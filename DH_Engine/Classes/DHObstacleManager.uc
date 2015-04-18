@@ -8,13 +8,12 @@ class DHObstacleManager extends Actor
 
 const MAX_OBSTACLES = 1024;
 const BITFIELD_LENGTH = 128;
-const OBSTACLE_TYPE_INDEX_INVALID = 255;
+const OBSTACLE_TYPE_INDEX_INVALID = -1;
 
 var byte            Bitfield[BITFIELD_LENGTH];
 
 var byte            SavedBitfield[BITFIELD_LENGTH];
 var DHObstacleInfo  Info;
-var bool            bPlayEffects;
 
 var config bool     bDebug;
 
@@ -24,10 +23,11 @@ replication
         Bitfield;
 }
 
+
 simulated function PostBeginPlay()
 {
-    local DHObstacle Obstacle;
-    local int i;
+    //local DHObstacleInstance Obstacle;
+    //local int i;
 
     super.PostBeginPlay();
 
@@ -43,46 +43,40 @@ simulated function PostBeginPlay()
         return;
     }
 
-    if (Role == ROLE_Authority)
+    /*foreach AllActors(class'DHObstacleInstance', Obstacle)
     {
-        foreach AllActors(class'DHObstacle', Obstacle)
+        if (Info.Obstacles.Length >= MAX_OBSTACLES)
         {
-            if (Info.Obstacles.Length >= MAX_OBSTACLES)
-            {
-                Warn(Obstacle @ " discarded, exceeds limit of manageable DHObstacle actors");
+            Warn(Obstacle @ "discarded, exceeds limit of manageable DHObstacle actors");
 
-                Obstacle.Destroy();
+            Obstacle.Destroy();
 
-                continue;
-            }
-
-            Obstacle.Index = Info.Obstacles.Length;
-
-            for (i = 0; i < Info.Types.Length; ++i)
-            {
-                if (Obstacle.StaticMesh != Info.Types[i].IntactStaticMesh)
-                {
-                    continue;
-                }
-
-                Obstacle.TypeIndex = i;
-
-                break;
-            }
-
-            if (Obstacle.TypeIndex == OBSTACLE_TYPE_INDEX_INVALID)
-            {
-                Log("Obstacle with static mesh" @ Obstacle.StaticMesh @ "was unable to be matched to obstacle info!");
-
-                continue;
-            }
-
-            Info.Obstacles[Info.Obstacles.Length] = Obstacle;
-
-            //trigger replication
-            Obstacle.RemoteRole = ROLE_SimulatedProxy;
+            continue;
         }
-    }
+
+        Obstacle.Info.Index = Info.Obstacles.Length;
+
+        for (i = 0; i < Info.Types.Length; ++i)
+        {
+            if (Obstacle.StaticMesh != Info.Types[i].IntactStaticMesh)
+            {
+                continue;
+            }
+
+            Obstacle.Info.TypeIndex = i;
+
+            break;
+        }
+
+        if (Obstacle.Info.TypeIndex == OBSTACLE_TYPE_INDEX_INVALID)
+        {
+            Log("Obstacle with static mesh" @ Obstacle.StaticMesh @ "was unable to be matched to obstacle info!");
+
+            continue;
+        }
+
+        Info.Obstacles[Info.Obstacles.Length] = Obstacle;
+    }*/
 }
 
 function DebugObstacles(optional int Option)
@@ -148,8 +142,6 @@ simulated function GetBitfieldIndexAndMask(int Index, out int ByteIndex, out byt
 
 simulated event PostNetBeginPlay()
 {
-    default.bPlayEffects = true;
-
     super.PostNetBeginPlay();
 }
 
@@ -206,7 +198,6 @@ simulated event PostNetReceive()
 simulated function Reset()
 {
     local int i;
-    local DHObstacle Obstacle;
 
     super.Reset();
 
@@ -214,19 +205,12 @@ simulated function Reset()
     {
         for (i = 0; i < Info.Obstacles.Length; ++i)
         {
-            Obstacle = Info.Obstacles[i];
-
-            SetCleared(Obstacle, false);
-
-            if (FRand() < Obstacle.SpawnClearedChance)
-            {
-                SetCleared(Obstacle, true);
-            }
+            SetCleared(Info.Obstacles[i], FRand() < Info.Obstacles[i].Info.SpawnClearedChance);
         }
     }
 }
 
-function SetCleared(DHObstacle Obstacle, bool bIsCleared)
+function SetCleared(DHObstacleInstance Obstacle, bool bIsCleared)
 {
     local int ByteIndex;
     local byte Mask;
@@ -235,7 +219,7 @@ function SetCleared(DHObstacle Obstacle, bool bIsCleared)
 
     if (Level.NetMode != NM_Client)
     {
-        GetBitfieldIndexAndMask(Obstacle.Index, ByteIndex, Mask);
+        GetBitfieldIndexAndMask(Obstacle.Info.Index, ByteIndex, Mask);
 
         if (bIsCleared)
         {

@@ -5,9 +5,9 @@
 
 class DHWireCuttersItem extends DHWeapon;
 
-var name        CutAnim;
-var DHObstacle  ObstacleBeingCut;
-var float       CutDistance;
+var name                CutAnim;
+var DHObstacleInstance  ObstacleBeingCut;
+var float               CutDistance;
 
 function bool FillAmmo()
 {
@@ -69,7 +69,7 @@ simulated state Cutting
 
         PlayAnim(CutAnim);
 
-        SetTimer(ObstacleBeingCut.GetCutDuration(), false);
+        SetTimer(ObstacleBeingCut.Info.GetCutDuration(), false);
     }
 
     simulated function EndState()
@@ -95,7 +95,7 @@ simulated state Cutting
 
         if (P != none)
         {
-            P.ServerClearObstacle(ObstacleBeingCut.Index);
+            P.ServerClearObstacle(ObstacleBeingCut.Info.Index);
         }
 
         PlayAnim('cutEnd', 1.0, 0.2);
@@ -139,7 +139,7 @@ simulated state Cutting
     {
         super.Tick(DeltaTime);
 
-        if (ObstacleBeingCut == none || ObstacleBeingCut.IsCleared())
+        if (ObstacleBeingCut == none || ObstacleBeingCut.Info.IsCleared())
         {
             PlayAnim('cutEnd', 1.0, 0.2);
         }
@@ -149,7 +149,7 @@ simulated state Cutting
 simulated function Fire(float F)
 {
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-    local DHObstacle O;
+    local DHObstacleInstance O;
 
     if (Instigator == none ||
         Instigator.Controller == none ||
@@ -162,9 +162,9 @@ simulated function Fire(float F)
     TraceStart = Instigator.Location;
     TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * CutDistance;
 
-    foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
+    foreach TraceActors(class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
-        if (O != none && !O.IsCleared() && O.CanBeCut())
+        if (O != none && !O.Info.IsCleared() && O.Info.CanBeCut())
         {
             ObstacleBeingCut = O;
 

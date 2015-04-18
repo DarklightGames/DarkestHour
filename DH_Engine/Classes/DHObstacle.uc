@@ -3,77 +3,34 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 // This is the placeable obstacle class.
-// Obstacles are replicated to clients only once, and then become independent.
-// The DHObstacleManager class handles obstacle state synchronization.
+// This acts simply as an informational actor. The client and server will spawn
+//
 //==============================================================================
 
 class DHObstacle extends Actor
+    hidecategories(Events,Force,Karama,Object,Sound)
     placeable;
-
-//==============================================================================
-// Because this is a non-static actor, location and rotations are quantized down
-// by default. Replicating this struct allows us the highest level of positional
-// precision possible over the network.
-//==============================================================================
-struct UncompressedPosition
-{
-    var float LocationX;
-    var float LocationY;
-    var float LocationZ;
-    var int Pitch;
-    var int Yaw;
-    var int Roll;
-    var float ScaleX;
-    var float ScaleY;
-    var float ScaleZ;
-};
 
 var() float         SpawnClearedChance;
 var() float         VelocityReductionTimeOnCrush;      // How much to slow the vehicle down that crushes this obstacle 0.0 for none, 8 for very strong
 
-var byte            TypeIndex;
+var int             TypeIndex;
 var int             Index;
+
 var config bool     bDebug;
 
-var bool            bPlayEffects;
+var DHObstacleInstance      Instance;
 
-var private DHObstacleInfo          Info;
-var private UncompressedPosition    UP;
-
-replication
-{
-    reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
-        TypeIndex, Index, UP;
-}
+var private DHObstacleInfo  Info;
 
 simulated function bool IsCleared()
 {
     return IsInState('Cleared');
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
-    super.PostBeginPlay();
-
-    if (Role == ROLE_Authority)
-    {
-        UP.LocationX = Location.X;
-        UP.LocationY = Location.Y;
-        UP.LocationZ = Location.Z;
-        UP.Pitch = Rotation.Pitch;
-        UP.Yaw = Rotation.Yaw;
-        UP.Roll = Rotation.Roll;
-        UP.ScaleX = DrawScale3D.X * DrawScale;
-        UP.ScaleY = DrawScale3D.Y * DrawScale;
-        UP.ScaleZ = DrawScale3D.Z * DrawScale;
-    }
-}
-
-simulated function PostNetBeginPlay()
-{
-    local DHObstacleManager OM;
-    local vector L, S;
-    local rotator R;
+    local int i;
 
     foreach AllActors(class'DHObstacleInfo', Info)
     {
@@ -82,144 +39,36 @@ simulated function PostNetBeginPlay()
 
     if (Info == none)
     {
-        Destroy();
-
-        return;
+        Error("DHObstacleInfo could not be found.");
     }
 
-    if (Role < ROLE_Authority)
+    // Deduce type index
+    for (i = 0; i < Info.Types.Length; ++i)
     {
-        Info.Obstacles[Index] = self;
-
-        foreach AllActors(class'DHObstacleManager', OM)
-        {
-            // If this obstacle gets replicated *after* the obstacle manager,
-            // we need to query the manager to get the state otherwise the state
-            // never gets set correctly!
-            if (OM.IsClearedInBitfield(Index))
-            {
-                SetCleared(true);
-            }
-
-            break;
-        }
-
-        L.X = UP.LocationX;
-        L.Y = UP.LocationY;
-        L.Z = UP.LocationZ;
-        SetLocation(L);
-
-        R.Pitch = UP.Pitch;
-        R.Yaw = UP.Yaw;
-        R.Roll = UP.Roll;
-        SetRotation(R);
-
-        S.X = UP.ScaleX;
-        S.Y = UP.ScaleY;
-        S.Z = UP.ScaleZ;
-        SetDrawScale3D(S);
+         if (Info.Types[i].IntactStaticMesh == StaticMesh)
+         {
+             TypeIndex = i;
+             break;
+         }
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (TypeIndex == -1)
     {
-        bPlayEffects = true;
-    }
-}
-
-simulated state Intact
-{
-    simulated function BeginState()
-    {
-        SetStaticMesh(GetIntactStaticMesh());
-        KSetBlockKarma(false);
-
-        super.BeginState();
+        Error("DHObstacle could not match to type.");
     }
 
-    simulated function EndState()
-    {
-        super.EndState();
-    }
+    // Add to obstacle list
+    Index = Info.Obstacles.Length;
 
-    event Touch(Actor Other)
-    {
-        local DarkestHourGame G;
+    // Create instance
+    Instance = Spawn(class'DHObstacleInstance', self,, Location, Rotation);
+    Instance.SetStaticMesh(StaticMesh);
+    Instance.SetDrawScale(DrawScale);
+    Instance.SetDrawScale3D(DrawScale3D);
 
-        if (!CanBeCrushed())
-        {
-            return;
-        }
+    Info.Obstacles[Index] = Instance;
 
-        if (Role == ROLE_Authority && SVehicle(Other) != none)
-        {
-            G = DarkestHourGame(Level.Game);
-
-            if (G != none && G.ObstacleManager != none)
-            {
-                G.ObstacleManager.SetCleared(self, true);
-            }
-
-            if (DHTreadCraft(Other) != none)
-            {
-                DHTreadCraft(Other).ObjectCrushed(VelocityReductionTimeOnCrush);
-            }
-            else if (DHWheeledVehicle(Other) != none)
-            {
-                DHWheeledVehicle(Other).ObjectCrushed(VelocityReductionTimeOnCrush);
-            }
-        }
-
-        super.Touch(Other);
-    }
-}
-
-simulated state Cleared
-{
-    simulated function BeginState()
-    {
-        local sound ClearSound;
-        local class<Emitter> ClearEmitterClass;
-
-        if (Level.NetMode != NM_DedicatedServer &&
-            class'DHObstacleManager'.default.bPlayEffects &&
-            bPlayEffects)
-        {
-            ClearSound = GetClearSound();
-            ClearEmitterClass = GetClearEmitterClass();
-
-            if (ClearSound != none)
-            {
-                PlayOwnedSound(ClearSound, SLOT_None, 255.0);
-            }
-
-            if (ClearEmitterClass != none)
-            {
-                Spawn(ClearEmitterClass, none, '', Location, Rotation);
-            }
-        }
-
-        SetStaticMesh(GetClearedStaticMesh());
-        KSetBlockKarma(false);
-
-        super.BeginState();
-    }
-}
-
-simulated function SetCleared(bool bIsCleared)
-{
-    if (bDebug)
-    {
-        Log(Index @ "SetCleared" @ bIsCleared);
-    }
-
-    if (bIsCleared)
-    {
-        GotoState('Cleared');
-    }
-    else
-    {
-        GotoState('Intact');
-    }
+    super.PostBeginPlay();
 }
 
 simulated function StaticMesh GetIntactStaticMesh()
@@ -252,6 +101,16 @@ simulated function bool CanBeCrushed()
     return Info.Types[TypeIndex].bCanBeCrushed;
 }
 
+simulated function bool CanBeDestroyedByExplosives()
+{
+    return Info.Types[TypeIndex].bCanBeDestroyedByExplosives;
+}
+
+simulated function int GetExplosionDamageThreshold()
+{
+    return Info.Types[TypeIndex].ExplosionDamageThreshold;
+}
+
 simulated function sound GetClearSound()
 {
     return Info.Types[TypeIndex].ClearSound;
@@ -272,47 +131,27 @@ simulated function class<Emitter> GetClearEmitterClass()
     return none;
 }
 
-simulated function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
-{
-    local DarkestHourGame G;
-
-    if (Role == ROLE_Authority &&
-        Info.Types[TypeIndex].bCanBeDestroyedByExplosives &&
-        !DamageType.default.bLocationalHit &&
-        Damage >= Info.Types[TypeIndex].ExplosionDamageThreshold)
-    {
-        G = DarkestHourGame(Level.Game);
-
-        if (G != none && G.ObstacleManager != none)
-        {
-            G.ObstacleManager.SetCleared(self, true);
-        }
-    }
-}
-
 defaultproperties
 {
-    bBlockPlayers=true
-    bBlockActors=true
-    bBlockKarma=true
-    bBlockProjectiles=true
-    bBlockHitPointTraces=true
-    bBlockNonZeroExtentTraces=true
-    bCanBeDamaged=true
-    bCollideActors=true
+    bBlockPlayers=false
+    bBlockActors=false
+    bBlockKarma=false
+    bBlockProjectiles=false
+    bBlockHitPointTraces=false
+    bBlockNonZeroExtentTraces=false
+    bCanBeDamaged=false
+    bCollideActors=false
     bCollideWorld=false
     bWorldGeometry=false
-    bStatic=false
-    bStaticLighting=true
+    bStatic=true
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
-    bNetTemporary=true
-    bAlwaysRelevant=true
     RemoteRole=ROLE_None
-    bCompressedPosition=false
     SpawnClearedChance=0.0
     VelocityReductionTimeOnCrush=1.0
-    TypeIndex=255
+    TypeIndex=-1
     bDebug=false
+    bNoDelete=false
+    bHidden=true
+    bHiddenEd=false
 }
-

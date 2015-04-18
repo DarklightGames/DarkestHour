@@ -21,9 +21,9 @@ struct Type
     var()   float                   CutDuration;
 };
 
-var()   array<Type>         Types;
+var()   array<Type>                 Types;
 
-var     array<DHObstacle>   Obstacles;
+var     array<DHObstacleInstance>   Obstacles;
 
 defaultproperties
 {

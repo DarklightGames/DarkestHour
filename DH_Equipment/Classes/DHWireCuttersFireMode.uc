@@ -9,15 +9,15 @@ simulated function bool AllowFire()
 {
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
     local Actor HitActor;
-    local DHObstacle O;
+    local DHObstacleInstance O;
 
     TraceStart = Weapon.Location;
     TraceEnd = vector(Weapon.Rotation) * 100.0;
 
     HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-    O = DHObstacle(HitActor);
+    O = DHObstacleInstance(HitActor);
 
-    if (O == none || !O.CanBeCut())
+    if (O == none || !O.Info.CanBeCut())
     {
         return false;
     }

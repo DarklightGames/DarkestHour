@@ -2610,7 +2610,7 @@ simulated function HUDCheckMantle()
 
 simulated function bool CanMantleActor(Actor A)
 {
-    local DHObstacle O;
+    local DHObstacleInstance O;
 
     if (A != none)
     {
@@ -2619,9 +2619,9 @@ simulated function bool CanMantleActor(Actor A)
             return true;
         }
 
-        O = DHObstacle(A);
+        O = DHObstacleInstance(A);
 
-        if (O != none && O.CanBeMantled())
+        if (O != none && O.Info.CanBeMantled())
         {
             return true;
         }
