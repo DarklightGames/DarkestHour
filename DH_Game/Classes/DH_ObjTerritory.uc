@@ -90,8 +90,12 @@ var(DH_ClearedActions)      array<name>                 AxisClearedCaptureEvents
 var(DH_GroupedActions)      array<int>                  GroupedObjectiveReliances; // array of Objective Nums this objective is grouped with (doesn't need to list itself)
 var(DH_GroupedActions)      array<ObjOperationAction>   AlliesCaptureGroupObjActions;
 var(DH_GroupedActions)      array<ObjOperationAction>   AxisCaptureGroupObjActions;
-var(DH_GroupedActions)      array<name>                 AlliesGroupedCaptureEvents;
-var(DH_GroupedActions)      array<name>                 AxisGroupedCaptureEvents;
+var(DH_GroupedActions)      array<SpawnPointAction>     AlliesGroupSpawnPointActions;
+var(DH_GroupedActions)      array<SpawnPointAction>     AxisGroupSpawnPointActions;
+var(DH_GroupedActions)      array<VehiclePoolAction>    AlliesGroupVehiclePoolActions;
+var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActions;
+var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
+var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
 // Contested operations (used when a side begins capturing)
 var(DH_ContestedActions)    array<ObjOperationAction>   AlliesContestObjActions;
@@ -372,9 +376,19 @@ function HandleGroupActions(int Team)
                 DoObjectiveAction(AxisCaptureGroupObjActions[i]);
             }
 
-            for (i = 0; i < AxisGroupedCaptureEvents.Length; ++i)
+            for (i = 0; i < AxisGroupSpawnPointActions.Length; ++i)
             {
-                TriggerEvent(AxisGroupedCaptureEvents[i], none, none);
+                DoSpawnPointAction(AxisGroupSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AxisGroupVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AxisGroupVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AxisGroupCaptureEvents.Length; ++i)
+            {
+                TriggerEvent(AxisGroupCaptureEvents[i], none, none);
             }
         }
     }
@@ -398,9 +412,19 @@ function HandleGroupActions(int Team)
                 DoObjectiveAction(AlliesCaptureGroupObjActions[i]);
             }
 
-            for (i = 0; i < AlliesGroupedCaptureEvents.Length; ++i)
+            for (i = 0; i < AlliesGroupSpawnPointActions.Length; ++i)
             {
-                TriggerEvent(AlliesGroupedCaptureEvents[i], none, none);
+                DoSpawnPointAction(AlliesGroupSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AlliesGroupVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AlliesGroupVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AlliesGroupCaptureEvents.Length; ++i)
+            {
+                TriggerEvent(AlliesGroupCaptureEvents[i], none, none);
             }
         }
     }
