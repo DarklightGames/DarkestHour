@@ -57,11 +57,14 @@ var     bool                    bIsInSpawnMenu;             // player is in spaw
 var     int                     SpawnTime;                  // the amount of time it will take the player to respawn from LastKilledTime
 var     float                   LastKilledTime;             // the time at which last death occured
 
+var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
+var     int                     DHSecondaryWeapon;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex, SpawnAmmoAmount, LastKilledTime;
+        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex, SpawnAmmoAmount, LastKilledTime, DHPrimaryWeapon, DHSecondaryWeapon;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -271,15 +274,9 @@ exec function PlayerMenu(optional int Tab)
     bPendingMapDisplay = false;
 
     // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-    if (!bWeaponsSelected)
-    {
-        ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-    }
-    else if (PlayerReplicationInfo.Team == none)
-    {
-        ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-    }
-    else if (PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex == 254)
+    if (!bWeaponsSelected ||
+        PlayerReplicationInfo.Team == none ||
+        PlayerReplicationInfo.Team.TeamIndex == 254)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
@@ -293,7 +290,17 @@ exec function PlayerMenu(optional int Tab)
 function ShowMidGameMenu(bool bPause)
 {
     if (Level.NetMode != NM_DedicatedServer)
+    {
         StopForceFeedback();
+    }
+
+    Log("bWeaponsSelected" @ bWeaponsSelected);
+    Log("PlayerReplicationInfo.Team" @ PlayerReplicationInfo.Team);
+
+    if (PlayerReplicationInfo.Team != none)
+    {
+        Log("PlayerReplicationInfo.Team.TeamIndex" @ PlayerReplicationInfo.Team.TeamIndex);
+    }
 
     // Open correct menu
     if (bDemoOwner)
@@ -303,21 +310,15 @@ function ShowMidGameMenu(bool bPause)
     else
     {
         // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-        if (!bWeaponsSelected)
-        {
-            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-        }
-        else if (PlayerReplicationInfo.Team == none)
-        {
-            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-        }
-        else if (PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex == 254)
+        if (!bWeaponsSelected ||
+            PlayerReplicationInfo.Team == none ||
+            PlayerReplicationInfo.Team.TeamIndex == 254)
         {
             ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
         }
         else
         {
-            ClientOpenMenu(ROMidGameMenuClass);
+            ClientReplaceMenu(ROMidGameMenuClass);
         }
     }
 }
@@ -1420,6 +1421,8 @@ state Mantling
 
     function EndState()
     {
+        local DHPawn P;
+
         if (bMantleDebug)
         {
             if (Role == ROLE_Authority)
@@ -1438,12 +1441,14 @@ state Mantling
         bDidCrouchCheck = false;
         bLockJump = false;
 
-        if (DHPawn(Pawn).bIsMantling)
+        P = DHPawn(Pawn);
+
+        if (P != none && P.bIsMantling)
         {
-            DHPawn(Pawn).CancelMantle();
+            P.CancelMantle();
         }
 
-        if (bMantleDebug && Pawn.IsLocallyControlled())
+        if (bMantleDebug && Pawn != none && Pawn.IsLocallyControlled())
         {
             ClientMessage("------------- End Mantle Debug -------------");
             Log("------------- End Mantle Debug -------------");
@@ -2116,46 +2121,44 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
-    local class<Inventory>        PrimaryWep;
-    local int MinValue, MidValue, MaxValue, AmmoTimeMod, NewDeployTime;
+    local class<DHProjectileWeapon> PrimaryWeaponClass;
+    local int MinValue, MidValue, MaxValue, AmmoTimeMod;
     local float TD, D, P;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI != none && (WeaponIndex == -1 || WeaponIndex > arraycount(RI.PrimaryWeapons)) && RI.PrimaryWeapons[PrimaryWeapon].Item != none)
+    if (RI == none || PRI == none || GRI == none)
     {
-        PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
-    }
-    else if (RI != none && RI.PrimaryWeapons[WeaponIndex].Item != none)
-    {
-        PrimaryWep = RI.PrimaryWeapons[WeaponIndex].Item;
-    }
-
-    // Make sure everything is set and no access nones
-    if (PRI == none || RI == none || GRI == none)
-    {
-        Warn("Error in Calculating deploy time");
-
         return 0;
     }
-    else if (PrimaryWep != none)
+
+    if (WeaponIndex < 0 || WeaponIndex > arraycount(RI.PrimaryWeapons))
+    {
+        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[PrimaryWeapon].Item);
+    }
+    else
+    {
+        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[WeaponIndex].Item);
+    }
+
+    if (PrimaryWeaponClass != none)
     {
         // If MagCount wasn't passed, lets use desired ammo amount
         if (MagCount == 255)
         {
             MagCount = SpawnAmmoAmount;
         }
-        else if (MagCount >= 1 && MagCount <= class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
+        else if (MagCount >= 1 && MagCount <= PrimaryWeaponClass.default.MaxNumPrimaryMags)
         {
             // MagCount was passed, so lets update SpawnAmmoAmount if the value is valid
             SpawnAmmoAmount = MagCount;
         }
 
         // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
-        MinValue = RI.MinStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
-        MidValue = RI.DefaultStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
-        MaxValue = RI.MaxStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
+        MinValue = RI.MinStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        MidValue = RI.DefaultStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        MaxValue = RI.MaxStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
 
         // Set AmmoTimeMod based on MagCount
         if (MagCount == MidValue)
@@ -2178,14 +2181,7 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
         }
     }
 
-    NewDeployTime = GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod;
-
-    if (NewDeployTime < 0)
-    {
-        NewDeployTime = 0;
-    }
-
-    return NewDeployTime;
+    return FMax(0, GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod);
 }
 
 function PawnDied(Pawn P)
@@ -2558,8 +2554,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
 
     RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
 
-    Log("SpawnTime" @ NewSpawnAmmoCount @ SpawnTime);
-
     SpawnTime = GetSpawnTime(NewSpawnAmmoCount, RI, newWeapon1);
 
     // Success!
@@ -2587,6 +2581,16 @@ function EndZoom()
 
     bZooming = false;
     DesiredFOV = DefaultFOV;
+}
+
+function Reset()
+{
+    super.Reset();
+
+    SpawnPointIndex = -1;
+    SpawnVehicleIndex = -1;
+    VehiclePoolIndex = -1;
+    LastKilledTime = 0;
 }
 
 defaultproperties
@@ -2625,4 +2629,7 @@ defaultproperties
     PawnClass=class'DH_Engine.DHPawn'
     SpawnPointIndex=255
     VehiclePoolIndex=255
+
+    DHPrimaryWeapon=-1
+    DHSecondaryWeapon=-1
 }

@@ -223,16 +223,18 @@ function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator Spawn
     switch (SP.Method)
     {
         case ESPM_Hints:
-            if (!GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnLocation, SpawnRotation))
+            if (!GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation))
             {
                 SpawnError = SpawnError_Blocked;
 
                 return;
             }
+            break;
         case ESPM_Radius:
             //TODO: do a proper radius check
             SpawnLocation = SP.Location;
             SpawnRotation = SP.Rotation;
+            break;
     }
 
     SpawnError = SpawnError_None;

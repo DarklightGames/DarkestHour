@@ -2982,14 +2982,11 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
     local DHPawn                DHP;
     local ROVehicleWeaponPawn   ROVWP;
     local ROVehicle             ROV;
-    local DHGameReplicationInfo GRI;
 
-    if (bShowVoiceIcon == false)
+    if (!bShowVoiceIcon)
     {
         return;
     }
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     foreach RadiusActors(class'DHPawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location) // 100 feet
     {

@@ -34,8 +34,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
 
-    Log(self @ "InitComponent");
-
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
     RolesContainer.ManageComponent(lb_Roles);
@@ -81,8 +79,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set initial counts
     Timer();
     SetTimer(0.1, true);
-
-    Log("Players team is: " $ DHP.GetTeamNum());
 }
 
 function ShowPanel(bool bShow)
@@ -193,15 +189,10 @@ function GetInitialValues()
         CurrentWeapons[0] = -1;
         CurrentWeapons[1] = -1;
     }
-    else if (DHP.CurrentRole != DHP.DesiredRole)
-    {
-        CurrentWeapons[0] = DHP.DesiredPrimary;
-        CurrentWeapons[1] = DHP.DesiredSecondary;
-    }
     else
     {
-        CurrentWeapons[0] = DHP.PrimaryWeapon;
-        CurrentWeapons[1] = DHP.SecondaryWeapon;
+        CurrentWeapons[0] = DHP.DHPrimaryWeapon;
+        CurrentWeapons[1] = DHP.DHSecondaryWeapon;
     }
 
     // Set desired stuff to be same as current stuff

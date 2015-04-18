@@ -1256,7 +1256,7 @@ function UpdateRoleCounts()
 function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 {
     local RORoleInfo RI;
-    local ROPlayer   Playa;
+    local DHPlayer   Playa;
     local ROBot      MrRoboto;
 
     if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
@@ -1272,7 +1272,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     }
 
     // Lets try and avoid 50 casts - Ramm
-    Playa = ROPlayer(aPlayer);
+    Playa = DHPlayer(aPlayer);
 
     if (Playa == none)
     {
@@ -1326,7 +1326,9 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
                     ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
                     Playa.PrimaryWeapon = -1;
+                    Playa.DHPrimaryWeapon = -1;
                     Playa.SecondaryWeapon = -1;
+                    Playa.DHSecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
                     SetCharacter(aPlayer);
@@ -2189,6 +2191,22 @@ static function PrecacheGameTextures(LevelInfo myLevel)
 
     // From DHTreadCraft:
     myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+}
+
+// Overridden so we can grab the primary and secondary weapons to feed to replication
+function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grenade)
+{
+    local DHPlayer PC;
+
+    super.ChangeWeapons(aPlayer, Primary, Secondary, Grenade);
+
+    PC = DHPlayer(aPlayer);
+
+    if (PC != none)
+    {
+        PC.DHPrimaryWeapon = PC.PrimaryWeapon;
+        PC.DHSecondaryWeapon = PC.SecondaryWeapon;
+    }
 }
 
 defaultproperties
