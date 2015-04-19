@@ -2001,8 +2001,6 @@ function bool FillAmmo()
         {
             PrimaryAmmoArray.Length = PrimaryAmmoArray.Length + 1;
 
-            Log("Added magazine (count:" @ PrimaryAmmoArray.Length $ ")");
-
             PrimaryAmmoArray[PrimaryAmmoArray.Length - 1] = FireMode[0].AmmoClass.default.InitialAmount;
 
             bDidFillAmmo = true;
@@ -2021,8 +2019,6 @@ function bool FillAmmo()
         {
             if (PrimaryAmmoArray[i] < FireMode[0].AmmoClass.default.InitialAmount)
             {
-                Log("Filled magazine index" @ i @ " (previously" @ PrimaryAmmoArray[i] $ ")");
-
                 PrimaryAmmoArray[i] = FireMode[0].AmmoClass.default.InitialAmount;
 
                 bDidFillAmmo = true;
