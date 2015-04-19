@@ -5,6 +5,10 @@
 
 class DHHud extends ROHud;
 
+#exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
+
 var(ROHud) SpriteWidget VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var(ROHud) SpriteWidget VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
 var(DHHud) SpriteWidget MapIconCarriedRadio;
@@ -40,11 +44,6 @@ var  Obituary           DHObituaries[8];
 var  const float        VOICE_ICON_DIST_MAX;
 
 var  bool               bDebugVehicleHitPoints; // show vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
-
-#exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
-
 
 simulated function UpdatePrecacheMaterials()
 {
