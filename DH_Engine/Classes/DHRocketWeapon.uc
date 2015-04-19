@@ -284,9 +284,6 @@ function UpdateResupplyStatus()
 
     P.bWeaponNeedsReload = bHasAmmo && !bIsLoaded;
     P.bWeaponNeedsResupply = !bHasFullAmmo;
-
-    Log("P.bWeaponNeedsResupply" @ P.bWeaponNeedsResupply);
-    Log("P.bWeaponNeedsReload" @ P.bWeaponNeedsReload);
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
