@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 // This is the placeable obstacle class.
-// This acts simply as an informational actor. The client and server will spawn
-//
+// This acts simply as an informational actor. The client and server will spawn.
 //==============================================================================
 
 class DHObstacle extends Actor
@@ -12,7 +11,6 @@ class DHObstacle extends Actor
     placeable;
 
 var() float         SpawnClearedChance;
-var() float         VelocityReductionTimeOnCrush;      // How much to slow the vehicle down that crushes this obstacle 0.0 for none, 8 for very strong
 
 var int             TypeIndex;
 var int             Index;
@@ -148,7 +146,6 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
     RemoteRole=ROLE_None
     SpawnClearedChance=0.0
-    VelocityReductionTimeOnCrush=1.0
     TypeIndex=-1
     bDebug=false
     bNoDelete=false
