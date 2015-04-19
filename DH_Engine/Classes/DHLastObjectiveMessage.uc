@@ -6,19 +6,17 @@
 class DHLastObjectiveMessage extends ROCriticalMessage
     abstract;
 
-var localized string AboutToWin;
-var localized string AboutToLose;
+var localized string AxisAboutToWinMessage;
+var localized string AlliesAboutToWinMessage;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
-        case 0: // axis about to win
-        case 2: // allies about to win
-            return default.AboutToLose;
-        case 1: // axis about to win (player is therefore allies)
-        case 3: // allies about to win (player is therefore axis)
-            return default.AboutToWin;
+        case AXIS_TEAM_INDEX: // axis about to win
+            return default.AxisAboutToWinMessage;
+        case ALLIES_TEAM_INDEX: // axis about to win (player is therefore allies)
+            return default.AlliesAboutToWinMessage;
         default:
             return "INVALID MESSAGE TYPE:" @ Switch;
     }
@@ -28,11 +26,9 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
 {
     switch (Switch)
     {
-        case 0: // axis about to win
-        case 1: // axis about to win (player is therefore allies)
+        case AXIS_TEAM_INDEX: // axis about to win
             return default.altIconID;
-        case 2: // allies about to win
-        case 3: // allies about to win (player is therefore axis)
+        case ALLIES_TEAM_INDEX: // allies about to win
             return default.IconID;
         default:
             return default.errorIconID;
@@ -41,8 +37,8 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
 
 defaultproperties
 {
-    AboutToWin="Last objective -- we have almost won the battle!"
-    AboutToLose="Last objective -- we have almost lost the battle!"
+    AxisAboutToWinMessage="Last objective -- the Axis have almost won the battle!"
+    AlliesAboutToWinMessage="Last objective -- the Allies have almost won the battle!"
     iconID=12
     altIconID=13
     iconTexture=texture'DH_GUI_Tex.GUI.criticalmessages_icons'
