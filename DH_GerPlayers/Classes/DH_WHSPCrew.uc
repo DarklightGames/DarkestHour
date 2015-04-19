@@ -24,6 +24,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'ROInventory.ROGermanHat'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
     RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
