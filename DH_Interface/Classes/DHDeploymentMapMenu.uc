@@ -160,6 +160,10 @@ function float GetDistance(float A, float B)
     {
         return Abs(A) + B;
     }
+    else if (A > B && A <= 0.0 && B <= 0.0)
+    {
+        return 0.0;
+    }
     else
     {
         return Abs(A - B);
