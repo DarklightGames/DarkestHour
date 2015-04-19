@@ -20,6 +20,7 @@ defaultproperties
     Models(5)="SSS_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
