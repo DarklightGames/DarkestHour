@@ -80,8 +80,8 @@ replication
         ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack;
 
     // Variables the owning client will replicate to the server
-    reliable if (bNetOwner && bNetDirty && Role < ROLE_Authority)   //TODO: verify need for bNetOwner check
-        bIsInSpawnMenu;
+    reliable if (Role < ROLE_Authority)   //TODO: verify need for bNetOwner check
+        ServerSetIsInSpawnMenu;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2) { } // No longer used
@@ -2591,6 +2591,11 @@ function Reset()
     SpawnVehicleIndex = -1;
     VehiclePoolIndex = -1;
     LastKilledTime = 0;
+}
+
+function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
+{
+    self.bIsInSpawnMenu = bIsInSpawnMenu;
 }
 
 defaultproperties

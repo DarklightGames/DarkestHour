@@ -488,7 +488,7 @@ function OnClose(optional bool bCancelled)
 
     if (P != none)
     {
-        P.bIsInSpawnMenu = false;
+        P.ServerSetIsInSpawnMenu(false);
     }
 }
 
@@ -502,7 +502,7 @@ function OnOpen()
 
     if (P != none)
     {
-        P.bIsInSpawnMenu = true;
+        P.ServerSetIsInSpawnMenu(true);
     }
 }
 
