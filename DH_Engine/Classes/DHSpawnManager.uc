@@ -170,10 +170,6 @@ function Reset()
     super.Reset();
 }
 
-function Timer()
-{
-}
-
 function UpdatePoolReplicationInfo(byte PoolIndex)
 {
     GRI.SetVehiclePoolVehicleClass(PoolIndex, VehiclePools[PoolIndex].VehicleClass);
@@ -803,6 +799,8 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
         return;
     }
 
+    P.TeleSpawnProtEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+
     SpawnError = SpawnError_None;
 }
 
@@ -1212,4 +1210,3 @@ defaultproperties
     SpawnPointType_Infantry=0
     SpawnPointType_Vehicles=1
 }
-
