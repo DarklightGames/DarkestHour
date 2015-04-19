@@ -175,6 +175,7 @@ function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
             if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
             {
                 PC.SpawnPointIndex = 255;
+                PC.bSpawnPointInvalidated = true;
             }
         }
     }
@@ -287,6 +288,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
             if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
             {
                 PC.VehiclePoolIndex = 255;
+                PC.bSpawnPointInvalidated = true;
             }
         }
     }
@@ -443,6 +445,7 @@ function bool RemoveSpawnVehicle(Vehicle V)
                 if (PC != none && PC.SpawnVehicleIndex == i)
                 {
                     PC.SpawnVehicleIndex = 255;
+                    PC.bSpawnPointInvalidated = true;
                 }
             }
 

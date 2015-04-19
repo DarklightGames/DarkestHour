@@ -60,11 +60,15 @@ var     float                   LastKilledTime;             // the time at which
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
 
+var     bool                    bSpawnPointInvalidated;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex, SpawnAmmoAmount, LastKilledTime, DHPrimaryWeapon, DHSecondaryWeapon;
+        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
+        SpawnAmmoAmount, LastKilledTime, DHPrimaryWeapon, DHSecondaryWeapon,
+        bSpawnPointInvalidated;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2334,7 +2338,14 @@ simulated exec function ROIronSights()
 // Client function to fade from black
 function ClientFadeFromBlack(float time, optional bool bInvertFadeDirection)
 {
-    ROHud(MyHud).FadeToBlack(time, !bInvertFadeDirection);
+    local ROHud H;
+
+    H = ROHud(MyHud);
+
+    if (H != none)
+    {
+        H.FadeToBlack(time, !bInvertFadeDirection);
+    }
 }
 
 // Modified to allow for faster suiciding, annoying when it doesn't work in MP
@@ -2400,6 +2411,8 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         SpawnPointIndex = NewSpawnPointIndex;
         VehiclePoolIndex = NewVehiclePoolIndex;
         SpawnVehicleIndex = NewSpawnVehicleIndex;
+
+        bSpawnPointInvalidated = false;
     }
 
     // Attempt to change teams
@@ -2468,6 +2481,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;
+                bSpawnPointInvalidated = false;
             }
 
             // Check if change failed and output results
@@ -2596,6 +2610,19 @@ function Reset()
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
 {
     self.bIsInSpawnMenu = bIsInSpawnMenu;
+}
+
+state DeadSpectating
+{
+    function BeginState()
+    {
+        super.BeginState();
+
+        if (bSpawnPointInvalidated)
+        {
+            ClientReplaceMenu("DH_Interface.DHDeployMenu");
+        }
+    }
 }
 
 defaultproperties
