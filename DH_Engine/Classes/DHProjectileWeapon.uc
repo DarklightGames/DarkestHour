@@ -2144,13 +2144,6 @@ function bool HandlePickupQuery(Pickup Item)
                 // Gets loaded magazines from the pickup and adds them to our weapon
                 LoadedMagazineIndices = DHWP.GetLoadedMagazineIndices();
 
-                Log("LoadedMagazineIndices.Length" @ LoadedMagazineIndices.Length);
-
-                for (i = 0; i < LoadedMagazineIndices.Length; ++i)
-                {
-                    Log("LoadedMagazineIndices[" $ i $ "] =" @ LoadedMagazineIndices[i] @ DHWP.AmmoMags[LoadedMagazineIndices[i]]);
-                }
-
                 for (i = 0; i < LoadedMagazineIndices.Length && PrimaryAmmoArray.Length < MaxNumPrimaryMags; ++i)
                 {
                     PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[LoadedMagazineIndices[i]];
