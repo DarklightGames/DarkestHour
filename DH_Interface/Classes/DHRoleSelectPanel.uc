@@ -553,9 +553,17 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.MidValue = DesiredRole.DefaultStartAmmoPercent * class<DHProjectileWeapon>(Item).default.MaxNumPrimaryMags;
                 nu_PrimaryAmmoMags.MaxValue = DesiredRole.MaxStartAmmoPercent * class<DHProjectileWeapon>(Item).default.MaxNumPrimaryMags;
 
-                // Set value to desired, if desired is out of range, set desired to clamped value
-                nu_PrimaryAmmoMags.Value = string(DHP.SpawnAmmoAmount);
+                // if current role and desired role are the same, set value to SpawnAmmoAmount (otherwise set to mid default)
+                if (CurrentRole == DesiredRole)
+                {
+                    nu_PrimaryAmmoMags.Value = string(DHP.SpawnAmmoAmount);
+                }
+                else
+                {
+                    nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+                }
 
+                // Check value
                 if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
                     nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue); // Will reset value to mid if out of range
@@ -563,7 +571,6 @@ function UpdateSelectedWeapon(int weaponCategory)
 
                 nu_PrimaryAmmoMags.CheckValue(); // Hard clamps value to be in range (visually)
                 nu_PrimaryAmmoMags.SetVisibility(true);
-
             }
             else
             {
