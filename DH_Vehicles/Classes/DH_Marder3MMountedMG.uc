@@ -29,7 +29,7 @@ defaultproperties
     AltFireInterval=0.07058
     AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.0
+    AmbientSoundScaling=2.5
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

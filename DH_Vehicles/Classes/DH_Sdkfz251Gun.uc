@@ -28,7 +28,7 @@ defaultproperties
     AltFireInterval=0.07058
     AmbientEffectEmitterClass=class'VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.0 // 3.0
+    AmbientSoundScaling=2.5
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

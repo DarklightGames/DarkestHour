@@ -23,7 +23,7 @@ defaultproperties
     Spread=0.002
     FireInterval=0.07059
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.0
+    AmbientSoundScaling=2.0
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
