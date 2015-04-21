@@ -277,10 +277,7 @@ exec function PlayerMenu(optional int Tab)
 {
     bPendingMapDisplay = false;
 
-    // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-    if (!bWeaponsSelected ||
-        PlayerReplicationInfo.Team == none ||
-        PlayerReplicationInfo.Team.TeamIndex == 254)
+    if (!bWeaponsSelected)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
