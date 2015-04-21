@@ -3857,6 +3857,39 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
     }
 }
 
+// Modified to make fade to black work with lower hud opacity values
+simulated function DrawFadeToBlack(Canvas Canvas)
+{
+    local float alpha;
+
+    if (FadeToBlackTime ~= 0)
+        alpha = 0.0;
+    else
+        alpha = (FadeToBlackTime - Level.TimeSeconds + FadeToBlackStartTime) / FadeToBlackTime;
+
+    if (alpha <= 0)
+        alpha = 0.0;
+    else if (alpha > 1)
+        alpha = 1.0;
+
+    if (!bFadeToBlackInvert)
+        alpha = 1.0 - alpha;
+
+    if (alpha ~= 0)
+    {
+        bFadeToBlack = false;
+        return;
+    }
+
+    Canvas.SetPos(0, 0);
+    Canvas.Style = ERenderStyle.STY_Alpha;
+    Canvas.DrawColor = BlackColor;
+    Canvas.DrawColor.A = alpha * 255;
+    Canvas.ColorModulate.W = 1.0;
+    Canvas.DrawTile(texture'Engine.WhiteTexture', Canvas.ClipX, Canvas.ClipY, 0, 0, 4, 4);
+    Canvas.ColorModulate.W = HudOpacity/255;
+}
+
 defaultproperties
 {
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.00000,ScaleMode=SM_Left,scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
