@@ -53,5 +53,5 @@ defaultproperties
     AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
-    bDHDebugMode=true // Matt: TEMP during development to aid testing - remove before release !
+    bDHDebugMode=false // Matt: TEMP during development to aid testing - remove before release !
 }
