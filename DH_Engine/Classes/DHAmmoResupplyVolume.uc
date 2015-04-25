@@ -21,10 +21,10 @@ enum EResupplyType
 };
 
 var()   EOwningTeam     Team;            //Team this volume resupplies
-var()   float           UpdateTime;      //How often this thing needs to do it's business
 var()   bool            bUsesSpawnAreas; //Activated/Deactivated based on a spawn area associated with a tag
 var()   EResupplyType   ResupplyType;    //Who this volume will resupply
 
+var     float           UpdateTime;      //How often this thing needs to do it's business
 var     bool            bActive;         // Whether this ammo resupply volume is active
 
 function PostBeginPlay()
@@ -212,7 +212,7 @@ function Reset()
 defaultproperties
 {
     Team=OWNER_Neutral
-    UpdateTime=5.0
+    UpdateTime=2.5
     ResupplyType=RT_All
     bStatic=false
 }
