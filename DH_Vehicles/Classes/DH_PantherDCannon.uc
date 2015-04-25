@@ -13,7 +13,7 @@ defaultproperties
     TertiarySpread=0.0012
     ManualRotationsPerSecond=0.011
     PoweredRotationsPerSecond=0.033
-    FrontArmorFactor=9.8
+    FrontArmorFactor=12.0
     RightArmorFactor=4.5
     LeftArmorFactor=4.5
     RearArmorFactor=4.5
