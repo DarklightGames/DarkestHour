@@ -412,7 +412,7 @@ simulated function bool AllowReload()
     {
         if (PC != none)
         {
-            PC.ReceiveLocalizedMessage(WarningMessageClass, 4);
+            PC.ReceiveLocalizedMessage(WarningMessageClass, 4,,, self);
         }
 
         return false;
@@ -791,7 +791,7 @@ function bool AssistedReload()
 
             if (PC != none)
             {
-                PC.ReceiveLocalizedMessage(WarningMessageClass, 3);
+                PC.ReceiveLocalizedMessage(WarningMessageClass, 3,,, self);
             }
         }
 
