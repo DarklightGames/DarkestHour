@@ -11,8 +11,7 @@ defaultproperties
     FireIronAnims(1)="iron_shootMid"
     FireIronAnims(2)="iron_shootFar"
     ExhaustDamageType=class'DH_ATWeapons.DH_BazookaExhaustDamType'
-    MuzzleBone="warhead1"  //TODO: not right, find the right one
+    MuzzleBone="warhead1"
     AmmoClass=class'DH_ATWeapons.DH_BazookaAmmo'
     ProjectileClass=class'DH_ATWeapons.DH_BazookaRocket'
 }
-
