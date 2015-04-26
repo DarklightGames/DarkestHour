@@ -3875,6 +3875,13 @@ simulated function DrawFadeToBlack(Canvas Canvas)
     Canvas.ColorModulate.W = HudOpacity/255;
 }
 
+exec function ShowDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bShowDebugInfo = !bShowDebugInfo;
+    }
+}
 defaultproperties
 {
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
