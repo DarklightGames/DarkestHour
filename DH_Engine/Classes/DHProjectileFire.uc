@@ -55,49 +55,45 @@ function DoFireEffect()
     local Actor   Other;
     local int     ProjectileID;
     local int     SpawnCount;
-    local float   theta;
+    local float   Theta;
     local coords  MuzzlePosition;
 
-    Instigator.MakeNoise(1.0);
+    if (Instigator != none)
+    {
+        Instigator.MakeNoise(1.0);
+    }
+
     Weapon.GetViewAxes(X, Y, Z);
 
-    if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
+    // Check if projectile would spawn through something like a wall and adjust start location accordingly
+    if (Instigator != none && (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed))
     {
         StartTrace = Instigator.Location + Instigator.EyePosition();
         StartProj = StartTrace + X * ProjSpawnOffset.X;
 
-        // check if projectile would spawn through a wall and adjust start location accordingly
-        Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-
-        if (Other != none)
-        {
-            StartProj = HitLocation;
-        }
+        Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false); // false means only trace world geometry
     }
     else
     {
         MuzzlePosition = Weapon.GetMuzzleCoords();
-
-        // Get the muzzle position and scale it down 5 times (since the model is scaled up 5 times in the editor)
         StartTrace = MuzzlePosition.Origin - Weapon.Location;
-        StartTrace = StartTrace * 0.2;
+        StartTrace = StartTrace * 0.2; // scale the muzzle position down 5 times, since the model is scaled up 5 times in the editor
         StartTrace = Weapon.Location + StartTrace;
-
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
-
         // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
-        if (Other != none)
-        {
-            StartProj = HitLocation;
-        }
+        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);
+    }
+
+    if (Other != none)
+    {
+        StartProj = HitLocation;
     }
 
     Aim = AdjustAim(StartProj, AimError);
 
-    // For free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim && Instigator.IsHumanControlled())
+    // For free-aim, just use where the muzzle bone is pointing
+    if (Instigator != none && !Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.IsHumanControlled() && Instigator.Weapon.bUsesFreeAim)
     {
         Aim = rotator(MuzzlePosition.XAxis);
     }
@@ -135,9 +131,9 @@ function DoFireEffect()
 
             for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
-                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
-                X.X = Cos(theta);
-                X.Y = Sin(theta);
+                Theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
+                X.X = Cos(Theta);
+                X.Y = Sin(Theta);
                 X.Z = 0.0;
                 SpawnProjectile(StartProj, rotator(X >> Aim));
             }
@@ -151,9 +147,8 @@ function DoFireEffect()
 
 function CalcSpreadModifiers()
 {
-    local float  MovementPctModifier;
-    local float  PlayerSpeed;
     local ROPawn ROP;
+    local float  PlayerSpeed, MovementPctModifier;
 
     ROP = ROPawn(Instigator);
 
@@ -162,9 +157,8 @@ function CalcSpreadModifiers()
         return;
     }
 
-    PlayerSpeed = VSize(ROP.Velocity);
-
     // Calc spread based on movement speed
+    PlayerSpeed = VSize(ROP.Velocity);
     MovementPctModifier = PlayerSpeed / ROP.default.GroundSpeed;
     Spread = default.Spread + default.Spread * MovementPctModifier;
 
@@ -183,23 +177,23 @@ function CalcSpreadModifiers()
         Spread *= RestDeploySpreadModifier;
     }
 
-    // Make the spread crazy if your jumping
-    if (Instigator.Physics == PHYS_Falling)
+    // Make the spread crazy if you're jumping
+    if (ROP.Physics == PHYS_Falling)
     {
         Spread *= 500.0;
     }
 
-    if (!Instigator.Weapon.bUsingSights  && !Instigator.bBipodDeployed)
+    if (!ROP.Weapon.bUsingSights  && !ROP.bBipodDeployed)
     {
         Spread *= HipSpreadModifier;
     }
 
-    if (Instigator.bBipodDeployed)
+    if (ROP.bBipodDeployed)
     {
         Spread *= BipodDeployedSpreadModifier;
     }
 
-    if (ROP.LeanAmount != 0)
+    if (ROP.LeanAmount != 0.0)
     {
         Spread *= LeanSpreadModifier;
     }
@@ -214,30 +208,26 @@ function CalcSpreadModifiers()
 *
 * modified by: Ramm 10/13/04
 * =================================================================================== */
-function projectile SpawnProjectile(vector Start, Rotator Dir)
+function Projectile SpawnProjectile(vector Start, Rotator Dir)
 {
     local Projectile         SpawnedProjectile;
     local vector             ProjectileDir, End, HitLocation, HitNormal;
     local Actor              Other;
     local ROPawn             HitPawn;
-    local DHWeaponAttachment WeapAttach;
+    local ROWeaponAttachment WeapAttach;
     local array<int>         HitPoints;
     local bool               bSpawnedTracer;
 
-     // do any additional pitch changes before launching the projectile
-    Dir.Pitch += AddedPitch;
+    Dir.Pitch += AddedPitch; // do any additional pitch changes before launching the projectile
 
-    // Perform prelaunch trace
+    // Perform pre-launch trace
     if (bUsePreLaunchTrace)
     {
         ProjectileDir = vector(Dir);
         End = Start + PreLaunchTraceDistance * ProjectileDir;
 
-        // Lets avoid all that casting
-        WeapAttach = DHWeaponAttachment(Weapon.ThirdPersonActor);
-
         // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound triggering
+        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0); // WhizType was 1, but set to 0 to prevent sound triggering
 
         // This is a bit of a hack, but it prevents bots from killing other players in most instances
         if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
@@ -247,9 +237,11 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
         if (Other != none && Other != Instigator && Other.Base != Instigator)
         {
+            WeapAttach = ROWeaponAttachment(Weapon.ThirdPersonActor);
+
             if (!Other.bWorldGeometry)
             {
-                // Update hit effect except for pawns (blood) other than vehicles.
+                // Update hit effect except for pawns (blood), other than vehicles
                 if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') && !Other.IsA('ROVehicleWeapon')))
                 {
                     WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
