@@ -3389,17 +3389,7 @@ simulated function MantleLowerWeapon()
     if (DHWeapon(Weapon) != none)
     {
         DHWeapon(Weapon).bIsMantling = true;
-        DHWeapon(Weapon).GoToState('StartMantle');
-    }
-    else if (DHExplosiveWeapon(Weapon) != none)
-    {
-        DHExplosiveWeapon(Weapon).bIsMantling = true;
-        DHExplosiveWeapon(Weapon).GoToState('StartMantle');
-    }
-    else if (DH_BinocularsItem(Weapon) != none)
-    {
-        DH_BinocularsItem(Weapon).bIsMantling = true;
-        DH_BinocularsItem(Weapon).GoToState('StartMantle');
+        DHWeapon(Weapon).GotoState('StartMantle');
     }
 }
 
@@ -3408,14 +3398,6 @@ simulated function MantleRaiseWeapon()
     if (DHWeapon(Weapon) != none)
     {
         DHWeapon(Weapon).bIsMantling = false;
-    }
-    else if (DHExplosiveWeapon(Weapon) != none)
-    {
-        DHExplosiveWeapon(Weapon).bIsMantling = false;
-    }
-    else if (DH_BinocularsItem(Weapon) != none)
-    {
-        DH_BinocularsItem(Weapon).bIsMantling = false;
     }
 }
 
