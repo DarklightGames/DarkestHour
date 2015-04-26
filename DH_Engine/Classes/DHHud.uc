@@ -39,7 +39,7 @@ var  bool               bSetColour;         // whether we've set the Allied colo
 var  float              ObituaryFadeInTime;
 var  float              ObituaryDelayTime;
 
-var  Obituary           DHObituaries[8];
+var  array<Obituary>    DHObituaries;
 
 var  const float        VOICE_ICON_DIST_MAX;
 
@@ -334,22 +334,11 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 // Adds a death message to the HUD
 function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
-    local int i;
+    local Obituary O;
 
     if (Victim == none)
     {
         return;
-    }
-
-    if (ObituaryCount == arraycount(DHObituaries))
-    {
-        for (i = 1; i < arraycount(DHObituaries); ++i)
-        {
-            DHObituaries[i - 1] = DHObituaries[i];
-        }
-
-        ObituaryCount--;
-        DHObituaries[ObituaryCount].KillerName = "";
     }
 
     if (!bSetColour)
@@ -359,29 +348,25 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
 
     if (Killer != none && Killer != Victim)
     {
-        DHObituaries[ObituaryCount].KillerName = Killer.PlayerName;
-        DHObituaries[ObituaryCount].KillerColor = GetTeamColour(Killer.Team.TeamIndex);
+        O.KillerName = Killer.PlayerName;
+        O.KillerColor = GetTeamColour(Killer.Team.TeamIndex);
     }
 
-    DHObituaries[ObituaryCount].VictimName = Victim.PlayerName;
-    DHObituaries[ObituaryCount].VictimColor = GetTeamColour(Victim.Team.TeamIndex);
-    DHObituaries[ObituaryCount].DamageType = DamageType;
-    DHObituaries[ObituaryCount].EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
+    O.VictimName = Victim.PlayerName;
+    O.VictimColor = GetTeamColour(Victim.Team.TeamIndex);
+    O.DamageType = DamageType;
+    O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
 
     // Making the player's name show up in white in the kill list
-    if (PlayerOwner != none && Killer != none)
+    if (PlayerOwner != none &&
+        Killer != none &&
+        PlayerOwner.PlayerReplicationInfo != none &&
+        PlayerOwner.PlayerReplicationInfo.PlayerName == Killer.PlayerName)
     {
-        if (PlayerOwner.PlayerReplicationInfo != none)
-        {
-            // When the player kills someone
-            if (PlayerOwner.PlayerReplicationInfo.PlayerName == Killer.PlayerName)
-            {
-                DHObituaries[ObituaryCount].KillerColor = WhiteColor;
-            }
-        }
+        O.KillerColor = WhiteColor;
     }
 
-    ObituaryCount++;
+    DHObituaries[DHObituaries.Length] = O;
 }
 
 // Modified to correct bug that sometimes screwed up layout of critical message, resulting in very long text lines going outside of message background & sometimes off screen
@@ -3094,6 +3079,7 @@ function DisplayMessages(Canvas C)
     local int   i;
     local float X, Y, XL, YL, Scale, TimeOfDeath, FadeInBeginTime, FadeInEndTime, FadeOutBeginTime;
     local byte  Alpha;
+    local Obituary O;
 
     super(HudBase).DisplayMessages(C);
 
@@ -3102,16 +3088,13 @@ function DisplayMessages(Canvas C)
         return;
     }
 
-    while (DHObituaries[0].VictimName != "" && DHObituaries[0].EndOfLife < Level.TimeSeconds)
+    // Removes expired obituaries
+    for (i = 0; i < DHObituaries.Length; ++i)
     {
-        for (i = 1; i < ObituaryCount; ++i)
+        if (Level.TimeSeconds > DHObituaries[i].EndOfLife)
         {
-            DHObituaries[i - 1] = DHObituaries[i];
+            DHObituaries.Remove(i--, 1);
         }
-
-        ObituaryCount--;
-        DHObituaries[ObituaryCount].VictimName = "";
-        DHObituaries[ObituaryCount].KillerName = "";
     }
 
     Scale = C.ClipX / 1600.0;
@@ -3126,12 +3109,14 @@ function DisplayMessages(Canvas C)
         Y += 2.0 * Y + (HintCoords.Y + HintCoords.YL) * C.ClipY;
     }
 
-    for (i = 0; i < ObituaryCount; ++i)
+    for (i = 0; i < DHObituaries.Length; ++i)
     {
-        TimeOfDeath = DHObituaries[i].EndOfLife - ObituaryLifeSpan;
+        O = DHObituaries[i];
+
+        TimeOfDeath = O.EndOfLife - ObituaryLifeSpan;
         FadeInBeginTime = TimeOfDeath + ObituaryDelayTime;
         FadeInEndTime = FadeInBeginTime + ObituaryFadeInTime;
-        FadeOutBeginTime = DHObituaries[i].EndOfLife - ObituaryFadeInTime;
+        FadeOutBeginTime = O.EndOfLife - ObituaryFadeInTime;
 
         //Death message delay and fade in - Basnett, 2011
         if (Level.TimeSeconds < FadeInBeginTime)
@@ -3150,31 +3135,31 @@ function DisplayMessages(Canvas C)
             Alpha = Byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / ObituaryFadeInTime) * 255.0)));
         }
 
-        C.TextSize(DHObituaries[i].VictimName, XL, YL);
+        C.TextSize(O.VictimName, XL, YL);
 
         X = C.ClipX - 8.0 * Scale - XL;
 
         C.SetPos(X, Y + 20.0 * Scale - YL * 0.5);
-        C.DrawColor = DHObituaries[i].VictimColor;
+        C.DrawColor = O.VictimColor;
         C.DrawColor.A = Alpha;
-        C.DrawTextClipped(DHObituaries[i].VictimName);
+        C.DrawTextClipped(O.VictimName);
 
         X -= 48.0 * Scale;
 
         C.SetPos(X, Y);
         C.DrawColor = WhiteColor;
         C.DrawColor.A = Alpha;
-        C.DrawTileScaled(GetDamageIcon(DHObituaries[i].DamageType), Scale * 1.25, Scale * 1.25);
+        C.DrawTileScaled(GetDamageIcon(O.DamageType), Scale * 1.25, Scale * 1.25);
 
-        if (DHObituaries[i].KillerName != "")
+        if (O.KillerName != "")
         {
-            C.TextSize(DHObituaries[i].KillerName, XL, YL);
+            C.TextSize(O.KillerName, XL, YL);
             X -= 8.0 * Scale + XL;
 
             C.SetPos(X, Y + 20.0 * Scale - YL * 0.5);
-            C.DrawColor = DHObituaries[i].KillerColor;
+            C.DrawColor = O.KillerColor;
             C.DrawColor.A = Alpha;
-            C.DrawTextClipped(DHObituaries[i].KillerName);
+            C.DrawTextClipped(O.KillerName);
         }
 
         Y += 44.0 * Scale;
