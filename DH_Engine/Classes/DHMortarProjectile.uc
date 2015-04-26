@@ -176,22 +176,22 @@ simulated singular function Touch(Actor Other)
 
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    // This is to prevent jerks from walking in front of the mortar and blowing us up
-    if (DHPawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0)
+    if (Other == Instigator || Other.Base == Instigator || ROBulletWhipAttachment(Other) != none)
     {
         return;
     }
 
-    // Matt TEST - we are doubling up calls to Explode here, as the super also calls it - talk with Basnett & confirm we need the Explode version below, in which case presumably ditch the Super
-    super.ProcessTouch(Other, HitLocation); // Super from Projectile just does: if (Other != Instigator) Explode(HitLocation, Normal(HitLocation - Other.Location));
+    // This is to prevent jerks from walking in front of the mortar and blowing us up
+    if (DHPawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0) // within approx 2 metres
+    {
+        return;
+    }
 
-    Explode(HitLocation, Normal(Other.Location - Location));
+    Explode(HitLocation, Normal(HitLocation - Other.Location));
 }
 
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    super.HitWall(HitNormal, Wall);
-
     Explode(Location, HitNormal);
 }
 
