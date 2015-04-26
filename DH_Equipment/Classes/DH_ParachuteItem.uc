@@ -192,27 +192,19 @@ simulated state LoweringWeapon
 // Overwritten to prevent 1st person arms & chute changing pitch rotation
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local rotator  RollMod;
-    local rotator  YawMod;
-    local ROPlayer Playa;
+    local rotator YawMod;
 
-    if (Instigator == none)
+    if (Instigator != none)
     {
-        return;
+        Canvas.DrawActor(none, false, true);
+        SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
+        YawMod.Yaw = Instigator.GetViewRotation().Yaw;
+        SetRotation(YawMod);
+
+        bDrawingFirstPerson = true;
+        Canvas.DrawActor(self, false, false, 90.0);
+        bDrawingFirstPerson = false;
     }
-
-    // Lets avoid having to do multiple casts every tick - Ramm
-    Playa = ROPlayer(Instigator.Controller);
-
-    Canvas.DrawActor(none, false, true);    // amb: Clear the z-buffer here
-    SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
-    RollMod = Instigator.GetViewRotation();
-    YawMod.Yaw = RollMod.Yaw;
-    SetRotation(YawMod);
-
-    bDrawingFirstPerson = true;
-    Canvas.DrawActor(self, false, false, 90.0);   //DisplayFOV);
-    bDrawingFirstPerson = false;
 }
 
 simulated function AnimEnd(int Channel)
