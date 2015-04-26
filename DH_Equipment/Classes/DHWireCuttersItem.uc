@@ -98,6 +98,7 @@ simulated state Cutting
             P.ServerClearObstacle(ObstacleBeingCut.Info.Index);
         }
 
+        GotoState('');
         PlayAnim('cutEnd', 1.0, 0.2);
     }
 
@@ -127,9 +128,6 @@ simulated state Cutting
             case 'cutHout':
                 PlayAnim('cutVin');
                 break;
-            case 'cutEnd':
-                GotoState('');
-                break;
             default:
                 break;
         }
@@ -141,6 +139,7 @@ simulated state Cutting
 
         if (ObstacleBeingCut == none || ObstacleBeingCut.Info.IsCleared())
         {
+            GotoState('');
             PlayAnim('cutEnd', 1.0, 0.2);
         }
     }
