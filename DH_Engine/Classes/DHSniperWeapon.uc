@@ -10,16 +10,16 @@ class DHSniperWeapon extends DHProjectileWeapon
 #exec OBJ LOAD FILE=..\Textures\ScopeShaders.utx
 #exec OBJ LOAD FILE=InterfaceArt_tex.utx
 
-var()       int         lenseMaterialID;        // Used since material id's seem to change alot
+var()       int         LensMaterialID;        // Used since material id's seem to change alot
 
-var()       float       scopePortalFOVHigh;     // The FOV to zoom the scope portal by.
-var()       float       scopePortalFOV;         // The FOV to zoom the scope portal by.
+var()       float       ScopePortalFOVHigh;     // The FOV to zoom the scope portal by.
+var()       float       ScopePortalFOV;         // The FOV to zoom the scope portal by.
 
 // Not sure if these pitch vars are still needed now that we use Scripted Textures. We'll keep for now in case they are - Ramm 08/14/04
-var()       int         scopePitch;             // Tweaks the pitch of the scope firing angle
-var()       int         scopeYaw;               // Tweaks the yaw of the scope firing angle
-var()       int         scopePitchHigh;         // Tweaks the pitch of the scope firing angle high detail scope
-var()       int         scopeYawHigh;           // Tweaks the yaw of the scope firing angle high detail scope
+var()       int         ScopePitch;             // Tweaks the pitch of the scope firing angle
+var()       int         ScopeYaw;               // Tweaks the yaw of the scope firing angle
+var()       int         ScopePitchHigh;         // Tweaks the pitch of the scope firing angle high detail scope
+var()       int         ScopeYawHigh;           // Tweaks the yaw of the scope firing angle high detail scope
 
 // 3d Scope vars
 var   ScriptedTexture   ScopeScriptedTexture;   // Scripted texture for 3d scopes
@@ -160,7 +160,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
     if (bPlayerViewIsZoomed && bUsingSights)
     {
-        Skins[LenseMaterialID] = ScriptedTextureFallback;
+        Skins[LensMaterialID] = ScriptedTextureFallback;
 
         if (!bUsingSights)
         {
@@ -182,7 +182,7 @@ simulated event RenderOverlays(Canvas Canvas)
     }
     else
     {
-        Skins[LenseMaterialID] = ScriptedTextureFallback;
+        Skins[LensMaterialID] = ScriptedTextureFallback;
         SetRotation(RollMod);
         bDrawingFirstPerson = true;
         Canvas.DrawActor(self, false, false, DisplayFOV);

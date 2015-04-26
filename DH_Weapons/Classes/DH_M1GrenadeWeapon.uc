@@ -16,7 +16,6 @@ defaultproperties
     ItemName="Mk II Grenade"
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
     PlayerViewOffset=(X=15.0,Y=15.0)
-//  PutDownAnim="putaway" // Matt: have renamed animation (in the animation file) to the standard "Put_away" used in all other grenades
     FuzeLength=4.0
     bHasReleaseLever=true
     LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'

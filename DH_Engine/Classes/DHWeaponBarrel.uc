@@ -256,7 +256,7 @@ defaultproperties
     BarrelCoolingRate=1.0
     FiringHeatIncrement=1.0
     BarrelTimerRate=0.1
-    DrawType=DT_none
+    DrawType=DT_None
     bHidden=true
     bReplicateMovement=false
     RemoteRole=ROLE_None

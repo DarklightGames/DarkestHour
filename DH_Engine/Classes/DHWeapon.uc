@@ -74,7 +74,7 @@ simulated state StartMantle extends Busy
         // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
         if (!bIsMantling)
         {
-            GoToState('RaisingWeapon');
+            GotoState('RaisingWeapon');
         }
         else
         {

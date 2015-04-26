@@ -5,14 +5,14 @@
 
 class DH_ParachuteItem extends DHWeapon;
 
-var bool    bUsedParachute;
-
-var name    DeployChuteAnim;
-var name    UndeployChuteAnim;
+var     bool    bUsedParachute;
+var     name    DeployChuteAnim;
+var     name    UndeployChuteAnim;
 
 //=============================================================================
 // Functions overridden because parachutes don't shoot
 //=============================================================================
+
 simulated function ClientWeaponSet(bool bPossiblySwitch)
 {
     Instigator = Pawn(Owner);
@@ -22,6 +22,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     if (Instigator == none)
     {
         GotoState('PendingClientWeaponSet');
+
         return;
     }
 
@@ -214,7 +215,7 @@ simulated event RenderOverlays(Canvas Canvas)
     bDrawingFirstPerson = false;
 }
 
-simulated function AnimEnd(int channel)
+simulated function AnimEnd(int Channel)
 {
     if (ClientState == WS_ReadyToFire)
     {

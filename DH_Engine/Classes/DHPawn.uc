@@ -538,7 +538,7 @@ simulated function ProcessHitFX()
         {
             if (DHHeadgear(HeadGear).bIsHelmet)
             {
-                DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
+                DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
             }
 
             HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
@@ -629,7 +629,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         {
             if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
             {
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
+                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
             }
 
             TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
@@ -646,7 +646,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
 
         if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
         {
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
         }
 
         TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
@@ -680,7 +680,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         InstigatedBy = DelayedDamageInstigatorController.Pawn;
     }
 
-    if (Physics == PHYS_none && DrivenVehicle == none)
+    if (Physics == PHYS_None && DrivenVehicle == none)
     {
         SetMovementPhysics();
     }
@@ -820,7 +820,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (bIsMantling)
     {
         CancelMantle();
-        DHPlayer(Controller).GoToState('PlayerWalking');
+        DHPlayer(Controller).GotoState('PlayerWalking');
         DHPlayer(Controller).SetTimer(0.0, false);
     }
 }
@@ -1016,13 +1016,13 @@ function LoadWeapon(Pawn Gunner)
             // Send notification message to gunner
             if (DHPlayer(Gunner.Controller) != none)
             {
-                DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo);
+                DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo); // been reloaded by [player]
             }
 
             // Send notification message to loader
             if (PlayerController(Controller) != none)
             {
-                PlayerController(Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo);
+                PlayerController(Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // you loaded [player]
             }
 
             // Score point
@@ -1679,7 +1679,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Stop damage overlay from overriding burning overlay if necessary
 simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 {
-    WeaponState = GS_none;
+    WeaponState = GS_None;
 
     if (PlayerController(Controller) != none)
     {
@@ -1802,7 +1802,7 @@ singular function GiveChute()
     // Make sure player doesn't already have a parachute
     if (RI != none)
     {
-        for (i = RI.GivenItems.Length - 1; i >= 0; i--)
+        for (i = RI.GivenItems.Length - 1; i >= 0; --i)
         {
             ItemString = RI.GivenItems[i];
 
@@ -1950,7 +1950,7 @@ function AddDefaultInventory()
 
             if (RI != none)
             {
-                for (i = RI.GivenItems.Length - 1; i >= 0; i--)
+                for (i = RI.GivenItems.Length - 1; i >= 0; --i)
                 {
                     CreateInventory(RI.GivenItems[i]);
                 }
@@ -2548,9 +2548,9 @@ simulated event SetAnimAction(name NewAction)
         else if (UsedAction == 'ResetRoot')
         {
             ResetRootBone();
-            GoToState('');
+            GotoState('');
         }
-        else if (Physics == PHYS_none || (Level.Game != none && Level.Game.IsInState('MatchOver')))
+        else if (Physics == PHYS_None || (Level.Game != none && Level.Game.IsInState('MatchOver')))
         {
             PlayAnim(UsedAction,, 0.1);
             AnimBlendToAlpha(1, 0.0, 0.05);
@@ -2559,7 +2559,7 @@ simulated event SetAnimAction(name NewAction)
         {
             if (CheckTauntValid(UsedAction))
             {
-                if (WeaponState == GS_none || WeaponState == GS_Ready)
+                if (WeaponState == GS_None || WeaponState == GS_Ready)
                 {
                     AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
                     PlayAnim(UsedAction,, 0.1, 1.0);
@@ -2568,7 +2568,7 @@ simulated event SetAnimAction(name NewAction)
             }
             else if (PlayAnim(UsedAction))
             {
-                if (Physics != PHYS_none)
+                if (Physics != PHYS_None)
                 {
                     bWaitForAnim = true;
                 }
@@ -2585,7 +2585,7 @@ simulated event SetAnimAction(name NewAction)
         }
         else // running taunt
         {
-            if (WeaponState == GS_none || WeaponState == GS_Ready)
+            if (WeaponState == GS_None || WeaponState == GS_Ready)
             {
                 AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
                 PlayAnim(UsedAction,, 0.1, 1.0);
@@ -2835,7 +2835,7 @@ function PreMantle()
     SetPhysics(PHYS_Flying);
 
     bCollideWorld = false;
-    WeaponAttachment.SetDrawType(DT_none);
+    WeaponAttachment.SetDrawType(DT_None);
     AirSpeed = default.GroundSpeed;
     AccelRate = 50000.0;
 
@@ -3737,7 +3737,7 @@ function DropWeaponInventory(vector TossVel)
 {
     local Inventory Inv;
     local Weapon    W;
-    local vector    X,Y,Z;
+    local vector    X, Y, Z;
     local int       i;
     local array<Inventory> InventoryList;
 
@@ -4131,7 +4131,7 @@ simulated state DivingToProne
 
         NewHeight = default.CollisionHeight - ProneHeight;
 
-        if (WeaponAttachment != None)
+        if (WeaponAttachment != none)
             Anim = WeaponAttachment.PA_DiveToProneEndAnim;
         else
             Anim = DiveToProneEndAnim;

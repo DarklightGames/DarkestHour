@@ -177,7 +177,7 @@ simulated function Fire(float F)
 defaultproperties
 {
     ItemName="Wire Cutters"
-    mesh=mesh'DH_Wirecutters_1st.wirecutters'
+    Mesh=mesh'DH_Wirecutters_1st.wirecutters'
     DrawScale=1.0
     DisplayFOV=70
     IronSightDisplayFOV=70

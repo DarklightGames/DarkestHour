@@ -64,7 +64,7 @@ function InitDroppedPickupFor(Inventory Inv)
     }
 }
 
-// Matt: modified (with a couple of extra class variables) so this only happens if weapon has a barrel to cool & also to stop it reducing barrel temperature below the level temperature
+// Modified (with a couple of extra class variables) so this only happens if weapon has a barrel to cool & also to stop it reducing barrel temperature below the level temperature
 function Tick(float DeltaTime)
 {
     if (bHasBarrel && Role == ROLE_Authority)
@@ -116,7 +116,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     AmbientGlow=64
     PickupMessage="You got the %w"
-    TouchMessage="Pick Up: %w"
+    TouchMessage="Pick up: %w"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0

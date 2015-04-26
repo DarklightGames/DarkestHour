@@ -55,7 +55,7 @@ simulated function PostBeginPlay()
     if (Level.bDropDetail)
     {
         bDynamicLight = false;
-        LightType = LT_none;
+        LightType = LT_None;
     }
 
     super.PostBeginPlay();

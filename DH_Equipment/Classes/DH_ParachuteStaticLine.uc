@@ -256,7 +256,7 @@ simulated function Fire(float F)
     return;
 }
 
-simulated function AnimEnd(int channel)
+simulated function AnimEnd(int Channel)
 {
     if (ClientState == WS_ReadyToFire)
     {

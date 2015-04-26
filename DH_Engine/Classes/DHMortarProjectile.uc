@@ -420,7 +420,7 @@ defaultproperties
     HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
     HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-    DrawType=DT_none
+    DrawType=DT_None
     LifeSpan=60.0
     bBlockHitPointTraces=false
 }
