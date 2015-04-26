@@ -3888,16 +3888,13 @@ function DropWeaponInventory(vector TossVel)
     {
         W = Weapon(InventoryList[i]);
 
-        if (W != none && W.bCanThrow)
+        if (W != none && W.CanThrow()) // check weapon's CanThrow(), allowing certain weapons to prevent themselves being dropped when player dies
         {
-            if (W.IsA('BinocularsItem')) //TODO: this is shit, need a way to define something as being droppable but not on death
-            {
-                W.Destroy();
-            }
-            else
-            {
-                W.DropFrom(Location + (0.8 * CollisionRadius * X) - (0.5 * CollisionRadius * Y));
-            }
+            W.DropFrom(Location + (0.8 * CollisionRadius * X) - (0.5 * CollisionRadius * Y));
+        }
+        else
+        {
+            W.Destroy();
         }
     }
 }
