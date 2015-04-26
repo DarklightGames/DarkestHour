@@ -20,6 +20,7 @@ var         name        BayoDetachAnim;             // anim for detaching the ba
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
 var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
 
+var         name        MuzzleBone;                 // muzzle bone, used to get coordinates
 var         float       IronSwitchAnimRate;         // the rate to play the ironsight animation at
 
 // Empty animations used for weapons that have visible empty states (pistols, PTRD, etc)
@@ -42,10 +43,10 @@ var()       name        SelectEmptyAnim;            // animation for drawing an 
 var()       name        PutDownEmptyAnim;           // animation for putting away an empty weapon
 
 // Manual bolting anims
-var()       name        BoltHipAnim;                // animation for crawling forward
-var()       name        BoltIronAnim;               // animation for crawling backward
-var()       name        PostFireIronIdleAnim;       // animation for crawling forward
-var()       name        PostFireIdleAnim;           // animation for crawling backward
+var()       name        BoltHipAnim;                // animation for bolting after hip firing
+var()       name        BoltIronAnim;               // animation for bolting while in ironsight view
+var()       name        PostFireIdleAnim;           // animation after hip firing
+var()       name        PostFireIronIdleAnim;       // animation after firing while in ironsight view
 
 // Ammo/Magazines
 var         array<int>  PrimaryAmmoArray;           // the array of magazines and thier ammo amounts this weapon has
@@ -54,8 +55,13 @@ var         int         MaxNumPrimaryMags;          // the maximum number of mag
 var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
 var         int         CurrentMagIndex;            // the index of the magazine currently in use
 var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
+var         bool        bTwoMagsCapacity;           // this weapon can be loaded with two magazines
 var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
-var         int         FillAmmoMagCount;
+var         bool        bDiscardMagOnReload;        // when weapon is reloaded, the previously loaded magazine is discarded
+var         bool        bDoesNotRetainLoadedMag;    // this weapon does not retain its loaded 'mag' when put away or dropped & it doesn't start loaded (e.g. bazooka or panzerschreck)
+var         int         FillAmmoMagCount;           // the number of mags that a resupply point will try to add each time
+var         bool        bCanBeResupplied;           // the weapon can be resupplied by another player
+var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied
 
 // Barrels
 var     bool                bTrackBarrelHeat;       // we should track barrel heat for this MG
@@ -68,8 +74,8 @@ var     byte                BarrelIndex;            // barrel being used
 var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
 var     byte                InitialBarrels;         // barrels initially given
 
-var     class<DHWeaponBarrel>  BarrelClass;            // barrel type we use now
-var     array<DHWeaponBarrel>  Barrels;                // The array of carried MG barrels for this weapon
+var     class<DHWeaponBarrel>  BarrelClass;         // barrel type we use now
+var     array<DHWeaponBarrel>  Barrels;             // The array of carried MG barrels for this weapon
 
 // Barrel steam info
 var     class<Emitter>      ROBarrelSteamEmitterClass;
@@ -88,16 +94,12 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerRequestReload, ServerZoomIn, ServerZoomOut, ServerChangeBayoStatus, ServerWorkBolt, ServerSwitchBarrels;
+        ServerRequestReload, ServerZoomIn, ServerZoomOut, ServerChangeBayoStatus, ServerWorkBolt, ServerSwitchBarrels,
+        ServerLogAmmo; // this one only during development
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientDoReload, ClientCancelReload, ToggleBarrelSteam;
-}
-
-// Implemented in subclasses
-function ServerWorkBolt()
-{
 }
 
 // Play an idle animation on the server so that weapon will be in the right position for free-aim calculations (not the ref pose)
@@ -105,53 +107,88 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Role == ROLE_Authority && !Instigator.IsLocallyControlled())
+    if (Role == ROLE_Authority && !InstigatorIsLocallyControlled())
     {
         PlayAnim(IdleAnim, IdleAnimRate, 0.0);
     }
 }
 
+// New state containing common function overrides from states that extend state Busy, so instead they extend WeaponBusy to reduce code repetition
+simulated state WeaponBusy extends Busy
+{
+    simulated function bool ReadyToFire(int Mode)
+    {
+        return false;
+    }
+
+    simulated function bool ShouldUseFreeAim()
+    {
+        return false;
+    }
+
+    simulated function Timer()
+    {
+        GotoState('Idle');
+    }
+}
+
+// Implemented in subclasses
+function ServerWorkBolt()
+{
+}
+
+// Implemented in subclasses
+simulated function ForceUndeploy()
+{
+}
+
 // Debug logging to show how much ammo we have in our mags
-exec function LogAmmo()
+simulated exec function LogAmmo()
 {
     local int i;
 
-    if (!class'ROEngine.ROLevelInfo'.static.RODebugMode())
+    if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        return;
-    }
-
-    for (i = 0; i < PrimaryAmmoArray.Length; ++i)
-    {
-        if (i == CurrentMagIndex)
+        if (Role == ROLE_Authority)
         {
-            Log("Current mag has" @ PrimaryAmmoArray[i] @ "ammo");
+            Log("Weapon has" @ AmmoAmount(0) @ "rounds loaded and a total of" @ PrimaryAmmoArray.Length @ "mags");
+
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+            {
+                if (i == CurrentMagIndex)
+                {
+                    Log("Current mag has" @ PrimaryAmmoArray[i] @ "ammo");
+                }
+                else
+                {
+                    Log("Stowed mag has " @ PrimaryAmmoArray[i] @ "ammo");
+                }
+            }
         }
         else
         {
-            Log("Stowed mag has " @ PrimaryAmmoArray[i] @ "ammo");
+            ServerLogAmmo();
         }
     }
+}
 
-    Log("Primary Ammo Count is" @ AmmoAmount(0));
-    Log("There are" @ PrimaryAmmoArray.Length @ "mags");
+function ServerLogAmmo()
+{
+    LogAmmo();
 }
 
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local int      i;
-    local rotator  RollMod;
     local ROPlayer Playa;
     local ROPawn   RPawn;
-    local int      LeanAngle;
-    local rotator  RotOffset;
+    local rotator  RollMod;
+    local int      LeanAngle, i;
 
     if (Instigator == none)
     {
         return;
     }
 
-    // Lets avoid having to do multiple casts every tick - Ramm
     Playa = ROPlayer(Instigator.Controller);
 
     // Don't draw the weapon if we're not viewing our own pawn
@@ -160,174 +197,187 @@ simulated event RenderOverlays(Canvas Canvas)
         return;
     }
 
-    // Draw muzzleflashes/smoke for all fire modes so idle state won't cause emitters to just disappear
+    // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
     Canvas.DrawActor(none, false, true);
 
     for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
-        if (FireMode[i] != none)
-        {
-            FireMode[i].DrawMuzzleFlash(Canvas);
-        }
+        FireMode[i].DrawMuzzleFlash(Canvas);
     }
 
     // Adjust weapon position for lean
     RPawn = ROPawn(Instigator);
 
-    if (RPawn != none && RPawn.LeanAmount != 0)
+    if (RPawn != none && RPawn.LeanAmount != 0.0)
     {
         LeanAngle += RPawn.LeanAmount;
     }
 
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
 
-    if (bUsesFreeAim && !bUsingSights)
-    {
-        // Remove the roll component so the weapon doesn't tilt with the terrain
-        RollMod = Instigator.GetViewRotation();
+    // Remove the roll component so the weapon doesn't tilt with the terrain
+    RollMod = Instigator.GetViewRotation();
+    RollMod.Roll += LeanAngle;
 
-        if (Playa != none)
+    if (IsCrawling())
+    {
+        RollMod.Pitch = CrawlWeaponPitch;
+    }
+
+    if (bUsesFreeAim && !bUsingSights && Playa != none)
+    {
+        if (!IsCrawling())
         {
             RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
-            RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
-
-            RotOffset.Pitch -= Playa.WeaponBufferRotation.Pitch;
-            RotOffset.Yaw -= Playa.WeaponBufferRotation.Yaw;
         }
 
-        RollMod.Roll += LeanAngle;
-
-        if (IsCrawling())
-        {
-            RollMod.Pitch = CrawlWeaponPitch;
-            RotOffset.Pitch = CrawlWeaponPitch;
-        }
+        RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
     }
-    else
-    {
-        RollMod = Instigator.GetViewRotation();
-        RollMod.Roll += LeanAngle;
 
-        if (IsCrawling())
-        {
-            RollMod.Pitch = CrawlWeaponPitch;
-            RotOffset.Pitch = CrawlWeaponPitch;
-        }
-    }
+    SetRotation(RollMod);
+
+    bDrawingFirstPerson = true;
 
     // Use the special actor drawing when in ironsights to avoid the ironsight "jitter"
-    // TODO: This messes up the lighting, and texture environment map shader when using ironsights
+    // TODO: This messes up the lighting & texture environment map shader when using ironsights
     // Maybe use a texrotator to simulate the texture environment map, or just find a way to fix the problems
     if (bUsingSights && Playa != none)
     {
-        bDrawingFirstPerson = true;
-
         Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
-
-        bDrawingFirstPerson = false;
     }
     else
     {
-        SetRotation(RollMod);
-
-        bDrawingFirstPerson = true;
-
         Canvas.DrawActor(self, false, false, DisplayFOV);
-
-        bDrawingFirstPerson = false;
     }
+
+    bDrawingFirstPerson = false;
 }
 
 function SetServerOrientation(rotator NewRotation)
 {
     local rotator WeaponRotation;
 
-    if (bUsesFreeAim && !bUsingSights)
+    if (bUsesFreeAim && !bUsingSights && Instigator != none)
     {
         // Remove the roll component so the weapon doesn't tilt with the terrain
         WeaponRotation = Instigator.GetViewRotation();
-
         WeaponRotation.Pitch += NewRotation.Pitch;
         WeaponRotation.Yaw += NewRotation.Yaw;
-        WeaponRotation.Roll += ROPawn(Instigator).LeanAmount;
+
+        if (ROPawn(Instigator) != none)
+        {
+            WeaponRotation.Roll += ROPawn(Instigator).LeanAmount;
+        }
 
         SetRotation(WeaponRotation);
         SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
     }
 }
 
-// Get the coords for the muzzle bone. Used for free-aim projectile spawning
+// Get the coords for the muzzle bone - used for free-aim projectile spawning
 function coords GetMuzzleCoords()
 {
-    // have to update the location of the weapon before getting the coords
-    SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
+    // Have to update the location of the weapon before getting the coords
+    if (Instigator != none)
+    {
+        SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
+    }
 
-    return GetBoneCoords('Muzzle');
+    return GetBoneCoords(MuzzleBone);
 }
 
-// Returns true if this weapon should use free-aim in this particular state
+// Modified so no free aim if using ironsights or melee attacking
 simulated function bool ShouldUseFreeAim()
 {
-    if (FireMode[1].bMeleeMode && FireMode[1].IsFiring())
-    {
-        return false;
-    }
-
-    if (bUsesFreeAim && !bUsingSights)
-    {
-        return true;
-    }
-
-    return false;
+    return bUsesFreeAim && !bUsingSights && !(FireMode[1].IsFiring() && FireMode[1].bMeleeMode);
 }
 
-// Choose between regular or alt-fire
+// Modified so bots may use a melee attack if really close to their enemy
 function byte BestMode()
 {
     local AIController C;
 
-    C = AIController(Instigator.Controller);
+    if (Instigator != none)
+    {
+        C = AIController(Instigator.Controller);
+    }
 
     if (C == none || C.Enemy == none)
     {
         return 0;
     }
 
-    if (!FireMode[1].bMeleeMode)
+    // If have alt fire melee attack mode, maybe use alt fire if really close to Enemy
+    if (FireMode[1].bMeleeMode)
     {
-        return super.BestMode();
+        if (VSize(C.Enemy.Location - Instigator.Location) < 125.0 && FRand() < 0.3) // 30% chance if within approx 2m
+        {
+            return 1;
+        }
+
+        return 0;
     }
 
-    if (VSize(C.Enemy.Location - Instigator.Location) < 125 && FRand() < 0.3)
-    {
-        return 1;
-    }
-
-    return 0;
+    return super.BestMode();
 }
 
+// Modified to update player's resupply status & to spawn any barrel steam emitter
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    if (Role == ROLE_Authority)
+    {
+        UpdateResupplyStatus(true);
+    }
+
+    super.BringUp(PrevWeapon);
+
+    if (InstigatorIsLocalHuman())
+    {
+        SpawnBarrelSteamEmitter();
+
+        if (bBarrelSteaming)
+        {
+            ToggleBarrelSteam(true);
+        }
+    }
+}
+
+// Modified to update player's resupply status
+simulated function bool PutDown()
+{
+    if (Role == ROLE_Authority)
+    {
+        UpdateResupplyStatus(false);
+    }
+
+    return super.PutDown();
+}
+
+// Modified to prevent a reload if we're putting the weapon away
 state Hidden
 {
-    // Don't allow a reload if we're putting the weapon away
-    simulated function bool AllowReload() {return false;}
+    simulated function bool AllowReload()
+    {
+        return false;
+    }
 }
 
-// Overridden to support projectile weapon specific functionality
+// Modified to handle ironsights, empty anim & bayonet
 simulated state RaisingWeapon
 {
     simulated function BeginState()
     {
-        local int i;
         local name Anim;
+        local int  i;
 
         // If we have quickly raised our sights right after putting the weapon away, take us out of ironsight mode
         if (bUsingSights)
         {
-            ZoomOut(false);
+            ZoomOut();
         }
 
         // Reset any zoom values
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (DisplayFOV != default.DisplayFOV)
             {
@@ -352,8 +402,9 @@ simulated state RaisingWeapon
         if (ClientState == WS_Hidden)
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
+            ClientPlayForceFeedback(SelectForce);
 
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 // Determines if bayonet capable weapon should come up with bayonet on or off
                 if (bHasBayonet)
@@ -390,11 +441,11 @@ simulated state RaisingWeapon
     }
 }
 
-// Overridden to support empty put away anims
+// Modified to support ironsight zoom & empty put away anims
 simulated state LoweringWeapon
 {
     // Don't zoom in when we're lowering the weapon
-    simulated function PerformZoom(bool bZoomStatus)
+    simulated function PerformZoom(bool bZoomIn)
     {
     }
 
@@ -425,7 +476,7 @@ simulated state LoweringWeapon
 
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 for (i = 0; i < NUM_FIRE_MODES; ++i)
                 {
@@ -455,38 +506,29 @@ simulated state LoweringWeapon
             FireMode[i].bServerDelayStartFire = false;
             FireMode[i].bServerDelayStopFire = false;
         }
-
-        ResetPlayerFOV();
     }
 
     simulated function EndState()
     {
         super.EndState();
 
-        if (bUsingSights && Role == ROLE_Authority)
+        // Destroy any barrel steam emitter
+        if (ROBarrelSteamEmitter != none && InstigatorIsLocalHuman())
         {
-            ServerZoomOut(false);
-        }
-
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            // destroy the barrel steam emitter
-            if (ROBarrelSteamEmitter != none)
-            {
-                ROBarrelSteamEmitter.Destroy();
-            }
+            ROBarrelSteamEmitter.Destroy();
         }
     }
-// Take the player out of iron sights if they are in ironsights
+
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
         {
-            ServerZoomOut(false);
+            ZoomOut();
         }
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -498,194 +540,83 @@ Begin:
     }
 }
 
-// Overridden to support taking you out of iron sights when using melee attacks (client & server)
+// Modified to prevent firing if out of ammo or barrel has failed, & to take player out of ironsights if trying to do melee attack in ironsights
 simulated function bool StartFire(int Mode)
 {
-    local int Alt;
-
-    if (!FireMode[Mode].bMeleeMode && AmmoAmount(0) <= 0 || bBarrelFailed)
+    if (!FireMode[Mode].bMeleeMode && (AmmoAmount(Mode) <= 0 || bBarrelFailed))
     {
         return false;
     }
 
-    if (!ReadyToFire(Mode))
+    if (super.StartFire(Mode))
     {
-        return false;
-    }
-
-    if (Mode == 0)
-    {
-        Alt = 1;
-    }
-    else
-    {
-        Alt = 0;
-    }
-
-    FireMode[Mode].bIsFiring = true;
-    FireMode[Mode].NextFireTime = Level.TimeSeconds + FireMode[Mode].PreFireTime;
-
-    if (FireMode[Alt].bModeExclusive)
-    {
-        // prevents rapidly alternating fire modes
-        FireMode[Mode].NextFireTime = FMax(FireMode[Mode].NextFireTime, FireMode[Alt].NextFireTime);
-    }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        if (FireMode[Mode].PreFireTime > 0.0 || FireMode[Mode].bFireOnRelease)
+        // Take the weapon out of ironsights if we're trying to do a melee attack in ironsights
+        if (FireMode[Mode].bMeleeMode)
         {
-            FireMode[Mode].PlayPreFire();
+            if (ROPawn(Instigator) != none)
+            {
+                ROPawn(Instigator).SetMeleeHoldAnims(true);
+            }
+
+            GotoState('UnZoomImmediately');
         }
 
-        FireMode[Mode].FireCount = 0;
+        return true;
     }
 
-    // Take the weapon out of ironsights if we're trying to do a melee attack in ironsights
-    if (FireMode[Mode].bMeleeMode)
-    {
-        ROPawn(Instigator).SetMeleeHoldAnims(true);
-        GotoState('UnZoomImmediately');
-    }
-
-    return true;
+    return false;
 }
 
 //=============================================================================
 // Crawling
 //=============================================================================
 
-simulated event NotifyCrawlMoving()
-{
-    if (!bUsingSights)
-    {
-        super.NotifyCrawlMoving();
-    }
-}
-
+// Modified to handle crawl empty animations & to take the player out of ironsights
 simulated state StartCrawling
 {
-    simulated function bool IsCrawling()
-    {
-        return true;
-    }
-
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
-    {
-        return false;
-    }
-
-    simulated function Timer()
-    {
-        GotoState('Crawling');
-    }
-
-    simulated event WeaponTick(float dt)
-    {
-        local int WeaponPitch;
-
-        // This is only for the visual rotation of the first person weapon client side
-        if (Level.NetMode == NM_DedicatedServer)
-        {
-            return;
-        }
-
-        // Looking straight forward
-        CrawlWeaponPitch = 0;
-
-        if (Level.TimeSeconds - LastStartCrawlingTime < 0.15)
-        {
-            WeaponPitch =  Rotation.Pitch & 65535;
-
-            if (WeaponPitch != CrawlWeaponPitch)
-            {
-
-                if (WeaponPitch > 32768)
-                {
-                    WeaponPitch += CrawlPitchTweenRate * dt;
-
-                    if (WeaponPitch > 65535)
-                    {
-                        WeaponPitch = CrawlWeaponPitch;
-                    }
-                }
-                else
-                {
-                    WeaponPitch -= CrawlPitchTweenRate * dt;
-
-                    if (WeaponPitch <  0)
-                    {
-                        WeaponPitch = CrawlWeaponPitch;
-                    }
-                }
-            }
-
-            CrawlWeaponPitch = WeaponPitch;
-        }
-    }
-
     simulated function PlayIdle()
     {
         local int Direction;
 
-        if (Instigator.IsLocallyControlled())
+        if (InstigatorIsLocallyControlled())
         {
-            Direction = ROPawn(Instigator).Get8WayDirection();
-
-            switch (Direction)
+            if (ROPawn(Instigator) != none)
             {
-                case 0:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
+                Direction = ROPawn(Instigator).Get8WayDirection();
+            }
 
-                    if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
-                    {
-                        LoopAnim(CrawlForwardEmptyAnim, 1.0, 0.2);
-                    }
-                    else if (HasAnim(CrawlForwardAnim))
-                    {
-                        LoopAnim(CrawlForwardAnim, 1.0, 0.2);
-                    }
-
-                    break;
-
-                default:
-
-                    if (AmmoAmount(0) < 1 && HasAnim(CrawlBackwardEmptyAnim))
-                    {
-                        LoopAnim(CrawlBackwardEmptyAnim, 1.0, 0.2);
-                    }
-                    else if (HasAnim(CrawlBackwardAnim))
-                    {
-                        LoopAnim(CrawlBackwardAnim, 1.0, 0.2);
-                    }
-
-                    break;
+            if (Direction == 0 ||  Direction == 2 ||  Direction == 3 || Direction == 4 || Direction == 5)
+            {
+                if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
+                {
+                    LoopAnim(CrawlForwardEmptyAnim, 1.0, 0.2);
+                }
+                else if (HasAnim(CrawlForwardAnim))
+                {
+                    LoopAnim(CrawlForwardAnim, 1.0, 0.2);
+                }
+            }
+            else
+            {
+                if (AmmoAmount(0) < 1 && HasAnim(CrawlBackwardEmptyAnim))
+                {
+                    LoopAnim(CrawlBackwardEmptyAnim, 1.0, 0.2);
+                }
+                else if (HasAnim(CrawlBackwardAnim))
+                {
+                    LoopAnim(CrawlBackwardAnim, 1.0, 0.2);
+                }
             }
         }
     }
 
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -695,60 +626,42 @@ Begin:
             SmoothZoom(false);
         }
     }
+
     // Finish unzooming the player if they are zoomed
-    else if (DisplayFOV != default.DisplayFOV)
+    if (DisplayFOV != default.DisplayFOV && InstigatorIsLocalHuman())
     {
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            SmoothZoom(false);
-        }
+        SmoothZoom(false);
     }
 }
 
+// Modified to handle crawl empty animation
 simulated function PlayStartCrawl()
 {
-    local name  Anim;
-    local float AnimTimer;
-
     if (AmmoAmount(0) < 1 && HasAnim(CrawlStartEmptyAnim))
     {
-        Anim = CrawlStartEmptyAnim;
+        PlayAnimAndSetTimer(CrawlStartEmptyAnim, 1.0, 0.1);
     }
     else
     {
-        Anim = CrawlStartAnim;
-    }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        PlayAnim(Anim, 1.0, FastTweenTime);
-    }
-
-    AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
-
-    if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-    {
-        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
-    }
-    else
-    {
-        SetTimer(AnimTimer, false);
+        PlayAnimAndSetTimer(CrawlStartAnim, 1.0, 0.1);
     }
 }
 
-// Overridden to support empty crawling anims
+// Modified to handle crawl empty animations
 simulated state Crawling
 {
     simulated function PlayIdle()
     {
         local int Direction;
 
-        if (Instigator.IsLocallyControlled())
+        if (InstigatorIsLocallyControlled())
         {
-            Direction = ROPawn(Instigator).Get8WayDirection();
+            if (ROPawn(Instigator) != none)
+            {
+                Direction = ROPawn(Instigator).Get8WayDirection();
+            }
 
-            if (Direction == 0 ||  Direction == 2 ||  Direction == 3 || Direction == 4 ||
-                Direction == 5)
+            if (Direction == 0 ||  Direction == 2 ||  Direction == 3 || Direction == 4 || Direction == 5)
             {
                 if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
                 {
@@ -775,34 +688,23 @@ simulated state Crawling
 
 // Finish unzooming the player if they are zoomed
 Begin:
-    if (DisplayFOV != default.DisplayFOV)
+    if (DisplayFOV != default.DisplayFOV && InstigatorIsLocalHuman())
     {
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            SmoothZoom(false);
-        }
+        SmoothZoom(false);
     }
 }
 
+// Modified to handle crawl empty animation
 simulated function PlayEndCrawl()
 {
-    local name Anim;
-
     if (AmmoAmount(0) < 1 && HasAnim(CrawlEndEmptyAnim))
     {
-        Anim = CrawlEndEmptyAnim;
+        PlayAnimAndSetTimer(CrawlEndEmptyAnim, 1.0);
     }
     else
     {
-        Anim = CrawlEndAnim;
+        PlayAnimAndSetTimer(CrawlEndAnim, 1.0);
     }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        PlayAnim(Anim, 1.0, FastTweenTime);
-    }
-
-    SetTimer(GetAnimDuration(Anim, 1.0) + FastTweenTime, false);
 }
 
 //==============================================================================
@@ -821,16 +723,16 @@ simulated function ShowBayonet()
     SetBoneScale(0, 1.0, BayonetBoneName);
 }
 
+// Triggered by deploy keybind & attempts to attach/detach any bayonet
 simulated exec function Deploy()
 {
-    if (IsBusy() || !bHasBayonet || (FireMode[1] != none && FireMode[1].bMeleeMode && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
+    if (bHasBayonet && !IsBusy() && !(FireMode[1].bMeleeMode && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
     {
-        return;
+        ChangeBayoStatus(!bBayonetMounted);
     }
-
-    ChangeBayoStatus(!bBayonetMounted);
 }
 
+// Attach or detach the bayonet
 simulated function ChangeBayoStatus(bool bBayoStatus)
 {
     if (bBayoStatus)
@@ -860,14 +762,9 @@ function ServerChangeBayoStatus(bool bBayoStatus)
     }
 }
 
-simulated state AttachingBayonet extends Busy
+simulated state AttachingBayonet extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
+    simulated function bool CanStartCrawlMoving()
     {
         return false;
     }
@@ -877,70 +774,30 @@ simulated state AttachingBayonet extends Busy
         return false;
     }
 
-    simulated function bool CanStartCrawlMoving()
-    {
-        return false;
-    }
-
-    simulated function Timer()
-    {
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
-        {
-            GotoState('StartCrawling');
-        }
-        else
-        {
-            GotoState('Idle');
-        }
-    }
-
     simulated function BeginState()
     {
-        local float AnimTimer;
-
         bBayonetMounted = true;
 
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
+        if (ROWeaponAttachment(ThirdPersonActor) != none)
         {
-            DHWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
+            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
         }
 
-        if (Instigator.IsLocallyControlled())
-        {
-            PlayAnim(BayoAttachAnim, 1.0, FastTweenTime);
-        }
+        PlayAnimAndSetTimer(BayoAttachAnim, 1.0, 0.1);
 
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleBayoAttach();
         }
-
-        AnimTimer = GetAnimDuration(BayoAttachAnim, 1.0) + FastTweenTime;
-
-        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        {
-            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
-        }
-        else
-        {
-            SetTimer(AnimTimer, false);
-        }
     }
 
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -948,87 +805,41 @@ Begin:
             }
 
             SmoothZoom(false);
-            ResetPlayerFOV();
         }
     }
 }
 
-simulated state DetachingBayonet extends Busy
+simulated state DetachingBayonet extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
-    {
-        return false;
-    }
-
     simulated function bool CanStartCrawlMoving()
     {
         return false;
     }
 
-    simulated function Timer()
-    {
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
-        {
-            GotoState('StartCrawling');
-        }
-        else
-        {
-            GotoState('Idle');
-        }
-    }
-
     simulated function BeginState()
     {
-        local float AnimTimer;
-
         bBayonetMounted = false;
 
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
+        if (ROWeaponAttachment(ThirdPersonActor) != none)
         {
-            DHWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
+            ROWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
         }
 
-        if (Instigator.IsLocallyControlled())
-        {
-            PlayAnim(BayoDetachAnim, 1.0, FastTweenTime);
-        }
+        PlayAnimAndSetTimer(BayoDetachAnim, 1.0, 0.1);
 
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleBayoDetach();
         }
-
-        AnimTimer = GetAnimDuration(BayoDetachAnim, 1.0) + FastTweenTime;
-
-        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        {
-            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
-        }
-        else
-        {
-            SetTimer(AnimTimer, false);
-        }
     }
 
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -1036,7 +847,6 @@ Begin:
             }
 
             SmoothZoom(false);
-            ResetPlayerFOV();
         }
     }
 }
@@ -1045,27 +855,29 @@ Begin:
 // Ironsight transition functionality
 //=============================================================================
 
+// Triggered by ironsights keybind & toggles ironsights
 simulated function ROIronSights()
 {
     PerformZoom(!bUsingSights);
 }
 
-simulated function PerformZoom(bool bZoomStatus)
+// Zoom in or out of ironsights view
+simulated function PerformZoom(bool bZoomIn)
 {
     if (IsBusy() && !IsCrawling())
     {
         return;
     }
 
-    if (bZoomStatus)
+    if (bZoomIn)
     {
-        if (Instigator.Physics == PHYS_Falling)
+        if (Instigator != none && Instigator.Physics == PHYS_Falling)
         {
             return;
         }
 
-        // Don't allow them to go to iron sights during a melee attack
-        if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
+        // Don't allow them to go to ironsights during a melee attack
+        if (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))
         {
             return;
         }
@@ -1074,7 +886,7 @@ simulated function PerformZoom(bool bZoomStatus)
 
         if (Role < ROLE_Authority)
         {
-            ServerZoomIn(true);
+            ServerZoomIn();
         }
     }
     else
@@ -1083,26 +895,29 @@ simulated function PerformZoom(bool bZoomStatus)
 
         if (Role < ROLE_Authority)
         {
-            ServerZoomOut(true);
+            ServerZoomOut();
         }
     }
 }
 
-simulated function ZoomIn(bool bAnimateTransition)
+// Zoom into ironsights view
+simulated function ZoomIn(optional bool bAnimateTransition)
 {
-    // Make the player stop firing when they go to iron sights
-    if (FireMode[0] != none && FireMode[0].bIsFiring)
-    {
-        FireMode[0].StopFiring();
-    }
-
-    // Don't allow player to go to iron sights while in melee mode
-    if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
+    // Don't allow player to go to ironsights while in melee mode
+    if (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))
     {
         return;
     }
 
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    bUsingSights = true;
+
+    // Make the player stop firing when they go to ironsights
+    if (FireMode[0].bIsFiring)
+    {
+        FireMode[0].StopFiring();
+    }
+
+    if (InstigatorIsLocalHuman())
     {
         SetPlayerFOV(PlayerIronsightFOV);
     }
@@ -1112,21 +927,21 @@ simulated function ZoomIn(bool bAnimateTransition)
         GotoState('IronSightZoomIn');
     }
 
-    bUsingSights = true;
-    ROPawn(Instigator).SetIronSightAnims(true);
-}
-
-function ServerZoomIn(bool bAnimateTransition)
-{
-    ZoomIn(bAnimateTransition);
-}
-
-simulated function ZoomOut(bool bAnimateTransition)
-{
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (ROPawn(Instigator) != none)
     {
-        ResetPlayerFOV();
+        ROPawn(Instigator).SetIronSightAnims(true);
     }
+}
+
+function ServerZoomIn()
+{
+    ZoomIn(true);
+}
+
+// Zoom out of ironsights view
+simulated function ZoomOut(optional bool bAnimateTransition)
+{
+    ResetPlayerFOV();
 
     if (bAnimateTransition)
     {
@@ -1134,62 +949,45 @@ simulated function ZoomOut(bool bAnimateTransition)
     }
 
     bUsingSights = false;
-    ROPawn(Instigator).SetIronSightAnims(false);
+
+    if (ROPawn(Instigator) != none)
+    {
+        ROPawn(Instigator).SetIronSightAnims(false);
+    }
 }
 
-function ServerZoomOut(bool bAnimateTransition)
+function ServerZoomOut()
 {
-    ZoomOut(bAnimateTransition);
+    ZoomOut(true);
 }
 
 simulated function PlayerViewZoom(bool ZoomDirection)
 {
-    if (ZoomDirection)
-    {
-        bPlayerViewIsZoomed = true;
+    bPlayerViewIsZoomed = ZoomDirection;
 
-        if (Instigator != none && PlayerController(Instigator.Controller) != none)
+    if (InstigatorIsHumanControlled())
+    {
+        if (bPlayerViewIsZoomed)
         {
             PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
         }
-    }
-    else
-    {
-        bPlayerViewIsZoomed = false;
-
-        if (Instigator != none && PlayerController(Instigator.Controller) != none)
+        else
         {
             PlayerController(Instigator.Controller).ResetFOV();
         }
     }
 }
 
-simulated state IronSightZoomIn extends Busy
+simulated state IronSightZoomIn extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
-    {
-        return false;
-    }
-
     simulated function bool CanStartCrawlMoving()
     {
         return false;
     }
 
-    simulated function Timer()
-    {
-        GotoState('Idle');
-    }
-
     simulated function BeginState()
     {
-        local name  Anim;
-        local float AnimTimer;
+        local name Anim;
 
         if (AmmoAmount(0) < 1 && HasAnim(IronBringUpEmpty))
         {
@@ -1204,116 +1002,77 @@ simulated state IronSightZoomIn extends Busy
             Anim = IronBringUp;
         }
 
-        if (Instigator.IsLocallyControlled())
-        {
-            PlayAnim(Anim, IronSwitchAnimRate, FastTweenTime);
-        }
-
-        AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
-
-        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        {
-            SetTimer(AnimTimer - (AnimTimer * 0.15), false);
-        }
-        else
-        {
-            SetTimer(AnimTimer, false);
-        }
-
-        SetPlayerFOV(PlayerIronsightFOV);
+        PlayAnimAndSetTimer(Anim, IronSwitchAnimRate, 0.15);
     }
 
     simulated function EndState()
     {
-        local float  TargetDisplayFOV;
-        local vector TargetPVO;
+        SetIronSightFOV();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (bPlayerFOVZooms && InstigatorIsLocallyControlled())
         {
-            if (ScopeDetail == RO_ModelScopeHigh)
-            {
-                TargetDisplayFOV = default.IronSightDisplayFOVHigh;
-                TargetPVO = default.XoffsetHighDetail;
-            }
-            else if (ScopeDetail == RO_ModelScope)
-            {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
-                TargetPVO = default.XoffsetScoped;
-            }
-            else
-            {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
-                TargetPVO = default.PlayerViewOffset;
-            }
-
-            DisplayFOV = TargetDisplayFOV;
-            PlayerViewOffset = TargetPVO;
+            PlayerViewZoom(true);
         }
     }
 
 Begin:
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (InstigatorIsLocalHuman())
     {
         SmoothZoom(true);
     }
 }
 
-simulated state IronSightZoomOut extends Busy
+// New function just to avoid code repetition in different functions
+simulated function SetIronSightFOV()
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
+    local float  TargetDisplayFOV;
+    local vector TargetPVO;
 
-    simulated function bool ShouldUseFreeAim()
+    if (InstigatorIsLocalHuman())
     {
-        return false;
-    }
+        if (ScopeDetail == RO_ModelScopeHigh)
+        {
+            TargetDisplayFOV = default.IronSightDisplayFOVHigh;
+            TargetPVO = default.XoffsetHighDetail;
+        }
+        else if (ScopeDetail == RO_ModelScope)
+        {
+            TargetDisplayFOV = default.IronSightDisplayFOV;
+            TargetPVO = default.XOffsetScoped;
+        }
+        else
+        {
+            TargetDisplayFOV = default.IronSightDisplayFOV;
+            TargetPVO = default.PlayerViewOffset;
+        }
 
-    simulated function Timer()
-    {
-        GotoState('Idle');
+        DisplayFOV = TargetDisplayFOV;
+        PlayerViewOffset = TargetPVO;
     }
+}
 
+simulated state IronSightZoomOut extends WeaponBusy
+{
     simulated function BeginState()
     {
-        local name  Anim;
-        local float AnimTimer;
-
         if (AmmoAmount(0) < 1 && HasAnim(IronPutDownEmpty))
         {
-            Anim = IronPutDownEmpty;
+            PlayAnimAndSetTimer(IronPutDownEmpty, IronSwitchAnimRate, 0.15);
         }
         else
         {
-            Anim = IronPutDown;
-        }
-
-        if (Instigator.IsLocallyControlled())
-        {
-            PlayAnim(Anim, IronSwitchAnimRate, FastTweenTime);
-        }
-
-        AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
-
-        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        {
-            SetTimer(AnimTimer - (AnimTimer * 0.15), false);
-        }
-        else
-        {
-            SetTimer(AnimTimer, false);
+            PlayAnimAndSetTimer(IronPutDown, IronSwitchAnimRate, 0.15);
         }
     }
 
     simulated function EndState()
     {
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        if (Instigator != none && Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
         {
             NotifyCrawlMoving();
         }
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             DisplayFOV = default.DisplayFOV;
             PlayerViewOffset = default.PlayerViewOffset;
@@ -1321,7 +1080,7 @@ simulated state IronSightZoomOut extends Busy
     }
 
 Begin:
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (InstigatorIsLocalHuman())
     {
         if (bPlayerFOVZooms)
         {
@@ -1329,11 +1088,10 @@ Begin:
         }
 
         SmoothZoom(false);
-        ResetPlayerFOV();
     }
 }
 
-// Take the weapon out of iron sights if you jump
+// Take the weapon out of ironsights if you jump
 simulated function NotifyOwnerJumped()
 {
     if (!IsBusy() || IsInState('IronSightZoomIn'))
@@ -1342,24 +1100,9 @@ simulated function NotifyOwnerJumped()
     }
 }
 
-// Just go back to the idle animation and take us out of zoom if we are zoomed
-simulated state TweenDown extends Busy
+// Just go back to the idle animation & take us out of zoom if we are zoomed
+simulated state TweenDown extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
-    {
-        return false;
-    }
-
-    simulated function Timer()
-    {
-        GotoState('Idle');
-    }
-
     simulated function PlayIdle()
     {
         if (bUsingSights)
@@ -1394,14 +1137,10 @@ simulated state TweenDown extends Busy
         }
     }
 
-    simulated function BeginState()
-    {
-    }
-
+    // Reset any zoom values
     simulated function EndState()
     {
-        // Reset any zoom values
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             global.PlayIdle();
         }
@@ -1410,18 +1149,11 @@ simulated state TweenDown extends Busy
 Begin:
     if (bUsingSights)
     {
-        SetTimer(Default.ZoomOutTime + 0.1, false);
+        SetTimer(default.ZoomOutTime + 0.1, false);
 
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() || (Instigator.DrivenVehicle != none && Instigator.DrivenVehicle.IsLocallyControlled()))
+        if (InstigatorIsLocallyControlled())
         {
             PlayIdle();
 
@@ -1431,7 +1163,6 @@ Begin:
             }
 
             SmoothZoom(false);
-            ResetPlayerFOV();
         }
     }
     else
@@ -1440,6 +1171,7 @@ Begin:
     }
 }
 
+// Modified to handle ironsight & empty anims
 simulated function PlayIdle()
 {
     if (bUsingSights)
@@ -1475,23 +1207,15 @@ simulated function PlayIdle()
 }
 
 // Takes us out of zoom immediately - this is a non blocking state, and will not prevent firing, reloading, etc
-// Use this when some non state changing action needs to bring us out of iron sights immediately, without playing the idle animation
+// Use this when some non state changing action needs to bring us out of ironsights immediately, without playing the idle animation
 simulated state UnZoomImmediately extends Idle
 {
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        // We'll want to sleep however long this zoom out takes
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -1499,7 +1223,6 @@ Begin:
             }
 
             SmoothZoom(false);
-            ResetPlayerFOV();
         }
     }
 
@@ -1510,6 +1233,7 @@ Begin:
 // Sprinting
 //=============================================================================
 
+// Modified to handle empty anim & to take player out of ironsights
 simulated state StartSprinting
 {
     simulated function PlayIdle()
@@ -1517,11 +1241,10 @@ simulated state StartSprinting
         local float LoopSpeed, Speed2d;
         local name  Anim;
 
-        if (Instigator.IsLocallyControlled())
+        if (InstigatorIsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
             LoopSpeed = 1.5;
-
             Speed2d = VSize(Instigator.Velocity);
             LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
 
@@ -1534,32 +1257,20 @@ simulated state StartSprinting
                 Anim = SprintLoopAnim;
             }
 
-            if (HasAnim(SprintLoopAnim))
+            if (HasAnim(Anim))
             {
                 LoopAnim(Anim, LoopSpeed, 0.2);
             }
         }
     }
 
-    simulated function BeginState()
-    {
-        PlayStartSprint();
-    }
-
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -1567,53 +1278,41 @@ Begin:
             }
 
             SmoothZoom(false);
-            ResetPlayerFOV();
         }
     }
+
     // Finish unzooming the player if they are zoomed
-    else if (DisplayFOV != default.DisplayFOV)
+    if (DisplayFOV != default.DisplayFOV && InstigatorIsLocalHuman())
     {
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            SmoothZoom(false);
-        }
+        SmoothZoom(false);
     }
 }
 
+// Modified to handle empty anim
 simulated function PlayStartSprint()
 {
-    local name Anim;
-
     if (AmmoAmount(0) <= 0 && HasAnim(SprintStartEmptyAnim))
     {
-        Anim = SprintStartEmptyAnim;
+        PlayAnimAndSetTimer(SprintStartEmptyAnim, 1.5);
     }
     else
     {
-        Anim = SprintStartAnim;
+        PlayAnimAndSetTimer(SprintStartAnim, 1.5);
     }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        PlayAnim(Anim, 1.5, FastTweenTime);
-    }
-
-    SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime, false);
 }
 
+// Modified to handle empty anim
 simulated state WeaponSprinting
 {
     simulated function PlayIdle()
     {
-        local float LoopSpeed;
-        local float Speed2d;
+        local float LoopSpeed, Speed2d;
         local name  Anim;
 
-        if (Instigator.IsLocallyControlled())
+        if (InstigatorIsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
             LoopSpeed = 1.5;
-
             Speed2d = VSize(Instigator.Velocity);
             LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
 
@@ -1626,7 +1325,7 @@ simulated state WeaponSprinting
                 Anim = SprintLoopAnim;
             }
 
-            if (HasAnim(SprintLoopAnim))
+            if (HasAnim(Anim))
             {
                 LoopAnim(Anim, LoopSpeed, FastTweenTime);
             }
@@ -1635,81 +1334,54 @@ simulated state WeaponSprinting
 
 // Finish unzooming the player if they are zoomed
 Begin:
-    if (DisplayFOV != default.DisplayFOV)
+    if (DisplayFOV != default.DisplayFOV && InstigatorIsLocalHuman())
     {
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            SmoothZoom(false);
-        }
+        SmoothZoom(false);
     }
 }
 
+// Modified to handle empty anim
 simulated function PlayEndSprint()
 {
-    local name Anim;
-
     if (AmmoAmount(0) <= 0 && HasAnim(SprintEndEmptyAnim))
     {
-        Anim = SprintEndEmptyAnim;
+        PlayAnimAndSetTimer(SprintEndEmptyAnim, 1.5);
     }
     else
     {
-        Anim = SprintEndAnim;
+        PlayAnimAndSetTimer(SprintEndAnim, 1.5);
     }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        PlayAnim(Anim, 1.5, FastTweenTime);
-    }
-
-    SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime, false);
 }
 
 //=============================================================================
 // Reloading/Ammunition
 //=============================================================================
 
-simulated function OutOfAmmo()
-{
-    if (!HasAmmo() && DHWeaponAttachment(ThirdPersonActor) != none)
-    {
-        DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
-    }
-
-    if (Instigator == none || !Instigator.IsLocallyControlled() || HasAmmo())
-    {
-        return;
-    }
-
-    if (AIController(Instigator.Controller) != none)
-    {
-        GotoState('Reloading');
-    }
-}
-
-simulated exec function ROManualReload()
-{
-    if (!AllowReload())
-    {
-        return;
-    }
-
-    if (Level.NetMode == NM_Client && !IsBusy())
-    {
-        GotoState('PendingAction');
-    }
-
-    ServerRequestReload();
-}
-
+// New function to determine whether a reload is allowed
 simulated function bool AllowReload()
 {
-    return !IsFiring() && !IsBusy() && CurrentMagCount >= 1;
+    // Weapons that can load 2 mags will not allow a mag to be loaded unless the 1st mag load has been used up
+    if (bTwoMagsCapacity && AmmoAmount(0) > FireMode[0].AmmoClass.default.InitialAmount)
+    {
+        return false;
+    }
+
+    // To reload, the weapon must not be firing or busy & player must have at least 1 spare mag
+    return !IsFiring() && !IsBusy() && CurrentMagCount > 0;
 }
 
-simulated function int GetHudAmmoCount()
+// Triggered by reload keybind & attempts to reload the weapon
+simulated exec function ROManualReload()
 {
-    return CurrentMagCount;
+    if (AllowReload())
+    {
+        if (Level.NetMode == NM_Client)
+        {
+            GotoState('PendingAction');
+        }
+
+        ServerRequestReload();
+    }
 }
 
 function ServerRequestReload()
@@ -1721,11 +1393,11 @@ function ServerRequestReload()
     }
     else
     {
-        ClientCancelReload(); // if we can't reload
+        ClientCancelReload();
     }
 }
 
-simulated function ClientDoReload(optional int NumRounds)
+simulated function ClientDoReload(optional byte NumRounds)
 {
     GotoState('Reloading');
 }
@@ -1735,18 +1407,8 @@ simulated function ClientCancelReload()
     GotoState('Idle');
 }
 
-simulated state Reloading extends Busy
+simulated state Reloading extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
-    {
-        return false;
-    }
-
     simulated function bool WeaponAllowSprint()
     {
         return false;
@@ -1757,27 +1419,14 @@ simulated state Reloading extends Busy
         return false;
     }
 
-    simulated function Timer()
-    {
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
-        {
-            GotoState('StartCrawling');
-        }
-        else
-        {
-            GotoState('Idle');
-        }
-    }
-
     simulated function BeginState()
     {
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleStandardReload();
         }
 
         PlayReload();
-        ResetPlayerFOV();
     }
 
     simulated function EndState()
@@ -1790,20 +1439,13 @@ simulated state Reloading extends Busy
         bWaitingToBolt = false;
     }
 
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -1815,7 +1457,7 @@ Begin:
     }
 
     // Sometimes the client will get switched out of ironsight mode before getting to the reload function - this should catch that
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (InstigatorIsLocalHuman())
     {
         if (DisplayFOV != default.DisplayFOV)
         {
@@ -1843,20 +1485,13 @@ simulated state PendingAction extends Busy
         return false;
     }
 
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (InstigatorIsLocalHuman())
         {
             if (bPlayerFOVZooms)
             {
@@ -1868,100 +1503,67 @@ Begin:
     }
 }
 
+// Play the reload animation & set a reload timer
 simulated function PlayReload()
 {
-    local name  Anim;
-    local float AnimTimer;
-
-    if (AmmoAmount(0) > 0)
+    if (AmmoAmount(0) > 0 || (bTwoMagsCapacity && CurrentMagCount < 2))
     {
-        Anim = MagPartialReloadAnim;
+        PlayAnimAndSetTimer(MagPartialReloadAnim, 1.0, 0.1);
     }
     else
     {
-        Anim = MagEmptyReloadAnim;
-    }
-
-    AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
-
-    if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-    {
-        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
-    }
-    else
-    {
-        SetTimer(AnimTimer, false);
-    }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        PlayAnim(Anim, 1.0, FastTweenTime);
+        PlayAnimAndSetTimer(MagEmptyReloadAnim, 1.0, 0.1);
     }
 }
 
-// Do the actual ammo swapping
+// New function to do the actual ammo swapping
 function PerformReload()
 {
     local int  CurrentMagLoad;
     local bool bDidPlusOneReload;
 
-    CurrentMagLoad = AmmoAmount(0);
-
-    if (PrimaryAmmoArray.Length == 0)
+    if (CurrentMagCount < 1)
     {
         return;
     }
 
-    if (CurrentMagLoad <= 0)
+    // Record remaining no. of rounds in current mag
+    if (bPlusOneLoading && AmmoAmount(0) > 0)
+    {
+        CurrentMagLoad = AmmoAmount(0) - 1; // don't count a round in the chamber for 'plus one' loading weapons
+        bDidPlusOneReload = true;
+    }
+    else
+    {
+        CurrentMagLoad = AmmoAmount(0);
+    }
+
+    // Discard current mag (remove it from the ammo array) if it's empty or if weapon is set to discard current mag on reloading (e.g. Garand rifle, which ejects the clip)
+    if (CurrentMagLoad <= 0 || bDiscardMagOnReload)
     {
         PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
     }
+    // Otherwise put the mag back into player's spare mags (specifically, update CurrentMagIndex with the current no. of loaded rounds)
     else
     {
-        if (bPlusOneLoading)
-        {
-            // If there's only one bullet left(the one in the chamber), discard the clip
-            if (CurrentMagLoad == 1)
-            {
-                PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
-            }
-            else
-            {
-                PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad - 1;
-            }
-
-            AmmoCharge[0] = 1;
-            bDidPlusOneReload = true;
-        }
-        else
-        {
-            PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad;
-            AmmoCharge[0] = 0;
-        }
+        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad;
     }
 
-    if (PrimaryAmmoArray.Length == 0)
-    {
-        return;
-    }
+    // Cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
+    CurrentMagIndex = ++CurrentMagIndex % (PrimaryAmmoArray.Length);
 
-    CurrentMagIndex++;
-
-    if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
-    {
-        CurrentMagIndex = 0;
-    }
-
+    // Update the no. of rounds (AmmoCharge) for new newly loaded mag
     if (bDidPlusOneReload)
     {
-        AddAmmo(PrimaryAmmoArray[CurrentMagIndex] + 1, 0);
+        AmmoCharge[0] = PrimaryAmmoArray[CurrentMagIndex] + 1;
     }
     else
     {
-        AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
+        AmmoCharge[0] = PrimaryAmmoArray[CurrentMagIndex];
     }
 
-    if (Instigator.IsHumanControlled())
+    // Show a screen message indicating how full the new mag feels
+    if (InstigatorIsHumanControlled())
     {
         if (AmmoStatus(0) > 0.5)
         {
@@ -1977,33 +1579,48 @@ function PerformReload()
         }
     }
 
-    if (AmmoAmount(0) > 0)
+    // Update the weapon attachment ammo status
+    if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
     {
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
-        {
-            DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
-        }
+        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
     }
 
-    ClientForceAmmoUpdate(0, AmmoAmount(0));
-
-    CurrentMagCount = PrimaryAmmoArray.Length - 1;
+    UpdateResupplyStatus(true);
 }
 
-function bool FillAmmo()
+// Modified to start reload for a bot
+simulated function OutOfAmmo()
 {
-    local int  i;
-    local bool bDidFillAmmo;
-
-    if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+    if (!HasAmmo())
     {
-        for (i = 0; i < default.FillAmmoMagCount; ++i)
+        if (ROWeaponAttachment(ThirdPersonActor) != none)
         {
-            PrimaryAmmoArray.Length = PrimaryAmmoArray.Length + 1;
+            ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
+        }
 
-            PrimaryAmmoArray[PrimaryAmmoArray.Length - 1] = FireMode[0].AmmoClass.default.InitialAmount;
+        if (Instigator != none && AIController(Instigator.Controller) != none)
+        {
+            GotoState('Reloading');
+        }
+    }
+}
 
-            bDidFillAmmo = true;
+// Modified so HUD ammo display shows number of magazines carried by the player
+simulated function int GetHudAmmoCount()
+{
+    return CurrentMagCount;
+}
+
+// Modified to allow a friendly player to resupply the weapon (for weapons that allow this)
+function bool ResupplyAmmo()
+{
+    local int i;
+
+    if (bCanBeResupplied && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+    {
+        for (i = 0; i < NumMagsToResupply; ++i)
+        {
+            PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
 
             if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
             {
@@ -2011,53 +1628,123 @@ function bool FillAmmo()
             }
         }
 
-        CurrentMagCount = PrimaryAmmoArray.Length - 1;
+        UpdateResupplyStatus(true);
+
+        return true;
     }
+
+    return false;
+}
+
+// New function to update the player's resupply status & number of spare mags
+function UpdateResupplyStatus(bool bCurrentWeapon)
+{
+    if (bCurrentWeapon)
+    {
+        CurrentMagCount = PrimaryAmmoArray.Length - 1; // update number of spare mages (replicated)
+    }
+
+    if (ROPawn(Instigator) != none)
+    {
+        ROPawn(Instigator).bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1);
+    }
+}
+
+// Modified so resupply point gradually replenishes ammo (no full resupply in one go)
+function bool FillAmmo()
+{
+    local int  InitialAmount, i;
+    local bool bDidFillAmmo;
+
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
+
+    // If we can carry more mags, add one or more (no. added is FillAmmoMagCount)
+    if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+    {
+        for (i = 0; i < default.FillAmmoMagCount; ++i)
+        {
+            PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
+            bDidFillAmmo = true;
+
+            if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
+            {
+                break;
+            }
+        }
+    }
+    // Otherwise, if we already have max mags, try to find a mag that isn't full & swap it for a new full mag
     else if (FillAmmoMagCount > 0)
     {
         for (i = 0; i < PrimaryAmmoArray.Length; ++i)
         {
-            if (PrimaryAmmoArray[i] < FireMode[0].AmmoClass.default.InitialAmount)
+            if (PrimaryAmmoArray[i] < InitialAmount && i != CurrentMagIndex) // skip over the current mag, as we have to do a manual reload to physically swap that mag out
             {
-                PrimaryAmmoArray[i] = FireMode[0].AmmoClass.default.InitialAmount;
-
+                PrimaryAmmoArray[i] = InitialAmount;
                 bDidFillAmmo = true;
-
                 break;
             }
         }
+
+        // If the weapon loads two mags, see if it can be topped up now
+        if (bTwoMagsCapacity && !bDidFillAmmo && PrimaryAmmoArray[CurrentMagIndex] < InitialAmount)
+        {
+            PrimaryAmmoArray[CurrentMagIndex] += InitialAmount; // bit of a hack, shoving rounds from 2nd clip into currently loaded 'mag'
+        }
+    }
+
+    if (bDidFillAmmo && IsCurrentWeapon())
+    {
+        UpdateResupplyStatus(true);
     }
 
     return bDidFillAmmo;
 }
 
+// New function, called from 
 function SetNumMags(int M)
 {
     PrimaryAmmoArray.Length = M;
-    CurrentMagCount = PrimaryAmmoArray.Length - 1;
+
+    if (IsCurrentWeapon())
+    {
+        UpdateResupplyStatus(true);
+    }
 }
 
 function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
 {
-    local bool bJustSpawnedAmmo;
-    local int  AddAmount, InitialAmount, i;
     local DHWeaponPickup DHWP;
+    local int            InitialAmount, i;
 
-    if (FireMode[M] != none && FireMode[M].AmmoClass != none)
+    if (FireMode[M].AmmoClass != none)
     {
-        Ammo[M] = Ammunition(Instigator.FindInventoryType(FireMode[M].AmmoClass));
-
-        bJustSpawnedAmmo = false;
-
-        if (FireMode[M].AmmoClass == none || (M != 0 && FireMode[M].AmmoClass == FireMode[0].AmmoClass))
+        if (M != 0 && FireMode[M].AmmoClass == FireMode[0].AmmoClass)
         {
             return;
         }
 
-        InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
-
-        if (bJustSpawned && WP == none)
+        // If from a WeaponPickup, swap to the ammo from the picked up weapon
+        if (WP != none)
         {
+            InitialAmount = WP.AmmoAmount[M];
+            DHWP = DHWeaponPickup(WP);
+
+            if (DHWP != none)
+            {
+                PrimaryAmmoArray = DHWP.AmmoMags;
+                CurrentMagIndex = DHWP.LoadedMagazineIndex;
+            }
+
+            if (IsCurrentWeapon())
+            {
+                UpdateResupplyStatus(true);
+            }
+        }
+        // If just spawned, give the default ammo for the weapon
+        else if (bJustSpawned)
+        {
+            InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
+            CurrentMagIndex = 0;
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
 
             for (i = 0; i < PrimaryAmmoArray.Length; ++i)
@@ -2065,43 +1752,23 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
                 PrimaryAmmoArray[i] = InitialAmount;
             }
 
-            CurrentMagIndex = 0;
-        }
-
-        if (WP != none)
-        {
-            InitialAmount = WP.AmmoAmount[M];
-
-            DHWP = DHWeaponPickup(WP);
-
-            if (DHWP != none)
+            // If the weapon loads two mags, the initial loaded rounds needs to be two mags
+            if (bTwoMagsCapacity)
             {
-                for (i = 0; i < DHWP.AmmoMags.Length; ++i)
-                {
-                    PrimaryAmmoArray[i] = DHWP.AmmoMags[i];
-                }
-
-                CurrentMagIndex = DHWP.LoadedMagazineIndex;
+                PrimaryAmmoArray[CurrentMagIndex] *= 2; // bit of a hack, shoving rounds from 2nd clip into current 'mag'
+                InitialAmount *= 2;
             }
         }
 
-        CurrentMagCount = PrimaryAmmoArray.Length - 1;
-
-        if (Ammo[M] != none)
+        // Give the weapon its loaded ammo (AmmoCharge)
+        if (!bDoesNotRetainLoadedMag)
         {
-            AddAmount = InitialAmount + Ammo[M].AmmoAmount;
-
-            Ammo[M].Destroy();
+            AmmoCharge[M] = InitialAmount;
         }
-        else
-        {
-            AddAmount = InitialAmount;
-        }
-
-        AddAmmo(AddAmount, M);
     }
 }
 
+// Modified to remove alternative handling if weapon's bNoAmmoInstances is set to false
 function bool AddAmmo(int AmmoToAdd, int Mode)
 {
     if (AmmoClass[0] == AmmoClass[Mode])
@@ -2118,189 +1785,189 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
         AmmoCharge[Mode] = Min(MaxAmmo(Mode), AmmoCharge[Mode] + AmmoToAdd);
     }
 
-    NetUpdateTime = Level.TimeSeconds - 1;
+    NetUpdateTime = Level.TimeSeconds - 1.0;
 
     return true;
 }
 
+// Modified to handle picking up spare ammo magazines from a WeaponPickup, which is a new system in DH
 function bool HandlePickupQuery(Pickup Item)
 {
-    local int            i;
-    local WeaponPickup   WP;
     local DHWeaponPickup DHWP;
-    local array<int>     LoadedMagazineIndices;
+    local int i;
 
-    if (Class == Item.InventoryType)
-    {
-        // Pickup is our weapon type
-        WP = WeaponPickup(Item);
-
-        if (WP != none)
-        {
-            DHWP = DHWeaponPickup(WP);
-
-            if (DHWP != none)
-            {
-                // Gets loaded magazines from the pickup and adds them to our weapon
-                LoadedMagazineIndices = DHWP.GetLoadedMagazineIndices();
-
-                for (i = 0; i < LoadedMagazineIndices.Length && PrimaryAmmoArray.Length < MaxNumPrimaryMags; ++i)
-                {
-                    PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[LoadedMagazineIndices[i]];
-                }
-
-                CurrentMagCount = PrimaryAmmoArray.Length - 1;
-
-                return false;
-            }
-            else
-            {
-                return !WP.AllowRepeatPickup();
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // Drop current weapon and pickup the one on the ground
-    if (Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup && Item.InventoryType.default.InventoryGroup == InventoryGroup && Instigator.CanThrowWeapon())
-    {
-        ROPlayer(Instigator.Controller).ThrowWeapon();
-
-        return false;
-    }
-
-    // Avoid multiple weapons in the same slot
-    if (Item.InventoryType.default.InventoryGroup == InventoryGroup)
+    // If no passed item, prevent pick up & stop checking rest of Inventory chain
+    if (Item == none)
     {
         return true;
     }
 
-    if (Inventory == none)
+    // Pickup weapon is same as this weapon, so see if we can pick up any spare mags from it
+    if (Class == Item.InventoryType && WeaponPickup(Item) != none)
     {
-        return false;
+        DHWP = DHWeaponPickup(Item);
+
+        // If we already have max mags, prevent pick up & stop checking rest of Inventory chain (same if pickup isn't a DHWeaponPickup & won't have stored mags)
+        if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags || DHWP == none)
+        {
+            return true;
+        }
+
+        i = DHWP.LoadedMagazineIndex; // start with pickup's loaded mag, although 1st thing we'll do is cycle to the next mag as it's most likely to be unused
+
+        // First, we'll look for any fairly full mags to pick up
+        while (PrimaryAmmoArray.Length < MaxNumPrimaryMags && DHWP.AmmoMags.Length > 0)
+        {
+            i = ++i % DHWP.AmmoMags.Length; // cycle to next pickup mag, looping back to 0 when exceeds mag array length
+
+            // Pick up the mag if it feels heavy (more then half full)
+            if (float(DHWP.AmmoMags[i]) / float(MaxAmmo(0)) > 0.5)
+            {
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[i];
+                DHWP.AmmoMags.Remove(i, 1);
+                --i; // need to adjust for array member being removed, otherwise we'll skip the next mag
+            }
+        }
+
+        // If we're still not carrying max mags, we'll loop through again & pick up any mags this time
+        for (i = 0; i < DHWP.AmmoMags.Length && PrimaryAmmoArray.Length < MaxNumPrimaryMags; ++i)
+        {
+            if (DHWP.AmmoMags[i] > 0)
+            {
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[i];
+                DHWP.AmmoMags.Remove(i, 1);
+                --i;
+            }
+        }
+
+        if (IsCurrentWeapon())
+        {
+            UpdateResupplyStatus(true);
+        }
+
+        // Need to do this here as we're going to prevent a new weapon pick up, so the pickup won't give a screen message or destroy/respawn itself
+        Item.AnnouncePickup(Pawn(Owner));
+        Item.SetRespawn();
+
+        return true; // prevents pick up, as already have weapon, & stops checking rest of Inventory chain
     }
 
-    return Inventory.HandlePickupQuery(Item);
+    // Pickup weapon's inventory slot is same as this weapon (& we can't carry more then one item in the same slot)
+    if (Item.InventoryType.default.InventoryGroup == InventoryGroup)
+    {
+        // If this is the currently held weapon & it can be dropped by human player, throw it away & pick up the weapon on the ground
+        if (InstigatorIsHumanControlled() && Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup && Instigator.CanThrowWeapon())
+        {
+            PlayerController(Instigator.Controller).ThrowWeapon();
+
+            return false; // allows pick up of new weapon & stops checking rest of Inventory chain
+        }
+
+        return true; // prevents pick up (as can't carry more than 1 item in same slot) & stops checking rest of Inventory chain
+    }
+
+    // Didn't do any pick up for this weapon, so pass this query on to the next item in the Inventory chain
+    // If we've reached the last Inventory item, returning false will allow pick up of the weapon
+    return Inventory != none && Inventory.HandlePickupQuery(Item);
 }
 
+// Modified to reset ironsights, update player's resupply status & add some random fall direction
 function DropFrom(vector StartLocation)
 {
-    local int    i;
     local Pickup Pickup;
+    local int    i;
 
-    if (!bCanThrow)
+    if (bCanThrow)
     {
-        return;
-    }
+        UpdateResupplyStatus(false);
 
-    if (Instigator != none && bUsingSights)
-    {
-        bUsingSights = false;
-
-        ROPawn(Instigator).SetIronSightAnims(false);
-    }
-
-    ClientWeaponThrown();
-
-    for (i = 0; i < NUM_FIRE_MODES; ++i)
-    {
-        if (FireMode[i].bIsFiring)
+        if (bUsingSights)
         {
-            StopFire(i);
+            bUsingSights = false;
+
+            if (ROPawn(Instigator) != none)
+            {
+                ROPawn(Instigator).SetIronSightAnims(false);
+            }
         }
-    }
 
-    if (Instigator != none)
-    {
-        DetachFromPawn(Instigator);
-    }
+        ClientWeaponThrown();
 
-    Pickup = Spawn(PickupClass,,, StartLocation, Rotation);
-
-    if (Pickup != none)
-    {
-        Pickup.InitDroppedPickupFor(self);
-        Pickup.Velocity = Velocity;
-        Pickup.Velocity.X += RandRange(-100.0, 100.0);
-        Pickup.Velocity.Y += RandRange(-100.0, 100.0);
-
-        if (Instigator.Health > 0)
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
-            WeaponPickup(Pickup).bThrown = true;
+            if (FireMode[i].bIsFiring)
+            {
+                StopFire(i);
+            }
         }
-    }
 
-    Destroy();
+        if (Instigator != none)
+        {
+            DetachFromPawn(Instigator);
+        }
+
+        Pickup = Spawn(PickupClass,,, StartLocation, Rotation);
+
+        if (Pickup != none)
+        {
+            Pickup.InitDroppedPickupFor(self);
+            Pickup.Velocity = Velocity;
+            Pickup.Velocity.X += RandRange(-100.0, 100.0);
+            Pickup.Velocity.Y += RandRange(-100.0, 100.0);
+
+            if (Instigator != none && Instigator.Health > 0)
+            {
+                WeaponPickup(Pickup).bThrown = true;
+            }
+        }
+
+        Destroy();
+    }
 }
 
-// The empty sound if your out of ammo
+// Modified to play the dry-fire sound if you're out of ammo
 simulated function Fire(float F)
 {
-    if (AmmoAmount(0) < 1 && !IsBusy())
+    if (AmmoAmount(0) < 1 && !IsBusy() && FireMode[0].NoAmmoSound != none)
     {
         PlayOwnedSound(FireMode[0].NoAmmoSound, SLOT_None, 1.0,,,, false);
     }
-
-    super.Fire(F);
 }
 
-// Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function ToggleBarrelSteam(bool NewState)
+//=============================================================================
+// Barrels - overheating & changing
+//=============================================================================
+
+// Triggered by change barrel keybind & attempts to swap over the barrels
+simulated exec function ROMGOperation()
 {
-    bBarrelSteaming = NewState;
-
-    if (DHWeaponAttachment(ThirdPersonActor) != none)
+    if (AllowBarrelChange())
     {
-        DHWeaponAttachment(ThirdPersonActor).bBarrelSteamActive = NewState;
-    }
+        GotoState('ChangingBarrels');
 
-    if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitter != none)
-    {
-        ROBarrelSteamEmitter.Trigger(self, Instigator);
+        if (Role < ROLE_Authority)
+        {
+            ServerSwitchBarrels();
+        }
     }
 }
 
 function ServerSwitchBarrels()
 {
-    GotoState('ChangingBarrels');
-}
-
-simulated exec function ROMGOperation()
-{
-    if (!AllowBarrelChange())
-    {
-        return;
-    }
-
-    if (Level.NetMode == NM_Client)
+    if (AllowBarrelChange())
     {
         GotoState('ChangingBarrels');
     }
-
-    ServerSwitchBarrels();
 }
 
 simulated function bool AllowBarrelChange()
 {
-    return !IsFiring() && !IsBusy() && RemainingBarrels >= 2 && bTrackBarrelHeat && !IsInState('ChangingBarrels') && Instigator.bBipodDeployed;
+    return !IsFiring() && !IsBusy() && RemainingBarrels >= 2 && bTrackBarrelHeat && !IsInState('ChangingBarrels') && Instigator != none && Instigator.bBipodDeployed;
 }
 
 // State where we are changing the barrel out for our MG
-simulated state ChangingBarrels extends Busy
+simulated state ChangingBarrels extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function bool ShouldUseFreeAim()
-    {
-        return false;
-    }
-
     simulated function bool WeaponAllowSprint()
     {
         return false;
@@ -2316,65 +1983,28 @@ simulated state ChangingBarrels extends Busy
         return false;
     }
 
-    simulated function Timer()
-    {
-        GotoState('Idle');
-    }
-
     simulated function BeginState()
     {
-        PlayBarrelChange();
+        PlayAnimAndSetTimer(BarrelChangeAnim, 1.0, 0.1);
+
         PerformBarrelChange();
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            ResetPlayerFOV();
-        }
+        ResetPlayerFOV();
     }
 
-    simulated function EndState()
-    {
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        {
-            SetPlayerFOV(PlayerDeployFOV);
-        }
-    }
-
-// Take the player out of zoom and then zoom them back in
+// Take the player out of zoom & then zoom them back in
 Begin:
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (InstigatorIsLocalHuman())
     {
         if (DisplayFOV != default.DisplayFOV)
         {
             SmoothZoom(false);
         }
 
-        Sleep(GetAnimDuration(BarrelChangeAnim, 1.0) - (default.ZoomInTime + default.ZoomOutTime));
+        Sleep(GetAnimDuration(BarrelChangeAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
 
         SetPlayerFOV(PlayerDeployFOV);
-
         SmoothZoom(true);
-    }
-}
-
-simulated function PlayBarrelChange()
-{
-    local float AnimTimer;
-
-    AnimTimer = GetAnimDuration(BarrelChangeAnim, 1.0) + FastTweenTime;
-
-    if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-    {
-        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
-    }
-    else
-    {
-        SetTimer(AnimTimer, false);
-    }
-
-    if (Instigator.IsLocallyControlled())
-    {
-        PlayAnim(BarrelChangeAnim, 1.0, FastTweenTime);
     }
 }
 
@@ -2390,16 +2020,14 @@ function PerformBarrelChange()
     if (Barrels[BarrelIndex].bBarrelFailed && Barrels[BarrelIndex] != none)
     {
         Barrels[BarrelIndex].Destroy();
-
         Barrels.Remove(BarrelIndex, 1);
-
         RemainingBarrels = byte(Barrels.Length);
     }
 
     // We only have one barrel left now
     if (RemainingBarrels == 1)
     {
-        if ((BarrelIndex >= (Barrels.Length - 1)) || (Barrels.Length == 1))
+        if (BarrelIndex >= (Barrels.Length - 1) || Barrels.Length == 1)
         {
             BarrelIndex = 0;
         }
@@ -2421,7 +2049,7 @@ function PerformBarrelChange()
         // First place the current BarrelIndex in the BarrelOff state
         Barrels[BarrelIndex].GotoState('BarrelOff');
 
-        if ((BarrelIndex >= (Barrels.Length - 1)) || (Barrels.Length == 1))
+        if (BarrelIndex >= (Barrels.Length - 1) || Barrels.Length == 1)
         {
             BarrelIndex = 0;
         }
@@ -2443,28 +2071,13 @@ function PerformBarrelChange()
 // Called when we change barrels, this updates the weapon's barrel properties for the new barrel that's being swapped in
 function ResetBarrelProperties()
 {
-    bBarrelFailed = Barrels[BarrelIndex].bBarrelFailed;
     bBarrelSteaming = Barrels[BarrelIndex].bBarrelSteaming;
     bBarrelDamaged = Barrels[BarrelIndex].bBarrelDamaged;
+    bBarrelFailed = Barrels[BarrelIndex].bBarrelFailed;
 
-    if (DHWeaponAttachment(ThirdPersonActor) != none && DHWeaponAttachment(ThirdPersonActor).SoundPitch != 64)
+    if (ThirdPersonActor.SoundPitch != 64)
     {
-        DHWeaponAttachment(ThirdPersonActor).SoundPitch = 64;
-    }
-}
-
-simulated function BringUp(optional Weapon PrevWeapon)
-{
-    super.BringUp(PrevWeapon);
-
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-    {
-        SpawnBarrelSteamEmitter();
-
-        if (bBarrelSteaming)
-        {
-            ToggleBarrelSteam(true);
-        }
+        ThirdPersonActor.SoundPitch = 64;
     }
 }
 
@@ -2482,12 +2095,27 @@ simulated function SpawnBarrelSteamEmitter()
     }
 }
 
+// Called when we need to toggle barrel steam on or off, depending on the barrel temperature
+simulated function ToggleBarrelSteam(bool NewState)
+{
+    bBarrelSteaming = NewState;
+
+    if (ROWeaponAttachment(ThirdPersonActor) != none)
+    {
+        ROWeaponAttachment(ThirdPersonActor).bBarrelSteamActive = NewState;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitter != none)
+    {
+        ROBarrelSteamEmitter.Trigger(self, Instigator);
+    }
+}
+
 // Spawns barrels for MG's on Authority
 function GiveBarrels(optional Pickup Pickup)
 {
-    local int            i;
-    local DHWeaponBarrel    TempBarrel, TempBarrel2;
     local DHWeaponPickup P;
+    local int            i;
 
     if (BarrelClass == none || Role != ROLE_Authority)
     {
@@ -2499,9 +2127,7 @@ function GiveBarrels(optional Pickup Pickup)
         // Give the barrels to the players
         for (i = 0; i < InitialBarrels; ++i)
         {
-            TempBarrel = Spawn(BarrelClass, self);
-
-            Barrels[i] = TempBarrel;
+            Barrels[i] = Spawn(BarrelClass, self);
 
             if (i == 0)
             {
@@ -2513,28 +2139,25 @@ function GiveBarrels(optional Pickup Pickup)
             }
         }
     }
-    else if (DHWeaponPickup(Pickup) != none)
+    else
     {
         P = DHWeaponPickup(Pickup);
 
-        TempBarrel = Spawn(BarrelClass, self);
-
-        Barrels[0] = TempBarrel;
-
-        Barrels[0].GotoState('BarrelInUse');
-        Barrels[0].Temperature = P.Temperature;
-        Barrels[0].bBarrelFailed = P.bBarrelFailed;
-        Barrels[0].UpdateBarrelStatus(); // update the barrel for the weapon we just picked up
-
-        if (P.bHasSpareBarrel)
+        if (P != none)
         {
-            TempBarrel2 = Spawn(BarrelClass, self);
+            Barrels[0] = Spawn(BarrelClass, self);
+            Barrels[0].GotoState('BarrelInUse');
+            Barrels[0].Temperature = P.Temperature;
+            Barrels[0].bBarrelFailed = P.bBarrelFailed;
+            Barrels[0].UpdateBarrelStatus(); // update the barrel for the weapon we just picked up
 
-            Barrels[1] = TempBarrel2;
-            Barrels[1].GotoState('BarrelOff');
-
-            Barrels[1].Temperature = P.Temperature2;
-            Barrels[1].UpdateSpareBarrelStatus();
+            if (P.bHasSpareBarrel)
+            {
+                Barrels[1] = Spawn(BarrelClass, self);
+                Barrels[1].GotoState('BarrelOff');
+                Barrels[1].Temperature = P.Temperature2;
+                Barrels[1].UpdateSpareBarrelStatus();
+            }
         }
     }
 
@@ -2542,7 +2165,7 @@ function GiveBarrels(optional Pickup Pickup)
     RemainingBarrels = byte(Barrels.Length);
 }
 
-// Overridden to set additional RO Variables when a weapon is given to the player
+// Modified to give barrel actors to player, if relevant
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     super.GiveTo(Other,Pickup);
@@ -2550,35 +2173,11 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
     GiveBarrels(Pickup);
 }
 
-simulated function Destroyed()
-{
-    local int i;
-
-    super.Destroyed();
-
-    // Remove and destroy the barrels in the Barrels array
-    for (i = 0; i < Barrels.Length; ++i)
-    {
-        if (Barrels[i] != none)
-        {
-            Barrels[i].Destroy();
-        }
-    }
-
-    // Destroy the barrel steam emitter
-    if (ROBarrelSteamEmitter != none)
-    {
-        ROBarrelSteamEmitter.Destroy();
-    }
-
-    Barrels.Remove(0, Barrels.Length);
-}
-
-// Overridden to support notifying the barrels that we have fired
+// Modified to notify barrels that we have fired
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
-    local float       SoundModifier;
     local DHWeaponBarrel B;
+    local float          SoundModifier;
 
     if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
     {
@@ -2607,6 +2206,34 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
     return super.ConsumeAmmo(Mode, Load, bAmountNeededIsMax);
 }
 
+// Modified to destroy barrel actors & to update player's resupply status
+simulated function Destroyed()
+{
+    local int i;
+
+    super.Destroyed();
+
+    if (Role == ROLE_Authority)
+    {
+        UpdateResupplyStatus(false);
+
+        for (i = 0; i < Barrels.Length; ++i)
+        {
+            if (Barrels[i] != none)
+            {
+                Barrels[i].Destroy();
+            }
+        }
+
+        Barrels.Remove(0, Barrels.Length);
+    }
+
+    if (ROBarrelSteamEmitter != none)
+    {
+        ROBarrelSteamEmitter.Destroy();
+    }
+}
+
 defaultproperties
 {
     IronSwitchAnimRate=1.0
@@ -2622,4 +2249,5 @@ defaultproperties
     LightPeriod=3
     FillAmmoMagCount=1
     ROBarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
+    MuzzleBone="Muzzle"
 }

@@ -34,7 +34,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
         return;
     }
 
-    if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
+    if (IsCurrentWeapon()) // this weapon was switched to while waiting for replication, switch to it now
     {
         if (Instigator.PendingWeapon != none)
         {
@@ -60,7 +60,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     }
     else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
-        if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
+        if (Instigator.IsHumanControlled() && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
         {
             return;
         }
@@ -101,7 +101,7 @@ simulated state RaisingWeapon
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
 
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 if (Mesh != none && HasAnim(SelectAnim))
                 {
@@ -123,9 +123,9 @@ simulated state RaisingWeapon
 
     simulated function EndState()
     {
-        if (Instigator.Physics != PHYS_Falling)
+        if (InstigatorIsHumanControlled() && Instigator.Physics != PHYS_Falling)
         {
-            ROPlayer(Instigator.Controller).ClientSwitchToBestWeapon();
+            Instigator.Controller.ClientSwitchToBestWeapon();
         }
     }
 }
@@ -141,7 +141,7 @@ simulated state LoweringWeapon
     {
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 if (ClientState == WS_BringUp)
                 {
@@ -173,7 +173,7 @@ simulated state LoweringWeapon
                 ClientState = WS_Hidden;
                 Instigator.ChangedWeapon();
 
-                if (Instigator.Weapon == self)
+                if (IsCurrentWeapon())
                 {
                     PlayIdle();
                     ClientState = WS_ReadyToFire;

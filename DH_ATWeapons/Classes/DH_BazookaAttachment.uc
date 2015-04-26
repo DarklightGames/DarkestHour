@@ -3,73 +3,15 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BazookaAttachment extends DHWeaponAttachment;
-
-var()   name            ExhaustBoneName;
-
-var     class<Emitter>  mExhFlashClass;
-var     Emitter         mExhFlash3rd;
-
-// Overridden because the 3rd person effects are handled differently for the panzerfaust
-simulated function PostBeginPlay()
-{
-    if (Role == ROLE_Authority)
-    {
-        bOldBayonetAttached = bBayonetAttached;
-        bOldBarrelSteamActive = bBarrelSteamActive;
-        bUpdated = true;
-    }
-}
-
-// Overridden because the 3rd person effects are handled differently for the panzerfaust
-simulated event ThirdPersonEffects()
-{
-    local ROPawn P;
-
-    P = ROPawn(Instigator);
-
-    if (Level.NetMode == NM_DedicatedServer || P == none)
-    {
-        return;
-    }
-
-    if (FlashCount > 0 && (FiringMode == 0 || bAltFireFlash))
-    {
-        if (Level.TimeSeconds - LastRenderTime > 0.2 && PlayerController(Instigator.Controller) == none)
-        {
-            return;
-        }
-
-        WeaponLight();
-
-        mMuzFlash3rd = Spawn(mMuzFlashClass);
-        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
-
-        mExhFlash3rd = Spawn(mExhFlashClass);
-        AttachToBone(mExhFlash3rd, ExhaustBoneName);
-    }
-
-    if (FlashCount == 0)
-    {
-        P.StopFiring();
-    }
-    else if (FiringMode == 0)
-    {
-        P.StartFiring(false, bRapidFire);
-    }
-    else
-    {
-        P.StartFiring(true, bAltRapidFire);
-    }
-}
+class DH_BazookaAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    ExhaustBoneName="ejector"
     mExhFlashClass=class'DH_Effects.DH_Bazooka3rdPersonExhaustFX'
-    PA_AssistedReloadAnim="crouch_reloadA_bazooka"
+    ExhaustBoneName="ejector"
     mMuzFlashClass=class'DH_Effects.DH_Bazooka3rdPersonMuzzleFX'
     MuzzleBoneName="Muzzle"
+    PA_AssistedReloadAnim="crouch_reloadA_bazooka"
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -197,6 +139,5 @@ defaultproperties
     WA_Reload="ReloadS_Bazooka"
     WA_ProneReload="ReloadS_Bazooka"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
-    bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bazooka_3rd'
 }

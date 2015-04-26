@@ -3,65 +3,15 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerschreckAttachment extends DHWeaponAttachment;
-
-var()   name            ExhaustBoneName;
-var     class<Emitter>          mExhFlashClass;
-var     Emitter                 mExhFlash3rd;
-
-// Overridden because the 3rd person effects are handled differently for the panzerfaust
-simulated function PostBeginPlay()
-{
-    if (Role == ROLE_Authority)
-    {
-        bOldBayonetAttached = bBayonetAttached;
-        bOldBarrelSteamActive = bBarrelSteamActive;
-        bUpdated = true;
-    }
-}
-
-// Overridden because the 3rd person effects are handled differently for the panzerfaust
-simulated event ThirdPersonEffects()
-{
-    if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
-        return;
-
-    if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
-    {
-        if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
-            return;
-
-        WeaponLight();
-
-        mMuzFlash3rd = Spawn(mMuzFlashClass);
-        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
-
-        mExhFlash3rd = Spawn(mExhFlashClass);
-        AttachToBone(mExhFlash3rd, ExhaustBoneName);
-
-    }
-
-        if (FlashCount == 0)
-        {
-                ROPawn(Instigator).StopFiring();
-        }
-        else if (FiringMode == 0)
-        {
-                ROPawn(Instigator).StartFiring(false, bRapidFire);
-        }
-        else
-        {
-                ROPawn(Instigator).StartFiring(true, bAltRapidFire);
-        }
-}
+class DH_PanzerschreckAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    ExhaustBoneName="ejector"
     mExhFlashClass=class'DH_Effects.DH_Bazooka3rdPersonExhaustFX'
-    PA_AssistedReloadAnim="crouch_reloadA_bazooka"
+    ExhaustBoneName="ejector"
     mMuzFlashClass=class'DH_Effects.DH_Bazooka3rdPersonMuzzleFX'
     MuzzleBoneName="Muzzle"
+    PA_AssistedReloadAnim="crouch_reloadA_bazooka"
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -188,6 +138,5 @@ defaultproperties
     WA_Fire="idle_panzerschreck"
     WA_Reload="reloadS_panzerschreck"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
-    bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Panzerschreck_3rd'
 }

@@ -6,14 +6,12 @@
 class DHRocketFire extends DHProjectileFire
     abstract;
 
-var array<name>         FireIronAnims;
-
-var float               ExhaustDamage;
-var float               ExhaustDamageRadius;
-var float               ExhaustMomentumTransfer;
-var class<DamageType>   ExhaustDamageType;
-
-var DHRocketWeapon      RocketWeapon;
+var     DHRocketWeapon      RocketWeapon;            // convenient reference to the rocket weapon actor
+var     bool                bCausesExhaustDamage;    // rocket exhaust causes backblast damage
+var     float               ExhaustLength;           // length of the exhaust back blast (in Unreal units)
+var     float               ExhaustDamage;           // damage caused by exhaust
+var     float               ExhaustMomentumTransfer; // momentum from exhaust to inflict on players
+var     class<DamageType>   ExhaustDamageType;       // damage type for exhaust
 
 simulated function PostBeginPlay()
 {
@@ -24,53 +22,55 @@ simulated function PostBeginPlay()
 
 event ModeDoFire()
 {
-    local rotator WeaponRotation;
-    local vector  WeaponLocation, HitLocation, HitNormal, ExhaustDirection, ExhaustReflectDirection;
-    local float   ExhaustLength;
-    local Actor   HitActor;
-    local RODestroyableStaticMesh DSM;
-
-    if (Instigator.bIsCrawling || !Weapon.bUsingSights)
-    {
-        return;
-    }
+    local vector WeaponLocation, ExhaustDirection, HitLocation, HitNormal, ExhaustReflectDirection;
+    local Actor  HitActor;
 
     super.ModeDoFire();
 
-    WeaponLocation = Weapon.ThirdPersonActor.Location;
-    WeaponRotation = Weapon.ThirdPersonActor.Rotation;
-    ExhaustDirection = vector(WeaponRotation);
-    ExhaustLength = 400.0;
-
-    HitActor = Trace(HitLocation, HitNormal, WeaponLocation - ExhaustDirection * 300.0, WeaponLocation, false);
-    DSM = RODestroyableStaticMesh(HitActor);
-
-    // Check if the firer is too close to an object and if so, simulate exhaust spreading out along, and reflecting from, the wall
-    // Do not reflect off players or breakable objects like windows
-    if (HitActor != none && DHPawn(HitActor) == none && DSM == none)
+    if (bCausesExhaustDamage)
     {
-        ExhaustLength = VSize(HitLocation - WeaponLocation); // exhaust stream length when it hit an object
-        ExhaustReflectDirection = 2.0 * (HitNormal * ExhaustDirection) * HitNormal - ExhaustDirection; // vector back towards firer from hit object
+        WeaponLocation = Weapon.ThirdPersonActor.Location;
+        ExhaustDirection = -vector(Weapon.ThirdPersonActor.Rotation);
 
-        if (ExhaustLength < 200.0)
+        // Check if the exhaust backblast hit an object behind the firer
+        HitActor = Trace(HitLocation, HitNormal, WeaponLocation + (ExhaustDirection * 0.75 * default.ExhaustLength), WeaponLocation, false);
+
+        // The backblast did hit something, not counting players or breakable objects
+        if (HitActor != none && !HitActor.IsA('DH_Pawn') && !HitActor.IsA('RODestroyableStaticMesh'))
         {
-            Weapon.HurtRadius(ExhaustDamage, ExhaustDamageRadius * 3.0, ExhaustDamageType, ExhaustMomentumTransfer, HitLocation + ExhaustReflectDirection * ExhaustLength / 2.0);
+            ExhaustLength = VSize(HitLocation - WeaponLocation); // reduce exhaust length, as it hit something
+
+            // If fired pretty close to the hit object (approx 3.3m by default), simulate a nasty backblast reflecting off the surface (& spreading out along it, if an angled hit)
+            // This causes full exhaust damage & by default the damage centre is approx 0.8m out from the hit surface, with a radius of 2.5m
+            if (ExhaustLength < 0.5 * default.ExhaustLength)
+            {
+                ExhaustReflectDirection = 2.0 * (HitNormal * -ExhaustDirection) * HitNormal + ExhaustDirection;
+                Weapon.HurtRadius(ExhaustDamage, 0.375 * default.ExhaustLength, ExhaustDamageType, ExhaustMomentumTransfer, HitLocation + (ExhaustReflectDirection * 0.125 * default.ExhaustLength));
+            }
         }
-    }
+        // Otherwise exhaust didn't hit anything, so exhaust is full length
+        else
+        {
+            ExhaustLength = default.ExhaustLength;
+        }
 
-    if (ExhaustLength > 100.0)
-    {
-       Weapon.HurtRadius(ExhaustDamage, ExhaustDamageRadius, ExhaustDamageType, ExhaustMomentumTransfer, WeaponLocation - ExhaustDirection * 100.0);
-    }
+        // Full exhaust damage to anything in a small area just behind the weapon
+        if (ExhaustLength > 0.25 * default.ExhaustLength)
+        {
+            Weapon.HurtRadius(ExhaustDamage, 0.125 * default.ExhaustLength, ExhaustDamageType, ExhaustMomentumTransfer, WeaponLocation + (ExhaustDirection * 0.25 * default.ExhaustLength));
+        }
 
-    if (ExhaustLength > 200.0)
-    {
-       Weapon.HurtRadius(ExhaustDamage / 2.0, ExhaustDamageRadius * 2.0, ExhaustDamageType, ExhaustMomentumTransfer, WeaponLocation - ExhaustDirection * 200.0);
-    }
+        // Half exhaust damage to anything in a medium sized area further back from the weapon
+        if (ExhaustLength > 0.5 * default.ExhaustLength)
+        {
+            Weapon.HurtRadius(ExhaustDamage / 2.0, 0.25 * default.ExhaustLength, ExhaustDamageType, ExhaustMomentumTransfer, WeaponLocation + (ExhaustDirection * 0.5 * default.ExhaustLength));
+        }
 
-    if (ExhaustLength >= 400.0)
-    {
-       Weapon.HurtRadius(ExhaustDamage / 3.0, ExhaustDamageRadius * 3.0, ExhaustDamageType, ExhaustMomentumTransfer, WeaponLocation - ExhaustDirection * 300.0);
+        // Third exhaust damage to anything in a quite large area towards the end of the exhaust stream
+        if (ExhaustLength > 0.75 * default.ExhaustLength)
+        {
+            Weapon.HurtRadius(ExhaustDamage / 3.0, 0.375 * default.ExhaustLength, ExhaustDamageType, ExhaustMomentumTransfer, WeaponLocation + (ExhaustDirection * 0.75 * default.ExhaustLength));
+        }
     }
 
     Weapon.PostFire();
@@ -78,29 +78,37 @@ event ModeDoFire()
 
 function PlayFiring()
 {
-    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+    local name Anim;
 
-    if (RocketWeapon != none)
+    if (RocketWeapon != none && Weapon.bUsingSights)
     {
-        Weapon.PlayAnim(FireIronAnims[RocketWeapon.RangeIndex], FireAnimRate, FireTweenTime);
+        if (RocketWeapon.RangeSettings.Length > 0)
+        {
+            Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+        }
+        else
+        {
+            Anim = FireIronAnim;
+        }
+    }
+    else
+    {
+        Anim = FireAnim;
     }
 
+    Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
+    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     ClientPlayForceFeedback(FireForce);
-
-    FireCount++;
 }
 
 defaultproperties
 {
-    FireIronAnims(0)="iron_shoot"
-    FireIronAnims(1)="iron_shootMid"
-    FireIronAnims(2)="iron_shootFar"
+    bCausesExhaustDamage=true
+    ExhaustLength=400.0
     ExhaustDamage=200.0
-    ExhaustDamageRadius=50.0
     ExhaustMomentumTransfer=100.0
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-25.0)
-    AddedPitch=-100
     bUsePreLaunchTrace=false
     FireIronAnim="iron_shoot"
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
@@ -120,9 +128,8 @@ defaultproperties
     ShakeOffsetTime=1.0
     BotRefireRate=0.5
     WarnTargetPct=0.9
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    SmokeEmitterClass=none // removed as is just little wisp of gun muzzle smoke, irrelevant among the smoke & blast of the exhaust
     AimError=2000.0
     Spread=450.0
     SpreadStyle=SS_Random
 }
-

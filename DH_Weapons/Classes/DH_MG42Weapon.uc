@@ -58,7 +58,6 @@ defaultproperties
     ZoomOutTime=0.2
     Handtex=texture'Weapons1st_tex.Arms.hands_gergloves'
     FireModeClass(0)=class'DH_Weapons.DH_MG42Fire'
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
     PutDownAnim="putaway"

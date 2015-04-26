@@ -6,28 +6,26 @@
 class DHBoltActionWeapon extends DHProjectileWeapon
     abstract;
 
-// Overridden because we don't want to allow reloading unless the weapon is out of ammo
+// Modified to prevent reloading unless the weapon is out of ammo
 simulated function bool AllowReload()
 {
-    if (AmmoAmount(0) > 0)
+    if (AmmoAmount(0) <= 0)
     {
-        return false;
+        return super.AllowReload();
     }
-
-    return super.AllowReload();
 }
 
-// Work the bolt when fire is pressed
+// Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
 simulated function Fire(float F)
 {
-    super.Fire(F);
-
-    if (IsBusy() || !bWaitingToBolt)
+    if (bWaitingToBolt && !IsBusy())
     {
-        return;
+        WorkBolt();
     }
-
-    WorkBolt();
+    else
+    {
+        super.Fire(F);
+    }
 }
 
 // Work the bolt
@@ -52,12 +50,12 @@ function ServerWorkBolt()
     WorkBolt();
 }
 
-//State where the bolt is being worked
-simulated state WorkingBolt extends Busy
+// State where the bolt is being worked
+simulated state WorkingBolt extends WeaponBusy
 {
-    simulated function bool ReadyToFire(int Mode)
+    simulated function bool ShouldUseFreeAim()
     {
-        return false;
+        return global.ShouldUseFreeAim();
     }
 
     simulated function bool WeaponAllowSprint()
@@ -70,88 +68,49 @@ simulated state WorkingBolt extends Busy
         return false;
     }
 
-    simulated function Timer()
-    {
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
-        {
-            GotoState('StartCrawling');
-        }
-        else
-        {
-            GotoState('Idle');
-        }
-    }
-
     // Overridden to support playing proper anims after bolting
-    simulated function AnimEnd(int channel)
+    simulated function AnimEnd(int Channel)
     {
         local name  Anim;
         local float Frame, Rate;
 
-        GetAnimParams(0, Anim, Frame, Rate);
-
-        if (Instigator.IsLocallyControlled() && (Anim == BoltIronAnim || Anim == BoltHipAnim))
+        if (InstigatorIsLocallyControlled())
         {
-            bWaitingToBolt = false;
+            GetAnimParams(0, Anim, Frame, Rate);
+            
+            if (Anim == BoltIronAnim || Anim == BoltHipAnim)
+            {
+                bWaitingToBolt = false;
+            }
         }
 
-        super.AnimEnd(channel);
+        super.AnimEnd(Channel);
 
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
-        {
-            GotoState('StartCrawling');
-        }
-        else
-        {
-            GotoState('Idle');
-        }
+        GotoState('Idle');
     }
 
     simulated function BeginState()
     {
-        local name  Anim;
-        local float BoltWaitTime;
-
         if (bUsingSights)
         {
-            Anim = BoltIronAnim;
+            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
         }
         else
         {
-            Anim = BoltHipAnim;
-        }
-
-        if (Instigator.IsLocallyControlled())
-        {
-            PlayAnim(Anim, 1.0, FastTweenTime);
+            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
         }
 
         // Play the animation on the pawn
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).HandleBoltAction();
-        }
-
-        BoltWaitTime = GetAnimDuration(Anim, 1.0) + FastTweenTime;
-
-        if (Instigator.IsLocallyControlled())
-        {
-            SetTimer(BoltWaitTime, false);
-        }
-        else
-        {
-            // Let the server set the bWaitingToBolt to false a little sooner than the client
-            // Since the client can't attempt to fire until he is done bolting, this will help alleviate situations
-            // where the client finishes bolting before the server registers the bolting as finished
-            BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
-            SetTimer(BoltWaitTime, false);
         }
     }
 
     simulated function EndState()
     {
         bWaitingToBolt = false;
-        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // fire now!
+        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // ready to fire fire now
     }
 }
 
@@ -159,12 +118,6 @@ simulated state WorkingBolt extends Busy
 simulated function PostFire()
 {
     GotoState('PostFiring');
-}
-
-// Don't want to go straight to the reloading state on bolt actions
-simulated function OutOfAmmo()
-{
-    super(ROWeapon).OutOfAmmo();
 }
 
 // State where the weapon has just been fired
@@ -198,7 +151,7 @@ simulated state PostFiring
     {
         bWaitingToBolt = true;
 
-        if (bUsingSights)
+        if (bUsingSights && DHProjectileFire(FireMode[0]) != none)
         {
             SetTimer(GetAnimDuration(DHProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
         }
@@ -209,6 +162,12 @@ simulated state PostFiring
     }
 }
 
+// Modified so bots don't go straight to the reloading state on bolt actions
+simulated function OutOfAmmo()
+{
+    super(ROWeapon).OutOfAmmo();
+}
+
 defaultproperties
 {
     BobDamping=0.8
@@ -216,4 +175,5 @@ defaultproperties
     bCanAttachOnBack=true
     SwayModifyFactor=0.4
     BobModifyFactor=0.12
+    bSniping=true
 }

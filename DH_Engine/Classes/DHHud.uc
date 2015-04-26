@@ -1441,13 +1441,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 // Overridden to handle AT reload messages
 function DrawPlayerNames(Canvas C)
 {
-    local Actor            HitActor;
-    local vector           HitLocation, HitNormal, ViewPos, ScreenPos, Loc, X, Y, Z, Dir;
-    local float            StrX, StrY, Distance;
-    local string           Display;
-    local bool             bIsAVehicle;
-    local DHPawn           MyDHP, OtherDHP;
-    local DHMortarVehicle  Mortar;
+    local vector          HitLocation, HitNormal, ViewPos, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
+    local float           StrX, StrY;
+    local string          ResupplyMessage;
+    local bool            bCouldMGResupply, bCouldMortarResupply, bCouldATResupply, bCouldATReload;
+    local Pawn            HitPawn;
+    local DHPawn          MyDHP, OtherDHP;
+    local DHMortarVehicle Mortar;
 
     if (PawnOwner == none || PawnOwner.Controller == none)
     {
@@ -1460,284 +1460,137 @@ function DrawPlayerNames(Canvas C)
     }
 
     ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0);
-    HitActor = Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true);
+    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true));
+    Mortar = DHMortarVehicle(HitPawn);
 
-    // CHECK FOR MORTAR - Basnett 2011
-    if (HitActor != none && DHPawn(PawnOwner) != none && DHMortarVehicle(HitActor) != none)
+    // Record NamedPlayer & possibly NameTime, if we're looking at a team-mate, or an unmanned mortar or if we're spectating (so we see all player names) 
+    if (HitPawn != none && ((HitPawn.PlayerReplicationInfo != none && HitPawn.PlayerReplicationInfo.Team == PawnOwner.PlayerReplicationInfo.Team)
+        || (Mortar != none && Mortar.VehicleTeam == PawnOwner.GetTeamNum()) || PawnOwner.PlayerReplicationInfo.Team == none))
     {
-        MyDHP = DHPawn(PawnOwner);
-
-        Mortar = DHMortarVehicle(HitActor);
-
-        if (Mortar != none && Mortar.VehicleTeam == MyDHP.GetTeamNum())
+        if (NamedPlayer != HitPawn || Level.TimeSeconds - NameTime > 0.5)
         {
-            NamedPlayer = Mortar;
-
-            // Draw player name
-            C.Font = GetPlayerNameFont(C);
-            Loc = NamedPlayer.Location;
-            Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-            ScreenPos = C.WorldToScreen(Loc);
-
-            if (Mortar.PlayerReplicationInfo != none)
-            {
-                C.DrawColor = GetTeamColour(Mortar.PlayerReplicationInfo.Team.TeamIndex);
-                C.TextSize(Mortar.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
-                Display = Mortar.PlayerReplicationInfo.PlayerName;
-                C.DrawTextClipped(Display);
-            }
-
-            // Someone's on it - let's check their ammunition
-            // Also, are we capable of reloading?
-            if (MyDHP != none && MyDHP.bHasMortarAmmo && Mortar.bCanBeResupplied)
-            {
-                Distance = VSizeSquared(Loc - PawnOwner.Location);
-
-                if (MyDHP != none)
-                {
-                    MyDHP.bCanMGResupply = false;
-                    MyDHP.bCanATReload = false;
-                    MyDHP.bCanMortarResupply = false;
-
-                    if (Distance < 14400.0) // 2 meters
-                    {
-                        MyDHP.bCanMortarResupply = true;
-                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                    }
-                    else
-                    {
-                        MyDHP.bCanMortarResupply = false;
-                        Display = NeedAmmoText;
-                    }
-                }
-
-                // Draw text under player's name (need ammo or press x to resupply)
-                C.DrawColor = WhiteColor;
-                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
-                C.DrawTextClipped(Display);
-            }
-        }
-
-        return;
-    }
-
-    if (Pawn(HitActor) != none && Pawn(HitActor).PlayerReplicationInfo != none &&
-        (PawnOwner.PlayerReplicationInfo.Team == none || PawnOwner.PlayerReplicationInfo.Team == Pawn(HitActor).PlayerReplicationInfo.Team))
-    {
-        if (NamedPlayer != HitActor || Level.TimeSeconds - NameTime > 0.5)
-        {
+            NamedPlayer = HitPawn;
             NameTime = Level.TimeSeconds;
         }
-
-        NamedPlayer = Pawn(HitActor);
     }
     else
     {
         NamedPlayer = none;
     }
 
-    if (NamedPlayer != none && NamedPlayer.PlayerReplicationInfo != none && Level.TimeSeconds - NameTime < 1.0)
+    // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
+    if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
     {
-        MyDHP = DHPawn(PawnOwner);
-        OtherDHP = DHPawn(NamedPlayer);
-
-        // Quick check simply to stop error log spam
-        bIsAVehicle = (OtherDHP == none);
-
         GetAxes(PlayerOwner.Rotation, X, Y, Z);
         Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
 
         if (Dir dot X > 0.0)
         {
-            C.DrawColor = GetTeamColour(NamedPlayer.PlayerReplicationInfo.Team.TeamIndex);
+            MyDHP = DHPawn(PawnOwner);
+
+            // Set resupply/reload flags
+            if (MyDHP != none)
+            {
+                OtherDHP = DHPawn(NamedPlayer);
+
+                // Mortar resupply (could be an unmanned mortar, not a player)
+                if (((OtherDHP != none && OtherDHP.bMortarCanBeResupplied) || (Mortar != none && Mortar.bCanBeResupplied)) && MyDHP.bHasMortarAmmo)
+                {
+                    bCouldMortarResupply = true;
+                }
+                // AT weapon assisted reload
+                else if (OtherDHP != none && OtherDHP.bWeaponNeedsReload && DHRocketWeapon(OtherDHP.Weapon) != none && DHRocketWeapon(OtherDHP.Weapon).bCanHaveAsssistedReload)
+                {
+                    bCouldATReload = true;
+                }
+                else if (OtherDHP != none && OtherDHP.bWeaponNeedsResupply && DHProjectileWeapon(OtherDHP.Weapon) != none && DHProjectileWeapon(OtherDHP.Weapon).bCanBeResupplied)
+                {
+                    // AT weapon resupply
+                    if (DHRocketWeapon(OtherDHP.Weapon) != none && MyDHP.bHasATAmmo)
+                    {
+                        bCouldATResupply = true;
+                    }
+                    // MG resupply
+                    else if (MyDHP.bHasMGAmmo)
+                    {
+                        bCouldMGResupply = true;
+                    }
+                }
+            }
+
+            NamedPlayerLoc = NamedPlayer.Location;
+            NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
+
+            // If we could resupply/reload the player, set the appropriate message
+            if (bCouldMGResupply || bCouldMortarResupply || bCouldATResupply || bCouldATReload)
+            {
+                // If within 2 metres then we can actually resupply/reload the player
+                if (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) < 14400.0)
+                {
+                    if (bCouldATReload)
+                    {
+                        ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
+                    }
+                    else
+                    {
+                        ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
+                    }
+                }
+                // Otherwise we'll display a message saying the player needs a resupply/reload
+                else
+                {
+                    if (bCouldATReload)
+                    {
+                        ResupplyMessage = NeedReloadText;
+                    }
+                    else
+                    {
+                        ResupplyMessage = NeedAmmoText;
+                    }
+
+                    // Not close enough to actually resupply/reload, so reset these local variables
+                    bCouldMGResupply = false;
+                    bCouldMortarResupply = false;
+                    bCouldATResupply = false;
+                    bCouldATReload = false;
+                }
+            }
+
+            // Now set our pawn's resupply/reload variables (do this only once, as they are replicated)
+            if (MyDHP != none)
+            {
+                MyDHP.bCanMGResupply = bCouldMGResupply;
+                MyDHP.bCanMortarResupply = bCouldMortarResupply;
+                MyDHP.bCanATResupply = bCouldATResupply;
+                MyDHP.bCanATReload = bCouldATReload;
+            }
+
             C.Font = GetPlayerNameFont(C);
+            ScreenPos = C.WorldToScreen(NamedPlayerLoc);
 
-            // Mortar resupply
-            if (MyDHP != none && OtherDHP != none && MyDHP.bHasMortarAmmo && OtherDHP.bMortarCanBeResupplied)
+            // Draw player name & any resupply/reload message
+            if (NamedPlayer.PlayerReplicationInfo != none)
             {
-                // Draw player name
-                Loc = NamedPlayer.Location;
-                Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-                ScreenPos = C.WorldToScreen(Loc);
                 C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
-                Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                C.DrawTextClipped(Display);
-                Distance = VSizeSquared(Loc - PawnOwner.Location);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
 
-                if (MyDHP != none)
+                if (ResupplyMessage != "")
                 {
-                    MyDHP.bCanMGResupply = false;
-                    MyDHP.bCanATReload = false;
-                    MyDHP.bCanMortarResupply = false;
-
-                    if (Distance < 14400.0) // 2 meters
-                    {
-                        MyDHP.bCanMortarResupply = true;
-                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                    }
-                    else
-                    {
-                        MyDHP.bCanMortarResupply = false;
-                        Display = NeedAmmoText;
-                    }
+                    C.DrawColor = WhiteColor;
+                    C.DrawTextClipped(ResupplyMessage);
+                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
                 }
-
-                // Draw text under player's name (need ammo or press x to resupply)
+                
+                C.DrawColor = GetTeamColour(NamedPlayer.PlayerReplicationInfo.Team.TeamIndex);
+                C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
+            }
+            // Or if we don't have a player name but have resupply text, then just draw that (must be an unmanned mortar that can be resupplied)
+            else if (ResupplyMessage != "")
+            {
                 C.DrawColor = WhiteColor;
-                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
-                C.DrawTextClipped(Display);
-            }
-            else if (bIsAVehicle || !OtherDHP.bWeaponCanBeReloaded)
-            {
-                // MG resupply
-                if (MyDHP != none && !NamedPlayer.IsA('Vehicle') && MyDHP.bHasMGAmmo && OtherDHP.bWeaponCanBeResupplied && OtherDHP.bWeaponNeedsResupply)
-                {
-                    // Draw player name
-                    Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-                    ScreenPos = C.WorldToScreen(Loc);
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
-                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(Display);
-
-                    Distance = VSizeSquared(Loc - PawnOwner.Location);
-
-                    if (MyDHP != none)
-                    {
-                        MyDHP.bCanATResupply = false;
-                        MyDHP.bCanATReload = false;
-
-                        if (Distance < 14400.0) // 2 meters
-                        {
-                            MyDHP.bCanMGResupply = true;
-                            Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                        }
-                        else
-                        {
-                            MyDHP.bCanMGResupply = false;
-                            Display = NeedAmmoText;
-                        }
-                    }
-
-                    // Draw text under player's name (need ammo or press x to resupply)
-                    C.DrawColor = WhiteColor;
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
-                    C.DrawTextClipped(Display);
-                }
-                else
-                {
-                    if (MyDHP != none)
-                    {
-                        MyDHP.bCanMGResupply = false;
-                        MyDHP.bCanATResupply = false;
-                        MyDHP.bCanATReload = false;
-                    }
-
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                    Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-                    ScreenPos = C.WorldToScreen(Loc);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
-
-                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(Display);
-                }
-            }
-            // AT weapon assisted reload
-            else if (OtherDHP != none && OtherDHP.bWeaponCanBeReloaded)
-            {
-                if (MyDHP != none && !NamedPlayer.IsA('Vehicle') && OtherDHP.bWeaponNeedsReload)
-                {
-                    // Draw player name
-                    Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-                    ScreenPos = C.WorldToScreen(Loc);
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
-                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(Display);
-
-                    Distance = VSizeSquared(Loc - PawnOwner.Location);
-
-                    MyDHP.bCanMGResupply = false;
-                    MyDHP.bCanATResupply = false;
-
-                    if (Distance < 14400.0) // 2 meters
-                    {
-                        MyDHP.bCanATReload = true;
-
-                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
-                    }
-                    else
-                    {
-                        MyDHP.bCanATReload = false;
-
-                        Display = NeedReloadText;
-                    }
-
-                    // Draw text under player's name (need reload or press x to reload)
-                    C.DrawColor = WhiteColor;
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
-                    C.DrawTextClipped(Display);
-                }
-                // AT weapon resupply
-                else if (MyDHP != none && OtherDHP != none && !NamedPlayer.IsA('Vehicle') && MyDHP.bHasATAmmo && OtherDHP.bWeaponCanBeResupplied && OtherDHP.bWeaponNeedsResupply)
-                {
-                    // Draw player name
-                    Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-                    ScreenPos = C.WorldToScreen(Loc);
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
-                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(Display);
-
-                    Distance = VSizeSquared(Loc - PawnOwner.Location);
-
-                    MyDHP.bCanMGResupply = false;
-                    MyDHP.bCanATReload = false;
-
-                    if (Distance < 14400.0) // 2 meters
-                    {
-                        MyDHP.bCanATResupply = true;
-
-                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                    }
-                    else
-                    {
-                        MyDHP.bCanATResupply = false;
-
-                        Display = NeedAmmoText;
-                    }
-
-                    // Draw text under player's name (need ammo or press x to resupply)
-                    C.DrawColor = WhiteColor;
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
-                    C.DrawTextClipped(Display);
-                }
-                // No resupply or assisted reload - just draw player name
-                else
-                {
-                    // Draw player name
-                    if (MyDHP != none)
-                    {
-                        MyDHP.bCanMGResupply = false;
-                        MyDHP.bCanATResupply = false;
-                        MyDHP.bCanATReload = false;
-                    }
-
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                    Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
-                    ScreenPos = C.WorldToScreen(Loc);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
-
-                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(Display);
-                }
+                C.TextSize(ResupplyMessage, StrX, StrY);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
+                C.DrawTextClipped(ResupplyMessage);
             }
         }
     }

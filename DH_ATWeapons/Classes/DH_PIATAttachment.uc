@@ -3,50 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATAttachment extends DHWeaponAttachment;
-
-var   mesh   EmptyMesh;  // The mesh to swap to after the round is fired
-
-// Overridden because the 3rd person effects are handled differently for the panzerfaust
-simulated function PostBeginPlay()
-{
-    if (Role == ROLE_Authority)
-    {
-        bOldBayonetAttached = bBayonetAttached;
-        bOldBarrelSteamActive = bBarrelSteamActive;
-        bUpdated = true;
-    }
-}
-
-// Overridden because the 3rd person effects are handled differently for the panzerfaust
-simulated event ThirdPersonEffects()
-{
-
-    // Only switch to the empty mesh if its not a melee attack
-    if (FiringMode == 0)
-        LinkMesh(EmptyMesh);
-
-    if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
-        return;
-
-    if (FlashCount == 0)
-    {
-        ROPawn(Instigator).StopFiring();
-    }
-    else if (FiringMode == 0)
-    {
-        ROPawn(Instigator).StartFiring(false, bRapidFire);
-    }
-    else
-    {
-        ROPawn(Instigator).StartFiring(true, bAltRapidFire);
-    }
-
-}
+class DH_PIATAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    EmptyMesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_NoShell_3rd'
     MuzzleBoneName="Muzzle"
     PA_MovementAnims(0)="stand_jogF_ptrd"
     PA_MovementAnims(1)="stand_jogB_ptrd"
@@ -213,6 +173,6 @@ defaultproperties
     WA_ProneReload="idle_PIAT"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
     bHeavy=true
-    bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'
+    EmptyMesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_NoShell_3rd'
 }

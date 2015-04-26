@@ -36,7 +36,6 @@ defaultproperties
     PutDownAnimRate=1.0
     AIRating=0.4
     CurrentRating=0.4
-    bSniping=true
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_M1CarbinePickup'

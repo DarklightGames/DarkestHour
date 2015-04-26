@@ -9,9 +9,9 @@ class DH_BazookaWeapon extends DHRocketWeapon;
 
 defaultproperties
 {
-    Ranges(0)=15
-    Ranges(1)=850
-    Ranges(2)=2450
+    RangeSettings(0)=(FirePitch=15,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
+    RangeSettings(1)=(FirePitch=850,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")
+    RangeSettings(2)=(FirePitch=2450,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar")
     FireModeClass(0)=class'DH_ATWeapons.DH_BazookaFire'
     FireModeClass(1)=class'DH_ATWeapons.DH_BazookaMeleeFire'
     PickupClass=class'DH_ATWeapons.DH_BazookaPickup'
@@ -19,4 +19,6 @@ defaultproperties
     ItemName="M1A1 Bazooka"
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka'
     FillAmmoMagCount=1
+    bCanHaveAsssistedReload=true
+    bDoesNotRetainLoadedMag=true
 }

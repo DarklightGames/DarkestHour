@@ -18,18 +18,19 @@ var     int         LoadedMagazineIndex;
 
 function InitDroppedPickupFor(Inventory Inv)
 {
-    local int i;
     local DHProjectileWeapon W;
-
-    W = DHProjectileWeapon(Inv);
+    local int i;
 
     super.InitDroppedPickupFor(Inv);
+
+    W = DHProjectileWeapon(Inv);
 
     if (W != none)
     {
         if (W.Barrels.Length > 0 && W.BarrelIndex >= 0 && W.BarrelIndex < W.Barrels.Length)
         {
             bHasBarrel = true;
+            Enable('Tick');
 
             LevelCTemp = W.Barrels[W.BarrelIndex].LevelCTemp;
             Temperature = W.Barrels[W.BarrelIndex].Temperature;
@@ -80,24 +81,10 @@ function Tick(float DeltaTime)
             Temperature2 = FMax(Temperature2 + (DeltaTime * BarrelCoolingRate), LevelCTemp);
         }
     }
-}
-
-function array<int> GetLoadedMagazineIndices()
-{
-    local array<int> Indices;
-    local int i;
-
-    for (i = 0; i < AmmoMags.Length; ++i)
+    else
     {
-        if (AmmoMags[i] <= 0)
-        {
-            continue;
-        }
-
-        Indices[Indices.Length] = i;
+        Disable('Tick');
     }
-
-    return Indices;
 }
 
 static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)

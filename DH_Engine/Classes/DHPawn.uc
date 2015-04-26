@@ -12,8 +12,7 @@ class DHPawn extends ROPawn
 var bool bHasMGAmmo;
 var bool bHasATAmmo;
 var bool bHasMortarAmmo;
-var bool bWeaponCanBeReloaded;          // Whether a weapon can be reloaded by an assistant
-var bool bWeaponNeedsReload;            // Whether an AT weapon is loaded or not
+var bool bWeaponNeedsReload; // whether an AT weapon is loaded or not
 var bool bCanMGResupply;
 var bool bCanATResupply;
 var bool bCanATReload;
@@ -23,7 +22,7 @@ var int  MortarHEAmmo, MortarSmokeAmmo;
 
 var bool bChuteDeleted;
 var bool bHatShotOff;
-var float MinHurtSpeed;                 // When a moving player lands, if they're moving faster than this speed they'll take damage
+var float MinHurtSpeed; // when a moving player lands, if they're moving faster than this speed they'll take damage
 
 var float  IronsightBobTime;
 var vector IronsightBob;
@@ -110,7 +109,7 @@ replication
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
-        bWeaponCanBeReloaded, bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
+        bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2200,7 +2199,7 @@ function HandleAssistedReload()
     local name PlayerAnim;
 
     // Set the anim blend time so the server will make this player relevant for third person reload sounds to be heard
-    if (Level.NetMode != NM_StandAlone && WeaponAttachment != none)
+    if (Level.NetMode != NM_StandAlone && DHWeaponAttachment(WeaponAttachment) != none)
     {
         PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
 
@@ -2216,7 +2215,7 @@ simulated function PlayAssistedReload()
     local name PlayerAnim;
     local name WeaponAnim;
 
-    if (WeaponAttachment != none)
+    if (DHWeaponAttachment(WeaponAttachment) != none)
     {
         PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
         WeaponAnim = WeaponAttachment.WA_ReloadEmpty;

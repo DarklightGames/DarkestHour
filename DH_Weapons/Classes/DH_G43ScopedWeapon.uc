@@ -44,12 +44,9 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
     {
-        if (!IsAnimating(0))
-        {
-            PlayIdle();
-        }
+        PlayIdle();
     }
 
     FireMode[Mode].bIsFiring = false;
@@ -95,7 +92,6 @@ defaultproperties
     PutDownAnimRate=1.0
     AIRating=0.4
     CurrentRating=0.4
-    bSniping=true
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'
