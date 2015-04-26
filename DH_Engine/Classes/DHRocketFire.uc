@@ -36,7 +36,7 @@ event ModeDoFire()
         HitActor = Trace(HitLocation, HitNormal, WeaponLocation + (ExhaustDirection * 0.75 * default.ExhaustLength), WeaponLocation, false);
 
         // The backblast did hit something, not counting players or breakable objects
-        if (HitActor != none && !HitActor.IsA('DH_Pawn') && !HitActor.IsA('RODestroyableStaticMesh'))
+        if (HitActor != none && !HitActor.IsA('DHPawn') && !HitActor.IsA('RODestroyableStaticMesh'))
         {
             ExhaustLength = VSize(HitLocation - WeaponLocation); // reduce exhaust length, as it hit something
 
