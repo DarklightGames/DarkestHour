@@ -25,7 +25,7 @@ defaultproperties
     TweenTime=0.0
     FireForce="RocketLauncherFire"
     FireRate=2.6
-    AmmoClass=class'ROAmmo.Kar792x57Ammo'
+    AmmoClass=class'DH_Weapons.DH_Kar98ScopedAmmo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0

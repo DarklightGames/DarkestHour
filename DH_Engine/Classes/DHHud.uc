@@ -2867,7 +2867,6 @@ simulated function DrawLocationHits(Canvas C, ROPawn P)
 simulated function UpdateHud()
 {
     local ROGameReplicationInfo GRI;
-    local class<Ammunition>     AmmoClass;
     local Weapon                W;
     local byte                  Nation;
     local ROPawn                P;
@@ -2876,32 +2875,29 @@ simulated function UpdateHud()
 
     if (PawnOwnerPRI != none)
     {
-        if (PawnOwner != none)
+        P = ROPawn(PawnOwner);
+
+        if (P != none)
         {
-            P = ROPawn(PawnOwner);
+            // Set stamina info
+            HealthFigureStamina.Scale = 1.0 - P.Stamina / P.default.Stamina;
+            HealthFigureStamina.Tints[0].G = 255 - HealthFigureStamina.Scale * 255;
+            HealthFigureStamina.Tints[1].G = 255 - HealthFigureStamina.Scale * 255;
+            HealthFigureStamina.Tints[0].B = 255 - HealthFigureStamina.Scale * 255;
+            HealthFigureStamina.Tints[1].B = 255 - HealthFigureStamina.Scale * 255;
 
-            if (P != none)
+            // Set stance info
+            if (P.bIsCrouched)
             {
-                // Set stamina info
-                HealthFigureStamina.Scale = 1.0 - P.Stamina / P.default.Stamina;
-                HealthFigureStamina.Tints[0].G = 255 - HealthFigureStamina.Scale * 255;
-                HealthFigureStamina.Tints[1].G = 255 - HealthFigureStamina.Scale * 255;
-                HealthFigureStamina.Tints[0].B = 255 - HealthFigureStamina.Scale * 255;
-                HealthFigureStamina.Tints[1].B = 255 - HealthFigureStamina.Scale * 255;
-
-                // Set stance info
-                if (P.bIsCrouched)
-                {
-                    StanceIcon.WidgetTexture = StanceCrouch;
-                }
-                else if (P.bIsCrawling)
-                {
-                    StanceIcon.WidgetTexture = StanceProne;
-                }
-                else
-                {
-                    StanceIcon.WidgetTexture = StanceStanding;
-                }
+                StanceIcon.WidgetTexture = StanceCrouch;
+            }
+            else if (P.bIsCrawling)
+            {
+                StanceIcon.WidgetTexture = StanceProne;
+            }
+            else
+            {
+                StanceIcon.WidgetTexture = StanceStanding;
             }
         }
 
@@ -2924,41 +2920,20 @@ simulated function UpdateHud()
         }
     }
 
-    AmmoIcon.WidgetTexture = none; // this is so we don't show icon on binocs or when we have no weapon
-
-    if (PawnOwner == none)
+    if (PawnOwner != none)
     {
-        return;
-    }
+        W = PawnOwner.Weapon;
 
-    W = PawnOwner.Weapon;
+        if (W != none)
+        {
+            if (W.AmmoClass[0] != none)
+            {
+                AmmoIcon.WidgetTexture = W.AmmoClass[0].default.IconMaterial;
+            }
 
-    if (W == none)
-    {
-        return;
+            AmmoCount.Value = W.GetHudAmmoCount();
+        }
     }
-
-    AmmoClass = W.GetAmmoClass(0);
-
-    if (AmmoClass == none)
-    {
-        return;
-    }
-
-    if (W.ItemName == "Scoped Enfield No.4")
-    {
-        AmmoIcon.WidgetTexture = texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Sniper_ammo';
-    }
-    else if (W.ItemName == "Scoped Kar98k Rifle")
-    {
-        AmmoIcon.WidgetTexture = texture'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo';
-    }
-    else
-    {
-        AmmoIcon.WidgetTexture = AmmoClass.default.IconMaterial;
-    }
-
-    AmmoCount.Value = W.GetHudAmmoCount();
 }
 
 simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
