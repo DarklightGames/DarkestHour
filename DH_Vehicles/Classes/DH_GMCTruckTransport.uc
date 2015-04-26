@@ -7,6 +7,7 @@ class DH_GMCTruckTransport extends DH_GMCTruck;
 
 defaultproperties
 {
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerTwo',WeaponBone="passenger_l_1")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerThree',WeaponBone="passenger_l_3")
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerFour',WeaponBone="passenger_l_5")
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerFive',WeaponBone="passenger_r_1")
