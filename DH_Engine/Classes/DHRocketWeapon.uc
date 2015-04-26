@@ -844,11 +844,6 @@ function bool ResupplyAmmo()
     return true;
 }
 
-function bool IsATWeapon()
-{
-    return true;
-}
-
 function bool FillAmmo()
 {
     local bool bDidFillAmmo;

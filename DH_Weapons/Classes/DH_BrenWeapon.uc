@@ -128,11 +128,6 @@ function bool ResupplyAmmo()
     return true;
 }
 
-function bool IsMGWeapon()
-{
-    return true;
-}
-
 defaultproperties
 {
     NumMagsToResupply=2

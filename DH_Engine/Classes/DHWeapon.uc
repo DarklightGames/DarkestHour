@@ -24,21 +24,6 @@ function bool AssistedReload()
     return false;
 }
 
-function bool IsATWeapon()
-{
-    return false;
-}
-
-function bool IsMGWeapon()
-{
-    return false;
-}
-
-simulated function bool IsMortarWeapon()
-{
-    return false;
-}
-
 simulated function bool WeaponAllowMantle()
 {
     return true;

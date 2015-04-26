@@ -23,11 +23,6 @@ replication
         ServerSetRange;
 }
 
-function bool IsATWeapon()
-{
-    return true;
-}
-
 simulated function bool AllowReload()
 {
     // Cannot reload without being prone or rested.

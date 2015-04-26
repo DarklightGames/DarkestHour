@@ -190,11 +190,6 @@ function bool ResupplyAmmo()
     return true;
 }
 
-function bool IsMGWeapon()
-{
-    return true;
-}
-
 defaultproperties
 {
     SelectFireAnim="switch_fire"

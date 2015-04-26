@@ -311,11 +311,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
     }
 }
 
-simulated function bool IsMortarWeapon()
-{
-    return true;
-}
-
 function bool ResupplyAmmo()
 {
     local DHPawn P;

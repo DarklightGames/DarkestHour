@@ -645,11 +645,6 @@ function float GetAIRating()
     return Result;
 }
 
-function bool IsATWeapon()
-{
-    return true;
-}
-
 defaultproperties
 {
     Ranges(0)=500

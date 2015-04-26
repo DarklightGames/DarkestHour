@@ -63,11 +63,6 @@ simulated function RenewAmmoBelt()
     }
 }
 
-function bool IsMGWeapon()
-{
-    return true;
-}
-
 // Implemented in various states to show whether the weapon is busy performing some action that normally shouldn't be interrupted
 // Overridden because we have no melee attack
 simulated function bool IsBusy()
