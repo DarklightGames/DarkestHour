@@ -1996,7 +1996,7 @@ function AddDefaultInventory()
     }
 }
 
-// Modified to prevent "accessed none" errors on parachute landing
+// Modified to use DH weapon classes to determine the correct put away & draw animations (also to prevent "accessed none" errors on parachute landing)
 state PutWeaponAway
 {
     simulated function BeginState()
@@ -2015,7 +2015,8 @@ state PutWeaponAway
         // Weapon could be none because it might have been destroyed before getting here (nades, faust, etc)
         if (Weapon != none)
         {
-            if (Weapon.IsA('ROExplosiveWeapon') || Weapon.IsA('BinocularsItem'))
+            // Putting away a grenade or binoculars
+            if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem'))
             {
                 if (bIsCrawling)
                 {
@@ -2026,18 +2027,8 @@ state PutWeaponAway
                     Anim = 'stand_putaway_nade';
                 }
             }
-            else if (Weapon.IsA('ROBoltActionWeapon') || Weapon.IsA('ROAutoWeapon') || Weapon.IsA('ROSemiAutoWeapon'))
-            {
-                if (bIsCrawling)
-                {
-                    Anim = 'prone_putaway_kar';
-                }
-                else
-                {
-                    Anim = 'stand_putaway_kar';
-                }
-            }
-            else if (Weapon.IsA('ROPistolWeapon'))
+            // Putting away a pistol
+            else if (Weapon.IsA('DHPistolWeapon'))
             {
                 if (bIsCrawling)
                 {
@@ -2048,22 +2039,11 @@ state PutWeaponAway
                     Anim = 'stand_putaway_pistol';
                 }
             }
-            else
-            {
-                // Default in case there is no anim
-                if (bIsCrawling)
-                {
-                    Anim = 'prone_putaway_kar';
-                }
-                else
-                {
-                    Anim = 'stand_putaway_kar';
-                }
-            }
         }
-        else
+
+        // If no specific animation has been set, we'll use a generic anim for putting away the old weapon on the player's back
+        if (Anim == '')
         {
-            // TODO: Need a put away empty anim
             if (bIsCrawling)
             {
                 Anim = 'prone_putaway_kar';
@@ -2081,7 +2061,7 @@ state PutWeaponAway
         {
             Weapon.GotoState('Hidden');
 
-            if (Weapon != none) // Matt: added this 'if' to prevent "accessed none" errors, as Weapon can become 'none' during GoToState above, e.g. when parachute landing
+            if (Weapon != none) // necessary to prevent "accessed none" errors, as Weapon can become 'none' during GotoState above, e.g. when parachute landing
             {
                 Weapon.NetUpdateFrequency = 2.0;
             }
@@ -2103,7 +2083,7 @@ state PutWeaponAway
             Weapon.BringUp(SwapWeapon);
         }
 
-        if (ROExplosiveWeapon(Weapon) == none)
+        if (DHExplosiveWeapon(Weapon) == none)
         {
             bPreventWeaponFire = false;
         }
@@ -2116,6 +2096,177 @@ state PutWeaponAway
         SetTimer(GetAnimDuration(Anim, 1.0) + 0.1, false);
 
         SetAnimAction(Anim);
+    }
+
+    simulated function EndState()
+    {
+        local name Anim;
+
+        if (SwapWeapon != none)
+        {
+            if (SwapWeapon.bCanAttachOnBack)
+            {
+                if (AttachedBackItem != none)
+                {
+                    AttachedBackItem.Destroy();
+                    AttachedBackItem = none;
+                }
+
+                AttachedBackItem = Spawn(class 'BackAttachment', self);
+                AttachedBackItem.InitFor(SwapWeapon);
+                AttachToBone(AttachedBackItem,AttachedBackItem.AttachmentBone);
+            }
+
+            SwapWeapon.SetDefaultDisplayProperties();
+            SwapWeapon.DetachFromPawn(self);
+        }
+
+        // Select the proper animation to play based on what the player is holding & what weapon they are switching to
+        if (Weapon == none)
+        {
+            if (bIsCrawling)
+            {
+                Anim = 'prone_nadefromrifle';
+            }
+            else
+            {
+                Anim = 'stand_nadefromrifle';
+            }
+        }
+        else if (SwapWeapon != none)
+        {
+            if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DH_BinocularsItem'))
+            {
+                // From grenade or binocs to pistol
+                if (Weapon.IsA('DHPistolWeapon'))
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_pistolfromnade';
+                    }
+                    else
+                    {
+                        Anim = 'stand_pistolfromnade';
+                    }
+                }
+                // From grenade or binocs, to grenade or binocs
+                else if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem'))
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_draw_nade';
+                    }
+                    else
+                    {
+                        Anim = 'stand_draw_nade';
+                    }
+                }
+                // From grenade or binocs to any other weapon (generic anim to draw new weapon from player's back)
+                else
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_riflefromnade';
+                    }
+                    else
+                    {
+                        Anim = 'stand_riflefromnade';
+                    }
+                }
+            }
+            else if (SwapWeapon.IsA('DHPistolWeapon'))
+            {
+                // From pistol to grenade or binocs
+                if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem'))
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_nadefrompistol';
+                    }
+                    else
+                    {
+                        Anim = 'stand_nadefrompistol';
+                    }
+                }
+                // From pistol to any other weapon (generic anim to draw new weapon from player's back)
+                else
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_riflefrompistol';
+                    }
+                    else
+                    {
+                        Anim = 'stand_riflefrompistol';
+                    }
+                }
+            }
+            else
+            {
+                // From any other weapon to grenade or binocs (generic anim having put away old weapon on player's back)
+                if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem')) // also used if Weapon is none
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_nadefromrifle';
+                    }
+                    else
+                    {
+                        Anim = 'stand_nadefromrifle';
+                    }
+                }
+                // From any other weapon to pistol
+                else if (Weapon.IsA('DHPistolWeapon'))
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_pistolfromrifle';
+                    }
+                    else
+                    {
+                        Anim = 'stand_pistolfromrifle';
+                    }
+                }
+            }
+        }
+
+        // If no specific animation has been set, we'll use a generic anim for drawing the new weapon from the player's back
+        if (Anim == '')
+        {
+            if (bIsCrawling)
+            {
+                Anim = 'prone_draw_kar';
+            }
+            else
+            {
+                Anim = 'stand_draw_kar';
+            }
+        }
+
+        SetAnimAction(Anim);
+
+        if (Weapon != none)
+        {
+            if (AttachedBackItem != none && AttachedBackItem.InventoryClass == Weapon.Class)
+            {
+                AttachedBackItem.Destroy();
+                AttachedBackItem = none;
+            }
+
+            // Unhide the weapon now
+            if (Weapon.ThirdPersonActor != none)
+            {
+                Weapon.ThirdPersonActor.bHidden = false;
+            }
+            else
+            {
+                Weapon.AttachToPawn(self);
+            }
+        }
+
+        SwapWeapon = none;
+
+        bPreventWeaponFire = false;
     }
 }
 
