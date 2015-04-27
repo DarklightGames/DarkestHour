@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHPlaceableWeaponPickup extends ROPlaceableAmmoPickup;
+class DHPlaceableWeaponPickup extends DHWeaponPickup
+    placeable;
 
-var()   class<Inventory>    WeaponType; // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
+var() class<Weapon> WeaponType; // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
 
 replication
 {
@@ -14,104 +15,118 @@ replication
         WeaponType;
 }
 
-// Modified to set StaticMesh, mesh DrawScale & InventoryType if they haven't been specified, based on WeaponType (which is replicated, so these can be set on clients too)
+// Emptied out the Super in WeaponPickup, as we won't yet have an InventoryType (have to wait until PostNetBeginPlay, when net client receives replicated WeaponType)
+function PostBeginPlay()
+{
+}
+
+// Modified to set InventoryType from the replicated WeaponType, then setting StaticMesh & mesh DrawScale if they haven't been specified
 // A leveller may have used this placeable class & set the WeaponType in the editor, in which we won't have the default properties found in a weapon-specific subclass
-// A smart leveller will at least set StaticMesh in editor, so it displays correctly in editor & can be positioned accurately, but this ensures correct weapon properties will be used in game
+// A smart leveller will at least set StaticMesh in editor, so it displays correctly in editor & can be positioned accurately - but here we ensure correct in-game weapon properties
 simulated function PostNetBeginPlay()
 {
-    super.PostNetBeginPlay();
+    local class<Pickup> PickupClass;
 
-    if (WeaponType == none && Role == ROLE_Authority)
+    if (WeaponType != none)
+    {
+        InventoryType = WeaponType;
+
+        MaxDesireability = 1.2 * WeaponType.default.AIRating;
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            PickupClass = InventoryType.default.PickupClass;
+
+            if (PickupClass != none)
+            {
+                if (StaticMesh != PickupClass.default.StaticMesh)
+                {
+                    SetStaticMesh(PickupClass.default.StaticMesh);
+                }
+
+                if (DrawScale != PickupClass.default.DrawScale)
+                {
+                    SetDrawScale(PickupClass.default.DrawScale);
+                }
+            }
+        }
+    }
+    else if (Role == ROLE_Authority)
     {
         Error(self @ "self-destructing as no WeaponType has been set");
     }
+}
 
-    if (Level.NetMode != NM_DedicatedServer && StaticMesh == default.StaticMesh && WeaponType.default.PickupClass != none)
+// New function, very similar to InitDroppedPickupFor(), but here we have to use weapon class defaults, as we don't have an actual weapon actor
+function InitPickup()
+{
+    local class<DHProjectileWeapon> W;
+    local int InitialAmount, i;
+
+    if (WeaponType.default.FireModeClass[0].default.AmmoClass != none)
     {
-        SetStaticMesh(WeaponType.default.PickupClass.default.StaticMesh);
-
-        if (DrawScale == 1.0 && WeaponType.default.PickupClass.default.DrawScale != 1.0)
-        {
-            SetDrawScale(WeaponType.default.PickupClass.default.DrawScale);
-        }
+        InitialAmount = WeaponType.default.FireModeClass[0].default.AmmoClass.default.InitialAmount;
     }
 
-    if (InventoryType == none && class<Weapon>(WeaponType) != none && class<Weapon>(WeaponType).default.FireModeClass[0] != none)
+    W = class<DHProjectileWeapon>(InventoryType);
+
+    // Load the pickup with the ammo the weapon would start loaded with
+    if (W == none || !W.default.bDoesNotRetainLoadedMag)
     {
-        InventoryType = class<Weapon>(WeaponType).default.FireModeClass[0].default.AmmoClass;
+        AmmoAmount[0] = InitialAmount;
+    }
+
+    if (W != none)
+    {
+        for (i = 0; i < W.default.InitialNumPrimaryMags; ++i)
+        {
+            AmmoMags[AmmoMags.Length] = InitialAmount; // give the pickup the ammo mags the weapon would start with
+        }
+
+        bHasBayonetMounted = W.default.bBayonetMounted;
+
+        if (W.default.InitialBarrels > 0 && W.default.BarrelClass != none)
+        {
+            bHasBarrel = true;
+            LevelCTemp = class'DHWeaponBarrel'.static.FtoCelsiusConversion(DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit);
+            Temperature = LevelCTemp;
+            BarrelCoolingRate = W.default.BarrelClass.default.BarrelCoolingRate;
+            bBarrelFailed = false;
+
+            if (W.default.InitialBarrels > 1)
+            {
+                bHasSpareBarrel = true;
+                RemainingBarrel = 1;
+                Temperature2 = LevelCTemp;
+            }
+        }
     }
 }
 
-// Modified to give the player the weapon, instead of ammo, including handling the situation where player already has a weapon in same inventory slot as the pickup weapon
+// Modified to check whether player already has a weapon in the same inventory slot & to call SetRespawn()
 auto state Pickup
 {
     function UsedBy(Pawn User)
     {
-        local Inventory Copy, Inv;
-        local bool      bHasWeapon;
+        local Inventory Copy;
 
-        if (User == none)
-        {
-            return;
-        }
-
-        if (User.Inventory != none)
-        {
-            for (Inv = User.Inventory; Inv != none; Inv = Inv.Inventory)
-            {
-                // Abort pick up if player already has a weapon in the same inventory slot (unless it's their current weapon, in which case we'll drop it later)
-                if (Inv.InventoryGroup == WeaponType.default.InventoryGroup && (User.Weapon == none || User.Weapon.Class != Inv.Class))
-                {
-                    return;
-                }
-
-                // Check if the player already has the same weapon - if they do, we'll just give them ammo (or exit if they have full ammo)
-                if (Weapon(Inv) != none && Inv.Class == WeaponType)
-                {
-                    if (Weapon(Inv).AmmoMaxed(0))
-                    {
-                        return;
-                    }
-
-                    bHasWeapon = true;
-                    break;
-                }
-            }
-        }
-
-        // Valid touch will pick up the object, or ammo if player already has the weapon
         if (ValidTouch(User))
         {
-            if (bHasWeapon)
-            {
-                Copy = SpawnCopy(User); // Matt TODO: meant to give ammo if player already has same weapon - seems to work for AT weapons but not for guns needing mags
-            }
-            else
-            {
-                // Player's current weapon is same InventoryGroup as the pickup, so drop current weapon & and pick up the one on the ground
-                if (User.Weapon != none && User.Weapon.InventoryGroup == WeaponType.default.InventoryGroup && User.CanThrowWeapon() && PlayerController(User.Controller) != none)
-                {
-                    PlayerController(User.Controller).ThrowWeapon();
-                }
-
-                Copy = SpawnWeaponCopy(User);
-            }
-
-            AnnouncePickup(User);
+            Copy = SpawnCopy(User);
 
             if (Copy != none)
             {
                 Copy.PickupFunction(User);
             }
 
-            SetRespawn();
+            AnnouncePickup(User);
+            SetRespawn(); // instead of Destroy() for normal, temporary weapon pickup
         }
     }
 
 // Modified to make sure replication is enabled, as will have been disabled if pickup has been used & is inactive
 Begin:
     RemoteRole = default.RemoteRole;
-    CheckTouching();
 }
 
 // Modified to enable replication as pickup is now inactive
@@ -125,30 +140,10 @@ Begin:
 }
 
 // Modified to always go inactive instead of being destroyed
-// Pickup may respawn if suitable RespawnTime was set, but even if a very high time effectively prevents respawning, Sleeping state still allows pickup to be rectivated if we reset the match
+// Pickup may respawn if suitable RespawnTime was set, but even if a very high time effectively prevents respawning, Sleeping state still allows pickup to be rectivated if match is reset
 function SetRespawn()
 {
     StartSleeping();
-}
-
-// New function to give weapon to player (it's a weapon version of SpawnCopy, which gives ammo)
-function Inventory SpawnWeaponCopy(Pawn Other)
-{
-    local Inventory Copy;
-
-    if (Inventory != none)
-    {
-        Copy = Inventory;
-        Inventory = none;
-    }
-    else
-    {
-        Copy = Other.Spawn(WeaponType, Other,,, rot(0, 0, 0));
-    }
-
-    Copy.GiveTo(Other, self);
-
-    return Copy;
 }
 
 // Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
@@ -156,7 +151,7 @@ simulated event NotifySelected(Pawn User)
 {
     if (User.IsHumanControlled() && (Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime)
     {
-        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass,,,, WeaponType);
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass,,,, InventoryType);
         LastNotifyTime = Level.TimeSeconds;
     }
 }
@@ -167,7 +162,7 @@ function AnnouncePickup(Pawn Receiver)
 {
     if (Receiver.IsHumanControlled())
     {
-        PlayerController(Receiver.Controller).ReceiveLocalizedMessage(MessageClass,,,, WeaponType);
+        PlayerController(Receiver.Controller).ReceiveLocalizedMessage(MessageClass,,,, InventoryType);
     }
     else
     {
@@ -178,36 +173,32 @@ function AnnouncePickup(Pawn Receiver)
     MakeNoise(0.2);
 }
 
-// Modified to skip over the Super in ROPlaceableAmmoPickup, as it just duplicates the Super in Pickup
+// Modified to call InitPickup() & to skip over the Super in ROPlaceableAmmoPickup, as it just duplicates the Super in Pickup
+// Note that this function gets called when a new round starts, so we always start with InitPickup() & not just if match is reset in the middle of a round
 function Reset()
 {
+    InitPickup();
+
     super(Pickup).Reset();
 }
 
-static function StaticPrecache(LevelInfo L)
+// Modified to call StaticPrecache() on the WeaponType (but pointless on net client, as this actor won't replicate to client until after level has finished pre-caching)
+simulated function UpdatePrecacheMaterials()
 {
-    if (default.WeaponType != none &&
-        default.WeaponType.default.PickupClass != none &&
-        default.WeaponType.default.PickupClass.default.StaticMesh != none)
+    if (Role == ROLE_Authority && class<DHWeapon>(WeaponType) != none)
     {
-        L.AddPrecacheStaticMesh(default.WeaponType.default.PickupClass.default.StaticMesh);
+        class<DHWeapon>(WeaponType).static.StaticPrecache(Level);
     }
 }
 
 defaultproperties
 {
-    AmmoAmount=1
-    bAmmoPickupIsWeapon=true
-    PickupMessage="You got the %w"
-    TouchMessage="Pick up: %w"
     MessageClass=class'DHWeaponPickupMessage' // new message classes that are passed the weapon class & use it to lookup the weapon name (for touch or pickup screen messages)
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
-    PickupSound=sound'Inf_Weapons_Foley.WeaponPickup'
-    PickupForce="AssaultRiflePickup"
-    DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on WeaponType
-    AmbientGlow=10
-    PrePivot=(X=0.0,Y=0.0,Z=3.0)
-    CollisionRadius=25.0
-    CollisionHeight=3.0
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on InventoryType
+    Physics=PHYS_None
+    bWeaponStay=false
+    bIgnoreEncroachers=false
+    bAlwaysRelevant=false
+    NetUpdateFrequency=8.0
 }
