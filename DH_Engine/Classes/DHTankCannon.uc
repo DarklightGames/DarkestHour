@@ -1516,7 +1516,7 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
     // True if commander is present & is not buttoned up & we hit one of the hit points representing his head or torso
-    return CannonPawn != none && CannonPawn.Driver != none && !CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
+    return CannonPawn != none && CannonPawn.Driver != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
         IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1);
 }
 
