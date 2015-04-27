@@ -134,6 +134,7 @@ defaultproperties
     MuzzleBone="Warhead"
     ItemName="Panzerfaust 60"
     Mesh=SkeletalMesh'Axis_Panzerfaust_1st.Panzerfaust_Mesh'
+    Skins(2)=texture'Weapons1st_tex.Grenades.PanzerFaust'
     HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2

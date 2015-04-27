@@ -302,6 +302,17 @@ function SetServerOrientation(rotator NewRotation)
     }
 }
 
+// Modified to add BeltBulletClass static mesh
+static function StaticPrecache(LevelInfo L)
+{
+    super.StaticPrecache(L);
+
+    if (default.BeltBulletClass != none && default.BeltBulletClass.default.StaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.BeltBulletClass.default.StaticMesh);
+    }
+}
+
 defaultproperties
 {
     bCanFireFromHip=true

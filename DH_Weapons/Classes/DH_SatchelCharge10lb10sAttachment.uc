@@ -246,4 +246,5 @@ defaultproperties
     LightType=LT_none
     LightEffect=LE_none
     Mesh=SkeletalMesh'Weapons3rd_anm.satchel'
+    Skins(0)=texture'Weapons3rd_tex.German.satchel_world'
 }

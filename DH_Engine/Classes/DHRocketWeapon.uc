@@ -406,6 +406,17 @@ function float GetAIRating()
     return Result;
 }
 
+// Modified to add RocketAttachment static mesh
+static function StaticPrecache(LevelInfo L)
+{
+    super.StaticPrecache(L);
+
+    if (default.RocketAttachmentClass != none && default.RocketAttachmentClass.default.StaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.RocketAttachmentClass.default.StaticMesh);
+    }
+}
+
 defaultproperties
 {
     bCanBeResupplied=true

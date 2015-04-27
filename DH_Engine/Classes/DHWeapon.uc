@@ -442,6 +442,51 @@ simulated function bool WeaponAllowMantle()
     return true;
 }
 
+// Added function to this class to handle all related pre-caching - DHRoleInfo.HandlePrecache calls it on every inventory item (assuming it is a DHWeapon)
+static function StaticPrecache(LevelInfo L)
+{
+    local int i;
+
+    for (i = 0; i < default.Skins.Length; ++i)
+    {
+        if (default.Skins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.Skins[i]); // 1st person mesh skins
+        }
+    }
+
+    if (default.HighDetailOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.HighDetailOverlay); // 1st person mesh shader
+    }
+
+    if (default.AttachmentClass != none)
+    {
+        for (i = 0; i < default.AttachmentClass.default.Skins.Length; ++i)
+        {
+            if (default.AttachmentClass.default.Skins[i] != none)
+            {
+                L.AddPrecacheMaterial(default.AttachmentClass.default.Skins[i]); // 3rd person mesh skins
+            }
+        }
+    }
+
+    if (default.FireModeClass[0].default.AmmoClass != none && default.FireModeClass[0].default.AmmoClass.default.IconMaterial != none)
+    {
+        L.AddPrecacheMaterial(default.FireModeClass[0].default.AmmoClass.default.IconMaterial); // HUD icon
+    }
+
+    if (default.FireModeClass[0].default.ProjectileClass != none && default.FireModeClass[0].default.ProjectileClass.default.StaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.FireModeClass[0].default.ProjectileClass.default.StaticMesh); // projectile SM
+    }
+
+    if (default.StaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.StaticMesh); // pickup SM
+    }
+}
+
 /////////////////////////////////////////////////////////////
 // New functions to save code repetition in many functions //
 /////////////////////////////////////////////////////////////

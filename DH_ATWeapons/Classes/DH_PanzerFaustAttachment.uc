@@ -197,4 +197,5 @@ defaultproperties
     menuImage=texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
     Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
+    Skins(0)=texture'Weapons3rd_tex.German.Panzerfaust_world'
 }

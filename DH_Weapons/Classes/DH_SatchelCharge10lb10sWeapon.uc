@@ -19,4 +19,5 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
     PreFireHoldAnim="Weapon_Down"
     InventoryGroup=6
+    Skins(2)=texture'Weapons1st_tex.Grenades.SatchelCharge'
 }
