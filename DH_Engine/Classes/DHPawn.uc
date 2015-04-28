@@ -2986,7 +2986,7 @@ function PreMantle()
 
     bCollideWorld = false;
 
-    if (WeaponAttachment)
+    if (WeaponAttachment != none)
     {
         WeaponAttachment.SetDrawType(DT_None);
     }
