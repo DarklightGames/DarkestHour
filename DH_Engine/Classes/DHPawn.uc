@@ -2985,7 +2985,12 @@ function PreMantle()
     SetPhysics(PHYS_Flying);
 
     bCollideWorld = false;
-    WeaponAttachment.SetDrawType(DT_None);
+
+    if (WeaponAttachment)
+    {
+        WeaponAttachment.SetDrawType(DT_None);
+    }
+
     AirSpeed = default.GroundSpeed;
     AccelRate = 50000.0;
 
@@ -3071,7 +3076,11 @@ function PostMantle()
     NextJumpTime = Level.TimeSeconds + 2.0;
     bSetMantleEyeHeight = false;
     BaseEyeHeight = default.BaseEyeHeight;
-    WeaponAttachment.SetDrawType(DT_Mesh);
+
+    if (WeaponAttachment != none)
+    {
+        WeaponAttachment.SetDrawType(DT_Mesh);
+    }
 
     bMantleAnimRun = false;
 
