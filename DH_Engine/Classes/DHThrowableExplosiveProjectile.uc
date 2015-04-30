@@ -314,16 +314,13 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local vector TempHitLocation, HitNormal;
 
-    if (Other == Instigator || Other.Base == Instigator)
+    if (Other == Instigator || Other.Base == Instigator || ROBulletWhipAttachment(Other) != none)
     {
         return;
     }
 
-    if (ROBulletWhipAttachment(Other) == none)
-    {
-        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable HitNormal for a deflection
-        HitWall(HitNormal, Other);
-    }
+    Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable HitNormal for a deflection
+    HitWall(HitNormal, Other);
 }
 
 simulated function Explode(vector HitLocation, vector HitNormal)

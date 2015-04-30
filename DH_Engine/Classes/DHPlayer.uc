@@ -1109,7 +1109,7 @@ state PlayerWalking
             {
                 if (Role == ROLE_Authority)
                 {
-                    GoToState('Mantling');
+                    GotoState('Mantling');
                 }
 
                 if (Role < ROLE_Authority)

@@ -98,6 +98,7 @@ simulated state Cutting
             P.ServerClearObstacle(ObstacleBeingCut.Info.Index);
         }
 
+        GotoState('');
         PlayAnim('cutEnd', 1.0, 0.2);
     }
 
@@ -127,9 +128,6 @@ simulated state Cutting
             case 'cutHout':
                 PlayAnim('cutVin');
                 break;
-            case 'cutEnd':
-                GotoState('');
-                break;
             default:
                 break;
         }
@@ -141,6 +139,7 @@ simulated state Cutting
 
         if (ObstacleBeingCut == none || ObstacleBeingCut.Info.IsCleared())
         {
+            GotoState('');
             PlayAnim('cutEnd', 1.0, 0.2);
         }
     }
@@ -178,7 +177,7 @@ simulated function Fire(float F)
 defaultproperties
 {
     ItemName="Wire Cutters"
-    mesh=mesh'DH_Wirecutters_1st.wirecutters'
+    Mesh=mesh'DH_Wirecutters_1st.wirecutters'
     DrawScale=1.0
     DisplayFOV=70
     IronSightDisplayFOV=70

@@ -8,6 +8,7 @@ class DHMortarWeapon extends DHWeapon
 
 replication
 {
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerDeployEnd, ServerDeployBegin;
 }
@@ -308,11 +309,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
     {
         DHPlayer(Instigator.Controller).QueueHint(6, false);
     }
-}
-
-simulated function bool IsMortarWeapon()
-{
-    return true;
 }
 
 function bool ResupplyAmmo()

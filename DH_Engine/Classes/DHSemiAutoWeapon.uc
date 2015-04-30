@@ -7,24 +7,24 @@ class DHSemiAutoWeapon extends DHProjectileWeapon
     abstract;
 
 // Overridden to prevent the exploit of freezing your animations after firing
-simulated function AnimEnd(int channel)
+simulated function AnimEnd(int Channel)
 {
-    local name anim;
-    local float frame, rate;
-
-    GetAnimParams(0, anim, frame, rate);
+    local name  Anim;
+    local float Frame, Rate;
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
+        GetAnimParams(0, Anim, Frame, Rate);
+
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
-        else if (anim == DHProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
+        else if (DHProjectileFire(FireMode[0]) != none && Anim == DHProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
         {
             PlayIdle();
         }
-        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (Anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
@@ -43,12 +43,9 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
     {
-        if (!IsAnimating(0))
-        {
-            PlayIdle();
-        }
+        PlayIdle();
     }
 
     FireMode[Mode].bIsFiring = false;
@@ -65,4 +62,5 @@ defaultproperties
     BobDamping=1.33
     FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
+    bSniping=true
 }

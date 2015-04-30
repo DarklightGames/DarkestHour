@@ -689,7 +689,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
                 {
-                    GoToState('ViewTransition');
+                    GotoState('ViewTransition');
                 }
             }
         }

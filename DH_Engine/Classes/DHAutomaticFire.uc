@@ -30,6 +30,11 @@ function ModeTick(float dt)
     }
 }
 
+function float MaxRange()
+{
+    return 9000.0; // about 150 meters
+}
+
 defaultproperties
 {
     PreLaunchTraceDistance=1312.0

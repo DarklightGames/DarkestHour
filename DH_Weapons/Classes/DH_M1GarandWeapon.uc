@@ -9,7 +9,7 @@ class DH_M1GarandWeapon extends DHSemiAutoWeapon;
 
 var bool bIsLastRound;
 
-//overwritten to support garand last round clip eject for Client only
+// Modified to support garand last round clip eject for client only
 simulated function Fire(float F)
 {
     super.Fire(F);
@@ -17,92 +17,21 @@ simulated function Fire(float F)
     bIsLastRound = AmmoAmount(0) == 1;
 }
 
-//overwritten to support garand last round clip eject for Server only
+// Modified to support garand last round clip eject for server only
 simulated function bool WasLastRound()
 {
     return AmmoAmount(0) == 0;
 }
 
+// Modified to add hint about garand's ping noise on clip ejection
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DHPlayer P;
-
     super.BringUp(PrevWeapon);
 
-    if (Instigator != none)
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
     {
-        P = DHPlayer(Instigator.Controller);
-
-        if (P != none)
-        {
-            P.QueueHint(4, true);
-        }
+        DHPlayer(Instigator.Controller).QueueHint(20, true);
     }
-}
-
-// Do the actual ammo swapping
-function PerformReload()
-{
-    local int CurrentMagLoad;
-
-    CurrentMagLoad = AmmoAmount(0);
-
-    if (PrimaryAmmoArray.Length == 0)
-    {
-        return;
-    }
-
-    if (CurrentMagLoad < FireMode[0].AmmoClass.default.InitialAmount)
-    {
-        PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
-    }
-    else
-    {
-        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad;
-        AmmoCharge[0] = 0;
-    }
-
-    if (PrimaryAmmoArray.Length == 0)
-    {
-        return;
-    }
-
-    ++CurrentMagIndex;
-
-    if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
-    {
-        CurrentMagIndex = 0;
-    }
-
-    AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
-
-    if (Instigator.IsHumanControlled())
-    {
-        if (AmmoStatus(0) > 0.5)
-        {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 0);
-        }
-        else if (AmmoStatus(0) > 0.2)
-        {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 1);
-        }
-        else
-        {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 2);
-        }
-    }
-
-    if (AmmoAmount(0) > 0)
-    {
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
-        {
-            DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
-        }
-    }
-
-    ClientForceAmmoUpdate(0, AmmoAmount(0));
-
-    CurrentMagCount = PrimaryAmmoArray.Length - 1;
 }
 
 defaultproperties
@@ -115,7 +44,6 @@ defaultproperties
     IronBringUpEmpty="Iron_In_empty"
     IronPutDown="iron_out"
     IronPutDownEmpty="Iron_Out_empty"
-    //   SelectEmptyAnim=" // Matt: removed as causes warning & no "Draw_empty" anim exists for Garand
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
     BayonetBoneName="bayonet"
@@ -123,6 +51,7 @@ defaultproperties
     IdleEmptyAnim="idle_empty"
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
+    bDiscardMagOnReload=true
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
@@ -139,7 +68,6 @@ defaultproperties
     PutDownAnimRate=1.0
     AIRating=0.4
     CurrentRating=0.4
-    bSniping=true
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_M1GarandPickup'

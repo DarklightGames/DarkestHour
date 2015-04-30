@@ -22,8 +22,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
             S = default.BeenLoaded;
         case 2:
             S = default.UnLoaded;
-        default:
-            S = default.LoadedGunner;
     }
 
     if (RelatedPRI_1 != none)

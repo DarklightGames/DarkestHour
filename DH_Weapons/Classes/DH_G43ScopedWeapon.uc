@@ -44,12 +44,9 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
     {
-        if (!IsAnimating(0))
-        {
-            PlayIdle();
-        }
+        PlayIdle();
     }
 
     FireMode[Mode].bIsFiring = false;
@@ -63,12 +60,12 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-    lenseMaterialID=4
-    scopePortalFOVHigh=13.0
-    scopePortalFOV=7.0
-    scopePitch=-10
-    scopeYaw=40
-    scopeYawHigh=35
+    LensMaterialID=4
+    ScopePortalFOVHigh=13.0
+    ScopePortalFOV=7.0
+    ScopePitch=-10
+    ScopeYaw=40
+    ScopeYawHigh=35
     TexturedScopeTexture=texture'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay'
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
@@ -95,7 +92,6 @@ defaultproperties
     PutDownAnimRate=1.0
     AIRating=0.4
     CurrentRating=0.4
-    bSniping=true
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'

@@ -5,14 +5,14 @@
 
 class DH_ParachuteItem extends DHWeapon;
 
-var bool    bUsedParachute;
-
-var name    DeployChuteAnim;
-var name    UndeployChuteAnim;
+var     bool    bUsedParachute;
+var     name    DeployChuteAnim;
+var     name    UndeployChuteAnim;
 
 //=============================================================================
 // Functions overridden because parachutes don't shoot
 //=============================================================================
+
 simulated function ClientWeaponSet(bool bPossiblySwitch)
 {
     Instigator = Pawn(Owner);
@@ -22,6 +22,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     if (Instigator == none)
     {
         GotoState('PendingClientWeaponSet');
+
         return;
     }
 
@@ -33,7 +34,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
         return;
     }
 
-    if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
+    if (IsCurrentWeapon()) // this weapon was switched to while waiting for replication, switch to it now
     {
         if (Instigator.PendingWeapon != none)
         {
@@ -59,7 +60,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     }
     else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
-        if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
+        if (Instigator.IsHumanControlled() && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
         {
             return;
         }
@@ -100,7 +101,7 @@ simulated state RaisingWeapon
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
 
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 if (Mesh != none && HasAnim(SelectAnim))
                 {
@@ -122,9 +123,9 @@ simulated state RaisingWeapon
 
     simulated function EndState()
     {
-        if (Instigator.Physics != PHYS_Falling)
+        if (InstigatorIsHumanControlled() && Instigator.Physics != PHYS_Falling)
         {
-            ROPlayer(Instigator.Controller).ClientSwitchToBestWeapon();
+            Instigator.Controller.ClientSwitchToBestWeapon();
         }
     }
 }
@@ -140,7 +141,7 @@ simulated state LoweringWeapon
     {
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 if (ClientState == WS_BringUp)
                 {
@@ -172,7 +173,7 @@ simulated state LoweringWeapon
                 ClientState = WS_Hidden;
                 Instigator.ChangedWeapon();
 
-                if (Instigator.Weapon == self)
+                if (IsCurrentWeapon())
                 {
                     PlayIdle();
                     ClientState = WS_ReadyToFire;
@@ -191,30 +192,22 @@ simulated state LoweringWeapon
 // Overwritten to prevent 1st person arms & chute changing pitch rotation
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local rotator  RollMod;
-    local rotator  YawMod;
-    local ROPlayer Playa;
+    local rotator YawMod;
 
-    if (Instigator == none)
+    if (Instigator != none)
     {
-        return;
+        Canvas.DrawActor(none, false, true);
+        SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
+        YawMod.Yaw = Instigator.GetViewRotation().Yaw;
+        SetRotation(YawMod);
+
+        bDrawingFirstPerson = true;
+        Canvas.DrawActor(self, false, false, 90.0);
+        bDrawingFirstPerson = false;
     }
-
-    // Lets avoid having to do multiple casts every tick - Ramm
-    Playa = ROPlayer(Instigator.Controller);
-
-    Canvas.DrawActor(none, false, true);    // amb: Clear the z-buffer here
-    SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
-    RollMod = Instigator.GetViewRotation();
-    YawMod.Yaw = RollMod.Yaw;
-    SetRotation(YawMod);
-
-    bDrawingFirstPerson = true;
-    Canvas.DrawActor(self, false, false, 90.0);   //DisplayFOV);
-    bDrawingFirstPerson = false;
 }
 
-simulated function AnimEnd(int channel)
+simulated function AnimEnd(int Channel)
 {
     if (ClientState == WS_ReadyToFire)
     {

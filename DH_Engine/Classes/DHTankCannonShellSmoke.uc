@@ -54,41 +54,6 @@ simulated function HandleDestruction()
     bCollideWorld = false;
 }
 
-/*
-// Matt: removed these functions as this stuff isn't necessary & didn't work to prevent the SmokeEmitter from persisting on clients if the game was reset
-// Destruction of SmokeEmitter now handled by emitter's Reset, called as standard in single player & by new DH_ClientResetGame actor on net clients
-simulated function KillSmoke()
-{
-    if (SmokeEmitter != none)
-    {
-        SmokeEmitter.Kill();
-    }
-}
-
-function Reset()
-{
-    if (SmokeEmitter != none)
-    {
-        SmokeEmitter.Destroyed();
-    }
-
-    super.Reset();
-}
-
-simulated function Tick(float DeltaTime)
-{
-    super.Tick(DeltaTime);
-
-    DestroyTimer -= DeltaTime;
-
-    if (DestroyTimer <= 0.0 && !bCalledDestroy)
-    {
-        bCalledDestroy = true;
-        KillSmoke();
-    }
-}
-*/
-
 defaultproperties
 {
     RoundType=RT_Smoke

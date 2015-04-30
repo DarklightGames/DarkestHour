@@ -186,7 +186,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     if (bMultiPosition)
     {
-        Gotostate('EnteringVehicle');
+        GotoState('EnteringVehicle');
         PendingPositionIndex = 0;
     }
     else
@@ -495,7 +495,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
                 {
-                    GoToState('ViewTransition');
+                    GotoState('ViewTransition');
                 }
                 else if (bPlayerCollisionBoxMoves)
                 {

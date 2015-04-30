@@ -6,13 +6,11 @@
 class DHMGWeapon extends DHBipodWeapon
     abstract;
 
-// MG Resupplying
-var     int                     NumMagsToResupply;      // Number of ammo mags to add when this weapon has been resupplied
+var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
+var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
+var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
 
-var     array<ROFPAmmoRound>    MGBeltArray;        // An array of first person ammo rounds
-var     array<name>             MGBeltBones;        // An array of bone names to attach the belt to
-var     class<ROFPAmmoRound>    BeltBulletClass;    // The class to spawn for each bullet on the ammo belt
-
+// Modified to spawn the ammo belt
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -28,18 +26,19 @@ simulated function UpdateAmmoBelt()
 {
     local int i;
 
-    if (AmmoAmount(0) > 9)
+    if (AmmoAmount(0) < 10)
     {
-        return;
-    }
-
-    for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
-    {
-        MGBeltArray[i].SetDrawType(DT_none);
+        for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
+        {
+            if (MGBeltArray[i] != none)
+            {
+                MGBeltArray[i].SetDrawType(DT_None);
+            }
+        }
     }
 }
 
-// Spawn the first person linked ammobelt
+// Spawn the first person linked ammo belt
 simulated function SpawnAmmoBelt()
 {
     local int i;
@@ -47,332 +46,221 @@ simulated function SpawnAmmoBelt()
     for (i = 0; i < MGBeltBones.Length; ++i)
     {
         MGBeltArray[i] = Spawn(BeltBulletClass, self);
-
         AttachToBone(MGBeltArray[i], MGBeltBones[i]);
     }
 }
 
-// Make the full ammo belt visible again. Called by anim notifies
+// Make the full ammo belt visible again (called by anim notifies)
 simulated function RenewAmmoBelt()
 {
     local int i;
 
     for (i = 0; i < MGBeltArray.Length; ++i)
     {
-        MGBeltArray[i].SetDrawType(DT_StaticMesh);
+        if (MGBeltArray[i] != none)
+        {
+            MGBeltArray[i].SetDrawType(DT_StaticMesh);
+        }
     }
 }
 
-function bool IsMGWeapon()
-{
-    return true;
-}
-
-// Implemented in various states to show whether the weapon is busy performing some action that normally shouldn't be interrupted
 // Overridden because we have no melee attack
 simulated function bool IsBusy()
 {
     return false;
 }
 
+// Modified to prevent deploying if player is moving
 simulated exec function Deploy()
 {
-    if (IsBusy() || VSizeSquared(Instigator.Velocity) != 0)
+    if (Instigator != none && VSizeSquared(Instigator.Velocity) == 0.0)
     {
-        return;
-    }
-
-    if (Instigator.bBipodDeployed)
-    {
-        BipodDeploy(false);
-
-        if (Role < ROLE_Authority)
-        {
-            ServerBipodDeploy(false);
-        }
-    }
-    else if (Instigator.bCanBipodDeploy)
-    {
-        BipodDeploy(true);
-
-        if (Role < ROLE_Authority)
-        {
-            ServerBipodDeploy(true);
-        }
+        super.Deploy();
     }
 }
 
+// Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
 {
-    if (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy)
+    if (Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
     {
         Deploy();
     }
     else if (bCanFireFromHip)
     {
-        super.ROIronSights();
+        PerformZoom(!bUsingSights);
     }
 }
 
 simulated function bool StartFire(int Mode)
 {
-    if (!super.StartFire(Mode))  // returns false when mag is empty
+    if (super.StartFire(Mode))
     {
-        return false;
+        AnimStopLooping();
+
+        if (!FireMode[Mode].IsInState('FireLoop'))
+        {
+            FireMode[Mode].StartFiring();
+
+            return true;
+        }
     }
 
-    AnimStopLooping();
-
-    if (!FireMode[Mode].IsInState('FireLoop') && (AmmoAmount(0) > 0))
-    {
-        FireMode[Mode].StartFiring();
-    }
-    else
-    {
-        return false;
-    }
-
-    return true;
+    return false;
 }
 
-simulated function AnimEnd(int channel)
+simulated function AnimEnd(int Channel)
 {
     if (!FireMode[0].IsInState('FireLoop'))
     {
-        super.AnimEnd(channel);
+        super.AnimEnd(Channel);
     }
 }
 
-simulated function BringUp(optional Weapon PrevWeapon)
+// Modified so works in DHDebugMode, & to log barrels & their current temperature & state
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
-    super.BringUp(PrevWeapon);
+    local DHWeaponBarrel Barrel;
+    local int            i;
 
-    if (Role == ROLE_Authority)
-    {
-        ROPawn(Instigator).bWeaponCanBeResupplied = true;
-        ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
-    }
-}
-
-simulated function bool PutDown()
-{
-    ROPawn(Instigator).bWeaponCanBeResupplied = false;
-    ROPawn(Instigator).bWeaponNeedsResupply = false;
-
-    return super.PutDown();
-}
-
-// Overridden to set additional RO Variables when a weapon is given to the player
-function GiveTo(Pawn Other, optional Pickup Pickup)
-{
-    super.GiveTo(Other,Pickup);
-
-    ROPawn(Instigator).bWeaponCanBeResupplied = true;
-    ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
-}
-
-function DropFrom(vector StartLocation)
-{
-    if (!bCanThrow)
+    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
     {
         return;
     }
 
-    ROPawn(Instigator).bWeaponCanBeResupplied = false;
-    ROPawn(Instigator).bWeaponNeedsResupply = false;
+    super(Weapon).DisplayDebug(Canvas, YL, YPos); // skip over Super in ROWeapon, as it requires RODebugMode
 
-    super.DropFrom(StartLocation);
-}
-
-simulated function Destroyed()
-{
-    if (Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none)
-    {
-        ROPawn(Instigator).bWeaponCanBeResupplied = false;
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-    }
-
-    super.Destroyed();
-}
-
-simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
-{
-    local int i;
-    local DHWeaponBarrel Barrel;
-
-    super.DisplayDebug(Canvas, YL, YPos);
-
+    // The super from ROWeapon, logging the FOV settings
     Canvas.SetDrawColor(0, 255, 0);
+    Canvas.DrawText("DisplayFOV is" @ DisplayFOV $ ", default is" @ default.DisplayFOV $ ", zoomed default is" @ IronSightDisplayFOV);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
 
-    // remove and destroy the barrels in the Barrels array
-    for (i = 0; i < Barrels.Length; ++i)
+    // Show the barrel info - only works in multi-player as barrel actors don't exist on net clients
+    if (Role == ROLE_Authority)
     {
-        Barrel = Barrels[i];
-
-        if (Barrel != none)
+        for (i = 0; i < Barrels.Length; ++i)
         {
-            if (i == BarrelIndex)
-            {
-                Canvas.DrawText("Active Barrel Temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-            }
-            else
-            {
-                Canvas.DrawText("Hidden Barrel Temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-            }
+            Barrel = Barrels[i];
 
-            YPos += YL;
-            Canvas.SetPos(4, YPos);
+            if (Barrel != none)
+            {
+                if (i == BarrelIndex)
+                {
+                    Canvas.DrawText("Active barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
+                }
+                else
+                {
+                    Canvas.DrawText("Hidden barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
+                }
+
+                YPos += YL;
+                Canvas.SetPos(4.0, YPos);
+            }
         }
     }
 }
 
-// returns true if this weapon should use free-aim in this particular state
+// Modified to use free aim when 'ironsighted', because for an MG that just means it's in hipped fire mode (melee attack stuff also removed as MG has none)
 simulated function bool ShouldUseFreeAim()
 {
     return bUsesFreeAim && bUsingSights;
 }
 
-// Overridden to support using ironsight mode as hipped mode for the MGs
+// Modified to avoid ironsights stuff because an 'ironsighted' MG is actually just hipped fire mode
 simulated state IronSightZoomIn
 {
-    simulated function bool ShouldUseFreeAim()
+    simulated function EndState() // avoids setting DisplayFOV & PlayerViewOffset
     {
-        return true;
     }
 
-    simulated function EndState()
-    {
-    }
-// Do nothing
-Begin:
+Begin: // do nothing (avoids calling SmoothZoom)
 }
 
-// Overridden to support using ironsight mode as hipped mode for the MGs
-simulated state IronSightZoomOut
-{
-    simulated function EndState()
-    {
-        if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
-        {
-            NotifyCrawlMoving();
-        }
-    }
-// Do nothing
-Begin:
-}
-
-// Overridden to support using ironsight mode as hipped mode for the MGs
+// Modified to avoid ironsights stuff because an 'ironsighted' MG is actually just hipped fire mode
 simulated state TweenDown
 {
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
     }
 
-    if (Instigator.IsLocallyControlled())
+    if (InstigatorIsLocallyControlled())
     {
         PlayIdle();
     }
 
     SetTimer(FastTweenTime, false);
 }
-
-//=============================================================================
-// Rendering
-//=============================================================================
-// Don't need to do the special rendering for bipod weapons since they won't
-// really sway while deployed
+    
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local int m;
-    local rotator RollMod;
     local ROPlayer Playa;
-    //For lean - Justin
-    local ROPawn rpawn;
-    local int leanangle;
+    local ROPawn   RPawn;
+    local rotator  RollMod;
+    local int      LeanAngle, i;
 
     if (Instigator == none)
     {
         return;
     }
 
-    // Lets avoid having to do multiple casts every tick - Ramm
     Playa = ROPlayer(Instigator.Controller);
 
-    // draw muzzleflashes/smoke for all fire modes so idle state won't
-    // cause emitters to just disappear
-    Canvas.DrawActor(none, false, true); // amb: Clear the z-buffer here
+    // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
+    Canvas.DrawActor(none, false, true);
 
-    for (m = 0; m < NUM_FIRE_MODES; m++)
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
-        if (FireMode[m] != none)
-        {
-            FireMode[m].DrawMuzzleFlash(Canvas);
-        }
+        FireMode[i].DrawMuzzleFlash(Canvas);
     }
 
-    //Adjust weapon position for lean
-    rpawn = ROPawn(Instigator);
+    // Adjust weapon position for lean
+    RPawn = ROPawn(Instigator);
 
-    if (rpawn != none && rpawn.LeanAmount != 0)
+    if (RPawn != none && RPawn.LeanAmount != 0.0)
     {
-        leanangle += rpawn.LeanAmount;
+        LeanAngle += RPawn.LeanAmount;
     }
 
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
 
     // Remove the roll component so the weapon doesn't tilt with the terrain
     RollMod = Instigator.GetViewRotation();
-
-    if (Playa != none)
-    {
-        RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
-        RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
-    }
-
-    RollMod.Roll += leanangle;
+    RollMod.Roll += LeanAngle;
 
     if (IsCrawling())
     {
         RollMod.Pitch = CrawlWeaponPitch;
     }
 
+    if (Playa != none)
+    {
+        if (!IsCrawling())
+        {
+            RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
+        }
+
+        RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
+    }
+
     SetRotation(RollMod);
 
     bDrawingFirstPerson = true;
-
     Canvas.DrawActor(self, false, false, DisplayFOV);
-
     bDrawingFirstPerson = false;
 }
 
-//=============================================================================
-// Sprinting
-//=============================================================================
 simulated state StartSprinting
 {
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
     }
-    else if (DisplayFOV != default.DisplayFOV && Instigator.IsLocallyControlled())
+    else if (DisplayFOV != default.DisplayFOV && InstigatorIsLocallyControlled())
     {
         SmoothZoom(false);
     }
@@ -380,95 +268,49 @@ Begin:
 
 simulated state StartCrawling
 {
-// Take the player out of iron sights if they are in ironsights
+// Take the player out of ironsights
 Begin:
     if (bUsingSights)
     {
-        if (Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-        else
-        {
-            ZoomOut(false);
-        }
+        ZoomOut();
     }
-    else if (DisplayFOV != default.DisplayFOV && Instigator.IsLocallyControlled())
+    else if (DisplayFOV != default.DisplayFOV && InstigatorIsLocallyControlled())
     {
         SmoothZoom(false);
     }
 }
 
+// Modified to allow for different free aim conditions in this class (due to possibility of hip fire from ironsights key))
 function SetServerOrientation(rotator NewRotation)
 {
     local rotator WeaponRotation;
 
-    if (bUsesFreeAim && bUsingSights)
+    if (bUsesFreeAim && bUsingSights && Instigator != none)
     {
         // Remove the roll component so the weapon doesn't tilt with the terrain
         WeaponRotation = Instigator.GetViewRotation();
-
         WeaponRotation.Pitch += NewRotation.Pitch;
         WeaponRotation.Yaw += NewRotation.Yaw;
-        WeaponRotation.Roll += ROPawn(Instigator).LeanAmount;
+
+        if (ROPawn(Instigator) != none)
+        {
+            WeaponRotation.Roll += ROPawn(Instigator).LeanAmount;
+        }
 
         SetRotation(WeaponRotation);
         SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
     }
 }
 
-simulated state Reloading
+// Modified to add BeltBulletClass static mesh
+static function StaticPrecache(LevelInfo L)
 {
-    simulated function EndState()
+    super.StaticPrecache(L);
+
+    if (default.BeltBulletClass != none && default.BeltBulletClass.default.StaticMesh != none)
     {
-        super.EndState();
-
-        if (Role == ROLE_Authority)
-        {
-            ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
-        }
+        L.AddPrecacheStaticMesh(default.BeltBulletClass.default.StaticMesh);
     }
-}
-
-// This MG has been resupplied either by an ammo resupply area or another player
-function bool ResupplyAmmo()
-{
-    local int InitialAmount, i;
-
-    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
-
-    for (i = NumMagsToResupply; i > 0; i--)
-    {
-        if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-        {
-            PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
-        }
-    }
-
-    CurrentMagCount = PrimaryAmmoArray.Length - 1;
-    NetUpdateTime = Level.TimeSeconds - 1;
-
-    if (CurrentMagCount == MaxNumPrimaryMags - 1)
-    {
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-    }
-
-    return true;
-}
-
-// Special ammo handling for MGs
-function bool FillAmmo()
-{
-    local bool bDidFillAmmo;
-
-    bDidFillAmmo = super.FillAmmo();
-
-    if (CurrentMagCount == MaxNumPrimaryMags - 1)
-    {
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-    }
-
-    return bDidFillammo;
 }
 
 defaultproperties
@@ -476,5 +318,5 @@ defaultproperties
     bCanFireFromHip=true
     InitialBarrels=2
     NumMagsToResupply=2
+    bSniping=false
 }
-

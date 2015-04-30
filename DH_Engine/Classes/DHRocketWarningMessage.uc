@@ -6,15 +6,17 @@
 class DHRocketWarningMessage extends ROCriticalMessage
     abstract;
 
-var localized string NoProneFire;
-var localized string NeedSupport;
-var localized string NoHipFire;
-var localized string NotInIS;
-var localized string NoProneReload;
+var     localized string    NoProneFire;
+var     localized string    NoHipFire;
+var     localized string    CrouchOrRestToFire;
+var     localized string    ProneOrRestToFire;
+var     localized string    NoProneReload;
+var     localized string    ProneOrRestToReload;
+var     localized string    ShoulderForAssistedReload;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    local string S;
+    local string    S;
     local Inventory I;
 
     switch (Switch)
@@ -23,16 +25,22 @@ static function string GetString(optional int Switch, optional PlayerReplication
             S = default.NoProneFire;
             break;
         case 1:
-            S = default.NeedSupport;
-            break;
-        case 2:
             S = default.NoHipFire;
             break;
+        case 2:
+            S = default.CrouchOrRestToFire;
+            break;
         case 3:
-            S = default.NotInIS;
+            S = default.ProneOrRestToFire;
             break;
         case 4:
             S = default.NoProneReload;
+            break;
+        case 5:
+            S = default.ProneOrRestToReload;
+            break;
+        case 6:
+            S = default.ShoulderForAssistedReload;
             break;
     }
 
@@ -49,8 +57,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
 defaultproperties
 {
     NoProneFire="You cannot fire the {0} while prone"
-    NeedSupport="You must be crouched or weapon rested to fire the {0}"
     NoHipFire="You cannot fire the {0} from the hip"
-    NotInIS="You must shoulder the {0} for an assisted reload"
+    CrouchOrRestToFire="You must be crouched or weapon rested to fire the {0}"
+    ProneOrRestToFire="You need to be prone or weapon rested to fire the {0}"
     NoProneReload="You cannot reload the {0} while prone"
+    ProneOrRestToReload="You need to be prone or weapon rested to reload the {0}"
+    ShoulderForAssistedReload="You must shoulder the {0} for an assisted reload"
 }

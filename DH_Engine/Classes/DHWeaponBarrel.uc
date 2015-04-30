@@ -50,7 +50,7 @@ simulated function Destroyed()
 // FtoCelciusConversion(RO) - This is executed on the authority, used to set the
 //  MG C temp using the map ambient Fahrenheit temp
 //------------------------------------------------------------------------------
-function float FtoCelsiusConversion(INT Fahrenheit)
+static function float FtoCelsiusConversion(INT Fahrenheit)
 {
     local float NewCTemp;
 
@@ -256,7 +256,7 @@ defaultproperties
     BarrelCoolingRate=1.0
     FiringHeatIncrement=1.0
     BarrelTimerRate=0.1
-    DrawType=DT_none
+    DrawType=DT_None
     bHidden=true
     bReplicateMovement=false
     RemoteRole=ROLE_None

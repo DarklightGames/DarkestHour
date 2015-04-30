@@ -50,7 +50,7 @@ function ServerChangeViewPoint(bool bForward)
             }
             else if (Level.NetMode == NM_DedicatedServer)
             {
-                GoToState('ViewTransition');
+                GotoState('ViewTransition');
             }
         }
     }
@@ -67,7 +67,7 @@ function ServerChangeViewPoint(bool bForward)
             }
             else if (Level.NetMode == NM_DedicatedServer)
             {
-                GoToState('ViewTransition');
+                GotoState('ViewTransition');
             }
         }
     }
@@ -112,7 +112,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     if (!bDontUsePositionMesh)
     {
-        Gotostate('EnteringVehicle');
+        GotoState('EnteringVehicle');
     }
 
     PendingPositionIndex = DriverPositionIndex;

@@ -424,6 +424,11 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
     return SpawnedProjectile;
 }
 
+function float MaxRange()
+{
+    return 4500.0; // about 75 meters
+}
+
 defaultproperties
 {
     LoopFireAnimRate=1.0

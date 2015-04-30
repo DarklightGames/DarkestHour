@@ -18,18 +18,19 @@ var     int         LoadedMagazineIndex;
 
 function InitDroppedPickupFor(Inventory Inv)
 {
-    local int i;
     local DHProjectileWeapon W;
-
-    W = DHProjectileWeapon(Inv);
+    local int i;
 
     super.InitDroppedPickupFor(Inv);
+
+    W = DHProjectileWeapon(Inv);
 
     if (W != none)
     {
         if (W.Barrels.Length > 0 && W.BarrelIndex >= 0 && W.BarrelIndex < W.Barrels.Length)
         {
             bHasBarrel = true;
+            Enable('Tick');
 
             LevelCTemp = W.Barrels[W.BarrelIndex].LevelCTemp;
             Temperature = W.Barrels[W.BarrelIndex].Temperature;
@@ -64,7 +65,7 @@ function InitDroppedPickupFor(Inventory Inv)
     }
 }
 
-// Matt: modified (with a couple of extra class variables) so this only happens if weapon has a barrel to cool & also to stop it reducing barrel temperature below the level temperature
+// Modified (with a couple of extra class variables) so this only happens if weapon has a barrel to cool & also to stop it reducing barrel temperature below the level temperature
 function Tick(float DeltaTime)
 {
     if (bHasBarrel && Role == ROLE_Authority)
@@ -80,24 +81,10 @@ function Tick(float DeltaTime)
             Temperature2 = FMax(Temperature2 + (DeltaTime * BarrelCoolingRate), LevelCTemp);
         }
     }
-}
-
-function array<int> GetLoadedMagazineIndices()
-{
-    local array<int> Indices;
-    local int i;
-
-    for (i = 0; i < AmmoMags.Length; ++i)
+    else
     {
-        if (AmmoMags[i] <= 0)
-        {
-            continue;
-        }
-
-        Indices[Indices.Length] = i;
+        Disable('Tick');
     }
-
-    return Indices;
 }
 
 static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
@@ -116,7 +103,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     AmbientGlow=64
     PickupMessage="You got the %w"
-    TouchMessage="Pick Up: %w"
+    TouchMessage="Pick up: %w"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0

@@ -139,18 +139,6 @@ simulated function float GetPenetration(vector Distance)
     return PenetrationNumber;
 }
 
-/*
-// Returns (T/d) for APC/APCBC, AP or APBC shells
-simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter) // Matt: removed as never used in projectile classes
-{
-    local float OverMatchFactor;
-
-    OverMatchFactor = ArmorFactor / ShellDiameter;
-
-    return OverMatchFactor;
-}
-*/
-
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated singular function Touch(Actor Other)

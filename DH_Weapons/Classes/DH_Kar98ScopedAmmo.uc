@@ -8,6 +8,6 @@ class DH_Kar98ScopedAmmo extends DHAmmunition;
 defaultproperties
 {
     MaxAmmo=5
-    InitialAmount=1
+    InitialAmount=5
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo'
 }

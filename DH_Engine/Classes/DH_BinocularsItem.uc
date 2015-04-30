@@ -3,305 +3,221 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BinocularsItem extends BinocularsItem;
+class DH_BinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
 
-var bool bIsMantling;
+#exec OBJ LOAD FILE=Weapon_overlays.utx
+#exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
 
-replication
-{
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsMantling;
-}
+var     texture     BinocsOverlay;
+var     float       BinocsEnlargementFactor;
 
-simulated function PlayerViewZoom(bool ZoomDirection)
-{
-    if (ZoomDirection)
-    {
-        bPlayerViewIsZoomed = true;
+// Functions emptied out or returning false, as binoculars aren't a real weapon
+simulated function bool IsFiring() {return false;}
+simulated event ClientStartFire(int Mode) {return;}
+simulated event StopFire(int Mode) {return;}
+simulated function bool IsBusy() {return false;}
+function bool FillAmmo()  {return false;}
 
-        if (Instigator != none && PlayerController(Instigator.Controller) != none)
-        {
-            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
-        }
-    }
-    else
-    {
-        bPlayerViewIsZoomed = false;
-
-        if (Instigator != none && PlayerController(Instigator.Controller) != none)
-        {
-            PlayerController(Instigator.Controller).ResetFOV();
-        }
-    }
-}
-
-simulated state StartMantle extends Busy
-{
-    simulated function Timer()
-    {
-        // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
-        if (!bIsMantling)
-        {
-            GoToState('RaisingWeapon');
-        }
-        else
-        {
-            SetTimer(0.2, false);
-        }
-    }
-
-    simulated function BeginState()
-    {
-        local int Mode;
-
-        if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
-        {
-            if (Instigator.IsLocallyControlled())
-            {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
-                {
-                    if (FireMode[Mode] != none && FireMode[Mode].bIsFiring)
-                    {
-                        ClientStopFire(Mode);
-                    }
-                }
-
-                if (ClientState == WS_BringUp)
-                {
-                    TweenAnim(SelectAnim,PutDownTime);
-                }
-                else if (HasAnim(PutDownAnim))
-                {
-                    PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
-                }
-            }
-
-            ClientState = WS_PutDown;
-        }
-
-        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
-
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
-        {
-            if (FireMode[Mode] != none)
-            {
-                FireMode[Mode].bServerDelayStartFire = false;
-                FireMode[Mode].bServerDelayStopFire = false;
-            }
-        }
-    }
-
-    simulated function EndState()
-    {
-        if (ClientState == WS_PutDown)
-        {
-            ClientState = WS_Hidden;
-        }
-    }
-}
-
-simulated state LoweringWeapon
-{
-    // Matt: modified to fix problem that writes many 'accessed none' errors to the log
-    // Need to avoid Super from ROWeapon, which only duplicates Super from BinocularsItem but adds unwanted calls on FireMode classes that binoculars don't have
-    simulated function EndState()
-    {
-        if (bUsingSights && Role == ROLE_Authority)
-        {
-            ServerZoomOut(false);
-        }
-
-        if (ClientState == WS_PutDown)
-        {
-            if (Instigator.PendingWeapon == none)
-            {
-                PlayIdle();
-
-                ClientState = WS_ReadyToFire;
-            }
-            else
-            {
-                ClientState = WS_Hidden;
-
-                Instigator.ChangedWeapon();
-
-                if (Instigator.Weapon == self)
-                {
-                    PlayIdle();
-
-                    ClientState = WS_ReadyToFire;
-                }
-            }
-        }
-    }
-}
-
+// Modified to add fire button functionality for mortar observer or artillery officer roles to mark targets
 simulated function Fire(float F)
 {
-    local DHPawn      P;
-    local DHPlayer    C;
     local DHRoleInfo RI;
 
-    if (Instigator == none || !Instigator.IsLocallyControlled() || Instigator.Controller == none || !bUsingSights)
+    if (bUsingSights && DHPawn(Instigator) != none && Instigator.IsLocallyControlled())
     {
-       return;
-    }
+        RI = DHPawn(Instigator).GetRoleInfo();
 
-    P = DHPawn(Instigator);
-    C = DHPlayer(Instigator.Controller);
-
-    if (P == none || C == none)
-    {
-        return;
-    }
-
-    RI = P.GetRoleInfo();
-
-    if (RI == none)
-    {
-        return;
-    }
-
-    if (RI.bIsMortarObserver)
-    {
-        C.ServerSaveMortarTarget();
-    }
-    else if (RI.bIsArtilleryOfficer)
-    {
-        C.ServerSaveArtilleryPosition();
+        if (RI != none)
+        {
+            if (RI.bIsMortarObserver)
+            {
+                if (DHPlayer(Instigator.Controller) != none)
+                {
+                    DHPlayer(Instigator.Controller).ServerSaveMortarTarget();
+                }
+            }
+            else if (RI.bIsArtilleryOfficer && DHPlayer(Instigator.Controller) != none)
+            {
+                DHPlayer(Instigator.Controller).ServerSaveArtilleryPosition();
+            }
+        }
     }
 }
 
+// Modified to add alt fire button functionality for mortar observer to cancel a mortar target
 simulated function AltFire(float F)
 {
     local DHPawn P;
 
-    if (Instigator == none || !Instigator.IsLocallyControlled())
-    {
-        return;
-    }
-
     P = DHPawn(Instigator);
 
-    if (P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver)
+    if (P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver && Instigator.IsLocallyControlled())
     {
         DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
     }
 }
 
+// Modified to add binoculars hint for mortar observer or artillery officer
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DHPawn   P;
-    local DHPlayer C;
+    local DHPawn P;
 
-    super.BringUp(PrevWeapon);
-
-    if (Instigator == none || !Instigator.IsLocallyControlled())
-    {
-        return;
-    }
+    super(ROWeapon).BringUp(PrevWeapon);
 
     P = DHPawn(Instigator);
-    C = DHPlayer(Instigator.Controller);
 
-    if (C != none && P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver)
+    if (P != none && P.GetRoleInfo() != none && InstigatorIsLocallyControlled() && DHPlayer(Instigator.Controller) != none)
     {
-        C.QueueHint(11, true);
+        if (P.GetRoleInfo().bIsMortarObserver)
+        {
+            DHPlayer(Instigator.Controller).QueueHint(11, true);
+        }
+        else if (P.GetRoleInfo().bIsArtilleryOfficer)
+        {
+            DHPlayer(Instigator.Controller).QueueHint(12, true);
+        }
     }
 }
 
-// Matt: added here to fix "accessed none" error, now that binocs can be dropped
-// Binocs don't have any FireModes, so better to remove that block of code instead of adding FireMode != none
-function DropFrom(vector StartLocation)
+// Modified so player can choose to throw away binoculars, but won't drop them every time he dies
+simulated function bool CanThrow()
 {
-    local ROMultiMagAmmoPickup AmmoPickup;
-    local Pickup  Pickup, TempPickup;
-    local int     DropMagCount, i;
-    local rotator R;
+    return Instigator != none && Instigator.Health > 0;
+}
 
-    if (!bCanThrow)
+// Modified to avoid re-setting DHPawn.bPreventWeaponFire to false, as binocs can never fire (doesn't actually make a difference, but avoids unnecessary update on replicated variable)
+simulated state RaisingWeapon
+{
+    simulated function EndState()
+    {
+    }
+}
+
+// Modified to avoid zooming in until raising binoculars animation finishes
+simulated function ZoomIn(optional bool bAnimateTransition)
+{
+    // Don't allow player to go to ironsights while in melee mode
+    if (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))
     {
         return;
     }
 
-    if (Instigator != none && bUsingSights)
+    bUsingSights = true;
+
+    // Make the player stop firing when they go to ironsights
+    if (FireMode[0].bIsFiring)
     {
-        bUsingSights = false;
-        ROPawn(Instigator).SetIronSightAnims(false);
+        FireMode[0].StopFiring();
     }
 
-    ClientWeaponThrown();
-
-    if (Instigator != none)
+    if (bAnimateTransition)
     {
-        DetachFromPawn(Instigator);
+        GotoState('IronSightZoomIn');
+    }
+    else if (InstigatorIsLocalHuman())
+    {
+        SetPlayerFOV(PlayerIronsightFOV); // if there's no animation, go to zoomed FOV now
     }
 
-    Pickup = Spawn(PickupClass,,, StartLocation);
-
-    if (Pickup != none)
+    if (ROPawn(Instigator) != none)
     {
-        Pickup.InitDroppedPickupFor(self);
-        Pickup.Velocity = Velocity;
-
-        if (Instigator.Health > 0)
-        {
-            WeaponPickup(Pickup).bThrown = true;
-        }
+        ROPawn(Instigator).SetIronSightAnims(true);
     }
-
-    // Handle multi mag ammo type pickups
-    if (class<ROMultiMagAmmoPickup>(AmmoPickupClass(0)) != none && CurrentMagCount > 0)
-    {
-        R.Yaw = Rand(65536);
-        TempPickup = spawn(AmmoPickupClass(0),,, StartLocation, R);
-        AmmoPickup = ROMultiMagAmmoPickup(TempPickup);
-
-        if (AmmoPickup == none)
-        {
-            return;
-        }
-
-        AmmoPickup.InitDroppedPickupFor(self);
-
-        AmmoPickup.Velocity.X = Float(Rand(200));
-        AmmoPickup.Velocity.Y = Float(Rand(200));
-        AmmoPickup.Velocity.Z = Float(Rand(100));
-
-        AmmoPickup.AmmoMags.Length = CurrentMagCount;
-
-        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
-        {
-            if (i != CurrentMagIndex)
-            {
-                AmmoPickup.AmmoMags[DropMagCount] = PrimaryAmmoArray[i];
-                DropMagCount++;
-            }
-        }
-    }
-    // Handle standard/old style ammo pickups
-    else
-    {
-        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
-        {
-            if (i != CurrentMagIndex)
-            {
-                DropAmmo(StartLocation, PrimaryAmmoArray[i]);
-            }
-        }
-    }
-
-    Destroy();
 }
 
-simulated function bool CanThrow()
+// Modified to draw the binoculars overlay when player has them raised
+simulated event RenderOverlays(Canvas Canvas)
 {
-    return true;
+    local ROPawn  RPawn;
+    local rotator RollMod;
+    local int     LeanAngle;
+    local float   PosX, Overlap;
+
+    if (Instigator == none)
+    {
+        return;
+    }
+
+    // Adjust weapon position for lean
+    RPawn = ROPawn(Instigator);
+
+    if (RPawn != none && RPawn.LeanAmount != 0.0)
+    {
+        LeanAngle += RPawn.LeanAmount;
+    }
+
+    SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
+
+    // Remove the roll component so the weapon doesn't tilt with the terrain
+    RollMod = Instigator.GetViewRotation();
+    RollMod.Roll += LeanAngle;
+
+    if (IsCrawling())
+    {
+        RollMod.Pitch = CrawlWeaponPitch;
+    }
+
+    SetRotation(RollMod);
+
+    if (bPlayerViewIsZoomed)
+    {
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+
+        // Draw the binoculars overlay
+        PosX = float(Canvas.SizeX - Canvas.SizeY) / 2.0 - Canvas.SizeY * BinocsEnlargementFactor;
+        Canvas.SetPos(PosX, -BinocsEnlargementFactor * Canvas.SizeY);
+        Canvas.DrawTile(BinocsOverlay, Canvas.SizeY * (1.0 + 2.0 * BinocsEnlargementFactor), Canvas.SizeY * (1.0 + 2.0 * BinocsEnlargementFactor), 0.0, 0.0, BinocsOverlay.USize, BinocsOverlay.VSize);
+
+        // Draw black bars on the sides
+        Overlap = 58.0 / float(BinocsOverlay.VSize) * Canvas.SizeY * (1.0 + BinocsEnlargementFactor);
+        Canvas.SetPos(0.0, 0.0);
+        Canvas.DrawTile(texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
+        Canvas.SetPos(Canvas.SizeX - PosX - Overlap, 0.0);
+        Canvas.DrawTile(texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
+    }
+    else
+    {
+        bDrawingFirstPerson = true;
+        Canvas.DrawActor(self, false, false, DisplayFOV);
+        bDrawingFirstPerson = false;
+    }
 }
 
 defaultproperties
 {
-    AttachmentClass=class'DH_Engine.DHBinocularsAttachment'
-    bCanThrow=true
+    InventoryGroup=4
+    Priority=1
+    BinocsEnlargementFactor=0.2
+    IronBringUp="Zoom_in"
+    IronIdleAnim="Zoom_idle"
+    IronPutDown="Zoom_out"
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    bPlayerFOVZooms=true
+    PlayerFOVZoom=10
+    IronSightDisplayFOV=70.0
+    DisplayFOV=70.0
+    ZoomInTime=0.4
+    ZoomOutTime=0.2
+    SelectForce="SwitchToAssaultRifle"
+    SelectAnim="Draw"
+    PutDownAnim="Put_Away"
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    bCanRestDeploy=true
+    BobDamping=1.6
+    bCanSway=false
+    AIRating=0.0
+    CurrentRating=0.0
     PickupClass=class'DH_Engine.DHBinocularsPickup'
+    AttachmentClass=class'DH_Engine.DHBinocularsAttachment'
+    ItemName="Binoculars"
+    Mesh=mesh'Common_Binoc_1st.binoculars'
+    BinocsOverlay=texture'Weapon_overlays.Scopes.BINOC_overlay'
+    HighDetailOverlay=Material'Weapons1st_tex.SniperScopes.Binoc_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 }

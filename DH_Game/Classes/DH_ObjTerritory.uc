@@ -123,7 +123,7 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     // Override the GameObjective variable bInitiallyActive with DH
-    if ( Role == Role_Authority && bOverrideGameObjective)
+    if ( Role == ROLE_Authority && bOverrideGameObjective)
     {
         SetActive(bIsInitiallyActive);
     }

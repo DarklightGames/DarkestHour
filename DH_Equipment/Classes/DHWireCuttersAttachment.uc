@@ -140,11 +140,12 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_nade"
     PA_DodgeAnims(2)="jumpL_mid_nade"
     PA_DodgeAnims(3)="jumpR_mid_nade"
-    WA_Idle="idle_binocs"
-    WA_Fire="idle_binocs"
+    WA_Idle="idle_wirecutters" // "idle_binocs"
+    WA_Fire="cut_wirecutters" // "idle_binocs"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None
-    Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
+    Mesh=SkeletalMesh'DH_Wirecutters_3rd.Wirecutters_3rd'
+    Skins(0)=texture'DH_Equipment_tex.wirecutter.Wirecutters_3rdP'
 }
