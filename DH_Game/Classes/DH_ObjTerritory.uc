@@ -691,7 +691,7 @@ function Timer()
 
             if (bDisableWhenAlliesClearObj)
             {
-                //Log("DEBUG Disable Objective Because Allies Cleared It");
+                CurrentCapProgress = 0.0;
                 bActive = false;
                 SetTimer(0.0, false);
                 DisableCapBarsForThisObj();
@@ -733,7 +733,7 @@ function Timer()
 
             if (bDisableWhenAxisClearObj)
             {
-                //Log("DEBUG Disable Objective Because Axis Cleared It");
+                CurrentCapProgress = 0.0;
                 bActive = false;
                 SetTimer(0.0, false);
                 DisableCapBarsForThisObj();
