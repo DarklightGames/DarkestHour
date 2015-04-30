@@ -333,7 +333,25 @@ function bool PlaceExitingDriver()
 // Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
+    local rotator NewRotation;
+    local float RotationChangeFactor;
+    local DHPlayer DHP;
+
+    DHP = DHPlayer(Controller);
+
+    RotationChangeFactor = 1.0;
+
+    if (CanFire())
+    {
+        RotationChangeFactor = DHP.DHISTurnSpeedFactor;
+    }
+
+    NewRotation = Rotation;
+    NewRotation.Yaw += 32.0 * RotationChangeFactor * deltaTime * YawChange;
+    NewRotation.Pitch += 32.0 * RotationChangeFactor * deltaTime * PitchChange;
+    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
+
+    SetRotation(NewRotation);
 
     if (bCustomAiming && CanFire())
     {

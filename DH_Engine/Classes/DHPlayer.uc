@@ -506,7 +506,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor;
         }
-        else if (ROPwn != none && ROPwn.bIronSights)
+        else if (ROPwn != none && (ROPwn.bIronSights || ROPwn.bBipodDeployed))
         {
             TurnSpeedFactor *= DHISTurnSpeedFactor;
         }
