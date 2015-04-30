@@ -16,8 +16,6 @@ var     protected float         DHSwayElasticFactor;
 var     protected float         DHSwayDampingFactor;
 
 // Rotation clamp values
-//var     protected float         DHSprintMaxTurnSpeed;
-//var     protected float         DHProneMaxTurnSpeed;
 var     protected InterpCurve   SprintMaxTurnCurve;
 var     protected InterpCurve   ProneMaxTurnCurve;
 var     protected float         DHStandardTurnSpeedFactor;
@@ -513,9 +511,6 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             TurnSpeedFactor *= DHISTurnSpeedFactor;
         }
 
-
-
-
         // Handle viewrotation
         if (ROPwn != none && ROPwn.bIsCrawling)
         {
@@ -523,7 +518,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
             ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
             ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
-            LastClampProneTime = DeltaTime;
+            LastClampProneTime = Level.TimeSeconds;
         }
         else if (ROPwn != none && ROPwn.bIsSprinting)
         {
@@ -531,32 +526,27 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
             ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
             ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
-            LastClampSprintTime = DeltaTime;
+            LastClampSprintTime = Level.TimeSeconds;
         }
         else
         {
-            if (DeltaTime - LastClampProneTime <= 1.0)
+            // Buffer change in clamp, so the clamp is not so noticable to player
+            if (Level.TimeSeconds - LastClampProneTime < 1.0 && Level.TimeSeconds - LastClampProneTime > 0.0)
             {
-                MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, DeltaTime - LastClampProneTime);
+                MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, Level.TimeSeconds - LastClampProneTime);
             }
-            else if (DeltaTime - LastClampSprintTime <= 1.0)
+            else if (Level.TimeSeconds - LastClampSprintTime < 1.0 && Level.TimeSeconds - LastClampSprintTime > 0.0)
             {
-                MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, DeltaTime - LastClampSprintTime);
+                MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, Level.TimeSeconds - LastClampSprintTime);
             }
             else
             {
-                MaxTurnSpeed = 10000;
+                MaxTurnSpeed = 10000.0;
             }
 
             ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
             ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
-            //ViewRotation.Yaw += TurnSpeedFactor * DeltaTime * aTurn;
-            //ViewRotation.Pitch += TurnSpeedFactor * DeltaTime * aLookUp;
         }
-
-
-
-
 
         if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
         {
@@ -2666,8 +2656,6 @@ defaultproperties
     // Max turn speed values
     SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=230.0),(InVal=1.0,OutVal=10000.0)))
     ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=180.0),(InVal=1.0,OutVal=10000.0)))
-    //DHSprintMaxTurnSpeed=230.0
-    //DHProneMaxTurnSpeed=180.0
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
