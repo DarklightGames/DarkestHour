@@ -1700,7 +1700,6 @@ function bool FillAmmo()
     return bDidFillAmmo;
 }
 
-// New function, called from 
 function SetNumMags(int M)
 {
     PrimaryAmmoArray.Length = M;

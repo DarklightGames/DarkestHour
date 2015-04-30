@@ -2138,8 +2138,7 @@ exec function CommunicationMenu()
 }
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
-// Pass this function with MagCount = -1 to have the function use Desired variable in this class
-simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optional int WeaponIndex)
+simulated function int GetSpawnTime(byte MagCount, DHRoleInfo RI, int WeaponIndex)
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
@@ -2166,21 +2165,15 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
 
     if (PrimaryWeaponClass != none)
     {
-        // If MagCount wasn't passed, lets use desired ammo amount
-        if (MagCount == 255)
-        {
-            MagCount = SpawnAmmoAmount;
-        }
-        else if (MagCount >= 1 && MagCount <= PrimaryWeaponClass.default.MaxNumPrimaryMags)
-        {
-            // MagCount was passed, so lets update SpawnAmmoAmount if the value is valid
-            SpawnAmmoAmount = MagCount;
-        }
-
         // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
         MinValue = RI.MinStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
         MidValue = RI.DefaultStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
         MaxValue = RI.MaxStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+
+        if (MagCount == 0 || MagCount == 255)
+        {
+            MagCount = MidValue;
+        }
 
         // Set AmmoTimeMod based on MagCount
         if (MagCount == MidValue)
@@ -2381,10 +2374,12 @@ exec function SwitchTeam() { }
 exec function ChangeTeam(int N) { }
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
+// Theel: this function is a fucking mess
 function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewSpawnAmmoCount)
 {
     local DarkestHourGame DHG;
     local DHRoleInfo RI;
+    local class<DHProjectileWeapon> PrimaryWeaponClass;
 
     DHG = DarkestHourGame(Level.Game);
 
@@ -2580,15 +2575,27 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         }
     }
 
+    // Set weapons
     ChangeWeapons(newWeapon1, newWeapon2, 0);
 
-    NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
-
+    // Handle ammo
     RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
 
-    SpawnTime = GetSpawnTime(NewSpawnAmmoCount, RI, newWeapon1);
+    PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[PrimaryWeapon].Item);
 
-    // Success!
+    if (NewSpawnAmmoCount == 255 || PrimaryWeaponClass == none)
+    {
+         SpawnAmmoAmount = 0;
+    }
+    else if (NewSpawnAmmoCount >= 1 && NewSpawnAmmoCount <= PrimaryWeaponClass.default.MaxNumPrimaryMags)
+    {
+        SpawnAmmoAmount = NewSpawnAmmoCount;
+    }
+
+    // If SpawnAmmoAmount is 0 or 255 it will calculate a normal default setting value
+    SpawnTime = GetSpawnTime(SpawnAmmoAmount, RI, newWeapon1);
+
+    // return result to client
     if (newTeam == AXIS_TEAM_INDEX)
     {
         ClientChangePlayerInfoResult(97); // successfully picked axis team

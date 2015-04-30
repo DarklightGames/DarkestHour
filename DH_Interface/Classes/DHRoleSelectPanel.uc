@@ -742,6 +742,7 @@ function string FormatRoleString(string RoleName, int RoleLimit, int RoleCount, 
     return s;
 }
 
+/*
 function bool IsApplicationChanged()
 {
     // Check values for changes
@@ -759,6 +760,7 @@ function bool IsApplicationChanged()
 
     return false;
 }
+*/
 
 // TODO: clean up function && optimize if possible
 function AttemptDeployApplication()
