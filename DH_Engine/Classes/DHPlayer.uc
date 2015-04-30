@@ -16,10 +16,14 @@ var     protected float         DHSwayElasticFactor;
 var     protected float         DHSwayDampingFactor;
 
 // Rotation clamp values
-var     protected float         DHSprintMaxTurnSpeed;
-var     protected float         DHProneMaxTurnSpeed;
+//var     protected float         DHSprintMaxTurnSpeed;
+//var     protected float         DHProneMaxTurnSpeed;
+var     protected InterpCurve   SprintMaxTurnCurve;
+var     protected InterpCurve   ProneMaxTurnCurve;
 var     protected float         DHStandardTurnSpeedFactor;
 var     protected float         DHHalfTurnSpeedFactor;
+var     protected float         LastClampProneTime;
+var     protected float         LastClampSprintTime;
 var globalconfig float          DHISTurnSpeedFactor;        // 0.0 to 1.0
 var globalconfig float          DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
@@ -413,7 +417,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     local ROVehicle ROVeh;
     local DHPawn    ROPwn;
     local ROWeapon  ROWeap;
-    local float     TurnSpeedFactor;
+    local float     TurnSpeedFactor, MaxTurnSpeed;
 
     ROPwn = DHPawn(Pawn);
 
@@ -509,22 +513,49 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             TurnSpeedFactor *= DHISTurnSpeedFactor;
         }
 
+
+
+
         // Handle viewrotation
         if (ROPwn != none && ROPwn.bIsCrawling)
         {
-            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
-            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
+            MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, 0.0);
+
+            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
+            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
+            LastClampProneTime = DeltaTime;
         }
         else if (ROPwn != none && ROPwn.bIsSprinting)
         {
-            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
-            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
+            MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, 0.0);
+
+            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
+            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
+            LastClampSprintTime = DeltaTime;
         }
         else
         {
-            ViewRotation.Yaw += TurnSpeedFactor * DeltaTime * aTurn;
-            ViewRotation.Pitch += TurnSpeedFactor * DeltaTime * aLookUp;
+            if (DeltaTime - LastClampProneTime <= 1.0)
+            {
+                MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, DeltaTime - LastClampProneTime);
+            }
+            else if (DeltaTime - LastClampSprintTime <= 1.0)
+            {
+                MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, DeltaTime - LastClampSprintTime);
+            }
+            else
+            {
+                MaxTurnSpeed = 10000;
+            }
+
+            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
+            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
+            //ViewRotation.Yaw += TurnSpeedFactor * DeltaTime * aTurn;
+            //ViewRotation.Pitch += TurnSpeedFactor * DeltaTime * aLookUp;
         }
+
+
+
 
 
         if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
@@ -2633,12 +2664,14 @@ defaultproperties
     baseSwayPitchAcc=500
 
     // Max turn speed values
-    DHSprintMaxTurnSpeed=225.0
-    DHProneMaxTurnSpeed=170.0
+    SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=230.0),(InVal=1.0,OutVal=10000.0)))
+    ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=180.0),(InVal=1.0,OutVal=10000.0)))
+    //DHSprintMaxTurnSpeed=230.0
+    //DHProneMaxTurnSpeed=180.0
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
-    DHScopeTurnSpeedFactor=0.33
+    DHScopeTurnSpeedFactor=0.2
 
     // Other values
     SpawnTime=15

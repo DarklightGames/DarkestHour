@@ -91,7 +91,7 @@ defaultproperties
     ControlProfiles(1)="Defaults (Reset)"
     ControlProfiles(2)="Revised Classic"
     ControlProfiles(3)="Contemporary"
-    ControlProfiles(4)="Formal"
+    ControlProfiles(4)="Wayward"
     ControlProfiles(5)="Express"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
@@ -161,7 +161,7 @@ defaultproperties
     ControlProfileBindings(2)=(KeyNames=("RightMouse","MiddleMouse"),KeyValues=("ROIronSights","AltFire"))
     // Contemporary
     ControlProfileBindings(3)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
-    // Formal
+    // Wayward
     ControlProfileBindings(4)=(KeyNames=("Tab","F1","RightMouse","MiddleMouse"),KeyValues=("VoiceTalk","ShowScores","ROIronSights","AltFire"))
     // Express
     ControlProfileBindings(5)=(KeyNames=("V","Z","G","H","T","Y","U","I","N","M","J","K","L","Semicolon","SingleQuote","CapsLock","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseX","MouseY","LeftBracket","RightBracket"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay /np","speech ACK 3","speech ACK 2","speech ALERT 3","Walking","ROIronSights","AltFire","SpeechMenuToggle","","","","speech ALERT 2","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","",""))
