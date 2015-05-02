@@ -2783,6 +2783,10 @@ simulated function UpdateHud()
             {
                 AmmoIcon.WidgetTexture = W.AmmoClass[0].default.IconMaterial;
             }
+            else
+            {
+                AmmoIcon.WidgetTexture = none;
+            }
 
             AmmoCount.Value = W.GetHudAmmoCount();
         }
