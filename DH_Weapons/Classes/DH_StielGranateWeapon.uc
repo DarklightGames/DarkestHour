@@ -19,4 +19,5 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
     InventoryGroup=2
+    Skins(2)=texture'Weapons1st_tex.Grenades.StielGranate'
 }

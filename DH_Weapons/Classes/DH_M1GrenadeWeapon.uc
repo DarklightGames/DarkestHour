@@ -22,4 +22,5 @@ defaultproperties
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
     InventoryGroup=2
+    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade'
 }

@@ -11,4 +11,5 @@ defaultproperties
     WA_Fire="idle_potato"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.Sticknade'
     Mesh=SkeletalMesh'Weapons3rd_anm.Stielhandgranate'
+    Skins(0)=texture'Weapons3rd_tex.German.Stielhandgranate'
 }
