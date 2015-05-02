@@ -502,7 +502,7 @@ function bool DrawDeployTimer(Canvas C)
     // Handle progress bar
     if (!bOutOfReinforcements)
     {
-        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.SpawnTime - GRI.ElapsedTime) / DHP.SpawnTime;
+        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.SpawnTime - DHP.Level.TimeSeconds) / DHP.SpawnTime;
         P = pb_DeployProgressBar.High - P;
         pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
 
@@ -570,7 +570,7 @@ function bool DrawDeployTimer(Canvas C)
     }
     else if (!bProgressComplete)
     {
-        b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.SpawnTime - GRI.ElapsedTime)) @ DeployBarText[4];
+        b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.SpawnTime - DHP.Level.TimeSeconds)) @ DeployBarText[4];
     }
     else
     {

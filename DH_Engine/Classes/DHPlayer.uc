@@ -69,7 +69,7 @@ replication
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
-        SpawnAmmoAmount, LastKilledTime, DHPrimaryWeapon, DHSecondaryWeapon,
+        SpawnAmmoAmount, DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated;
 
     // Variables the server will replicate to all clients
@@ -1766,7 +1766,7 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if (DHGRI.ElapsedTime < LastKilledTime + SpawnTime)
+    else if (Level.TimeSeconds < LastKilledTime + SpawnTime)
     {
         return false;
     }
@@ -2197,23 +2197,6 @@ simulated function int GetSpawnTime(byte MagCount, DHRoleInfo RI, int WeaponInde
     }
 
     return FMax(0, GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod);
-}
-
-function PawnDied(Pawn P)
-{
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    // Make sure the pawn that died is our pawn, not some random other pawn and GRI check
-    if (P != Pawn || DHGRI == none)
-    {
-        return;
-    }
-
-    LastKilledTime = DHGRI.ElapsedTime; // Server sets killed time based on GRI elapsed
-
-    super.PawnDied(P); //Calls super in ROPlayer
 }
 
 // Function to get offset coordinates from nearby vehicle(s) to create/adjust vehicle exit positions (Only works in singleplayer)
@@ -2647,6 +2630,17 @@ state DeadSpectating
         {
             ClientReplaceMenu("DH_Interface.DHDeployMenu");
         }
+    }
+}
+
+state Dead
+{
+    function BeginState()
+    {
+        super.BeginState();
+
+        // Run by both client and server, but time is different for each, this is ideal as they are checked separately and we can avoid replication
+        LastKilledTime = Level.TimeSeconds;
     }
 }
 

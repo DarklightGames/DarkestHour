@@ -1463,7 +1463,7 @@ function DrawPlayerNames(Canvas C)
     HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true));
     Mortar = DHMortarVehicle(HitPawn);
 
-    // Record NamedPlayer & possibly NameTime, if we're looking at a team-mate, or an unmanned mortar or if we're spectating (so we see all player names) 
+    // Record NamedPlayer & possibly NameTime, if we're looking at a team-mate, or an unmanned mortar or if we're spectating (so we see all player names)
     if (HitPawn != none && ((HitPawn.PlayerReplicationInfo != none && HitPawn.PlayerReplicationInfo.Team == PawnOwner.PlayerReplicationInfo.Team)
         || (Mortar != none && Mortar.VehicleTeam == PawnOwner.GetTeamNum()) || PawnOwner.PlayerReplicationInfo.Team == none))
     {
@@ -1580,7 +1580,7 @@ function DrawPlayerNames(Canvas C)
                     C.DrawTextClipped(ResupplyMessage);
                     C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
                 }
-                
+
                 C.DrawColor = GetTeamColour(NamedPlayer.PlayerReplicationInfo.Team.TeamIndex);
                 C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
             }
@@ -3434,7 +3434,7 @@ simulated function DrawSpectatingHud(Canvas C)
         else if (GRI.bMatchHasBegun &&
                  GRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            Time = Max(PC.LastKilledTime + PC.SpawnTime - GRI.ElapsedTime, 0);
+            Time = Max(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0);
 
             if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
             {

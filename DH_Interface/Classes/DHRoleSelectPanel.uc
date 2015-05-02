@@ -742,26 +742,6 @@ function string FormatRoleString(string RoleName, int RoleLimit, int RoleCount, 
     return s;
 }
 
-/*
-function bool IsApplicationChanged()
-{
-    // Check values for changes
-    if (CurrentRole != DesiredRole ||
-        CurrentTeam != DesiredTeam ||
-        CurrentWeapons[0] != DesiredWeapons[0] ||
-        CurrentWeapons[1] != DesiredWeapons[1] ||
-        nu_PrimaryAmmoMags.Value != string(DHP.SpawnAmmoAmount) ||
-        MyDeployMenu.SpawnPointIndex != DHP.SpawnPointIndex ||
-        MyDeployMenu.VehiclePoolIndex != DHP.VehiclePoolIndex ||
-        MyDeployMenu.SpawnVehicleIndex != DHP.SpawnVehicleIndex)
-    {
-        return true;
-    }
-
-    return false;
-}
-*/
-
 // TODO: clean up function && optimize if possible
 function AttemptDeployApplication()
 {
@@ -850,20 +830,13 @@ function InternalOnChange(GUIComponent Sender)
         case lb_Roles:
             Role = RORoleInfo(li_Roles.GetObject());
 
-            if (Role != none)
+            // if we selected a different role change it (otherwise do nothing)
+            if (Role != none && Role != DesiredRole)
             {
                 // Because we changed role, lets reset our desired ammo
                 nu_PrimaryAmmoMags.Value = string(0);
 
                 ChangeDesiredRole(Role);
-            }
-            else
-            {
-                // We clicked another role, but we tried changing too fast, lets force index back
-                if (Role != none && DesiredRole != none && DesiredRole != Role)
-                {
-                    li_Roles.SetIndex(li_Roles.FindItemObject(DesiredRole));
-                }
             }
             break;
 
