@@ -502,7 +502,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
         // if sniper scope or binoc
         if (ROWeap != none &&
-            (ROWeap.bPlayerViewIsZoomed || (ROWeap.IsA('BinocularsItem') && ROWeap.bPlayerViewIsZoomed)))
+            (ROWeap.bPlayerViewIsZoomed || (ROWeap.IsA('DH_BinocularsItem') && ROWeap.bPlayerViewIsZoomed)))
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor;
         }
@@ -602,120 +602,99 @@ function ServerSaveArtilleryPosition()
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
-    local Actor        HitActor;
-    local vector       HitLocation, HitNormal, StartTrace;
-    local Material     HitMaterial;
-    local int          TraceDist, i;
-    local ROVolumeTest RVT;
-    local rotator      AimRot;
-    local bool         bFoundARadio;
     local DHRoleInfo   RI;
+    local ROVolumeTest RVT;
+    local Actor        HitActor;
+    local Material     HitMaterial;
+    local vector       HitLocation, HitNormal, StartTrace;
+    local rotator      AimRot;
+    local int          TraceDist, i;
+    local bool         bFoundARadio;
 
-    if (DHPawn(Pawn) == none)
+    if (DHPawn(Pawn) != none && Pawn.Weapon != none && Pawn.Weapon.IsA('DH_BinocularsItem'))
     {
-        return;
+        RI = DHPawn(Pawn).GetRoleInfo();
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
     }
 
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-    RI = DHPawn(Pawn).GetRoleInfo();
-
-    if (PRI == none || PRI.RoleInfo == none || RI == none || !RI.bIsArtilleryOfficer)
+    if (RI != none && RI.bIsArtilleryOfficer && PRI != none && PRI.RoleInfo != none && GRI != none)
     {
-        return;
-    }
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    // If a player tries to mark artillery on a level with no arty for their team, give them a message
-    if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.AlliedRadios); ++i)
+        // If a player tries to mark artillery on a level with no arty for their team, give them a message
+        if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
         {
-            if (GRI.AlliedRadios[i] != none)
+            for (i = 0; i < arraycount(GRI.AlliedRadios); ++i)
             {
-                bFoundARadio = true;
-                break;
-            }
-        }
-
-        if (!bFoundARadio)
-        {
-            for (i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
-            {
-                if (GRI.CarriedAlliedRadios[i] != none)
+                if (GRI.AlliedRadios[i] != none)
                 {
                     bFoundARadio = true;
                     break;
                 }
             }
-        }
-    }
-    else if (PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.AxisRadios); ++i)
-        {
-            if (GRI.AxisRadios[i] != none)
+
+            if (!bFoundARadio)
             {
-                bFoundARadio = true;
-                break;
+                for (i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
+                {
+                    if (GRI.CarriedAlliedRadios[i] != none)
+                    {
+                        bFoundARadio = true;
+                        break;
+                    }
+                }
             }
         }
-
-        if (!bFoundARadio)
+        else if (PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
+            for (i = 0; i < arraycount(GRI.AxisRadios); ++i)
             {
-                if (GRI.CarriedAxisRadios[i] != none)
+                if (GRI.AxisRadios[i] != none)
                 {
                     bFoundARadio = true;
                     break;
                 }
             }
+
+            if (!bFoundARadio)
+            {
+                for (i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
+                {
+                    if (GRI.CarriedAxisRadios[i] != none)
+                    {
+                        bFoundARadio = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (bFoundARadio)
+        {
+            TraceDist = GetMaxViewDistance();
+            StartTrace = Pawn.Location + Pawn.EyePosition();
+            AimRot = Rotation;
+
+            HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
+
+            RVT = Spawn(class'ROVolumeTest', self,, HitLocation);
+
+            if ((RVT == none || !RVT.IsInNoArtyVolume()) && HitActor != none && HitNormal != vect(0.0, 0.0, -1.0))
+            {
+                ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // position saved
+                SavedArtilleryCoords = HitLocation;
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // invalid target
+            }
+
+            RVT.Destroy();
+        }
+        else
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 9); // no arty support (actually means there's no radio in the level to call arty)
         }
     }
-
-    if (!bFoundARadio)
-    {
-        ReceiveLocalizedMessage(class'ROArtilleryMsg', 9);
-
-        return;
-    }
-
-    // If you don't have binocs can't call arty strike
-    if (Pawn.Weapon != none && Pawn.Weapon.IsA('BinocularsItem'))
-    {
-        TraceDist = GetMaxViewDistance();
-        StartTrace = Pawn.Location + Pawn.EyePosition();
-        AimRot = Rotation;
-    }
-    else if (Pawn.IsA('ROVehicleWeaponPawn'))
-    {
-        TraceDist = GetMaxViewDistance();
-        AimRot = ROVehicleWeaponPawn(Pawn).CustomAim;
-        StartTrace = ROVehicleWeaponPawn(Pawn).GetViewLocation() + 500.0 * vector(AimRot);
-    }
-    else
-    {
-       return;
-    }
-
-    HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
-
-    RVT = Spawn(class'ROVolumeTest', self,, HitLocation);
-
-    if ((RVT != none && RVT.IsInNoArtyVolume()) || HitActor == none || HitNormal == vect(0.0, 0.0, -1.0))
-    {
-        ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
-        RVT.Destroy();
-
-        return;
-    }
-
-    RVT.Destroy();
-
-    ReceiveLocalizedMessage(class'ROArtilleryMsg', 0);
-
-    SavedArtilleryCoords = HitLocation;
 }
 
 // Spawn the artillery strike at the appropriate position
@@ -1831,7 +1810,7 @@ function HitThis(ROArtilleryTrigger RAT)
 
     if (GRI.bArtilleryAvailable[Pawn.GetTeamNum()] > 0)
     {
-        ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self);
+        ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self); // strike confirmed
 
         if (PawnTeam ==  0)
         {
@@ -1871,19 +1850,19 @@ function HitThis(ROArtilleryTrigger RAT)
 
         if (GRI.TotalStrikes[PawnTeam] >= GRI.ArtilleryStrikeLimit[PawnTeam])
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 6);
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 6); // out of arty
         }
         else if (TimeTilNextStrike >= 20)
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 7);
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 7); // try again later
         }
         else if (TimeTilNextStrike >= 0)
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 8);
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 8); // try again soon
         }
         else
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 2);
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 2); // arty denied
         }
     }
 }
