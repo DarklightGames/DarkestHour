@@ -6,256 +6,140 @@
 class DHWeaponBarrel extends Actor
     notplaceable;
 
-var     float       Temperature;           // current barrel temp
-var     float       DH_MGSteamTemp,              // temp barrel begins to steam
-                    CriticalTemperature,          // temp barrel steams alot and conefire error introduced
-                    FailureTemperature,              // temp at which barrel fails and unusable
-                    BarrelCoolingRate,          // rate/second the barrel cools at
-                    FiringHeatIncrement;        // deg C/shot the barrel heat is increased
-var     bool        bBarrelFailed,              // if barrel passes ROMGFailTemp, becomes true and barrel unusable
-                    bBarrelSteaming,            // if barrel passes ROMGSteamTemp, we'll start steaming the barrel
-                    bBarrelDamaged;             // if barrel passes ROMGCriticalTemp, becomes true and conefire error introduced
-var     int         LevelCTemp;                 //  The temperature of the level we're playing in
-var     float       BarrelTimerRate;            // How fast to call the timer for this barrel. We don't really need to cool the Barrel every tick
+var     float       LevelTempCentigrade; // the temperature of the level we're playing in (all temps here are in centigrade)
+var     float       Temperature;         // current barrel temp
+var     float       SteamTemperature;    // temp barrel begins to steam
+var     float       CriticalTemperature; // temp barrel steams a lot and cone-fire error introduced
+var     float       FailureTemperature;  // temp at which barrel fails and unusable
+var     float       FiringHeatIncrement; // increase in barrel temp per shot fired
+var     float       BarrelTimerRate;     // how often to call the timer to handle barrel cooling
+var     float       BarrelCoolingRate;   // rate at which barrel cools off (degrees per second)
+var     bool        bBarrelSteamActive;  // if barrel passes SteamTemperature, we'll start steaming the barrel
+var     bool        bBarrelDamaged;      // if barrel passes CriticalTemperature, becomes true and cone-fire error introduced
+var     bool        bBarrelFailed;       // if barrel passes FailureTemperature, becomes true and barrel unusable
+var     bool        bIsCurrentBarrel;    // this is the weapon's current barrel, not a spare
 
+// Modified to set the LevelTempCentigrade & match barrel's starting temperature to that, & to start a repeating timer to handle barrel cooling & updating
 simulated function PostBeginPlay()
 {
+    local int TempFahrenheit;
+
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority && DarkestHourGame(Level.Game).LevelInfo != none)
     {
-        LevelCTemp = FtoCelsiusConversion(DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit);
+        TempFahrenheit = DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit;
+        LevelTempCentigrade = float(TempFahrenheit - 32) * 5.0 / 9.0;
+        Temperature = LevelTempCentigrade;
 
-        Temperature = LevelCTemp;
+        SetTimer(BarrelTimerRate, true);
     }
 }
 
+// Modified to make sure any steam effects are deactivated
 simulated function Destroyed()
 {
-    // if the barrel is destroyed and is steaming, de-activate the steam effect
-    if (bBarrelSteaming)
+    if (bBarrelSteamActive)
     {
-        DHProjectileWeapon(Owner).ToggleBarrelSteam(false);
-    }
-
-    if (bBarrelDamaged)
-    {
-        DHProjectileWeapon(Owner).bBarrelDamaged = false;
+        if (DHProjectileWeapon(Owner)!= none)
+        {
+            DHProjectileWeapon(Owner).SetBarrelSteamActive(false);
+        }
+        else if (DHWeaponPickup(Owner) != none)
+        {
+            DHWeaponPickup(Owner).SetBarrelSteamActive(false);
+        }
     }
 
     super.Destroyed();
 }
 
-//------------------------------------------------------------------------------
-// FtoCelciusConversion(RO) - This is executed on the authority, used to set the
-//  MG C temp using the map ambient Fahrenheit temp
-//------------------------------------------------------------------------------
-static function float FtoCelsiusConversion(INT Fahrenheit)
+// Sets whether this barrel is the current one in the weapon & updates its status
+function SetCurrentBarrel(bool bIsCurrent)
 {
-    local float NewCTemp;
+    bIsCurrentBarrel = bIsCurrent;
 
-    Fahrenheit -= 32;
-    NewCTemp = Fahrenheit * 5.0;
-    NewCTemp = NewCTemp / 9.0;
-
-    return NewCTemp;
+    if (bIsCurrentBarrel)
+    {
+        UpdateBarrelStatus();
+    }
 }
 
-//------------------------------------------------------------------------------
-// WeaponFired(RO) - This is a server-side function that will handle
-//  barrel heating whenver the mg fires
-//------------------------------------------------------------------------------
+// Increases barrel temperature whenever the weapon fires
 function WeaponFired()
 {
-    // Increment the barrel temp by 1 deg C for firing
     Temperature += FiringHeatIncrement;
-
-    // Only CheckBarrelSteaming if the barrel isn't steaming yet
-    if (!bBarrelSteaming && (Temperature > DH_MGSteamTemp))
-    {
-        bBarrelSteaming = true;
-
-        DHProjectileWeapon(Owner).ToggleBarrelSteam(bBarrelSteaming);
-    }
-
-    if (Temperature > FailureTemperature)
-    {
-        bBarrelFailed = true;
-    }
-
     UpdateBarrelStatus();
 }
 
-// Will update this barrel and the weapons's barrel status
+// Periodically lowers the barrel temp, but no further than the level's ambient temp
+function Timer()
+{
+    if (Role == ROLE_Authority && Temperature != LevelTempCentigrade)
+    {
+        Temperature = FMax(LevelTempCentigrade, Temperature -= (BarrelCoolingRate * BarrelTimerRate));
+        UpdateBarrelStatus();
+    }
+}
+
+// Updates this barrel and the weapon's status
 function UpdateBarrelStatus()
 {
     local DHProjectileWeapon W;
+    local DHWeaponPickup     PU;
 
-    W = DHProjectileWeapon(Owner);
-
-    if (W == none)
+    if (Role == ROLE_Authority)
     {
-        return;
-    }
+        bBarrelSteamActive = Temperature > SteamTemperature;
+        bBarrelDamaged = Temperature > CriticalTemperature;
 
-    if (bBarrelFailed)
-    {
-        W.bBarrelFailed = true;
-    }
-
-    if (!bBarrelSteaming && (Temperature > DH_MGSteamTemp))
-    {
-        bBarrelSteaming = true;
-
-        W.ToggleBarrelSteam(bBarrelSteaming);
-    }
-
-    if (!bBarrelDamaged && (Temperature > CriticalTemperature))
-    {
-        bBarrelDamaged = true;
-        W.bBarrelDamaged = true;
-    }
-}
-
-// Will update this barrel status when it's not currently in use without affecting the weapon
-function UpdateSpareBarrelStatus()
-{
-    if (!bBarrelSteaming && (Temperature > DH_MGSteamTemp))
-    {
-        bBarrelSteaming = true;
-    }
-
-    if (!bBarrelDamaged && (Temperature > CriticalTemperature))
-    {
-        bBarrelDamaged = true;
-    }
-}
-
-state BarrelInUse
-{
-    function BeginState()
-    {
-        // if the barrel is being put on and is steaming, turn on the steam emitter
-        if (bBarrelSteaming)
+        if (!bBarrelFailed && Temperature > FailureTemperature) // no coming back from barrel failure
         {
-            DHProjectileWeapon(Owner).ToggleBarrelSteam(true);
+            bBarrelFailed = true;
         }
 
-        // if the barrel is being put on and is damaged, set the weapon to have a damaged barrel
-        if (bBarrelDamaged)
+        if (bIsCurrentBarrel)
         {
-            DHProjectileWeapon(Owner).bBarrelDamaged = true;
-        }
+            W = DHProjectileWeapon(Owner);
 
-        SetTimer(BarrelTimerRate, true);
-    }
+            if (W != none)
+            {
+                if (W.bBarrelSteamActive != bBarrelSteamActive)
+                {
+                    W.SetBarrelSteamActive(bBarrelSteamActive);
+                }
 
-    //------------------------------------------------------------------------------
-    // Timer - This is a server-side function that will handle barrel heat
-    // related operations such as barrel steaming and cone fire activation calls
-    //------------------------------------------------------------------------------
-    function Timer()
-    {
-        local DHProjectileWeapon W;
+                if (W.bBarrelDamaged != bBarrelDamaged)
+                {
+                    W.SetBarrelDamaged(bBarrelDamaged);
+                }
 
-        // make sure this is done on the authority
-        // if temp is at the level temp, don't bother with anything else
-        if (Role < ROLE_Authority || Temperature == LevelCTemp)
-        {
-            return;
-        }
+                if (W.bBarrelFailed != bBarrelFailed)
+                {
+                    W.SetBarrelFailed(bBarrelFailed);
+                }
+            }
+            else
+            {
+                PU = DHWeaponPickup(Owner);
 
-        W = DHProjectileWeapon(Owner);
-
-        if (W == none)
-        {
-            return;
-        }
-
-        // lower the barrel temp or set to Level ambient temp if it goes below
-        if (Temperature > LevelCTemp)
-        {
-            Temperature -= (BarrelTimerRate * BarrelCoolingRate);
-        }
-        else if (Temperature < LevelCTemp)
-        {
-            Temperature = LevelCTemp;
-        }
-
-        if (bBarrelSteaming && (Temperature < DH_MGSteamTemp))
-        {
-            bBarrelSteaming = false;
-
-            W.ToggleBarrelSteam(bBarrelSteaming);
-        }
-
-        // Questionable, once the barrel is damaged, does it ever really get better again?
-        if (bBarrelDamaged && (Temperature < CriticalTemperature))
-        {
-            bBarrelDamaged = false;
-
-            W.bBarrelDamaged = false;
-        }
-    }
-}
-
-//------------------------------------------------------------------------------
-// Allows Barrel heat to continue to be tracked, but without the steam or cone
-// fire toggling calls to the MG
-//------------------------------------------------------------------------------
-state BarrelOff
-{
-    function BeginState()
-    {
-        // if the barrel is being removed and is steaming, shut off the steam
-        // emitter
-        if (bBarrelSteaming)
-        {
-            DHProjectileWeapon(Owner).ToggleBarrelSteam(false);
-        }
-
-        SetTimer(BarrelTimerRate, true);
-    }
-
-    function Timer()
-    {
-        // make sure this is done on the authority
-        if (Role < ROLE_Authority || Temperature == LevelCTemp)
-        {
-            return;
-        }
-
-        // lower the barrel temp or set to Level ambient temp if it goes below
-        if (Temperature > LevelCTemp)
-        {
-            Temperature -= (BarrelTimerRate * BarrelCoolingRate);
-        }
-
-        else if (Temperature < LevelCTemp)
-        {
-            Temperature = LevelCTemp;
-        }
-
-        if (bBarrelSteaming && (Temperature < DH_MGSteamTemp))
-        {
-            bBarrelSteaming = false;
-        }
-
-        if (bBarrelDamaged && (Temperature < CriticalTemperature))
-        {
-            bBarrelDamaged = false;
+                if (PU != none && PU.bBarrelSteamActive != bBarrelSteamActive)
+                {
+                    PU.SetBarrelSteamActive(bBarrelSteamActive);
+                }
+            }
         }
     }
 }
 
 defaultproperties
 {
-    DH_MGSteamTemp=225.0
+    SteamTemperature=225.0
     CriticalTemperature=250.0
     FailureTemperature=275.0
     BarrelCoolingRate=1.0
     FiringHeatIncrement=1.0
-    BarrelTimerRate=0.1
+    BarrelTimerRate=3.0
     DrawType=DT_None
     bHidden=true
     bReplicateMovement=false

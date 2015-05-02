@@ -6,8 +6,9 @@
 class DHPlaceableWeaponPickup extends DHWeaponPickup
     placeable;
 
-var() class<Weapon> WeaponType; // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
-
+var() class<Weapon> WeaponType;       // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
+var   bool          bIsOneShotWeapon; // pickup weapon is a one shot weapon, e.g. a grenade, satchel or faust
+ 
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -20,9 +21,8 @@ function PostBeginPlay()
 {
 }
 
-// Modified to set InventoryType from the replicated WeaponType, then setting StaticMesh & mesh DrawScale if they haven't been specified
-// A leveller may have used this placeable class & set the WeaponType in the editor, in which we won't have the default properties found in a weapon-specific subclass
-// A smart leveller will at least set StaticMesh in editor, so it displays correctly in editor & can be positioned accurately - but here we ensure correct in-game weapon properties
+// Modified to set InventoryType from the replicated WeaponType, then setting other properties from that weapon's normal PickupClass
+// A smart leveller using this generic placeable pickup will at least set StaticMesh in the editor, so it displays correctly in editor & can be positioned accurately
 simulated function PostNetBeginPlay()
 {
     local class<Pickup> PickupClass;
@@ -33,20 +33,28 @@ simulated function PostNetBeginPlay()
 
         MaxDesireability = 1.2 * WeaponType.default.AIRating;
 
-        if (Level.NetMode != NM_DedicatedServer)
+        PickupClass = InventoryType.default.PickupClass;
+
+        if (PickupClass != none)
         {
-            PickupClass = InventoryType.default.PickupClass;
+            SetStaticMesh(PickupClass.default.StaticMesh);
+            SetDrawScale(PickupClass.default.DrawScale);
+            SetCollisionSize(PickupClass.default.CollisionRadius, PickupClass.default.CollisionHeight);
+            PickupSound = PickupClass.default.PickupSound;
+            PrePivot = PickupClass.default.PrePivot;
 
-            if (PickupClass != none)
+            if (class<ROWeaponPickup>(PickupClass) != none)
             {
-                if (StaticMesh != PickupClass.default.StaticMesh)
-                {
-                    SetStaticMesh(PickupClass.default.StaticMesh);
-                }
+                DropLifeTime = class<ROWeaponPickup>(PickupClass).default.DropLifeTime;
 
-                if (DrawScale != PickupClass.default.DrawScale)
+                if (class<DHWeaponPickup>(PickupClass) != none)
                 {
-                    SetDrawScale(PickupClass.default.DrawScale);
+                    BarrelSteamEmitterClass = class<DHWeaponPickup>(PickupClass).default.BarrelSteamEmitterClass;
+
+                    if (class<DHOneShotWeaponPickup>(PickupClass) != none)
+                    {
+                        bIsOneShotWeapon = true; // different ammo handling (in InitPickup) for one-shot weapons
+                    }
                 }
             }
         }
@@ -63,41 +71,50 @@ function InitPickup()
     local class<DHProjectileWeapon> W;
     local int InitialAmount, i;
 
-    if (WeaponType.default.FireModeClass[0].default.AmmoClass != none)
+    // One-shot weapon (e.g. grenade, satchel, faust) just needs 1 ammo - don't want it using weapon's usual InitialAmount (e.g. 2 grenades) & the other stuff isn't relevant
+    if (bIsOneShotWeapon)
     {
-        InitialAmount = WeaponType.default.FireModeClass[0].default.AmmoClass.default.InitialAmount;
+        AmmoAmount[0] = 1;
     }
-
-    W = class<DHProjectileWeapon>(InventoryType);
-
-    // Load the pickup with the ammo the weapon would start loaded with
-    if (W == none || !W.default.bDoesNotRetainLoadedMag)
+    else
     {
-        AmmoAmount[0] = InitialAmount;
-    }
-
-    if (W != none)
-    {
-        for (i = 0; i < W.default.InitialNumPrimaryMags; ++i)
+        if (WeaponType.default.FireModeClass[0].default.AmmoClass != none)
         {
-            AmmoMags[AmmoMags.Length] = InitialAmount; // give the pickup the ammo mags the weapon would start with
+            InitialAmount = WeaponType.default.FireModeClass[0].default.AmmoClass.default.InitialAmount;
         }
 
-        bHasBayonetMounted = W.default.bBayonetMounted;
+        W = class<DHProjectileWeapon>(InventoryType);
 
-        if (W.default.InitialBarrels > 0 && W.default.BarrelClass != none)
+        // Load the pickup with the ammo the weapon would start loaded with
+        if (W == none || !W.default.bDoesNotRetainLoadedMag)
         {
-            bHasBarrel = true;
-            LevelCTemp = class'DHWeaponBarrel'.static.FtoCelsiusConversion(DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit);
-            Temperature = LevelCTemp;
-            BarrelCoolingRate = W.default.BarrelClass.default.BarrelCoolingRate;
-            bBarrelFailed = false;
+            AmmoAmount[0] = InitialAmount;
+        }
 
-            if (W.default.InitialBarrels > 1)
+        if (W != none)
+        {
+            AmmoMags.Length = 0; // so when Reset, we start again
+
+            // Give the pickup the ammo mags the weapon would start with
+            for (i = 0; i < W.default.InitialNumPrimaryMags; ++i)
             {
-                bHasSpareBarrel = true;
-                RemainingBarrel = 1;
-                Temperature2 = LevelCTemp;
+                AmmoMags[AmmoMags.Length] = InitialAmount;
+            }
+
+            bHasBayonetMounted = W.default.bBayonetMounted;
+
+            // If weapon has barrels, copy the weapon's reference to the Barrels array & make this pickup the owner of the barrels
+            if (W.default.InitialBarrels > 0 && W.default.BarrelClass != none)
+            {
+                Barrels.Length = 0; // so when Reset, we start again
+
+                for (i = 0; i < W.default.InitialBarrels; ++i)
+                {
+                    Barrels[Barrels.Length] = Spawn(W.default.BarrelClass, self);
+                }
+
+                BarrelIndex = 0;
+                Barrels[BarrelIndex].SetCurrentBarrel(true);
             }
         }
     }
@@ -173,13 +190,12 @@ function AnnouncePickup(Pawn Receiver)
     MakeNoise(0.2);
 }
 
-// Modified to call InitPickup() & to skip over the Super in ROPlaceableAmmoPickup, as it just duplicates the Super in Pickup
+// Modified to call InitPickup() & to skip over the duplication & redundancy in the Supers
 // Note that this function gets called when a new round starts, so we always start with InitPickup() & not just if match is reset in the middle of a round
 function Reset()
 {
     InitPickup();
-
-    super(Pickup).Reset();
+    GotoState('Pickup');
 }
 
 // Modified to call StaticPrecache() on the WeaponType (but pointless on net client, as this actor won't replicate to client until after level has finished pre-caching)
@@ -195,10 +211,11 @@ defaultproperties
 {
     MessageClass=class'DHWeaponPickupMessage' // new message classes that are passed the weapon class & use it to lookup the weapon name (for touch or pickup screen messages)
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on InventoryType
+    RespawnTime=60.0 // leveller can override
     Physics=PHYS_None
     bWeaponStay=false
     bIgnoreEncroachers=false
     bAlwaysRelevant=false
     NetUpdateFrequency=8.0
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on InventoryType
 }

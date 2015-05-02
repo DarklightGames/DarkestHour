@@ -31,8 +31,8 @@ defaultproperties
     MGBeltBones(8)="Case01"
     MGBeltBones(9)="Case"
     BeltBulletClass=class'ROInventory.MG42BeltRound'
-    bTrackBarrelHeat=true
     bCanFireFromHip=false
+    InitialBarrels=2
     BarrelClass=class'DH_Weapons.DH_MG42Barrel'
     BarrelSteamBone="Barrel_Switch"
     BarrelChangeAnim="Bipod_Barrel_Change"

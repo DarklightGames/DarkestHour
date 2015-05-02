@@ -6,16 +6,59 @@
 class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
-//Barrel
-var     float       Temperature, Temperature2;
-var     float       LevelCTemp, BarrelCoolingRate;
-var     bool        bHasBarrel, bBarrelFailed, bHasSpareBarrel;
-var     int         RemainingBarrel;
-
-//Ammo
+// Ammo
 var     array<int>  AmmoMags;
 var     int         LoadedMagazineIndex;
 
+// Barrels
+var     array<DHWeaponBarrel>   Barrels;                  // array of any carried barrels for this weapon
+var     byte                    BarrelIndex;              // index number of current barrel
+var     bool                    bBarrelSteamActive;       // barrel is steaming
+var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
+var     class<ROMGSteam>        BarrelSteamEmitterClass;
+var     ROMGSteam               BarrelSteamEmitter;
+var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
+
+replication
+{
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bBarrelSteamActive;
+}
+
+// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
+    {
+        bNetNotify = class<DHProjectileWeapon>(InventoryType).default.InitialBarrels > 0;
+    }
+}
+
+// Modified to destroy any BarrelSteamEmitter
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (BarrelSteamEmitter != none)
+    {
+        BarrelSteamEmitter.Destroy();
+    }
+}
+
+// Non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off
+simulated function PostNetReceive()
+{
+    if (bBarrelSteamActive != bOldBarrelSteamActive)
+    {
+        bOldBarrelSteamActive = bBarrelSteamActive;
+        SetBarrelSteamActive(bBarrelSteamActive);
+    }
+}
+
+// Modified to store ammo mags & any barrels from the weapon
 function InitDroppedPickupFor(Inventory Inv)
 {
     local DHProjectileWeapon W;
@@ -27,66 +70,68 @@ function InitDroppedPickupFor(Inventory Inv)
 
     if (W != none)
     {
-        if (W.Barrels.Length > 0 && W.BarrelIndex >= 0 && W.BarrelIndex < W.Barrels.Length)
-        {
-            bHasBarrel = true;
-            Enable('Tick');
-
-            LevelCTemp = W.Barrels[W.BarrelIndex].LevelCTemp;
-            Temperature = W.Barrels[W.BarrelIndex].Temperature;
-            BarrelCoolingRate = W.Barrels[W.BarrelIndex].BarrelCoolingRate;
-            bBarrelFailed = W.Barrels[W.BarrelIndex].bBarrelFailed;
-
-            if (W.RemainingBarrels > 1)
-            {
-                if (W.BarrelIndex == 0)
-                {
-                    RemainingBarrel = 1;
-                }
-                else
-                {
-                    RemainingBarrel = 0;
-                }
-
-                Temperature2 = W.Barrels[RemainingBarrel].Temperature;
-
-                bHasSpareBarrel = true;
-            }
-        }
-        else
-        {
-            bHasBarrel = false;
-        }
-
+        // Store the ammo mags from the weapon
         for (i = 0; i < W.PrimaryAmmoArray.Length; ++i)
         {
             AmmoMags[AmmoMags.Length] = W.PrimaryAmmoArray[i];
         }
+
+        // If weapon has barrels, transfer over any barrels
+        if (W.Barrels.Length > 0)
+        {
+            Barrels = W.Barrels; // copy the weapon's reference to the Barrels array
+
+            for (i = 0; i < Barrels.Length; ++i)
+            {
+                if (Barrels[i] != none)
+                {
+                    Barrels[i].SetOwner(self); // barrel's owner is now this pickup
+
+                    if (Barrels[i].bIsCurrentBarrel)
+                    {
+                        BarrelIndex = i;
+                        Barrels[BarrelIndex].UpdateBarrelStatus();
+                    }
+                }
+            }
+        }
     }
 }
 
-// Modified (with a couple of extra class variables) so this only happens if weapon has a barrel to cool & also to stop it reducing barrel temperature below the level temperature
-function Tick(float DeltaTime)
+// Called when we need to toggle barrel steam on or off, depending on the barrel temperature
+simulated function SetBarrelSteamActive(bool bSteaming)
 {
-    if (bHasBarrel && Role == ROLE_Authority)
+    bBarrelSteamActive = bSteaming;
+
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        // continue to lower the barrel temp
-        if (Temperature > LevelCTemp)
+        // Spawn the steam emitter if we need it
+        if (BarrelSteamEmitter == none && bBarrelSteamActive && BarrelSteamEmitterClass != none)
         {
-            Temperature = FMax(Temperature + (DeltaTime * BarrelCoolingRate), LevelCTemp);
+            BarrelSteamEmitter = Spawn(BarrelSteamEmitterClass, self);
+
+            if (BarrelSteamEmitter != none)
+            {
+                BarrelSteamEmitter.SetLocation(Location + (BarrelSteamEmitterOffset >> Rotation));
+                BarrelSteamEmitter.SetBase(self);
+            }
         }
 
-        if (bHasSpareBarrel && Temperature2 > LevelCTemp)
+        // Toggle the steam emitter on/off if we need to
+        if (BarrelSteamEmitter != none && BarrelSteamEmitter.bActive != bBarrelSteamActive)
         {
-            Temperature2 = FMax(Temperature2 + (DeltaTime * BarrelCoolingRate), LevelCTemp);
+            BarrelSteamEmitter.Trigger(self, Instigator);
         }
-    }
-    else
-    {
-        Disable('Tick');
     }
 }
 
+// Disabled as it isn't used
+simulated function Tick(float DeltaTime)
+{
+    Disable('Tick');
+}
+
+// Modified to work generically, using ItemName
 static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
 {
     switch(Switch)
@@ -107,4 +152,5 @@ defaultproperties
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
+    BarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
 }

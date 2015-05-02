@@ -20,7 +20,6 @@ defaultproperties
     MGBeltBones(8)="Case01"
     MGBeltBones(9)="Case"
     BeltBulletClass=class'DH_Weapons.DH_30calBeltRound'
-    bTrackBarrelHeat=true
     bCanFireFromHip=false
     InitialBarrels=1
     BarrelClass=class'DH_Weapons.DH_30CalBarrel'

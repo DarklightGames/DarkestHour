@@ -7,12 +7,13 @@ class DH_MG42Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_MG42Bullet' // was 'DH_Weapons.DH_MG42Bullet_C'
-    ClientTracerClass=class'DH_MG42TracerBullet' // was 'DH_Weapons.DH_MG34ClientTracer'
+    ClientProjectileClass=class'DH_MG42Bullet'
+    ClientTracerClass=class'DH_MG42TracerBullet'
     bUsesTracers=true
     TracerFrequency=7
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bBarrelCanOverheat=true
     PA_MovementAnims(0)="stand_jogF_mg34"
     PA_MovementAnims(1)="stand_jogB_mg34"
     PA_MovementAnims(2)="stand_jogL_mg34"

@@ -31,7 +31,7 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-    bTrackBarrelHeat=true
+    InitialBarrels=2
     BarrelClass=class'DH_Weapons.DH_MG34Barrel'
     BarrelSteamBone="Barrel"
     BarrelChangeAnim="Bipod_Barrel_Change"

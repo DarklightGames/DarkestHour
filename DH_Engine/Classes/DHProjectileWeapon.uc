@@ -6,6 +6,24 @@
 class DHProjectileWeapon extends DHWeapon
     abstract;
 
+var         float       PlayerDeployFOV;
+var         bool        bCanFireFromHip;            // if true this weapon has a hip firing mode
+
+// Ammo/magazines
+var         array<int>  PrimaryAmmoArray;           // the array of magazines and thier ammo amounts this weapon has
+var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client // Matt: changed from int to byte for more efficient replication
+var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
+var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
+var         int         CurrentMagIndex;            // the index of the magazine currently in use
+var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
+var         bool        bTwoMagsCapacity;           // this weapon can be loaded with two magazines
+var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
+var         bool        bDiscardMagOnReload;        // when weapon is reloaded, the previously loaded magazine is discarded
+var         bool        bDoesNotRetainLoadedMag;    // this weapon does not retain its loaded 'mag' when put away or dropped & it doesn't start loaded (e.g. bazooka or panzerschreck)
+var         int         FillAmmoMagCount;           // the number of mags that a resupply point will try to add each time
+var         bool        bCanBeResupplied;           // the weapon can be resupplied by another player
+var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied
+
 // Animations
 var         name        MagEmptyReloadAnim;         // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
 var         name        MagPartialReloadAnim;       // anim for reloads when a weapon still has ammo in magazine/box
@@ -48,49 +66,27 @@ var()       name        BoltIronAnim;               // animation for bolting whi
 var()       name        PostFireIdleAnim;           // animation after hip firing
 var()       name        PostFireIronIdleAnim;       // animation after firing while in ironsight view
 
-// Ammo/Magazines
-var         array<int>  PrimaryAmmoArray;           // the array of magazines and thier ammo amounts this weapon has
-var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client // Matt: changed from int to byte for more efficient replication
-var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
-var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
-var         int         CurrentMagIndex;            // the index of the magazine currently in use
-var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
-var         bool        bTwoMagsCapacity;           // this weapon can be loaded with two magazines
-var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
-var         bool        bDiscardMagOnReload;        // when weapon is reloaded, the previously loaded magazine is discarded
-var         bool        bDoesNotRetainLoadedMag;    // this weapon does not retain its loaded 'mag' when put away or dropped & it doesn't start loaded (e.g. bazooka or panzerschreck)
-var         int         FillAmmoMagCount;           // the number of mags that a resupply point will try to add each time
-var         bool        bCanBeResupplied;           // the weapon can be resupplied by another player
-var         int         NumMagsToResupply;          // number of ammo mags to add when this weapon has been resupplied
-
 // Barrels
-var     bool                bTrackBarrelHeat;       // we should track barrel heat for this MG
-var     bool                bBarrelSteaming;        // barrel is steaming
+var     class<DHWeaponBarrel>   BarrelClass;        // barrel type we use now
+var     array<DHWeaponBarrel>   Barrels;            // array of any carried barrels for this weapon
+var     byte                InitialBarrels;         // barrels initially given
+var     bool                bHasSpareBarrel;        // we have at least one spare barrel we can switch to (minimal replication so net client knows whether can change barrel)
+var     byte                BarrelIndex;            // index number of current barrel
+var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
+var     bool                bCallBarrelChangeTimer; // we're in middle of a barrel change, so Timer() should call PerformBarrelChange() instead of exiting state ChangingBarrels
+var     float               BarrelChangeDuration;   // saves duration of barrel change, so Timer() can be called at mid point & then again at end of barrel change animation
+var     class<ROMGSteam>    BarrelSteamEmitterClass;
+var     ROMGSteam           BarrelSteamEmitter;
+var     name                BarrelSteamBone;        // bone we attach the barrel steam emitter to
+var     bool                bBarrelSteamActive;     // barrel is steaming
 var     bool                bBarrelDamaged;         // barrel is close to failure, accuracy is VERY BAD
 var     bool                bBarrelFailed;          // barrel overheated and can't be used
-var     bool                bCanFireFromHip;        // if true this weapon has a hip firing mode
-
-var     byte                BarrelIndex;            // barrel being used
-var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
-var     byte                InitialBarrels;         // barrels initially given
-
-var     class<DHWeaponBarrel>  BarrelClass;         // barrel type we use now
-var     array<DHWeaponBarrel>  Barrels;             // The array of carried MG barrels for this weapon
-
-// Barrel steam info
-var     class<Emitter>      ROBarrelSteamEmitterClass;
-var     Emitter             ROBarrelSteamEmitter;
-var     name                BarrelSteamBone;        // bone we attach the barrel steam emitter too
-
-// MG specific animations
-var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
-var     float               PlayerDeployFOV;
 
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        CurrentMagCount, RemainingBarrels, bBarrelSteaming, bBarrelDamaged, bBarrelFailed;
+        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -99,7 +95,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientDoReload, ClientCancelReload, ToggleBarrelSteam;
+        ClientDoReload, ClientCancelReload, ClientSetBarrelSteam;
 }
 
 // Play an idle animation on the server so that weapon will be in the right position for free-aim calculations (not the ref pose)
@@ -110,6 +106,22 @@ simulated function PostBeginPlay()
     if (Role == ROLE_Authority && !InstigatorIsLocallyControlled())
     {
         PlayAnim(IdleAnim, IdleAnimRate, 0.0);
+    }
+}
+
+// Modified to update player's resupply status & destroy any BarrelSteamEmitter
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Role == ROLE_Authority)
+    {
+        UpdateResupplyStatus(false);
+    }
+
+    if (BarrelSteamEmitter != none)
+    {
+        BarrelSteamEmitter.Destroy();
     }
 }
 
@@ -321,7 +333,7 @@ function byte BestMode()
     return super.BestMode();
 }
 
-// Modified to update player's resupply status & to spawn any barrel steam emitter
+// Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
 simulated function BringUp(optional Weapon PrevWeapon)
 {
     if (Role == ROLE_Authority)
@@ -331,14 +343,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     super.BringUp(PrevWeapon);
 
-    if (InstigatorIsLocalHuman())
+    if (bBarrelSteamActive && InstigatorIsLocalHuman())
     {
-        SpawnBarrelSteamEmitter();
-
-        if (bBarrelSteaming)
-        {
-            ToggleBarrelSteam(true);
-        }
+        SetBarrelSteamActive(true);
     }
 }
 
@@ -513,9 +520,9 @@ simulated state LoweringWeapon
         super.EndState();
 
         // Destroy any barrel steam emitter
-        if (ROBarrelSteamEmitter != none && InstigatorIsLocalHuman())
+        if (BarrelSteamEmitter != none)
         {
-            ROBarrelSteamEmitter.Destroy();
+            BarrelSteamEmitter.Destroy();
         }
     }
 
@@ -1961,10 +1968,10 @@ function ServerSwitchBarrels()
 
 simulated function bool AllowBarrelChange()
 {
-    return !IsFiring() && !IsBusy() && RemainingBarrels >= 2 && bTrackBarrelHeat && !IsInState('ChangingBarrels') && Instigator != none && Instigator.bBipodDeployed;
+    return bHasSpareBarrel && Instigator != none && Instigator.bBipodDeployed && !IsInState('ChangingBarrels') && !IsFiring() && !IsBusy();
 }
 
-// State where we are changing the barrel out for our MG
+// State where we are changing the barrel
 simulated state ChangingBarrels extends WeaponBusy
 {
     simulated function bool WeaponAllowSprint()
@@ -1982,13 +1989,59 @@ simulated state ChangingBarrels extends WeaponBusy
         return false;
     }
 
+    simulated function Timer()
+    {
+        // Means we're half-way through the barrel change animation, so now we call PerformBarrelChange() & set another Timer, which will later exit this state
+        if (bCallBarrelChangeTimer)
+        {
+            bCallBarrelChangeTimer = false;
+            PerformBarrelChange();
+            SetTimer(FMin(0.5 * BarrelChangeDuration, 0.1), false); // minimum of 0.1 secs just in case something has gone wrong - guarantees we set another Timer & exit state
+        }
+        // Otherwise we just exit the state as normal, as we've completed the barrel change process
+        else
+        {
+            super.Timer();
+        }
+    }
+
     simulated function BeginState()
     {
-        PlayAnimAndSetTimer(BarrelChangeAnim, 1.0, 0.1);
-
-        PerformBarrelChange();
+        local float AnimTimer;
 
         ResetPlayerFOV();
+
+        // This replaces what would be PlayAnimAndSetTimer(), so on an authority role we set up to call a Timer to swap barrels halfway through the barrel change animation
+        // This is so any current steam effect stops when the old barrel has been removed & put away, then we determine whether the new barrel should be steaming
+        // This is rather hacky & should really be controlled by a notify event in the barrel change animation, but I can't justify re-making RO's MG34 & MG42 anim files just for that
+        if (HasAnim(BarrelChangeAnim))
+        {
+            if (InstigatorIsLocallyControlled())
+            {
+                PlayAnim(BarrelChangeAnim, 1.0, 0.1);
+            }
+
+            AnimTimer = GetAnimDuration(BarrelChangeAnim) + FastTweenTime;
+
+            if (Role == ROLE_Authority)
+            {
+                if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && (Instigator == none || !Instigator.IsLocallyControlled())))
+                {
+                    BarrelChangeDuration = 0.9 * AnimTimer; // 10% ServerTimerReduction
+                }
+                else
+                {
+                    BarrelChangeDuration = AnimTimer;
+                }
+
+                bCallBarrelChangeTimer = true; // flag for state Timer to call PerformBarrelChange at mid-point of anim
+                SetTimer(0.5 * BarrelChangeDuration, false);
+            }
+            else
+            {
+                SetTimer(AnimTimer, false); // normal timer on a net client as it doesn't control barrel changes, it just receives updates from the server
+            }
+        }
     }
 
 // Take the player out of zoom & then zoom them back in
@@ -2010,169 +2063,164 @@ Begin:
 function PerformBarrelChange()
 {
     // We only have the 1 barrel in our weapon, don't do anything
-    if (RemainingBarrels == 1)
+    if (bHasSpareBarrel)
     {
-        return;
-    }
-
-    // If the barrel has failed, we're going to toss it, so remove it from the barrel array
-    if (Barrels[BarrelIndex].bBarrelFailed && Barrels[BarrelIndex] != none)
-    {
-        Barrels[BarrelIndex].Destroy();
-        Barrels.Remove(BarrelIndex, 1);
-        RemainingBarrels = byte(Barrels.Length);
-    }
-
-    // We only have one barrel left now
-    if (RemainingBarrels == 1)
-    {
-        if (BarrelIndex >= (Barrels.Length - 1) || Barrels.Length == 1)
+        if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length && Barrels[BarrelIndex] != none)
         {
-            BarrelIndex = 0;
-        }
-        else
-        {
-            ++BarrelIndex;
+            // If the barrel has failed, we're going to toss it, so remove it from the barrel array
+            if (Barrels[BarrelIndex].bBarrelFailed)
+            {
+                Barrels[BarrelIndex].Destroy();
+                Barrels.Remove(BarrelIndex, 1);
+
+                if (Barrels.Length < 2)
+                {
+                    bHasSpareBarrel = false;
+                }
+
+                // If just removed the last barrel in array, cycle back to 0 (otherwise BarrelIndex stays the same, as next barrel has dropped back into current index position)
+                if (BarrelIndex >- Barrels.Length)
+                {
+                    BarrelIndex = 0;
+                }
+            }
+            else
+            {
+                Barrels[BarrelIndex].SetCurrentBarrel(false); // old barrel is no longer current
+                BarrelIndex = ++BarrelIndex % Barrels.Length; // cycle BarrelIndex (loops back to 0 when goes past the last barrel in array)
+            }
         }
 
-        // Put the new barrel in the use state for heat increments and steaming
         if (Barrels[BarrelIndex] != none)
         {
-            Barrels[BarrelIndex].GotoState('BarrelInUse');
-        }
-    }
-    else
-    {
-        // At this point, we have more than 1 barrel, & the one being replaced hasn't failed,
-        // so we'll switch the BarrelIndex tracker & also place the barrels in new states for whether they're on or off
-        // First place the current BarrelIndex in the BarrelOff state
-        Barrels[BarrelIndex].GotoState('BarrelOff');
-
-        if (BarrelIndex >= (Barrels.Length - 1) || Barrels.Length == 1)
-        {
-            BarrelIndex = 0;
-        }
-        else
-        {
-            BarrelIndex++;
-        }
-
-        // Put the new barrel in the use state for heat increments and steaming
-        if (Barrels[BarrelIndex] != none)
-        {
-            Barrels[BarrelIndex].GotoState('BarrelInUse');
-        }
-    }
-
-    ResetBarrelProperties();
-}
-
-// Called when we change barrels, this updates the weapon's barrel properties for the new barrel that's being swapped in
-function ResetBarrelProperties()
-{
-    bBarrelSteaming = Barrels[BarrelIndex].bBarrelSteaming;
-    bBarrelDamaged = Barrels[BarrelIndex].bBarrelDamaged;
-    bBarrelFailed = Barrels[BarrelIndex].bBarrelFailed;
-
-    if (ThirdPersonActor.SoundPitch != 64)
-    {
-        ThirdPersonActor.SoundPitch = 64;
-    }
-}
-
-// Spawns barrel steam emitter
-simulated function SpawnBarrelSteamEmitter()
-{
-    if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitterClass != none)
-    {
-        ROBarrelSteamEmitter = Spawn(ROBarrelSteamEmitterClass, self);
-
-        if (ROBarrelSteamEmitter != none)
-        {
-            AttachToBone(ROBarrelSteamEmitter, BarrelSteamBone);
+            Barrels[BarrelIndex].SetCurrentBarrel(true);
         }
     }
 }
 
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function ToggleBarrelSteam(bool NewState)
+simulated function SetBarrelSteamActive(bool bSteaming)
 {
-    bBarrelSteaming = NewState;
+    bBarrelSteamActive = bSteaming;
 
-    if (ROWeaponAttachment(ThirdPersonActor) != none)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        ROWeaponAttachment(ThirdPersonActor).bBarrelSteamActive = NewState;
+        // Spawn the steam emitter if we need it
+        if (BarrelSteamEmitter == none && bBarrelSteamActive && BarrelSteamEmitterClass != none)
+        {
+            BarrelSteamEmitter = Spawn(BarrelSteamEmitterClass, self);
+
+            if (BarrelSteamEmitter != none)
+            {
+                AttachToBone(BarrelSteamEmitter, BarrelSteamBone);
+            }
+        }
+
+        // Toggle the steam emitter on/off if we need to
+        if (BarrelSteamEmitter != none && BarrelSteamEmitter.bActive != bBarrelSteamActive)
+        {
+            BarrelSteamEmitter.Trigger(self, Instigator);
+        }
     }
 
-    if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitter != none)
+    // Call a replicated server-to-client function to do the same on the owning net client
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
-        ROBarrelSteamEmitter.Trigger(self, Instigator);
+        ClientSetBarrelSteam(bBarrelSteamActive);
+    }
+
+    // Do the same on the 3rd person WeaponAttachment
+    if (DHWeaponAttachment(ThirdPersonActor) != none)
+    {
+        DHWeaponAttachment(ThirdPersonActor).SetBarrelSteamActive(bBarrelSteamActive);
     }
 }
 
-// Spawns barrels for MG's on Authority
-function GiveBarrels(optional Pickup Pickup)
+// Modified so if the barrel is already steaming when the pawn gets this weapon, we set the same affect on the WeaponAttachment
+// Necessary as attachment may not yet exist when SetBarrelSteamActive() is called in this class (e.g. when picking up a pickup)
+function AttachToPawnHidden(Pawn P)
 {
-    local DHWeaponPickup P;
-    local int            i;
+    super.AttachToPawnHidden(P);
 
-    if (BarrelClass == none || Role != ROLE_Authority)
+    if (bBarrelSteamActive && DHWeaponAttachment(ThirdPersonActor) != none)
     {
-        return;
+        DHWeaponAttachment(ThirdPersonActor).SetBarrelSteamActive(true);
     }
+}
 
-    if (Pickup == none)
+function AttachToPawn(Pawn P)
+{
+    super.AttachToPawn(P);
+
+    if (bBarrelSteamActive && DHWeaponAttachment(ThirdPersonActor) != none)
     {
-        // Give the barrels to the players
-        for (i = 0; i < InitialBarrels; ++i)
-        {
-            Barrels[i] = Spawn(BarrelClass, self);
-
-            if (i == 0)
-            {
-                Barrels[i].GotoState('BarrelInUse');
-            }
-            else
-            {
-                Barrels[i].GotoState('BarrelOff');
-            }
-        }
+        DHWeaponAttachment(ThirdPersonActor).SetBarrelSteamActive(true);
     }
-    else
-    {
-        P = DHWeaponPickup(Pickup);
+}
 
-        if (P != none)
-        {
-            Barrels[0] = Spawn(BarrelClass, self);
-            Barrels[0].GotoState('BarrelInUse');
-            Barrels[0].Temperature = P.Temperature;
-            Barrels[0].bBarrelFailed = P.bBarrelFailed;
-            Barrels[0].UpdateBarrelStatus(); // update the barrel for the weapon we just picked up
+simulated function ClientSetBarrelSteam(bool bSteaming)
+{
+    SetBarrelSteamActive(bSteaming);
+}
 
-            if (P.bHasSpareBarrel)
-            {
-                Barrels[1] = Spawn(BarrelClass, self);
-                Barrels[1].GotoState('BarrelOff');
-                Barrels[1].Temperature = P.Temperature2;
-                Barrels[1].UpdateSpareBarrelStatus();
-            }
-        }
-    }
+function SetBarrelDamaged(bool bDamaged)
+{
+    bBarrelDamaged = bDamaged;
+}
 
-    BarrelIndex = 0;
-    RemainingBarrels = byte(Barrels.Length);
+function SetBarrelFailed(bool bFailed)
+{
+    bBarrelFailed = bFailed;
 }
 
 // Modified to give barrel actors to player, if relevant
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
+    local int i;
+
     super.GiveTo(Other,Pickup);
 
-    GiveBarrels(Pickup);
+    if (BarrelClass != none && Role == ROLE_Authority)
+    {
+        // This weapon is spawning for this player, so spawn any barrels
+        if (Pickup == none)
+        {
+            if (InitialBarrels > 0)
+            {
+                for (i = 0; i < InitialBarrels; ++i)
+                {
+                    Barrels[i] = Spawn(BarrelClass, self);
+                }
+
+                BarrelIndex = 0;
+                Barrels[BarrelIndex].SetCurrentBarrel(true);
+            }
+        }
+        // Player has picked up this weapon from the ground, so transfer any barrels from the pickup
+        else if (DHWeaponPickup(Pickup) != none && DHWeaponPickup(Pickup).Barrels.Length > 0)
+        {
+            Barrels = DHWeaponPickup(Pickup).Barrels; // copy the pickup's reference to the Barrels array
+
+            for (i = 0; i < Barrels.Length; ++i)
+            {
+                if (Barrels[i] != none)
+                {
+                    Barrels[i].SetOwner(self); // barrel's owner is now this weapon
+
+                    if (Barrels[i].bIsCurrentBarrel)
+                    {
+                        BarrelIndex = i;
+                        Barrels[BarrelIndex].UpdateBarrelStatus();
+                    }
+                }
+            }
+        }
+
+        bHasSpareBarrel = Barrels.Length >= 2;
+    }
 }
 
-// Modified to notify barrels that we have fired
+// Modified to notify an active barrel that we have fired (so it can increase its temperature) & change the WeaponAttachment's sound if the barrel is damaged
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local DHWeaponBarrel B;
@@ -2182,55 +2230,26 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
     {
         B = Barrels[BarrelIndex];
 
-        if (Role == ROLE_Authority)
+        if (Role == ROLE_Authority && B != none)
         {
             B.WeaponFired();
         }
 
-        if (ROWeaponAttachment(ThirdPersonActor) != none)
+        if (ThirdPersonActor != none)
         {
-            if (bBarrelDamaged)
+            if (bBarrelDamaged && B != none)
             {
                 SoundModifier = FMax(52.0, 64.0 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature) * 52.0));
-
-                ROWeaponAttachment(ThirdPersonActor).SoundPitch = SoundModifier;
+                ThirdPersonActor.SoundPitch = SoundModifier;
             }
-            else if (ROWeaponAttachment(ThirdPersonActor).SoundPitch != 64)
+            else if (ThirdPersonActor.SoundPitch != 64)
             {
-                ROWeaponAttachment(ThirdPersonActor).SoundPitch = 64;
+                ThirdPersonActor.SoundPitch = 64;
             }
         }
     }
 
     return super.ConsumeAmmo(Mode, Load, bAmountNeededIsMax);
-}
-
-// Modified to destroy barrel actors & to update player's resupply status
-simulated function Destroyed()
-{
-    local int i;
-
-    super.Destroyed();
-
-    if (Role == ROLE_Authority)
-    {
-        UpdateResupplyStatus(false);
-
-        for (i = 0; i < Barrels.Length; ++i)
-        {
-            if (Barrels[i] != none)
-            {
-                Barrels[i].Destroy();
-            }
-        }
-
-        Barrels.Remove(0, Barrels.Length);
-    }
-
-    if (ROBarrelSteamEmitter != none)
-    {
-        ROBarrelSteamEmitter.Destroy();
-    }
 }
 
 defaultproperties
@@ -2247,6 +2266,6 @@ defaultproperties
     LightRadius=4.0
     LightPeriod=3
     FillAmmoMagCount=1
-    ROBarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
+    BarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
     MuzzleBone="Muzzle"
 }

@@ -7,13 +7,14 @@ class DH_30calAttachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_30calBullet' // was 'DH_Weapons.DH_30calBullet_C'
-    ClientTracerClass=class'DH_30calTracerBullet' // was 'DH_Weapons.DH_30CalClientTracer'
+    ClientProjectileClass=class'DH_30calBullet'
+    ClientTracerClass=class'DH_30calTracerBullet'
     bUsesTracers=true
     TracerFrequency=5
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     MuzzleBoneName="Muzzle"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bBarrelCanOverheat=true
     PA_MovementAnims(0)="stand_jogF_dp27"
     PA_MovementAnims(1)="stand_jogB_dp27"
     PA_MovementAnims(2)="stand_jogL_dp27"

@@ -64,6 +64,8 @@ simulated function Rot2Int(rotator R, out int N)
 // Here we spawn our client side effect rounds if the shot count has changed
 simulated function PostNetReceive()
 {
+    super.PostNetReceive();
+
     if (DualShotCount != SavedDualShotCount)
     {
         if (Level.NetMode == NM_Client)
