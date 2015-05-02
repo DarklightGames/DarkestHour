@@ -123,7 +123,7 @@ simulated event RenderOverlays(Canvas Canvas)
     if (IsCrawling())
     {
         RollMod.Pitch = CrawlWeaponPitch;
-    }    
+    }
 
     if (bUsesFreeAim && !bUsingSights && Playa != none)
     {
@@ -227,4 +227,5 @@ defaultproperties
     FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
     BobModifyFactor=0.15
+    PlayerIronsightFOV=90.0
 }

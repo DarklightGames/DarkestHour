@@ -56,4 +56,5 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SpringfieldScopedAttachment'
     ItemName="M1903 Springfield Scoped"
     Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_Scoped'
+    OverlayCorrectionX=-0.5
 }
