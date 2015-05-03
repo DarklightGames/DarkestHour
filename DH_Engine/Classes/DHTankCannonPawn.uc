@@ -11,11 +11,12 @@ var     DHTankCannon    Cannon;               // just a reference to the DH cann
 var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Position stuff
-var     int         InitialPositionIndex;     // initial commander position on entering
+var     int         InitialPositionIndex;     // initial player position on entering
 var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
 var()   int         PeriscopePositionIndex;
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
-var()   bool        bPlayerCollisionBoxMoves; // commander's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
+var()   bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 // Gunsight or periscope overlay
 var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
@@ -624,97 +625,118 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified so when player comes up off the gunsight, they stay facing forward, in the direction of the cannon
+// Modified to use Sleep to control exit from state (including on server) & to avoid unnecessary stuff on a server
+// Also to improve timing of FOV & camera position changes & to match rotation to gun's aim when coming up off the gunsight
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        // Added so when player moves up from gunsight, view rotation is neutralised so he stays facing same direction as cannon (feels more natural to come up from the gun)
-        // Note an owning net client will update rotation back to server
-        if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions)
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            if (bPCRelativeFPRotation)
+            // Switch to mesh for new position as may be different
+            SwitchMesh(DriverPositionIndex);
+
+            // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
+            WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+
+            if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
             {
-                SetRotation(rot(0, 0, 0));
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+                {
+                    PlayerController(Controller).SetFOV(WeaponFOV);
+                }
+                else
+                {
+                    PlayerController(Controller).DesiredFOV = WeaponFOV;
+                }
+
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
-            else
+
+            // When player moves up from gunsight, view rotation is neutralised so he stays facing same direction as cannon (feels more natural to come up from the gun)
+            // Note an owning net client will update rotation back to server
+            if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions)
             {
-                SetRotation(VehicleBase.Rotation);
+                if (bPCRelativeFPRotation)
+                {
+                    SetRotation(rot(0, 0, 0));
+                }
+                else
+                {
+                    SetRotation(VehicleBase.Rotation);
+                }
+            }
+
+            // Play any transition animation for the player
+            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+            {
+                // Matt: added this 'if' to play correct driver animation when coming down from the binoculars position (RO's DriverTransitionAnims are 1 way)
+                if (LastPositionIndex == BinocPositionIndex && DriverPositionIndex < LastPositionIndex)
+                {
+                    if (Driver.HasAnim(DriveAnim))
+                    {
+                        Driver.PlayAnim(DriveAnim);
+                    }
+                }
+                else
+                {
+                    Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+                }
             }
         }
 
-        StoredVehicleRotation = VehicleBase.Rotation;
+        ViewTransitionDuration = 0.2; // set minimum default delay before we exit state, if we don't have a transition animation
 
-        SwitchMesh(DriverPositionIndex);
-
-        if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-        }
-
-        WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-
-        FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-
-        if (DriverPositionIndex != 0)
-        {
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-            {
-                PlayerController(Controller).SetFOV(WeaponFOV);
-            }
-            else
-            {
-                PlayerController(Controller).DesiredFOV = WeaponFOV;
-            }
-        }
-
+        // Play any transition animation for the cannon itself
+        // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if player's collision box moves)
         if (LastPositionIndex < DriverPositionIndex)
         {
             if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
             {
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
-            }
-            else
-            {
-                GotoState('');
+                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+                {
+                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                }
+
+                ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
             }
         }
         else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
         {
-            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
-        }
-        else
-        {
-            GotoState('');
+            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+            {
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            }
+
+            ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
         }
     }
 
-    simulated function Timer()
-    {
-        GotoState('');
-    }
-
+    // Emptied out so that Sleep is the sole timing for exiting this state
     simulated function AnimEnd(int channel)
     {
-        if (IsLocallyControlled())
-        {
-            GotoState('');
-        }
     }
 
+    // Reverted to global Timer as Sleep is now the sole means of exiting this state
+    simulated function Timer()
+    {
+        global.Timer();
+    }
+
+    // Set any zoom & camera offset for new position, if we have moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
     simulated function EndState()
     {
-        if (PlayerController(Controller) != none)
+        if (Level.NetMode != NM_DedicatedServer && WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
         {
-            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            PlayerController(Controller).SetFOV(WeaponFOV);
+            FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
         }
     }
 
 Begin:
     HandleTransition();
-    Sleep(0.2);
+    Sleep(ViewTransitionDuration);
+    GotoState('');
 }
 
 // Modified so mesh rotation is matched in all net modes, not just standalone as in the RO original (not sure why they did that)

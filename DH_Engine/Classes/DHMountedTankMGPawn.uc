@@ -12,6 +12,7 @@ var     DHMountedTankMG  MGun;             // just a reference to the DH MG acto
 
 var()   int         InitialPositionIndex;     // initial player position on entering
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
+var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
 var()   bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
@@ -539,6 +540,98 @@ function ServerChangeViewPoint(bool bForward)
             }
         }
     }
+}
+
+// Modified to use Sleep to control exit from state (including on server), to avoid unnecessary stuff on a server, & to improve timing of FOV & camera position changes
+simulated state ViewTransition
+{
+    simulated function HandleTransition()
+    {
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            // Switch to mesh for new position as may be different
+            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer) &&
+                DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+            {
+                Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
+
+            // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
+            WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+
+            if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+            {
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+                {
+                    PlayerController(Controller).SetFOV(WeaponFOV);
+                }
+                else
+                {
+                    PlayerController(Controller).DesiredFOV = WeaponFOV;
+                }
+
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            }
+
+            // Play any transition animation for the player
+            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+            {
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+            }
+        }
+
+        ViewTransitionDuration = 0.2; // set minimum default delay before we exit state, if we don't have a transition animation
+
+        // Play any transition animation for the MG itself
+        // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if player's collision box moves)
+        if (LastPositionIndex < DriverPositionIndex)
+        {
+            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+            {
+                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+                {
+                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                }
+
+                ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
+            }
+        }
+        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
+        {
+            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+            {
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            }
+
+            ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
+        }
+    }
+
+    // Emptied out so that Sleep is the sole timing for exiting this state
+    simulated function AnimEnd(int channel)
+    {
+    }
+
+    // Reverted to global Timer as Sleep is now the sole means of exiting this state
+    simulated function Timer()
+    {
+        global.Timer();
+    }
+
+    // Set any zoom & camera offset for new position, if we have moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
+    simulated function EndState()
+    {
+        if (Level.NetMode != NM_DedicatedServer && WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+        {
+            PlayerController(Controller).SetFOV(WeaponFOV);
+            FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+        }
+    }
+
+Begin:
+    HandleTransition();
+    Sleep(ViewTransitionDuration);
+    GotoState('');
 }
 
 // Modified to add clientside checks before sending the function call to the server
