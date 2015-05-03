@@ -3089,6 +3089,12 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
     return bMustUnbuttonToSwitchToRider && bAllowRiders && ChosenWeaponPawnIndex >= FirstRiderPositionIndex && ChosenWeaponPawnIndex < PassengerWeapons.Length && !CanExit();
 }
 
+// Modified to revert to Super in Pawn, skipping unnecessary stuff in ROWheeledVehicle & ROVehicle, as this is a many-times-a-second function & so should be optimised
+function int LimitPitch(int pitch, optional float DeltaTime)
+{
+    return super(Pawn).LimitPitch(pitch, DeltaTime);
+}
+
 // Modified to optimise & to avoid accessed none errors
 // Also, for HullMG it looks for any VehicleWeapon that is flagged bIsMountedTankMG, instead of specifically a ROMountedTankMG, so more generic
 simulated function UpdateTurretReferences()

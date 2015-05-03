@@ -866,7 +866,7 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
             }
 
             // Send notification message to supplier
-            if (PlayerController(Controller) != none)
+            if (IsHumanControlled())
             {
                 PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo);
             }
@@ -904,7 +904,7 @@ function TossMortarAmmo(DHPawn P)
             }
 
             // Send notification message to supplier
-            if (PlayerController(Controller) != none)
+            if (IsHumanControlled())
             {
                 PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
             }
@@ -1019,7 +1019,7 @@ function LoadWeapon(Pawn Gunner)
             }
 
             // Send notification message to loader
-            if (PlayerController(Controller) != none)
+            if (IsHumanControlled())
             {
                 PlayerController(Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // you loaded [player]
             }
@@ -1033,7 +1033,7 @@ function LoadWeapon(Pawn Gunner)
     else
     {
         // Notify loader of failed attempt
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             PlayerController(Controller).ReceiveLocalizedMessage(class'DHATLoadFailMessage', 0, Gunner.Controller.PlayerReplicationInfo);
         }
@@ -1680,7 +1680,7 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 {
     WeaponState = GS_None;
 
-    if (PlayerController(Controller) != none)
+    if (IsHumanControlled())
     {
         PlayerController(Controller).bFreeCamera = false;
     }

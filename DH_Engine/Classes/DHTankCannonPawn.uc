@@ -836,7 +836,7 @@ function AltFire(optional float F)
         VehicleFire(true);
         bWeaponIsAltFiring = true;
 
-        if (!bWeaponIsFiring && PlayerController(Controller) != none)
+        if (!bWeaponIsFiring && IsHumanControlled())
         {
             Gun.ClientStartFire(Controller, true);
         }

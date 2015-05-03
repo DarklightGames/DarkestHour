@@ -358,7 +358,7 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     {
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
             PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
@@ -459,7 +459,7 @@ function Fire(optional float F)
         VehicleFire(false);
         bWeaponIsFiring = true;
 
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             Gun.ClientStartFire(Controller, false);
         }

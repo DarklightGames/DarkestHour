@@ -281,16 +281,9 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local DHPlayer P;
-
-    if (bIsSpawnVehicle && !bEngineOff)
+    if (bIsSpawnVehicle && !bEngineOff && DHPlayer(PC) != none)
     {
-        P = DHPlayer(PC);
-
-        if (P != none)
-        {
-            P.QueueHint(17, true);
-        }
+        DHPlayer(PC).QueueHint(17, true);
     }
 
     super.ClientKDriverLeave(PC);
@@ -311,7 +304,7 @@ simulated state EnteringVehicle
             PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
         }
@@ -1144,6 +1137,12 @@ simulated function DrawHUD(Canvas C)
     {
         ActivateOverlay(false);
     }
+}
+
+// Modified to revert to Super in Pawn, skipping unnecessary stuff in ROWheeledVehicle & ROVehicle, as this is a many-times-a-second function & so should be optimised
+function int LimitPitch(int pitch, optional float DeltaTime)
+{
+    return super(Pawn).LimitPitch(pitch, DeltaTime);
 }
 
 // Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties & remove obsolete stuff
