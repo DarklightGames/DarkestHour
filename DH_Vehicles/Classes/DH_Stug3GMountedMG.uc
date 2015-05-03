@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GMountedMG extends DHMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_Stug3GMountedMG extends DHMountedTankMG;
 
 defaultproperties
 {
@@ -14,6 +14,8 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=5.0)
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
+    bHasGunShield=true
+    MaxPlayerHitX=-10.0
     VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="loader_attachment",PointOffset=(X=10.0,Y=-5.0,Z=23.0))
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="loader_attachment",PointOffset=(X=10.0,Y=-5.0,Z=1.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -25,7 +27,7 @@ defaultproperties
     GunnerAttachmentBone="loader_attachment"
     WeaponFireOffset=0.0 // override inherited from ROMountedTankMG
     RotationsPerSecond=0.05
-    bInstantFire=false // override inherited from ROMountedTankMG (all MGs have this)
+    bInstantFire=false
     Spread=0.002
     FireInterval=0.07058
     AltFireInterval=0.07058

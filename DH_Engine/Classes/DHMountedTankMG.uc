@@ -6,7 +6,7 @@
 class DHMountedTankMG extends ROMountedTankMG
     abstract;
 
-var  DHMountedTankMGPawn  MGPawn;  // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+var  DHMountedTankMGPawn  MGPawn;     // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
 
 var()   class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var()   byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
@@ -19,6 +19,11 @@ var()   sound   ReloadSound;          // sound of this MG reloading
 var     float   ReloadDuration;       // time duration of reload (set automatically)
 var     float   ReloadStartTime;      // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
 var()   name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
+
+// Player hit detection
+var     bool    bHasGunShield;        // this MG has a gunshield that may protect the player
+var     float   MaxPlayerHitX;        // maximum distance along X-axis where a projectile must have hit player's collision box (hit location offset, relative to mesh origin)
+var     bool    bDriverDebugging;     // screen & log messages to debug player/gunshield hit detection
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -451,6 +456,65 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
+}
+
+// Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the player's collision box?"
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+{
+    local vector HitOffset;
+
+    // If MG has no gunshield then we can only have hit the player's collision box
+    if (!bHasGunShield)
+    {
+        return true;
+    }
+
+    HitOffset = (Hitlocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
+
+    // We must have hit the player's collision box (HitOffset.X is how far the HitLocation is in front of the mesh origin)
+    if (HitOffset.X <= MaxPlayerHitX)
+    {
+        if (bDriverDebugging)
+        {
+            Log("HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Assume hit player's collision box");
+
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Assume hit player's collision box");
+            }
+        }
+
+        return true;
+    }
+    // We can't have hit the player so we must have hit the MG itself (or some other collision box)
+    else
+    {
+        if (bDriverDebugging)
+        {
+            Log("HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Must have missed player's collision box");
+
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Must have missed player's collision box");
+            }
+        }
+
+        return false;
+    }
+}
+
+// Matt: slightly different concept to work more accurately & simply with projectiles
+// Think of this function as asking "is there an exposed player there & did we actually hit him, not just his collision box?"
+simulated function bool HitDriver(vector Hitlocation, vector Momentum)
+{
+    // Player is present & is not buttoned up & we hit his collision box & hit one of the hit points representing his head or torso
+    if (MGPawn != none && MGPawn.Driver != none && MGPawn.DriverPositions[MGPawn.DriverPositionIndex].bExposed &&
+        IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 // Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits

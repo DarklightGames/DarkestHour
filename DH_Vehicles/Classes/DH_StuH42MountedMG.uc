@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StuH42MountedMG extends DHMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_StuH42MountedMG extends DHMountedTankMG;
 
 defaultproperties
 {
@@ -13,6 +13,8 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=5.0)
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
+    bHasGunShield=true
+    MaxPlayerHitX=-20.5
     VehHitpoints(0)=(PointRadius=15.0,PointScale=1.0,PointBone="loader_player",PointOffset=(Z=-16.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
@@ -23,7 +25,7 @@ defaultproperties
     GunnerAttachmentBone="loader_attachment"
     WeaponFireOffset=3.0
     RotationsPerSecond=0.05
-    bInstantFire=false // added to reverse ROMountedTankMG (all MGs have this)
+    bInstantFire=false
     Spread=0.002
     FireInterval=0.07058
     AltFireInterval=0.07058

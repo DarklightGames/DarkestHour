@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Gun extends DHMountedTankMG; // Matt: was Sdkfz251Gun
+class DH_Sdkfz251Gun extends DHMountedTankMG;
 
 defaultproperties
 {
@@ -12,6 +12,8 @@ defaultproperties
     ReloadDuration=6.59
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
+    bHasGunShield=true
+    MaxPlayerHitX=-18.0
     VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=0.0,Y=0.0,Z=15.0))
     VehHitpoints(1)=(PointRadius=15.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=0.0,Y=0.0,Z=-5.0))
     hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -22,8 +24,8 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=40.0
-    bInstantFire=false // override inherited from ROMountedTankMG (all MGs have this)
-    Spread=0.002 // 0.03
+    bInstantFire=false
+    Spread=0.002
     FireInterval=0.07058
     AltFireInterval=0.07058
     AmbientEffectEmitterClass=class'VehicleMGEmitter'
