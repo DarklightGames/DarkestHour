@@ -634,6 +634,28 @@ Begin:
     GotoState('');
 }
 
+// Modified to avoid playing unnecessary DriverTransitionAnim on dedicated server, as this function may be called on server to move player's collision box
+simulated function AnimateTransition()
+{
+    if (Level.NetMode != NM_DedicatedServer && Driver != none &&
+        Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+    {
+        Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+    }
+
+    if (LastPositionIndex < DriverPositionIndex)
+    {
+        if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+        {
+            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+        }
+    }
+    else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
+    {
+        Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+    }
+}
+
 // Modified to add clientside checks before sending the function call to the server
 simulated function SwitchWeapon(byte F)
 {

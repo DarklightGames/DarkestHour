@@ -739,6 +739,39 @@ Begin:
     GotoState('');
 }
 
+// Modified to avoid playing unnecessary DriverTransitionAnim on dedicated server, as this function may be called on server to move player's collision box
+simulated function AnimateTransition()
+{
+    if (Level.NetMode != NM_DedicatedServer && Driver != none &&
+        Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+    {
+        // Matt: added this 'if' to play correct driver animation when coming down from the binoculars position (RO's DriverTransitionAnims are 1 way)
+        if (LastPositionIndex == BinocPositionIndex && DriverPositionIndex < LastPositionIndex)
+        {
+            if (Driver.HasAnim(DriveAnim))
+            {
+                Driver.PlayAnim(DriveAnim);
+            }
+        }
+        else
+        {
+            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+        }
+    }
+
+    if (LastPositionIndex < DriverPositionIndex)
+    {
+        if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+        {
+            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+        }
+    }
+    else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
+    {
+        Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+    }
+}
+
 // Modified so mesh rotation is matched in all net modes, not just standalone as in the RO original (not sure why they did that)
 // Also to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
 simulated state LeavingVehicle
