@@ -5,7 +5,7 @@
 
 class DH_Kar98ScopedWeapon extends DHBoltSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Kar98_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Kar98_1stt.ukx
 
 defaultproperties
 {
@@ -53,7 +53,7 @@ defaultproperties
     BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
     ItemName="Karabiner 98k"
-    Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k-scoped-mesh'
+    Mesh=SkeletalMesh'DH_Kar98_1st.kar98k-scoped-mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
