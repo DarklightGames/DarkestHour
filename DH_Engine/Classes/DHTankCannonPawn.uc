@@ -1028,6 +1028,43 @@ simulated function FixPCRotation(PlayerController PC)
     PC.SetRotation(rotator(vector(ViewRelativeRotation) >> VehicleBase.Rotation));
 }
 
+// Modified to correct error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in a multi position weapon
+function int LocalLimitPitch(int pitch)
+{
+    pitch = pitch & 65535;
+
+    if (bMultiPosition)
+    {
+        if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
+        {
+            if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < DriverPositions[DriverPositionIndex].ViewPitchDownLimit - pitch)
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
+            }
+            else
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
+            }
+        }
+    }
+    else
+    {
+        if (pitch > PitchUpLimit && pitch < PitchDownLimit)
+        {
+            if (pitch - PitchUpLimit < PitchDownLimit - pitch)
+            {
+                pitch = PitchUpLimit;
+            }
+            else
+            {
+                pitch = PitchDownLimit;
+            }
+        }
+    }
+
+    return pitch;
+}
+
 // Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
 simulated function IncrementRange()
 {
