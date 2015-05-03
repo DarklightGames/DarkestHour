@@ -1139,6 +1139,12 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+// Modified to revert to Super in Pawn, skipping unnecessary stuff in ROWheeledVehicle & ROVehicle, as this is a many-times-a-second function & so should be optimised
+function int LimitPitch(int pitch, optional float DeltaTime)
+{
+    return super(Pawn).LimitPitch(pitch, DeltaTime);
+}
+
 // Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties & remove obsolete stuff
 // Also removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
 static function StaticPrecache(LevelInfo L)
