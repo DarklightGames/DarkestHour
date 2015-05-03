@@ -15,8 +15,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG3'
-    maxVerticalRecoilAngle=600
-    maxHorizontalRecoilAngle=75
+    maxVerticalRecoilAngle=650
+    maxHorizontalRecoilAngle=85
     RecoilRate=0.05
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellIronSightOffset=(X=15.0)
@@ -40,6 +40,6 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=1200.0
-    Spread=290.0
+    Spread=325.0
     SpreadStyle=SS_Random
 }

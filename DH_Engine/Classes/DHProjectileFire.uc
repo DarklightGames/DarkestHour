@@ -426,7 +426,7 @@ defaultproperties
     ProneSpreadModifier=0.7
     BipodDeployedSpreadModifier=0.5
     RestDeploySpreadModifier=0.75
-    HipSpreadModifier=2.0
+    HipSpreadModifier=3.5
     LeanSpreadModifier=1.35
     PctBipodDeployRecoil=0.05
     bLeadTarget=true
