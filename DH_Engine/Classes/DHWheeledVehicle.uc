@@ -281,16 +281,9 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local DHPlayer P;
-
-    if (bIsSpawnVehicle && !bEngineOff)
+    if (bIsSpawnVehicle && !bEngineOff && DHPlayer(PC) != none)
     {
-        P = DHPlayer(PC);
-
-        if (P != none)
-        {
-            P.QueueHint(17, true);
-        }
+        DHPlayer(PC).QueueHint(17, true);
     }
 
     super.ClientKDriverLeave(PC);
