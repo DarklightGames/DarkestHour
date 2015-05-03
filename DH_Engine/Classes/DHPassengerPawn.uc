@@ -127,28 +127,23 @@ function KDriverEnter(Pawn P)
     super.KDriverEnter(P);
 }
 
-// Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
-// Also so that exit stuff only happens if the Super returns true
+// Modified to give player the same momentum as the vehicle when exiting
+// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
 function bool KDriverLeave(bool bForceLeave)
 {
-    local vector OldVel;
+    local vector ExitVelocity;
 
     if (!bForceLeave)
     {
-        OldVel = VehicleBase.Velocity;
+        ExitVelocity = Velocity;
+        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
     }
 
     if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
     {
-        DriverPositionIndex = 0;
-        LastPositionIndex = 0;
-
-        VehicleBase.MaybeDestroyVehicle();
-
         if (!bForceLeave)
         {
-            OldVel.Z += 50.0;
-            Instigator.Velocity = OldVel;
+            Instigator.Velocity = ExitVelocity;
         }
 
         return true;
@@ -157,12 +152,20 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to call DriverLeft() because player death doesn't trigger KDriverLeave/DriverLeft/DrivingStatusChanged
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
 function DriverDied()
 {
-    super.DriverDied();
+    super(Vehicle).DriverDied();
 
     DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
+}
+
+// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function
+function DriverLeft()
+{
+    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+
+    DrivingStatusChanged(); // the Super from Vehicle
 }
 
 // Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel

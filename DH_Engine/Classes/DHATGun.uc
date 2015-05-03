@@ -50,7 +50,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified as everything in DHTreadCraft is irrelevant to AT gun
+// Modified as everything in DHTreadCraft & ROWheeledVehicle is irrelevant to AT gun
 simulated function PostNetBeginPlay()
 {
     super(ROVehicle).PostNetBeginPlay();
@@ -72,16 +72,6 @@ function KDriverEnter(Pawn P)
     {
         WeaponPawns[0].KDriverEnter(P); // attach to the first WeaponPawn, do not pass "Go" :-)
     }
-}
-
-function DriverLeft()
-{
-    super(ROWheeledVehicle).DriverLeft(); // skip ROTreadCraft
-}
-
-simulated function Destroyed()
-{
-    super(ROVehicle).Destroyed(); // skip ROTreadCraft
 }
 
 simulated function Tick(float DeltaTime)
@@ -229,7 +219,8 @@ exec function DamageTank()
 
 defaultproperties
 {
-    bNetNotify=false
+    bNetNotify=false // AT gun doesn't use PostNetReceive() as has engine on/off, damaged tracks & hull fires all all irrelevant it
+    bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
     UFrontArmorFactor=0.8
     URightArmorFactor=0.8
     ULeftArmorFactor=0.8

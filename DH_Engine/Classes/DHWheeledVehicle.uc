@@ -311,18 +311,6 @@ simulated state EnteringVehicle
     }
 }
 
-// Modified to avoid playing engine shut down sound when entering vehicle & also to use IdleTimeBeforeReset
-function DriverLeft()
-{
-    // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-    if (IsVehicleEmpty() && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) && !bNeverReset)
-    {
-        ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-    }
-
-    DrivingStatusChanged(); // Matt: this is the Super from Vehicle, as we need to skip over Super in ROVehicle
-}
-
 // Modified to prevent entry if player is on fire
 function bool TryToDrive(Pawn P)
 {
@@ -696,28 +684,23 @@ function ServerStartEngine()
     }
 }
 
-// Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
-// Also so that exit stuff only happens if the Super returns true
+// Modified to give players the same momentum as the vehicle when exiting
+// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
 function bool KDriverLeave(bool bForceLeave)
 {
-    local vector OldVel;
+    local vector ExitVelocity;
 
     if (!bForceLeave)
     {
-        OldVel = Velocity;
+        ExitVelocity = Velocity;
+        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
     }
 
     if (super(ROVehicle).KDriverLeave(bForceLeave))
     {
-        DriverPositionIndex = InitialPositionIndex;
-        PreviousPositionIndex = InitialPositionIndex;
-
-        MaybeDestroyVehicle();
-
         if (!bForceLeave)
         {
-            OldVel.Z += 75.0;
-            Instigator.AddVelocity(OldVel);
+            Instigator.Velocity = ExitVelocity;
         }
 
         return true;
@@ -726,6 +709,40 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
+function DriverDied()
+{
+    super(ROVehicle).DriverDied();
+}
+
+// Modified to avoid playing engine shut down sound when leaving vehicle & also to use IdleTimeBeforeReset
+// Also to add common features from KDriverLeave() & DriverLeft(), which both call this function
+function DriverLeft()
+{
+    DriverPositionIndex = InitialPositionIndex;
+    PreviousPositionIndex = InitialPositionIndex;
+
+    if (IsVehicleEmpty())
+    {
+        // Set spiked vehicle timer if it's an empty, disabled vehicle
+        if (IsDisabled())
+        {
+            bSpikedVehicle = true;
+            SetTimer(VehicleSpikeTime, false);
+        }
+
+        // If vehicle is now empty & some way from its spawn point, set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
+        // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
+        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) && !bNeverReset)
+        {
+            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+        }
+    }
+
+    DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
+}
+
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
 function bool PlaceExitingDriver()
 {
     local int    i;

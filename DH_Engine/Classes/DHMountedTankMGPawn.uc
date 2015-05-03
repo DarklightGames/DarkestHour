@@ -221,20 +221,29 @@ simulated state EnteringVehicle
     }
 }
 
-// Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
+// Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
+// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
 function bool KDriverLeave(bool bForceLeave)
 {
-    if (!bForceLeave && !CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+    local vector ExitVelocity;
+
+    if (!bForceLeave)
     {
-        return false;
+        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+        {
+            return false;
+        }
+
+        ExitVelocity = Velocity;
+        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
     }
 
     if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
     {
-        DriverPositionIndex = 0;
-        LastPositionIndex = 0;
-
-        VehicleBase.MaybeDestroyVehicle();
+        if (!bForceLeave)
+        {
+            Instigator.Velocity = ExitVelocity;
+        }
 
         return true;
     }
@@ -252,12 +261,31 @@ simulated state LeavingVehicle
     }
 }
 
-// Modified to call DriverLeft() because player death doesn't trigger KDriverLeave/DriverLeft/DrivingStatusChanged
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
 function DriverDied()
 {
-    super.DriverDied();
+    super(Vehicle).DriverDied();
+
+    if (VehicleBase != none && VehicleBase.Health > 0)
+    {
+        SetRotatingStatus(0); // kill the rotation sound if the driver dies but the vehicle doesn't
+    }
 
     DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
+}
+
+// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function, & to reset to InitialPositionIndex instead of zero
+function DriverLeft()
+{
+    if (bMultiPosition)
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        LastPositionIndex = InitialPositionIndex;
+    }
+
+    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+
+    DrivingStatusChanged(); // the Super from Vehicle
 }
 
 // Modified to play idle animation for all net players, so they see closed hatches & any animated collision boxes are re-set (also server if collision is animated)
