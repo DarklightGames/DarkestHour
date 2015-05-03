@@ -311,7 +311,7 @@ simulated state EnteringVehicle
             PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
         }

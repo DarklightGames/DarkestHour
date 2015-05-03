@@ -27,7 +27,7 @@ simulated state EnteringVehicle
             LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
         }
 
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
         }
