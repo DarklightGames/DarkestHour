@@ -707,27 +707,6 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
-function bool KDriverLeave(bool bForceLeave)
-{
-    if (!bForceLeave && !CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
-    {
-        return false;
-    }
-
-    if (super(ROVehicle).KDriverLeave(bForceLeave))
-    {
-        DriverPositionIndex = InitialPositionIndex;
-        PreviousPositionIndex = InitialPositionIndex;
-
-        MaybeDestroyVehicle();
-
-        return true;
-    }
-
-    return false;
-}
-
 // Modified to add clientside checks before sending the function call to the server
 simulated function SwitchWeapon(byte F)
 {
@@ -788,26 +767,67 @@ simulated function SwitchWeapon(byte F)
     ServerChangeDriverPosition(F);
 }
 
+// Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
+// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
+function bool KDriverLeave(bool bForceLeave)
+{
+    local vector ExitVelocity;
+
+    if (!bForceLeave)
+    {
+        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+        {
+            return false;
+        }
+
+        ExitVelocity = Velocity;
+        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
+    }
+
+    if (super(ROVehicle).KDriverLeave(bForceLeave))
+    {
+        if (!bForceLeave)
+        {
+            Instigator.Velocity = ExitVelocity;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
+function DriverDied()
+{
+    super(ROVehicle).DriverDied();
+}
+
 // Modified to avoid playing engine shut down sound when leaving vehicle & also to use IdleTimeBeforeReset
+// Also to add common features from KDriverLeave() & DriverLeft(), which both call this function
 function DriverLeft()
 {
-    MotionSoundVolume = 0.0;
-    UpdateMovementSound();
+    DriverPositionIndex = InitialPositionIndex;
+    PreviousPositionIndex = InitialPositionIndex;
 
-    // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-    if (!bNeverReset && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
+    if (IsVehicleEmpty())
     {
-        if (bKeyVehicle)
+        // Set spiked vehicle timer if it's an empty, disabled vehicle
+        if (IsDisabled())
         {
-            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+            bSpikedVehicle = true;
+            SetTimer(VehicleSpikeTime, false);
         }
-        else
+
+        // If vehicle is now empty & some way from its spawn point, set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
+        // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
+        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) && !bNeverReset)
         {
             ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
         }
     }
 
-    super(Vehicle).DriverLeft();
+    DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
 }
 
 // Modified to use DriverTraceDistSquared instead of literal values (& add debug)

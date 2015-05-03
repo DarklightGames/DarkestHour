@@ -122,34 +122,21 @@ simulated function ClientKDriverEnter(PlayerController PC)
     DHPlayer(PC).QueueHint(42, true);
 }
 
-// Overridden for ramp (sets InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position)
-// Also removes vehicle momentum added in DHWheeledVehicle, as it can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
+// Modified to set InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position
+// Also skips over Super in DHWheeledVehicle, as added vehicle momentum can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
 function bool KDriverLeave(bool bForceLeave)
 {
     InitialPositionIndex = DriverPositionIndex;
 
-    if (super(ROVehicle).KDriverLeave(bForceLeave))
-    {
-        DriverPositionIndex = InitialPositionIndex;
-        PreviousPositionIndex = InitialPositionIndex;
-
-        MaybeDestroyVehicle();
-
-        return true;
-    }
-
-    return false;
+    return super(ROVehicle).KDriverLeave(bForceLeave);
 }
 
-// Overwridden for ramp (sets InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position)
+// Modified to setsInitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position
 function DriverDied()
 {
     InitialPositionIndex = DriverPositionIndex;
-    DriverPositionIndex = InitialPositionIndex;
 
     super(ROVehicle).DriverDied(); // skip over Super in ROWheeledVehicle, which would reset DriverPositionIndex to 0
-
-    MaybeDestroyVehicle();
 }
 
 // Matt: modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player exited

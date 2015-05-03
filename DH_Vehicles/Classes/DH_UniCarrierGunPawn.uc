@@ -5,35 +5,6 @@
 
 class DH_UniCarrierGunPawn extends DHMountedTankMGPawn; // Matt: originally extended ROMountedTankMGPawn
 
-// Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
-function bool KDriverLeave(bool bForceLeave)
-{
-    local vector OldVel;
-
-    if (!bForceLeave)
-    {
-        OldVel = VehicleBase.Velocity;
-    }
-
-    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
-    {
-        DriverPositionIndex = 0;
-        LastPositionIndex = 0;
-
-        VehicleBase.MaybeDestroyVehicle();
-
-        if (!bForceLeave)
-        {
-            OldVel.Z += 50.0;
-            Instigator.Velocity = OldVel;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z;
