@@ -42,7 +42,7 @@ var()   float       ObjectCollisionResistance;
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 
-var     bool        bCrushedAnObject;       // Value set when the vehicle crushes something
+var     bool        bCrushedAnObject;       // value set when the vehicle crushes something
 var     float       LastCrushedTime;
 var     float       ObjectCrushStallTime;
 
@@ -574,7 +574,7 @@ simulated function StopEmitters()
 {
     local int i;
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
         for (i = 0; i < Dust.Length; ++i)
         {
@@ -1380,21 +1380,16 @@ simulated function ObjectCrushed(float ReductionTime)
 }
 
 // Modified to add an impact effect for running someone over (will slow vehicle down)
-// This will get called if we couldn't move a pawn out of the way
 function bool EncroachingOn(Actor Other)
 {
-    if ( Other == None || Other == Instigator || Other.Role != ROLE_Authority || (!Other.bCollideActors && !Other.bBlockActors)
-         || VSize(Velocity) < 10 )
-        return false;
-
-    // If its a non-vehicle pawn, do lots of damage.
-    if( (Pawn(Other) != None) && (Vehicle(Other) == None) )
+    // If its a player pawn, do lots of damage & call ObjectCrushed()
+    if (Pawn(Other) != none && Vehicle(Other) == none && Other != Instigator && Other.Role == ROLE_Authority && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
     {
         Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
         ObjectCrushed(4.0);
-
-        return false;
     }
+
+    return false;
 }
 
 defaultproperties

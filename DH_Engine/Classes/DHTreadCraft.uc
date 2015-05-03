@@ -509,7 +509,7 @@ simulated state EnteringVehicle
             PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
-        if (PlayerController(Controller) != none)
+        if (IsHumanControlled())
         {
             PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
         }
@@ -686,12 +686,9 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-            else if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer && DriverPositionIndex == UnbuttonedPositionIndex)
             {
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GotoState('ViewTransition');
-                }
+                GoToState('ViewTransition');
             }
         }
     }
@@ -3527,21 +3524,16 @@ simulated function ObjectCrushed(float ReductionTime)
 }
 
 // Modified to add an impact effect for running someone over (will slow vehicle down)
-// This will get called if we couldn't move a pawn out of the way
 function bool EncroachingOn(Actor Other)
 {
-    if ( Other == None || Other == Instigator || Other.Role != ROLE_Authority || (!Other.bCollideActors && !Other.bBlockActors)
-         || VSize(Velocity) < 10 )
-        return false;
-
-    // If its a non-vehicle pawn, do lots of damage.
-    if( (Pawn(Other) != None) && (Vehicle(Other) == None) )
+    // If its a player pawn, do lots of damage & call ObjectCrushed()
+    if (Pawn(Other) != none && Vehicle(Other) == none && Other != Instigator && Other.Role == ROLE_Authority && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
     {
         Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
         ObjectCrushed(2.0);
-
-        return false;
     }
+
+    return false;
 }
 
 defaultproperties
