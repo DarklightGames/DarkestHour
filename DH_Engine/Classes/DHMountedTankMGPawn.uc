@@ -863,6 +863,43 @@ simulated function FixPCRotation(PlayerController PC)
     PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. MG pawn's rotation (note Gun.Rotation is effectively same as vehicle base's rotation)
 }
 
+// Modified to correct error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in a multi position weapon
+function int LocalLimitPitch(int pitch)
+{
+    pitch = pitch & 65535;
+
+    if (bMultiPosition)
+    {
+        if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
+        {
+            if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < DriverPositions[DriverPositionIndex].ViewPitchDownLimit - pitch)
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
+            }
+            else
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
+            }
+        }
+    }
+    else
+    {
+        if (pitch > PitchUpLimit && pitch < PitchDownLimit)
+        {
+            if (pitch - PitchUpLimit < PitchDownLimit - pitch)
+            {
+                pitch = PitchUpLimit;
+            }
+            else
+            {
+                pitch = PitchDownLimit;
+            }
+        }
+    }
+
+    return pitch;
+}
+
 // Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
