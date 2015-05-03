@@ -537,7 +537,7 @@ simulated function ProcessHitFX()
         {
             if (DHHeadgear(HeadGear).bIsHelmet)
             {
-                DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
+                DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0,150.0),, 80,, true);
             }
 
             HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
@@ -545,6 +545,7 @@ simulated function ProcessHitFX()
     }
 }
 
+// Theel: This function makes no sense to me, why is it not exiting the loop? why is it calling TakeDamage and PlaySound multiple times??????
 function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocation, vector Momentum, class<DamageType> DamageType, array<int> PointsHit)
 {
     local int    ActualDamage, OriginalDamage, CumulativeDamage, TotalDamage, i;
@@ -626,9 +627,9 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         // Lets exit out if one of the shots killed the player
         if (CumulativeDamage >=  Health)
         {
-            if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
+            if (DamageType.default.HumanObliterationThreshhold != 1000001)
             {
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
             }
 
             TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
@@ -643,9 +644,9 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             return;
         }
 
-        if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
+        if (DamageType.default.HumanObliterationThreshhold != 1000001)
         {
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
         }
 
         TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
@@ -1465,11 +1466,11 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
     {
         if (DamageType.IsA('Drowned'))
         {
-            PlaySound(GetSound(EST_Drown), SLOT_Pain, 1.5 * TransientSoundVolume);
+            PlaySound(GetSound(EST_Drown), SLOT_Pain, 1.5 * TransientSoundVolume,, 10.0);
         }
         else
         {
-            PlaySound(GetSound(EST_HitUnderwater), SLOT_Pain, 1.5 * TransientSoundVolume);
+            PlaySound(GetSound(EST_HitUnderwater), SLOT_Pain, 1.5 * TransientSoundVolume,, 10.0);
         }
 
         return;
@@ -1498,7 +1499,7 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
        }
     }
 
-    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, 200.0);
+    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30,90),, true);
 }
 
 // A few minor additions
@@ -4355,6 +4356,40 @@ simulated function vector CalcZoomedDrawOffset(Inventory Inv)
     }
 
     return DrawOffset;
+}
+
+// Modified to have radius on ragdoll sounds
+event KImpact(actor other, vector pos, vector impactVel, vector impactNorm)
+{
+    local float VelocitySquared;
+    local float RagHitVolume;
+
+    if(Level.TimeSeconds > RagLastSoundTime + RagImpactSoundInterval)
+    {
+        VelocitySquared = VSizeSquared(impactVel);
+
+        RagHitVolume = FMin(4.0,(VelocitySquared/40000));
+
+        PlaySound(RagImpactSound, SLOT_None, RagHitVolume,, 10.0,, true);
+        RagLastSoundTime = Level.TimeSeconds;
+    }
+}
+
+// Modified to have radius (so deaths can't be hurd like gunshots)
+function PlayDyingSound()
+{
+    if( Level.Netmode == NM_Client || bGibbed)
+    {
+        return;
+    }
+
+    if ( HeadVolume.bWaterVolume )
+    {
+        PlaySound(GetSound(EST_Drown), SLOT_Pain,2.5*TransientSoundVolume,true,80);
+        return;
+    }
+
+    PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20,200), true, 80,, true);
 }
 
 defaultproperties

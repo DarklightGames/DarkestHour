@@ -33,7 +33,7 @@ simulated function PostNetBeginPlay()
 
     if (HitEffects[ST].HitSound != none)
     {
-        PlaySound(HitEffects[ST].HitSound, SLOT_None, 30.0, false, 100.0);
+        PlaySound(HitEffects[ST].HitSound, SLOT_None, RandRange(10.0,32.0), false, 32,, true);
     }
 
     if (HitEffects[ST].HitEffect != none)
