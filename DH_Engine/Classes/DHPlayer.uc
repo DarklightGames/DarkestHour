@@ -129,7 +129,6 @@ event ClientReset()
     //Reset deploy stuff
     SpawnTime = default.SpawnTime;
     LastKilledTime = 0;
-    SpawnAmmoAmount = 0;
 
     //Reset camera stuff
     bBehindView = false;
@@ -2448,7 +2447,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 // Because we switched teams we should reset current role, desired role, etc.
                 DesiredRole = -1;
                 CurrentRole = -1;
-                SpawnAmmoAmount = 0;
                 SpawnPointIndex = 255;
                 SpawnVehicleIndex = 255;
                 VehiclePoolIndex = 255;
@@ -2543,19 +2541,35 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     // Handle ammo
     RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
 
-    PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[PrimaryWeapon].Item);
-
-    if (NewSpawnAmmoCount == 255 || PrimaryWeaponClass == none)
+    if (RI != none)
     {
-         SpawnAmmoAmount = 0;
-    }
-    else if (NewSpawnAmmoCount >= 1 && NewSpawnAmmoCount <= PrimaryWeaponClass.default.MaxNumPrimaryMags)
-    {
-        SpawnAmmoAmount = NewSpawnAmmoCount;
-    }
+        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[PrimaryWeapon].Item);
 
-    // If SpawnAmmoAmount is 0 or 255 it will calculate a normal default setting value
-    SpawnTime = GetSpawnTime(SpawnAmmoAmount, RI, newWeapon1);
+        if (NewSpawnAmmoCount == 255 || NewSpawnAmmoCount == 0 && PrimaryWeaponClass != none)
+        {
+            // Player may not have selected ammo yet so set to default
+            SpawnAmmoAmount = RI.DefaultStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        }
+        else if (NewSpawnAmmoCount >= 1 && NewSpawnAmmoCount <= PrimaryWeaponClass.default.MaxNumPrimaryMags)
+        {
+            SpawnAmmoAmount = NewSpawnAmmoCount;
+        }
+        else
+        {
+            // Theel Debug Remove once we determine this isn't being ran
+            Warn("===============================================");
+            Warn("Ammo failed to set correctly, setting to 1!!!!!");
+            Warn("===============================================");
+            SpawnAmmoAmount = 1;
+        }
+
+        // If SpawnAmmoAmount is 0 or 255 it will calculate a normal default setting value
+        SpawnTime = GetSpawnTime(SpawnAmmoAmount, RI, newWeapon1);
+    }
+    else
+    {
+        SpawnTime = default.SpawnTime;
+    }
 
     // return result to client
     if (newTeam == AXIS_TEAM_INDEX)
