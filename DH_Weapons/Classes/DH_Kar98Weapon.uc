@@ -5,7 +5,7 @@
 
 class DH_Kar98Weapon extends DHBoltActionWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Kar98_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Kar98_1st.ukx
 
 defaultproperties
 {
@@ -44,7 +44,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_Kar98Pickup'
     AttachmentClass=class'DH_Weapons.DH_Kar98Attachment'
     ItemName="Karabiner 98k"
-    Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k_mesh'
+    Mesh=SkeletalMesh'DH_Kar98_1st.kar98k_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
