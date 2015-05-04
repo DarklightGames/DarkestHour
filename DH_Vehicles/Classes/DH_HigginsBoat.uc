@@ -17,7 +17,7 @@ var     name        RampDownIdleAnim;
 function Fire(optional float F);
 function ServerStartEngine();
 
-// Matt: modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player entered
+// Modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player entered
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
@@ -73,7 +73,7 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Overwritten to add Higgins Boat ramp sounds
+// Modified to to add Higgins Boat ramp sounds
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -104,8 +104,8 @@ simulated state ViewTransition
     }
 }
 
-// Add Higgins boat hint
-// Matt: also to set PPI to match DPI, instead of usual InitialPositionIndex, otherwise net client can get stuck & unable to lower/raise the ramp, because server may have changed IPI
+// Modified to set PPI to match DPI, instead of usual InitialPositionIndex, otherwise net client can get stuck & unable to lower/raise the ramp, because server may have changed IPI
+// Also to add Higgins boat hint
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     FPCamPos = default.FPCamPos;
@@ -119,27 +119,27 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super(ROVehicle).ClientKDriverEnter(PC); // skip over Super in ROWheeledVehicle as it sets PPI to match IPI
 
-    DHPlayer(PC).QueueHint(42, true);
+    if (DHPlayer(PC) != none)
+    {
+        DHPlayer(PC).QueueHint(42, true);
+    }
 }
 
-// Modified to set InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position
-// Also skips over Super in DHWheeledVehicle, as added vehicle momentum can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
+// Modified to avoid adding vehicle momentum from Super in DHWheeledVehicle, as can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
 function bool KDriverLeave(bool bForceLeave)
 {
-    InitialPositionIndex = DriverPositionIndex;
-
     return super(ROVehicle).KDriverLeave(bForceLeave);
 }
 
 // Modified to setsInitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position
-function DriverDied()
+function DriverLeft()
 {
     InitialPositionIndex = DriverPositionIndex;
 
-    super(ROVehicle).DriverDied(); // skip over Super in ROWheeledVehicle, which would reset DriverPositionIndex to 0
+    super.DriverLeft();
 }
 
-// Matt: modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player exited
+// Modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player exited
 simulated event DrivingStatusChanged()
 {
     super(Vehicle).DrivingStatusChanged();
@@ -151,7 +151,7 @@ simulated event DrivingStatusChanged()
     }
 }
 
-// Called by notifies
+// Called by notifies from the animation
 function RampUpIdle()
 {
     LoopAnim(BeginningIdleAnim);
