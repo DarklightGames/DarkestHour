@@ -953,7 +953,7 @@ simulated state ViewTransition
             }
         }
 
-        ViewTransitionDuration = 0.2; // set minimum default delay before we exit state, if we don't have a transition animation
+        ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
         // Play any transition animation for the vehicle itself
         // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if driver's collision box moves)
