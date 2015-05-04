@@ -270,6 +270,12 @@ function ChangeDesiredRole(RORoleInfo newRole)
             NotifyDesiredRoleUpdated();
         }
     }
+
+    if (DesiredRole.bCanBeTankCrew)
+    {
+        // Selected a crew role, so lets auto-open vehicle panel
+        MyDeployMenu.c_LoadoutArea.ActivateTabByPanel(MyDeployMenu.VehiclePanel, true);
+    }
 }
 
 function AutoPickRole()
