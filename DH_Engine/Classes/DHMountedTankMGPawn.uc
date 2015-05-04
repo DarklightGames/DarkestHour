@@ -168,10 +168,13 @@ function bool TryToDrive(Pawn P)
 }
 
 // Modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
+// Also to use InitialPositionIndex instead of assuming start in position zero
 function KDriverEnter(Pawn P)
 {
     local float PercentageOfReloadDone;
 
+    DriverPositionIndex = InitialPositionIndex;
+    LastPositionIndex = InitialPositionIndex;
 
     if (MGun != none && MGun.bReloading)
     {
@@ -182,42 +185,44 @@ function KDriverEnter(Pawn P)
     super(VehicleWeaponPawn).KDriverEnter(P); // skip over Super in ROMountedTankMGPawn as it sets rotation we now want to avoid
 }
 
-// Modified to match rotation to MG's aim (also consolidates & optimises the Supers)
+// Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim (also consolidates & optimises the Supers)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     if (bMultiPosition)
     {
-        GotoState('EnteringVehicle');
-        PendingPositionIndex = 0;
+        Gotostate('EnteringVehicle');
+        SavedPositionIndex = InitialPositionIndex;
+        PendingPositionIndex = InitialPositionIndex;
     }
-    else
+    else if (PC != none)
     {
-        PC.SetFOV(WeaponFOV);
+        PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
-
-    StoredVehicleRotation = VehicleBase.Rotation; // Matt: I don't think this is used anywhere & will probably remove from all functions later
 
     super(Vehicle).ClientKDriverEnter(PC);
 
     MatchRotationToGunAim();
 }
 
-// Modified so MG retains its aimed direction when player enters & may switch to internal mesh
+// Modified so MG retains its aimed direction when player enters & may switch to internal mesh, & to handle InitialPositionIndex instead of assuming start in position zero
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-        SwitchMesh(0);
+        SwitchMesh(InitialPositionIndex);
 
         if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
         {
-            Gun.PlayAnim(Gun.BeginningIdleAnim);
+            Gun.PlayAnim(Gun.BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
-        WeaponFOV = DriverPositions[0].ViewFOV;
-        PlayerController(Controller).SetFOV(WeaponFOV);
+        FPCamPos = DriverPositions[InitialPositionIndex].ViewLocation;
+        WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
 
-        FPCamPos = DriverPositions[0].ViewLocation;
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).SetFOV(WeaponFOV);
+        }
     }
 }
 
@@ -527,7 +532,7 @@ simulated function PrevWeapon()
 }
 
 // Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
-// Server also plays down animation when buttoning up, if player has moving collision box
+// Also so that server plays animations if player has moving collision box
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -611,7 +616,7 @@ simulated state ViewTransition
             }
         }
 
-        ViewTransitionDuration = 0.2; // set minimum default delay before we exit state, if we don't have a transition animation
+        ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
         // Play any transition animation for the MG itself
         // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if player's collision box moves)

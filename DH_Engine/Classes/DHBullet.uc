@@ -188,7 +188,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         Log(">>>" @ Other @ "==" @ Instigator @ "||" @ Other.Base @ "==" @ Instigator @ "||" @ !Other.bBlockHitPointTraces);
     }
 
-    if (SavedTouchActor == Other || Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
+    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || !Other.bBlockHitPointTraces ||
+        Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
     }

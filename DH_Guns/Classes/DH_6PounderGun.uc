@@ -34,8 +34,8 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.0
     VehicleHudOccupantsY(1)=0.6
     VehicleHudOccupantsY(2)=0.0
-    VehHitpoints(0)=(PointRadius=0.0,PointBone="turret_attachment",bPenetrationPoint=false,DamageMultiplier=1.0)
-    VehHitpoints(1)=(PointBone="turret_attachment",bPenetrationPoint=true,DamageMultiplier=1.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=0.0,PointBone="turret_attachment",bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=0.0,PointBone="turret_attachment")
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)

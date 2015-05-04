@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak88CannonPawn extends DHATGunTwoCannonPawn;
+class DH_Flak88CannonPawn extends DHATGunCannonPawn;
 
 defaultproperties
 {
