@@ -509,7 +509,7 @@ defaultproperties
 
     Begin Object Class=GUIButton Name=SettingsButton
         CaptionAlign=TXTA_Left
-        Caption="Configuration"
+        Caption="Settings"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
@@ -643,10 +643,10 @@ defaultproperties
     b_Back=GUIButton'DH_Interface.DHMainMenu.BackButton'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
-		WinWidth=0.261250
-		WinHeight=0.026563
-		WinLeft=0.712799
-		WinTop=0.185657
+        WinWidth=0.261250
+        WinHeight=0.026563
+        WinLeft=0.712799
+        WinTop=0.185657
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
@@ -656,9 +656,9 @@ defaultproperties
         Caption="Version: 6.0"
         TextAlign=TXTA_Right
         WinWidth=1.0
-		WinHeight=1.0
-		WinLeft=0.0
-		WinTop=0.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
         RenderWeight=20.700001
     End Object
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
@@ -670,9 +670,9 @@ defaultproperties
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_BottomRight
         WinWidth=0.867656
-		WinHeight=0.197539
-		WinLeft=0.130391
-		WinTop=0.0
+        WinHeight=0.197539
+        WinLeft=0.130391
+        WinTop=0.0
     End Object
     i_DHTextLogo=LogoImage
 

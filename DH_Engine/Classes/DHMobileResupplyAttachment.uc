@@ -277,7 +277,7 @@ event UnTouch(Actor Other)
 defaultproperties
 {
     Team=OWNER_Neutral
-    UpdateTime=5.0
+    UpdateTime=2.5
     ResupplyType=RT_All
     bDramaticLighting=true
     CollisionRadius=300

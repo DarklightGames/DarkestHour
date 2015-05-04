@@ -47,15 +47,6 @@ simulated state Intact
             {
                 G.ObstacleManager.SetCleared(self, true);
             }
-
-//            if (DHTreadCraft(Other) != none)
-//            {
-//                DHTreadCraft(Other).ObjectCrushed(VelocityReductionTimeOnCrush);
-//            }
-//            else if (DHWheeledVehicle(Other) != none)
-//            {
-//                DHWheeledVehicle(Other).ObjectCrushed(VelocityReductionTimeOnCrush);
-//            }
         }
 
         super.Touch(Other);
@@ -100,16 +91,16 @@ simulated function SetCleared(bool bIsCleared)
 
     if (bIsCleared && !IsInState('Cleared'))
     {
-        GotoState('Cleared');
-
-        if (Level.NetMode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer &&
+            !IsInState('DHObstacleInstance'))
         {
             ClearSound = Info.GetClearSound();
             ClearEmitterClass = Info.GetClearEmitterClass();
 
             if (ClearSound != none)
             {
-                PlayOwnedSound(ClearSound, SLOT_None, 255.0);
+                //TODO: figure out the best way to do this
+                PlayOwnedSound(ClearSound, SLOT_None, 128.0, true, 30.0,, true);
             }
 
             if (ClearEmitterClass != none)
@@ -117,6 +108,8 @@ simulated function SetCleared(bool bIsCleared)
                 Spawn(ClearEmitterClass, none, '', Location, Rotation);
             }
         }
+
+        GotoState('Cleared');
     }
     else if (!bIsCleared && !IsInState('Intact'))
     {

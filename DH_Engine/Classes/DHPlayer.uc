@@ -2637,6 +2637,38 @@ state Dead
     }
 }
 
+event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string Msg1, optional string Msg2)
+{
+    if (Player.Console != none)
+    {
+        Player.Console.TypingClose();
+    }
+
+    if (!Player.GUIController.bActive)
+    {
+        if (!Player.GUIController.ReplaceMenu(Menu, Msg1, Msg2))
+        {
+            UnpressButtons();
+        }
+    }
+    else
+    {
+        Player.GUIController.ReplaceMenu(Menu, Msg1, Msg2);
+    }
+
+    if (bDisconnect)
+    {
+        if (Player.Console != none)
+        {
+            Player.Console.DelayedConsoleCommand("Disconnect");
+        }
+        else
+        {
+            ConsoleCommand("Disconnect");
+        }
+    }
+}
+
 defaultproperties
 {
     // Sway values

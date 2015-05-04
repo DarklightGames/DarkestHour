@@ -722,7 +722,7 @@ defaultproperties
     MenuOptions(3)="Kick Vote"
     MenuOptions(4)="Communication"
     MenuOptions(5)="Server Browser"
-    MenuOptions(6)="Options"
+    MenuOptions(6)="Settings"
     MenuOptions(7)="Suicide"
     MenuOptions(8)="Disconnect"
 

@@ -1888,23 +1888,6 @@ simulated function DrawObjectives(Canvas C)
         }
     }
 
-    // Draw AT guns
-    for (i = 0; i < arraycount(DHGRI.ATCannons); ++i)
-    {
-        if (DHGRI.ATCannons[i].ATCannonLocation != vect(0.0, 0.0, 0.0) && DHGRI.ATCannons[i].Team == PlayerOwner.GetTeamNum())
-        {
-            if (DHGRI.ATCannons[i].ATCannonLocation.Z > 0.0) // ATCannon is active is the Z location is greater than 0
-            {
-                bShowATGun = true;
-
-                // AT gGun icon
-                MapIconATGun.Tints[0] = WhiteColor;
-                MapIconATGun.Tints[1] = WhiteColor;
-                DrawIconOnMap(C, SubCoords, MapIconATGun, MyMapScale, DHGRI.ATCannons[i].ATCannonLocation, MapCenter);
-            }
-        }
-    }
-
     if (Level.NetMode == NM_Standalone && bShowDebugInfoOnMap)
     {
         // PSYONIX: DEBUG - Show all vehicles on map who have no driver
