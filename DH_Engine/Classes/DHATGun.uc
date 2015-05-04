@@ -206,8 +206,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-}
-
 defaultproperties
 {
     bNetNotify=false // AT gun doesn't use PostNetReceive() as has engine on/off, damaged tracks & hull fires all all irrelevant it
