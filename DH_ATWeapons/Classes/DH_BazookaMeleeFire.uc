@@ -15,4 +15,8 @@ defaultproperties
     BashFinishAnim="bash_return"
     BotRefireRate=0.25
     aimerror=800.0
+
+    MinHoldtime=0.3
+    FullHeldTime=0.5
+    FireRate=0.5
 }

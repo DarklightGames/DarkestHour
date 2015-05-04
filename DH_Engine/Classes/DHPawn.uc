@@ -521,10 +521,6 @@ simulated function ProcessHitFX()
                         bRightArmGibbed = true;
                     }
                     break;
-
-                case 'head':
-                    HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
-                    break;
             }
 
             if (HitFX[SimHitFXTicker].Bone != 'Spine' && HitFX[SimHitFXTicker].Bone != 'UpperSpine')
@@ -537,7 +533,14 @@ simulated function ProcessHitFX()
         {
             if (DHHeadgear(HeadGear).bIsHelmet)
             {
-                DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0,150.0),, 80,, true);
+                if (HitDamageType != none && HitDamageType.default.HumanObliterationThreshhold == 1000001)
+                {
+                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 2.0,, 8,, true);
+                }
+                else
+                {
+                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0,150.0),, 80,, true);
+                }
             }
 
             HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
@@ -632,6 +635,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
                 PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
             }
 
+            HitDamageType = DamageType;
             TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
         }
     }
@@ -649,6 +653,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
         }
 
+        HitDamageType = DamageType;
         TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
     }
 }

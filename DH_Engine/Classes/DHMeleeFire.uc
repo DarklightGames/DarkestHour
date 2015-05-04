@@ -188,5 +188,15 @@ function DoTrace(vector Start, rotator Dir)
 
 defaultproperties
 {
-}
+    DamageMin=20
+    DamageMax=33
+    BayonetDamageMin=30
+    BayonetDamageMax=45
+    MinHoldtime=0.1
+    FullHeldTime=0.2
+    MeleeAttackSpread=8.0
+    MomentumTransfer=0
 
+    FireRate=0.25
+    FireAnimRate=1.0
+}
