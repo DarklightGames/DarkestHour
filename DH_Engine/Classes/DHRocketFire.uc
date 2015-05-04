@@ -6,20 +6,19 @@
 class DHRocketFire extends DHProjectileFire
     abstract;
 
-var     DHRocketWeapon      RocketWeapon;            // convenient reference to the rocket weapon actor
 var     bool                bCausesExhaustDamage;    // rocket exhaust causes backblast damage
 var     float               ExhaustLength;           // length of the exhaust back blast (in Unreal units)
 var     float               ExhaustDamage;           // damage caused by exhaust
 var     float               ExhaustMomentumTransfer; // momentum from exhaust to inflict on players
 var     class<DamageType>   ExhaustDamageType;       // damage type for exhaust
 
-simulated function PostBeginPlay()
+// Modified to prevent firing if RocketWeapon's CanFire() says no
+simulated function bool AllowFire()
 {
-    super.PostBeginPlay();
-
-    RocketWeapon = DHRocketWeapon(Weapon);
+    return DHRocketWeapon(Weapon) != none && DHRocketWeapon(Weapon).CanFire() && super.AllowFire();
 }
 
+// Modified to add exhaust damage & to call PostFire() on the Weapon
 event ModeDoFire()
 {
     local vector WeaponLocation, ExhaustDirection, HitLocation, HitNormal, ExhaustReflectDirection;
@@ -76,13 +75,17 @@ event ModeDoFire()
     Weapon.PostFire();
 }
 
+// Modified so when ironsighted we use the appropriate animation from RocketWeapon's range settings
 function PlayFiring()
 {
-    local name Anim;
+    local DHRocketWeapon RocketWeapon;
+    local name           Anim;
 
-    if (RocketWeapon != none && Weapon.bUsingSights)
+    if (Weapon.bUsingSights)
     {
-        if (RocketWeapon.RangeSettings.Length > 0)
+        RocketWeapon = DHRocketWeapon(Weapon);
+
+        if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
         {
             Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
         }

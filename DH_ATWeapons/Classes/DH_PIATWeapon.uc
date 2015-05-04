@@ -36,11 +36,11 @@ simulated state Reloading
 }
 
 // Modified as PIAT can only be fired when player is prone or weapon is rested
-simulated function bool CanFire()
+simulated function bool CanFire(optional bool bShowFailureMessage)
 {
     if (!bUsingSights)
     {
-        if (InstigatorIsHumanControlled())
+        if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
             WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 1,,, self); // can't fire from hip
         }
@@ -50,7 +50,7 @@ simulated function bool CanFire()
 
     if (Instigator == none || (!Instigator.bIsCrawling && !Instigator.bRestingWeapon))
     {
-        if (InstigatorIsHumanControlled())
+        if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
             WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 3,,, self); // can't fire unless prone or rested
         }

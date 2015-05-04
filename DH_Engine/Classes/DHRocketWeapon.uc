@@ -146,11 +146,11 @@ simulated function SpawnRocketAttachment()
 
 // New function to check if weapon can fire
 // Default is to prevent firing (with message) if player is prone or not ironsighted, but allows easy subclassing for different weapon requirements
-simulated function bool CanFire()
+simulated function bool CanFire(optional bool bShowFailureMessage)
 {
     if (Instigator != none && Instigator.bIsCrawling)
     {
-        if (Instigator.IsHumanControlled())
+        if (bShowFailureMessage && Instigator.IsHumanControlled())
         {
             PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 0,,, self); // can't fire prone
         }
@@ -160,7 +160,7 @@ simulated function bool CanFire()
 
     if (!bUsingSights)
     {
-        if (InstigatorIsHumanControlled())
+        if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
             PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
         }
@@ -174,7 +174,7 @@ simulated function bool CanFire()
 // Modified to check CanFire() & to set firing pitch based on current range setting
 simulated function Fire(float F)
 {
-    if (CanFire())
+    if (CanFire(true)) // true flags to show a screen message if can't fire
     {
         if (IsLoaded() && DHProjectileFire(FireMode[0]) != none)
         {
