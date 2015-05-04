@@ -748,6 +748,24 @@ function string FormatRoleString(string RoleName, int RoleLimit, int RoleCount, 
     return s;
 }
 
+function bool IsApplicationChanged()
+{
+    // Check values for changes
+    if (CurrentRole != DesiredRole ||
+        CurrentTeam != DesiredTeam ||
+        CurrentWeapons[0] != DesiredWeapons[0] ||
+        CurrentWeapons[1] != DesiredWeapons[1] ||
+        nu_PrimaryAmmoMags.Value != string(DHP.SpawnAmmoAmount) ||
+        MyDeployMenu.SpawnPointIndex != DHP.SpawnPointIndex ||
+        MyDeployMenu.VehiclePoolIndex != DHP.VehiclePoolIndex ||
+        MyDeployMenu.SpawnVehicleIndex != DHP.SpawnVehicleIndex)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // TODO: clean up function && optimize if possible
 function AttemptDeployApplication()
 {

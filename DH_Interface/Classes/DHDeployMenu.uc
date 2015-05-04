@@ -260,6 +260,10 @@ function bool OnClick(GUIComponent Sender)
 
         // Suicide
         case b_MenuOptions[7]:
+            if (RolePanel.IsApplicationChanged())
+            {
+                RolePanel.AttemptDeployApplication();
+            }
             PlayerOwner().ConsoleCommand("SUICIDE");
             CloseMenu();
             break;
