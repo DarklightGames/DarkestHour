@@ -51,7 +51,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     // Use gun camera bone rotation if buttoned up & controlling the remote MG
     if (CanFire())
     {
-        CameraRotation =  WeaponAimRot;
+        CameraRotation = WeaponAimRot;
     }
     // Or if buttoned up we'll use this 'free look around' code instead (inside the loader's internal 'box')
     else if (bPCRelativeFPRotation)

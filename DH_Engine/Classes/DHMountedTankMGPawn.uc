@@ -384,6 +384,9 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
     if (bCustomAiming && CanFire())
     {
+        YawChange *= DHP.DHISTurnSpeedFactor;
+        PitchChange *= DHP.DHISTurnSpeedFactor;
+
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
         if (IsHumanControlled())

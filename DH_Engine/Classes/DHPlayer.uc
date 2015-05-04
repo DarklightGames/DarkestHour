@@ -412,11 +412,12 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 {
     local rotator   NewRotation, ViewRotation;
     local ROVehicle ROVeh;
-    local DHPawn    ROPwn;
+    local DHPawn    DHPwn;
     local ROWeapon  ROWeap;
     local float     TurnSpeedFactor, MaxTurnSpeed;
 
-    ROPwn = DHPawn(Pawn);
+    DHPwn = DHPawn(Pawn);
+    ROVeh = ROVehicle(Pawn);
 
     if (Pawn != none)
     {
@@ -491,9 +492,9 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         // Begin handling turning speed
         TurnSpeedFactor = DHStandardTurnSpeedFactor;
 
-        if (ROPwn != none)
+        if (DHPwn != none)
         {
-            if (ROPwn.bIsCrawling || ROPwn.bIsSprinting || ROPwn.bRestingWeapon)
+            if (DHPwn.bIsCrawling || DHPwn.bIsSprinting || DHPwn.bRestingWeapon)
             {
                 TurnSpeedFactor = DHHalfTurnSpeedFactor;
             }
@@ -505,13 +506,13 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor;
         }
-        else if (ROPwn != none && (ROPwn.bIronSights || ROPwn.bBipodDeployed))
+        else if (DHPwn != none && (DHPwn.bIronSights || DHPwn.bBipodDeployed))
         {
             TurnSpeedFactor *= DHISTurnSpeedFactor;
         }
 
         // Handle viewrotation
-        if (ROPwn != none && ROPwn.bIsCrawling)
+        if (DHPwn != none && DHPwn.bIsCrawling)
         {
             MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, 0.0);
 
@@ -519,7 +520,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
             LastClampProneTime = Level.TimeSeconds;
         }
-        else if (ROPwn != none && ROPwn.bIsSprinting)
+        else if (DHPwn != none && DHPwn.bIsSprinting)
         {
             MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, 0.0);
 
@@ -547,26 +548,24 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
         }
 
-        if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
+        if (Pawn != none && Pawn.Weapon != none && DHPwn != none)
         {
             ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
         }
 
-        if (ROPwn != none)
+        if (DHPwn != none)
         {
-            ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
+            ViewRotation.Pitch = DHPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
         }
 
-        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bIsDeployingMortar || ROPwn.bIsCuttingWire))
+        if (DHPwn != none && (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingMortar || DHPwn.bIsCuttingWire))
         {
-            ROPwn.LimitYaw(ViewRotation.Yaw);
+            DHPwn.LimitYaw(ViewRotation.Yaw);
         }
 
-        // Limit Pitch and yaw for the ROVehicles - Ramm
-        if (Pawn != none && Pawn.IsA('ROVehicle'))
+        // Limit Pitch and yaw for the ROVehicles
+        if (ROVeh != none)
         {
-            ROVeh = ROVehicle(Pawn);
-
             ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
             ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
         }
