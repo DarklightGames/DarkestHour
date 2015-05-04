@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATDamType extends DH_PanzerschreckDamType
+class DH_PIATDamType extends DHAntiTankProjectileDamageType
     abstract;
 
 defaultproperties
