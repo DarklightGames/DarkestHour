@@ -296,6 +296,7 @@ function bool DrawMapComponents(Canvas C)
     {
         if (GRI.Objectives[i] == none || !GRI.Objectives[i].bActive)
         {
+            b_Objectives[i].Graphic = none;
             continue;
         }
 
