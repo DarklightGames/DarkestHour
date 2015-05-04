@@ -14,7 +14,6 @@ var     int             LensMaterialID;          // used since material IDs seem
 var     float           ScopePortalFOVHigh;      // the FOV to zoom the scope portal by
 var     float           ScopePortalFOV;          // the FOV to zoom the scope portal by
 
-// Not sure if these pitch vars are still needed now that we use Scripted Textures, but we'll keep for now in case they are - Ramm 08/14/04
 var     int             ScopePitch;              // tweaks the pitch of the scope firing angle
 var     int             ScopeYaw;                // tweaks the yaw of the scope firing angle
 var     int             ScopePitchHigh;          // tweaks the pitch of the scope firing angle high detail scope
@@ -168,7 +167,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
         RollMod = Instigator.GetViewRotation();
         RPawn = ROPawn(Instigator);
 
-        // Subtract roll from view while leaning - Ramm
+        // Subtract roll from view while leaning
         if (RPawn != none && RPawn.LeanAmount != 0.0)
         {
             RollMod.Roll += RPawn.LeanAmount;

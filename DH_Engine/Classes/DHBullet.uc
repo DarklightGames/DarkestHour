@@ -248,7 +248,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
     }
 
-    // If the bullet collides right after launch, it doesn't have any velocity yet - use the rotation instead & give it the default speed - Ramm
+    // If the bullet collides right after launch, it doesn't have any velocity yet - use the rotation instead & give it the default speed
     if (V < 25.0)
     {
         if (bDebugMode && !bHasDeflected)
@@ -446,7 +446,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     if (Role == ROLE_Authority && !bHasDeflected)
     {
-        // Have to use special damage for vehicles, otherwise it doesn't register for some reason - Ramm
+        // Have to use special damage for vehicles, otherwise it doesn't register for some reason
         if (ROVehicle(Wall) != none)
         {
             Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);

@@ -65,7 +65,6 @@ function DoFireEffect()
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
 
-        // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
         if (Other != none)
         {
             StartProj = HitLocation;
@@ -245,13 +244,8 @@ event ModeDoFire()
     }
 }
 
-/* =================================================================================== *
-* FireLoop
-*   This state handles looping the firing animations and ambient fire sounds as well
-*   as firing rounds.
-*
-* modified by: Ramm 1/17/05
-* =================================================================================== */
+
+// This state handles looping the firing animations and ambient fire sounds as well as firing rounds.
 state FireLoop
 {
     function BeginState()
@@ -333,8 +327,6 @@ state FireLoop
 *   we would hit something close before spawning a bullet. This way we don't ever
 *   spawn a bullet if we would hit something so close that the ballistics wouldn't
 *   matter anyway. Don't use pre-launch trace for things like rocket launchers
-*
-* modified by: Ramm 1/17/05
 * =================================================================================== */
 function Projectile SpawnProjectile(vector Start, Rotator Dir)
 {

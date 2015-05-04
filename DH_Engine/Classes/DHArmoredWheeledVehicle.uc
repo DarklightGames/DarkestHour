@@ -54,8 +54,7 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
-        // VSize() is very CPU intensive - Ramm
+        // VSize() is very CPU intensive
         MySpeed = VSize(Velocity);
 
         if (MySpeed >= MaxCriticalSpeed && Controller != none)

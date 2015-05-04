@@ -25,7 +25,7 @@ event PlayerInput( float DeltaTime )
     bWasLeft = (aStrafe < 0);
     bWasRight = (aStrafe > 0);
 
-    // Modify mouse sensitivity based on the scope - Ramm
+    // Calculate FOVScale
     if( Outer.GetMouseModifier() < 0 )
     {
         FOVScale = DesiredFOV * 0.01111; // 0.01111 = 1/90

@@ -589,13 +589,6 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     }
 }
 
-/* ======================================================================================================================= *
-* ServerSaveArtilleryPosition()
-*   Sends out a trace to find the saved artillery coordinates, then verifies that the coordinates are in a valid location.
-*   Sends a confirmation or denial message to the player. Client calls this function on the server.
-*
-* modified by: Ramm 10/21/04
-*===================================== =================================================================================== */
 function ServerSaveArtilleryPosition()
 {
     local DHGameReplicationInfo   GRI;
@@ -1232,7 +1225,6 @@ state PlayerWalking
                 Pawn.ShouldCrouch(false);
             }
 
-            // Not sure if we need this or not - Ramm
             if (bCrawl == 0)
             {
                 Pawn.ShouldProne(false);

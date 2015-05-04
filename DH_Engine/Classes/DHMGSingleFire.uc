@@ -147,8 +147,6 @@ function DoFireEffect()
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);
 
-        // Instead of just checking walls, lets check all actors. That way we won't have rounds
-        // spawning on the other side of players and missing them altogether - Ramm 10/14/04
         if (Other != none)
         {
             StartProj = HitLocation;

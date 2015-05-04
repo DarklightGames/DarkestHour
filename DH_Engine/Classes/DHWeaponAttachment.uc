@@ -128,7 +128,6 @@ simulated event ThirdPersonEffects()
         return;
     }
 
-    // New Trace FX - Ramm
     if (FiringMode == 0)
     {
         if (OldSpawnHitCount != SpawnHitCount)

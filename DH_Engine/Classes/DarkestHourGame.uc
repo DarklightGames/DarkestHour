@@ -424,7 +424,7 @@ function CheckMortarmanSpawnAreas()
             }
 
             // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
+            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
             for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
                 if (Objectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
@@ -1271,7 +1271,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
         return;
     }
 
-    // Lets try and avoid 50 casts - Ramm
     Playa = DHPlayer(aPlayer);
 
     if (Playa == none)
@@ -2254,7 +2253,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="GÃ¼nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -2263,10 +2262,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton MÃ¼ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans GrÃ¼schke"
+    GermanNames(12)="Wilhelm KrÃ¼ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"

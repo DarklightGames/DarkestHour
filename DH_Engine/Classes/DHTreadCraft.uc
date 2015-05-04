@@ -1283,7 +1283,7 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once, as VSize() is very CPU intensive - Ramm
+        // VSize() is CPU intensive
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity

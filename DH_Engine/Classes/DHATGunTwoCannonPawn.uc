@@ -61,9 +61,6 @@ function bool PlaceExitingDriver()
             TryPlace = ExitPositions[i];
         }
 
-        // First, do a line check (stops us passing through things on exit)
-        // NO, skip line check, sometimes there are close objects that cause this check to fail, even when area that you are trying to place the exiting driver is clear - Ramm
-
         // Now see if we can place the player there
         if (!Driver.SetLocation(TryPlace))
         {
@@ -77,7 +74,7 @@ function bool PlaceExitingDriver()
 }
 
 // Options
-// 1: Implemented: modified PlaceExitingDriver so that it handles placing the player on exit better - Ramm
+// 1: Implemented: modified PlaceExitingDriver so that it handles placing the player on exit better
 // 2: Implemented: keep the player at his current position and send him a msg - if they are smart they can suicide to get off the gun
 //
 // This is a combination of the KDriverLeave over-rides in VehicleWeaponPawn and ROVehicleWeaponPawn

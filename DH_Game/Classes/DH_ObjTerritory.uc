@@ -478,7 +478,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             {
                 P = ROVehicleWeaponPawn(C.Pawn);
 
-                // This check might be a little redundant, since we do it in the next line - Ramm
+                // This check is redundant
                 if (P == none || !bVehiclesCanCapture)
                 {
                     continue;

@@ -42,8 +42,6 @@ simulated function PostBeginPlay()
     CurrentFuzeTime = default.FuzeLength;
 }
 
-// A couple of hacks to prevent the grenades getting stuck unable to fire when the PutWeaponAway state gets interrupted on the ROPawn
-// Remove these if we ever rip out and redo that system or come up with a better fix - Ramm
 function ServerCheckPawnCanFire()
 {
     if (ROPawn(Instigator) != none && !ROPawn(Instigator).bPreventWeaponFire)
@@ -189,7 +187,7 @@ simulated function bool StartFire(int Mode)
     return true;
 }
 
-// Modified to handle fuze & so after firing the player either brings up another weapon (if still has another) or switches to a new weapon 
+// Modified to handle fuze & so after firing the player either brings up another weapon (if still has another) or switches to a new weapon
 simulated function PostFire()
 {
     bPrimed = false;

@@ -6,12 +6,6 @@
 class DH_C96Fire extends DHFastAutoFire;
 
 /* =================================================================================== *
-* FireLoop
-*   This state handles looping the firing animations and ambient fire sounds as well
-*   as firing rounds.
-*
-* modified by: Ramm 1/17/05
-*
 * Overridden here to allow semi auto fire sound handling for a fastauto weapon class
 * This is an extremely messy and inefficient way of doing this, however it works - Ch!cken
 * =================================================================================== */
