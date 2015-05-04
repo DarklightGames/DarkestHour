@@ -5,7 +5,7 @@
 
 class DH_MP40Weapon extends DHAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Mp40_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Mp40_1st.ukx
 
 defaultproperties
 {
@@ -39,7 +39,7 @@ defaultproperties
     BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_MP40Attachment'
     ItemName="Maschinenpistole 40"
-    Mesh=SkeletalMesh'Axis_Mp40_1st.mp40-mesh'
+    Mesh=SkeletalMesh'DH_Mp40_1st.mp40-mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
