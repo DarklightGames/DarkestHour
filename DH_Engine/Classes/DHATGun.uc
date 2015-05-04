@@ -74,16 +74,10 @@ function KDriverEnter(Pawn P)
     }
 }
 
+// Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
 {
-    // Only need these effects client side
-    // Reworked from the original code in ROTreadCraft to drop evaluations
-    if (Level.NetMode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
-    {
-        SoundVolume = default.SoundVolume;
-    }
-
-    super(ROWheeledVehicle).Tick(DeltaTime);
+    Disable('Tick');
 }
 
 // Modified to remove restriction on entering while crouched, to allow human to kick bot off a gun, & to remove stuff not relevant to an AT gun
@@ -212,30 +206,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-exec function DamageTank()
-{
-    Health /= 2;
 }
 
 defaultproperties
 {
     bNetNotify=false // AT gun doesn't use PostNetReceive() as has engine on/off, damaged tracks & hull fires all all irrelevant it
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
-    UFrontArmorFactor=0.8
-    URightArmorFactor=0.8
-    ULeftArmorFactor=0.8
-    URearArmorFactor=0.8
     PointValue=2.0
-    TreadVelocityScale=0.0
-    FrontLeftAngle=302.0
-    FrontRightAngle=58.0
-    RearRightAngle=122.0
-    RearLeftAngle=238.0
-    IdleRPM=0.0
-    EngineRPMSoundRange=0.0
-    bSpecialTankTurning=false
-    ViewShakeRadius=100.0
-    ViewShakeOffsetFreq=1.0
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationHealth=-1000000000.0
@@ -243,23 +220,15 @@ defaultproperties
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
     DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
     bMustBeTankCommander=false
-    VehicleHudEngineX=0.0
-    VehicleHudEngineY=0.0
-    EngineHealth=1
     bMultiPosition=false
     TouchMessage="Use the "
     VehicleMass=5.0
-    VehicleNameString="AT-Gun"
-    RanOverDamageType=none
-    CrushedDamageType=none
-    RanOverSound=none
-    StolenAnnouncement=
+    VehicleNameString="AT gun"
     MaxDesireability=1.9
-    WaterDamage=0.0
-    VehicleDrowningDamType=none
     bSpecialHUD=false
     CollisionRadius=75.0
     CollisionHeight=100.0
+    MinBrakeFriction=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
