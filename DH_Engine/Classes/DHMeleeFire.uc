@@ -6,6 +6,9 @@
 class DHMeleeFire extends ROMeleeFire
     abstract;
 
+var protected float         BehindDamageFactor; // Damage factor for when meleeing player is behind another
+var protected float         RearAngleArc; // Angle in UU angles for a player's rear (used to calculate rear melee hits)
+
 const SoundRadius = 32.0;
 
 function DoTrace(vector Start, rotator Dir)
@@ -19,6 +22,7 @@ function DoTrace(vector Start, rotator Dir)
     local array<int> DamageHitPoint;
     local float scale;
     local int i;
+    local rotator RotationDifference;
     local vector TempVec;
     local vector X, Y, Z;
 
@@ -106,15 +110,32 @@ function DoTrace(vector Start, rotator Dir)
     if (Other != none && Other != Instigator && Other.Base != Instigator)
     {
         scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime); // result 0 to 1
+        RotationDifference = Normalize(Other.Rotation) - Normalize(Instigator.Rotation);
 
         if (Weapon.bBayonetMounted)
         {
-            Damage = BayonetDamageMin + scale * (BayonetDamageMax - BayonetDamageMin);
+            if (abs(RotationDifference.Yaw) <= RearAngleArc)
+            {
+                Damage = BayonetDamageMin * BehindDamageFactor + scale * (BayonetDamageMax - BayonetDamageMin);
+            }
+            else
+            {
+                Damage = BayonetDamageMin + scale * (BayonetDamageMax - BayonetDamageMin);
+            }
+
             ThisDamageType = BayonetDamageType;
         }
         else
         {
-            Damage = DamageMin + scale * (DamageMax - DamageMin);
+            if (abs(RotationDifference.Yaw) <= RearAngleArc)
+            {
+                Damage = DamageMin * BehindDamageFactor + scale * (DamageMax - DamageMin);
+            }
+            else
+            {
+                Damage = DamageMin + scale * (DamageMax - DamageMin);
+            }
+
             ThisDamageType = DamageType;
         }
 
@@ -132,7 +153,14 @@ function DoTrace(vector Start, rotator Dir)
             {
                  if (!HitPawn.bDeleteMe)
                  {
-                    DamageHitPoint[0] = HitPoints[HitPawn.GetHighestDamageHitIndex(HitPoints)];
+                    if (HitPoints.Length > 0)
+                    {
+                        DamageHitPoint[0] = HitPoints[HitPawn.GetHighestDamageHitIndex(HitPoints)];
+                    }
+                    else
+                    {
+                        DamageHitPoint[0] = 0;
+                    }
 
                     HitPawn.ProcessLocationalDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, ThisDamageType, DamageHitPoint);
 
@@ -188,6 +216,9 @@ function DoTrace(vector Start, rotator Dir)
 
 defaultproperties
 {
+    BehindDamageFactor=3.0
+    RearAngleArc=16000.0
+
     DamageMin=20
     DamageMax=33
     BayonetDamageMin=30
