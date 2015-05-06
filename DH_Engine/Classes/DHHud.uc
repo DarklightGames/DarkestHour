@@ -156,22 +156,32 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
 }
 
-// This is potentially called from 5 different functions, as GameReplicationInfo isn't replicating until after PostNetBeginPlay
+// New function to set colours for allied team, depending on whether US, British or Canadian
 simulated function SetAlliedColour()
 {
     if (DHGRI != none)
     {
-        if (bSimpleColours || DHGRI.AlliedNationID == 1)
+        if (DHGRI.AlliedNationID == 1 || bSimpleColours) // Britain (or player is using the special colour-blindness setting)
         {
-            CaptureBarTeamColors[1].R = 64;
-            CaptureBarTeamColors[1].G = 80;
-            CaptureBarTeamColors[1].B = 230;
+            if (bSimpleColours) // black!
+            {
+               CaptureBarTeamColors[0].R = 0;
+               CaptureBarTeamColors[0].G = 0;
+               CaptureBarTeamColors[0].B = 0;
+            }
+            else
+            {
+                CaptureBarTeamColors[1].R = 64;
+                CaptureBarTeamColors[1].G = 80;
+                CaptureBarTeamColors[1].B = 230;
+            }
+
             SideColors[1].R = 64;
             SideColors[1].G = 140;
             SideColors[1].B = 190;
             AlliedNationID = 1;
         }
-        else if (DHGRI.AlliedNationID == 2)
+        else if (DHGRI.AlliedNationID == 2) // Canada
         {
             CaptureBarTeamColors[1].R = 210;
             CaptureBarTeamColors[1].G = 190;
@@ -181,18 +191,11 @@ simulated function SetAlliedColour()
             SideColors[1].B = 20;
             AlliedNationID = 2;
         }
-        else
+        else // USA
         {
             CaptureBarTeamColors[1] = default.CaptureBarTeamColors[1];
             SideColors[1] = default.SideColors[1];
             AlliedNationID = default.AlliedNationID;
-        }
-
-        if (bSimpleColours) // black!
-        {
-           CaptureBarTeamColors[0].R = 0;
-           CaptureBarTeamColors[0].G = 0;
-           CaptureBarTeamColors[0].B = 0;
         }
 
         Scoreboard.bActorShadows = bSimpleColours; // filthy hack to cheat our way around messed up class hierarchy
@@ -224,9 +227,9 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
         return;
     }
 
-    PlayerDist = VSize(P.Location - PlayerOwner.Pawn.Location);
+    PlayerDist = VSizeSquared(P.Location - PlayerOwner.Pawn.Location);
 
-    if (PlayerDist > 1600.0)
+    if (PlayerDist > 2560000) // was 1600.0 but now using VSizeSquared for efficient processing (equals 26.5 metres)
     {
         return;
     }
@@ -240,18 +243,17 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     if (PRI.Team != none)
     {
-        C.DrawColor = GetTeamColour(PRI.Team.TeamIndex);
+        C.DrawColor = SideColors[PRI.Team.TeamIndex];
     }
     else
     {
-        C.DrawColor = GetTeamColour(0);
+        C.DrawColor = SideColors[0];
     }
 
     C.Font = GetPlayerNameFont(C);
     C.StrLen(PRI.PlayerName, XL, YL);
     C.SetPos(ScreenLocX - 0.5 * XL, ScreenLocY - YL);
     C.DrawText(PRI.PlayerName, true);
-
     C.SetPos(ScreenLocX, ScreenLocY);
 }
 
@@ -321,11 +323,6 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
         }
     }
 
-    if (!bSetColour)
-    {
-        SetAlliedColour();
-    }
-
     TextMessages[i].Text = M;
     TextMessages[i].MessageLife = Level.TimeSeconds + MessageClass.default.LifeTime;
     TextMessages[i].TextColor = MessageClass.static.GetDHConsoleColor(PRI, AlliedNationID, bSimpleColours);
@@ -342,27 +339,19 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
         return;
     }
 
-    if (!bSetColour)
-    {
-        SetAlliedColour();
-    }
-
     if (Killer != none && Killer != Victim)
     {
         O.KillerName = Killer.PlayerName;
-        O.KillerColor = GetTeamColour(Killer.Team.TeamIndex);
+        O.KillerColor = SideColors[Killer.Team.TeamIndex];
     }
 
     O.VictimName = Victim.PlayerName;
-    O.VictimColor = GetTeamColour(Victim.Team.TeamIndex);
+    O.VictimColor = SideColors[Victim.Team.TeamIndex];
     O.DamageType = DamageType;
     O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
 
     // Making the player's name show up in white in the kill list
-    if (PlayerOwner != none &&
-        Killer != none &&
-        PlayerOwner.PlayerReplicationInfo != none &&
-        PlayerOwner.PlayerReplicationInfo.PlayerName == Killer.PlayerName)
+    if (PlayerOwner != none && Killer != none && PlayerOwner.PlayerReplicationInfo != none && PlayerOwner.PlayerReplicationInfo.PlayerName == Killer.PlayerName)
     {
         O.KillerColor = WhiteColor;
     }
@@ -386,7 +375,7 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
         // Figure what width to use to break the string at
         InitialXL = Message.DX;
 
-        // Matt: replaced by line below to use max width specified in ROCriticalMessage subclass
+        // Modified line to use max width specified in ROCriticalMessage subclass
         TempXL = Min(InitialXL, C.SizeX * class<ROCriticalMessage>(Message.Message).default.maxMessageWidth);
 
         if (TempXL < Message.DY * 8.0) // only wrap if we have enough text
@@ -399,7 +388,7 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
             Lines.Length = 0;
             C.WrapStringToArray(Message.StringMessage, Lines, TempXL);
             InitialNumLines = Lines.Length;
-            Message.DX = TempXL; // Matt: added to fix problem, so Message.DX is always set, even for the 1st pass
+            Message.DX = TempXL; // added to fix bug, so Message.DX is always set, even for the 1st pass
 
             for (i = 0; i < 20; ++i)
             {
@@ -411,7 +400,7 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
                 {
                     // If we're getting more than InitialNumLines Lines, it means we should use the previously calculated width
                     Lines.Length = 0;
-                    C.WrapStringToArray(Message.StringMessage, Lines, Message.DX); // Matt: was sometimes going wrong here, as Message.DX hadn't been set before the 1st pass
+                    C.WrapStringToArray(Message.StringMessage, Lines, Message.DX);
 
                     // Save strings to message array + calculate resulting XL/YL
                     MessageExtra.Lines.Length = Lines.Length;
@@ -437,16 +426,6 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
             }
         }
     }
-}
-
-function color GetTeamColour(byte Team)
-{
-    if (!bSetColour)
-    {
-        SetAlliedColour();
-    }
-
-    return SideColors[Team];
 }
 
 static function font GetPlayerNameFont(Canvas C)
@@ -502,18 +481,14 @@ static function font GetPlayerNameFont(Canvas C)
     return LoadFontStatic(Min(8, FontSize));
 }
 
+// Modified to set a reference to the DHGRI, as soon as we can (can't do it in a BeginPlay event as net client won't yet have received GRI)
 simulated event PostRender(canvas Canvas)
 {
-    if (!bSetColour)
-    {
-        SetAlliedColour();
-    }
-
-    // Important assignment to DHGRI if it hasn't been set
-    // Many function in DHHud use this DHGRI, so each function doesn't have to assign it, we can assign it just once here
-    if (DHGRI == none)
+    if (DHGRI == none && PlayerOwner != none)
     {
         DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+        SetAlliedColour(); // try to set this as soon as we may have DHGRI
     }
 
     super.PostRender(Canvas);
@@ -523,48 +498,35 @@ simulated event PostRender(canvas Canvas)
 // Modified to add mantling icon - PsYcH0_Ch!cKeN
 simulated function DrawHudPassC(Canvas C)
 {
-    local VoiceChatRoom         VCR;
-    local ROPawn                ROP;
-    local float                 Y, XL, YL, Alpha;
-    local string                s;
-    local color                 MyColor;
-    local AbsoluteCoordsInfo    Coords;
-    local ROWeapon              MyWeapon;
+    local VoiceChatRoom      VCR;
+    local float              Y, XL, YL, Alpha;
+    local string             s;
+    local color              MyColor;
+    local AbsoluteCoordsInfo Coords;
+    local ROWeapon           MyWeapon;
 
-    // Set coordinates to use whole screen
-    Coords.Width = C.ClipX; Coords.Height = C.ClipY;
-
-    if (PawnOwner != none)
-    {
-        ROP = ROPawn(PawnOwner);
-    }
-    else
-    {
-        return;
-    }
-
-    if (DHGRI == none)
+    if (PawnOwner == none)
     {
         return;
     }
 
     // Don't draw the healthfigure when in a vehicle
-    if (bShowPersonalInfo && ROP != none)
+    if (bShowPersonalInfo && ROPawn(PawnOwner) != none)
     {
         DrawSpriteWidget(C, HealthFigureBackground);
         DrawSpriteWidget(C, HealthFigureStamina);
         DrawSpriteWidget(C, HealthFigure);
         DrawSpriteWidget(C, StanceIcon);
-        DrawLocationHits(C, ROP);
+        DrawLocationHits(C, ROPawn(PawnOwner));
     }
 
     // Show MG deploy icon if the weapon can be deployed
-    if (PawnOwner != none && PawnOwner.bCanBipodDeploy)
+    if (PawnOwner.bCanBipodDeploy)
     {
         DrawSpriteWidget(C, MGDeployIcon);
     }
 
-    if (PawnOwner != none && DHPawn(PawnOwner) != none)
+    if (DHPawn(PawnOwner) != none)
     {
         if (DHPawn(PawnOwner).bCanMantle)
         {
@@ -578,20 +540,17 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // Draw the icon for weapon resting
-    if (PawnOwner != none)
+    if (PawnOwner.bRestingWeapon)
     {
-        if (PawnOwner.bRestingWeapon)
-        {
-            DrawSpriteWidget(C, WeaponRestingIcon);
-        }
-        else if (PawnOwner.bCanRestWeapon)
-        {
-            DrawSpriteWidget(C, WeaponCanRestIcon);
-        }
+        DrawSpriteWidget(C, WeaponRestingIcon);
+    }
+    else if (PawnOwner.bCanRestWeapon)
+    {
+        DrawSpriteWidget(C, WeaponCanRestIcon);
     }
 
     // Resupply icon
-    if (PawnOwner != none && PawnOwner.bTouchingResupply)
+    if (PawnOwner.bTouchingResupply)
     {
         if (Vehicle(PawnOwner) != none)
         {
@@ -618,42 +577,47 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // Show weapon info
-    if (bShowWeaponInfo && PawnOwner != none && PawnOwner.Weapon != none && AmmoIcon.WidgetTexture != none)
+    if (bShowWeaponInfo && PawnOwner.Weapon != none)
     {
-        MyWeapon = ROWeapon(PawnOwner.Weapon);
-
-        if (MyWeapon != none)
+        if (AmmoIcon.WidgetTexture != none)
         {
-            if (MyWeapon.bWaitingToBolt || MyWeapon.AmmoAmount(0) <= 0)
-            {
-                AmmoIcon.Tints[TeamIndex] = WeaponReloadingColor;
-                AmmoCount.Tints[TeamIndex] = WeaponReloadingColor;
-                AutoFireIcon.Tints[TeamIndex] = WeaponReloadingColor;
-                SemiFireIcon.Tints[TeamIndex] = WeaponReloadingColor;
-            }
-            else
-            {
-                AmmoIcon.Tints[TeamIndex] = default.AmmoIcon.Tints[TeamIndex];
-                AmmoCount.Tints[TeamIndex] = default.AmmoCount.Tints[TeamIndex];
-                AutoFireIcon.Tints[TeamIndex] = default.AutoFireIcon.Tints[TeamIndex];
-                SemiFireIcon.Tints[TeamIndex] = default.SemiFireIcon.Tints[TeamIndex];
-            }
+            MyWeapon = ROWeapon(PawnOwner.Weapon);
 
-            DrawSpriteWidget(C, AmmoIcon);
-            DrawNumericWidget(C, AmmoCount, Digits);
-
-            if (MyWeapon.bHasSelectFire)
+            if (MyWeapon != none)
             {
-                if (MyWeapon.UsingAutoFire())
+                if (MyWeapon.bWaitingToBolt || MyWeapon.AmmoAmount(0) <= 0)
                 {
-                    DrawSpriteWidget(C, AutoFireIcon);
+                    AmmoIcon.Tints[TeamIndex] = WeaponReloadingColor;
+                    AmmoCount.Tints[TeamIndex] = WeaponReloadingColor;
+                    AutoFireIcon.Tints[TeamIndex] = WeaponReloadingColor;
+                    SemiFireIcon.Tints[TeamIndex] = WeaponReloadingColor;
                 }
                 else
                 {
-                    DrawSpriteWidget(C, SemiFireIcon);
+                    AmmoIcon.Tints[TeamIndex] = default.AmmoIcon.Tints[TeamIndex];
+                    AmmoCount.Tints[TeamIndex] = default.AmmoCount.Tints[TeamIndex];
+                    AutoFireIcon.Tints[TeamIndex] = default.AutoFireIcon.Tints[TeamIndex];
+                    SemiFireIcon.Tints[TeamIndex] = default.SemiFireIcon.Tints[TeamIndex];
+                }
+
+                DrawSpriteWidget(C, AmmoIcon);
+                DrawNumericWidget(C, AmmoCount, Digits);
+
+                if (MyWeapon.bHasSelectFire)
+                {
+                    if (MyWeapon.UsingAutoFire())
+                    {
+                        DrawSpriteWidget(C, AutoFireIcon);
+                    }
+                    else
+                    {
+                        DrawSpriteWidget(C, SemiFireIcon);
+                    }
                 }
             }
         }
+
+        MyWeapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
     }
 
     DrawCaptureBar(C);
@@ -705,6 +669,9 @@ simulated function DrawHudPassC(Canvas C)
             YL = 0.0;
             Y  = 0.0;
 
+            // Set coordinates to use whole screen
+            Coords.Width = C.ClipX; Coords.Height = C.ClipY;
+
             if (bShowMapUpdatedText)
             {
                 // Check width & height of text label
@@ -740,7 +707,7 @@ simulated function DrawHudPassC(Canvas C)
 
     DrawPlayerNames(C);
 
-    if ((Level.NetMode == NM_Standalone || DHGRI.bAllowNetDebug) && bShowRelevancyDebugOverlay)
+    if (bShowRelevancyDebugOverlay && (Level.NetMode == NM_Standalone || (DHGRI != none && DHGRI.bAllowNetDebug)))
     {
         DrawNetworkActors(C);
     }
@@ -841,14 +808,9 @@ simulated function DrawHudPassC(Canvas C)
             PortraitText[1].Tints[TeamIndex] = PortraitText[0].Tints[TeamIndex];
             DrawTextWidgetClipped(C, PortraitText[1], Coords);
 
-            //Draw the voice icon
+            // Draw the voice icon
             DrawVoiceIcon(C, PortraitPRI);
         }
-    }
-
-    if (bShowWeaponInfo && PawnOwner != none && PawnOwner.Weapon != none)
-    {
-        PawnOwner.Weapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
     }
 
     // Slow, for debugging only
@@ -1093,7 +1055,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         VehicleAltAmmoIcon.WidgetTexture = Cannon.hudAltAmmoIcon;
                         DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
-                        // Draw coaxial gun reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
+                        // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
                         if (DHTankCannonPawn(Passenger) != none)
                         {
                             ProportionOfReloadRemaining = DHTankCannonPawn(Passenger).GetAltAmmoReloadState();
@@ -1141,7 +1103,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleMGAmmoIcon.WidgetTexture = VehWeapon.hudAltAmmoIcon;
             DrawSpriteWidget(Canvas, VehicleMGAmmoIcon);
 
-            // Draw reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
+            // Draw reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
             if (DHMountedTankMGPawn(Passenger) != none)
             {
                 ProportionOfReloadRemaining = Passenger.GetAmmoReloadState();
@@ -1355,13 +1317,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
         else
         {
-            if (i - 1 >= Vehicle.WeaponPawns.Length)
+            if (i - 1 >= Vehicle.WeaponPawns.Length) // if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
             {
-                // Matt: added to replace lines above - if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
                 break;
             }
-            // Matt: added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
-            else if (Vehicle.WeaponPawns[i - 1] == none)
+            else if (Vehicle.WeaponPawns[i - 1] == none) // added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
@@ -1439,7 +1399,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         VehicleOccupantsText.OffsetY += ModifiedVehicleOccupantsTextYOffset;
         Canvas.Font = GetSmallMenuFont(Canvas);
 
-        for (i = Lines.Length - 1; i >= 0 ; --i)
+        for (i = Lines.Length - 1; i >= 0; --i)
         {
             VehicleOccupantsText.Text = Lines[i];
             DrawTextWidgetClipped(Canvas, VehicleOccupantsText, Coords2, XL, YL, Y_one);
@@ -1463,11 +1423,6 @@ function DrawPlayerNames(Canvas C)
     if (PawnOwner == none || PawnOwner.Controller == none)
     {
         return;
-    }
-
-    if (!bSetColour)
-    {
-        SetAlliedColour();
     }
 
     ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0);
@@ -1592,7 +1547,7 @@ function DrawPlayerNames(Canvas C)
                     C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
                 }
 
-                C.DrawColor = GetTeamColour(NamedPlayer.PlayerReplicationInfo.Team.TeamIndex);
+                C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
                 C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
             }
             // Or if we don't have a player name but have resupply text, then just draw that (must be an unmanned mortar that can be resupplied)
@@ -1746,11 +1701,6 @@ simulated function DrawObjectives(Canvas C)
     local DHPawn        DHP;
     local DHRoleInfo    RI;
 
-    if (PlayerOwner.Pawn != none)
-    {
-        DHP = DHPawn(PlayerOwner.Pawn);
-    }
-
     // Avoid access none if DHGRI isn't set yet
     if (DHGRI == none)
     {
@@ -1774,7 +1724,7 @@ simulated function DrawObjectives(Canvas C)
     PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
     // Get Role info
-    if (PRI.RoleInfo != none)
+    if (PRI != none && PRI.RoleInfo != none)
     {
         RI = DHRoleInfo(PRI.RoleInfo);
     }
@@ -1854,6 +1804,7 @@ simulated function DrawObjectives(Canvas C)
 
     // Draw level map overlay
     MapLevelOverlay.WidgetTexture = Material'DH_GUI_Tex.GUI.GridOverlay';
+
     if( MapLevelOverlay.WidgetTexture != none )
     {
         DrawSpriteWidgetClipped(C, MapLevelOverlay, subCoords, true);
@@ -2117,7 +2068,7 @@ simulated function DrawObjectives(Canvas C)
         }
 
         // Draw player-carried Artillery radio icons if player is an artillery officer
-        if (PRI.RoleInfo != none && RI != none && RI.bIsArtilleryOfficer)
+        if (RI != none && RI.bIsArtilleryOfficer)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
             {
@@ -2722,12 +2673,9 @@ simulated function DrawLocationHits(Canvas C, ROPawn P)
 
 simulated function UpdateHud()
 {
-    local ROGameReplicationInfo GRI;
-    local Weapon                W;
-    local byte                  Nation;
-    local ROPawn                P;
-
-    GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+    local ROPawn P;
+    local Weapon W;
+    local byte   Nation;
 
     if (PawnOwnerPRI != none)
     {
@@ -2757,9 +2705,9 @@ simulated function UpdateHud()
             }
         }
 
-        if (PawnOwnerPRI.Team != none && GRI != none)
+        if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
         {
-            Nation = GRI.NationIndex[PawnOwnerPRI.Team.TeamIndex];
+            Nation = PlayerOwner.GameReplicationInfo.NationIndex[PawnOwnerPRI.Team.TeamIndex];
             HealthFigure.WidgetTexture = NationHealthFigures[Nation];
             HealthFigureBackground.WidgetTexture = NationHealthFiguresBackground[Nation];
 
@@ -3003,28 +2951,18 @@ function DisplayMessages(Canvas C)
 
 simulated function DrawCaptureBar(Canvas Canvas)
 {
-    local DHPawn                P;
-    local ROVehicle             Veh;
-    local ROVehicleWeaponPawn   WpnPwn;
+    local DHPawn              P;
+    local ROVehicle           Veh;
+    local ROVehicleWeaponPawn WpnPwn;
     local int    Team;
     local byte   CurrentCapArea, CurrentCapProgress, CurrentCapAxisCappers, CurrentCapAlliesCappers, CurrentCapRequiredCappers;
     local float  AxisProgress, AlliesProgress, AttackersProgress, AttackersRatio, DefendersProgress, DefendersRatio, XL, YL, YPos;
     local string s;
 
-    if (!bSetColour)
-    {
-        SetAlliedColour();
-    }
-
     bDrawingCaptureBar = false;
 
-    // Don't draw if we have no associated pawn!
-    if (PawnOwner == none)
-    {
-        return;
-    }
-
-    if (DHGRI == none)
+    // Don't draw if we have no associated pawn or DHGRI
+    if (PawnOwner == none || DHGRI == none)
     {
         return;
     }
@@ -3035,12 +2973,12 @@ simulated function DrawCaptureBar(Canvas Canvas)
     if (P != none)
     {
         CurrentCapArea = P.CurrentCapArea;
-        CurrentCapProgress = P.CurrentCapProgress;
-        CurrentCapAxisCappers = P.CurrentCapAxisCappers;
-        CurrentCapAlliesCappers = P.CurrentCapAlliesCappers;
-        if (CurrentCapArea != 255 && DHGRI.DHObjectives[CurrentCapArea] != none)
+
+        if (CurrentCapArea != 255)
         {
-            CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+            CurrentCapProgress = P.CurrentCapProgress;
+            CurrentCapAxisCappers = P.CurrentCapAxisCappers;
+            CurrentCapAlliesCappers = P.CurrentCapAlliesCappers;
         }
     }
     else
@@ -3051,12 +2989,12 @@ simulated function DrawCaptureBar(Canvas Canvas)
         if (Veh != none)
         {
             CurrentCapArea = Veh.CurrentCapArea;
-            CurrentCapProgress = Veh.CurrentCapProgress;
-            CurrentCapAxisCappers = Veh.CurrentCapAxisCappers;
-            CurrentCapAlliesCappers = Veh.CurrentCapAlliesCappers;
-            if (CurrentCapArea != 255 && DHGRI.DHObjectives[CurrentCapArea] != none)
+
+            if (CurrentCapArea != 255)
             {
-                CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+                CurrentCapProgress = Veh.CurrentCapProgress;
+                CurrentCapAxisCappers = Veh.CurrentCapAxisCappers;
+                CurrentCapAlliesCappers = Veh.CurrentCapAlliesCappers;
             }
         }
         else
@@ -3067,12 +3005,12 @@ simulated function DrawCaptureBar(Canvas Canvas)
             if (WpnPwn != none)
             {
                 CurrentCapArea = WpnPwn.CurrentCapArea;
-                CurrentCapProgress = WpnPwn.CurrentCapProgress;
-                CurrentCapAxisCappers = WpnPwn.CurrentCapAxisCappers;
-                CurrentCapAlliesCappers = WpnPwn.CurrentCapAlliesCappers;
-                if (CurrentCapArea != 255 && DHGRI.DHObjectives[CurrentCapArea] != none)
+
+                if (CurrentCapArea != 255)
                 {
-                    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+                    CurrentCapProgress = WpnPwn.CurrentCapProgress;
+                    CurrentCapAxisCappers = WpnPwn.CurrentCapAxisCappers;
+                    CurrentCapAlliesCappers = WpnPwn.CurrentCapAlliesCappers;
                 }
             }
             else
@@ -3083,8 +3021,8 @@ simulated function DrawCaptureBar(Canvas Canvas)
         }
     }
 
-    // Don't render if we're not in a capture zone
-    if (CurrentCapArea == 255)
+    // Don't render if we're not in a valid capture zone
+    if (CurrentCapArea >= arraycount(DHGRI.DHObjectives) || DHGRI.DHObjectives[CurrentCapArea] == none)
     {
         return;
     }
@@ -3235,6 +3173,8 @@ simulated function DrawCaptureBar(Canvas Canvas)
     YPos = Canvas.ClipY * CaptureBarBackground.PosY - (CaptureBarBackground.TextureCoords.Y2 + 1.0 + 4.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
     s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
 
+    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+    
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
     {
@@ -3274,8 +3214,8 @@ simulated function DrawCaptureBar(Canvas Canvas)
 // Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
 simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GRI, int CurrentObj)
 {
-    local  int    i, Count;
     local  float  NewY;
+    local  int    Count, i;
 
     // Do not update label coords if it's disabled in the objective
     if (DHGRI.DHObjectives[CurrentObj].bDoNotUseLabelShiftingOnSituationMap)
@@ -3295,7 +3235,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
 
     for (i = 0; i < CurrentObj; ++i)
     {
-        if (DHGRI.DHObjectives[i] == none) // Matt: added to avoid spamming "accessed none" errors
+        if (DHGRI.DHObjectives[i] == none) // added to avoid spamming "accessed none" errors
         {
             continue;
         }
@@ -3329,7 +3269,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
     DHGRI.DHObjectives[CurrentObj].LabelCoords = LabelCoords;
 }
 
-// Matt: modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
+// Modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
 // When player is in a vehicle these functions do nothing to the HUD, but they can be used to add useful custom functionality to vehicles, especially as keys are -/+ by default
 exec function GrowHUD()
 {
@@ -3389,20 +3329,11 @@ exec function ShrinkHUD()
 simulated function DrawSpectatingHud(Canvas C)
 {
     local DHPlayerReplicationInfo PRI;
-    local float Time, strX, strY, X, Y, Scale;
+    local DHSpawnPoint            SP;
+    local DHPlayer                PC;
+    local class<Vehicle>          SVC;
+    local float  Scale, Time, X, Y, strX, strY, NameWidth, SmallH, XL;
     local string S;
-    local DHPlayer PC;
-    local float SmallH, NameWidth;
-    local float XL;
-    local DHSpawnPoint SP;
-    local class<Vehicle> SVC;
-
-    // Draw fade effects
-    C.Style = ERenderStyle.STY_Alpha;
-
-    DrawFadeEffect(C);
-
-    scale = C.ClipX / 1600.0;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3411,9 +3342,15 @@ simulated function DrawSpectatingHud(Canvas C)
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     }
 
+    Scale = C.ClipX / 1600.0;
+
+    // Draw fade effects
+    C.Style = ERenderStyle.STY_Alpha;
+    DrawFadeEffect(C);
+
     if (DHGRI != none)
     {
-        // Update round timer
+        // Update & draw round timer
         if (!DHGRI.bMatchHasBegun)
         {
             CurrentTime = DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime;
@@ -3425,8 +3362,8 @@ simulated function DrawSpectatingHud(Canvas C)
 
         S = default.TimeRemainingText $ GetTimeString(CurrentTime);
 
-        X = 8 * Scale;
-        Y = 8 * Scale;
+        X = 8.0 * Scale;
+        Y = 8.0 * Scale;
 
         C.DrawColor = WhiteColor;
         C.Font = GetConsoleFont(C);
@@ -3436,19 +3373,19 @@ simulated function DrawSpectatingHud(Canvas C)
 
         S = "";
 
+        // Draw deploy text
         if (PRI == none || PRI.Team == none || PRI.bIsSpectator)
         {
             // Press ESC to join a team
             S = default.RedeployText[4];
         }
-        else if (DHGRI.bMatchHasBegun &&
-                 DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
+        else if (DHGRI.bMatchHasBegun && DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            Time = Max(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0);
+            Time = FMax(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0.0);
 
             if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
             {
-                //You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
+                // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
                 S = default.RedeployText[1];
                 S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
                 S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
@@ -3459,12 +3396,12 @@ simulated function DrawSpectatingHud(Canvas C)
 
                 if (SP != none)
                 {
-                    //You will deploy as a {0} at {1} in {2} | Press ESC to change
+                    // You will deploy as a {0} at {1} in {2} | Press ESC to change
                     S = Repl(default.RedeployText[0], "{1}", SP.SpawnPointName);
                 }
                 else
                 {
-                    //Press ESC to select a spawn point
+                    // Press ESC to select a spawn point
                     S = default.RedeployText[3];
                 }
             }
@@ -3474,18 +3411,18 @@ simulated function DrawSpectatingHud(Canvas C)
 
                 if (SVC != none)
                 {
-                    //You will deploy as a {0} at a {1} in {2} | Press ESC to change
+                    // You will deploy as a {0} at a {1} in {2} | Press ESC to change
                     S = Repl(default.RedeployText[5], "{1}", SVC.default.VehicleNameString);
                 }
                 else
                 {
-                    //Press ESC to select a spawn point
+                    // Press ESC to select a spawn point
                     S = default.RedeployText[3];
                 }
             }
             else
             {
-                //Press ESC to select a spawn point
+                // Press ESC to select a spawn point
                 S = default.RedeployText[3];
             }
 
@@ -3501,24 +3438,23 @@ simulated function DrawSpectatingHud(Canvas C)
             S = Repl(S, "{2}", GetTimeString(Time));
         }
 
-        Y += 4 * scale + strY;
-
+        Y += 4.0 * Scale + strY;
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
     }
 
+    // Draw player's name
     if (PlayerOwner.ViewTarget != PlayerOwner.Pawn && PawnOwner != none && PawnOwner.PlayerReplicationInfo != none)
     {
         S = ViewingText $ PawnOwner.PlayerReplicationInfo.PlayerName;
-
         C.DrawColor = WhiteColor;
         C.Font = GetConsoleFont(C);
         C.TextSize(S, strX, strY);
-        C.SetPos(C.ClipX / 2 - strX / 2, C.ClipY - 8 * scale - strY);
+        C.SetPos(C.ClipX / 2.0 - strX / 2.0, C.ClipY - 8.0 * Scale - strY);
         C.DrawTextClipped(S);
     }
 
-    // Rough spectate hud stuff. TODO: Refine this so its not so plane
+    // Rough spectate hud stuff // TODO: refine this so its not so plain
     if (PC != none)
     {
         S = PC.GetSpecModeDescription();
@@ -3529,7 +3465,7 @@ simulated function DrawSpectatingHud(Canvas C)
         Y = C.ClipY * 0.1;
 
         C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2, Y  - strY);
+        C.SetPos(X - strX / 2.0, Y  - strY);
         C.DrawTextClipped(S);
 
         // Draw line 1
@@ -3540,73 +3476,76 @@ simulated function DrawSpectatingHud(Canvas C)
         Y = C.ClipY * 0.9;
 
         C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2, Y  - strY);
+        C.SetPos(X - strX / 2.0, Y  - strY);
         C.DrawTextClipped(S);
 
         // Draw line 2
         S = SpectateInstructionText2;
         X = C.ClipX * 0.5;
-        Y += strY + (3 * scale);
+        Y += strY + (3.0 * Scale);
 
         C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2, Y  - strY);
+        C.SetPos(X - strX / 2.0, Y  - strY);
         C.DrawTextClipped(S);
 
         // Draw line 3
         S = SpectateInstructionText3;
         X = C.ClipX * 0.5;
-        Y += strY + (3 * scale);
+        Y += strY + (3.0 * Scale);
 
         C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2, Y  - strY);
+        C.SetPos(X - strX / 2.0, Y  - strY);
         C.DrawTextClipped(S);
 
         // Draw line 4
         S = SpectateInstructionText4;
         X = C.ClipX * 0.5;
-        Y += strY + (3 * scale);
+        Y += strY + (3.0 * Scale);
 
         C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2, Y  - strY);
+        C.SetPos(X - strX / 2.0, Y  - strY);
         C.DrawTextClipped(S);
     }
 
-    // Draw the players name large if thier are viewing someone else in first person
-    if ((PawnOwner != none) && (PawnOwner != PlayerOwner.Pawn)
-        && (PawnOwner.PlayerReplicationInfo != none) && !PlayerOwner.bBehindView)
+    // Draw the players name large if they are viewing someone else in first person
+    if (PawnOwner != none && PawnOwner != PlayerOwner.Pawn && PawnOwner.PlayerReplicationInfo != none && !PlayerOwner.bBehindView)
     {
-        // draw viewed player name
         C.Font = GetMediumFontFor(C);
-        C.SetDrawColor(255,255,0,255);
-        C.StrLen(PawnOwner.PlayerReplicationInfo.PlayerName,NameWidth,SmallH);
+        C.SetDrawColor(255, 255, 0, 255);
+        C.StrLen(PawnOwner.PlayerReplicationInfo.PlayerName, NameWidth, SmallH);
         NameWidth = FMax(NameWidth, 0.15 * C.ClipX);
-        if (C.ClipX >= 640)
+
+        if (C.ClipX >= 640.0)
         {
             C.Font = GetConsoleFont(C);
-            C.StrLen("W",XL,SmallH);
-            C.SetPos(79*C.ClipX/80 - NameWidth,C.ClipY * 0.68);
-            C.DrawText(NowViewing,false);
+            C.StrLen("W" ,XL, SmallH);
+            C.SetPos(79 * C.ClipX / 80 - NameWidth, C.ClipY * 0.68);
+            C.DrawText(NowViewing, false);
         }
 
         C.Font = GetMediumFontFor(C);
-        C.SetPos(79*C.ClipX/80 - NameWidth,C.ClipY * 0.68 + SmallH);
-        C.DrawText(PawnOwner.PlayerReplicationInfo.PlayerName,false);
+        C.SetPos(79.0 * C.ClipX / 80.0 - NameWidth, C.ClipY * 0.68 + SmallH);
+        C.DrawText(PawnOwner.PlayerReplicationInfo.PlayerName, false);
     }
 
     // Draw hints
     if (bDrawHint)
+    {
         DrawHint(C);
+    }
 
+    // Update & draw screen messages
     DisplayLocalMessages(C);
 }
 
 // Modified to make objective title's smaller on the overview
-function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget icon, float myMapScale, vector location, vector MapCenter, optional int flashMode, optional string title, optional ROGameReplicationInfo GRI, optional int objective_index)
+function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Icon, float MyMapScale, vector Location, vector MapCenter,
+    optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int Objective_index)
 {
-    local vector HUDLocation;
-    local float XL, YL, YL_one, OldFontXScale, OldFontYScale;
-    local SpriteWidget myIcon;
-    local FloatBox label_coords;
+    local SpriteWidget MyIcon;
+    local FloatBox     Label_coords;
+    local vector       HUDLocation;
+    local float        XL, YL, YL_one, OldFontXScale, OldFontYScale;
 
     if (DHGRI == none)
     {
@@ -3614,54 +3553,61 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
     }
 
     // Calculate proper position
-    HUDLocation = location - MapCenter;
-    HUDLocation.Z = 0;
+    HUDLocation = Location - MapCenter;
+    HUDLocation.Z = 0.0;
     HUDLocation = GetAdjustedHudLocation(HUDLocation);
 
-    myIcon = icon;
-
-    myIcon.PosX = HUDLocation.X / myMapScale + 0.5;
-    myIcon.PosY = HUDLocation.Y / myMapScale + 0.5;
+    MyIcon = Icon;
+    MyIcon.PosX = HUDLocation.X / MyMapScale + 0.5;
+    MyIcon.PosY = HUDLocation.Y / MyMapScale + 0.5;
 
     // Bound the values between 0 and 1
-    myIcon.PosX = fmax(0.0, fmin(1.0, myIcon.PosX));
-    myIcon.PosY = fmax(0.0, fmin(1.0, myIcon.PosY));
+    MyIcon.PosX = FMax(0.0, FMin(1.0, MyIcon.PosX));
+    MyIcon.PosY = FMax(0.0, FMin(1.0, MyIcon.PosY));
 
     // Set flashing texture if needed
-
-    if (flashMode != 0)
+    if (FlashMode != 0)
     {
-        if (flashMode == 2)
-            myIcon.WidgetTexture = MapIconsFlash;
-        else if (flashMode == 3)
-            myIcon.WidgetTexture = MapIconsFastFlash;
-        else if (flashMode == 4)
-            myIcon.WidgetTexture = MapIconsAltFlash;
-        else if (flashMode == 5)
-            myIcon.WidgetTexture = MapIconsAltFastFlash;
-
-        //else if (flashMode == 1)
-        //  myIcon.WidgetTexture = icon.WidgetTexture; // not needed
+//      if (FlashMode == 1)
+//      {
+//          MyIcon.WidgetTexture = icon.WidgetTexture; // not needed
+//      }
+        if (FlashMode == 2)
+        {
+            MyIcon.WidgetTexture = MapIconsFlash;
+        }
+        else if (FlashMode == 3)
+        {
+            MyIcon.WidgetTexture = MapIconsFastFlash;
+        }
+        else if (FlashMode == 4)
+        {
+            MyIcon.WidgetTexture = MapIconsAltFlash;
+        }
+        else if (FlashMode == 5)
+        {
+            MyIcon.WidgetTexture = MapIconsAltFastFlash;
+        }
     }
 
-    // Draw icon!
-    DrawSpriteWidgetClipped(C, myIcon, levelCoords, true, XL, YL, true);
+    // Draw icon
+    DrawSpriteWidgetClipped(C, MyIcon, LevelCoords, true, XL, YL, true);
 
-    if (title != "" && !DHGRI.DHObjectives[objective_index].bDoNotDisplayTitleOnSituationMap)
+    if (Title != "" && !DHGRI.DHObjectives[objective_index].bDoNotDisplayTitleOnSituationMap)
     {
         // Setup text info
-        MapTexts.text = title;
-        MapTexts.PosX = myIcon.PosX;
-        MapTexts.PosY = myIcon.PosY;
-        MapTexts.Tints[TeamIndex].A = myIcon.Tints[TeamIndex].A;
+        MapTexts.text = Title;
+        MapTexts.PosX = MyIcon.PosX;
+        MapTexts.PosY = MyIcon.PosY;
+        MapTexts.Tints[TeamIndex].A = MyIcon.Tints[TeamIndex].A;
         MapTexts.OffsetY = YL * 0.3;
 
         // Fake render to get desired label pos
-        DrawTextWidgetClipped(C, MapTexts, levelCoords, XL, YL, YL_one, true);
+        DrawTextWidgetClipped(C, MapTexts, LevelCoords, XL, YL, YL_one, true);
 
         // Update objective floatbox info with desired coords
-        label_coords.X1 = levelCoords.width * MapTexts.PosX - XL/2;
-        label_coords.Y1 = levelCoords.height * MapTexts.PosY;
+        label_coords.X1 = LevelCoords.width * MapTexts.PosX - XL / 2.0;
+        label_coords.Y1 = LevelCoords.height * MapTexts.PosY;
         label_coords.X2 = label_coords.X1 + XL;
         label_coords.Y2 = label_coords.Y1 + YL;
 
@@ -3678,8 +3624,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
         C.FontScaleY = 0.66;
 
         // Draw text
-        DrawTextWidgetClipped(C, MapTexts, levelCoords);
-
+        DrawTextWidgetClipped(C, MapTexts, LevelCoords);
         C.FontScaleX = OldFontXScale;
         C.FontScaleY = OldFontYScale;
     }
@@ -3688,43 +3633,45 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
 // Modified to make fade to black work with lower hud opacity values
 simulated function DrawFadeToBlack(Canvas Canvas)
 {
-    local float alpha;
+    local float Alpha;
 
-    if (FadeToBlackTime ~= 0)
-        alpha = 0.0;
-    else
-        alpha = (FadeToBlackTime - Level.TimeSeconds + FadeToBlackStartTime) / FadeToBlackTime;
-
-    if (alpha <= 0)
-        alpha = 0.0;
-    else if (alpha > 1)
-        alpha = 1.0;
-
-    if (!bFadeToBlackInvert)
-        alpha = 1.0 - alpha;
-
-    if (alpha ~= 0)
+    if (FadeToBlackTime ~= 0.0)
     {
-        bFadeToBlack = false;
-        return;
+        Alpha = 0.0;
+    }
+    else
+    {
+        Alpha = FClamp((FadeToBlackTime - Level.TimeSeconds + FadeToBlackStartTime) / FadeToBlackTime, 0.0, 1.0); // clamp between 0 & 1
     }
 
-    Canvas.SetPos(0, 0);
-    Canvas.Style = ERenderStyle.STY_Alpha;
-    Canvas.DrawColor = BlackColor;
-    Canvas.DrawColor.A = alpha * 255;
-    Canvas.ColorModulate.W = 1.0;
-    Canvas.DrawTile(texture'Engine.WhiteTexture', Canvas.ClipX, Canvas.ClipY, 0, 0, 4, 4);
-    Canvas.ColorModulate.W = HudOpacity/255;
+    if (!bFadeToBlackInvert)
+    {
+        Alpha = 1.0 - Alpha;
+    }
+
+    if (Alpha ~= 0)
+    {
+        bFadeToBlack = false;
+    }
+    else
+    {
+        Canvas.SetPos(0.0, 0.0);
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.DrawColor = BlackColor;
+        Canvas.DrawColor.A = Alpha * 255;
+        Canvas.ColorModulate.W = 1.0;
+        Canvas.DrawTile(texture'Engine.WhiteTexture', Canvas.ClipX, Canvas.ClipY, 0.0, 0.0, 4.0, 4.0);
+        Canvas.ColorModulate.W = HudOpacity / 255.0;
+    }
 }
 
 // Draw objective information on the G15 LCD
 // Modified in case this function is ever used
 simulated function DrawLCDObjectives(Canvas C, GUIController GC)
 {
-    local int i, objCount, row;
+    local int    ObjCount, Row, i;
     local string s;
-    local bool bHasSecondaryObjectives;
+    local bool   bHasSecondaryObjectives;
 
     if (DHGRI == none)
     {
@@ -3732,29 +3679,26 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
     }
 
     // Draw objective texts
-    objCount = 1;
+    ObjCount = 1;
 
     GC.LCDCls();
 
     // See if there are any secondary objectives
-    for (i = 0; i < ArrayCount(DHGRI.DHObjectives); i++)
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
-        if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive )
-            continue;
-
-        if( !DHGRI.DHObjectives[i].bRequired )
+        if (DHGRI.DHObjectives[i] != none && DHGRI.DHObjectives[i].bActive && !DHGRI.DHObjectives[i].bRequired)
         {
-            bHasSecondaryObjectives=true;
+            bHasSecondaryObjectives = true;
             break;
         }
     }
 
-    if( LCDPage == 0 || !bHasSecondaryObjectives )
+    if (LCDPage == 0 || !bHasSecondaryObjectives)
     {
-        GC.LCDDrawText(MapRequiredObjectivesTitle.text$" Status:",0,0, GC.LCDTinyFont);
-        row++;
+        GC.LCDDrawText(MapRequiredObjectivesTitle.text @ "Status:", 0, 0, GC.LCDTinyFont);
+        Row++;
 
-        for (i = 0; i < ArrayCount(DHGRI.DHObjectives); i++)
+        for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
         {
             if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || !DHGRI.DHObjectives[i].bRequired)
                 continue;
@@ -3763,82 +3707,89 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
             {
                 if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                 {
-                    s = objCount $ "." $ "Allies"$"-" $ "Under Attack" ;
+                    s = ObjCount $ "." $ "Allies" $ "-" $ "under attack";
                 }
                 else
                 {
-                    s = objCount $ "." $ "Allies"$"-" $ "Captured" ;
+                    s = ObjCount $ "." $ "Allies" $ "-" $ "captured";
                 }
             }
             else if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
             {
                 if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                 {
-                    s = objCount $ "." $ "Axis"$"-" $ "Under Attack" ;
+                    s = ObjCount $ "." $ "Axis" $ "-" $ "under attack";
                 }
                 else
                 {
-                    s = objCount $ "." $ "Axis"$"-" $ "Captured" ;
+                    s = ObjCount $ "." $ "Axis" $ "-" $ "captured";
                 }
             }
             else
             {
-                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 )
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0)
                 {
                     if(DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                     {
                         if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
-                            s = objCount $ "." $ "Neutral"$"-" $ "Allies Attacking";
+                        {
+                            s = ObjCount $ "." $ "Neutral" $ "-" $ "allies attacking";
+                        }
                         else
-                            s = objCount $ "." $ "Neutral"$"-" $ "Axis Attacking";
+                        {
+                            s = ObjCount $ "." $ "Neutral" $ "-" $ "axis attacking";
+                        }
                     }
                     else
                     {
-                        s = objCount $ "." $ "Neutral"$"-" $ "Under Attack";
+                        s = ObjCount $ "." $ "Neutral" $ "-" $ "under attack";
                     }
                 }
                 else
                 {
-                    s = objCount $ "." $ "Neutral";
+                    s = ObjCount $ "." $ "Neutral";
                 }
             }
 
-            GC.LCDDrawText(s,0,8*row + 2, GC.LCDTinyFont);
+            GC.LCDDrawText(s, 0, 8 * Row + 2, GC.LCDTinyFont);
 
-            row++;
-            objCount++;
+            Row++;
+            ObjCount++;
         }
     }
-    if( LCDPage == 1 && bHasSecondaryObjectives )
-    {
-        GC.LCDDrawText(MapSecondaryObjectivesTitle.text$" Status:",0,0, GC.LCDTinyFont);
-        row++;
 
-        for (i = 0; i < ArrayCount(DHGRI.DHObjectives); i++)
+    if (LCDPage == 1 && bHasSecondaryObjectives)
+    {
+        GC.LCDDrawText(MapSecondaryObjectivesTitle.text @ "Status:", 0, 0, GC.LCDTinyFont);
+        Row++;
+
+        for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
         {
             if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || DHGRI.DHObjectives[i].bRequired)
+            {
                 continue;
+            }
 
             if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
             {
                 if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                 {
-                    s = objCount $ "." $ "Allies"$"-" $ "Under Attack" ;
+                    s = ObjCount $ "." $ "Allies" $ "-" $ "under attack";
                 }
                 else
                 {
-                    s = objCount $ "." $ "Allies"$"-" $ "Captured" ;
+                    s = ObjCount $ "." $ "Allies" $ "-" $ "captured";
                 }
             }
             else if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
             {
                 if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                 {
-                    s = objCount $ "." $ "Axis"$"-" $ "Under Attack" ;
+                    s = ObjCount $ "." $ "Axis" $ "-" $ "under attack";
                 }
                 else
                 {
-                    s = objCount $ "." $ "Axis"$"-" $ "Captured" ;
+                    s = ObjCount $ "." $ "Axis" $ "-" $ "captured";
                 }
             }
             else
@@ -3848,25 +3799,29 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
                     if(DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                     {
                         if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
-                            s = objCount $ "." $ "Neutral"$"-" $ "Allies Attacking";
+                        {
+                            s = ObjCount $ "." $ "Neutral" $ "-" $ "allies attacking";
+                        }
                         else
-                            s = objCount $ "." $ "Neutral"$"-" $ "Axis Attacking";
+                        {
+                            s = ObjCount $ "." $ "Neutral" $ "-" $ "axis attacking";
+                        }
                     }
                     else
                     {
-                        s = objCount $ "." $ "Neutral"$"-" $ "Under Attack";
+                        s = ObjCount $ "." $ "Neutral" $ "-" $ "under attack";
                     }
                 }
                 else
                 {
-                    s = objCount $ "." $ "Neutral";
+                    s = ObjCount $ "." $ "Neutral";
                 }
             }
 
-            GC.LCDDrawText(s,0,8*row, GC.LCDTinyFont);
+            GC.LCDDrawText(s, 0, 8 * Row, GC.LCDTinyFont);
 
-            row++;
-            objCount++;
+            Row++;
+            ObjCount++;
         }
     }
 
@@ -3883,7 +3838,7 @@ exec function ShowDebug()
 
 defaultproperties
 {
-    MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.3,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
