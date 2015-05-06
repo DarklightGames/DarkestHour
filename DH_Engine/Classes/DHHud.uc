@@ -3038,7 +3038,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CurrentCapProgress = P.CurrentCapProgress;
         CurrentCapAxisCappers = P.CurrentCapAxisCappers;
         CurrentCapAlliesCappers = P.CurrentCapAlliesCappers;
-        if (DHGRI.DHObjectives[CurrentCapArea] != none)
+        if (CurrentCapArea != 255 && DHGRI.DHObjectives[CurrentCapArea] != none)
         {
             CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
         }
@@ -3054,7 +3054,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
             CurrentCapProgress = Veh.CurrentCapProgress;
             CurrentCapAxisCappers = Veh.CurrentCapAxisCappers;
             CurrentCapAlliesCappers = Veh.CurrentCapAlliesCappers;
-            if (DHGRI.DHObjectives[CurrentCapArea] != none)
+            if (CurrentCapArea != 255 && DHGRI.DHObjectives[CurrentCapArea] != none)
             {
                 CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
             }
@@ -3070,7 +3070,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
                 CurrentCapProgress = WpnPwn.CurrentCapProgress;
                 CurrentCapAxisCappers = WpnPwn.CurrentCapAxisCappers;
                 CurrentCapAlliesCappers = WpnPwn.CurrentCapAlliesCappers;
-                if (DHGRI.DHObjectives[CurrentCapArea] != none)
+                if (CurrentCapArea != 255 && DHGRI.DHObjectives[CurrentCapArea] != none)
                 {
                     CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
                 }

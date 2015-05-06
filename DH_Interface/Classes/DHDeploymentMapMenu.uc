@@ -264,7 +264,7 @@ function PlaceObjectiveOnMap(DHObjective O, byte Index)
 {
     local float X, Y;
 
-    if (O != none && Index < arraycount(b_Objectives))
+    if (O != none && Index < arraycount(b_Objectives) && b_Objectives[Index] != none)
     {
         GetMapCoords(O.Location, X, Y, ObjSize.X, ObjSize.X);
 
@@ -767,6 +767,22 @@ defaultproperties
     b_Objectives(13)=ObjectiveButton
     b_Objectives(14)=ObjectiveButton
     b_Objectives(15)=ObjectiveButton
+    b_Objectives(16)=ObjectiveButton
+    b_Objectives(17)=ObjectiveButton
+    b_Objectives(18)=ObjectiveButton
+    b_Objectives(19)=ObjectiveButton
+    b_Objectives(20)=ObjectiveButton
+    b_Objectives(21)=ObjectiveButton
+    b_Objectives(22)=ObjectiveButton
+    b_Objectives(23)=ObjectiveButton
+    b_Objectives(24)=ObjectiveButton
+    b_Objectives(25)=ObjectiveButton
+    b_Objectives(26)=ObjectiveButton
+    b_Objectives(27)=ObjectiveButton
+    b_Objectives(28)=ObjectiveButton
+    b_Objectives(29)=ObjectiveButton
+    b_Objectives(30)=ObjectiveButton
+    b_Objectives(31)=ObjectiveButton
 
     // Reinforcement Counter
     Begin Object Class=GUILabel Name=ReinforceCounter
