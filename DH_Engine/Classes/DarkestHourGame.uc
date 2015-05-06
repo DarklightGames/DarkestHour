@@ -1551,7 +1551,7 @@ state RoundInPlay
     {
         local int i, Num[2], NumReq[2], NumObj, NumObjReq;
 
-        for (i = 0; i < ArrayCount(DHObjectives); i++)
+        for (i = 0; i < arraycount(DHObjectives); ++i)
         {
             if (DHObjectives[i] == None)
             {
@@ -1780,22 +1780,16 @@ state RoundInPlay
             {
                 for (P = Level.ControllerList; P != none; P = P.NextController)
                 {
-                    if (!P.bIsPlayer ||
-                        P.Pawn != none ||
-                        P.PlayerReplicationInfo == none ||
-                        P.PlayerReplicationInfo.Team == none ||
-                        P.PlayerReplicationInfo.Team.TeamIndex != i)
+                    if (!P.bIsPlayer || P.Pawn != none || P.PlayerReplicationInfo == none || P.PlayerReplicationInfo.Team == none || P.PlayerReplicationInfo.Team.TeamIndex != i)
                     {
                         continue;
                     }
 
-                    if (ROPlayer(P) != none &&
-                        ROPlayer(P).CanRestartPlayer())
+                    if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
                     {
                         RestartPlayer(P);
                     }
-                    else if (ROBot(P) != none &&
-                             ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
+                    else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
                     {
                         RestartPlayer(P);
                     }
@@ -1953,7 +1947,7 @@ function HandleReinforcements(Controller C)
     DHP = DHPlayer(C);
 
     // Don't subtract / calc reinforcements as the player didn't get a pawn
-    if (DHP == none && DHP.Pawn == none)
+    if (DHP == none || DHP.Pawn == none)
     {
         return;
     }
@@ -2314,7 +2308,7 @@ function ChooseWinner()
     local int i, Num[2], NumReq[2], AxisScore, AlliedScore;
     local float AxisReinforcementsPercent, AlliedReinforcementsPercent;
 
-    for (i = 0; i < ArrayCount(DHObjectives); i++)
+    for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i] == None)
         {
@@ -2424,7 +2418,7 @@ function CheckSpawnAreas()
     local ROSpawnArea Best[2];
     local bool bReqsMet, bSomeReqsMet;
 
-    for (i = 0; i < SpawnAreas.Length; i++)
+    for (i = 0; i < SpawnAreas.Length; ++i)
     {
         if (!SpawnAreas[i].bEnabled)
         {
@@ -2550,7 +2544,7 @@ function CheckTankCrewSpawnAreas()
     local ROSpawnArea Best[2];
     local bool bReqsMet, bSomeReqsMet;
 
-    for (i = 0; i < TankCrewSpawnAreas.Length; i++)
+    for (i = 0; i < TankCrewSpawnAreas.Length; ++i)
     {
         if (!TankCrewSpawnAreas[i].bEnabled)
         {
