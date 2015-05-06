@@ -156,13 +156,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
 }
 
-simulated event PostBeginPlay()
-{
-    Super.PostBeginPlay();
-
-    DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-}
-
 // This is potentially called from 5 different functions, as GameReplicationInfo isn't replicating until after PostNetBeginPlay
 simulated function SetAlliedColour()
 {
@@ -516,6 +509,13 @@ simulated event PostRender(canvas Canvas)
         SetAlliedColour();
     }
 
+    // Important assignment to DHGRI if it hasn't been set
+    // Many function in DHHud use this DHGRI, so each function doesn't have to assign it, we can assign it just once here
+    if (DHGRI == none)
+    {
+        DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+    }
+
     super.PostRender(Canvas);
 }
 
@@ -525,7 +525,6 @@ simulated function DrawHudPassC(Canvas C)
 {
     local VoiceChatRoom         VCR;
     local ROPawn                ROP;
-    local DHGameReplicationInfo GRI;
     local float                 Y, XL, YL, Alpha;
     local string                s;
     local color                 MyColor;
@@ -538,9 +537,13 @@ simulated function DrawHudPassC(Canvas C)
     if (PawnOwner != none)
     {
         ROP = ROPawn(PawnOwner);
-        GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
     }
     else
+    {
+        return;
+    }
+
+    if (DHGRI == none)
     {
         return;
     }
@@ -1748,6 +1751,7 @@ simulated function DrawObjectives(Canvas C)
         DHP = DHPawn(PlayerOwner.Pawn);
     }
 
+    // Avoid access none if DHGRI isn't set yet
     if (DHGRI == none)
     {
         return;
@@ -2999,7 +3003,6 @@ function DisplayMessages(Canvas C)
 
 simulated function DrawCaptureBar(Canvas Canvas)
 {
-    local ROGameReplicationInfo GRI;
     local DHPawn                P;
     local ROVehicle             Veh;
     local ROVehicleWeaponPawn   WpnPwn;
@@ -3017,6 +3020,11 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
     // Don't draw if we have no associated pawn!
     if (PawnOwner == none)
+    {
+        return;
+    }
+
+    if (DHGRI == none)
     {
         return;
     }
@@ -3079,14 +3087,6 @@ simulated function DrawCaptureBar(Canvas Canvas)
     if (CurrentCapArea == 255)
     {
         return;
-    }
-
-    // Get GRI
-    GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-
-    if (GRI == none)
-    {
-        return; // Can't draw without a GRI!
     }
 
     // Get current team
@@ -3388,7 +3388,6 @@ exec function ShrinkHUD()
 // Modified to show respawn time for deploy system
 simulated function DrawSpectatingHud(Canvas C)
 {
-    local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
     local float Time, strX, strY, X, Y, Scale;
     local string S;
@@ -3409,11 +3408,10 @@ simulated function DrawSpectatingHud(Canvas C)
 
     if (PC != none)
     {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     }
 
-    if (GRI != none)
+    if (DHGRI != none)
     {
         // Update round timer
         if (!DHGRI.bMatchHasBegun)
