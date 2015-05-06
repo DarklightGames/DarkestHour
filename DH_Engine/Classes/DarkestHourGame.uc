@@ -2666,6 +2666,57 @@ function CheckTankCrewSpawnAreas()
     CheckMortarmanSpawnAreas();
 }
 
+// function will spawn bots on the player
+exec function DebugSpawnBots(bool bSpawnEnemies)
+{
+    local Controller C;
+    local DHPlayer DHP;
+    local ROBot B;
+
+    //TODO Theel: Add debug mode check
+
+    // Get the player
+    for (C = Level.ControllerList; C != None; C = C.NextController)
+    {
+        if (DHPlayer(C) != none && C.bIsPlayer)
+        {
+            DHP = DHPlayer(C);
+            break;
+        }
+    }
+
+    // Spawn the bots and teleport to the player
+    for (C = Level.ControllerList; C != None; C = C.NextController)
+    {
+        if (ROBot(C) != None && ROBot(C).Pawn == none)
+        {
+            B = ROBot(C);
+
+            if (!bSpawnEnemies)
+            {
+                if (DHP.GetTeamNum() != B.GetTeamNum())
+                {
+                    continue;
+                }
+            }
+
+            DeployRestartPlayer(C, false, true);
+
+            if (B.Pawn != none && DHP.Pawn != none)
+            {
+                if (SpawnManager.TeleportPlayer(B, DHP.Pawn.Location, DHP.Pawn.Rotation))
+                {
+                    // if succesful teleport (nothing for now)
+                }
+                else
+                {
+                    B.Pawn.Suicide(); // Kill the pawn if it failed to teleport
+                }
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH
