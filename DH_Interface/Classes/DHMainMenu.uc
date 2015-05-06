@@ -155,11 +155,16 @@ function bool ButtonClick(GUIComponent Sender)
                 b_QuickPlay.Caption = ConnectingString @ "(Timeout:" @ int(TimeOutTime) $ ")";
 
                 //Destroy and re-establish link
-                MyLink.DestroyLink();
+                if (MyLink != none)
+                {
+                    MyLink.DestroyLink();
+                }
+
                 if (MyLink != none)
                 {
                     MyLink = none;
                 }
+
                 KillTimer();
                 GetQuickPlayIp();
             }

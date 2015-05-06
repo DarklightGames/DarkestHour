@@ -96,7 +96,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Initialize objective points (make hidden)
     for (i = 0; i < arraycount(b_Objectives); ++i)
     {
-        b_Objectives[i].Graphic = none;
+        if (b_Objectives[i] != none)
+        {
+            b_Objectives[i].Graphic = none;
+        }
     }
 
     // Initialize spawn room button
@@ -296,7 +299,11 @@ function bool DrawMapComponents(Canvas C)
     {
         if (GRI.DHObjectives[i] == none || !GRI.DHObjectives[i].bActive)
         {
-            b_Objectives[i].Graphic = none;
+            if (b_Objectives[i] != none)
+            {
+                b_Objectives[i].Graphic = none;
+            }
+
             continue;
         }
 
