@@ -10,6 +10,4 @@ class DH_PantherDeco_SchurzenOne extends DHVehicleDecoAttachment;
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_VehicleDecoGE_stc.Panther.schurzen01'
-    DrawType=DT_StaticMesh
-    CullDistance=80000.0
 }

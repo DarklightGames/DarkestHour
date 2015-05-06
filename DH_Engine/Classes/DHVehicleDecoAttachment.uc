@@ -6,11 +6,14 @@
 class DHVehicleDecoAttachment extends RODummyAttachment
     abstract;
 
+// Emptied out to remove auto-attachment to bone
 simulated function PostBeginPlay()
 {
 }
 
 defaultproperties
 {
+    DrawType=DT_StaticMesh
+    CullDistance=80000.0
     bDramaticLighting=true
 }

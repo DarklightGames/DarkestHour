@@ -44,7 +44,7 @@ simulated function HandlePrecache()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < ArrayCount(PrimaryWeapons); ++i)
+        for (i = 0; i < arraycount(PrimaryWeapons); ++i)
         {
             if (class<DHWeapon>(PrimaryWeapons[i].Item) != none)
             {
@@ -52,7 +52,7 @@ simulated function HandlePrecache()
             }
         }
 
-        for (i = 0; i < ArrayCount(SecondaryWeapons); ++i)
+        for (i = 0; i < arraycount(SecondaryWeapons); ++i)
         {
             if (class<DHWeapon>(SecondaryWeapons[i].Item) != none)
             {
@@ -60,7 +60,7 @@ simulated function HandlePrecache()
             }
         }
 
-        for (i = 0; i < ArrayCount(Grenades); ++i)
+        for (i = 0; i < arraycount(Grenades); ++i)
         {
             if (class<DHWeapon>(Grenades[i].Item) != none)
             {

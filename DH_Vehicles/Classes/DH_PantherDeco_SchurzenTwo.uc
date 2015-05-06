@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PantherDeco_SchurzenTwo extends DH_PantherDeco_SchurzenOne;
+class DH_PantherDeco_SchurzenTwo extends DHVehicleDecoAttachment;
 
 defaultproperties
 {
