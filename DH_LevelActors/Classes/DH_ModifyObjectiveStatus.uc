@@ -20,10 +20,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int RandomNum, i;
     local bool  NewStatus;
-    local ROTeamGame ROGame;
+    local DarkestHourGame DHGame;
     local array<int> TempObjNumsModify;
 
-    ROGame = ROTeamGame(Level.Game); //Get Game Info
+    DHGame = DarkestHourGame(Level.Game); //Get Game Info
 
     switch (HowToRandom)
     {
@@ -33,14 +33,14 @@ event Trigger(Actor Other, Pawn EventInstigator)
                 switch (HowToModify)
                 {
                     case SMT_Activate:
-                        ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(true);
+                        DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(true);
                     break;
                     case SMT_Deactivate:
-                        ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(false);
+                        DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(false);
                     break;
                     case SMT_Toggle:
-                        NewStatus = !ROGame.Objectives[ObjectivesNumsToModify[i]].bActive;
-                        ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(NewStatus);
+                        NewStatus = !DHGame.DHObjectives[ObjectivesNumsToModify[i]].bActive;
+                        DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(NewStatus);
                     break;
                 }
             }
@@ -54,14 +54,14 @@ event Trigger(Actor Other, Pawn EventInstigator)
                     switch (HowToModify)
                     {
                         case SMT_Activate:
-                            ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(true);
+                            DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(true);
                         break;
                         case SMT_Deactivate:
-                            ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(false);
+                            DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(false);
                         break;
                         case SMT_Toggle:
-                            NewStatus = !ROGame.Objectives[ObjectivesNumsToModify[i]].bActive;
-                            ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(NewStatus);
+                            NewStatus = !DHGame.DHObjectives[ObjectivesNumsToModify[i]].bActive;
+                            DHGame.DHObjectives[ObjectivesNumsToModify[i]].SetActive(NewStatus);
                         break;
                     }
                 }
@@ -80,14 +80,14 @@ event Trigger(Actor Other, Pawn EventInstigator)
                 switch (HowToModify)
                 {
                     case SMT_Activate:
-                        ROGame.Objectives[TempObjNumsModify[RandomNum]].SetActive(true);
+                        DHGame.DHObjectives[TempObjNumsModify[RandomNum]].SetActive(true);
                     break;
                     case SMT_Deactivate:
-                        ROGame.Objectives[TempObjNumsModify[RandomNum]].SetActive(false);
+                        DHGame.DHObjectives[TempObjNumsModify[RandomNum]].SetActive(false);
                     break;
                     case SMT_Toggle:
-                        NewStatus = !ROGame.Objectives[TempObjNumsModify[RandomNum]].bActive;
-                        ROGame.Objectives[TempObjNumsModify[RandomNum]].SetActive(NewStatus);
+                        NewStatus = !DHGame.DHObjectives[TempObjNumsModify[RandomNum]].bActive;
+                        DHGame.DHObjectives[TempObjNumsModify[RandomNum]].SetActive(NewStatus);
                     break;
                 }
                 //Remove the element in the array so we don't select it again

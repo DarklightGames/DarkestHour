@@ -9,6 +9,8 @@ class DHHud extends ROHud;
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
+const MAX_OBJ_ON_SIT = 12; // The maximum objectives that can be listed down the side on the situational map (not on the map itself)
+
 var(ROHud) SpriteWidget VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var(ROHud) SpriteWidget VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
 var(DHHud) SpriteWidget MapIconCarriedRadio;
@@ -24,6 +26,7 @@ var  localized string   LegendCarriedArtilleryRadioText;
 
 var  localized string   NeedReloadText;
 var  localized string   CanReloadText;
+var  localized string   AndMoreText;
 var  localized string   RedeployText[6];    //TODO: arrays are unwieldly
 
 var  globalconfig int   PlayerNameFontSize; // the size of the name you see when you mouseover a player
@@ -44,6 +47,8 @@ var  array<Obituary>    DHObituaries;
 var  const float        VOICE_ICON_DIST_MAX;
 
 var  bool               bDebugVehicleHitPoints; // show vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
+
+var  DHGameReplicationInfo DHGRI;
 
 simulated function UpdatePrecacheMaterials()
 {
@@ -151,13 +156,16 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
 }
 
+simulated event PostBeginPlay()
+{
+    Super.PostBeginPlay();
+
+    DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+}
+
 // This is potentially called from 5 different functions, as GameReplicationInfo isn't replicating until after PostNetBeginPlay
 simulated function SetAlliedColour()
 {
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-
     if (DHGRI != none)
     {
         if (bSimpleColours || DHGRI.AlliedNationID == 1)
@@ -729,7 +737,7 @@ simulated function DrawHudPassC(Canvas C)
 
     DrawPlayerNames(C);
 
-    if ((Level.NetMode == NM_Standalone || GRI.bAllowNetDebug) && bShowRelevancyDebugOverlay)
+    if ((Level.NetMode == NM_Standalone || DHGRI.bAllowNetDebug) && bShowRelevancyDebugOverlay)
     {
         DrawNetworkActors(C);
     }
@@ -1710,14 +1718,13 @@ simulated function DrawVehiclePointSphere()
 // Renders the objectives on the HUD similar to the scoreboard
 simulated function DrawObjectives(Canvas C)
 {
-    local DHGameReplicationInfo   DHGRI;
     local DHPlayerReplicationInfo PRI;
     local AbsoluteCoordsInfo      MapCoords, SubCoords;
     local SpriteWidget  Widget;
     local Actor         A;
     local DHPlayer      Player;
     local Controller    P;
-    local int           i, OwnerTeam, ObjCount, SecondaryObjCount;
+    local int           i, j, OwnerTeam, ObjCount, SecondaryObjCount;
     local bool          bShowRally, bShowArtillery, bShowResupply, bShowArtyCoords, bShowNeutralObj, bShowMGResupplyRequest, bShowHelpRequest, bShowAttackDefendRequest;
     local bool          bShowArtyStrike, bShowDestroyableItems, bShowDestroyedItems, bShowVehicleResupply, bHasSecondaryObjectives;
     local float         MyMapScale, XL, YL, YL_one, Time;
@@ -1741,24 +1748,19 @@ simulated function DrawObjectives(Canvas C)
         DHP = DHPawn(PlayerOwner.Pawn);
     }
 
-    DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-
     if (DHGRI == none)
     {
         return;
     }
 
     // Update time
-    if (DHGRI != none)
+    if (!DHGRI.bMatchHasBegun)
     {
-        if (!DHGRI.bMatchHasBegun)
-        {
-            CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
-        }
-        else
-        {
-            CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
-        }
+        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
+    }
+    else
+    {
+        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
     }
 
     // Get player
@@ -2158,13 +2160,13 @@ simulated function DrawObjectives(Canvas C)
                         Widget = MapIconHelpRequest;
                         Widget.Tints[0].A = 125;
                         Widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 1: // attack request
                     case 2: // defend request
                         bShowAttackDefendRequest = true;
-                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 3: // mg resupply requests
@@ -2225,13 +2227,13 @@ simulated function DrawObjectives(Canvas C)
                         Widget = MapIconHelpRequest;
                         Widget.Tints[0].A = 125;
                         Widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
+                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 1: // attack request
                     case 2: // defend request
                         bShowAttackDefendRequest = true;
-                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.Objectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 3: // mg resupply requests
@@ -2276,19 +2278,19 @@ simulated function DrawObjectives(Canvas C)
     }
 
     // Draw objectives
-    for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
-        if (DHGRI.Objectives[i] == none)
+        if (DHGRI.DHObjectives[i] == none)
         {
             continue;
         }
 
         // Set up icon info
-        if (DHGRI.Objectives[i].ObjState == OBJ_Axis)
+        if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
         {
             Widget = MapIconTeam[AXIS_TEAM_INDEX];
         }
-        else if (DHGRI.Objectives[i].ObjState == OBJ_Allies)
+        else if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
         {
             Widget = MapIconTeam[ALLIES_TEAM_INDEX];
         }
@@ -2297,7 +2299,7 @@ simulated function DrawObjectives(Canvas C)
             bShowNeutralObj = true;
             Widget = MapIconNeutral;
         }
-        if (!DHGRI.Objectives[i].bActive)
+        if (!DHGRI.DHObjectives[i].bActive)
         {
             Widget.Tints[0] = GrayColor;
             Widget.Tints[1] = GrayColor;
@@ -2310,30 +2312,30 @@ simulated function DrawObjectives(Canvas C)
         }
 
         // Draw flashing icon if objective is disputed
-        if (DHGRI.Objectives[i].CompressedCapProgress != 0 && DHGRI.Objectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
         {
-            if (DHGRI.Objectives[i].CompressedCapProgress == 1 || DHGRI.Objectives[i].CompressedCapProgress == 2)
+            if (DHGRI.DHObjectives[i].CompressedCapProgress == 1 || DHGRI.DHObjectives[i].CompressedCapProgress == 2)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 2, DHGRI.Objectives[i].ObjName, DHGRI, i);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 2, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
             }
-            else if (DHGRI.Objectives[i].CompressedCapProgress == 3 || DHGRI.Objectives[i].CompressedCapProgress == 4)
+            else if (DHGRI.DHObjectives[i].CompressedCapProgress == 3 || DHGRI.DHObjectives[i].CompressedCapProgress == 4)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 3, DHGRI.Objectives[i].ObjName, DHGRI, i);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 3, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
             }
             else
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 1, DHGRI.Objectives[i].ObjName, DHGRI, i);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
             }
         }
         else
         {
-            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 1, DHGRI.Objectives[i].ObjName, DHGRI, i);
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
         }
 
         // If the objective isn't completely captured, overlay a flashing icon from other team
-        if (DHGRI.Objectives[i].CompressedCapProgress != 0 && DHGRI.Objectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
         {
-            if (DHGRI.Objectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
+            if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
             {
                 Widget = MapIconDispute[ALLIES_TEAM_INDEX];
             }
@@ -2342,13 +2344,13 @@ simulated function DrawObjectives(Canvas C)
                 Widget = MapIconDispute[AXIS_TEAM_INDEX];
             }
 
-            if (DHGRI.Objectives[i].CompressedCapProgress == 1 || DHGRI.Objectives[i].CompressedCapProgress == 2)
+            if (DHGRI.DHObjectives[i].CompressedCapProgress == 1 || DHGRI.DHObjectives[i].CompressedCapProgress == 2)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 4);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 4);
             }
-            else if (DHGRI.Objectives[i].CompressedCapProgress == 3 || DHGRI.Objectives[i].CompressedCapProgress == 4)
+            else if (DHGRI.DHObjectives[i].CompressedCapProgress == 3 || DHGRI.DHObjectives[i].CompressedCapProgress == 4)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 5);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 5);
             }
         }
     }
@@ -2539,14 +2541,14 @@ simulated function DrawObjectives(Canvas C)
     GetAbsoluteCoordinatesAlt(MapCoords, MapObjectivesCoords, SubCoords);
 
     // See if there are any secondary objectives
-    for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
-        if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive)
+        if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive)
         {
             continue;
         }
 
-        if (!DHGRI.Objectives[i].bRequired)
+        if (!DHGRI.DHObjectives[i].bRequired)
         {
             bHasSecondaryObjectives = true;
             break;
@@ -2569,41 +2571,55 @@ simulated function DrawObjectives(Canvas C)
     ObjCount = 1;
     C.Font = GetSmallMenuFont(C);
 
-    for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
+    // Modified so objectives don't draw off the situational map, it will show "and more..." if there are too many active
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
-        if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive || !DHGRI.Objectives[i].bRequired)
+        if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || !DHGRI.DHObjectives[i].bRequired)
         {
             continue;
         }
 
-        if (DHGRI.Objectives[i].ObjState != OwnerTeam)
+        if (DHGRI.DHObjectives[i].ObjState != OwnerTeam)
         {
-            if (DHGRI.Objectives[i].AttackerDescription == "")
+            if (DHGRI.DHObjectives[i].AttackerDescription == "")
             {
-                MapObjectivesTexts.Text = ObjCount $ "." @ "Attack" @ DHGRI.Objectives[i].ObjName;
+                MapObjectivesTexts.Text = ObjCount $ "." @ "Attack" @ DHGRI.DHObjectives[i].ObjName;
             }
             else
             {
-                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].AttackerDescription;
+                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.DHObjectives[i].AttackerDescription;
             }
         }
         else
         {
-            if (DHGRI.Objectives[i].DefenderDescription == "")
+            if (DHGRI.DHObjectives[i].DefenderDescription == "")
             {
-                MapObjectivesTexts.Text = ObjCount $ "." @ "Defend" @ DHGRI.Objectives[i].ObjName;
+                MapObjectivesTexts.Text = ObjCount $ "." @ "Defend" @ DHGRI.DHObjectives[i].ObjName;
             }
             else
             {
-                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].DefenderDescription;
+                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.DHObjectives[i].DefenderDescription;
             }
         }
 
-        DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
-        MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
+        // Can only show so many objectives before they draw off map, so lets leave the last spot to indicate there are more...
+        if (j == MAX_OBJ_ON_SIT - 1)
+        {
+            MapObjectivesTexts.Text = AndMoreText;
+        }
+
+        // Don't draw anymore objective text as it would be off the situational map
+        if (j < MAX_OBJ_ON_SIT)
+        {
+            DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
+            MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
+            ++j;
+        }
+
         ObjCount++;
     }
 
+    // Theel: should secondary objectives even be listed (they shouldn't be important enough!)
     if (bHasSecondaryObjectives)
     {
         MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
@@ -2611,20 +2627,20 @@ simulated function DrawObjectives(Canvas C)
         MapSecondaryObjectivesTitle.OffsetY = MapObjectivesTexts.OffsetY;
         DrawTextWidgetClipped(C, MapSecondaryObjectivesTitle, SubCoords, XL, YL, YL_one);
 
-        for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
+        for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
         {
-            if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive|| DHGRI.Objectives[i].bRequired)
+            if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive|| DHGRI.DHObjectives[i].bRequired)
             {
                 continue;
             }
 
-            if (DHGRI.Objectives[i].ObjState != OwnerTeam)
+            if (DHGRI.DHObjectives[i].ObjState != OwnerTeam)
             {
-                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.Objectives[i].AttackerDescription;
+                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.DHObjectives[i].AttackerDescription;
             }
             else
             {
-                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.Objectives[i].DefenderDescription;
+                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.DHObjectives[i].DefenderDescription;
             }
 
             DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
@@ -3010,11 +3026,14 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
     if (P != none)
     {
-        CurrentCapArea = (P.CurrentCapArea & 0X0F);
+        CurrentCapArea = P.CurrentCapArea;
         CurrentCapProgress = P.CurrentCapProgress;
         CurrentCapAxisCappers = P.CurrentCapAxisCappers;
         CurrentCapAlliesCappers = P.CurrentCapAlliesCappers;
-        CurrentCapRequiredCappers = (P.CurrentCapArea >> 4);
+        if (DHGRI.DHObjectives[CurrentCapArea] != none)
+        {
+            CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+        }
     }
     else
     {
@@ -3023,11 +3042,14 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
         if (Veh != none)
         {
-            CurrentCapArea = (Veh.CurrentCapArea & 0X0F);
+            CurrentCapArea = Veh.CurrentCapArea;
             CurrentCapProgress = Veh.CurrentCapProgress;
             CurrentCapAxisCappers = Veh.CurrentCapAxisCappers;
             CurrentCapAlliesCappers = Veh.CurrentCapAlliesCappers;
-            CurrentCapRequiredCappers = (Veh.CurrentCapArea >> 4);
+            if (DHGRI.DHObjectives[CurrentCapArea] != none)
+            {
+                CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+            }
         }
         else
         {
@@ -3036,11 +3058,14 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
             if (WpnPwn != none)
             {
-                CurrentCapArea = (WpnPwn.CurrentCapArea & 0X0F);
+                CurrentCapArea = WpnPwn.CurrentCapArea;
                 CurrentCapProgress = WpnPwn.CurrentCapProgress;
                 CurrentCapAxisCappers = WpnPwn.CurrentCapAxisCappers;
                 CurrentCapAlliesCappers = WpnPwn.CurrentCapAlliesCappers;
-                CurrentCapRequiredCappers = (WpnPwn.CurrentCapArea >> 4);
+                if (DHGRI.DHObjectives[CurrentCapArea] != none)
+                {
+                    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+                }
             }
             else
             {
@@ -3051,7 +3076,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     }
 
     // Don't render if we're not in a capture zone
-    if (CurrentCapArea == 15 && CurrentCapRequiredCappers == 15)
+    if (CurrentCapArea == 255)
     {
         return;
     }
@@ -3077,12 +3102,12 @@ simulated function DrawCaptureBar(Canvas Canvas)
     // Get cap progress on a 0-1 scale for each team
     if (CurrentCapProgress == 0)
     {
-        if (GRI.Objectives[CurrentCapArea].ObjState == NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[CurrentCapArea].ObjState == NEUTRAL_TEAM_INDEX)
         {
             AlliesProgress = 0.0;
             AxisProgress = 0.0;
         }
-        else if (GRI.Objectives[CurrentCapArea].ObjState == AXIS_TEAM_INDEX)
+        else if (DHGRI.DHObjectives[CurrentCapArea].ObjState == AXIS_TEAM_INDEX)
         {
             AlliesProgress = 0.0;
             AxisProgress = 1.0;
@@ -3097,7 +3122,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AlliesProgress = Float(CurrentCapProgress - 100) / 100.0;
 
-        if (GRI.Objectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
         {
             AxisProgress = 1.0 - AlliesProgress;
         }
@@ -3106,7 +3131,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AxisProgress = Float(CurrentCapProgress) / 100.0;
 
-        if (GRI.Objectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
         {
             AlliesProgress = 1.0 - AxisProgress;
         }
@@ -3208,13 +3233,13 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
     // Draw the objective name
     YPos = Canvas.ClipY * CaptureBarBackground.PosY - (CaptureBarBackground.TextureCoords.Y2 + 1.0 + 4.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
-    s = GRI.Objectives[CurrentCapArea].ObjName;
+    s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
 
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
     {
         // Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers
-        if (Team == 0 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
+        if (Team == 0 && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
         {
             if (CurrentCapAxisCappers < CurrentCapRequiredCappers)
             {
@@ -3224,7 +3249,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
             s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
         }
-        else if (Team == 1 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
+        else if (Team == 1 && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
         {
             if (CurrentCapAlliesCappers < CurrentCapRequiredCappers)
             {
@@ -3253,9 +3278,9 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
     local  float  NewY;
 
     // Do not update label coords if it's disabled in the objective
-    if (GRI.Objectives[CurrentObj].bDoNotUseLabelShiftingOnSituationMap)
+    if (DHGRI.DHObjectives[CurrentObj].bDoNotUseLabelShiftingOnSituationMap)
     {
-        GRI.Objectives[CurrentObj].LabelCoords = LabelCoords;
+        DHGRI.DHObjectives[CurrentObj].LabelCoords = LabelCoords;
 
         return;
     }
@@ -3263,26 +3288,26 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
     if (CurrentObj == 0)
     {
         // Set label position to be same as tested position
-        GRI.Objectives[0].LabelCoords = LabelCoords;
+        DHGRI.DHObjectives[0].LabelCoords = LabelCoords;
 
         return;
     }
 
     for (i = 0; i < CurrentObj; ++i)
     {
-        if (GRI.Objectives[i] == none) // Matt: added to avoid spamming "accessed none" errors
+        if (DHGRI.DHObjectives[i] == none) // Matt: added to avoid spamming "accessed none" errors
         {
             continue;
         }
 
         // Check if there's overlap in the X axis
-        if (!(LabelCoords.X2 <= GRI.Objectives[i].LabelCoords.X1 || LabelCoords.X1 >= GRI.Objectives[i].LabelCoords.X2))
+        if (!(LabelCoords.X2 <= DHGRI.DHObjectives[i].LabelCoords.X1 || LabelCoords.X1 >= DHGRI.DHObjectives[i].LabelCoords.X2))
         {
             // There's overlap! Check if there's overlap in the Y axis.
-            if (!(LabelCoords.Y2 <= GRI.Objectives[i].LabelCoords.Y1 || LabelCoords.Y1 >= GRI.Objectives[i].LabelCoords.Y2))
+            if (!(LabelCoords.Y2 <= DHGRI.DHObjectives[i].LabelCoords.Y1 || LabelCoords.Y1 >= DHGRI.DHObjectives[i].LabelCoords.Y2))
             {
                 // There's overlap on both axis: the label overlaps. Update the position of the label.
-                NewY = GRI.Objectives[i].LabelCoords.Y2 - (LabelCoords.Y2 - LabelCoords.Y1) * 0.0;
+                NewY = DHGRI.DHObjectives[i].LabelCoords.Y2 - (LabelCoords.Y2 - LabelCoords.Y1) * 0.0;
                 LabelCoords.Y2 = NewY + LabelCoords.Y2 - LabelCoords.Y1;
                 LabelCoords.Y1 = NewY;
 
@@ -3301,7 +3326,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
     }
 
     // Set new label position
-    GRI.Objectives[CurrentObj].LabelCoords = LabelCoords;
+    DHGRI.DHObjectives[CurrentObj].LabelCoords = LabelCoords;
 }
 
 // Matt: modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
@@ -3391,13 +3416,13 @@ simulated function DrawSpectatingHud(Canvas C)
     if (GRI != none)
     {
         // Update round timer
-        if (!GRI.bMatchHasBegun)
+        if (!DHGRI.bMatchHasBegun)
         {
-            CurrentTime = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+            CurrentTime = DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime;
         }
         else
         {
-            CurrentTime = GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime;
+            CurrentTime = DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime;
         }
 
         S = default.TimeRemainingText $ GetTimeString(CurrentTime);
@@ -3418,8 +3443,8 @@ simulated function DrawSpectatingHud(Canvas C)
             // Press ESC to join a team
             S = default.RedeployText[4];
         }
-        else if (GRI.bMatchHasBegun &&
-                 GRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
+        else if (DHGRI.bMatchHasBegun &&
+                 DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
             Time = Max(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0);
 
@@ -3427,12 +3452,12 @@ simulated function DrawSpectatingHud(Canvas C)
             {
                 //You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
                 S = default.RedeployText[1];
-                S = Repl(S, "{3}", GRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
-                S = Repl(S, "{1}", GRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
+                S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
+                S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
             }
             else if (PC.SpawnPointIndex != 255)
             {
-                SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
+                SP = DHGRI.GetSpawnPoint(PC.SpawnPointIndex);
 
                 if (SP != none)
                 {
@@ -3447,7 +3472,7 @@ simulated function DrawSpectatingHud(Canvas C)
             }
             else if (PC.SpawnVehicleIndex != 255)
             {
-                SVC = GRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
+                SVC = DHGRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
 
                 if (SVC != none)
                 {
@@ -3585,6 +3610,11 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
     local SpriteWidget myIcon;
     local FloatBox label_coords;
 
+    if (DHGRI == none)
+    {
+        return;
+    }
+
     // Calculate proper position
     HUDLocation = location - MapCenter;
     HUDLocation.Z = 0;
@@ -3619,7 +3649,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
     // Draw icon!
     DrawSpriteWidgetClipped(C, myIcon, levelCoords, true, XL, YL, true);
 
-    if (title != "" && !GRI.Objectives[objective_index].bDoNotDisplayTitleOnSituationMap)
+    if (title != "" && !DHGRI.DHObjectives[objective_index].bDoNotDisplayTitleOnSituationMap)
     {
         // Setup text info
         MapTexts.text = title;
@@ -3641,7 +3671,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget ic
         UpdateMapIconLabelCoords(label_coords, GRI, objective_index);
 
         // Update Y offset
-        MapTexts.OffsetY += GRI.Objectives[objective_index].LabelCoords.Y1 - label_coords.Y1;
+        MapTexts.OffsetY += DHGRI.DHObjectives[objective_index].LabelCoords.Y1 - label_coords.Y1;
 
         // Hack to make the text smaller on the overview for objectives
         OldFontXScale = C.FontScaleX;
@@ -3690,6 +3720,161 @@ simulated function DrawFadeToBlack(Canvas Canvas)
     Canvas.ColorModulate.W = HudOpacity/255;
 }
 
+// Draw objective information on the G15 LCD
+// Modified in case this function is ever used
+simulated function DrawLCDObjectives(Canvas C, GUIController GC)
+{
+    local int i, objCount, row;
+    local string s;
+    local bool bHasSecondaryObjectives;
+
+    if (DHGRI == none)
+    {
+        return;
+    }
+
+    // Draw objective texts
+    objCount = 1;
+
+    GC.LCDCls();
+
+    // See if there are any secondary objectives
+    for (i = 0; i < ArrayCount(DHGRI.DHObjectives); i++)
+    {
+        if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive )
+            continue;
+
+        if( !DHGRI.DHObjectives[i].bRequired )
+        {
+            bHasSecondaryObjectives=true;
+            break;
+        }
+    }
+
+    if( LCDPage == 0 || !bHasSecondaryObjectives )
+    {
+        GC.LCDDrawText(MapRequiredObjectivesTitle.text$" Status:",0,0, GC.LCDTinyFont);
+        row++;
+
+        for (i = 0; i < ArrayCount(DHGRI.DHObjectives); i++)
+        {
+            if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || !DHGRI.DHObjectives[i].bRequired)
+                continue;
+
+            if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
+            {
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                {
+                    s = objCount $ "." $ "Allies"$"-" $ "Under Attack" ;
+                }
+                else
+                {
+                    s = objCount $ "." $ "Allies"$"-" $ "Captured" ;
+                }
+            }
+            else if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
+            {
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                {
+                    s = objCount $ "." $ "Axis"$"-" $ "Under Attack" ;
+                }
+                else
+                {
+                    s = objCount $ "." $ "Axis"$"-" $ "Captured" ;
+                }
+            }
+            else
+            {
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 )
+                {
+                    if(DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                    {
+                        if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
+                            s = objCount $ "." $ "Neutral"$"-" $ "Allies Attacking";
+                        else
+                            s = objCount $ "." $ "Neutral"$"-" $ "Axis Attacking";
+                    }
+                    else
+                    {
+                        s = objCount $ "." $ "Neutral"$"-" $ "Under Attack";
+                    }
+                }
+                else
+                {
+                    s = objCount $ "." $ "Neutral";
+                }
+            }
+
+            GC.LCDDrawText(s,0,8*row + 2, GC.LCDTinyFont);
+
+            row++;
+            objCount++;
+        }
+    }
+    if( LCDPage == 1 && bHasSecondaryObjectives )
+    {
+        GC.LCDDrawText(MapSecondaryObjectivesTitle.text$" Status:",0,0, GC.LCDTinyFont);
+        row++;
+
+        for (i = 0; i < ArrayCount(DHGRI.DHObjectives); i++)
+        {
+            if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || DHGRI.DHObjectives[i].bRequired)
+                continue;
+
+            if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
+            {
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                {
+                    s = objCount $ "." $ "Allies"$"-" $ "Under Attack" ;
+                }
+                else
+                {
+                    s = objCount $ "." $ "Allies"$"-" $ "Captured" ;
+                }
+            }
+            else if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
+            {
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                {
+                    s = objCount $ "." $ "Axis"$"-" $ "Under Attack" ;
+                }
+                else
+                {
+                    s = objCount $ "." $ "Axis"$"-" $ "Captured" ;
+                }
+            }
+            else
+            {
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 )
+                {
+                    if(DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                    {
+                        if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
+                            s = objCount $ "." $ "Neutral"$"-" $ "Allies Attacking";
+                        else
+                            s = objCount $ "." $ "Neutral"$"-" $ "Axis Attacking";
+                    }
+                    else
+                    {
+                        s = objCount $ "." $ "Neutral"$"-" $ "Under Attack";
+                    }
+                }
+                else
+                {
+                    s = objCount $ "." $ "Neutral";
+                }
+            }
+
+            GC.LCDDrawText(s,0,8*row, GC.LCDTinyFont);
+
+            row++;
+            objCount++;
+        }
+    }
+
+    GC.LCDRepaint();
+}
+
 exec function ShowDebug()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -3697,6 +3882,7 @@ exec function ShowDebug()
         bShowDebugInfo = !bShowDebugInfo;
     }
 }
+
 defaultproperties
 {
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
@@ -3716,6 +3902,7 @@ defaultproperties
     VehicleOccupantsTextOffset=0.40
     LegendCarriedArtilleryRadioText="Artillery Radioman"
     NeedReloadText="Needs reloading"
+    AndMoreText="and more..."
     CanReloadText="Press %THROWMGAMMO% to assist reload"
     PlayerNameFontSize=4
     bShowDeathMessages=true

@@ -10,14 +10,14 @@ var()   ROSideIndex     TeamToCap;
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-    local ROTeamGame ROTeamGame;
+    local DarkestHourGame DHTeamGame;
 
-    ROTeamGame = ROTeamGame(Level.Game);
+    DHTeamGame = DarkestHourGame(Level.Game);
 
     if (TeamToCap == NEUTRAL)
-        ROTeamGame.Objectives[ObjectiveToModify].ObjState = OBJ_Neutral;
+        DHTeamGame.DHObjectives[ObjectiveToModify].ObjState = OBJ_Neutral;
     else
-        ROTeamGame.Objectives[ObjectiveToModify].ObjectiveCompleted(none, TeamToCap); //Pass the team to capture
+        DHTeamGame.DHObjectives[ObjectiveToModify].ObjectiveCompleted(none, TeamToCap); //Pass the team to capture
 }
 
 defaultproperties

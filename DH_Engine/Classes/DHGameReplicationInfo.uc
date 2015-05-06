@@ -73,6 +73,10 @@ const SPAWN_VEHICLES_MAX = 8;
 
 var SpawnVehicle        SpawnVehicles[SPAWN_VEHICLES_MAX];
 
+const OBJECTIVES_MAX = 32;
+
+var DHObjective         DHObjectives[OBJECTIVES_MAX];
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -82,7 +86,7 @@ replication
         CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
         VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
         VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
-        SpawnPointIsActives, SpawnPointsUpdateTime, SpawnVehicles, MaxTeamVehicles;
+        SpawnPointIsActives, SpawnPointsUpdateTime, SpawnVehicles, MaxTeamVehicles, DHObjectives;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;

@@ -2660,6 +2660,28 @@ event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string 
     }
 }
 
+// Modified for DHObjectives
+function vector getObjectiveLocation(int id)
+{
+    local DHGameReplicationInfo DHGRI;
+
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (DHGRI == none)
+    {
+        return vect(0,0,0);
+    }
+
+    if (DHGRI.DHObjectives[id] != none)
+    {
+        return DHGRI.DHObjectives[id].Location;
+    }
+    else
+    {
+        return vect(0,0,0);
+    }
+}
+
 defaultproperties
 {
     // Sway values

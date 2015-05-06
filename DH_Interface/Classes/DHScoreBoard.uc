@@ -144,17 +144,17 @@ simulated function UpdateScoreBoard (Canvas C)
         }
     }
 
-    for (i = 0; i < arraycount(ROGameReplicationInfo(GRI).Objectives); ++i)
+    for (i = 0; i < arraycount(DHGameReplicationInfo(GRI).DHObjectives); ++i)
     {
-        if (ROGameReplicationInfo(GRI).Objectives[i] == none)
+        if (DHGameReplicationInfo(GRI).DHObjectives[i] == none)
         {
             continue;
         }
 
         // Count up the objective types
-        if (ROGameReplicationInfo(GRI).Objectives[i].ObjState == OBJ_Axis)
+        if (DHGameReplicationInfo(GRI).DHObjectives[i].ObjState == OBJ_Axis)
         {
-            if (ROGameReplicationInfo(GRI).Objectives[i].bRequired)
+            if (DHGameReplicationInfo(GRI).DHObjectives[i].bRequired)
             {
                 AxisReqObjCount++;
             }
@@ -164,9 +164,9 @@ simulated function UpdateScoreBoard (Canvas C)
                 Axis2ndObjCount++;
             }
         }
-        else if (ROGameReplicationInfo(GRI).Objectives[i].ObjState == OBJ_Allies)
+        else if (DHGameReplicationInfo(GRI).DHObjectives[i].ObjState == OBJ_Allies)
         {
-            if (ROGameReplicationInfo(GRI).Objectives[i].bRequired)
+            if (DHGameReplicationInfo(GRI).DHObjectives[i].bRequired)
             {
                 AlliesReqObjCount++;
             }

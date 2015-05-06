@@ -5,7 +5,7 @@
 
 class DHDeploymentMapMenu extends MidGamePanel; //Does not extend DHDeployMenuPanel as it will differ from other panels quite a bit
 
-const   OBJECTIVES_MAX =                    16; // Max objectives total
+const   OBJECTIVES_MAX =                    32; // Max objectives total
 const   SPAWN_POINTS_MAX =                  16; // Max spawn points active at once
 const   SPAWN_POINTS_TOTAL =                64; // Max spawn points total (make sure this matches GRI)
 const   SPAWN_VEHICLES_TOTAL =              10; // Max spawn vehicles total (make sure this matches GRI)
@@ -24,7 +24,7 @@ var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
                                             b_SpawnVehicles[SPAWN_VEHICLES_TOTAL];
 
-var     ROObjective                         Objectives[OBJECTIVES_MAX];
+var     DHObjective                         ObjArray[OBJECTIVES_MAX];
 var     Material                            ObjectiveIcons[3];
 
 var     DHGameReplicationInfo               GRI;
@@ -257,7 +257,7 @@ function PlaceVehicleSpawnOnMap(vector Location, byte Index, int SpawnVehicleInd
     }
 }
 
-function PlaceObjectiveOnMap(ROObjective O, byte Index)
+function PlaceObjectiveOnMap(DHObjective O, byte Index)
 {
     local float X, Y;
 
@@ -266,10 +266,10 @@ function PlaceObjectiveOnMap(ROObjective O, byte Index)
         GetMapCoords(O.Location, X, Y, ObjSize.X, ObjSize.X);
 
         b_Objectives[Index].SetPosition(X, Y, ObjSize.X, ObjSize.X, true);
-        b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.Objectives[Index].ObjState)];
+        b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.DHObjectives[Index].ObjState)];
         b_Objectives[Index].Caption = O.ObjectiveName;
 
-        Objectives[Index] = O;
+        ObjArray[Index] = O;
     }
 }
 
@@ -292,15 +292,15 @@ function bool DrawMapComponents(Canvas C)
     }
 
     // Draw objectives
-    for (i = 0; i < arraycount(GRI.Objectives); ++i)
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
     {
-        if (GRI.Objectives[i] == none || !GRI.Objectives[i].bActive)
+        if (GRI.DHObjectives[i] == none || !GRI.DHObjectives[i].bActive)
         {
             b_Objectives[i].Graphic = none;
             continue;
         }
 
-        PlaceObjectiveOnMap(GRI.Objectives[i], i);
+        PlaceObjectiveOnMap(GRI.DHObjectives[i], i);
     }
 
     // Get Spawn Points for Current Team

@@ -3,16 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-
-// *********
-
-
-// Theel: This class will need deprecated once all maps are updated
-
-
-// *********
-
-class DH_ObjTerritory extends ROObjTerritory
+class DHObjective extends ROObjTerritory
     hidecategories(Assault,GameObjective,JumpDest,JumpSpot,MothershipHack)
     placeable;
 
@@ -157,12 +148,12 @@ function PostBeginPlay()
     // Add self to game objectives
     if (DarkestHourGame(Level.Game) != None)
     {
-        //DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+        DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
     }
     // Add self to game replication info objectives
     if (DHGRI != None)
     {
-        //DHGRI.DHObjectives[ObjNum] = self;
+        DHGRI.DHObjectives[ObjNum] = self;
     }
 }
 
@@ -1028,45 +1019,6 @@ function Timer()
 
     UpdateCompressedCapProgress();
 }
-
-// Modified to correctly turn off capture bars for DH objective areas
-/*
-function DisableCapBarsForThisObj()
-{
-    local Pawn apawn;
-    local ROPawn P;
-    local ROVehicle ROVeh;
-    local ROVehicleWeaponPawn VehWepPawn;
-
-    // Go through and update capture bars
-    foreach DynamicActors(class'pawn', apawn)
-    {
-        P = ROPawn(apawn);
-        ROVeh = ROVehicle(apawn);
-        VehWepPawn = ROVehicleWeaponPawn(apawn);
-
-        if ( P != none )
-        {
-            if (P.CurrentCapArea == ObjNum)
-                P.CurrentCapArea = 255;
-        }
-
-        // Disable the capture bar for rovehicles
-        if (  P == none && ROVeh != none )
-        {
-            if (ROVeh.CurrentCapArea == ObjNum)
-                ROVeh.CurrentCapArea = 255;
-        }
-
-        // Disable the capture bar for rovehiclepawns
-        if (  P == none && ROVeh == none && VehWepPawn != none)
-        {
-            if (VehWepPawn.CurrentCapArea == ObjNum)
-                VehWepPawn.CurrentCapArea = 255;
-        }
-    }
-}
-*/
 
 defaultproperties
 {

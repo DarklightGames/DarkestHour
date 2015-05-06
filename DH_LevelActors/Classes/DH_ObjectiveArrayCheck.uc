@@ -27,7 +27,7 @@ var()   bool                        bAutoStartCheck;
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int RandomNum, i;
-    local ROTeamGame ROGame;
+    local DarkestHourGame DHGame;
 
     if (bFireOnce && IsInState('Done'))
         return; //stop function because it's already done and should only fire once
@@ -39,12 +39,12 @@ event Trigger(Actor Other, Pawn EventInstigator)
             return; //stop function because it randomly failed
     }
 
-    ROGame = ROTeamGame(Level.Game); //Get Game Info
+    DHGame = DarkestHourGame(Level.Game); //Get Game Info
 
     //Check the array for the state to check for
     for (i = 0; i < ObjectivesToCheck.Length; ++i)
     {
-        if (ROGame.Objectives[ObjectivesToCheck[i]].ObjState != StateToCheckFor)
+        if (DHGame.DHObjectives[ObjectivesToCheck[i]].ObjState != StateToCheckFor)
         {
             if (EventToTriggerForFail != '')
                 TriggerEvent(EventToTriggerForFail, self, none); //Triggers the event EventToTriggerForFail
@@ -62,7 +62,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     //Go ahead and status change the objectives you want to change
     for (i = 0; i < ObjectivesToModify.Length; ++i)
     {
-        ROGame.Objectives[ObjectivesToModify[i]].SetActive(bStatusToModifyTo);
+        DHGame.DHObjectives[ObjectivesToModify[i]].SetActive(bStatusToModifyTo);
     }
 }
 
