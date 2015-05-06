@@ -245,12 +245,12 @@ function FillRoleList()
     li_Roles.SortList();
 }
 
-function ChangeDesiredRole(RORoleInfo newRole)
+function ChangeDesiredRole(RORoleInfo NewRole)
 {
     local int RoleIndex;
 
     // Don't change role if we already have correct role selected
-    if (newRole == DesiredRole && DesiredTeam != -1)
+    if (NewRole == DesiredRole && DesiredTeam != -1)
     {
         return;
     }
@@ -264,6 +264,7 @@ function ChangeDesiredRole(RORoleInfo newRole)
     else
     {
         RoleIndex = FindRoleIndexInList(newRole);
+
         if (RoleIndex != -1)
         {
             li_Roles.SetIndex(RoleIndex);
@@ -271,9 +272,9 @@ function ChangeDesiredRole(RORoleInfo newRole)
         }
     }
 
-    if (DesiredRole.bCanBeTankCrew)
+    // Selected a crew role, so lets auto-open vehicle panel
+    if (DesiredRole != none && DesiredRole.bCanBeTankCrew)
     {
-        // Selected a crew role, so lets auto-open vehicle panel
         MyDeployMenu.c_LoadoutArea.ActivateTabByPanel(MyDeployMenu.VehiclePanel, true);
     }
 }
