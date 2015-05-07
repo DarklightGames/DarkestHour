@@ -814,24 +814,7 @@ function DriverLeft()
 {
     DriverPositionIndex = InitialPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
-
-    if (IsVehicleEmpty())
-    {
-        // Set spiked vehicle timer if it's an empty, disabled vehicle
-        if (IsDisabled())
-        {
-            bSpikedVehicle = true;
-            SetTimer(VehicleSpikeTime, false);
-        }
-
-        // If vehicle is now empty & some way from its spawn point, set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
-        // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) && !bNeverReset)
-        {
-            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-        }
-    }
-
+    MaybeDestroyVehicle();
     DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
 }
 
@@ -2805,18 +2788,27 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
     }
 }
 
-// Modified to stop vehicle from prematurely destroying itself when on fire
+// Modified to stop vehicle from prematurely destroying itself when on fire & to include setting ResetTime for an empty vehicle away from its spawn (moved from DriverLeft)
 function MaybeDestroyVehicle()
 {
-    if (IsDisabled() && IsVehicleEmpty() && !bOnFire && !bEngineOnFire && !bNeverReset)
+    if (!bNeverReset && IsVehicleEmpty())
     {
-        bSpikedVehicle = true;
-        SpikeTime = Level.TimeSeconds + VehicleSpikeTime;
-        SetNextTimer();
-
-        if (bDebuggingText)
+        if (IsDisabled() && !bOnFire && !bEngineOnFire)
         {
-            Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
+            bSpikedVehicle = true;
+            SetTimer(VehicleSpikeTime, false);
+
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
+            }
+        }
+
+        // If vehicle is now empty & some way from its spawn point (> 83m or out of sight), set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
+        // Changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
+        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
+        {
+            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
         }
     }
 }

@@ -721,25 +721,33 @@ function DriverLeft()
 {
     DriverPositionIndex = InitialPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
+    MaybeDestroyVehicle();
+    DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
+}
 
-    if (IsVehicleEmpty())
+// Modified to include setting ResetTime for an empty vehicle away from its spawn (moved from DriverLeft)
+function MaybeDestroyVehicle()
+{
+    if (!bNeverReset && IsVehicleEmpty())
     {
-        // Set spiked vehicle timer if it's an empty, disabled vehicle
         if (IsDisabled())
         {
             bSpikedVehicle = true;
             SetTimer(VehicleSpikeTime, false);
+
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
+            }
         }
 
-        // If vehicle is now empty & some way from its spawn point, set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
-        // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) && !bNeverReset)
+        // If vehicle is now empty & some way from its spawn point (> 83m or out of sight), set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
+        // Changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
+        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
         {
             ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
         }
     }
-
-    DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
 }
 
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
