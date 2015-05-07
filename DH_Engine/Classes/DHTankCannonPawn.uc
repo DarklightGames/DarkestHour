@@ -1533,24 +1533,26 @@ function ServerToggleDebugExits()
     }
 }
 
-function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    local rotator NewRotation;
-    local float RotationChangeFactor;
     local DHPlayer DHP;
+    local float    RotationChangeFactor;
+    local rotator  NewRotation;
 
     DHP = DHPlayer(Controller);
-
-    RotationChangeFactor = 1.0;
 
     if (DHP != none && DriverPositionIndex == BinocPositionIndex)
     {
         RotationChangeFactor = DHP.DHScopeTurnSpeedFactor;
     }
+    else
+    {
+        RotationChangeFactor = 1.0;
+    }
 
     NewRotation = Rotation;
-    NewRotation.Yaw += 32.0 * RotationChangeFactor * deltaTime * YawChange;
-    NewRotation.Pitch += 32.0 * RotationChangeFactor * deltaTime * PitchChange;
+    NewRotation.Yaw += 32.0 * RotationChangeFactor * DeltaTime * YawChange;
+    NewRotation.Pitch += 32.0 * RotationChangeFactor * DeltaTime * PitchChange;
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
 
     SetRotation(NewRotation);
