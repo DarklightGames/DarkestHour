@@ -27,51 +27,51 @@ var     ENewHitPointType    NewHitPointType;
 
 struct NewHitpoint
 {
-    var() float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var() float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var() float             PointScale;
-    var() name              PointBone;          // bone to reference in offset
-    var() vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var() bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var() float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var() ENewHitPointType  NewHitPointType;    // what type of hit point this is
+    var   float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
+    var   float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
+    var   float             PointScale;
+    var   name              PointBone;          // bone to reference in offset
+    var   vector            PointOffset;        // amount to offset the hitpoint from the bone
+    var   bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
+    var   float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
+    var   ENewHitPointType  NewHitPointType;    // what type of hit point this is
 };
 
-var()   array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
-var()   texture     PeriscopeOverlay;
-var()   float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
-var()   float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
+var     texture     PeriscopeOverlay;
+var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
+var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
-var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
+var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-
+// Obstacle crushing
 var     bool        bCrushedAnObject;       // value set when the vehicle crushes something
 var     float       LastCrushedTime;
 var     float       ObjectCrushStallTime;
 
 // Positions
-var()   int         UnbuttonedPositionIndex;
-var()   int         FirstRiderPositionIndex;
+var     int         UnbuttonedPositionIndex;
+var     int         FirstRiderPositionIndex;
 var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
-var()   bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
-var()   bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
-var()   bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
+var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
+var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 
 // Armor penetration
 var     bool        bProjectilePenetrated; // shell has passed penetration test & has entered the hull or turret
 var     bool        bRoundShattered;       // tells projectile to show shattered round effects
 var     bool        bRearHit;              // saves rear hit in DHShouldPenetrate, so TakeDamage can tell if an engine hit should stop the round penetrating any further
 
-var()   float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
-var()   float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
+var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
+var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
 
 // Damage stuff
-var()   float       TreadDamageThreshold;    // allows for tank by tank adjustment of tread vulnerability
-var()   float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
+var     float       TreadDamageThreshold;    // allows for tank by tank adjustment of tread vulnerability
+var     float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
 var     float       DriverKillChance;        // chance that shrapnel will kill driver
 var     float       GunnerKillChance;        // chance that shrapnel will kill bow gunner
 var     texture     DamagedPeriscopeOverlay;
@@ -93,21 +93,21 @@ var     sound       DamagedStartUpSound;
 var     sound       DamagedShutDownSound;
 
 // Treads
-var()   int         LeftTreadIndex, RightTreadIndex;
-var()   rotator     LeftTreadPanDirection, RightTreadPanDirection;
+var     int         LeftTreadIndex, RightTreadIndex;
+var     rotator     LeftTreadPanDirection, RightTreadPanDirection;
 var     material    DamagedTreadPanner;
 
-var()   class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
+var     class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
 var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
 var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
-var()   name        FireAttachBone;
-var()   vector      FireEffectOffset;
-var()   float       HullFireChance;
-var()   float       HullFireHEATChance;
+var     name        FireAttachBone;
+var     vector      FireEffectOffset;
+var     float       HullFireChance;
+var     float       HullFireHEATChance;
 var     bool        bOnFire; // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
 var     float       PlayerFireDamagePer2Secs;

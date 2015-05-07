@@ -22,27 +22,27 @@ var     ECarHitPointType    CarHitPointType;
 
 struct CarHitpoint
 {
-    var() float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var() float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var() float             PointScale;
-    var() name              PointBone;          // bone to reference in offset
-    var() vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var() bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var() float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var() ECarHitPointType  CarHitPointType;    // what type of hit point this is
+    var float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
+    var float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
+    var float             PointScale;
+    var name              PointBone;          // bone to reference in offset
+    var vector            PointOffset;        // amount to offset the hitpoint from the bone
+    var bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
+    var float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
+    var ECarHitPointType  CarHitPointType;    // what type of hit point this is
 };
 
-var()   array<CarHitpoint>  CarVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     array<CarHitpoint>  CarVehHitpoints;  // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
-var     float       PointValue;             // used for scoring
+var     float       PointValue;               // used for scoring
 var     bool        bEmittersOn;
-var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
-var()   float       ObjectCollisionResistance;
-var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
-                                            // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-
-var     bool        bCrushedAnObject;       // value set when the vehicle crushes something
+var     float       DriverTraceDistSquared;   // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
+var     float       ObjectCollisionResistance;// vehicle's resistance to colliding with other actors - a higher value reduces damage more
+var     bool        bClientInitialized;       // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
+                                              // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
+// Obstacle crushing
+var     bool        bCrushedAnObject;         // value set when the vehicle crushes something
 var     float       LastCrushedTime;
 var     float       ObjectCrushStallTime;
 
@@ -53,24 +53,24 @@ var     float       IgnitionSwitchTime;       // records last time the engine wa
 var     float       IgnitionSwitchInterval;   // how frequently the engine can be manually switched on/off
 
 // New sounds & sound attachment actors
-var()   float               MaxPitchSpeed;
-var()   sound               EngineSound;
+var     float               MaxPitchSpeed;
+var     sound               EngineSound;
 var     ROSoundAttachment   EngineSoundAttach;
-var()   name                EngineSoundBone;
-var()   sound               RumbleSound; // interior rumble sound
+var     name                EngineSoundBone;
+var     sound               RumbleSound; // interior rumble sound
 var     ROSoundAttachment   InteriorRumbleSoundAttach;
-var()   name                RumbleSoundBone;
+var     name                RumbleSoundBone;
 var     sound               VehicleBurningSound;
 var     sound               DestroyedBurningSound;
 var     sound               DamagedStartUpSound;
 
 // Resupply attachments
-var()   class<RODummyAttachment>    ResupplyAttachmentClass;
+var     class<RODummyAttachment>    ResupplyAttachmentClass;
 var     RODummyAttachment           ResupplyAttachment;
-var()   name                        ResupplyAttachBone;
-var()   class<RODummyAttachment>    ResupplyDecoAttachmentClass;
+var     name                        ResupplyAttachBone;
+var     class<RODummyAttachment>    ResupplyDecoAttachmentClass;
 var     RODummyAttachment           ResupplyDecoAttachment;
-var()   name                        ResupplyDecoAttachBone;
+var     name                        ResupplyDecoAttachBone;
 
 // Debugging
 var     bool        bDebuggingText;

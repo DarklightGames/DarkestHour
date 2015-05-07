@@ -13,24 +13,24 @@ var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload 
 // Position stuff
 var     int         InitialPositionIndex;     // initial player position on entering
 var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
-var()   int         PeriscopePositionIndex;
+var     int         PeriscopePositionIndex;
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
 var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
-var()   bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 // Gunsight or periscope overlay
 var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
 var     bool        bShowRangeText;       // show current range setting text
 var     TexRotator  ScopeCenterRotator;
-var()   float       ScopeCenterScale;
-var()   int         CenterRotationFactor;
-var()   float       OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var     float       ScopeCenterScale;
+var     int         CenterRotationFactor;
+var     float       OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var     float       OverlayCenterScale;
 var     float       OverlayCenterTexStart;
 var     float       OverlayCenterTexSize;
-var()   float       OverlayCorrectionX;   // scope center correction in pixels, in case an overlay is off-center by pixel or two
-var()   float       OverlayCorrectionY;
-var()   texture     PeriscopeOverlay;
+var     float       OverlayCorrectionX;   // scope center correction in pixels, in case an overlay is off-center by pixel or two
+var     float       OverlayCorrectionY;
+var     texture     PeriscopeOverlay;
 
 // Damage modelling stuff
 var     bool        bTurretRingDamaged;
@@ -58,7 +58,7 @@ var     float       PoweredMaxRotateThreshold;
 //var   bool        bHasLightedOptics;
 
 // Debugging help
-var()   bool        bShowCenter;    // shows centering cross in tank sight for testing purposes
+var     bool        bShowCenter;    // shows centering cross in tank sight for testing purposes
 var     bool        bDebuggingText; // on screen messages if damage prevents turret or gun from moving properly
 var     bool        bDebugExitPositions;
 
@@ -597,7 +597,7 @@ simulated function PrevWeapon()
 }
 
 // Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
-// Server also plays down animation when buttoning up, if player has moving collision box
+// Also so that server plays animations if player has moving collision box
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)

@@ -8,24 +8,26 @@ class DHMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var     DHMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+// General
+var     DHMountedTankMG  MGun;                // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+var     texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
+var     name        FirstPersonGunRefBone;    // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
+var     float       FirstPersonOffsetZScale;  // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
 
-var()   int         InitialPositionIndex;     // initial player position on entering
-var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
+// Position stuff
+var     int         InitialPositionIndex;     // initial player position on entering
+var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
 var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
-var()   bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
-var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
+// Gunsight
+var     float       OverlayCenterSize;        // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var     float       OverlayCenterTexStart;
+var     float       OverlayCenterTexSize;
+var     float       OverlayCorrectionX;
+var     float       OverlayCorrectionY;
 
-var()   name        FirstPersonGunRefBone;    // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
-var()   float       FirstPersonOffsetZScale;  // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
-
-var()   float       OverlayCenterSize;        // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var()   float       OverlayCenterTexStart;
-var()   float       OverlayCenterTexSize;
-var()   float       OverlayCorrectionX;
-var()   float       OverlayCorrectionY;
-
+// Debugging help
 var     bool        bDebugExitPositions;
 
 replication

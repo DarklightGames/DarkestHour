@@ -6,7 +6,7 @@
 class DHATGunCannonPawn extends DHTankCannonPawn
     abstract;
 
-var     bool    bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
+var bool bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
 
 // Emptied out so we just use plain RO rotate/pitch sounds & ignore DHTankCannonPawn's manual/powered sounds
 simulated function SetManualTurret(bool bManual)

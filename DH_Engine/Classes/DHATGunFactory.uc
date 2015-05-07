@@ -6,12 +6,12 @@
 class DHATGunFactory extends DHVehicleFactory
     abstract;
 
-var()   bool    bUseRandomizer;            // whether or not to use the randomization system
-var     int     GunIndex;                  // the index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
-var()   string  GroupTag;                  // a tag used by the randomizer to spawn at guns by groups
-var     bool    bRandomEvaluated;          // whether or not this AT Gun Factory has been evaluated by the randomizer yet
-var     bool    bMasterFactory;            // this factory is the master gun factory
-var()   int     MaxRandomFactoriesActive;  // the maximum number of AT Gun Factories to have active at one time for a particular Group (based on the grouptag)
+var()   bool        bUseRandomizer;            // whether or not to use the randomization system
+var     int         GunIndex;                  // the index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
+var()   string      GroupTag;                  // a tag used by the randomizer to spawn at guns by groups
+var     bool        bRandomEvaluated;          // whether or not this AT Gun Factory has been evaluated by the randomizer yet
+var     bool        bMasterFactory;            // this factory is the master gun factory
+var()   int         MaxRandomFactoriesActive;  // the maximum number of AT Gun Factories to have active at one time for a particular Group (based on the grouptag)
 var     array<int> ActivatedIndexes;
 
 // Add this AT gun to the GRI

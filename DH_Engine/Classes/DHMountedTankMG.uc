@@ -8,17 +8,18 @@ class DHMountedTankMG extends ROMountedTankMG
 
 var  DHMountedTankMGPawn  MGPawn;     // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
 
-var()   class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
-var()   byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
+// Ammo & firing
+var     class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
+var     byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
 var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
 var     sound   NoAmmoSound;          // 'dry fire' sound when trying to fire empty MG
 
-// Reload stuff
+// Reloading
 var     bool    bReloading;           // this MG is currently reloading
-var()   sound   ReloadSound;          // sound of this MG reloading
+var     sound   ReloadSound;          // sound of this MG reloading
 var     float   ReloadDuration;       // time duration of reload (set automatically)
 var     float   ReloadStartTime;      // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
-var()   name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
+var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
 // Player hit detection
 var     bool    bHasGunShield;        // this MG has a gunshield that may protect the player
@@ -32,8 +33,8 @@ var DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
 // Stuff for fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HullMGFireEffect;
 var     class<VehicleDamagedEffect> FireEffectClass;
-var()   name                        FireAttachBone;
-var()   vector                      FireEffectOffset;
+var     name                        FireAttachBone;
+var     vector                      FireEffectOffset;
 
 replication
 {

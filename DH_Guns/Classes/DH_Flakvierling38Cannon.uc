@@ -19,8 +19,9 @@ var     name        ElevationWheelBone;
 
 replication
 {
-    reliable if (bNetInitial && Role == ROLE_Authority)
-        bSecondGunPairFiring; // Matt: replicate when actor replicates to net client, but after that the client should be able to keep track itself
+    // Variables the server will replicate to clients when this actor is 1st replicated
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
 }
 
 // Modified to animate sights & aiming wheels

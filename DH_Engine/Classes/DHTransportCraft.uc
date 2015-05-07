@@ -6,24 +6,24 @@
 class DHTransportCraft extends DHWheeledVehicle
     abstract;
 
-var()   float               MaxCriticalSpeed; // if vehicle goes over max speed, it forces player to pull back on throttle
+var     float               MaxCriticalSpeed; // if vehicle goes over max speed, it forces player to pull back on throttle
 
 // Tread stuff
 var     int                 LeftTreadIndex, RightTreadIndex;
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
-var()   float               TreadVelocityScale;
+var     float               TreadVelocityScale;
 var     rotator             LeftTreadPanDirection, RightTreadPanDirection;
 
 // Tread sounds
-var()   sound               LeftTreadSound, RightTreadSound; // sound for each tread squeaking
+var     sound               LeftTreadSound, RightTreadSound; // sound for each tread squeaking
 var     float               TreadSoundVolume;
 var     ROSoundAttachment   LeftTreadSoundAttach, RightTreadSoundAttach;
-var()   name                LeftTrackSoundBone, RightTrackSoundBone;
+var     name                LeftTrackSoundBone, RightTrackSoundBone;
 
 // Wheel animation
-var()   array<name>         LeftWheelBones, RightWheelBones; // for animation only - the bone names for the wheels on each side
+var     array<name>         LeftWheelBones, RightWheelBones; // for animation only - the bone names for the wheels on each side
 var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
-var()   int                 WheelRotationScale;
+var     int                 WheelRotationScale;
 
 // From DHTreadCraft & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
 simulated function SetupTreads()

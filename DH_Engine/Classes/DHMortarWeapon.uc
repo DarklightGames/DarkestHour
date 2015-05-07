@@ -6,30 +6,26 @@
 class DHMortarWeapon extends DHWeapon
     abstract;
 
+var     class<DHMortarVehicle>  VehicleClass;
+
+// Deploying
+var     bool    bDeploying;
+var     name    DeployAnimation;
+var     float   DeployRadius;
+var     float   DeployAngleMaximum;
+
+// Ammo
+var     int     HighExplosiveMaximum;
+var     int     HighExplosiveResupplyCount;
+var     int     SmokeMaximum;
+var     int     SmokeResupplyCount;
+
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerDeployEnd, ServerDeployBegin;
 }
-
-var bool bDeploying;
-
-//---------------
-//Animation names
-var name DeployAnimation;
-
-//-----------------
-//Deploy attributes
-var() float DeployRadius;
-var() float DeployAngleMaximum;
-
-var() class<DHMortarVehicle> VehicleClass;
-
-var int HighExplosiveMaximum;
-var int HighExplosiveResupplyCount;
-var int SmokeMaximum;
-var int SmokeResupplyCount;
 
 simulated function bool HasAmmo()
 {

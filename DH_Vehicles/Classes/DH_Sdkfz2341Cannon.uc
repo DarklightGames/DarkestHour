@@ -5,9 +5,9 @@
 
 class DH_Sdkfz2341Cannon extends DHTankCannon;
 
-var()   byte    NumMags; // Matt: changed all Mags variables from int to byte for more efficient replication
-var()   byte    NumSecMags;
-var()   byte    NumTertMags;
+var     byte    NumMags;         // using bytes for more efficient replication
+var     byte    NumSecMags;
+var     byte    NumTertMags;
 var     bool    bMixedMagFireAP; // flags that a mixed AP/HE mag is due to fire an AP round
 
 replication

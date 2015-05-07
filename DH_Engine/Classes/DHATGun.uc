@@ -9,9 +9,6 @@ class DHATGun extends DHTreadCraft
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
-var  DHATGunFactory     DHParentFactory;
-var  ROVehicleFactory   ROParentFactory;
-
 // The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), resupply or self-destruct if empty:
 simulated function PostNetReceive();
 function Fire(optional float F);

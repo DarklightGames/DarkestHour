@@ -6,14 +6,14 @@
 class DHMortarVehicle extends ROVehicle
     abstract;
 
-var DHPawn  OwningPawn;
-var bool    bCanBeResupplied;
-var int     PlayerResupplyAmounts[2];
-
-var bool    bEnteredOnce;
+var     DHPawn      OwningPawn;
+var     bool        bCanBeResupplied;
+var     int         PlayerResupplyAmounts[2];
+var     bool        bEnteredOnce;
 
 replication
 {
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bCanBeResupplied;
 }

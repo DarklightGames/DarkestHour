@@ -8,29 +8,28 @@ class DHMortarVehicleWeapon extends ROTankCannon;
 const RAD2DEG = 57.29577951;
 const DEG2RAD = 0.01745329;
 
-//Bones
-var name MuzzleBoneName;
+// Trajectory
+var     float           NewElevation;
+var     float           Elevation;
+var     float           ElevationMaximum;
+var     float           ElevationMinimum;
+var     float           ElevationStride;
 
-//Trajectory
-var float NewElevation;
-var float Elevation;
-var float ElevationMaximum;
-var float ElevationMinimum;
-var float ElevationStride;
+// Firing & effects
+var     name            MuzzleBoneName;
+var     float           SpreadYawMin;
+var     float           SpreadYawMax;
+var     class<Emitter>  FireEmitterClass;
+var     sound           FireSound;
 
-var class<Emitter> FireEmitterClass;
-
-var sound FireSound;
-
-var float SpreadYawMin;
-var float SpreadYawMax;
-
-var bool bDebug;
-var bool bDebugNoSpread;
-var bool bDebugCalibrate;
+// Debugging
+var     bool            bDebug;
+var     bool            bDebugNoSpread;
+var     bool            bDebugCalibrate;
 
 replication
 {
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ClientReplicateElevation;
 }

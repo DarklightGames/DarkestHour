@@ -9,57 +9,57 @@ class DHTankCannon extends ROTankCannon
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // General
-var     DHTankCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
-var()   float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
-var()   class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
-var()   byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
+var     DHTankCannonPawn    CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
+var     class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
+var     byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
 var     sound               NoMGAmmoSound;            // 'dry fire' sound when trying to fire empty coaxial MG
 
 // Variables for up to three ammo types, including shot dispersion customized by round type
-var     byte                MainAmmoChargeExtra[3];   // Matt: changed from int to byte for more efficient replication
-var()   int                 InitialTertiaryAmmo;
-var()   class<Projectile>   TertiaryProjectileClass;
+var     byte                MainAmmoChargeExtra[3];   // using byte for more efficient replication
+var     int                 InitialTertiaryAmmo;
+var     class<Projectile>   TertiaryProjectileClass;
 
-var()   bool                bUsesSecondarySpread;
-var()   float               SecondarySpread;
-var()   bool                bUsesTertiarySpread;
-var()   float               TertiarySpread;
+var     bool                bUsesSecondarySpread;
+var     float               SecondarySpread;
+var     bool                bUsesTertiarySpread;
+var     float               TertiarySpread;
 
 // Armor penetration
-var()   float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
-var()   float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
-var()   float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
+var     float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
+var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
+var     float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
-var()   bool                bHasTurret;            // this cannon is in a fully rotating turret
-var()   float               GunMantletArmorFactor; // used for mantlet hits for casemate-style vehicles without a turret
-var()   float               GunMantletSlope;
+var     bool                bHasTurret;            // this cannon is in a fully rotating turret
+var     float               GunMantletArmorFactor; // used for mantlet hits for casemate-style vehicles without a turret
+var     float               GunMantletSlope;
 
-var()   bool                bHasAddedSideArmor;    // has side skirts that will make a hit by a HEAT projectile ineffective
+var     bool                bHasAddedSideArmor;    // has side skirts that will make a hit by a HEAT projectile ineffective
 var     bool                bRoundShattered;       // tells projectile to show shattered round effects
 
 // Manual/powered turret
-var()   float               ManualRotationsPerSecond;
-var()   float               PoweredRotationsPerSecond;
+var     float               ManualRotationsPerSecond;
+var     float               PoweredRotationsPerSecond;
 
 // Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
-var()   class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var     class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
 var     DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
 // Fire effects - Ch!cKeN
 var     VehicleDamagedEffect        TurretHatchFireEffect;
 var     class<VehicleDamagedEffect> FireEffectClass;
-var()   name                        FireAttachBone;
-var()   vector                      FireEffectOffset;
-var()   float                       FireEffectScale;
+var     name                        FireAttachBone;
+var     vector                      FireEffectOffset;
+var     float                       FireEffectScale;
 
 // Debugging and calibration
-var()   bool                bDrawPenetration;
-var()   bool                bDebuggingText;
-var()   bool                bPenetrationText;
-var()   bool                bLogPenetration;
-var()   bool                bDriverDebugging;
-var()   config bool         bGunFireDebug;
-var()   config bool         bGunsightSettingMode;
+var     bool                bDrawPenetration;
+var     bool                bDebuggingText;
+var     bool                bPenetrationText;
+var     bool                bLogPenetration;
+var     bool                bDriverDebugging;
+var     config bool         bGunFireDebug;
+var     config bool         bGunsightSettingMode;
 
 replication
 {

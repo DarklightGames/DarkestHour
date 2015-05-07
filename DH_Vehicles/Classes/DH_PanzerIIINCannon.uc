@@ -5,11 +5,10 @@
 
 class DH_PanzerIIINCannon extends DHTankCannon;
 
-// Vars for canister shot:
-var    int          CSpread;     // Spread for canister shot
-var    int          ProjPerFire; // Number of projectiles to spawn on each shot
-var    bool         bLastShot;   // Prevents shoot effects playing for each projectile spawned
-
+// Canister
+var     int     CSpread;     // spread for canister shot
+var     int     ProjPerFire; // number of projectiles to spawn on each shot
+var     bool    bLastShot;   // prevents shoot effects playing for each projectile spawned
 
 state ProjectileFireMode
 {

@@ -6,70 +6,67 @@
 class DHMortarVehicleWeaponPawn extends ROTankCannonPawn
     abstract;
 
-//Animations
-var name DriverIdleAnim;
-var name DriverFiringAnim;
-var name DriverUnflinchAnim;
-
-const IdleAnimIndex = 0;
-const FiringAnimIndex = 1;
-const UnflinchAnimIndex = 2;
-
-var name OverlayIdleAnim;
-var name OverlayFiringAnim;
-var name OverlayUndeployingAnim;
-var name OverlayKnobRaisingAnim;
-var name OverlayKnobLoweringAnim;
-var name OverlayKnobIdleAnim;
-var name OverlayKnobTurnLeftAnim;
-var name OverlayKnobTurnRightAnim;
-
-//Animation rates, new in 5.0 hotfix because old animations were too slow.
-var float OverlayKnobLoweringAnimRate;
-var float OverlayKnobRaisingAnimRate;
-var float OverlayKnobTurnAnimRate;
-
-var name GunIdleAnim;
-var name GunFiringAnim;
-
-var class<DHMortarWeapon> WeaponClass;
-
-var bool bTraversing;
-
-//Elevation timing
-var float LastElevationTime;
-var float ElevationAdjustmentDelay;
-
-var texture HUDMortarTexture;
-var texture HUDHighExplosiveTexture;
-var texture HUDSmokeTexture;
-var texture HUDArcTexture;
-var TexRotator HUDArrowTexture;
-
-var byte CurrentDriverAnimation;
-var byte OldDriverAnimation;
-
-var bool    bCanUndeploy;
-var bool    bPendingFire;
-
-// View shake vars
-var         float       ShakeScale;       // how much larger than the explosion radius should the view shake
-var         float       BlurTime;         // how long blur effect should last for this projectile
-// camera shakes //
-var()       vector      ShakeRotMag;      // how far to rot view
-var()       vector      ShakeRotRate;     // how fast to rot view
-var()       float       ShakeRotTime;     // how much time to rot the instigator's view
-var()       vector      ShakeOffsetMag;   // max view offset vertically
-var()       vector      ShakeOffsetRate;  // how fast to offset view vertically
-var()       float       ShakeOffsetTime;  // how much time to offset view
-var()       float       BlurEffectScalar;
-
 struct DigitSet
 {
-    var Material DigitTexture;
-    var IntBox   TextureCoords[11];
+    var Material    DigitTexture;
+    var IntBox      TextureCoords[11];
 };
-var DigitSet Digits;
+
+var     class<DHMortarWeapon> WeaponClass;
+
+// Aim & firing
+var     bool        bPendingFire;
+var     bool        bTraversing;
+var     bool        bCanUndeploy;
+var     float       LastElevationTime;
+var     float       ElevationAdjustmentDelay;
+
+// Animations
+const   IdleAnimIndex = 0;
+const   FiringAnimIndex = 1;
+const   UnflinchAnimIndex = 2;
+
+var     name        GunIdleAnim;
+var     name        GunFiringAnim;
+var     name        DriverIdleAnim;
+var     name        DriverFiringAnim;
+var     name        DriverUnflinchAnim;
+var     byte        CurrentDriverAnimation;
+var     byte        OldDriverAnimation;
+
+// Overlay animations
+var     name        OverlayIdleAnim;
+var     name        OverlayFiringAnim;
+var     name        OverlayUndeployingAnim;
+var     name        OverlayKnobRaisingAnim;
+var     name        OverlayKnobLoweringAnim;
+var     name        OverlayKnobIdleAnim;
+var     name        OverlayKnobTurnLeftAnim;
+var     name        OverlayKnobTurnRightAnim;
+
+// Animation rates - new in 5.0 hotfix because old animations were too slow
+var     float       OverlayKnobLoweringAnimRate;
+var     float       OverlayKnobRaisingAnimRate;
+var     float       OverlayKnobTurnAnimRate;
+
+// HUD
+var     texture     HUDMortarTexture;
+var     texture     HUDHighExplosiveTexture;
+var     texture     HUDSmokeTexture;
+var     texture     HUDArcTexture;
+var     TexRotator  HUDArrowTexture;
+var     DigitSet    Digits;
+
+// View shake
+var     float       ShakeScale;       // how much larger than the explosion radius should the view shake
+var     float       BlurTime;         // how long blur effect should last for this projectile
+var     vector      ShakeRotMag;      // how far to rot view
+var     vector      ShakeRotRate;     // how fast to rot view
+var     float       ShakeRotTime;     // how much time to rot the instigator's view
+var     vector      ShakeOffsetMag;   // max view offset vertically
+var     vector      ShakeOffsetRate;  // how fast to offset view vertically
+var     float       ShakeOffsetTime;  // how much time to offset view
+var     float       BlurEffectScalar;
 
 replication
 {
