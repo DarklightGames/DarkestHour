@@ -72,7 +72,8 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerChangeDriverPos, ServerToggleDebugExits, ServerToggleDriverDebug;
+        ServerToggleDebugExits, ServerToggleDriverDebug; // only during development
+//      ServerChangeDriverPos      // Matt: removed as have deprecated
 //      ServerToggleExtraRoundType // Matt: removed as is pointless - the normal RO ServerToggleRoundType can be called; it's only the functionality in Gun.ToggleRoundType() that changes
 //      DamageCannonOverlay        // Matt: removed as isn't called by client
 
@@ -465,10 +466,13 @@ function bool TryToDrive(Pawn P)
     return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
 }
 
-// Recalls that optics are still non-functioning when players jump in and out
+// Modified to use InitialPositionIndex instead of assuming start in position zero, & to call a client function to show a damaged gunsight
 function KDriverEnter(Pawn P)
 {
     super.KDriverEnter(P);
+
+    DriverPositionIndex = InitialPositionIndex;
+    LastPositionIndex = InitialPositionIndex;
 
     if (bOpticsDamaged)
     {
@@ -489,10 +493,13 @@ simulated state EnteringVehicle
             Gun.PlayAnim(Gun.BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
-        WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
-        PlayerController(Controller).SetFOV(WeaponFOV);
-
         FPCamPos = DriverPositions[InitialPositionIndex].ViewLocation;
+        WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
+
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).SetFOV(WeaponFOV);
+        }
     }
 }
 
@@ -501,23 +508,16 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     if (bMultiPosition)
     {
-        GotoState('EnteringVehicle');
+        SavedPositionIndex = InitialPositionIndex;
         PendingPositionIndex = InitialPositionIndex;
-        ServerChangeDriverPos();
+        Gotostate('EnteringVehicle');
     }
-    else
+    else if (PC != none)
     {
-        PC.SetFOV(WeaponFOV);
+        PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
-
-    StoredVehicleRotation = VehicleBase.Rotation; // Matt: I don't think this is used anywhere & will probably remove from all functions later
 
     super(Vehicle).ClientKDriverEnter(PC);
-}
-
-function ServerChangeDriverPos()
-{
-    DriverPositionIndex = InitialPositionIndex;
 }
 
 // Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
