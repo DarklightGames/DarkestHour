@@ -614,10 +614,10 @@ simulated function DrawHudPassC(Canvas C)
                         DrawSpriteWidget(C, SemiFireIcon);
                     }
                 }
+
+                MyWeapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
             }
         }
-
-        MyWeapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
     }
 
     DrawCaptureBar(C);
