@@ -20,17 +20,17 @@ var     ECarHitPointType    CarHitPointType;
 
 struct CarHitpoint
 {
-    var() float             PointRadius;       // squared radius of the head of the pawn that is vulnerable to headshots
-    var() float             PointHeight;       // distance from base of neck to center of head - used for headshot calculation
-    var() float             PointScale;
-    var() name              PointBone;         // bone to reference in offset
-    var() vector            PointOffset;       // amount to offset the hitpoint from the bone
-    var() bool              bPenetrationPoint; // this is a penetration point, open hatch, etc
-    var() float             DamageMultiplier;  // amount to scale damage to the vehicle if this point is hit
-    var() ECarHitPointType  CarHitPointType;   // what type of hit point this is
+    var float               PointRadius;       // squared radius of the head of the pawn that is vulnerable to headshots
+    var float               PointHeight;       // distance from base of neck to center of head - used for headshot calculation
+    var float               PointScale;
+    var name                PointBone;         // bone to reference in offset
+    var vector              PointOffset;       // amount to offset the hitpoint from the bone
+    var bool                bPenetrationPoint; // this is a penetration point, open hatch, etc
+    var float               DamageMultiplier;  // amount to scale damage to the vehicle if this point is hit
+    var ECarHitPointType    CarHitPointType;   // what type of hit point this is
 };
 
-var()   array<CarHitpoint>  CarVehHitpoints;   // an array of possible small points that can be hit (index zero is always the driver)
+var     array<CarHitpoint>  CarVehHitpoints;   // an array of possible small points that can be hit (index zero is always the driver)
 
 // Empty functions that we don't need for armored cars:
 simulated function UpdateMovementSound();
