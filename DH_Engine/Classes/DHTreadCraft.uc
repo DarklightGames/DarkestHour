@@ -672,7 +672,8 @@ simulated function PrevWeapon()
     }
 }
 
-// Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
+// Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
+// Also so if player has moving collision box, server goes to state ViewTransition just to play animations
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -682,11 +683,11 @@ function ServerChangeViewPoint(bool bForward)
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
-            else if (Level.NetMode == NM_DedicatedServer && DriverPositionIndex == UnbuttonedPositionIndex)
+            else if ((DriverPositionIndex == UnbuttonedPositionIndex || bPlayerCollisionBoxMoves) && Level.NetMode == NM_DedicatedServer)
             {
                 GoToState('ViewTransition');
             }
@@ -699,9 +700,13 @@ function ServerChangeViewPoint(bool bForward)
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
+            }
+            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
+            {
+                GoToState('ViewTransition');
             }
         }
     }
