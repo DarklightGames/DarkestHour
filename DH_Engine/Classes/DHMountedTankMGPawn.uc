@@ -599,14 +599,7 @@ simulated state ViewTransition
 
             if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
             {
-                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                {
-                    PlayerController(Controller).SetFOV(WeaponFOV);
-                }
-                else
-                {
-                    PlayerController(Controller).DesiredFOV = WeaponFOV;
-                }
+                PlayerController(Controller).SetFOV(WeaponFOV);
 
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }

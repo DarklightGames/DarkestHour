@@ -924,14 +924,7 @@ simulated state ViewTransition
             // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
             if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
             {
-                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                {
-                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-                }
-                else
-                {
-                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-                }
+                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
             }
 
             // Play any transition animation for the driver
