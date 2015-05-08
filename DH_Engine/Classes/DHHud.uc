@@ -2896,10 +2896,10 @@ function DisplayMessages(Canvas C)
     {
         O = DHObituaries[i];
 
-        TimeOfDeath = O.EndOfLife - ObituaryLifeSpan;
-        FadeInBeginTime = TimeOfDeath + ObituaryDelayTime;
-        FadeInEndTime = FadeInBeginTime + ObituaryFadeInTime;
-        FadeOutBeginTime = O.EndOfLife - ObituaryFadeInTime;
+        TimeOfDeath = O.EndOfLife - default.ObituaryLifeSpan;
+        FadeInBeginTime = TimeOfDeath + default.ObituaryDelayTime;
+        FadeInEndTime = FadeInBeginTime + default.ObituaryFadeInTime;
+        FadeOutBeginTime = O.EndOfLife - default.ObituaryFadeInTime;
 
         //Death message delay and fade in - Basnett, 2011
         if (Level.TimeSeconds < FadeInBeginTime)
@@ -2911,11 +2911,11 @@ function DisplayMessages(Canvas C)
 
         if (Level.TimeSeconds > FadeInBeginTime && Level.TimeSeconds < FadeInEndTime)
         {
-            Alpha = Byte(((Level.TimeSeconds - FadeInBeginTime) / ObituaryFadeInTime) * 255.0);
+            Alpha = Byte(((Level.TimeSeconds - FadeInBeginTime) / default.ObituaryFadeInTime) * 255.0);
         }
         else if (Level.TimeSeconds > FadeOutBeginTime)
         {
-            Alpha = Byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / ObituaryFadeInTime) * 255.0)));
+            Alpha = Byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / default.ObituaryFadeInTime) * 255.0)));
         }
 
         C.TextSize(O.VictimName, XL, YL);
@@ -3174,7 +3174,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
 
     CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
-    
+
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
     {
