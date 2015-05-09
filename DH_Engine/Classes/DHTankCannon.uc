@@ -478,9 +478,9 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     if (TreadCraft != none)
     {
         TreadCraft.bProjectilePenetrated = bProjectilePenetrated;
-        TreadCraft.bWasTurretHit = bProjectilePenetrated;
-        TreadCraft.bRearHit = false;
-        TreadCraft.bWasHEATRound = P.RoundType == RT_HEAT && bProjectilePenetrated;
+        TreadCraft.bTurretPenetration = bProjectilePenetrated;
+        TreadCraft.bRearHullPenetration = false;
+        TreadCraft.bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
     }
 
     return bProjectilePenetrated;
