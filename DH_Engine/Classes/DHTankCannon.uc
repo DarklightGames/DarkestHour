@@ -110,7 +110,7 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from VehicleBase's PostNetReceive()
+// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from Vehicle's PostNetReceive()
 // Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
 {
@@ -139,7 +139,7 @@ simulated function StartTurretFire()
 }
 
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
-// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+// Crucially, we know that we have CannonPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
@@ -763,7 +763,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
-    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle so we call TD on that
+    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle itself, so we call TD on that
     else if (CannonPawn != none && CannonPawn.VehicleBase != none)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
@@ -1113,7 +1113,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
 
-    // Calculate projectile's starting location
+    // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
     if (bDoOffsetTrace)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);

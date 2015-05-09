@@ -111,7 +111,7 @@ state RangedAttack
             }
         }
 
-        // Cause bots to use thier ironsights when they do this
+        // Cause bots to use their ironsights when they do this
         if (Pawn.Weapon != none &&  DHProjectileWeapon(Pawn.Weapon) != none)
         {
             DHProjectileWeapon(Pawn.Weapon).ZoomIn(false);

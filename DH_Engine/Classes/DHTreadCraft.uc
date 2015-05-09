@@ -27,17 +27,16 @@ var     ENewHitPointType    NewHitPointType;
 
 struct NewHitpoint
 {
-    var   float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var   float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var   float             PointScale;
-    var   name              PointBone;          // bone to reference in offset
-    var   vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var   bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var   float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var   ENewHitPointType  NewHitPointType;    // what type of hit point this is
+    var   float             PointRadius;       // squared radius of the head of the pawn that is vulnerable to headshots
+    var   float             PointHeight;       // distance from base of neck to center of head - used for headshot calculation
+    var   float             PointScale;        // scale factor for radius & height
+    var   name              PointBone;         // bone to reference in offset
+    var   vector            PointOffset;       // amount to offset the hitpoint from the bone
+    var   bool              bPenetrationPoint; // this is a penetration point, open hatch, etc
+    var   float             DamageMultiplier;  // amount to scale damage to the vehicle if this point is hit
+    var   ENewHitPointType  NewHitPointType;   // what type of hit point this is
 };
-
-var     array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
 var     texture     PeriscopeOverlay;
@@ -49,54 +48,50 @@ var     bool        bEmittersOn;            // dust & exhaust emitters are activ
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
-var     bool        bCrushedAnObject;       // value set when the vehicle crushes something
-var     float       LastCrushedTime;
-var     float       ObjectCrushStallTime;
+var     bool        bCrushedAnObject;       // vehicle has just crushed something, causing temporary movement stall
+var     float       LastCrushedTime;        // records time object was crushed, so we know when the movement stall should end
+var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 
 // Positions
-var     int         UnbuttonedPositionIndex;
-var     int         FirstRiderPositionIndex;
+var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
+var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
 var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
 var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 
 // Armor penetration
-var     bool        bProjectilePenetrated; // shell has passed penetration test & has entered the hull or turret
-var     bool        bRoundShattered;       // tells projectile to show shattered round effects
-var     bool        bRearHit;              // saves rear hit in DHShouldPenetrate, so TakeDamage can tell if an engine hit should stop the round penetrating any further
-
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
 var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
+var     bool        bProjectilePenetrated;     // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
+var     bool        bWasTurretHit;             // shell has penetrated the turret (used in TakeDamage)
+var     bool        bRearHit;                  // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
+var     bool        bRoundShattered;           // tells projectile to show shattered round effects
 
-// Damage stuff
-var     float       TreadDamageThreshold;    // allows for tank by tank adjustment of tread vulnerability
-var     float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
-var     float       DriverKillChance;        // chance that shrapnel will kill driver
-var     float       GunnerKillChance;        // chance that shrapnel will kill bow gunner
-var     texture     DamagedPeriscopeOverlay;
+// Damage (allows for adjustment for indivudual vehicles in subclasses)
+var     float       AmmoIgnitionProbability;   // chance that direct hit on ammo store will ignite it
+var     float       TurretDetonationThreshold; // chance that shrapnel will detonate turret ammo
+var     float       DriverKillChance;          // chance that shrapnel will kill driver
+var     float       CommanderKillChance;       // chance that shrapnel will kill commander
+var     float       GunnerKillChance;          // chance that shrapnel will kill bow gunner
+var     float       GunDamageChance;           // chance that shrapnel will damage gun pivot mechanism
+var     float       TraverseDamageChance;      // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
+var     float       OpticsDamageChance;        // chance that shrapnel will break gunsight optics
+var     texture     DamagedPeriscopeOverlay;   // gunsight overlay to show if optics have been broken
+var     float       TreadDamageThreshold;      // minimum TreadDamageModifier in DamageType to possibly break treads
 
-// Turret damage stuff
-var     bool        bWasTurretHit;
-var     float       CommanderKillChance;
-var     float       GunDamageChance;
-var     float       TraverseDamageChance;
-var     float       OpticsDamageChance;
-var     float       TurretDetonationThreshold; // chance that turret ammo will go up
-
-// Engine stuff
-var     bool        bEngineOff;      // tank engine is simply switched off
-var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchTime;
-var     float       IgnitionSwitchInterval;
-var     sound       DamagedStartUpSound;
-var     sound       DamagedShutDownSound;
+// Engine
+var     bool        bEngineOff;                // tank engine is simply switched off
+var     bool        bSavedEngineOff;           // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
+var     float       IgnitionSwitchInterval;    // interval in seconds before engine can be switched on/off again, used to stop players spamming the ignition
+var     float       IgnitionSwitchTime;        // records last engine on/off time, so we can check IgnitionSwitchInterval
+var     sound       DamagedStartUpSound;       // sound played when trying to start a damaged engine
+var     sound       DamagedShutDownSound;      // sound played when damaged engine shuts down
 
 // Treads
 var     int         LeftTreadIndex, RightTreadIndex;
 var     rotator     LeftTreadPanDirection, RightTreadPanDirection;
 var     material    DamagedTreadPanner;
-
 var     class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
 var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
 
@@ -108,7 +103,7 @@ var     name        FireAttachBone;
 var     vector      FireEffectOffset;
 var     float       HullFireChance;
 var     float       HullFireHEATChance;
-var     bool        bOnFire; // the vehicle itself is on fire
+var     bool        bOnFire;               // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
 var     float       PlayerFireDamagePer2Secs;
 var     float       NextHullFireDamageTime;
@@ -1432,7 +1427,7 @@ function TakeFireDamage()
             }
         }
 
-        // Chance of cooking off ammo/igniting fuel before health runs out
+        // Chance of cooking off ammo before health runs out
         if (FRand() < FireDetonationChance)
         {
             TakeDamage(Health, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
@@ -2766,6 +2761,7 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
         if (DamageScale > 0.0)
         {
             Driver.SetDelayedDamageInstigatorController(EventInstigator);
+
             Driver.TakeDamage(DamageScale * DamageAmount, EventInstigator.Pawn, Driver.Location - (0.5 * (Driver.CollisionHeight + Driver.CollisionRadius)) * Direction,
                 DamageScale * Momentum * Direction, DamageType);
         }

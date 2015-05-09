@@ -634,7 +634,7 @@ function Bot SpawnBot(optional string botName)
         NewBot.Jumpiness = 0.0;
         NewBot.TranslocUse = 0.0;
 
-        // Set the bots favorite weapon to thier primary weapon
+        // Set the bots favorite weapon to their primary weapon
         NewBot.FavoriteWeapon = class<ROWeapon>(RI.PrimaryWeapons[0].Item);
 
         // Tweak the bots abilities and characteristics based on their role

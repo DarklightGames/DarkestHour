@@ -24,7 +24,7 @@ struct CarHitpoint
 {
     var float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
     var float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var float             PointScale;
+    var float             PointScale;         // scale factor for radius & height
     var name              PointBone;          // bone to reference in offset
     var vector            PointOffset;        // amount to offset the hitpoint from the bone
     var bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
@@ -32,25 +32,30 @@ struct CarHitpoint
     var ECarHitPointType  CarHitPointType;    // what type of hit point this is
 };
 
-var     array<CarHitpoint>  CarVehHitpoints;  // an array of possible small points that can be hit. Index zero is always the driver
+var     array<CarHitpoint>  CarVehHitpoints;  // an array of possible small points that can be hit (index zero is always the driver)
 
 // General
 var     float       PointValue;               // used for scoring
-var     bool        bEmittersOn;
-var     float       DriverTraceDistSquared;   // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
+var     bool        bEmittersOn;              // dust & exhaust effects are enabled
+var     float       DriverTraceDistSquared;   // CheckReset() variable (changed to a squared value, as VSizeSquared is more efficient than VSize)
 var     float       ObjectCollisionResistance;// vehicle's resistance to colliding with other actors - a higher value reduces damage more
 var     bool        bClientInitialized;       // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                               // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
-var     bool        bCrushedAnObject;         // value set when the vehicle crushes something
-var     float       LastCrushedTime;
-var     float       ObjectCrushStallTime;
+var     bool        bCrushedAnObject;         // vehicle has just crushed something, causing temporary movement stall
+var     float       LastCrushedTime;          // records time object was crushed, so we know when the movement stall should end
+var     float       ObjectCrushStallTime;     // how long the movement stall lasts
 
 // Engine stuff
 var     bool        bEngineOff;               // vehicle engine is simply switched off
 var     bool        bSavedEngineOff;          // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;       // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
 var     float       IgnitionSwitchInterval;   // how frequently the engine can be manually switched on/off
+
+// Spawning
+var     bool            bIsSpawnVehicle;
+var     float           FriendlyResetDistance;
+var     DHSpawnManager  SM;
 
 // New sounds & sound attachment actors
 var     float               MaxPitchSpeed;
@@ -75,11 +80,6 @@ var     name                        ResupplyDecoAttachBone;
 // Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
-
-// Spawning
-var     bool            bIsSpawnVehicle;
-var     float           FriendlyResetDistance;
-var     DHSpawnManager  SM;
 
 replication
 {
