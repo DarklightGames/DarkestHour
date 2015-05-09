@@ -82,7 +82,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 {
     local DHTankCannonPawn CannonPawn;
     local Controller       InstigatorController;
-    local float            /*APCDamageMod, TankDamageMod, */VehicleDamageMod, HitCheckDistance;
+    local float            VehicleDamageMod, HitCheckDistance;
     local int              InstigatorTeam, PossibleDriverDamage, i;
     local bool             bAmmoDetonation;
 
@@ -136,21 +136,15 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         if (class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
         {
-            /*APCDamageMod*/VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
         }
-
-//        TankDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
-//        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier;
     }
     else if (class<ROVehicleDamageType>(DamageType) != none)
     {
         if (class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
         {
-            /*APCDamageMod*/VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
+            VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
         }
-
-//        TankDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
-//        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.VehicleDamageModifier;
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
@@ -160,7 +154,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
-    Damage *= /*APCDamageMod*/VehicleDamageMod;
+    Damage *= VehicleDamageMod;
 
     // Check RO VehHitPoints (driver, engine, ammo)
     for (i = 0; i < VehHitpoints.Length; ++i)
