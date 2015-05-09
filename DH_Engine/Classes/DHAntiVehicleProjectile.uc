@@ -250,7 +250,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
-        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -345,7 +345,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHTreadCraft') && !DHTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHTreadCraft') && !DHTreadCraft(Wall).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -429,10 +429,19 @@ simulated function BlowUp(vector HitLocation)
 // Although this has actually been written as a generic function that should handle all or most situations
 simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
 {
-    local bool bExploded, bShattered;
+    // Round shatters on vehicle armor
+    if (bRoundShattered)
+    {
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Shell shattered on vehicle armor & failed to penetrate");
+        }
 
+        ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
+        bRoundShattered = false; // reset for next hit
+    }
     // Round explodes on vehicle armor
-    if (bExplodesOnArmor)
+    else if (bExplodesOnArmor)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -442,34 +451,9 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         bFailedToPenetrateArmor = true;  // flag that may make SpawnExplosionEffects do different effects
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
         bFailedToPenetrateArmor = false; // reset
-        bExploded = true;
     }
-    // Round may shatter on vehicle armor
-    else if (bShatterProne)
-    {
-        if (
-        (HitActor) != none)
-        {
-            if (DHTankCannon(HitActor).bRoundShattered)
-            {
-                bShattered = true;
-                DHTankCannon(HitActor).bRoundShattered = false; // reset for next hit
-            }
-        }
-        else if (DHTreadCraft(HitActor) != none && DHTreadCraft(HitActor).bRoundShattered)
-        {
-            bShattered = true;
-            DHTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
-        }
-
-        if (bShattered)
-        {
-            ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-        }
-    }
-
     // Round deflects off vehicle armor
-    if (!bExploded && !bShattered)
+    else
     {
         DHDeflect(HitLocation, HitNormal, HitActor);
     }

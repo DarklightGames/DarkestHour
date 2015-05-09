@@ -44,7 +44,7 @@ simulated function Timer()
 }
 
 // AT gun will always be penetrated by a shell
-simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }
