@@ -339,7 +339,7 @@ defaultproperties
     FirstRiderPositionIndex=1
     bSpecialTankTurning=false
     DriverKillChance=900.0
-    DriverKillChance=900.0
+    GunnerKillChance=900.0
     CommanderKillChance=600.0
     GunDamageChance=1000.0
     TraverseDamageChance=1250.0
