@@ -126,12 +126,12 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
     Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
-// Hack - Turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
+// Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
 simulated state ViewTransition
 {
     simulated function BeginState()
     {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositionIndex > 0)
             {
@@ -144,7 +144,7 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositionIndex == 0)
             {
