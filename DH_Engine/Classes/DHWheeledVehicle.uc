@@ -518,20 +518,40 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+// Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
+// And to avoid unnecessary stuff on dedicated server & the call to Super in Vehicle class (it only duplicates)
 simulated event DrivingStatusChanged()
 {
-    super(Vehicle).DrivingStatusChanged();
+    local PlayerController PC;
 
-    // Not moving, so no motion sound
-    if (Level.NetMode != NM_DedicatedServer && (!bDriving || bEngineOff))
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        UpdateMovementSound(0.0);
+        // Player has exited
+        if (!bDriving)
+        {
+            // Vehicle will now stop, so no motion sound
+            UpdateMovementSound(0.0);
+
+            // Play neutral idle animation
+            if (HasAnim(BeginningIdleAnim))
+            {
+                PlayAnim(BeginningIdleAnim);
+            }
+        }
+
+        PC = Level.GetLocalPlayerController();
+
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
     }
 
-    if (!bDriving && HasAnim(BeginningIdleAnim))
+    if (bDriving)
     {
-        PlayAnim(BeginningIdleAnim);
+        Enable('Tick');
+    }
+    else
+    {
+        Disable('Tick');
     }
 }
 

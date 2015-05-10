@@ -90,12 +90,12 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
     }
 }
 
-// Modified to add treads (from ROTreadCraft)
+// Modified to stop tread movement if player has exited
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
 
-    if (!bDriving)
+    if (Level.NetMode != NM_DedicatedServer && !bDriving)
     {
         if (LeftTreadPanner != none)
         {

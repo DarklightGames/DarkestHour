@@ -430,37 +430,35 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+// Also to play idle animation for other net clients (not just owning client) & on server if collision is animated, so we reset visuals like hatches & any moving collision boxes
+// And to avoid unnecessary stuff on dedicated server & the call to Super in Vehicle class (it only duplicated)
 simulated event DrivingStatusChanged()
 {
     local PlayerController PC;
 
-    PC = Level.GetLocalPlayerController();
-
-    if (!bDriving || bEngineOff)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        if (LeftTreadPanner != none)
+        // Not moving, so no motion sound or tread movement
+        if (!bDriving)
         {
-            LeftTreadPanner.PanRate = 0.0;
+            if (LeftTreadPanner != none)
+            {
+                LeftTreadPanner.PanRate = 0.0;
+            }
+
+            if (RightTreadPanner != none)
+            {
+                RightTreadPanner.PanRate = 0.0;
+            }
+
+            MotionSoundVolume = 0.0;
+            UpdateMovementSound();
         }
 
-        if (RightTreadPanner != none)
-        {
-            RightTreadPanner.PanRate = 0.0;
-        }
+        PC = Level.GetLocalPlayerController();
 
-        // Not moving, so no motion sound
-        MotionSoundVolume = 0.0;
-        UpdateMovementSound();
-    }
-
-    if (bDriving && PC != none && (PC.ViewTarget == none || !(PC.ViewTarget.IsJoinedTo(self))))
-    {
-        bDropDetail = (Level.bDropDetail || (Level.DetailMode == DM_Low));
-    }
-    else
-    {
-        bDropDetail = false;
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
     }
 
     if (bDriving)
@@ -471,13 +469,12 @@ simulated event DrivingStatusChanged()
     {
         Disable('Tick');
 
-        if (HasAnim(BeginningIdleAnim))
+        // Play neutral idle animation if player has exited, but not on a server collision is animated
+        if ((Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && HasAnim(BeginningIdleAnim))
         {
             PlayAnim(BeginningIdleAnim);
         }
     }
-
-    super(Vehicle).DrivingStatusChanged();
 }
 
 // Modified to add engine start/stop hint
