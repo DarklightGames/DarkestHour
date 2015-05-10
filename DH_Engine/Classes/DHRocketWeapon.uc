@@ -122,9 +122,14 @@ simulated function NotifyOwnerJumped()
     {
         AmmoCharge[0] = 0; // unload rocket
 
+        // Clumsy, but different mode timings mean on net client the player will be controlling the vehicle, while in single player he will be controlling the player pawn
         if (Instigator.DrivenVehicle.IsLocallyControlled() && Instigator.DrivenVehicle.IsHumanControlled())
         {
             PlayerController(Instigator.DrivenVehicle.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
+        }
+        else if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        {
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2);
         }
     }
 
