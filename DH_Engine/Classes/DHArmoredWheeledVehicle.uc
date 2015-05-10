@@ -82,7 +82,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 {
     local DHTankCannonPawn CannonPawn;
     local Controller       InstigatorController;
-    local float            VehicleDamageMod, HitCheckDistance;
+    local float            VehicleDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier;
     local int              InstigatorTeam, PossibleDriverDamage, i;
     local bool             bAmmoDetonation;
 
@@ -224,62 +224,87 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
+    // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
     if (bProjectilePenetrated && !bAmmoDetonation)
     {
-        // Turret penetration
-        if (bTurretPenetration)
+        CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+
+        // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
+        if (CannonPawn != none && CannonPawn.Cannon != none && CannonPawn.Cannon.bHasTurret)
         {
-            CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
-
-            if (CannonPawn != none)
+            if (bTurretPenetration)
             {
-                // Random chance of shrapnel killing commander
-                if (CannonPawn.Driver != none && FRand() < (Float(Damage) / CommanderKillChance))
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Commander killed by shrapnel");
-                    }
-
-                    CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
-                }
-
-                // Random chance of shrapnel damaging gun pivot mechanism
-                if (FRand() < (Float(Damage) / GunDamageChance))
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
-                    }
-
-                    CannonPawn.bGunPivotDamaged = true;
-                }
-
-                // Random chance of shrapnel damaging gun traverse mechanism
-                if (FRand() < (Float(Damage) / TraverseDamageChance))
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
-                    }
-
-                    CannonPawn.bTurretRingDamaged = true;
-                }
+                HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
+                TurretChanceModifier = 1.0;
+            }
+            else
+            {
+                HullChanceModifier = 1.0;
+                TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret 
             }
         }
-        // Hull penetration
-        else
+        else // normal chance of damage to everything in vehicles without a turret
         {
-            // Random chance of shrapnel killing driver
-            if (Driver != none && FRand() < (Float(Damage) / DriverKillChance))
+            HullChanceModifier = 1.0;
+            TurretChanceModifier = 1.0;
+        }
+
+        if (CannonPawn != none)
+        {
+            // Random chance of shrapnel killing commander
+            if (CannonPawn.Driver != none && FRand() < (Float(Damage) / CommanderKillChance * TurretChanceModifier))
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                    Level.Game.Broadcast(self, "Commander killed by shrapnel");
                 }
 
-                Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
+
+            // Random chance of shrapnel damaging gun pivot mechanism
+            if (FRand() < (Float(Damage) / GunDamageChance * TurretChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                }
+
+                CannonPawn.bGunPivotDamaged = true;
+            }
+
+            // Random chance of shrapnel damaging gun traverse mechanism
+            if (FRand() < (Float(Damage) / TraverseDamageChance * TurretChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                }
+
+                CannonPawn.bTurretRingDamaged = true;
+            }
+        }
+
+        // Random chance of shrapnel killing driver
+        if (Driver != none && FRand() < (Float(Damage) / DriverKillChance * HullChanceModifier))
+        {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Driver killed by shrapnel");
+            }
+
+            Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+        }
+
+        // Random chance of shrapnel killing hull machine gunner
+        if (HullMG != none && Vehicle(HullMG.Owner) != none && Vehicle(HullMG.Owner).Driver != none && FRand() < (Float(Damage) / GunnerKillChance * HullChanceModifier))
+        {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+            }
+
+            Vehicle(HullMG.Owner).Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
         }
     }
 
@@ -313,6 +338,7 @@ defaultproperties
     PointValue=2.0
     FirstRiderPositionIndex=1
     bSpecialTankTurning=false
+    DriverKillChance=900.0
     DriverKillChance=900.0
     CommanderKillChance=600.0
     GunDamageChance=1000.0
