@@ -3388,47 +3388,56 @@ simulated function DrawSpectatingHud(Canvas C)
         {
             Time = FMax(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0.0);
 
-            if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+            switch (PC.ClientLevelInfo.SpawnMode)
             {
-                // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
-                S = default.SpawnVehicleText;
-                S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
-                S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
-            }
-            else if (PC.SpawnPointIndex != 255)
-            {
-                SP = DHGRI.GetSpawnPoint(PC.SpawnPointIndex);
+                case ESM_DarkestHour:
+                    if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+                    {
+                        // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
+                        S = default.SpawnVehicleText;
+                        S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
+                        S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
+                    }
+                    else if (PC.SpawnPointIndex != 255)
+                    {
+                        SP = DHGRI.GetSpawnPoint(PC.SpawnPointIndex);
 
-                if (SP != none)
-                {
-                    // You will deploy as a {0} at {1} in {2} | Press ESC to change
-                    S = Repl(default.SpawnInfantryText, "{1}", SP.SpawnPointName);
-                }
-                else
-                {
-                    // Press ESC to select a spawn point
-                    S = default.SelectSpawnPointText;
-                }
-            }
-            else if (PC.SpawnVehicleIndex != 255)
-            {
-                SVC = DHGRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
+                        if (SP != none)
+                        {
+                            // You will deploy as a {0} at {1} in {2} | Press ESC to change
+                            S = Repl(default.SpawnInfantryText, "{1}", SP.SpawnPointName);
+                        }
+                        else
+                        {
+                            // Press ESC to select a spawn point
+                            S = default.SelectSpawnPointText;
+                        }
+                    }
+                    else if (PC.SpawnVehicleIndex != 255)
+                    {
+                        SVC = DHGRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
 
-                if (SVC != none)
-                {
-                    // You will deploy as a {0} at a {1} in {2} | Press ESC to change
-                    S = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
-                }
-                else
-                {
-                    // Press ESC to select a spawn point
-                    S = default.SelectSpawnPointText;
-                }
-            }
-            else
-            {
-                // Press ESC to select a spawn point
-                S = default.SelectSpawnPointText;
+                        if (SVC != none)
+                        {
+                            // You will deploy as a {0} at a {1} in {2} | Press ESC to change
+                            S = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
+                        }
+                        else
+                        {
+                            // Press ESC to select a spawn point
+                            S = default.SelectSpawnPointText;
+                        }
+                    }
+                    else
+                    {
+                        // Press ESC to select a spawn point
+                        S = default.SelectSpawnPointText;
+                    }
+
+                    break;
+                case ESM_RedOrchestra:
+                    S = default.ReinforcementText;
+                    break;
             }
 
             if (PC.bUseNativeRoleNames)
@@ -3444,6 +3453,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
 
         Y += 4.0 * Scale + strY;
+
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
     }
@@ -3920,6 +3930,5 @@ defaultproperties
     SelectSpawnPointText="Press ESC to select a spawn point"
     JoinTeamText="Press ESC to join a team"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
-
-    ReinforcementText="Redeploy in: {2}"
+    ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
 }

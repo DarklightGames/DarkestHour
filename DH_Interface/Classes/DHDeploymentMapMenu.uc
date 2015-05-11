@@ -556,7 +556,9 @@ function bool DrawDeployTimer(Canvas C)
     {
         b_DeployButton.Caption = DeployBarText[0]; // "Make sure you have a role and/or vehicle selected"
     }
-    else if (!GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()) && !GRI.CanSpawnAtVehicle(MyDeployMenu.SpawnVehicleIndex, DHP) && DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
+    else if (DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour &&
+             !GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()) &&
+             !GRI.CanSpawnAtVehicle(MyDeployMenu.SpawnVehicleIndex, DHP))
     {
         b_DeployButton.Caption = DeployBarText[1]; // "Select a spawnpoint"
     }

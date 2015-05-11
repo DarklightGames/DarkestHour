@@ -108,7 +108,9 @@ simulated event PostBeginPlay()
     {
         // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
         foreach self.AllActors(class'DH_LevelInfo', ClientLevelInfo)
+        {
             break;
+        }
     }
 }
 
