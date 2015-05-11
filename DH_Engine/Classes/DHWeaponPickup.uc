@@ -73,7 +73,14 @@ function InitDroppedPickupFor(Inventory Inv)
         // Store the ammo mags from the weapon
         for (i = 0; i < W.PrimaryAmmoArray.Length; ++i)
         {
-            AmmoMags[AmmoMags.Length] = W.PrimaryAmmoArray[i];
+            if (i != W.CurrentMagIndex)
+            {
+                AmmoMags[AmmoMags.Length] = W.PrimaryAmmoArray[i];
+            }
+            else if (W.AmmoAmount(0) > 0)
+            {
+                AmmoMags[AmmoMags.Length] = W.AmmoAmount(0);
+            }
         }
 
         // If weapon has barrels, transfer over any barrels
