@@ -18,7 +18,7 @@ var localized string                        ReinforcementText,
 var     bool                                bReadyToDeploy, bOutOfReinforcements, bResolutionChanged;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
-var     automated DHGUIButton               b_DeployButton, b_SpawnRoom;
+var     automated DHGUIButton               b_DeployButton;
 var     automated GUIProgressBar            pb_DeployProgressBar;
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
@@ -105,9 +105,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Initialize spawn room button
     if (DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
     {
-        b_SpawnRoom.SetVisibility(false);
-        b_SpawnRoom.WinWidth = 0.0;
-        b_SpawnRoom.WinHeight = 0.0;
+        //TODO: COLIN
     }
 
     // Set rotator based on map rotation offset
@@ -432,10 +430,6 @@ function bool InternalOnClick(GUIComponent Sender)
 
     switch(Sender)
     {
-        case b_SpawnRoom:
-            SpawnClick();
-            break;
-
         case b_DeployButton:
             SpawnClick();
             break;
@@ -658,20 +652,6 @@ defaultproperties
         OnClick=InternalOnClick
     End Object
     b_DeployButton=DeployButton
-
-    // Spawn room button
-    Begin Object class=DHGUIButton Name=SpawnRoomButton
-        Caption="Spawn Room"
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSpawnButtonStyle"
-        WinWidth=0.3
-        WinHeight=0.1
-        WinLeft=0.35
-        WinTop=0.45
-        OnClick=InternalOnClick
-    End Object
-    b_SpawnRoom=SpawnRoomButton
 
     // Deploy time progress bar
     Begin Object class=GUIProgressBar Name=DeployTimePB
