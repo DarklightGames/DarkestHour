@@ -325,8 +325,6 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
     // We have a pawn so lets edit ammo and fade from black
     if (DHPawn(C.Pawn) != none)
     {
-        DHPawn(C.Pawn).SetAmmoAmount(C.SpawnAmmoAmount);
-
         if (C.VehiclePoolIndex != 255) // Vehicle spawn
         {
             C.ClientFadeFromBlack(0.0, true); // Black out, the fade will start when the pawn is put back into the vehicle

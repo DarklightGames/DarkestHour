@@ -2025,6 +2025,8 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
+    local DHPlayer PC;
+    local DHPawn P;
     local byte SpawnError;
 
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
@@ -2048,6 +2050,18 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
             //Log(SpawnError);
             //COLIN
             //TODO: send message to client that spawn failed and put them into the deploy menu with an error!!!
+        }
+    }
+
+    PC = DHPlayer(C);
+
+    if (PC != none)
+    {
+        P = DHPawn(PC.Pawn);
+
+        if (P != none)
+        {
+            P.SetAmmoAmount(PC.SpawnAmmoAmount);
         }
     }
 }
