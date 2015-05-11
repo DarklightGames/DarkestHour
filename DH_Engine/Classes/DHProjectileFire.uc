@@ -36,6 +36,7 @@ var(FireAnims)  name        FireIronAnim;               // Firing animation for 
 var(FireAnims)  name        FireIronLoopAnim;           // Looping Fire animation for firing in ironsights
 var(FireAnims)  name        FireIronEndAnim;            // End anim for firing in ironsights
 
+var             bool        bShouldBlurOnFire;
 var             float       BlurTime;
 var             float       BlurTimeIronsight;
 var             float       BlurScale;
@@ -401,7 +402,7 @@ simulated function HandleRecoil()
 {
     super.HandleRecoil();
 
-    if (Level.NetMode != NM_DedicatedServer && Instigator != none && ROPlayer(Instigator.Controller) != none)
+    if (Level.NetMode != NM_DedicatedServer && default.bShouldBlurOnFire && Instigator != none && ROPlayer(Instigator.Controller) != none)
     {
         if (Weapon.bUsingSights)
         {
@@ -431,6 +432,7 @@ defaultproperties
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireForce="AssaultRifleFire"
     WarnTargetPct=0.5
+    bShouldBlurOnFire=true
     BlurTime=0.1
     BlurTimeIronsight=0.1
     BlurScale=0.01
