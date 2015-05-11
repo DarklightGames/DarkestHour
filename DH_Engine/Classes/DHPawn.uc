@@ -161,6 +161,12 @@ simulated function Tick(float DeltaTime)
         {
             EndBurnFX();
         }
+
+        // Forced client bob values. These variables are global config and are used in native code.
+        // There is no way to bypass its use and only way to restrict is by forcing its value in tick
+        // Do not set to DHPawn.default.Bob as it'll just use the ini as default
+        Bob = 0.01;
+        bWeaponBob = true;
     }
 
     // Forces us to equip a mortar if we have one on us.
