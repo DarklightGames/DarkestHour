@@ -3545,7 +3545,7 @@ simulated function DrawSpectatingHud(Canvas C)
 
 // Modified to make objective title's smaller on the overview
 function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Icon, float MyMapScale, vector Location, vector MapCenter,
-    optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int Objective_index)
+    optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int ObjectiveIndex)
 {
     local SpriteWidget MyIcon;
     local FloatBox     Label_coords;
@@ -3598,7 +3598,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
     // Draw icon
     DrawSpriteWidgetClipped(C, MyIcon, LevelCoords, true, XL, YL, true);
 
-    if (Title != "" && !DHGRI.DHObjectives[objective_index].bDoNotDisplayTitleOnSituationMap)
+    if (Title != "" && !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)
     {
         // Setup text info
         MapTexts.text = Title;
@@ -3617,10 +3617,10 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
         label_coords.Y2 = label_coords.Y1 + YL;
 
         // Iterate through objectives list and check if we should offset label
-        UpdateMapIconLabelCoords(label_coords, GRI, objective_index);
+        UpdateMapIconLabelCoords(label_coords, GRI, ObjectiveIndex);
 
         // Update Y offset
-        MapTexts.OffsetY += DHGRI.DHObjectives[objective_index].LabelCoords.Y1 - label_coords.Y1;
+        MapTexts.OffsetY += DHGRI.DHObjectives[ObjectiveIndex].LabelCoords.Y1 - label_coords.Y1;
 
         // Hack to make the text smaller on the overview for objectives
         OldFontXScale = C.FontScaleX;
