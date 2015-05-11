@@ -1444,7 +1444,7 @@ simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
     // True if commander is present & is not buttoned up & we hit one of the hit points representing his head or torso
     return CannonPawn != none && CannonPawn.Driver != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
-        IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1);
+        (IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1));
 }
 
 // Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
