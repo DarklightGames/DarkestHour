@@ -785,17 +785,24 @@ function AttemptDeployApplication()
     else
     {
         if (DesiredTeam == -1)
+        {
             TeamIndex = 254; // spectator
+        }
         else
+        {
             TeamIndex = DesiredTeam;
+        }
     }
 
     // Get Role switch info
     if (TeamIndex == 254 || (TeamIndex == 255 && DesiredTeam == -1))
+    {
         RoleIndex = 255; // no role switch if we're spectating
+    }
     else if (DesiredRole == none)
     {
         warn("No role selected, using role #0");
+
         RoleIndex = 0; // force role of 0 if we havn't picked a role (should never happen)
     }
     else if (DesiredRole == CurrentRole && DesiredTeam == CurrentTeam)
@@ -808,8 +815,10 @@ function AttemptDeployApplication()
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
             GUIQuestionPage(Controller.TopPage()).SetupQuestion(MyDeployMenu.RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
+
             return;
         }
+
         RoleIndex = FindRoleIndexInGRI(RORoleInfo(li_Roles.GetObject()), DesiredTeam);
     }
 
