@@ -502,14 +502,9 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 // Think of this function as asking "is there an exposed player there & did we actually hit him, not just his collision box?"
 simulated function bool HitDriver(vector Hitlocation, vector Momentum)
 {
-    // Player is present & is not buttoned up & we hit his collision box & hit one of the hit points representing his head or torso
-    if (MGPawn != none && MGPawn.Driver != none && MGPawn.DriverPositions[MGPawn.DriverPositionIndex].bExposed &&
-        IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1))
-    {
-        return true;
-    }
-
-    return false;
+    // True if player is present & is not buttoned up & we hit one of the hit points representing his head or torso
+    return MGPawn != none && MGPawn.Driver != none && MGPawn.DriverPositions[MGPawn.DriverPositionIndex].bExposed &&
+        (IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1));
 }
 
 // Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
