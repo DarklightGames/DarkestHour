@@ -102,12 +102,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         }
     }
 
-    // Initialize spawn room button
-    if (DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
-    {
-        //TODO: COLIN
-    }
-
     // Set rotator based on map rotation offset
     R.Yaw = GRI.OverheadOffset * 182.044444;
 
