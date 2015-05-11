@@ -117,8 +117,8 @@ defaultproperties
     PctCrouchRecoil=0.65
     PctCrouchIronRecoil=0.45
     PctProneIronRecoil=0.25
-    PctBipodDeployRecoil=0.01
-    PctRestDeployRecoil=0.05
+    PctBipodDeployRecoil=0.05
+    PctRestDeployRecoil=0.1
     RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Z=-2.0)
@@ -129,7 +129,7 @@ defaultproperties
     FireLoopAnim="Shoot_Loop"
     FireEndAnim="Shoot_End"
     TweenTime=0.0
-    FireRate=0.08
+    FireRate=0.12
     AmmoClass=class'DH_Weapons.DH_FG42Ammo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=150.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
