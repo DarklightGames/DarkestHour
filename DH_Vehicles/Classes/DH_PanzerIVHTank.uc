@@ -164,7 +164,7 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
     ExitPositions(0)=(X=105.0,Y=-37.0,Z=115.0)
-    ExitPositions(1)=(X=-85.0,Y=-4.0,Z=160.0)
+    ExitPositions(1)=(X=-128.0,Y=0.0,Z=160.0)
     ExitPositions(2)=(X=105.0,Y=44.0,Z=115.0)
     ExitPositions(3)=(X=-121.0,Y=-163.0,Z=5.0)
     ExitPositions(4)=(X=-251.0,Y=-35.0,Z=5.0)

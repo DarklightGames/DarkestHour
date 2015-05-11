@@ -164,8 +164,8 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-5.0,Y=-5.0,Z=0.0)
     DriveAnim="VStug3_driver_idle_close"
-    ExitPositions(0)=(X=-49.0,Y=-40.0,Z=130.0)
-    ExitPositions(1)=(X=-49.0,Y=-40.0,Z=130.0)
+    ExitPositions(0)=(X=-95.0,Y=-40.0,Z=130.0)
+    ExitPositions(1)=(X=-95.0,Y=-40.0,Z=130.0)
     ExitPositions(2)=(X=-30.0,Y=38.0,Z=150.0)
     ExitPositions(3)=(X=-80.0,Y=-167.0,Z=5.0)
     ExitPositions(4)=(X=-235.0,Y=-3.0,Z=5.0)

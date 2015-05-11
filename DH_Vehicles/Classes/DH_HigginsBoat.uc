@@ -142,12 +142,29 @@ function DriverLeft()
 // Modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player exited
 simulated event DrivingStatusChanged()
 {
-    super(Vehicle).DrivingStatusChanged();
+    local PlayerController PC;
 
-    // Not moving, so no motion sound
-    if (Level.NetMode != NM_DedicatedServer && (!bDriving || bEngineOff))
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        UpdateMovementSound(0.0);
+        // Player has exited && vehicle will now stop, so no motion sound
+        if (!bDriving)
+        {
+            UpdateMovementSound(0.0);
+        }
+
+        PC = Level.GetLocalPlayerController();
+
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
+    }
+
+    if (bDriving)
+    {
+        Enable('Tick');
+    }
+    else
+    {
+        Disable('Tick');
     }
 }
 

@@ -90,12 +90,12 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
     }
 }
 
-// Modified to add treads (from ROTreadCraft)
+// Modified to stop tread movement if player has exited
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
 
-    if (!bDriving)
+    if (Level.NetMode != NM_DedicatedServer && !bDriving)
     {
         if (LeftTreadPanner != none)
         {
@@ -203,124 +203,13 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// Modified to add chance of engine kill & fire starting, to require APCDamageModifier of at least 0.25 & to randomise damage a little
+// Modified to add chance of engine being destroyed & engine fire starting
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local Controller InstigatorController;
-    local float      VehicleDamageMod;
-    local int        HitPointDamage, InstigatorTeam, i;
-
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
-    {
-        DamageType = class'ROSuicided';
-
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-
-    // Quick fix for the thing giving itself impact damage
-    if (InstigatedBy == self)
-    {
-        return;
-    }
-
-    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
-    if (!bDriverAlreadyEntered)
-    {
-        if (InstigatedBy != none)
-        {
-            InstigatorController = InstigatedBy.Controller;
-        }
-
-        if (InstigatorController == none && DamageType.default.bDelayedDamage)
-        {
-            InstigatorController = DelayedDamageInstigatorController;
-        }
-
-        if (InstigatorController != none)
-        {
-            InstigatorTeam = InstigatorController.GetTeamNum();
-
-            if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
-            {
-                return;
-            }
-        }
-    }
-
-    // Hacked in APC damage mod for halftracks and armored cars, but bullets/bayo/nades/bashing still shouldn't work ...
-    if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
-    {
-        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
-    }
-    else if (class<ROVehicleDamageType>(DamageType) != none && class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
-    {
-        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-    }
-
-    for (i = 0; i < VehHitpoints.Length; ++i)
-    {
-        HitPointDamage = Damage;
-
-        if (VehHitpoints[i].HitPointType == HP_Driver)
-        {
-            // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
-            {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
-                {
-                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-                }
-            }
-            // Damage for small (non penetrating) arms
-            else
-            {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
-                {
-                    Driver.TakeDamage(150, InstigatedBy, HitLocation, Momentum, DamageType);
-                }
-            }
-        }
-        else if (IsPointShot(HitLocation,Momentum, 1.0, i))
-        {
-            HitPointDamage *= VehHitpoints[i].DamageMultiplier;
-            HitPointDamage *= VehicleDamageMod;
-
-            if (VehHitpoints[i].HitPointType == HP_Engine)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Engine hit effective");
-                }
-
-                DamageEngine(HitPointDamage, InstigatedBy, HitLocation, Momentum, DamageType);
-            }
-            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Ammo hit effective");
-                }
-
-                Damage *= Health;
-                break;
-            }
-        }
-    }
-
-    Damage *= RandRange(0.85, 1.15);
-
-    // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
-    Damage *= VehicleDamageMod;
-
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
 
     // If vehicle health is very low, kill the engine (which will start a fire)
-    if (Health >= 0 && Health <= HealthMax / 3)
+    if (Health <= HealthMax / 3 && Health >= 0)
     {
         EngineHealth = 0;
         bEngineOff = true;
@@ -337,7 +226,6 @@ simulated function bool IsDisabled()
 
 defaultproperties
 {
-    bEnterringUnlocks=false
     LeftTreadIndex=1
     RightTreadIndex=2
     MaxCriticalSpeed=800.0
@@ -346,6 +234,7 @@ defaultproperties
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     VehicleSpikeTime=60.0
     bIsApc=true
+    MinVehicleDamageModifier=0.25 // needs APCDamageModifier of at least 0.25 to damage this type of vehicle
     bKeepDriverAuxCollision=false
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)

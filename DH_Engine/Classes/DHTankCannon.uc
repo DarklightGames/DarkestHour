@@ -10,32 +10,28 @@ class DHTankCannon extends ROTankCannon
 
 // General
 var     DHTankCannonPawn    CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     bool                bHasTurret;               // this cannon is in a fully rotating turret
 var     float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
-var     class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
-var     byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
-var     sound               NoMGAmmoSound;            // 'dry fire' sound when trying to fire empty coaxial MG
 
-// Variables for up to three ammo types, including shot dispersion customized by round type
+// Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];   // using byte for more efficient replication
 var     int                 InitialTertiaryAmmo;
 var     class<Projectile>   TertiaryProjectileClass;
-
 var     bool                bUsesSecondarySpread;
 var     float               SecondarySpread;
 var     bool                bUsesTertiarySpread;
 var     float               TertiarySpread;
+var     class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
+var     byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
+var     sound               NoMGAmmoSound;            // 'dry fire' sound when trying to fire empty coaxial MG
 
 // Armor penetration
 var     float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
 var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
 var     float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
-
-var     bool                bHasTurret;            // this cannon is in a fully rotating turret
-var     float               GunMantletArmorFactor; // used for mantlet hits for casemate-style vehicles without a turret
+var     float               GunMantletArmorFactor;    // used for mantlet hits for casemate-style vehicles without a turret
 var     float               GunMantletSlope;
-
-var     bool                bHasAddedSideArmor;    // has side skirts that will make a hit by a HEAT projectile ineffective
-var     bool                bRoundShattered;       // tells projectile to show shattered round effects
+var     bool                bHasAddedSideArmor;       // has side skirts that will make a hit by a HEAT projectile ineffective
 
 // Manual/powered turret
 var     float               ManualRotationsPerSecond;
@@ -69,7 +65,6 @@ replication
 
     // Variables the server will replicate to all clients
 //  reliable if (bNetDirty && Role == ROLE_Authority)
-//      bRoundShattered;        // Matt: removed as is set independently on client & server & so doesn't need replicating
 //      bManualTurret, bOnFire; // Matt: have deprecated both of these
 }
 
@@ -110,7 +105,7 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from VehicleBase's PostNetReceive()
+// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from Vehicle's PostNetReceive()
 // Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
 {
@@ -139,7 +134,7 @@ simulated function StartTurretFire()
 }
 
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
-// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+// Crucially, we know that we have CannonPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
@@ -221,15 +216,15 @@ simulated function InitEffects()
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float   WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
-    local vector  LocDir, HitDir, X, Y, Z;
-    local rotator AimRot;
+    local float  WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
+    local vector LocDir, HitDir, X, Y, Z;
 
     if (!bHasTurret)
     {
-        return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
+        // Checking that PenetrationNumber > ArmorFactor 1st is a quick pre-check that it's worth doing more complex calculations in CheckPenetration()
+        return PenetrationNumber > GunMantletArmorFactor && CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
     }
 
     // Figure out which side we hit
@@ -256,90 +251,72 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
         Y = Y >> CurrentAim;
     }
 
-    // Penetration debugging
-    if (bLogPenetration)
+    if (bPenetrationText && Role == ROLE_Authority)
     {
-        Log("Hit angle =" @ HitAngleDegrees @ "degrees, Weapon rotation =" @ WeaponRotationDegrees @ "degrees, Side =" @ Side);
-    }
-
-    if (bDebuggingText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Hit angle:" @ HitAngleDegrees @ "degrees");
-    }
-
-    if (bDrawPenetration)
-    {
-        ClearStayingDebugLines();
-        AimRot = Rotation;
-        AimRot.Yaw += (FrontLeftAngle / 360.0) * 65536.0;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 255, 0);
-
-        AimRot = Rotation;
-        AimRot.Yaw += (FrontRightAngle / 360.0) * 65536.0;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 255, 255, 0);
-
-        AimRot = Rotation;
-        AimRot.Yaw += (RearRightAngle / 360.0) * 65536.0;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 0, 255);
-
-        AimRot = Rotation;
-        AimRot.Yaw += (RearLeftAngle / 360.0) * 65536.0;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 0, 0);
+        Level.Game.Broadcast(self, "Turret hit angle =" @ HitAngleDegrees @ "degrees");
     }
 
     // Frontal hit
     if (HitAngleDegrees >= FrontLeftAngle || HitAngleDegrees < FrontRightAngle)
     {
-        InAngle = Acos(Normal(-HitRotation) dot Normal(X));
-        InAngleDegrees = InAngle * 57.2957795131;
-
-        // Penetration debugging
+        // Debugging
         if (bDrawPenetration)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log("We hit the front of the vehicle");
+        } 
+
+        if (bLogPenetration)
+        {
+            Log("Front turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
 
-        // Fix hit detection bug
+        // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
+        InAngle = Acos(Normal(-HitRotation) dot Normal(X));
+        InAngleDegrees = InAngle * 57.2957795131;
+
+        // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to opposite side
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from front to REAR turret hit: base armor =" @ RearArmorFactor * 10.0 $ "mm");
+                Level.Game.Broadcast(self, "Hit bug - switching from front to REAR turret hit: base armor =" @ RearArmorFactor * 10.0 $ "mm, slope =" @ RearArmorSlope);
             }
 
-            // Run a pre-check
-            if (RearArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, RearArmorFactor, GetCompoundAngle(InAngle, RearArmorSlope), PenetrationNumber);
+            // Checking that PenetrationNumber > ArmorFactor 1st is a quick pre-check that it's worth doing more complex calculations in CheckPenetration()
+            return PenetrationNumber > RearArmorFactor && CheckPenetration(P, RearArmorFactor, GetCompoundAngle(InAngle, RearArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Front turret hit, base armor =" @ FrontArmorFactor * 10.0 $ "mm");
+            Level.Game.Broadcast(self, "Front turret hit: base armor =" @ FrontArmorFactor * 10.0 $ "mm, slope =" @ FrontArmorSlope);
         }
 
-        // Run a pre-check
-        if (FrontArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, FrontArmorFactor, GetCompoundAngle(InAngle, FrontArmorSlope), PenetrationNumber);
+        return PenetrationNumber > FrontArmorFactor && CheckPenetration(P, FrontArmorFactor, GetCompoundAngle(InAngle, FrontArmorSlope), PenetrationNumber);
 
     }
 
     // Right side hit
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
+        // Debugging
+        if (bDrawPenetration)
+        {
+            ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+        }
+
+        if (bLogPenetration)
+        {
+            Log("Right side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+        }
+
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
+        if (bHasAddedSideArmor && P.RoundType == RT_HEAT) // using RoundType instead of P.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -347,99 +324,83 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
         InAngle = Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
-        // Penetration Debugging
-        if (bDrawPenetration)
-        {
-            ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log("We hit the right side of the vehicle");
-        }
-
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT turret hit: base armor =" @ LeftArmorFactor * 10.0 $ "mm");
+                Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT turret hit: base armor =" @ LeftArmorFactor * 10.0 $ "mm, slope =" @ LeftArmorSlope);
             }
 
-            // Run a pre-check
-            if (LeftArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, LeftArmorFactor, GetCompoundAngle(InAngle, LeftArmorSlope), PenetrationNumber);
+            return PenetrationNumber > LeftArmorFactor && CheckPenetration(P, LeftArmorFactor, GetCompoundAngle(InAngle, LeftArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Right turret hit: base armor =" @ RightArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Right turret hit: base armor =" @ RightArmorFactor * 10.0 $ "mm, slope =" @ RightArmorSlope);
         }
 
-        // Run a pre-check
-        if (RightArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, RightArmorFactor, GetCompoundAngle(InAngle, RightArmorSlope), PenetrationNumber);
+        return PenetrationNumber > RightArmorFactor && CheckPenetration(P, RightArmorFactor, GetCompoundAngle(InAngle, RightArmorSlope), PenetrationNumber);
     }
 
     // Rear hit
     else if (HitAngleDegrees >= RearRightAngle && HitAngleDegrees < RearLeftAngle)
     {
-        InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
-        InAngleDegrees = InAngle * 57.2957795131;
-
-        //  Penetration debugging
+        // Debugging
         if (bDrawPenetration)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log ("We hit the back of the vehicle");
         }
+
+        if (bLogPenetration)
+        {
+            Log("Rear turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+        }
+
+        InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
+        InAngleDegrees = InAngle * 57.2957795131;
 
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from rear to FRONT turret hit: base armor =" @ FrontArmorFactor * 10.0 $ "mm");;
+                Level.Game.Broadcast(self, "Hit bug - switching from rear to FRONT turret hit: base armor =" @ FrontArmorFactor * 10.0 $ "mm, slope =" @ FrontArmorSlope);
             }
 
-            // Run a pre-check
-            if (FrontArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, FrontArmorFactor, GetCompoundAngle(InAngle, FrontArmorSlope), PenetrationNumber);
+            return PenetrationNumber > FrontArmorFactor && CheckPenetration(P, FrontArmorFactor, GetCompoundAngle(InAngle, FrontArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Rear turret hit: base armor =" @ RearArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Rear turret hit: base armor =" @ RearArmorFactor * 10.0 $ "mm, slope =" @ RearArmorSlope);
         }
 
-        // Run a pre-check
-        if (RearArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, RearArmorFactor, GetCompoundAngle(InAngle, RearArmorSlope), PenetrationNumber);
+        return PenetrationNumber > RearArmorFactor && CheckPenetration(P, RearArmorFactor, GetCompoundAngle(InAngle, RearArmorSlope), PenetrationNumber);
     }
 
     // Left side hit
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
+        // Debugging
+        if (bDrawPenetration)
+        {
+            ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+        }
+
+        if (bLogPenetration)
+        {
+            Log("Left side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+        }
+
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
+        if (bHasAddedSideArmor && P.RoundType == RT_HEAT) // using RoundType instead of P.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -447,45 +408,23 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
         InAngle = Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
-        //  Penetration debugging
-        if (bDrawPenetration)
-        {
-            ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log("We hit the left side of the vehicle");
-        }
-
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT turret hit: base armor =" @ RightArmorFactor * 10.0 $ "mm");;
+                Level.Game.Broadcast(self, "Hit bug - switching from left to RIGHT turret hit: base armor =" @ RightArmorFactor * 10.0 $ "mm, slope =" @ RightArmorSlope);
             }
 
-            // Run a pre-check
-            if (RightArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, RightArmorFactor, GetCompoundAngle(InAngle, RightArmorSlope), PenetrationNumber);
+            return PenetrationNumber > RightArmorFactor && CheckPenetration(P, RightArmorFactor, GetCompoundAngle(InAngle, RightArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Left turret hit: base armor =" @ LeftArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Left turret hit: base armor =" @ LeftArmorFactor * 10.0 $ "mm, slope =" @ LeftArmorSlope);
         }
 
-        // Run a pre-check
-        if (LeftArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, LeftArmorFactor, GetCompoundAngle(InAngle, LeftArmorSlope), PenetrationNumber);
+        return PenetrationNumber > LeftArmorFactor && CheckPenetration(P, LeftArmorFactor, GetCompoundAngle(InAngle, LeftArmorSlope), PenetrationNumber);
     }
 
     // Should never happen !
@@ -500,9 +439,11 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
 
 // Matt: new generic function to handle penetration calcs for any shell type
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
+simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
-    local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
+    local DHTreadCraft TreadCraft;
+    local float        CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
+    local bool         bProjectilePenetrated;
 
     // Convert angle back to degrees
     CompoundAngleDegrees = CompoundAngle * 57.2957795131;
@@ -513,48 +454,36 @@ simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float
     }
 
     // Calculate the SlopeMultiplier & EffectiveArmor, to give us the PenetrationRatio
-    OverMatchFactor = ArmorFactor / P.default.ShellDiameter;
+    OverMatchFactor = ArmorFactor / P.ShellDiameter;
     SlopeMultiplier = GetArmorSlopeMultiplier(P, CompoundAngleDegrees, OverMatchFactor);
     EffectiveArmor = ArmorFactor * SlopeMultiplier;
     PenetrationRatio = PenetrationNumber / EffectiveArmor;
 
     // Penetration debugging
-    if (Role == ROLE_Authority)
+    if (bPenetrationText && Role == ROLE_Authority)
     {
-        if (bDebuggingText)
-        {
-            Level.Game.Broadcast(self, "CompoundAngle:" @ CompoundAngleDegrees @ "SlopeMultiplier:" @ SlopeMultiplier);
-        }
-
-        if (bPenetrationText)
-        {
-            Level.Game.Broadcast(self, "Effective armor:" @ EffectiveArmor * 10.0 $ "mm" @ "Shot penetration:" @ PenetrationNumber * 10.0 $ "mm");
-        }
+        Level.Game.Broadcast(self, "Effective armor:" @ EffectiveArmor * 10.0 $ "mm" @ " Shot penetration:" @ PenetrationNumber * 10.0 $ "mm");
+        Level.Game.Broadcast(self, "Compound angle:" @ CompoundAngleDegrees @ " Slope multiplier:" @ SlopeMultiplier);
     }
 
-    // Now we have the necessary factors, check whether the round penetrates the armor
-    if (PenetrationRatio >= 1.0)
+    // Check if round shattered on armor
+    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
+
+    // Check if round penetrated the vehicle
+    bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
+
+    // Set TakeDamage-related variables on the vehicle itself
+    TreadCraft = DHTreadCraft(Base);
+
+    if (TreadCraft != none)
     {
-        // Check if the round should shatter on the armor
-        if (P.default.bShatterProne)
-        {
-            bRoundShattered = CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
-        }
-
-        if (!bRoundShattered)
-        {
-            DHTreadCraft(Base).bProjectilePenetrated = true;
-            DHTreadCraft(Base).bWasTurretHit = true;
-            DHTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in DamageType, but would need new DH_WeaponDamageType class
-
-            return true;
-        }
+        TreadCraft.bProjectilePenetrated = bProjectilePenetrated;
+        TreadCraft.bTurretPenetration = bProjectilePenetrated;
+        TreadCraft.bRearHullPenetration = false;
+        TreadCraft.bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
     }
 
-    DHTreadCraft(Base).bProjectilePenetrated = false;
-    DHTreadCraft(Base).bWasTurretHit = false;
-
-    return false;
+    return bProjectilePenetrated;
 }
 
 // Returns the compound hit angle
@@ -570,14 +499,14 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
-simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
+simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, CompoundAngleFixed;
     local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
 
-    if (P.default.RoundType == RT_HVAP)
+    if (P.RoundType == RT_HVAP)
     {
-        if (P.default.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
+        if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (CompoundAngleDegrees <= 30.0)
             {
@@ -608,13 +537,13 @@ simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> 
             }
         }
     }
-    else if (P.default.RoundType == RT_APDS)
+    else if (P.RoundType == RT_APDS)
     {
         CompoundExp = CompoundAngleDegrees ** 2.6;
 
         return 2.71828 ** (CompoundExp * 0.00003011);
     }
-    else if (P.default.RoundType == RT_HEAT)
+    else if (P.RoundType == RT_HEAT)
     {
         CompoundAngleFixed = Abs(CompoundAngleDegrees * 0.01745329252); // convert angle back to radians
 
@@ -642,10 +571,10 @@ simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> 
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
-simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
+simulated function float ArmorSlopeTable(DHAntiVehicleProjectile P, float CompoundAngleDegrees, float OverMatchFactor)
 {
     // after Bird & Livingston:
-    if (P.default.RoundType == RT_AP) // from Darkest Orchestra
+    if (P.RoundType == RT_AP) // from Darkest Orchestra
     {
         if      (CompoundAngleDegrees <= 10.0)  return 0.98  * (OverMatchFactor ** 0.0637); // at 10 degrees
         else if (CompoundAngleDegrees <= 15.0)  return 1.0  * (OverMatchFactor ** 0.0969);
@@ -664,7 +593,7 @@ simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float
         else if (CompoundAngleDegrees <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
         else                                    return 34.49 * (OverMatchFactor ** 1.28631); // at 85 degrees
     }
-    else if (P.default.RoundType == RT_APBC) // from Darkest Orchestra
+    else if (P.RoundType == RT_APBC) // from Darkest Orchestra
     {
         if      (CompoundAngleDegrees <= 10.0)  return 1.04 * (OverMatchFactor ** 0.01555); // at 10 degrees
         else if (CompoundAngleDegrees <= 15.0)  return 1.06 * (OverMatchFactor ** 0.02315);
@@ -707,12 +636,12 @@ simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float PenetrationRatio, optional float OverMatchFactor)
 {
-    if (P.default.RoundType == RT_HVAP)
+    if (P.RoundType == RT_HVAP)
     {
         // Matt: TEST - maybe this should include 88mm APCR, which is same as HVAP?
-        if (P.default.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
+        if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.27)
             {
@@ -727,14 +656,14 @@ simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float 
             }
         }
     }
-    else if (P.default.RoundType == RT_APDS)
+    else if (P.RoundType == RT_APDS)
     {
         if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.2)
         {
             return true;
         }
     }
-    else if (P.default.RoundType == RT_HEAT) // no chance of shatter for HEAT round
+    else if (P.RoundType == RT_HEAT) // no chance of shatter for HEAT round
     {
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
@@ -763,7 +692,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
-    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle so we call TD on that
+    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle itself, so we call TD on that
     else if (CannonPawn != none && CannonPawn.VehicleBase != none)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
@@ -773,8 +702,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         CannonPawn.VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
-
-    bRoundShattered = false; // reset for next time
 }
 
 // Modified to handle DH's extended ammo system
@@ -1113,7 +1040,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
 
-    // Calculate projectile's starting location
+    // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
     if (bDoOffsetTrace)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);

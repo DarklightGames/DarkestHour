@@ -131,6 +131,7 @@ function DenyEntry(Pawn P, int MessageNum)
     P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNum);
 }
 
+// Modified to remove lots of irrelevant tank stuff & to use APCDamageModifier instead of TankDamageModifier
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local float VehicleDamageMod;
@@ -140,14 +141,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
-    // Hacked in APC damage mods for AT Guns, but bullets/bayo/bashing still shouldn't work...
+    // Set damage modifier from the DamageType
     if (DamageType != none)
     {
         if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.05)
@@ -160,47 +161,27 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    if (bLogPenetration)
-    {
-        Log("VehHitpoints start: Damage =" @ Damage);
-    }
+    // Add in the DamageType's vehicle damage modifier & a little damage randomisation
+    Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
 
+    // Check RO VehHitPoints, but only for any ammo store (AT gun has no driver or engine)
+    // We will, however, leave the ammo store because we need it to get around a collision issue with the gunner (player) // Matt: TEST what this means
     for (i = 0; i < VehHitpoints.Length; ++i)
     {
-        if (VehHitpoints[i].HitPointType == HP_Driver)
+        if (VehHitpoints[i].HitPointType == HP_AmmoStore && IsPointShot(HitLocation, Momentum, 1.0, i))
         {
-            // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            if (bDebuggingText)
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
-                {
-                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-                }
+                Level.Game.Broadcast(self, "Hit AT gun ammo store");
             }
-            // Damage for small (non penetrating) arms
-            else
-            {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
-                {
-                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-                }
-            }
-        }
-        // An AT gun does not have an engine - we will however leave the ammo store because we need it to get around a collision issue with the gunner (player)
-        else if (IsPointShot(HitLocation,Momentum, 1.0, i))
-        {
-            if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                Damage *= VehHitpoints[i].DamageMultiplier;
-                break;
-            }
+
+            Damage *= VehHitpoints[i].DamageMultiplier;
+            break;
         }
     }
 
-    // Add in the vehicle damage modifier for the actual damage to the vehicle itself
-    Damage *= VehicleDamageMod;
-
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
 defaultproperties

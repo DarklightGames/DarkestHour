@@ -185,6 +185,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
 
+    // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
     if (bDoOffsetTrace)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
@@ -225,6 +226,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
     }
 
+    // Now spawn the projectile
     P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
     // Swap to the next round type after firing // note this 'if' is removed & is the only change in this override

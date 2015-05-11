@@ -286,6 +286,19 @@ state SpeechMenuVisible
     }
 }
 
+exec function VehicleTalk()
+{
+    if (ViewportOwner != none &&
+        ViewportOwner.Actor != none &&
+        ViewportOwner.Actor.Pawn != none &&
+        ViewportOwner.Actor.Pawn.IsA('Vehicle'))
+    {
+        TypedStr = "VehicleSay ";
+        TypedStrPos = 11;
+        TypingOpen();
+    }
+}
+
 defaultproperties
 {
 }

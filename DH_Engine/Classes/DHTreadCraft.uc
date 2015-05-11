@@ -27,17 +27,16 @@ var     ENewHitPointType    NewHitPointType;
 
 struct NewHitpoint
 {
-    var   float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var   float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var   float             PointScale;
-    var   name              PointBone;          // bone to reference in offset
-    var   vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var   bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var   float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var   ENewHitPointType  NewHitPointType;    // what type of hit point this is
+    var   float             PointRadius;       // squared radius of the head of the pawn that is vulnerable to headshots
+    var   float             PointHeight;       // distance from base of neck to center of head - used for headshot calculation
+    var   float             PointScale;        // scale factor for radius & height
+    var   name              PointBone;         // bone to reference in offset
+    var   vector            PointOffset;       // amount to offset the hitpoint from the bone
+    var   bool              bPenetrationPoint; // this is a penetration point, open hatch, etc
+    var   float             DamageMultiplier;  // amount to scale damage to the vehicle if this point is hit
+    var   ENewHitPointType  NewHitPointType;   // what type of hit point this is
 };
-
-var     array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
 var     texture     PeriscopeOverlay;
@@ -49,54 +48,50 @@ var     bool        bEmittersOn;            // dust & exhaust emitters are activ
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
-var     bool        bCrushedAnObject;       // value set when the vehicle crushes something
-var     float       LastCrushedTime;
-var     float       ObjectCrushStallTime;
+var     bool        bCrushedAnObject;       // vehicle has just crushed something, causing temporary movement stall
+var     float       LastCrushedTime;        // records time object was crushed, so we know when the movement stall should end
+var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 
 // Positions
-var     int         UnbuttonedPositionIndex;
-var     int         FirstRiderPositionIndex;
+var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
+var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
 var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
 var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 
 // Armor penetration
-var     bool        bProjectilePenetrated; // shell has passed penetration test & has entered the hull or turret
-var     bool        bRoundShattered;       // tells projectile to show shattered round effects
-var     bool        bRearHit;              // saves rear hit in DHShouldPenetrate, so TakeDamage can tell if an engine hit should stop the round penetrating any further
-
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
 var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
+var     bool        bProjectilePenetrated;     // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
+var     bool        bTurretPenetration;        // shell has penetrated the turret (used in TakeDamage)
+var     bool        bRearHullPenetration;      // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
-// Damage stuff
-var     float       TreadDamageThreshold;    // allows for tank by tank adjustment of tread vulnerability
-var     float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
-var     float       DriverKillChance;        // chance that shrapnel will kill driver
-var     float       GunnerKillChance;        // chance that shrapnel will kill bow gunner
-var     texture     DamagedPeriscopeOverlay;
+// Damage (allows for adjustment for indivudual vehicles in subclasses)
+var     float       AmmoIgnitionProbability;   // chance that direct hit on ammo store will ignite it
+var     float       TurretDetonationThreshold; // chance that shrapnel will detonate turret ammo
+var     float       DriverKillChance;          // chance that shrapnel will kill driver
+var     float       CommanderKillChance;       // chance that shrapnel will kill commander
+var     float       GunnerKillChance;          // chance that shrapnel will kill bow gunner
+var     float       GunDamageChance;           // chance that shrapnel will damage gun pivot mechanism
+var     float       TraverseDamageChance;      // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
+var     float       OpticsDamageChance;        // chance that shrapnel will break gunsight optics
+var     texture     DamagedPeriscopeOverlay;   // gunsight overlay to show if optics have been broken
+var     float       TreadDamageThreshold;      // minimum TreadDamageModifier in DamageType to possibly break treads
 
-// Turret damage stuff
-var     bool        bWasTurretHit;
-var     float       CommanderKillChance;
-var     float       GunDamageChance;
-var     float       TraverseDamageChance;
-var     float       OpticsDamageChance;
-var     float       TurretDetonationThreshold; // chance that turret ammo will go up
-
-// Engine stuff
-var     bool        bEngineOff;      // tank engine is simply switched off
-var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchTime;
-var     float       IgnitionSwitchInterval;
-var     sound       DamagedStartUpSound;
-var     sound       DamagedShutDownSound;
+// Engine
+var     bool        bEngineOff;                // tank engine is simply switched off
+var     bool        bSavedEngineOff;           // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
+var     float       IgnitionSwitchInterval;    // interval in seconds before engine can be switched on/off again, used to stop players spamming the ignition
+var     float       IgnitionSwitchTime;        // records last engine on/off time, so we can check IgnitionSwitchInterval
+var     sound       DamagedStartUpSound;       // sound played when trying to start a damaged engine
+var     sound       DamagedShutDownSound;      // sound played when damaged engine shuts down
 
 // Treads
+//var   float       TreadHitMaxHeight; // the height (in Unreal units) of the top of the treads above the hull mesh origin, used to detect tread hits // NEW METHOD FOR LATER (see notes in TakeDamage)
 var     int         LeftTreadIndex, RightTreadIndex;
 var     rotator     LeftTreadPanDirection, RightTreadPanDirection;
 var     material    DamagedTreadPanner;
-
 var     class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
 var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
 
@@ -108,7 +103,7 @@ var     name        FireAttachBone;
 var     vector      FireEffectOffset;
 var     float       HullFireChance;
 var     float       HullFireHEATChance;
-var     bool        bOnFire; // the vehicle itself is on fire
+var     bool        bOnFire;               // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
 var     float       PlayerFireDamagePer2Secs;
 var     float       NextHullFireDamageTime;
@@ -126,8 +121,8 @@ var     bool        bHullMGFireNeeded;
 var     float       HullMGHatchFireSpawnTime;
 var     float       FireDetonationChance;   // chance of a fire blowing a tank up, runs each time the fire does damage
 var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the tank, runs each time engine takes fire damage
-var     bool        bFirstHit;
-var     bool        bWasHEATRound;          // whether the round doing damage was a HEAT round or not
+var     bool        bFirstPenetratingHit;
+var     bool        bHEATPenetration;       // a penetrating round is a HEAT round
 var     Controller  WhoSetOnFire;
 var     int         HullFireStarterTeam;
 var     Controller  WhoSetEngineOnFire;
@@ -173,8 +168,7 @@ replication
 //      bEngineDead                                 // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax                             // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 //      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
-//      bProjectilePenetrated, bFirstHit            // Matt: removed as not even used clientside
-//      bRoundShattered                             // Matt: removed as is set independently on client & server & so doesn't need replicating
+//      bProjectilePenetrated, bFirstPenetratingHit // Matt: removed as not even used clientside
 //      bPeriscopeDamaged                           // Matt: removed variable as is part of functionality never implemented
 
     // Functions a client can call on the server
@@ -436,37 +430,35 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+// Also to play idle animation for other net clients (not just owning client) & on server if collision is animated, so we reset visuals like hatches & any moving collision boxes
+// And to avoid unnecessary stuff on dedicated server & the call to Super in Vehicle class (it only duplicated)
 simulated event DrivingStatusChanged()
 {
     local PlayerController PC;
 
-    PC = Level.GetLocalPlayerController();
-
-    if (!bDriving || bEngineOff)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        if (LeftTreadPanner != none)
+        // Not moving, so no motion sound or tread movement
+        if (!bDriving)
         {
-            LeftTreadPanner.PanRate = 0.0;
+            if (LeftTreadPanner != none)
+            {
+                LeftTreadPanner.PanRate = 0.0;
+            }
+
+            if (RightTreadPanner != none)
+            {
+                RightTreadPanner.PanRate = 0.0;
+            }
+
+            MotionSoundVolume = 0.0;
+            UpdateMovementSound();
         }
 
-        if (RightTreadPanner != none)
-        {
-            RightTreadPanner.PanRate = 0.0;
-        }
+        PC = Level.GetLocalPlayerController();
 
-        // Not moving, so no motion sound
-        MotionSoundVolume = 0.0;
-        UpdateMovementSound();
-    }
-
-    if (bDriving && PC != none && (PC.ViewTarget == none || !(PC.ViewTarget.IsJoinedTo(self))))
-    {
-        bDropDetail = (Level.bDropDetail || (Level.DetailMode == DM_Low));
-    }
-    else
-    {
-        bDropDetail = false;
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
     }
 
     if (bDriving)
@@ -477,13 +469,12 @@ simulated event DrivingStatusChanged()
     {
         Disable('Tick');
 
-        if (HasAnim(BeginningIdleAnim))
+        // Play neutral idle animation if player has exited, but not on a server collision is animated
+        if ((Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && HasAnim(BeginningIdleAnim))
         {
             PlayAnim(BeginningIdleAnim);
         }
     }
-
-    super(Vehicle).DrivingStatusChanged();
 }
 
 // Modified to add engine start/stop hint
@@ -924,14 +915,7 @@ simulated state ViewTransition
             // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
             if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
             {
-                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                {
-                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-                }
-                else
-                {
-                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-                }
+                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
             }
 
             // Play any transition animation for the driver
@@ -1439,9 +1423,14 @@ function TakeFireDamage()
             }
         }
 
-        // Chance of cooking off ammo/igniting fuel before health runs out
+        // Chance of cooking off ammo before health runs out
         if (FRand() < FireDetonationChance)
         {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Fire detonated ammo");
+            }
+
             TakeDamage(Health, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
         }
         // Otherwise the vehicle takes normal fire damage
@@ -1843,11 +1832,13 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float   HitAngleDegrees, Side, InAngle, InAngleDegrees;
-    local vector  LocDir, HitDir, X, Y, Z;
-    local rotator AimRot;
+    local float  HitAngleDegrees, Side, InAngle, InAngleDegrees;
+    local vector LocDir, HitDir, X, Y, Z;
+    local bool   bPenetrated;
+
+    bRearHullPenetration = false; // reset before we start
 
     // Figure out which side we hit
     LocDir = vector(Rotation);
@@ -1863,91 +1854,74 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
         HitAngleDegrees = 360.0 - HitAngleDegrees;
     }
 
-    // Penetration debugging
-    if (bLogPenetration)
+    if (bPenetrationText && Role == ROLE_Authority)
     {
-        Log("Hit angle =" @ HitAngleDegrees @ "degrees, Side =" @ Side);
-    }
-
-    if (bDebuggingText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Hit angle:" @ HitAngleDegrees @ "degrees");
-    }
-
-    if (bDrawPenetration)
-    {
-        ClearStayingDebugLines();
-        AimRot = Rotation;
-        AimRot.Yaw += (FrontLeftAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 255, 0);
-
-        AimRot = Rotation;
-        AimRot.Yaw += (FrontRightAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 255, 255, 0);
-
-        AimRot = Rotation;
-        AimRot.Yaw += (RearRightAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 0, 255);
-
-        AimRot = Rotation;
-        AimRot.Yaw += (RearLeftAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 0, 0);
+        Level.Game.Broadcast(self, "Hull hit angle =" @ HitAngleDegrees @ "degrees");
     }
 
     // Frontal hit
     if (HitAngleDegrees >= FrontLeftAngle || HitAngleDegrees < FrontRightAngle)
     {
-        InAngle = Acos(Normal(-HitRotation) dot Normal(X));
-        InAngleDegrees = InAngle * 57.2957795131;
-
-        // Penetration debugging
+        // Debugging
         if (bDrawPenetration)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log("We hit the front of the vehicle");
         }
 
-        // Fix hit detection bug
+        if (bLogPenetration)
+        {
+            Log("Front hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+        }
+
+        // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
+        InAngle = Acos(Normal(-HitRotation) dot Normal(X));
+        InAngleDegrees = InAngle * 57.2957795131;
+
+        // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to opposite side
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from front to REAR hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm");
+                Level.Game.Broadcast(self, "Hit bug - switching from front to REAR hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm, slope =" @ URearArmorSlope);
             }
 
-            // Run a pre-check
-            if (URearArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
+            // Checking that PenetrationNumber > ArmorFactor 1st is a quick pre-check that it's worth doing more complex calculations in CheckPenetration()
+            bPenetrated = PenetrationNumber > URearArmorFactor && CheckPenetration(P, URearArmorFactor, GetCompoundAngle(InAngle, URearArmorSlope), PenetrationNumber);
+            bRearHullPenetration = bPenetrated; // record that we penetrated the rear of vehicle, which is useful in TakeDamage()
 
-            bRearHit = true;
-
-            return CheckPenetration(P, URearArmorFactor, GetCompoundAngle(InAngle, URearArmorSlope), PenetrationNumber);
+            return bPenetrated;
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Front hull hit, base armor =" @ UFrontArmorFactor * 10.0 $ "mm");
+            Level.Game.Broadcast(self, "Front hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm, slope =" @ UFrontArmorSlope);
         }
 
-        // Run a pre-check
-        if (UFrontArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
+        return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
     }
 
     // Right side hit
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
+        // Debugging
+        if (bDrawPenetration)
+        {
+            ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+        }
+
+        if (bLogPenetration)
+        {
+            Log("Right side hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+        }
+
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
+        if (bHasAddedSideArmor && P.RoundType == RT_HEAT) // using RoundType instead of P.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -1955,99 +1929,86 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
         InAngle = Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
-        // Penetration Debugging
-        if (bDrawPenetration)
-        {
-            ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log("We hit the right side of the vehicle");
-        }
-
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm");
+                Level.Game.Broadcast(self, "Hit bug - switching from right to LEFT hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm, slope =" @ ULeftArmorSlope);
             }
 
-            // Run a pre-check
-            if (ULeftArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
+            return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Right hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Right hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm, slope =" @ URightArmorSlope);
         }
 
-        // Run a pre-check
-        if (URightArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
+        return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
     }
 
     // Rear hit
     else if (HitAngleDegrees >= RearRightAngle && HitAngleDegrees < RearLeftAngle)
     {
-        InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
-        InAngleDegrees = InAngle * 57.2957795131;
-
-        //  Penetration debugging
+        // Debugging
         if (bDrawPenetration)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log ("We hit the back of the vehicle");
         }
+
+        if (bLogPenetration)
+        {
+            Log("Rear hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+        }
+
+        InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
+        InAngleDegrees = InAngle * 57.2957795131;
 
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from rear to FRONT hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm");;
+                Level.Game.Broadcast(self, "Hit bug - switching from rear to FRONT hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm, slope =" @ UFrontArmorSlope);
             }
 
-            // Run a pre-check
-            if (UFrontArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
+            return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Rear hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Rear hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm, slope =" @ URearArmorSlope);
         }
 
-        // Run a pre-check
-        if (URearArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
+        bPenetrated = PenetrationNumber > URearArmorFactor && CheckPenetration(P, URearArmorFactor, GetCompoundAngle(InAngle, URearArmorSlope), PenetrationNumber);
+        bRearHullPenetration = bPenetrated; // record that we penetrated the rear of vehicle, which is useful in TakeDamage()
 
-        return CheckPenetration(P, URearArmorFactor, GetCompoundAngle(InAngle, URearArmorSlope), PenetrationNumber);
+        return bPenetrated;
     }
 
     // Left side hit
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
+        // Debugging
+        if (bDrawPenetration)
+        {
+            ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+        }
+
+        if (bLogPenetration)
+        {
+            Log("Left side hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+        }
+
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
+        if (bHasAddedSideArmor && P.RoundType == RT_HEAT) // using RoundType instead of P.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -2055,45 +2016,23 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
         InAngle = Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
-        //  Penetration debugging
-        if (bDrawPenetration)
-        {
-            ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-            Log("We hit the left side of the vehicle");
-        }
-
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm");;
+                Level.Game.Broadcast(self, "Hit bug - switching from left to RIGHT hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm, slope =" @ URightArmorSlope);
             }
 
-            // Run a pre-check
-            if (URightArmorFactor > PenetrationNumber)
-            {
-                return false;
-            }
-
-            return CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
+            return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Left hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Left hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm, slope =" @ ULeftArmorSlope);
         }
 
-        // Run a pre-check
-        if (ULeftArmorFactor > PenetrationNumber)
-        {
-            return false;
-        }
-
-        return CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
+        return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
     }
 
     // Should never happen !
@@ -2108,7 +2047,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
 
 // Matt: new generic function to handle penetration calcs for any shell type
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
+simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
     local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
 
@@ -2121,48 +2060,30 @@ simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float
     }
 
     // Calculate the SlopeMultiplier & EffectiveArmor, to give us the PenetrationRatio
-    OverMatchFactor = ArmorFactor / P.default.ShellDiameter;
+    OverMatchFactor = ArmorFactor / P.ShellDiameter;
     SlopeMultiplier = GetArmorSlopeMultiplier(P, CompoundAngleDegrees, OverMatchFactor);
     EffectiveArmor = ArmorFactor * SlopeMultiplier;
     PenetrationRatio = PenetrationNumber / EffectiveArmor;
 
     // Penetration debugging
-    if (Role == ROLE_Authority)
+    if (bPenetrationText && Role == ROLE_Authority)
     {
-        if (bDebuggingText)
-        {
-            Level.Game.Broadcast(self, "CompoundAngle:" @ CompoundAngleDegrees @ "SlopeMultiplier:" @ SlopeMultiplier);
-        }
-
-        if (bPenetrationText)
-        {
-            Level.Game.Broadcast(self, "Effective armor:" @ EffectiveArmor * 10.0 $ "mm" @ "Shot penetration:" @ PenetrationNumber * 10.0 $ "mm");
-        }
+        Level.Game.Broadcast(self, "Effective armor:" @ EffectiveArmor * 10.0 $ "mm" @ " Shot penetration:" @ PenetrationNumber * 10.0 $ "mm");
+        Level.Game.Broadcast(self, "Compound angle:" @ CompoundAngleDegrees @ " Slope multiplier:" @ SlopeMultiplier);
     }
 
-    // Now we have the necessary factors, check whether the round penetrates the armor
-    if (PenetrationRatio >= 1.0)
-    {
-        // Check if the round should shatter on the armor
-        if (P.default.bShatterProne)
-        {
-            bRoundShattered = CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
-        }
+    // Check if round shattered on armor
+    P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
 
-        if (!bRoundShattered)
-        {
-            bProjectilePenetrated = true;
-            bWasTurretHit = false;
-            bWasHEATRound = (P.default.RoundType == RT_HEAT);
+    // Check if round penetrated the vehicle
+    bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
-            return true;
-        }
-    }
+    // Set TakeDamage-related variables
+    bTurretPenetration = false;
+    bRearHullPenetration = bRearHullPenetration && bProjectilePenetrated;
+    bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated; // would be much better to flag bIsHeatRound in DamageType, but would need new DHWeaponDamageType class
 
-    bProjectilePenetrated = false;
-    bWasTurretHit = false;
-
-    return false;
+    return bProjectilePenetrated;
 }
 
 // Returns the compound hit angle
@@ -2178,14 +2099,14 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
-simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
+simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, CompoundAngleFixed;
     local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
 
-    if (P.default.RoundType == RT_HVAP)
+    if (P.RoundType == RT_HVAP)
     {
-        if (P.default.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
+        if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (CompoundAngleDegrees <= 30.0)
             {
@@ -2216,13 +2137,13 @@ simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> 
             }
         }
     }
-    else if (P.default.RoundType == RT_APDS)
+    else if (P.RoundType == RT_APDS)
     {
         CompoundExp = CompoundAngleDegrees ** 2.6;
 
         return 2.71828 ** (CompoundExp * 0.00003011);
     }
-    else if (P.default.RoundType == RT_HEAT)
+    else if (P.RoundType == RT_HEAT)
     {
         CompoundAngleFixed = Abs(CompoundAngleDegrees * 0.01745329252); // convert angle back to radians
 
@@ -2250,10 +2171,10 @@ simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> 
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
-simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
+simulated function float ArmorSlopeTable(DHAntiVehicleProjectile P, float CompoundAngleDegrees, float OverMatchFactor)
 {
     // after Bird & Livingston:
-    if (P.default.RoundType == RT_AP) // from Darkest Orchestra
+    if (P.RoundType == RT_AP) // from Darkest Orchestra
     {
         if      (CompoundAngleDegrees <= 10.0)  return 0.98  * (OverMatchFactor ** 0.0637); // at 10 degrees
         else if (CompoundAngleDegrees <= 15.0)  return 1.0  * (OverMatchFactor ** 0.0969);
@@ -2272,7 +2193,7 @@ simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float
         else if (CompoundAngleDegrees <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
         else                                    return 34.49 * (OverMatchFactor ** 1.28631); // at 85 degrees
     }
-    else if (P.default.RoundType == RT_APBC) // from Darkest Orchestra
+    else if (P.RoundType == RT_APBC) // from Darkest Orchestra
     {
         if      (CompoundAngleDegrees <= 10.0)  return 1.04 * (OverMatchFactor ** 0.01555); // at 10 degrees
         else if (CompoundAngleDegrees <= 15.0)  return 1.06 * (OverMatchFactor ** 0.02315);
@@ -2315,11 +2236,11 @@ simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float PenetrationRatio, optional float OverMatchFactor)
 {
-    if (P.default.RoundType == RT_HVAP)
+    if (P.RoundType == RT_HVAP)
     {
-        if (P.default.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
+        if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.27)
             {
@@ -2334,14 +2255,14 @@ simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float 
             }
         }
     }
-    else if (P.default.RoundType == RT_APDS)
+    else if (P.RoundType == RT_APDS)
     {
         if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.2)
         {
             return true;
         }
     }
-    else if (P.default.RoundType == RT_HEAT) // no chance of shatter for HEAT round
+    else if (P.RoundType == RT_HEAT) // no chance of shatter for HEAT round
     {
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
@@ -2358,27 +2279,29 @@ simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float 
 // Modified to add all the DH vehicle damage stuff
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
+    local DHTankCannonPawn CannonPawn;
     local Controller InstigatorController;
-    local vector     LocDir, HitDir, X, Y, Z;
-    local float      HitAngle, Side, InAngle, VehicleDamageMod;
-    local int        HitPointDamage, InstigatorTeam, i;
-
+    local vector     HitDir, LocDir, X, Y, Z;
+    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, InAngle, HitAngleDegrees, Side; // HitHeight
+    local int        InstigatorTeam, PossibleDriverDamage, i;
+    local bool       bEngineStoppedProjectile, bAmmoDetonation;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Quick fix for the thing giving itself impact damage
     if (InstigatedBy == self && DamageType != VehicleBurningDamType)
     {
+        ResetTakeDamageVariables();
+
         return;
     }
 
@@ -2401,313 +2324,405 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
             if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
+                ResetTakeDamageVariables();
+
                 return;
             }
         }
     }
 
-    // Modify the damage based on what it should do to the vehicle - overloaded here so tank cannot take any bullet/bash/bayo damage
+    // Set damage modifiers from the DamageType
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
         VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
+        TreadDamageMod = class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier;
     }
     else if (class<ROVehicleDamageType>(DamageType) != none)
     {
         VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
+        TreadDamageMod = class<ROVehicleDamageType>(DamageType).default.TreadDamageModifier;
     }
 
-    for (i = 0; i < VehHitpoints.Length; ++i)
-    {
-        HitPointDamage = Damage;
-
-        if (VehHitpoints[i].HitPointType == HP_Driver)
-        {
-            // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
-            {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
-                {
-                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-                }
-            }
-            // Damage for small (non penetrating) arms
-            else
-            {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
-                {
-                    Driver.TakeDamage(150, InstigatedBy, HitLocation, Momentum, DamageType);
-                }
-            }
-        }
-        else if (IsPointShot(HitLocation,Momentum, 1.0, i))
-        {
-            HitPointDamage *= VehHitpoints[i].DamageMultiplier;
-            HitPointDamage *= VehicleDamageMod;
-
-            if (bLogPenetration)
-            {
-                Log(" We hit" @ GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType) @ "hitpoint.");
-            }
-
-            if (VehHitpoints[i].HitPointType == HP_Engine)
-            {
-                // Extra check here prevents splashing HE/HEAT from triggering engine fires
-                if (DamageType != none && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && bProjectilePenetrated == true)
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Engine hit effective");
-                    }
-
-                    DamageEngine(HitPointDamage, InstigatedBy, HitLocation, Momentum, DamageType);
-                    Damage *= 0.55; // hitting the engine shouldn't blow up the tank automatically!
-                }
-            }
-            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                // Extra check here prevents splashing HE/HEAT from triggering ammo detonation or fires; Engine hit will stop shell from passing through to cabin
-                if (bProjectilePenetrated == true && bRearHit == false)
-                {
-                    if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5 &&
-                        (FRand() <= AmmoIgnitionProbability || (bWasHEATRound && FRand() < 0.85)))
-                    {
-                        if (bDebuggingText)
-                        {
-                            Level.Game.Broadcast(self, "Ammo hit effective");
-                        }
-
-                        Damage *= Health;
-                        break;
-                    }
-                    else // either detonate above - or - set the sucker on fire!
-                    {
-                       HullFireChance = 0.75;
-                       HullFireHEATChance = 0.9;
-                    }
-                }
-            }
-        }
-    }
-
-    for (i = 0; i < NewVehHitpoints.Length; ++i)
-    {
-        HitPointDamage = Damage;
-
-        if (bLogPenetration)
-        {
-            Log("We hit" @ GetEnum(enum'ENewHitPointType', NewVehHitpoints[i].NewHitPointType) @ "hitpoint");
-        }
-
-        if (IsNewPointShot(HitLocation,Momentum, 1.0, i))
-        {
-            HitPointDamage *= VehicleDamageMod;
-
-            if  (NewVehHitpoints[i].NewHitPointType == NHP_GunOptics) // can be useful for Stug and JP
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Optics hit");
-                }
-
-                DHTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
-            }
-            else if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
-            {
-            }
-            else if (NewVehHitpoints[i].NewHitPointType == NHP_Traverse && bProjectilePenetrated == true) // useful for assault guns
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Turret ring hit");
-                }
-
-                DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
-            }
-            else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch && bProjectilePenetrated == true) // useful for assault guns
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Gun pivot hit");
-                }
-
-                DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
-            }
-        }
-    }
-
-    if (bProjectilePenetrated == true)
-    {
-        if (bWasTurretHit == false)
-        {
-            if (bRearHit == false && Driver != none && FRand() < Damage/DriverKillChance)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Driver killed");
-                }
-
-                Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
-            }
-
-            if (bRearHit == false && WeaponPawns[1] != none && WeaponPawns[1].Driver != none && FRand() < Damage/GunnerKillChance)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Hull gunner killed");
-                }
-
-                WeaponPawns[1].Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
-            }
-        }
-        else
-        {
-            if (WeaponPawns[0] != none)
-            {
-                if (WeaponPawns[0].Driver != none && FRand() < Damage/CommanderKillChance)
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Commander killed");
-                    }
-
-                    WeaponPawns[0].Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
-                }
-
-                if (FRand() < Damage/OpticsDamageChance)
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Optics destroyed");
-                    }
-
-                    DHTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
-                }
-
-                if (FRand() < Damage/GunDamageChance)
-                {
-                    if (bDebuggingText)
-                    Level.Game.Broadcast(self, "Gun Pivot Damaged");
-                    DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
-                }
-
-                if (FRand() < Damage/TraverseDamageChance)
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Traverse Damaged");
-                    }
-
-                    DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
-                }
-            }
-
-            if (FRand() < Damage/TurretDetonationThreshold)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Turret ammo detonated");
-                }
-
-                Damage *= Health;
-            }
-            else
-            {
-                Damage *= 0.55;
-            }
-        }
-
-        if (!bFirstHit)
-        {
-            HullFireChance = 0.75;
-            HullFireHEATChance = 0.9;
-        }
-    }
-
-    // Tread damage calculations
-    LocDir = vector(Rotation);
-    LocDir.Z = 0.0;
-    HitDir =  HitLocation - Location;
-    HitDir.Z = 0.0;
-    HitAngle = Acos(Normal(LocDir) dot Normal(HitDir));
-
-    // Convert the angle into degrees from radians
-    HitAngle *= 57.2957795131;
-
-    GetAxes(Rotation, X, Y, Z);
-    Side = Y dot HitDir;
-
-    if (Side >= 0.0)
-    {
-       HitAngle = 360.0 - HitAngle;
-    }
-
-    // Left side hit
-    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit)
-    {
-        HitDir = HitLocation - Location;
-        InAngle= Acos(Normal(HitDir) dot Normal(Z));
-
-        if (InAngle > TreadHitMinAngle)
-        {
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
-            {
-                DamageTrack(true);
-
-                if (bDebugTreadText && Role == ROLE_Authority)
-                {
-                    Level.Game.Broadcast(self, "Left track damaged");
-                }
-            }
-        }
-    }
-    //Right side hit
-    else if ((HitAngle >= RearLeftAngle && HitAngle < FrontLeftAngle) && !bWasTurretHit)
-    {
-        HitDir = HitLocation - Location;
-        InAngle= Acos(Normal(HitDir) dot Normal(Z));
-
-        if (InAngle > TreadHitMinAngle)
-        {
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
-            {
-                DamageTrack(false);
-
-                if (bDebugTreadText && Role == ROLE_Authority)
-                {
-                    Level.Game.Broadcast(self, "Right track damaged");
-                }
-            }
-        }
-    }
-
-    // If I allow randomised damage then things break once the hull catches fire
+    // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
     if (DamageType != VehicleBurningDamType)
     {
         Damage *= RandRange(0.75, 1.08);
     }
 
-    // Add in the vehicle damage modifier for the actual damage to the vehicle itself
+    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-
-    // This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
-    if (!bOnFire && Damage > 0 && Health > 0 && class<ROWeaponDamageType>(DamageType) != none &&
-        class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5 && bProjectilePenetrated == true)
+    // Check RO VehHitPoints (driver, engine, ammo)
+    for (i = 0; i < VehHitpoints.Length; ++i)
     {
-        if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
+        // Series of checks to see if we hit the vehicle driver
+        if (VehHitpoints[i].HitPointType == HP_Driver)
         {
-            StartHullFire(InstigatedBy);
+            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed)
+            {
+                // Non-penetrating rounds have a limited HitCheckDistance
+                // For penetrating rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
+                if (!bProjectilePenetrated)
+                {
+                    HitCheckDistance = DriverHitCheckDist;
+                }
+
+                if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
+                {
+                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                }
+            }
+        }
+        else if (bProjectilePenetrated && IsPointShot(Hitlocation, Momentum, 1.0, i))
+        {
+            if (bLogPenetration)
+            {
+                Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
+            }
+
+            // Engine hit
+            if (VehHitpoints[i].HitPointType == HP_Engine)
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Hit vehicle engine");
+                }
+
+                DamageEngine(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                Damage *= 0.55; // reduce damage to vehicle itself if hit engine
+
+                // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitPoints
+                if (bRearHullPenetration)
+                {
+                    bEngineStoppedProjectile = true;
+                    break;
+                }
+            }
+            // Hit ammo store
+            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+            {
+                // Random chance that ammo explodes & vehicle is destroyed
+                if ((bHEATPenetration && FRand() < 0.85) || (!bHEATPenetration && FRand() < AmmoIgnitionProbability))
+                {
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                    }
+
+                    Damage *= Health;
+                    bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+                    break;
+                }
+                // Even if ammo did not explode, increase the chance of a fire breaking out
+                else
+                {
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                    }
+
+                    HullFireChance = FMax(0.75, HullFireChance);
+                    HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                }
+            }
         }
     }
 
-    // Reset everything
-    bWasHEATRound = false;
-    bRearHit = false;
-    bFirstHit = false;
+    if (!bEngineStoppedProjectile && !bAmmoDetonation) // we can skip lots of checks if either has been flagged true
+    {
+        CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+
+        // Check additional DH NewVehHitPoints
+        for (i = 0; i < NewVehHitpoints.Length; ++i)
+        {
+            if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
+            {
+                if (bLogPenetration)
+                {
+                    Log("We hit" @ GetEnum(enum'ENewHitPointType', NewVehHitpoints[i].NewHitPointType) @ "hitpoint");
+                }
+
+                // Hit periscope optics
+                if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
+                {
+                    // does nothing at present - possibly add in future
+                }
+                else if (CannonPawn != none)
+                {
+                    // Hit exposed gunsight optics
+                    if (NewVehHitpoints[i].NewHitPointType == NHP_GunOptics)
+                    {
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Hit gunsight optics");
+                        }
+
+                        CannonPawn.DamageCannonOverlay();
+                    }
+                    else if (bProjectilePenetrated)
+                    {
+                        // Hit turret ring or gun traverse mechanism
+                        if (NewVehHitpoints[i].NewHitPointType == NHP_Traverse)
+                        {
+                            if (bDebuggingText)
+                            {
+                                Level.Game.Broadcast(self, "Hit gun/turret traverse");
+                            }
+
+                            CannonPawn.bTurretRingDamaged = true;
+                        }
+                        // Hit gun pivot mechanism
+                        else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                        {
+                            if (bDebuggingText)
+                            {
+                                Level.Game.Broadcast(self, "Hit gun pivot");
+                            }
+
+                            CannonPawn.bGunPivotDamaged = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
+        if (bProjectilePenetrated)
+        {
+            // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
+            if (CannonPawn != none && CannonPawn.Cannon != none && CannonPawn.Cannon.bHasTurret)
+            {
+                if (bTurretPenetration)
+                {
+                    HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
+                    TurretChanceModifier = 1.0;
+                }
+                else
+                {
+                    HullChanceModifier = 1.0;
+                    TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret 
+                }
+            }
+            else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
+            {
+                HullChanceModifier = 1.0;
+                TurretChanceModifier = 1.0;
+            }
+
+            if (CannonPawn != none)
+            {
+                // Random chance of shrapnel killing commander
+                if (CannonPawn.Driver != none && FRand() < (Float(Damage) / CommanderKillChance * TurretChanceModifier))
+                {
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Commander killed by shrapnel");
+                    }
+
+                    CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                }
+
+                // Random chance of shrapnel damaging gunsight optics
+                if (FRand() < (Float(Damage) / OpticsDamageChance * TurretChanceModifier))
+                {
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Gunsight optics destroyed by shrapnel");
+                    }
+
+                    CannonPawn.DamageCannonOverlay();
+                }
+
+                // Random chance of shrapnel damaging gun pivot mechanism
+                if (FRand() < (Float(Damage) / GunDamageChance * TurretChanceModifier))
+                {
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                    }
+
+                    CannonPawn.bGunPivotDamaged = true;
+                }
+
+                // Random chance of shrapnel damaging gun traverse mechanism
+                if (FRand() < (Float(Damage) / TraverseDamageChance * TurretChanceModifier))
+                {
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                    }
+
+                    CannonPawn.bTurretRingDamaged = true;
+                }
+            }
+
+            // Random chance of shrapnel detonating turret ammo & destroying the vehicle
+            if (FRand() < (Float(Damage) / TurretDetonationThreshold * TurretChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Turret ammo detonated by shrapnel");
+                }
+
+                Damage *= Health;
+                bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+            }
+            else if (bTurretPenetration)
+            {
+                Damage *= 0.55; // reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate
+            }
+
+            // Random chance of shrapnel killing driver
+            if (Driver != none && FRand() < (Float(Damage) / DriverKillChance * HullChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                }
+
+                Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+            }
+
+            // Random chance of shrapnel killing hull machine gunner
+            if (HullMG != none && Vehicle(HullMG.Owner) != none && Vehicle(HullMG.Owner).Driver != none && FRand() < (Float(Damage) / GunnerKillChance * HullChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+                }
+
+                Vehicle(HullMG.Owner).Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+            }
+        }
+
+    // Matt UK May 2015: in future I intend to add a modified method for track hit detection that works properly, with the changes shown commented out below
+    // Problem with original RO method above is the InAngle calculation is distorted by the position of the hit along the vehicle mesh's X axis
+    // My new method is simpler & works, producing consistent results along the length of the hull
+    // To implement it needs each tracked vehicle to have TreadHitMaxHeight set, being the height (in Unreal units) of the top of the tracks above the hull mesh origin
+    // I don't have time to do this for the 6.0 release, so will add later
+
+        // Check if we hit & damaged either track
+        if (TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
+        {
+            // Calculate height of HitLocation is in relation to hull mesh origin, expressed as an angle in radians
+            HitDir =  Hitlocation - Location;
+            GetAxes(Rotation, X, Y, Z);
+            InAngle = Acos(Normal(HitDir) dot Normal(Z));
+
+            // Calculate height of hit above/below hull mesh origin, having applied hull's rotation // NEW METHOD FOR LATER, replacing 3 lines above
+//          HitDir =  Hitlocation - Location;
+//          HitHeight = (HitDir << Rotation).Z;
+
+            // We hit low enough to possibly hit one of the tracks
+            if (InAngle > TreadHitMinAngle)
+//          if (HitHeight <= TreadHitMaxHeight) // NEW METHOD FOR LATER, replacing 'if' line above
+            {
+                // Now figure out which side of the vehicle we hit
+                LocDir = vector(Rotation);
+                LocDir.Z = 0.0;
+                HitDir.Z = 0.0;
+                HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
+//              GetAxes(Rotation, X, Y, Z); // NEW METHOD FOR LATER, moved down here from further up
+                Side = Y dot HitDir;
+
+                if (Side < 0.0)
+                {
+                    HitAngleDegrees = 360.0 - HitAngleDegrees;
+                }
+
+                // Right track hit
+                if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
+                {
+                    // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
+                    InAngle = Acos(Normal(-Momentum) dot Normal(Y)) * 57.2957795131;
+
+                    // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to left side (same as in DHShouldPenetrate)
+                    if (InAngle > 90.0)
+                    {
+                        if (!bLeftTrackDamaged)
+                        {
+                            DamageTrack(true);
+
+                            if (bDebugTreadText && Role == ROLE_Authority)
+                            {
+                                Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged"); // (HitHeight =" @ HitHeight $ ")");
+                            }
+                        }
+                    }
+                    // Otherwise it's a valid hit on the right track
+                    else if (!bRightTrackDamaged)
+                    {
+                        DamageTrack(false);
+
+                        if (bDebugTreadText && Role == ROLE_Authority)
+                        {
+                            Level.Game.Broadcast(self, "Right track damaged"); // (HitHeight =" @ HitHeight $ ")"); // NEW METHOD FOR LATER - add extra debug detail
+                        }
+                    }
+                }
+                // Left track hit
+                else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
+                {
+                    InAngle = Acos(Normal(-Momentum) dot Normal(-Y)) * 57.2957795131;
+
+                    // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to right side
+                    if (InAngle > 90.0)
+                    {
+                        if (!bRightTrackDamaged)
+                        {
+                            DamageTrack(false);
+
+                            if (bDebugTreadText && Role == ROLE_Authority)
+                            {
+                                Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged"); // (HitHeight =" @ HitHeight $ ")");
+                            }
+                        }
+                    }
+                    // Otherwise it's a valid hit on the left track
+                    else if (!bLeftTrackDamaged)
+                    {
+                        DamageTrack(true);
+
+                        if (bDebugTreadText && Role == ROLE_Authority)
+                        {
+                            Level.Game.Broadcast(self, "Left track damaged"); // (HitHeight =" @ HitHeight $ ")");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+
+    // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
+    if (bProjectilePenetrated && !bOnFire && Damage > 0 && Health > 0)
+    {
+        // Random chance of hull fire breaking out
+        if (!bEngineStoppedProjectile && ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance)))
+        {
+            StartHullFire(InstigatedBy);
+        }
+        // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations
+        else if (bFirstPenetratingHit)
+        {
+            bFirstPenetratingHit = false;
+            HullFireChance = FMax(0.75, HullFireChance);
+            HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+        }
+    }
+
+    ResetTakeDamageVariables();
+}
+
+// New function to reset all variables used in TakeDamage, ready for next time
+function ResetTakeDamageVariables()
+{
     bProjectilePenetrated = false;
-    bRoundShattered = false;
-    bWasTurretHit = false;
+    bTurretPenetration = false;
+    bRearHullPenetration = false;
+    bHEATPenetration = false;
 }
 
 // Modified to to kill engine if zero health & to add random chance of engine fire breaking out
@@ -2748,8 +2763,13 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     // Or if engine still alive, a random chance of engine fire breaking out
     else if (DamageType != VehicleBurningDamType && !bEngineOnFire && Damage > 0 && Health > 0)
     {
-        if ((!bWasHEATRound && FRand() < EngineFireChance) || (bWasHEATRound && FRand() < EngineFireHEATChance))
+        if ((bHEATPenetration && FRand() < EngineFireHEATChance) || (!bHEATPenetration && FRand() < EngineFireChance))
         {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Engine fire started");
+            }
+
             StartEngineFire(InstigatedBy);
         }
     }
@@ -2773,6 +2793,7 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
         if (DamageScale > 0.0)
         {
             Driver.SetDelayedDamageInstigatorController(EventInstigator);
+
             Driver.TakeDamage(DamageScale * DamageAmount, EventInstigator.Pawn, Driver.Location - (0.5 * (Driver.CollisionHeight + Driver.CollisionRadius)) * Direction,
                 DamageScale * Momentum * Direction, DamageType);
         }
@@ -3562,7 +3583,6 @@ function bool EncroachingOn(Actor Other)
 defaultproperties
 {
     ObjectCrushStallTime=1.0
-    bEnterringUnlocks=false
     UnbuttonedPositionIndex=2
     bAllowRiders=true
     FirstRiderPositionIndex=2
@@ -3588,7 +3608,7 @@ defaultproperties
     HullFireHEATChance=0.5
     VehicleBurningDamType=class'DHVehicleBurningDamageType'
     PlayerFireDamagePer2Secs=15.0
-    bFirstHit=true
+    bFirstPenetratingHit=true
     FireDetonationChance=0.07
     EngineToHullFireChance=0.05
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'

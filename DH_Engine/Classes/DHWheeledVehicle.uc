@@ -24,7 +24,7 @@ struct CarHitpoint
 {
     var float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
     var float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var float             PointScale;
+    var float             PointScale;         // scale factor for radius & height
     var name              PointBone;          // bone to reference in offset
     var vector            PointOffset;        // amount to offset the hitpoint from the bone
     var bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
@@ -32,25 +32,31 @@ struct CarHitpoint
     var ECarHitPointType  CarHitPointType;    // what type of hit point this is
 };
 
-var     array<CarHitpoint>  CarVehHitpoints;  // an array of possible small points that can be hit. Index zero is always the driver
+var     array<CarHitpoint>  CarVehHitpoints;  // an array of possible small points that can be hit (index zero is always the driver)
 
 // General
+var     float       MinVehicleDamageModifier; // minimum damage modifier (from DamageType) needed to damage this vehicle
 var     float       PointValue;               // used for scoring
-var     bool        bEmittersOn;
-var     float       DriverTraceDistSquared;   // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
+var     bool        bEmittersOn;              // dust & exhaust effects are enabled
+var     float       DriverTraceDistSquared;   // CheckReset() variable (changed to a squared value, as VSizeSquared is more efficient than VSize)
 var     float       ObjectCollisionResistance;// vehicle's resistance to colliding with other actors - a higher value reduces damage more
 var     bool        bClientInitialized;       // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                               // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
-var     bool        bCrushedAnObject;         // value set when the vehicle crushes something
-var     float       LastCrushedTime;
-var     float       ObjectCrushStallTime;
+var     bool        bCrushedAnObject;         // vehicle has just crushed something, causing temporary movement stall
+var     float       LastCrushedTime;          // records time object was crushed, so we know when the movement stall should end
+var     float       ObjectCrushStallTime;     // how long the movement stall lasts
 
-// Engine stuff
+// Engine
 var     bool        bEngineOff;               // vehicle engine is simply switched off
 var     bool        bSavedEngineOff;          // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;       // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
 var     float       IgnitionSwitchInterval;   // how frequently the engine can be manually switched on/off
+
+// Spawning
+var     bool            bIsSpawnVehicle;
+var     float           FriendlyResetDistance;
+var     DHSpawnManager  SM;
 
 // New sounds & sound attachment actors
 var     float               MaxPitchSpeed;
@@ -75,11 +81,6 @@ var     name                        ResupplyDecoAttachBone;
 // Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
-
-// Spawning
-var     bool            bIsSpawnVehicle;
-var     float           FriendlyResetDistance;
-var     DHSpawnManager  SM;
 
 replication
 {
@@ -517,20 +518,40 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+// Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
+// And to avoid unnecessary stuff on dedicated server & the call to Super in Vehicle class (it only duplicates)
 simulated event DrivingStatusChanged()
 {
-    super(Vehicle).DrivingStatusChanged();
+    local PlayerController PC;
 
-    // Not moving, so no motion sound
-    if (Level.NetMode != NM_DedicatedServer && (!bDriving || bEngineOff))
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        UpdateMovementSound(0.0);
+        // Player has exited
+        if (!bDriving)
+        {
+            // Vehicle will now stop, so no motion sound
+            UpdateMovementSound(0.0);
+
+            // Play neutral idle animation
+            if (HasAnim(BeginningIdleAnim))
+            {
+                PlayAnim(BeginningIdleAnim);
+            }
+        }
+
+        PC = Level.GetLocalPlayerController();
+
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
     }
 
-    if (!bDriving && HasAnim(BeginningIdleAnim))
+    if (bDriving)
     {
-        PlayAnim(BeginningIdleAnim);
+        Enable('Tick');
+    }
+    else
+    {
+        Disable('Tick');
     }
 }
 
@@ -793,6 +814,140 @@ function bool PlaceExitingDriver()
     }
 
     return false;
+}
+
+// Slightly modified to add randomised damage but mainly to tidy & standardise with TakeDamage in other vehicle classes
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    local Controller InstigatorController;
+    local float      VehicleDamageMod, HitCheckDistance;
+    local int        InstigatorTeam, PossibleDriverDamage, i;
+
+    // Fix for suicide death messages
+    if (DamageType == class'Suicided')
+    {
+        DamageType = class'ROSuicided';
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    }
+    else if (DamageType == class'ROSuicided')
+    {
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    }
+
+    // Quick fix for the thing giving itself impact damage
+    if (InstigatedBy == self)
+    {
+        return;
+    }
+
+    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to their team :))
+    if (!bDriverAlreadyEntered)
+    {
+        if (InstigatedBy != none)
+        {
+            InstigatorController = InstigatedBy.Controller;
+        }
+
+        if (InstigatorController == none && DamageType.default.bDelayedDamage)
+        {
+            InstigatorController = DelayedDamageInstigatorController;
+        }
+
+        if (InstigatorController != none)
+        {
+            InstigatorTeam = InstigatorController.GetTeamNum();
+
+            if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
+            {
+                return;
+            }
+        }
+    }
+
+    // Set damage modifier from the DamageType, based on type of vehicle
+    if (class<ROWeaponDamageType>(DamageType) != none)
+    {
+        if (bIsApc)
+        {
+            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+        }
+        else
+        {
+            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier;
+        }
+    }
+    else if (class<ROVehicleDamageType>(DamageType) != none)
+    {
+        if (bIsApc)
+        {
+            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
+        }
+        else
+        {
+            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.VehicleDamageModifier;
+        }
+    }
+
+    // No damage, except possibly to driver, if less than MinVehicleDamageModifier for this vehicle
+    if (VehicleDamageMod < MinVehicleDamageModifier)
+    {
+        VehicleDamageMod = 0.0;
+    }
+
+    // Add in the DamageType's vehicle damage modifier & a little damage randomisation
+    Damage *= RandRange(0.75, 1.08);
+    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
+    Damage *= VehicleDamageMod;
+
+    // Check RO VehHitPoints (driver, engine, ammo)
+    for (i = 0; i < VehHitpoints.Length; ++i)
+    {
+        // Series of checks to see if we hit the vehicle driver
+        if (VehHitpoints[i].HitPointType == HP_Driver)
+        {
+            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed)
+            {
+                // Lower-powered rounds have a limited HitCheckDistance, as they won't rip through the vehicle
+                // For more powerful rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
+                if (VehicleDamageMod <= 0.25)
+                {
+                    HitCheckDistance = DriverHitCheckDist;
+                }
+
+                if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
+                {
+                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                }
+            }
+        }
+        else if (IsPointShot(Hitlocation, Momentum, 1.0, i))
+        {
+            // Engine hit
+            if (VehHitpoints[i].HitPointType == HP_Engine)
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Hit vehicle engine");
+                }
+
+                DamageEngine(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+            }
+            // Hit ammo store - explodes & vehicle is destroyed
+            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                }
+
+                Damage *= Health;
+                break;
+            }
+        }
+    }
+
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 }
 
 // Modified so if we hit a vehicle we use its velocity to calculate damage, & also to factor in an ObjectCollisionResistance for this vehicle

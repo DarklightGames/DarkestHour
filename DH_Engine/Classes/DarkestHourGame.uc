@@ -634,7 +634,7 @@ function Bot SpawnBot(optional string botName)
         NewBot.Jumpiness = 0.0;
         NewBot.TranslocUse = 0.0;
 
-        // Set the bots favorite weapon to thier primary weapon
+        // Set the bots favorite weapon to their primary weapon
         NewBot.FavoriteWeapon = class<ROWeapon>(RI.PrimaryWeapons[0].Item);
 
         // Tweak the bots abilities and characteristics based on their role
@@ -2025,6 +2025,8 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
+    local DHPlayer PC;
+    local DHPawn P;
     local byte SpawnError;
 
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
@@ -2048,6 +2050,18 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
             //Log(SpawnError);
             //COLIN
             //TODO: send message to client that spawn failed and put them into the deploy menu with an error!!!
+        }
+    }
+
+    PC = DHPlayer(C);
+
+    if (PC != none)
+    {
+        P = DHPawn(PC.Pawn);
+
+        if (P != none)
+        {
+            P.SetAmmoAmount(PC.SpawnAmmoAmount);
         }
     }
 }

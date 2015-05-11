@@ -108,7 +108,9 @@ simulated event PostBeginPlay()
     {
         // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
         foreach self.AllActors(class'DH_LevelInfo', ClientLevelInfo)
+        {
             break;
+        }
     }
 }
 
@@ -1722,11 +1724,6 @@ function bool CanRestartPlayer()
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (DHGRI == none)
-    {
-        return false;
-    }
-
     if ((PlayerReplicationInfo != none && PlayerReplicationInfo.bOnlySpectator) || !bCanRespawn)
     {
         return false;
@@ -1745,7 +1742,16 @@ function bool CanRestartPlayer()
 
 function bool HasSelectedSpawn()
 {
-    return SpawnPointIndex != 255 || SpawnVehicleIndex != 255;
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.DHLevelInfo != none && G.DHLevelInfo.SpawnMode == ESM_DarkestHour)
+    {
+        return SpawnPointIndex != 255 || SpawnVehicleIndex != 255;
+    }
+
+    return true;
 }
 
 // Modified incase this ever gets called, make it open the deploy menu instead of old RoleMenu

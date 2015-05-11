@@ -11,44 +11,49 @@ class DHHud extends ROHud;
 
 const MAX_OBJ_ON_SIT = 12; // The maximum objectives that can be listed down the side on the situational map (not on the map itself)
 
-var(ROHud) SpriteWidget VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
-var(ROHud) SpriteWidget VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
-var(DHHud) SpriteWidget MapIconCarriedRadio;
-var(DHHud) SpriteWidget CanMantleIcon;
-var(DHHud) SpriteWidget CanCutWireIcon;
-var(DHHud) SpriteWidget VoiceIcon;
-var(DHHud) SpriteWidget MapIconMortarTarget;
-var(DHHud) SpriteWidget MapIconMortarHit;
-var(DHHud) SpriteWidget MapLevelOverlay;
-var(DHHud) TextWidget   MapScaleText;
+var SpriteWidget        VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
+var SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
+var SpriteWidget        MapIconCarriedRadio;
+var SpriteWidget        CanMantleIcon;
+var SpriteWidget        CanCutWireIcon;
+var SpriteWidget        VoiceIcon;
+var SpriteWidget        MapIconMortarTarget;
+var SpriteWidget        MapIconMortarHit;
+var SpriteWidget        MapLevelOverlay;
+var TextWidget          MapScaleText;
 
-var  localized string   LegendCarriedArtilleryRadioText;
+var localized string    LegendCarriedArtilleryRadioText;
 
-var  localized string   NeedReloadText;
-var  localized string   CanReloadText;
-var  localized string   AndMoreText;
-var  localized string   RedeployText[6];    //TODO: arrays are unwieldly
+var localized string    NeedReloadText;
+var localized string    CanReloadText;
+var localized string    AndMoreText;
 
-var  globalconfig int   PlayerNameFontSize; // the size of the name you see when you mouseover a player
-var  globalconfig bool  bSimpleColours;     // for colourblind setting, i.e. red and blue only
-var  globalconfig bool  bShowDeathMessages; // whether or not to show the death messages
-var  globalconfig bool  bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
+var localized string    JoinTeamText;
+var localized string    SelectSpawnPointText;
+var localized string    SpawnInfantryText;
+var localized string    SpawnVehicleText;
+var localized string    SpawnAtVehicleText;
 
-var  int                AlliedNationID;     // US = 0, Britain = 1, Canada = 2
+var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
+var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
+var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
+var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
 
-var  bool               bSetColour;         // whether we've set the Allied colour yet
+var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
+
+var bool                bSetColour;         // whether we've set the Allied colour yet
 
 // For some added suspense:
-var  float              ObituaryFadeInTime;
-var  float              ObituaryDelayTime;
+var float               ObituaryFadeInTime;
+var float               ObituaryDelayTime;
 
-var  array<Obituary>    DHObituaries;
+var array<Obituary>     DHObituaries;
 
-var  const float        VOICE_ICON_DIST_MAX;
+var const float         VOICE_ICON_DIST_MAX;
 
-var  bool               bDebugVehicleHitPoints; // show vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
+var bool                bDebugVehicleHitPoints; // show vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 
-var  DHGameReplicationInfo DHGRI;
+var DHGameReplicationInfo   DHGRI;
 
 simulated function UpdatePrecacheMaterials()
 {
@@ -2896,10 +2901,10 @@ function DisplayMessages(Canvas C)
     {
         O = DHObituaries[i];
 
-        TimeOfDeath = O.EndOfLife - ObituaryLifeSpan;
-        FadeInBeginTime = TimeOfDeath + ObituaryDelayTime;
-        FadeInEndTime = FadeInBeginTime + ObituaryFadeInTime;
-        FadeOutBeginTime = O.EndOfLife - ObituaryFadeInTime;
+        TimeOfDeath = O.EndOfLife - default.ObituaryLifeSpan;
+        FadeInBeginTime = TimeOfDeath + default.ObituaryDelayTime;
+        FadeInEndTime = FadeInBeginTime + default.ObituaryFadeInTime;
+        FadeOutBeginTime = O.EndOfLife - default.ObituaryFadeInTime;
 
         //Death message delay and fade in - Basnett, 2011
         if (Level.TimeSeconds < FadeInBeginTime)
@@ -2911,11 +2916,11 @@ function DisplayMessages(Canvas C)
 
         if (Level.TimeSeconds > FadeInBeginTime && Level.TimeSeconds < FadeInEndTime)
         {
-            Alpha = Byte(((Level.TimeSeconds - FadeInBeginTime) / ObituaryFadeInTime) * 255.0);
+            Alpha = Byte(((Level.TimeSeconds - FadeInBeginTime) / default.ObituaryFadeInTime) * 255.0);
         }
         else if (Level.TimeSeconds > FadeOutBeginTime)
         {
-            Alpha = Byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / ObituaryFadeInTime) * 255.0)));
+            Alpha = Byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / default.ObituaryFadeInTime) * 255.0)));
         }
 
         C.TextSize(O.VictimName, XL, YL);
@@ -3174,7 +3179,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
 
     CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
-    
+
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
     {
@@ -3377,53 +3382,62 @@ simulated function DrawSpectatingHud(Canvas C)
         if (PRI == none || PRI.Team == none || PRI.bIsSpectator)
         {
             // Press ESC to join a team
-            S = default.RedeployText[4];
+            S = default.JoinTeamText;
         }
         else if (DHGRI.bMatchHasBegun && DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
             Time = FMax(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0.0);
 
-            if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+            switch (PC.ClientLevelInfo.SpawnMode)
             {
-                // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
-                S = default.RedeployText[1];
-                S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
-                S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
-            }
-            else if (PC.SpawnPointIndex != 255)
-            {
-                SP = DHGRI.GetSpawnPoint(PC.SpawnPointIndex);
+                case ESM_DarkestHour:
+                    if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+                    {
+                        // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
+                        S = default.SpawnVehicleText;
+                        S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
+                        S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
+                    }
+                    else if (PC.SpawnPointIndex != 255)
+                    {
+                        SP = DHGRI.GetSpawnPoint(PC.SpawnPointIndex);
 
-                if (SP != none)
-                {
-                    // You will deploy as a {0} at {1} in {2} | Press ESC to change
-                    S = Repl(default.RedeployText[0], "{1}", SP.SpawnPointName);
-                }
-                else
-                {
-                    // Press ESC to select a spawn point
-                    S = default.RedeployText[3];
-                }
-            }
-            else if (PC.SpawnVehicleIndex != 255)
-            {
-                SVC = DHGRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
+                        if (SP != none)
+                        {
+                            // You will deploy as a {0} at {1} in {2} | Press ESC to change
+                            S = Repl(default.SpawnInfantryText, "{1}", SP.SpawnPointName);
+                        }
+                        else
+                        {
+                            // Press ESC to select a spawn point
+                            S = default.SelectSpawnPointText;
+                        }
+                    }
+                    else if (PC.SpawnVehicleIndex != 255)
+                    {
+                        SVC = DHGRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
 
-                if (SVC != none)
-                {
-                    // You will deploy as a {0} at a {1} in {2} | Press ESC to change
-                    S = Repl(default.RedeployText[5], "{1}", SVC.default.VehicleNameString);
-                }
-                else
-                {
-                    // Press ESC to select a spawn point
-                    S = default.RedeployText[3];
-                }
-            }
-            else
-            {
-                // Press ESC to select a spawn point
-                S = default.RedeployText[3];
+                        if (SVC != none)
+                        {
+                            // You will deploy as a {0} at a {1} in {2} | Press ESC to change
+                            S = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
+                        }
+                        else
+                        {
+                            // Press ESC to select a spawn point
+                            S = default.SelectSpawnPointText;
+                        }
+                    }
+                    else
+                    {
+                        // Press ESC to select a spawn point
+                        S = default.SelectSpawnPointText;
+                    }
+
+                    break;
+                case ESM_RedOrchestra:
+                    S = default.ReinforcementText;
+                    break;
             }
 
             if (PC.bUseNativeRoleNames)
@@ -3439,6 +3453,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
 
         Y += 4.0 * Scale + strY;
+
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
     }
@@ -3540,7 +3555,7 @@ simulated function DrawSpectatingHud(Canvas C)
 
 // Modified to make objective title's smaller on the overview
 function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Icon, float MyMapScale, vector Location, vector MapCenter,
-    optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int Objective_index)
+    optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int ObjectiveIndex)
 {
     local SpriteWidget MyIcon;
     local FloatBox     Label_coords;
@@ -3593,7 +3608,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
     // Draw icon
     DrawSpriteWidgetClipped(C, MyIcon, LevelCoords, true, XL, YL, true);
 
-    if (Title != "" && !DHGRI.DHObjectives[objective_index].bDoNotDisplayTitleOnSituationMap)
+    if (Title != "" && !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)
     {
         // Setup text info
         MapTexts.text = Title;
@@ -3612,10 +3627,10 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
         label_coords.Y2 = label_coords.Y1 + YL;
 
         // Iterate through objectives list and check if we should offset label
-        UpdateMapIconLabelCoords(label_coords, GRI, objective_index);
+        UpdateMapIconLabelCoords(label_coords, GRI, ObjectiveIndex);
 
         // Update Y offset
-        MapTexts.OffsetY += DHGRI.DHObjectives[objective_index].LabelCoords.Y1 - label_coords.Y1;
+        MapTexts.OffsetY += DHGRI.DHObjectives[ObjectiveIndex].LabelCoords.Y1 - label_coords.Y1;
 
         // Hack to make the text smaller on the overview for objectives
         OldFontXScale = C.FontScaleX;
@@ -3910,11 +3925,10 @@ defaultproperties
     VOICE_ICON_DIST_MAX = 2624.672119
     TeamMessagePrefix="*TEAM* "
 
-    RedeployText(0)="You will deploy as a {0} at {1} in {2} | Press ESC to change"
-    RedeployText(1)="You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change"
-    RedeployText(3)="Press ESC to select a spawn point"
-    RedeployText(4)="Press ESC to join a team"
-    RedeployText(5)="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
-
-    ReinforcementText="Redeploy in: "
+    SpawnInfantryText="You will deploy as a {0} at {1} in {2} | Press ESC to change"
+    SpawnVehicleText="You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change"
+    SelectSpawnPointText="Press ESC to select a spawn point"
+    JoinTeamText="Press ESC to join a team"
+    SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
+    ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
 }

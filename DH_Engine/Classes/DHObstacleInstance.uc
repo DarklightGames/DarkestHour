@@ -100,7 +100,7 @@ simulated function SetCleared(bool bIsCleared)
             if (ClearSound != none)
             {
                 //TODO: figure out the best way to do this
-                PlayOwnedSound(ClearSound, SLOT_None, 128.0, true, 30.0,, true);
+                PlaySound(ClearSound, SLOT_None, 255.0, true, 32.0);
             }
 
             if (ClearEmitterClass != none)

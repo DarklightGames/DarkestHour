@@ -84,7 +84,7 @@ simulated function PostBeginPlay()
 }
 
 // Matt: new function to do any extra set up in the MG classes (called from MG pawn) - can be subclassed to do any vehicle specific setup
-// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+// Crucially, we know that we have MGPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeMG(DHMountedTankMGPawn MGPwn)
 {
     if (MGPwn != none)
@@ -115,7 +115,7 @@ simulated function InitializeMG(DHMountedTankMGPawn MGPwn)
     }
 }
 
-// Matt: no longer use Tick, as MG hatch fire effect is now triggered on net client from VehicleBase's PostNetReceive()
+// Matt: no longer use Tick, as MG hatch fire effect is now triggered on net client from Vehicle's PostNetReceive()
 // Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
 {
@@ -421,28 +421,22 @@ simulated function int LimitYaw(int yaw)
         return yaw;
     }
 
-    if (MGPawn != none)
+    // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
+    if (MGPawn != none && MGPawn.bMultiPosition)
     {
-        // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
-        if (MGPawn.bMultiPosition)
-        {
-            return Clamp(yaw, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewNegativeYawLimit, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewPositiveYawLimit);
-        }
-        // Or for single position MGs we use our max/min yaw values from the MG weapon class
-        else if (MGPawn.VehicleBase != none)
-        {
-            VehYaw = MGPawn.VehicleBase.Rotation.Yaw;
-
-            return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
-        }
+        return Clamp(yaw, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewNegativeYawLimit, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewPositiveYawLimit);
     }
 
-    // Just a fallback
-    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
-}
+    // For single position MGs we use our max/min yaw values from this class
+    if (ROVehicle(Base) != none)
+    {
+        VehYaw = Base.Rotation.Yaw;
+    }
 
+    return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
+}
 // Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
-// Note that shell's ProcessTouch also now calls TD() on VehicleWeapon instead of VehicleBase
+// Note that shell's ProcessTouch also now calls TD() on VehicleWeapon instead of Vehicle itself
 // For a vehicle MG this is not counted as a hit on vehicle itself, but we could add any desired functionality here or in subclasses, e.g. shell could wreck MG
 // Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)

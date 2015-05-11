@@ -77,47 +77,45 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
-//              for Tanks, we'll probably want to prevent bullets from doing damage too
-function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+// Modified to avoid track damage & other tank damage stuff, that isn't relevant to an armored car, & also to use the APCDamageModifier
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local int i;
-    local float VehicleDamageMod;
-    local int HitPointDamage;
-    local int InstigatorTeam;
-    local controller InstigatorController;
+    local DHTankCannonPawn CannonPawn;
+    local Controller       InstigatorController;
+    local float            VehicleDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier;
+    local int              InstigatorTeam, PossibleDriverDamage, i;
+    local bool             bAmmoDetonation;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        super(ROVehicle).TakeDamage(Damage, instigatedBy, HitLocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, instigatedBy, HitLocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Quick fix for the thing giving itself impact damage
-    if (instigatedBy == self && DamageType != VehicleBurningDamType)
+    if (InstigatedBy == self && DamageType != VehicleBurningDamType)
     {
+        ResetTakeDamageVariables();
+
         return;
     }
 
-    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
+    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to their team :))
     if (!bDriverAlreadyEntered)
     {
         if (InstigatedBy != none)
         {
-            InstigatorController = instigatedBy.Controller;
+            InstigatorController = InstigatedBy.Controller;
         }
 
-        if (InstigatorController == none)
+        if (InstigatorController == none && DamageType.default.bDelayedDamage)
         {
-            if (DamageType.default.bDelayedDamage)
-            {
-                InstigatorController = DelayedDamageInstigatorController;
-            }
+            InstigatorController = DelayedDamageInstigatorController;
         }
 
         if (InstigatorController != none)
@@ -126,162 +124,202 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 
             if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
+                ResetTakeDamageVariables();
+
                 return;
             }
         }
     }
 
-    // Hacked in APC damage mod for halftracks and armored cars, but bullets/bayo/nades/bashing still shouldn't work...
-    if (DamageType != none)
+    // Set damage modifier from the DamageType, using APCDamageModifier instead of TankDamageModifier
+    if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        if (class<ROWeaponDamageType>(DamageType) != none &&
-            class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
+        if (class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
         {
             VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
         }
-        else if (class<ROVehicleDamageType>(DamageType) != none &&
-            class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
+    }
+    else if (class<ROVehicleDamageType>(DamageType) != none)
+    {
+        if (class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
         {
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
+            VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
         }
     }
 
+    // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
+    if (DamageType != VehicleBurningDamType)
+    {
+        Damage *= RandRange(0.75, 1.08);
+    }
+
+    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
+    Damage *= VehicleDamageMod;
+
+    // Check RO VehHitPoints (driver, engine, ammo)
     for (i = 0; i < VehHitpoints.Length; ++i)
     {
-        HitPointDamage = Damage;
-
+        // Series of checks to see if we hit the vehicle driver
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
-            // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none &&
-                class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed)
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
+                // Non-penetrating rounds have a limited HitCheckDistance
+                // For penetrating rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
+                if (!bProjectilePenetrated)
                 {
-                    Driver.TakeDamage(Damage, instigatedBy, HitLocation, Momentum, DamageType);
+                    HitCheckDistance = DriverHitCheckDist;
                 }
-            }
-            // Damage for small (non penetrating) arms
-            else
-            {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
+
+                if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
                 {
-                    Driver.TakeDamage(150, instigatedBy, HitLocation, Momentum, DamageType); //just kill the bloody driver
+                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
                 }
             }
         }
-        else if (IsPointShot(HitLocation, Momentum, 1.0, i))
+        else if (bProjectilePenetrated && IsPointShot(Hitlocation, Momentum, 1.0, i))
         {
-            HitPointDamage *= VehHitpoints[i].DamageMultiplier;
-            HitPointDamage *= VehicleDamageMod;
+            if (bLogPenetration)
+            {
+                Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
+            }
 
+            // Engine hit
             if (VehHitpoints[i].HitPointType == HP_Engine)
-            {
-                //extra check here prevents splashing HE/HEAT from triggering engine fires
-                if (DamageType != none && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && bProjectilePenetrated == true)
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Engine Hit Effective");
-                    }
-
-                    DamageEngine(HitPointDamage, instigatedBy, HitLocation, Momentum, DamageType);
-                }
-            }
-            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                //extra check here prevents splashing HE/HEAT from triggering ammo detonation or fires; Engine hit will stop shell from passing through to cabin
-                if (DamageType != none && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && FRand() <= AmmoIgnitionProbability || (bWasHEATRound && FRand() < 0.85 && bProjectilePenetrated == true))
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Ammo Hit Effective");
-                    }
-
-                    Damage *= Health;
-                }
-                else  //either detonate above - or - set the sucker on fire!
-                {
-                }
-                break;
-            }
-        }
-    }
-
-    if (bProjectilePenetrated)
-    {
-        if (!bWasTurretHit)
-        {
-            if (Driver != none && !bRearHit && FRand() < 0.5)
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Driver killed");
+                    Level.Game.Broadcast(self, "Hit vehicle engine");
                 }
 
-                Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                DamageEngine(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
             }
-        }
-        else
-        {
-            if (WeaponPawns[0] != none)
+            // Hit ammo store
+            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
-                if (WeaponPawns[0].Driver != none && FRand() < 0.85)
+                // Random chance that ammo explodes & vehicle is destroyed
+                if ((bHEATPenetration && FRand() < 0.85) || (!bHEATPenetration && FRand() < AmmoIgnitionProbability))
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Commander killed");
+                        Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
                     }
 
-                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                    Damage *= Health;
+                    bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+                    break;
                 }
-
-                if (FRand() < Damage / 1000)
+                // Even if ammo did not explode, increase the chance of a fire breaking out
+                else
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Gun Pivot Damaged");
+                        Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
                     }
 
-                    DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
-                }
-
-                if (FRand() < Damage / 1250)
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Traverse Damaged");
-                    }
-
-                    DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
+                    HullFireChance = FMax(0.75, HullFireChance);
+                    HullFireHEATChance = FMax(0.90, HullFireHEATChance);
                 }
             }
         }
     }
 
-    // If I allow randomised damage then things break once the hull catches fire
-    if (DamageType != VehicleBurningDamType)
+    // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
+    if (bProjectilePenetrated && !bAmmoDetonation)
     {
-        Damage *= RandRange(0.85, 1.15);
+        CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+
+        // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
+        if (CannonPawn != none && CannonPawn.Cannon != none && CannonPawn.Cannon.bHasTurret)
+        {
+            if (bTurretPenetration)
+            {
+                HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
+                TurretChanceModifier = 1.0;
+            }
+            else
+            {
+                HullChanceModifier = 1.0;
+                TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret 
+            }
+        }
+        else // normal chance of damage to everything in vehicles without a turret
+        {
+            HullChanceModifier = 1.0;
+            TurretChanceModifier = 1.0;
+        }
+
+        if (CannonPawn != none)
+        {
+            // Random chance of shrapnel killing commander
+            if (CannonPawn.Driver != none && FRand() < (Float(Damage) / CommanderKillChance * TurretChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Commander killed by shrapnel");
+                }
+
+                CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+            }
+
+            // Random chance of shrapnel damaging gun pivot mechanism
+            if (FRand() < (Float(Damage) / GunDamageChance * TurretChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                }
+
+                CannonPawn.bGunPivotDamaged = true;
+            }
+
+            // Random chance of shrapnel damaging gun traverse mechanism
+            if (FRand() < (Float(Damage) / TraverseDamageChance * TurretChanceModifier))
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                }
+
+                CannonPawn.bTurretRingDamaged = true;
+            }
+        }
+
+        // Random chance of shrapnel killing driver
+        if (Driver != none && FRand() < (Float(Damage) / DriverKillChance * HullChanceModifier))
+        {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Driver killed by shrapnel");
+            }
+
+            Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+        }
+
+        // Random chance of shrapnel killing hull machine gunner
+        if (HullMG != none && Vehicle(HullMG.Owner) != none && Vehicle(HullMG.Owner).Driver != none && FRand() < (Float(Damage) / GunnerKillChance * HullChanceModifier))
+        {
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+            }
+
+            Vehicle(HullMG.Owner).Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+        }
     }
 
-    // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
-    Damage *= VehicleDamageMod;
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    super(ROVehicle).TakeDamage(Damage, instigatedBy, HitLocation, Momentum, DamageType);
-
-    //This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
-    if (!bOnFire && Damage > 0 && Health > 0 && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && bProjectilePenetrated)
+    // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
+    if (bProjectilePenetrated && !bOnFire && Damage > 0 && Health > 0)
     {
-        if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
+        // Random chance of hull fire breaking out
+        if ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance))
         {
             StartHullFire(InstigatedBy);
         }
     }
-
-    bWasHEATRound = false;
-    bProjectilePenetrated = false;
-    bWasTurretHit = false;
 
     // If vehicle health is very low, kill the engine & start a fire
     if (Health >= 0 && Health <= HealthMax / 3)
@@ -290,6 +328,8 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
         bEngineOff = true;
         StartEngineFire(InstigatedBy);
     }
+
+    ResetTakeDamageVariables();
 }
 
 defaultproperties
@@ -298,4 +338,9 @@ defaultproperties
     PointValue=2.0
     FirstRiderPositionIndex=1
     bSpecialTankTurning=false
+    DriverKillChance=900.0
+    GunnerKillChance=900.0
+    CommanderKillChance=600.0
+    GunDamageChance=1000.0
+    TraverseDamageChance=1250.0
 }

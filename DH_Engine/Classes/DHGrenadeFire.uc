@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHGrenadeFire extends DHProjectileFire; // Matt - this class would be better as DHThrownExplosiveFire
+class DHGrenadeFire extends DHProjectileFire    // Matt - this class would be better as DHThrownExplosiveFire
+    abstract;
 
 var     float   MinimumThrowSpeed;      // minimum speed the explosive will have if just clicking, with no hold time
 var     float   MaximumThrowSpeed;      // the maximum speed an explosive can have with holding (not including pawn speed)
@@ -391,4 +392,5 @@ defaultproperties
     AimError=200.0
     Spread=75.0
     SpreadStyle=SS_Random
+    bShouldBlurOnFire=false
 }

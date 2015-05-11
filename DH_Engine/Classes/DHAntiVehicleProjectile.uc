@@ -19,42 +19,44 @@ enum ERoundType
     RT_APBC,  // with ballistic cap but not armor-piercing cap (used by Soviets)
 };
 
-var   ERoundType     RoundType;               // Matt: added to identify round type, making it easier to write more generic functionality & avoid code repetition
-var   float          DHPenetrationTable[11];
-var   float          ShellDiameter;           // to assist in T/d calculations
-//var bool           bIsHEATRound;            // triggers different penetration calcs for HEAT projectiles // Matt: removed as unnecessary, as we now have RoundType = RT_HEAT
-var   bool           bIsAlliedShell;          // just for debugging stuff, maybe later for shell shatter
-var   bool           bShatterProne;           // assists with shatter gap calculations
-var   bool           bExplodesOnArmor;        // shell explodes on vehicle armor if it fails to penetrate
-var   bool           bExplodesOnHittingBody;  // shell explodes on hitting a human body (otherwise punches through & continues in flight)
-var   bool           bExplodesOnHittingWater; // shell explodes on hitting a WaterVolume
-var   bool           bBotNotifyIneffective;   // notify bot of an ineffective attack on target
-var   bool           bFailedToPenetrateArmor; // flags that we hit an armored vehicle & failed to penetrate it, which makes SpawnExplosionEffects handle it differently
-var   bool           bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
+// Projectile characteristics
+var     ERoundType      RoundType;               // makes it easier to write more generic functionality & avoid code repetition
+var     float           DHPenetrationTable[11];  // array of projectile's penetration capability (in centimetres) at different ranges
+var     float           ShellDiameter;           // used in penetration calculations
+var     bool            bExplodesOnArmor;        // shell explodes on vehicle armor if it fails to penetrate
+var     bool            bExplodesOnHittingBody;  // shell explodes on hitting a human body (otherwise punches through & continues in flight)
+var     bool            bExplodesOnHittingWater; // shell explodes on hitting a WaterVolume
+var     bool            bBotNotifyIneffective;   // notify bot of an ineffective attack on target
+var     bool            bIsAlliedShell;          // only used in debugging, so info is shown in metric or imperial
 
-var() class<Emitter> ShellShatterEffectClass; // effect for this shell shattering against a vehicle
-var   sound          ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
-var   sound          ShatterSound[4];         // sound of the round exploding
+// Shatter
+var     bool            bShatterProne;           // projectile may shatter on vehicle armor
+var     bool            bRoundShattered;         // projectile has shattered
+var     class<Emitter>  ShellShatterEffectClass; // effect for this shell shattering against a vehicle
+var     sound           ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
+var     sound           ShatterSound[4];         // sound of the round shattering
 
-var   Effects        Corona;           // shell tracer
-var   bool           bHasTracer;       // will be disabled for HE shells, and any others with no tracers
-var   class<Effects> TracerEffect;
+// Effects
+var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
+var     class<Effects>  TracerEffect;            // tracer effect class
+var     Effects         Corona;                  // shell tracer
+var     bool            bFailedToPenetrateArmor; // flags that we hit an armored vehicle & failed to penetrate it, which makes SpawnExplosionEffects handle it differently
+var     bool            bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
 
 // Camera shakes
-var() vector         ShakeRotMag;      // how far to rot view
-var() vector         ShakeRotRate;     // how fast to rot view
-var() float          ShakeRotTime;     // how much time to rot the instigator's view
-var() vector         ShakeOffsetMag;   // max view offset vertically
-var() vector         ShakeOffsetRate;  // how fast to offset view vertically
-var() float          ShakeOffsetTime;  // how much time to offset view
-var   float          BlurTime;         // how long blur effect should last for this shell
-var   float          BlurEffectScalar;
-var   float          PenetrationMag;   // different for AP and HE shells and can be set by caliber too
+var     vector          ShakeRotMag;             // how far to rot view
+var     vector          ShakeRotRate;            // how fast to rot view
+var     float           ShakeRotTime;            // how much time to rot the instigator's view
+var     vector          ShakeOffsetMag;          // max view offset vertically
+var     vector          ShakeOffsetRate;         // how fast to offset view vertically
+var     float           ShakeOffsetTime;         // how much time to offset view
+var     float           BlurTime;                // how long blur effect should last for this shell
+var     float           BlurEffectScalar;        // scales the shake effect
+var     float           PenetrationMag;          // different for AP and HE shells and can be set by caliber too
 
-// Debugging code - set to false on release
-var              bool  bDebuggingText;
-var globalconfig bool  bDebugROBallistics; // sets bDebugBallistics to true for getting the arrow pointers // Matt: added from DHBullet so bDebugBallistics can be set in a config file
-
+// Debugging
+var     bool            bDebuggingText;          // show screen debugging text
+var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to true for getting the arrow pointers (added from DHBullet so bDebugBallistics can be set in a config file)
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here, & also to add bDebugROBallistics
 simulated function PostBeginPlay()
@@ -248,7 +250,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
-        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -343,7 +345,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHTreadCraft') && !DHTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHTreadCraft') && !DHTreadCraft(Wall).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -427,10 +429,19 @@ simulated function BlowUp(vector HitLocation)
 // Although this has actually been written as a generic function that should handle all or most situations
 simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
 {
-    local bool bExploded, bShattered;
+    // Round shatters on vehicle armor
+    if (bRoundShattered)
+    {
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Shell shattered on vehicle armor & failed to penetrate");
+        }
 
+        ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
+        bRoundShattered = false; // reset for next hit
+    }
     // Round explodes on vehicle armor
-    if (bExplodesOnArmor)
+    else if (bExplodesOnArmor)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -440,34 +451,9 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         bFailedToPenetrateArmor = true;  // flag that may make SpawnExplosionEffects do different effects
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
         bFailedToPenetrateArmor = false; // reset
-        bExploded = true;
     }
-    // Round may shatter on vehicle armor
-    else if (bShatterProne)
-    {
-        if (
-        (HitActor) != none)
-        {
-            if (DHTankCannon(HitActor).bRoundShattered)
-            {
-                bShattered = true;
-                DHTankCannon(HitActor).bRoundShattered = false; // reset for next hit
-            }
-        }
-        else if (DHTreadCraft(HitActor) != none && DHTreadCraft(HitActor).bRoundShattered)
-        {
-            bShattered = true;
-            DHTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
-        }
-
-        if (bShattered)
-        {
-            ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-        }
-    }
-
     // Round deflects off vehicle armor
-    if (!bExploded && !bShattered)
+    else
     {
         DHDeflect(HitLocation, HitNormal, HitActor);
     }
@@ -687,7 +673,7 @@ function DebugShotDistanceAndSpeed()
 {
     if (bIsAlliedShell)
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / 18.395 @ "fps"); // Matt: corrected conversion factor for yards from 66.002
+        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / 18.395 @ "fps");
     }
     else
     {

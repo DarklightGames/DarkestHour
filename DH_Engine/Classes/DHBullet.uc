@@ -374,6 +374,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                             Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
                         }
 
+                        // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
+                        if (HitVehicleWeapon != none && DHTreadCraft(HitVehicleWeapon.Base) != none)
+                        {
+                            DHTreadCraft(HitVehicleWeapon.Base).bProjectilePenetrated = false;
+                        }
+
                         Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
                     }
                 }
@@ -450,6 +456,12 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // Have to use special damage for vehicles, otherwise it doesn't register for some reason
         if (ROVehicle(Wall) != none)
         {
+            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
+            if (DHTreadCraft(Wall) != none)
+            {
+                DHTreadCraft(Wall).bProjectilePenetrated = false;
+            }
+
             Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
         }
         else if (Mover(Wall) != none || DestroMesh != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
