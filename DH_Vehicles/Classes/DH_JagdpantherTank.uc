@@ -96,7 +96,7 @@ defaultproperties
     DamagedEffectOffset=(X=-135.0,Y=20.0,Z=108.0)
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(1)=0.55
@@ -176,8 +176,6 @@ defaultproperties
     VehicleMass=14.0
     bDrawDriverInTP=false
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
-    DriveAnim="VPanther_driver_idle_close"
     ExitPositions(0)=(X=-33.0,Y=36.0,Z=210.0)
     ExitPositions(1)=(X=-33.0,Y=36.0,Z=210.0)
     ExitPositions(2)=(X=-33.0,Y=36.0,Z=210.0)

@@ -167,8 +167,6 @@ defaultproperties
     VehicleMass=12.0
     bDrawDriverInTP=false
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=-5.0,Y=-5.0,Z=0.0)
-    DriveAnim="VStug3_driver_idle_close"
     ExitPositions(0)=(X=-26.0,Y=-25.0,Z=135.0)
     ExitPositions(1)=(X=-26.0,Y=-25.0,Z=135.0)
     ExitPositions(2)=(X=-26.0,Y=-25.0,Z=135.0)
