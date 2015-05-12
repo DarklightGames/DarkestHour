@@ -515,6 +515,10 @@ simulated function DrawHudPassC(Canvas C)
         return;
     }
 
+    // Set coordinates to use whole screen
+    Coords.Width = C.ClipX;
+    Coords.Height = C.ClipY;
+
     // Don't draw the healthfigure when in a vehicle
     if (bShowPersonalInfo && ROPawn(PawnOwner) != none)
     {
@@ -673,9 +677,6 @@ simulated function DrawHudPassC(Canvas C)
             XL = 0.0;
             YL = 0.0;
             Y  = 0.0;
-
-            // Set coordinates to use whole screen
-            Coords.Width = C.ClipX; Coords.Height = C.ClipY;
 
             if (bShowMapUpdatedText)
             {
