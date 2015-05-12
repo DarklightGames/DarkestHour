@@ -14,7 +14,6 @@ defaultproperties
     bHasAltFire=false
     CameraBone="mg_yaw"
     bDrawDriverInTP=false
-    DrivePos=(Z=130.0)
     EntryRadius=130.0
     FPCamViewOffset=(Z=3.0)
     TPCamDistance=300.0
