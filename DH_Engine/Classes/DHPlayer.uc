@@ -2114,12 +2114,10 @@ simulated function int GetSpawnTime(byte MagCount, DHRoleInfo RI, int WeaponInde
 
     if (WeaponIndex < 0 || WeaponIndex > arraycount(RI.PrimaryWeapons))
     {
-        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[PrimaryWeapon].Item);
+        WeaponIndex = PrimaryWeapon;
     }
-    else
-    {
-        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[WeaponIndex].Item);
-    }
+
+    PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[WeaponIndex].Item);
 
     if (PrimaryWeaponClass != none)
     {
@@ -2536,7 +2534,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         }
         else
         {
-            // Theel Debug Remove once we determine this isn't being ran
+            //TODO: Theel Debug Remove once we determine this isn't being ran
             Warn("===============================================");
             Warn("Ammo failed to set correctly, setting to 1!!!!!");
             Warn("===============================================");
