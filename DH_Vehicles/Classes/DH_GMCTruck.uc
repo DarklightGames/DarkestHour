@@ -84,7 +84,6 @@ defaultproperties
     VehHitpoints(1)=(PointBone="Engine",DamageMultiplier=1.0)
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-80.0,Z=90.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     EngineHealth=35
     bMultiPosition=false
     DriverAttachmentBone="driver_player"

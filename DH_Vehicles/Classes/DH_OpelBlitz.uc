@@ -82,7 +82,6 @@ defaultproperties
 
     VehHitpoints(0)=(PointBone="Camera_driver",bPenetrationPoint=false)
     VehHitpoints(1)=(PointBone="Engine",PointOffset=(X=16.0),DamageMultiplier=1.0)
-    VehHitpoints(2)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     EngineHealth=35
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
