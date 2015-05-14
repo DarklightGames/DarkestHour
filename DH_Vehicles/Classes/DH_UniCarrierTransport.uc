@@ -215,9 +215,6 @@ defaultproperties
     ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
     ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
     EntryRadius=375.0
-    TPCamDistance=200.0
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=50.0)
     DriverDamageMult=1.0
     VehicleNameString="Mk.I Bren Carrier"
     MaxDesireability=0.1

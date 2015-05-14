@@ -177,9 +177,6 @@ defaultproperties
     ExitPositions(6)=(X=-135.0,Y=175.0,Z=-40.0)
     EntryRadius=375.0
     FPCamPos=(X=0.0,Y=-5.0,Z=0.0)
-    TPCamDistance=300.0
-    TPCamLookat=(X=-50.0)
-    TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="Panzer VI Ausf.B"
     MaxDesireability=1.9

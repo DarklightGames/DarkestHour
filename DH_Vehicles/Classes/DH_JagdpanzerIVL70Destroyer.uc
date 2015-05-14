@@ -175,9 +175,6 @@ defaultproperties
     ExitPositions(4)=(X=-252.0,Y=39.0,Z=5.0)
     EntryRadius=375.0
     FPCamPos=(X=-5.0,Y=0.0,Z=25.0)
-    TPCamDistance=600.0
-    TPCamLookat=(X=-50.0)
-    TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="Jagdpanzer IV/70(V)"
     MaxDesireability=1.9

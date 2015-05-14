@@ -195,10 +195,7 @@ defaultproperties
 
     EntryRadius=375.0
     FPCamPos=(Z=-60.0)
-    TPCamDistance=1000.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=50.0)
     DriverDamageMult=1.0
     VehicleNameString="M3A1 Halftrack"
     MaxDesireability=1.5

@@ -36,9 +36,6 @@ defaultproperties
     DriveAnim="VPanther_com_idle_close"
     EntryRadius=130.0
     FPCamPos=(Y=-27.0)
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=2731
     PitchDownLimit=64206
 }

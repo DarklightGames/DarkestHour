@@ -283,9 +283,6 @@ defaultproperties
     ExitPositions(14)=(X=-125.0,Z=60.0)
     ExitPositions(15)=(X=-250.0,Z=75.0)
     EntryRadius=130.0
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Y=50.0,Z=120.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
 }

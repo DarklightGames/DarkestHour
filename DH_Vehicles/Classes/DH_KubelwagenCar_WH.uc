@@ -144,10 +144,7 @@ defaultproperties
     ExitPositions(3)=(X=-40.0,Y=110.0,Z=25.0)
     EntryRadius=160.0
     FPCamViewOffset=(Z=2.0)
-    TPCamDistance=300.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="Volkswagen Type 82"
     MaxDesireability=1.9

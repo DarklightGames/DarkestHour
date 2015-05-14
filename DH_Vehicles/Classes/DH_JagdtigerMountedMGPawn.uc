@@ -17,9 +17,6 @@ defaultproperties
     bDesiredBehindView=false
     EntryRadius=130.0
     FPCamViewOffset=(X=10.0,Y=-5.0,Z=1.0)
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=3640
     PitchDownLimit=63715
 }

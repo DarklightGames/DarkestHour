@@ -3646,4 +3646,7 @@ defaultproperties
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     IgnitionSwitchInterval=4.0
+    TPCamDistance=600.0
+    TPCamLookat=(X=-50.0,Y=0.0,Z=0.0)
+    TPCamWorldOffset=(X=0.0,Y=0.0,Z=175.0)
 }

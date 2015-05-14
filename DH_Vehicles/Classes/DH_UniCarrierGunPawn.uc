@@ -146,9 +146,6 @@ defaultproperties
     DriveAnim="VUC_com_idle_close"
     EntryRadius=130.0
     FPCamPos=(X=10.0)
-    TPCamDistance=50.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
     HUDOverlayOffset=(X=-6.0)
     HUDOverlayFOV=35.0

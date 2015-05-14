@@ -173,9 +173,6 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  //passenger (r)
     EntryRadius=375.0
     FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
-    TPCamDistance=600.0
-    TPCamLookat=(X=-50.0)
-    TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="M10 Wolverine"
     MaxDesireability=1.9

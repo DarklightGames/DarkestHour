@@ -332,9 +332,6 @@ defaultproperties
     ExitPositions(7)=(X=45.0,Y=38.0,Z=100.0)
     EntryRadius=350.0
     FPCamPos=(Z=30.0)
-    TPCamDistance=375.0
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=100.0)
     DriverDamageMult=1.0
     VehicleNameString="Higgins Boat"
     MaxDesireability=1.9

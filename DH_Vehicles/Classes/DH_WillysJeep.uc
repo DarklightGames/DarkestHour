@@ -148,10 +148,7 @@ defaultproperties
     EntryRadius=225.0
     FPCamPos=(Z=10.0)
     FPCamViewOffset=(Z=-5.0)
-    TPCamDistance=300.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="Willys Jeep MB"
     GroundSpeed=325.0

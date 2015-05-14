@@ -32,9 +32,6 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.0
     FPCamPos=(Z=5.0)
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

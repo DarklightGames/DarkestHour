@@ -130,10 +130,7 @@ defaultproperties
     ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)
     EntryRadius=375.0
     FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
-    TPCamDistance=1000.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=50.0)
     DriverDamageMult=1.0
     VehicleNameString="Opel Blitz"
     MaxDesireability=0.12

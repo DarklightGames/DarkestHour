@@ -159,9 +159,6 @@ defaultproperties
     ExitPositions(6)=(X=-90.0,Y=160.0,Z=5.0)
     EntryRadius=375.0
     FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
-    TPCamDistance=600.0
-    TPCamLookat=(X=-50.0)
-    TPCamWorldOffset=(Z=250.0)
     VehicleNameString="Panzer VI Ausf.E"
     MaxDesireability=1.9
     FlagBone="Mg_placement"

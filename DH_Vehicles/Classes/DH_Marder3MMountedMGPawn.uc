@@ -104,9 +104,6 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
     EntryRadius=130.0
-    TPCamDistance=300.0
-    TPCamLookat=(X=-50.0,Y=25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
     HUDOverlayFOV=45.0
     PitchUpLimit=6000

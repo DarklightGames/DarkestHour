@@ -1179,4 +1179,7 @@ defaultproperties
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    TPCamDistance=300.0
+    TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
+    TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
 }

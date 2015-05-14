@@ -29,9 +29,6 @@ defaultproperties
     DriveAnim="VPanzer3_com_idle_close"
     EntryRadius=130.0
     FPCamPos=(X=50.0,Y=-30.0,Z=11.0)
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

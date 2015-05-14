@@ -26,9 +26,6 @@ defaultproperties
     DrivePos=(X=8.0,Y=4.8,Z=-5.75)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.0
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

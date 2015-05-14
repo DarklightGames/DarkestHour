@@ -1605,4 +1605,7 @@ defaultproperties
     HealthMax=175.0
     Health=175
     IgnitionSwitchInterval=4.0
+    TPCamDistance=600.0
+    TPCamLookat=(X=-50.0,Y=0.0,Z=0.0)
+    TPCamWorldOffset=(X=0.0,Y=0.0,Z=175.0)
 }

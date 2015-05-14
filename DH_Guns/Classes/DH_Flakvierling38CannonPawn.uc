@@ -40,8 +40,5 @@ defaultproperties
     ExitPositions(13)=(X=-60.0,Z=15.0)
     ExitPositions(14)=(X=-60.0,Z=20.0)
     ExitPositions(15)=(Z=5.0)
-    TPCamDistance=2048.0
-    TPCamLookat=(X=25.0)
-    TPCamWorldOffset=(Z=0.0)
     bKeepDriverAuxCollision=true
 }

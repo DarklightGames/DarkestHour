@@ -175,9 +175,6 @@ defaultproperties
     ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
     EntryRadius=375.0
     FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
-    TPCamDistance=600.0
-    TPCamLookat=(X=-50.0)
-    TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="M4A1(76)W Sherman"
     MaxDesireability=1.9

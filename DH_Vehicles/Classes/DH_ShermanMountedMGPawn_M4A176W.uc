@@ -16,9 +16,6 @@ defaultproperties
     bDrawDriverInTP=false
     EntryRadius=130.0
     FPCamViewOffset=(X=-1.0,Z=4.0)
-    TPCamDistance=300.0
-    TPCamLookat=(X=-25.0,Z=0.0)
-    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=3000
     PitchDownLimit=63500
 }

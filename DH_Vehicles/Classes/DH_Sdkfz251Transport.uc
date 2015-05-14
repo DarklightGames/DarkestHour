@@ -188,10 +188,7 @@ defaultproperties
     ExitPositions(10)=(X=-111.0,Y=36.0,Z=112.0) // Top Extra
 
     EntryRadius=375.0
-    TPCamDistance=1000.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.0,Z=0.0)
-    TPCamWorldOffset=(Z=50.0)
     DriverDamageMult=1.0
     VehicleNameString="SdKfz-251 Halftrack"
     MaxDesireability=1.2
