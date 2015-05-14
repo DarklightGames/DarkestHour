@@ -86,7 +86,7 @@ replication
         ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack;
 
     // Variables the owning client will replicate to the server
-    reliable if (Role < ROLE_Authority)   //TODO: verify need for bNetOwner check
+    reliable if (Role < ROLE_Authority)
         ServerSetIsInSpawnMenu;
 }
 
@@ -1600,7 +1600,7 @@ function AdjustView(float DeltaTime)
 {
     if (FOVAngle != DesiredFOV)
     {
-        FOVAngle -= (FClamp(10.0 * DeltaTime, 0.0, 1.0) * (FOVAngle - DesiredFOV)); //TODO: arbitrary number
+        FOVAngle -= (FClamp(10.0 * DeltaTime, 0.0, 1.0) * (FOVAngle - DesiredFOV));
 
         if (Abs(FOVAngle - DesiredFOV) <= 0.0625)
         {
