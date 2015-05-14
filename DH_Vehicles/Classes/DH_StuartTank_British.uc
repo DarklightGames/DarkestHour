@@ -13,7 +13,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_intB')
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_intB')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_intB')
-    VehicleNameString="M5A1 Stuart"
+    VehicleNameString="Stuart Mk.VI"
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_extB'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor'
