@@ -66,9 +66,6 @@ const SPAWN_POINTS_MAX = 64;
 var DHSpawnPoint        SpawnPoints[SPAWN_POINTS_MAX];
 var private byte        SpawnPointIsActives[SPAWN_POINTS_MAX];
 
-var float               VehiclePoolsUpdateTime;   // the last time the vehicle pools were updated in a way that requires the client to re-populate its list
-var float               SpawnPointsUpdateTime;    // the last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
-
 const SPAWN_VEHICLES_MAX = 8;
 
 var SpawnVehicle        SpawnVehicles[SPAWN_VEHICLES_MAX];
@@ -85,8 +82,8 @@ replication
         DHAlliesRoleCount, DHAxisRoleCount, DHAlliesRoleBotCount, DHAxisRoleBotCount,
         CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
         VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
-        VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
-        SpawnPointIsActives, SpawnPointsUpdateTime, SpawnVehicles, MaxTeamVehicles, DHObjectives;
+        VehiclePoolSpawnsRemainings, VehiclePoolMaxActives,
+        SpawnPointIsActives, SpawnVehicles, MaxTeamVehicles, DHObjectives;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -168,7 +165,6 @@ function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
     local DHPlayer PC;
 
     SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
-    SpawnPointsUpdateTime = Level.TimeSeconds;
 
     if (!bIsActive)
     {
@@ -296,8 +292,6 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
             }
         }
     }
-
-    VehiclePoolsUpdateTime = Level.TimeSeconds;
 }
 
 function SetVehiclePoolSpawnsRemaining(byte PoolIndex, int SpawnsRemaining)
