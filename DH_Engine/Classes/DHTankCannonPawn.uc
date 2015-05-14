@@ -681,18 +681,7 @@ simulated state ViewTransition
             // Play any transition animation for the player
             if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
             {
-                // Matt: added this 'if' to play correct driver animation when coming down from the binoculars position (RO's DriverTransitionAnims are 1 way)
-                if (LastPositionIndex == BinocPositionIndex && DriverPositionIndex < LastPositionIndex)
-                {
-                    if (Driver.HasAnim(DriveAnim))
-                    {
-                        Driver.PlayAnim(DriveAnim);
-                    }
-                }
-                else
-                {
-                    Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-                }
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }
         }
 
@@ -756,18 +745,7 @@ simulated function AnimateTransition()
     if (Level.NetMode != NM_DedicatedServer && Driver != none &&
         Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
     {
-        // Matt: added this 'if' to play correct driver animation when coming down from the binoculars position (RO's DriverTransitionAnims are 1 way)
-        if (LastPositionIndex == BinocPositionIndex && DriverPositionIndex < LastPositionIndex)
-        {
-            if (Driver.HasAnim(DriveAnim))
-            {
-                Driver.PlayAnim(DriveAnim);
-            }
-        }
-        else
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-        }
+        Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
     }
 
     if (LastPositionIndex < DriverPositionIndex)
