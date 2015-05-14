@@ -29,7 +29,6 @@ defaultproperties
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Z=0.0)
     TPCamWorldOffset=(Z=120.0)
-    VehicleNameString="M8 Armored Car Cannon"
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130
