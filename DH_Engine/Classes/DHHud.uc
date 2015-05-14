@@ -213,8 +213,6 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
     local PlayerReplicationInfo PRI;
     local float PlayerDist, XL, YL;
 
-    Log("Are we even getting here?");
-
     PRI = P.PlayerReplicationInfo;
 
     if (PRI == none || PRI.Team == none)
@@ -241,8 +239,6 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     if (!FastTrace(P.Location, PlayerOwner.Pawn.Location))
     {
-        Log("FastTrace from" @ P.Tag @ "to" @ PlayerOwner.Pawn.Tag @ "Failed");
-
         return;
     }
 
