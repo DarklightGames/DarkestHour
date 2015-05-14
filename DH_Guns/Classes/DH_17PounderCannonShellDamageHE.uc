@@ -13,7 +13,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.85
-    DeathString="%o was ripped by shrapnel from %k's 17 Pounder AT-Gun HE shell."
+    DeathString="%o was ripped apart by shrapnel from %k's 17 Pounder AT-Gun HE shell."
     FemaleSuicide="%o fired her 17 Pounder AT-Gun HE shell prematurely."
     MaleSuicide="%o fired his 17 Pounder AT-Gun HE shell prematurely."
     KDeathVel=300.0

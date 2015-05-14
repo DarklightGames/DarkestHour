@@ -12,7 +12,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.85
-    DeathString="%o was ripped by shrapnel from %k's Sherman Firefly HE shell."
+    DeathString="%o was ripped apart by shrapnel from %k's Sherman Firefly HE shell."
     //   bArmorStops=true // Matt: removed as inconsistent with other relatively high power HE rounds, including Achilles that uses same gun & round
     KDeathVel=300.0
     KDeathUpKick=60.0

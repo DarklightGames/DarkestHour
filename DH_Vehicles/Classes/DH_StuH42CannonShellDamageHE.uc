@@ -12,7 +12,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=1.0
-    DeathString="%o was ripped by shrapnel from %k's StuH42 HE shell."
+    DeathString="%o was ripped apart by shrapnel from %k's StuH42 HE shell."
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

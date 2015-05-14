@@ -11,7 +11,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=2.0
     TreadDamageModifier=1.0
-    DeathString="%o was ripped by shrapnel from %k's Jagdpanzer VI HE shell."
+    DeathString="%o was ripped apart by shrapnel from %k's Jagdpanzer VI HE shell."
     KDamageImpulse=6000.0
     KDeathVel=300.0
     KDeathUpKick=60.0
