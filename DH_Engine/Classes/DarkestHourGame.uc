@@ -2029,6 +2029,8 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     local DHPawn P;
     local byte SpawnError;
 
+    PC = DHPlayer(C);
+
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
@@ -2044,16 +2046,13 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     {
         SpawnError = DHRestartPlayer(C, bHandleReinforcements);
 
-        if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+        if (PC != none && SpawnError != class'DHSpawnManager'.default.SpawnError_None)
         {
-            //TODO: this is being called for bots as well, suppress this
-            //Log(SpawnError);
-            //COLIN
-            //TODO: send message to client that spawn failed and put them into the deploy menu with an error!!!
+            PC.ClientReplaceMenu("DH_Interface.DHDeployMenu",, class'DHSpawnManager'.static.GetSpawnErrorString(SpawnError));
+
+            return;
         }
     }
-
-    PC = DHPlayer(C);
 
     if (PC != none)
     {
@@ -2128,6 +2127,11 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
     {
         SpawnManager.SpawnPlayer(DHC, SpawnError);
 
+        if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+        {
+            return SpawnError;
+        }
+
         if (bHandleReinforcements)
         {
             HandleReinforcements(C);
@@ -2138,11 +2142,6 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
         {
             SendReinforcementMessage(C.PlayerReplicationInfo.Team.TeamIndex, 1);
         }
-    }
-
-    if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
-    {
-        //Warn("Spawn Error =" @ SpawnError);
     }
 }
 
