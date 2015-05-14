@@ -1022,17 +1022,10 @@ state PlayerWalking
         }
     }
 
-    // Matt: modified to allow behind view in debug mode
+    // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
     {
-        if (B && Role < ROLE_Authority && !class'DH_LevelInfo'.static.DHDebugMode()) // added !DHDebugMode
-        {
-            ServerCancelBehindview();
-
-            return;
-        }
-
-        super(PlayerController).ClientSetBehindView(B);
+        global.ClientSetBehindView(B);
     }
 
     // Added a test for mantling
@@ -1863,7 +1856,7 @@ function HitThis(ROArtilleryTrigger RAT)
     }
 }
 
-// Matt: modified to call ToggleBehindView to avoid code repetition
+// Modified to call ToggleBehindView to avoid code repetition
 exec function BehindView(bool B)
 {
     if (B != bBehindView)
@@ -1872,31 +1865,21 @@ exec function BehindView(bool B)
     }
 }
 
-// Matt: modified to avoid wasteful call to server if we know behind view isn't allowed (note can't do other checks here, as client can't access GameInfo's bAllowBehindView)
-exec function ToggleBehindView()
-{
-    if (Vehicle(Pawn) == none || Vehicle(Pawn).bAllowViewChange || class'DH_LevelInfo'.static.DHDebugMode()) // allow vehicles to limit view changes
-    {
-        ServerToggleBehindview();
-    }
-}
-
-// Modified to allow behind view if we are in DHDebugMode (during development only) & to disallow behind view just because a player is a game admin
+// Modified to disallow behind view just because a player is a game admin (too open to abuse) & to deprecate use of vehicle's bAllowViewChange setting
+// Not using DHDebugMode to enable this, as using behind view can cause crashes on busy maps
+// To aid development & testing, a standalone PC or test server can easily be configured to allow behind view by adding bAllowBehindView=true to DarkestHour.ini file's [Engine.GameInfo] section
 function ServerToggleBehindView()
 {
-    if (Level.NetMode == NM_Standalone || Level.Game.bAllowBehindView || PlayerReplicationInfo.bOnlySpectator || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || Level.Game.bAllowBehindView || PlayerReplicationInfo.bOnlySpectator)
     {
-        if (Vehicle(Pawn) == none || Vehicle(Pawn).bAllowViewChange || class'DH_LevelInfo'.static.DHDebugMode()) // allow vehicles to limit view changes
+        if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
         {
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                ClientSetBehindView(!bBehindView);
-            }
-            else
-            {
-                bBehindView = !bBehindView;
-                ClientSetBehindView(bBehindView);
-            }
+            ClientSetBehindView(!bBehindView);
+        }
+        else
+        {
+            bBehindView = !bBehindView;
+            ClientSetBehindView(bBehindView);
         }
     }
 }
