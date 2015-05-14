@@ -40,6 +40,9 @@ struct VehiclePool
     var byte                ActiveCount;                //count of active vehicles spawn from this pool
 };
 
+//TODO: these were basically used for debug, reduce this down to a simple binary
+//for whether a fatal error occurred or not, the user never needs to know the
+//specifics
 var const byte SpawnError_None;
 var const byte SpawnError_Fatal;
 var const byte SpawnError_MaxVehicles;
@@ -69,8 +72,6 @@ const SPAWN_VEHICLES_MAX = 8;
 
 var(Vehicles) array<VehiclePool>        VehiclePools;
 var(Vehicles) byte                      MaxTeamVehicles[2];
-
-var class<LocalMessage>                 VehicleDestroyedMessageClass;
 
 var private byte                        TeamVehicleCounts[2];
 var private array<ROVehicle>            Vehicles;
@@ -373,8 +374,6 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     // Make sure player has a pawn
     if (C.Pawn == none)
     {
-        Warn("Pawn does not exist!!!! NO PLAYER WAS SPAWNED OR SOMETHING!!!!");
-
         return none;
     }
     else
@@ -596,8 +595,6 @@ function bool TeleportPlayer(Controller C, vector SpawnLocation, rotator SpawnRo
 {
     if (C == none)
     {
-        Warn(self @ "Teleport failed: no controller passed");
-
         return false;
     }
 
@@ -606,6 +603,7 @@ function bool TeleportPlayer(Controller C, vector SpawnLocation, rotator SpawnRo
         C.Pawn.SetRotation(SpawnRotation);
         C.Pawn.SetViewRotation(SpawnRotation);
         C.Pawn.ClientSetRotation(SpawnRotation);
+
         return true;
     }
     else
@@ -805,7 +803,6 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 event VehicleDestroyed(Vehicle V)
 {
     local int i;
-    local Controller C;
 
     super.VehicleDestroyed(V);
 
@@ -835,13 +832,8 @@ event VehicleDestroyed(Vehicle V)
 
             if (!IsPoolInfinite(i))
             {
-                for (C = Level.ControllerList; C != none; C = C.NextController)
-                {
-                    if (C.GetTeamNum() == VehiclePools[i].VehicleClass.default.VehicleTeam)
-                    {
-                        C.BroadcastLocalizedMessage(VehicleDestroyedMessageClass,,,, V);
-                    }
-                }
+                //Send "Vehicle has been destroyed." message
+                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 100 + i,,, self);
             }
 
             if (VehiclePools[i].OnVehicleDestroyedEvent != '')
@@ -860,6 +852,9 @@ event VehicleDestroyed(Vehicle V)
                 {
                     SetPoolIsActiveByTag(VehiclePools[i].OnDepleteActivatePool, true);
                 }
+
+                //Send "Vehicle reinforcements have been depleted." message
+                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 200 + i,,, self);
             }
 
             break;
@@ -985,6 +980,12 @@ private function AddPoolMaxSpawns(byte PoolIndex, byte Value)
 {
     VehiclePools[PoolIndex].MaxSpawns += Value;
     GRI.SetVehiclePoolSpawnsRemaining(PoolIndex, GetPoolSpawnsRemaining(PoolIndex));
+
+    if (Value > 0)
+    {
+        //Send "Vehicle reinforcements have arrived" message
+        BroadcastTeamLocalizedMessage(VehiclePools[PoolIndex].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 300 + PoolIndex,,, self);
+    }
 }
 
 private function SetPoolIsActive(int PoolIndex, bool bIsActive)
@@ -1181,6 +1182,25 @@ function int GetSpawnVehicleCount()
     return SpawnVehicles.Length;
 }
 
+function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+{
+    local Controller C;
+    local PlayerController PC;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.GetTeamNum() == Team)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     bDirectional=false
@@ -1203,7 +1223,6 @@ defaultproperties
     SpawnError_SpawnPointsDontMatch=15
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
-    VehicleDestroyedMessageClass=class'DHVehicleDestroyedMessage'
     bDebug=false
     SpawnPointType_Infantry=0
     SpawnPointType_Vehicles=1

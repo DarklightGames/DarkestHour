@@ -5,6 +5,10 @@
 
 class DHGameMessage extends ROGameMessage;
 
+var localized string VehicleDestroyedMessage;
+var localized string VehicleDepletedMessage;
+var localized string VehicleArrivedMessage;
+
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored
 static function string GetString(
@@ -14,6 +18,9 @@ static function string GetString(
     optional Object OptionalObject
    )
 {
+    local string S;
+    local DHSpawnManager SM;
+
     switch (Switch)
     {
         case 0:
@@ -142,7 +149,42 @@ static function string GetString(
         // You have logged out of admin message(used for AdminLoginSilent)
         case 21:
             return default.YouHaveLoggedOutOfAdminMsg;
+        default:
+            break;
+    }
+
+    SM = DHSpawnManager(OptionalObject);
+
+    // This is a fairly hacky workaround to the fact that this function can't
+    // accept class references as arguments. The remainder of Switch/100
+    // is the index into the DHSpawnManager.VehiclePools array.
+    if (SM != none)
+    {
+        if (Switch >= 300)
+        {
+            // Vehicle reinforcements have arrived
+            S = default.VehicleArrivedMessage;
+        }
+        else if (Switch >= 200)
+        {
+            // Vehicle reinforcements have been depleted
+            S = default.VehicleDepletedMessage;
+        }
+        else if (Switch >= 100)
+        {
+            // Vehicle has been destroyed
+            S = default.VehicleDestroyedMessage;
+        }
+
+        return Repl(S, "{0}", SM.VehiclePools[Switch % 100].VehicleClass.default.VehicleNameString);
     }
 
     return "";
+}
+
+defaultproperties
+{
+    VehicleDestroyedMessage="{0} has been destroyed."
+    VehicleDepletedMessage="{0} reinforcements have been depleted."
+    VehicleArrivedMessage="{0} reinforcements have arrived."
 }
