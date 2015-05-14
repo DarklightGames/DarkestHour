@@ -216,7 +216,7 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
     }
 }
 
-simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, optional bool bCheckSPType, optional bool bTypeIsVehicle)
+simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, optional bool bCheckType, optional bool bTypeIsVehicle)
 {
     local DHSpawnPoint SP;
 
@@ -235,8 +235,13 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
     // Is spawn point for the correct team
     SP = GetSpawnPoint(SpawnPointIndex);
 
+    if (SP.TeamIndex != TeamIndex)
+    {
+        return false;
+    }
+
     // optional type check
-    if (bCheckSPType)
+    if (bCheckType)
     {
         // Confirm the types
         if (bTypeIsVehicle && SP.Type == ESPT_Infantry)
@@ -249,14 +254,7 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
         }
     }
 
-    if (SP.TeamIndex == TeamIndex)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -335,23 +333,16 @@ simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInf
 
     if (RI == none)
     {
-        Log("RI check");
         return false;
     }
 
     if (VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
     {
-        if (VehiclePoolIndex != 255)
-        {
-            Log("Index bound check");
-        }
-
         return false;
     }
 
     if (VehiclePoolIsActives[VehiclePoolIndex] == 0)
     {
-        Log("Active check");
         return false;
     }
 
@@ -359,19 +350,16 @@ simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInf
 
     if (VehicleClass == none)
     {
-        Log("Failed at VehicleClass check");
         return false;
     }
 
     if (VehicleClass.default.bMustBeTankCommander && !RI.bCanBeTankCrew)
     {
-        Log("Tank commander check");
         return false;
     }
 
     if (VehicleClass.default.VehicleTeam != RI.Side)
     {
-        Log("Failed at team check");
         return false;
     }
 
@@ -409,12 +397,12 @@ function int AddSpawnVehicle(Vehicle V, int Index)
             SpawnVehicles[i].VehicleClass = V.Class;
             SpawnVehicles[i].Vehicle = V;
 
-            // Vehicle was successfully added, return index in
+            // Vehicle was successfully added
             return i;
         }
     }
 
-    Warn("AddSpawnVehicle failed, no empty spaces available");
+    Warn("Spawn vehicle (" $ V.Class $ ") could not be initialized.");
 
     // No empty spaces, cannot add to SpawnVehicles
     return -1;
@@ -526,13 +514,13 @@ simulated function bool AreIndicesValid(DHPlayer DHP)
     else if (DHP.SpawnPointIndex != 255 && DHP.VehiclePoolIndex != 255)
     {
         // Trying to spawn a vehicle
-        if (IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum(), true, true) && IsVehiclePoolIndexValid(DHP.VehiclePoolIndex, ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo))
+        if (IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum(), true, true) &&
+            IsVehiclePoolIndexValid(DHP.VehiclePoolIndex, ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo))
         {
             return true;
         }
     }
 
-    // If we are here then return false as indices are some how not valid
     return false;
 }
 
