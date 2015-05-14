@@ -40,6 +40,8 @@ var     float       PointValue;               // used for scoring
 var     bool        bEmittersOn;              // dust & exhaust effects are enabled
 var     float       DriverTraceDistSquared;   // CheckReset() variable (changed to a squared value, as VSizeSquared is more efficient than VSize)
 var     float       ObjectCollisionResistance;// vehicle's resistance to colliding with other actors - a higher value reduces damage more
+var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
+var     bool        bPlayerCollisionBoxMoves; // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     bool        bClientInitialized;       // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                               // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
@@ -1209,6 +1211,134 @@ simulated function PrevWeapon()
         PendingPositionIndex = DriverPositionIndex -1;
         ServerChangeViewPoint(false);
     }
+}
+
+// Modified so if player has moving collision box, server goes to state ViewTransition just to play animations
+function ServerChangeViewPoint(bool bForward)
+{
+    if (bForward)
+    {
+        if (DriverPositionIndex < (DriverPositions.Length - 1))
+        {
+            PreviousPositionIndex = DriverPositionIndex;
+            DriverPositionIndex++;
+
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
+            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
+            {
+                GoToState('ViewTransition');
+            }
+        }
+    }
+    else
+    {
+        if (DriverPositionIndex > 0)
+        {
+            PreviousPositionIndex = DriverPositionIndex;
+            DriverPositionIndex--;
+
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
+            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
+            {
+                GoToState('ViewTransition');
+            }
+        }
+    }
+}
+
+// Modified to use Sleep to control exit from state (including on server), to avoid unnecessary stuff on a server, & to add handling of FOV changes
+simulated state ViewTransition
+{
+    simulated function HandleTransition()
+    {
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            // Switch to mesh for new position as may be different
+            if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+                {
+                    LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
+            }
+
+            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
+            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+            {
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+                {
+                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                }
+                else
+                {
+                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+                }
+            }
+
+            // Play any transition animation for the driver
+            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
+            {
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+            }
+        }
+
+        ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
+
+        // Play any transition animation for the vehicle itself
+        // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if driver's collision box moves)
+        if (PreviousPositionIndex < DriverPositionIndex)
+        {
+            if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+            {
+                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+                {
+                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+                }
+
+                ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+            }
+        }
+        else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
+        {
+            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+            {
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            }
+
+            ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+        }
+    }
+
+    // Emptied out so that Sleep is the sole timing for exiting this state
+    simulated function AnimEnd(int channel)
+    {
+    }
+
+    // Reverted to global Timer as Sleep is now the sole means of exiting this state
+    simulated function Timer()
+    {
+        global.Timer();
+    }
+
+    simulated function EndState()
+    {
+        // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
+        if (Level.NetMode != NM_DedicatedServer && DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+        {
+            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+        }
+    }
+
+Begin:
+    HandleTransition();
+    Sleep(ViewTransitionDuration);
+    GotoState('');
 }
 
 // Modified to prevent moving to another vehicle position while moving between view points

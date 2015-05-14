@@ -919,7 +919,7 @@ simulated state ViewTransition
             }
 
             // Play any transition animation for the driver
-            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
             {
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }

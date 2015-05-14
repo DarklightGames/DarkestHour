@@ -34,72 +34,67 @@ simulated state EnteringVehicle
     }
 }
 
-// Overridden because the animation needs to play on the server for this vehicle for the driver's hit detection
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            PreviousPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                GotoState('ViewTransition');
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            PreviousPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                GotoState('ViewTransition');
-            }
-        }
-    }
-}
-
-// Modified to to add Higgins Boat ramp sounds
+// Modified to to add ramp sounds
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+            // Switch to mesh for new position as may be different
+            if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+                {
+                    LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
+            }
+
+            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
+            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+            {
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+                {
+                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                }
+                else
+                {
+                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+                }
+            }
+
+            // Play any transition animation for the driver
+            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
+            {
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }
         }
 
-        if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+        ViewTransitionDuration = 0.0;
+
+        // Play any transition animation for the vehicle itself - plus the ramp/up down sounds that are specific to the Higgins boat
+        if (PreviousPositionIndex < DriverPositionIndex)
         {
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-            PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+            if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+            {
+                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+                {
+                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+                }
+
+                ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+                PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+            }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-            PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
-        }
+            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
+            {
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            }
 
-        if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+            ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
         }
     }
 }
@@ -192,6 +187,7 @@ function bool EncroachingOn(Actor Other)
 
 defaultproperties
 {
+    bPlayerCollisionBoxMoves=true // actually it doesn't, but this is a simple way of making the server play the ramp up/down animations, which is necessary to move the ramp collision box
     bEngineOff=false
     bSavedEngineOff=false
     RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
