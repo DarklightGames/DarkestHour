@@ -23,7 +23,7 @@ var             byte        NextTracerCounter;
 //var class<DH_ClientTracer>DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer // now replaced by TracerProjectileClass
 var     class<Projectile>   TracerProjectileClass;      // class for the tracer bullet for this weapon (now a real bullet that does damage, as well as tracer effects)
 
-// Weapon spread/innaccuracy variables
+// Weapon spread/inaccuracy variables
 var             float       AppliedSpread;              // spread applied to the projectile
 var()           float       CrouchSpreadModifier;       // Modifier applied when player is crouched
 var()           float       ProneSpreadModifier;        // Modifier applied when player is prone
