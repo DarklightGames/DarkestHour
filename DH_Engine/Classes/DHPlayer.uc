@@ -2185,9 +2185,9 @@ simulated function SwayHandler(float DeltaTime)
     local float WeaponSwayPitchAcc;
     local float DeltaSwayYaw;
     local float DeltaSwayPitch;
-    local float timeFactor;
-    local float bobFactor;
-    local float staminaFactor;
+    local float TimeFactor;
+    local float BobFactor;
+    local float StaminaFactor;
     local DHPawn P;
 
     P = DHPawn(Pawn);
@@ -2214,21 +2214,21 @@ simulated function SwayHandler(float DeltaTime)
     }
 
     // Get timefactor based on sway curve
-    timeFactor = InterpCurveEval(SwayCurve, SwayTime);
+    TimeFactor = InterpCurveEval(SwayCurve, SwayTime);
 
     // Get bobfactor based on bob curve
-    bobFactor = InterpCurveEval(BobCurve, SwayTime);
+    BobFactor = InterpCurveEval(BobCurve, SwayTime);
 
     // Handle timefactor modifier & weapon bob for weapon type
     if (DHWeapon(P.Weapon) != none)
     {
-        timeFactor *= DHWeapon(P.Weapon).SwayModifyFactor;
-        //P.IronSightBobFactor = bobFactor * DHWeapon(P.Weapon).BobModifyFactor;
+        TimeFactor *= DHWeapon(P.Weapon).SwayModifyFactor;
+        //P.IronSightBobFactor = BobFactor * DHWeapon(P.Weapon).BobModifyFactor;
     }
 
     // Add modifiers to sway for time in iron sights and stamina
-    WeaponSwayYawAcc = (timeFactor * WeaponSwayYawAcc) + (staminaFactor * WeaponSwayYawAcc);
-    WeaponSwayPitchAcc = (timeFactor * WeaponSwayPitchAcc) + (staminaFactor * WeaponSwayPitchAcc);
+    WeaponSwayYawAcc = (TimeFactor * WeaponSwayYawAcc) + (StaminaFactor * WeaponSwayYawAcc);
+    WeaponSwayPitchAcc = (TimeFactor * WeaponSwayPitchAcc) + (StaminaFactor * WeaponSwayPitchAcc);
 
     // Sway reduction for crouching, prone, and resting the weapon
     if (P.bRestingWeapon)
