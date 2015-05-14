@@ -2430,7 +2430,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (!bEngineStoppedProjectile && !bAmmoDetonation) // we can skip lots of checks if either has been flagged true
     {
-        CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+        if (WeaponPawns.Length > 0)
+        {
+            CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+        }
 
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
@@ -2500,7 +2503,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 else
                 {
                     HullChanceModifier = 1.0;
-                    TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret 
+                    TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret
                 }
             }
             else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
