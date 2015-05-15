@@ -25,7 +25,7 @@ var globalconfig float DistortionScale;  // global distortion scale factor
 // Modified to handle world and object penetration
 simulated singular function HitWall(vector HitNormal, Actor Wall)
 {
-    local vector SavedVelocity, X, Y, Z, TempHitLocation, TempHitNormal;
+    local vector X, Y, Z, TempHitLocation, TempHitNormal;
     local float  xH, TempMaxWall;
     local Actor  TraceHitActor;
 
@@ -71,15 +71,17 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
+                    DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                if (Instigator == none || Instigator.Controller == none)
+                UpdateInstigator();
+
+                if (ShellImpactDamage.default.bDelayedDamage && InstigatorController != none)
                 {
                     Wall.SetDelayedDamageInstigatorController(InstigatorController);
                 }
 
-                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
+                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
             if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)

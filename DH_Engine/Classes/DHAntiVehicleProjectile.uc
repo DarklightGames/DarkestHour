@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DHAntiVehicleProjectile extends ROAntiVehicleProjectile
-    config(DH_Penetration) // Matt: added (like DHBullet) so bDebugBallistics can be set easily in a config file
+    config
     abstract;
 
 enum ERoundType
@@ -58,45 +58,47 @@ var     float           PenetrationMag;          // different for AP and HE shel
 var     bool            bDebuggingText;          // show screen debugging text
 var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to true for getting the arrow pointers (added from DHBullet so bDebugBallistics can be set in a config file)
 
-// Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here, & also to add bDebugROBallistics
+// Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
 simulated function PostBeginPlay()
 {
     LaunchLocation = Location;
-    Velocity = vector(Rotation) * Speed;
     BCInverse = 1.0 / BallisticCoefficient;
+    Velocity = vector(Rotation) * Speed;
 
     if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume.bWaterVolume)
     {
         Velocity *= 0.5;
+    }
+}
+
+// Modified to set InstigatorController (used to attribute radius damage kills correctly) & to move bDebugBallistics stuff here from PostBeginPlay (with bDebugROBallistics option)
+simulated function PostNetBeginPlay()
+{
+    local Actor  TraceHitActor;
+    local vector HitNormal;
+    local float  TraceRadius;
+
+    if (Instigator != none)
+    {
+        InstigatorController = Instigator.Controller;
     }
 
     if (bDebugROBallistics)
     {
         bDebugBallistics = true;
     }
-}
-
-// Modified to move bDebugBallistics stuff here from PostBeginPlay
-simulated function PostNetBeginPlay()
-{
-    local Actor  TraceHitActor;
-    local vector HitNormal;
-
-    super.PostNetBeginPlay();
 
     if (bDebugBallistics)
     {
         FlightTime = 0.0;
-        OrigLoc = Location;
+        TraceRadius = 5.0;
 
         if (Instigator != none)
         {
-            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + ((Instigator.CollisionRadius + 5.0) * vector(Rotation)), true);
+            TraceRadius += Instigator.CollisionRadius;
         }
-        else
-        {
-            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + (5.0 * vector(Rotation)), true);
-        }
+
+        TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + TraceRadius * vector(Rotation), true);
 
         if (ROBulletWhipAttachment(TraceHitActor) != none)
         {
@@ -115,8 +117,7 @@ simulated function Tick(float DeltaTime)
 // Borrowed from AB: Just using a standard linear interpolation equation here
 simulated function float GetPenetration(vector Distance)
 {
-    local float MeterDistance;
-    local float PenetrationNumber;
+    local float MeterDistance, PenetrationNumber;
 
     MeterDistance = VSize(Distance) / 60.352;
 
@@ -189,6 +190,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local vector          TempHitLocation, HitNormal;
     local array<int>      HitPoints;
 
+    // Exit without doing anything if we hit something we don't want to count a hit on
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
@@ -202,10 +204,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // We hit a VehicleWeapon
     if (HitVehicleWeapon != none && HitVehicle != none)
     {
-        // We hit the Driver's collision box, not the actual VehicleWeapon
+        // We hit the VehicleWeapon's 'driver' collision box, not the actual VehicleWeapon
         if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
         {
-            // We actually hit the Driver
+            // We actually hit the player
             if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
             {
                 if (ShouldDrawDebugLines())
@@ -215,10 +217,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                 if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
-                    VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // Matt: changed from Location to HitLocation
+                    UpdateInstigator();
+                    VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // changed from Location to HitLocation
                 }
 
-                // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on, as it only hit Driver's collision box & not actual VehicleWeapon
+                // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on, as it only hit player's collision box & not actual VehicleWeapon
                 if (!bExplodesOnHittingBody)
                 {
                     Velocity *= 0.8;
@@ -226,7 +229,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     return;
                 }
             }
-            // This isn't a real hit - we must have hit Driver's collision box but not actually the Driver, so don't save hitting this actor & exit the function
+            // This isn't a real hit - we must have hit player's collision box but not actually the player, so don't save hitting this actor & exit the function
             else
             {
                 SavedTouchActor = none;
@@ -259,14 +262,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (Role == ROLE_Authority)
             {
-                // Matt: removed as SetDDI is irrelevant to VehWeapon (empty function) & for Vehicle we'll let VehWeapon call SetDDI on Vehicle only if it's calling TakeDamage on it
-//              if (ShellImpactDamage.default.bDelayedDamage && Instigator == none || Instigator.Controller == none)
-//              {
-//                  HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
-//                  HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
-//              }
+                UpdateInstigator();
 
-                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // Matt: changed from Location to HitLocation
+                // Removed SetDelayedDamageInstigatorController() as irrelevant to VehWeapon (empty function), & we'll let VehWeapon call SetDDIC on Vehicle only if it's calling TakeDamage on it
+
+                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // changed from Location to HitLocation
 
                 if (DamageRadius > 0 && HitVehicle.Health > 0)
                 {
@@ -282,17 +282,19 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // We hit something other than a VehicleWeapon
     else
     {
-        // We hit a soldier ... potentially - first we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
+        UpdateInstigator();
+
+        // We hit a player pawn, but now we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
         if (Other.IsA('ROPawn'))
         {
             Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0);
 
-            // We hit one of the body's hit points, so register a hit on the soldier
+            // We hit one of the body's hit points, so register a hit on the player
             if (Other != none)
             {
                 if (Role == ROLE_Authority)
                 {
-                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints); // Matt: changed from Location to HitLocation
+                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints); // changed from Location to HitLocation
                 }
 
                 // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on
@@ -303,7 +305,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     return;
                 }
 
-                HurtWall = Other; // Matt: added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
+                HurtWall = Other; // added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
             }
         }
         // We hit some other kind of pawn or a destroyable mesh
@@ -311,7 +313,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (Role == ROLE_Authority)
             {
-                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // Matt: changed from Location to HitLocation
+                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // changed from Location to HitLocation
             }
 
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
@@ -320,20 +322,22 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 return;
             }
 
-            HurtWall = Other; // Matt: added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
+            HurtWall = Other; // added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
         }
         // Otherwise we hit something we aren't going to damage
-        else if (bBotNotifyIneffective && Role == ROLE_Authority && Instigator != none && ROBot(Instigator.Controller) != none)
+        else if (bBotNotifyIneffective && Role == ROLE_Authority && ROBot(InstigatorController) != none)
         {
-            ROBot(Instigator.Controller).NotifyIneffectiveAttack();
+            ROBot(InstigatorController).NotifyIneffectiveAttack();
         }
 
         Explode(HitLocation, vect(0.0, 0.0, 1.0));
     }
 }
 
+// Matt: re-worked a little, but not as much as ProcessTouch, with which is shares some features
 simulated singular function HitWall(vector HitNormal, Actor Wall)
 {
+    // Exit without doing anything if we hit something we don't want to count a hit on
     if ((Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe)
     {
         return;
@@ -354,7 +358,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
 
     SavedHitActor = Pawn(Wall);
 
-//  super(ROBallisticProjectile).HitWall(HitNormal, Wall); // Matt: removed as just duplicates shell debugging
+//  super(ROBallisticProjectile).HitWall(HitNormal, Wall); // removed as just duplicates shell debugging
 
     if (Role == ROLE_Authority)
     {
@@ -367,7 +371,9 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                if (Instigator == none || Instigator.Controller == none)
+                UpdateInstigator();
+
+                if (ShellImpactDamage.default.bDelayedDamage && InstigatorController != none)
                 {
                     Wall.SetDelayedDamageInstigatorController(InstigatorController);
                 }
@@ -382,9 +388,9 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
 
             HurtWall = Wall;
         }
-        else if (bBotNotifyIneffective && Instigator != none && ROBot(Instigator.Controller) != none)
+        else if (bBotNotifyIneffective && ROBot(InstigatorController) != none)
         {
-            ROBot(Instigator.Controller).NotifyIneffectiveAttack();
+            ROBot(InstigatorController).NotifyIneffectiveAttack();
         }
     }
 
@@ -425,6 +431,14 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
+// Modified to update Instigator, so HurtRadius attributes damage to the player's current pawn
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+{
+    UpdateInstigator();
+
+    super.HurtRadius(DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
+}
+
 // New function to consolidate code now standardised between ProcessTouch & HitWall, and allowing it to be easily sub-classed without re-stating those long functions
 // Although this has actually been written as a generic function that should handle all or most situations
 simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
@@ -459,18 +473,18 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
     }
 
     // If bot fired this round, notify it of ineffective attack on vehicle
-    if (Instigator != none && ROBot(Instigator.Controller) != none)
+    if (ROBot(InstigatorController) != none)
     {
         if (Pawn(HitActor) == none && HitActor != none && Pawn(HitActor.Base) != none)
         {
             HitActor = HitActor.Base;
         }
 
-        ROBot(Instigator.Controller).NotifyIneffectiveAttack(Pawn(HitActor));
+        ROBot(InstigatorController).NotifyIneffectiveAttack(Pawn(HitActor));
     }
 }
 
-// Matt: modified version to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns)
+// Modified version of function to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns)
 // Also avoided setting replicated variables on a server, as clients are going to get this anyway
 simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
@@ -631,6 +645,19 @@ simulated function CheckForSplash(vector SplashLocation)
             Spawn(ShellHitWaterEffectClass,,, HitLocation, rot(16384, 0, 0));
             PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
         }
+    }
+}
+
+// New function to update Instigator reference to ensure damage is attributed to correct player, as player may have switched to different pawn since firing, e.g. changed vehicle position
+simulated function UpdateInstigator()
+{
+    if (InstigatorController != none)
+    {
+        Instigator = InstigatorController.Pawn;
+    }
+    else
+    {
+        Instigator = none;
     }
 }
 
