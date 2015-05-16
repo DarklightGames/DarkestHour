@@ -85,7 +85,6 @@ simulated function PostNetBeginPlay()
 
     if (bDebugBallistics)
     {
-        FlightTime = 0.0;
         TraceRadius = 5.0;
 
         if (Instigator != none)
