@@ -21,17 +21,12 @@ replication
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     local int   FireMode;
-    local float FireSpread;
+    local float ProjectileSpread;
 
-    if (Role != ROLE_Authority || bForceCenterAim)
+    // Check that cannon/coaxial MG is ready to fire & that we're an authority role (234/1 adds FireCountdown check on cannon fire, not just alt fire)
+    if (FireCountdown <= 0.0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bAltFire) && Role == ROLE_Authority)
     {
-        return false;
-    }
-
-    // Check that can fire (adds FireCountdown check on cannon fire, not just alt fire)
-    if (FireCountdown <= 0.0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bAltFire))
-    {
-        // Set fire rotation, including any random spread (record FireMode to simplify things later)
+        // Calculate the starting WeaponFireRotation
         CalcWeaponFire(bAltFire);
 
         if (bCorrectAim)
@@ -39,19 +34,21 @@ event bool AttemptFire(Controller C, bool bAltFire)
             WeaponFireRotation = AdjustAim(bAltFire);
         }
 
+        // Calculate any random spread & record the FireMode to simplify things later
         if (bAltFire)
         {
-            if (AltFireSpread > 0.0)
-            {
-                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * AltFireSpread);
-            }
+            ProjectileSpread = AltFireSpread;
         }
         else
         {
+            if (Spread > 0.0)
+            {
+                ProjectileSpread = Spread; // a starting point for spread, using any primary round spread
+            }
+
             if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
             {
                 FireMode = 0;
-                FireSpread = Spread;
             }
             else if (ProjectileClass == SecondaryProjectileClass)
             {
@@ -59,7 +56,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
                 if (bUsesSecondarySpread && SecondarySpread > 0.0)
                 {
-                    FireSpread = SecondarySpread;
+                    ProjectileSpread = SecondarySpread;
                 }
             }
             else if (ProjectileClass == TertiaryProjectileClass)
@@ -68,65 +65,71 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
                 if (bUsesTertiarySpread && TertiarySpread > 0.0)
                 {
-                    FireSpread = TertiarySpread;
+                    ProjectileSpread = TertiarySpread;
                 }
             }
 
-            if (FireSpread > 0)
+            // Now apply any random spread
+            if (ProjectileSpread > 0.0)
             {
-                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * FireSpread);
-                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
+
+                if (!bAltFire)
+                {
+                    WeaponFireRotation += rot(1, 6, 0);
+                }
             }
         }
 
-        DualFireOffset *= -1;
-
         Instigator.MakeNoise(1.0);
 
-        // Alt fire is coaxial MG - check we have ammo & fire the MG
+        // Coaxial MG fire - check we have ammo & fire the MG
         if (bAltFire)
         {
-            // If MG is empty so we can't fire
+            // If MG is empty we can't fire - start a reload
             if (!ConsumeAmmo(3))
             {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                CannonPawn.ClientVehicleCeaseFire(bAltFire);
                 HandleReload();
 
                 return false;
             }
 
+            // Fire
             AltFire(C);
             FireCountdown = AltFireInterval;
 
-            // If we just fired our last round, start a reload
+            // If we just fired our last MG round, start an MG reload
             if (!HasAmmo(3))
             {
                 HandleReload();
             }
         }
-        // Cannon - check we have ammo & fire the current round
+        // Cannon fire - check we have ammo & fire the current round
         else
         {
-            // If cannon is empty so we can't fire
+            // If cannon is empty we can't fire
             if (!ConsumeAmmo(FireMode))
             {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
-                HandleCannonReload();
+                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                HandleCannonReload(); // added to 234/1
 
                 return false;
             }
 
+            // Fire
             Fire(C);
-            FireCountdown = FireInterval;
+//          bClientCanFireCannon = false; // removed from 234/1
+            FireCountdown = FireInterval; // added to 234/1
 
-            // If cannon is now empty, after firing our last round
+            // If cannon is now empty, after firing our last round, start a magazine reload (this replaces setting reload state & timer & possible round type switch)
             if (!HasAmmo(FireMode))
             {
                 HandleCannonReload();
             }
         }
 
-        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
+        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock; // moved back down here in 234/1, as potentially relevant to cannon & MG as both use FireCountdown
 
         return true;
     }
