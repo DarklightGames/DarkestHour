@@ -22,7 +22,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    GivenItems(0)="DH_Engine.DH_BinocularsItem"
+    GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'

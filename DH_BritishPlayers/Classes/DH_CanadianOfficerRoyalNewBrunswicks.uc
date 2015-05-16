@@ -19,7 +19,7 @@ defaultproperties
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    GivenItems(0)="DH_Engine.DH_BinocularsItem"
+    GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

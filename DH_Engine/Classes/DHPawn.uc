@@ -2028,7 +2028,7 @@ state PutWeaponAway
         if (Weapon != none)
         {
             // Putting away a grenade or binoculars
-            if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem'))
+            if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
             {
                 if (bIsCrawling)
                 {
@@ -2147,7 +2147,7 @@ state PutWeaponAway
         }
         else if (SwapWeapon != none)
         {
-            if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DH_BinocularsItem'))
+            if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DHBinocularsItem'))
             {
                 // From grenade or binocs to pistol
                 if (Weapon.IsA('DHPistolWeapon'))
@@ -2162,7 +2162,7 @@ state PutWeaponAway
                     }
                 }
                 // From grenade or binocs, to grenade or binocs
-                else if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem'))
+                else if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
                 {
                     if (bIsCrawling)
                     {
@@ -2189,7 +2189,7 @@ state PutWeaponAway
             else if (SwapWeapon.IsA('DHPistolWeapon'))
             {
                 // From pistol to grenade or binocs
-                if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem'))
+                if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
                 {
                     if (bIsCrawling)
                     {
@@ -2216,7 +2216,7 @@ state PutWeaponAway
             else
             {
                 // From any other weapon to grenade or binocs (generic anim having put away old weapon on player's back)
-                if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DH_BinocularsItem')) // also used if Weapon is none
+                if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem')) // also used if Weapon is none
                 {
                     if (bIsCrawling)
                     {

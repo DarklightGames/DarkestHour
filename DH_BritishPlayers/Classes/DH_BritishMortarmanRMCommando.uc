@@ -23,7 +23,7 @@ defaultproperties
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"
-    GivenItems(1)="DH_Engine.DH_BinocularsItem"
+    GivenItems(1)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'

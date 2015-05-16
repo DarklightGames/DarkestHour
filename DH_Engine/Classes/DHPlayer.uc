@@ -504,7 +504,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
         // if sniper scope or binoc
         if (ROWeap != none &&
-            (ROWeap.bPlayerViewIsZoomed || (ROWeap.IsA('DH_BinocularsItem') && ROWeap.bPlayerViewIsZoomed)))
+            (ROWeap.bPlayerViewIsZoomed || (ROWeap.IsA('DHBinocularsItem') && ROWeap.bPlayerViewIsZoomed)))
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor;
         }
@@ -604,7 +604,7 @@ function ServerSaveArtilleryPosition()
     local int          TraceDist, i;
     local bool         bFoundARadio;
 
-    if (DHPawn(Pawn) != none && Pawn.Weapon != none && Pawn.Weapon.IsA('DH_BinocularsItem'))
+    if (DHPawn(Pawn) != none && Pawn.Weapon != none && Pawn.Weapon.IsA('DHBinocularsItem'))
     {
         RI = DHPawn(Pawn).GetRoleInfo();
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);

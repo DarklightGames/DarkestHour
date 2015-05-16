@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
+class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
 
 #exec OBJ LOAD FILE=Weapon_overlays.utx
 #exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
@@ -212,8 +212,8 @@ defaultproperties
     bCanSway=false
     AIRating=0.0
     CurrentRating=0.0
-    PickupClass=class'DH_Engine.DHBinocularsPickup'
-    AttachmentClass=class'DH_Engine.DHBinocularsAttachment'
+    PickupClass=class'DH_Equipment.DHBinocularsPickup'
+    AttachmentClass=class'DH_Equipment.DHBinocularsAttachment'
     ItemName="Binoculars"
     Mesh=mesh'Common_Binoc_1st.binoculars'
     BinocsOverlay=texture'Weapon_overlays.Scopes.BINOC_overlay'
