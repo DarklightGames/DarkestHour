@@ -1859,7 +1859,7 @@ state ResetGameCountdown
         Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
     }
 
-    // Matt: modified to spawn a DH_ClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
+    // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
     function Timer()
     {
         global.Timer();
@@ -1868,7 +1868,7 @@ state ResetGameCountdown
         {
             if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
             {
-                Spawn(class'DH_ClientResetGame');
+                Spawn(class'DHClientResetGame');
             }
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
