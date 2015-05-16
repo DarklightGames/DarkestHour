@@ -137,7 +137,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return false;
 }
 
-// Matt: modified to alternate between AP & HE rounds if firing a mixed mag (the tertiary ammo type)
+// Modified to alternate between AP & HE rounds if firing a mixed mag (the tertiary ammo type)
 state ProjectileFireMode
 {
     function Fire(Controller C)
@@ -165,17 +165,16 @@ state ProjectileFireMode
 // Modified to remove switch to PendingProjectileClass after firing, as this cannon uses a magazine
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
-    local Projectile        P;
-    local VehicleWeaponPawn WeaponPawn;
-    local vector            StartLocation, HitLocation, HitNormal, Extent;
-    local rotator           FireRot;
+    local Projectile P;
+    local vector     StartLocation, HitLocation, HitNormal, Extent;
+    local rotator    FireRot;
 
+    // Calculate projectile's starting rotation
     FireRot = WeaponFireRotation;
 
-    // Used only for human players - lets cannons with non-centered aim points have a different aiming location
     if (Instigator != none && Instigator.IsHumanControlled())
     {
-        FireRot.Pitch += AddedPitch;
+        FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
     }
 
     if (!bAltFire && RangeSettings.Length > 0)
@@ -193,12 +192,11 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
-        WeaponPawn = VehicleWeaponPawn(Owner);
 
-        if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
+        if (CannonPawn != none && CannonPawn.VehicleBase != none)
         {
-            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
-                WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
+            if (!CannonPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
+                WeaponFireLocation + vector(WeaponFireRotation) * (CannonPawn.VehicleBase.CollisionRadius * 1.5), Extent))
             {
                 StartLocation = HitLocation;
             }
@@ -301,7 +299,7 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
     }
 }
 
-// Matt: modified slightly but no significant changes
+// Modified to reinstate use of FireCountDown for cannon as well as coaxial MG, & to prevent reload after each individual shot
 simulated event OwnerEffects()
 {
     // Stop the firing effects it we shouldn't be able to fire
@@ -309,7 +307,7 @@ simulated event OwnerEffects()
     {
         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
 
-        return; // Matt: originally removed in 234/1, suggesting fire effects would happen if weapon can't fire - doesn't seem to matter either way but have reinstated as seems more logical
+        return;
     }
 
     if (!bIsRepeatingFF)
@@ -341,22 +339,22 @@ simulated event OwnerEffects()
         {
             FireCountdown = FireInterval;
         }
-/*
-        if (!bIsAltFire) // note this 'if' is removed in 234/1
-        {
-            if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
-            {
-                CannonReloadState = CR_Waiting;
-            }
-            else
-            {
-                CannonReloadState = CR_Empty;
-                SetTimer(0.01, false);
-            }
 
-            bClientCanFireCannon = false;
-        }
-*/
+//      if (!bIsAltFire) // note this 'if' is removed in 234/1
+//      {
+//          if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
+//          {
+//              CannonReloadState = CR_Waiting;
+//          }
+//          else
+//          {
+//              CannonReloadState = CR_Empty;
+//              SetTimer(0.01, false);
+//          }
+//
+//          bClientCanFireCannon = false;
+//      }
+
         AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
         FlashMuzzleFlash(bIsAltFire);
@@ -386,7 +384,7 @@ simulated event OwnerEffects()
     }
 }
 
-// Matt: modified to handle our modified reload process for players who manually reload
+// Modified to handle our modified reload process for players who manually reload
 function ServerManualReload()
 {
     if (Role == ROLE_Authority && CannonReloadState == CR_Waiting)
@@ -395,7 +393,7 @@ function ServerManualReload()
     }
 }
 
-// Matt: new function that handles all 3 round types, trying all the alternatives if we're out of some types of ammo
+// New function that handles all 3 round types, trying all the alternatives if we're out of some types of ammo
 function HandleCannonReload(optional bool bIsManualReload)
 {
     bClientCanFireCannon = false;
@@ -409,7 +407,7 @@ function HandleCannonReload(optional bool bIsManualReload)
     // Otherwise check ammo & proceed with reload if we have some
     else if (CannonReloadState != CR_Empty)
     {
-        // If we don't have a spare mag for the pending round type, try to switch to another round type (but not if player reloads manually)
+        // If we don't have a spare mag for the pending round type, try to switch to another round type
         if (!HasMagazines(GetPendingRoundIndex()))
         {
             if (!bIsManualReload)
@@ -512,7 +510,7 @@ function ToggleRoundType()
     }
 }
 
-// Modified as this cannon uses magazines
+// New function to return number of magazines for given firing mode
 simulated function bool HasMagazines(int Mode)
 {
     switch (Mode)
@@ -691,14 +689,14 @@ defaultproperties
     AltFireInterval=0.05
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
     EffectEmitterClass=none
-    CannonDustEmitterClass=none // Matt: avoids having to override FlashMuzzleFlash function
+    CannonDustEmitterClass=none // avoids having to override FlashMuzzleFlash function
     FireEffectOffset=(X=20.0,Y=-5.0,Z=20.0)
     FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
-    bIsRepeatingFF=true // Matt: added, as strongly suspect this should be true, like a tank mounted MG
+    bIsRepeatingFF=true // added, as strongly suspect this should be true, like a tank mounted MG
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
     ShakeRotMag=(Z=5.0)
