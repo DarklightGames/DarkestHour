@@ -3,17 +3,15 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ArtillerySpawner extends ROArtillerySpawner;
+class DHArtillerySpawner extends ROArtillerySpawner;
 
-// Matt: modified to spawn DHArtilleryShell instead of RO version
+// Modified to spawn DHArtilleryShell instead of RO version
 function Timer()
 {
-    local vector       AimVec;
     local ROVolumeTest RVT;
-    local ROPlayer     ROP;
+    local vector       AimVec;
 
-    // Hack: Lets find a better way to prevent arty from spilling to the next round
-    // Also kill the arty strike if the commander switches teams or leaves the server
+    // Destroy this actor if the round is over or if the arty officer has switched teams or left the server
     if (!ROTeamGame(Level.Game).IsInState('RoundInPlay') || InstigatorController == none || InstigatorController.GetTeamNum() != OwningTeam)
     {
         if (LastSpawnedShell != none && !LastSpawnedShell.bDeleteMe)
@@ -31,11 +29,9 @@ function Timer()
     // If the place this arty is falling has become a NoArtyVolume after the strike was called, cancel the strike
     if (RVT != none && RVT.IsInNoArtyVolume())
     {
-        ROP = ROPlayer(InstigatorController);
-
-        if (ROP != none)
+        if (ROPlayer(InstigatorController) != none)
         {
-            ROP.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
+            ROPlayer(InstigatorController).ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid artillery target
         }
 
         RVT.Destroy();
@@ -52,6 +48,7 @@ function Timer()
 
     RVT.Destroy();
 
+    // If this salvo still has remaining shells to land, set a new timer & exit
     if (SpawnCounter <= BatterySize)
     {
         AimVec = vect(0.0, 0.0, 0.0);
@@ -66,22 +63,23 @@ function Timer()
 
         if (FRand() > 0.5)
         {
-           AimVec.Y *= -1;
+           AimVec.Y *= -1.0;
         }
 
         LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController,, Location + AimVec, rotator(PhysicsVolume.Gravity));
 
         SpawnCounter++;
-        SetTimer(FRand() * 1.5, false);
+        SetTimer(FRand() * 1.5, false); // randomised time between individual shells landing
 
         return;
     }
 
+    // If we still have remaining salvo(s) then set a new timer, otherwise destroy this actor
     if (SalvoCounter < SalvoAmount)
     {
         SalvoCounter++;
         SpawnCounter = 0;
-        SetTimer(Max(Rand(20), 10), false); // time between salvos
+        SetTimer(Max(Rand(20), 10), false); // randomised time between each salvo
     }
     else
     {

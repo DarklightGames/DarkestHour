@@ -695,14 +695,14 @@ function ServerArtyStrike()
 {
     local vector                SpawnLocation;
     local ROGameReplicationInfo GRI;
-    local DH_ArtillerySpawner   Spawner;
+    local DHArtillerySpawner    Spawner;
 
     GRI = ROGameReplicationInfo(GameReplicationInfo);
 
     SpawnLocation = SavedArtilleryCoords;
     SpawnLocation.Z = GRI.NorthEastBounds.Z;
 
-    Spawner = Spawn(class'DH_ArtillerySpawner', self,, SpawnLocation, rotator(PhysicsVolume.Gravity));
+    Spawner = Spawn(class'DHArtillerySpawner', self,, SpawnLocation, rotator(PhysicsVolume.Gravity));
 
     if (Spawner == none)
     {
