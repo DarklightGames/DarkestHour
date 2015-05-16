@@ -8,7 +8,7 @@
 // Note that Reset also gets called on those actors in single player mode, where it will have the same desired result
 //===================================================================================================================
 
-class DH_ClientResetGame extends Actor;
+class DHClientResetGame extends Actor;
 
 simulated function PostBeginPlay()
 {
