@@ -1262,7 +1262,9 @@ simulated function int PrimaryAmmoCount()
 simulated function bool ConsumeAmmo(int Mode)
 {
     if (!HasAmmo(Mode))
+    {
         return false;
+    }
 
     switch (Mode)
     {
@@ -1303,14 +1305,17 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// Modified so only sets timer if the new reload state needs it
+// Modified so only sets timer if the new reload state needs it, & to only act on net client (avoids duplication for standalone or listen server)
 simulated function ClientSetReloadState(ECannonReloadState NewState)
 {
-    CannonReloadState = NewState;
-
-    if (CannonReloadState != CR_Waiting  && CannonReloadState != CR_ReadyToFire)
+    if (Role < ROLE_Authority)
     {
-        SetTimer(0.01, false);
+        CannonReloadState = NewState;
+
+        if (CannonReloadState != CR_Waiting  && CannonReloadState != CR_ReadyToFire)
+        {
+            SetTimer(0.01, false);
+        }
     }
 }
 
