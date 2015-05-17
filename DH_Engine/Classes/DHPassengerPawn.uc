@@ -63,7 +63,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    // Debug exits - uses DHPassengerPawn class default, allowing bDebugExitPositions to be toggled for all passenger pawns
     if (class'DHPassengerPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)

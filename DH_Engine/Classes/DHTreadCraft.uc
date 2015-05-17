@@ -193,7 +193,7 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all DHTreadCrafts
+    // Debug exits - uses DHTreadCraft class default, allowing bDebugExitPositions to be toggled for all DHTreadCrafts
     if (class'DHTreadCraft'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositions.Length; ++i)

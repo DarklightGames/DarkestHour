@@ -510,7 +510,7 @@ function ToggleRoundType()
     }
 }
 
-// New function to return number of magazines for given firing mode
+// New function to return whether we have any magazines for the given firing mode
 simulated function bool HasMagazines(int Mode)
 {
     switch (Mode)

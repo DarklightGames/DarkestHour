@@ -115,7 +115,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    // Debug exits - uses DHTankCannonPawn class default, allowing bDebugExitPositions to be toggled for all cannon pawns
     if (class'DHTankCannonPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)

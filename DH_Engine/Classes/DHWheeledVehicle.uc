@@ -788,7 +788,7 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DHWheeledVehicles
+    // Debug exits - uses DHWheeledVehicle class default, allowing bDebugExitPositions to be toggled for all DHWheeledVehicles
     if (class'DHWheeledVehicle'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositions.Length; ++i)
