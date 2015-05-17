@@ -6,8 +6,11 @@
 class DHTankCannonShellCanister extends DHBullet
     abstract;
 
+var int NumberOfProjectilesPerShot; // the number of separate small projectiles launched by each canister shot
+
 defaultproperties
 {
+    NumberOfProjectilesPerShot=20
     WhizType=2
     MyVehicleDamage=class'DH_Engine.DHCanisterShotVehicleDamageType'
     BallisticCoefficient=4.0

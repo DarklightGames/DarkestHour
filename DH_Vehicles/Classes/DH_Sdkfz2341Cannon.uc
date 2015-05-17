@@ -230,8 +230,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     // Now spawn the projectile
     P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
-    // Swap to the next round type after firing // note this 'if' is removed & is the only change in this override
-//  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
+    // If pending round type is different, switch round type // note this 'if' is removed & is the only change in this override
+//  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass && !bCanisterIsFiring)
 //  {
 //      ProjectileClass = PendingProjectileClass;
 //  }
@@ -243,32 +243,35 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             P.Velocity = Instigator.Velocity;
         }
 
-        FlashMuzzleFlash(bAltFire);
+        // Play firing effects (unless it's canister in the process of spawning separate projectiles - only do it once at the end)
+        if (!bCanisterIsFiring)
+        {
+            FlashMuzzleFlash(bAltFire);
 
-        // Play firing noise
-        if (bAltFire)
-        {
-            if (bAmbientAltFireSound)
+            if (bAltFire)
             {
-                AmbientSound = AltFireSoundClass;
-                SoundVolume = AltFireSoundVolume;
-                SoundRadius = AltFireSoundRadius;
-                AmbientSoundScaling = AltFireSoundScaling;
+                if (bAmbientAltFireSound)
+                {
+                    AmbientSound = AltFireSoundClass;
+                    SoundVolume = AltFireSoundVolume;
+                    SoundRadius = AltFireSoundRadius;
+                    AmbientSoundScaling = AltFireSoundScaling;
+                }
+                else
+                {
+                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
+                }
             }
             else
             {
-                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
-            }
-        }
-        else
-        {
-            if (bAmbientFireSound)
-            {
-                AmbientSound = FireSoundClass;
-            }
-            else
-            {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                if (bAmbientFireSound)
+                {
+                    AmbientSound = FireSoundClass;
+                }
+                else
+                {
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                }
             }
         }
     }

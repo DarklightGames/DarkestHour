@@ -24,6 +24,7 @@ var     float               TertiarySpread;
 var     class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
 var     byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
 var     sound               NoMGAmmoSound;            // 'dry fire' sound when trying to fire empty coaxial MG
+var     bool                bCanisterIsFiring;        // canister is spawning separate projectiles - until done it stops firing effects playing or switch to different round type
 
 // Armor penetration
 var     float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
@@ -883,7 +884,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
             {
                 FireMode = 2;
 
-                if (bUsesTertiarySpread && TertiarySpread > 0.0)
+                // No spread here for canister shot, as it is randomised separately for each projectile fired (in the Fire function)
+                if (bUsesTertiarySpread && TertiarySpread > 0.0 && class<DHTankCannonShellCanister>(TertiaryProjectileClass) == none)
                 {
                     ProjectileSpread = TertiarySpread;
                 }
@@ -966,9 +968,42 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return false;
 }
 
-// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 state ProjectileFireMode
 {
+    // Modified to handle canister shot
+    function Fire(Controller C)
+    {
+        local vector  WeaponFireVector;
+        local int     ProjectilesToFire, i;
+
+        // If firing canister shot
+        if (class<DHTankCannonShellCanister>(ProjectileClass) != none)
+        {
+            bCanisterIsFiring = true;
+            ProjectilesToFire = class<DHTankCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
+            WeaponFireVector = vector(WeaponFireRotation);
+
+            for (i = 1; i <= ProjectilesToFire; ++i)
+            {
+                WeaponFireRotation = rotator(WeaponFireVector + VRand() * FRand() * TertiarySpread);
+                WeaponFireRotation += rot(1, 6, 0);
+
+                if (i >= ProjectilesToFire)
+                {
+                    bCanisterIsFiring = false;
+                }
+
+                SpawnProjectile(ProjectileClass, false);
+            }
+        }
+        // Otherwise the usual Super for normal cannon fire
+        else
+        {
+            SpawnProjectile(ProjectileClass, false);
+        }
+    }
+
+    // Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
     function AltFire(Controller C)
     {
         // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
@@ -983,6 +1018,7 @@ state ProjectileFireMode
     }
 }
 
+// Modified to handle canister shot, by avoiding possibility of switching to a different round type until canister finishes spawning its last separate projectile
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
@@ -1000,11 +1036,11 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     if (!bAltFire && RangeSettings.Length > 0)
     {
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    }
 
-    if (bCannonShellDebugging && RangeSettings.Length > 0)
-    {
-        Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        if (bCannonShellDebugging)
+        {
+            Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        }
     }
 
     // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
@@ -1050,8 +1086,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     // Now spawn the projectile
     P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
-    // If pending round type is different, switch round type
-    if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
+    // If pending round type is different, switch round type (unless it's canister in the process of spawning separate projectiles)
+    if (ProjectileClass != PendingProjectileClass && PendingProjectileClass != none && ProjClass == ProjectileClass && !bCanisterIsFiring)
     {
         ProjectileClass = PendingProjectileClass;
     }
@@ -1063,32 +1099,35 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             P.Velocity = Instigator.Velocity;
         }
 
-        FlashMuzzleFlash(bAltFire);
+        // Play firing effects (unless it's canister in the process of spawning separate projectiles - only do it once at the end)
+        if (!bCanisterIsFiring)
+        {
+            FlashMuzzleFlash(bAltFire);
 
-        // Play firing noise
-        if (bAltFire)
-        {
-            if (bAmbientAltFireSound)
+            if (bAltFire)
             {
-                AmbientSound = AltFireSoundClass;
-                SoundVolume = AltFireSoundVolume;
-                SoundRadius = AltFireSoundRadius;
-                AmbientSoundScaling = AltFireSoundScaling;
+                if (bAmbientAltFireSound)
+                {
+                    AmbientSound = AltFireSoundClass;
+                    SoundVolume = AltFireSoundVolume;
+                    SoundRadius = AltFireSoundRadius;
+                    AmbientSoundScaling = AltFireSoundScaling;
+                }
+                else
+                {
+                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
+                }
             }
             else
             {
-                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-            }
-        }
-        else
-        {
-            if (bAmbientFireSound)
-            {
-                AmbientSound = FireSoundClass;
-            }
-            else
-            {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                if (bAmbientFireSound)
+                {
+                    AmbientSound = FireSoundClass;
+                }
+                else
+                {
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                }
             }
         }
     }
