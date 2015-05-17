@@ -462,6 +462,50 @@ function HandleCannonReload(optional bool bIsManualReload)
     }
 }
 
+// Modified to remove requirement for PrimaryAmmoCount > 0, which for autocannon means has at least 1 magazines, as last mag may just have been used to start this reload
+simulated function Timer()
+{
+    // Do not proceed with reload if no player in cannon position - set a repeating timer to keep checking
+    if (CannonPawn == none || CannonPawn.Controller == none)
+    {
+        SetTimer(0.5, true);
+    }
+    else if (CannonReloadState == CR_Empty)
+    {
+        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart1;
+        SetTimer(GetSoundDuration(ReloadSoundOne), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart1)
+    {
+        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart2;
+        SetTimer(GetSoundDuration(ReloadSoundTwo), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart2)
+    {
+        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart3;
+        SetTimer(GetSoundDuration(ReloadSoundThree), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart3)
+    {
+        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart4;
+        SetTimer(GetSoundDuration(ReloadSoundFour), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart4)
+    {
+        if (Role == ROLE_Authority)
+        {
+            bClientCanFireCannon = true;
+        }
+
+        CannonReloadState = CR_ReadyToFire;
+        SetTimer(0.0, false);
+    }
+}
+
 // Modified as this cannon uses magazines
 function ToggleRoundType()
 {

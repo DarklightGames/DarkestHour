@@ -1331,11 +1331,13 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 }
 
 // Modified to simplify a little, including call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do
+// Also to postpone reload if cannon is out of ammo & to sharply reduce frequency of repeat timer if reload can't proceed for now
 simulated function Timer()
 {
-    if (CannonPawn == none || CannonPawn.Controller == none)
+    // Do not proceed with reload if no player in cannon position or if cannon has no ammo - set a repeating timer to keep checking (but reduced from 20 times a second !)
+    if (CannonPawn == none || CannonPawn.Controller == none || PrimaryAmmoCount() < 1)
     {
-        SetTimer(0.05, true);
+        SetTimer(0.5, true);
     }
     else if (CannonReloadState == CR_Empty)
     {
