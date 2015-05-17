@@ -788,28 +788,20 @@ function bool CanFire()
     return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
 }
 
-// Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn & optimise what remains
+// Modified to use CanFire(), to add clientside check before calling ServerManualReload(), & to avoid obsolete RO functionality in ROTankCannonPawn & optimise what remains
 function Fire(optional float F)
 {
-    if (!CanFire())
+    if (CanFire() && Cannon != none)
     {
-        return;
-    }
-
-    if (Cannon != none)
-    {
-        if (Cannon.CannonReloadState != CR_ReadyToFire || !Cannon.bClientCanFireCannon)
+        if (Cannon.CannonReloadState == CR_ReadyToFire && Cannon.bClientCanFireCannon)
         {
-            if (Cannon.CannonReloadState == CR_Waiting && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
-            {
-                Cannon.ServerManualReload();
-            }
-
-            return;
+            super(VehicleWeaponPawn).Fire(F);
+        }
+        else if (Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex()) && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+        {
+            Cannon.ServerManualReload();
         }
     }
-
-    super(VehicleWeaponPawn).Fire(F);
 }
 
 // Modified to check CanFire(), to skip over obsolete RO functionality in ROTankCannonPawn, & to add dry-fire sound if trying to fire empty MG
@@ -835,6 +827,20 @@ function AltFire(optional float F)
         PlaySound(Cannon.NoMGAmmoSound, SLOT_None, 1.5,, 25.0,, true);
     }
 }
+
+// Modified to prevent attempting reload if don't have ammo
+simulated exec function ROManualReload()
+{
+    if (Cannon != none && Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex()) && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+    {
+        Cannon.ServerManualReload();
+    }
+}
+
+// simulated exec function SwitchFireMode()
+// Matt: TODO - add some kind of clientside eligibility check to stop player spamming server with invalid ServerToggleRoundType() calls 
+// Maybe just change PendingProjClass clientside & only update to server when it needs it, i.e. after firing or starting a reload (similar to what I've done with RangeIndex in DHRocketWeapon)
+// Server only needs PendingProjectileClass in ServerManualReload, AttemptFire & SpawnProjectile & clientside it's only used by/replicated to an owning net client
 
 // Modified to add clientside checks before sending the function call to the server
 simulated function SwitchWeapon(byte F)

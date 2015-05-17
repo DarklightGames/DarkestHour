@@ -753,7 +753,7 @@ simulated function int GetPendingRoundIndex()
         }
         else
         {
-            return 3;
+            return -1; // RO used 3 as the invalid/null return value, but that runs the risk of functions like HasAmmo() using 3 to return the alt fire (coaxial MG) ammo status
         }
     }
     else
@@ -772,7 +772,7 @@ simulated function int GetPendingRoundIndex()
         }
         else
         {
-            return 3;
+            return -1;
         }
     }
 }
@@ -1303,6 +1303,24 @@ function bool GiveInitialAmmo()
     }
 
     return false;
+}
+
+// Modified to prevent attempting reload if don't have ammo
+function ServerManualReload()
+{
+    if (Role == ROLE_Authority && CannonReloadState == CR_Waiting && HasAmmo(GetPendingRoundIndex()))
+    {
+        // If player has selected a different ammo type, switch now
+        if (PendingProjectileClass != ProjectileClass && PendingProjectileClass != none)
+        {
+            ProjectileClass = PendingProjectileClass;
+        }
+
+        // Start reload on both client & server
+        CannonReloadState = CR_Empty;
+        ClientSetReloadState(CannonReloadState); // tell a net client to start reloading 
+        SetTimer(0.01, false);
+    }
 }
 
 // Modified so only sets timer if the new reload state needs it, & to only act on net client (avoids duplication for standalone or listen server)

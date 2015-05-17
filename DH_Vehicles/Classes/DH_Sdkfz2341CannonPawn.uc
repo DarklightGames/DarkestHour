@@ -5,6 +5,33 @@
 
 class DH_Sdkfz2341CannonPawn extends DHGermanTankCannonPawn;
 
+// Modified as need to check if has spare magazines (the normal HasAmmo check returns AmmoCharge, not mags)
+simulated exec function ROManualReload()
+{
+    if (DH_Sdkfz2341Cannon(Cannon) != none && Cannon.CannonReloadState == CR_Waiting && DH_Sdkfz2341Cannon(Cannon).HasMagazines(Cannon.GetPendingRoundIndex())
+        && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+    {
+        Cannon.ServerManualReload();
+    }
+}
+
+// Modified as need to check if has spare magazines if a manual reload is required (the normal HasAmmo check returns AmmoCharge, not mags)
+function Fire(optional float F)
+{
+    if (CanFire() && Cannon != none)
+    {
+        if (Cannon.CannonReloadState == CR_ReadyToFire && Cannon.bClientCanFireCannon)
+        {
+            super(VehicleWeaponPawn).Fire(F);
+        }
+        else if (Cannon.CannonReloadState == CR_Waiting && DH_Sdkfz2341Cannon(Cannon) != none && DH_Sdkfz2341Cannon(Cannon).HasMagazines(Cannon.GetPendingRoundIndex())
+            && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+        {
+            Cannon.ServerManualReload();
+        }
+    }
+}
+
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float GetAmmoReloadState()
 {

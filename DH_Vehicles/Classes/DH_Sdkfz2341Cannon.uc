@@ -387,7 +387,7 @@ simulated event OwnerEffects()
 // Modified to handle our modified reload process for players who manually reload
 function ServerManualReload()
 {
-    if (Role == ROLE_Authority && CannonReloadState == CR_Waiting)
+    if (CannonReloadState == CR_Waiting)
     {
         HandleCannonReload(true); // true flags that this is a manually-triggered reload
     }
@@ -396,18 +396,23 @@ function ServerManualReload()
 // New function that handles all 3 round types, trying all the alternatives if we're out of some types of ammo
 function HandleCannonReload(optional bool bIsManualReload)
 {
+    if (Role != ROLE_Authority)
+    {
+        return;
+    }
+
     bClientCanFireCannon = false;
 
     // If player uses manual reloading & this isn't a manually-triggered reload, then just go to reload state waiting
-    if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading && !bIsManualReload)
+    if (!bIsManualReload && Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
     {
         CannonReloadState = CR_Waiting;
         ClientSetReloadState(CannonReloadState); // primarily so client's HUD can display ammo icon in red to show it needs a reload
     }
     // Otherwise check ammo & proceed with reload if we have some
-    else if (CannonReloadState != CR_Empty)
+    else if (CannonReloadState == CR_ReadyToFire || CannonReloadState == CR_Waiting)
     {
-        // If we don't have a spare mag for the pending round type, try to switch to another round type
+        // If we don't have a spare mag for the pending round type, try to switch to another round type (unless player reloads & switches manually)
         if (!HasMagazines(GetPendingRoundIndex()))
         {
             if (!bIsManualReload)
@@ -415,7 +420,7 @@ function HandleCannonReload(optional bool bIsManualReload)
                 ToggleRoundType();
             }
 
-            // Abort reload if we still don't have a spare mag (so must be completely out of cannon ammo) or if player reloads manually
+            // Abort reload if we still don't have a spare mag (so must be completely out of cannon ammo) or if player reloads/switches manually
             if (bIsManualReload || !HasMagazines(GetPendingRoundIndex()))
             {
                 CannonReloadState = CR_Waiting;
