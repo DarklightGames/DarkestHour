@@ -7,7 +7,7 @@ class DHMGAutomaticFire extends DHFastAutoFire
     abstract;
 
 var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip
-var         DHMGWeapon       MGWeapon;
+var         DHMGWeapon      MGWeapon;
 
 simulated function PostBeginPlay()
 {
