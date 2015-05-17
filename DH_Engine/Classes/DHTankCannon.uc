@@ -943,20 +943,25 @@ event bool AttemptFire(Controller C, bool bAltFire)
             Fire(C);
             bClientCanFireCannon = false;
 
-            // If we have run out of the current round type, switch to another type
-            if (!HasAmmo(FireMode))
-            {
-                ToggleRoundType();
-                ProjectileClass = PendingProjectileClass;
-            }
-
-            // Set cannon reload state & start a reload timer (unless on manual reloading)
+            // If player uses manual reloading, just set the reload state to waiting (for key press)
             if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
             {
                 CannonReloadState = CR_Waiting;
             }
+            // Otherwise start a reload, including switch to another ammo type if we have run out of the current type
+            // Note we don't start a reload on the client, as that gets done in OwnerEffects(), for effects only
             else
             {
+                if (!HasAmmo(FireMode))
+                {
+                    if (FireMode == GetPendingRoundIndex()) // don't toggle if we already have a different pending ammo type selected
+                    {
+                        ToggleRoundType();
+                    }
+
+                    ProjectileClass = PendingProjectileClass;
+                }
+
                 CannonReloadState = CR_Empty;
                 SetTimer(0.01, false);
             }
