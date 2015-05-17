@@ -2047,7 +2047,7 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
 
         if (PC != none && SpawnError != class'DHSpawnManager'.default.SpawnError_None)
         {
-            PC.ClientReplaceMenu("DH_Interface.DHDeployMenu",, class'DHSpawnManager'.static.GetSpawnErrorString(SpawnError));
+            PC.ClientReplaceMenu("DH_Interface.DHDeployMenu");
 
             return;
         }
