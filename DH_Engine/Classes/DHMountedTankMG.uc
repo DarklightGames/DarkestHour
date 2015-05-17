@@ -179,7 +179,7 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // Matt: modified to generic function handling HUDOverlay reloads as well as normal reloads, including making client record ReloadStartTime (used for reload progress on HUD ammo icon)
 function HandleReload()
 {
-    if (NumMags > 0 && !bReloading)
+    if (NumMags > 0 && !bReloading && Role == ROLE_Authority)
     {
         bReloading = true;
         NumMags--;
@@ -221,15 +221,10 @@ simulated function Timer()
     }
 }
 
-// Modified to call HandleReload when empty
+// Modified to call HandleReload when empty (& to optimise/shorten a little)
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-    if (Role != ROLE_Authority || bForceCenterAim)
-    {
-        return false;
-    }
-
-    if (FireCountdown <= 0.0)
+    if (FireCountdown <= 0.0 && Role == ROLE_Authority)
     {
         CalcWeaponFire(bAltFire);
 
@@ -250,8 +245,6 @@ event bool AttemptFire(Controller C, bool bAltFire)
             WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
         }
 
-        DualFireOffset *= -1.0;
-
         Instigator.MakeNoise(1.0);
 
         if (bAltFire)
@@ -268,33 +261,24 @@ event bool AttemptFire(Controller C, bool bAltFire)
         }
         else
         {
-            if (bMultipleRoundTypes)
+            if (!bMultipleRoundTypes || ProjectileClass == PrimaryProjectileClass)
             {
-                if (ProjectileClass == PrimaryProjectileClass)
+                if (!ConsumeAmmo(0))
                 {
-                    if (!ConsumeAmmo(0))
-                    {
-                        MGPawn.ClientVehicleCeaseFire(bAltFire);
+                    MGPawn.ClientVehicleCeaseFire(bAltFire);
+                    HandleReload();
 
-                        return false;
-                    }
-                }
-                else if (ProjectileClass == SecondaryProjectileClass)
-                {
-                    if (!ConsumeAmmo(1))
-                    {
-                        MGPawn.ClientVehicleCeaseFire(bAltFire);
-
-                        return false;
-                    }
+                    return false;
                 }
             }
-            else if (!ConsumeAmmo(0))
+            else if (ProjectileClass == SecondaryProjectileClass)
             {
-                MGPawn.ClientVehicleCeaseFire(bAltFire);
-                HandleReload();
+                if (!ConsumeAmmo(1))
+                {
+                    MGPawn.ClientVehicleCeaseFire(bAltFire);
 
-                return false;
+                    return false;
+                }
             }
 
             FireCountdown = FireInterval;
@@ -435,6 +419,7 @@ simulated function int LimitYaw(int yaw)
 
     return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
 }
+
 // Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
 // Note that shell's ProcessTouch also now calls TD() on VehicleWeapon instead of Vehicle itself
 // For a vehicle MG this is not counted as a hit on vehicle itself, but we could add any desired functionality here or in subclasses, e.g. shell could wreck MG
