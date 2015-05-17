@@ -353,40 +353,23 @@ function bool GiveInitialAmmo()
     return bDidResupply;
 }
 
-// Modified to use DH's new incremental resupply system
+// New function (in VehicleWeapon class) to use DH's new incremental resupply system
 function bool ResupplyAmmo()
 {
-    local bool bDidResupply;
-
-    if (MainAmmoCharge[0] < InitialPrimaryAmmo)
-    {
-        MainAmmoCharge[0] = InitialPrimaryAmmo;
-
-        bDidResupply = true;
-    }
-
-    if (MainAmmoCharge[1] < InitialSecondaryAmmo)
-    {
-        MainAmmoCharge[1] = InitialSecondaryAmmo;
-
-        bDidResupply = true;
-    }
-
-    if (AltAmmoCharge < InitialAltAmmo)
-    {
-        ++AltAmmoCharge;
-
-        bDidResupply = true;
-    }
-
     if (NumMags < default.NumMags)
     {
         ++NumMags;
 
-        bDidResupply = true;
+        // If MG is out of ammo, start a reload, but only if there is a player in the MG position
+        if (!HasAmmo(0) && Instigator.Controller != none)
+        {
+            HandleReload();
+        }
+        
+        return true;
     }
 
-    return bDidResupply;
+    return false;
 }
 
 // Modified to handle MG magazines

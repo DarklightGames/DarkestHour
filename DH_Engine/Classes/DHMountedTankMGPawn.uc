@@ -169,7 +169,7 @@ function bool TryToDrive(Pawn P)
     return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
 }
 
-// Modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
+// Modified so that if MG is reloading when player enters, we update the reload start time, or if MG is out of ammo, we try to start a reload
 // Also to use InitialPositionIndex instead of assuming start in position zero
 function KDriverEnter(Pawn P)
 {
@@ -178,13 +178,22 @@ function KDriverEnter(Pawn P)
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
 
-    if (MGun != none && MGun.bReloading)
-    {
-        PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
-        MGun.ClientHandleReload(PercentageOfReloadDone);
-    }
-
     super(VehicleWeaponPawn).KDriverEnter(P); // skip over Super in ROMountedTankMGPawn as it sets rotation we now want to avoid
+
+    if (MGun != none)
+    {
+        // If MG is reloading, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
+        if (MGun.bReloading)
+        {
+            PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
+            MGun.ClientHandleReload(PercentageOfReloadDone);
+        }
+        // If MG is out of ammo, try to start a reload
+        else if (!MGun.HasAmmo(0))
+        {
+            MGun.HandleReload();
+        }
+    }
 }
 
 // Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim (also consolidates & optimises the Supers)

@@ -1654,7 +1654,7 @@ simulated function int LimitYaw(int yaw)
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
-// Modified to use new DH incremental resupply system
+// New function (in VehicleWeapon class) to use DH's new incremental resupply system (only resupplies rounds; doesn't reload the cannon)
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
@@ -1662,29 +1662,32 @@ function bool ResupplyAmmo()
     if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
     {
         ++MainAmmoChargeExtra[0];
-
         bDidResupply = true;
     }
 
     if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
     {
         ++MainAmmoChargeExtra[1];
-
         bDidResupply = true;
     }
 
     if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
     {
         ++MainAmmoChargeExtra[2];
-
         bDidResupply = true;
     }
 
     if (NumAltMags < default.NumAltMags)
     {
         ++NumAltMags;
-
         bDidResupply = true;
+
+        // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
+        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
+        if (!HasAmmo(3) && Instigator.Controller != none && Role == ROLE_Authority)
+        {
+            HandleReload();
+        }
     }
 
     return bDidResupply;

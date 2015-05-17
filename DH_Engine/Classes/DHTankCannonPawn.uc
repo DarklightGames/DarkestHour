@@ -466,13 +466,20 @@ function bool TryToDrive(Pawn P)
     return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
 }
 
-// Modified to use InitialPositionIndex instead of assuming start in position zero, & to call a client function to show a damaged gunsight
+// Modified to try to start an MG reload if coaxial MG is out of ammo, to show any damaged gunsight, & to use InitialPositionIndex instead of assuming start in position zero
 function KDriverEnter(Pawn P)
 {
     super.KDriverEnter(P);
 
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
+
+    // If coaxial MG is out of ammo, start an MG reload
+    // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
+    if (bHasAltFire && Cannon != none && !Cannon.HasAmmo(3) && Role == ROLE_Authority)
+    {
+        Cannon.HandleReload();
+    }
 
     if (bOpticsDamaged)
     {

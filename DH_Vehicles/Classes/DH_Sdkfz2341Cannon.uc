@@ -575,54 +575,34 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
-    {
-        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-        bMixedMagFireAP = default.bMixedMagFireAP;
-
-        bDidResupply = true;
-    }
-
-    if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
-    {
-        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-
-        bDidResupply = true;
-    }
-
-    if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
-    {
-        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-
-        bDidResupply = true;
-    }
-
     if (NumMags < default.NumMags)
     {
         ++NumMags;
-
         bDidResupply = true;
     }
 
     if (NumSecMags < default.NumSecMags)
     {
         ++NumSecMags;
-
         bDidResupply = true;
     }
 
     if (NumTertMags < default.NumTertMags)
     {
         ++NumTertMags;
-
         bDidResupply = true;
     }
 
     if (NumAltMags < default.NumAltMags)
     {
         ++NumAltMags;
-
         bDidResupply = true;
+
+        // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
+        if (!HasAmmo(3) && Instigator.Controller != none && Role == ROLE_Authority)
+        {
+            HandleReload();
+        }
     }
 
     return bDidResupply;
