@@ -54,36 +54,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-// Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
-simulated state ViewTransition
-{
-    simulated function BeginState()
-    {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositionIndex > 0)
-            {
-                Gun.AmbientEffectEmitter.bHidden = true;
-            }
-        }
-
-        super.BeginState();
-    }
-
-    simulated function EndState()
-    {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositionIndex == 0)
-            {
-                Gun.AmbientEffectEmitter.bHidden = false;
-            }
-        }
-
-        super.EndState();
-    }
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=0
@@ -98,6 +68,7 @@ defaultproperties
     CameraBone="loader_cam"
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonOffsetZScale=1.0
+    bHideMuzzleFlashAboveSights=true
     bPCRelativeFPRotation=true
     bAllowViewChange=true
     DrivePos=(X=7.0,Z=-22.0)

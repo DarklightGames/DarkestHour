@@ -9,19 +9,20 @@ class DHMountedTankMGPawn extends ROMountedTankMGPawn
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
 // General
-var     DHMountedTankMG  MGun;                // just a reference to the DH MG actor, for convenience & to avoid lots of casts
-var     texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
-var     name        FirstPersonGunRefBone;    // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
-var     float       FirstPersonOffsetZScale;  // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
+var     DHMountedTankMG  MGun;                   // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
+var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
+var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
+var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
 
 // Position stuff
-var     int         InitialPositionIndex;     // initial player position on entering
-var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
-var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
-var     bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     int         InitialPositionIndex;        // initial player position on entering
+var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
+var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
+var     bool        bPlayerCollisionBoxMoves;    // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 // Gunsight
-var     float       OverlayCenterSize;        // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var     float       OverlayCenterSize;           // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var     float       OverlayCenterTexStart;
 var     float       OverlayCenterTexSize;
 var     float       OverlayCorrectionX;
@@ -590,17 +591,26 @@ function ServerChangeViewPoint(bool bForward)
 }
 
 // Modified to use Sleep to control exit from state (including on server), to avoid unnecessary stuff on a server, & to improve timing of FOV & camera position changes
+// Also to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
-            // Switch to mesh for new position as may be different
-            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer) &&
-                DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
             {
-                Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                // Switch to mesh for new position as may be different
+                if (DriverPositions[DriverPositionIndex].PositionMesh != none)
+                {
+                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
+
+                // If the option is flagged, turn off muzzle flash if player has raised head above sights
+                if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0)
+                {
+                    Gun.AmbientEffectEmitter.bHidden = true;
+                }
             }
 
             // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
@@ -658,13 +668,23 @@ simulated state ViewTransition
         global.Timer();
     }
 
-    // Set any zoom & camera offset for new position, if we have moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
     simulated function EndState()
     {
-        if (Level.NetMode != NM_DedicatedServer && WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            PlayerController(Controller).SetFOV(WeaponFOV);
-            FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            // Set any zoom & camera offset for new position, if moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
+            if (WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+            {
+                PlayerController(Controller).SetFOV(WeaponFOV);
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            }
+
+            // Re-enable muzzle flash if it has previously been turned off when player raised head above sights
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex == 0 && Gun != none && 
+                (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
+            {
+                Gun.AmbientEffectEmitter.bHidden = false;
+            }
         }
     }
 
