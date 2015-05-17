@@ -2690,6 +2690,19 @@ function vector getObjectiveLocation(int id)
     }
 }
 
+// Modified to not have player automatically switch to best weapon when player requests to drop weapon
+function ServerThrowWeapon()
+{
+    local Vector TossVel;
+
+    if (Pawn.CanThrowWeapon())
+    {
+        TossVel = vector(GetViewRotation());
+        TossVel = TossVel * ((Pawn.Velocity dot TossVel) + 150) + Vect(0,0,100);
+        Pawn.TossWeapon(TossVel);
+    }
+}
+
 defaultproperties
 {
     // Sway values
