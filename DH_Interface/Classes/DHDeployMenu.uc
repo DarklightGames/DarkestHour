@@ -260,11 +260,13 @@ function bool OnClick(GUIComponent Sender)
 
         // Suicide
         case b_MenuOptions[7]:
+            PlayerOwner().ConsoleCommand("SUICIDE");
+
             if (RolePanel.IsApplicationChanged())
             {
                 RolePanel.AttemptDeployApplication();
             }
-            PlayerOwner().ConsoleCommand("SUICIDE");
+
             CloseMenu();
             break;
 
@@ -628,7 +630,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.01
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(0)=MenuOptionsButton0
     Begin Object Class=DHGUIButton Name=MenuOptionsButton1
@@ -639,7 +641,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.11
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(1)=MenuOptionsButton1
     Begin Object Class=DHGUIButton Name=MenuOptionsButton2
@@ -650,7 +652,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.22
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(2)=MenuOptionsButton2
     Begin Object Class=DHGUIButton Name=MenuOptionsButton3
@@ -661,7 +663,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.33
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(3)=MenuOptionsButton3
     Begin Object Class=DHGUIButton Name=MenuOptionsButton4
@@ -672,7 +674,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.44
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(4)=MenuOptionsButton4
     Begin Object Class=DHGUIButton Name=MenuOptionsButton5
@@ -683,7 +685,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.55
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(5)=MenuOptionsButton5
     Begin Object Class=DHGUIButton Name=MenuOptionsButton6
@@ -694,7 +696,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.66
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(6)=MenuOptionsButton6
     Begin Object Class=DHGUIButton Name=MenuOptionsButton7
@@ -705,7 +707,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.77
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(7)=MenuOptionsButton7
     Begin Object Class=DHGUIButton Name=MenuOptionsButton8
@@ -716,7 +718,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.0
         WinTop=0.88
-        OnClick=OnClick
+        OnClick=DHDeployMenu.OnClick
     End Object
     b_MenuOptions(8)=MenuOptionsButton8
 
