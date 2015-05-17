@@ -716,7 +716,7 @@ simulated function int GetRoundsDescription(out array<string> Descriptions)
         Descriptions[i] = ProjectileDescriptions[i];
     }
 
-    if (ProjectileClass == PrimaryProjectileClass)
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
     {
         return 0;
     }
@@ -758,7 +758,7 @@ simulated function int GetPendingRoundIndex()
     }
     else
     {
-        if (ProjectileClass == PrimaryProjectileClass)
+        if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
         {
             return 0;
         }
@@ -1217,7 +1217,7 @@ simulated function bool ReadyToFire(bool bAltFire)
             return false;
         }
 
-        if (ProjectileClass == PrimaryProjectileClass)
+        if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
         {
             Mode = 0;
         }
@@ -1237,24 +1237,17 @@ simulated function bool ReadyToFire(bool bAltFire)
 // Modified to handle DH's extended ammo system
 simulated function int PrimaryAmmoCount()
 {
-    if (bMultipleRoundTypes)
-    {
-        if (ProjectileClass == PrimaryProjectileClass)
-        {
-            return MainAmmoChargeExtra[0];
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            return MainAmmoChargeExtra[1];
-        }
-        else if (ProjectileClass == TertiaryProjectileClass)
-        {
-            return MainAmmoChargeExtra[2];
-        }
-    }
-    else
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
     {
         return MainAmmoChargeExtra[0];
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        return MainAmmoChargeExtra[1];
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        return MainAmmoChargeExtra[2];
     }
 }
 
