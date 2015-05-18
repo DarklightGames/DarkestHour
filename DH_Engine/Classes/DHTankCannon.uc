@@ -1680,24 +1680,48 @@ simulated function DestroyEffects()
 }
 
 // Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)
+// Also to make into a generic function to handle single/multi position cannons & relative/non-relative rotation
+// This is somewhat theoretical for tank cannons as they are always multi-position & relative rotation, but just copying the generic functionality from the MG equivalent
 simulated function int LimitYaw(int yaw)
 {
+    local int CurrentPosition, VehYaw;
+
     if (!bLimitYaw)
     {
         return yaw;
     }
 
-    if (CannonPawn != none)
+    // For multi-position cannons, we use the view yaw limits in the cannon pawn's DriverPositions
+    if (CannonPawn != none && CannonPawn.bMultiPosition)
     {
-        if (CannonPawn.DriverPositionIndex >= CannonPawn.PeriscopePositionIndex)
+        CurrentPosition = CannonPawn.DriverPositionIndex;
+
+        if (CurrentPosition >= CannonPawn.PeriscopePositionIndex)
         {
             return yaw;
         }
 
-        return Clamp(yaw, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewNegativeYawLimit, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewPositiveYawLimit);
+        if (CannonPawn.bPCRelativeFPRotation || Base == none)
+        {
+            return Clamp(yaw, CannonPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, CannonPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+        }
+
+        // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
+        VehYaw = Base.Rotation.Yaw;
+
+        return Clamp(yaw, VehYaw + CannonPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, VehYaw + CannonPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
     }
 
-    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+    // For single position cannons we use our max/min yaw values from this class
+    if ((CannonPawn != none && CannonPawn.bPCRelativeFPRotation) || Base == none)
+    {
+        return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+    }
+
+    // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
+    VehYaw = Base.Rotation.Yaw;
+
+    return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
 }
 
 // New function (in VehicleWeapon class) to use DH's new incremental resupply system (only resupplies rounds; doesn't reload the cannon)

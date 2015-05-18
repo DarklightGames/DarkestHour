@@ -378,10 +378,10 @@ simulated function int GetNumMags()
     return NumMags;
 }
 
-// Modified to make into a generic function to handle single & multi position MGs, without need for overrides in subclasses, & to optimise
+// Modified to make into a generic function to handle single/multi position MGs & relative/non-relative rotation, without need for overrides in subclasses
 simulated function int LimitYaw(int yaw)
 {
-    local int VehYaw;
+    local int CurrentPosition, VehYaw;
 
     if (!bLimitYaw)
     {
@@ -391,14 +391,27 @@ simulated function int LimitYaw(int yaw)
     // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
     if (MGPawn != none && MGPawn.bMultiPosition)
     {
-        return Clamp(yaw, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewNegativeYawLimit, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewPositiveYawLimit);
+        CurrentPosition = MGPawn.DriverPositionIndex;
+
+        if (MGPawn.bPCRelativeFPRotation || Base == none)
+        {
+            return Clamp(yaw, MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+        }
+
+        // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
+        VehYaw = Base.Rotation.Yaw;
+
+        return Clamp(yaw, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
     }
 
     // For single position MGs we use our max/min yaw values from this class
-    if (ROVehicle(Base) != none)
+    if ((MGPawn != none && MGPawn.bPCRelativeFPRotation) || Base == none)
     {
-        VehYaw = Base.Rotation.Yaw;
+        return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
     }
+
+    // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
+    VehYaw = Base.Rotation.Yaw;
 
     return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
 }
