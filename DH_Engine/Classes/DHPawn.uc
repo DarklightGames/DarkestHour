@@ -4144,7 +4144,6 @@ function CheckBob(float DeltaTime, vector Y)
     OldBobTime = BobTime;
 
     Bob = FClamp(Bob, -0.01, 0.01);
-    BobModifier = 1.0;
 
     // Modify the amount of bob based on the movement state
     if (bIsSprinting)
@@ -4158,6 +4157,14 @@ function CheckBob(float DeltaTime, vector Y)
     else if (bIsCrouched && !bIronSights)
     {
         BobModifier = 2.5;
+    }
+    else if (bIronSights)
+    {
+        BobModifier = 0.5;
+    }
+    else
+    {
+        BobModifier = 1.0;
     }
 
     if (Physics == PHYS_Walking)
