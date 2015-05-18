@@ -54,36 +54,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-// Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
-simulated state ViewTransition
-{
-    simulated function BeginState()
-    {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositionIndex > 0)
-            {
-                Gun.AmbientEffectEmitter.bHidden = true;
-            }
-        }
-
-        super.BeginState();
-    }
-
-    simulated function EndState()
-    {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositionIndex == 0)
-            {
-                Gun.AmbientEffectEmitter.bHidden = false;
-            }
-        }
-
-        super.EndState();
-    }
-}
-
 // Modified to better suit the curved magazine of the bren gun
 function float GetAmmoReloadState()
 {
@@ -140,6 +110,7 @@ defaultproperties
     CameraBone="Camera_com"
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=3.0
+    bHideMuzzleFlashAboveSights=true
     bDesiredBehindView=false
     DrivePos=(X=-11.0,Y=-4.0,Z=31.0)
     DriveRot=(Yaw=16384)
