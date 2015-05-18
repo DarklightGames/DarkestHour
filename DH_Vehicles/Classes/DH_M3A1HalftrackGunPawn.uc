@@ -71,6 +71,7 @@ defaultproperties
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
+    bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DrivePos=(Y=-5.0,Z=14.0)
     DriveRot=(Yaw=16384)
