@@ -191,18 +191,13 @@ defaultproperties
     ExplosionRadius=600.0
     ImpactDamageThreshold=5000.0 // reinstate default from ROWheeledVehicle
     ImpactDamageMult=0.001
-    TimeTilDissapear=15.0
-    IdleTimeBeforeReset=30.0
     DriverTraceDistSquared=4000000.0 // Matt: default 2000 from ROWheeledVehicle, but squared for new DistSquared variable
     InitialPositionIndex=0
-    VehicleSpikeTime=15.0
     VehHitpoints(0)=(PointBone="Driver")
     VehicleMass=12.0
     bKeyVehicle=true
     bFPNoZFromCameraPitch=true
     CenterSpringForce="SpringONSSRV"
-    VehiclePositionString="in a Boat"
-    StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
     MaxDesireability=0.1
     WaterDamage=0.0
     bCanSwim=true
