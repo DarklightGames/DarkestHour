@@ -3583,6 +3583,16 @@ function bool EncroachingOn(Actor Other)
     return false;
 }
 
+simulated event NotifySelected(Pawn User)
+{
+    if (User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
+    {
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass,0,,,self.class);
+
+        LastNotifyTime = Level.TimeSeconds;
+    }
+}
+
 defaultproperties
 {
     ObjectCrushStallTime=1.0
