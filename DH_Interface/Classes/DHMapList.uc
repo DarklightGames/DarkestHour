@@ -2,7 +2,6 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
-// Note: You cannot access dynamic arrays from static functions
 
 class DHMapList extends MapList
     config;
@@ -39,24 +38,23 @@ defaultproperties
     OfficialMaps(10)="DH-Foy"
     OfficialMaps(11)="DH-Ginkel_Heath"
     OfficialMaps(12)="DH-Gran"
-    OfficialMaps(13)="DH-Hells_Highway"
-    OfficialMaps(14)="DH-Hill_108"
-    OfficialMaps(15)="DH-Hill_400"
-    OfficialMaps(16)="DH-Hurtgenwald"
-    OfficialMaps(17)="DH-Juno_Beach"
-    OfficialMaps(18)="DH-Kommerscheidt"
-    OfficialMaps(19)="DH-La_Chapelle"
-    OfficialMaps(20)="DH-La_Gleize"
-    OfficialMaps(21)="DH-La_Monderie"
-    OfficialMaps(22)="DH-Lutremange"
-    OfficialMaps(23)="DH-Noville"
-    OfficialMaps(24)="DH-Poteau_Ambush"
-    OfficialMaps(25)="DH-Raids"
-    OfficialMaps(26)="DH-Simonskall"
-    OfficialMaps(27)="DH-Stavelot"
-    OfficialMaps(28)="DH-Stoumont"
-    OfficialMaps(29)="DH-Targnon"
-    OfficialMaps(30)="DH-Vieux"
-    OfficialMaps(31)="DH-Vieux_Recon"
-    OfficialMaps(32)="DH-Wacht_am_Rhein"
+    OfficialMaps(13)="DH-Hill_108"
+    OfficialMaps(14)="DH-Hill_400"
+    OfficialMaps(15)="DH-Hurtgenwald"
+    OfficialMaps(16)="DH-Juno_Beach"
+    OfficialMaps(17)="DH-Kommerscheidt"
+    OfficialMaps(18)="DH-La_Chapelle"
+    OfficialMaps(19)="DH-La_Gleize"
+    OfficialMaps(20)="DH-La_Monderie"
+    OfficialMaps(21)="DH-Lutremange"
+    OfficialMaps(22)="DH-Noville"
+    OfficialMaps(23)="DH-Poteau_Ambush"
+    OfficialMaps(24)="DH-Raids"
+    OfficialMaps(25)="DH-Simonskall"
+    OfficialMaps(26)="DH-Stavelot"
+    OfficialMaps(27)="DH-Stoumont"
+    OfficialMaps(28)="DH-Targnon"
+    OfficialMaps(29)="DH-Vieux"
+    OfficialMaps(30)="DH-Vieux_Recon"
+    OfficialMaps(31)="DH-Wacht_am_Rhein"
 }
