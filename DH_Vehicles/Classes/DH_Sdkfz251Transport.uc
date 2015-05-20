@@ -54,21 +54,21 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=10.0),(InVal=1000000000.0,OutVal=15.0)))
     TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
-    GearRatios(0)=-0.2
+    GearRatios(0)=-0.25
     GearRatios(1)=0.2
     GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.75
-    TransRatio=0.13
+    GearRatios(3)=0.5
+    GearRatios(4)=0.6
+    TransRatio=0.10
     ChangeUpPoint=2000.0
     ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
     MaxBrakeTorque=20.0
-    SteerSpeed=160.0
+    SteerSpeed=120.0
     TurnDamping=35.0
     StopThreshold=100.0
     HandbrakeThresh=200.0

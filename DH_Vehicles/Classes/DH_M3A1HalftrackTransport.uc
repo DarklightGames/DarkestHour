@@ -14,7 +14,7 @@ defaultproperties
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0
-    TreadVelocityScale=80.0
+    TreadVelocityScale=650
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
@@ -23,7 +23,7 @@ defaultproperties
     RumbleSoundBone="body"
     LeftTreadIndex=6
     RightTreadIndex=5
-    MaxCriticalSpeed=729.0
+    MaxCriticalSpeed=680.0
     LeftWheelBones(0)="SRWL02"
     LeftWheelBones(1)="SRWL2"
     LeftWheelBones(2)="SRWL3"
@@ -38,7 +38,7 @@ defaultproperties
     RightWheelBones(4)="RWFR"
     RightWheelBones(5)="RWRR"
     RightWheelBones(6)="RR1"
-    WheelRotationScale=1600
+    WheelRotationScale=400
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -56,21 +56,21 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=10.0),(InVal=1000000000.0,OutVal=15.0)))
     TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
-    GearRatios(0)=-0.2
+    GearRatios(0)=-0.25
     GearRatios(1)=0.2
     GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.75
-    TransRatio=0.12
+    GearRatios(3)=0.5
+    GearRatios(4)=0.6
+    TransRatio=0.10
     ChangeUpPoint=2000.0
     ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
     MaxBrakeTorque=20.0
-    SteerSpeed=75.0
+    SteerSpeed=50.0
     TurnDamping=35.0
     StopThreshold=100.0
     HandbrakeThresh=200.0
@@ -82,7 +82,6 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Y=60.0,Z=-10.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
-
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackGunPawn',WeaponBone="mg_base")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerOne',WeaponBone="passenger_l_1")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerTwo',WeaponBone="passenger_l_3")
@@ -90,7 +89,6 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFour',WeaponBone="passenger_r_2")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFive',WeaponBone="passenger_r_3")
     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerSix',WeaponBone="passenger_r_5")
-
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
@@ -127,60 +125,76 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=35.0,PointScale=1.0,PointBone="Engine",PointOffset=(Z=-20.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
     EngineHealth=125
     DriverAttachmentBone="driver_player"
-    Begin Object Class=SVehicleWheel Name=RFWheel
+
+    //Front Wheels
+    Begin Object class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=29.0
+        WheelRadius=60.0
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_Z
+        BoneOffset=(X=45.0,Y=0.0,Z=26.0)
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=29.0
+        WheelRadius=60.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_Z
+        BoneOffset=(X=45.0,Y=0.0,Z=26.0)
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
-    Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
+
+    //Back Wheels
+
+        //Middle left
+    Begin Object class=SVehicleWheel Name=FLeft_Drive_Wheel
+        //SteerType=VST_Steered
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(Y=-3.0,Z=-12.0)
-        WheelRadius=31.0
+        BoneOffset=(X=15.0,Y=0.0,Z=-8.0)
+        WheelRadius=30.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FLeft_Drive_Wheel'
+
+        //Middle right
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
+        //SteerType=VST_Steered
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(Y=-3.0,Z=12.0)
-        WheelRadius=31.0
+        BoneOffset=(X=15.0,Y=0.0,Z=-8.0)
+        WheelRadius=30.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FRight_Drive_Wheel'
+
+        //Back left
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-120.0,Y=-3.0,Z=-12.0)
+        BoneOffset=(X=-110.0,Y=0.0,Z=-20.0)
         WheelRadius=30.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RLeft_Drive_Wheel'
+
+        //Back right
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-120.0,Y=-3.0,Z=12.0)
+        BoneOffset=(X=-110.0,Y=0.0,Z=-20.0)
         WheelRadius=30.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RRight_Drive_Wheel'
+
     VehicleMass=8.5
     DrivePos=(X=4.0,Y=5.0,Z=-10.0)
     DriveAnim="VUC_driver_idle_close"
-
     ExitPositions(0)=(X=-242.0,Y=0.0,Z=10.0)    // Back 1 Driver
     ExitPositions(1)=(X=-266.0,Y=28.0,Z=10.0)   // Back 2 MG
     ExitPositions(2)=(X=-266.0,Y=-35.0,Z=10.0)  // Back 3 Passenger 1
@@ -192,7 +206,6 @@ defaultproperties
     ExitPositions(8)=(X=5.0,Y=-117.0,Z=10.0)    // Left Side Extra
     ExitPositions(9)=(X=9.0,Y=122.0,Z=10.0)     // Right Side Extra
     ExitPositions(10)=(X=-107.0,Y=-33.0,Z=116.0)// Top Extra
-
     EntryRadius=375.0
     FPCamPos=(Z=-60.0)
     CenterSpringForce="SpringONSSRV"
