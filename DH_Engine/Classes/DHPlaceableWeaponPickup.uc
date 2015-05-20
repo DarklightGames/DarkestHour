@@ -8,7 +8,7 @@ class DHPlaceableWeaponPickup extends DHWeaponPickup
 
 var() class<Weapon> WeaponType;       // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
 var   bool          bIsOneShotWeapon; // pickup weapon is a one shot weapon, e.g. a grenade, satchel or faust
- 
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -17,13 +17,17 @@ replication
 }
 
 // Emptied out the Super in WeaponPickup, as we won't yet have an InventoryType (have to wait until PostNetBeginPlay, when net client receives replicated WeaponType)
-function PostBeginPlay()
+simulated event PostBeginPlay()
 {
+    if (Role < ROLE_Authority || Level.NetMode == NM_Client || Level.NetMode == NM_Standalone)
+    {
+        NotifyObjectMap.Insert("InventoryClass", default.WeaponType);
+    }
 }
 
 // Modified to set InventoryType from the replicated WeaponType, then setting other properties from that weapon's normal PickupClass
 // A smart leveller using this generic placeable pickup will at least set StaticMesh in the editor, so it displays correctly in editor & can be positioned accurately
-simulated function PostNetBeginPlay()
+simulated event PostNetBeginPlay()
 {
     local class<Pickup> PickupClass;
 
@@ -164,16 +168,6 @@ function SetRespawn()
 }
 
 // Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
-simulated event NotifySelected(Pawn User)
-{
-    if (User.IsHumanControlled() && (Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime)
-    {
-        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass,,,, InventoryType);
-        LastNotifyTime = Level.TimeSeconds;
-    }
-}
-
-// Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
 // Avoid calling HandlePickup() for a human player & instead do what that funbction does, except for the modfied message call
 function AnnouncePickup(Pawn Receiver)
 {
@@ -209,8 +203,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    MessageClass=class'DHWeaponPickupMessage' // new message classes that are passed the weapon class & use it to lookup the weapon name (for touch or pickup screen messages)
-    TouchMessageClass=class'DHWeaponPickupTouchMessage'
     RespawnTime=60.0 // leveller can override
     Physics=PHYS_None
     bWeaponStay=false

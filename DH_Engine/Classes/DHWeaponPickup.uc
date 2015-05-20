@@ -19,6 +19,10 @@ var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
+var     bool                    bTraceFlag;
+
+var     ObjectMap               NotifyObjectMap;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -27,9 +31,21 @@ replication
 }
 
 // Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
+simulated function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    NotifyObjectMap = new class'ObjectMap';
+}
+
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    if (Role < ROLE_Authority || Level.NetMode == NM_Client || Level.NetMode == NM_Standalone)
+    {
+        NotifyObjectMap.Insert("InventoryClass", default.InventoryType);
+    }
 
     if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
     {
@@ -135,7 +151,19 @@ simulated function SetBarrelSteamActive(bool bSteaming)
 // Disabled as it isn't used
 simulated function Tick(float DeltaTime)
 {
-    Disable('Tick');
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone || Level.NetMode == NM_Client)
+    {
+        if (bTraceFlag)
+        {
+            Style = STY_Modulated;
+
+            bTraceFlag = false;
+        }
+        else
+        {
+            Style = default.Style;
+        }
+    }
 }
 
 // Modified to work generically, using ItemName
@@ -144,20 +172,37 @@ static function string GetLocalString(optional int Switch, optional PlayerReplic
     switch(Switch)
     {
         case 0:
-            return Repl(default.PickupMessage, "%w", default.InventoryType.default.ItemName);
+            return Repl(default.PickupMessage, "{0}", default.InventoryType.default.ItemName);
         case 1:
-            return Repl(default.TouchMessage, "%w", default.InventoryType.default.ItemName);
+            return Repl(default.TouchMessage, "{0}", default.InventoryType.default.ItemName);
     }
+}
+
+// Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
+simulated event NotifySelected(Pawn User)
+{
+    if (User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
+    {
+        NotifyObjectMap.Insert("Controller", User.Controller);
+
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 1,,, NotifyObjectMap);
+
+        LastNotifyTime = Level.TimeSeconds;
+    }
+
+    bTraceFlag = true;
 }
 
 defaultproperties
 {
     DrawType=DT_StaticMesh
     AmbientGlow=64
-    PickupMessage="You got the %w"
-    TouchMessage="Pick up: %w"
+    PickupMessage="You got the {0}"
+    TouchMessage="Press [%USE%] to pick up {0}"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
     BarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
+    MessageClass=class'DHWeaponPickupMessage' // new message classes that are passed the weapon class & use it to lookup the weapon name (for touch or pickup screen messages)
+    TouchMessageClass=class'DHWeaponPickupTouchMessage'
 }
