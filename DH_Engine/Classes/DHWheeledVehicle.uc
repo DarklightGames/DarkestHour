@@ -71,6 +71,7 @@ var     name                RumbleSoundBone;
 var     sound               VehicleBurningSound;
 var     sound               DestroyedBurningSound;
 var     sound               DamagedStartUpSound;
+var     float               LastBottomOutTime; // last time a bottom out sound was played
 
 // Resupply attachments
 var     class<RODummyAttachment>    ResupplyAttachmentClass;
@@ -968,10 +969,11 @@ event TakeImpactDamage(float AccelMag)
         TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
     }
 
-    // FIXME - scale sound volume to damage amount
-    if (ImpactDamageSounds.Length > 0)
+    // Play bottom out sound (modified to not play across level, lowered volume, and limit sound occurrence to every second)
+    if (ImpactDamageSounds.Length > 0 && Level.TimeSeconds - LastBottomOutTime > 1.0)
     {
-        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)],, TransientSoundVolume * 2.5);
+        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], SLOT_None, TransientSoundVolume, false, 70,, true);
+        LastBottomOutTime = Level.TimeSeconds;
     }
 
     if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)
@@ -1703,6 +1705,7 @@ function bool EncroachingOn(Actor Other)
 
 defaultproperties
 {
+    SparkEffectClass=none // Removes the odd spark effects when vehicle drags bottom
     ObjectCrushStallTime=1.0
     FriendlyResetDistance=4000.0
     ObjectCollisionResistance=1.0
