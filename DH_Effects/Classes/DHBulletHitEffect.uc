@@ -17,7 +17,7 @@ simulated function PostNetBeginPlay()
     }
 
     //Velocity
-    Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16, Location, false,, HitMat);
+    Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16, Location, true,, HitMat);
 
     ST = EST_Default;
 
