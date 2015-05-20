@@ -51,7 +51,8 @@ var array<Obituary>     DHObituaries;
 
 var const float         VOICE_ICON_DIST_MAX;
 
-var bool                bDebugVehicleHitPoints; // show vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
+var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
+var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 
 var DHGameReplicationInfo   DHGRI;
 
@@ -831,6 +832,12 @@ simulated function DrawHudPassC(Canvas C)
     if (bDebugPlayerCollision && class'DH_LevelInfo'.static.DHDebugMode())
     {
         DrawPointSphere();
+    }
+
+    // Slow, for debugging only
+    if (bDebugVehicleWheels && class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        DrawVehiclePhysiscsWheels();
     }
 }
 
@@ -1669,6 +1676,31 @@ simulated function DrawVehiclePointSphere()
                             TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+// New function showing all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
+simulated function DrawVehiclePhysiscsWheels()
+{
+    local ROVehicle V;
+    local Coords    CO;
+    local vector    Loc;
+    local int       i;
+
+    foreach DynamicActors(class'ROVehicle', V)
+    {
+        if (V != none)
+        {
+            for (i = 0; i < V.Wheels.Length; ++i)
+            {
+                if (V.Wheels[i].BoneName != '')
+                {
+                    CO = V.GetBoneCoords(V.Wheels[i].BoneName);
+                    Loc = CO.Origin + (V.Wheels[i].BoneOffset >> V.Rotation);
+                    V.DrawDebugSphere(Loc, V.Wheels[i].WheelRadius, 10, 255, 255, 255); // white
                 }
             }
         }

@@ -1925,13 +1925,23 @@ simulated exec function DriverCollisionDebug()
     }
 }
 
-// New exec showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DHTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+// New exec showing all vehicle's special hit points for engine (blue) & ammo stores (red), plus a DHTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
 simulated exec function VehicleHitPointDebug()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHUD) != none)
     {
         DHHud(myHUD).bDebugVehicleHitPoints = !DHHud(myHUD).bDebugVehicleHitPoints;
         SetSkyOff(DHHud(myHUD).bDebugVehicleHitPoints);
+    }
+}
+
+// New exec showing all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
+simulated exec function VehicleWheelDebug()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHUD) != none)
+    {
+        DHHud(myHUD).bDebugVehicleWheels = !DHHud(myHUD).bDebugVehicleWheels;
+        SetSkyOff(DHHud(myHUD).bDebugVehicleWheels);
     }
 }
 
@@ -1950,7 +1960,8 @@ simulated function SetSkyOff(bool bHideSky)
         }
     }
     // Restore the sky, but only if we have no other similar debug functionality enabled
-    else if (bSkyOff && !(ROHud(myHUD) != none && (ROHud(myHUD).bDebugDriverCollision || ROHud(myHUD).bDebugPlayerCollision || (DHHud(myHUD) != none && DHHud(myHUD).bDebugVehicleHitPoints))))
+    else if (bSkyOff && !(ROHud(myHUD) != none && (ROHud(myHUD).bDebugDriverCollision || ROHud(myHUD).bDebugPlayerCollision
+        || (DHHud(myHUD) != none && (DHHud(myHUD).bDebugVehicleHitPoints || DHHud(myHUD).bDebugVehicleWheels)))))
     {
         bSkyOff = false;
         PlayerReplicationInfo.PlayerZone.SkyZone = SavedSkyZone;
