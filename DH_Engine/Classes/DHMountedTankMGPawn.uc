@@ -211,6 +211,10 @@ simulated function ClientKDriverEnter(PlayerController PC)
         PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
 
+    // Matt: appears to do nothing as not used anywhere in Unrealscript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
+    // Also in HandleTransition(), but I can't see it's having an effect there
+    StoredVehicleRotation = VehicleBase.Rotation;
+
     super(Vehicle).ClientKDriverEnter(PC);
 
     MatchRotationToGunAim();
@@ -598,6 +602,8 @@ simulated state ViewTransition
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
+            StoredVehicleRotation = VehicleBase.Rotation;
+
             if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
             {
                 // Switch to mesh for new position as may be different
