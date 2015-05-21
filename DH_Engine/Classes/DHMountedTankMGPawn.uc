@@ -599,19 +599,13 @@ simulated state ViewTransition
         {
             StoredVehicleRotation = VehicleBase.Rotation;
 
-            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
-            {
-                // Switch to mesh for new position as may be different
-                if (DriverPositions[DriverPositionIndex].PositionMesh != none)
-                {
-                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+            // Switch to mesh for new position as may be different
+            SwitchMesh(DriverPositionIndex);
 
-                // If the option is flagged, turn off muzzle flash if player has raised head above sights
-                if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0)
-                {
-                    Gun.AmbientEffectEmitter.bHidden = true;
-                }
+            // If the option is flagged, turn off muzzle flash if player has raised head above sights
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0)
+            {
+                Gun.AmbientEffectEmitter.bHidden = true;
             }
 
             // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
