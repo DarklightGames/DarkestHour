@@ -1523,26 +1523,22 @@ function ServerToggleDebugExits()
     }
 }
 
+// Modified to add in the scope turn speed factor if the player is using binoculars
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    local DHPlayer DHP;
-    local float    RotationChangeFactor;
-    local rotator  NewRotation;
+    local float   TurnSpeedFactor;
+    local rotator NewRotation;
 
-    DHP = DHPlayer(Controller);
-
-    if (DHP != none && DriverPositionIndex == BinocPositionIndex)
+    if (DriverPositionIndex == BinocPositionIndex && DHPlayer(Controller) != none)
     {
-        RotationChangeFactor = DHP.DHScopeTurnSpeedFactor;
-    }
-    else
-    {
-        RotationChangeFactor = 1.0;
+        TurnSpeedFactor = DHPlayer(Controller).DHScopeTurnSpeedFactor;
+        YawChange *= TurnSpeedFactor;
+        PitchChange *= TurnSpeedFactor;
     }
 
     NewRotation = Rotation;
-    NewRotation.Yaw += 32.0 * RotationChangeFactor * DeltaTime * YawChange;
-    NewRotation.Pitch += 32.0 * RotationChangeFactor * DeltaTime * PitchChange;
+    NewRotation.Yaw += 32.0 * DeltaTime * YawChange;
+    NewRotation.Pitch += 32.0 * DeltaTime * PitchChange;
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
 
     SetRotation(NewRotation);

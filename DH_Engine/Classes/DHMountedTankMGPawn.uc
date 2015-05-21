@@ -381,33 +381,28 @@ function bool PlaceExitingDriver()
 }
 
 // Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
+// Also to add in the ironsights turn speed factor if the player is controlling the MG
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
+    local float   TurnSpeedFactor;
     local rotator NewRotation;
-    local float RotationChangeFactor;
-    local DHPlayer DHP;
 
-    DHP = DHPlayer(Controller);
-
-    RotationChangeFactor = 1.0;
-
-    if (CanFire())
+    if (CanFire() && DHPlayer(Controller) != none)
     {
-        RotationChangeFactor = DHP.DHISTurnSpeedFactor;
+        TurnSpeedFactor = DHPlayer(Controller).DHISTurnSpeedFactor;
+        YawChange *= TurnSpeedFactor;
+        PitchChange *= TurnSpeedFactor;
     }
 
     NewRotation = Rotation;
-    NewRotation.Yaw += 32.0 * RotationChangeFactor * deltaTime * YawChange;
-    NewRotation.Pitch += 32.0 * RotationChangeFactor * deltaTime * PitchChange;
+    NewRotation.Yaw += 32.0 * DeltaTime * YawChange;
+    NewRotation.Pitch += 32.0 * DeltaTime * PitchChange;
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
 
     SetRotation(NewRotation);
 
     if (bCustomAiming && CanFire())
     {
-        YawChange *= DHP.DHISTurnSpeedFactor;
-        PitchChange *= DHP.DHISTurnSpeedFactor;
-
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
         if (IsHumanControlled())
