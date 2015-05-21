@@ -70,7 +70,6 @@ defaultproperties
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
     bPCRelativeFPRotation=true
-    bAllowViewChange=true
     DrivePos=(X=7.0,Z=-22.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
