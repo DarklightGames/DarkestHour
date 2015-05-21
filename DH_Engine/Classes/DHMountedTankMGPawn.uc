@@ -874,22 +874,25 @@ simulated function SwitchMesh(int PositionIndex)
         // Only switch mesh if we actually have a different new mesh
         if (NewMesh != Gun.Mesh && NewMesh != none)
         {
-            if (bCustomAiming)
-            {
-                // Save old mesh rotation
-                MGYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
-                MGPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
+            // Switch to the new mesh
+            Gun.LinkMesh(NewMesh);
 
-                // Switch to the new mesh
-                Gun.LinkMesh(NewMesh);
-
-                // Now make the new mesh you swap to have the same rotation as the old one
-                Gun.SetBoneRotation(Gun.YawBone, MGYaw);
-                Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
-            }
-            else
+            // Now make the new mesh you swap to have the same rotation as the old one
+            if (VehicleBase != none)
             {
-                Gun.LinkMesh(NewMesh);
+                // If one bone is used for both yaw & pitch, we just update all rotation for that one bone
+                if (Gun.YawBone == Gun.PitchBone)
+                {
+                    Gun.SetBoneRotation(Gun.YawBone, Gun.CurrentAim * -1.0);
+                }
+                // Otherwise we have to update the yaw & pitch bones separately
+                else
+                {
+                    MGYaw.Yaw = -Gun.CurrentAim.Yaw;
+                    MGPitch.Pitch = -Gun.CurrentAim.Pitch;
+                    Gun.SetBoneRotation(Gun.YawBone, MGYaw);
+                    Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
+                }
             }
         }
     }
