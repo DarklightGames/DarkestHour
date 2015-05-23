@@ -197,7 +197,7 @@ function KDriverEnter(Pawn P)
     }
 }
 
-// Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim (also consolidates & optimises the Supers)
+// Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim, & to consolidate & optimise the Supers)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     if (bMultiPosition)
@@ -217,7 +217,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super(Vehicle).ClientKDriverEnter(PC);
 
-    MatchRotationToGunAim();
+    MatchRotationToGunAim(PC);
 }
 
 // Modified so MG retains its aimed direction when player enters & may switch to internal mesh, & to handle InitialPositionIndex instead of assuming start in position zero
@@ -609,13 +609,15 @@ simulated state ViewTransition
             }
 
             // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
-            WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-
-            if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+            if (IsHumanControlled())
             {
-                PlayerController(Controller).SetFOV(WeaponFOV);
+                WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
 
-                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+                if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV)
+                {
+                    PlayerController(Controller).SetFOV(WeaponFOV);
+                    FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+                }
             }
 
             // Play any transition animation for the player
@@ -892,25 +894,29 @@ simulated function SwitchMesh(int PositionIndex)
     }
 }
 
-// New function to match rotation to MG's current aim, either relative or independent to vehicle rotation
-simulated function MatchRotationToGunAim()
+// New function to match rotation to MG's current aim, either relative or independent to vehicle rotation (note owning net client will update rotation back to server)
+simulated function MatchRotationToGunAim(optional Controller C)
 {
-    local rotator NewRotation;
-
     if (Gun != none)
     {
+        if (C == none)
+        {
+            C = Controller;
+        }
+
         if (bPCRelativeFPRotation)
         {
-            NewRotation = Gun.CurrentAim;
+            SetRotation(Gun.CurrentAim);
         }
         else
         {
-            NewRotation = rotator(vector(Gun.CurrentAim) >> Gun.Rotation); // note Gun.Rotation is effectively same as vehicle base's rotation
+            SetRotation(rotator(vector(Gun.CurrentAim) >> Gun.Rotation)); // note Gun.Rotation is effectively same as vehicle base's rotation
         }
 
-        NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-
-        SetRotation(NewRotation); // note owning net client will update rotation back to server
+        if (C != none)
+        {
+            C.SetRotation(Rotation);
+        }
     }
 }
 
@@ -1033,9 +1039,11 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         if (bBehindViewChanged)
         {
+            // Switching to behind view, so make rotation non-relative to vehicle
             if (bPCRelativeFPRotation)
             {
-                PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation));
+                FixPCRotation(PC);
+                SetRotation(PC.Rotation);
             }
 
             if (bMultiPosition)
@@ -1076,13 +1084,15 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
     else
     {
-        if (bPCRelativeFPRotation)
-        {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
-        }
-
         if (bBehindViewChanged)
         {
+            // Switching back from behind view, so make rotation relative to vehicle again
+            if (bPCRelativeFPRotation)
+            {
+                PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
+                SetRotation(PC.Rotation);
+            }
+
             if (bMultiPosition)
             {
                 for (i = 0; i < DriverPositions.Length; ++i)
@@ -1206,6 +1216,7 @@ defaultproperties
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    bZeroPCRotOnEntry=false // Matt: we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)

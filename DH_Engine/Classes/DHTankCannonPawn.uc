@@ -488,7 +488,7 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero
-// Also so cannon retains its aimed direction when player enters & may switch to internal mesh // Matt: TEST
+// Also so cannon retains its aimed direction when player enters & may switch to internal mesh
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
@@ -510,7 +510,7 @@ simulated state EnteringVehicle
     }
 }
 
-// Modified to handle InitialPositionIndex instead of assuming start in position zero, & to consolidate & optimise the Supers
+// Modified to handle InitialPositionIndex instead of assuming start in position zero, to start facing same way as cannon, & to consolidate & optimise the Supers
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     if (bMultiPosition)
@@ -529,6 +529,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
     StoredVehicleRotation = VehicleBase.Rotation;
 
     super(Vehicle).ClientKDriverEnter(PC);
+
+    MatchRotationToGunAim(PC);
 }
 
 // Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
@@ -667,27 +669,21 @@ simulated state ViewTransition
             // Switch to mesh for new position as may be different
             SwitchMesh(DriverPositionIndex);
 
-            // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
-            WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-
-            if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+            if (IsHumanControlled())
             {
-                PlayerController(Controller).SetFOV(WeaponFOV);
+                WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
 
-                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-            }
-
-            // When player moves up from gunsight, view rotation is neutralised so he stays facing same direction as cannon (feels more natural to come up from the gun)
-            // Note an owning net client will update rotation back to server
-            if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions)
-            {
-                if (bPCRelativeFPRotation)
+                // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
+                if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV)
                 {
-                    SetRotation(rot(0, 0, 0));
+                    PlayerController(Controller).SetFOV(WeaponFOV);
+                    FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
                 }
-                else
+
+                // If player is moving up from gunsight, make him face the same direction as the cannon (feels more natural to come up from the gun)
+                if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions && !PlayerController(Controller).bBehindView)
                 {
-                    SetRotation(VehicleBase.Rotation);
+                    MatchRotationToGunAim();
                 }
             }
 
@@ -1019,6 +1015,30 @@ simulated function SwitchMesh(int PositionIndex)
     }
 }
 
+// New function to adjust rotation so player faces same direction as cannon, either relative or independent to vehicle rotation (note owning net client will update rotation back to server)
+// Note we don't actually match rotation to cannon's current aim like we do with an MG, because rotation of turret already gets added in SpecialCalcFirstPersonView()
+simulated function MatchRotationToGunAim(optional Controller C)
+{
+    if (C == none)
+    {
+        C = Controller;
+    }
+
+    if (bPCRelativeFPRotation || Gun == none)
+    {
+        SetRotation(rot(0, 0, 0));
+    }
+    else
+    {
+        SetRotation(Gun.Rotation); // note Gun.Rotation is effectively same as vehicle base's rotation
+    }
+
+    if (C != none)
+    {
+        C.SetRotation(Rotation);
+    }
+}
+
 // Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit, including turret rotation
 // Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the cannon pawn's rotation to the vehicle
 simulated function FixPCRotation(PlayerController PC)
@@ -1332,15 +1352,24 @@ simulated function ShrinkHUD();
 // Matt: modified to switch to external mesh & default FOV for behind view
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
-    local int i;
+    local rotator ViewRotation;
+    local int     i;
 
     if (PC.bBehindView)
     {
         if (bBehindViewChanged)
         {
+            // Behind view, so if player is on the gunsight, make him face the same direction as the cannon
+            if (DriverPositionIndex < GunsightPositions)
+            {
+                MatchRotationToGunAim();
+            }
+
+            // Switching to behind view, so make rotation non-relative to vehicle
             if (bPCRelativeFPRotation)
             {
-                PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation));
+                FixPCRotation(PC);
+                SetRotation(PC.Rotation);
             }
 
             if (bMultiPosition)
@@ -1381,13 +1410,23 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
     else
     {
-        if (bPCRelativeFPRotation)
-        {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
-        }
-
         if (bBehindViewChanged)
         {
+            // Switching back from behind view, so make rotation relative to vehicle again
+            if (bPCRelativeFPRotation)
+            {
+                ViewRotation = PC.Rotation;
+
+                // Remove any turret yaw from player's rotation, as in 1st person view the turret yaw will be added by SpecialCalcFirstPersonView()
+                if (Cannon.bHasTurret)
+                {
+                    ViewRotation.Yaw -= Cannon.CurrentAim.Yaw;
+                }
+
+                PC.SetRotation(rotator(vector(ViewRotation) << Gun.Rotation));
+                SetRotation(PC.Rotation);
+            }
+
             if (bMultiPosition)
             {
                 for (i = 0; i < DriverPositions.Length; ++i)
