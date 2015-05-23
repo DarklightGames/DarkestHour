@@ -5,55 +5,6 @@
 
 class DH_M3A1HalftrackGunPawn extends DHMountedTankMGPawn;
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
-{
-    local vector  x, y, z;
-    local vector  VehicleZ, CamViewOffsetWorld;
-    local float   CamViewOffsetZAmount;
-    local rotator WeaponAimRot;
-
-    GetAxes(CameraRotation, x, y, z);
-    ViewActor = self;
-
-    WeaponAimRot = Gun.GetBoneRotation(CameraBone);
-
-    if (ROPlayer(Controller) != none)
-    {
-        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-    }
-
-    CameraRotation =  WeaponAimRot;
-
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-
-    if (CameraBone != '' && Gun != none)
-    {
-        CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-    else
-    {
-        CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=0
