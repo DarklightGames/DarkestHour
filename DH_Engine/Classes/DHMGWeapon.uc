@@ -316,6 +316,7 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     bCanFireFromHip=true
+    bCanBeResupplied=true
     NumMagsToResupply=2
     bSniping=false
 }

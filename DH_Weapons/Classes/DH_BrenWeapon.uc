@@ -9,6 +9,7 @@ class DH_BrenWeapon extends DHBipodAutoWeapon;
 
 defaultproperties
 {
+    bCanBeResupplied=true
     NumMagsToResupply=2
     SightUpIronBringUp="Deploy"
     SightUpIronPutDown="undeploy"

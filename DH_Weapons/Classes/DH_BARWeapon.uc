@@ -38,6 +38,7 @@ defaultproperties
     SelectFireIronAnim="Iron_switch_fire"
     SightUpSelectFireIronAnim="SightUp_iron_switch_fire"
     bSlowFireRate=true
+    bCanBeResupplied=true
     NumMagsToResupply=2
     MaxNumPrimaryMags=6
     InitialNumPrimaryMags=6
