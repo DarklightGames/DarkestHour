@@ -1372,12 +1372,14 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                 SetRotation(PC.Rotation);
             }
 
-            if (bMultiPosition)
+            if (DriverPositions.Length > 0)
             {
                 for (i = 0; i < DriverPositions.Length; ++i)
                 {
                     DriverPositions[i].PositionMesh = Gun.default.Mesh;
                     DriverPositions[i].ViewFOV = PC.DefaultFOV;
+                    DriverPositions[i].ViewPositiveYawLimit = 65535;
+                    DriverPositions[i].ViewNegativeYawLimit = -65535;
                     DriverPositions[i].ViewPitchUpLimit = 65535;
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
@@ -1389,11 +1391,10 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             else
             {
                 PC.SetFOV(PC.DefaultFOV);
-                Gun.PitchUpLimit = 65535;
-                Gun.PitchDownLimit = 1;
+                Gun.bLimitYaw = false;
+                PitchUpLimit = 65535;
+                PitchDownLimit = 1;
             }
-
-            Gun.bLimitYaw = false;
         }
 
         bOwnerNoSee = false;
@@ -1403,7 +1404,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             Driver.bOwnerNoSee = !bDrawDriverInTP;
         }
 
-        if (PC == Controller) // no overlays for spectators
+        if (PC == Controller)
         {
             ActivateOverlay(false);
         }
@@ -1427,12 +1428,14 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                 SetRotation(PC.Rotation);
             }
 
-            if (bMultiPosition)
+            if (DriverPositions.Length > 0)
             {
                 for (i = 0; i < DriverPositions.Length; ++i)
                 {
                     DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
                     DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
+                    DriverPositions[i].ViewPositiveYawLimit = default.DriverPositions[i].ViewPositiveYawLimit;
+                    DriverPositions[i].ViewNegativeYawLimit = default.DriverPositions[i].ViewNegativeYawLimit;
                     DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
                     DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
                 }
@@ -1445,11 +1448,10 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             else
             {
                 PC.SetFOV(WeaponFOV);
-                Gun.PitchUpLimit = Gun.default.PitchUpLimit;
-                Gun.PitchDownLimit = Gun.default.PitchDownLimit;
+                Gun.bLimitYaw = Gun.default.bLimitYaw;
+                PitchUpLimit = default.PitchUpLimit;
+                PitchDownLimit = default.PitchDownLimit;
             }
-
-            Gun.bLimitYaw = Gun.default.bLimitYaw;
         }
 
         bOwnerNoSee = !bDrawMeshInFP;
@@ -1499,16 +1501,25 @@ exec function ToggleViewLimit()
 
     if (class'DH_LevelInfo'.static.DHDebugMode() && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
-        if (Gun.bLimitYaw == Gun.default.bLimitYaw && Gun.PitchUpLimit == Gun.default.PitchUpLimit && Gun.PitchDownLimit == Gun.default.PitchDownLimit)
+        if (Gun.bLimitYaw == Gun.default.bLimitYaw && PitchUpLimit == default.PitchUpLimit && PitchDownLimit == default.PitchDownLimit)
         {
             Gun.bLimitYaw = false;
             Gun.PitchUpLimit = 65535;
             Gun.PitchDownLimit = 1;
+            Gun.CustomPitchUpLimit = 65535;
+            Gun.CustomPitchDownLimit = 1;
+            PitchUpLimit = 65535;
+            PitchDownLimit = 1;
 
-            for (i = 0; i < DriverPositions.Length; ++i)
+            if (DriverPositions.Length > 0)
             {
-                DriverPositions[i].ViewPitchUpLimit = 65535;
-                DriverPositions[i].ViewPitchDownLimit = 1;
+                for (i = 0; i < DriverPositions.Length; ++i)
+                {
+                    DriverPositions[i].ViewPositiveYawLimit = 65535;
+                    DriverPositions[i].ViewNegativeYawLimit = -65535;
+                    DriverPositions[i].ViewPitchUpLimit = 65535;
+                    DriverPositions[i].ViewPitchDownLimit = 1;
+                }
             }
         }
         else
@@ -1516,11 +1527,20 @@ exec function ToggleViewLimit()
             Gun.bLimitYaw = Gun.default.bLimitYaw;
             Gun.PitchUpLimit = Gun.default.PitchUpLimit;
             Gun.PitchDownLimit = Gun.default.PitchDownLimit;
+            Gun.CustomPitchUpLimit = Gun.default.CustomPitchUpLimit;
+            Gun.CustomPitchDownLimit = Gun.default.CustomPitchDownLimit;
+            PitchUpLimit = default.PitchUpLimit;
+            PitchDownLimit = default.PitchDownLimit;
 
-            for (i = 0; i < DriverPositions.Length; ++i)
+            if (DriverPositions.Length > 0)
             {
-                DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
-                DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
+                for (i = 0; i < DriverPositions.Length; ++i)
+                {
+                    DriverPositions[i].ViewPositiveYawLimit = default.DriverPositions[i].ViewPositiveYawLimit;
+                    DriverPositions[i].ViewNegativeYawLimit = default.DriverPositions[i].ViewNegativeYawLimit;
+                    DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
+                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
+                }
             }
         }
     }
