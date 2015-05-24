@@ -119,19 +119,18 @@ replication
 exec function LogSupply() // DEBUG // Matt: May 2015 - TEMP to log resupply/reload properties, to check they are correctly set & (some) being replicated
 {
     local vector HitLocation, HitNormal, ViewPos;
-    local bool   bCouldMGResupply, bCouldMortarResupply, bCouldATResupply, bCouldATReload;
     local DHPawn Other;
 
     ViewPos = Location + BaseEyeHeight * vect(0.0, 0.0, 1.0);
     Other = DHPawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(Controller.Rotation), ViewPos, true));
 
-    Log("ME: Weapon =" @ Weapon.ItemName @ " bWeaponNeedsResupply =" @ bWeaponNeedsResupply @ " bWeaponNeedsReload =" @ bWeaponNeedsReload @ 
+    Log("ME: Weapon =" @ Weapon.ItemName @ " WepAttach =" @ WeaponAttachment.Tag @ " bWeaponNeedsResupply =" @ bWeaponNeedsResupply @ " bWeaponNeedsReload =" @ bWeaponNeedsReload @
         " bCanBeResupplied =" @ DHProjectileWeapon(Weapon).bCanBeResupplied @ " bCanHaveAsssistedRL =" @ (DHRocketWeapon(Weapon) != none && DHRocketWeapon(Weapon).bCanHaveAsssistedReload) @
         " bHasATAmmo =" @ bHasATAmmo @ " bHasMGAmmo =" @ bHasMGAmmo);
 
-    if (Other != none) Log("OTHER: Weapon =" @ Other.Weapon.ItemName @ " bWeaponNeedsResupply =" @ Other.bWeaponNeedsResupply @ " bWeaponNeedsReload =" @ Other.bWeaponNeedsReload @ 
-        " bCanBeResupplied =" @ DHProjectileWeapon(Other.Weapon).bCanBeResupplied @ " bCanHaveAsssistedRL =" @ (DHRocketWeapon(Weapon) != none && DHRocketWeapon(Other.Weapon).bCanHaveAsssistedReload) @
-        " bHasATAmmo =" @ Other.bHasATAmmo @ " bHasMGAmmo =" @ Other.bHasMGAmmo);
+    if (Other != none) Log("OTHER: Weapon =" @ Other.Weapon.ItemName @ " WepAttach =" @ Other.WeaponAttachment.Tag @ " bWeaponNeedsResupply =" @ Other.bWeaponNeedsResupply @ 
+        " bWeaponNeedsReload =" @ Other.bWeaponNeedsReload @ " bCanBeResupplied =" @ DHProjectileWeapon(Other.Weapon).bCanBeResupplied @ " bCanHaveAsssistedRL =" @ 
+        (DHRocketWeapon(Other.Weapon) != none && DHRocketWeapon(Other.Weapon).bCanHaveAsssistedReload) @ " bHasATAmmo =" @ Other.bHasATAmmo @ " bHasMGAmmo =" @ Other.bHasMGAmmo);
 }
 
 simulated function PostBeginPlay()

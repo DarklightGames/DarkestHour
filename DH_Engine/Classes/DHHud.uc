@@ -1456,8 +1456,10 @@ function DrawPlayerNames(Canvas C)
     // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
     if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
     {
+        NamedPlayerLoc = NamedPlayer.Location;
+        NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
+        Dir = Normal(NamedPlayerLoc - PawnOwner.Location);
         GetAxes(PlayerOwner.Rotation, X, Y, Z);
-        Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
 
         if (Dir dot X > 0.0)
         {
@@ -1468,75 +1470,77 @@ function DrawPlayerNames(Canvas C)
             {
                 OtherDHP = DHPawn(NamedPlayer);
 
-                // Mortar resupply (could be an unmanned mortar, not a player)
-                if (((OtherDHP != none && OtherDHP.bMortarCanBeResupplied) || (Mortar != none && Mortar.bCanBeResupplied)) && MyDHP.bHasMortarAmmo)
+                if (OtherDHP != none)
+                {
+                    // AT weapon assisted reload
+                    if (OtherDHP.bWeaponNeedsReload)
+                    {
+                        bCouldATReload = true;
+                    }
+                    else if (OtherDHP.bWeaponNeedsResupply)
+                    {
+                        // AT weapon resupply
+                        if (DHRocketWeaponAttachment(OtherDHP.WeaponAttachment) != none)
+                        {
+                            if (MyDHP.bHasATAmmo)
+                            {
+                                bCouldATResupply = true;
+                            }
+                        }
+                        // MG resupply
+                        else if (MyDHP.bHasMGAmmo)
+                        {
+                            bCouldMGResupply = true;
+                        }
+                    }
+                    // Mortar resupply
+                    else if (OtherDHP.bMortarCanBeResupplied && MyDHP.bHasMortarAmmo)
+                    {
+                        bCouldMortarResupply = true;
+                    }
+                }
+                // Resupply an unmanned mortar weapon (not a player)
+                else if (Mortar != none && Mortar.bCanBeResupplied && MyDHP.bHasMortarAmmo)
                 {
                     bCouldMortarResupply = true;
                 }
-                // AT weapon assisted reload
-                else if (OtherDHP != none && OtherDHP.bWeaponNeedsReload && DHRocketWeapon(OtherDHP.Weapon) != none && DHRocketWeapon(OtherDHP.Weapon).bCanHaveAsssistedReload)
+
+                // If we could resupply/reload the player, set the appropriate message
+                if (bCouldMGResupply || bCouldMortarResupply || bCouldATResupply || bCouldATReload)
                 {
-                    bCouldATReload = true;
-                }
-                else if (OtherDHP != none && OtherDHP.bWeaponNeedsResupply && DHProjectileWeapon(OtherDHP.Weapon) != none && DHProjectileWeapon(OtherDHP.Weapon).bCanBeResupplied)
-                {
-                    // AT weapon resupply
-                    if (DHRocketWeapon(OtherDHP.Weapon) != none)
+                    // If within 2 metres then we can actually resupply/reload the player
+                    if (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) < 14400.0)
                     {
-                        if (MyDHP.bHasATAmmo)
+                        if (bCouldATReload)
                         {
-                            bCouldATResupply = true;
+                            ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
+                        }
+                        else
+                        {
+                            ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                         }
                     }
-                    // MG resupply
-                    else if (MyDHP.bHasMGAmmo)
-                    {
-                        bCouldMGResupply = true;
-                    }
-                }
-            }
-
-            NamedPlayerLoc = NamedPlayer.Location;
-            NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
-
-            // If we could resupply/reload the player, set the appropriate message
-            if (bCouldMGResupply || bCouldMortarResupply || bCouldATResupply || bCouldATReload)
-            {
-                // If within 2 metres then we can actually resupply/reload the player
-                if (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) < 14400.0)
-                {
-                    if (bCouldATReload)
-                    {
-                        ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
-                    }
+                    // Otherwise we'll display a message saying the player needs a resupply/reload
                     else
                     {
-                        ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
+                        if (bCouldATReload)
+                        {
+                            ResupplyMessage = NeedReloadText;
+                        }
+                        else
+                        {
+                            ResupplyMessage = NeedAmmoText;
+                        }
+
+                        // Not close enough to actually resupply/reload, so reset these local variables
+                        bCouldMGResupply = false;
+                        bCouldMortarResupply = false;
+                        bCouldATResupply = false;
+                        bCouldATReload = false;
                     }
                 }
-                // Otherwise we'll display a message saying the player needs a resupply/reload
-                else
-                {
-                    if (bCouldATReload)
-                    {
-                        ResupplyMessage = NeedReloadText;
-                    }
-                    else
-                    {
-                        ResupplyMessage = NeedAmmoText;
-                    }
 
-                    // Not close enough to actually resupply/reload, so reset these local variables
-                    bCouldMGResupply = false;
-                    bCouldMortarResupply = false;
-                    bCouldATResupply = false;
-                    bCouldATReload = false;
-                }
-            }
-
-            // Now set our pawn's resupply/reload variables (do this only once, as they are replicated)
-            if (MyDHP != none)
-            {
+                // Now set our pawn's resupply/reload variables (do this only once, as they are replicated)
                 MyDHP.bCanMGResupply = bCouldMGResupply;
                 MyDHP.bCanMortarResupply = bCouldMortarResupply;
                 MyDHP.bCanATResupply = bCouldATResupply;
