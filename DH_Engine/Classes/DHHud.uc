@@ -1481,9 +1481,12 @@ function DrawPlayerNames(Canvas C)
                 else if (OtherDHP != none && OtherDHP.bWeaponNeedsResupply && DHProjectileWeapon(OtherDHP.Weapon) != none && DHProjectileWeapon(OtherDHP.Weapon).bCanBeResupplied)
                 {
                     // AT weapon resupply
-                    if (DHRocketWeapon(OtherDHP.Weapon) != none && MyDHP.bHasATAmmo)
+                    if (DHRocketWeapon(OtherDHP.Weapon) != none)
                     {
-                        bCouldATResupply = true;
+                        if (MyDHP.bHasATAmmo)
+                        {
+                            bCouldATResupply = true;
+                        }
                     }
                     // MG resupply
                     else if (MyDHP.bHasMGAmmo)
