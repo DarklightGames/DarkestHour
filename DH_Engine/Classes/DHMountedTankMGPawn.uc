@@ -755,7 +755,7 @@ simulated state ViewTransition
             }
 
             // Re-enable muzzle flash if it has previously been turned off when player raised head above sights
-            if (bHideMuzzleFlashAboveSights && DriverPositionIndex == 0 && Gun != none && 
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex == 0 && Gun != none &&
                 (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
             {
                 Gun.AmbientEffectEmitter.bHidden = false;

@@ -181,7 +181,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 Instigator.ClientMessage("Bullet.ProcessTouch on" @ Other.Tag @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation @ "Velocity =" @ VSize(Velocity));
             }
 
-            Log(Tag @ ">>> Bullet.ProcessTouch on" @ Pawn(Other).PlayerReplicationInfo.PlayerName @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation @ 
+            Log(Tag @ ">>> Bullet.ProcessTouch on" @ Pawn(Other).PlayerReplicationInfo.PlayerName @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation @
                 " Velocity =" @ VSize(Velocity) @ " Instigator =" @ Instigator.Tag);
         }
         else

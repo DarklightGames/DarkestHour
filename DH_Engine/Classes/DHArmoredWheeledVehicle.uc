@@ -240,7 +240,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             else
             {
                 HullChanceModifier = 1.0;
-                TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret 
+                TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret
             }
         }
         else // normal chance of damage to everything in vehicles without a turret

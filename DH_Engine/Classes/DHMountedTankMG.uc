@@ -365,7 +365,7 @@ function bool ResupplyAmmo()
         {
             HandleReload();
         }
-        
+
         return true;
     }
 

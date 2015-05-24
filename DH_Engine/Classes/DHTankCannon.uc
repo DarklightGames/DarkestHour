@@ -267,7 +267,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
-        } 
+        }
 
         if (bLogPenetration)
         {
@@ -1355,7 +1355,7 @@ function ServerManualReload()
 
         // Start reload on both client & server
         CannonReloadState = CR_Empty;
-        ClientSetReloadState(CannonReloadState); // tell a net client to start reloading 
+        ClientSetReloadState(CannonReloadState); // tell a net client to start reloading
         SetTimer(0.01, false);
     }
 }

@@ -255,7 +255,6 @@ function bool FillAmmo()
 // Implemented in subclasses as required
 simulated state PostFiring
 {
-    
 }
 
 // New state to automatically lower one-shot weapons, then either bring up another if player still has more, or switch to a different weapon if just used last one
