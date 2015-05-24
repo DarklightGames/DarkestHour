@@ -89,8 +89,8 @@ defaultproperties
 {
     ControlProfiles(0)="Current"
     ControlProfiles(1)="Defaults (Reset)"
-    ControlProfiles(3)="Contemporary"
-    ControlProfiles(5)="Recommended"
+    ControlProfiles(2)="Contemporary"
+    ControlProfiles(3)="Recommended"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
@@ -156,7 +156,7 @@ defaultproperties
     // default (With DH fixes)
     ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","",""))
     // Contemporary
-    ControlProfileBindings(3)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
+    ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
     // Recommended
-    ControlProfileBindings(5)=(KeyNames=("V","Z","G","H","T","Y","U","I","N","M","J","K","L","Semicolon","SingleQuote","CapsLock","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseX","MouseY","LeftBracket","RightBracket"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","Walking","ROIronSights","AltFire","SpeechMenuToggle","","","","speech ALERT 2","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","",""))
+    ControlProfileBindings(3)=(KeyNames=("V","Z","G","H","T","Y","U","I","N","M","J","K","L","Semicolon","SingleQuote","CapsLock","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseX","MouseY","LeftBracket","RightBracket","ScrollLock"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","Walking","ROIronSights","AltFire","SpeechMenuToggle","","","","speech ALERT 2","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","","",""))
 }

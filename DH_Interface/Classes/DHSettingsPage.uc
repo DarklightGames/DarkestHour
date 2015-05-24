@@ -74,11 +74,13 @@ function bool InternalOnCanClose(optional bool bCanceled)
 
 function InternalOnClose(optional bool bCanceled)
 {
-        local rotator NewRot;
-        NewRot = PlayerOwner().Rotation;
-        NewRot.Pitch = SavedPitch;
-        PlayerOwner().SetRotation(NewRot);
-        super.OnClose(bCanceled);
+    local rotator NewRot;
+
+    NewRot = PlayerOwner().Rotation;
+    NewRot.Pitch = SavedPitch;
+    PlayerOwner().SetRotation(NewRot);
+
+    super.OnClose(bCanceled);
 }
 
 function InternalOnChange(GUIComponent Sender)
@@ -94,9 +96,12 @@ function BackButtonClicked()
 {
     if (InternalOnCanClose(false))
     {
-            c_Tabs.ActiveTab.OnDeActivate();
-                Controller.CloseMenu(false);
-        }
+        SaveConfig();
+
+        c_Tabs.ActiveTab.OnDeActivate();
+
+        Controller.CloseMenu(false);
+    }
 }
 
 function DefaultsButtonClicked()

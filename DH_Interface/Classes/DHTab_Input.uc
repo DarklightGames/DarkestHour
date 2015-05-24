@@ -62,6 +62,8 @@ function OnInputChange(GUIComponent Sender)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHScopeTurnSpeedFactor" @ fl_ScopedFactor.GetValue());
     }
+
+    SaveConfig();
 }
 
 function ResetClicked()
