@@ -1898,7 +1898,6 @@ state RoundOver
         {
             AS.Destroy();
         }
-
     }
 }
 
@@ -2229,7 +2228,7 @@ function HandleFFViolation(PlayerController Offender)
     local string OffenderID;
     local int    i;
 
-    if (FFPunishment == FFP_None || Level.NetMode == NM_Standalone)
+    if (FFPunishment == FFP_None || Level.NetMode == NM_Standalone || Offender.PlayerReplicationInfo.bAdmin)
     {
         return;
     }
