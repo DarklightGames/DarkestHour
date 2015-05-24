@@ -981,7 +981,7 @@ event TakeImpactDamage(float AccelMag)
     // Play bottom out sound (modified to not play across level, lowered volume, and limit sound occurrence to every second)
     if (ImpactDamageSounds.Length > 0 && Level.TimeSeconds - LastBottomOutTime > 1.0)
     {
-        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], SLOT_None, TransientSoundVolume, false, 70,, true);
+        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], SLOT_None, TransientSoundVolume * 2.5, false, 120,, true);
         LastBottomOutTime = Level.TimeSeconds;
     }
 

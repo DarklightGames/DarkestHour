@@ -48,7 +48,7 @@ defaultproperties
     WheelLongSlip=0.001
     WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
-    WheelLatFrictionScale=1.35
+    WheelLatFrictionScale=2.5
     WheelHandbrakeSlip=0.01
     WheelHandbrakeFriction=0.1
     WheelSuspensionTravel=15.0
@@ -62,8 +62,8 @@ defaultproperties
     GearRatios(1)=0.2
     GearRatios(2)=0.35
     GearRatios(3)=0.5
-    GearRatios(4)=0.6
-    TransRatio=0.10
+    GearRatios(4)=0.62
+    TransRatio=0.12
     ChangeUpPoint=2000.0
     ChangeDownPoint=1000.0
     LSDFactor=1.0
@@ -243,6 +243,7 @@ defaultproperties
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
+        KMaxAngularSpeed=0.9
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3A1HalftrackTransport.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
