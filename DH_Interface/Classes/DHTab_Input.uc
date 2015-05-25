@@ -9,8 +9,6 @@ var automated DHmoNumericEdit           nu_MousePollRate;
 var automated moFloatEdit               fl_IronSightFactor;
 var automated moFloatEdit               fl_ScopedFactor;
 
-var float                               IronSightFactor, ScopedFactor;
-
 event InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
@@ -23,39 +21,26 @@ event InitComponent(GUIController MyController, GUIComponent MyOwner)
 function InternalOnLoadINI(GUIComponent Sender, string s)
 {
     local PlayerController PC;
+    local float MouseSamplingTime;
+    local int PollRate;
 
     PC = PlayerOwner();
 
     switch (Sender)
     {
+        case nu_MousePollRate:
+            MouseSamplingTime = float(PC.ConsoleCommand("get Engine.PlayerInput MouseSamplingTime"));
+            PollRate = Round(1 / MouseSamplingTime);
+            nu_MousePollRate.SetComponentValue(PollRate);
+            break;
         case fl_IronSightFactor:
-            IronSightFactor = float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHISTurnSpeedFactor"));
-            fl_IronSightFactor.SetComponentValue(IronSightFactor,true);
+            fl_IronSightFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHISTurnSpeedFactor")),true);
             break;
         case fl_ScopedFactor:
-            ScopedFactor = float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHScopeTurnSpeedFactor"));
-            fl_ScopedFactor.SetComponentValue(ScopedFactor,true);
+            fl_ScopedFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHScopeTurnSpeedFactor")),true);
             break;
         default:
             super.InternalOnLoadINI(Sender, s);
-    }
-}
-
-function ShowPanel(bool bShow)
-{
-    local PlayerController PC;
-    local float MouseSamplingTime, temp;
-    local int PollRate;
-
-    super.ShowPanel(bShow);
-
-    if (bShow)
-    {
-        PC = PlayerOwner();
-
-        MouseSamplingTime = float(PC.ConsoleCommand("get Engine.PlayerInput MouseSamplingTime"));
-        PollRate = Round(1 / MouseSamplingTime);
-        nu_MousePollRate.SetComponentValue(PollRate);
     }
 }
 
@@ -63,7 +48,6 @@ function OnInputChange(GUIComponent Sender)
 {
     local PlayerController PC;
     local string SampleRateString;
-    local bool bChangeMade;
 
     PC = PlayerOwner();
 
@@ -72,28 +56,27 @@ function OnInputChange(GUIComponent Sender)
         SampleRateString = string(10000000.0 / float(nu_MousePollRate.GetValue()));
         SampleRateString = Left(SampleRateString, InStr(SampleRateString, "."));
         SampleRateString = "0.00" $ SampleRateString;
-
         PC.ConsoleCommand("set Engine.PlayerInput MouseSamplingTime" @ SampleRateString);
-        bChangeMade = true;
     }
     else if(Sender == fl_IronSightFactor)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHISTurnSpeedFactor" @ fl_IronSightFactor.GetValue());
-        IronSightFactor = fl_IronSightFactor.GetValue();
-        bChangeMade = true;
+
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();;
+            DHPlayer(PC).SaveConfig();
+        }
     }
     else if(Sender == fl_ScopedFactor)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHScopeTurnSpeedFactor" @ fl_ScopedFactor.GetValue());
-        ScopedFactor = fl_ScopedFactor.GetValue();
-        bChangeMade = true;
-    }
 
-    if (bChangeMade && DHPlayer(PC) != none)
-    {
-        DHPlayer(PC).DHISTurnSpeedFactor = IronSightFactor;
-        DHPlayer(PC).DHScopeTurnSpeedFactor = ScopedFactor;
-        DHPlayer(PC).SaveConfig();
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).DHScopeTurnSpeedFactor = fl_ScopedFactor.GetValue();
+            DHPlayer(PC).SaveConfig();
+        }
     }
 }
 
@@ -102,8 +85,6 @@ function ResetClicked()
     class'PlayerInput'.static.ResetConfig("MouseSamplingTime");
     class'DHPlayer'.static.ResetConfig("DHISTurnSpeedFactor");
     class'DHPlayer'.static.ResetConfig("DHScopeTurnSpeedFactor");
-
-    ShowPanel(true);
 
     super.ResetClicked();
 }
@@ -302,6 +283,7 @@ defaultproperties
         WinHeight=0.045352
         TabOrder=10
         OnChange=OnInputChange
+        OnLoadIni=InternalOnLoadINI
     End Object
     nu_MousePollRate=InputMousePollRate
 
