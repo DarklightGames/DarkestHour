@@ -79,8 +79,9 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerSetPlayerInfo;
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
+        ServerSaveMortarTarget, ServerCancelMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -2042,17 +2043,107 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
     Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
 }
 
-exec function LeaveBody()
+// New exec that respawns the player, but leaves their old pawn body behind, frozen in the game
+// Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
+exec function LeaveBody(optional bool bKeepPRI)
 {
-    ServerLeaveBody();
+    local Pawn OldPawn;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        OldPawn = Pawn;
+        ServerLeaveBody(bKeepPRI);
+
+        // Attempt to fix 'pin head', where old pawn's head is shrunk to 10% by state Dead.BeginState() - but generally ineffective as happens before state Dead (ViewTarget is key)
+        if (Pawn.IsA('DHPawn'))
+        {
+            OldPawn.SetHeadScale(OldPawn.default.HeadScale);
+        }
+    }
 }
 
-function ServerLeaveBody()
+function ServerLeaveBody(optional bool bKeepPRI)
 {
-    Pawn.UnPossessed();
-    Pawn.SetPhysics(PHYS_None);
-    Pawn.Velocity = vect(0.0, 0.0, 0.0);
-    Pawn = none;
+    local Vehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    {
+        Pawn.UnPossessed();
+
+        if (bKeepPRI)
+        {
+            Pawn.PlayerReplicationInfo = PlayerReplicationInfo;
+        }
+
+        V = Vehicle(Pawn);
+
+        if (V != none)
+        {
+            V.Throttle = 0.0;
+            V.Steering = 0.0;
+            V.Rise = 0.0;
+        }
+        else
+        {
+            Pawn.Velocity = vect(0.0, 0.0, 0.0);
+            Pawn.SetPhysics(PHYS_None);
+        }
+
+        Pawn = none;
+    }
+}
+
+// New exec, used with LeaveBody(), as a clientside fix for annoying bug where old pawn's head shrinks to 10% size! - can be used when head location accuracy is important
+exec function FixPinHead()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHud) != none && DHHud(myHud).NamedPlayer != none)
+    {
+        DHHud(myHud).NamedPlayer.SetHeadScale(DHHud(myHud).NamedPlayer.default.HeadScale);
+    }
+}
+
+// New exec that reverses LeaveBody(), allowing the player 'reclaim' their old pawn body (& killing off their current pawn)
+exec function PossessBody()
+{
+    local Pawn   TargetPawn;
+    local vector HitLocation, HitNormal, ViewPos;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    {
+        ViewPos = Pawn.Location + Pawn.BaseEyeHeight * vect(0.0, 0.0, 1.0);
+        TargetPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(Rotation), ViewPos, true));
+
+        // Only proceed if body's PRI matches the player (so must have been their old body, left using bKeepPRI option), or if body belongs to no one
+        if (TargetPawn != none && (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo || TargetPawn.PlayerReplicationInfo == none))
+        {
+            ServerPossessBody(TargetPawn);
+
+            if (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo)
+            {
+                TargetPawn.bOwnerNoSee = TargetPawn.default.bOwnerNoSee; // have to set this clientside to stop it drawing the player's body in 1st person
+            }
+        }
+    }
+}
+
+function ServerPossessBody(Pawn NewPawn)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && NewPawn != none)
+    {
+        // If the pawn body is already associated with the player (shares PRI) then possess it & kill off current pawn
+        if (NewPawn.PlayerReplicationInfo == PlayerReplicationInfo)
+        {
+            Pawn.Died(none, class'DamageType', vect(0.0, 0.0, 0.0));
+            Unpossess();
+            Possess(NewPawn);
+        }
+        // Otherwise, if pawn body 'belongs' to no one (no PRI) then associate it with the player, so his name & resupply status appears on the HUD
+        // Then a repeat of PossessBody() will allow him to possess the 2nd time
+        else if (NewPawn.PlayerReplicationInfo == none)
+        {
+            NewPawn.PlayerReplicationInfo = PlayerReplicationInfo;
+        }
+    }
 }
 
 exec function DebugRoundPause()
