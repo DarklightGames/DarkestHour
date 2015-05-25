@@ -291,7 +291,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 OrigLoc = Instigator.Location;
             }
 
-            BulletDistance = VSize(Location - OrigLoc) / 60.352; // calculate distance travelled by bullet in metres
+            BulletDistance = class'DHLib'.static.UnrealToMeters(VSize(Location - OrigLoc)); // calculate distance travelled by bullet in metres
 
             // If it's FF at close range, we won't suppress, so send a different WT through
             if (BulletDistance < 10.0 && InstigatorController != none && Other != none && DHPawn(Other.Base) != none &&

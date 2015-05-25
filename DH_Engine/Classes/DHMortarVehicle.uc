@@ -10,6 +10,7 @@ var     DHPawn      OwningPawn;
 var     bool        bCanBeResupplied;
 var     int         PlayerResupplyAmounts[2];
 var     bool        bEnteredOnce;
+var     ObjectMap   NotifyParameters;
 
 replication
 {
@@ -29,6 +30,12 @@ Destroy();
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("VehicleClass", Class);
+    }
 }
 
 function PlayerResupply()
@@ -113,13 +120,26 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     return;
 }
 
+// Let the player know they can get in this vehicle
+simulated event NotifySelected(Pawn User)
+{
+    if (User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
+    {
+        NotifyParameters.Insert("Controller", User.Controller);
+
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
+
+        LastNotifyTime = Level.TimeSeconds;
+    }
+}
+
 defaultproperties
 {
     ExplosionSoundRadius=0.0
     ExplosionDamage=0.0
     ExplosionRadius=0.0
     ExplosionMomentum=0.0
-    TouchMessage="Operate "
+    TouchMessageClass=class'DHVehicleTouchMessage'
     MaxDesireability=0.0
     GroundSpeed=0.0
     bOwnerNoSee=false

@@ -6,11 +6,6 @@
 class DHLocalMessage extends LocalMessage
     abstract;
 
-var color GermanColour;
-var color USColour;
-var color BritishColour;
-var color CanadianColour;
-
 var localized string MessagePrefix;
 var localized string SpecPrefix;
 
@@ -21,6 +16,14 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
+    if (RelatedPRI_1 != none &&
+        RelatedPRI_1.Team != none &&
+        RelatedPRI_1.Team.TeamIndex >= 0 &&
+        RelatedPRI_1.Team.TeamIndex < arraycount(class'DHHud'.default.SideColors))
+    {
+        return class'DHHud'.default.SideColors[RelatedPRI_1.Team.TeamIndex];
+    }
+
     return default.DrawColor;
 }
 

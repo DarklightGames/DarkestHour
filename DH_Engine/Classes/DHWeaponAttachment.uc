@@ -158,6 +158,8 @@ simulated event ThirdPersonEffects()
                 }
                 else
                 {
+                    Log("what");
+
                     Spawn(class'DHBulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
                     CheckForSplash();
                 }

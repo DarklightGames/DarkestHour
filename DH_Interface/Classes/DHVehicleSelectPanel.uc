@@ -5,17 +5,14 @@
 
 class DHVehicleSelectPanel extends DHDeployMenuPanel;
 
-var automated ROGUIProportionalContainer    CrewPoolsContainer,
-                                            NoCrewPoolsContainer;
+var automated ROGUIProportionalContainer    VehiclePoolsContainer;
+var automated DHGUIListBox                  lb_VehiclePools;
 
-var automated DHGUIListBox                  lb_CrewVehiclePools,
-                                            lb_NoCrewVehiclePools;
+var ROGUIListPlus                           li_VehiclePools;
 
-var ROGUIListPlus                           li_CrewVehiclePools,
-                                            li_NoCrewVehiclePools;
-
-var array<int>                              CrewedVehiclePoolIndices,
-                                            NonCrewedVehiclePoolIndices;
+// Colin: I would love to use the GetExtra in the GUIList class instead of this,
+// but GetExtra is polluted with the "disabled" indicator
+var array<int>                              VehiclePoolIndices;
 
 var byte                                    TeamNum;
 
@@ -23,23 +20,17 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    // Change background from default if team == Axis
-    if (DHP.GetTeamNum() == Axis_Team_Index)
+    if (PC.GetTeamNum() == AXIS_TEAM_INDEX)
     {
-        Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+        Background = texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
     }
     else
     {
-        Background=Texture'DH_GUI_Tex.Menu.AlliesLoadout_BG';
+        Background = texture'DH_GUI_Tex.Menu.AlliesLoadout_BG';
     }
 
-    // Crew required vehicle pool container
-    li_CrewVehiclePools = ROGUIListPlus(lb_CrewVehiclePools.List);
-    CrewPoolsContainer.ManageComponent(lb_CrewVehiclePools);
-
-    // None crew required vehicle pool container
-    li_NoCrewVehiclePools = ROGUIListPlus(lb_NoCrewVehiclePools.List);
-    NoCrewPoolsContainer.ManageComponent(lb_NoCrewVehiclePools);
+    li_VehiclePools = ROGUIListPlus(lb_VehiclePools.List);
+    VehiclePoolsContainer.ManageComponent(lb_VehiclePools);
 
     InitializeVehiclePools();
 }
@@ -53,15 +44,15 @@ function ShowPanel(bool bShow)
     // We are showing this panel so we want to spawn as vehicle
     if (bShow && myDeployMenu != none)
     {
-        myDeployMenu.Tab = TAB_Vehicle;
+        MyDeployMenu.Tab = TAB_Vehicle;
 
         // Check if SpawnPointIndex is valid
-        if (DHGRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()))
+        if (GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, PC.GetTeamNum()))
         {
-            SP = DHGRI.GetSpawnPoint(MyDeployMenu.SpawnPointIndex);
+            SP = GRI.SpawnPoints[MyDeployMenu.SpawnPointIndex];
         }
 
-        // If spawnpoint index is type infantry, then nullify it and spawnvehicle
+        // If spawnpoint index is type infantry, then nullify it and SpawnVehicle
         if (SP != none && SP.Type == ESPT_Infantry)
         {
             MyDeployMenu.ChangeSpawnIndices(255, MyDeployMenu.VehiclePoolIndex, 255);
@@ -100,19 +91,19 @@ function Timer()
 {
     // HACK: checks the saved TeamNum and re-initializes if the team changed.
     // Would be far better if we had some sort of event system to detect this
-    if (DHP.GetTeamNum() != TeamNum)
+    if (PC.GetTeamNum() != TeamNum)
     {
         // Team changed, we must re-build the list!
         InitializeVehiclePools();
 
         // Fix the background
-        if (DHP.GetTeamNum() == Axis_Team_Index)
+        if (PC.GetTeamNum() == AXIS_TEAM_INDEX)
         {
-            Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+            Background = texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
         }
         else
         {
-            Background=Texture'DH_GUI_Tex.Menu.AlliesLoadout_BG';
+            Background = texture'DH_GUI_Tex.Menu.AlliesLoadout_BG';
         }
     }
 
@@ -121,47 +112,47 @@ function Timer()
 
 function InitializeVehiclePools()
 {
-    local int i;
+    local int i, j;
 
-    li_CrewVehiclePools.Clear();
-    li_NoCrewVehiclePools.Clear();
+    j = -1;
 
-    CrewedVehiclePoolIndices.Length = 0;
-    NonCrewedVehiclePoolIndices.Length = 0;
+    li_VehiclePools.Clear();
 
-    if (DHGRI == none)
+    VehiclePoolIndices.Length = 0;
+
+    if (GRI == none)
     {
         return;
     }
 
-    for (i = 0; i < arraycount(DHGRI.VehiclePoolIsActives); ++i)
+    li_VehiclePools.SortList();
+
+    VehiclePoolIndices.Length = 0;
+
+    for (i = 0; i < arraycount(GRI.VehiclePoolVehicleClasses); ++i)
     {
-        if (DHGRI.VehiclePoolVehicleClasses[i] == none)
+        if (GRI.VehiclePoolVehicleClasses[i] == none ||
+            GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != PC.GetTeamNum())
         {
             continue;
         }
 
-        if (DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != DHP.GetTeamNum())
+        if (PC != none && PC.VehiclePoolIndex == i)
         {
-            // Do not display those not belonging to player's team
-            continue;
+            j = li_VehiclePools.ItemCount;
         }
 
-        if (DHGRI.VehiclePoolVehicleClasses[i].default.bMustBeTankCommander)
-        {
-            li_CrewVehiclePools.Add(DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString);
-            li_CrewVehiclePools.SetExtraAtIndex(li_CrewVehiclePools.ItemCount - 1, "" $ i);
-            CrewedVehiclePoolIndices[CrewedVehiclePoolIndices.Length] = i;
-        }
-        else
-        {
-            li_NoCrewVehiclePools.Add(DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString);
-            li_NoCrewVehiclePools.SetExtraAtIndex(li_NoCrewVehiclePools.ItemCount - 1, "" $ i);
-            NonCrewedVehiclePoolIndices[NonCrewedVehiclePoolIndices.Length] = i;
-        }
+        li_VehiclePools.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString);
+        li_VehiclePools.SetExtraAtIndex(li_VehiclePools.ItemCount - 1, "" $ i);
+
+        VehiclePoolIndices[VehiclePoolIndices.Length] = i;
     }
 
-    TeamNum = DHP.GetTeamNum();
+    li_VehiclePools.SortList();
+
+    li_VehiclePools.SetIndex(j);
+
+    TeamNum = PC.GetTeamNum();
 }
 
 function UpdateVehiclePools()
@@ -174,24 +165,24 @@ function UpdateVehiclePools()
         bNoPoolSet = true;
     }
 
-    // Loop for crewed vehicles
-    for (i = 0; i < CrewedVehiclePoolIndices.Length; ++i)
+    // Loop for  vehicles
+    for (i = 0; i < VehiclePoolIndices.Length; ++i)
     {
-        PoolIndex = CrewedVehiclePoolIndices[i];
+        PoolIndex = VehiclePoolIndices[i];
 
-        li_CrewVehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
+        li_VehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
 
-        if (DHGRI.MaxTeamVehicles[DHP.GetTeamNum()] <= 0 ||
-            DHGRI.VehiclePoolSpawnsRemainings[PoolIndex] <= 0 ||
-            DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
-            DHGRI.VehiclePoolActiveCounts[PoolIndex] >= DHGRI.VehiclePoolMaxActives[PoolIndex] ||
-            !myDeployMenu.bRoleIsCrew)
+        if (GRI.MaxTeamVehicles[PC.GetTeamNum()] <= 0 ||
+            GRI.GetVehiclePoolSpawnsRemaining(i) <= 0 ||
+            !GRI.IsVehiclePoolActive(PoolIndex) ||
+            GRI.VehiclePoolActiveCounts[PoolIndex] >= GRI.VehiclePoolMaxActives[PoolIndex] ||
+            (GRI.VehiclePoolVehicleClasses[PoolIndex].default.bMustBeTankCommander && !MyDeployMenu.bRoleIsCrew))
         {
-            li_CrewVehiclePools.SetDisabledAtIndex(i, true);
+            li_VehiclePools.SetDisabledAtIndex(i, true);
         }
         else
         {
-            li_CrewVehiclePools.SetDisabledAtIndex(i, false);
+            li_VehiclePools.SetDisabledAtIndex(i, false);
 
             if (bNoPoolSet)
             {
@@ -205,104 +196,40 @@ function UpdateVehiclePools()
     // We found no active vehicle pool in the list
     if (bNoPoolSet)
     {
-        li_CrewVehiclePools.SetIndex(-1);
-    }
-
-    // Loop for non-crewed vehicles
-    for (i = 0; i < NonCrewedVehiclePoolIndices.Length; ++i)
-    {
-        PoolIndex = NonCrewedVehiclePoolIndices[i];
-
-        li_NoCrewVehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
-
-        if (DHGRI.MaxTeamVehicles[DHP.GetTeamNum()] <= 0 ||
-            DHGRI.VehiclePoolSpawnsRemainings[PoolIndex] <= 0 ||
-            DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
-            DHGRI.VehiclePoolActiveCounts[PoolIndex] >= DHGRI.VehiclePoolMaxActives[PoolIndex])
-        {
-            li_NoCrewVehiclePools.SetDisabledAtIndex(i, true);
-        }
-        else
-        {
-            li_NoCrewVehiclePools.SetDisabledAtIndex(i, false);
-
-            if (bNoPoolSet)
-            {
-                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255);
-
-                bNoPoolSet = false;
-            }
-        }
-    }
-
-    // We found no active vehicle pool in the list
-    if (bNoPoolSet)
-    {
-        li_NoCrewVehiclePools.SetIndex(-1);
-
-        MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, 255, 255);
-
-        return;
-    }
-
-    // Lets disable the selection of the list that we don't have as active selected pool
-    if (IsSelectedIndexCrewed())
-    {
-        li_NoCrewVehiclePools.SetIndex(-1);
-    }
-    else
-    {
-        li_CrewVehiclePools.SetIndex(-1);
+        li_VehiclePools.SetIndex(-1);
     }
 }
 
-function bool IsSelectedIndexCrewed()
-{
-    local int i;
-
-    for (i = 0; i < CrewedVehiclePoolIndices.Length; ++i)
-    {
-        if (MyDeployMenu.VehiclePoolIndex == CrewedVehiclePoolIndices[i])
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// Eventually this function will properly contruct a string with helpful info to player
 function string FormatPoolString(int i)
 {
-    local string PoolString;;
-    local float PoolRespawnTime;
+    local string PoolString;
+    local int PoolRespawnTime;
 
-    if (DHGRI.VehiclePoolVehicleClasses[i] != none)
+    if (GRI.VehiclePoolVehicleClasses[i] != none)
     {
-        PoolString = DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString;
-    }
-    else
-    {
-        PoolString = "ERROR";
+        PoolString = GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString;
     }
 
     // Remaining spawns (if not infinite)
-    if (DHGRI.VehiclePoolSpawnsRemainings[i] != 255)
+    if (GRI.GetVehiclePoolSpawnsRemaining(i) != 255)
     {
-        PoolString @= "[" $ DHGRI.VehiclePoolSpawnsRemainings[i] $ "]";
+        PoolString @= "[" $ GRI.GetVehiclePoolSpawnsRemaining(i) $ "]";
     }
 
     // Respawn time
-    PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[i] - DHGRI.ElapsedTime);
+    PoolRespawnTime = Max(0.0, GRI.VehiclePoolNextAvailableTimes[i] - GRI.ElapsedTime);
 
     if (PoolRespawnTime > 0)
     {
         PoolString @= "(" $ class'DHLib'.static.GetDurationString(PoolRespawnTime, "m:ss") $ ")";
     }
 
-    if (DHGRI.MaxTeamVehicles[DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam] <= 0 ||
-        DHGRI.VehiclePoolMaxActives[i] == DHGRI.VehiclePoolActiveCounts[i])
+    //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
+    if (GRI.MaxTeamVehicles[GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam] <= 0 ||
+        GRI.VehiclePoolActiveCounts[i] >= GRI.VehiclePoolMaxActives[i])
     {
+        Log(GRI.VehiclePoolActiveCounts[i] @ GRI.VehiclePoolMaxActives[i]);
+
         // Indicate either pool or team max has been reached
         PoolString @= "*MAX*";
     }
@@ -331,20 +258,15 @@ function bool InternalOnClick(GUIComponent Sender)
             MyDeployMenu.HandleMenuButton();
             break;
 
-        case lb_CrewVehiclePools:
-            if (lb_CrewVehiclePools.List.Index >= 0 && lb_CrewVehiclePools.List.Index < CrewedVehiclePoolIndices.Length)
+        case lb_VehiclePools:
+            if (lb_VehiclePools.List.Index >= 0 && lb_VehiclePools.List.Index < VehiclePoolIndices.Length)
             {
-                PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
+                PoolIndex = VehiclePoolIndices[lb_VehiclePools.List.Index];
                 MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255); // update pool index
-                break;
             }
-        case lb_NoCrewVehiclePools:
-            if (lb_NoCrewVehiclePools.List.Index >= 0 && lb_NoCrewVehiclePools.List.Index < NonCrewedVehiclePoolIndices.Length)
-            {
-                PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
-                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255); // update pool index
-                break;
-            }
+            break;
+        default:
+            break;
     }
 
     return true;
@@ -357,8 +279,7 @@ defaultproperties
     OnKeyEvent=InternalOnKeyEvent
     bNeverFocus=true
 
-    // Crew Based Pools Container
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PoolsContainer_Crew
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=VehiclePoolsContainerObject
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
         WinHeight=0.407
@@ -370,25 +291,10 @@ defaultproperties
         ImageOffset(2)=10
         ImageOffset(3)=10
     End Object
-    CrewPoolsContainer=PoolsContainer_Crew
-
-    // Non Crew Based Pools Container
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PoolsContainer_NonCrew
-        HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
-        WinWidth=1.0
-        WinHeight=0.67
-        WinLeft=0.0
-        WinTop=0.43
-        TopPadding=0.03
-        ImageOffset(0)=10
-        ImageOffset(1)=10
-        ImageOffset(2)=10
-        ImageOffset(3)=10
-    End Object
-    NoCrewPoolsContainer=PoolsContainer_NonCrew
+    VehiclePoolsContainer=VehiclePoolsContainerObject
 
     // Vehicle pool list box
-    Begin Object Class=DHGuiListBox Name=PoolsCrewLB
+    Begin Object Class=DHGUIListBox Name=VehiclePoolsListBox
         OutlineStyleName="ItemOutline"              // When focused, the outline selection (text background)
         SectionStyleName="ListSection"              // Not sure
         SelectedStyleName="DHItemOutline"           // Style for items selected
@@ -402,24 +308,7 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.0
     End Object
-    lb_CrewVehiclePools=PoolsCrewLB
-
-    // None crew vehicle pool list box
-    Begin Object Class=DHGuiListBox Name=PoolsNoCrewLB
-        OutlineStyleName="ItemOutline"              // When focused, the outline selection (text background)
-        SectionStyleName="ListSection"              // Not sure
-        SelectedStyleName="DHItemOutline"           // Style for items selected
-        StyleName="DHSmallText"                     // Style for items not selected
-        bVisibleWhenEmpty=true
-        bSorted=true
-        TabOrder=2
-        OnClick=InternalOnClick
-        WinWidth=1.0
-        WinHeight=1.0
-        WinLeft=0.0
-        WinTop=0.0
-    End Object
-    lb_NoCrewVehiclePools=PoolsNoCrewLB
+    lb_VehiclePools=VehiclePoolsListBox
 
     // Menu button
     Begin Object Class=DHGUIButton Name=MenuButton

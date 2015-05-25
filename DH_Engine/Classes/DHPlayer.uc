@@ -11,19 +11,19 @@ var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
 
 // DH sway values
-var     protected InterpCurve   BobCurve;                   // the amount of weapon bob to apply based on an input time in ironsights
-var     protected float         DHSwayElasticFactor;
-var     protected float         DHSwayDampingFactor;
+var     InterpCurve             BobCurve;                   // the amount of weapon bob to apply based on an input time in ironsights
+var     float                   DHSwayElasticFactor;
+var     float                   DHSwayDampingFactor;
 
 // Rotation clamp values
-var     protected InterpCurve   SprintMaxTurnCurve;
-var     protected InterpCurve   ProneMaxTurnCurve;
-var     protected float         DHStandardTurnSpeedFactor;
-var     protected float         DHHalfTurnSpeedFactor;
-var     protected float         LastClampProneTime;
-var     protected float         LastClampSprintTime;
-var globalconfig float          DHISTurnSpeedFactor;        // 0.0 to 1.0
-var globalconfig float          DHScopeTurnSpeedFactor;     // 0.0 to 1.0
+var     InterpCurve             SprintMaxTurnCurve;
+var     InterpCurve             ProneMaxTurnCurve;
+var     float                   DHStandardTurnSpeedFactor;
+var     float                   DHHalfTurnSpeedFactor;
+var     float                   LastClampProneTime;
+var     float                   LastClampSprintTime;
+var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
+var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
 var     vector                  FlinchRotMag;
 var     vector                  FlinchRotRate;
@@ -58,6 +58,7 @@ var     Vehicle                 SpawnVehicle;               // used for vehicle 
 var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
 var     int                     SpawnTime;                  // the amount of time it will take the player to respawn from LastKilledTime
 var     float                   LastKilledTime;             // the time at which last death occured
+var     float                   LastVehicleSpawnTime;
 
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
@@ -296,14 +297,6 @@ function ShowMidGameMenu(bool bPause)
     if (Level.NetMode != NM_DedicatedServer)
     {
         StopForceFeedback();
-    }
-
-    Log("bWeaponsSelected" @ bWeaponsSelected);
-    Log("PlayerReplicationInfo.Team" @ PlayerReplicationInfo.Team);
-
-    if (PlayerReplicationInfo.Team != none)
-    {
-        Log("PlayerReplicationInfo.Team.TeamIndex" @ PlayerReplicationInfo.Team.TeamIndex);
     }
 
     // Open correct menu
@@ -2128,63 +2121,31 @@ exec function CommunicationMenu()
 }
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
-simulated function int GetSpawnTime(byte MagCount, DHRoleInfo RI, int WeaponIndex)
+simulated function int GetSpawnTime(DHRoleInfo RI, int WeaponIndex, byte MagCount)
 {
-    local DHGameReplicationInfo   GRI;
-    local DHPlayerReplicationInfo PRI;
-    local class<DHProjectileWeapon> PrimaryWeaponClass;
-    local int MinValue, MidValue, MaxValue, AmmoTimeMod;
-    local float TD, D, P;
+    local int T;
+    local DHGameReplicationInfo GRI;
 
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI == none || PRI == none || GRI == none)
+    if (GRI == none || PlayerReplicationInfo == none)
     {
         return 0;
     }
 
-    if (WeaponIndex < 0 || WeaponIndex > arraycount(RI.PrimaryWeapons))
+    T = GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.GetSpawnTime(WeaponIndex, MagCount);
+
+    Log("T before VP" @ T);
+
+    if (VehiclePoolIndex != 255)
     {
-        WeaponIndex = PrimaryWeapon;
+        //TODO: might need to do more thorough checks here
+        T = Max(T, GRI.VehiclePoolNextAvailableTimes[VehiclePoolIndex] - GRI.ElapsedTime);
     }
 
-    PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[WeaponIndex].Item);
+    Log("T after VP" @ T);
 
-    if (PrimaryWeaponClass != none)
-    {
-        // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
-        MinValue = RI.MinStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
-        MidValue = RI.DefaultStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
-        MaxValue = RI.MaxStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
-
-        if (MagCount == 0 || MagCount == 255)
-        {
-            MagCount = MidValue;
-        }
-
-        // Set AmmoTimeMod based on MagCount
-        if (MagCount == MidValue)
-        {
-            AmmoTimeMod = 0;
-        }
-        else if (MagCount > MidValue)
-        {
-            TD = MaxValue - MidValue;
-            D = MagCount - MidValue;
-            P = D / TD;
-            AmmoTimeMod = int(P * RI.MaxAmmoTimeMod);
-        }
-        else if (MagCount < MidValue)
-        {
-            TD = MidValue - MinValue;
-            D = MidValue - MagCount;
-            P = D / TD;
-            AmmoTimeMod = int(P * RI.MinAmmoTimeMod);
-        }
-    }
-
-    return FMax(0, GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod);
+    return T;
 }
 
 // Function to get offset coordinates from nearby vehicle(s) to create/adjust vehicle exit positions (Only works in singleplayer)
@@ -2574,7 +2535,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         }
 
         // If SpawnAmmoAmount is 0 or 255 it will calculate a normal default setting value
-        SpawnTime = GetSpawnTime(SpawnAmmoAmount, RI, newWeapon1);
+        SpawnTime = GetSpawnTime(RI, newWeapon1, SpawnAmmoAmount);
     }
     else
     {
@@ -2680,25 +2641,18 @@ event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string 
 }
 
 // Modified for DHObjectives
-function vector getObjectiveLocation(int id)
+function vector GetObjectiveLocation(int Index)
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
 
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (DHGRI == none)
+    if (GRI == none && GRI.DHObjectives[Index] != none)
     {
-        return vect(0,0,0);
+        return GRI.DHObjectives[Index].Location;
     }
 
-    if (DHGRI.DHObjectives[id] != none)
-    {
-        return DHGRI.DHObjectives[id].Location;
-    }
-    else
-    {
-        return vect(0,0,0);
-    }
+    return vect(0, 0, 0);
 }
 
 // Modified to not have player automatically switch to best weapon when player requests to drop weapon
@@ -2711,6 +2665,31 @@ function ServerThrowWeapon()
         TossVel = vector(GetViewRotation());
         TossVel = TossVel * ((Pawn.Velocity dot TossVel) + 150) + Vect(0,0,100);
         Pawn.TossWeapon(TossVel);
+    }
+}
+
+function PawnDied(Pawn P)
+{
+    local DarkestHourGame G;
+    local DHRoleInfo RI;
+
+    if (P == none)
+    {
+        return;
+    }
+
+    super.PawnDied(P);
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        RI = DHRoleInfo(G.GetRoleInfo(GetTeamNum(), DesiredRole));
+
+        if (RI != none)
+        {
+            SpawnTime = GetSpawnTime(RI, DesiredPrimary, SpawnAmmoAmount);
+        }
     }
 }
 

@@ -248,5 +248,4 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3A1HalftrackTransport.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
-    bIsSpawnVehicle=true
 }

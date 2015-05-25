@@ -10,8 +10,9 @@ class DHDeployMenuPanel extends MidGamePanel;
 var automated DHGUIButton                   b_MenuButton;
 var DHDeployMenu                            MyDeployMenu; // Deploy Menu Access
 
-var DHGameReplicationInfo                   DHGRI;
-var DHPlayer                                DHP;
+//TODO: DH prefix is redundant
+var DHGameReplicationInfo                   GRI;
+var DHPlayer                                PC;
 var DHPlayerReplicationInfo                 PRI;
 
 var bool                                    bRendered;
@@ -20,19 +21,21 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    DHP = DHPlayer(PlayerOwner());
-    if (DHP != none)
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none)
     {
-        PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     }
 
-    if (DHP == none || PRI == none)
+    if (PC == none || PRI == none)
     {
         return;
     }
 
-    DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
-    if (DHGRI == none)
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    if (GRI == none)
     {
         return;
     }
@@ -60,10 +63,10 @@ function bool OnPostDraw(Canvas C)
     super.OnPostDraw(C);
 
     bRendered = true;
+
     return true;
 }
 
 defaultproperties
 {
-
 }

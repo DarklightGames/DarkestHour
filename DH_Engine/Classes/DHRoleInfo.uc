@@ -136,6 +136,55 @@ function class<ROHeadgear> GetHeadgear()
     return none;
 }
 
+simulated function int GetSpawnTime(int WeaponIndex, byte MagCount)
+{
+    local class<DHProjectileWeapon> PrimaryWeaponClass;
+    local int MinValue, MidValue, MaxValue, AmmoTimeMod;
+    local float TD, D, P;
+
+    if (WeaponIndex < 0 || WeaponIndex > arraycount(PrimaryWeapons))
+    {
+        WeaponIndex = 0;
+    }
+
+    PrimaryWeaponClass = class<DHProjectileWeapon>(PrimaryWeapons[WeaponIndex].Item);
+
+    if (PrimaryWeaponClass != none)
+    {
+        // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
+        MinValue = MinStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        MidValue = DefaultStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        MaxValue = MaxStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+
+        if (MagCount == 0 || MagCount == 255)
+        {
+            MagCount = MidValue;
+        }
+
+        // Set AmmoTimeMod based on MagCount
+        if (MagCount == MidValue)
+        {
+            AmmoTimeMod = 0;
+        }
+        else if (MagCount > MidValue)
+        {
+            TD = MaxValue - MidValue;
+            D = MagCount - MidValue;
+            P = D / TD;
+            AmmoTimeMod = int(P * MaxAmmoTimeMod);
+        }
+        else if (MagCount < MidValue)
+        {
+            TD = MidValue - MinValue;
+            D = MidValue - MagCount;
+            P = D / TD;
+            AmmoTimeMod = int(P * MinAmmoTimeMod);
+        }
+    }
+
+    return DeployTimeMod + AmmoTimeMod;
+}
+
 defaultproperties
 {
     DefaultStartAmmoPercent=0.7

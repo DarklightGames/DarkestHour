@@ -950,7 +950,7 @@ simulated function bool CanExit()
 {
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
-        ReceiveLocalizedMessage(class'DHVehicleMessage', 4); // must unbutton the hatch
+        ReceiveLocalizedMessage(class'DHVehicleMessage', 4,,, Controller); // must unbutton the hatch
 
         return false;
     }

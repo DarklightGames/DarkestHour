@@ -5,49 +5,9 @@
 
 class DHScoreBoard extends ROScoreBoard;
 
-//const MAXPLAYERS = 32;
-//const SPECTATOR = 3;
 const DHMAXPERSIDE = 25;
 const DHMAXPERSIDEWIDE = 25;
 
-var     bool      bColourCheck; // for flagging when to rerun SetAlliedColour()
-var     bool      bFirstRun;    // to force the first run through of SetAlliedColour()
-
-simulated function SetAlliedColour()
-{
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GRI);
-
-    if (DHGRI != none)
-    {
-        if (bActorShadows || DHGRI.AlliedNationID == 1) // using bActorShadows as a filthy hack to circumvent a messed up package hierarchy
-        {
-            TeamColors[1].R = 64;
-            TeamColors[1].G = 140;
-            TeamColors[1].B = 190;
-        }
-        else if (DHGRI.AlliedNationID == 2)
-        {
-            TeamColors[1].R = 165;
-            TeamColors[1].G = 155;
-            TeamColors[1].B = 57;
-        }
-        else
-        {
-
-        }
-
-        bColourCheck = bActorShadows;
-
-        if (!bFirstRun)
-        {
-            bFirstRun = true;
-        }
-    }
-}
-
-// HACK - Calling SetAlliedColour here because the GRI unfortunately hasn't replicated yet in PostNetBeginPlay
 simulated function UpdateScoreBoard (Canvas C)
 {
     local ROPlayerReplicationInfo myPRI, PRI, GermanPRI[32], RussianPRI[32], UnassignedPRI[32];
@@ -68,11 +28,6 @@ simulated function UpdateScoreBoard (Canvas C)
     if (C == none)
     {
         return;
-    }
-
-    if (bColourCheck != bActorShadows || bFirstRun)
-    {
-        SetAlliedColour();
     }
 
     // Widescreen mode uses a different maximum per side setting
@@ -262,7 +217,7 @@ simulated function UpdateScoreBoard (Canvas C)
     X = CalcX(BaseGermanX, C);
     Y = CalcY(2.0, C);
     Y += CellHeight;
-    TeamColor = TeamColors[0];
+    TeamColor = class'DHHud'.default.SideColors[0];
     DrawCell(C, TeamNameAxis @ "-" @ ROGameReplicationInfo(GRI).UnitName[0], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
 
     Y += CellHeight;
@@ -446,7 +401,7 @@ simulated function UpdateScoreBoard (Canvas C)
     // Draw Russian data
     X = CalcX(BaseRussianX, C);
     Y = CalcY(2, C);
-    TeamColor = TeamColors[1];
+    TeamColor = class'DHHud'.default.SideColors[1];
     Y += CellHeight;
     DrawCell(C, TeamNameAllies @ "-" @ ROGameReplicationInfo(GRI).UnitName[1], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
     Y += CellHeight;
@@ -677,7 +632,6 @@ simulated function UpdateScoreBoard (Canvas C)
 
 defaultproperties
 {
-    bFirstRun=true
     HeaderImage=texture'DH_GUI_Tex.GUI.DH_Headerbar'
     TeamColors(0)=(B=80,G=80,R=200)
     TeamColors(1)=(B=75,G=150,R=80)

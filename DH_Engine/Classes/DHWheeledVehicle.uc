@@ -55,10 +55,8 @@ var     bool        bSavedEngineOff;          // clientside record of current va
 var     float       IgnitionSwitchTime;       // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
 var     float       IgnitionSwitchInterval;   // how frequently the engine can be manually switched on/off
 
-// Spawning
-var     bool            bIsSpawnVehicle;
-var     float           FriendlyResetDistance;
-var     DHSpawnManager  SM;
+var     byte                SpawnVehicleType;
+var     float               FriendlyResetDistance;
 
 // New sounds & sound attachment actors
 var     float               MaxPitchSpeed;
@@ -85,11 +83,14 @@ var     name                        ResupplyDecoAttachBone;
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
 
+// Notifications
+var     ObjectMap   NotifyParameters;
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff;
+        bEngineOff, SpawnVehicleType;
 //      bEngineDead      // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax  // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 //      bResupplyVehicle // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
@@ -124,12 +125,6 @@ simulated function PostBeginPlay()
         {
             bDriverAlreadyEntered = true;
         }
-
-        // Capture the SpawnManager here so we don't have to fish for it later
-        if (Level.Game.IsA('DarkestHourGame'))
-        {
-            SM = DarkestHourGame(Level.Game).SpawnManager;
-        }
     }
     else
     {
@@ -160,6 +155,9 @@ simulated function PostBeginPlay()
             ResupplyDecoAttachment = Spawn(ResupplyDecoAttachmentClass);
             AttachToBone(ResupplyDecoAttachment, ResupplyDecoAttachBone);
         }
+
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("VehicleClass", Class);
     }
 }
 
@@ -272,10 +270,15 @@ simulated function ClientKDriverEnter(PlayerController PC)
     {
         P.QueueHint(40, true);
 
-        if (bIsSpawnVehicle)
+        if (SpawnVehicleType != class'DHSpawnManager'.default.SVT_None)
         {
             P.QueueHint(14, true);
-            P.QueueHint(15, true);
+
+            if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
+            {
+                P.QueueHint(15, true);
+            }
+
             P.QueueHint(16, true);
         }
     }
@@ -285,7 +288,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    if (bIsSpawnVehicle && !bEngineOff && DHPlayer(PC) != none)
+    if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff && !bEngineOff && DHPlayer(PC) != none)
     {
         DHPlayer(PC).QueueHint(17, true);
     }
@@ -675,6 +678,10 @@ simulated function StartEmitters()
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
     {
@@ -698,15 +705,15 @@ function ServerStartEngine()
                 PlaySound(StartUpSound, SLOT_None, 1.0);
             }
 
-            if (bIsSpawnVehicle && SM != none)
+            if (GRI != none && SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
             {
                 if (bEngineOff)
                 {
-                    SM.AddSpawnVehicle(self);
+                    GRI.AddSpawnVehicle(self);
                 }
                 else
                 {
-                    SM.RemoveSpawnVehicle(self);
+                    GRI.RemoveSpawnVehicle(self);
                 }
             }
         }
@@ -1714,9 +1721,11 @@ function bool EncroachingOn(Actor Other)
 
 simulated event NotifySelected(Pawn User)
 {
-    if (User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
+    if (User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
-        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass,0,,,self.class);
+        NotifyParameters.Insert("Controller", User.Controller);
+
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
 
         LastNotifyTime = Level.TimeSeconds;
     }
@@ -1757,7 +1766,5 @@ defaultproperties
     HealthMax=175.0
     Health=175
     IgnitionSwitchInterval=4.0
-    TPCamDistance=600.0
-    TPCamLookat=(X=-50.0,Y=0.0,Z=0.0)
-    TPCamWorldOffset=(X=0.0,Y=0.0,Z=175.0)
+    TouchMessageClass=class'DHVehicleTouchMessage'
 }

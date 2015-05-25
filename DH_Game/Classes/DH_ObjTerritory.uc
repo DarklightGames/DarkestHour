@@ -223,25 +223,25 @@ function DoVehiclePoolAction(VehiclePoolAction VPA)
     switch (VPA.Operation)
     {
         case EVPO_Enable:
-            VM.SetPoolIsActiveByTag(VPA.VehiclePoolTag, true);
+            VM.SetVehiclePoolIsActiveByTag(VPA.VehiclePoolTag, true);
             break;
         case EVPO_Disable:
-            VM.SetPoolIsActiveByTag(VPA.VehiclePoolTag, false);
+            VM.SetVehiclePoolIsActiveByTag(VPA.VehiclePoolTag, false);
             break;
         case EVPO_Toggle:
-            VM.TogglePoolIsActiveByTag(VPA.VehiclePoolTag);
+            VM.ToggleVehiclePoolIsActiveByTag(VPA.VehiclePoolTag);
             break;
         case EVPO_MaxSpawnsAdd:
-            VM.AddPoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
+            VM.AddVehiclePoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         case EVPO_MaxSpawnsSet:
-            VM.SetPoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
+            VM.SetVehiclePoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         case EVPO_MaxActiveAdd:
-            VM.AddPoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
+            VM.AddVehiclePoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         case EVPO_MaxActiveSet:
-            VM.SetPoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
+            VM.SetVehiclePoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         default:
             Warn("Unhandled EVehiclePoolOperation");

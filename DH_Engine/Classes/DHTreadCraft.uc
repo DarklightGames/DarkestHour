@@ -152,6 +152,12 @@ var     bool        bDebugTreadText;
 var     bool        bLogPenetration;
 var     bool        bDebugExitPositions;
 
+// Spawning
+var     byte        SpawnVehicleType;
+
+// Notifications
+var     ObjectMap   NotifyParameters;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -164,7 +170,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bOnFire, bEngineOnFire;
+        bEngineOff, bOnFire, bEngineOnFire, SpawnVehicleType;
 //      bEngineDead                                 // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax                             // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 //      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
@@ -480,9 +486,38 @@ simulated event DrivingStatusChanged()
 // Modified to add engine start/stop hint
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    super.ClientKDriverEnter(PC);
+    local DHPlayer P;
 
-    DHPlayer(PC).QueueHint(40, true);
+    P = DHPlayer(PC);
+
+    if (P != none)
+    {
+        P.QueueHint(40, true);
+
+        if (SpawnVehicleType != class'DHSpawnManager'.default.SVT_None)
+        {
+            P.QueueHint(14, true);
+
+            if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
+            {
+                P.QueueHint(15, true);
+            }
+
+            P.QueueHint(16, true);
+        }
+    }
+
+    super.ClientKDriverEnter(PC);
+}
+
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff && !bEngineOff && DHPlayer(PC) != none)
+    {
+        DHPlayer(PC).QueueHint(17, true);
+    }
+
+    super.ClientKDriverLeave(PC);
 }
 
 // Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
@@ -615,6 +650,10 @@ simulated function StartEmitters()
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
     {
@@ -623,6 +662,7 @@ function ServerStartEngine()
         if (EngineHealth > 0)
         {
             bEngineOff = !bEngineOff;
+
             SetEngine();
 
             if (bEngineOff)
@@ -635,6 +675,18 @@ function ServerStartEngine()
             else if (StartUpSound != none)
             {
                 PlaySound(StartUpSound, SLOT_None, 1.0);
+            }
+
+            if (GRI != none && SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
+            {
+                if (bEngineOff)
+                {
+                    GRI.AddSpawnVehicle(self);
+                }
+                else
+                {
+                    GRI.RemoveSpawnVehicle(self);
+                }
             }
         }
         else
@@ -1072,6 +1124,14 @@ function bool TryToDrive(Pawn P)
 simulated function bool IsDisabled()
 {
     return (EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged));
+}
+
+simulated function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    NotifyParameters = new class'ObjectMap';
+    NotifyParameters.Insert("VehicleClass", Class);
 }
 
 // Modified to set fire damage properties, to select any random schurzen model, & so net clients show unoccupied rider positions on the HUD vehicle icon
@@ -3585,9 +3645,11 @@ function bool EncroachingOn(Actor Other)
 
 simulated event NotifySelected(Pawn User)
 {
-    if (User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
+    if (User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
-        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass,0,,,self.class);
+        NotifyParameters.Insert("Controller", User.Controller);
+
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
 
         LastNotifyTime = Level.TimeSeconds;
     }
@@ -3656,7 +3718,5 @@ defaultproperties
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     IgnitionSwitchInterval=4.0
-    TPCamDistance=600.0
-    TPCamLookat=(X=-50.0,Y=0.0,Z=0.0)
-    TPCamWorldOffset=(X=0.0,Y=0.0,Z=175.0)
+    TouchMessageClass=class'DHVehicleTouchMessage'
 }
