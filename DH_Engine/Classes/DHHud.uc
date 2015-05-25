@@ -1536,7 +1536,7 @@ simulated function DrawDriverPointSphere()
     local ROVehicle       V;
     local ROVehicleWeapon VW;
     local Coords          CO;
-    local vector          HeadLoc;
+    local vector          Loc;
     local int             i;
 
     foreach DynamicActors(class'ROVehicle', V)
@@ -1548,9 +1548,9 @@ simulated function DrawDriverPointSphere()
                 if (V.VehHitpoints[i].HitPointType == HP_Driver && V.VehHitpoints[i].PointBone != '')
                 {
                     CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
-                    HeadLoc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
-                    HeadLoc = HeadLoc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
-                    V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 255, 0);
+                    Loc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
+                    Loc = Loc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
+                    V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 255, 0);
                 }
             }
         }
@@ -1565,22 +1565,23 @@ simulated function DrawDriverPointSphere()
                 if (VW.VehHitpoints[i].PointBone != '')
                 {
                     CO = VW.GetBoneCoords(VW.VehHitpoints[i].PointBone);
-                    HeadLoc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
-                    HeadLoc = HeadLoc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.Xaxis));
-                    VW.DrawDebugSphere(HeadLoc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
+                    Loc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
+                    Loc = Loc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.Xaxis));
+                    VW.DrawDebugSphere(Loc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
                 }
             }
         }
     }
 }
 
-// New function showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DHTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+// Modified to include DHTreadCraft's special hit points & to use different colours for different types of hit point
+// Engine is blue, ammo stores are red, gun traverse & pivot are gold, periscopes are pink, others are white
 simulated function DrawVehiclePointSphere()
 {
     local ROVehicle       V;
-    local DHTreadCraft TC;
+    local DHTreadCraft    TC;
     local Coords          CO;
-    local vector          HeadLoc;
+    local vector          Loc;
     local int             i;
 
     foreach DynamicActors(class'ROVehicle', V)
@@ -1592,20 +1593,20 @@ simulated function DrawVehiclePointSphere()
                 if (V.VehHitpoints[i].HitPointType != HP_Driver && V.VehHitpoints[i].PointBone != '')
                 {
                     CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
-                    HeadLoc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
-                    HeadLoc = HeadLoc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
+                    Loc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
+                    Loc = Loc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
 
                     if (V.VehHitpoints[i].HitPointType == HP_Engine)
                     {
-                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 0, 255); // blue
+                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 0, 255); // blue
                     }
                     else if (V.VehHitpoints[i].HitPointType == HP_AmmoStore)
                     {
-                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 255, 0, 0); // red
+                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 255, 0, 0); // red
                     }
                     else
                     {
-                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 200, 200, 200); // gray
+                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 200, 200, 200); // gray
                     }
                 }
             }
@@ -1619,22 +1620,58 @@ simulated function DrawVehiclePointSphere()
                     if (TC.NewVehHitpoints[i].PointBone != '')
                     {
                         CO = TC.GetBoneCoords(TC.NewVehHitpoints[i].PointBone);
-                        HeadLoc = CO.Origin + (TC.NewVehHitpoints[i].PointHeight * TC.NewVehHitpoints[i].PointScale * CO.XAxis);
-                        HeadLoc = HeadLoc + (TC.NewVehHitpoints[i].PointOffset >> TC.Rotation);
+                        Loc = CO.Origin + (TC.NewVehHitpoints[i].PointHeight * TC.NewVehHitpoints[i].PointScale * CO.XAxis);
+                        Loc = Loc + (TC.NewVehHitpoints[i].PointOffset >> TC.Rotation);
 
                         if (TC.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || TC.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
                         {
-                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 0); // gold
+                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 0); // gold
                         }
                         else if (TC.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || TC.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
                         {
-                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 0, 255); // pink
+                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 0, 255); // pink
                         }
                         else
                         {
-                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
+                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+// Modified to avoid drawing the player's own collision in 1st person, as it screws up the view too much and serves no purpose
+// Also to draw the pawn's AuxCollisionCylinder (the DHBulletWhipAttachment), instead of the unnecessary whole body cylinder (it's just an optimisation, not an actual hit point)
+simulated function DrawPointSphere()
+{
+    local ROPawn P;
+    local coords CO;
+    local vector Loc;
+    local int    i;
+
+    foreach DynamicActors(class'ROPawn', P)
+    {
+        if (P != none && ((P != PawnOwner && P.Owner != PawnOwner) || PlayerOwner.bBehindView)) // only draw player's own collision if he's in behind view
+        {
+            if (P.AuxCollisionCylinder != none && P.AuxCollisionCylinder.bCollideActors) // don't draw AuxCollisionCylinder if it's collision is disabled
+            {
+                CO = P.GetBoneCoords(P.AuxCollisionCylinder.AttachmentBone);
+
+                DrawDebugCylinder(CO.Origin, vect(1.0, 0.0, 0.0), vect(0.0, 1.0, 0.0), vect(0.0, 0.0, 1.0),
+                    P.AuxCollisionCylinder.CollisionRadius, P.AuxCollisionCylinder.CollisionHeight, 10, 255, 255, 255); // white
+            }
+
+            for(i = 1; i < P.Hitpoints.Length; ++i) // skip Hitpoints[0], as that's just the big whole body cylinder (an optimisation) & not an actual hit point
+            {
+                if (P.Hitpoints[i].PointBone != '')
+                {
+                    CO = P.GetBoneCoords(P.Hitpoints[i].PointBone);
+                    Loc = CO.Origin + (P.Hitpoints[i].PointOffset >> P.GetBoneRotation(P.Hitpoints[i].PointBone));
+
+                    DrawDebugCylinder(Loc, CO.ZAxis, CO.YAxis, CO.XAxis, P.Hitpoints[i].PointRadius * P.Hitpoints[i].PointScale,
+                        P.Hitpoints[i].PointHeight * P.Hitpoints[i].PointScale, 10, 0, 255, 0); // green
                 }
             }
         }
