@@ -32,6 +32,7 @@ defaultproperties
     HUDOverlayOffset=(X=-2.0)
     HUDOverlayFOV=35.0
     bKeepDriverAuxCollision=true
+    bPlayerCollisionBoxMoves=true; // TEST, so server always plays animations, to put serverside gunner collision in correct place (Matt, May 2015)
     PitchUpLimit=4000
     PitchDownLimit=60000
 }
