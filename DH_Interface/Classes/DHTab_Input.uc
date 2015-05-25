@@ -9,6 +9,8 @@ var automated DHmoNumericEdit           nu_MousePollRate;
 var automated moFloatEdit               fl_IronSightFactor;
 var automated moFloatEdit               fl_ScopedFactor;
 
+var float                               IronSightFactor, ScopedFactor;
+
 event InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
@@ -18,10 +20,31 @@ event InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG3.ManageComponent(fl_ScopedFactor);
 }
 
+function InternalOnLoadINI(GUIComponent Sender, string s)
+{
+    local PlayerController PC;
+
+    PC = PlayerOwner();
+
+    switch (Sender)
+    {
+        case fl_IronSightFactor:
+            IronSightFactor = float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHISTurnSpeedFactor"));
+            fl_IronSightFactor.SetComponentValue(IronSightFactor,true);
+            break;
+        case fl_ScopedFactor:
+            ScopedFactor = float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHScopeTurnSpeedFactor"));
+            fl_ScopedFactor.SetComponentValue(ScopedFactor,true);
+            break;
+        default:
+            super.InternalOnLoadINI(Sender, s);
+    }
+}
+
 function ShowPanel(bool bShow)
 {
     local PlayerController PC;
-    local float MouseSamplingTime;
+    local float MouseSamplingTime, temp;
     local int PollRate;
 
     super.ShowPanel(bShow);
@@ -33,9 +56,6 @@ function ShowPanel(bool bShow)
         MouseSamplingTime = float(PC.ConsoleCommand("get Engine.PlayerInput MouseSamplingTime"));
         PollRate = Round(1 / MouseSamplingTime);
         nu_MousePollRate.SetComponentValue(PollRate);
-
-        fl_IronSightFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHISTurnSpeedFactor")));
-        fl_ScopedFactor.SetComponentValue(float(PC.ConsoleCommand("get DH_Engine.DHPlayer DHScopeTurnSpeedFactor")));
     }
 }
 
@@ -43,6 +63,7 @@ function OnInputChange(GUIComponent Sender)
 {
     local PlayerController PC;
     local string SampleRateString;
+    local bool bChangeMade;
 
     PC = PlayerOwner();
 
@@ -53,17 +74,27 @@ function OnInputChange(GUIComponent Sender)
         SampleRateString = "0.00" $ SampleRateString;
 
         PC.ConsoleCommand("set Engine.PlayerInput MouseSamplingTime" @ SampleRateString);
+        bChangeMade = true;
     }
     else if(Sender == fl_IronSightFactor)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHISTurnSpeedFactor" @ fl_IronSightFactor.GetValue());
+        IronSightFactor = fl_IronSightFactor.GetValue();
+        bChangeMade = true;
     }
     else if(Sender == fl_ScopedFactor)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHScopeTurnSpeedFactor" @ fl_ScopedFactor.GetValue());
+        ScopedFactor = fl_ScopedFactor.GetValue();
+        bChangeMade = true;
     }
 
-    SaveConfig();
+    if (bChangeMade && DHPlayer(PC) != none)
+    {
+        DHPlayer(PC).DHISTurnSpeedFactor = IronSightFactor;
+        DHPlayer(PC).DHScopeTurnSpeedFactor = ScopedFactor;
+        DHPlayer(PC).SaveConfig();
+    }
 }
 
 function ResetClicked()
@@ -79,7 +110,7 @@ function ResetClicked()
 
 defaultproperties
 {
-    Begin Object Class=DHGUISectionBackground Name=InputBK1
+    Begin Object class=DHGUISectionBackground Name=InputBK1
         Caption="Options"
         WinTop=0.18036
         WinLeft=0.021641
@@ -289,6 +320,7 @@ defaultproperties
         WinHeight=0.045352
         TabOrder=11
         OnChange=OnInputChange
+        OnLoadIni=InternalOnLoadINI
     End Object
     fl_IronSightFactor=InputIronSightFactor
 
@@ -307,6 +339,7 @@ defaultproperties
         WinHeight=0.045352
         TabOrder=12
         OnChange=OnInputChange
+        OnLoadIni=InternalOnLoadINI
     End Object
     fl_ScopedFactor=InputScopedFactor
 }
