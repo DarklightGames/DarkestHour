@@ -156,13 +156,13 @@ static final function float UnrealToMeters(coerce float Unreal)
     return Unreal * 0.01656945917285259809119830328738;
 }
 
-static final function string GetNumberString(int N, int Precision)
+static final function string GetNumberString(int N, int Digits)
 {
     local string NumberString;
 
     NumberString = string(N);
 
-    N = Precision - Len(NumberString);
+    N = Digits - Len(NumberString);
 
     while (N-- > 0)
     {
