@@ -1648,7 +1648,7 @@ function UpdateResupplyStatus(bool bCurrentWeapon)
 {
     if (bCurrentWeapon)
     {
-        CurrentMagCount = PrimaryAmmoArray.Length - 1; // update number of spare mages (replicated)
+        CurrentMagCount = Max(0, PrimaryAmmoArray.Length - 1); // update number of spare mags (replicated)
     }
 
     if (ROPawn(Instigator) != none)
