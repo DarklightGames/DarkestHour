@@ -236,9 +236,8 @@ function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHi
     local Pawn P;
     local Controller C;
     local array<int> LocationHintIndices;
-    //local array<float> LocationHintEnemyDistances;
     local int LocationHintIndex;
-    local int i;
+    local int i, j, k;
     local bool bIsBlocked;
     local array<vector> EnemyLocations;
 
@@ -254,6 +253,24 @@ function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHi
     //Scramble location hint indices so we don't use the same ones repeatedly
     LocationHintIndices = class'DHLib'.static.CreateIndicesArray(LocationHints.Length);
     class'DHLib'.static.FisherYatesShuffle(LocationHintIndices);
+
+    //Put location hints with enemies nearby at the end of the array to be
+    //evaluated last
+    if (LocationHintIndices.Length > 1)
+    {
+        for (i = LocationHintIndices.Length - 1; i >= 0; --i)
+        {
+            for (j = 0; j < EnemyLocations.Length; ++j)
+            {
+                if (VSize(EnemyLocations[i] - LocationHints[LocationHintIndices[i]].Location) <= class'DHLib'.static.MetersToUnreal(10.0))
+                {
+                    k = LocationHintIndices[i];
+                    LocationHintIndices.Remove(i, 1);
+                    LocationHintIndices[LocationHintIndices.Length] = k;
+                }
+            }
+        }
+    }
 
     //Initialize with invalid index
     LocationHintIndex = -1;
