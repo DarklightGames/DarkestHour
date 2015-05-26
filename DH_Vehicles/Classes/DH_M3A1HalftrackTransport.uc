@@ -243,7 +243,6 @@ defaultproperties
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
-        KMaxAngularSpeed=0.9
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3A1HalftrackTransport.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
