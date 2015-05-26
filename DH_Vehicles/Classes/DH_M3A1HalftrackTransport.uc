@@ -14,7 +14,8 @@ defaultproperties
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0
-    TreadVelocityScale=650
+    TreadVelocityScale=400
+    WheelRotationScale=3000
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
@@ -38,7 +39,6 @@ defaultproperties
     RightWheelBones(4)="RWFR"
     RightWheelBones(5)="RWRR"
     RightWheelBones(6)="RR1"
-    WheelRotationScale=400
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -48,7 +48,7 @@ defaultproperties
     WheelLongSlip=0.001
     WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
-    WheelLatFrictionScale=2.5
+    WheelLatFrictionScale=2.0
     WheelHandbrakeSlip=0.01
     WheelHandbrakeFriction=0.1
     WheelSuspensionTravel=15.0
@@ -131,20 +131,20 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=60.0
+        WheelRadius=30.0
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_Z
-        BoneOffset=(X=45.0,Y=0.0,Z=26.0)
+        BoneOffset=(X=45.0,Y=0.0,Z=0.0)
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=60.0
+        WheelRadius=30.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_Z
-        BoneOffset=(X=45.0,Y=0.0,Z=26.0)
+        BoneOffset=(X=45.0,Y=0.0,Z=0.0)
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
 

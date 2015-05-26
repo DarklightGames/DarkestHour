@@ -13,6 +13,7 @@ defaultproperties
     IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=80.0
+    WheelRotationScale=500
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
@@ -36,7 +37,6 @@ defaultproperties
     RightWheelBones(5)="Wheel_T_R_6"
     RightWheelBones(6)="Wheel_T_R_7"
     RightWheelBones(7)="Wheel_T_R_8"
-    WheelRotationScale=1600
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -46,7 +46,7 @@ defaultproperties
     WheelLongSlip=0.001
     WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
-    WheelLatFrictionScale=3.5
+    WheelLatFrictionScale=2.0
     WheelHandbrakeSlip=0.01
     WheelHandbrakeFriction=0.1
     WheelSuspensionTravel=15.0
@@ -223,7 +223,6 @@ defaultproperties
         bDoSafetime=true
         KFriction=0.5
         KImpactThreshold=700.0
-        KMaxAngularSpeed=0.9
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz251Transport.KParams0'
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
