@@ -127,8 +127,10 @@ event ConnectFailure(string FailCode,string URL)
     else if (FailCode == "STEAMVALIDATIONSTALLED")
     {
         // Lame hack for a Steam problem - take this out when Valve fixes the SteamValidationStalled bug
-        if (SteamLoginRetryCount++ < 5)
+        if (SteamLoginRetryCount < 5)
         {
+            ++SteamLoginRetryCount;
+
             ViewportOwner.Actor.ClientTravel(URL, TRAVEL_Absolute, false);
             ViewportOwner.GUIController.CloseAll(false, true);
         }
