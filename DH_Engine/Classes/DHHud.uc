@@ -22,6 +22,9 @@ var SpriteWidget        MapIconMortarHit;
 var SpriteWidget        MapLevelOverlay;
 var TextWidget          MapScaleText;
 
+var SpriteWidget        MapAxisFlagIcon;
+var SpriteWidget        MapAlliesFlagIcons[3];
+
 var localized string    LegendCarriedArtilleryRadioText;
 
 var localized string    NeedReloadText;
@@ -41,15 +44,13 @@ var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice 
 
 var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
 
-var bool                bSetColour;         // whether we've set the Allied colour yet
-
 // For some added suspense:
 var float               ObituaryFadeInTime;
 var float               ObituaryDelayTime;
 
 var array<Obituary>     DHObituaries;
 
-var const float         VOICE_ICON_DIST_MAX;
+const VOICE_ICON_DIST_MAX = 2624.672119;
 
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
@@ -162,53 +163,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
 }
 
-// New function to set colours for allied team, depending on whether US, British or Canadian
-simulated function SetAlliedColour()
-{
-    if (DHGRI != none)
-    {
-        if (DHGRI.AlliedNationID == 1 || bSimpleColours) // Britain (or player is using the special colour-blindness setting)
-        {
-            if (bSimpleColours) // black!
-            {
-               CaptureBarTeamColors[0].R = 0;
-               CaptureBarTeamColors[0].G = 0;
-               CaptureBarTeamColors[0].B = 0;
-            }
-            else
-            {
-                CaptureBarTeamColors[1].R = 64;
-                CaptureBarTeamColors[1].G = 80;
-                CaptureBarTeamColors[1].B = 230;
-            }
-
-            SideColors[1].R = 64;
-            SideColors[1].G = 140;
-            SideColors[1].B = 190;
-            AlliedNationID = 1;
-        }
-        else if (DHGRI.AlliedNationID == 2) // Canada
-        {
-            CaptureBarTeamColors[1].R = 210;
-            CaptureBarTeamColors[1].G = 190;
-            CaptureBarTeamColors[1].B = 0;
-            SideColors[1].R = 160;
-            SideColors[1].G = 155;
-            SideColors[1].B = 20;
-            AlliedNationID = 2;
-        }
-        else // USA
-        {
-            CaptureBarTeamColors[1] = default.CaptureBarTeamColors[1];
-            SideColors[1] = default.SideColors[1];
-            AlliedNationID = default.AlliedNationID;
-        }
-
-        Scoreboard.bActorShadows = bSimpleColours; // filthy hack to cheat our way around messed up class hierarchy
-        bSetColour = true;
-    }
-}
-
 function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 {
     local PlayerReplicationInfo PRI;
@@ -245,11 +199,11 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     if (PRI.Team != none)
     {
-        C.DrawColor = SideColors[PRI.Team.TeamIndex];
+        C.DrawColor = default.SideColors[PRI.Team.TeamIndex];
     }
     else
     {
-        C.DrawColor = SideColors[0];
+        C.DrawColor = default.SideColors[0];
     }
 
     C.Font = GetPlayerNameFont(C);
@@ -489,8 +443,6 @@ simulated event PostRender(canvas Canvas)
     if (DHGRI == none && PlayerOwner != none)
     {
         DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-
-        SetAlliedColour(); // try to set this as soon as we may have DHGRI
     }
 
     super.PostRender(Canvas);
@@ -1584,7 +1536,7 @@ simulated function DrawDriverPointSphere()
     local ROVehicle       V;
     local ROVehicleWeapon VW;
     local Coords          CO;
-    local vector          HeadLoc;
+    local vector          Loc;
     local int             i;
 
     foreach DynamicActors(class'ROVehicle', V)
@@ -1596,9 +1548,9 @@ simulated function DrawDriverPointSphere()
                 if (V.VehHitpoints[i].HitPointType == HP_Driver && V.VehHitpoints[i].PointBone != '')
                 {
                     CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
-                    HeadLoc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
-                    HeadLoc = HeadLoc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
-                    V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 255, 0);
+                    Loc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
+                    Loc = Loc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
+                    V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 255, 0);
                 }
             }
         }
@@ -1613,22 +1565,23 @@ simulated function DrawDriverPointSphere()
                 if (VW.VehHitpoints[i].PointBone != '')
                 {
                     CO = VW.GetBoneCoords(VW.VehHitpoints[i].PointBone);
-                    HeadLoc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
-                    HeadLoc = HeadLoc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.Xaxis));
-                    VW.DrawDebugSphere(HeadLoc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
+                    Loc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
+                    Loc = Loc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.Xaxis));
+                    VW.DrawDebugSphere(Loc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
                 }
             }
         }
     }
 }
 
-// New function showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DHTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+// Modified to include DHTreadCraft's special hit points & to use different colours for different types of hit point
+// Engine is blue, ammo stores are red, gun traverse & pivot are gold, periscopes are pink, others are white
 simulated function DrawVehiclePointSphere()
 {
     local ROVehicle       V;
-    local DHTreadCraft TC;
+    local DHTreadCraft    TC;
     local Coords          CO;
-    local vector          HeadLoc;
+    local vector          Loc;
     local int             i;
 
     foreach DynamicActors(class'ROVehicle', V)
@@ -1640,20 +1593,20 @@ simulated function DrawVehiclePointSphere()
                 if (V.VehHitpoints[i].HitPointType != HP_Driver && V.VehHitpoints[i].PointBone != '')
                 {
                     CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
-                    HeadLoc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
-                    HeadLoc = HeadLoc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
+                    Loc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
+                    Loc = Loc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
 
                     if (V.VehHitpoints[i].HitPointType == HP_Engine)
                     {
-                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 0, 255); // blue
+                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 0, 255); // blue
                     }
                     else if (V.VehHitpoints[i].HitPointType == HP_AmmoStore)
                     {
-                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 255, 0, 0); // red
+                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 255, 0, 0); // red
                     }
                     else
                     {
-                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 200, 200, 200); // gray
+                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 200, 200, 200); // gray
                     }
                 }
             }
@@ -1667,22 +1620,58 @@ simulated function DrawVehiclePointSphere()
                     if (TC.NewVehHitpoints[i].PointBone != '')
                     {
                         CO = TC.GetBoneCoords(TC.NewVehHitpoints[i].PointBone);
-                        HeadLoc = CO.Origin + (TC.NewVehHitpoints[i].PointHeight * TC.NewVehHitpoints[i].PointScale * CO.XAxis);
-                        HeadLoc = HeadLoc + (TC.NewVehHitpoints[i].PointOffset >> TC.Rotation);
+                        Loc = CO.Origin + (TC.NewVehHitpoints[i].PointHeight * TC.NewVehHitpoints[i].PointScale * CO.XAxis);
+                        Loc = Loc + (TC.NewVehHitpoints[i].PointOffset >> TC.Rotation);
 
                         if (TC.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || TC.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
                         {
-                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 0); // gold
+                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 0); // gold
                         }
                         else if (TC.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || TC.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
                         {
-                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 0, 255); // pink
+                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 0, 255); // pink
                         }
                         else
                         {
-                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
+                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+// Modified to avoid drawing the player's own collision in 1st person, as it screws up the view too much and serves no purpose
+// Also to draw the pawn's AuxCollisionCylinder (the DHBulletWhipAttachment), instead of the unnecessary whole body cylinder (it's just an optimisation, not an actual hit point)
+simulated function DrawPointSphere()
+{
+    local ROPawn P;
+    local coords CO;
+    local vector Loc;
+    local int    i;
+
+    foreach DynamicActors(class'ROPawn', P)
+    {
+        if (P != none && ((P != PawnOwner && P.Owner != PawnOwner) || PlayerOwner.bBehindView)) // only draw player's own collision if he's in behind view
+        {
+            if (P.AuxCollisionCylinder != none && P.AuxCollisionCylinder.bCollideActors) // don't draw AuxCollisionCylinder if it's collision is disabled
+            {
+                CO = P.GetBoneCoords(P.AuxCollisionCylinder.AttachmentBone);
+
+                DrawDebugCylinder(CO.Origin, vect(1.0, 0.0, 0.0), vect(0.0, 1.0, 0.0), vect(0.0, 0.0, 1.0),
+                    P.AuxCollisionCylinder.CollisionRadius, P.AuxCollisionCylinder.CollisionHeight, 10, 255, 255, 255); // white
+            }
+
+            for(i = 1; i < P.Hitpoints.Length; ++i) // skip Hitpoints[0], as that's just the big whole body cylinder (an optimisation) & not an actual hit point
+            {
+                if (P.Hitpoints[i].PointBone != '')
+                {
+                    CO = P.GetBoneCoords(P.Hitpoints[i].PointBone);
+                    Loc = CO.Origin + (P.Hitpoints[i].PointOffset >> P.GetBoneRotation(P.Hitpoints[i].PointBone));
+
+                    DrawDebugCylinder(Loc, CO.ZAxis, CO.YAxis, CO.XAxis, P.Hitpoints[i].PointRadius * P.Hitpoints[i].PointScale,
+                        P.Hitpoints[i].PointHeight * P.Hitpoints[i].PointScale, 10, 0, 255, 0); // green
                 }
             }
         }
@@ -2284,17 +2273,18 @@ simulated function DrawObjectives(Canvas C)
         // Set up icon info
         if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
         {
-            Widget = MapIconTeam[AXIS_TEAM_INDEX];
+            Widget = MapAxisFlagIcon;
         }
         else if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
         {
-            Widget = MapIconTeam[ALLIES_TEAM_INDEX];
+            Widget = MapAlliesFlagIcons[DHGRI.AlliedNationID];
         }
         else
         {
             bShowNeutralObj = true;
             Widget = MapIconNeutral;
         }
+
         if (!DHGRI.DHObjectives[i].bActive)
         {
             Widget.Tints[0] = GrayColor;
@@ -2304,7 +2294,8 @@ simulated function DrawObjectives(Canvas C)
         }
         else
         {
-            Widget.Tints[0] = WhiteColor; Widget.Tints[1] = WhiteColor;
+            Widget.Tints[0] = WhiteColor;
+            Widget.Tints[1] = WhiteColor;
         }
 
         // Draw flashing icon if objective is disputed
@@ -2457,8 +2448,9 @@ simulated function DrawObjectives(Canvas C)
 
     // Draw legend elements
     LegendItemsIndex = 2; // no item at position #0 and #1 (reserved for title)
-    DrawLegendElement(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], LegendAxisObjectiveText);
-    DrawLegendElement(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], LegendAlliesObjectiveText);
+
+    DrawLegendElement(C, SubCoords, MapAxisFlagIcon, LegendAxisObjectiveText);
+    DrawLegendElement(C, SubCoords, MapAlliesFlagIcons[DHGRI.AlliedNationID], LegendAlliesObjectiveText);
 
     if (bShowNeutralObj || bShowAllItemsInMapLegend)
     {
@@ -3125,8 +3117,10 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
         CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
         CaptureBarDefenderRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarIcons[0].WidgetTexture = CaptureBarTeamIcons[AXIS_TEAM_INDEX];
-        CaptureBarIcons[1].WidgetTexture = CaptureBarTeamIcons[ALLIES_TEAM_INDEX];
+        CaptureBarIcons[0].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
+        CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords;
+        CaptureBarIcons[1].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
 
         // Figure ratios
         if (CurrentCapAlliesCappers == 0)
@@ -3152,8 +3146,10 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
         CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
         CaptureBarDefenderRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarIcons[0].WidgetTexture = CaptureBarTeamIcons[ALLIES_TEAM_INDEX];
-        CaptureBarIcons[1].WidgetTexture = CaptureBarTeamIcons[AXIS_TEAM_INDEX];
+        CaptureBarIcons[0].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
+        CaptureBarIcons[0].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
+        CaptureBarIcons[1].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = MapAxisFlagIcon.TextureCoords;
 
         // Figure ratios
         if (CurrentCapAxisCappers == 0)
@@ -3389,7 +3385,7 @@ simulated function DrawSpectatingHud(Canvas C)
     C.Style = ERenderStyle.STY_Alpha;
     DrawFadeEffect(C);
 
-    if (DHGRI != none)
+    if (DHGRI != none && DHGRI.bMatchHasBegun)
     {
         // Update & draw round timer
         if (!DHGRI.bMatchHasBegun)
@@ -3431,12 +3427,12 @@ simulated function DrawSpectatingHud(Canvas C)
                     {
                         // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
                         S = default.SpawnVehicleText;
-                        S = Repl(S, "{3}", DHGRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
-                        S = Repl(S, "{1}", DHGRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
+                        S = Repl(S, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
+                        S = Repl(S, "{1}", DHGRI.SpawnPoints[PC.SpawnPointIndex].SpawnPointName);
                     }
                     else if (PC.SpawnPointIndex != 255)
                     {
-                        SP = DHGRI.GetSpawnPoint(PC.SpawnPointIndex);
+                        SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
 
                         if (SP != none)
                         {
@@ -3451,7 +3447,7 @@ simulated function DrawSpectatingHud(Canvas C)
                     }
                     else if (PC.SpawnVehicleIndex != 255)
                     {
-                        SVC = DHGRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
+                        SVC = DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehicleClass;
 
                         if (SVC != none)
                         {
@@ -3619,10 +3615,6 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
     // Set flashing texture if needed
     if (FlashMode != 0)
     {
-//      if (FlashMode == 1)
-//      {
-//          MyIcon.WidgetTexture = icon.WidgetTexture; // not needed
-//      }
         if (FlashMode == 2)
         {
             MyIcon.WidgetTexture = MapIconsFlash;
@@ -3692,7 +3684,7 @@ simulated function DrawFadeToBlack(Canvas Canvas)
     }
     else
     {
-        Alpha = FClamp((FadeToBlackTime - Level.TimeSeconds + FadeToBlackStartTime) / FadeToBlackTime, 0.0, 1.0); // clamp between 0 & 1
+        Alpha = FClamp((FadeToBlackTime - Level.TimeSeconds + FadeToBlackStartTime) / FadeToBlackTime, 0.0, 1.0);
     }
 
     if (!bFadeToBlackInvert)
@@ -3902,6 +3894,16 @@ defaultproperties
     VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
     VehicleAltAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAltAmmoAmount=(TextureScale=0.2,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=135,OffsetY=-40,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
+    MapIconNeutral=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAxisFlagIcon=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(0)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=0,X2=127,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(1)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=0,X2=95,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(2)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=0,X2=63,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
+    CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
     VehicleAltAmmoOccupantsTextOffset=-35
     VehicleOccupantsTextOffset=0.40
     LegendCarriedArtilleryRadioText="Artillery Radioman"
@@ -3914,22 +3916,20 @@ defaultproperties
     ObituaryFadeInTime=0.5
     ObituaryDelayTime=5.0
     LegendArtilleryRadioText="Artillery Radio"
-    SideColors(0)=(B=80,G=80,R=200)
-    SideColors(1)=(B=75,G=150,R=80)
     ResupplyZoneNormalPlayerIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     ResupplyZoneNormalVehicleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    ResupplyZoneResupplyingPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
-    ResupplyZoneResupplyingVehicleIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
+    //ResupplyZoneResupplyingPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
+    //ResupplyZoneResupplyingVehicleIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
     NationHealthFigures(1)=texture'DH_GUI_Tex.GUI.US_player'
     NationHealthFiguresBackground(1)=texture'DH_GUI_Tex.GUI.US_player_background'
     NationHealthFiguresStamina(1)=texture'DH_GUI_Tex.GUI.US_player_Stamina'
     NationHealthFiguresStaminaCritical(1)=FinalBlend'DH_GUI_Tex.GUI.US_player_Stamina_critical'
     PlayerArrowTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final'
     ObituaryLifeSpan=8.5
-    MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_Icons_flashing'
-    MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash'
-    MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_alt_flashing'
-    MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_alt_fast_flash'
+    MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_flashing'
+    MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_fast_flash'
+    MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'
+    MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_fast_flash'
     MapBackground=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_background')
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final',Tints[0]=(G=110))
     MapIconTeam(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
@@ -3956,9 +3956,8 @@ defaultproperties
     MouseInterfaceIcon=(WidgetTexture=texture'DH_GUI_Tex.Menu.DHPointer')
     CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
     CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'
-    CaptureBarTeamColors(0)=(B=30,G=43,R=213)
-    CaptureBarTeamColors(1)=(B=35,G=150,R=40)
-    VOICE_ICON_DIST_MAX = 2624.672119
+    CaptureBarTeamColors(0)=(R=221,G=0,B=0)
+    CaptureBarTeamColors(1)=(R=49,G=57,B=223)
     TeamMessagePrefix="*TEAM* "
 
     SpawnInfantryText="You will deploy as a {0} at {1} in {2} | Press ESC to change"
@@ -3967,4 +3966,10 @@ defaultproperties
     JoinTeamText="Press ESC to join a team"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
     ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
+
+    LegendAxisObjectiveText="Axis territory"
+    LegendAlliesObjectiveText="Allied territory"
+
+    SideColors(0)=(R=200,G=72,B=72,A=255)
+    SideColors(1)=(R=151,G=154,B=223,A=255)
 }

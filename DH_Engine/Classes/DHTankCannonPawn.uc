@@ -950,7 +950,7 @@ simulated function bool CanExit()
 {
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
-        ReceiveLocalizedMessage(class'DHVehicleMessage', 4); // must unbutton the hatch
+        ReceiveLocalizedMessage(class'DHVehicleMessage', 4,,, Controller); // must unbutton the hatch
 
         return false;
     }
@@ -1588,7 +1588,7 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     local float   TurnSpeedFactor;
     local rotator NewRotation;
 
-    if (DHPlayer(Controller) != none && DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex)
+    if ((DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex) && DHPlayer(Controller) != none)
     {
         TurnSpeedFactor = DHPlayer(Controller).DHScopeTurnSpeedFactor;
         YawChange *= TurnSpeedFactor;

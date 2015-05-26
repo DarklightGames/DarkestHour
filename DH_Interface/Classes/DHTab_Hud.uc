@@ -146,7 +146,6 @@ function SaveSettings()
     if (H.bSimpleColours != bSimpleColours)
     {
         H.bSimpleColours = bSimpleColours;
-        H.bSetColour = false;
         bSave = true;
     }
 

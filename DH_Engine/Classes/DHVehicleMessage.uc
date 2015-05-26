@@ -17,33 +17,53 @@ var localized string VehicleBurning;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
+    local string S;
+
     switch (Switch)
     {
         case 0:
-            return default.NotQualified;
+            S = default.NotQualified;
+            break;
         case 1:
-            return default.VehicleIsEnemy;
+            S = default.VehicleIsEnemy;
+            break;
         case 2:
-            return default.CannotEnter;
+            S = default.CannotEnter;
+            break;
         case 3:
-            return default.CannotRide;
+            S = default.CannotRide;
+            break;
         case 4:
-            return default.OpenHatch;
+            S = default.OpenHatch;
+            break;
         case 5:
-            return default.ExitCommandersHatch;
+            S = default.ExitCommandersHatch;
+            break;
         case 7:
-            return default.OverSpeed;
+            S = default.OverSpeed;
+            break;
         case 8:
-            return default.VehicleFull;
+            S = default.VehicleFull;
+            break;
         case 9:
-            return default.VehicleBurning;
+            S = default.VehicleBurning;
+            break;
         case 10:
-            return default.ExitDriverOrComHatch;
+            S = default.ExitDriverOrComHatch;
+            break;
         case 11:
-            return default.ExitCommandersOrMGHatch;
+            S = default.ExitCommandersOrMGHatch;
+            break;
         default:
-            return "";
+            break;
     }
+
+    if (PlayerController(OptionalObject) != none)
+    {
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, PlayerController(OptionalObject));
+    }
+
+    return S;
 }
 
 defaultproperties
@@ -53,7 +73,7 @@ defaultproperties
     CannotEnter="Cannot enter this vehicle"
     CannotRide="Cannot ride this vehicle"
     VehicleFull="All rider positions are occupied"
-    OpenHatch="You must unbutton the hatch to exit"
+    OpenHatch="You must unbutton the hatch [%NEXTWEAPON%] to exit"
     ExitCommandersHatch="You must exit through commander's hatch"
     ExitDriverOrComHatch="Exit through driver's or commander's hatch"
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"

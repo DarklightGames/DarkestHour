@@ -23,11 +23,11 @@ defaultproperties
     FontNames(12)="DHMenuFont"
     FontNames(13)="DHMenuFont"
     FontNames(14)="DHMenuFont"
-    FontColors(0)=(B=10,G=15,R=200,A=255)   // Default look
-    FontColors(1)=(B=15,G=220,R=255,A=255) // Mouse over / hover
-    FontColors(2)=(B=255,G=255,R=255,A=255) // Selected
-    FontColors(3)=(B=0,G=0,R=150,A=200)     // On mouse click
-    FontColors(4)=(B=0,G=0,R=0,A=0)         // Disabled (not used)
+    FontColors(0)=(B=255,G=255,R=255,A=255)     // Default look
+    FontColors(1)=(B=192,G=192,R=192,A=255)     // Mouse over / hover
+    FontColors(2)=(B=255,G=255,R=255,A=255)     // Selected
+    FontColors(3)=(B=128,G=128,R=128,A=255)     // On mouse click
+    FontColors(4)=(B=255,G=255,R=255,A=255)     // Disabled (not used)
 
     // Scaled needed for icon to look correct
     ImgStyle(0)=ISTY_Scaled
@@ -36,17 +36,17 @@ defaultproperties
     ImgStyle(3)=ISTY_Scaled
     ImgStyle(4)=ISTY_Scaled
 
-    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnPoint'
+    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnPoint'
+    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnPointSelected'
+    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnPointSelected'
+    Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnPointDisabled'
 
     ImgColors(0)=(R=255,G=255,B=255,A=255)
     ImgColors(1)=(R=255,G=255,B=255,A=255)
     ImgColors(2)=(R=255,G=255,B=255,A=255)
     ImgColors(3)=(R=255,G=255,B=255,A=255)
-    ImgColors(4)=(R=128,G=128,B=128,A=255)
+    ImgColors(4)=(R=255,G=255,B=255,A=255)
 
     BorderOffsets(0)=0
     BorderOffsets(1)=0

@@ -16,7 +16,6 @@ struct MortarTargetInfo
 
 struct SpawnVehicle
 {
-    var byte            Index;
     var byte            TeamIndex;
     var vector          Location;
     var class<Vehicle>  VehicleClass;
@@ -53,15 +52,16 @@ var int                 DHSpawnCount[2];
 const VEHICLE_POOLS_MAX = 32;
 
 var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
-var byte                VehiclePoolIsActives[VEHICLE_POOLS_MAX];
+var private byte        VehiclePoolIsActives[VEHICLE_POOLS_MAX];
 var float               VehiclePoolNextAvailableTimes[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolActiveCounts[VEHICLE_POOLS_MAX];
-var byte                VehiclePoolSpawnsRemainings[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolMaxSpawns[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolSpawnCounts[VEHICLE_POOLS_MAX];
 
 var byte                MaxTeamVehicles[2];
 
-const SPAWN_POINTS_MAX = 64;
+const SPAWN_POINTS_MAX = 48;
 
 var DHSpawnPoint        SpawnPoints[SPAWN_POINTS_MAX];
 var private byte        SpawnPointIsActives[SPAWN_POINTS_MAX];
@@ -78,12 +78,28 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        DHSpawnCount, DHAxisRoles, DHAlliesRoles,
-        DHAlliesRoleCount, DHAxisRoleCount, DHAlliesRoleBotCount, DHAxisRoleBotCount,
-        CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
-        VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
-        VehiclePoolSpawnsRemainings, VehiclePoolMaxActives,
-        SpawnPointIsActives, SpawnVehicles, MaxTeamVehicles, DHObjectives;
+        DHSpawnCount,
+        DHAxisRoles,
+        DHAlliesRoles,
+        DHAlliesRoleCount,
+        DHAxisRoleCount,
+        DHAlliesRoleBotCount,
+        DHAxisRoleBotCount,
+        CarriedAlliedRadios,
+        CarriedAxisRadios,
+        AlliedMortarTargets,
+        GermanMortarTargets,
+        VehiclePoolVehicleClasses,
+        VehiclePoolIsActives,
+        VehiclePoolNextAvailableTimes,
+        VehiclePoolActiveCounts,
+        VehiclePoolMaxActives,
+        VehiclePoolMaxSpawns,
+        VehiclePoolSpawnCounts,
+        SpawnPointIsActives,
+        SpawnVehicles,
+        MaxTeamVehicles,
+        DHObjectives;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -106,6 +122,26 @@ simulated function PostBeginPlay()
         }
 
         SpawnPoints[i++] = SP;
+    }
+}
+
+simulated event Timer()
+{
+    local int i;
+
+    super.Timer();
+
+    if (Role == ROLE_Authority)
+    {
+        for (i = 0; i < arraycount(SpawnVehicles); ++i)
+        {
+            if (SpawnVehicles[i].Vehicle != none)
+            {
+                SpawnVehicles[i].Location.X = SpawnVehicles[i].Vehicle.Location.X;
+                SpawnVehicles[i].Location.Y = SpawnVehicles[i].Vehicle.Location.Y;
+                SpawnVehicles[i].Location.Z = SpawnVehicles[i].Vehicle.Rotation.Yaw;
+            }
+        }
     }
 }
 
@@ -181,11 +217,6 @@ function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
     }
 }
 
-simulated function DHSpawnPoint GetSpawnPoint(byte Index)
-{
-    return SpawnPoints[Index];
-}
-
 simulated function byte GetSpawnPointIndex(DHSpawnPoint SP)
 {
     local int i;
@@ -233,7 +264,7 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
     }
 
     // Is spawn point for the correct team
-    SP = GetSpawnPoint(SpawnPointIndex);
+    SP = SpawnPoints[SpawnPointIndex];
 
     if (SP.TeamIndex != TeamIndex)
     {
@@ -292,39 +323,14 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
     }
 }
 
-function SetVehiclePoolSpawnsRemaining(byte PoolIndex, int SpawnsRemaining)
+simulated function bool IsVehiclePoolInfinite(byte VehiclePoolIndex)
 {
-    VehiclePoolSpawnsRemainings[PoolIndex] = SpawnsRemaining;
+    return VehiclePoolMaxSpawns[VehiclePoolIndex] == 255;
 }
 
-function SetVehiclePoolMaxActives(byte PoolIndex, byte MaxActive)
+simulated function bool IsVehiclePoolActive(byte VehiclePoolIndex)
 {
-    VehiclePoolMaxActives[PoolIndex] = MaxActive;
-}
-
-function SetVehiclePoolNextAvailableTime(byte PoolIndex, float NextAvailableTime)
-{
-    VehiclePoolNextAvailableTimes[PoolIndex] = NextAvailableTime;
-}
-
-function SetVehiclePoolActiveCount(byte PoolIndex, byte ActiveCount)
-{
-    VehiclePoolActiveCounts[PoolIndex] = ActiveCount;
-}
-
-function bool IsVehiclePoolInfinite(byte PoolIndex)
-{
-    return VehiclePoolSpawnsRemainings[PoolIndex] == 255;
-}
-
-simulated function class<ROVehicle> GetVehiclePoolClass(byte VehiclePoolIndex)
-{
-    if (VehiclePoolIndex >= 0 && VehiclePoolIndex < arraycount(VehiclePoolVehicleClasses))
-    {
-        return VehiclePoolVehicleClasses[VehiclePoolIndex];
-    }
-
-    return none;
+    return VehiclePoolIsActives[VehiclePoolIndex] != 0;
 }
 
 simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInfo RI)
@@ -341,7 +347,7 @@ simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInf
         return false;
     }
 
-    if (VehiclePoolIsActives[VehiclePoolIndex] == 0)
+    if (!IsVehiclePoolActive(VehiclePoolIndex))
     {
         return false;
     }
@@ -366,11 +372,21 @@ simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInf
     return true;
 }
 
+simulated function byte GetVehiclePoolSpawnsRemaining(byte PoolIndex)
+{
+    if (VehiclePoolMaxSpawns[PoolIndex] == 255)
+    {
+        return 255;
+    }
+
+    return VehiclePoolMaxSpawns[PoolIndex] - VehiclePoolSpawnCounts[PoolIndex];
+}
+
 //------------------------------------------------------------------------------
 // Spawn Vehicle Functions
 //------------------------------------------------------------------------------
 
-function int AddSpawnVehicle(Vehicle V, int Index)
+function int AddSpawnVehicle(Vehicle V)
 {
     local int i;
 
@@ -389,7 +405,6 @@ function int AddSpawnVehicle(Vehicle V, int Index)
     {
         if (SpawnVehicles[i].Vehicle == none)
         {
-            SpawnVehicles[i].Index = Index;
             SpawnVehicles[i].Location.X = V.Location.X;
             SpawnVehicles[i].Location.Y = V.Location.Y;
             SpawnVehicles[i].Location.Z = V.Rotation.Yaw;
@@ -418,7 +433,6 @@ function bool RemoveSpawnVehicle(Vehicle V)
     {
         if (SpawnVehicles[i].Vehicle == V)
         {
-            SpawnVehicles[i].Index = 255;
             SpawnVehicles[i].Location = vect(0.0, 0.0, 0.0);
             SpawnVehicles[i].TeamIndex = 0;
             SpawnVehicles[i].VehicleClass = none;
@@ -440,16 +454,6 @@ function bool RemoveSpawnVehicle(Vehicle V)
     }
 
     return false;
-}
-
-simulated function class<Vehicle> GetSpawnVehicleClass(int SpawnVehicleIndex)
-{
-    if (SpawnVehicleIndex >= 0 && SpawnVehicleIndex < arraycount(SpawnVehicles))
-    {
-        return SpawnVehicles[SpawnVehicleIndex].VehicleClass;
-    }
-
-    return none;
 }
 
 simulated function bool CanSpawnAtVehicle(byte Index, PlayerController PC)

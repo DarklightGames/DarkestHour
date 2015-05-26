@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHGUIList extends ROGuiListPlus;
+class DHGUIList extends ROGUIListPlus;
 
 //NOTE: Overridden to eliminate the need for selected items to only be highlighted if the list is in focus
 function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, float YL, bool bIsSelected, bool bIsPending)

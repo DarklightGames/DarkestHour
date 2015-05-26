@@ -19,9 +19,9 @@ replication
 // Emptied out the Super in WeaponPickup, as we won't yet have an InventoryType (have to wait until PostNetBeginPlay, when net client receives replicated WeaponType)
 simulated event PostBeginPlay()
 {
-    if (Role < ROLE_Authority || Level.NetMode == NM_Client || Level.NetMode == NM_Standalone)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        NotifyObjectMap.Insert("InventoryClass", default.WeaponType);
+        NotifyParameters.Insert("InventoryClass", default.WeaponType);
     }
 }
 

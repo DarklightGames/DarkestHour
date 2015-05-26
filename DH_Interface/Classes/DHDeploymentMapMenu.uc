@@ -206,22 +206,21 @@ function PlaceSpawnPointOnMap(vector Location, byte Index, byte SPIndex, string 
         }
 
         b_SpawnPoints[Index].Tag = SPIndex; // Store the SP Index in the button
-        b_SpawnPoints[Index].Caption = Caps(Left(Title, 2));
         b_SpawnPoints[Index].SetVisibility(true);
     }
 }
 
-function PlaceVehicleSpawnOnMap(vector Location, byte Index, int SpawnVehicleIndex)
+function PlaceVehicleSpawnOnMap(vector Location, byte Index)
 {
     local float X, Y, W, H;
     local TexRotator TR;
 
     if (Index < arraycount(b_SpawnVehicles))
     {
-        if (SpawnVehicleIndex == MyDeployMenu.SpawnVehicleIndex)
+        if (Index == MyDeployMenu.SpawnVehicleIndex)
         {
-            W = 0.075;
-            H = 0.035;
+            W = 0.04;
+            H = 0.04;
 
             GetMapCoords(Location, X, Y, W, H);
 
@@ -230,16 +229,15 @@ function PlaceVehicleSpawnOnMap(vector Location, byte Index, int SpawnVehicleInd
         }
         else
         {
-            W = 0.07;
-            H = 0.03;
+            W = 0.04;
+            H = 0.04;
 
             GetMapCoords(Location, X, Y, W, H);
 
             b_SpawnVehicles[Index].SetPosition(X, Y, W, H, true);
         }
 
-        b_SpawnVehicles[Index].Tag = SpawnVehicleIndex;
-        b_SpawnVehicles[Index].Caption = string(Index);
+        b_SpawnVehicles[Index].Tag = Index;
         b_SpawnVehicles[Index].SetVisibility(true);
 
         TR = TexRotator(b_SpawnVehicles[Index].Graphic);
@@ -322,21 +320,19 @@ function bool DrawMapComponents(Canvas C)
         }
     }
 
-    // Deploy vehicles (Spawn Vehicles)
-    if (MyDeployMenu.Tab != TAB_Vehicle)
+    // Loop Vehicle Spawn Points
+    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
     {
-        // Loop Vehicle Spawn Points
-        for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
+        // Only show active, current team, and if we aren't spawning a vehicle
+        if (MyDeployMenu.Tab != TAB_Vehicle &&
+            GRI.SpawnVehicles[i].VehicleClass != none &&
+            GRI.SpawnVehicles[i].TeamIndex == DHP.GetTeamNum())
         {
-            // Only show active, current team, and if we aren't spawning a vehicle
-            if (GRI.SpawnVehicles[i].VehicleClass != none && GRI.SpawnVehicles[i].TeamIndex == DHP.GetTeamNum())
-            {
-                PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i, GRI.SpawnVehicles[i].Index);
-            }
-            else
-            {
-                ClearIcon(b_SpawnVehicles[i]);
-            }
+            PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i);
+        }
+        else
+        {
+            ClearIcon(b_SpawnVehicles[i]);
         }
     }
 
@@ -447,11 +443,8 @@ function bool InternalOnClick(GUIComponent Sender)
                     if (b_SpawnPoints[i].Tag == MyDeployMenu.SpawnPointIndex) // Player clicked twice on spawnpoint
                     {
                         // Clear spawnvehicle just in case it was set
-                        if (DHP.Pawn == none)
-                        {
-                            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, 255);
-                            SpawnClick();
-                        }
+                        MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, 255);
+                        SpawnClick();
                     }
                     else
                     {
@@ -600,8 +593,8 @@ defaultproperties
     DeployBarText(8)=""
     DeployBarText(9)=""
 
-    SPSelectedSize=(X=0.075,Y=0.035)
-    SPSize=(X=0.07,Y=0.03)
+    SPSelectedSize=(X=0.04,Y=0.04)
+    SPSize=(X=0.04,Y=0.04)
     ObjSize=(X=0.04,Y=0.04)
     //SVSize=
     //SVSelectedSize=

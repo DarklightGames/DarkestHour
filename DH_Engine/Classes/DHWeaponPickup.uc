@@ -21,7 +21,7 @@ var     vector                  BarrelSteamEmitterOffset; // offset for the emit
 
 var     bool                    bTraceFlag;
 
-var     ObjectMap               NotifyObjectMap;
+var     ObjectMap               NotifyParameters;
 
 replication
 {
@@ -30,22 +30,21 @@ replication
         bBarrelSteamActive;
 }
 
-// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
 simulated function PreBeginPlay()
 {
     super.PreBeginPlay();
 
-    NotifyObjectMap = new class'ObjectMap';
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("InventoryClass", default.InventoryType);
+    }
 }
 
+// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
-
-    if (Role < ROLE_Authority || Level.NetMode == NM_Client || Level.NetMode == NM_Standalone)
-    {
-        NotifyObjectMap.Insert("InventoryClass", default.InventoryType);
-    }
 
     if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
     {
@@ -151,19 +150,7 @@ simulated function SetBarrelSteamActive(bool bSteaming)
 // Disabled as it isn't used
 simulated function Tick(float DeltaTime)
 {
-    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone || Level.NetMode == NM_Client)
-    {
-        if (bTraceFlag)
-        {
-            Style = STY_Modulated;
-
-            bTraceFlag = false;
-        }
-        else
-        {
-            Style = default.Style;
-        }
-    }
+    Disable('Tick');
 }
 
 // Modified to work generically, using ItemName
@@ -183,9 +170,9 @@ simulated event NotifySelected(Pawn User)
 {
     if (User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
     {
-        NotifyObjectMap.Insert("Controller", User.Controller);
+        NotifyParameters.Insert("Controller", User.Controller);
 
-        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 1,,, NotifyObjectMap);
+        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 1,,, NotifyParameters);
 
         LastNotifyTime = Level.TimeSeconds;
     }
