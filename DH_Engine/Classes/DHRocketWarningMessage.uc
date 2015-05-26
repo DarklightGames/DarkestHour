@@ -6,7 +6,6 @@
 class DHRocketWarningMessage extends ROCriticalMessage
     abstract;
 
-var     localized string    NoProneFire;
 var     localized string    NoHipFire;
 var     localized string    CrouchOrRestToFire;
 var     localized string    ProneOrRestToFire;
@@ -22,7 +21,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            S = default.NoProneFire;
+            // Colin: Used to be NoProneFire, but that restriction has been lifted
             break;
         case 1:
             S = default.NoHipFire;
@@ -42,6 +41,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 6:
             S = default.ShoulderForAssistedReload;
             break;
+        default:
+            break;
     }
 
     I = Inventory(OptionalObject);
@@ -56,7 +57,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
-    NoProneFire="You cannot fire the {0} while prone"
     NoHipFire="You cannot fire the {0} from the hip"
     CrouchOrRestToFire="You must be crouched or weapon rested to fire the {0}"
     ProneOrRestToFire="You need to be prone or weapon rested to fire the {0}"
