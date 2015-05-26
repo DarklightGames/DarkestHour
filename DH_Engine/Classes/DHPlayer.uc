@@ -2226,15 +2226,11 @@ simulated function int GetSpawnTime(DHRoleInfo RI, int WeaponIndex, byte MagCoun
 
     T = GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.GetSpawnTime(WeaponIndex, MagCount);
 
-    Log("T before VP" @ T);
-
     if (VehiclePoolIndex != 255)
     {
         //TODO: might need to do more thorough checks here
         T = Max(T, GRI.VehiclePoolNextAvailableTimes[VehiclePoolIndex] - GRI.ElapsedTime);
     }
-
-    Log("T after VP" @ T);
 
     return T;
 }
