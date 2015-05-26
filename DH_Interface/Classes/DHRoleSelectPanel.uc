@@ -538,6 +538,7 @@ function UpdateSelectedWeapon(int weaponCategory)
 
     // Clear current weapon & mag display
     i_WeaponImages[weaponCategory].Image = none;
+
     if (weaponCategory == 0)
     {
         i_MagImages[weaponCategory].Image = none;
@@ -601,7 +602,15 @@ function UpdateSelectedWeapon(int weaponCategory)
                 class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass != none &&
                 weaponCategory == 0)
             {
-                i_MagImages[weaponCategory].Image = class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
+                if (class<DHAmmunition>(class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass) != none &&
+                    class<DHAmmunition>(class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass).default.MenuImage != none)
+                {
+                    i_MagImages[weaponCategory].Image = class<DHAmmunition>(class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass).default.MenuImage;
+                }
+                else
+                {
+                    i_MagImages[weaponCategory].Image = class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
+                }
             }
 
             DesiredWeapons[weaponCategory] = i;
