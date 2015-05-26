@@ -156,6 +156,11 @@ def main():
     proc = subprocess.Popen(['ucc', 'make', '-mod=' + args.mod])
     proc.communicate()
 
+    # store contents of ucc.log before it's overwritten
+    ucc_log_file = open('ucc.log', 'rb')
+    ucc_log_contents = ucc_log_file.read()
+    ucc_log_file.close()
+
     # move compiled packages to mod directory
     for root, dirs, files in os.walk(ro_sys_dir):
         for file in files:
@@ -175,6 +180,12 @@ def main():
                 if file.replace('.int', '.u') in packages_to_compile:
                     shutil.copy(os.path.join(root, file), mod_sys_dir)
                     os.remove(os.path.join(root, file))
+
+    # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
+    ucc_log_file = open('ucc.log', 'wb')
+    ucc_log_file.truncate()
+    ucc_log_file.write(ucc_log_contents)
+    ucc_log_file.close()
 
 if __name__ == "__main__":
    main()
