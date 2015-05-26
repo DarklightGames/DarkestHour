@@ -62,7 +62,7 @@ defaultproperties
     GearRatios(1)=0.2
     GearRatios(2)=0.35
     GearRatios(3)=0.5
-    GearRatios(4)=0.62
+    GearRatios(4)=0.69
     TransRatio=0.12
     ChangeUpPoint=2000.0
     ChangeDownPoint=1000.0
@@ -134,7 +134,7 @@ defaultproperties
         WheelRadius=30.0
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_Z
-        BoneOffset=(X=45.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
@@ -144,7 +144,7 @@ defaultproperties
         WheelRadius=30.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_Z
-        BoneOffset=(X=45.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
 
@@ -156,8 +156,8 @@ defaultproperties
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=15.0,Y=0.0,Z=-8.0)
-        WheelRadius=30.0
+        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
+        WheelRadius=25.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FLeft_Drive_Wheel'
 
@@ -167,8 +167,8 @@ defaultproperties
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=15.0,Y=0.0,Z=-8.0)
-        WheelRadius=30.0
+        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
+        WheelRadius=25.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FRight_Drive_Wheel'
 
@@ -177,7 +177,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-110.0,Y=0.0,Z=-20.0)
+        BoneOffset=(X=-110.0,Y=0.0,Z=0.0)
         WheelRadius=30.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RLeft_Drive_Wheel'
@@ -187,7 +187,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-110.0,Y=0.0,Z=-20.0)
+        BoneOffset=(X=-110.0,Y=0.0,Z=-0.0)
         WheelRadius=30.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RRight_Drive_Wheel'
