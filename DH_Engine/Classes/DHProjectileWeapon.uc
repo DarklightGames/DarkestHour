@@ -519,6 +519,12 @@ simulated state LoweringWeapon
     {
         super.EndState();
 
+        // Important if player switchs weapon while IS
+        if( bUsingSights && Role == ROLE_Authority)
+        {
+            ServerZoomOut();
+        }
+
         // Destroy any barrel steam emitter
         if (BarrelSteamEmitter != none)
         {
