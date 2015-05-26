@@ -1721,7 +1721,7 @@ function bool EncroachingOn(Actor Other)
 
 simulated event NotifySelected(Pawn User)
 {
-    if (User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
+    if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
         NotifyParameters.Insert("Controller", User.Controller);
 
