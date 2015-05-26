@@ -546,10 +546,9 @@ simulated state EnteringVehicle
 simulated function Fire(optional float F)
 {
     // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
+    if (Throttle == 0.0)
     {
         ServerStartEngine();
-        IgnitionSwitchTime = Level.TimeSeconds;
     }
 }
 
