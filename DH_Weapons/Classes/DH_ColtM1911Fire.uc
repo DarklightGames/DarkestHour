@@ -15,7 +15,7 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Colt45.Colt45_Fire01'
     maxVerticalRecoilAngle=600
     maxHorizontalRecoilAngle=75
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=10.0)
     ShellHipOffset=(Y=3.0)
     ShellRotOffsetHip=(Pitch=2500,Yaw=4000)

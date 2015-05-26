@@ -19,13 +19,10 @@ defaultproperties
     maxHorizontalRecoilAngle=75
     PctProneIronRecoil=0.5
     RecoilRate=0.075
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=15.0)
     ShellRotOffsetIron=(Pitch=1000)
-    PreFireAnim="Shoot1_start"
     FireAnim="Shoot_Loop"
-    FireLoopAnim="Shoot_Loop"
-    FireEndAnim="Shoot_End"
     TweenTime=0.0
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     FireRate=0.15

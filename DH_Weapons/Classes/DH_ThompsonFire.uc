@@ -18,7 +18,7 @@ defaultproperties
     maxVerticalRecoilAngle=650
     maxHorizontalRecoilAngle=85
     RecoilRate=0.05
-    ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
+    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=15.0)
     ShellRotOffsetIron=(Pitch=5000)
     PreFireAnim="Shoot1_start"
