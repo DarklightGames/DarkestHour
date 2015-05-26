@@ -1369,8 +1369,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 }
 
-// Draws identify info for friendlies
-// Overridden to handle AT reload messages
+// Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
 function DrawPlayerNames(Canvas C)
 {
     local vector          HitLocation, HitNormal, ViewPos, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
@@ -1391,8 +1390,10 @@ function DrawPlayerNames(Canvas C)
     Mortar = DHMortarVehicle(HitPawn);
 
     // Record NamedPlayer & possibly NameTime, if we're looking at a team-mate, or an unmanned mortar or if we're spectating (so we see all player names)
-    if (HitPawn != none && ((HitPawn.PlayerReplicationInfo != none && HitPawn.PlayerReplicationInfo.Team == PawnOwner.PlayerReplicationInfo.Team)
-        || (Mortar != none && Mortar.VehicleTeam == PawnOwner.GetTeamNum()) || PawnOwner.PlayerReplicationInfo.Team == none))
+    if (HitPawn != none && HitPawn != PawnOwner && (                                                                          // looking at another pawn (not self)
+        (HitPawn.PlayerReplicationInfo != none && HitPawn.PlayerReplicationInfo.Team == PawnOwner.PlayerReplicationInfo.Team) // team-mate
+        || (Mortar != none && Mortar.VehicleTeam == PawnOwner.GetTeamNum())                                                   // unmanned mortar of same team
+        ||  PawnOwner.PlayerReplicationInfo.Team == none))                                                                    // viewing player is a spectator
     {
         if (NamedPlayer != HitPawn || Level.TimeSeconds - NameTime > 0.5)
         {
@@ -1408,13 +1409,14 @@ function DrawPlayerNames(Canvas C)
     // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
     if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
     {
-        NamedPlayerLoc = NamedPlayer.Location;
-        NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
-        Dir = Normal(NamedPlayerLoc - PawnOwner.Location);
+        Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
         GetAxes(PlayerOwner.Rotation, X, Y, Z);
 
         if (Dir dot X > 0.0)
         {
+            NamedPlayerLoc = NamedPlayer.Location;
+            NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
+
             MyDHP = DHPawn(PawnOwner);
 
             // Set resupply/reload flags
