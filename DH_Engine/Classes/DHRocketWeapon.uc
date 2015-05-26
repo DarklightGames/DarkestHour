@@ -153,16 +153,6 @@ simulated function SpawnRocketAttachment()
 // Default is to prevent firing (with message) if player is prone or not ironsighted, but allows easy subclassing for different weapon requirements
 simulated function bool CanFire(optional bool bShowFailureMessage)
 {
-    if (Instigator != none && Instigator.bIsCrawling)
-    {
-        if (bShowFailureMessage && Instigator.IsHumanControlled())
-        {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 0,,, self); // can't fire prone
-        }
-
-        return false;
-    }
-
     if (!bUsingSights)
     {
         if (bShowFailureMessage && InstigatorIsHumanControlled())
