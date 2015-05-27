@@ -119,7 +119,7 @@ defaultproperties
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     InventoryGroup=10
     TeamCanUse=NEUTRAL_TEAM_INDEX
-    AttachBoneName='hip'
+    AttachBoneName="hip"
     ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTrigger'
 }
 
