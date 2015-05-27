@@ -46,6 +46,7 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=200
     Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
+    bForceSkelUpdate=true // TEST to make server update bone position, so attached gunner moves correctly, to work with player pawn hit detection (Matt, May 2015)
 //    bCollideActors=true // TEST removed all collision as believes interferes with player pawn hit detection (Matt, May 2015)
 //    bBlockActors=true
 //    bProjTarget=true

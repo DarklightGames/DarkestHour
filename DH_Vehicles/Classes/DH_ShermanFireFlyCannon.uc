@@ -99,6 +99,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellAPDS'
     Mesh=SkeletalMesh'DH_ShermanFirefly_TurretDemo_anm.ShermanFirefly_turret_ext' // TEST using version without commander's collision box, should be DH_ShermanFirefly_anm (Matt, May 2015)
+    bForceSkelUpdate=true // TEST to make server update bone position, so attached commander moves correctly, to work with player pawn hit detection (Matt, May 2015)
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'

@@ -10,23 +10,17 @@ simulated function AttachDriver(Pawn P)
 {
     local coords GunnerAttachmentBoneCoords;
 
-    if (Gun == none)
+    if (Gun != none)
     {
-        return;
+        P.bHardAttach = true;
+        GunnerAttachmentBoneCoords = Gun.GetBoneCoords(Gun.GunnerAttachmentBone);
+        P.SetLocation(GunnerAttachmentBoneCoords.Origin + DrivePos + P.default.PrePivot); // added + DrivePos + P.default.PrePivot
+        P.SetPhysics(PHYS_None);
+        Gun.AttachToBone(P, Gun.GunnerAttachmentBone);
+        P.SetRelativeLocation(DrivePos + P.default.PrePivot);
+        P.SetRelativeRotation(DriveRot);
+        P.PrePivot=vect(0.0, 0.0, 0.0);
     }
-
-    P.bHardAttach = true;
-
-    GunnerAttachmentBoneCoords = Gun.GetBoneCoords(Gun.GunnerAttachmentBone);
-    P.SetLocation(GunnerAttachmentBoneCoords.Origin + DrivePos + P.default.PrePivot); // added + DrivePos + P.default.PrePivot
-
-    P.SetPhysics(PHYS_None);
-
-    Gun.AttachToBone(P, Gun.GunnerAttachmentBone);
-    P.SetRelativeLocation(DrivePos + P.default.PrePivot);
-    P.SetRelativeRotation(DriveRot);
-
-    P.PrePivot=vect(0,0,0);
 }
 
 defaultproperties
