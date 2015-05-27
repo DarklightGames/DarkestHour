@@ -32,7 +32,7 @@ var float                                   SavedMainContainerPos, RoleSelectFoo
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
