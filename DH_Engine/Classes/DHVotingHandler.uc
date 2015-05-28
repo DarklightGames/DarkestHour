@@ -254,7 +254,7 @@ function GetDefaultMap(out int mapidx, out int gameidx)
     // choose a map at random, check if it is enabled and the prefix is in the prefix list
     r = 0;
 
-    bLoop = True;
+    bLoop = true;
 
     while(bLoop)
     {
