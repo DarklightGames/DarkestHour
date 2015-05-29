@@ -35,6 +35,7 @@ defaultproperties
     PostFireIdleAnim="Idle"
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
+    bTwoMagsCapacity=true
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"

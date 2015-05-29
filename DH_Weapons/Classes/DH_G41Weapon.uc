@@ -30,6 +30,7 @@ defaultproperties
     BayonetBoneName="bayonet"
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
+    bTwoMagsCapacity=true
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"

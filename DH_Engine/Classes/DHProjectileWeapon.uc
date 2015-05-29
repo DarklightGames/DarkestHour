@@ -1541,39 +1541,61 @@ function PerformReload()
     }
 
     // Record remaining no. of rounds in current mag
-    if (bPlusOneLoading && AmmoAmount(0) > 0)
+    CurrentMagLoad = AmmoAmount(0);
+
+    if (bPlusOneLoading && CurrentMagLoad > 0) // deduct a round in the chamber for 'plus one' loading weapons
     {
-        CurrentMagLoad = AmmoAmount(0) - 1; // don't count a round in the chamber for 'plus one' loading weapons
+        --CurrentMagLoad;
         bDidPlusOneReload = true;
     }
+
+    // Discard current mag (remove it from ammo array) if it's empty, or if weapon is set to discard current mag on reloading (e.g. Garand rifle, which ejects the clip),
+    // or if we're going to load a 2nd clip into a weapon that can load 2 clips/mags (new clip becomes the current 'mag')
+    if (CurrentMagLoad <= 0 || bDiscardMagOnReload || bTwoMagsCapacity)
+    {
+        PrimaryAmmoArray.Remove(CurrentMagIndex, 1); // remove current mag, meaning the next one in the array now becomes the new current mag
+
+        if (CurrentMagIndex >= PrimaryAmmoArray.Length) // loop back to index 0 if we just removed last mag in the array
+        {
+            CurrentMagIndex = 0;
+        }
+    }
+    // Otherwise put the current mag back into player's spare mags
     else
     {
-        CurrentMagLoad = AmmoAmount(0);
+        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad; // update CurrentMagIndex with current no. of loaded rounds, as it won't have been updated when shots fired
+        CurrentMagIndex = ++CurrentMagIndex % (PrimaryAmmoArray.Length); // now cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
     }
 
-    // Discard current mag (remove it from the ammo array) if it's empty or if weapon is set to discard current mag on reloading (e.g. Garand rifle, which ejects the clip)
-    if (CurrentMagLoad <= 0 || bDiscardMagOnReload)
+    // Now build up the new ammo 'charge' from the newly loaded mag
+    if (!bTwoMagsCapacity)
+    {
+        CurrentMagLoad = 0; // start by resetting to empty, unless it's a weapon that can load 2 clips/mags (in which case we add ammo to existing)
+    }
+
+    if (bDidPlusOneReload) // for 'plus one' loading weapons, add the round that was already in the chamber
+    {
+        ++CurrentMagLoad;
+    }
+
+    CurrentMagLoad += PrimaryAmmoArray[CurrentMagIndex]; // add ammo from the new mag
+
+    // For weapons that can load 2 clips/mags, check if we can load a 2nd clip (possible if weapon was completely empty at start of reload)
+    if (bTwoMagsCapacity && CurrentMagLoad <= FireMode[0].AmmoClass.default.InitialAmount && CurrentMagCount > 1)
     {
         PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
-    }
-    // Otherwise put the mag back into player's spare mags (specifically, update CurrentMagIndex with the current no. of loaded rounds)
-    else
-    {
-        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad;
+
+        if (CurrentMagIndex >= PrimaryAmmoArray.Length)
+        {
+            CurrentMagIndex = 0;
+        }
+
+        CurrentMagLoad += PrimaryAmmoArray[CurrentMagIndex]; // bit of a hack, shoving rounds from 2nd clip into current 'mag'
     }
 
-    // Cycle to the next mag in the ammo index (loops back to 0 when exceeds last mag index)
-    CurrentMagIndex = ++CurrentMagIndex % (PrimaryAmmoArray.Length);
-
-    // Update the no. of rounds (AmmoCharge) for new newly loaded mag
-    if (bDidPlusOneReload)
-    {
-        AmmoCharge[0] = PrimaryAmmoArray[CurrentMagIndex] + 1;
-    }
-    else
-    {
-        AmmoCharge[0] = PrimaryAmmoArray[CurrentMagIndex];
-    }
+    // Now update the weapon's ammo 'charge' with the newly calculated rounds (only assign this once as it's a replicated variable)
+    CurrentMagLoad = Min(CurrentMagLoad, FireMode[0].AmmoClass.default.MaxAmmo); // fail-safe to make sure ammo can never exceed maximum allowed
+    AmmoCharge[0] = CurrentMagLoad;
 
     // Show a screen message indicating how full the new mag feels
     if (InstigatorIsHumanControlled())
@@ -1696,12 +1718,6 @@ function bool FillAmmo()
                 bDidFillAmmo = true;
                 break;
             }
-        }
-
-        // If the weapon loads two mags, see if it can be topped up now
-        if (bTwoMagsCapacity && !bDidFillAmmo && PrimaryAmmoArray[CurrentMagIndex] < InitialAmount)
-        {
-            PrimaryAmmoArray[CurrentMagIndex] += InitialAmount; // bit of a hack, shoving rounds from 2nd clip into currently loaded 'mag'
         }
     }
 
