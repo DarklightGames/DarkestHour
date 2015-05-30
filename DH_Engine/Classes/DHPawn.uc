@@ -17,7 +17,6 @@ var bool bCanMGResupply;
 var bool bCanATResupply;
 var bool bCanATReload;
 var bool bCanMortarResupply;
-var bool bWeaponIsMG, bWeaponIsAT;
 var int  MortarHEAmmo, MortarSmokeAmmo;
 
 var bool bChuteDeleted;
@@ -109,7 +108,9 @@ replication
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
-        bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
+        bWeaponNeedsReload;
+//      bWeaponIsMG, bWeaponIsAT; // Matt: removed as not used anywhere
+
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
