@@ -1164,7 +1164,7 @@ simulated function DrawHUD(Canvas Canvas)
     local vector           CameraLocation;
     local rotator          CameraRotation;
     local Actor            ViewActor;
-    local float            SavedOpacity, posx, posy, ScreenRatio, XL, YL, MapX, MapY;
+    local float            SavedOpacity, PosX, PosY, ScreenRatio, XL, YL, MapX, MapY;
     local int              RotationFactor;
     local color            SavedColor, WhiteColor;
 
@@ -1189,20 +1189,20 @@ simulated function DrawHUD(Canvas Canvas)
                     // Debug - draw cross on the center of the screen
                     if (bShowCenter)
                     {
-                        posx = Canvas.SizeX / 2.0;
-                        posy = Canvas.SizeY / 2.0;
+                        PosX = Canvas.SizeX / 2.0;
+                        PosY = Canvas.SizeY / 2.0;
                         Canvas.SetPos(0.0, 0.0);
-                        Canvas.DrawVertical(posx - 1.0, posy - 3.0);
-                        Canvas.DrawVertical(posx, posy - 3.0);
-                        Canvas.SetPos(0.0, posy + 3.0);
-                        Canvas.DrawVertical(posx - 1.0, posy - 3.0);
-                        Canvas.DrawVertical(posx, posy - 3.0);
+                        Canvas.DrawVertical(PosX - 1.0, PosY - 3.0);
+                        Canvas.DrawVertical(PosX, PosY - 3.0);
+                        Canvas.SetPos(0.0, PosY + 3.0);
+                        Canvas.DrawVertical(PosX - 1.0, PosY - 3.0);
+                        Canvas.DrawVertical(PosX, PosY - 3.0);
                         Canvas.SetPos(0.0, 0.0);
-                        Canvas.DrawHorizontal(posy - 1.0, posx - 3.0);
-                        Canvas.DrawHorizontal(posy, posx - 3.0);
-                        Canvas.SetPos(posx + 3.0, 0.0);
-                        Canvas.DrawHorizontal(posy - 1.0, posx - 3.0);
-                        Canvas.DrawHorizontal(posy, posx - 3.0);
+                        Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+                        Canvas.DrawHorizontal(PosY, PosX - 3.0);
+                        Canvas.SetPos(PosX + 3.0, 0.0);
+                        Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+                        Canvas.DrawHorizontal(PosY, PosX - 3.0);
                     }
 
                     // Draw the gunsight overlays
@@ -1236,10 +1236,10 @@ simulated function DrawHUD(Canvas Canvas)
                     if (bShowRangeRing && Gun != none)
                     {
                         // Draw the range ring
-                        posx = (float(Canvas.SizeX) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
-                        posy = (float(Canvas.SizeY) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
+                        PosX = (float(Canvas.SizeX) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
+                        PosY = (float(Canvas.SizeY) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
 
-                        Canvas.SetPos(OverlayCorrectionX + Posx + (Canvas.SizeY * (1.0 - ScopeCenterScale) * 4.0 / OverlayCenterScale / 3.0 / 2.0),
+                        Canvas.SetPos(OverlayCorrectionX + PosX + (Canvas.SizeY * (1.0 - ScopeCenterScale) * 4.0 / OverlayCenterScale / 3.0 / 2.0),
                             OverlayCorrectionY + Canvas.SizeY * (1.0 - ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0) / 2.0);
 
                         if (Gun.CurrentRangeIndex < 20)
