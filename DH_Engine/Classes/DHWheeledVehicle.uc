@@ -1424,7 +1424,7 @@ simulated function SwitchWeapon(byte F)
 
 // Modified to remove irrelevant stuff about driver weapon crosshair & to optimise a little
 // Includes omitting calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
-simulated function DrawHUD(Canvas C)
+simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
     local vector           CameraLocation;
@@ -1450,14 +1450,15 @@ simulated function DrawHUD(Canvas C)
                 SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
                 HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                 HUDOverlay.SetRotation(CameraRotation);
-                C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+
+                Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
             }
         }
 
         // Draw vehicle, turret, ammo count, passenger list
-        if (PC != none && ROHud(PC.myHUD) != none)
+        if (ROHud(PC.myHUD) != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, self);
         }
     }
     else if (HUDOverlay != none)
