@@ -177,7 +177,6 @@ defaultproperties
     ExitPositions(5)=(X=-176.0,Y=162.0,Z=5.0)
     ExitPositions(6)=(X=-95.0,Y=160.0,Z=5.0)
     EntryRadius=375.0
-    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     DriverDamageMult=1.0
     VehicleNameString="Panzer V Ausf.D"
     MaxDesireability=2.1

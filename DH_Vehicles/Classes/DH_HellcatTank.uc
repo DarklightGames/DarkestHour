@@ -175,7 +175,6 @@ defaultproperties
     ExitPositions(4)=(X=-241.0,Y=34.0,Z=5.0)
     ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)
     EntryRadius=375.0
-    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     DriverDamageMult=1.0
     VehicleNameString="M18 Hellcat"
     MaxDesireability=1.9

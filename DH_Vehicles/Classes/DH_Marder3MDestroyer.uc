@@ -154,7 +154,6 @@ defaultproperties
     ExitPositions(2)=(X=-135.0,Y=24.0,Z=120.0)
     ExitPositions(3)=(X=25.0,Y=106.0,Z=5.0)
     EntryRadius=375.0
-    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     FPCamViewOffset=(Z=-1.0)
     DriverDamageMult=1.0
     VehicleNameString="Marder III Ausf.M"

@@ -153,7 +153,6 @@ defaultproperties
     ExitPositions(0)=(X=57.0,Y=-132.0,Z=25.0)  // driver
     ExitPositions(1)=(X=65.0,Y=137.0,Z=25.0)   // front passenger
     EntryRadius=375.0
-    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
     VehicleNameString="GMC 2.5 Ton Truck"

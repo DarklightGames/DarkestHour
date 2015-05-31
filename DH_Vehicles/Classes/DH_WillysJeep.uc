@@ -146,7 +146,6 @@ defaultproperties
     ExitPositions(2)=(X=-64.0,Y=-109.0,Z=30.0)
     ExitPositions(3)=(X=-71.0,Y=109.0,Z=30.0)
     EntryRadius=225.0
-    FPCamPos=(Z=10.0)
     FPCamViewOffset=(Z=-5.0)
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0

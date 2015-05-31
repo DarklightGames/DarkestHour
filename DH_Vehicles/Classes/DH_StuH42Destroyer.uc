@@ -171,7 +171,6 @@ defaultproperties
     ExitPositions(5)=(X=-80.0,Y=167.0,Z=5.0)
     ExitPositions(6)=(X=-235.0,Y=-3.0,Z=5.0)
     EntryRadius=375.0
-    FPCamPos=(X=-5.0,Y=0.0,Z=25.0)
     DriverDamageMult=1.0
     VehicleNameString="StuH42 Ausf.G"
     MaxDesireability=1.9

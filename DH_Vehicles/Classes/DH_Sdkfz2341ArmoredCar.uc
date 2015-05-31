@@ -172,7 +172,6 @@ defaultproperties
     ExitPositions(4)=(X=-160.0,Y=120.0,Z=35.0)
     ExitPositions(5)=(X=-300.0,Y=0.0,Z=35.0)
     EntryRadius=375.0
-    FPCamPos=(X=42.0,Y=-18.0,Z=33.0)
     DriverDamageMult=1.0
     VehicleNameString="Sdkfz 234/1 Armored Car"
     MaxDesireability=0.1

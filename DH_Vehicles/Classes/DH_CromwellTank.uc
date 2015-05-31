@@ -174,7 +174,6 @@ defaultproperties
     ExitPositions(6)=(X=-142.0,Y=160.0,Z=75.0)
     ExitPositions(5)=(X=-77.0,Y=160.0,Z=75.0)
     EntryRadius=375.0
-    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     DriverDamageMult=1.0
     VehicleNameString="Cromwell Mk.IV"
     MaxDesireability=1.9

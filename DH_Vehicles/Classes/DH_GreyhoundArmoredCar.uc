@@ -141,7 +141,6 @@ defaultproperties
     ExitPositions(4)=(X=-249.0,Y=31.0,Z=63.0)
     ExitPositions(5)=(X=-126.0,Y=169.0,Z=64.0)
     EntryRadius=375.0
-    FPCamPos=(X=42.0,Y=-18.0,Z=33.0)
     DriverDamageMult=1.0
     VehicleNameString="M8 Armored Car"
     MaxDesireability=0.1

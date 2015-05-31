@@ -158,7 +158,6 @@ defaultproperties
     ExitPositions(5)=(X=-155.0,Y=160.0,Z=5.0)
     ExitPositions(6)=(X=-90.0,Y=160.0,Z=5.0)
     EntryRadius=375.0
-    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     VehicleNameString="Panzer VI Ausf.E"
     MaxDesireability=1.9
     FlagBone="Mg_placement"
