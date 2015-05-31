@@ -803,6 +803,11 @@ simulated function SwitchWeapon(byte F)
         return;
     }
 
+    if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
+    {
+        ServerChangeDriverPosition(F);
+    }
+
     // Trying to switch to driver position
     if (F == 1)
     {

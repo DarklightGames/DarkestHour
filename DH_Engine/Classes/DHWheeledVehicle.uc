@@ -1374,6 +1374,11 @@ simulated function SwitchWeapon(byte F)
     local bool                bMustBeTankerToSwitch;
     local byte                ChosenWeaponPawnIndex;
 
+    if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
+    {
+        ServerChangeDriverPosition(F);
+    }
+
     ChosenWeaponPawnIndex = F - 2;
 
     // Stop call to server if player has selected an invalid weapon position

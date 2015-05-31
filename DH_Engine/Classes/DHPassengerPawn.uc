@@ -228,6 +228,11 @@ simulated function SwitchWeapon(byte F)
     local  bool                 bMustBeTankerToSwitch;
     local  byte                 ChosenWeaponPawnIndex;
 
+    if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
+    {
+        ServerChangeDriverPosition(F);
+    }
+
     if (VehicleBase != none)
     {
         if (F == 1)

@@ -797,7 +797,7 @@ function bool CanFire()
     return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
 }
 
-// Modified to use CanFire(), to add clientside check before calling ServerManualReload(), & to avoid obsolete RO functionality in ROTankCannonPawn & optimise what remains
+// Modified to use CanFire() & to avoid obsolete RO functionality in ROTankCannonPawn & optimise what remains
 function Fire(optional float F)
 {
     if (CanFire() && Cannon != none)
@@ -861,6 +861,11 @@ simulated function SwitchWeapon(byte F)
     if (VehicleBase == none)
     {
         return;
+    }
+
+    if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
+    {
+        ServerChangeDriverPosition(F);
     }
 
     // Trying to switch to driver position
