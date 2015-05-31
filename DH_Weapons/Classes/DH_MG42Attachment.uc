@@ -12,6 +12,7 @@ defaultproperties
     bUsesTracers=true
     TracerFrequency=7
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
+    ShellEjectionBoneName="ejector"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bBarrelCanOverheat=true
     PA_MovementAnims(0)="stand_jogF_mg34"

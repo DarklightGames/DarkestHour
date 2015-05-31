@@ -10,6 +10,7 @@ defaultproperties
     ClientProjectileClass=class'DH_C96Bullet' // was 'DH_Weapons.DH_C96Bullet_C'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
+    ShellEjectionBoneName="ejector"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"

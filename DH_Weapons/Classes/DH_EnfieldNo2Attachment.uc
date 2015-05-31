@@ -9,6 +9,7 @@ defaultproperties
 {
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
+    ShellEjectionBoneName="Bullet1" // Matt: different from all other DH weapons, which use "ejector" (RO weapons use "weapon_eject") - this ones seems appropriate
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"

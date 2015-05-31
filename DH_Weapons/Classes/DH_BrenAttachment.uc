@@ -56,6 +56,7 @@ defaultproperties
     WA_SightDown_ReloadEmpty="idle_Bren"
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     MuzzleBoneName="Muzzle"
+    ShellEjectionBoneName="ejector"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"

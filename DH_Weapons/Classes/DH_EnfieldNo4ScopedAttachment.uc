@@ -26,6 +26,7 @@ defaultproperties
 {
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     MuzzleBoneName="Muzzle"
+    ShellEjectionBoneName="ejector"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
     PA_MovementAnims(0)="stand_jogF_kar"
