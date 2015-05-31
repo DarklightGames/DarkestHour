@@ -318,7 +318,7 @@ simulated function DrawHUD(Canvas Canvas)
 // Allows debugging exit positions to be toggled for all rider pawns
 exec function ToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerToggleDebugExits();
     }
@@ -326,7 +326,7 @@ exec function ToggleDebugExits()
 
 function ServerToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DHPassengerPawn'.default.bDebugExitPositions = !class'DHPassengerPawn'.default.bDebugExitPositions;
         Log("DHPassengerPawn.bDebugExitPositions =" @ class'DHPassengerPawn'.default.bDebugExitPositions);

@@ -1624,7 +1624,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
 exec function ToggleViewLimit()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
         if (bLimitYaw == default.bLimitYaw && bLimitPitch == default.bLimitPitch)
         {
@@ -1642,7 +1642,7 @@ exec function ToggleViewLimit()
 // Matt: allows debugging exit positions to be toggled for all DHWheeledVehicles
 exec function ToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerToggleDebugExits();
     }
@@ -1650,7 +1650,7 @@ exec function ToggleDebugExits()
 
 function ServerToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DHWheeledVehicle'.default.bDebugExitPositions = !class'DHWheeledVehicle'.default.bDebugExitPositions;
         Log("DHWheeledVehicle.bDebugExitPositions =" @ class'DHWheeledVehicle'.default.bDebugExitPositions);

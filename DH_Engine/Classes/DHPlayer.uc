@@ -1965,7 +1965,7 @@ simulated function SetSkyOff(bool bHideSky)
 // Matt: DH version
 exec function ClearLines()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ClearStayingDebugLines();
     }
@@ -1976,7 +1976,7 @@ exec function ClearArrows()
 {
     local RODebugTracer Tracer;
 
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         foreach DynamicActors(class'RODebugTracer', Tracer)
         {

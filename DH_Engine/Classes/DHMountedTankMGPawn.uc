@@ -1243,7 +1243,7 @@ exec function ToggleViewLimit()
 {
     local int i;
 
-    if (class'DH_LevelInfo'.static.DHDebugMode() && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
         if (Gun.bLimitYaw == Gun.default.bLimitYaw && PitchUpLimit == default.PitchUpLimit && PitchDownLimit == default.PitchDownLimit)
         {
@@ -1293,7 +1293,7 @@ exec function ToggleViewLimit()
 // Allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerToggleDebugExits();
     }
@@ -1301,7 +1301,7 @@ exec function ToggleDebugExits()
 
 function ServerToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DHMountedTankMGPawn'.default.bDebugExitPositions = !class'DHMountedTankMGPawn'.default.bDebugExitPositions;
         Log("DHMountedTankMGPawn.bDebugExitPositions =" @ class'DHMountedTankMGPawn'.default.bDebugExitPositions);

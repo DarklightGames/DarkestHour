@@ -769,25 +769,25 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // Slow, for debugging only
-    if (bDebugDriverCollision && class'DH_LevelInfo'.static.DHDebugMode())
+    if (bDebugDriverCollision && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
     {
         DrawDriverPointSphere();
     }
 
     // Slow, for debugging only
-    if (bDebugVehicleHitPoints && class'DH_LevelInfo'.static.DHDebugMode())
+    if (bDebugVehicleHitPoints && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
     {
         DrawVehiclePointSphere();
     }
 
     // Slow, for debugging only
-    if (bDebugPlayerCollision && class'DH_LevelInfo'.static.DHDebugMode())
+    if (bDebugPlayerCollision && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
     {
         DrawPointSphere();
     }
 
     // Slow, for debugging only
-    if (bDebugVehicleWheels && class'DH_LevelInfo'.static.DHDebugMode())
+    if (bDebugVehicleWheels && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
     {
         DrawVehiclePhysiscsWheels();
     }

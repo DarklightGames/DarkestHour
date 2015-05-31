@@ -1499,7 +1499,7 @@ exec function ToggleViewLimit()
 {
     local int i;
 
-    if (class'DH_LevelInfo'.static.DHDebugMode() && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
         if (Gun.bLimitYaw == Gun.default.bLimitYaw && PitchUpLimit == default.PitchUpLimit && PitchDownLimit == default.PitchDownLimit)
         {
@@ -1549,7 +1549,7 @@ exec function ToggleViewLimit()
 // Allows 'Driver' (commander) debugging to be toggled for all cannon pawns
 exec function ToggleDriverDebug()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerToggleDriverDebug();
     }
@@ -1557,7 +1557,7 @@ exec function ToggleDriverDebug()
 
 function ServerToggleDriverDebug()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DHTankCannon'.default.bDriverDebugging = !class'DHTankCannon'.default.bDriverDebugging;
         Log("DHTankCannon.bDriverDebugging =" @ class'DHTankCannon'.default.bDriverDebugging);
@@ -1567,7 +1567,7 @@ function ServerToggleDriverDebug()
 // Allows debugging exit positions to be toggled for all cannon pawns
 exec function ToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerToggleDebugExits();
     }
@@ -1575,7 +1575,7 @@ exec function ToggleDebugExits()
 
 function ServerToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DHTankCannonPawn'.default.bDebugExitPositions = !class'DHTankCannonPawn'.default.bDebugExitPositions;
         Log("DHTankCannonPawn.bDebugExitPositions =" @ class'DHTankCannonPawn'.default.bDebugExitPositions);

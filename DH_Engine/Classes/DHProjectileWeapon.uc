@@ -159,7 +159,7 @@ simulated exec function LogAmmo()
 {
     local int i;
 
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         if (Role == ROLE_Authority)
         {

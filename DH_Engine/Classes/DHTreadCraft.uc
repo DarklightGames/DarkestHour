@@ -3436,7 +3436,7 @@ exec function ToggleMesh()
 // Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
 exec function ToggleViewLimit()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
         if (bLimitYaw == default.bLimitYaw && bLimitPitch == default.bLimitPitch)
         {
@@ -3454,7 +3454,7 @@ exec function ToggleViewLimit()
 // Allows debugging exit positions to be toggled for all DHTreadCrafts
 exec function ToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerToggleDebugExits();
     }
@@ -3462,7 +3462,7 @@ exec function ToggleDebugExits()
 
 function ServerToggleDebugExits()
 {
-    if (class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DHTreadCraft'.default.bDebugExitPositions = !class'DHTreadCraft'.default.bDebugExitPositions;
         Log("DHTreadCraft.bDebugExitPositions =" @ class'DHTreadCraft'.default.bDebugExitPositions);
