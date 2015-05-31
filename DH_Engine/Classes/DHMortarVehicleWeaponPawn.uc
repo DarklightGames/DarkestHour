@@ -122,26 +122,23 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
 
-    if (bMultiPosition)
-    {
-        GotoState('EnteringVehicle');
-    }
-
-    PendingPositionIndex = 0;
-//  StoredVehicleRotation = VehicleBase.Rotation; // this is called a split second before we receive VehicleBase, so we just get "accessed none" & StoredVehicleRotation isn't used anyway
-
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
     PC.SetFOV(WeaponFOV);
+//  StoredVehicleRotation = VehicleBase.Rotation; // called a split second before we receive VehicleBase, so just get "accessed none" & StoredVehicleRotation isn't used in mortar anyway
 
-    // From here on is mortar specific - above is just re-stating the Supers, with 1 line removed
+    // From here on is mortar specific - above is just re-stating the Super from CannonPawn, as everything in ROVehWepPawn is irrelevant or unwanted
     GotoState('Idle');
 
     DHP = DHPlayer(PC);
-    DHP.QueueHint(7, false);
-    DHP.QueueHint(8, false);
-    DHP.QueueHint(9, false);
-    DHP.QueueHint(10, false);
+
+    if (DHP != none)
+    {
+        DHP.QueueHint(7, false);
+        DHP.QueueHint(8, false);
+        DHP.QueueHint(9, false);
+        DHP.QueueHint(10, false);
+    }
 }
 
 simulated function ClientKDriverLeave(PlayerController PC)
@@ -845,6 +842,7 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
 
 defaultproperties
 {
+    bMultiPosition=false
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
