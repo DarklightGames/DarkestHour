@@ -14,13 +14,11 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'
-    bCustomAiming=true
     bHasAltFire=false
     CameraBone="loader_cam"
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
-    bPCRelativeFPRotation=true
     DrivePos=(X=7.0,Z=-22.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"

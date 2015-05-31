@@ -1315,6 +1315,8 @@ defaultproperties
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
     bZeroPCRotOnEntry=false // Matt: we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
+    bPCRelativeFPRotation=true // MG pawn must have this as it's now assumed in some critical functions
+    bCustomAiming=true // several things just don't work quite right without custom aiming
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)

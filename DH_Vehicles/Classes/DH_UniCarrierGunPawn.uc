@@ -55,14 +55,12 @@ defaultproperties
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_UniCarrierGun'
-    bCustomAiming=true
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=3.0
     bHideMuzzleFlashAboveSights=true
-    bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DrivePos=(X=-11.0,Y=-4.0,Z=31.0)
     DriveRot=(Yaw=16384)

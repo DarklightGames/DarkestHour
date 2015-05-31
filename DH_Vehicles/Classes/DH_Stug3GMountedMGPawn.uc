@@ -32,12 +32,10 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
-    bCustomAiming=true
     bHasAltFire=false
     CameraBone="loader_cam"
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonOffsetZScale=3.0
-    bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DrivePos=(X=16.0,Z=20.0)
     DriveRot=(Yaw=16384)

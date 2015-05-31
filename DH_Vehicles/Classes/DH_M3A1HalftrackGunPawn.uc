@@ -33,14 +33,12 @@ defaultproperties
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_M3A1HalftrackGun'
-    bCustomAiming=true
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
-    bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DrivePos=(Y=-5.0,Z=14.0)
     DriveRot=(Yaw=16384)

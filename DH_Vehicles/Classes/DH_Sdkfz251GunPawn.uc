@@ -15,14 +15,12 @@ defaultproperties
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_Sdkfz251Gun'
-    bCustomAiming=true
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=3.0
     bHideMuzzleFlashAboveSights=true
-    bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
