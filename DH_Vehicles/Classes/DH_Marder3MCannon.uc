@@ -9,9 +9,7 @@ defaultproperties
 {
     SecondarySpread=0.00127
     ManualRotationsPerSecond=0.033
-    bHasTurret=false
-    GunMantletArmorFactor=1.0
-    GunMantletSlope=0.0
+//  bHasTurret=false // Matt: not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
