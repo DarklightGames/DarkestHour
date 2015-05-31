@@ -301,7 +301,7 @@ simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-        if (DriverPositions[InitialPositionIndex].PositionMesh != none)
+        if (DriverPositions[InitialPositionIndex].PositionMesh != Mesh)
         {
             LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
         }
@@ -1276,13 +1276,11 @@ simulated state ViewTransition
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
-            // Switch to mesh for new position as may be different
-            if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            // Switch to mesh for new position if it's different
+            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && !bDontUsePositionMesh &&
+                (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
             {
-                if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
-                {
-                    LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
 
             // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
@@ -1556,7 +1554,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             bDontUsePositionMesh = true;
 
-            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
@@ -1596,7 +1594,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             bDontUsePositionMesh = default.bDontUsePositionMesh;
 
-            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }

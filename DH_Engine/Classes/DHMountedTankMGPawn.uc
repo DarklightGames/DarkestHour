@@ -934,10 +934,7 @@ simulated function SwitchMesh(int PositionIndex)
         // If switching to a valid driver position, get its PositionMesh
         if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length)
         {
-            if (DriverPositions[PositionIndex].PositionMesh != none)
-            {
-                NewMesh = DriverPositions[PositionIndex].PositionMesh;
-            }
+            NewMesh = DriverPositions[PositionIndex].PositionMesh;
         }
         // Else switch to default external mesh (pass PositionIndex of -1 to signify this, as it's an invalid position)
         else
