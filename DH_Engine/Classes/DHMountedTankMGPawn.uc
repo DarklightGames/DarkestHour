@@ -1002,7 +1002,10 @@ simulated function MatchRotationToGunAim(optional Controller C)
 // Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the MG pawn's rotation to the vehicle
 simulated function FixPCRotation(PlayerController PC)
 {
-    PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. MG pawn's rotation (note Gun.Rotation is effectively same as vehicle base's rotation)
+    if (Gun != none && PC != none)
+    {
+        PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. MG pawn's rotation (note Gun's rotation is same as vehicle base)
+    }
 }
 
 // Modified to correct error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in a multi position weapon

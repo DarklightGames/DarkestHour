@@ -1045,15 +1045,18 @@ simulated function FixPCRotation(PlayerController PC)
 {
     local rotator ViewRelativeRotation;
 
-    ViewRelativeRotation = PC.Rotation;
-
-    // If the vehicle has a turret, add turret's yaw to player's relative rotation
-    if (Cannon.bHasTurret)
+    if (Gun != none && PC != none)
     {
-        ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
-    }
+        ViewRelativeRotation = PC.Rotation;
 
-    PC.SetRotation(rotator(vector(ViewRelativeRotation) >> VehicleBase.Rotation));
+        // If the vehicle has a turret, add turret's yaw to player's relative rotation
+        if (Cannon != none && Cannon.bHasTurret)
+        {
+            ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
+        }
+
+        PC.SetRotation(rotator(vector(ViewRelativeRotation) >> Gun.Rotation)); // Gun's rotation is same as vehicle base
+    }
 }
 
 // Modified to correct error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in a multi position weapon
