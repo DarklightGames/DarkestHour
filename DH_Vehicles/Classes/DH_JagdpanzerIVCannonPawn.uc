@@ -24,7 +24,6 @@ defaultproperties
     DrivePos=(X=5.0,Z=-30.0)
     DriveAnim="VStug3_com_idle_close"
     EntryRadius=130.0
-    FPCamPos=(Z=5.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

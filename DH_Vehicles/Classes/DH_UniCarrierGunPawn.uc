@@ -68,7 +68,6 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VUC_com_idle_close"
     EntryRadius=130.0
-    FPCamPos=(X=10.0)
     HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
     HUDOverlayOffset=(X=-6.0)
     HUDOverlayFOV=35.0

@@ -31,7 +31,6 @@ defaultproperties
     DrivePos=(Z=-6.0)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.0
-    FPCamPos=(Z=5.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

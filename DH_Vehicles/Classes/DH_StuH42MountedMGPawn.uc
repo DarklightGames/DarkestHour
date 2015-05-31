@@ -46,7 +46,6 @@ defaultproperties
     DrivePos=(Z=-9.0)
     DriveAnim="VPanzer3_com_idle_close"
     EntryRadius=130.0
-    FPCamPos=(X=4.0,Z=-1.5)
     PitchUpLimit=6000
     PitchDownLimit=63500
 }

@@ -35,7 +35,6 @@ defaultproperties
     DrivePos=(Z=5.0)
     DriveAnim="VPanther_com_idle_close"
     EntryRadius=130.0
-    FPCamPos=(Y=-27.0)
     PitchUpLimit=2731
     PitchDownLimit=64206
 }

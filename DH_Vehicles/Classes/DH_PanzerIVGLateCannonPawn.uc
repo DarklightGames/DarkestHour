@@ -28,7 +28,6 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_PanzerIVGLateCannon'
     CameraBone="Gun"
     EntryRadius=130.0
-    FPCamPos=(X=50.0,Y=-30.0,Z=11.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

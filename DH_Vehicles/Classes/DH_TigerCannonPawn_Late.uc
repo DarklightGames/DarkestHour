@@ -34,7 +34,6 @@ defaultproperties
     CameraBone="Gun"
     DriveAnim="VTiger_com_idle_close"
     EntryRadius=130.0
-    FPCamPos=(X=50.0,Y=-30.0,Z=11.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
 }
