@@ -545,8 +545,7 @@ simulated state EnteringVehicle
 // Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
-    // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0)
+    if (Throttle == 0.0) // clientside check to prevent unnecessary replicated function call to server if invalid
     {
         ServerStartEngine();
     }
@@ -654,7 +653,7 @@ function ServerStartEngine()
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
 

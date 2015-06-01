@@ -578,8 +578,7 @@ simulated event DrivingStatusChanged()
 // Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
-    // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0)
+    if (Throttle == 0.0) // clientside check to prevent unnecessary replicated function call to server if invalid
     {
         ServerStartEngine();
     }
