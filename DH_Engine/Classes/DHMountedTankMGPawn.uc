@@ -487,84 +487,84 @@ simulated function DrawHUD(Canvas Canvas)
         ActivateOverlay(false);
     }
 }
-
-// Modified to make into a generic function, avoiding need for overrides in subclasses
+/*
+// Modified to make into a generic function, avoiding need for overrides in subclasses, & to properly handle vehicle roll
+// Also optimised generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local name    WeaponCameraBone;
-    local vector  CamViewOffsetWorld, VehicleZ, x, y, z;
-    local float   CamViewOffsetZAmount;
-    local rotator WeaponAimRot;
+    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local vector CamViewOffsetWorld, VehicleZ;
+    local float  CamViewOffsetZAmount;
 
-    GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
 
-    // If this MG uses custom aiming & the player is on the gun, we'll select the relevant camera bone
-    if (bCustomAiming && CanFire() && Gun != none)
+    if (PC == none || Gun == none || CameraBone =='')
     {
+        return;
+    }
+
+    // MG uses custom aim & player is in a firing position, so follow the gun's aim
+    if (bCustomAiming && CanFire())
+    {
+        // Get camera rotation from gun's aim, but factor in the vehicle's rotation, as aim is relative to vehicle
+        RelativeQuat = QuatFromRotator(Gun.CurrentAim);
+        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
+
+        if (bCustomAiming)
+        {
+            PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
+            PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
+        }
+
+        // Get camera location - use GunsightCameraBone if there is one, otherwise use normal CameraBone
         if (GunsightCameraBone != '')
         {
-            WeaponCameraBone = GunsightCameraBone;
+            CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
         }
-        else if (CameraBone != '')
-        {
-            WeaponCameraBone = CameraBone;
-        }
-    }
-
-    // If we've identified a suitable camera bone, we now use that to set our camera rotation & location
-    if (WeaponCameraBone != '')
-    {
-        WeaponAimRot = Gun.GetBoneRotation(WeaponCameraBone);
-        PC.WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-        PC.WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-
-        CameraRotation = WeaponAimRot;
-        CameraLocation = Gun.GetBoneCoords(WeaponCameraBone).Origin;
-    }
-    // Otherwise we'll use the PC's rotation for our camera rotation
-    else
-    {
-        // If PC's rotation is relative to the vehicle, we need to factor in the vehicle's rotation
-        // Matt: don't need the fancy quat stuff; this 1 line handles it (think quats are needed to combine 2 rotators without losing roll, but these rotators don't have roll anyway)
-        if (bPCRelativeFPRotation && VehicleBase != none)
-        {
-            CameraRotation = rotator(vector(PC.Rotation) >> Gun.Rotation);
-        }
-        // Or if PC isn't relative to the vehicle, we can simply use the unadjusted PC rotation
         else
-        {
-            CameraRotation = PC.Rotation;
-        }
-
-        // Set our camera location using the camera bone if we have one
-        if (CameraBone != '' && Gun != none)
         {
             CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
         }
-        // Or a fallback in case we don't have a camera bone or VehicleWeapon
-        else
+
+        // Adjust camera location for any offset positioning
+        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation) + CamViewOffsetWorld; // FPCamPos offset is relative to weapon's aim
+
+        if (bFPNoZFromCameraPitch)
         {
-            CameraLocation = GetCameraLocationStart();
+            VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
-
-    // Adjust camera location for any offset positioning
-    CamViewOffsetWorld = (FPCamViewOffset + FPCamPos) >> CameraRotation;
-    CameraLocation = CameraLocation + CamViewOffsetWorld;
-
-    // Remove any vehicle-space Z due to FPCamViewOffset (so looking up and down doesn't change camera Z relative to vehicle) // Matt: doubt this is doing anything for us
-    if (bFPNoZFromCameraPitch)
+    else
     {
-        VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        // Get camera rotation from PC rotation, but factor in the vehicle's rotation, as PC rotation is relative to vehicle
+        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
+        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
+
+        // Get camera location & adjust for any offset positioning
+        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
+        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+        CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation) + CamViewOffsetWorld; // FPCamPos offset is relative to vehicle rotation
+
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Gun.Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
     }
 
     // Finalise the camera with any shake
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
 }
+*/
 // New function, checked by Fire() to see if we are in an eligible firing position (subclass as required)
 function bool CanFire()
 {
