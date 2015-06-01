@@ -995,8 +995,8 @@ simulated function SwitchMesh(int PositionIndex)
             if (bCustomAiming)
             {
                 // Save old mesh rotation
-                TurretYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
-                TurretPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
+                TurretYaw.Yaw = Gun.Rotation.Yaw - CustomAim.Yaw; // Gun's rotation is same as vehicle base
+                TurretPitch.Pitch = Gun.Rotation.Pitch - CustomAim.Pitch;
 
                 // Switch to the new mesh
                 Gun.LinkMesh(NewMesh);
