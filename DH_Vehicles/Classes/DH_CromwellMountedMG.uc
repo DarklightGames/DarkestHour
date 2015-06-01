@@ -16,6 +16,8 @@ defaultproperties
     PitchBone="mg_yaw"
     PitchUpLimit=15000
     PitchDownLimit=45000
+    CustomPitchUpLimit=4500
+    CustomPitchDownLimit=64000
     WeaponFireAttachmentBone="mg_yaw"
     WeaponFireOffset=24.0
     bInstantFire=false
