@@ -1621,6 +1621,32 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
 }
 
+// Matt: toggles between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+exec function ToggleMesh()
+{
+    local int i;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DriverPositions.Length > 0)
+    {
+        if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
+        {
+            for (i = 0; i < DriverPositions.Length; ++i)
+            {
+                DriverPositions[i].PositionMesh = default.Mesh;
+            }
+        }
+        else
+        {
+            for (i = 0; i < DriverPositions.Length; ++i)
+            {
+                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
+            }
+        }
+
+        LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+    }
+}
+
 // Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
 exec function ToggleViewLimit()
 {
