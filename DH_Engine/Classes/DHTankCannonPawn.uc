@@ -8,6 +8,7 @@ class DHTankCannonPawn extends ROTankCannonPawn
 
 // General
 var     DHTankCannon    Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
+var     name            PlayerCameraBone;     // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Position stuff
@@ -330,102 +331,86 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-// Modified so the player's view rotation turns with the turret, if the vehicle has one
-// Also to handle dual-magnification optics (DPI < GunsightPositions), & to apply FPCamPos to all positions not just overlay positions
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+// Modified so player's view turns with a turret, to properly handle vehicle roll, & to handle dual-magnification optics & FPCamPos camera offset for all positions not just overlays
+// Also to optimise generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector  x, y, z, VehicleZ, CamViewOffsetWorld;
-    local float   CamViewOffsetZAmount;
-    local coords  CamBoneCoords;
-    local rotator WeaponAimRot, ViewRelativeRotation;
-    local quat    AQuat, BQuat, CQuat;
+    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local vector CamViewOffsetWorld, VehicleZ;
+    local float  CamViewOffsetZAmount;
 
-    GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
 
-    WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  VehicleBase.Rotation.Roll;
-
-    if (ROPlayer(Controller) != none)
+    if (PC == none || Gun == none)
     {
-        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
+        return;
     }
 
-    // This makes the camera stick to the cannon, but you have no control
-    if (DriverPositionIndex < GunsightPositions)
+    // If player is on gunsight, use cannon's CameraBone for camera location & match camera rotation to cannon's aim (GunsightPositions may be 2 for dual-magnification optics)
+    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='')
     {
-        CameraRotation = WeaponAimRot;
-        CameraRotation.Roll = 0; // make the cannon view have no roll
-    }
-    else if (bPCRelativeFPRotation)
-    {
-        ViewRelativeRotation = PC.Rotation;
+        // Get camera rotation using weapon's aim, but factor in the vehicle's rotation, as aim is relative to vehicle
+        RelativeQuat = QuatFromRotator(Gun.CurrentAim);
+        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
 
-        // If the vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
-        if (Cannon.bHasTurret)
+        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
+        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
+
+        // Get camera location & adjust for any offset positioning
+        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
+        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation) + CamViewOffsetWorld; // FPCamPos offset is relative to weapon's aim
+
+        if (bFPNoZFromCameraPitch)
         {
-            ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
-
-        // Rotate the headbob by the player's view rotation (looking around)
-        AQuat = QuatFromRotator(ViewRelativeRotation);
-        BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
-        CQuat = QuatProduct(AQuat, BQuat);
-
-        // Then, rotate that by the vehicles rotation to get the final rotation
-        AQuat = QuatFromRotator(VehicleBase.Rotation);
-        BQuat = QuatProduct(CQuat, AQuat);
-
-        // Finally, make it back into a rotator
-        CameraRotation = QuatToRotator(BQuat);
     }
     else
     {
-        CameraRotation = PC.Rotation;
-    }
-
-    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
-    {
-        CameraRotation = Gun.GetBoneRotation('Camera_com');
-    }
-
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-
-    if (CameraBone != '' && Gun != none)
-    {
-        CamBoneCoords = Gun.GetBoneCoords(CameraBone);
-
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
+        // If camera is locked during a current transition, lock view to PlayerCameraBone
+        if (bLockCameraDuringTransition && IsInState('ViewTransition'))
         {
-            CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
+            CameraRotation = Gun.GetBoneRotation(PlayerCameraBone);
         }
+        // Otherwise, player can look around (e.g. cupola, periscope, unbuttoned or binoculars), so use PC's rotation for camera rotation
         else
         {
-            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
+            CameraRotation = PC.Rotation;
+
+            // If vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
+            if (Cannon != none && Cannon.bHasTurret)
+            {
+                CameraRotation.Yaw += Cannon.CurrentAim.Yaw;
+            }
+
+            // Factor in the vehicle's rotation (because PC's rotation is relative to vehicle)
+            RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
+            VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
+            NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+            CameraRotation = QuatToRotator(NonRelativeQuat);
         }
+
+        // Get camera location & adjust for any offset positioning
+        CameraLocation = Gun.GetBoneCoords(PlayerCameraBone).Origin;
+        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+        CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation) + CamViewOffsetWorld; // FPCamPos offset is relative to vehicle rotation
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Gun.Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
-    else
-    {
-        CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-
+    // Finalise the camera with any shake
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
 }
 
 // Modified to simply draw the BinocsOverlay, without additional drawing
@@ -657,7 +642,7 @@ function ServerChangeViewPoint(bool bForward)
 }
 
 // Modified to use Sleep to control exit from state (including on server) & to avoid unnecessary stuff on a server
-// Also to improve timing of FOV & camera position changes & to match rotation to gun's aim when coming up off the gunsight
+// Also to improve timing of FOV & camera position changes, to match rotation to gun's aim when coming up off the gunsight, & better handling of locked camera
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -732,13 +717,24 @@ simulated state ViewTransition
         global.Timer();
     }
 
-    // Set any zoom & camera offset for new position, if we have moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
     simulated function EndState()
     {
-        if (Level.NetMode != NM_DedicatedServer && WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
         {
-            PlayerController(Controller).SetFOV(WeaponFOV);
-            FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            // Set any zoom & camera offset for new position, if we have moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
+            if (WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV)
+            {
+                PlayerController(Controller).SetFOV(WeaponFOV);
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            }
+
+            // If camera was locked to PlayerCameraBone during button/unbutton transition, match rotation to that now, so the view can't snap to another rotation
+            if (bLockCameraDuringTransition && ((DriverPositionIndex == UnbuttonedPositionIndex && LastPositionIndex < UnbuttonedPositionIndex)
+                || (LastPositionIndex == UnbuttonedPositionIndex && DriverPositionIndex < UnbuttonedPositionIndex)) && ViewTransitionDuration > 0.0)
+            {
+                SetRotation(rot(0, 0, 0));
+                Controller.SetRotation(Rotation);
+            }
         }
     }
 
@@ -1621,7 +1617,8 @@ defaultproperties
     PoweredMinRotateThreshold=0.15
     PoweredMaxRotateThreshold=1.75
     MaxRotateThreshold=1.5
-    bPCRelativeFPRotation=true
+    PlayerCameraBone="Camera_com"
+    bPCRelativeFPRotation=true // cannon pawn must have this as it's now assumed in some critical functions
     bFPNoZFromCameraPitch=true
     bDesiredBehindView=false
     PeriscopePositionIndex=-1
