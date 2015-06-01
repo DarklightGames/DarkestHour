@@ -47,33 +47,24 @@ simulated function bool IsDisabled()
     return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
 }
 
+// Modified to removed lots of TreadCraft stuff that doesn't apply to a wheeled vehicle
 simulated function Tick(float DeltaTime)
 {
-    local float MySpeed;
-
-    // Only need these effects client side
-    if (Level.NetMode != NM_DedicatedServer)
+    // Force player to pull back on throttle if over max speed
+    if (Level.NetMode != NM_DedicatedServer && Abs(ForwardVel) >= MaxCriticalSpeed && ROPlayer(Controller) != none)
     {
-        // VSize() is very CPU intensive
-        MySpeed = VSize(Velocity);
-
-        if (MySpeed >= MaxCriticalSpeed && Controller != none)
-        {
-            if (Controller.IsA('ROPlayer'))
-            {
-                ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
-            }
-        }
+        ROPlayer(Controller).aForward = -32768;
     }
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
+    // Stop all movement if engine off
     if (bEngineOff)
     {
         Velocity = vect(0.0, 0.0, 0.0);
-        Throttle = 0;
-        ThrottleAmount = 0;
-        Steering = 0;
+        Throttle = 0.0;
+        ThrottleAmount = 0.0;
+        Steering = 0.0;
     }
 }
 

@@ -399,103 +399,42 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-simulated function Tick(float dt)
+// Modified to handle engine & interior rumble sounds, object crushing, & stopping all movement if vehicle can't move
+simulated function Tick(float DeltaTime)
 {
-    local bool  LostTraction;
-    local float MySpeed, MotionSoundVolume, ThrottlePosition;
-    local int   i;
+    local float MotionSoundVolume;
 
-    super(ROVehicle).Tick(dt); // Matt: skip over the Super in ROWheeledVehicle, as it is already entirely re-stated her, so just duplicates everything
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
-    // Pack the throttle setting into a byte to replicate it
-    if (Role == ROLE_Authority)
-    {
-        if (Throttle < 0.0)
-        {
-            ThrottleRep = (100.0 * Abs(Throttle));
-        }
-        else
-        {
-            ThrottleRep = 101 + (100.0 * Throttle);
-        }
-    }
-
-    // Don't bother doing effects on dedicated server
+    // Update engine & interior rumble sounds dependent on speed
     if (Level.NetMode != NM_DedicatedServer)
     {
-        MySpeed = Abs(ForwardVel);
-
-        // Update engine & interior rumble sounds dependent on speed
-        if (MySpeed > 0.1)
+        if (Abs(ForwardVel) > 0.1)
         {
-            MotionSoundVolume = FClamp(MySpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
+            MotionSoundVolume = FClamp(Abs(ForwardVel) / MaxPitchSpeed * 255.0, 0.0, 255.0);
         }
 
         UpdateMovementSound(MotionSoundVolume);
-
-        if (!bDropDetail)
-        {
-            LostTraction = true;
-
-            // Update dust kicked up by wheels
-            for (i = 0; i < Dust.Length; ++i)
-            {
-                Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
-            }
-
-            // Unpack the replicated throttle byte
-            if (ThrottleRep < 101)
-            {
-                ThrottlePosition = Float(ThrottleRep) / 100.0;
-            }
-            else if (ThrottleRep == 101)
-            {
-                ThrottlePosition = 0.0;
-            }
-            else
-            {
-                ThrottlePosition = Float(ThrottleRep - 101) / 100.0;
-            }
-
-            for (i = 0; i < ExhaustPipes.Length; ++i)
-            {
-                if (ExhaustPipes[i].ExhaustEffect != none)
-                {
-                    ExhaustPipes[i].ExhaustEffect.UpdateExhaust(ThrottlePosition);
-                }
-            }
-        }
     }
 
-    TurnDamping = default.TurnDamping;
-
-    // Lets make the vehicle not slide when its parked
-    if (Abs(ForwardVel) < 50.0)
-    {
-        MinBrakeFriction = LowSpeedBrakeFriction;
-    }
-    else
-    {
-        MinBrakeFriction = Default.MinBrakeFriction;
-    }
-
-    // If we crushed an object, apply break and clamp throttle (server only)
+    // If we crushed an object, apply brake & clamp throttle (server only)
     if (bCrushedAnObject)
     {
-        if (Controller.IsA('ROPlayer'))
+        if (ROPlayer(Controller) != none)
         {
             ROPlayer(Controller).bPressedJump = true;
         }
 
         Throttle = FClamp(Throttle, -0.1, 0.1);
 
-        // if our crush stall time is over, we are no longer crushing
+        // If our crush stall time is over, we are no longer crushing
         if (LastCrushedTime + ObjectCrushStallTime < Level.TimeSeconds)
         {
             bCrushedAnObject = false;
         }
     }
 
+    // Stop all movement if engine off
     if (bEngineOff)
     {
         Velocity = vect(0.0, 0.0, 0.0);

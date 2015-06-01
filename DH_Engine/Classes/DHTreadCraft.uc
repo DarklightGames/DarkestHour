@@ -1283,14 +1283,12 @@ simulated function PostNetReceive()
     }
 }
 
+// Modified to remove RO disabled throttle stuff & add handling of jammed steering for a damaged track, MaxCriticalSpeed, object crushing, & stopping all movement if vehicle can't move
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
     local float MotionSoundTemp, MySpeed;
     local int   i;
-
-    KGetRigidBodyState(BodyState);
-    LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
     // Damaged treads cause vehicle to swerve and turn without control
     if (Controller != none)
@@ -1326,10 +1324,9 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        // VSize() is CPU intensive
-        MySpeed = VSize(Velocity);
+        MySpeed = Abs(ForwardVel); // Matt: don't need VSize(Velocity), as already have ForwardVel
 
-        // Setup sounds that are dependent on velocity
+        // Update tread & interior rumble sounds dependent on speed
         if (MySpeed > 0.1)
         {
             MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
@@ -1342,6 +1339,10 @@ simulated function Tick(float DeltaTime)
 
         UpdateMovementSound();
 
+        // Set tread & wheel movement rates
+        KGetRigidBodyState(BodyState);
+        LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+
         if (LeftTreadPanner != none)
         {
             LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
@@ -1352,6 +1353,7 @@ simulated function Tick(float DeltaTime)
             }
 
             LeftTreadPanner.PanRate += LinTurnSpeed;
+            LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         }
 
         if (RightTreadPanner != none)
@@ -1364,12 +1366,10 @@ simulated function Tick(float DeltaTime)
             }
 
             RightTreadPanner.PanRate -= LinTurnSpeed;
+            RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
         }
 
         // Animate the tank wheels
-        LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-        RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
-
         for (i = 0; i < LeftWheelBones.Length; ++i)
         {
             SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
@@ -1380,13 +1380,14 @@ simulated function Tick(float DeltaTime)
             SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
 
+        // Force player to pull back on throttle if over max speed
         if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
         {
-            ROPlayer(Controller).aForward = -32768.0; // forces player to pull back on throttle
+            ROPlayer(Controller).aForward = -32768.0;
         }
     }
 
-    // This will slow the tank way down when it tries to turn at high speeds
+    // Slow the tank way down when it tries to turn at high speeds
     if (ForwardVel > 0.0)
     {
         WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
@@ -1398,23 +1399,24 @@ simulated function Tick(float DeltaTime)
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
-    // If we crushed an object, apply break and clamp throttle (server only)
+    // If we crushed an object, apply brake & clamp throttle (server only)
     if (bCrushedAnObject)
     {
-        if (Controller.IsA('ROPlayer'))
+        if (ROPlayer(Controller) != none)
         {
             ROPlayer(Controller).bPressedJump = true;
         }
 
         Throttle = FClamp(Throttle, -0.1, 0.1);
 
-        // if our crush stall time is over, we are no longer crushing
+        // If our crush stall time is over, we are no longer crushing
         if (LastCrushedTime + ObjectCrushStallTime < Level.TimeSeconds)
         {
             bCrushedAnObject = false;
         }
     }
 
+    // Stop all movement if engine off or both tracks damaged
     if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
         Velocity = vect(0.0, 0.0, 0.0);

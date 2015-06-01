@@ -152,14 +152,9 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        // VSize() is CPU intensive
-        MySpeed = VSize(Velocity);
+        MySpeed = Abs(ForwardVel);
 
-        if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).aForward = -32768.0; // forces player to pull back on throttle
-        }
-
+        // Set tread & wheel movement rates
         KGetRigidBodyState(BodyState);
         LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
@@ -173,6 +168,7 @@ simulated function Tick(float DeltaTime)
             }
 
             LeftTreadPanner.PanRate += LinTurnSpeed;
+            LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         }
 
         if (RightTreadPanner != none)
@@ -185,12 +181,10 @@ simulated function Tick(float DeltaTime)
             }
 
             RightTreadPanner.PanRate -= LinTurnSpeed;
+            RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
         }
 
         // Animate the tank wheels
-        LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-        RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
-
         for (i = 0; i < LeftWheelBones.Length; ++i)
         {
             SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
@@ -199,6 +193,12 @@ simulated function Tick(float DeltaTime)
         for (i = 0; i < RightWheelBones.Length; ++i)
         {
             SetBoneRotation(RightWheelBones[i], RightWheelRot);
+        }
+
+        // Force player to pull back on throttle if over max speed
+        if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
+        {
+            ROPlayer(Controller).aForward = -32768.0;
         }
     }
 }
