@@ -1022,14 +1022,7 @@ simulated function MatchRotationToGunAim(optional Controller C)
         C = Controller;
     }
 
-    if (bPCRelativeFPRotation || Gun == none)
-    {
-        SetRotation(rot(0, 0, 0));
-    }
-    else
-    {
-        SetRotation(Gun.Rotation); // note Gun.Rotation is effectively same as vehicle base's rotation
-    }
+    SetRotation(rot(0, 0, 0));
 
     if (C != none)
     {

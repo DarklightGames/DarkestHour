@@ -984,14 +984,7 @@ simulated function MatchRotationToGunAim(optional Controller C)
             C = Controller;
         }
 
-        if (bPCRelativeFPRotation)
-        {
-            SetRotation(Gun.CurrentAim);
-        }
-        else
-        {
-            SetRotation(rotator(vector(Gun.CurrentAim) >> Gun.Rotation)); // note Gun.Rotation is effectively same as vehicle base's rotation
-        }
+        SetRotation(Gun.CurrentAim);
 
         if (C != none)
         {
