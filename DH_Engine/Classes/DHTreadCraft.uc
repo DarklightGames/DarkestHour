@@ -481,10 +481,12 @@ simulated event DrivingStatusChanged()
     }
 }
 
-// Modified to add engine start/stop hint
+// Modified to add engine start/stop hint & to enforce bDesiredBehindView = false (avoids view rotation bug)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer P;
+
+    bDesiredBehindView = false; // true values can exist in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
 
     P = DHPlayer(PC);
 

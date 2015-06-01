@@ -262,10 +262,12 @@ function KDriverEnter(Pawn P)
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
 }
 
-// Modified to add engine start/stop hint
+// Modified to add engine start/stop hint & to enforce bDesiredBehindView = false (avoids view rotation bug)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer P;
+
+    bDesiredBehindView = false; // true values can exist in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
 
     P = DHPlayer(PC);
 

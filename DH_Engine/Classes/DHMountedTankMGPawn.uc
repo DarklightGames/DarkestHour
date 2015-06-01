@@ -1322,6 +1322,7 @@ defaultproperties
     bZeroPCRotOnEntry=false // Matt: we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     bPCRelativeFPRotation=true // MG pawn must have this as it's now assumed in some critical functions
     bCustomAiming=true // several things just don't work quite right without custom aiming
+    bDesiredBehindView=false
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)

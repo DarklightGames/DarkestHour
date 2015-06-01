@@ -39,7 +39,6 @@ defaultproperties
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
-    bDesiredBehindView=false
     DrivePos=(Y=-5.0,Z=14.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"

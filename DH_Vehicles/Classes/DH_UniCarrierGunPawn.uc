@@ -61,7 +61,6 @@ defaultproperties
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=3.0
     bHideMuzzleFlashAboveSights=true
-    bDesiredBehindView=false
     DrivePos=(X=-11.0,Y=-4.0,Z=31.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VUC_com_idle_close"

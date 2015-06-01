@@ -14,7 +14,6 @@ defaultproperties
     bHasAltFire=false
     CameraBone="mg_yaw"
     bDrawDriverInTP=false
-    bDesiredBehindView=false
     EntryRadius=130.0
     FPCamViewOffset=(X=10.0,Y=-5.0,Z=1.0)
     PitchUpLimit=3640

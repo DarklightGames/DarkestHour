@@ -998,8 +998,11 @@ function ServerLoadATAmmo(Pawn Gunner)
     DHPawn(Pawn).LoadWeapon(Gunner);
 }
 
-// Modified to avoid calling unnecessary Pawn.SaveConfig(), which saves block of pointless vehicle config variables into User.ini file every time player goes to behind view in a vehicle
-// This includes TPCamDistance, which once saved in the .ini file will override any changes made in vehicle default properties
+// Matt: modified to avoid unnecessary Pawn.SaveConfig(), which saved block of pointless vehicle config variables to user.ini file every time player used behind view in a vehicle
+// Including TPCamDistance, which once saved in the .ini file will override any changes made in vehicle default properties
+// Also bDesiredBehindView=true was saved in .ini if player exited game while in a vehicle in behind view, which then screwed up their rotation when entering that vehicle in future
+// Instead we ResetConfig() for the vehicle class, in practice meaning clearing all saved config if no default config exists, so we always use the class default values in behind view
+// And in vehicle's ClientKDriverEnter() we set bDesiredBehindView to false, to avoid possibility of rotation being screwed when entering a vehicle
 function ClientSetBehindView(bool B)
 {
     local bool bWasBehindView;
@@ -1015,7 +1018,8 @@ function ClientSetBehindView(bool B)
 
     if (Vehicle(Pawn) != none)
     {
-        Vehicle(Pawn).bDesiredBehindView = B;
+        Pawn.ResetConfig();
+        Vehicle(Pawn).DesiredTPCamDistance = Vehicle(Pawn).TPCamDistance;
     }
 }
 
