@@ -2355,7 +2355,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local vector     HitDir, LocDir, X, Y, Z;
     local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, InAngle, HitAngleDegrees, Side; // HitHeight
     local int        InstigatorTeam, PossibleDriverDamage, i;
-    local bool       bEngineStoppedProjectile, bAmmoDetonation;
+    local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
@@ -2429,7 +2429,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Series of checks to see if we hit the vehicle driver
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
-            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed)
+            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && !bHitDriver)
             {
                 // Non-penetrating rounds have a limited HitCheckDistance
                 // For penetrating rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
@@ -2441,10 +2441,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
                 {
                     Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
                 }
             }
         }
-        else if (bProjectilePenetrated && IsPointShot(Hitlocation, Momentum, 1.0, i))
+        else if (bProjectilePenetrated && Damage > 0 && IsPointShot(Hitlocation, Momentum, 1.0, i))
         {
             if (bLogPenetration)
             {
@@ -3711,6 +3712,14 @@ simulated event NotifySelected(Pawn User)
 
 defaultproperties
 {
+    // all TEMP:
+//    bDrawPenetration=true
+    bDebuggingText=true
+    bPenetrationText=true
+    bDebugTreadText=true
+    bLogPenetration=true
+    bDriverAlreadyEntered=true
+//////////////////////////////////////////////////
     ObjectCrushStallTime=1.0
     PlayerCameraBone="Camera_driver"
     bPCRelativeFPRotation=true // this is inherited default, but adding here as a note that vehicles must have this as it's now assumed in some critical functions

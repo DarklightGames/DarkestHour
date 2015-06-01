@@ -844,6 +844,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local Controller InstigatorController;
     local float      VehicleDamageMod, HitCheckDistance;
     local int        InstigatorTeam, PossibleDriverDamage, i;
+    local bool       bHitDriver;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
@@ -927,7 +928,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Series of checks to see if we hit the vehicle driver
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
-            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed)
+            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && !bHitDriver)
             {
                 // Lower-powered rounds have a limited HitCheckDistance, as they won't rip through the vehicle
                 // For more powerful rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
@@ -939,10 +940,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
                 {
                     Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
                 }
             }
         }
-        else if (IsPointShot(Hitlocation, Momentum, 1.0, i))
+        else if (Damage > 0 && IsPointShot(Hitlocation, Momentum, 1.0, i))
         {
             // Engine hit
             if (VehHitpoints[i].HitPointType == HP_Engine)
@@ -954,15 +956,15 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                 DamageEngine(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
             }
-            // Hit ammo store - explodes & vehicle is destroyed
+            // Hit ammo store
             else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                    Level.Game.Broadcast(self, "Hit vehicle ammo store");
                 }
 
-                Damage *= Health;
+                Damage *= VehHitpoints[i].DamageMultiplier;
                 break;
             }
         }
