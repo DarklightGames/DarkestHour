@@ -487,7 +487,7 @@ simulated function DrawHUD(Canvas Canvas)
         ActivateOverlay(false);
     }
 }
-/*
+
 // Modified to make into a generic function, avoiding need for overrides in subclasses, & to properly handle vehicle roll
 // Also optimised generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
@@ -564,7 +564,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
 }
-*/
+
 // New function, checked by Fire() to see if we are in an eligible firing position (subclass as required)
 function bool CanFire()
 {
