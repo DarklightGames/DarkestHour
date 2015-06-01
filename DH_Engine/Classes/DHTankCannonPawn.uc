@@ -1066,7 +1066,7 @@ function int LocalLimitPitch(int pitch)
 {
     pitch = pitch & 65535;
 
-    if (bMultiPosition)
+    if (DriverPositions.Length > 0)
     {
         if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
         {
@@ -1478,7 +1478,7 @@ exec function ToggleMesh()
 {
     local int i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bMultiPosition)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DriverPositions.Length > 0)
     {
         if (Gun.Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
         {

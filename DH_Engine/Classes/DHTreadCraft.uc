@@ -3416,7 +3416,7 @@ exec function ToggleMesh()
 {
     local int i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bMultiPosition)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DriverPositions.Length > 0)
     {
         if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
         {
