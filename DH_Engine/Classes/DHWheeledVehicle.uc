@@ -22,41 +22,44 @@ var     ECarHitPointType    CarHitPointType;
 
 struct CarHitpoint
 {
-    var float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var float             PointScale;         // scale factor for radius & height
-    var name              PointBone;          // bone to reference in offset
-    var vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var ECarHitPointType  CarHitPointType;    // what type of hit point this is
+    var float             PointRadius;           // squared radius of the head of the pawn that is vulnerable to headshots
+    var float             PointHeight;           // distance from base of neck to center of head - used for headshot calculation
+    var float             PointScale;            // scale factor for radius & height
+    var name              PointBone;             // bone to reference in offset
+    var vector            PointOffset;           // amount to offset the hitpoint from the bone
+    var bool              bPenetrationPoint;     // this is a penetration point, open hatch, etc
+    var float             DamageMultiplier;      // amount to scale damage to the vehicle if this point is hit
+    var ECarHitPointType  CarHitPointType;       // what type of hit point this is
 };
 
-var     array<CarHitpoint>  CarVehHitpoints;  // an array of possible small points that can be hit (index zero is always the driver)
+var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
 
 // General
-var     float       MinVehicleDamageModifier; // minimum damage modifier (from DamageType) needed to damage this vehicle
-var     float       PointValue;               // used for scoring
-var     bool        bEmittersOn;              // dust & exhaust effects are enabled
-var     float       DriverTraceDistSquared;   // CheckReset() variable (changed to a squared value, as VSizeSquared is more efficient than VSize)
-var     float       ObjectCollisionResistance;// vehicle's resistance to colliding with other actors - a higher value reduces damage more
-var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
-var     bool        bPlayerCollisionBoxMoves; // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
-var     bool        bClientInitialized;       // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
-                                              // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-// Obstacle crushing
-var     bool        bCrushedAnObject;         // vehicle has just crushed something, causing temporary movement stall
-var     float       LastCrushedTime;          // records time object was crushed, so we know when the movement stall should end
-var     float       ObjectCrushStallTime;     // how long the movement stall lasts
+var     byte        SpawnVehicleType;
+var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
+var     float       PointValue;                  // used for scoring
+var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
+var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly players, to avoid re-spawning vehicle
+var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly pawn found // Matt: seems to duplicate FriendlyResetDistance?
+var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
+                                                 // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
+// Driver positions & view
+var     bool        bPlayerCollisionBoxMoves;    // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
+var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
+var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 
 // Engine
-var     bool        bEngineOff;               // vehicle engine is simply switched off
-var     bool        bSavedEngineOff;          // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchTime;       // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
-var     float       IgnitionSwitchInterval;   // how frequently the engine can be manually switched on/off
+var     bool        bEngineOff;                  // vehicle engine is simply switched off
+var     bool        bSavedEngineOff;             // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
+var     float       IgnitionSwitchTime;          // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
+var     float       IgnitionSwitchInterval;      // how frequently the engine can be manually switched on/off
 
-var     byte                SpawnVehicleType;
-var     float               FriendlyResetDistance;
+// Obstacle crushing & object collision
+var     bool        bCrushedAnObject;            // vehicle has just crushed something, causing temporary movement stall
+var     float       LastCrushedTime;             // records time object was crushed, so we know when the movement stall should end
+var     float       ObjectCrushStallTime;        // how long the movement stall lasts
+var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
 
 // New sounds & sound attachment actors
 var     float               MaxPitchSpeed;
@@ -1269,7 +1272,7 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified to use Sleep to control exit from state (including on server), to avoid unnecessary stuff on a server, & to add handling of FOV changes
+// Modified to use Sleep to control exit from state, to avoid unnecessary stuff on a server, to add handling of FOV changes & better handling of locked camera
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -1343,10 +1346,19 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
-        if (Level.NetMode != NM_DedicatedServer && DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
         {
-            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
+            if (DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV)
+            {
+                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+
+            // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
+            if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0)
+            {
+                Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation));
+            }
         }
     }
 
@@ -1467,6 +1479,49 @@ simulated function DrawHUD(Canvas Canvas)
     else if (HUDOverlay != none)
     {
         ActivateOverlay(false);
+    }
+}
+
+// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise generally
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+{
+    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local vector CamViewOffsetWorld, VehicleZ;
+    local float  CamViewOffsetZAmount;
+
+    ViewActor = self;
+
+    // Set CameraRotation
+    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
+    {
+        CameraRotation = GetBoneRotation(PlayerCameraBone); // if camera is locked during a current transition, lock rotation to PlayerCameraBone
+    }
+    else if (PC != none)
+    {
+        // Factor in the vehicle's rotation, as PC's rotation is relative to vehicle
+        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
+        VehicleQuat = QuatFromRotator(Rotation);
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
+    }
+
+    // Get camera location & adjust for any offset positioning
+    CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
+    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+    CameraLocation = CameraLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
+
+    if (bFPNoZFromCameraPitch)
+    {
+        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
+        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+    }
+
+    // Finalise the camera with any shake
+    if (PC != none)
+    {
+        CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+        CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
     }
 }
 
@@ -1736,10 +1791,8 @@ simulated event NotifySelected(Pawn User)
 
 defaultproperties
 {
-    SparkEffectClass=none // Removes the odd spark effects when vehicle drags bottom
-    ObjectCrushStallTime=1.0
-    FriendlyResetDistance=4000.0
-    ObjectCollisionResistance=1.0
+    PlayerCameraBone="Camera_driver"
+    bPCRelativeFPRotation=true // this is inherited default, but adding here as a note that vehicles must have this as it's now assumed in some critical functions
     bEngineOff=true
     bSavedEngineOff=true
     bDisableThrottle=false
@@ -1747,7 +1800,11 @@ defaultproperties
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     DamagedStartUpSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
     PointValue=1.0
+    FriendlyResetDistance=4000.0
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
+    ObjectCrushStallTime=1.0
+    ObjectCollisionResistance=1.0
+    SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'

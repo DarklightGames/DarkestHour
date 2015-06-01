@@ -6,13 +6,10 @@
 class DHBoatVehicle extends DHWheeledVehicle // Matt: originally extended ROWheeledVehicle
     abstract;
 
-var()   name                DriverCameraBoneName;
-var     vector              CameraBoneLocation;
-
-var()   sound               WashSound;
-var()   name                WashSoundBoneL;
+var     sound               WashSound;
+var     name                WashSoundBoneL;
 var     ROSoundAttachment   WashSoundAttachL;
-var()   name                WashSoundBoneR;
+var     name                WashSoundBoneR;
 var     ROSoundAttachment   WashSoundAttachR;
 
 var     Material            DestroyedVehicleTexture;
@@ -50,45 +47,6 @@ simulated function PostBeginPlay()
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super(ROWheeledVehicle).ClientKDriverEnter(PC);
-}
-
-// Overridden for locking the player to the camerabone // altered slightly to allow change of camera bone name - Fennich
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
-{
-    local quat   CarQuat, LookQuat, ResultQuat;
-    local vector VehicleZ, CamViewOffsetWorld, x, y, z;
-    local float  CamViewOffsetZAmount;
-
-    GetAxes(PC.Rotation, x, y, z);
-    ViewActor = self;
-
-    if (bPCRelativeFPRotation)
-    {
-        CarQuat = QuatFromRotator(Rotation);
-        CameraRotation = Normalize(PC.Rotation);
-        LookQuat = QuatFromRotator(CameraRotation);
-        ResultQuat = QuatProduct(LookQuat, CarQuat);
-        CameraRotation = QuatToRotator(ResultQuat);
-    }
-    else
-    {
-        CameraRotation = PC.Rotation;
-    }
-
-    // Camera position is locked to vehicle
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-    CameraBoneLocation = GetBoneCoords(DriverCameraBoneName).Origin;
-    CameraLocation = CameraBoneLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-    if (bFPNoZFromCameraPitch)
-    {
-        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-    }
-
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
 // Modified to include wash sound attachments

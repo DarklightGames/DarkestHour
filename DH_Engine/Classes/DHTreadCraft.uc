@@ -39,7 +39,8 @@ struct NewHitpoint
 var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
-var     texture     PeriscopeOverlay;
+var     byte        SpawnVehicleType;
+var     ObjectMap   NotifyParameters;
 var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
@@ -52,13 +53,16 @@ var     bool        bCrushedAnObject;       // vehicle has just crushed somethin
 var     float       LastCrushedTime;        // records time object was crushed, so we know when the movement stall should end
 var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 
-// Positions
+// Positions & view
 var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
 var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
-var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
-var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
+var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+var     name        PlayerCameraBone;             // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
+var     bool        bLockCameraDuringTransition;  // lock the camera's rotation to the camera bone during view transitions
+var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
+var     texture     PeriscopeOverlay;
 
 // Armor penetration
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
@@ -151,12 +155,6 @@ var     bool        bPenetrationText;
 var     bool        bDebugTreadText;
 var     bool        bLogPenetration;
 var     bool        bDebugExitPositions;
-
-// Spawning
-var     byte        SpawnVehicleType;
-
-// Notifications
-var     ObjectMap   NotifyParameters;
 
 replication
 {
@@ -952,7 +950,7 @@ function bool IsVehicleEmpty()
     return true;
 }
 
-// Modified to use Sleep to control exit from state (including on server), to avoid unnecessary stuff on a server, & to add handling of FOV changes
+// Modified to use Sleep to control exit from state, to avoid unnecessary stuff on a server, to add handling of FOV changes & better handling of locked camera
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -1020,10 +1018,19 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
-        if (Level.NetMode != NM_DedicatedServer && DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
         {
-            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
+            if (DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV)
+            {
+                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+
+            // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
+            if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0)
+            {
+                Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation));
+            }
         }
     }
 
@@ -3610,6 +3617,49 @@ simulated function DrawHUD(Canvas Canvas)
     }
 }
 
+// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise generally
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+{
+    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local vector CamViewOffsetWorld, VehicleZ;
+    local float  CamViewOffsetZAmount;
+
+    ViewActor = self;
+
+    // Set CameraRotation
+    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
+    {
+        CameraRotation = GetBoneRotation(PlayerCameraBone); // if camera is locked during a current transition, lock rotation to PlayerCameraBone
+    }
+    else if (PC != none)
+    {
+        // Factor in the vehicle's rotation, as PC's rotation is relative to vehicle
+        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
+        VehicleQuat = QuatFromRotator(Rotation);
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
+    }
+
+    // Get camera location & adjust for any offset positioning
+    CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
+    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+    CameraLocation = CameraLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
+
+    if (bFPNoZFromCameraPitch)
+    {
+        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
+        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+    }
+
+    // Finalise the camera with any shake
+    if (PC != none)
+    {
+        CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+        CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    }
+}
+
 simulated function DrawPeriscopeOverlay(Canvas Canvas)
 {
     local float ScreenRatio;
@@ -3661,6 +3711,9 @@ simulated event NotifySelected(Pawn User)
 defaultproperties
 {
     ObjectCrushStallTime=1.0
+    PlayerCameraBone="Camera_driver"
+    bPCRelativeFPRotation=true // this is inherited default, but adding here as a note that vehicles must have this as it's now assumed in some critical functions
+    FPCamPos=(X=0.0,Y=0.0,Z=0.0)
     UnbuttonedPositionIndex=2
     bAllowRiders=true
     FirstRiderPositionIndex=2

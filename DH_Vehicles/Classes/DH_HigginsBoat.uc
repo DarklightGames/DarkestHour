@@ -192,7 +192,6 @@ defaultproperties
     RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     RampSoundVolume=180.0
     RampDownIdleAnim="Ramp_Idle"
-    DriverCameraBoneName="Camera_driver"
     WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
     WashSoundBoneL="Wash_L"
     WashSoundBoneR="Wash_R"
