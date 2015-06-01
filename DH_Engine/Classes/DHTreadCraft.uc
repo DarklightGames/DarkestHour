@@ -3344,7 +3344,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         {
             if (bPCRelativeFPRotation)
             {
-                PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
+                FixPCRotation(PC);
             }
 
             for (i = 0; i < DriverPositions.Length; ++i)
