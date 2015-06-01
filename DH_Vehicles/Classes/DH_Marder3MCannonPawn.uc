@@ -14,7 +14,6 @@ defaultproperties
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
-    bLockCameraDuringTransition=true
     BinocPositionIndex=2
     WeaponFOV=14.4
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
