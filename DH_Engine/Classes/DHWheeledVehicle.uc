@@ -1704,7 +1704,7 @@ function bool CheckForCrew()
 }
 
 // Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
-simulated function int GetPassengerCount()
+simulated function int NumPassengers()
 {
     local int i, Num;
 
