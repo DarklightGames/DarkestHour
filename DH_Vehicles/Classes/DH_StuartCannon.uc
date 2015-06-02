@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StuartCannon extends DHTankCannon;
+class DH_StuartCannon extends DHVehicleCannon;
 
 defaultproperties
 {

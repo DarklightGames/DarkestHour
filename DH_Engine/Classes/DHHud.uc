@@ -1017,13 +1017,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
                         // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
-                        if (DHTankCannonPawn(Passenger) != none)
+                        if (DHVehicleCannonPawn(Passenger) != none)
                         {
-                            ProportionOfReloadRemaining = DHTankCannonPawn(Passenger).GetAltAmmoReloadState();
+                            ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
 
                             if (ProportionOfReloadRemaining > 0.0)
                             {
-                                VehicleAltAmmoReloadIcon.WidgetTexture = DHTankCannonPawn(Passenger).AltAmmoReloadTexture;
+                                VehicleAltAmmoReloadIcon.WidgetTexture = DHVehicleCannonPawn(Passenger).AltAmmoReloadTexture;
                                 VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                                 DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                             }
@@ -1065,13 +1065,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             DrawSpriteWidget(Canvas, VehicleMGAmmoIcon);
 
             // Draw reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
-            if (DHMountedTankMGPawn(Passenger) != none)
+            if (DHVehicleMGPawn(Passenger) != none)
             {
                 ProportionOfReloadRemaining = Passenger.GetAmmoReloadState();
 
                 if (ProportionOfReloadRemaining > 0.0)
                 {
-                    VehicleMGAmmoReloadIcon.WidgetTexture = DHMountedTankMGPawn(Passenger).VehicleMGReloadTexture;
+                    VehicleMGAmmoReloadIcon.WidgetTexture = DHVehicleMGPawn(Passenger).VehicleMGReloadTexture;
                     VehicleMGAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                     DrawSpriteWidget(Canvas, VehicleMGAmmoReloadIcon);
                 }
@@ -3322,13 +3322,13 @@ exec function GrowHUD()
         {
             DHWheeledVehicle(PawnOwner).GrowHUD();
         }
-        else if (PawnOwner.IsA('DHTankCannonPawn'))
+        else if (PawnOwner.IsA('DHVehicleCannonPawn'))
         {
-            DHTankCannonPawn(PawnOwner).GrowHUD();
+            DHVehicleCannonPawn(PawnOwner).GrowHUD();
         }
-        else if (PawnOwner.IsA('DHMountedTankMGPawn'))
+        else if (PawnOwner.IsA('DHVehicleMGPawn'))
         {
-            DHMountedTankMGPawn(PawnOwner).GrowHUD();
+            DHVehicleMGPawn(PawnOwner).GrowHUD();
         }
     }
     else
@@ -3349,13 +3349,13 @@ exec function ShrinkHUD()
         {
             DHWheeledVehicle(PawnOwner).ShrinkHUD();
         }
-        else if (PawnOwner.IsA('DHTankCannonPawn'))
+        else if (PawnOwner.IsA('DHVehicleCannonPawn'))
         {
-            DHTankCannonPawn(PawnOwner).ShrinkHUD();
+            DHVehicleCannonPawn(PawnOwner).ShrinkHUD();
         }
-        else if (PawnOwner.IsA('DHMountedTankMGPawn'))
+        else if (PawnOwner.IsA('DHVehicleMGPawn'))
         {
-            DHMountedTankMGPawn(PawnOwner).ShrinkHUD();
+            DHVehicleMGPawn(PawnOwner).ShrinkHUD();
         }
     }
     else

@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackGun extends DHMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_M3A1HalftrackGun extends DHVehicleMG;
 
 defaultproperties
 {
     NumMags=8
     HUDOverlayReloadAnim="Reloads"
-    ReloadDuration=6.7 // Matt: corrected from 6.59
+    ReloadDuration=6.7
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
 //    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=0.0,Y=-0.5,Z=29.0)) // TEST removed as no longer any collision on this VehicleWeapon (Matt, May 2015)
@@ -21,9 +21,9 @@ defaultproperties
     PitchDownLimit=50000
     WeaponFireAttachmentBone="tip"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=0.0 // override inherited from ROMountedTankMG
+    WeaponFireOffset=0.0
     RotationsPerSecond=0.5
-    bInstantFire=false // override inherited from ROMountedTankMG (all MGs have this)
+    bInstantFire=false
     Spread=0.002
     FireInterval=0.12
     AltFireInterval=0.12

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackGunPawn extends DHMountedTankMGPawn;
+class DH_M3A1HalftrackGunPawn extends DHVehicleMGPawn;
 
 // TEST added so player pawn's body part hit detection is aligned correctly between server & client (Matt, May 2015)
 simulated function AttachDriver(Pawn P)

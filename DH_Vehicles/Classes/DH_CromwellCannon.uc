@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CromwellCannon extends DHTankCannon;
+class DH_CromwellCannon extends DHVehicleCannon;
 
 defaultproperties
 {

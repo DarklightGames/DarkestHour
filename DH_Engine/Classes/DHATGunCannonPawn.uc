@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHATGunCannonPawn extends DHTankCannonPawn
+class DHATGunCannonPawn extends DHVehicleCannonPawn
     abstract;
 
 var bool bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
 
-// Emptied out so we just use plain RO rotate/pitch sounds & ignore DHTankCannonPawn's manual/powered sounds
+// Emptied out so we just use plain RO rotate/pitch sounds & ignore DHVehicleCannonPawn's manual/powered sounds
 simulated function SetManualTurret(bool bManual)
 {
 }
@@ -23,7 +23,7 @@ function AltFire(optional float F)
 {
 }
 
-// Modified to avoid turret damage checks in DHTankCannonPawn, just for processing efficiency as this function is called many times per second
+// Modified to avoid turret damage checks in DHVehicleCannonPawn, just for processing efficiency as this function is called many times per second
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
     super(ROTankCannonPawn).HandleTurretRotation(DeltaTime, YawChange, PitchChange);

@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMountedTankMG extends ROMountedTankMG
+class DHVehicleMG extends ROMountedTankMG
     abstract;
 
-var  DHMountedTankMGPawn  MGPawn;     // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+var  DHVehicleMGPawn  MGPawn;     // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
 
 // Ammo & firing
 var     class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
@@ -85,7 +85,7 @@ simulated function PostBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from MG pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have MGPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeMG(DHMountedTankMGPawn MGPwn)
+simulated function InitializeMG(DHVehicleMGPawn MGPwn)
 {
     if (MGPwn != none)
     {
@@ -111,7 +111,7 @@ simulated function InitializeMG(DHMountedTankMGPawn MGPwn)
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHMountedTankMGPawn, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleMGPawn, so lots of things are not going to work!");
     }
 }
 

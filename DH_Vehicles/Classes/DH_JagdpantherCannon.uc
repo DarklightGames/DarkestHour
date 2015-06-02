@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpantherCannon extends DHTankCannon;
+class DH_JagdpantherCannon extends DHVehicleCannon;
 
 defaultproperties
 {

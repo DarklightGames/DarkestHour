@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2341Cannon extends DHTankCannon;
+class DH_Sdkfz2341Cannon extends DHVehicleCannon;
 
 var     byte    NumMags;         // using bytes for more efficient replication
 var     byte    NumSecMags;

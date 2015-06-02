@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMountedTankMGPawn extends ROMountedTankMGPawn
+class DHVehicleMGPawn extends ROMountedTankMGPawn
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
 // General
-var     DHMountedTankMG  MGun;                   // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+var     DHVehicleMG  MGun;                   // just a reference to the DH MG actor, for convenience & to avoid lots of casts
 var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
@@ -116,7 +116,7 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeMG()
 {
-    MGun = DHMountedTankMG(Gun);
+    MGun = DHVehicleMG(Gun);
 
     if (MGun != none)
     {
@@ -124,7 +124,7 @@ simulated function InitializeMG()
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMountedTankMG, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleMG, so lots of things are not going to work!");
     }
 }
 
@@ -341,8 +341,8 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    // Debug exits - uses DHMountedTankMGPawn class default, allowing bDebugExitPositions to be toggled for all MG pawns
-    if (class'DHMountedTankMGPawn'.default.bDebugExitPositions)
+    // Debug exits - uses DHVehicleMGPawn class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    if (class'DHVehicleMGPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
@@ -1301,8 +1301,8 @@ function ServerToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DHMountedTankMGPawn'.default.bDebugExitPositions = !class'DHMountedTankMGPawn'.default.bDebugExitPositions;
-        Log("DHMountedTankMGPawn.bDebugExitPositions =" @ class'DHMountedTankMGPawn'.default.bDebugExitPositions);
+        class'DHVehicleMGPawn'.default.bDebugExitPositions = !class'DHVehicleMGPawn'.default.bDebugExitPositions;
+        Log("DHVehicleMGPawn.bDebugExitPositions =" @ class'DHVehicleMGPawn'.default.bDebugExitPositions);
     }
 }
 

@@ -252,7 +252,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
-        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+        if (HitVehicleWeapon.IsA('DHVehicleCannon') && !DHVehicleCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }

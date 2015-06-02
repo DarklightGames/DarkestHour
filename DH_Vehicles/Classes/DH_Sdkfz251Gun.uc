@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Gun extends DHMountedTankMG;
+class DH_Sdkfz251Gun extends DHVehicleMG;
 
 defaultproperties
 {

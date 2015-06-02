@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HellcatCannon extends DHTankCannon;
+class DH_HellcatCannon extends DHVehicleCannon;
 
 defaultproperties
 {

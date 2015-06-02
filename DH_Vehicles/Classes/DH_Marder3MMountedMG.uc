@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Marder3MMountedMG extends DHMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_Marder3MMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
@@ -21,9 +21,9 @@ defaultproperties
     PitchDownLimit=50000
     WeaponFireAttachmentBone="tip"
     GunnerAttachmentBone="loader_player"
-    WeaponFireOffset=0.0 // override inherited from ROMountedTankMG
+    WeaponFireOffset=0.0
     RotationsPerSecond=0.05
-    bInstantFire=false // override inherited from ROMountedTankMG (all MGs have this)
+    bInstantFire=false
     Spread=0.002
     FireInterval=0.07058
     AltFireInterval=0.07058

@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTankCannon extends ROTankCannon
+class DHVehicleCannon extends ROTankCannon
     abstract;
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // General
-var     DHTankCannonPawn    CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     DHVehicleCannonPawn    CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var     bool                bHasTurret;               // this cannon is in a fully rotating turret
 var     float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 
@@ -136,7 +136,7 @@ simulated function StartTurretFire()
 
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have CannonPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
+simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
     {
@@ -162,7 +162,7 @@ simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHTankCannonPawn, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleCannonPawn, so lots of things are not going to work!");
     }
 }
 

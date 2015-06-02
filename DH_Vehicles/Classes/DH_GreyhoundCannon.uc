@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundCannon extends DHTankCannon;
+class DH_GreyhoundCannon extends DHVehicleCannon;
 
 defaultproperties
 {

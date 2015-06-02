@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GMountedMGPawn extends DHMountedTankMGPawn;
+class DH_Stug3GMountedMGPawn extends DHVehicleMGPawn;
 
 // Can't fire unless unbuttoned & controlling the external MG
 function bool CanFire()

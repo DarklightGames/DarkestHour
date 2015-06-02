@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierGun extends DHMountedTankMG; // Matt: was UniCarrierGun
+class DH_UniCarrierGun extends DHVehicleMG;
 
 defaultproperties
 {
@@ -23,7 +23,7 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=0.0
     RotationsPerSecond=0.5
-    bInstantFire=false // override inherited from ROMountedTankMG (all MGs have this)
+    bInstantFire=false
     Spread=0.002
     FireInterval=0.125
     AltFireInterval=0.125

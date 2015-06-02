@@ -71,11 +71,11 @@ simulated function Tick(float DeltaTime)
 // Modified to avoid track damage & other tank damage stuff, that isn't relevant to an armored car, & also to use the APCDamageModifier
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local DHTankCannonPawn CannonPawn;
-    local Controller       InstigatorController;
-    local float            VehicleDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier;
-    local int              InstigatorTeam, PossibleDriverDamage, i;
-    local bool             bAmmoDetonation;
+    local DHVehicleCannonPawn CannonPawn;
+    local Controller InstigatorController;
+    local float      VehicleDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier;
+    local int        InstigatorTeam, PossibleDriverDamage, i;
+    local bool       bAmmoDetonation;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
@@ -218,7 +218,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
     if (bProjectilePenetrated && !bAmmoDetonation)
     {
-        CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+        CannonPawn = DHVehicleCannonPawn(WeaponPawns[0]);
 
         // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
         if (CannonPawn != none && CannonPawn.Cannon != none && CannonPawn.Cannon.bHasTurret)

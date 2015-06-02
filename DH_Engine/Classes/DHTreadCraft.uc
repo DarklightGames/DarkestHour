@@ -1788,9 +1788,9 @@ simulated function SetEngine()
         }
     }
 
-    if (CannonTurret != none && DHTankCannonPawn(CannonTurret.Owner) != none)
+    if (CannonTurret != none && DHVehicleCannonPawn(CannonTurret.Owner) != none)
     {
-        DHTankCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
+        DHVehicleCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
     }
 }
 
@@ -2352,7 +2352,7 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 // Modified to add all the DH vehicle damage stuff
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local DHTankCannonPawn CannonPawn;
+    local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
     local vector     HitDir, LocDir, X, Y, Z;
     local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, InAngle, HitAngleDegrees, Side; // HitHeight
@@ -2506,7 +2506,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         if (WeaponPawns.Length > 0)
         {
-            CannonPawn = DHTankCannonPawn(WeaponPawns[0]);
+            CannonPawn = DHVehicleCannonPawn(WeaponPawns[0]);
         }
 
         // Check additional DH NewVehHitPoints
@@ -2964,9 +2964,9 @@ simulated function Timer()
         {
             bTurretFireNeeded = false;
 
-            if (DHTankCannon(CannonTurret) != none)
+            if (DHVehicleCannon(CannonTurret) != none)
             {
-                DHTankCannon(CannonTurret).StartTurretFire();
+                DHVehicleCannon(CannonTurret).StartTurretFire();
             }
         }
 
@@ -2974,9 +2974,9 @@ simulated function Timer()
         {
             bHullMGFireNeeded = false;
 
-            if (DHMountedTankMG(HullMG) != none)
+            if (DHVehicleMG(HullMG) != none)
             {
-                DHMountedTankMG(HullMG).StartMGFire();
+                DHVehicleMG(HullMG).StartMGFire();
             }
         }
     }
@@ -3167,7 +3167,7 @@ function ServerChangeDriverPosition(byte F)
 // New function to check if player can exit, displaying an "unbutton the hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
-    local DHMountedTankMGPawn MGPawn;
+    local DHVehicleMGPawn MGPawn;
 
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
@@ -3179,7 +3179,7 @@ simulated function bool CanExit()
         {
             if (HullMG != none)
             {
-                MGPawn = DHMountedTankMGPawn(HullMG.Owner);
+                MGPawn = DHVehicleMGPawn(HullMG.Owner);
             }
 
             if (MGPawn != none && MGPawn.DriverPositions.Length > MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonA_M4A176W extends DHTankCannon;
+class DH_ShermanCannonA_M4A176W extends DHVehicleCannon;
 
 defaultproperties
 {

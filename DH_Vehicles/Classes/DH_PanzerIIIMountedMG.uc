@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIIMountedMG extends DHMountedTankMG;
+class DH_PanzerIIIMountedMG extends DHVehicleMG;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierGunPawn extends DHMountedTankMGPawn; // Matt: originally extended ROMountedTankMGPawn
+class DH_UniCarrierGunPawn extends DHVehicleMGPawn;
 
 // Modified to better suit the curved magazine of the bren gun
 function float GetAmmoReloadState()

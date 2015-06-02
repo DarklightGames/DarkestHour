@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StuartMountedMG extends DHMountedTankMG;
+class DH_StuartMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
