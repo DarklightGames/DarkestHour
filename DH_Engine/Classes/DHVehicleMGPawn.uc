@@ -9,7 +9,7 @@ class DHVehicleMGPawn extends ROMountedTankMGPawn
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
 // General
-var     DHVehicleMG  MGun;                   // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+var     DHVehicleMG MGun;                        // just a reference to the DH MG actor, for convenience & to avoid lots of casts
 var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
@@ -38,6 +38,45 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerToggleDebugExits; // only during development
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to calculate & set texture MGOverlay variables once instead of every DrawHUD
+simulated function PostBeginPlay()
+{
+    local float OverlayCenterScale;
+
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer && MGOverlay != none)
+    {
+        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(MGOverlay.USize) / 2.0;
+        OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
+    }
+}
+
+// Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
+// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+simulated function InitializeMG()
+{
+    MGun = DHVehicleMG(Gun);
+
+    if (MGun != none)
+    {
+        MGun.InitializeMG(self);
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleMG, so lots of things are not going to work!");
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***************************** KEY ENGINE EVENTS  ******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Matt: modified to call InitializeMG when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
 // 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
@@ -100,48 +139,353 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to call InitializeMG to do any extra set up in the MG classes
-// This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
-function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
-{
-    super.AttachToVehicle(VehiclePawn, WeaponBone);
+///////////////////////////////////////////////////////////////////////////////////////
+//  *******************************  VIEW/DISPLAY  ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
-    if (Role == ROLE_Authority)
+// Modified to make into a generic function, avoiding need for overrides in subclasses, & to properly handle vehicle roll
+// Also optimised generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+{
+    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local vector CamViewOffsetWorld, VehicleZ;
+    local float  CamViewOffsetZAmount;
+
+    ViewActor = self;
+
+    if (PC == none || Gun == none || CameraBone =='')
     {
-        InitializeMG();
+        return;
     }
-}
 
-// Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
-// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeMG()
-{
-    MGun = DHVehicleMG(Gun);
-
-    if (MGun != none)
+    // MG uses custom aim & player is in a firing position, so follow the gun's aim
+    if (bCustomAiming && CanFire())
     {
-        MGun.InitializeMG(self);
+        // Get camera rotation from gun's aim, but factor in the vehicle's rotation, as aim is relative to vehicle
+        RelativeQuat = QuatFromRotator(Gun.CurrentAim);
+        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
+
+        if (bCustomAiming)
+        {
+            PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
+            PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
+        }
+
+        // Get camera location - use GunsightCameraBone if there is one, otherwise use normal CameraBone
+        if (GunsightCameraBone != '')
+        {
+            CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
+        }
+        else
+        {
+            CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
+        }
+
+        // Adjust camera location for any offset positioning
+        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation) + CamViewOffsetWorld; // FPCamPos offset is relative to weapon's aim
+
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleMG, so lots of things are not going to work!");
+        // Get camera rotation from PC rotation, but factor in the vehicle's rotation, as PC rotation is relative to vehicle
+        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
+        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = QuatToRotator(NonRelativeQuat);
+
+        // Get camera location & adjust for any offset positioning
+        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
+        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+        CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation) + CamViewOffsetWorld; // FPCamPos offset is relative to vehicle rotation
+
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Gun.Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
     }
+
+    // Finalise the camera with any shake
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
 }
 
-// Modified to calculate & set texture MGOverlay variables once instead of every DrawHUD
-simulated function PostBeginPlay()
+// Modified to optimise & make into generic function to handle all MG types
+simulated function DrawHUD(Canvas Canvas)
 {
-    local float OverlayCenterScale;
+    local PlayerController PC;
+    local vector           CameraLocation, GunOffset, x, y, z;
+    local rotator          CameraRotation;
+    local Actor            ViewActor;
+    local float            SavedOpacity, ScreenRatio;
 
-    super.PostBeginPlay();
+    PC = PlayerController(Controller);
 
-    if (Level.NetMode != NM_DedicatedServer && MGOverlay != none)
+    if (PC != none && !PC.bBehindView)
     {
-        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(MGOverlay.USize) / 2.0;
-        OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
+        // Player is in a position where an overlay should be drawn
+        if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
+        {
+            // Draw any HUD overlay
+            if (HUDOverlay != none)
+            {
+                if (!Level.IsSoftwareRendering())
+                {
+                    CameraRotation = PC.Rotation;
+                    SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+                    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+
+                    // Make the first person gun appear lower when your sticking your head up
+                    if (FirstPersonGunRefBone != '')
+                    {
+                        GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
+                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
+                        GunOffset += HUDOverlayOffset;
+                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                        Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+                    }
+                    else
+                    {
+                        CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                        HUDOverlay.SetRotation(CameraRotation);
+                        Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+                    }
+                }
+            }
+            // Draw gunsight overlay
+            else if (MGOverlay != none)
+            {
+                // Save current HUD opacity & then set up for drawing overlays
+                SavedOpacity = Canvas.ColorModulate.W;
+                Canvas.ColorModulate.W = 1.0;
+                Canvas.DrawColor.A = 255;
+                Canvas.Style = ERenderStyle.STY_Alpha;
+
+                ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
+                Canvas.SetPos(0.0, 0.0);
+
+                Canvas.DrawTile(MGOverlay, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+
+                Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+            }
+        }
+
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        }
+    }
+    else if (HUDOverlay != none)
+    {
+        ActivateOverlay(false);
     }
 }
+
+// Modified to switch to external mesh & default FOV for behind view
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
+{
+    local int i;
+
+    if (PC.bBehindView)
+    {
+        if (bBehindViewChanged)
+        {
+            // Switching to behind view, so make rotation non-relative to vehicle
+            if (bPCRelativeFPRotation)
+            {
+                FixPCRotation(PC);
+                SetRotation(PC.Rotation);
+            }
+
+            if (DriverPositions.Length > 0)
+            {
+                for (i = 0; i < DriverPositions.Length; ++i)
+                {
+                    DriverPositions[i].PositionMesh = Gun.default.Mesh;
+                    DriverPositions[i].ViewFOV = PC.DefaultFOV;
+                    DriverPositions[i].ViewPositiveYawLimit = 65535;
+                    DriverPositions[i].ViewNegativeYawLimit = -65535;
+                    DriverPositions[i].ViewPitchUpLimit = 65535;
+                    DriverPositions[i].ViewPitchDownLimit = 1;
+                }
+
+                SwitchMesh(DriverPositionIndex);
+
+                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+            else
+            {
+                PC.SetFOV(PC.DefaultFOV);
+                Gun.bLimitYaw = false;
+                PitchUpLimit = 65535;
+                PitchDownLimit = 1;
+            }
+        }
+
+        bOwnerNoSee = false;
+
+        if (Driver != none)
+        {
+            Driver.bOwnerNoSee = !bDrawDriverInTP;
+        }
+
+        if (PC == Controller)
+        {
+            ActivateOverlay(false);
+        }
+    }
+    else
+    {
+        if (bBehindViewChanged)
+        {
+            // Switching back from behind view, so make rotation relative to vehicle again
+            if (bPCRelativeFPRotation)
+            {
+                PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
+                SetRotation(PC.Rotation);
+            }
+
+            if (DriverPositions.Length > 0)
+            {
+                for (i = 0; i < DriverPositions.Length; ++i)
+                {
+                    DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
+                    DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
+                    DriverPositions[i].ViewPositiveYawLimit = default.DriverPositions[i].ViewPositiveYawLimit;
+                    DriverPositions[i].ViewNegativeYawLimit = default.DriverPositions[i].ViewNegativeYawLimit;
+                    DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
+                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
+                }
+
+                SwitchMesh(DriverPositionIndex);
+
+                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            }
+            else
+            {
+                PC.SetFOV(WeaponFOV);
+                Gun.bLimitYaw = Gun.default.bLimitYaw;
+                PitchUpLimit = default.PitchUpLimit;
+                PitchDownLimit = default.PitchDownLimit;
+            }
+        }
+
+        bOwnerNoSee = !bDrawMeshInFP;
+
+        if (Driver != none)
+        {
+            Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
+        }
+
+        if (bDriving && PC == Controller)
+        {
+            ActivateOverlay(true);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************* FIRING & AMMO  ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to prevent fire based on CanFire() & to add dry-fire effects if trying to fire empty MG
+function Fire(optional float F)
+{
+    if (!CanFire() || Gun == none)
+    {
+        return;
+    }
+
+    if (Gun.ReadyToFire(false))
+    {
+        VehicleFire(false);
+        bWeaponIsFiring = true;
+
+        if (IsHumanControlled())
+        {
+            Gun.ClientStartFire(Controller, false);
+        }
+    }
+    else if (MGun != none && !MGun.bReloading)
+    {
+        Gun.ShakeView(false);
+        PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5,, 25.0,, true);
+    }
+}
+
+// Emptied out as MG has no alt fire mode, so just ensures nothing happens
+function AltFire(optional float F)
+{
+}
+
+// New function, checked by Fire() to see if we are in an eligible firing position (subclass as required)
+function bool CanFire()
+{
+    return true;
+}
+
+// Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
+function bool ResupplyAmmo()
+{
+    return MGun != none && MGun.ResupplyAmmo();
+}
+
+// New function, used by HUD to show coaxial MG reload progress, like the cannon reload
+function float GetAmmoReloadState()
+{
+    local float ProportionOfReloadRemaining;
+
+    if (MGun != none)
+    {
+        if (MGun.ReadyToFire(false))
+        {
+            return 0.0;
+        }
+        else if (MGun.bReloading)
+        {
+            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
+
+            if (ProportionOfReloadRemaining >= 0.75)
+            {
+                return 1.0;
+            }
+            else if (ProportionOfReloadRemaining >= 0.5)
+            {
+                return 0.65;
+            }
+            else if (ProportionOfReloadRemaining >= 0.25)
+            {
+                return 0.45;
+            }
+            else
+            {
+                return 0.25;
+            }
+        }
+        else
+        {
+            return 1.0; // must be totally out of ammo, so HUD will draw ammo icon all in red to indicate that MG can't be fired
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************** VEHICLE ENTRY  ******************************** //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to remove obsolete stuff & duplication from the Supers, & to use the vehicle's VehicleTeam to determine the team
 function bool TryToDrive(Pawn P)
@@ -243,363 +587,9 @@ simulated state EnteringVehicle
     }
 }
 
-// Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
-// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
-function bool KDriverLeave(bool bForceLeave)
-{
-    local vector ExitVelocity;
-
-    if (!bForceLeave)
-    {
-        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
-        {
-            return false;
-        }
-
-        ExitVelocity = Velocity;
-        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
-    }
-
-    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
-    {
-        if (!bForceLeave)
-        {
-            Instigator.Velocity = ExitVelocity;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-// Modified so MG retains its aimed direction when player exits & may switch back to external mesh
-// Also to remove playing BeginningIdleAnim as now that's played on all net modes in DrivingStatusChanged()
-simulated state LeavingVehicle
-{
-    simulated function HandleExit()
-    {
-        SwitchMesh(-1); // -1 signifies switch to default external mesh
-    }
-}
-
-// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
-function DriverDied()
-{
-    super(Vehicle).DriverDied();
-
-    if (VehicleBase != none && VehicleBase.Health > 0)
-    {
-        SetRotatingStatus(0); // kill the rotation sound if the driver dies but the vehicle doesn't
-    }
-
-    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
-}
-
-// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function, & to reset to InitialPositionIndex instead of zero
-function DriverLeft()
-{
-    if (bMultiPosition)
-    {
-        DriverPositionIndex = InitialPositionIndex;
-        LastPositionIndex = InitialPositionIndex;
-    }
-
-    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
-
-    DrivingStatusChanged(); // the Super from Vehicle
-}
-
-// Modified to play idle animation for all net players, so they see closed hatches & any animated collision boxes are re-set (also server if collision is animated)
-simulated event DrivingStatusChanged()
-{
-    super.DrivingStatusChanged();
-
-    if (!bDriving && (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
-    {
-        Gun.PlayAnim(Gun.BeginningIdleAnim);
-    }
-}
-
-// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
-function bool PlaceExitingDriver()
-{
-    local int    i, StartIndex;
-    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-
-    if (Driver == none)
-    {
-        return false;
-    }
-
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    if (VehicleBase == none)
-    {
-        return false;
-    }
-
-    // Debug exits - uses DHVehicleMGPawn class default, allowing bDebugExitPositions to be toggled for all MG pawns
-    if (class'DHVehicleMGPawn'.default.bDebugExitPositions)
-    {
-        for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
-        {
-            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-
-            Spawn(class'DHDebugTracer',,, ExitPosition);
-        }
-    }
-
-    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
-    StartIndex = i;
-
-    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
-    {
-        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-
-        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) == none &&
-            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none &&
-            Driver.SetLocation(ExitPosition))
-        {
-            return true;
-        }
-
-        ++i;
-
-        if (i == StartIndex)
-        {
-            break;
-        }
-        else if (i == VehicleBase.ExitPositions.Length)
-        {
-            i = 0;
-        }
-    }
-
-    return false;
-}
-
-// Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
-// Also to add in the ironsights turn speed factor if the player is controlling the MG
-function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
-{
-    local float   TurnSpeedFactor;
-    local rotator NewRotation;
-
-    if (CanFire() && DHPlayer(Controller) != none)
-    {
-        TurnSpeedFactor = DHPlayer(Controller).DHISTurnSpeedFactor;
-        YawChange *= TurnSpeedFactor;
-        PitchChange *= TurnSpeedFactor;
-    }
-
-    NewRotation = Rotation;
-    NewRotation.Yaw += 32.0 * DeltaTime * YawChange;
-    NewRotation.Pitch += 32.0 * DeltaTime * PitchChange;
-    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-
-    SetRotation(NewRotation);
-
-    if (bCustomAiming && CanFire())
-    {
-        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-            PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
-        }
-    }
-}
-
-// Modified to optimise & make into generic function to handle all MG types
-simulated function DrawHUD(Canvas Canvas)
-{
-    local PlayerController PC;
-    local vector           CameraLocation, GunOffset, x, y, z;
-    local rotator          CameraRotation;
-    local Actor            ViewActor;
-    local float            SavedOpacity, ScreenRatio;
-
-    PC = PlayerController(Controller);
-
-    if (PC != none && !PC.bBehindView)
-    {
-        // Player is in a position where an overlay should be drawn
-        if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
-        {
-            // Draw any HUD overlay
-            if (HUDOverlay != none)
-            {
-                if (!Level.IsSoftwareRendering())
-                {
-                    CameraRotation = PC.Rotation;
-                    SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-                    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-
-                    // Make the first person gun appear lower when your sticking your head up
-                    if (FirstPersonGunRefBone != '')
-                    {
-                        GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
-                        GunOffset += HUDOverlayOffset;
-                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
-                    }
-                    else
-                    {
-                        CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
-                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        HUDOverlay.SetRotation(CameraRotation);
-                        Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-                    }
-                }
-            }
-            // Draw gunsight overlay
-            else if (MGOverlay != none)
-            {
-                // Save current HUD opacity & then set up for drawing overlays
-                SavedOpacity = Canvas.ColorModulate.W;
-                Canvas.ColorModulate.W = 1.0;
-                Canvas.DrawColor.A = 255;
-                Canvas.Style = ERenderStyle.STY_Alpha;
-
-                ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-                Canvas.SetPos(0.0, 0.0);
-
-                Canvas.DrawTile(MGOverlay, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-
-                Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
-            }
-        }
-
-        // Draw vehicle, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && VehicleBase != none)
-        {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
-        }
-    }
-    else if (HUDOverlay != none)
-    {
-        ActivateOverlay(false);
-    }
-}
-
-// Modified to make into a generic function, avoiding need for overrides in subclasses, & to properly handle vehicle roll
-// Also optimised generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
-{
-    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local vector CamViewOffsetWorld, VehicleZ;
-    local float  CamViewOffsetZAmount;
-
-    ViewActor = self;
-
-    if (PC == none || Gun == none || CameraBone =='')
-    {
-        return;
-    }
-
-    // MG uses custom aim & player is in a firing position, so follow the gun's aim
-    if (bCustomAiming && CanFire())
-    {
-        // Get camera rotation from gun's aim, but factor in the vehicle's rotation, as aim is relative to vehicle
-        RelativeQuat = QuatFromRotator(Gun.CurrentAim);
-        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
-        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
-
-        if (bCustomAiming)
-        {
-            PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-            PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
-        }
-
-        // Get camera location - use GunsightCameraBone if there is one, otherwise use normal CameraBone
-        if (GunsightCameraBone != '')
-        {
-            CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
-        }
-        else
-        {
-            CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-        }
-
-        // Adjust camera location for any offset positioning
-        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation) + CamViewOffsetWorld; // FPCamPos offset is relative to weapon's aim
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-    else
-    {
-        // Get camera rotation from PC rotation, but factor in the vehicle's rotation, as PC rotation is relative to vehicle
-        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
-        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
-        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
-
-        // Get camera location & adjust for any offset positioning
-        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation) + CamViewOffsetWorld; // FPCamPos offset is relative to vehicle rotation
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Gun.Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-
-    // Finalise the camera with any shake
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
-}
-
-// New function, checked by Fire() to see if we are in an eligible firing position (subclass as required)
-function bool CanFire()
-{
-    return true;
-}
-
-// Modified to prevent fire based on CanFire() & to add dry-fire effects if trying to fire empty MG
-function Fire(optional float F)
-{
-    if (!CanFire() || Gun == none)
-    {
-        return;
-    }
-
-    if (Gun.ReadyToFire(false))
-    {
-        VehicleFire(false);
-        bWeaponIsFiring = true;
-
-        if (IsHumanControlled())
-        {
-            Gun.ClientStartFire(Controller, false);
-        }
-    }
-    else if (MGun != none && !MGun.bReloading)
-    {
-        Gun.ShakeView(false);
-        PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5,, 25.0,, true);
-    }
-}
-
-// Emptied out as MG has no alt fire mode, so just ensures nothing happens
-function AltFire(optional float F)
-{
-}
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***************************** GUNNER VIEW POINTS  ****************************** //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
@@ -791,6 +781,10 @@ simulated function AnimateTransition()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************** VEHICLE EXIT  ********************************* //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Modified to add clientside checks before sending the function call to the server
 simulated function SwitchWeapon(byte F)
 {
@@ -890,6 +884,84 @@ function ServerChangeDriverPosition(byte F)
     super.ServerChangeDriverPosition(F);
 }
 
+// Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
+// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
+function bool KDriverLeave(bool bForceLeave)
+{
+    local vector ExitVelocity;
+
+    if (!bForceLeave)
+    {
+        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+        {
+            return false;
+        }
+
+        ExitVelocity = Velocity;
+        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
+    }
+
+    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
+    {
+        if (!bForceLeave)
+        {
+            Instigator.Velocity = ExitVelocity;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
+function DriverDied()
+{
+    super(Vehicle).DriverDied();
+
+    if (VehicleBase != none && VehicleBase.Health > 0)
+    {
+        SetRotatingStatus(0); // kill the rotation sound if the driver dies but the vehicle doesn't
+    }
+
+    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
+}
+
+// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function, & to reset to InitialPositionIndex instead of zero
+function DriverLeft()
+{
+    if (bMultiPosition)
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        LastPositionIndex = InitialPositionIndex;
+    }
+
+    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+
+    DrivingStatusChanged(); // the Super from Vehicle
+}
+
+// Modified so MG retains its aimed direction when player exits & may switch back to external mesh
+// Also to remove playing BeginningIdleAnim as now that's played on all net modes in DrivingStatusChanged()
+simulated state LeavingVehicle
+{
+    simulated function HandleExit()
+    {
+        SwitchMesh(-1); // -1 signifies switch to default external mesh
+    }
+}
+
+// Modified to play idle animation for all net players, so they see closed hatches & any animated collision boxes are re-set (also server if collision is animated)
+simulated event DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving && (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    {
+        Gun.PlayAnim(Gun.BeginningIdleAnim);
+    }
+}
+
 // New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
@@ -927,6 +999,172 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
     return AV != none && AV.bMustUnbuttonToSwitchToRider && AV.bAllowRiders &&
         ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && !CanExit();
 }
+
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
+function bool PlaceExitingDriver()
+{
+    local int    i, StartIndex;
+    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
+
+    if (Driver == none)
+    {
+        return false;
+    }
+
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+
+    if (VehicleBase == none)
+    {
+        return false;
+    }
+
+    // Debug exits - uses DHVehicleMGPawn class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    if (class'DHVehicleMGPawn'.default.bDebugExitPositions)
+    {
+        for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
+        {
+            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+
+            Spawn(class'DHDebugTracer',,, ExitPosition);
+        }
+    }
+
+    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
+    StartIndex = i;
+
+    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
+    {
+        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+
+        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) == none &&
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none &&
+            Driver.SetLocation(ExitPosition))
+        {
+            return true;
+        }
+
+        ++i;
+
+        if (i == StartIndex)
+        {
+            break;
+        }
+        else if (i == VehicleBase.ExitPositions.Length)
+        {
+            i = 0;
+        }
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to call same function on VehicleWeapon class so it pre-caches its Skins array (the RO class missed calling the Super to do that), & also to add an extra material property
+static function StaticPrecache(LevelInfo L)
+{
+    L.AddPrecacheMaterial(default.MGOverlay);
+    L.AddPrecacheMaterial(default.VehicleMGReloadTexture);
+
+    default.GunClass.static.StaticPrecache(L);
+}
+
+// Modified to add an extra material property
+simulated function UpdatePrecacheMaterials()
+{
+    Level.AddPrecacheMaterial(default.MGOverlay);
+    Level.AddPrecacheMaterial(default.VehicleMGReloadTexture);
+}
+
+// Modified to call InitializeMG to do any extra set up in the MG classes
+// This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
+function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
+{
+    super.AttachToVehicle(VehiclePawn, WeaponBone);
+
+    if (Role == ROLE_Authority)
+    {
+        InitializeMG();
+    }
+}
+
+// Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
+// Also to add in the ironsights turn speed factor if the player is controlling the MG
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
+{
+    local float   TurnSpeedFactor;
+    local rotator NewRotation;
+
+    if (CanFire() && DHPlayer(Controller) != none)
+    {
+        TurnSpeedFactor = DHPlayer(Controller).DHISTurnSpeedFactor;
+        YawChange *= TurnSpeedFactor;
+        PitchChange *= TurnSpeedFactor;
+    }
+
+    NewRotation = Rotation;
+    NewRotation.Yaw += 32.0 * DeltaTime * YawChange;
+    NewRotation.Pitch += 32.0 * DeltaTime * PitchChange;
+    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
+
+    SetRotation(NewRotation);
+
+    if (bCustomAiming && CanFire())
+    {
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+            PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        }
+    }
+}
+
+// Modified to correct apparent error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
+function int LocalLimitPitch(int pitch)
+{
+    pitch = pitch & 65535;
+
+    if (DriverPositions.Length > 0)
+    {
+        if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
+        {
+            if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < DriverPositions[DriverPositionIndex].ViewPitchDownLimit - pitch)
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
+            }
+            else
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
+            }
+        }
+    }
+    else
+    {
+        if (pitch > PitchUpLimit && pitch < PitchDownLimit)
+        {
+            if (pitch - PitchUpLimit < PitchDownLimit - pitch)
+            {
+                pitch = PitchUpLimit;
+            }
+            else
+            {
+                pitch = PitchDownLimit;
+            }
+        }
+    }
+
+    return pitch;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *******************************  MISCELLANEOUS ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to handle switching between external & internal mesh, including copying MG's aimed direction to new mesh (just saves code repetition)
 simulated function SwitchMesh(int PositionIndex)
@@ -1003,214 +1241,16 @@ simulated function FixPCRotation(PlayerController PC)
     }
 }
 
-// Modified to correct error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in a multi position weapon
-function int LocalLimitPitch(int pitch)
-{
-    pitch = pitch & 65535;
-
-    if (DriverPositions.Length > 0)
-    {
-        if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
-        {
-            if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < DriverPositions[DriverPositionIndex].ViewPitchDownLimit - pitch)
-            {
-                pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
-            }
-            else
-            {
-                pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
-            }
-        }
-    }
-    else
-    {
-        if (pitch > PitchUpLimit && pitch < PitchDownLimit)
-        {
-            if (pitch - PitchUpLimit < PitchDownLimit - pitch)
-            {
-                pitch = PitchUpLimit;
-            }
-            else
-            {
-                pitch = PitchDownLimit;
-            }
-        }
-    }
-
-    return pitch;
-}
-
-// Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
-function bool ResupplyAmmo()
-{
-    return MGun != none && MGun.ResupplyAmmo();
-}
-
-// New function, used by HUD to show coaxial MG reload progress, like the cannon reload
-function float GetAmmoReloadState()
-{
-    local float ProportionOfReloadRemaining;
-
-    if (MGun != none)
-    {
-        if (MGun.ReadyToFire(false))
-        {
-            return 0.0;
-        }
-        else if (MGun.bReloading)
-        {
-            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
-
-            if (ProportionOfReloadRemaining >= 0.75)
-            {
-                return 1.0;
-            }
-            else if (ProportionOfReloadRemaining >= 0.5)
-            {
-                return 0.65;
-            }
-            else if (ProportionOfReloadRemaining >= 0.25)
-            {
-                return 0.45;
-            }
-            else
-            {
-                return 0.25;
-            }
-        }
-        else
-        {
-            return 1.0; // must be totally out of ammo, so HUD will draw ammo icon all in red to indicate that MG can't be fired
-        }
-    }
-}
-
-// Modified to call same function on VehicleWeapon class so it pre-caches its Skins array (the RO class missed calling the Super to do that), & also to add an extra material property
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheMaterial(default.MGOverlay);
-    L.AddPrecacheMaterial(default.VehicleMGReloadTexture);
-
-    default.GunClass.static.StaticPrecache(L);
-}
-
-// Modified to add an extra material property
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(default.MGOverlay);
-    Level.AddPrecacheMaterial(default.VehicleMGReloadTexture);
-}
-
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-// Matt: modified to switch to external mesh & default FOV for behind view
-simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
-{
-    local int i;
+///////////////////////////////////////////////////////////////////////////////////////
+//  ****************************** EXEC FUNCTIONS  ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
-    if (PC.bBehindView)
-    {
-        if (bBehindViewChanged)
-        {
-            // Switching to behind view, so make rotation non-relative to vehicle
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-                SetRotation(PC.Rotation);
-            }
-
-            if (DriverPositions.Length > 0)
-            {
-                for (i = 0; i < DriverPositions.Length; ++i)
-                {
-                    DriverPositions[i].PositionMesh = Gun.default.Mesh;
-                    DriverPositions[i].ViewFOV = PC.DefaultFOV;
-                    DriverPositions[i].ViewPositiveYawLimit = 65535;
-                    DriverPositions[i].ViewNegativeYawLimit = -65535;
-                    DriverPositions[i].ViewPitchUpLimit = 65535;
-                    DriverPositions[i].ViewPitchDownLimit = 1;
-                }
-
-                SwitchMesh(DriverPositionIndex);
-
-                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            }
-            else
-            {
-                PC.SetFOV(PC.DefaultFOV);
-                Gun.bLimitYaw = false;
-                PitchUpLimit = 65535;
-                PitchDownLimit = 1;
-            }
-        }
-
-        bOwnerNoSee = false;
-
-        if (Driver != none)
-        {
-            Driver.bOwnerNoSee = !bDrawDriverInTP;
-        }
-
-        if (PC == Controller)
-        {
-            ActivateOverlay(false);
-        }
-    }
-    else
-    {
-        if (bBehindViewChanged)
-        {
-            // Switching back from behind view, so make rotation relative to vehicle again
-            if (bPCRelativeFPRotation)
-            {
-                PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
-                SetRotation(PC.Rotation);
-            }
-
-            if (DriverPositions.Length > 0)
-            {
-                for (i = 0; i < DriverPositions.Length; ++i)
-                {
-                    DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
-                    DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
-                    DriverPositions[i].ViewPositiveYawLimit = default.DriverPositions[i].ViewPositiveYawLimit;
-                    DriverPositions[i].ViewNegativeYawLimit = default.DriverPositions[i].ViewNegativeYawLimit;
-                    DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
-                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
-                }
-
-                SwitchMesh(DriverPositionIndex);
-
-                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-            }
-            else
-            {
-                PC.SetFOV(WeaponFOV);
-                Gun.bLimitYaw = Gun.default.bLimitYaw;
-                PitchUpLimit = default.PitchUpLimit;
-                PitchDownLimit = default.PitchDownLimit;
-            }
-        }
-
-        bOwnerNoSee = !bDrawMeshInFP;
-
-        if (Driver != none)
-        {
-            Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
-        }
-
-        if (bDriving && PC == Controller)
-        {
-            ActivateOverlay(true);
-        }
-    }
-}
-
-// Matt: toggles between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+// New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
@@ -1236,7 +1276,7 @@ exec function ToggleMesh()
     }
 }
 
-// Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
+// Modified to work with DHDebugMode & restricted to changing view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
 exec function ToggleViewLimit()
 {
     local int i;
@@ -1288,7 +1328,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// Allows debugging exit positions to be toggled for all MG pawns
+// New exec function that allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -1312,7 +1352,7 @@ defaultproperties
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    bZeroPCRotOnEntry=false // Matt: we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
+    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     bPCRelativeFPRotation=true // MG pawn must have this as it's now assumed in some critical functions
     bCustomAiming=true // several things just don't work quite right without custom aiming
     bDesiredBehindView=false

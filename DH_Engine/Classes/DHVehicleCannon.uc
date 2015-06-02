@@ -9,7 +9,7 @@ class DHVehicleCannon extends ROTankCannon
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // General
-var     DHVehicleCannonPawn    CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     DHVehicleCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var     bool                bHasTurret;               // this cannon is in a fully rotating turret
 var     float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 
@@ -66,8 +66,12 @@ replication
 
     // Variables the server will replicate to all clients
 //  reliable if (bNetDirty && Role == ROLE_Authority)
-//      bManualTurret, bOnFire; // Matt: have deprecated both of these
+//      bManualTurret, bOnFire; // Matt: removed these variables
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to fix minor bug where 1st key press to switch round type key didn't do anything
 simulated function PostBeginPlay()
@@ -106,34 +110,6 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from Vehicle's PostNetReceive()
-// Let's disable Tick altogether to save unnecessary processing
-simulated function Tick(float DeltaTime)
-{
-    Disable('Tick');
-}
-
-// New function to start a turret hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
-simulated function StartTurretFire()
-{
-    if (TurretHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
-    {
-        TurretHatchFireEffect = Spawn(FireEffectClass);
-    }
-
-    if (TurretHatchFireEffect != none)
-    {
-        AttachToBone(TurretHatchFireEffect, FireAttachBone);
-        TurretHatchFireEffect.SetRelativeLocation(FireEffectOffset);
-        TurretHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
-
-        if (FireEffectScale != 1.0)
-        {
-            TurretHatchFireEffect.SetEffectScale(FireEffectScale);
-        }
-    }
-}
-
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have CannonPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
@@ -163,6 +139,426 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
     else
     {
         Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleCannonPawn, so lots of things are not going to work!");
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***************************** KEY ENGINE EVENTS  ******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from Vehicle's PostNetReceive()
+// Let's disable Tick altogether to save unnecessary processing
+simulated function Tick(float DeltaTime)
+{
+    Disable('Tick');
+}
+
+// Modified to simplify a little, including call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do
+// Also to postpone reload if cannon is out of ammo & to sharply reduce frequency of repeat timer if reload can't proceed for now
+simulated function Timer()
+{
+    // Do not proceed with reload if no player in cannon position or if cannon has no ammo - set a repeating timer to keep checking (but reduced from 20 times a second !)
+    if (CannonPawn == none || CannonPawn.Controller == none || PrimaryAmmoCount() < 1)
+    {
+        SetTimer(0.5, true);
+    }
+    else if (CannonReloadState == CR_Empty)
+    {
+        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart1;
+        SetTimer(GetSoundDuration(ReloadSoundOne), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart1)
+    {
+        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart2;
+        SetTimer(GetSoundDuration(ReloadSoundTwo), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart2)
+    {
+        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart3;
+        SetTimer(GetSoundDuration(ReloadSoundThree), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart3)
+    {
+        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        CannonReloadState = CR_ReloadedPart4;
+        SetTimer(GetSoundDuration(ReloadSoundFour), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart4)
+    {
+        if (Role == ROLE_Authority)
+        {
+            bClientCanFireCannon = true;
+        }
+
+        CannonReloadState = CR_ReadyToFire;
+        SetTimer(0.0, false);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *********************************** FIRING ************************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to handle DH's extended ammo system & re-factored to reduce lots of code repetition
+event bool AttemptFire(Controller C, bool bAltFire)
+{
+    local int   FireMode;
+    local float ProjectileSpread;
+
+    // Check that cannon/coaxial MG is ready to fire & that we're an authority role
+    if (((!bAltFire && CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || (bAltFire && FireCountdown <= 0.0)) && Role == ROLE_Authority)
+    {
+        // Calculate the starting WeaponFireRotation
+        CalcWeaponFire(bAltFire);
+
+        if (bCorrectAim)
+        {
+            WeaponFireRotation = AdjustAim(bAltFire);
+        }
+
+        // Calculate any random spread & record the FireMode to simplify things later
+        if (bAltFire)
+        {
+            ProjectileSpread = AltFireSpread;
+        }
+        else
+        {
+            if (Spread > 0.0)
+            {
+                ProjectileSpread = Spread; // a starting point for spread, using any primary round spread
+            }
+
+            if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+            {
+                FireMode = 0;
+            }
+            else if (ProjectileClass == SecondaryProjectileClass)
+            {
+                FireMode = 1;
+
+                if (bUsesSecondarySpread && SecondarySpread > 0.0)
+                {
+                    if (FRand() < 0.6)
+                    {
+                        ProjectileSpread = SecondarySpread;
+                    }
+                    else
+                    {
+                        ProjectileSpread = 0.0015; // 40% chance of SecondaryProjectileClass using literal value for spread instead of shell's SecondarySpread // Matt: why? // TEST
+                    }
+                }
+            }
+            else if (ProjectileClass == TertiaryProjectileClass)
+            {
+                FireMode = 2;
+
+                // No spread here for canister shot, as it is randomised separately for each projectile fired (in the Fire function)
+                if (bUsesTertiarySpread && TertiarySpread > 0.0 && class<DHTankCannonShellCanister>(TertiaryProjectileClass) == none)
+                {
+                    ProjectileSpread = TertiarySpread;
+                }
+            }
+
+            // Now apply any random spread
+            if (ProjectileSpread > 0.0)
+            {
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
+
+                if (!bAltFire)
+                {
+                    WeaponFireRotation += rot(1, 6, 0);
+                }
+            }
+        }
+
+        Instigator.MakeNoise(1.0);
+
+        // Coaxial MG fire - check we have ammo & fire the MG
+        if (bAltFire)
+        {
+            // If MG is empty we can't fire - start a reload
+            if (!ConsumeAmmo(3))
+            {
+                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                HandleReload();
+
+                return false;
+            }
+
+            // Fire
+            AltFire(C);
+            FireCountdown = AltFireInterval;
+            AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
+
+            // If we just fired our last MG round, start an MG reload
+            if (!HasAmmo(3))
+            {
+                HandleReload();
+            }
+        }
+        // Cannon fire - check we have ammo & fire the current round
+        else
+        {
+            // If cannon is empty we can't fire
+            if (!ConsumeAmmo(FireMode))
+            {
+                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+
+                return false;
+            }
+
+            // Fire
+            Fire(C);
+            bClientCanFireCannon = false;
+
+            // If player uses manual reloading, just set the reload state to waiting (for key press)
+            if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
+            {
+                CannonReloadState = CR_Waiting;
+            }
+            // Otherwise start a reload, including switch to another ammo type if we have run out of the current type
+            // Note we don't start a reload on the client, as that gets done in OwnerEffects(), for effects only
+            else
+            {
+                if (!HasAmmo(FireMode))
+                {
+                    if (FireMode == GetPendingRoundIndex()) // don't toggle if we already have a different pending ammo type selected
+                    {
+                        ToggleRoundType();
+                    }
+
+                    ProjectileClass = PendingProjectileClass;
+                }
+
+                CannonReloadState = CR_Empty;
+                SetTimer(0.01, false);
+            }
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+state ProjectileFireMode
+{
+    // Modified to handle canister shot
+    function Fire(Controller C)
+    {
+        local vector  WeaponFireVector;
+        local int     ProjectilesToFire, i;
+
+        // If firing canister shot
+        if (class<DHTankCannonShellCanister>(ProjectileClass) != none)
+        {
+            bCanisterIsFiring = true;
+            ProjectilesToFire = class<DHTankCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
+            WeaponFireVector = vector(WeaponFireRotation);
+
+            for (i = 1; i <= ProjectilesToFire; ++i)
+            {
+                WeaponFireRotation = rotator(WeaponFireVector + VRand() * FRand() * TertiarySpread);
+                WeaponFireRotation += rot(1, 6, 0);
+
+                if (i >= ProjectilesToFire)
+                {
+                    bCanisterIsFiring = false;
+                }
+
+                SpawnProjectile(ProjectileClass, false);
+            }
+        }
+        // Otherwise the usual Super for normal cannon fire
+        else
+        {
+            SpawnProjectile(ProjectileClass, false);
+        }
+    }
+
+    // Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
+    function AltFire(Controller C)
+    {
+        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
+        if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % AltFireTracerFrequency == 0.0) && AltTracerProjectileClass != none)
+        {
+            SpawnProjectile(AltTracerProjectileClass, true);
+        }
+        else if (AltFireProjectileClass != none)
+        {
+            SpawnProjectile(AltFireProjectileClass, true);
+        }
+    }
+}
+
+// Modified to handle canister shot, by avoiding possibility of switching to a different round type until canister finishes spawning its last separate projectile
+function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+{
+    local Projectile P;
+    local vector     StartLocation, HitLocation, HitNormal, Extent;
+    local rotator    FireRot;
+
+    // Calculate projectile's starting rotation
+    FireRot = WeaponFireRotation;
+
+    if (Instigator != none && Instigator.IsHumanControlled())
+    {
+        FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
+    }
+
+    if (!bAltFire && RangeSettings.Length > 0)
+    {
+        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+
+        if (bCannonShellDebugging)
+        {
+            Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        }
+    }
+
+    // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
+    if (bDoOffsetTrace)
+    {
+        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+        Extent.Z = ProjClass.default.CollisionHeight;
+
+        if (CannonPawn != none && CannonPawn.VehicleBase != none)
+        {
+            if (!CannonPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
+                WeaponFireLocation + vector(WeaponFireRotation) * (CannonPawn.VehicleBase.CollisionRadius * 1.5), Extent))
+            {
+                StartLocation = HitLocation;
+            }
+            else
+            {
+                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
+            }
+        }
+        else
+        {
+            if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
+            {
+                StartLocation = HitLocation;
+            }
+            else
+            {
+                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
+            }
+        }
+    }
+    else
+    {
+        StartLocation = WeaponFireLocation;
+    }
+
+    if (bCannonShellDebugging)
+    {
+        Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
+    }
+
+    // Now spawn the projectile
+    P = Spawn(ProjClass, none,, StartLocation, FireRot);
+
+    // If pending round type is different, switch round type (unless it's canister in the process of spawning separate projectiles)
+    if (ProjectileClass != PendingProjectileClass && PendingProjectileClass != none && ProjClass == ProjectileClass && !bCanisterIsFiring)
+    {
+        ProjectileClass = PendingProjectileClass;
+    }
+
+    if (P != none)
+    {
+        if (bInheritVelocity)
+        {
+            P.Velocity = Instigator.Velocity;
+        }
+
+        // Play firing effects (unless it's canister in the process of spawning separate projectiles - only do it once at the end)
+        if (!bCanisterIsFiring)
+        {
+            FlashMuzzleFlash(bAltFire);
+
+            if (bAltFire)
+            {
+                if (bAmbientAltFireSound)
+                {
+                    AmbientSound = AltFireSoundClass;
+                    SoundVolume = AltFireSoundVolume;
+                    SoundRadius = AltFireSoundRadius;
+                    AmbientSoundScaling = AltFireSoundScaling;
+                }
+                else
+                {
+                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
+                }
+            }
+            else
+            {
+                if (bAmbientFireSound)
+                {
+                    AmbientSound = FireSoundClass;
+                }
+                else
+                {
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                }
+            }
+        }
+    }
+
+    return P;
+}
+
+// Modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
+// Also to avoid playing unnecessary shoot animations on a server
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+    if (Role == ROLE_Authority)
+    {
+        FiringMode = byte(bWasAltFire);
+        FlashCount++;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+    }
+    else
+    {
+        CalcWeaponFire(bWasAltFire);
+    }
+
+//  if (!bAltFireTracersOnly && bUsesTracers && !bWasAltFire)
+//  {
+//      UpdateTracer();
+//  }
+
+    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
+    {
+        if (FlashEmitter != none)
+        {
+            FlashEmitter.Trigger(self, Instigator);
+        }
+
+        if (EffectEmitterClass != none && EffectIsRelevant(Location, false))
+        {
+            EffectEmitter = Spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
+        }
+
+        if (CannonDustEmitterClass != none && EffectIsRelevant(Location, false))
+        {
+            CannonDustEmitter = Spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
+        }
+
+        if (CannonPawn != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed)
+        {
+            if (HasAnim(TankShootOpenAnim))
+            {
+                PlayAnim(TankShootOpenAnim);
+            }
+        }
+        else if (HasAnim(TankShootClosedAnim))
+        {
+            PlayAnim(TankShootClosedAnim);
+        }
     }
 }
 
@@ -214,6 +610,603 @@ simulated function InitEffects()
         }
     }
 }
+
+// Modified to stop 'phantom' coaxial MG firing effects (muzzle flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button
+// Also to enable MG muzzle flash when hosting a listen server, which the original code misses out
+simulated function OwnerEffects()
+{
+    if (Role < ROLE_Authority && bIsAltFire && CannonPawn != none && !CannonPawn.CanFire())
+    {
+        CannonPawn.ClientVehicleCeaseFire(bIsAltFire); // stops MG flash & tracers
+
+        return;
+    }
+
+    super.OwnerEffects();
+
+    if (Level.NetMode == NM_ListenServer && bIsAltFire && AmbientEffectEmitter != none) // to get MG muzzle flash on listen server
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true);
+    }
+}
+
+// Modified to remove shake from coaxial MGs
+simulated function ShakeView(bool bWasAltFire)
+{
+    if (!bWasAltFire && Instigator != none && PlayerController(Instigator.Controller) != none)
+    {
+        PlayerController(Instigator.Controller).WeaponShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
+    }
+}
+
+// Modified to handle DH's extended ammo system (coax MG is now mode 3)
+function CeaseFire(Controller C, bool bWasAltFire)
+{
+    super(ROVehicleWeapon).CeaseFire(C, bWasAltFire);
+
+    if (bWasAltFire && !HasAmmo(3))
+    {
+        HandleReload();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************* RANGE SETTING  ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Functions extended for easy tuning of gunsights in development mode
+// Modified to network optimise by clientside check before sending replicated function to server, & also playing click clientside, not replicating it back
+// These functions now get called on both client & server, but only progress to server if it's a valid action (see modified LeanLeft & LeanRight execs in DHPlayer)
+simulated function IncrementRange()
+{
+    // If bGunsightSettingMode is enabled & gun not loaded, then the range control buttons change sight adjustment up and down
+    if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
+    {
+        if (Role == ROLE_Authority) // the server action from when this was a server only function
+        {
+            IncreaseAddedPitch();
+            GiveInitialAmmo();
+        }
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none) // net client just calls the server function
+        {
+            ROPlayer(Instigator.Controller).ServerLeanRight(true);
+        }
+    }
+    // Normal range adjustment - 1st make sure it's a valid action
+    else if (CurrentRangeIndex < RangeSettings.Length - 1)
+    {
+        if (Role == ROLE_Authority) // the server action from when this was a server only function
+        {
+            CurrentRangeIndex++;
+        }
+
+        if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller) != none)
+        {
+            if (Role < ROLE_Authority) // net client calls the server function, but only if we passed the valid action check
+            {
+                ROPlayer(Instigator.Controller).ServerLeanRight(true);
+            }
+
+            if (Instigator.IsLocallyControlled()) // play click sound only locally
+            {
+                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+            }
+        }
+    }
+}
+
+simulated function DecrementRange()
+{
+    if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
+    {
+        if (Role == ROLE_Authority)
+        {
+            DecreaseAddedPitch();
+            GiveInitialAmmo();
+        }
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+        {
+            ROPlayer(Instigator.Controller).ServerLeanLeft(true);
+        }
+    }
+    else if (CurrentRangeIndex > 0)
+    {
+        if (Role == ROLE_Authority)
+        {
+            CurrentRangeIndex--;
+        }
+
+        if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller) != none)
+        {
+            if (Role < ROLE_Authority)
+            {
+                ROPlayer(Instigator.Controller).ServerLeanLeft(true);
+            }
+
+            if (Instigator.IsLocallyControlled())
+            {
+                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+            }
+        }
+    }
+}
+
+// Functions making AddedPitch (gunsight correction) adjustment and display:
+function IncreaseAddedPitch()
+{
+    local int MechanicalRangesValue, Correction;
+
+    AddedPitch += 2;
+
+    if (RangeSettings.Length > 0)
+    {
+        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    }
+
+    Correction = AddedPitch - default.AddedPitch;
+
+    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
+    }
+}
+
+function DecreaseAddedPitch()
+{
+    local int MechanicalRangesValue, Correction;
+
+    AddedPitch -= 2;
+
+    if (RangeSettings.Length > 0)
+    {
+        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    }
+
+    Correction = AddedPitch - default.AddedPitch;
+
+    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
+    }
+}
+
+// Modified to return zero if there are no RangeSettings, e.g. for American cannons without adjustable sights
+simulated function int GetRange()
+{
+    if (CurrentRangeIndex < RangeSettings.Length)
+    {
+        return RangeSettings[CurrentRangeIndex];
+    }
+
+    return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ****************************** AMMO & RELOADING *******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to use DH's MainAmmoChargeExtra array
+function bool GiveInitialAmmo()
+{
+    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo ||
+        AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
+    {
+        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
+        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
+        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+        AltAmmoCharge = InitialAltAmmo;
+        NumAltMags = default.NumAltMags;
+
+        return true;
+    }
+
+    return false;
+}
+
+// New function (in VehicleWeapon class) to use DH's new incremental resupply system (only resupplies rounds; doesn't reload the cannon)
+function bool ResupplyAmmo()
+{
+    local bool bDidResupply;
+
+    if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
+    {
+        ++MainAmmoChargeExtra[0];
+        bDidResupply = true;
+    }
+
+    if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
+    {
+        ++MainAmmoChargeExtra[1];
+        bDidResupply = true;
+    }
+
+    if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
+    {
+        ++MainAmmoChargeExtra[2];
+        bDidResupply = true;
+    }
+
+    if (NumAltMags < default.NumAltMags)
+    {
+        ++NumAltMags;
+        bDidResupply = true;
+
+        // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
+        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
+        if (!HasAmmo(3) && Instigator.Controller != none && Role == ROLE_Authority)
+        {
+            HandleReload();
+        }
+    }
+
+    return bDidResupply;
+}
+
+// Modified to handle DH's extended ammo system
+simulated function bool ConsumeAmmo(int Mode)
+{
+    if (!HasAmmo(Mode))
+    {
+        return false;
+    }
+
+    switch (Mode)
+    {
+        case 0:
+            MainAmmoChargeExtra[0]--;
+            return true;
+        case 1:
+            MainAmmoChargeExtra[1]--;
+            return true;
+        case 2:
+            MainAmmoChargeExtra[2]--;
+            return true;
+        case 3:
+            AltAmmoCharge--;
+            return true;
+        default:
+            return false;
+    }
+
+    return false;
+}
+
+// Modified to handle DH's extended ammo system (coax MG is now mode 3)
+simulated function bool HasAmmo(int Mode)
+{
+    switch (Mode)
+    {
+        case 0:
+            return (MainAmmoChargeExtra[0] > 0);
+            break;
+        case 1:
+            return (MainAmmoChargeExtra[1] > 0);
+            break;
+        case 2:
+            return (MainAmmoChargeExtra[2] > 0);
+            break;
+        case 3:
+            return (AltAmmoCharge > 0);
+            break;
+        default:
+            return false;
+    }
+
+    return false;
+}
+
+// Modified to handle DH's extended ammo system
+simulated function int PrimaryAmmoCount()
+{
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    {
+        return MainAmmoChargeExtra[0];
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        return MainAmmoChargeExtra[1];
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        return MainAmmoChargeExtra[2];
+    }
+}
+
+// Modified to handle DH's extended ammo system
+simulated function int GetRoundsDescription(out array<string> Descriptions)
+{
+    local int i;
+
+    Descriptions.Length = 0;
+
+    for (i = 0; i < ProjectileDescriptions.Length; ++i)
+    {
+        Descriptions[i] = ProjectileDescriptions[i];
+    }
+
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    {
+        return 0;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        return 1;
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        return 2;
+    }
+    else
+    {
+        return 3;
+    }
+}
+
+// Modified to handle DH's extended ammo system
+simulated function int GetPendingRoundIndex()
+{
+    if (PendingProjectileClass != none)
+    {
+        if (PendingProjectileClass == PrimaryProjectileClass)
+        {
+            return 0;
+        }
+        else if (PendingProjectileClass == SecondaryProjectileClass)
+        {
+            return 1;
+        }
+        else if (PendingProjectileClass == TertiaryProjectileClass)
+        {
+            return 2;
+        }
+        else
+        {
+            return -1; // RO used 3 as the invalid/null return value, but that runs the risk of functions like HasAmmo() using 3 to return the alt fire (coaxial MG) ammo status
+        }
+    }
+    else
+    {
+        if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+        {
+            return 0;
+        }
+        else if (ProjectileClass == SecondaryProjectileClass)
+        {
+            return 1;
+        }
+        else if (ProjectileClass == TertiaryProjectileClass)
+        {
+            return 2;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+}
+
+// Modified to optimise slightly
+simulated function bool ReadyToFire(bool bAltFire)
+{
+    local int Mode;
+
+    if (bAltFire)
+    {
+        Mode = 3;
+    }
+    else
+    {
+        if (CannonReloadState != CR_ReadyToFire || !bClientCanFireCannon)
+        {
+            return false;
+        }
+
+        if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+        {
+            Mode = 0;
+        }
+        else if (ProjectileClass == SecondaryProjectileClass)
+        {
+            Mode = 1;
+        }
+        else if (ProjectileClass == TertiaryProjectileClass)
+        {
+            Mode = 2;
+        }
+    }
+
+    return HasAmmo(Mode);
+}
+
+// Modified to handle DH's extended ammo system
+function ToggleRoundType()
+{
+    if (PendingProjectileClass == PrimaryProjectileClass)
+    {
+        if (HasAmmo(1))
+        {
+            PendingProjectileClass = SecondaryProjectileClass;
+        }
+        else if (HasAmmo(2))
+        {
+            PendingProjectileClass = TertiaryProjectileClass;
+        }
+    }
+    else if (PendingProjectileClass == SecondaryProjectileClass)
+    {
+        if (HasAmmo(2))
+        {
+            PendingProjectileClass = TertiaryProjectileClass;
+        }
+        else if (HasAmmo(0))
+        {
+            PendingProjectileClass = PrimaryProjectileClass;
+        }
+    }
+    else if (PendingProjectileClass == TertiaryProjectileClass)
+    {
+        if (HasAmmo(0))
+        {
+            PendingProjectileClass = PrimaryProjectileClass;
+        }
+        else if (HasAmmo(1))
+        {
+            PendingProjectileClass = SecondaryProjectileClass;
+        }
+    }
+    else
+    {
+        if (HasAmmo(0))
+        {
+            PendingProjectileClass = PrimaryProjectileClass;
+        }
+        else if (HasAmmo(1))
+        {
+            PendingProjectileClass = SecondaryProjectileClass;
+        }
+        else if (HasAmmo(2))
+        {
+            PendingProjectileClass = TertiaryProjectileClass;
+        }
+    }
+}
+
+// Modified to prevent attempting reload if don't have ammo
+function ServerManualReload()
+{
+    if (Role == ROLE_Authority && CannonReloadState == CR_Waiting && HasAmmo(GetPendingRoundIndex()))
+    {
+        // If player has selected a different ammo type, switch now
+        if (PendingProjectileClass != ProjectileClass && PendingProjectileClass != none)
+        {
+            ProjectileClass = PendingProjectileClass;
+        }
+
+        // Start reload on both client & server
+        CannonReloadState = CR_Empty;
+        ClientSetReloadState(CannonReloadState); // tell a net client to start reloading
+        SetTimer(0.01, false);
+    }
+}
+
+// Modified so only sets timer if the new reload state needs it, & to only act on net client (avoids duplication for standalone or listen server)
+simulated function ClientSetReloadState(ECannonReloadState NewState)
+{
+    if (Role < ROLE_Authority)
+    {
+        CannonReloadState = NewState;
+
+        if (CannonReloadState != CR_Waiting  && CannonReloadState != CR_ReadyToFire)
+        {
+            SetTimer(0.01, false);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************  COMMANDER HIT DETECTION  ***************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the commander's collision box?"
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+{
+    local vector HitOffset;
+
+    HitOffset = (HitLocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
+
+    // We must have hit the commander's collision box (HitOffset.Z is how far the HitLocation is above the mesh origin)
+    if (HitOffset.Z >= MinCommanderHitHeight)
+    {
+        if (bDriverDebugging)
+        {
+            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
+
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
+            }
+        }
+
+        return true;
+    }
+    // We can't have hit the commander so we must have hit the turret (or some other collision box)
+    else
+    {
+        if (bDriverDebugging)
+        {
+            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
+
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
+            }
+        }
+
+        return false;
+    }
+}
+
+// Matt: slightly different concept to work more accurately & simply with projectiles
+// Think of this function as asking "is there an exposed commander there & did we actually hit him, not just his collision box?"
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
+{
+    // True if commander is present & is not buttoned up & we hit one of the hit points representing his head or torso
+    return CannonPawn != none && CannonPawn.Driver != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
+        (IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1));
+}
+
+// Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
+simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
+{
+    local  coords  C;
+    local  vector  HeadLoc, B, M, Diff;
+    local  float   t, DotMM, Distance;
+
+    if (VehHitpoints.Length <= Index || VehHitpoints[Index].PointBone == '') // added check against array length to avoid "out of bounds" errors
+    {
+        return false;
+    }
+
+    C = GetBoneCoords(VehHitpoints[Index].PointBone);
+    HeadLoc = C.Origin + (VehHitpoints[Index].PointHeight * VehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
+    HeadLoc = HeadLoc + (VehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
+
+    // Express snipe trace line in terms of B + tM
+    B = Loc;
+    M = Ray * 150.0;
+
+    // Find point-line squared distance
+    Diff = HeadLoc - B;
+    t = M dot Diff;
+
+    if (t > 0.0)
+    {
+        DotMM = M dot M;
+
+        if (t < DotMM)
+        {
+            t = t / DotMM;
+            Diff = Diff - (t * M);
+        }
+        else
+        {
+            t = 1.0;
+            Diff -= M;
+        }
+    }
+    else
+    {
+        t = 0.0;
+    }
+
+    Distance = Sqrt(Diff dot Diff);
+
+    return Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************  HIT DETECTION, PENETRATION & DAMAGE  ********************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
@@ -641,7 +1634,7 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 {
     if (P.RoundType == RT_HVAP)
     {
-        // Matt: TEST - maybe this should include 88mm APCR, which is same as HVAP?
+        // Matt: maybe this should include 88mm APCR, which is same as HVAP? // TEST
         if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.27)
@@ -705,824 +1698,42 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 }
 
-// Modified to handle DH's extended ammo system
-simulated function int GetRoundsDescription(out array<string> Descriptions)
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties
+static function StaticPrecache(LevelInfo L)
 {
     local int i;
 
-    Descriptions.Length = 0;
-
-    for (i = 0; i < ProjectileDescriptions.Length; ++i)
+    for (i = 0; i < default.Skins.Length; ++i)
     {
-        Descriptions[i] = ProjectileDescriptions[i];
+        L.AddPrecacheMaterial(default.Skins[i]);
     }
 
-    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    super.StaticPrecache(L);
+
+    L.AddPrecacheMaterial(default.hudAltAmmoIcon);
+
+    if (default.HighDetailOverlay != none)
     {
-        return 0;
+        L.AddPrecacheMaterial(default.HighDetailOverlay);
     }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        return 1;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass)
-    {
-        return 2;
-    }
-    else
-    {
-        return 3;
-    }
+
 }
 
-// Modified to handle DH's extended ammo system
-simulated function int GetPendingRoundIndex()
+// Modified to add extra material properties (note the Super in Actor already pre-caches the Skins array)
+simulated function UpdatePrecacheMaterials()
 {
-    if (PendingProjectileClass != none)
+    super.UpdatePrecacheMaterials();
+
+    Level.AddPrecacheMaterial(hudAltAmmoIcon);
+
+    if (HighDetailOverlay != none)
     {
-        if (PendingProjectileClass == PrimaryProjectileClass)
-        {
-            return 0;
-        }
-        else if (PendingProjectileClass == SecondaryProjectileClass)
-        {
-            return 1;
-        }
-        else if (PendingProjectileClass == TertiaryProjectileClass)
-        {
-            return 2;
-        }
-        else
-        {
-            return -1; // RO used 3 as the invalid/null return value, but that runs the risk of functions like HasAmmo() using 3 to return the alt fire (coaxial MG) ammo status
-        }
+        Level.AddPrecacheMaterial(HighDetailOverlay);
     }
-    else
-    {
-        if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-        {
-            return 0;
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            return 1;
-        }
-        else if (ProjectileClass == TertiaryProjectileClass)
-        {
-            return 2;
-        }
-        else
-        {
-            return -1;
-        }
-    }
-}
-
-// Modified to handle DH's extended ammo system
-function ToggleRoundType()
-{
-    if (PendingProjectileClass == PrimaryProjectileClass)
-    {
-        if (HasAmmo(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-        else if (HasAmmo(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-    else if (PendingProjectileClass == SecondaryProjectileClass)
-    {
-        if (HasAmmo(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-        else if (HasAmmo(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-    }
-    else if (PendingProjectileClass == TertiaryProjectileClass)
-    {
-        if (HasAmmo(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasAmmo(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-    }
-    else
-    {
-        if (HasAmmo(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasAmmo(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-        else if (HasAmmo(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-}
-
-// Modified to handle DH's extended ammo system & re-factored to reduce lots of code repetition
-event bool AttemptFire(Controller C, bool bAltFire)
-{
-    local int   FireMode;
-    local float ProjectileSpread;
-
-    // Check that cannon/coaxial MG is ready to fire & that we're an authority role
-    if (((!bAltFire && CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || (bAltFire && FireCountdown <= 0.0)) && Role == ROLE_Authority)
-    {
-        // Calculate the starting WeaponFireRotation
-        CalcWeaponFire(bAltFire);
-
-        if (bCorrectAim)
-        {
-            WeaponFireRotation = AdjustAim(bAltFire);
-        }
-
-        // Calculate any random spread & record the FireMode to simplify things later
-        if (bAltFire)
-        {
-            ProjectileSpread = AltFireSpread;
-        }
-        else
-        {
-            if (Spread > 0.0)
-            {
-                ProjectileSpread = Spread; // a starting point for spread, using any primary round spread
-            }
-
-            if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-            {
-                FireMode = 0;
-            }
-            else if (ProjectileClass == SecondaryProjectileClass)
-            {
-                FireMode = 1;
-
-                if (bUsesSecondarySpread && SecondarySpread > 0.0)
-                {
-                    if (FRand() < 0.6)
-                    {
-                        ProjectileSpread = SecondarySpread;
-                    }
-                    else
-                    {
-                        ProjectileSpread = 0.0015; // 40% chance of SecondaryProjectileClass using literal value for spread instead of shell's SecondarySpread // Matt: why?
-                    }
-                }
-            }
-            else if (ProjectileClass == TertiaryProjectileClass)
-            {
-                FireMode = 2;
-
-                // No spread here for canister shot, as it is randomised separately for each projectile fired (in the Fire function)
-                if (bUsesTertiarySpread && TertiarySpread > 0.0 && class<DHTankCannonShellCanister>(TertiaryProjectileClass) == none)
-                {
-                    ProjectileSpread = TertiarySpread;
-                }
-            }
-
-            // Now apply any random spread
-            if (ProjectileSpread > 0.0)
-            {
-                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
-
-                if (!bAltFire)
-                {
-                    WeaponFireRotation += rot(1, 6, 0);
-                }
-            }
-        }
-
-        Instigator.MakeNoise(1.0);
-
-        // Coaxial MG fire - check we have ammo & fire the MG
-        if (bAltFire)
-        {
-            // If MG is empty we can't fire - start a reload
-            if (!ConsumeAmmo(3))
-            {
-                CannonPawn.ClientVehicleCeaseFire(bAltFire);
-                HandleReload();
-
-                return false;
-            }
-
-            // Fire
-            AltFire(C);
-            FireCountdown = AltFireInterval;
-            AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
-
-            // If we just fired our last MG round, start an MG reload
-            if (!HasAmmo(3))
-            {
-                HandleReload();
-            }
-        }
-        // Cannon fire - check we have ammo & fire the current round
-        else
-        {
-            // If cannon is empty we can't fire
-            if (!ConsumeAmmo(FireMode))
-            {
-                CannonPawn.ClientVehicleCeaseFire(bAltFire);
-
-                return false;
-            }
-
-            // Fire
-            Fire(C);
-            bClientCanFireCannon = false;
-
-            // If player uses manual reloading, just set the reload state to waiting (for key press)
-            if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
-            {
-                CannonReloadState = CR_Waiting;
-            }
-            // Otherwise start a reload, including switch to another ammo type if we have run out of the current type
-            // Note we don't start a reload on the client, as that gets done in OwnerEffects(), for effects only
-            else
-            {
-                if (!HasAmmo(FireMode))
-                {
-                    if (FireMode == GetPendingRoundIndex()) // don't toggle if we already have a different pending ammo type selected
-                    {
-                        ToggleRoundType();
-                    }
-
-                    ProjectileClass = PendingProjectileClass;
-                }
-
-                CannonReloadState = CR_Empty;
-                SetTimer(0.01, false);
-            }
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-state ProjectileFireMode
-{
-    // Modified to handle canister shot
-    function Fire(Controller C)
-    {
-        local vector  WeaponFireVector;
-        local int     ProjectilesToFire, i;
-
-        // If firing canister shot
-        if (class<DHTankCannonShellCanister>(ProjectileClass) != none)
-        {
-            bCanisterIsFiring = true;
-            ProjectilesToFire = class<DHTankCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
-            WeaponFireVector = vector(WeaponFireRotation);
-
-            for (i = 1; i <= ProjectilesToFire; ++i)
-            {
-                WeaponFireRotation = rotator(WeaponFireVector + VRand() * FRand() * TertiarySpread);
-                WeaponFireRotation += rot(1, 6, 0);
-
-                if (i >= ProjectilesToFire)
-                {
-                    bCanisterIsFiring = false;
-                }
-
-                SpawnProjectile(ProjectileClass, false);
-            }
-        }
-        // Otherwise the usual Super for normal cannon fire
-        else
-        {
-            SpawnProjectile(ProjectileClass, false);
-        }
-    }
-
-    // Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
-    function AltFire(Controller C)
-    {
-        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
-        if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % AltFireTracerFrequency == 0.0) && AltTracerProjectileClass != none)
-        {
-            SpawnProjectile(AltTracerProjectileClass, true);
-        }
-        else if (AltFireProjectileClass != none)
-        {
-            SpawnProjectile(AltFireProjectileClass, true);
-        }
-    }
-}
-
-// Modified to handle canister shot, by avoiding possibility of switching to a different round type until canister finishes spawning its last separate projectile
-function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
-{
-    local Projectile P;
-    local vector     StartLocation, HitLocation, HitNormal, Extent;
-    local rotator    FireRot;
-
-    // Calculate projectile's starting rotation
-    FireRot = WeaponFireRotation;
-
-    if (Instigator != none && Instigator.IsHumanControlled())
-    {
-        FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
-    }
-
-    if (!bAltFire && RangeSettings.Length > 0)
-    {
-        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-
-        if (bCannonShellDebugging)
-        {
-            Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
-        }
-    }
-
-    // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
-    if (bDoOffsetTrace)
-    {
-        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-        Extent.Z = ProjClass.default.CollisionHeight;
-
-        if (CannonPawn != none && CannonPawn.VehicleBase != none)
-        {
-            if (!CannonPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
-                WeaponFireLocation + vector(WeaponFireRotation) * (CannonPawn.VehicleBase.CollisionRadius * 1.5), Extent))
-            {
-                StartLocation = HitLocation;
-            }
-            else
-            {
-                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-            }
-        }
-        else
-        {
-            if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
-            {
-                StartLocation = HitLocation;
-            }
-            else
-            {
-                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-            }
-        }
-    }
-    else
-    {
-        StartLocation = WeaponFireLocation;
-    }
-
-    if (bCannonShellDebugging)
-    {
-        Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
-    }
-
-    // Now spawn the projectile
-    P = Spawn(ProjClass, none,, StartLocation, FireRot);
-
-    // If pending round type is different, switch round type (unless it's canister in the process of spawning separate projectiles)
-    if (ProjectileClass != PendingProjectileClass && PendingProjectileClass != none && ProjClass == ProjectileClass && !bCanisterIsFiring)
-    {
-        ProjectileClass = PendingProjectileClass;
-    }
-
-    if (P != none)
-    {
-        if (bInheritVelocity)
-        {
-            P.Velocity = Instigator.Velocity;
-        }
-
-        // Play firing effects (unless it's canister in the process of spawning separate projectiles - only do it once at the end)
-        if (!bCanisterIsFiring)
-        {
-            FlashMuzzleFlash(bAltFire);
-
-            if (bAltFire)
-            {
-                if (bAmbientAltFireSound)
-                {
-                    AmbientSound = AltFireSoundClass;
-                    SoundVolume = AltFireSoundVolume;
-                    SoundRadius = AltFireSoundRadius;
-                    AmbientSoundScaling = AltFireSoundScaling;
-                }
-                else
-                {
-                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-                }
-            }
-            else
-            {
-                if (bAmbientFireSound)
-                {
-                    AmbientSound = FireSoundClass;
-                }
-                else
-                {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-                }
-            }
-        }
-    }
-
-    return P;
-}
-
-// Modified to stop 'phantom' coaxial MG firing effects (muzzle flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button
-// Also to enable MG muzzle flash when hosting a listen server, which the original code misses out
-simulated function OwnerEffects()
-{
-    if (Role < ROLE_Authority && bIsAltFire && CannonPawn != none && !CannonPawn.CanFire())
-    {
-        CannonPawn.ClientVehicleCeaseFire(bIsAltFire); // stops MG flash & tracers
-
-        return;
-    }
-
-    super.OwnerEffects();
-
-    if (Level.NetMode == NM_ListenServer && bIsAltFire && AmbientEffectEmitter != none) // to get MG muzzle flash on listen server
-    {
-        AmbientEffectEmitter.SetEmitterStatus(true);
-    }
-}
-
-// Modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
-// Also to avoid playing unnecessary shoot animations on a server
-simulated function FlashMuzzleFlash(bool bWasAltFire)
-{
-    if (Role == ROLE_Authority)
-    {
-        FiringMode = byte(bWasAltFire);
-        FlashCount++;
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-    }
-    else
-    {
-        CalcWeaponFire(bWasAltFire);
-    }
-
-//  if (!bAltFireTracersOnly && bUsesTracers && !bWasAltFire)
-//  {
-//      UpdateTracer();
-//  }
-
-    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
-    {
-        if (FlashEmitter != none)
-        {
-            FlashEmitter.Trigger(self, Instigator);
-        }
-
-        if (EffectEmitterClass != none && EffectIsRelevant(Location, false))
-        {
-            EffectEmitter = Spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
-        }
-
-        if (CannonDustEmitterClass != none && EffectIsRelevant(Location, false))
-        {
-            CannonDustEmitter = Spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
-        }
-
-        if (CannonPawn != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed)
-        {
-            if (HasAnim(TankShootOpenAnim))
-            {
-                PlayAnim(TankShootOpenAnim);
-            }
-        }
-        else if (HasAnim(TankShootClosedAnim))
-        {
-            PlayAnim(TankShootClosedAnim);
-        }
-    }
-}
-
-// Modified to handle DH's extended ammo system (coax MG is now mode 3)
-function CeaseFire(Controller C, bool bWasAltFire)
-{
-    super(ROVehicleWeapon).CeaseFire(C, bWasAltFire);
-
-    if (bWasAltFire && !HasAmmo(3))
-    {
-        HandleReload();
-    }
-}
-
-// Modified to handle DH's extended ammo system (coax MG is now mode 3)
-simulated function bool HasAmmo(int Mode)
-{
-    switch (Mode)
-    {
-        case 0:
-            return (MainAmmoChargeExtra[0] > 0);
-            break;
-        case 1:
-            return (MainAmmoChargeExtra[1] > 0);
-            break;
-        case 2:
-            return (MainAmmoChargeExtra[2] > 0);
-            break;
-        case 3:
-            return (AltAmmoCharge > 0);
-            break;
-        default:
-            return false;
-    }
-
-    return false;
-}
-
-// Modified to optimise slightly
-simulated function bool ReadyToFire(bool bAltFire)
-{
-    local int Mode;
-
-    if (bAltFire)
-    {
-        Mode = 3;
-    }
-    else
-    {
-        if (CannonReloadState != CR_ReadyToFire || !bClientCanFireCannon)
-        {
-            return false;
-        }
-
-        if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-        {
-            Mode = 0;
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            Mode = 1;
-        }
-        else if (ProjectileClass == TertiaryProjectileClass)
-        {
-            Mode = 2;
-        }
-    }
-
-    return HasAmmo(Mode);
-}
-
-// Modified to handle DH's extended ammo system
-simulated function int PrimaryAmmoCount()
-{
-    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-    {
-        return MainAmmoChargeExtra[0];
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        return MainAmmoChargeExtra[1];
-    }
-    else if (ProjectileClass == TertiaryProjectileClass)
-    {
-        return MainAmmoChargeExtra[2];
-    }
-}
-
-// Modified to handle DH's extended ammo system
-simulated function bool ConsumeAmmo(int Mode)
-{
-    if (!HasAmmo(Mode))
-    {
-        return false;
-    }
-
-    switch (Mode)
-    {
-        case 0:
-            MainAmmoChargeExtra[0]--;
-            return true;
-        case 1:
-            MainAmmoChargeExtra[1]--;
-            return true;
-        case 2:
-            MainAmmoChargeExtra[2]--;
-            return true;
-        case 3:
-            AltAmmoCharge--;
-            return true;
-        default:
-            return false;
-    }
-
-    return false;
-}
-
-// Modified to use DH's MainAmmoChargeExtra array
-function bool GiveInitialAmmo()
-{
-    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo ||
-        AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
-    {
-        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-        AltAmmoCharge = InitialAltAmmo;
-        NumAltMags = default.NumAltMags;
-
-        return true;
-    }
-
-    return false;
-}
-
-// Modified to prevent attempting reload if don't have ammo
-function ServerManualReload()
-{
-    if (Role == ROLE_Authority && CannonReloadState == CR_Waiting && HasAmmo(GetPendingRoundIndex()))
-    {
-        // If player has selected a different ammo type, switch now
-        if (PendingProjectileClass != ProjectileClass && PendingProjectileClass != none)
-        {
-            ProjectileClass = PendingProjectileClass;
-        }
-
-        // Start reload on both client & server
-        CannonReloadState = CR_Empty;
-        ClientSetReloadState(CannonReloadState); // tell a net client to start reloading
-        SetTimer(0.01, false);
-    }
-}
-
-// Modified so only sets timer if the new reload state needs it, & to only act on net client (avoids duplication for standalone or listen server)
-simulated function ClientSetReloadState(ECannonReloadState NewState)
-{
-    if (Role < ROLE_Authority)
-    {
-        CannonReloadState = NewState;
-
-        if (CannonReloadState != CR_Waiting  && CannonReloadState != CR_ReadyToFire)
-        {
-            SetTimer(0.01, false);
-        }
-    }
-}
-
-// Modified to simplify a little, including call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do
-// Also to postpone reload if cannon is out of ammo & to sharply reduce frequency of repeat timer if reload can't proceed for now
-simulated function Timer()
-{
-    // Do not proceed with reload if no player in cannon position or if cannon has no ammo - set a repeating timer to keep checking (but reduced from 20 times a second !)
-    if (CannonPawn == none || CannonPawn.Controller == none || PrimaryAmmoCount() < 1)
-    {
-        SetTimer(0.5, true);
-    }
-    else if (CannonReloadState == CR_Empty)
-    {
-        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart1;
-        SetTimer(GetSoundDuration(ReloadSoundOne), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart1)
-    {
-        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart2;
-        SetTimer(GetSoundDuration(ReloadSoundTwo), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart2)
-    {
-        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart3;
-        SetTimer(GetSoundDuration(ReloadSoundThree), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart3)
-    {
-        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart4;
-        SetTimer(GetSoundDuration(ReloadSoundFour), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart4)
-    {
-        if (Role == ROLE_Authority)
-        {
-            bClientCanFireCannon = true;
-        }
-
-        CannonReloadState = CR_ReadyToFire;
-        SetTimer(0.0, false);
-    }
-}
-
-// Modified to remove shake from coaxial MGs
-simulated function ShakeView(bool bWasAltFire)
-{
-    if (!bWasAltFire && Instigator != none && PlayerController(Instigator.Controller) != none)
-    {
-        PlayerController(Instigator.Controller).WeaponShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
-    }
-}
-
-// Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the commander's collision box?"
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
-{
-    local vector HitOffset;
-
-    HitOffset = (HitLocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
-
-    // We must have hit the commander's collision box (HitOffset.Z is how far the HitLocation is above the mesh origin)
-    if (HitOffset.Z >= MinCommanderHitHeight)
-    {
-        if (bDriverDebugging)
-        {
-            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
-
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
-            }
-        }
-
-        return true;
-    }
-    // We can't have hit the commander so we must have hit the turret (or some other collision box)
-    else
-    {
-        if (bDriverDebugging)
-        {
-            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
-
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
-            }
-        }
-
-        return false;
-    }
-}
-
-// Matt: slightly different concept to work more accurately & simply with projectiles
-// Think of this function as asking "is there an exposed commander there & did we actually hit him, not just his collision box?"
-simulated function bool HitDriver(vector HitLocation, vector Momentum)
-{
-    // True if commander is present & is not buttoned up & we hit one of the hit points representing his head or torso
-    return CannonPawn != none && CannonPawn.Driver != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
-        (IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1));
-}
-
-// Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
-simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
-{
-    local  coords  C;
-    local  vector  HeadLoc, B, M, Diff;
-    local  float   t, DotMM, Distance;
-
-    if (VehHitpoints.Length <= Index || VehHitpoints[Index].PointBone == '') // added check against array length to avoid "out of bounds" errors
-    {
-        return false;
-    }
-
-    C = GetBoneCoords(VehHitpoints[Index].PointBone);
-    HeadLoc = C.Origin + (VehHitpoints[Index].PointHeight * VehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
-
-    // Express snipe trace line in terms of B + tM
-    B = Loc;
-    M = Ray * 150.0;
-
-    // Find point-line squared distance
-    Diff = HeadLoc - B;
-    t = M dot Diff;
-
-    if (t > 0.0)
-    {
-        DotMM = M dot M;
-
-        if (t < DotMM)
-        {
-            t = t / DotMM;
-            Diff = Diff - (t * M);
-        }
-        else
-        {
-            t = 1.0;
-            Diff -= M;
-        }
-    }
-    else
-    {
-        t = 0.0;
-    }
-
-    Distance = Sqrt(Diff dot Diff);
-
-    return Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
 }
 
 // Modified to add TertiaryProjectileClass
@@ -1534,149 +1745,6 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 
     super.UpdatePrecacheStaticMeshes();
-}
-
-// Modified to return zero if there are no RangeSettings, e.g. for American cannons without adjustable sights
-simulated function int GetRange()
-{
-    if (CurrentRangeIndex < RangeSettings.Length)
-    {
-        return RangeSettings[CurrentRangeIndex];
-    }
-
-    return 0;
-}
-
-// Functions extended for easy tuning of gunsights in development mode
-// Modified to network optimise by clientside check before sending replicated function to server, & also playing click clientside, not replicating it back
-// These functions now get called on both client & server, but only progress to server if it's a valid action (see modified LeanLeft & LeanRight execs in DHPlayer)
-simulated function IncrementRange()
-{
-    // If bGunsightSettingMode is enabled & gun not loaded, then the range control buttons change sight adjustment up and down
-    if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
-    {
-        if (Role == ROLE_Authority) // the server action from when this was a server only function
-        {
-            IncreaseAddedPitch();
-            GiveInitialAmmo();
-        }
-        else if (Instigator != none && ROPlayer(Instigator.Controller) != none) // net client just calls the server function
-        {
-            ROPlayer(Instigator.Controller).ServerLeanRight(true);
-        }
-    }
-    // Normal range adjustment - 1st make sure it's a valid action
-    else if (CurrentRangeIndex < RangeSettings.Length - 1)
-    {
-        if (Role == ROLE_Authority) // the server action from when this was a server only function
-        {
-            CurrentRangeIndex++;
-        }
-
-        if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller) != none)
-        {
-            if (Role < ROLE_Authority) // net client calls the server function, but only if we passed the valid action check
-            {
-                ROPlayer(Instigator.Controller).ServerLeanRight(true);
-            }
-
-            if (Instigator.IsLocallyControlled()) // play click sound only locally
-            {
-                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-            }
-        }
-    }
-}
-
-simulated function DecrementRange()
-{
-    if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
-    {
-        if (Role == ROLE_Authority)
-        {
-            DecreaseAddedPitch();
-            GiveInitialAmmo();
-        }
-        else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
-        {
-            ROPlayer(Instigator.Controller).ServerLeanLeft(true);
-        }
-    }
-    else if (CurrentRangeIndex > 0)
-    {
-        if (Role == ROLE_Authority)
-        {
-            CurrentRangeIndex--;
-        }
-
-        if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller) != none)
-        {
-            if (Role < ROLE_Authority)
-            {
-                ROPlayer(Instigator.Controller).ServerLeanLeft(true);
-            }
-
-            if (Instigator.IsLocallyControlled())
-            {
-                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-            }
-        }
-    }
-}
-
-// Functions making AddedPitch (gunsight correction) adjustment and display:
-function IncreaseAddedPitch()
-{
-    local int MechanicalRangesValue, Correction;
-
-    AddedPitch += 2;
-
-    if (RangeSettings.Length > 0)
-    {
-        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    }
-
-    Correction = AddedPitch - default.AddedPitch;
-
-    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
-    {
-        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
-    }
-}
-
-function DecreaseAddedPitch()
-{
-    local int MechanicalRangesValue, Correction;
-
-    AddedPitch -= 2;
-
-    if (RangeSettings.Length > 0)
-    {
-        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    }
-
-    Correction = AddedPitch - default.AddedPitch;
-
-    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
-    {
-        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
-    }
-}
-
-// Modified to add extra stuff
-simulated function DestroyEffects()
-{
-    super.DestroyEffects();
-
-    if (CollisionMeshActor != none)
-    {
-        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
-    }
-
-    if (TurretHatchFireEffect != none)
-    {
-        TurretHatchFireEffect.Kill();
-    }
 }
 
 // Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)
@@ -1724,76 +1792,40 @@ simulated function int LimitYaw(int yaw)
     return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
 }
 
-// New function (in VehicleWeapon class) to use DH's new incremental resupply system (only resupplies rounds; doesn't reload the cannon)
-function bool ResupplyAmmo()
+// New function to start a turret hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
+simulated function StartTurretFire()
 {
-    local bool bDidResupply;
-
-    if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
+    if (TurretHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
-        ++MainAmmoChargeExtra[0];
-        bDidResupply = true;
+        TurretHatchFireEffect = Spawn(FireEffectClass);
     }
 
-    if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
+    if (TurretHatchFireEffect != none)
     {
-        ++MainAmmoChargeExtra[1];
-        bDidResupply = true;
-    }
+        AttachToBone(TurretHatchFireEffect, FireAttachBone);
+        TurretHatchFireEffect.SetRelativeLocation(FireEffectOffset);
+        TurretHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
 
-    if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
-    {
-        ++MainAmmoChargeExtra[2];
-        bDidResupply = true;
-    }
-
-    if (NumAltMags < default.NumAltMags)
-    {
-        ++NumAltMags;
-        bDidResupply = true;
-
-        // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
-        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-        if (!HasAmmo(3) && Instigator.Controller != none && Role == ROLE_Authority)
+        if (FireEffectScale != 1.0)
         {
-            HandleReload();
+            TurretHatchFireEffect.SetEffectScale(FireEffectScale);
         }
     }
-
-    return bDidResupply;
 }
 
-// Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties
-static function StaticPrecache(LevelInfo L)
+// Modified to add extra stuff
+simulated function DestroyEffects()
 {
-    local int i;
+    super.DestroyEffects();
 
-    for (i = 0; i < default.Skins.Length; ++i)
+    if (CollisionMeshActor != none)
     {
-        L.AddPrecacheMaterial(default.Skins[i]);
+        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
     }
 
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(default.hudAltAmmoIcon);
-
-    if (default.HighDetailOverlay != none)
+    if (TurretHatchFireEffect != none)
     {
-        L.AddPrecacheMaterial(default.HighDetailOverlay);
-    }
-
-}
-
-// Modified to add extra material properties (note the Super in Actor already pre-caches the Skins array)
-simulated function UpdatePrecacheMaterials()
-{
-    super.UpdatePrecacheMaterials();
-
-    Level.AddPrecacheMaterial(hudAltAmmoIcon);
-
-    if (HighDetailOverlay != none)
-    {
-        Level.AddPrecacheMaterial(HighDetailOverlay);
+        TurretHatchFireEffect.Kill();
     }
 }
 

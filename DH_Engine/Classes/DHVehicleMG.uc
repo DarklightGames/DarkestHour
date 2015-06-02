@@ -6,12 +6,12 @@
 class DHVehicleMG extends ROMountedTankMG
     abstract;
 
-var  DHVehicleMGPawn  MGPawn;     // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+var  DHVehicleMGPawn  MGPawn;         // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
 
 // Ammo & firing
-var     class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
+var     class<Projectile> TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var     byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
-var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
+var     byte    NumMags;              // number of mags carried for this MG (use byte for more efficient replication)
 var     sound   NoAmmoSound;          // 'dry fire' sound when trying to fire empty MG
 
 // Reloading
@@ -44,12 +44,16 @@ replication
 
     // Variables the server will replicate to all clients
 //  reliable if (bNetDirty && Role == ROLE_Authority)
-//      bOnFire; // Matt: removed as have deprecated
+//      bOnFire; // Matt: removed this variable
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientHandleReload;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Matt: modified to handle new collision static mesh actor, if one has been specified
 simulated function PostBeginPlay()
@@ -115,99 +119,15 @@ simulated function InitializeMG(DHVehicleMGPawn MGPwn)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***************************** KEY ENGINE EVENTS  ******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Matt: no longer use Tick, as MG hatch fire effect is now triggered on net client from Vehicle's PostNetReceive()
 // Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
-}
-
-// New function to start an MG hatch fire effect - all fires now triggered from vehicle base, so don't need MG's Tick() constantly checking for a fire
-simulated function StartMGFire()
-{
-    if (HullMGFireEffect == none && Level.NetMode != NM_DedicatedServer)
-    {
-        HullMGFireEffect = Spawn(FireEffectClass);
-    }
-
-    if (HullMGFireEffect != none)
-    {
-        AttachToBone(HullMGFireEffect, FireAttachBone);
-        HullMGFireEffect.SetRelativeLocation(FireEffectOffset);
-        HullMGFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
-    }
-}
-
-// Modified to add extra stuff
-simulated function DestroyEffects()
-{
-    super.DestroyEffects();
-
-    if (CollisionMeshActor != none)
-    {
-        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
-    }
-
-    if (HullMGFireEffect != none)
-    {
-        HullMGFireEffect.Kill();
-    }
-}
-
-// Modified to return false if MG reloading
-simulated function bool ReadyToFire(bool bAltFire)
-{
-    if (bReloading)
-    {
-        return false;
-    }
-
-    return super.ReadyToFire(bAltFire);
-}
-
-// Modified to start a reload when empty
-function CeaseFire(Controller C, bool bWasAltFire)
-{
-    super.CeaseFire(C, bWasAltFire);
-
-    if (!bReloading && !HasAmmo(0))
-    {
-        HandleReload();
-    }
-}
-
-// Matt: modified to generic function handling HUDOverlay reloads as well as normal reloads, including making client record ReloadStartTime (used for reload progress on HUD ammo icon)
-function HandleReload()
-{
-    if (NumMags > 0 && !bReloading && Role == ROLE_Authority)
-    {
-        bReloading = true;
-        NumMags--;
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-        ReloadStartTime = Level.TimeSeconds;
-        ClientHandleReload();
-
-        if (MGPawn == none || MGPawn.HUDOverlay == none || !HasAnim(HUDOverlayReloadAnim)) // don't play sound if there's a HUDOverlay with reload animation, as it plays its own sounds
-        {
-            PlaySound(ReloadSound, SLOT_None, 1.5,, 25.0,, true);
-        }
-
-        SetTimer(ReloadDuration, false);
-    }
-}
-
-// New server-to-client function called at start of reload or if player enters an MG that is reloading
-// Client records when reload started, which is used to show reload progress on HUD ammo icon (replication optimised to a byte instead of passing start time as float)
-// Also plays any HUDOverlay reload animation, starting it from the appropriate point if a reload is already in progress
-simulated function ClientHandleReload(optional byte PercentageDone)
-{
-    ReloadStartTime = Level.TimeSeconds - (Float(PercentageDone) / 100.0 * ReloadDuration);
-
-    if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
-    {
-        MGPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
-        MGPawn.HUDOverlay.SetAnimFrame(Float(PercentageDone)); // move reload animation to appropriate point
-    }
 }
 
 // Timer used to reload the MG, after the set reload duration
@@ -220,6 +140,10 @@ simulated function Timer()
         NetUpdateTime = Level.TimeSeconds - 1;
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *********************************** FIRING ************************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to call HandleReload when empty (& to optimise/shorten a little)
 event bool AttemptFire(Controller C, bool bAltFire)
@@ -335,6 +259,21 @@ simulated function OwnerEffects()
     }
 }
 
+// Modified to start a reload when empty
+function CeaseFire(Controller C, bool bWasAltFire)
+{
+    super.CeaseFire(C, bWasAltFire);
+
+    if (!bReloading && !HasAmmo(0))
+    {
+        HandleReload();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ****************************** AMMO & RELOADING *******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Modified to handle MG magazines
 function bool GiveInitialAmmo()
 {
@@ -372,67 +311,60 @@ function bool ResupplyAmmo()
     return false;
 }
 
+// New generic function handling HUDOverlay reloads as well as normal reloads, including making client record ReloadStartTime (used for reload progress on HUD ammo icon)
+function HandleReload()
+{
+    if (NumMags > 0 && !bReloading && Role == ROLE_Authority)
+    {
+        bReloading = true;
+        NumMags--;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+        ReloadStartTime = Level.TimeSeconds;
+        ClientHandleReload();
+
+        if (MGPawn == none || MGPawn.HUDOverlay == none || !HasAnim(HUDOverlayReloadAnim)) // don't play sound if there's a HUDOverlay with reload animation, as it plays its own sounds
+        {
+            PlaySound(ReloadSound, SLOT_None, 1.5,, 25.0,, true);
+        }
+
+        SetTimer(ReloadDuration, false);
+    }
+}
+
+// New server-to-client function called at start of reload or if player enters an MG that is reloading
+// Client records when reload started, which is used to show reload progress on HUD ammo icon (replication optimised to a byte instead of passing start time as float)
+// Also plays any HUDOverlay reload animation, starting it from the appropriate point if a reload is already in progress
+simulated function ClientHandleReload(optional byte PercentageDone)
+{
+    ReloadStartTime = Level.TimeSeconds - (Float(PercentageDone) / 100.0 * ReloadDuration);
+
+    if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
+    {
+        MGPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
+        MGPawn.HUDOverlay.SetAnimFrame(Float(PercentageDone)); // move reload animation to appropriate point
+    }
+}
+
+// Modified to return false if MG reloading
+simulated function bool ReadyToFire(bool bAltFire)
+{
+    if (bReloading)
+    {
+        return false;
+    }
+
+    return super.ReadyToFire(bAltFire);
+}
+
 // Modified to handle MG magazines
 simulated function int GetNumMags()
 {
     return NumMags;
 }
 
-// Modified to make into a generic function to handle single/multi position MGs & relative/non-relative rotation, without need for overrides in subclasses
-simulated function int LimitYaw(int yaw)
-{
-    local int CurrentPosition, VehYaw;
-
-    if (!bLimitYaw)
-    {
-        return yaw;
-    }
-
-    // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
-    if (MGPawn != none && MGPawn.bMultiPosition)
-    {
-        CurrentPosition = MGPawn.DriverPositionIndex;
-
-        if (MGPawn.bPCRelativeFPRotation || Base == none)
-        {
-            return Clamp(yaw, MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
-        }
-
-        // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
-        VehYaw = Base.Rotation.Yaw;
-
-        return Clamp(yaw, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
-    }
-
-    // For single position MGs we use our max/min yaw values from this class
-    if ((MGPawn != none && MGPawn.bPCRelativeFPRotation) || Base == none)
-    {
-        return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
-    }
-
-    // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
-    VehYaw = Base.Rotation.Yaw;
-
-    return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
-}
-
-// Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
-// Note that shell's ProcessTouch also now calls TD() on VehicleWeapon instead of Vehicle itself
-// For a vehicle MG this is not counted as a hit on vehicle itself, but we could add any desired functionality here or in subclasses, e.g. shell could wreck MG
-// Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
-{
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
-    {
-        DamageType = class'ROSuicided';
-        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-}
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***************************  GUNNER HIT DETECTION  ****************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the player's collision box?"
 simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
@@ -537,6 +469,10 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************  SETUP, UPDATE, CLEAN UP, MISCELLANEOUS  *******************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties (note the Supers are empty)
 static function StaticPrecache(LevelInfo L)
 {
@@ -568,12 +504,100 @@ simulated function UpdatePrecacheMaterials()
     }
 }
 
+// Modified to make into a generic function to handle single/multi position MGs & relative/non-relative rotation, without need for overrides in subclasses
+simulated function int LimitYaw(int yaw)
+{
+    local int CurrentPosition, VehYaw;
+
+    if (!bLimitYaw)
+    {
+        return yaw;
+    }
+
+    // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
+    if (MGPawn != none && MGPawn.bMultiPosition)
+    {
+        CurrentPosition = MGPawn.DriverPositionIndex;
+
+        if (MGPawn.bPCRelativeFPRotation || Base == none)
+        {
+            return Clamp(yaw, MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+        }
+
+        // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
+        VehYaw = Base.Rotation.Yaw;
+
+        return Clamp(yaw, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+    }
+
+    // For single position MGs we use our max/min yaw values from this class
+    if ((MGPawn != none && MGPawn.bPCRelativeFPRotation) || Base == none)
+    {
+        return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+    }
+
+    // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
+    VehYaw = Base.Rotation.Yaw;
+
+    return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
+}
+
+// Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
+// Note that shell's ProcessTouch also now calls TD() on VehicleWeapon instead of Vehicle itself
+// For a vehicle MG this is not counted as a hit on vehicle itself, but we could add any desired functionality here or in subclasses, e.g. shell could wreck MG
+// Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    // Fix for suicide death messages
+    if (DamageType == class'Suicided')
+    {
+        DamageType = class'ROSuicided';
+        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    }
+    else if (DamageType == class'ROSuicided')
+    {
+        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    }
+}
+
+// New function to start an MG hatch fire effect - all fires now triggered from vehicle base, so don't need MG's Tick() constantly checking for a fire
+simulated function StartMGFire()
+{
+    if (HullMGFireEffect == none && Level.NetMode != NM_DedicatedServer)
+    {
+        HullMGFireEffect = Spawn(FireEffectClass);
+    }
+
+    if (HullMGFireEffect != none)
+    {
+        AttachToBone(HullMGFireEffect, FireAttachBone);
+        HullMGFireEffect.SetRelativeLocation(FireEffectOffset);
+        HullMGFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
+    }
+}
+
+// Modified to add extra stuff
+simulated function DestroyEffects()
+{
+    super.DestroyEffects();
+
+    if (CollisionMeshActor != none)
+    {
+        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
+    }
+
+    if (HullMGFireEffect != none)
+    {
+        HullMGFireEffect.Kill();
+    }
+}
+
 defaultproperties
 {
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireAttachBone="mg_pitch"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    YawStartConstraint=0 // Matt: revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
+    YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
     YawEndConstraint=65535
 }

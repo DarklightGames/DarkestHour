@@ -40,13 +40,6 @@ function DamageTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
 exec function DamTrack(string Track);
 
-// Modified to ignore damaged treads & to disable if vehicle takes major damage, as well as if engine is dead
-// This should give time for troops to bail out & escape before vehicle blows
-simulated function bool IsDisabled()
-{
-    return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
-}
-
 // Modified to removed lots of stuff that doesn't apply to a wheeled vehicle
 simulated function Tick(float DeltaTime)
 {
@@ -323,12 +316,18 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     ResetTakeDamageVariables();
 }
 
+// Modified to ignore damaged treads & to disable if vehicle takes major damage, as well as if engine is dead
+// This should give time for troops to bail out & escape before vehicle blows
+simulated function bool IsDisabled()
+{
+    return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
+}
+
 defaultproperties
 {
-    bAllowRiders=true
+    bSpecialTankTurning=false
     PointValue=2.0
     FirstRiderPositionIndex=1
-    bSpecialTankTurning=false
     DriverKillChance=900.0
     GunnerKillChance=900.0
     CommanderKillChance=600.0

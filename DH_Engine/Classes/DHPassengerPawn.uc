@@ -43,143 +43,6 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
-function bool PlaceExitingDriver()
-{
-    local int    i, StartIndex;
-    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-
-    if (Driver == none)
-    {
-        return false;
-    }
-
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    if (VehicleBase == none)
-    {
-        return false;
-    }
-
-    // Debug exits - uses DHPassengerPawn class default, allowing bDebugExitPositions to be toggled for all passenger pawns
-    if (class'DHPassengerPawn'.default.bDebugExitPositions)
-    {
-        for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
-        {
-            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-
-            Spawn(class'DHDebugTracer',,, ExitPosition);
-        }
-    }
-
-    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
-    StartIndex = i;
-
-    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
-    {
-        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-
-        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) == none &&
-            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none &&
-            Driver.SetLocation(ExitPosition))
-        {
-            return true;
-        }
-
-        ++i;
-
-        if (i == StartIndex)
-        {
-            break;
-        }
-        else if (i == VehicleBase.ExitPositions.Length)
-        {
-            i = 0;
-        }
-    }
-
-    return false;
-}
-
-// Overridden to set passenger exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    local rotator NewRot;
-
-    NewRot = VehicleBase.Rotation;
-    NewRot.Pitch = LimitPitch(NewRot.Pitch);
-    SetRotation(NewRot);
-
-    super.ClientKDriverLeave(PC);
-}
-
-// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
-function KDriverEnter(Pawn P)
-{
-    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
-    {
-        SetTimer(0.0, false); // clear any timer, so we don't risk setting bTearOff to true again just after we enter
-        bTearOff = false;     // don't need to do quick net update as normal entering sequence already does it
-    }
-
-    super.KDriverEnter(P);
-}
-
-// Modified to give player the same momentum as the vehicle when exiting
-// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
-function bool KDriverLeave(bool bForceLeave)
-{
-    local vector ExitVelocity;
-
-    if (!bForceLeave)
-    {
-        ExitVelocity = Velocity;
-        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
-    }
-
-    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
-    {
-        if (!bForceLeave)
-        {
-            Instigator.Velocity = ExitVelocity;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
-function DriverDied()
-{
-    super(Vehicle).DriverDied();
-
-    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
-}
-
-// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function
-function DriverLeft()
-{
-    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
-
-    DrivingStatusChanged(); // the Super from Vehicle
-}
-
-// Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel
-// Need to use timer to add short delay, to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to client before shutting down all net traffic
-simulated event DrivingStatusChanged()
-{
-    super.DrivingStatusChanged();
-
-    if (!bDriving && (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer))
-    {
-        SetTimer(0.5, false);
-    }
-}
-
 // Sets bTearOff to true on a server when player exits, purely so server decides the actor is no longer net relevant, kills off the clientside actor & closes the net channel
 // But we don't want the clientside actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
 // So we delay the next update to the client for longer than the server's 5 second delay before it kills a clientside actor after it becomes net irrelevant
@@ -189,6 +52,29 @@ function Timer()
     {
         NetUpdateTime = Level.TimeSeconds + (6.0 * Level.Game.GameSpeed);
         bTearOff = true;
+    }
+}
+
+// Emptied out to prevent unnecessary replicated function calls to server
+function Fire(optional float F)
+{
+}
+
+function AltFire(optional float F)
+{
+}
+
+// Modified to remove everything except drawing basic vehicle HUD info
+simulated function DrawHUD(Canvas Canvas)
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Controller);
+
+    // Draw vehicle, turret, passenger list
+    if (PC != none && !PC.bBehindView && ROHud(PC.myHUD) != none && VehicleBase != none)
+    {
+        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
     }
 }
 
@@ -218,6 +104,18 @@ function bool TryToDrive(Pawn P)
     }
 
     return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
+}
+
+// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
+function KDriverEnter(Pawn P)
+{
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+    {
+        SetTimer(0.0, false); // clear any timer, so we don't risk setting bTearOff to true again just after we enter
+        bTearOff = false;     // don't need to do quick net update as normal entering sequence already does it
+    }
+
+    super.KDriverEnter(P);
 }
 
 // Modified to add clientside checks before sending the function call to the server
@@ -297,27 +195,129 @@ simulated function SwitchWeapon(byte F)
     }
 }
 
-// Emptied out to prevent unnecessary replicated function calls to server
-function Fire(optional float F)
+// Modified to give player the same momentum as the vehicle when exiting
+// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
+function bool KDriverLeave(bool bForceLeave)
 {
-}
+    local vector ExitVelocity;
 
-function AltFire(optional float F)
-{
-}
-
-// Modified to remove everything except drawing basic vehicle HUD info
-simulated function DrawHUD(Canvas Canvas)
-{
-    local PlayerController PC;
-
-    PC = PlayerController(Controller);
-
-    // Draw vehicle, turret, passenger list
-    if (PC != none && !PC.bBehindView && ROHud(PC.myHUD) != none && VehicleBase != none)
+    if (!bForceLeave)
     {
-        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        ExitVelocity = Velocity;
+        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
     }
+
+    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
+    {
+        if (!bForceLeave)
+        {
+            Instigator.Velocity = ExitVelocity;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
+function DriverDied()
+{
+    super(Vehicle).DriverDied();
+
+    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
+}
+
+// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function
+function DriverLeft()
+{
+    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+
+    DrivingStatusChanged(); // the Super from Vehicle
+}
+
+// Overridden to set passenger exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    local rotator NewRot;
+
+    NewRot = VehicleBase.Rotation;
+    NewRot.Pitch = LimitPitch(NewRot.Pitch);
+    SetRotation(NewRot);
+
+    super.ClientKDriverLeave(PC);
+}
+
+// Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel
+// Need to use timer to add short delay, to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to client before shutting down all net traffic
+simulated event DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving && (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer))
+    {
+        SetTimer(0.5, false);
+    }
+}
+
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
+function bool PlaceExitingDriver()
+{
+    local int    i, StartIndex;
+    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
+
+    if (Driver == none)
+    {
+        return false;
+    }
+
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+
+    if (VehicleBase == none)
+    {
+        return false;
+    }
+
+    // Debug exits - uses DHPassengerPawn class default, allowing bDebugExitPositions to be toggled for all passenger pawns
+    if (class'DHPassengerPawn'.default.bDebugExitPositions)
+    {
+        for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
+        {
+            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+
+            Spawn(class'DHDebugTracer',,, ExitPosition);
+        }
+    }
+
+    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
+    StartIndex = i;
+
+    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
+    {
+        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+
+        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) == none &&
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none &&
+            Driver.SetLocation(ExitPosition))
+        {
+            return true;
+        }
+
+        ++i;
+
+        if (i == StartIndex)
+        {
+            break;
+        }
+        else if (i == VehicleBase.ExitPositions.Length)
+        {
+            i = 0;
+        }
+    }
+
+    return false;
 }
 
 // Allows debugging exit positions to be toggled for all rider pawns
@@ -340,13 +340,13 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-    WeaponFOV=90.0
     bSinglePositionExposed=true
-    bAllowViewChange=false
-    bDesiredBehindView=false
     bKeepDriverAuxCollision=true
     DriverDamageMult=1.0
     CameraBone="body"
+    bAllowViewChange=false
+    bDesiredBehindView=false
+    WeaponFOV=90.0
     TPCamDistance=200.0
     EntryRadius=375.0
 }

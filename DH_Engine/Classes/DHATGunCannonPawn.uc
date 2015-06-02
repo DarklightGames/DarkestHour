@@ -8,71 +8,6 @@ class DHATGunCannonPawn extends DHVehicleCannonPawn
 
 var bool bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
 
-// Emptied out so we just use plain RO rotate/pitch sounds & ignore DHVehicleCannonPawn's manual/powered sounds
-simulated function SetManualTurret(bool bManual)
-{
-}
-
-// Emptied out as can't switch positions in an AT gun
-simulated function SwitchWeapon(byte F)
-{
-}
-
-// Emptied out as AT gun has no alt fire mode, so just ensures nothing happens
-function AltFire(optional float F)
-{
-}
-
-// Modified to avoid turret damage checks in DHVehicleCannonPawn, just for processing efficiency as this function is called many times per second
-function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
-{
-    super(ROTankCannonPawn).HandleTurretRotation(DeltaTime, YawChange, PitchChange);
-}
-
-// Overridden to handle vehicle exiting better for fixed AT guns
-function bool PlaceExitingDriver()
-{
-    local int    i;
-    local vector TryPlace, Extent, ZOffset;
-
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        if (bRelativeExitPos)
-        {
-            if (VehicleBase != none)
-            {
-                TryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-            }
-            else if (Gun != none)
-            {
-                TryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-            }
-            else
-            {
-                TryPlace = Location + (ExitPositions[i] >> Rotation);
-            }
-        }
-        else
-        {
-            TryPlace = ExitPositions[i];
-        }
-
-        // Now see if we can place the player there
-        if (!Driver.SetLocation(TryPlace))
-        {
-            continue;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 // Options
 // 1: Implemented: modified PlaceExitingDriver so that it handles placing the player on exit better
 // 2: Implemented: keep the player at his current position and send him a msg - if they are smart they can suicide to get off the gun
@@ -166,6 +101,71 @@ event bool KDriverLeave(bool bForceLeave)
     return bSuperDriverLeave;
 }
 
+// Overridden to handle vehicle exiting better for fixed AT guns
+function bool PlaceExitingDriver()
+{
+    local int    i;
+    local vector TryPlace, Extent, ZOffset;
+
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+
+    for (i = 0; i < ExitPositions.Length; ++i)
+    {
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+            {
+                TryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+            }
+            else if (Gun != none)
+            {
+                TryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
+            }
+            else
+            {
+                TryPlace = Location + (ExitPositions[i] >> Rotation);
+            }
+        }
+        else
+        {
+            TryPlace = ExitPositions[i];
+        }
+
+        // Now see if we can place the player there
+        if (!Driver.SetLocation(TryPlace))
+        {
+            continue;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to avoid turret damage checks in DHVehicleCannonPawn, just for processing efficiency as this function is called many times per second
+function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
+{
+    super(ROTankCannonPawn).HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+}
+
+// Emptied out so we just use plain RO rotate/pitch sounds & ignore DHVehicleCannonPawn's manual/powered sounds
+simulated function SetManualTurret(bool bManual)
+{
+}
+
+// Emptied out as AT gun has no alt fire mode, so just ensures nothing happens
+function AltFire(optional float F)
+{
+}
+
+// Emptied out as can't switch positions in an AT gun
+simulated function SwitchWeapon(byte F)
+{
+}
+
 // Modified to use 3 part reload for AT gun, instead of 4 part reload in tank cannon
 function float GetAmmoReloadState()
 {
@@ -255,15 +255,18 @@ simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, 
 defaultproperties
 {
     UnbuttonedPositionIndex=0
-    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
-    HudName="Gunner"
     bMustBeTankCrew=false
-    FireImpulse=(X=-1000.0)
-    bHasFireImpulse=false
     bHasAltFire=false
+    PitchUpLimit=6000
+    PitchDownLimit=64000
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    HudName="Gunner"
+    bHasFireImpulse=false
+    FireImpulse=(X=-1000.0)
+    EntryRadius=130.0
     ExitPositions(0)=(X=-40.0,Y=-10.0,Z=50.0)
     ExitPositions(1)=(X=-40.0,Y=-10.0,Z=60.0)
     ExitPositions(2)=(X=-40.0,Y=25.0,Z=50.0)
@@ -280,7 +283,4 @@ defaultproperties
     ExitPositions(13)=(X=-90.0,Z=75.0)
     ExitPositions(14)=(X=-125.0,Z=60.0)
     ExitPositions(15)=(X=-250.0,Z=75.0)
-    EntryRadius=130.0
-    PitchUpLimit=6000
-    PitchDownLimit=64000
 }

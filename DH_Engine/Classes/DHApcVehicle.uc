@@ -8,14 +8,12 @@ class DHApcVehicle extends DHWheeledVehicle
 
 var     float               MaxCriticalSpeed; // if vehicle goes over max speed, it forces player to pull back on throttle
 
-// Tread stuff
+// Treads
 var     int                 LeftTreadIndex, RightTreadIndex;
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
 var     float               TreadVelocityScale;
 var     rotator             LeftTreadPanDirection, RightTreadPanDirection;
-
-// Tread sounds
-var     sound               LeftTreadSound, RightTreadSound; // sound for each tread squeaking
+var     sound               LeftTreadSound, RightTreadSound;
 var     float               TreadSoundVolume;
 var     ROSoundAttachment   LeftTreadSoundAttach, RightTreadSoundAttach;
 var     name                LeftTrackSoundBone, RightTrackSoundBone;
@@ -23,45 +21,7 @@ var     name                LeftTrackSoundBone, RightTrackSoundBone;
 // Wheel animation
 var     array<name>         LeftWheelBones, RightWheelBones; // for animation only - the bone names for the wheels on each side
 var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
-var     int                 WheelRotationScale;
-
-// From DHArmoredVehicle & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = RightTreadPanDirection;
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-
-    if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
-    {
-        LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
-        LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
-        AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
-    }
-
-    if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
-    {
-        RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
-        RightTreadSoundAttach.AmbientSound = RightTreadSound;
-        AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
-    }
-}
+var     int                 WheelRotationScale;              // allows adjustment of wheel rotation speed for each vehicle
 
 // Modified to add treads (from ROTreadCraft)
 simulated function PostBeginPlay()
@@ -71,72 +31,6 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetupTreads();
-    }
-}
-
-// Modified to add tread sounds (from ROTreadCraft)
-simulated function UpdateMovementSound(float MotionSoundVolume)
-{
-    super.UpdateMovementSound(MotionSoundVolume);
-
-    if (LeftTreadSoundAttach != none)
-    {
-       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
-    }
-
-    if (RightTreadSoundAttach != none)
-    {
-       RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
-    }
-}
-
-// Modified to stop tread movement if player has exited
-simulated event DrivingStatusChanged()
-{
-    super.DrivingStatusChanged();
-
-    if (Level.NetMode != NM_DedicatedServer && !bDriving)
-    {
-        if (LeftTreadPanner != none)
-        {
-            LeftTreadPanner.PanRate = 0.0;
-        }
-
-        if (RightTreadPanner != none)
-        {
-            RightTreadPanner.PanRate = 0.0;
-        }
-    }
-}
-
-// Modified to destroy treads
-simulated function DestroyAttachments()
-{
-    super.DestroyAttachments();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (LeftTreadPanner != none)
-        {
-            Level.ObjectPool.FreeObject(LeftTreadPanner);
-            LeftTreadPanner = none;
-        }
-
-        if (RightTreadPanner != none)
-        {
-            Level.ObjectPool.FreeObject(RightTreadPanner);
-            RightTreadPanner = none;
-        }
-
-        if (LeftTreadSoundAttach != none)
-        {
-            LeftTreadSoundAttach.Destroy();
-        }
-
-        if (RightTreadSoundAttach != none)
-        {
-            RightTreadSoundAttach.Destroy();
-        }
     }
 }
 
@@ -203,6 +97,25 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+// Modified to stop tread movement if player has exited
+simulated event DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (Level.NetMode != NM_DedicatedServer && !bDriving)
+    {
+        if (LeftTreadPanner != none)
+        {
+            LeftTreadPanner.PanRate = 0.0;
+        }
+
+        if (RightTreadPanner != none)
+        {
+            RightTreadPanner.PanRate = 0.0;
+        }
+    }
+}
+
 // Modified to add chance of engine being destroyed & engine fire starting
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
@@ -217,6 +130,91 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 }
 
+// From DHArmoredVehicle & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
+simulated function SetupTreads()
+{
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = RightTreadPanDirection;
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
+
+    if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
+    {
+        LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+        AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
+    }
+
+    if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
+    {
+        RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        RightTreadSoundAttach.AmbientSound = RightTreadSound;
+        AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
+    }
+}
+
+// Modified to add tread sounds (from ROTreadCraft)
+simulated function UpdateMovementSound(float MotionSoundVolume)
+{
+    super.UpdateMovementSound(MotionSoundVolume);
+
+    if (LeftTreadSoundAttach != none)
+    {
+       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
+    }
+
+    if (RightTreadSoundAttach != none)
+    {
+       RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
+    }
+}
+
+// Modified to destroy treads
+simulated function DestroyAttachments()
+{
+    super.DestroyAttachments();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (LeftTreadPanner != none)
+        {
+            Level.ObjectPool.FreeObject(LeftTreadPanner);
+            LeftTreadPanner = none;
+        }
+
+        if (RightTreadPanner != none)
+        {
+            Level.ObjectPool.FreeObject(RightTreadPanner);
+            RightTreadPanner = none;
+        }
+
+        if (LeftTreadSoundAttach != none)
+        {
+            LeftTreadSoundAttach.Destroy();
+        }
+
+        if (RightTreadSoundAttach != none)
+        {
+            RightTreadSoundAttach.Destroy();
+        }
+    }
+}
+
 // Modified to disable if vehicle takes major damage, as well as if engine is dead
 // This should give time for troops to bail out & escape before vehicle blows
 simulated function bool IsDisabled()
@@ -226,16 +224,16 @@ simulated function bool IsDisabled()
 
 defaultproperties
 {
-    LeftTreadIndex=1
-    RightTreadIndex=2
-    MaxCriticalSpeed=800.0
-    WheelRotationScale=500
-    PointValue=2.0
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    VehicleSpikeTime=60.0
     bIsApc=true
+    PointValue=2.0
     MinVehicleDamageModifier=0.25 // needs APCDamageModifier of at least 0.25 to damage this type of vehicle
     bKeepDriverAuxCollision=false
+    LeftTreadIndex=1
+    RightTreadIndex=2
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    MaxCriticalSpeed=800.0
+    WheelRotationScale=500
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    VehicleSpikeTime=60.0
 }

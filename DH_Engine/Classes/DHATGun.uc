@@ -53,24 +53,6 @@ simulated function PostNetBeginPlay()
     super(ROVehicle).PostNetBeginPlay();
 }
 
-// Overridden to bypass attaching as a driver and go straight to the gun
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    if (WeaponPawns.Length > 0)
-    {
-        WeaponPawns[0].ClientKDriverEnter(PC); // attach to the first WeaponPawn, do not pass "Go" :-)
-    }
-}
-
-// Overridden to bypass attaching as a driver and go straight to the gun
-function KDriverEnter(Pawn P)
-{
-    if (WeaponPawns.Length > 0)
-    {
-        WeaponPawns[0].KDriverEnter(P); // attach to the first WeaponPawn, do not pass "Go" :-)
-    }
-}
-
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
 {
@@ -123,6 +105,24 @@ function bool TryToDrive(Pawn P)
     KDriverEnter(P);
 
     return true;
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun
+function KDriverEnter(Pawn P)
+{
+    if (WeaponPawns.Length > 0)
+    {
+        WeaponPawns[0].KDriverEnter(P); // attach to the first WeaponPawn, do not pass "Go" :-)
+    }
+}
+
+// Overridden to bypass attaching as a driver and go straight to the gun
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    if (WeaponPawns.Length > 0)
+    {
+        WeaponPawns[0].ClientKDriverEnter(PC); // attach to the first WeaponPawn, do not pass "Go" :-)
+    }
 }
 
 // Modified to use a different AT cannon message class
