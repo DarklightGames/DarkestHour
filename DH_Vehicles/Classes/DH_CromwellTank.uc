@@ -215,4 +215,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_CromwellTank.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell'
 }

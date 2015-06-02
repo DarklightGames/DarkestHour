@@ -3,65 +3,46 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHDeploymentMapMenu extends MidGamePanel; //Does not extend DHDeployMenuPanel as it will differ from other panels quite a bit
+class DHDeploymentMapMenu extends GUIPanel;
 
 const   OBJECTIVES_MAX =                    32; // Max objectives total
-const   SPAWN_POINTS_MAX =                  16; // Max spawn points active at once
-const   SPAWN_POINTS_TOTAL =                64; // Max spawn points total (make sure this matches GRI)
-const   SPAWN_VEHICLES_TOTAL =              10; // Max spawn vehicles total (make sure this matches GRI)
+const   SPAWN_POINTS_MAX =                  48; // Max spawn points total (make sure this matches GRI)
+const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
 
-var automated ROGUIProportionalContainer    MapContainer;
-
-var localized string                        ReinforcementText,
-                                            DeployBarText[10];
-
-var     bool                                bReadyToDeploy, bOutOfReinforcements, bResolutionChanged;
-var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
-var     automated DHGUIButton               b_DeployButton;
-var     automated GUIProgressBar            pb_DeployProgressBar;
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
-                                            b_SpawnVehicles[SPAWN_VEHICLES_TOTAL];
+                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX];
 
-var     DHObjective                         ObjArray[OBJECTIVES_MAX];
+var     int                                 SpawnPoint;
+var     int                                 SpawnVehicle;
+
 var     Material                            ObjectiveIcons[3];
 
 var     DHGameReplicationInfo               GRI;
-var     DHPlayerReplicationInfo             PRI;
-var     DHPlayer                            DHP;
-var     DHHud                               HUD;
+var     DHPlayer                            PC;
 var     vector                              NELocation,
-                                            SWLocation,
-                                            SPSelectedSize,
-                                            SPSize,
-                                            ObjSize,
-                                            SVSize,
-                                            SVSelectedSize;
+                                            SWLocation;
 
 //Deploy Menu Access
 var DHDeployMenu                            MyDeployMenu;
-var DHRoleSelectPanel                       MyRoleMenu;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    local int i;
     local rotator R;
 
     super.InitComponent(MyController, MyOwner);
 
-    DHP = DHPlayer(PlayerOwner());
+    PC = DHPlayer(PlayerOwner());
 
-    if (DHP == none)
+    if (PC == none)
     {
         return;
     }
 
-    GRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
-    PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
-    HUD = DHHud(DHP.myHUD);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (GRI == none || HUD == none || PRI == none)
+    if (GRI == none)
     {
         return;
     }
@@ -72,36 +53,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set the level map image
     i_Background.Image = GRI.MapImage;
 
-    // Have container manage level map image
-    MapContainer.ManageComponent(i_Background);
-
-    // Initialize spawn points (make hidden)
-    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
-    {
-        b_SpawnPoints[i].Graphic = none;
-        b_SpawnPoints[i].SetVisibility(false);
-        b_SpawnPoints[i].WinWidth=0.0;
-        b_SpawnPoints[i].WinHeight=0.0;
-    }
-
-    // Initialize vehicle spawns (make hidden)
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        b_SpawnVehicles[i].Graphic = none;
-        b_SpawnVehicles[i].SetVisibility(false);
-        b_SpawnVehicles[i].WinWidth=0.0;
-        b_SpawnVehicles[i].WinHeight=0.0;
-    }
-
-    // Initialize objective points (make hidden)
-    for (i = 0; i < arraycount(b_Objectives); ++i)
-    {
-        if (b_Objectives[i] != none)
-        {
-            b_Objectives[i].Graphic = none;
-        }
-    }
-
     // Set rotator based on map rotation offset
     R.Yaw = GRI.OverheadOffset * 182.044444;
 
@@ -109,44 +60,89 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     NELocation = GRI.NorthEastBounds << R;
     SWLocation = GRI.SouthWestBounds << R;
 
-    // Timer for updating reinforcements & time
-    Timer();
+    //TODO: this is sloppy, figure out a better way
+    Update();
+
     SetTimer(1.0, true);
 }
 
-// Used to update round time and reinforcements
-function Timer()
+function Update()
 {
-    local int CurrentTime;
+    local int i;
+    local float X, Y;
+    local TexRotator TR;
 
-    // Update round time & reinforcement count
-    if (HUD != none && GRI != none)
+    // Objectives
+    for (i = 0; i < arraycount(b_Objectives); ++i)
     {
-        if (!GRI.bMatchHasBegun)
+        if (GRI.DHObjectives[i] != none &&
+            GRI.DHObjectives[i].bActive)
         {
-            CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
+            GetMapCoords(GRI.DHObjectives[i].Location, X, Y, b_Objectives[i].WinWidth, b_Objectives[i].WinHeight);
+
+            //TODO: fuck this, graphic is going to be replaced with special plan
+            b_Objectives[i].Graphic = ObjectiveIcons[int(GRI.DHObjectives[i].ObjState)];
+            b_Objectives[i].SetPosition(X, Y, b_Objectives[i].WinWidth, b_Objectives[i].WinHeight, true);
+            b_Objectives[i].SetVisibility(true);
         }
         else
         {
-            CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
+            b_Objectives[i].SetVisibility(false);
         }
+    }
 
-        l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(CurrentTime);
-        l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[DHP.GetTeamNum()]);
+    // Spawn points
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] != none &&
+            GRI.SpawnPoints[i].TeamIndex == MyDeployMenu.CurrentTeam &&
+            GRI.IsSpawnPointActive(GRI.SpawnPoints[i]) &&
+            ((MyDeployMenu.LoadoutMode == LM_Equipment && GRI.SpawnPoints[i].CanSpawnInfantry()) ||
+             (MyDeployMenu.LoadoutMode == LM_Vehicle && GRI.SpawnPoints[i].CanSpawnVehicles())))
+        {
+            GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
 
-        // Inform menu that our team is out of reinforcements and we can't spawn
-        bOutOfReinforcements = GRI.DHSpawnCount[DHP.GetTeamNum()] == 0;
+            b_SpawnPoints[i].Tag = i;
+            b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
+            b_SpawnPoints[i].SetVisibility(true);
+        }
+        else
+        {
+            b_SpawnPoints[i].SetVisibility(false);
+        }
+    }
+
+    // Spawn vehicles
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        if (MyDeployMenu.LoadoutMode != LM_Vehicle &&
+            GRI.SpawnVehicles[i].VehicleClass != none &&
+            GRI.SpawnVehicles[i].TeamIndex == MyDeployMenu.CurrentTeam)
+        {
+            GetMapCoords(GRI.SpawnVehicles[i].Location, X, Y, b_SpawnVehicles[i].WinWidth, b_SpawnVehicles[i].WinHeight);
+
+            b_SpawnVehicles[i].Tag = i;
+            b_SpawnVehicles[i].SetPosition(X, Y, b_SpawnVehicles[i].WinWidth, b_SpawnVehicles[i].WinHeight, true);
+            b_SpawnVehicles[i].SetVisibility(true);
+
+            TR = TexRotator(b_SpawnVehicles[i].Graphic);
+
+            if (TR != none)
+            {
+                //TODO: verify correctness and take map rotation into consideration
+                TR.Rotation.Roll = GRI.SpawnVehicles[i].Location.Z;
+            }
+        }
+        else
+        {
+            b_SpawnVehicles[i].SetVisibility(false);
+        }
     }
 }
 
-function ClearIcon(GUIGFXButton IconB)
+function Timer()
 {
-    if (IconB != none)
-    {
-        IconB.SetVisibility(false);
-        IconB.WinWidth = 0.0;
-        IconB.WinHeight = 0.0;
-    }
+    Update();
 }
 
 function float GetDistance(float A, float B)
@@ -165,7 +161,7 @@ function float GetDistance(float A, float B)
     }
 }
 
-// This function still needs to support levels with odd rotated NE and SW and "rotatation"
+// This function still needs to support levels with odd rotated NE and SW and "rotation"
 // Object location, sets map X, Y, based on image size W&H
 function GetMapCoords(vector Location, out float X, out float Y, float W, float H)
 {
@@ -182,395 +178,59 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
     TDistance = GetDistance(SWLocation.Y, NELocation.Y);
     Distance = GetDistance(SWLocation.Y, Location.Y);
     Distance = FMin(Distance, TDistance);
-    Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); // Because the map is managed by a container, lets form to the container's winheight
+    Y = (1.0 - (Distance / TDistance)) - (H / 2);
 }
 
-function PlaceSpawnPointOnMap(vector Location, byte Index, byte SPIndex, string Title)
+function bool OnDblClick(GUIComponent Sender)
 {
-    local float X, Y;
-
-    if (Index < arraycount(b_SpawnPoints))
-    {
-        if (SPIndex == MyDeployMenu.SpawnPointIndex) // Selected SP
-        {
-            GetMapCoords(Location, X, Y, SPSelectedSize.X, SPSelectedSize.Y);
-
-            b_SpawnPoints[Index].SetPosition(X, Y, SPSelectedSize.X, SPSelectedSize.Y, true);
-            b_SpawnPoints[Index].SetFocus(none);
-        }
-        else // Unselected SP
-        {
-            GetMapCoords(Location, X, Y, SPSize.X, SPSize.Y);
-
-            b_SpawnPoints[Index].SetPosition(X, Y, SPSize.X, SPSize.Y, true);
-        }
-
-        b_SpawnPoints[Index].Tag = SPIndex; // Store the SP Index in the button
-        b_SpawnPoints[Index].SetVisibility(true);
-    }
-}
-
-function PlaceVehicleSpawnOnMap(vector Location, byte Index)
-{
-    local float X, Y, W, H;
-    local TexRotator TR;
-
-    if (Index < arraycount(b_SpawnVehicles))
-    {
-        if (Index == MyDeployMenu.SpawnVehicleIndex)
-        {
-            W = 0.04;
-            H = 0.04;
-
-            GetMapCoords(Location, X, Y, W, H);
-
-            b_SpawnVehicles[Index].SetPosition(X, Y, W, H, true);
-            b_SpawnVehicles[Index].SetFocus(none);
-        }
-        else
-        {
-            W = 0.04;
-            H = 0.04;
-
-            GetMapCoords(Location, X, Y, W, H);
-
-            b_SpawnVehicles[Index].SetPosition(X, Y, W, H, true);
-        }
-
-        b_SpawnVehicles[Index].Tag = Index;
-        b_SpawnVehicles[Index].SetVisibility(true);
-
-        TR = TexRotator(b_SpawnVehicles[Index].Graphic);
-
-        if (TR != none)
-        {
-            //TODO: verify correctness and take map rotation into consideration
-            TR.Rotation.Roll = Location.Z;
-        }
-    }
-}
-
-function PlaceObjectiveOnMap(DHObjective O, byte Index)
-{
-    local float X, Y;
-
-    if (O != none && Index < arraycount(b_Objectives) && b_Objectives[Index] != none)
-    {
-        GetMapCoords(O.Location, X, Y, ObjSize.X, ObjSize.X);
-
-        b_Objectives[Index].SetPosition(X, Y, ObjSize.X, ObjSize.X, true);
-        b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.DHObjectives[Index].ObjState)];
-        b_Objectives[Index].Caption = O.ObjectiveName;
-
-        ObjArray[Index] = O;
-    }
-}
-
-function bool DrawMapComponents(Canvas C)
-{
-    local array<DHSpawnPoint> ActiveSpawnPoints;
-    local DHSpawnPoint        SP;
-    local byte                SpawnPointIndex;
-    local int                 i;
-
-    // If resolution changed then resetup the menu positions
-    if (bResolutionChanged)
-    {
-        InternalOnPostDraw(C); // Hack must keep drawing as res changed (end user shouldn't realize anything
-    }
-
-    if (MyDeployMenu == none || bOutOfReinforcements)
-    {
-        return false;
-    }
-
-    // Draw objectives
-    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
-    {
-        if (GRI.DHObjectives[i] == none || !GRI.DHObjectives[i].bActive)
-        {
-            if (b_Objectives[i] != none)
-            {
-                b_Objectives[i].Graphic = none;
-            }
-
-            continue;
-        }
-
-        PlaceObjectiveOnMap(GRI.DHObjectives[i], i);
-    }
-
-    // Get Spawn Points for Current Team
-    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, DHP.GetTeamNum());
-
-    for (i = 0; i < ActiveSpawnPoints.Length; ++i)
-    {
-        SP = ActiveSpawnPoints[i];
-        SpawnPointIndex = GRI.GetSpawnPointIndex(SP);
-
-        // Draw infantry or vehicle spawn points
-        if ((MyDeployMenu.Tab == TAB_Role && SP.CanSpawnInfantry()) ||
-            (MyDeployMenu.Tab == TAB_Vehicle && SP.CanSpawnVehicles()))
-        {
-            PlaceSpawnPointOnMap(SP.Location, i, SpawnPointIndex, SP.SpawnPointName);
-        }
-        else
-        {
-            ClearIcon(b_SpawnPoints[i]);
-        }
-    }
-
-    // Loop Vehicle Spawn Points
-    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
-    {
-        // Only show active, current team, and if we aren't spawning a vehicle
-        if (MyDeployMenu.Tab != TAB_Vehicle &&
-            GRI.SpawnVehicles[i].VehicleClass != none &&
-            GRI.SpawnVehicles[i].TeamIndex == DHP.GetTeamNum())
-        {
-            PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i);
-        }
-        else
-        {
-            ClearIcon(b_SpawnVehicles[i]);
-        }
-    }
-
-    return false;
-}
-
-// Resolution was changed, lets call OnPostDraw
-event ResolutionChanged(int ResX, int ResY)
-{
-    //super.ResolutionChanged(ResX, ResY); // No point in calling the super!
-
-    bResolutionChanged = true;
-}
-
-// Make panel uniform (square) and adjust other components accordingly
-// Other initialization/setup
-function InternalOnPostDraw(Canvas Canvas)
-{
-    local float ImageHeight, ExtraHeight, ExtraWidth;
-
-    ImageHeight = MapContainer.ActualHeight();
-    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, ImageHeight, MenuOwner.WinHeight, true);
-    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, ImageHeight, true);
-
-    ExtraHeight = 1.0 - MapContainer.WinHeight;
-    ExtraWidth = 1.0 - MenuOwner.WinLeft - MenuOwner.WinWidth;
-
-    MyDeployMenu.HandleExtraWidth(ExtraWidth);
-
-    pb_DeployProgressBar.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, ExtraHeight, true);
-    b_DeployButton.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, ExtraHeight, true);
-
-    bInit = false;
-    OnRendered = none;
-    ShowPanel(true);
-
-    // Set MyRoleMenu here to make sure it is initialized, though it should always be, do it here just in case
-    if (MyDeployMenu != none && MyDeployMenu.c_LoadoutArea.TabStack.Length > 0 && MyDeployMenu.c_LoadoutArea.TabStack[0].MyPanel != none)
-    {
-        MyRoleMenu = DHRoleSelectPanel(MyDeployMenu.c_LoadoutArea.TabStack[0].MyPanel);
-    }
-}
-
-// Deploy requested
-function SpawnClick()
-{
-    MyRoleMenu.AttemptDeployApplication();
-}
-
-// TODO: replace this function and other checks with the one from DHGRI
-function bool AreIndicesValid()
-{
-    // If we are trying to spawn vehicle, but no pool selected : return false
-    if (MyDeployMenu.Tab == TAB_Vehicle && MyDeployMenu.VehiclePoolIndex == 255)
-    {
-        return false;
-    }
-
-    // If we are trying to spawn as infantry, but pool is selected : return false
-    if (MyDeployMenu.Tab == TAB_Role && MyDeployMenu.VehiclePoolIndex != 255)
-    {
-        return false;
-    }
-
-    // If we have pool selected, but no spawn point : return false
-    if (MyDeployMenu.VehiclePoolIndex != 255 && MyDeployMenu.SpawnPointIndex == 255)
-    {
-        return false;
-    }
-
-    // If we have a SpawnVehicle selected, but also one of the others set : return false
-    if (MyDeployMenu.SpawnVehicleIndex != 255 && (MyDeployMenu.SpawnPointIndex != 255 || MyDeployMenu.VehiclePoolIndex != 255))
-    {
-        return false;
-    }
-
-    // Otherwise return true
-    return true;
-}
-
-function bool InternalOnClick(GUIComponent Sender)
-{
-    local GUIButton Selected;
     local int i;
 
-    switch(Sender)
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        case b_DeployButton:
-            SpawnClick();
-            break;
+        if (Sender == b_SpawnPoints[i])
+        {
+            SpawnPoint = b_SpawnPoints[i].Tag;
+            MyDeployMenu.Apply();
 
-        default:
-            // Something else was clicked, if spawn point button handle it
-            if (GUIButton(Sender) != none)
-            {
-                Selected = GUIButton(Sender);
-            }
+            return true;
+        }
+    }
 
-            if (Selected == none)
-            {
-                return false;
-            }
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        if (Sender == b_SpawnVehicles[i])
+        {
+            SpawnVehicle = b_SpawnVehicles[i].Tag;
+            MyDeployMenu.Apply();
 
-            for (i = 0; i < arraycount(b_SpawnPoints); ++i)
-            {
-                if (Selected == b_SpawnPoints[i])
-                {
-                    if (b_SpawnPoints[i].Tag == MyDeployMenu.SpawnPointIndex) // Player clicked twice on spawnpoint
-                    {
-                        // Clear spawnvehicle just in case it was set
-                        MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, 255);
-                        SpawnClick();
-                    }
-                    else
-                    {
-                        // Set SpawnPoint and clear spawnvehicle point as we clicked a spawn point
-                        MyDeployMenu.ChangeSpawnIndices(b_SpawnPoints[i].Tag, MyDeployMenu.VehiclePoolIndex, 255);
-                    }
-
-                    break;
-                }
-            }
-
-            for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-            {
-                if (Selected == b_SpawnVehicles[i])
-                {
-                    if (b_SpawnVehicles[i].Tag == MyDeployMenu.SpawnVehicleIndex)
-                    {
-                        // Clear pool and spawnpoint just incase either were set
-                        MyDeployMenu.ChangeSpawnIndices(255, 255, MyDeployMenu.SpawnVehicleIndex);
-                        SpawnClick();
-                    }
-                    else
-                    {
-                        // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
-                        MyDeployMenu.ChangeSpawnIndices(255, 255, b_SpawnVehicles[i].Tag);
-                    }
-
-                    break;
-                }
-            }
-
-            break;
+            return true;
+        }
     }
 
     return false;
 }
 
-
-function bool DrawDeployTimer(Canvas C)
+function bool OnClick(GUIComponent Sender)
 {
-    local float P; // Progress
-    local bool bButtonEnabled, bProgressComplete;
+    local int i;
 
-    // Handle progress bar
-    if (!bOutOfReinforcements)
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.SpawnTime - DHP.Level.TimeSeconds) / DHP.SpawnTime;
-        P = pb_DeployProgressBar.High - P;
-        pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
-
-        if (pb_DeployProgressBar.Value == pb_DeployProgressBar.High)
+        if (Sender == b_SpawnPoints[i])
         {
-            // Progress bar is complete
-            bProgressComplete = true;
+            SpawnPoint = b_SpawnPoints[i].Tag;
+            return true;
         }
     }
-    else
-    {
-        // Set progress to none
-        pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
-    }
 
-    // Handle button (enabled/disabled)
-    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (AreIndicesValid() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra))
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
     {
-        // match started, team not out of reinforcements, have legit indices, and no pawn
-        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, MyRoleMenu.desiredRole))
+        if (Sender == b_SpawnVehicles[i])
         {
-            // We are deploying a vehicle and our vehicle pool index is valid
-            b_DeployButton.EnableMe();
-            bButtonEnabled = true;
-        }
-        else if (MyDeployMenu.Tab == TAB_Role && (GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()) ||
-                                                  GRI.CanSpawnAtVehicle(MyDeployMenu.SpawnVehicleIndex, DHP)))
-        {
-            // We are deploying infantry and either our spawn point or vehicle spawn point is valid
-            b_DeployButton.EnableMe();
-            bButtonEnabled = true;
-        }
-        else if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
-        {
-            // We are on a RO spawn room map
-            b_DeployButton.EnableMe();
-            bButtonEnabled = true;
-        }
-        else
-        {
-            b_DeployButton.DisableMe();
-        }
-    }
-    else
-    {
-        b_DeployButton.DisableMe();
-    }
+            SpawnVehicle = b_SpawnVehicles[i].Tag;
 
-    // Handle button caption
-    if (!GRI.bMatchHasBegun)
-    {
-        b_DeployButton.Caption = DeployBarText[6]; // "Round not in play"
-    }
-    else if (!AreIndicesValid())
-    {
-        b_DeployButton.Caption = DeployBarText[0]; // "Make sure you have a role and/or vehicle selected"
-    }
-    else if (DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour &&
-             !GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()) &&
-             !GRI.CanSpawnAtVehicle(MyDeployMenu.SpawnVehicleIndex, DHP))
-    {
-        b_DeployButton.Caption = DeployBarText[1]; // "Select a spawnpoint"
-    }
-    else if (bOutOfReinforcements)
-    {
-        b_DeployButton.Caption = DeployBarText[2]; // "Your team is out of reinforcements"
-    }
-    else if (!bProgressComplete)
-    {
-        b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.SpawnTime - DHP.Level.TimeSeconds)) @ DeployBarText[4];
-    }
-    else
-    {
-        b_DeployButton.Caption = DeployBarText[7]; // "Deploy!"
-    }
-
-    if (bButtonEnabled && bProgressComplete)
-    {
-        bReadyToDeploy = true;
+            return true;
+        }
     }
 
     return false;
@@ -579,99 +239,40 @@ function bool DrawDeployTimer(Canvas C)
 defaultproperties
 {
     bNeverFocus=true
-    OnRendered=DHDeploymentMapMenu.InternalOnPostDraw
-    ReinforcementText="Reinforcements Remaining:"
 
-    DeployBarText(0)="Make sure you have a role and/or vehicle selected"
-    DeployBarText(1)="Select a spawnpoint"
-    DeployBarText(2)="Your team is out of reinforcements"
-    DeployBarText(3)="Deploy in:"
-    DeployBarText(4)="seconds | Close & Deploy When Ready"
-    DeployBarText(5)="You are already deployed"
-    DeployBarText(6)="Round not in play"
-    DeployBarText(7)="Deploy!"
-    DeployBarText(8)=""
-    DeployBarText(9)=""
+    SpawnVehicle=255;
+    SpawnPoint=255
 
-    SPSelectedSize=(X=0.04,Y=0.04)
-    SPSize=(X=0.04,Y=0.04)
-    ObjSize=(X=0.04,Y=0.04)
-    //SVSize=
-    //SVSelectedSize=
-
+    //TODO: special plans for this
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
     ObjectiveIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
     ObjectiveIcons(2)=Texture'DH_GUI_Tex.GUI.NeutralObj'
 
     // Image for level map
     Begin Object Class=GUIImage Name=BackgroundImage
-        ImageStyle=ISTY_Justified
+        ImageStyle=ISTY_Scaled
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
         bAcceptsInput=false
-        OnDraw=DrawMapComponents
     End Object
     i_Background=BackgroundImage
 
-    // Container for level map image (used for plotting of elements)
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainer_co
-        WinLeft=0.0
-        WinTop=0.0
-        WinWidth=1.0
-        WinHeight=0.95
-        TopPadding=0.0
-        LeftPadding=0.0
-        RightPadding=0.0
-        BottomPadding=0.0
-    End Object
-    MapContainer=MapContainer_co
-
-    // Deploy button
-    Begin Object Class=DHGUIButton Name=DeployButton
-        Caption=""
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHDeployButtonStyle"
-        WinWidth=0.315937
-        WinHeight=0.3
-        WinLeft=0.137395
-        WinTop=0.010181
-        OnClick=InternalOnClick
-    End Object
-    b_DeployButton=DeployButton
-
-    // Deploy time progress bar
-    Begin Object class=GUIProgressBar Name=DeployTimePB
-        BarColor=(B=255,G=255,R=255,A=255)
-        Value=0.0
-        RenderWeight=1.75
-        bShowValue=false
-        CaptionWidth=0.0
-        ValueRightWidth=0.0
-        BarBack=Texture'InterfaceArt_tex.Menu.GreyDark'
-        BarTop=Texture'InterfaceArt_tex.Menu.GreyLight'
-        OnDraw=DrawDeployTimer
-        WinWidth=0.315937
-        WinHeight=0.033589
-        WinLeft=0.137395
-        WinTop=0.010181
-        bNeverFocus=true
-        bAcceptsInput=false
-    End Object
-    pb_DeployProgressBar=DeployTimePB
-
-    // Spawn point buttons
+    // Spawn points
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
         Position=ICP_Normal
         bClientBound=true
         StyleName="DHSpawnButtonStyle"
-        WinWidth=0.0
-        WinHeight=0.0
+        WinWidth=0.04
+        WinHeight=0.04
         bTabStop=true
-        OnClick=InternalOnClick
+        OnClick=OnClick
+        OnDblClick=OnDblClick
+        bVisible=false
     End Object
+
+    //TODO: This is begging to be put into a loop somewhere
     b_SpawnPoints(0)=SpawnPointButton
     b_SpawnPoints(1)=SpawnPointButton
     b_SpawnPoints(2)=SpawnPointButton
@@ -688,17 +289,52 @@ defaultproperties
     b_SpawnPoints(13)=SpawnPointButton
     b_SpawnPoints(14)=SpawnPointButton
     b_SpawnPoints(15)=SpawnPointButton
+    b_SpawnPoints(16)=SpawnPointButton
+    b_SpawnPoints(17)=SpawnPointButton
+    b_SpawnPoints(18)=SpawnPointButton
+    b_SpawnPoints(19)=SpawnPointButton
+    b_SpawnPoints(20)=SpawnPointButton
+    b_SpawnPoints(21)=SpawnPointButton
+    b_SpawnPoints(22)=SpawnPointButton
+    b_SpawnPoints(23)=SpawnPointButton
+    b_SpawnPoints(24)=SpawnPointButton
+    b_SpawnPoints(25)=SpawnPointButton
+    b_SpawnPoints(26)=SpawnPointButton
+    b_SpawnPoints(27)=SpawnPointButton
+    b_SpawnPoints(28)=SpawnPointButton
+    b_SpawnPoints(29)=SpawnPointButton
+    b_SpawnPoints(30)=SpawnPointButton
+    b_SpawnPoints(31)=SpawnPointButton
+    b_SpawnPoints(32)=SpawnPointButton
+    b_SpawnPoints(33)=SpawnPointButton
+    b_SpawnPoints(34)=SpawnPointButton
+    b_SpawnPoints(35)=SpawnPointButton
+    b_SpawnPoints(36)=SpawnPointButton
+    b_SpawnPoints(37)=SpawnPointButton
+    b_SpawnPoints(38)=SpawnPointButton
+    b_SpawnPoints(39)=SpawnPointButton
+    b_SpawnPoints(40)=SpawnPointButton
+    b_SpawnPoints(41)=SpawnPointButton
+    b_SpawnPoints(42)=SpawnPointButton
+    b_SpawnPoints(43)=SpawnPointButton
+    b_SpawnPoints(44)=SpawnPointButton
+    b_SpawnPoints(45)=SpawnPointButton
+    b_SpawnPoints(46)=SpawnPointButton
+    b_SpawnPoints(47)=SpawnPointButton
 
     // Spawn Vehicle Buttons
     Begin Object Class=GUIGFXButton Name=SpawnVehicleButton
         Position=ICP_Normal
         bClientBound=true
         StyleName="DHSpawnButtonStyle"
-        WinWidth=0.0
-        WinHeight=0.0
+        WinWidth=0.04
+        WinHeight=0.04
         bTabStop=true
-        OnClick=InternalOnClick
+        OnClick=OnClick
+        OnDblClick=OnDblClick
+        bVisible=false
     End Object
+
     b_SpawnVehicles(0)=SpawnVehicleButton
     b_SpawnVehicles(1)=SpawnVehicleButton
     b_SpawnVehicles(2)=SpawnVehicleButton
@@ -707,8 +343,6 @@ defaultproperties
     b_SpawnVehicles(5)=SpawnVehicleButton
     b_SpawnVehicles(6)=SpawnVehicleButton
     b_SpawnVehicles(7)=SpawnVehicleButton
-    b_SpawnVehicles(8)=SpawnVehicleButton
-    b_SpawnVehicles(9)=SpawnVehicleButton
 
     // Objective buttons
     Begin Object Class=GUIGFXButton Name=ObjectiveButton
@@ -716,9 +350,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.0
-        WinHeight=0.0
+        WinWidth=0.04
+        WinHeight=0.04
         bTabStop=true
+        bVisible=false
     End Object
     b_Objectives(0)=ObjectiveButton
     b_Objectives(1)=ObjectiveButton
@@ -752,26 +387,4 @@ defaultproperties
     b_Objectives(29)=ObjectiveButton
     b_Objectives(30)=ObjectiveButton
     b_Objectives(31)=ObjectiveButton
-
-    // Reinforcement Counter
-    Begin Object Class=GUILabel Name=ReinforceCounter
-        TextAlign=TXTA_Left
-        StyleName="ComboListBox"
-        WinWidth=0.45
-        WinHeight=0.03
-        WinLeft=0.0
-        WinTop=0.03
-    End Object
-    l_ReinforcementCount=ReinforceCounter
-
-    // Round Time Counter
-    Begin Object Class=GUILabel Name=RoundTimeCounter
-        TextAlign=TXTA_Left
-        StyleName="ComboListBox"
-        WinWidth=0.45
-        WinHeight=0.03
-        WinLeft=0.0
-        WinTop=0.0
-    End Object
-    l_RoundTime=RoundTimeCounter
 }

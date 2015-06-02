@@ -4,243 +4,299 @@
 //==============================================================================
 class DHDeployMenu extends UT2K4GUIPage;
 
-enum ETab
+enum ELoadoutMode
 {
-    TAB_Role,
-    TAB_Vehicle
+    LM_Equipment,
+    LM_Vehicle
 };
 
-var automated ROGUIProportionalContainer    MenuOptionsContainer;
+var automated   FloatingImage               i_Background;
 
-var automated FloatingImage                 i_background;
+var automated   ROGUIProportionalContainer  c_Teams;
+var automated   GUIGFXButton                    b_Axis;
+var automated   GUIGFXButton                    b_Allies;
+var automated   GUIGFXButton                    b_Spectate;
+var automated   GUILabel                    l_Roles;
+var automated   ROGUIProportionalContainer  c_Roles;
+var automated   DHGUIListBox                    lb_Roles;
+var             DHGUIList                        li_Roles;
+var automated   ROGUIProportionalContainer  LoadoutTabContainer;
+var automated   GUIGFXButton                    b_EquipmentButton;
+var automated   GUIGFXButton                    b_VehicleButton;
+var automated   GUILabel                    l_Loadout;
+var automated   ROGUIProportionalContainer  c_Loadout;
+var automated   ROGUIProportionalContainer        c_Equipment;
+var automated   ROGUIProportionalContainer        c_Vehicle;
+var automated   ROGUIProportionalContainer  c_Map;
+var automated   ROGUIProportionalContainer  c_Footer;
+var automated   GUILabel                    l_Status;
 
-var automated DHGUIButton                   b_MenuOptions[10];
+var automated   GUIImage                        i_PrimaryWeapon;
+var automated   GUIImage                        i_SecondaryWeapon;
+var automated   GUIImage                        i_Vehicle;
 
-var localized string                        MenuOptions[10], CloseButtonString;
+var automated   DHmoComboBox                cb_PrimaryWeapon;
+var automated   DHmoComboBox                cb_SecondaryWeapon;
 
-var automated DHDeployTabControl            c_LoadoutArea;
-var automated DHDeployTabControl            c_DeploymentMapArea;
+var automated   DHGUIListBox                lb_Vehicles;
+var             DHGUIList                   li_Vehicles;
 
-var DHRoleSelectPanel                       RolePanel;
-var DHDeployMenuPanel                       VehiclePanel;
+var automated   DHGUIListBox                lb_PrimaryWeapons;
+var             DHGUIList                   li_PrimaryWeapons;
 
-var array<string>                           DeploymentPanelClass;
-var localized array<string>                 DeploymentPanelCaption;
-var localized array<string>                 DeploymentPanelHint;
+var automated array<DHGUIButton>            b_MenuOptions;
 
-var array<string>                           LoadoutPanelClass;
-var localized array<string>                 LoadoutPanelCaption;
-var localized array<string>                 LoadoutPanelHint;
+var automated DHDeploymentMapMenu           MapComponent;
 
-var localized string                        NoSelectedRoleText,
-                                            RoleHasBotsText,
-                                            CurrentRoleText,
-                                            RoleFullText,
-                                            SelectEquipmentText,
-                                            RoleIsFullMessageText,
-                                            ChangingRoleMessageText,
-                                            UnknownErrorMessageText,
-                                            ErrorChangingTeamsMessageText,
-                                            UnknownErrorSpectatorMissingReplicationInfo,
-                                            SpectatorErrorTooManySpectators,
-                                            SpectatorErrorRoundHasEnded,
-                                            UnknownErrorTeamMissingReplicationInfo,
-                                            ErrorTeamMustJoinBeforeStart,
-                                            TeamSwitchErrorTooManyPlayers,
-                                            UnknownErrorTeamMaxLives,
-                                            TeamSwitchErrorRoundHasEnded,
-                                            TeamSwitchErrorGameHasStarted,
-                                            TeamSwitchErrorPlayingAgainstBots,
-                                            TeamSwitchErrorTeamIsFull,
-                                            SpawnPointInvalid,
-                                            VehiclePoolInvalid,
-                                            SpawnVehicleInvalid;
+var DHGameReplicationInfo                   GRI;
+var DHPlayer                                PC;
 
-var bool                                    bReceivedTeam,
-                                            bShowingMenuOptions,
-                                            bRoleIsCrew,
-                                            bRoomForOptions,
-                                            bAttemptDeploy;
-
-var float                                   PanelMargin;
-var float                                   RequiredExtraWidth;
-
-var DHGameReplicationInfo                   DHGRI;
-var DHPlayer                                DHP;
+// Colin: The reason this variable is needed is because the PlayerController's
+// GetTeamNum function is not reliable after recieving a successful team change
+// signal from InternalOnMessage.
+var byte                                    CurrentTeam;
 
 var byte                                    SpawnPointIndex;
 var byte                                    VehiclePoolIndex;
 var byte                                    SpawnVehicleIndex;
 
-var ETab                                    Tab;
+var ELoadoutMode                            LoadoutMode;
+
+var localized string                        NoneString;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
+    local int i;
+
     super.InitComponent(MyController, MyOwner);
 
-    DHP = DHPlayer(PlayerOwner());
+    PC = DHPlayer(PlayerOwner());
 
-    if (DHP == none)
+    if (PC == none)
     {
         return;
     }
 
-    DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (DHGRI == none)
+    if (GRI == none)
     {
         return;
     }
 
-    // Initialize menu options
-    InitializeMenuOptions();
+    li_Roles = DHGUIList(lb_Roles.List);
+    li_Vehicles = DHGUIList(lb_Vehicles.List);
 
-    // Check if the player doesn't have a team
-    if (DHP.PlayerReplicationInfo.Team != none)
+    // Footer buttons
+    for (i = 0; i < b_MenuOptions.Length; ++i)
     {
-        // We have a team!
-        HandlePanelInitialization();
-    }
-    else
-    {
-        // Have timer search for team if we didn't get one
-        SetTimer(0.1, true);
+        b_MenuOptions[i].WinLeft = i * (1.0 / b_MenuOptions.Length);
+        b_MenuOptions[i].WinWidth = 1.0 / b_MenuOptions.Length;
+
+        c_Footer.ManageComponent(b_MenuOptions[i]);
     }
 
-    // Makes this menu not pause in single-player
-    if (DHP.Level.Pauser != none)
-    {
-        DHP.SetPause(false);
-    }
+    // Team buttons
+    c_Teams.ManageComponent(b_Allies);
+    c_Teams.ManageComponent(b_Axis);
+    c_Teams.ManageComponent(b_Spectate);
 
-    // Gather spawn point indices
-    if (!DHP.bSwappedTeams)
-    {
-        SpawnPointIndex = DHP.SpawnPointIndex;
-        SpawnVehicleIndex = DHP.SpawnVehicleIndex;
-        VehiclePoolIndex = DHP.VehiclePoolIndex;
-    }
-    else
-    {
-        DHP.bSwappedTeams = false;
-    }
+    c_Loadout.ManageComponent(c_Equipment);
+    c_Loadout.ManageComponent(c_Vehicle);
+
+    LoadoutTabContainer.ManageComponent(b_EquipmentButton);
+    LoadoutTabContainer.ManageComponent(b_VehicleButton);
+
+    c_Map.ManageComponent(MapComponent);
+
+    c_Equipment.ManageComponent(i_PrimaryWeapon);
+    c_Equipment.ManageComponent(i_SecondaryWeapon);
+    c_Equipment.ManageComponent(cb_PrimaryWeapon);
+    c_Equipment.ManageComponent(cb_SecondaryWeapon);
+
+    c_Vehicle.ManageComponent(i_Vehicle);
+    c_Vehicle.ManageComponent(lb_Vehicles);
+
+    c_Roles.ManageComponent(lb_Roles);
+
+    // Get spawn point indices from player
+    SpawnPointIndex = PC.SpawnPointIndex;
+    SpawnVehicleIndex = PC.SpawnVehicleIndex;
+    VehiclePoolIndex = PC.VehiclePoolIndex;
+
+    OnTeamChanged(PC.GetTeamNum());
+
+    SetTimer(1.0, true);
+}
+
+function SetLoadoutMode(ELoadoutMode Mode)
+{
+    LoadoutMode = Mode;
+
+    c_Equipment.SetVisibility(Mode == LM_Equipment);
+    c_Vehicle.SetVisibility(Mode == LM_Vehicle);
+
+    MapComponent.Update();
 }
 
 function Timer()
 {
-    local ROPlayer C;
-
-    C = ROPlayer(PlayerOwner());
-
-    // Leave timer loop if we found a team
-    if (bReceivedTeam)
-    {
-        SetTimer(0.0, false);
-    }
-
-    if (!bReceivedTeam && C != none && C.ForcedTeamSelectOnRoleSelectPage != -5)
-    {
-        C.ServerChangePlayerInfo(C.ForcedTeamSelectOnRoleSelectPage, 255, 0, 0);
-
-        if (C.PlayerReplicationInfo.Team != none)
-        {
-            // Initialize loadout panels
-            HandlePanelInitialization();
-        }
-    }
+    UpdateRoles();
+    UpdateVehicles();
 }
 
-function InitializeMenuOptions()
+function PopulateVehicles()
 {
     local int i;
 
-    for (i = 0; i < arraycount(b_MenuOptions); ++i)
+    li_Vehicles.Clear();
+
+    for (i = 0; i < arraycount(GRI.VehiclePoolVehicleClasses); ++i)
     {
-        if (MenuOptions[i] == "")
+        if (GRI.VehiclePoolVehicleClasses[i] != none &&
+            GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam == CurrentTeam)
+        {
+            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, GRI.VehiclePoolVehicleClasses[i]);
+        }
+    }
+
+    li_Vehicles.SortList();
+
+    li_Vehicles.Insert(0, default.NoneString, none,, true);
+
+    UpdateVehicles();
+    AutoSelectVehicle();
+}
+
+function UpdateVehicles()
+{
+    local int i, j;
+    local class<ROVehicle> VehicleClass;
+    local RORoleInfo RI;
+    local bool bDisabled;
+    local string S;
+    local float RespawnTime;
+
+    RI = RORoleInfo(li_Roles.GetObject());
+
+    for (i = 0; i < li_Vehicles.ItemCount; ++i)
+    {
+        VehicleClass = class<ROVehicle>(li_Vehicles.GetObjectAtIndex(i));
+        j = GRI.GetVehiclePoolIndex(VehicleClass);
+
+        if (j == -1)
         {
             continue;
         }
 
-        b_MenuOptions[i].Caption = MenuOptions[i];
+        //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
+        bDisabled = VehicleClass != none &&
+                    ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
+                    GRI.MaxTeamVehicles[CurrentTeam] <= 0 ||
+                    GRI.GetVehiclePoolSpawnsRemaining(j) <= 0 ||
+                    !GRI.IsVehiclePoolActive(j) ||
+                    GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j]);
 
-        MenuOptionsContainer.ManageComponent(b_MenuOptions[i]);
+        if (VehicleClass != none)
+        {
+            S = VehicleClass.default.VehicleNameString;
+
+            if (GRI.GetVehiclePoolSpawnsRemaining(j) != 255)
+            {
+                S @= "[" $ GRI.GetVehiclePoolSpawnsRemaining(j) $ "]";
+            }
+
+            RespawnTime = Max(0.0, GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime);
+
+            if (RespawnTime > 0)
+            {
+                S @= "(" $ class'DHLib'.static.GetDurationString(RespawnTime, "m:ss") $ ")";
+            }
+
+            if (GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j])
+            {
+                S @= "*MAX*";
+            }
+
+            li_Vehicles.SetItemAtIndex(i, S);
+        }
+
+        li_Vehicles.SetDisabledAtIndex(i, bDisabled);
     }
-
-    MenuOptionsContainer.SetVisibility(false); // Initially hidden
 }
 
-function HandlePanelInitialization()
+function UpdateRoles()
 {
     local int i;
-    local bool bVehicleTabActive;
+    local RORoleInfo RI;
+    local int Count;
+    local int BotCount;
+    local int Limit;
+    local string S;
 
-    if (DHP.VehiclePoolIndex != 255)
+    for (i = 0; i < li_Roles.ItemCount; ++i)
     {
-        bVehicleTabActive = true;
-    }
+        RI = RORoleInfo(li_Roles.GetObjectAtIndex(i));
 
-    // Initialize loadout panels
-    for (i = 0; i < LoadoutPanelClass.Length; ++i)
-    {
-        // Check if we have a vehicle pool index set and are dealing with role panel
-        if (bVehicleTabActive && i == 1)
+        if (RI == none)
         {
-            c_LoadoutArea.AddTab(LoadoutPanelCaption[i], LoadoutPanelClass[i],, LoadoutPanelHint[i], bVehicleTabActive);
+            continue;
         }
-        else // Initialize normally (where 0 is active)
+
+        if (PC != none && PC.bUseNativeRoleNames)
         {
-            c_LoadoutArea.AddTab(LoadoutPanelCaption[i], LoadoutPanelClass[i],, LoadoutPanelHint[i]);
+            S = RI.AltName;
         }
+        else
+        {
+            S = RI.MyName;
+        }
+
+        GRI.GetRoleCounts(RI, Count, BotCount, Limit);
+
+        if (Limit > 0)
+        {
+            S @= "[" $ Count $ "/" $ Limit $ "]";
+        }
+        else
+        {
+            S @= "[" $ Count $ "]";
+        }
+
+        if (BotCount > 0)
+        {
+            S @= "*BOTS*";
+        }
+
+        li_Roles.SetItemAtIndex(i, S);
+        li_Roles.SetDisabledAtIndex(i, (PC.GetRoleInfo() != RI) && (Limit > 0) && (Count >= Limit) && (BotCount == 0));
     }
-
-    // Initialize deployment panel(s)
-    for (i = 0; i < DeploymentPanelClass.Length; ++i)
-    {
-        c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
-    }
-
-    // Set easy panel access
-    RolePanel = DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel);
-    VehiclePanel = DHDeployMenuPanel(c_LoadoutArea.TabStack[1].MyPanel);
-
-    // We have a team now
-    bReceivedTeam = true;
 }
 
 function bool OnClick(GUIComponent Sender)
 {
     switch (Sender)
     {
-        // Back to deploy
+        // Disconnect
         case b_MenuOptions[0]:
-            if (bRoomForOptions && bShowingMenuOptions)
-            {
-                CloseMenu();
-            }
-            else if (bShowingMenuOptions)
-            {
-                // Hide menu options (show panels & menu button)
-                bShowingMenuOptions = false;
-                MenuOptionsContainer.SetVisibility(false);
-                c_LoadoutArea.SetVisibility(true);
-                c_DeploymentMapArea.SetVisibility(true);
-            }
+            PlayerOwner().ConsoleCommand("DISCONNECT");
+            CloseMenu();
             break;
 
-        // Switch Team
+        // Suicide
         case b_MenuOptions[1]:
-            // Open team select menu
-            Controller.ReplaceMenu("DH_Interface.DHGUITeamSelection");
-            break;
-
-        // Map Vote
-        case b_MenuOptions[2]:
-            Controller.OpenMenu(Controller.MapVotingMenu);
+            PlayerOwner().ConsoleCommand("SUICIDE");
+            CloseMenu();
             break;
 
         // Kick Vote
-        case b_MenuOptions[3]:
+        case b_MenuOptions[2]:
             Controller.OpenMenu(Controller.KickVotingMenu);
+            break;
+
+        // Map Vote
+        case b_MenuOptions[3]:
+            Controller.OpenMenu(Controller.MapVotingMenu);
             break;
 
         // Communication
@@ -258,116 +314,206 @@ function bool OnClick(GUIComponent Sender)
             Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
             break;
 
-        // Suicide
+        // Apply
         case b_MenuOptions[7]:
-            PlayerOwner().ConsoleCommand("SUICIDE");
-
-            if (RolePanel.IsApplicationChanged())
-            {
-                RolePanel.AttemptDeployApplication();
-            }
-
-            CloseMenu();
+            Apply();
             break;
 
-        // Disconnect
-        case b_MenuOptions[8]:
-            PlayerOwner().ConsoleCommand("DISCONNECT");
-            CloseMenu();
+        //Axis
+        case b_Axis:
+            ChangeTeam(AXIS_TEAM_INDEX);
+            break;
+
+        //Allies
+        case b_Allies:
+            ChangeTeam(ALLIES_TEAM_INDEX);
+            break;
+
+        //Spectate
+        case b_Spectate:
+            ChangeTeam(254);
+            break;
+
+        //Equipment
+        case b_EquipmentButton:
+            SetLoadoutMode(LM_Equipment);
+            break;
+
+        //Vehicle
+        case b_VehicleButton:
+            SetLoadoutMode(LM_Vehicle);
+            break;
+
+        default:
             break;
     }
 
     return false;
 }
 
-function HandleExtraWidth(float ExtraWidth)
+function Apply()
 {
-    local float L, T, W, H;
+    local RORoleInfo RI;
+    local int RoleIndex;
+    local byte Team;
 
-    if (ExtraWidth >= RequiredExtraWidth)
+    RI = RORoleInfo(li_Roles.GetObject());
+
+    if (RI == none)
     {
-        // Tell panels to not have menu option buttons
-        bRoomForOptions = true;
-        RolePanel.b_MenuButton.SetVisibility(false);
-        VehiclePanel.b_MenuButton.SetVisibility(false);
+        return;
+    }
 
-        // Set the position values
-        L = 1.0 - ExtraWidth + PanelMargin;
-        T = 0.0;
-        W = ExtraWidth - (PanelMargin * 2);
-        H = 1.0;
+    RoleIndex = GRI.GetRoleIndexAndTeam(RI, Team);
 
-        // Draw the menu options in the extra space
-        MenuOptionsContainer.SetPosition(L, T, W, H);
-        MenuOptionsContainer.SetVisibility(true);
-        bShowingMenuOptions = true;
+    if (RoleIndex == -1)
+    {
+        return;
+    }
 
-        // Change the back button to the close button
-        b_MenuOptions[0].Caption = CloseButtonString;
+    Log("MapComponent.SpawnPoint" @ MapComponent.SpawnPoint);
+    Log("VehiclePoolIndex" @ VehiclePoolIndex);
+    Log("MapComponent.SpawnVehicle" @ MapComponent.SpawnVehicle);
+
+    PC.ServerSetPlayerInfo(255,
+                           RoleIndex,
+                           cb_PrimaryWeapon.GetIndex(),
+                           cb_SecondaryWeapon.GetIndex(),
+                           MapComponent.SpawnPoint,
+                           VehiclePoolIndex,
+                           MapComponent.SpawnVehicle,
+                           0);
+}
+
+function SelectRole(RORoleInfo NewRole)
+{
+    li_Roles.SelectByObject(NewRole);
+
+    if (NewRole != none && NewRole.bCanBeTankCommander)
+    {
+        SetLoadoutMode(LM_Vehicle);
     }
     else
     {
-        // Tell panels there is no longer room for option buttons
-        bRoomForOptions = false;
-        RolePanel.b_MenuButton.SetVisibility(true);
-        VehiclePanel.b_MenuButton.SetVisibility(true);
-
-        // Set the position values (cant call defaults :C)
-        L = 0.25;
-        T = 0.05;
-        W = 0.5;
-        H = 0.9;
-
-        // Set option container to default
-        MenuOptionsContainer.SetPosition(L, T, W, H);
-        MenuOptionsContainer.SetVisibility(false);
-        bShowingMenuOptions = false;
-
-        // Change the back button to the close button
-        b_MenuOptions[0].Caption = MenuOptions[0];
+        SetLoadoutMode(LM_Equipment);
     }
 }
 
-function HandleMenuButton()
+function SelectVehicle(class<ROVehicle> VehicleClass)
 {
-    if (!bShowingMenuOptions && !bRoomForOptions)
+
+}
+
+function PopulateRoles()
+{
+    local int i;
+    local string RoleName;
+
+    li_Roles.Clear();
+    li_Roles.SetIndex(-1);
+
+    if (CurrentTeam == AXIS_TEAM_INDEX)
     {
-        // Show menu options (hide panels & menu button)
-        bShowingMenuOptions = true;
-        MenuOptionsContainer.SetVisibility(true);
-        c_LoadoutArea.SetVisibility(false);
-        c_DeploymentMapArea.SetVisibility(false);
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+        {
+            if (GRI.DHAxisRoles[i] != none)
+            {
+                if (PC != none && PC.bUseNativeRoleNames)
+                {
+                    RoleName = GRI.DHAxisRoles[i].default.AltName;
+                }
+                else
+                {
+                    RoleName = GRI.DHAxisRoles[i].default.MyName;
+                }
+
+                li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
+            }
+        }
+    }
+    else if (CurrentTeam == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+        {
+            if (GRI.DHAlliesRoles[i] != none)
+            {
+                if (PC != none && PC.bUseNativeRoleNames)
+                {
+                    RoleName = GRI.DHAlliesRoles[i].default.AltName;
+                }
+                else
+                {
+                    RoleName = GRI.DHAlliesRoles[i].default.MyName;
+                }
+
+                li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
+            }
+        }
+    }
+
+    li_Roles.SortList();
+
+    UpdateRoles();
+
+    AutoSelectRole();
+}
+
+// Colin: Automatically selects a role from the roles list. If the player is
+// currently assigned to a role, that role will be selected. Otherwise, a role
+// that has no limit will be selected. In the rare case that no role is
+// limitless, no role will be selected.
+function AutoSelectRole()
+{
+    local int i;
+
+    if (PC.GetRoleInfo() != none)
+    {
+        SelectRole(PC.GetRoleInfo());
+    }
+    else
+    {
+        if (CurrentTeam == AXIS_TEAM_INDEX)
+        {
+            for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+            {
+                if (GRI.DHAxisRoles[i] != none &&
+                    GRI.DHAxisRoles[i].GetLimit(GRI.MaxPlayers) == 0)
+                {
+                    SelectRole(GRI.DHAxisRoles[i]);
+                }
+            }
+        }
+        else if(CurrentTeam == ALLIES_TEAM_INDEX)
+        {
+            for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+            {
+                if (GRI.DHAlliesRoles[i] != none &&
+                    GRI.DHAlliesRoles[i].GetLimit(GRI.MaxPlayers) == 0)
+                {
+                    SelectRole(GRI.DHAlliesRoles[i]);
+                }
+            }
+        }
+        else
+        {
+            SelectRole(none);
+        }
     }
 }
 
-function ChangeSpawnIndices(byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
+// Colin: Automatically selects the players' currently selected vehicle to
+// spawn. If no vehicle is selected to spawn, the "None" option will be
+// selected.
+function AutoSelectVehicle()
 {
-    if (NewSpawnPointIndex < DHGRI.SPAWN_POINTS_MAX)
+    local class<Vehicle> VehicleClass;
+
+    if (PC.VehiclePoolIndex >= 0 && PC.VehiclePoolIndex < arraycount(GRI.VehiclePoolVehicleClasses))
     {
-        SpawnPointIndex = NewSpawnPointIndex;
-    }
-    else
-    {
-        SpawnPointIndex = 255;
+        VehicleClass = GRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex];
     }
 
-    if (NewVehiclePoolIndex < arraycount(DHGRI.VehiclePoolVehicleClasses))
-    {
-        VehiclePoolIndex = NewVehiclePoolIndex;
-    }
-    else
-    {
-        VehiclePoolIndex = 255;
-    }
-
-    if (NewSpawnVehicleIndex < arraycount(DHGRI.SpawnVehicles))
-    {
-        SpawnVehicleIndex = NewSpawnVehicleIndex;
-    }
-    else
-    {
-        SpawnVehicleIndex = 255;
-    }
+    li_Vehicles.SelectByObject(VehicleClass);
 }
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
@@ -375,20 +521,37 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     local int Result;
     local string ErrorMessage;
 
-    if (Msg == "notify_gui_role_selection_page")
+    if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
     {
         Result = int(MsgLife);
 
+        Log(Result);
+
         switch (Result)
         {
-            case 0: // All is well!
+            //Spectator
+            case 96:
+                CloseMenu();
+                return;
+
+            //Axis
             case 97:
+                //Axis
+                OnTeamChanged(AXIS_TEAM_INDEX);
+                return;
+
+            //Allies
             case 98:
+                OnTeamChanged(ALLIES_TEAM_INDEX);
+                return;
+
+            //Success
+            case 0:
                 CloseMenu();
                 return;
 
             default:
-                ErrorMessage = getErrorMessageForId(result);
+                ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
                 break;
         }
 
@@ -400,116 +563,22 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     }
 }
 
-static function string getErrorMessageForId(int id)
-{
-    local string error_msg;
-
-    switch (id)
-    {
-        // TEAM CHANGE ERROR
-        case 1: // Couldn't switch to spectator: no player replication info
-            error_msg = default.UnknownErrorMessageText $ default.UnknownErrorSpectatorMissingReplicationInfo;
-            break;
-
-        case 2: // Couldn't switch to spectator: out of spectator slots
-            error_msg = default.SpectatorErrorTooManySpectators;
-            break;
-
-        case 3: // Couldn't switch to spectator: game has ended
-        case 4: // Couldn't switch to spectator: round has ended
-            error_msg = default.SpectatorErrorRoundHasEnded;
-            break;
-
-        case 10: // Couldn't switch teams: no player replication info
-            error_msg = default.UnknownErrorMessageText $ default.UnknownErrorTeamMissingReplicationInfo;
-            break;
-
-        case 11: // Couldn't switch teams: must join team before game start
-            error_msg = default.ErrorTeamMustJoinBeforeStart;
-            break;
-
-        case 12: // Couldn't switch teams: too many active players
-            error_msg = default.TeamSwitchErrorTooManyPlayers;
-            break;
-
-        case 13: // Couldn't switch teams: MaxLives > 0 (wtf is this)
-            error_msg = default.UnknownErrorMessageText $ default.UnknownErrorTeamMaxLives;
-            break;
-
-        case 14: // Couldn't switch teams: game has ended
-        case 15: // Couldn't switch teams: round has ended
-            error_msg = default.TeamSwitchErrorRoundHasEnded;
-            break;
-
-        case 16: // Couldn't switch teams: server rules disallow team changes after game has started
-            error_msg = default.TeamSwitchErrorGameHasStarted;
-            break;
-
-        case 17: // Couldn't switch teams: playing game against bots
-            error_msg = default.TeamSwitchErrorPlayingAgainstBots;
-            break;
-
-        case 18: // Couldn't switch teams: team is full
-            error_msg = default.TeamSwitchErrorTeamIsFull;
-            break;
-
-        case 19: // Spawn point invalid at index
-            error_msg = default.SpawnPointInvalid;
-            break;
-
-        case 20: // Vehicle pool index not valid
-            error_msg = default.VehiclePoolInvalid;
-            break;
-
-        case 21: // Spawn vehicle index not valid
-            error_msg = default.SpawnVehicleInvalid;
-            break;
-
-        case 99: // Couldn't change teams: unknown reason
-            error_msg = default.ErrorChangingTeamsMessageText;
-            break;
-        // ROLE CHANGE ERROR
-        case 100: // Couldn't change roles (role is full)
-            error_msg = default.RoleIsFullMessageText;
-            break;
-
-        case 199: // Couldn't change roles (unknown error)
-            error_msg = default.UnknownErrorMessageText;
-            break;
-
-        default:
-            error_msg = default.UnknownErrorMessageText $ " (id = " $ id $ ")";
-    }
-
-    return error_msg;
-}
-
+// Colin: When the menu is closed, the client tells the server that it is no
+// longer in this menu and is therefore ready to be spawned.
 function OnClose(optional bool bCancelled)
 {
-    local DHPlayer P;
-
     super.OnClose(bCancelled);
 
-    P = DHPlayer(PlayerOwner());
-
-    if (P != none)
-    {
-        P.ServerSetIsInSpawnMenu(false);
-    }
+    PC.ServerSetIsInSpawnMenu(false);
 }
 
+// Colin: When the menu is closed, the client tells the server that they are in
+// the spawn menu and therefore not ready to be spawned.
 function OnOpen()
 {
-    local DHPlayer P;
-
     super.OnOpen();
 
-    P = DHPlayer(PlayerOwner());
-
-    if (P != none)
-    {
-        P.ServerSetIsInSpawnMenu(true);
-    }
+    PC.ServerSetIsInSpawnMenu(true);
 }
 
 function CloseMenu()
@@ -520,12 +589,138 @@ function CloseMenu()
     }
 }
 
+// Colin: This function centers the map component inside of it's container.
+function bool MapContainerPreDraw(Canvas C)
+{
+    //TODO: have the entire map be drawn identically to the DHHud map
+    local float Offset;
+
+    Offset = (c_Map.ActualWidth() - c_Map.ActualHeight()) / 2.0;
+    Offset /= ActualWidth();
+
+    MapComponent.SetPosition(c_Map.WinLeft + Offset,
+                             c_Map.WinTop,
+                             c_Map.ActualHeight(),
+                             c_Map.ActualHeight(),
+                             true);
+
+    return true;
+}
+
+function OnChange(GUIComponent Sender)
+{
+    local int i;
+    local RORoleInfo RI;
+    local class<Vehicle> VehicleClass;
+
+    switch (Sender)
+    {
+        case lb_Roles:
+            i_PrimaryWeapon.Image = none;
+            i_SecondaryWeapon.Image = none;
+
+            cb_PrimaryWeapon.Clear();
+            cb_SecondaryWeapon.Clear();
+
+            RI = RORoleInfo(li_Roles.GetObject());
+
+            if (RI != none)
+            {
+                for (i = 0; i < arraycount(RI.PrimaryWeapons); ++i)
+                {
+                    if (RI.PrimaryWeapons[i].Item != none)
+                    {
+                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item);
+                    }
+                }
+
+                for (i = 0; i < arraycount(RI.SecondaryWeapons); ++i)
+                {
+                    if (RI.SecondaryWeapons[i].Item != none)
+                    {
+                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item);
+                    }
+                }
+
+                if (RI.bCanBeTankCrew)
+                {
+                    SetLoadoutMode(LM_Vehicle);
+                }
+                else
+                {
+                    SetLoadoutMode(LM_Equipment);
+                }
+            }
+
+            cb_PrimaryWeapon.SetIndex(0);
+            cb_SecondaryWeapon.SetIndex(0);
+
+            // Colin: Visiblity is not hierarchical, so we need to make sure
+            // that we are on the equipment tab if we are to show the weapon
+            // selection combo boxes.
+            if (LoadoutMode == LM_Equipment)
+            {
+                cb_PrimaryWeapon.SetVisibility(cb_PrimaryWeapon.ItemCount() > 0);
+                cb_SecondaryWeapon.SetVisibility(cb_SecondaryWeapon.ItemCount() > 0);
+            }
+
+            // Colin: Vehicle eligibility may have changed, update vehicles.
+            UpdateVehicles();
+
+            break;
+
+        case cb_PrimaryWeapon:
+            i_PrimaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_PrimaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
+            break;
+
+        case cb_SecondaryWeapon:
+            i_SecondaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_SecondaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
+            break;
+
+        case lb_Vehicles:
+            VehicleClass = class<Vehicle>(li_Vehicles.GetObject());
+
+            if (VehicleClass != none)
+            {
+                VehiclePoolIndex = GRI.GetVehiclePoolIndex(VehicleClass);
+                i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
+            }
+            else
+            {
+                VehiclePoolIndex = 255;
+                i_Vehicle.Image = none;
+            }
+
+            break;
+
+        default:
+            break;
+    }
+}
+
+function ChangeTeam(byte Team)
+{
+    if (Team != CurrentTeam)
+    {
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255, 255);
+    }
+}
+
+function OnTeamChanged(byte Team)
+{
+    CurrentTeam = Team;
+
+    PopulateRoles();
+    PopulateVehicles();
+}
+
 defaultproperties
 {
     SpawnPointIndex=255
     VehiclePoolIndex=-255
     SpawnVehicleIndex=255
 
+    // GUI Components
     OnMessage=InternalOnMessage
     bRenderWorld=true
     bAllowedAsLast=true
@@ -533,36 +728,7 @@ defaultproperties
     InactiveFadeColor=(B=0,G=0,R=0)
     WinTop=0.0
     WinHeight=1.0
-    PanelMargin=0.005
-    RequiredExtraWidth=0.15
 
-    //Strings!
-    CloseButtonString="Close"
-    NoSelectedRoleText="Select a role from the role list."
-    RoleHasBotsText=" (has bots)"
-    CurrentRoleText="Current Role"
-    RoleFullText="Full"
-    SelectEquipmentText="Select an item to view its description."
-    RoleIsFullMessageText="The role you selected is full. Select another role from the list and hit continue."
-    ChangingRoleMessageText="Please wait while your player information is being updated."
-    UnknownErrorMessageText="An unknown error occured when updating player information. Please wait a bit and retry."
-    ErrorChangingTeamsMessageText="An error occured when changing teams. Please retry in a few moments or select another team."
-    UnknownErrorSpectatorMissingReplicationInfo=" (Spectator switch error: player has no replication info.)"
-    SpectatorErrorTooManySpectators="Cannot switch to Spectating mode: too many spectators on server."
-    SpectatorErrorRoundHasEnded="Cannot switch to Spectating mode: round has ended."
-    UnknownErrorTeamMissingReplicationInfo=" (Team switch error: player has no replication info.)"
-    ErrorTeamMustJoinBeforeStart="Cannot switch teams: must join team before game starts."
-    TeamSwitchErrorTooManyPlayers="Cannot switch teams: too many active players in game."
-    UnknownErrorTeamMaxLives=" (Team switch error: MaxLives > 0)"
-    TeamSwitchErrorRoundHasEnded="Cannot switch teams: round has ended."
-    TeamSwitchErrorGameHasStarted="Cannot switch teams: server rules disallow team changes after game has started."
-    TeamSwitchErrorPlayingAgainstBots="Cannot switch teams: server rules ask for bots on one team and players on the other."
-    TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
-    SpawnPointInvalid="Invalid spawn point."
-    VehiclePoolInvalid="Invalid vehicle pool."
-    SpawnVehicleInvalid="Invalid deploy vehicle."
-
-    // Background
     Begin Object Class=FloatingImage Name=FloatingBackground
         Image=texture'DH_GUI_Tex.Menu.MultiMenuBack'
         DropShadow=none
@@ -571,181 +737,327 @@ defaultproperties
         WinLeft=0.0
         WinWidth=1.0
         WinHeight=1.0
-        RenderWeight=0.000003
     End Object
     i_Background=FloatingBackground
 
-    // Loadout / Role Area
-    Begin Object class=DHDeployTabControl Name=LoadoutArea
-        bFillSpace=false
-        bDockPanels=true
-        TabHeight=0.03
-        BackgroundStyleName="DHHeader"
-        WinWidth=0.315
-        WinHeight=0.039 //Button height
-        WinLeft=0.005 //PanelMargin
-        WinTop=0.0
-        RenderWeight=0.49
-        TabOrder=1
-        bAcceptsInput=true
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=FooterContainerObject
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.95
     End Object
-    c_LoadoutArea=LoadoutArea
+    c_Footer=FooterContainerObject
 
-    // Deployment Area
-    Begin Object class=DHDeployTabControl name=DeploymentArea
-        bFillSpace=false
-        bDockPanels=true
-        TabHeight=0.03
-        BackgroundStyleName="DHHeader"
-        WinWidth=0.642
-        WinHeight=0.039 //Button height
-        WinLeft=0.325
-        WinTop=0.0
-        RenderWeight=0.49
-        TabOrder=2
-        bAcceptsInput=true
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=TeamsContainerObject
+        WinWidth=0.26
+        WinHeight=0.05
+        WinLeft=0.02
+        WinTop=0.02
     End Object
-    c_DeploymentMapArea=DeploymentArea
+    c_Teams=TeamsContainerObject
 
-    // Menu Options Container
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MenuContainer
-        HeaderBase=Texture'DH_GUI_Tex.Menu.DHBox'
+    Begin Object Class=GUIGFXButton Name=AxisButtonObject
+        Caption="Axis"
+        WinWidth=0.333
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.0
+        OnClick=OnClick
+    End Object
+    b_Axis=AxisButtonObject
+
+    Begin Object Class=GUIGFXButton Name=AlliesButtonObject
+        Caption="Allies"
+        WinWidth=0.333
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.333334
+        OnClick=OnClick
+    End Object
+    b_Allies=AlliesButtonObject
+
+    Begin Object Class=GUIGFXButton Name=SpectateButtonObject
+        Caption="Spectate"
+        WinWidth=0.333
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.666667
+        OnClick=OnClick
+    End Object
+    b_Spectate=SpectateButtonObject
+
+    Begin Object class=GUILabel Name=RolesLabelObject
+        Caption="Roles"
+        TextAlign=TXTA_Right
+        VertAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        WinWidth=0.26
+        WinHeight=0.05
+        WinLeft=0.02
+        WinTop=0.07
+    End Object
+    l_Roles=RolesLabelObject
+
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainerObject
+        WinWidth=0.26
+        WinHeight=0.28
+        WinLeft=0.02
+        WinTop=0.12
+        LeftPadding=0.05
+        RightPadding=0.05
+        TopPadding=0.05
+        BottomPadding=0.05
+    End Object
+    c_Roles=RolesContainerObject
+
+    Begin Object Class=DHGUIListBox Name=RolesListBoxObject
+        OutlineStyleName="ItemOutline"
+        SectionStyleName="ListSection"
+        SelectedStyleName="DHItemOutline"
+        StyleName="DHSmallText"
+        bVisibleWhenEmpty=true
+        bSorted=true
+        OnCreateComponent=RolesListBoxObject.InternalOnCreateComponent
+        TabOrder=0
+        OnChange=OnChange
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+    End Object
+    lb_Roles=RolesListBoxObject
+
+    Begin Object Class=DHGUIListBox Name=VehiclesListBoxObject
+        OutlineStyleName="ItemOutline"
+        SectionStyleName="ListSection"
+        SelectedStyleName="DHItemOutline"
+        StyleName="DHSmallText"
+        bVisibleWhenEmpty=true
+        bSorted=true
+        OnCreateComponent=VehiclesListBoxObject.InternalOnCreateComponent
+        TabOrder=0
+        OnChange=OnChange
+        WinWidth=1.0
+        WinHeight=0.5
+        WinLeft=0.0
+        WinTop=0.5
+    End Object
+    lb_Vehicles=VehiclesListBoxObject
+
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=LoadoutTabContainerObject
+        WinWidth=0.26
+        WinHeight=0.05
+        WinLeft=0.02
+        WinTop=0.40
+    End Object
+    LoadoutTabContainer=LoadoutTabContainerObject
+
+    Begin Object Class=GUIGFXButton Name=EquipmentButtonObject
+        Caption="Equipment"
         WinWidth=0.5
-        WinHeight=0.9
-        WinLeft=0.25
-        WinTop=0.05
-        ImageOffset(0)=10
-        ImageOffset(1)=10
-        ImageOffset(2)=10
-        ImageOffset(3)=10
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.0
+        OnClick=OnClick
     End Object
-    MenuOptionsContainer=MenuContainer
+    b_EquipmentButton=EquipmentButtonObject
 
-    // Menu Option Buttons
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton0
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.01
-        OnClick=DHDeployMenu.OnClick
+    Begin Object Class=GUIGFXButton Name=VehicleButtonObject
+        Caption="Vehicle"
+        WinWidth=0.5
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.5
+        OnClick=OnClick
     End Object
-    b_MenuOptions(0)=MenuOptionsButton0
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton1
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.11
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(1)=MenuOptionsButton1
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton2
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.22
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(2)=MenuOptionsButton2
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton3
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.33
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(3)=MenuOptionsButton3
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton4
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.44
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(4)=MenuOptionsButton4
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton5
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.55
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(5)=MenuOptionsButton5
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton6
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.66
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(6)=MenuOptionsButton6
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton7
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.77
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(7)=MenuOptionsButton7
-    Begin Object Class=DHGUIButton Name=MenuOptionsButton8
-        CaptionAlign=TXTA_Center
-        RenderWeight=5.85
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=1.0
-        WinHeight=0.05
-        WinLeft=0.0
-        WinTop=0.88
-        OnClick=DHDeployMenu.OnClick
-    End Object
-    b_MenuOptions(8)=MenuOptionsButton8
+    b_VehicleButton=VehicleButtonObject
 
-    MenuOptions(0)="Back"
-    MenuOptions(1)="Change Team"
-    MenuOptions(2)="Map Vote"
-    MenuOptions(3)="Kick Vote"
-    MenuOptions(4)="Communication"
-    MenuOptions(5)="Server Browser"
-    MenuOptions(6)="Settings"
-    MenuOptions(7)="Suicide"
-    MenuOptions(8)="Disconnect"
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=LoadoutContainerObject
+        WinWidth=0.26
+        WinHeight=0.48
+        WinLeft=0.02
+        WinTop=0.45
+        LeftPadding=0.05
+        RightPadding=0.05
+        TopPadding=0.05
+        BottomPadding=0.05
+        OnClick=OnClick
+    End Object
+    c_Loadout=LoadoutContainerObject
 
-    // Panel Variables
-    LoadoutPanelCaption(0)="Role"
-    LoadoutPanelCaption(1)="Vehicle"
-    LoadoutPanelCaption(2)="Squad"
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=EquipmentContainerObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+    End Object
+    c_Equipment=EquipmentContainerObject
 
-    LoadoutPanelHint(0)="Choose a role/class to deploy"
-    LoadoutPanelHint(1)="Choose a vehicle to deploy"
-    LoadoutPanelHint(2)="Create or join a squad"
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=VehicleContainerObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        bVisible=false
+    End Object
+    c_Vehicle=VehicleContainerObject
 
-    LoadoutPanelClass(0)="DH_Interface.DHRoleSelectPanel"
-    LoadoutPanelClass(1)="DH_Interface.DHVehicleSelectPanel"
-    LoadoutPanelClass(2)=""
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainerObject
+        WinWidth=0.68
+        WinHeight=0.91
+        WinLeft=0.3
+        WinTop=0.02
+        OnPreDraw = MapContainerPreDraw;
+    End Object
+    c_Map=MapContainerObject
 
-    DeploymentPanelClass(0)="DH_Interface.DHDeploymentMapMenu"
-    DeploymentPanelCaption(0)="Deployment"
-    DeploymentPanelHint(0)="Deploy to the battlefield"
+    Begin Object Class=DHGUIButton Name=DisconnectButtonObject
+        Caption="Disconnect"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(0)=DisconnectButtonObject
+
+    //Suicide Button
+    Begin Object Class=DHGUIButton Name=SuicideButtonObject
+        Caption="Suicide"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(1)=SuicideButtonObject
+
+    //Kick Vote Button
+    Begin Object Class=DHGUIButton Name=KickVoteButtonObject
+        Caption="Kick Vote"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(2)=KickVoteButtonObject
+
+    //Map Vote Button
+    Begin Object Class=DHGUIButton Name=MapVoteButtonObject
+        Caption="Map Vote"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(3)=MapVoteButtonObject
+
+    //CommunicationButton
+    Begin Object Class=DHGUIButton Name=CommunicationButtonObject
+        Caption="Communication"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(4)=CommunicationButtonObject
+
+    //Servers Button
+    Begin Object Class=DHGUIButton Name=ServersButtonObject
+        Caption="Servers"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(5)=ServersButtonObject
+
+    //Settings Button
+    Begin Object Class=DHGUIButton Name=SettingsButtonObject
+        Caption="Settings"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(6)=SettingsButtonObject
+
+    //Apply Button
+    Begin Object Class=DHGUIButton Name=ApplyButtonObject
+        Caption="Apply"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_MenuOptions(7)=ApplyButtonObject
+
+    Begin Object Class=DHDeploymentMapMenu Name=MapComponentObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+    End Object
+    MapComponent=MapComponentObject
+
+    Begin Object Class=GUIImage Name=PrimaryWeaponImageObject
+        WinWidth=1.0
+        WinHeight=0.333334
+        WinLeft=0.0
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_PrimaryWeapon=PrimaryWeaponImageObject
+
+    Begin Object Class=DHmoComboBox Name=PrimaryWeaponComboBoxObject
+        bReadOnly=true
+        CaptionWidth=0
+        ComponentWidth=-1
+        WinWidth=0.75
+        WinLeft=0.0
+        WinTop=0.0
+        OnChange=OnChange
+    End Object
+    cb_PrimaryWeapon=PrimaryWeaponComboBoxObject
+
+    Begin Object Class=GUIImage Name=SecondaryWeaponImageObject
+        WinWidth=0.5
+        WinHeight=0.333334
+        WinLeft=0.0
+        WinTop=0.333334
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_SecondaryWeapon=SecondaryWeaponImageObject
+
+    Begin Object Class=DHmoComboBox Name=SecondaryWeaponComboBoxObject
+        bReadOnly=true
+        CaptionWidth=0
+        ComponentWidth=-1
+        WinWidth=0.5
+        WinLeft=0.0
+        WinTop=0.333334
+        OnChange=OnChange
+    End Object
+    cb_SecondaryWeapon=SecondaryWeaponComboBoxObject
+
+    Begin Object Class=GUIImage Name=VehicleImageObject
+        WinWidth=1.0
+        WinHeight=0.5
+        WinLeft=0.0
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=Material'DH_InterfaceArt_tex.Vehicles.sherman_firefly'
+    End Object
+    i_Vehicle=VehicleImageObject
+
+    NoneString="None"
 }

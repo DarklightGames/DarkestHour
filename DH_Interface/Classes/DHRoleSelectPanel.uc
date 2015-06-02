@@ -62,7 +62,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Change background from default if team == Axis
     if (CurrentTeam == Axis_Team_Index)
     {
-        Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+        Background = Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
     }
 
     // Fill roles list
@@ -85,11 +85,9 @@ function ShowPanel(bool bShow)
 {
     local DHSpawnPoint SP;
 
-    super.ShowPanel(bShow);
-
     if (bShow && MyDeployMenu != none)
     {
-        MyDeployMenu.Tab = TAB_Role;
+        MyDeployMenu.LoadoutMode = LM_Equipment;
 
         // Check if SpawnPointIndex is valid
         if (GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, PC.GetTeamNum()))
@@ -100,11 +98,11 @@ function ShowPanel(bool bShow)
         // If spawnpoint index is type vehicles, then nullify it
         if (SP != none && SP.Type == ESPT_Vehicles)
         {
-            MyDeployMenu.ChangeSpawnIndices(255, 255, MyDeployMenu.SpawnVehicleIndex);
+            //MyDeployMenu.ChangeSpawnIndices(255, 255, MyDeployMenu.SpawnVehicleIndex);
         }
         else // Just nullify vehicle pool
         {
-            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, 255, MyDeployMenu.SpawnVehicleIndex);
+            //MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, 255, MyDeployMenu.SpawnVehicleIndex);
         }
     }
 }
@@ -272,11 +270,11 @@ function ChangeDesiredRole(RORoleInfo NewRole)
         }
     }
 
-    // Selected a crew role, so lets auto-open vehicle panel
-    if (DesiredRole != none && DesiredRole.bCanBeTankCrew)
-    {
-        MyDeployMenu.c_LoadoutArea.ActivateTabByPanel(MyDeployMenu.VehiclePanel, true);
-    }
+    //// Selected a crew role, so lets auto-open vehicle panel
+    //if (DesiredRole != none && DesiredRole.bCanBeTankCrew)
+    //{
+    //    MyDeployMenu.c_LoadoutArea.ActivateTabByPanel(MyDeployMenu.VehiclePanel, true);
+    //}
 }
 
 function AutoPickRole()
@@ -324,7 +322,7 @@ function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
 
-    MyDeployMenu.bRoleIsCrew = DesiredRole.default.bCanBeTankCrew;
+    //MyDeployMenu.bRoleIsCrew = DesiredRole.default.bCanBeTankCrew;
 }
 
 function int FindRoleIndexInList(RORoleInfo newRole)
@@ -493,7 +491,8 @@ function AutoPickWeapons()
     local int i;
 
     // If we already had selected a weapon, then re-select it.
-    if (CurrentTeam == DesiredTeam && CurrentRole == DesiredRole &&
+    if (CurrentTeam == DesiredTeam &&
+        CurrentRole == DesiredRole &&
         DesiredWeapons[0] == -5 && DesiredWeapons[1] == -5)
     {
         for (i = 0; i < 2; ++i)
@@ -741,22 +740,22 @@ function string FormatRoleString(string RoleName, int RoleLimit, int RoleCount, 
     {
         if (RoleCount == RoleLimit && !bHasBots)
         {
-            s = RoleName $ " [" $ MyDeployMenu.RoleFullText $ "]";
+            //s = RoleName $ " [" $ MyDeployMenu.RoleFullText $ "]";
         }
         else
         {
-            s = RoleName $ " [" $ RoleCount $ "/" $ RoleLimit $ "]";
+            //s = RoleName $ " [" $ RoleCount $ "/" $ RoleLimit $ "]";
         }
     }
 
     if (bIsCurrentRole)
     {
-        s = s @ MyDeployMenu.CurrentRoleText;
+        //s = s @ MyDeployMenu.CurrentRoleText;
     }
 
     if (bHasBots)
     {
-        s = s $ MyDeployMenu.RoleHasBotsText;
+        //s = s $ MyDeployMenu.RoleHasBotsText;
     }
 
     return s;
@@ -827,7 +826,7 @@ function AttemptDeployApplication()
         if (CheckIfRoleIsFull(DesiredRole, DesiredTeam) && Controller != none)
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
-            GUIQuestionPage(Controller.TopPage()).SetupQuestion(MyDeployMenu.RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
+            //GUIQuestionPage(Controller.TopPage()).SetupQuestion(MyDeployMenu.RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
 
             return;
         }
@@ -847,10 +846,6 @@ function bool InternalOnClick(GUIComponent Sender)
 {
     switch (sender)
     {
-        case b_MenuButton:
-            MyDeployMenu.HandleMenuButton();
-            break;
-
         case lb_AvailableWeapons[0]:
             UpdateSelectedWeapon(0);
             break;
@@ -1131,18 +1126,4 @@ defaultproperties
         OnChange=InternalOnChange
     End Object
     nu_PrimaryAmmoMags=PrimaryAmmoButton
-
-    // Menu button
-    Begin Object Class=DHGUIButton Name=MenuButton
-        Caption="Menu"
-        CaptionAlign=TXTA_Center
-        RenderWeight=6.0
-        StyleName="DHSmallTextButtonStyle"
-        WinWidth=0.15
-        WinHeight=0.035
-        WinLeft=0.85
-        WinTop=-0.035
-        OnClick=InternalOnClick
-    End Object
-    b_MenuButton=MenuButton
 }

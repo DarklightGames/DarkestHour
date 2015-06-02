@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHDeployMenuPanel extends MidGamePanel;
+class DHDeployMenuPanel extends GUIPanel;
 
 //TODO Move background stuff into this class
 
@@ -42,20 +42,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Assign MyDeployMenu
     MyDeployMenu = DHDeployMenu(PageOwner);
-}
-
-function ShowPanel(bool bShow)
-{
-    super.ShowPanel(bShow);
-
-    if (MyDeployMenu.bRoomForOptions)
-    {
-        b_MenuButton.SetVisibility(false);
-    }
-    else
-    {
-        b_MenuButton.SetVisibility(true);
-    }
 }
 
 function bool OnPostDraw(Canvas C)

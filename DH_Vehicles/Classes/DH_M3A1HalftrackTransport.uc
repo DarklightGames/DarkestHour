@@ -246,4 +246,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3A1HalftrackTransport.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m3a1_halftrack'
 }

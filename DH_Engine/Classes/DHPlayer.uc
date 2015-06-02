@@ -2407,7 +2407,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     DHG = DarkestHourGame(Level.Game);
 
     // This map uses the DH deploy system, not an RO spawn room
-    if (DHG != none && DHG.DHLevelInfo != none && DHG.DHLevelInfo.SpawnMode == ESM_DarkestHour)
+    if (DHG != none &&
+        DHG.DHLevelInfo != none &&
+        DHG.DHLevelInfo.SpawnMode == ESM_DarkestHour)
     {
         // We need a SpawnManager !
         if (DHG.SpawnManager == none)
@@ -2507,6 +2509,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 ServerChangeTeam(newTeam);
 
                 // Because we switched teams we should reset current role, desired role, etc.
+                ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo = none;
                 DesiredRole = -1;
                 CurrentRole = -1;
                 SpawnPointIndex = 255;
@@ -2601,7 +2604,10 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     ChangeWeapons(newWeapon1, newWeapon2, 0);
 
     // Handle ammo
-    RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
+    if (PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none)
+    {
+        RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
+    }
 
     if (RI != none)
     {
@@ -2636,11 +2642,15 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     // return result to client
     if (newTeam == AXIS_TEAM_INDEX)
     {
-        ClientChangePlayerInfoResult(97); // successfully picked axis team
+        ClientChangePlayerInfoResult(97);   // successfully picked axis team
     }
     else if (newTeam == ALLIES_TEAM_INDEX)
     {
-        ClientChangePlayerInfoResult(98); // successfully picked allies team
+        ClientChangePlayerInfoResult(98);   // successfully picked allies team
+    }
+    else if (newTeam == 254)
+    {
+        ClientChangePlayerInfoResult(96);   // successfully picked spectator team
     }
     else
     {

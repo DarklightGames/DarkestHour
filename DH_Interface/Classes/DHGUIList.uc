@@ -5,6 +5,27 @@
 
 class DHGUIList extends ROGUIListPlus;
 
+function int GetIndexByObject(Object O)
+{
+    local int i;
+
+    for (i = 0; i < Elements.Length; ++i)
+    {
+        if (O == GetObjectAtIndex(i))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function int SelectByObject(Object O)
+{
+    return SetIndex(GetIndexByObject(O));
+}
+
+/*
 //NOTE: Overridden to eliminate the need for selected items to only be highlighted if the list is in focus
 function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, float YL, bool bIsSelected, bool bIsPending)
 {
@@ -99,4 +120,9 @@ function bool InternalOnClick(GUIComponent Sender)
     SetIndex(NewIndex);
 
     return true;
+}
+*/
+
+defaultproperties
+{
 }

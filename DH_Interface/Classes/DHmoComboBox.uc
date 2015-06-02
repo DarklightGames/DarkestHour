@@ -5,6 +5,11 @@
 
 class DHmoComboBox extends moComboBox;
 
+function Clear()
+{
+    RemoveItem(0, ItemCount());
+}
+
 defaultproperties
 {
     ComponentClassName="DH_Interface.DHGUIComboBox"

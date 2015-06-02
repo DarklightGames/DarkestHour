@@ -145,42 +145,6 @@ simulated event Timer()
     }
 }
 
-simulated function int GetRoleIndex(RORoleInfo RI, int TeamNum)
-{
-    local int i;
-
-    if (TeamNum >= NEUTRAL_TEAM_INDEX)
-    {
-        return -1;
-    }
-
-    for (i = 0 ; i < arraycount(DHAxisRoles); ++i)
-    {
-        switch (TeamNum)
-        {
-            case AXIS_TEAM_INDEX:
-
-                if (DHAxisRoles[i] != none && DHAxisRoles[i] == RI)
-                {
-                    return i;
-                }
-
-                break;
-
-            case ALLIES_TEAM_INDEX:
-
-                if (DHAlliesRoles[i] != none && DHAlliesRoles[i] == RI)
-                {
-                    return i;
-                }
-
-                break;
-        }
-   }
-
-   return -1;
-}
-
 //------------------------------------------------------------------------------
 // Spawn Point Functions
 //------------------------------------------------------------------------------
@@ -240,7 +204,9 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
 
     for (i = 0; i < arraycount(SpawnPoints); ++i)
     {
-        if (SpawnPoints[i] != none && SpawnPoints[i].TeamIndex == TeamIndex && SpawnPointIsActives[i] != 0)
+        if (SpawnPoints[i] != none &&
+            SpawnPoints[i].TeamIndex == TeamIndex &&
+            SpawnPointIsActives[i] != 0)
         {
             SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
         }
@@ -486,6 +452,21 @@ simulated function GetActiveSpawnVehicleIndices(PlayerController PC, out array<i
     }
 }
 
+simulated function int GetVehiclePoolIndex(class<Vehicle> VehicleClass)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
+    {
+        if (VehiclePoolVehicleClasses[i] == VehicleClass)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 //------------------------------------------------------------------------------
 // Check function
 //------------------------------------------------------------------------------
@@ -526,6 +507,67 @@ simulated function bool AreIndicesValid(DHPlayer DHP)
     }
 
     return false;
+}
+
+
+//------------------------------------------------------------------------------
+// Roles
+//------------------------------------------------------------------------------
+
+simulated function int GetRoleIndexAndTeam(RORoleInfo RI, out byte Team)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(DHAxisRoles); ++i)
+    {
+        if (RI == DHAxisRoles[i])
+        {
+            Team = AXIS_TEAM_INDEX;
+
+            return i;
+        }
+    }
+
+    for (i = 0; i < arraycount(DHAlliesRoles); ++i)
+    {
+        if (RI == DHAlliesRoles[i])
+        {
+            Team = ALLIES_TEAM_INDEX;
+
+            return i;
+        }
+    }
+
+    Team = NEUTRAL_TEAM_INDEX;
+
+    return -1;
+}
+
+simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount, out int Limit)
+{
+    local int Index;
+    local byte Team;
+
+    Index = GetRoleIndexAndTeam(RI, Team);
+
+    if (Index == -1)
+    {
+        return;
+    }
+
+    Limit = RI.GetLimit(MaxPlayers);
+
+    switch (Team)
+    {
+        case AXIS_TEAM_INDEX:
+            Count = DHAxisRoleCount[Index];
+            BotCount = DHAxisRoleBotCount[Index];
+            break;
+        case ALLIES_TEAM_INDEX:
+            Count = DHAlliesRoleCount[Index];
+            BotCount = DHAlliesRoleBotCount[Index];
+            break;
+    }
 }
 
 defaultproperties

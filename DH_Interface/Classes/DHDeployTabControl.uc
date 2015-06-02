@@ -55,7 +55,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
             NewTabPanel.MyButton = NewTabButton;
             if (!bDrawTabAbove)
             {
-                NewTabPanel.MyButton.bBoundToParent = false;
+                //NewTabPanel.MyButton.bBoundToParent = false;
                 NewTabPanel.MyButton.Style = Controller.GetStyle("FlippedTabButton",NewTabPanel.FontScale);
             }
         }

@@ -35,6 +35,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     InitializeVehiclePools();
 }
 
+/*
 function ShowPanel(bool bShow)
 {
     local DHSpawnPoint SP;
@@ -73,6 +74,7 @@ function ShowPanel(bool bShow)
         SetTimer(0.0, false);
     }
 }
+*/
 
 function bool OnPostDraw(Canvas C)
 {
@@ -157,7 +159,7 @@ function InitializeVehiclePools()
 
 function UpdateVehiclePools()
 {
-    local int i, PoolIndex;
+    local int i;
     local bool bNoPoolSet;
 
     if (MyDeployMenu.VehiclePoolIndex == 255)
@@ -168,29 +170,29 @@ function UpdateVehiclePools()
     // Loop for  vehicles
     for (i = 0; i < VehiclePoolIndices.Length; ++i)
     {
-        PoolIndex = VehiclePoolIndices[i];
-
-        li_VehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
-
-        if (GRI.MaxTeamVehicles[PC.GetTeamNum()] <= 0 ||
-            GRI.GetVehiclePoolSpawnsRemaining(i) <= 0 ||
-            !GRI.IsVehiclePoolActive(PoolIndex) ||
-            GRI.VehiclePoolActiveCounts[PoolIndex] >= GRI.VehiclePoolMaxActives[PoolIndex] ||
-            (GRI.VehiclePoolVehicleClasses[PoolIndex].default.bMustBeTankCommander && !MyDeployMenu.bRoleIsCrew))
-        {
-            li_VehiclePools.SetDisabledAtIndex(i, true);
-        }
-        else
-        {
-            li_VehiclePools.SetDisabledAtIndex(i, false);
-
-            if (bNoPoolSet)
-            {
-                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255);
-
-                bNoPoolSet = false;
-            }
-        }
+//        PoolIndex = VehiclePoolIndices[i];
+//
+//        li_VehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
+//
+//        if (GRI.MaxTeamVehicles[PC.GetTeamNum()] <= 0 ||
+//            GRI.GetVehiclePoolSpawnsRemaining(i) <= 0 ||
+//            !GRI.IsVehiclePoolActive(PoolIndex) ||
+//            GRI.VehiclePoolActiveCounts[PoolIndex] >= GRI.VehiclePoolMaxActives[PoolIndex] ||
+//            (GRI.VehiclePoolVehicleClasses[PoolIndex].default.bMustBeTankCommander && !MyDeployMenu.bRoleIsCrew))
+//        {
+//            li_VehiclePools.SetDisabledAtIndex(i, true);
+//        }
+//        else
+//        {
+//            li_VehiclePools.SetDisabledAtIndex(i, false);
+//
+//            if (bNoPoolSet)
+//            {
+//                //MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255);
+//
+//                bNoPoolSet = false;
+//            }
+//        }
     }
 
     // We found no active vehicle pool in the list
@@ -254,15 +256,11 @@ function bool InternalOnClick(GUIComponent Sender)
 
     switch (sender)
     {
-        case b_MenuButton:
-            MyDeployMenu.HandleMenuButton();
-            break;
-
         case lb_VehiclePools:
             if (lb_VehiclePools.List.Index >= 0 && lb_VehiclePools.List.Index < VehiclePoolIndices.Length)
             {
                 PoolIndex = VehiclePoolIndices[lb_VehiclePools.List.Index];
-                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255); // update pool index
+                //MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, 255); // update pool index
             }
             break;
         default:
