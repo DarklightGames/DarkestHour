@@ -254,8 +254,6 @@ simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, 
 
 defaultproperties
 {
-    bShowRangeText=false
-    OverlayCenterSize=1.0
     UnbuttonedPositionIndex=0
     BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     HudName="Gunner"

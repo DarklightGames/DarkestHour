@@ -1599,9 +1599,9 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
 defaultproperties
 {
-    bShowRangeText=true
     GunsightPositions=1
     UnbuttonedPositionIndex=2
+    OverlayCenterSize=0.9
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'

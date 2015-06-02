@@ -9,11 +9,7 @@ defaultproperties
 {
     OverlayCenterSize=0.555
     PeriscopePositionIndex=1
-    bManualTraverseOnly=true
-    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bLockCameraDuringTransition=true
     WeaponFOV=14.4
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
@@ -26,8 +22,6 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_JagdpantherCannon'
     bHasAltFire=false
     CameraBone="Turret_placement1"
-    ManualMinRotateThreshold=0.5
-    ManualMaxRotateThreshold=3.0
     DrivePos=(Z=-4.0)
     DriveAnim="VStug3_com_idle_close"
     EntryRadius=130.0

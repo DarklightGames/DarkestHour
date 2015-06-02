@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AchillesCannonPawn extends DHBritishTankCannonPawn;
+class DH_AchillesCannonPawn extends DHBritishCannonPawn;
 
 defaultproperties
 {
@@ -13,8 +13,6 @@ defaultproperties
     bManualTraverseOnly=true
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
-    ScopePositionX=0.0
-    ScopePositionY=0.0
     BinocPositionIndex=2
     WeaponFOV=24.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'

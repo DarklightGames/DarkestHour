@@ -20,7 +20,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_Flak88Cannon'
     CameraBone="Gun"
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=-15.0,Z=-5.0)
     DriveAnim="Vt3485_driver_idle_close"
     ExitPositions(0)=(X=-150.0,Y=0.0,Z=0.0)

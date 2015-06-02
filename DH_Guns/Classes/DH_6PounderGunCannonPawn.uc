@@ -22,7 +22,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_6PounderGunCannon'
     CameraBone="Gun"
-    bFPNoZFromCameraPitch=true
     DrivePos=(Z=-32.0)
     ExitPositions(0)=(X=-150.0,Y=0.0,Z=0.0)
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0)

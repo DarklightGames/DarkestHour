@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BCannonPawn extends DHGermanTankCannonPawn;
+class DH_Tiger2BCannonPawn extends DHGermanCannonPawn;
 
 defaultproperties
 {
@@ -18,8 +18,6 @@ defaultproperties
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_travelevate'
     PoweredRotateAndPitchSound=sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
-    ScopePositionX=0.237
-    ScopePositionY=0.15
     BinocPositionIndex=4
     WeaponFOV=28.8
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'

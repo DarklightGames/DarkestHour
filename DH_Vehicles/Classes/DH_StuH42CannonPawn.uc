@@ -10,11 +10,7 @@ defaultproperties
     OverlayCenterSize=0.555
     PeriscopePositionIndex=1
     UnbuttonedPositionIndex=3
-    bManualTraverseOnly=true
-    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     BinocPositionIndex=4
     WeaponFOV=14.4
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
@@ -26,8 +22,6 @@ defaultproperties
     DriverPositions(4)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_StuH42Cannon'
     CameraBone="Turret"
-    ManualMinRotateThreshold=0.5
-    ManualMaxRotateThreshold=3.0
     DrivePos=(Z=-6.0)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.0

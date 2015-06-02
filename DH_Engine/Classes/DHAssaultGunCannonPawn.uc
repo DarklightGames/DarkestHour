@@ -8,8 +8,14 @@ class DHAssaultGunCannonPawn extends DHVehicleCannonPawn
 
 defaultproperties
 {
+    bManualTraverseOnly=true
+    ManualMinRotateThreshold=0.5
+    ManualMaxRotateThreshold=3.0
+    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    bShowRangeText=true
+    RangeText="meters"
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
-    OverlayCenterSize=0.65
-    DestroyedScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
     BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
 }

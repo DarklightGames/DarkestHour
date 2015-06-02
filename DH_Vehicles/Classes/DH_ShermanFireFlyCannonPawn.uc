@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFireFlyCannonPawn extends DHBritishTankCannonPawn;
+class DH_ShermanFireFlyCannonPawn extends DHBritishCannonPawn;
 
 // TEST added so player pawn's body part hit detection is aligned correctly between server & client (Matt, May 2015)
 simulated function AttachDriver(Pawn P)
@@ -37,8 +37,6 @@ defaultproperties
     PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.17Pdr_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
-    ScopePositionX=0.0
-    ScopePositionY=0.0
     BinocPositionIndex=4
     WeaponFOV=24.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'

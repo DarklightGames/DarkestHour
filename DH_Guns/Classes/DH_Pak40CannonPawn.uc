@@ -19,7 +19,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Pak40_anm.Pak40_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_Pak40Cannon'
     CameraBone="Turret"
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=-20.0,Z=-44.0)
     DriveAnim="crouch_idlehold_bayo"
     EntryRadius=200.0

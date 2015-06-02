@@ -14,6 +14,7 @@ function DecrementRange();
 
 defaultproperties
 {
+    OverlayCenterSize=1.0
     CannonScopeOverlay=texture'DH_Flakvierling38_tex.flak.flakv38_sight'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'

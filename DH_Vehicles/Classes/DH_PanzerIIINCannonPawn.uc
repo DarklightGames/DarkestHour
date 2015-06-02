@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIINCannonPawn extends DHGermanTankCannonPawn;
+class DH_PanzerIIINCannonPawn extends DHGermanCannonPawn;
 
 defaultproperties
 {
@@ -14,8 +14,6 @@ defaultproperties
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
     bManualTraverseOnly=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
-    ScopePositionX=0.237
-    ScopePositionY=0.15
     WeaponFOV=30.0
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'

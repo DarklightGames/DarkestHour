@@ -9,11 +9,7 @@ defaultproperties
 {
     OverlayCenterSize=0.555
     UnbuttonedPositionIndex=0
-    bManualTraverseOnly=true
-    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     BinocPositionIndex=2
     WeaponFOV=14.4
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
@@ -25,8 +21,6 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_Marder3MCannon'
     bHasAltFire=false
     CameraBone="Gun"
-    ManualMinRotateThreshold=0.5
-    ManualMaxRotateThreshold=3.0
     DrivePos=(X=-10.0,Z=22.0)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.0

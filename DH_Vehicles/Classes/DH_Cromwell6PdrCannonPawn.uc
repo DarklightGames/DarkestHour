@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrCannonPawn extends DHBritishTankCannonPawn;
+class DH_Cromwell6PdrCannonPawn extends DHBritishCannonPawn;
 
 defaultproperties
 {
@@ -14,8 +14,6 @@ defaultproperties
     PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Cromwell6Pdr_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
-    ScopePositionX=0.0
-    ScopePositionY=0.0
     WeaponFOV=24.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'

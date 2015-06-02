@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PantherDCannonPawn extends DHGermanTankCannonPawn;
+class DH_PantherDCannonPawn extends DHGermanCannonPawn;
 
 defaultproperties
 {
@@ -16,8 +16,6 @@ defaultproperties
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.Panther_sight_graticule'
-    ScopePositionX=0.237
-    ScopePositionY=0.15
     WeaponFOV=28.8
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panthershell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panthershell_reload'

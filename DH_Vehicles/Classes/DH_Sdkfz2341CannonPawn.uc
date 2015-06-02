@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2341CannonPawn extends DHGermanTankCannonPawn;
+class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
 
 // Modified as need to check if has spare magazines (the normal HasAmmo check returns AmmoCharge, not mags)
 simulated exec function ROManualReload()
@@ -75,8 +75,6 @@ defaultproperties
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
     bManualTraverseOnly=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
-    ScopePositionX=0.237
-    ScopePositionY=0.15
     BinocPositionIndex=2
     WeaponFOV=30.0
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
