@@ -3173,7 +3173,7 @@ simulated function bool CanExit()
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            ReceiveLocalizedMessage(class'DHVehicleMessage', 4); // must unbutton the hatch
+            ReceiveLocalizedMessage(class'DHVehicleMessage', 4,,, Controller); // must unbutton the hatch
         }
         else
         {
