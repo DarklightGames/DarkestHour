@@ -218,4 +218,5 @@ defaultproperties
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panther'
 }

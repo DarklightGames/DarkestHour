@@ -164,4 +164,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_OpelBlitz.KParams0'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.opelblitz'
 }

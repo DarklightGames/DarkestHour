@@ -179,4 +179,5 @@ defaultproperties
     HighDetailOverlay=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.kubelwagen'
 }

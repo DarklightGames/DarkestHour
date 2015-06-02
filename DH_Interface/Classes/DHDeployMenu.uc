@@ -1055,7 +1055,6 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=Material'DH_InterfaceArt_tex.Vehicles.sherman_firefly'
     End Object
     i_Vehicle=VehicleImageObject
 
