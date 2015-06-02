@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVHTank extends DHTreadCraft;
+class DH_PanzerIVHTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_PanzerIV_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex2.utx

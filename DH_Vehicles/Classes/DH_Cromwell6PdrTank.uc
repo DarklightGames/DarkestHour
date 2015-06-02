@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrTank extends DHTreadCraft;
+class DH_Cromwell6PdrTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx

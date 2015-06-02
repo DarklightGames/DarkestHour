@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierTransport extends DHTransportCraft;
+class DH_UniCarrierTransport extends DHApcVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_allies_carrier_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex2.utx

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2342ArmoredCar extends DHArmoredWheeledVehicle;
+class DH_Sdkfz2342ArmoredCar extends DHArmoredCar;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz234ArmoredCar_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex6.utx

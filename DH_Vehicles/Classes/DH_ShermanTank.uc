@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank extends DHTreadCraft;
+class DH_ShermanTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A176W_anm.ukx
 #exec OBJ LOAD FILE=..\Animations\DH_Sherman_anm.ukx

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TigerTank extends DHTreadCraft;
+class DH_TigerTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\axis_tiger1_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx

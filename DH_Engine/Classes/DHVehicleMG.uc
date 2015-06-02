@@ -97,13 +97,13 @@ simulated function InitializeMG(DHVehicleMGPawn MGPwn)
             Instigator = MGPawn;
         }
 
-        if (DHTreadCraft(MGPawn.VehicleBase) != none)
+        if (DHArmoredVehicle(MGPawn.VehicleBase) != none)
         {
             // Set the vehicle's HullMG reference - normally unused but can be useful
-            DHTreadCraft(MGPawn.VehicleBase).HullMG = self;
+            DHArmoredVehicle(MGPawn.VehicleBase).HullMG = self;
 
             // If vehicle is burning, start the MG hatch fire effect
-            if (DHTreadCraft(MGPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (DHArmoredVehicle(MGPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartMGFire();
             }

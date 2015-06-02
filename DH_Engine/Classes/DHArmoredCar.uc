@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHArmoredWheeledVehicle extends DHTreadCraft
+class DHArmoredCar extends DHArmoredVehicle
     abstract;
 
 enum ECarHitPointType
@@ -47,7 +47,7 @@ simulated function bool IsDisabled()
     return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
 }
 
-// Modified to removed lots of TreadCraft stuff that doesn't apply to a wheeled vehicle
+// Modified to removed lots of stuff that doesn't apply to a wheeled vehicle
 simulated function Tick(float DeltaTime)
 {
     // Force player to pull back on throttle if over max speed

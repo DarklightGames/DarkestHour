@@ -239,9 +239,9 @@ simulated function InitializeCannon()
         Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleCannon, so lots of things are not going to work!");
     }
 
-    if (DHTreadCraft(VehicleBase) != none)
+    if (DHArmoredVehicle(VehicleBase) != none)
     {
-        SetManualTurret(DHTreadCraft(VehicleBase).bEngineOff);
+        SetManualTurret(DHArmoredVehicle(VehicleBase).bEngineOff);
     }
     else
     {
@@ -962,12 +962,12 @@ simulated function bool CanExit()
 // New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local DHTreadCraft TreadCraft;
+    local DHArmoredVehicle AV;
 
-    TreadCraft = DHTreadCraft(VehicleBase);
+    AV = DHArmoredVehicle(VehicleBase);
 
-    return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
-        ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
+    return AV != none && AV.bMustUnbuttonToSwitchToRider && AV.bAllowRiders &&
+        ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && !CanExit();
 }
 
 // New function to handle switching between external & internal mesh, including copying cannon's aimed direction to new mesh (just saves code repetition)

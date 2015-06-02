@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpanzerIVL48Destroyer extends DHTreadCraft;
+class DH_JagdpanzerIVL48Destroyer extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jagdpanzer4_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex4.utx

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHATGun extends DHTreadCraft
+class DHATGun extends DHArmoredVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
@@ -36,7 +36,7 @@ simulated function SetNextTimer(optional float Now);
 //function EnteredResupply();
 //function LeftResupply();
 
-// Modified as nearly everything in DHTreadCraft is irrelevant to AT gun
+// Modified as nearly everything in DHArmoredVehicle is irrelevant to AT gun
 simulated function PostBeginPlay()
 {
     super(Vehicle).PostBeginPlay();
@@ -47,7 +47,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified as everything in DHTreadCraft & ROWheeledVehicle is irrelevant to AT gun
+// Modified as everything in DHArmoredVehicle & ROWheeledVehicle is irrelevant to AT gun
 simulated function PostNetBeginPlay()
 {
     super(ROVehicle).PostNetBeginPlay();

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank_DDay extends DHTreadCraft;
+class DH_ShermanTank_DDay extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sherman_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

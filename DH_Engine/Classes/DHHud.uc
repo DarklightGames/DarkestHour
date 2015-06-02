@@ -797,7 +797,7 @@ simulated function DrawHudPassC(Canvas C)
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
-    local  ROTreadCraft           TreadCraft;
+    local  ROTreadCraft           AV;
     local  ROWheeledVehicle       WheeledVehicle;
     local  ROVehicleWeaponPawn    WeaponPawn;
     local  ROVehicleWeapon        VehWeapon;
@@ -891,39 +891,39 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
     }
 
-    // Draw treaded vehicle specific stuff
-    TreadCraft = ROTreadCraft(Vehicle);
+    // Draw armored fighting vehicle specific stuff
+    AV = ROTreadCraft(Vehicle);
 
-    if (TreadCraft != none)
+    if (AV != none)
     {
         // Update turret references
-        if (TreadCraft.CannonTurret == none)
+        if (AV.CannonTurret == none)
         {
-            TreadCraft.UpdateTurretReferences();
+            AV.UpdateTurretReferences();
         }
 
         // Draw threads (if needed)
-        if (TreadCraft.bLeftTrackDamaged)
+        if (AV.bLeftTrackDamaged)
         {
-            VehicleThreads[0].TextureScale = TreadCraft.VehicleHudThreadsScale;
-            VehicleThreads[0].PosX = TreadCraft.VehicleHudThreadsPosX[0];
-            VehicleThreads[0].PosY = TreadCraft.VehicleHudThreadsPosY;
+            VehicleThreads[0].TextureScale = AV.VehicleHudThreadsScale;
+            VehicleThreads[0].PosX = AV.VehicleHudThreadsPosX[0];
+            VehicleThreads[0].PosY = AV.VehicleHudThreadsPosY;
             DrawSpriteWidgetClipped(Canvas, VehicleThreads[0], Coords, true, XL, YL, false, true);
         }
 
-        if (TreadCraft.bRightTrackDamaged)
+        if (AV.bRightTrackDamaged)
         {
-            VehicleThreads[1].TextureScale = TreadCraft.VehicleHudThreadsScale;
-            VehicleThreads[1].PosX = TreadCraft.VehicleHudThreadsPosX[1];
-            VehicleThreads[1].PosY = TreadCraft.VehicleHudThreadsPosY;
+            VehicleThreads[1].TextureScale = AV.VehicleHudThreadsScale;
+            VehicleThreads[1].PosX = AV.VehicleHudThreadsPosX[1];
+            VehicleThreads[1].PosY = AV.VehicleHudThreadsPosY;
             DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
         }
 
         // Update & draw look turret (if needed)
         if (Passenger != none && Passenger.IsA('ROTankCannonPawn'))
         {
-            TreadCraft.VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
-            Widget.WidgetTexture = TreadCraft.VehicleHudTurretLook;
+            AV.VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
+            Widget.WidgetTexture = AV.VehicleHudTurretLook;
             Widget.Tints[0].A /= 2;
             Widget.Tints[1].A /= 2;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
@@ -1041,11 +1041,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
 
         // Update & draw turret
-        if (TreadCraft.CannonTurret != none)
+        if (AV.CannonTurret != none)
         {
-            MyRot = rotator(vector(TreadCraft.CannonTurret.CurrentAim) >> TreadCraft.CannonTurret.Rotation);
-            TreadCraft.VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
-            Widget.WidgetTexture = TreadCraft.VehicleHudTurret;
+            MyRot = rotator(vector(AV.CannonTurret.CurrentAim) >> AV.CannonTurret.Rotation);
+            AV.VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = AV.VehicleHudTurret;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
     }
@@ -1174,7 +1174,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             // Check if we should draw throttle
             if (ROPlayer(Vehicle.Controller) != none &&
-                ((ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle && TreadCraft != none) || (ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle && TreadCraft == none)))
+                ((ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle && AV != none) || (ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle && AV == none)))
             {
                 // Draw throttle background
                 DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBackground, Coords, true, XL, YL, false, true);
@@ -1576,12 +1576,12 @@ simulated function DrawDriverPointSphere()
     }
 }
 
-// Modified to include DHTreadCraft's special hit points & to use different colours for different types of hit point
+// Modified to include DHArmoredVehicle's special hit points & to use different colours for different types of hit point
 // Engine is blue, ammo stores are red, gun traverse & pivot are gold, periscopes are pink, others are white
 simulated function DrawVehiclePointSphere()
 {
     local ROVehicle       V;
-    local DHTreadCraft    TC;
+    local DHArmoredVehicle    TC;
     local Coords          CO;
     local vector          Loc;
     local int             i;
@@ -1613,7 +1613,7 @@ simulated function DrawVehiclePointSphere()
                 }
             }
 
-            TC = DHTreadCraft(V);
+            TC = DHArmoredVehicle(V);
 
             if (TC != none)
             {
@@ -3314,9 +3314,9 @@ exec function GrowHUD()
 {
     if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
     {
-        if (PawnOwner.IsA('DHTreadCraft'))
+        if (PawnOwner.IsA('DHArmoredVehicle'))
         {
-            DHTreadCraft(PawnOwner).GrowHUD();
+            DHArmoredVehicle(PawnOwner).GrowHUD();
         }
         else if (PawnOwner.IsA('DHWheeledVehicle'))
         {
@@ -3341,9 +3341,9 @@ exec function ShrinkHUD()
 {
     if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
     {
-        if (PawnOwner.IsA('DHTreadCraft'))
+        if (PawnOwner.IsA('DHArmoredVehicle'))
         {
-            DHTreadCraft(PawnOwner).ShrinkHUD();
+            DHArmoredVehicle(PawnOwner).ShrinkHUD();
         }
         else if (PawnOwner.IsA('DHWheeledVehicle'))
         {

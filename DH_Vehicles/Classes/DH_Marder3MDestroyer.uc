@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Marder3MDestroyer extends DHTreadCraft;
+class DH_Marder3MDestroyer extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex7.utx
 #exec OBJ LOAD FILE=..\Animations\DH_Marder3M_anm.ukx

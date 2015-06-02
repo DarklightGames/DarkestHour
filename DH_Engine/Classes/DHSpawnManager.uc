@@ -402,10 +402,10 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
             DHWheeledVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
             DHWheeledVehicle(V).ServerStartEngine();
         }
-        else if (V.IsA('DHTreadCraft'))
+        else if (V.IsA('DHArmoredVehicle'))
         {
-            DHTreadCraft(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
-            DHTreadCraft(V).ServerStartEngine();
+            DHArmoredVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
+            DHArmoredVehicle(V).ServerStartEngine();
         }
 
         if (VehiclePools[C.VehiclePoolIndex].SpawnVehicleType == ESVT_Always)

@@ -901,7 +901,7 @@ simulated function bool CanExit()
         }
         else
         {
-            if (DHTreadCraft(VehicleBase) != none && DHTreadCraft(VehicleBase).DriverPositions.Length > DHTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
+            if (DHArmoredVehicle(VehicleBase) != none && DHArmoredVehicle(VehicleBase).DriverPositions.Length > DHArmoredVehicle(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
             {
                 ReceiveLocalizedMessage(class'DHVehicleMessage', 10); // must exit through driver's or commander's hatch
             }
@@ -920,12 +920,12 @@ simulated function bool CanExit()
 // New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local DHTreadCraft TreadCraft;
+    local DHArmoredVehicle AV;
 
-    TreadCraft = DHTreadCraft(VehicleBase);
+    AV = DHArmoredVehicle(VehicleBase);
 
-    return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
-        ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
+    return AV != none && AV.bMustUnbuttonToSwitchToRider && AV.bAllowRiders &&
+        ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && !CanExit();
 }
 
 // New function to handle switching between external & internal mesh, including copying MG's aimed direction to new mesh (just saves code repetition)

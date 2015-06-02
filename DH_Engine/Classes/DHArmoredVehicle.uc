@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTreadCraft extends ROTreadCraft
+class DHArmoredVehicle extends ROTreadCraft
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
@@ -197,8 +197,8 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Debug exits - uses DHTreadCraft class default, allowing bDebugExitPositions to be toggled for all DHTreadCrafts
-    if (class'DHTreadCraft'.default.bDebugExitPositions)
+    // Debug exits - uses DHArmoredVehicle class default, allowing bDebugExitPositions to be toggled for all DHArmoredVehicles
+    if (class'DHArmoredVehicle'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositions.Length; ++i)
         {
@@ -3466,7 +3466,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// Allows debugging exit positions to be toggled for all DHTreadCrafts
+// Allows debugging exit positions to be toggled for all DHArmoredVehicles
 exec function ToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -3479,8 +3479,8 @@ function ServerToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DHTreadCraft'.default.bDebugExitPositions = !class'DHTreadCraft'.default.bDebugExitPositions;
-        Log("DHTreadCraft.bDebugExitPositions =" @ class'DHTreadCraft'.default.bDebugExitPositions);
+        class'DHArmoredVehicle'.default.bDebugExitPositions = !class'DHArmoredVehicle'.default.bDebugExitPositions;
+        Log("DHArmoredVehicle.bDebugExitPositions =" @ class'DHArmoredVehicle'.default.bDebugExitPositions);
     }
 }
 

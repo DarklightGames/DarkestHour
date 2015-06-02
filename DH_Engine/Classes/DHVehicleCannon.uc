@@ -148,13 +148,13 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
             Instigator = CannonPawn;
         }
 
-        if (DHTreadCraft(CannonPawn.VehicleBase) != none)
+        if (DHArmoredVehicle(CannonPawn.VehicleBase) != none)
         {
             // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-            DHTreadCraft(CannonPawn.VehicleBase).CannonTurret = self;
+            DHArmoredVehicle(CannonPawn.VehicleBase).CannonTurret = self;
 
             // If vehicle is burning, start the turret hatch fire effect
-            if (DHTreadCraft(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (DHArmoredVehicle(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartTurretFire();
             }
@@ -442,9 +442,9 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
 simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
-    local DHTreadCraft TreadCraft;
-    local float        CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
-    local bool         bProjectilePenetrated;
+    local DHArmoredVehicle AV;
+    local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
+    local bool  bProjectilePenetrated;
 
     // Convert angle back to degrees
     CompoundAngleDegrees = CompoundAngle * 57.2957795131;
@@ -474,14 +474,14 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
     // Set TakeDamage-related variables on the vehicle itself
-    TreadCraft = DHTreadCraft(Base);
+    AV = DHArmoredVehicle(Base);
 
-    if (TreadCraft != none)
+    if (AV != none)
     {
-        TreadCraft.bProjectilePenetrated = bProjectilePenetrated;
-        TreadCraft.bTurretPenetration = bProjectilePenetrated;
-        TreadCraft.bRearHullPenetration = false;
-        TreadCraft.bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
+        AV.bProjectilePenetrated = bProjectilePenetrated;
+        AV.bTurretPenetration = bProjectilePenetrated;
+        AV.bRearHullPenetration = false;
+        AV.bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
     }
 
     return bProjectilePenetrated;
