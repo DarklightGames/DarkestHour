@@ -456,6 +456,11 @@ simulated function int GetVehiclePoolIndex(class<Vehicle> VehicleClass)
 {
     local int i;
 
+    if (VehicleClass == none)
+    {
+        return -1;
+    }
+
     for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
     {
         if (VehiclePoolVehicleClasses[i] == VehicleClass)

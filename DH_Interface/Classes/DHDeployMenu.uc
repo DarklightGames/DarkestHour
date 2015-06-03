@@ -6,6 +6,7 @@ class DHDeployMenu extends UT2K4GUIPage;
 
 enum ELoadoutMode
 {
+    LM_None,
     LM_Equipment,
     LM_Vehicle
 };
@@ -16,7 +17,10 @@ var automated   ROGUIProportionalContainer  c_Teams;
 var automated   GUIGFXButton                    b_Axis;
 var automated   GUIGFXButton                    b_Allies;
 var automated   GUIGFXButton                    b_Spectate;
-var automated   GUILabel                    l_Roles;
+var automated   GUIImage                    i_Reinforcements;
+var automated   GUILabel                    l_Reinforcements;
+var automated   GUIImage                    i_RoundTime;
+var automated   GUILabel                    l_RoundTime;
 var automated   ROGUIProportionalContainer  c_Roles;
 var automated   DHGUIListBox                    lb_Roles;
 var             DHGUIList                        li_Roles;
@@ -30,23 +34,20 @@ var automated   ROGUIProportionalContainer        c_Vehicle;
 var automated   ROGUIProportionalContainer  c_Map;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
-
 var automated   GUIImage                        i_PrimaryWeapon;
 var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
-
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
-
+var automated   GUIImage                    i_GivenItems[6];
 var automated   DHGUIListBox                lb_Vehicles;
 var             DHGUIList                   li_Vehicles;
-
 var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
 
-var automated array<DHGUIButton>            b_MenuOptions;
+var automated   array<DHGUIButton>          b_MenuOptions;
 
-var automated DHDeploymentMapMenu           MapComponent;
+var automated   DHDeploymentMapMenu         MapComponent;
 
 var DHGameReplicationInfo                   GRI;
 var DHPlayer                                PC;
@@ -56,12 +57,7 @@ var DHPlayer                                PC;
 // signal from InternalOnMessage.
 var byte                                    CurrentTeam;
 
-var byte                                    SpawnPointIndex;
-var byte                                    VehiclePoolIndex;
-var byte                                    SpawnVehicleIndex;
-
 var ELoadoutMode                            LoadoutMode;
-
 var localized string                        NoneString;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -111,6 +107,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
     c_Equipment.ManageComponent(i_SecondaryWeapon);
+
+    for (i = 0; i < arraycount(i_GivenItems); ++i)
+    {
+        if (i_GivenItems[i] != none)
+        {
+            c_Equipment.ManageComponent(i_GivenItems[i]);
+        }
+    }
+
     c_Equipment.ManageComponent(cb_PrimaryWeapon);
     c_Equipment.ManageComponent(cb_SecondaryWeapon);
 
@@ -119,30 +124,50 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     c_Roles.ManageComponent(lb_Roles);
 
-    // Get spawn point indices from player
-    SpawnPointIndex = PC.SpawnPointIndex;
-    SpawnVehicleIndex = PC.SpawnVehicleIndex;
-    VehiclePoolIndex = PC.VehiclePoolIndex;
-
     OnTeamChanged(PC.GetTeamNum());
 
+    SetLoadoutMode(LM_Equipment);
+
+    Timer();
     SetTimer(1.0, true);
 }
 
 function SetLoadoutMode(ELoadoutMode Mode)
 {
-    LoadoutMode = Mode;
+    if (LoadoutMode != Mode)
+    {
+        LoadoutMode = Mode;
 
-    c_Equipment.SetVisibility(Mode == LM_Equipment);
-    c_Vehicle.SetVisibility(Mode == LM_Vehicle);
+        c_Equipment.SetVisibility(Mode == LM_Equipment);
+        c_Vehicle.SetVisibility(Mode == LM_Vehicle);
 
-    MapComponent.Update();
+        UpdateMap();
+    }
 }
 
 function Timer()
 {
     UpdateRoles();
     UpdateVehicles();
+    UpdateStatus();
+}
+
+function UpdateStatus()
+{
+    local int RoundTime;
+
+    l_Reinforcements.Caption = string(GRI.DHSpawnCount[CurrentTeam]);
+
+    if (!GRI.bMatchHasBegun)
+    {
+        RoundTime = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+    }
+    else
+    {
+        RoundTime = GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime;
+    }
+
+    l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
 }
 
 function PopulateVehicles()
@@ -273,6 +298,11 @@ function UpdateRoles()
     }
 }
 
+function UpdateMap()
+{
+    MapComponent.Update();
+}
+
 function bool OnClick(GUIComponent Sender)
 {
     switch (Sender)
@@ -371,16 +401,14 @@ function Apply()
         return;
     }
 
-    Log("MapComponent.SpawnPoint" @ MapComponent.SpawnPoint);
-    Log("VehiclePoolIndex" @ VehiclePoolIndex);
-    Log("MapComponent.SpawnVehicle" @ MapComponent.SpawnVehicle);
+    //TODO: ammunition?
 
     PC.ServerSetPlayerInfo(255,
                            RoleIndex,
                            cb_PrimaryWeapon.GetIndex(),
                            cb_SecondaryWeapon.GetIndex(),
                            MapComponent.SpawnPoint,
-                           VehiclePoolIndex,
+                           GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
                            MapComponent.SpawnVehicle,
                            0);
 }
@@ -397,11 +425,6 @@ function SelectRole(RORoleInfo NewRole)
     {
         SetLoadoutMode(LM_Equipment);
     }
-}
-
-function SelectVehicle(class<ROVehicle> VehicleClass)
-{
-
 }
 
 function PopulateRoles()
@@ -609,9 +632,10 @@ function bool MapContainerPreDraw(Canvas C)
 
 function OnChange(GUIComponent Sender)
 {
-    local int i;
+    local int i, j;
     local RORoleInfo RI;
     local class<Vehicle> VehicleClass;
+    local class<Weapon> WeaponClass;
 
     switch (Sender)
     {
@@ -664,6 +688,20 @@ function OnChange(GUIComponent Sender)
                 cb_SecondaryWeapon.SetVisibility(cb_SecondaryWeapon.ItemCount() > 0);
             }
 
+            for (i = 0; i < RI.default.GivenItems.Length; ++i)
+            {
+                WeaponClass = class<Weapon>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
+
+                if (WeaponClass == none)
+                {
+                    continue;
+                }
+
+                Log(class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage);
+
+                i_GivenItems[j].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
+            }
+
             // Colin: Vehicle eligibility may have changed, update vehicles.
             UpdateVehicles();
 
@@ -682,12 +720,10 @@ function OnChange(GUIComponent Sender)
 
             if (VehicleClass != none)
             {
-                VehiclePoolIndex = GRI.GetVehiclePoolIndex(VehicleClass);
                 i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
             }
             else
             {
-                VehiclePoolIndex = 255;
                 i_Vehicle.Image = none;
             }
 
@@ -712,20 +748,16 @@ function OnTeamChanged(byte Team)
 
     PopulateRoles();
     PopulateVehicles();
+
+    UpdateMap();
 }
 
 defaultproperties
 {
-    SpawnPointIndex=255
-    VehiclePoolIndex=-255
-    SpawnVehicleIndex=255
-
     // GUI Components
     OnMessage=InternalOnMessage
     bRenderWorld=true
     bAllowedAsLast=true
-    BackgroundColor=(B=0,G=125,R=0)
-    InactiveFadeColor=(B=0,G=0,R=0)
     WinTop=0.0
     WinHeight=1.0
 
@@ -786,17 +818,49 @@ defaultproperties
     End Object
     b_Spectate=SpectateButtonObject
 
-    Begin Object class=GUILabel Name=RolesLabelObject
-        Caption="Roles"
-        TextAlign=TXTA_Right
-        VertAlign=TXTA_Center
-        TextColor=(R=255,G=255,B=255,A=255)
-        WinWidth=0.26
+    Begin Object Class=GUIImage Name=ReinforcementsImageObject
+        WinWidth=0.04
         WinHeight=0.05
         WinLeft=0.02
         WinTop=0.07
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=texture'DH_GUI_Tex.DeployMenu.reinforcements'
     End Object
-    l_Roles=RolesLabelObject
+    i_Reinforcements=ReinforcementsImageObject
+
+    Begin Object class=GUILabel Name=ReinforcementsLabelObject
+        TextAlign=TXTA_Left
+        VertAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        WinWidth=0.09
+        WinHeight=0.05
+        WinLeft=0.06
+        WinTop=0.07
+    End Object
+    l_Reinforcements=ReinforcementsLabelObject
+
+    Begin Object Class=GUIImage Name=RoundTimeImageObject
+        WinWidth=0.04
+        WinHeight=0.05
+        WinLeft=0.15
+        WinTop=0.07
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=texture'DH_GUI_Tex.DeployMenu.StopWatch'
+    End Object
+    i_RoundTime=RoundTimeImageObject
+
+    Begin Object class=GUILabel Name=RoundTimeLabelObject
+        TextAlign=TXTA_Left
+        VertAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        WinWidth=0.09
+        WinHeight=0.05
+        WinLeft=0.19
+        WinTop=0.07
+    End Object
+    l_RoundTime=RoundTimeLabelObject
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainerObject
         WinWidth=0.26
@@ -1047,6 +1111,16 @@ defaultproperties
         OnChange=OnChange
     End Object
     cb_SecondaryWeapon=SecondaryWeaponComboBoxObject
+
+    Begin Object Class=GUIImage Name=GivenItemImageObject0
+        WinWidth=0.5
+        WinHeight=0.333334
+        WinLeft=0.5
+        WinTop=0.333334
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_GivenItems(0)=GivenItemImageObject0
 
     Begin Object Class=GUIImage Name=VehicleImageObject
         WinWidth=1.0
