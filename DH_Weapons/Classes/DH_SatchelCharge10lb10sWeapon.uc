@@ -12,8 +12,8 @@ defaultproperties
     ItemName="10lb Satchel Charge"
     Mesh=mesh'Common_Satchel_1st.Sachel_Charge'
     PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
-    bCanThrow=false // cannot be dropped
-    FuzeLength=15.0 // was 10
+    bCanThrow=true
+    FuzeLength=15.0
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
