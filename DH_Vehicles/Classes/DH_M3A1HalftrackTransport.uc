@@ -126,68 +126,53 @@ defaultproperties
     EngineHealth=125
     DriverAttachmentBone="driver_player"
 
-    //Front Wheels
-    Begin Object class=SVehicleWheel Name=RFWheel
+    Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=29.0
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_Z
-        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="Wheel_F_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=29.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_Z
-        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
-
-    //Back Wheels
-
-        //Middle left
-    Begin Object class=SVehicleWheel Name=FLeft_Drive_Wheel
-        //SteerType=VST_Steered
+    Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
-        WheelRadius=25.0
+        BoneOffset=(Y=-3.0,Z=-12.0)
+        WheelRadius=31.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FLeft_Drive_Wheel'
-
-        //Middle right
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
-        //SteerType=VST_Steered
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=0.0,Y=0.0,Z=0.0)
-        WheelRadius=25.0
+        BoneOffset=(Y=-3.0,Z=12.0)
+        WheelRadius=31.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FRight_Drive_Wheel'
-
-        //Back left
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-110.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=-120.0,Y=-3.0,Z=-12.0)
         WheelRadius=30.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RLeft_Drive_Wheel'
-
-        //Back right
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-110.0,Y=0.0,Z=-0.0)
+        BoneOffset=(X=-120.0,Y=-3.0,Z=12.0)
         WheelRadius=30.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RRight_Drive_Wheel'
