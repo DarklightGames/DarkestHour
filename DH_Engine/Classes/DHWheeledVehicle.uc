@@ -383,6 +383,34 @@ function int LimitPitch(int pitch, optional float DeltaTime)
     return super(Pawn).LimitPitch(pitch, DeltaTime);
 }
 
+// Modified to correct apparent error in ROVehicle, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
+function int LimitPawnPitch(int pitch)
+{
+    pitch = pitch & 65535;
+
+    if (!bLimitPitch)
+    {
+        return pitch;
+    }
+
+    if (DriverPositions.Length > 0)
+    {
+        if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
+        {
+            if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < DriverPositions[DriverPositionIndex].ViewPitchDownLimit - pitch)
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
+            }
+            else
+            {
+                pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
+            }
+        }
+    }
+
+    return pitch;
+}
+
 // Modified to switch to external mesh & default FOV for behind view
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
