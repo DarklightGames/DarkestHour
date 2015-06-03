@@ -504,42 +504,20 @@ simulated function UpdatePrecacheMaterials()
     }
 }
 
-// Modified to make into a generic function to handle single/multi position MGs & relative/non-relative rotation, without need for overrides in subclasses
+// Modified to enforce use of rotation relative to vehicle (bPCRelativeFPRotation) & to use yaw limits from DriverPositions in a multi position MG
 simulated function int LimitYaw(int yaw)
 {
-    local int CurrentPosition, VehYaw;
-
     if (!bLimitYaw)
     {
         return yaw;
     }
 
-    // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
-    if (MGPawn != none && MGPawn.bMultiPosition)
+    if (MGPawn != none && MGPawn.DriverPositions.Length > 0)
     {
-        CurrentPosition = MGPawn.DriverPositionIndex;
-
-        if (MGPawn.bPCRelativeFPRotation || Base == none)
-        {
-            return Clamp(yaw, MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
-        }
-
-        // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
-        VehYaw = Base.Rotation.Yaw;
-
-        return Clamp(yaw, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, VehYaw + MGPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+        return Clamp(yaw, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewNegativeYawLimit, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewPositiveYawLimit);
     }
 
-    // For single position MGs we use our max/min yaw values from this class
-    if ((MGPawn != none && MGPawn.bPCRelativeFPRotation) || Base == none)
-    {
-        return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
-    }
-
-    // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
-    VehYaw = Base.Rotation.Yaw;
-
-    return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
+    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
 // Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
