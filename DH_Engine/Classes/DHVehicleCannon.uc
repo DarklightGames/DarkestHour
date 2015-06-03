@@ -1748,19 +1748,21 @@ simulated function UpdatePrecacheStaticMeshes()
 }
 
 // Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)
-// Also to make into a generic function to handle single/multi position cannons & relative/non-relative rotation
-// This is somewhat theoretical for tank cannons as they are always multi-position & relative rotation, but just copying the generic functionality from the MG equivalent
+// Also to enforce use of rotation relative to vehicle (bPCRelativeFPRotation) & to use yaw limits from DriverPositions in a multi position cannon
 simulated function int LimitYaw(int yaw)
 {
-    local int CurrentPosition, VehYaw;
+    local int CurrentPosition;
 
+    // Matt: this is confusing 2 different things: limit on cannon's yaw & limit on player's view yaw
+    // bLimitYaw is used by native code to limit (or not) cannon's turning, which ignores anything that happens in this function
+    // This function is best thought of as LimitViewYaw() & would be better placed in the cannon pawn class (but needs to stay as is because it is called by UpdateRotation() in PC class)
+    // bLimitYaw should not be used here - the view yaw limits should be based on ViewNegativeYawLimit & ViewPositiveYawLimit in DriverPositions
     if (!bLimitYaw)
     {
         return yaw;
     }
 
-    // For multi-position cannons, we use the view yaw limits in the cannon pawn's DriverPositions
-    if (CannonPawn != none && CannonPawn.bMultiPosition)
+    if (CannonPawn != none && CannonPawn.DriverPositions.Length > 0)
     {
         CurrentPosition = CannonPawn.DriverPositionIndex;
 
@@ -1769,27 +1771,10 @@ simulated function int LimitYaw(int yaw)
             return yaw;
         }
 
-        if (CannonPawn.bPCRelativeFPRotation || Base == none)
-        {
-            return Clamp(yaw, CannonPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, CannonPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
-        }
-
-        // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
-        VehYaw = Base.Rotation.Yaw;
-
-        return Clamp(yaw, VehYaw + CannonPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, VehYaw + CannonPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
+        return Clamp(yaw, CannonPawn.DriverPositions[CurrentPosition].ViewNegativeYawLimit, CannonPawn.DriverPositions[CurrentPosition].ViewPositiveYawLimit);
     }
 
-    // For single position cannons we use our max/min yaw values from this class
-    if ((CannonPawn != none && CannonPawn.bPCRelativeFPRotation) || Base == none)
-    {
-        return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
-    }
-
-    // If PlayerController's rotation isn't relative to the vehicle, we need to factor in the vehicle's rotation
-    VehYaw = Base.Rotation.Yaw;
-
-    return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
+    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
 // New function to start a turret hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
