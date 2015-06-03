@@ -3343,7 +3343,7 @@ simulated function SetDamagedTracks()
         }
 
         // Matt: added support for spawning damaged track model as decorative static mesh
-        if (DamagedTrackLeftClass != none)
+        if (DamagedTrackLeftClass != none && DamagedTrackLeft == none)
         {
             DamagedTrackLeft = Spawn(DamagedTrackLeftClass);
             DamagedTrackLeft.Skins[0] = default.Skins[LeftTreadIndex]; // sets damaged tread skin to match treads for this tank (i.e. whether normal or snowy)
@@ -3360,7 +3360,7 @@ simulated function SetDamagedTracks()
             RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
         }
 
-        if (DamagedTrackRightClass != none)
+        if (DamagedTrackRightClass != none && DamagedTrackRight == none)
         {
             DamagedTrackRight = Spawn(DamagedTrackRightClass);
             DamagedTrackRight.Skins[0] = default.Skins[RightTreadIndex];
