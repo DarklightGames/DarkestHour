@@ -11,4 +11,5 @@ defaultproperties
     PctRestDeployRecoil=0.75
     bDelayedRecoil=true
     DelayedRecoilTime=0.05
+    HipSpreadModifier=6.5
 }
