@@ -173,5 +173,5 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_GreyhoundArmoredCar.KParams0'
     HighDetailOverlayIndex=1
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.M8_Greyhound'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
 }

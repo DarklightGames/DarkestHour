@@ -178,4 +178,5 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WillysJeep.KParams0'
     HighDetailOverlay=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jeep'
 }

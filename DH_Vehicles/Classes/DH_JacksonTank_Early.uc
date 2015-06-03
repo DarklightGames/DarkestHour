@@ -8,4 +8,5 @@ class DH_JacksonTank_Early extends DH_JacksonTank;
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonCannonPawn_Early')
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m36_jackson_early'
 }

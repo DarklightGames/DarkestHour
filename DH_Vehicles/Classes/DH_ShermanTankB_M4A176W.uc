@@ -13,4 +13,5 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_body_intB')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_body_intB')
     Mesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_body_extB'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a1_76_b'
 }

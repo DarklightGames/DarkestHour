@@ -214,4 +214,5 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpanzerIVL70Destroyer.KParams0'
     HighDetailOverlayIndex=5
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l70'
 }

@@ -209,4 +209,5 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Stug3GDestroyer.KParams0'
     HighDetailOverlayIndex=4
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stug3g'
 }

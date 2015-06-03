@@ -223,4 +223,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpantherTank.KParams0'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanther'
 }

@@ -217,4 +217,5 @@ defaultproperties
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=6
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_j'
 }

@@ -14,4 +14,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_camo2'
     Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3G_armor_camo2'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stug3g_late'
 }

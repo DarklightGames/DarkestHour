@@ -214,4 +214,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanTank.KParams0'
     LeftTreadPanDirection=(Pitch=32768,Yaw=0,Roll=-16384)
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a1_75'
 }

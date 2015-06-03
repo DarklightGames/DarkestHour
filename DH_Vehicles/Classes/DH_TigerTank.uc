@@ -205,5 +205,6 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.69ti
+    VehicleHudOccupantsY(6)=0.69
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.tiger'
 }
