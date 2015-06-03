@@ -43,6 +43,11 @@ simulated event Touch(Actor Other)
 
     super.Touch(Other);
 
+    if (Other == none)
+    {
+        return;
+    }
+
     P = DHPawn(Other);
 
     //Handle Pawns on Fire!
