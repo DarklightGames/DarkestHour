@@ -363,9 +363,9 @@ simulated function Tick(float DeltaTime)
     local float MotionSoundTemp, MySpeed;
     local int   i;
 
-    // Damaged treads cause vehicle to swerve and turn without control
     if (Controller != none)
     {
+        // Damaged treads mean vehicle can only turn one way & speed is limited
         if (bLeftTrackDamaged)
         {
             Throttle = FClamp(Throttle, -0.5, 0.5);
@@ -391,6 +391,11 @@ simulated function Tick(float DeltaTime)
             {
                 Steering = -1.0;
             }
+        }
+        // Heavy damage to engine limits speed
+        else if (EngineHealth <= (default.EngineHealth * 0.5) && EngineHealth > 0)
+        {
+            Throttle = FClamp(Throttle, -0.5, 0.5);
         }
     }
 
@@ -2956,13 +2961,8 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
         EngineHealth -= Damage;
     }
 
-    // if engine health drops below a certain level, slow the tank way down // Matt: won't have any effect setting this here - will move elsewhere later // TEST
-    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.5))
-    {
-        Throttle = FClamp(Throttle, -0.5, 0.5);
-    }
     // Kill the engine if its health has now fallen to zero
-    else if (EngineHealth <= 0)
+    if (EngineHealth <= 0)
     {
         if (bDebuggingText)
         {

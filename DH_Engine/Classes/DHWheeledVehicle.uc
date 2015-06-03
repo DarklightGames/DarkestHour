@@ -230,6 +230,12 @@ simulated function Tick(float DeltaTime)
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
+    // Very heavy damage to engine limits speed
+    if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
+    {
+        Throttle = FClamp(Throttle, -0.5, 0.5);
+    }
+
     // Update engine & interior rumble sounds dependent on speed
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -1429,19 +1435,15 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 // Modified to kill engine if zero health
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
+    // Apply new damage
     if (EngineHealth > 0)
     {
         Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
         EngineHealth -= Damage;
     }
 
-    // Heavy damage to engine slows vehicle way down // Matt: won't have any effect setting this here - will move elsewhere later
-    if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
-    {
-        Throttle = FClamp(Throttle, -0.5, 0.5);
-    }
     // Kill the engine if its health has now fallen to zero
-    else if (EngineHealth <= 0)
+    if (EngineHealth <= 0)
     {
         if (bDebuggingText)
         {
