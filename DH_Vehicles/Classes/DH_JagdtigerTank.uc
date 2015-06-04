@@ -29,7 +29,7 @@ defaultproperties
     URearArmorSlope=30.0
     PointValue=5.0
     MaxPitchSpeed=50.0
-    TreadVelocityScale=100.0
+    TreadVelocityScale=350.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
