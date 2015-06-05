@@ -44,7 +44,7 @@ defaultproperties
     MaxNegativeYaw=-10000
     bLimitYaw=true
     InitialPrimaryAmmo=50
-    Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun'
+    Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_ext'
     bCollideActors=true
     bCollideWorld=false
     bProjTarget=true
