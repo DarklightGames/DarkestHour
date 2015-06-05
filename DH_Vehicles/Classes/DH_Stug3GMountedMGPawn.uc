@@ -24,6 +24,7 @@ simulated state EnteringVehicle // Matt: this is a TEST as an alternative to doi
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true
     bPlayerCollisionBoxMoves=true
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0

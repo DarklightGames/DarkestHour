@@ -1107,6 +1107,19 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 //  *************************  COMMANDER HIT DETECTION  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // TEMP
+{
+    log("HitDriverArea called on" @ Tag @ " SHOULD NOT HAPPEN !?");
+    return false;
+}
+
+simulated function bool HitDriver(vector HitLocation, vector Momentum) // TEMP
+{
+    log("HitDriver called on" @ Tag @ " SHOULD NOT HAPPEN !?");
+    return false;
+}
+
+/* // removed as part of player hit detection TEST
 // Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the commander's collision box?"
 simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 {
@@ -1203,6 +1216,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
 
     return Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************  HIT DETECTION, PENETRATION & DAMAGE  ********************  //
@@ -1816,6 +1830,7 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     bHasTurret=true
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true

@@ -7,6 +7,7 @@ class DH_BrenCarrierGun extends DHVehicleMG;
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     NumMags=20
     HUDOverlayReloadAnim="reload_empty"
     ReloadDuration=7.0
@@ -43,11 +44,10 @@ defaultproperties
     MaxNegativeYaw=-7000
     bLimitYaw=true
     InitialPrimaryAmmo=30
-    bCollideActors=true
-    bCollideWorld=false
-    bProjTarget=true
-    bBlockActors=true
-    bBlockNonZeroExtentTraces=true
-    bBlockZeroExtentTraces=true
+//    bCollideActors=true // all collision removed as part of player hit detection TEST
+//    bProjTarget=true
+//    bBlockActors=true
+//    bBlockNonZeroExtentTraces=true
+//    bBlockZeroExtentTraces=true
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_ext'
 }

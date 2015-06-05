@@ -7,6 +7,7 @@ class DH_Sdkfz251GunPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0

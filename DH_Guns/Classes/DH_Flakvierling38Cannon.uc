@@ -263,7 +263,8 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
    return true;
 }
 
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+/*
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // removed as part of player hit detection TEST
 {
     return super(ROVehicleWeapon).HitDriverArea(HitLocation, Momentum);
 }
@@ -277,6 +278,7 @@ simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
     return false;
 }
+*/
 
 defaultproperties
 {

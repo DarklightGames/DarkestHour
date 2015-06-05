@@ -7,6 +7,7 @@ class DH_Marder3MMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     NumMags=8
     HUDOverlayReloadAnim="Bipod_Reload_s"
     ReloadDuration=6.59
@@ -45,9 +46,9 @@ defaultproperties
     BeginningIdleAnim="loader_close_idle"
     InitialPrimaryAmmo=75
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
-    bCollideActors=true
-    bBlockActors=true
-    bProjTarget=true
-    bBlockZeroExtentTraces=true
-    bBlockNonZeroExtentTraces=true
+//    bCollideActors=true // all collision removed as part of player hit detection TEST
+//    bProjTarget=true
+//    bBlockActors=true
+//    bBlockNonZeroExtentTraces=true
+//    bBlockZeroExtentTraces=true
 }

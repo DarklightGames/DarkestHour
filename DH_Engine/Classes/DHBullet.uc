@@ -203,7 +203,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // We hit a VehicleWeapon // added this block to handle VehicleWeapon 'driver' hit detection much better (very similar to a shell)
     if (HitVehicleWeapon != none)
     {
-        // We hit the player's collision box, not the actual VehicleWeapon
+/*      // We hit the player's collision box, not the actual VehicleWeapon // removed as part of player hit detection TEST
         if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
         {
             // We actually hit the player
@@ -225,7 +225,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
         }
         // We didn't hit the player's collision box, so show the bullet impact effects
-        else if (Level.NetMode != NM_DedicatedServer)
+        else */if (Level.NetMode != NM_DedicatedServer)
         {
             VehEffect = Spawn(class'ROVehicleHitEffect',,, HitLocation, rotator(Normal(Velocity)));
             VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));

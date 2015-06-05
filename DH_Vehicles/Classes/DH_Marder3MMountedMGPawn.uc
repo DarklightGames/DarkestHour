@@ -7,6 +7,7 @@ class DH_Marder3MMountedMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=2.0
     WeaponFOV=60.0

@@ -239,16 +239,17 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
 
             if (!Other.bWorldGeometry)
             {
-                // Update hit effect except for pawns (blood), other than vehicles
-                if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') && !Other.IsA('ROVehicleWeapon')))
+                // Update hit effect except for pawns (blood), other than vehicles // line replaced as part of player hit detection TEST
+//              if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') && !Other.IsA('ROVehicleWeapon')))
+                if (Other.IsA('Vehicle') || Other.IsA('ROVehicleWeapon') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume')))
                 {
                     WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
 
-                if (Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir))
-                {
-                    WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
-                }
+//              if (Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir)) // removed as part of player hit detection TEST
+//              {
+//                  WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
+//              }
 
                 if (Other.IsA('ROVehicle'))
                 {

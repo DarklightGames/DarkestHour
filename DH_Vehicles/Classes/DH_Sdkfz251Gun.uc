@@ -7,6 +7,7 @@ class DH_Sdkfz251Gun extends DHVehicleMG;
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     NumMags=15
     HUDOverlayReloadAnim="Bipod_Reload_s"
     ReloadDuration=6.59
@@ -46,7 +47,6 @@ defaultproperties
     InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_ext'
     bCollideActors=true
-    bCollideWorld=false
     bProjTarget=true
     bBlockActors=true
     bBlockNonZeroExtentTraces=true

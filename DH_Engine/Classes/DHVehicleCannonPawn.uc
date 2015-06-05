@@ -1640,6 +1640,8 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true // added as standard as part of player hit detection TEST
+    bPlayerCollisionBoxMoves=true // TEMP added as part of player hit detection TEST (will replace asap with proper code)
     UnbuttonedPositionIndex=2
     PeriscopePositionIndex=-1
     GunsightPositions=1

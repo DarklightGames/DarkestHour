@@ -7,6 +7,7 @@ class DH_StuH42MountedMG extends DHVehicleMG;
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
     FireAttachBone="gunner_int"

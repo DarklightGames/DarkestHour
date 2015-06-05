@@ -1348,6 +1348,7 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
+    bPlayerCollisionBoxMoves=true // TEMP added as part of player hit detection TEST (will replace asap with proper code)
     UnbuttonedPositionIndex=1
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used

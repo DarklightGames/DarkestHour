@@ -203,7 +203,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // We hit a VehicleWeapon
     if (HitVehicleWeapon != none && HitVehicle != none)
     {
-        // We hit the VehicleWeapon's 'driver' collision box, not the actual VehicleWeapon
+/*      // We hit the VehicleWeapon's 'driver' collision box, not the actual VehicleWeapon // removed as part of player hit detection TEST
         if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
         {
             // We actually hit the player
@@ -236,7 +236,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 return;
             }
         }
-
+*/
         SavedHitActor = HitVehicle;
 
         Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal, e.g. for a deflection

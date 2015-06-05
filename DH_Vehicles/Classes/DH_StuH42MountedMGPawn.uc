@@ -29,6 +29,7 @@ simulated state ViewTransition
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true
     OverlayCenterSize=0.7
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.85

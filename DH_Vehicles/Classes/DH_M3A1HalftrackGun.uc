@@ -7,6 +7,7 @@ class DH_M3A1HalftrackGun extends DHVehicleMG;
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     NumMags=8
     HUDOverlayReloadAnim="Reloads"
     ReloadDuration=6.7
@@ -46,9 +47,9 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=200
     Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
-    bCollideActors=true
-    bBlockActors=true
-    bProjTarget=true
-    bBlockZeroExtentTraces=true
-    bBlockNonZeroExtentTraces=true
+//    bCollideActors=true // all collision removed as part of player hit detection TEST
+//    bProjTarget=true
+//    bBlockActors=true
+//    bBlockNonZeroExtentTraces=true
+//    bBlockZeroExtentTraces=true
 }

@@ -7,6 +7,7 @@ class DH_Stug3GMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
+    bForceSkelUpdate=true // added as part of player hit detection TEST
     NumMags=8
     HUDOverlayReloadAnim="Bipod_Reload_s"
     ReloadDuration=6.59
