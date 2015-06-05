@@ -142,7 +142,8 @@ defaultproperties
     Health=150
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
+    Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
     SoundRadius=800.0
     TransientSoundRadius=1500.0
     CollisionRadius=175.0

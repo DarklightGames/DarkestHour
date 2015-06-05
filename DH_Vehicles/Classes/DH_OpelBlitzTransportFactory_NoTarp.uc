@@ -8,5 +8,5 @@ class DH_OpelBlitzTransportFactory_NoTarp extends DH_OpelBlitzTransportFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_OpelBlitzTransport_NoTarp'
-    Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_extNT'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 }
