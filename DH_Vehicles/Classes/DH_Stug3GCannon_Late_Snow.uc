@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GCannon_SnowTwo extends DH_Stug3GCannon_CamoTwo;
+class DH_Stug3GCannon_Late_Snow extends DH_Stug3GCannon_Late;
 
 defaultproperties
 {

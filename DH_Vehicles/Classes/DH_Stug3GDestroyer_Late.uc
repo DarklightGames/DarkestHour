@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GDestroyer_CamoTwo extends DH_Stug3GDestroyer;
+class DH_Stug3GDestroyer_Late extends DH_Stug3GDestroyer;
 
 defaultproperties
 {
     bHasAddedSideArmor=true
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_Late')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destlate'
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'

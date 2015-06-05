@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GCannonPawn_CamoTwo extends DH_Stug3GCannonPawn;
+class DH_Stug3GCannonPawn_Late extends DH_Stug3GCannonPawn;
 
 defaultproperties
 {
@@ -12,5 +12,5 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
     DriverPositions(4)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
-    GunClass=class'DH_Vehicles.DH_Stug3GCannon_CamoTwo'
+    GunClass=class'DH_Vehicles.DH_Stug3GCannon_Late'
 }
