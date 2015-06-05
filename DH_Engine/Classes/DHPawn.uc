@@ -1535,7 +1535,11 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     }
     else if (bOnFire) // person who starts the fire always gets the credit
     {
-        Killer = FireStarter.Controller;
+        if (FireStarter != none)
+        {
+            Killer = FireStarter.Controller;
+        }
+
         DamageType = FireDamageClass;
     }
 
