@@ -5,24 +5,6 @@
 
 class DH_M3A1HalftrackGunPawn extends DHVehicleMGPawn;
 
-// TEST added so player pawn's body part hit detection is aligned correctly between server & client (Matt, May 2015)
-simulated function AttachDriver(Pawn P)
-{
-    local coords GunnerAttachmentBoneCoords;
-
-    if (Gun != none)
-    {
-        P.bHardAttach = true;
-        GunnerAttachmentBoneCoords = Gun.GetBoneCoords(Gun.GunnerAttachmentBone);
-        P.SetLocation(GunnerAttachmentBoneCoords.Origin + DrivePos + P.default.PrePivot); // added + DrivePos + P.default.PrePivot
-        P.SetPhysics(PHYS_None);
-        Gun.AttachToBone(P, Gun.GunnerAttachmentBone);
-        P.SetRelativeLocation(DrivePos + P.default.PrePivot);
-        P.SetRelativeRotation(DriveRot);
-        P.PrePivot=vect(0.0, 0.0, 0.0);
-    }
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=0
@@ -47,7 +29,6 @@ defaultproperties
     HUDOverlayOffset=(X=-2.0)
     HUDOverlayFOV=35.0
     bKeepDriverAuxCollision=true
-    bPlayerCollisionBoxMoves=true; // TEST, so server always plays animations, to put serverside gunner collision in correct place (Matt, May 2015)
     PitchUpLimit=4000
     PitchDownLimit=60000
 }

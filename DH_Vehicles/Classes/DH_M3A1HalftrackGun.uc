@@ -12,8 +12,8 @@ defaultproperties
     ReloadDuration=6.7
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
-//    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=0.0,Y=-0.5,Z=29.0)) // TEST removed as no longer any collision on this VehicleWeapon (Matt, May 2015)
-//    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-3.5,Y=-3.0,Z=8.0))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=0.0,Y=-0.5,Z=29.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-3.5,Y=-3.0,Z=8.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun_protection"
@@ -46,10 +46,9 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=200
     Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
-    bForceSkelUpdate=true // TEST to make server update bone position, so attached gunner moves correctly, to work with player pawn hit detection (Matt, May 2015)
-//    bCollideActors=true // TEST removed all collision as believes interferes with player pawn hit detection (Matt, May 2015)
-//    bBlockActors=true
-//    bProjTarget=true
-//    bBlockZeroExtentTraces=true
-//    bBlockNonZeroExtentTraces=true
+    bCollideActors=true
+    bBlockActors=true
+    bProjTarget=true
+    bBlockZeroExtentTraces=true
+    bBlockNonZeroExtentTraces=true
 }

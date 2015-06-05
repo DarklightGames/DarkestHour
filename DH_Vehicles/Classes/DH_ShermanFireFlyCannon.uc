@@ -55,8 +55,8 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=40.0;
-//    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=8.0)) // TEST removed to use com's AuxColCyl & a turret mesh with com's col box removed (Matt, May 2015)
-//    VehHitpoints(1)=(PointRadius=16.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-14.0))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=8.0))
+    VehHitpoints(1)=(PointRadius=16.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-14.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
@@ -98,8 +98,7 @@ defaultproperties
     InitialAltAmmo=200
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellAPDS'
-    Mesh=SkeletalMesh'DH_ShermanFirefly_TurretDemo_anm.ShermanFirefly_turret_ext' // TEST using version without commander's collision box, should be DH_ShermanFirefly_anm (Matt, May 2015)
-    bForceSkelUpdate=true // TEST to make server update bone position, so attached commander moves correctly, to work with player pawn hit detection (Matt, May 2015)
+    Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
