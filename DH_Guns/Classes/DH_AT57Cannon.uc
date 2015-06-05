@@ -50,9 +50,10 @@ defaultproperties
     InitialSecondaryAmmo=25
     PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
-    Mesh=SkeletalMesh'DH_AT57_anm.AT57_turret'
-    Skins(0)=texture'DH_Artillery_Tex.57mmGun.57mmGun'
-    Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
+    Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret'
+    Skins(0)=texture'DH_Artillery_Tex.6pounder.6pounder'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides 6 pounder's muzzle brake
+    Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
     SoundVolume=130
     SoundRadius=200.0
 }

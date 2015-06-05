@@ -76,8 +76,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
     Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret'
-    Skins(0)=texture'DH_Artillery_Tex.57mmGun.57mmGun'
-    Skins(1)=texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
+    Skins(0)=texture'DH_Artillery_Tex.6pounder.6pounder'
+    Skins(1)=texture'DH_Artillery_Tex.6pounder.6pounder' // muzzle brake
     Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
     SoundVolume=130
     SoundRadius=200.0

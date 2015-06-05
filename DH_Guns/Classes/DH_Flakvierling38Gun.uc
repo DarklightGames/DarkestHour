@@ -25,5 +25,6 @@ defaultproperties
     VehicleHudOccupantsX(0)=0.0
     VehicleHudOccupantsX(1)=0.0
     VehicleNameString="Flakvierling 38"
-    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
+    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flakv_base'
+    Skins(0)=texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

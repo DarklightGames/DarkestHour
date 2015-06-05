@@ -10,5 +10,6 @@ class DH_Flakvierling38Factory extends DHATGunFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Guns.DH_Flakvierling38Gun'
-    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
+    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flakv_base'
+    Skins(0)=texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

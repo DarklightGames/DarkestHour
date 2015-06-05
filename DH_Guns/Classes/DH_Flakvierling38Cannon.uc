@@ -309,6 +309,6 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'
     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
-    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
+    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flakv_turret'
     Skins(0)=texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

@@ -10,5 +10,4 @@ defaultproperties
     InitialPrimaryAmmo=15
     InitialSecondaryAmmo=3
     Skins(0)=texture'DH_Artillery_Tex.Pak40.Pak40'
-    Skins(1)=texture'DH_Artillery_Tex.Pak40.Pak40'
 }

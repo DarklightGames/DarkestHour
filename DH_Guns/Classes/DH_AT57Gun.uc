@@ -5,7 +5,7 @@
 
 class DH_AT57Gun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_AT57_anm.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_6PounderGun_anm.ukx
 
 defaultproperties
 {
@@ -49,8 +49,8 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=101.0
     Health=101
-    Mesh=SkeletalMesh'DH_AT57_anm.AT57_body'
-    Skins(0)=texture'DH_Artillery_Tex.57mmGun.57mmGun'
+    Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_body'
+    Skins(0)=texture'DH_Artillery_Tex.6pounder.6pounder'
     CollisionRadius=60.0
     CollisionHeight=175.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

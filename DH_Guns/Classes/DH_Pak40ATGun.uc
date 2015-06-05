@@ -50,7 +50,6 @@ defaultproperties
     Health=101
     Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body'
     Skins(0)=texture'MilitaryAxisSMT.Artillery.RO_BC_pak40'
-    Skins(1)=texture'MilitaryAxisSMT.Artillery.RO_BC_pak40'
     CollisionRadius=60.0
     CollisionHeight=175.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

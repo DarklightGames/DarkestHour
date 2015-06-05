@@ -51,7 +51,7 @@ defaultproperties
     HealthMax=101.0
     Health=101
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
-    Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
+    Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder'
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

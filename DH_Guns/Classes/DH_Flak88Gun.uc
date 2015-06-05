@@ -51,7 +51,7 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=100.0
     Health=100
-    Mesh=SkeletalMesh'DH_Flak88_anm.flak88_body'
+    Mesh=SkeletalMesh'DH_Flak88_anm.flak88_base'
     Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88'
     CollisionRadius=60.0
     CollisionHeight=175.0
