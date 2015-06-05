@@ -262,7 +262,7 @@ function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHi
         {
             for (j = 0; j < EnemyLocations.Length; ++j)
             {
-                if (VSize(EnemyLocations[i] - LocationHints[LocationHintIndices[i]].Location) <= class'DHLib'.static.MetersToUnreal(10.0))
+                if (VSize(EnemyLocations[j] - LocationHints[LocationHintIndices[i]].Location) <= class'DHLib'.static.MetersToUnreal(10.0))
                 {
                     k = LocationHintIndices[i];
                     LocationHintIndices.Remove(i, 1);
