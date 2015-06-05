@@ -5,7 +5,7 @@
 
 class DH_ShermanTank_M4A3105 extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3E2_anm.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex3.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
@@ -91,9 +91,9 @@ defaultproperties
     VehicleTeam=1
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E2_anm.M4A3_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E2_anm.M4A3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E2_anm.M4A3_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(2)=0.56
@@ -185,7 +185,7 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=575.0
     Health=575
-    Mesh=SkeletalMesh'DH_ShermanM4A3E2_anm.M4A3_body_ext'
+    Mesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3_body_ext'
     Skins(1)=texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_wheels'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
