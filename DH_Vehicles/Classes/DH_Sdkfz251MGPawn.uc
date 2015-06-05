@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251GunPawn extends DHVehicleMGPawn;
+class DH_Sdkfz251MGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
@@ -15,7 +15,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
-    GunClass=class'DH_Vehicles.DH_Sdkfz251Gun'
+    GunClass=class'DH_Vehicles.DH_Sdkfz251MG'
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"

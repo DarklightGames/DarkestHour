@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Gun extends DHVehicleMG;
+class DH_Sdkfz251MG extends DHVehicleMG;
 
 defaultproperties
 {

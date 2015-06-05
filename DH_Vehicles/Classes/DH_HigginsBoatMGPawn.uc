@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsBoatGunnerPawn extends DH_M3A1HalftrackGunPawn;
+class DH_HigginsBoatMGPawn extends DH_M3A1HalftrackMGPawn;
 
 var     texture     BinocsOverlay;
 var     int         BinocsPositionIndex;

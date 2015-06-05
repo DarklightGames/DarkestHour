@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackGunPawn extends DHVehicleMGPawn;
+class DH_M3A1HalftrackMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
@@ -14,7 +14,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
-    GunClass=class'DH_Vehicles.DH_M3A1HalftrackGun'
+    GunClass=class'DH_Vehicles.DH_M3A1HalftrackMG'
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"

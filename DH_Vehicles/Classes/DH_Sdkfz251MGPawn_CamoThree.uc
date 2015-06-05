@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251GunPawn_CamoOne extends DH_Sdkfz251GunPawn;
+class DH_Sdkfz251MGPawn_CamoThree extends DH_Sdkfz251MGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_Sdkfz251Gun_CamoOne'
+    GunClass=class'DH_Vehicles.DH_Sdkfz251MG_CamoThree'
 }

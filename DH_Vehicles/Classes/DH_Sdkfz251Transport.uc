@@ -80,7 +80,7 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=105.0,Y=-70.0,Z=-15.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251GunPawn',WeaponBone="mg_base")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251MGPawn',WeaponBone="mg_base")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerOne',WeaponBone="passenger_l_1")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerTwo',WeaponBone="passenger_l_2")
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerThree',WeaponBone="passenger_l_3")

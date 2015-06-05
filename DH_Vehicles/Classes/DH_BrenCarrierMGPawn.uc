@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenCarrierGunPawn extends DHVehicleMGPawn;
+class DH_BrenCarrierMGPawn extends DHVehicleMGPawn;
 
 // Modified to better suit the curved magazine of the bren gun
 function float GetAmmoReloadState()
@@ -54,7 +54,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
-    GunClass=class'DH_Vehicles.DH_BrenCarrierGun'
+    GunClass=class'DH_Vehicles.DH_BrenCarrierMG'
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"

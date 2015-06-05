@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackGun extends DHVehicleMG;
+class DH_M3A1HalftrackMG extends DHVehicleMG;
 
 defaultproperties
 {

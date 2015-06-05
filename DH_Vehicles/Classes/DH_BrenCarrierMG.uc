@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenCarrierGun extends DHVehicleMG;
+class DH_BrenCarrierMG extends DHVehicleMG;
 
 defaultproperties
 {

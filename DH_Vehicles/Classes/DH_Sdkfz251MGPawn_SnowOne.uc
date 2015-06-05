@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Gun_CamoOne extends DH_Sdkfz251Gun;
+class DH_Sdkfz251MGPawn_SnowOne extends DH_Sdkfz251MGPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo1'
+    GunClass=class'DH_Vehicles.DH_Sdkfz251MG_SnowOne'
 }
