@@ -5,7 +5,7 @@
 
 class DH_TigerTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\axis_tiger1_anm.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Tiger_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
 
@@ -82,9 +82,9 @@ defaultproperties
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
     SteeringScaleFactor=2.0
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VTiger_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VTiger_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.Tiger_body'
     VehHitpoints(0)=(PointOffset=(X=-6.0),bPenetrationPoint=false)
     VehHitpoints(1)=(PointRadius=40.0,PointHeight=40.0,PointOffset=(X=-100.0,Z=10.0),DamageMultiplier=1.0)
@@ -166,7 +166,7 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=650.0
     Health=650
-    Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_ext'
+    Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
     Skins(1)=texture'axis_vehicles_tex.Treads.Tiger1_treads'
     Skins(2)=texture'axis_vehicles_tex.Treads.Tiger1_treads'

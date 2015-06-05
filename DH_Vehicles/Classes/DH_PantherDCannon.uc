@@ -110,7 +110,7 @@ defaultproperties
     InitialAltAmmo=150
     PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
-    Mesh=SkeletalMesh'axis_pantherg_anm.PantherG_turret_ext'
+    Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     SoundVolume=120

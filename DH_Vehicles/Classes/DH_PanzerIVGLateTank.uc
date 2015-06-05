@@ -89,9 +89,9 @@ defaultproperties
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_panzer4F2_anm.Panzer4F2_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_panzer4F2_anm.Panzer4F2_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=61000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'axis_panzer4F2_anm.Panzer4F2_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=61000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panzer4F2_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(2)=0.57
@@ -180,7 +180,7 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=525.0
     Health=525
-    Mesh=SkeletalMesh'axis_panzer4F2_anm.Panzer4F2_body_ext'
+    Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
     Skins(1)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(2)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'

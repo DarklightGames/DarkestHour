@@ -5,7 +5,7 @@
 
 class DH_PantherDTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\axis_pantherg_anm.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Panther_anm.ukx
 
 defaultproperties
 {
@@ -89,8 +89,8 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed'
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panther_body'
     VehicleHudOccupantsX(0)=0.45
@@ -186,7 +186,7 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=600.0
     Health=600
-    Mesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_ext'
+    Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=texture'axis_vehicles_tex.Treads.PantherG_treads'
     Skins(2)=texture'axis_vehicles_tex.Treads.PantherG_treads'

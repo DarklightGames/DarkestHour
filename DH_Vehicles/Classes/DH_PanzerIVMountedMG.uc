@@ -34,5 +34,5 @@ defaultproperties
     MaxNegativeYaw=-2730
     bLimitYaw=true
     InitialPrimaryAmmo=150
-    Mesh=SkeletalMesh'axis_panzer4F1_anm.Panzer4F1_mg_ext'
+    Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4_mg_ext'
 }

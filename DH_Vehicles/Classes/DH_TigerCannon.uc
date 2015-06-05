@@ -105,7 +105,7 @@ defaultproperties
     InitialAltAmmo=150
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
-    Mesh=SkeletalMesh'DH_TigerTurret_anm.Tiger_turret_ext'
+    Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
     SoundVolume=120
     SoundRadius=300.0
