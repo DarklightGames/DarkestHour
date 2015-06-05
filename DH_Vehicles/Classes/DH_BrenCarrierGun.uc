@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierGun extends DHVehicleMG;
+class DH_BrenCarrierGun extends DHVehicleMG;
 
 defaultproperties
 {
@@ -43,11 +43,11 @@ defaultproperties
     MaxNegativeYaw=-7000
     bLimitYaw=true
     InitialPrimaryAmmo=30
-    Mesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_ext'
     bCollideActors=true
     bCollideWorld=false
     bProjTarget=true
     bBlockActors=true
     bBlockNonZeroExtentTraces=true
     bBlockZeroExtentTraces=true
+    Mesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_ext'
 }

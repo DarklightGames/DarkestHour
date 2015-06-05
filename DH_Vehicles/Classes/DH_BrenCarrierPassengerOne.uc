@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierPassengerTwo extends DHPassengerPawn;
+class DH_BrenCarrierPassengerOne extends DHPassengerPawn;
 
 defaultproperties
 {
-    PositionInArray=2
-    CameraBone="passenger_l_2"
+    PositionInArray=1
+    CameraBone="passenger_l_1"
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VUC_rider1_idle"
     FPCamViewOffset=(X=0.0,Z=0.0)

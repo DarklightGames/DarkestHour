@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierTransport extends DHApcVehicle;
+class DH_BrenCarrierTransport extends DHApcVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_allies_carrier_anm.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_BrenCarrier_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex2.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Sounds\Vehicle_EnginesTwo.uax
@@ -75,11 +75,11 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-105.0,Y=33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-105.0,Y=-33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierGunPawn',WeaponBone="mg_base")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerOne',WeaponBone="passenger_l_1")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerTwo',WeaponBone="passenger_l_2")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerThree',WeaponBone="passenger_r_1")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerFour',WeaponBone="passenger_r_2")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierGunPawn',WeaponBone="mg_base")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerOne',WeaponBone="passenger_l_1")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerTwo',WeaponBone="passenger_l_2")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerThree',WeaponBone="passenger_r_1")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerFour',WeaponBone="passenger_r_2")
     IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
     StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
     ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
@@ -92,9 +92,9 @@ defaultproperties
     VehicleTeam=1
     SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'InterfaceArt2_tex.Tank_Hud.Carrier_body'
     VehicleHudOccupantsX(0)=0.58
     VehicleHudOccupantsX(1)=0.46
@@ -125,7 +125,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.LF_Steering'
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -134,7 +134,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.RF_Steering'
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -143,7 +143,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.LR_Steering'
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
         bPoweredWheel=true
         SteerType=VST_Inverted
@@ -152,7 +152,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.RR_Steering'
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="Wheel_T_L_3"
@@ -160,7 +160,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.Left_Drive_Wheel'
+    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="Wheel_T_R_3"
@@ -168,7 +168,7 @@ defaultproperties
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
     End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.Right_Drive_Wheel'
+    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.Right_Drive_Wheel'
     VehicleMass=5.0
     bHasHandbrake=true
     DriveAnim="VUC_driver_idle_close"
@@ -189,8 +189,8 @@ defaultproperties
     PitchDownLimit=49000
     HealthMax=275.0
     Health=275
-    Mesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext'
+    Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
     Skins(1)=texture'allies_vehicles_tex.Treads.T60_treads'
     Skins(2)=texture'allies_vehicles_tex.Treads.T60_treads'
     Skins(3)=texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
@@ -214,11 +214,11 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_UniCarrierTransport.KParams0'
+    KParams=KarmaParamsRBFull'DH_Vehicles.DH_BrenCarrierTransport.KParams0'
     HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.unicarrier'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
 }

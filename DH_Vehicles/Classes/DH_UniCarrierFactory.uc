@@ -3,12 +3,5 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierFactory extends DH_BritishVehicles;
-
-defaultproperties
-{
-    RespawnTime=1.0
-    bFactoryActive=true
-    VehicleClass=class'DH_Vehicles.DH_UniCarrierTransport'
-    Mesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_ext'
-}
+class DH_UniCarrierFactory extends DH_BrenCarrierFactory // TODO: delete this class in the release after 6.0
+    notplaceable;                                        // UniCarrier has been renamed to BrenCarrier & this actor only remains temporarily so we don't break maps with the old factory

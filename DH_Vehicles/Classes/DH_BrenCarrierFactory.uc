@@ -3,13 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierPassengerThree extends DHPassengerPawn;
+class DH_BrenCarrierFactory extends DH_BritishVehicles;
 
 defaultproperties
 {
-    PositionInArray=3
-    CameraBone="passenger_r_1"
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
-    DriveAnim="VUC_rider1_idle"
-    FPCamViewOffset=(X=0.0,Z=0.0)
+    RespawnTime=1.0
+    bFactoryActive=true
+    VehicleClass=class'DH_Vehicles.DH_BrenCarrierTransport'
+    Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
 }
