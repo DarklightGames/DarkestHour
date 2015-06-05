@@ -255,6 +255,7 @@ simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, 
 defaultproperties
 {
     UnbuttonedPositionIndex=0
+    bKeepDriverAuxCollision=true
     bMustBeTankCrew=false
     bHasAltFire=false
     PitchUpLimit=6000

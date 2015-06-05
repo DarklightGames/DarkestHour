@@ -37,6 +37,5 @@ defaultproperties
     ExitPositions(14)=(X=-60.0,Z=20.0)
     ExitPositions(15)=(Z=5.0)
     EntryRadius=200.0
-    bKeepDriverAuxCollision=true
     SoundVolume=130
 }

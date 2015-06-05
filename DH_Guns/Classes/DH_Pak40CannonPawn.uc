@@ -22,6 +22,5 @@ defaultproperties
     DrivePos=(X=-20.0,Z=-44.0)
     DriveAnim="crouch_idlehold_bayo"
     EntryRadius=200.0
-    bKeepDriverAuxCollision=true
     SoundVolume=130
 }

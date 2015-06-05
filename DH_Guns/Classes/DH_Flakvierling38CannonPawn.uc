@@ -41,5 +41,4 @@ defaultproperties
     ExitPositions(13)=(X=-60.0,Z=15.0)
     ExitPositions(14)=(X=-60.0,Z=20.0)
     ExitPositions(15)=(Z=5.0)
-    bKeepDriverAuxCollision=true
 }
