@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierMGOverlay extends VehicleHUDOverlay;
+class DH_VehHUDOverlay_Bren extends VehicleHUDOverlay;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Bren_1st.ukx
 

@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanDriverOverlay extends VehicleHUDOverlay;
+class DH_VehHUDOverlay_30Cal extends VehicleHUDOverlay;
+
+#exec OBJ LOAD FILE=..\Animations\DH_30cal_1st.ukx
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_overlay'
+    Mesh=SkeletalMesh'DH_30Cal_1st.30Cal_S'
 }

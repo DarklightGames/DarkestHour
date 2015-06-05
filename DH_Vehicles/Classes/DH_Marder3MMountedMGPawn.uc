@@ -23,7 +23,7 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
     EntryRadius=130.0
-    HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
+    HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_MG34'
     HUDOverlayFOV=45.0
     PitchUpLimit=6000
     PitchDownLimit=63500

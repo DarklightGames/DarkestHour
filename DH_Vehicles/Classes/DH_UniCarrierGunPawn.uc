@@ -65,7 +65,7 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VUC_com_idle_close"
     EntryRadius=130.0
-    HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
+    HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_Bren'
     HUDOverlayOffset=(X=-6.0)
     HUDOverlayFOV=35.0
     bKeepDriverAuxCollision=true
