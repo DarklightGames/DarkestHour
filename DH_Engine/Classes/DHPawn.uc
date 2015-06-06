@@ -114,7 +114,8 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire,/*bCrouchMantle, MantleHeight,*/ bMortarCanBeResupplied; // Matt TEST: may be possible to remove bCrouchMantle & MantleHeight as seem to be set independently on server & client
+        bOnFire, bMortarCanBeResupplied;
+//      bCrouchMantle, MantleHeight; // Matt: removed as are set independently on server & client & so don't seem to need to be replicated
 }
 
 simulated function PostBeginPlay()
