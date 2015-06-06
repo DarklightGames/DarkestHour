@@ -56,6 +56,8 @@ simulated state Intact
     {
         local DarkestHourGame G;
 
+        Log("Damage taken: " $ Damage @ "DamageType: " $ DamageType);
+
         if (Role == ROLE_Authority &&
             Info.CanBeDestroyedByExplosives() &&
             !DamageType.default.bLocationalHit &&

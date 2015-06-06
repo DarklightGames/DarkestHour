@@ -762,7 +762,7 @@ defaultproperties
     WinHeight=1.0
 
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=texture'DH_GUI_Tex.Menu.MultiMenuBack'
+        Image=texture'DH_GUI_Tex.DeployMenu.Background'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
