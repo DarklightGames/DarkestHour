@@ -262,7 +262,7 @@ function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHi
         {
             for (j = 0; j < EnemyLocations.Length; ++j)
             {
-                if (VSize(EnemyLocations[i] - LocationHints[LocationHintIndices[i]].Location) <= class'DHLib'.static.MetersToUnreal(10.0))
+                if (VSize(EnemyLocations[j] - LocationHints[LocationHintIndices[i]].Location) <= class'DHLib'.static.MetersToUnreal(10.0))
                 {
                     k = LocationHintIndices[i];
                     LocationHintIndices.Remove(i, 1);
@@ -386,32 +386,30 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     {
         return none;
     }
-    else
+
+    V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
+
+    if (V == none)
     {
-        V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
+        SpawnError = SpawnError_Failed;
 
-        if (V == none)
-        {
-            SpawnError = SpawnError_Failed;
+        return none;
+    }
 
-            return none;
-        }
+    if (V.IsA('DHWheeledVehicle'))
+    {
+        DHWheeledVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
+        DHWheeledVehicle(V).ServerStartEngine();
+    }
+    else if (V.IsA('DHArmoredVehicle'))
+    {
+        DHArmoredVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
+        DHArmoredVehicle(V).ServerStartEngine();
+    }
 
-        if (V.IsA('DHWheeledVehicle'))
-        {
-            DHWheeledVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
-            DHWheeledVehicle(V).ServerStartEngine();
-        }
-        else if (V.IsA('DHArmoredVehicle'))
-        {
-            DHArmoredVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
-            DHArmoredVehicle(V).ServerStartEngine();
-        }
-
-        if (VehiclePools[C.VehiclePoolIndex].SpawnVehicleType == ESVT_Always)
-        {
-            GRI.AddSpawnVehicle(V);
-        }
+    if (VehiclePools[C.VehiclePoolIndex].SpawnVehicleType == ESVT_Always)
+    {
+        GRI.AddSpawnVehicle(V);
     }
 
     if(!V.TryToDrive(C.Pawn))

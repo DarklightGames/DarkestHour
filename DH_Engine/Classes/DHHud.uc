@@ -3427,21 +3427,15 @@ simulated function DrawSpectatingHud(Canvas C)
                 case ESM_DarkestHour:
                     if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
                     {
-                        // You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
+                        // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
                         S = default.SpawnVehicleText;
                         S = Repl(S, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
-                        S = Repl(S, "{1}", DHGRI.SpawnPoints[PC.SpawnPointIndex].SpawnPointName);
                     }
                     else if (PC.SpawnPointIndex != 255)
                     {
                         SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
 
-                        if (SP != none)
-                        {
-                            // You will deploy as a {0} at {1} in {2} | Press ESC to change
-                            S = Repl(default.SpawnInfantryText, "{1}", SP.SpawnPointName);
-                        }
-                        else
+                        if (SP == none)
                         {
                             // Press ESC to select a spawn point
                             S = default.SelectSpawnPointText;
@@ -3962,8 +3956,8 @@ defaultproperties
     CaptureBarTeamColors(1)=(R=49,G=57,B=223)
     TeamMessagePrefix="*TEAM* "
 
-    SpawnInfantryText="You will deploy as a {0} at {1} in {2} | Press ESC to change"
-    SpawnVehicleText="You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change"
+    SpawnInfantryText="You will deploy as a {0} in {2} | Press ESC to change"
+    SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press ESC to change"
     SelectSpawnPointText="Press ESC to select a spawn point"
     JoinTeamText="Press ESC to join a team"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"

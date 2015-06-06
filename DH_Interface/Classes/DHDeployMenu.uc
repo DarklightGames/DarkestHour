@@ -6,7 +6,6 @@ class DHDeployMenu extends UT2K4GUIPage;
 
 enum ELoadoutMode
 {
-    LM_None,
     LM_Equipment,
     LM_Vehicle
 };
@@ -23,7 +22,7 @@ var automated   GUIImage                    i_RoundTime;
 var automated   GUILabel                    l_RoundTime;
 var automated   ROGUIProportionalContainer  c_Roles;
 var automated   DHGUIListBox                    lb_Roles;
-var             DHGUIList                        li_Roles;
+var             DHGUIList                       li_Roles;
 var automated   ROGUIProportionalContainer  LoadoutTabContainer;
 var automated   GUIGFXButton                    b_EquipmentButton;
 var automated   GUIGFXButton                    b_VehicleButton;
@@ -123,26 +122,26 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Vehicle.ManageComponent(lb_Vehicles);
 
     c_Roles.ManageComponent(lb_Roles);
-
-    OnTeamChanged(PC.GetTeamNum());
-
-    SetLoadoutMode(LM_Equipment);
-
-    Timer();
-    SetTimer(1.0, true);
 }
 
 function SetLoadoutMode(ELoadoutMode Mode)
 {
-    if (LoadoutMode != Mode)
-    {
-        LoadoutMode = Mode;
+    LoadoutMode = Mode;
 
-        c_Equipment.SetVisibility(Mode == LM_Equipment);
-        c_Vehicle.SetVisibility(Mode == LM_Vehicle);
+    // Colin: GUIComponent visiblity is not properly hierarchical, so we
+    // need to hide and show elements indidivually.
+    i_Vehicle.SetVisibility(Mode == LM_Vehicle);
+    lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
 
-        UpdateMap();
-    }
+    i_PrimaryWeapon.SetVisibility(Mode == LM_Equipment);
+    i_SecondaryWeapon.SetVisibility(Mode == LM_Equipment);
+
+    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 0);
+    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 0);
+
+    //TODO: hide other shit
+
+    UpdateMap();
 }
 
 function Timer()
@@ -155,6 +154,8 @@ function Timer()
 function UpdateStatus()
 {
     local int RoundTime;
+
+    //TODO: update team numbers on tabs
 
     l_Reinforcements.Caption = string(GRI.DHSpawnCount[CurrentTeam]);
 
@@ -247,6 +248,13 @@ function UpdateVehicles()
         }
 
         li_Vehicles.SetDisabledAtIndex(i, bDisabled);
+
+        // Colin: If selected vehicle pool becomes disabled, select the "None"
+        // option.
+        if (bDisabled && li_Vehicles.Index == i)
+        {
+            li_Vehicles.SetIndex(0);
+        }
     }
 }
 
@@ -413,20 +421,6 @@ function Apply()
                            0);
 }
 
-function SelectRole(RORoleInfo NewRole)
-{
-    li_Roles.SelectByObject(NewRole);
-
-    if (NewRole != none && NewRole.bCanBeTankCommander)
-    {
-        SetLoadoutMode(LM_Vehicle);
-    }
-    else
-    {
-        SetLoadoutMode(LM_Equipment);
-    }
-}
-
 function PopulateRoles()
 {
     local int i;
@@ -491,7 +485,7 @@ function AutoSelectRole()
 
     if (PC.GetRoleInfo() != none)
     {
-        SelectRole(PC.GetRoleInfo());
+        li_Roles.SelectByObject(PC.GetRoleInfo());
     }
     else
     {
@@ -502,7 +496,7 @@ function AutoSelectRole()
                 if (GRI.DHAxisRoles[i] != none &&
                     GRI.DHAxisRoles[i].GetLimit(GRI.MaxPlayers) == 0)
                 {
-                    SelectRole(GRI.DHAxisRoles[i]);
+                    li_Roles.SelectByObject(GRI.DHAxisRoles[i]);
                 }
             }
         }
@@ -513,13 +507,13 @@ function AutoSelectRole()
                 if (GRI.DHAlliesRoles[i] != none &&
                     GRI.DHAlliesRoles[i].GetLimit(GRI.MaxPlayers) == 0)
                 {
-                    SelectRole(GRI.DHAlliesRoles[i]);
+                    li_Roles.SelectByObject(GRI.DHAlliesRoles[i]);
                 }
             }
         }
         else
         {
-            SelectRole(none);
+            li_Roles.SelectByObject(none);
         }
     }
 }
@@ -547,8 +541,6 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
     {
         Result = int(MsgLife);
-
-        Log(Result);
 
         switch (Result)
         {
@@ -602,6 +594,12 @@ function OnOpen()
     super.OnOpen();
 
     PC.ServerSetIsInSpawnMenu(true);
+
+    OnTeamChanged(PC.GetTeamNum());
+
+    Timer();
+
+    SetTimer(1.0, true);
 }
 
 function CloseMenu()
@@ -630,7 +628,7 @@ function bool MapContainerPreDraw(Canvas C)
     return true;
 }
 
-function OnChange(GUIComponent Sender)
+function InternalOnChange(GUIComponent Sender)
 {
     local int i, j;
     local RORoleInfo RI;
@@ -639,9 +637,15 @@ function OnChange(GUIComponent Sender)
 
     switch (Sender)
     {
+        case li_Roles:
         case lb_Roles:
             i_PrimaryWeapon.Image = none;
             i_SecondaryWeapon.Image = none;
+
+            for (i = 0; i < arraycount(i_GivenItems); ++i)
+            {
+                i_GivenItems[j].Image = none;
+            }
 
             cb_PrimaryWeapon.Clear();
             cb_SecondaryWeapon.Clear();
@@ -665,41 +669,37 @@ function OnChange(GUIComponent Sender)
                         cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item);
                     }
                 }
-
-                if (RI.bCanBeTankCrew)
-                {
-                    SetLoadoutMode(LM_Vehicle);
-                }
-                else
-                {
-                    SetLoadoutMode(LM_Equipment);
-                }
             }
 
-            cb_PrimaryWeapon.SetIndex(0);
-            cb_SecondaryWeapon.SetIndex(0);
-
-            // Colin: Visiblity is not hierarchical, so we need to make sure
-            // that we are on the equipment tab if we are to show the weapon
-            // selection combo boxes.
-            if (LoadoutMode == LM_Equipment)
+            if (PC.GetRoleInfo() == RI)
             {
-                cb_PrimaryWeapon.SetVisibility(cb_PrimaryWeapon.ItemCount() > 0);
-                cb_SecondaryWeapon.SetVisibility(cb_SecondaryWeapon.ItemCount() > 0);
+                cb_PrimaryWeapon.SetIndex(PC.PrimaryWeapon);
+                cb_SecondaryWeapon.SetIndex(PC.SecondaryWeapon);
+            }
+            else
+            {
+                cb_PrimaryWeapon.SetIndex(0);
+                cb_SecondaryWeapon.SetIndex(0);
             }
 
             for (i = 0; i < RI.default.GivenItems.Length; ++i)
             {
                 WeaponClass = class<Weapon>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
 
-                if (WeaponClass == none)
+                if (WeaponClass != none)
                 {
-                    continue;
+                    //TODO: do proper placement logic
+                    i_GivenItems[j++].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
                 }
+            }
 
-                Log(class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage);
-
-                i_GivenItems[j].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
+            if (RI != none && RI.bCanBeTankCrew)
+            {
+                SetLoadoutMode(LM_Vehicle);
+            }
+            else
+            {
+                SetLoadoutMode(LM_Equipment);
             }
 
             // Colin: Vehicle eligibility may have changed, update vehicles.
@@ -715,6 +715,7 @@ function OnChange(GUIComponent Sender)
             i_SecondaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_SecondaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
             break;
 
+        case li_Vehicles:
         case lb_Vehicles:
             VehicleClass = class<Vehicle>(li_Vehicles.GetObject());
 
@@ -881,9 +882,7 @@ defaultproperties
         StyleName="DHSmallText"
         bVisibleWhenEmpty=true
         bSorted=true
-        OnCreateComponent=RolesListBoxObject.InternalOnCreateComponent
-        TabOrder=0
-        OnChange=OnChange
+        OnChange=InternalOnChange
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
@@ -898,9 +897,7 @@ defaultproperties
         StyleName="DHSmallText"
         bVisibleWhenEmpty=true
         bSorted=true
-        OnCreateComponent=VehiclesListBoxObject.InternalOnCreateComponent
-        TabOrder=0
-        OnChange=OnChange
+        OnChange=InternalOnChange
         WinWidth=1.0
         WinHeight=0.5
         WinLeft=0.0
@@ -1087,7 +1084,7 @@ defaultproperties
         WinWidth=0.75
         WinLeft=0.0
         WinTop=0.0
-        OnChange=OnChange
+        OnChange=InternalOnChange
     End Object
     cb_PrimaryWeapon=PrimaryWeaponComboBoxObject
 
@@ -1108,7 +1105,7 @@ defaultproperties
         WinWidth=0.5
         WinLeft=0.0
         WinTop=0.333334
-        OnChange=OnChange
+        OnChange=InternalOnChange
     End Object
     cb_SecondaryWeapon=SecondaryWeaponComboBoxObject
 
