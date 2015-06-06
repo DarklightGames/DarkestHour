@@ -25,7 +25,6 @@ var() ESpawnPointMethod Method;
 var() bool bIsInitiallyActive;
 var() name InfantryLocationHintTag;
 var() name VehicleLocationHintTag;
-var() string SpawnPointName;
 var() float SpawnProtectionTime;
 var int TeamIndex;
 
@@ -38,18 +37,16 @@ function PostBeginPlay()
 
     foreach AllActors(class'DHLocationHint', LH)
     {
-        if (LH.Tag == '')
+        if (LH.Tag != '')
         {
-            continue;
-        }
-
-        if (LH.Tag == InfantryLocationHintTag)
-        {
-            InfantryLocationHints[InfantryLocationHints.Length] = LH;
-        }
-        else if (LH.Tag == VehicleLocationHintTag)
-        {
-            VehicleLocationHints[VehicleLocationHints.Length] = LH;
+            if (LH.Tag == InfantryLocationHintTag)
+            {
+                InfantryLocationHints[InfantryLocationHints.Length] = LH;
+            }
+            else if (LH.Tag == VehicleLocationHintTag)
+            {
+                VehicleLocationHints[VehicleLocationHints.Length] = LH;
+            }
         }
     }
 
@@ -73,7 +70,6 @@ defaultproperties
     bStatic=true
     RemoteRole=ROLE_None
     DrawScale=1.5
-    SpawnPointName="UNNAMED SPAWN POINT!!!"
     SpawnProtectionTime=5.0
     Method=ESPM_LocationHint
     bCollideWhenPlacing=true
