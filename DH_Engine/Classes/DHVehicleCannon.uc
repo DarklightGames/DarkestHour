@@ -1514,7 +1514,7 @@ simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, floa
 
     if (P.RoundType == RT_HVAP)
     {
-        if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
+        if (P.ShellDiameter > 8.5) // HVAP rounds bigger than 85mm shell diameter (instead of using separate RoundType RT_HVAPLarge)
         {
             if (CompoundAngleDegrees <= 30.0)
             {
@@ -1648,7 +1648,6 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 {
     if (P.RoundType == RT_HVAP)
     {
-        // Matt: maybe this should include 88mm APCR, which is same as HVAP? // TEST
         if (P.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.27)
