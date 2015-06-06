@@ -161,6 +161,50 @@ function SelectTeam(int Team)
     }
 }
 
+function InternalOnMessage(coerce string Msg, float MsgLife)
+{
+    local int Result;
+    local string ErrorMessage;
+
+    if (Msg != "NOTIFY_GUI_ROLE_SELECTION_PAGE")
+    {
+        // Received success/failure message from server.
+
+        Result = int(MsgLife);
+
+        switch (Result)
+        {
+            case 0:
+            case 96: // Team change successfull!
+                SelectTeamSuccessfull();
+                return;
+
+            case 97: // Succesfully picked axis team
+                SelectedTeam = AXIS_TEAM_INDEX;
+                SelectTeamSuccessfull();
+
+                return;
+
+            case 98: // Successfully picked allies team
+                SelectedTeam = ALLIES_TEAM_INDEX;
+                SelectTeamSuccessfull();
+
+                return;
+
+            default: // Couldn't change teams: get error msg
+                ErrorMessage = class'ROGUIRoleSelection'.static.getErrorMessageForId(result);
+        }
+
+        SetButtonsState(false);
+
+        if (Controller != none)
+        {
+            Controller.OpenMenu(Controller.QuestionMenuClass);
+            GUIQuestionPage(Controller.TopPage()).SetupQuestion(ErrorMessage, QBTN_Ok, QBTN_Ok);
+        }
+    }
+}
+
 defaultproperties
 {
     Begin Object Class=BackgroundImage Name=PageBackground2
