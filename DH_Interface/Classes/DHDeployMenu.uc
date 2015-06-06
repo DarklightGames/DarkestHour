@@ -6,7 +6,6 @@ class DHDeployMenu extends UT2K4GUIPage;
 
 enum ELoadoutMode
 {
-    LM_None,
     LM_Equipment,
     LM_Vehicle
 };
@@ -127,25 +126,22 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function SetLoadoutMode(ELoadoutMode Mode)
 {
-    if (LoadoutMode != Mode)
-    {
-        LoadoutMode = Mode;
+    LoadoutMode = Mode;
 
-        // Colin: GUIComponent visiblity is not properly hierarchical, so we
-        // need to hide and show elements indidivually.
-        i_Vehicle.SetVisibility(Mode == LM_Vehicle);
-        lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
+    // Colin: GUIComponent visiblity is not properly hierarchical, so we
+    // need to hide and show elements indidivually.
+    i_Vehicle.SetVisibility(Mode == LM_Vehicle);
+    lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
 
-        i_PrimaryWeapon.SetVisibility(Mode == LM_Equipment);
-        i_SecondaryWeapon.SetVisibility(Mode == LM_Equipment);
+    i_PrimaryWeapon.SetVisibility(Mode == LM_Equipment);
+    i_SecondaryWeapon.SetVisibility(Mode == LM_Equipment);
 
-        cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 0);
-        cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 0);
+    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 0);
+    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 0);
 
-        //TODO: hide other shit
+    //TODO: hide other shit
 
-        UpdateMap();
-    }
+    UpdateMap();
 }
 
 function Timer()
@@ -675,8 +671,16 @@ function InternalOnChange(GUIComponent Sender)
                 }
             }
 
-            cb_PrimaryWeapon.SetIndex(0);
-            cb_SecondaryWeapon.SetIndex(0);
+            if (PC.GetRoleInfo() == RI)
+            {
+                cb_PrimaryWeapon.SetIndex(PC.PrimaryWeapon);
+                cb_SecondaryWeapon.SetIndex(PC.SecondaryWeapon);
+            }
+            else
+            {
+                cb_PrimaryWeapon.SetIndex(0);
+                cb_SecondaryWeapon.SetIndex(0);
+            }
 
             for (i = 0; i < RI.default.GivenItems.Length; ++i)
             {
@@ -695,7 +699,6 @@ function InternalOnChange(GUIComponent Sender)
             }
             else
             {
-                Log("A");
                 SetLoadoutMode(LM_Equipment);
             }
 
