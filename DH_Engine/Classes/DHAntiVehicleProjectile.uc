@@ -203,40 +203,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // We hit a VehicleWeapon
     if (HitVehicleWeapon != none && HitVehicle != none)
     {
-/*      // We hit the VehicleWeapon's 'driver' collision box, not the actual VehicleWeapon // removed as part of player hit detection TEST
-        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
-        {
-            // We actually hit the player
-            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
-            {
-                if (ShouldDrawDebugLines())
-                {
-                    DrawStayingDebugLine(HitLocation, HitLocation - (Normal(Velocity) * 500.0), 255, 0, 0);
-                }
-
-                if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
-                {
-                    UpdateInstigator();
-                    VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // changed from Location to HitLocation
-                }
-
-                // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on, as it only hit player's collision box & not actual VehicleWeapon
-                if (!bExplodesOnHittingBody)
-                {
-                    Velocity *= 0.8;
-
-                    return;
-                }
-            }
-            // This isn't a real hit - we must have hit player's collision box but not actually the player, so don't save hitting this actor & exit the function
-            else
-            {
-                SavedTouchActor = none;
-
-                return;
-            }
-        }
-*/
         SavedHitActor = HitVehicle;
 
         Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal, e.g. for a deflection

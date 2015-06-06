@@ -46,6 +46,7 @@ function float GetAmmoReloadState()
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Bren_ammo_reload'
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=1.5
@@ -68,7 +69,6 @@ defaultproperties
     HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_Bren'
     HUDOverlayOffset=(X=-6.0)
     HUDOverlayFOV=35.0
-    bKeepDriverAuxCollision=true
     PitchUpLimit=4000
     PitchDownLimit=60000
     ExitPositions(0)=(X=48.0,Y=-107.0,Z=15.0)

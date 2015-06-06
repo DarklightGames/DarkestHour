@@ -433,6 +433,118 @@ simulated event HandleWhizSound()
 {
 }
 
+// Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
+// Matt: part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
+simulated event StartDriving(Vehicle V)
+{
+    local DHVehicleCannonPawn CP;
+    local DHVehicleMGPawn     MGP;
+    local bool                bKeepAuxCollisionCylinder;
+    local int                 i;
+
+    DrivenVehicle = V;
+    NetUpdateTime = Level.TimeSeconds - 1.0;
+    AmbientSound = none;
+    StopWeaponFiring();
+    DeactivateSpawnProtection();
+
+    // Move the driver into position & attach to vehicle
+    ShouldCrouch(false);
+    ShouldProne(false);
+    bIgnoreForces = true;
+    Velocity = vect(0.0, 0.0, 0.0);
+    Acceleration = vect(0.0, 0.0, 0.0);
+    bCanTeleport = false;
+
+    if (!V.bRemoteControlled || V.bHideRemoteDriver)
+    {
+        SetCollision(false, false, false);
+        bCollideWorld = false;
+        V.AttachDriver(self);
+
+        if (V.bDrawDriverinTP)
+        {
+            CullDistance = 5000.0;
+        }
+        else
+        {
+            bHidden = true;
+        }
+    }
+
+    // Set animation
+    bPhysicsAnimUpdate = false;
+    bWaitForAnim = false;
+
+    if (V.bDrawDriverinTP && !V.bHideRemoteDriver)
+    {
+        if (HasAnim(V.DriveAnim))
+        {
+            LoopAnim(V.DriveAnim);
+        }
+
+        SetAnimFrame(0.5);
+        SmoothViewYaw = Rotation.Yaw;
+        SetTwistLook(0, 0);
+    }
+
+    if (PlayerShadow != none)
+    {
+        PlayerShadow.bShadowActive = false;
+    }
+
+    if (WeaponAttachment != none)
+    {
+        WeaponAttachment.Hide(true);
+    }
+
+    // Hack for sticky grenades
+    for (i = 0; i < Attached.Length; ++i)
+    {
+        if (Projectile(Attached[i]) != none)
+        {
+            Attached[i].SetBase(none);
+        }
+    }
+
+    // Either keep or disable collision for player pawn's AuxCollisionCylinder (the bullet whip attachment)
+    if (V.bKeepDriverAuxCollision)
+    {
+        bKeepAuxCollisionCylinder = true;
+
+        CP = DHVehicleCannonPawn(V);
+
+        if (CP != none)
+        {
+            if (!CP.DriverPositions[CP.InitialPositionIndex].bExposed)
+            {
+                bKeepAuxCollisionCylinder = false;
+            }
+        }
+        else
+        {
+            MGP = DHVehicleMGPawn(V);
+
+            if (MGP != none && !MGP.DriverPositions[MGP.InitialPositionIndex].bExposed)
+            {
+                bKeepAuxCollisionCylinder = false;
+            }
+        }
+    }
+
+    ToggleAuxCollision(bKeepAuxCollisionCylinder);
+
+    if (Weapon != none)
+    {
+        if (ROWeapon(Weapon) != none)
+        {
+            ROWeapon(Weapon).GotoState('Idle');
+        }
+
+        Weapon.NotifyOwnerJumped();
+    }
+}
+
 // Added bullet impact sounds for helmets and players
 // MergeTODO: Replace this with realistic gibbing
 simulated function ProcessHitFX()

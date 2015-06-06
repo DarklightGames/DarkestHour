@@ -1104,123 +1104,20 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  *************************  COMMANDER HIT DETECTION  ***************************  //
-///////////////////////////////////////////////////////////////////////////////////////
-
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // TEMP
-{
-    log("HitDriverArea called on" @ Tag @ " SHOULD NOT HAPPEN !?");
-    return false;
-}
-
-simulated function bool HitDriver(vector HitLocation, vector Momentum) // TEMP
-{
-    log("HitDriver called on" @ Tag @ " SHOULD NOT HAPPEN !?");
-    return false;
-}
-
-/* // removed as part of player hit detection TEST
-// Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the commander's collision box?"
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
-{
-    local vector HitOffset;
-
-    HitOffset = (HitLocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
-
-    // We must have hit the commander's collision box (HitOffset.Z is how far the HitLocation is above the mesh origin)
-    if (HitOffset.Z >= MinCommanderHitHeight)
-    {
-        if (bDriverDebugging)
-        {
-            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
-
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
-            }
-        }
-
-        return true;
-    }
-    // We can't have hit the commander so we must have hit the turret (or some other collision box)
-    else
-    {
-        if (bDriverDebugging)
-        {
-            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
-
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
-            }
-        }
-
-        return false;
-    }
-}
-
-// Matt: slightly different concept to work more accurately & simply with projectiles
-// Think of this function as asking "is there an exposed commander there & did we actually hit him, not just his collision box?"
-simulated function bool HitDriver(vector HitLocation, vector Momentum)
-{
-    // True if commander is present & is not buttoned up & we hit one of the hit points representing his head or torso
-    return CannonPawn != none && CannonPawn.Driver != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
-        (IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1));
-}
-
-// Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
-simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
-{
-    local  coords  C;
-    local  vector  HeadLoc, B, M, Diff;
-    local  float   t, DotMM, Distance;
-
-    if (VehHitpoints.Length <= Index || VehHitpoints[Index].PointBone == '') // added check against array length to avoid "out of bounds" errors
-    {
-        return false;
-    }
-
-    C = GetBoneCoords(VehHitpoints[Index].PointBone);
-    HeadLoc = C.Origin + (VehHitpoints[Index].PointHeight * VehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
-
-    // Express snipe trace line in terms of B + tM
-    B = Loc;
-    M = Ray * 150.0;
-
-    // Find point-line squared distance
-    Diff = HeadLoc - B;
-    t = M dot Diff;
-
-    if (t > 0.0)
-    {
-        DotMM = M dot M;
-
-        if (t < DotMM)
-        {
-            t = t / DotMM;
-            Diff = Diff - (t * M);
-        }
-        else
-        {
-            t = 1.0;
-            Diff -= M;
-        }
-    }
-    else
-    {
-        t = 0.0;
-    }
-
-    Distance = Sqrt(Diff dot Diff);
-
-    return Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
-}
-*/
-
-///////////////////////////////////////////////////////////////////////////////////////
 //  ********************  HIT DETECTION, PENETRATION & DAMAGE  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // Matt: TEMP
+{
+    log("HitDriverArea() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
+    return false;
+}
+
+simulated function bool HitDriver(vector HitLocation, vector Momentum) // Matt: TEMP
+{
+    log("HitDriver() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
+    return false;
+}
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
@@ -1829,7 +1726,7 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
-    bForceSkelUpdate=true // added as part of player hit detection TEST
+    bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update the cannon mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     bHasTurret=true
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true

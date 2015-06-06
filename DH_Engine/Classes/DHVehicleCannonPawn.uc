@@ -814,8 +814,9 @@ simulated function PrevWeapon()
     }
 }
 
-// Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
-// Also so that server plays animations if player has moving collision box
+// Modified to call NextViewPoint() for all modes, including dedicated server
+// New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
+// Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -824,22 +825,7 @@ function ServerChangeViewPoint(bool bForward)
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GotoState('ViewTransition');
-                }
-                else if (bPlayerCollisionBoxMoves)
-                {
-                    AnimateTransition();
-                }
-            }
+            NextViewPoint();
         }
     }
     else
@@ -848,80 +834,85 @@ function ServerChangeViewPoint(bool bForward)
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer) // only if player has moving collision box
-            {
-                AnimateTransition();
-            }
+            NextViewPoint();
         }
     }
 }
 
-// Modified to use Sleep to control exit from state (including on server) & to avoid unnecessary stuff on a server
-// Also to improve timing of FOV & camera position changes, to match rotation to gun's aim when coming up off the gunsight, & better handling of locked camera
+// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
+// Avoids calling AnimateTransition() & instead uses state ViewTransition in all relevant situations, as ViewTransition controls timing of enabling/disabling player hit detection
+simulated function NextViewPoint()
+{
+    if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed)
+    {
+        GotoState('ViewTransition');
+    }
+}
+
+// Emptied out as no longer used (see NextViewPoint() above)
+simulated function AnimateTransition()
+{
+    Log ("AnimateTransition() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!"); // Matt: TEMP
+}
+
+// Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
+// to improve timing of FOV & camera position changes, to match rotation to gun's aim when coming up off the gunsight, & to add better handling of locked camera
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            StoredVehicleRotation = VehicleBase.Rotation;
+        StoredVehicleRotation = VehicleBase.Rotation;
 
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
+        {
             // Switch to mesh for new position as may be different
             SwitchMesh(DriverPositionIndex);
 
-            if (IsHumanControlled())
+            // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
+            WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+
+            if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV)
             {
-                WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+                PlayerController(Controller).SetFOV(WeaponFOV);
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            }
 
-                // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
-                if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV)
-                {
-                    PlayerController(Controller).SetFOV(WeaponFOV);
-                    FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-                }
+            // If player is moving up from gunsight, make him face the same direction as the cannon (feels more natural to come up from the gun)
+            if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions && !PlayerController(Controller).bBehindView)
+            {
+                MatchRotationToGunAim();
+            }
+        }
 
-                // If player is moving up from gunsight, make him face the same direction as the cannon (feels more natural to come up from the gun)
-                if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions && !PlayerController(Controller).bBehindView)
-                {
-                    MatchRotationToGunAim();
-                }
+        if (Driver != none)
+        {
+            // If moving to an exposed position, enable the player's hit detection
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && Driver.IsA('ROPawn'))
+            {
+                ROPawn(Driver).ToggleAuxCollision(true);
             }
 
             // Play any transition animation for the player
-            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
             {
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }
         }
 
+        // Play any transition animation for the cannon itself & set a duration to control when we exit this state
         ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
-        // Play any transition animation for the cannon itself
-        // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if player's collision box moves)
         if (LastPositionIndex < DriverPositionIndex)
         {
             if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
             {
-                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-                {
-                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                }
-
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
             }
         }
         else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
         {
-            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-            {
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            }
-
+            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
             ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
         }
     }
@@ -941,7 +932,7 @@ simulated state ViewTransition
     {
         if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
         {
-            // Set any zoom & camera offset for new position, if we have moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
+            // Set any zoom & camera offset for new position, if we've moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
             if (WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV)
             {
                 PlayerController(Controller).SetFOV(WeaponFOV);
@@ -956,34 +947,18 @@ simulated state ViewTransition
                 Controller.SetRotation(Rotation);
             }
         }
+
+        // If moving to an unexposed position, disable the player's hit detection
+        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
+        {
+            ROPawn(Driver).ToggleAuxCollision(false);
+        }
     }
 
 Begin:
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('');
-}
-
-// Modified to avoid playing unnecessary DriverTransitionAnim on dedicated server, as this function may be called on server to move player's collision box
-simulated function AnimateTransition()
-{
-    if (Level.NetMode != NM_DedicatedServer && Driver != none &&
-        Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
-    {
-        Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-    }
-
-    if (LastPositionIndex < DriverPositionIndex)
-    {
-        if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
-        {
-            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-        }
-    }
-    else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
-    {
-        Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1156,12 +1131,12 @@ simulated state LeavingVehicle
     }
 }
 
-// Modified to play idle animation for all net players, so they see closed hatches & any animated collision boxes are re-set (also server if collision is animated)
+// Modified to play idle animation for all modes, so other net players see things like closed hatches & also any collision stuff is re-set (including on server)
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
 
-    if (!bDriving && (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    if (!bDriving && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
     {
         Gun.PlayAnim(Gun.BeginningIdleAnim);
     }
@@ -1640,8 +1615,7 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-    bKeepDriverAuxCollision=true // added as standard as part of player hit detection TEST
-    bPlayerCollisionBoxMoves=true // TEMP added as part of player hit detection TEST (will replace asap with proper code)
+    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=2
     PeriscopePositionIndex=-1
     GunsightPositions=1

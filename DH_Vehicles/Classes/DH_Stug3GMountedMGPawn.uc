@@ -24,8 +24,7 @@ simulated state EnteringVehicle // Matt: this is a TEST as an alternative to doi
 
 defaultproperties
 {
-    bKeepDriverAuxCollision=true
-    bPlayerCollisionBoxMoves=true
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)

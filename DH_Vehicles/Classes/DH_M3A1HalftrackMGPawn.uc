@@ -7,6 +7,7 @@ class DH_M3A1HalftrackMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=0.75
     WeaponFOV=60.0
@@ -28,7 +29,6 @@ defaultproperties
     HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_30Cal'
     HUDOverlayOffset=(X=-2.0)
     HUDOverlayFOV=35.0
-    bKeepDriverAuxCollision=true
     PitchUpLimit=4000
     PitchDownLimit=60000
 }

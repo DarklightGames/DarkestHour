@@ -7,7 +7,7 @@ class DH_Marder3MMountedMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    bKeepDriverAuxCollision=true
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=2.0
     WeaponFOV=60.0

@@ -49,25 +49,6 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
    return true;
 }
 
-/*
-// Matt: reinstating original RO functions for AT guns, as generally don't have gunner's collision & if they do (e.g. German 88mm) they need different handling from new commander hit system
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // removed as part of player hit detection TEST
-{
-    return super(ROVehicleWeapon).HitDriverArea(HitLocation, Momentum);
-}
-
-simulated function bool HitDriver(vector HitLocation, vector Momentum)
-{
-    return super(ROVehicleWeapon).HitDriver(HitLocation, Momentum);
-}
-
-// There aren't any angles that are below the driver angle for the AT Gun cannon
-simulated function bool BelowDriverAngle(vector loc, vector ray)
-{
-    return false;
-}
-*/
-
 // Limit the left and right movement of the gun
 simulated function int LimitYaw(int yaw)
 {

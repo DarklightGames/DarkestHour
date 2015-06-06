@@ -170,7 +170,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local vector             TempHitLocation, HitNormal, X, Y, Z;
     local array<int>         HitPoints;
     local float              BulletDistance, V;
-    local bool               bDoDeflection, bHitVehicleDriver;
+    local bool               bDoDeflection;
 
     if (bDebugMode && !bHasDeflected)
     {
@@ -200,40 +200,15 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     SavedTouchActor = Other;
     HitVehicleWeapon = ROVehicleWeapon(Other);
 
-    // We hit a VehicleWeapon // added this block to handle VehicleWeapon 'driver' hit detection much better (very similar to a shell)
-    if (HitVehicleWeapon != none)
+    // We hit a VehicleWeapons so show the bullet impact effects
+    if (Level.NetMode != NM_DedicatedServer && HitVehicleWeapon != none)
     {
-/*      // We hit the player's collision box, not the actual VehicleWeapon // removed as part of player hit detection TEST
-        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
+        VehEffect = Spawn(class'ROVehicleHitEffect',,, HitLocation, rotator(Normal(Velocity)));
+        VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
+
+        if (bIsTracerBullet)
         {
-            // We actually hit the player
-            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
-            {
-                bHitVehicleDriver = true;
-            }
-            // Didn't hit the player, so this isn't a real hit & we'll exit now (& don't save hitting this actor)
-            else
-            {
-                SavedTouchActor = none;
-
-                if (bDebugMode && !bHasDeflected)
-                {
-                    Log(">>> Bullet.ProcessTouch: EXITING as hit VehicleWeapon's player collision box but didn't hit player");
-                }
-
-                return;
-            }
-        }
-        // We didn't hit the player's collision box, so show the bullet impact effects
-        else */if (Level.NetMode != NM_DedicatedServer)
-        {
-            VehEffect = Spawn(class'ROVehicleHitEffect',,, HitLocation, rotator(Normal(Velocity)));
-            VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
-
-            if (bIsTracerBullet)
-            {
-                bDoDeflection = true;
-            }
+            bDoDeflection = true;
         }
     }
 
@@ -244,11 +219,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (bDebugMode)
         {
-            Log(">>> Bullet.ProcessTouch: V =" @ V @ " Velocity =" @ Velocity @ "(bHitVehicleDriver =" @ bHitVehicleDriver $ ")");
+            Log(">>> Bullet.ProcessTouch: V =" @ V @ " Velocity =" @ Velocity);
 
             if (Pawn(Other) != none && Instigator != none)
             {
-                Instigator.ClientMessage("Bullet.ProcessTouch: V =" @ V @ " Velocity =" @ Velocity @ "(bHitVehicleDriver =" @ bHitVehicleDriver $ ")");
+                Instigator.ClientMessage("Bullet.ProcessTouch: V =" @ V @ " Velocity =" @ Velocity);
             }
         }
     }
@@ -353,37 +328,21 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
                 }
             }
+            // Damage something else
             else
             {
-                // Added to call TakeDamage directly on a vehicle's 'Driver' if we hit him
-                if (bHitVehicleDriver)
+                if (bDebugMode)
                 {
-                    if (VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
-                    {
-                        if (bDebugMode)
-                        {
-                            Log(">>> Bullet.ProcessTouch: VehicleWeaponPawn.Driver.TakeDamage on" @ VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.Tag);
-                        }
-
-                        VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
-                    }
+                    Log(">>> Bullet.ProcessTouch: TakeDamage on" @ Other.Tag);
                 }
-                // Damage something else
-                else
+
+                // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
+                if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none)
                 {
-                    if (bDebugMode)
-                    {
-                        Log(">>> Bullet.ProcessTouch: Other.TakeDamage on" @ Other.Tag);
-                    }
-
-                    // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
-                    if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none)
-                    {
-                        DHArmoredVehicle(HitVehicleWeapon.Base).bProjectilePenetrated = false;
-                    }
-
-                    Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                    DHArmoredVehicle(HitVehicleWeapon.Base).bProjectilePenetrated = false;
                 }
+
+                Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
             }
 
             if (bDebugMode && Pawn(Other) != none)

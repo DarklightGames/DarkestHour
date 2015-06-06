@@ -9,7 +9,7 @@ var()           int         ProjPerFire;                // How many projectiles 
 var()           vector      ProjSpawnOffset;            // +x forward, +y right, +z up
 var()           vector      FAProjSpawnOffset;          // ProjSpawnOffset for free-aim mode +x forward, +y right, +z up
 
-var(DHProjectileFire) int  AddedPitch;                 // Additional pitch to add to firing calculations. Primarily used for rockect launchers
+var(DHProjectileFire) int   AddedPitch;                 // Additional pitch to add to firing calculations. Primarily used for rockect launchers
 
 var             bool        bUsePreLaunchTrace;         // Use the pre-projectile spawn trace to see if anything close is hit before launching projectile. Saves CPU and Net usuage
 var             float       PreLaunchTraceDistance;     // How long of a pre launch trace to use. Shorter for SMGs and pistols, longer for rifles and MGs.
@@ -20,7 +20,7 @@ var             float       PreLaunchTraceDistance;     // How long of a pre lau
 var()           bool        bUsesTracers;               // true if the weapon uses tracers in it's ammo loadout
 var()           int         TracerFrequency;            // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
 var             byte        NextTracerCounter;
-//var class<DH_ClientTracer>DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer // now replaced by TracerProjectileClass
+//var class<DH_ClientTracer>DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: replaced by TracerProjectileClass
 var     class<Projectile>   TracerProjectileClass;      // class for the tracer bullet for this weapon (now a real bullet that does damage, as well as tracer effects)
 
 // Weapon spread/inaccuracy variables
@@ -199,14 +199,10 @@ function CalcSpreadModifiers()
     }
 }
 
-/* =================================================================================== *
-* SpawnProjectile()
-*   Launches the projectile and tracers. Also performs a prelaunch trace to see if
-*   we would hit something close before spawning a bullet. This way we don't ever
-*   spawn a bullet if we would hit something so close that the ballistics wouldn't
-*   matter anyway. Don't use pre-launch trace for things like rocket launchers
-* =================================================================================== */
-function Projectile SpawnProjectile(vector Start, Rotator Dir)
+// Launches/spawns a projectile, including option to do a pre-launch trace to see if we would hit something close before spawning a bullet
+// If we do then we can avoid spawning the projectile if we'd hit something so close that the ballistics wouldn't matter anyway (don't use this for things like rocket launchers)
+// Matt: modified to remove checks on HitDriverArea() for a VehicleWeapon, as that is now deprecated in new vehicle occupant hit detection system
+function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
     local Projectile         SpawnedProjectile;
     local vector             ProjectileDir, End, HitLocation, HitNormal;
@@ -216,7 +212,8 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
     local array<int>         HitPoints;
     local bool               bSpawnedTracer;
 
-    Dir.Pitch += AddedPitch; // do any additional pitch changes before launching the projectile
+    // Do any additional pitch changes before launching the projectile
+    Dir.Pitch += AddedPitch;
 
     // Perform pre-launch trace
     if (bUsePreLaunchTrace)
@@ -227,30 +224,25 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
         // Do precision hit point pre-launch trace to see if we hit a player or something else
         Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0); // WhizType was 1, but set to 0 to prevent sound triggering
 
-        // This is a bit of a hack, but it prevents bots from killing other players in most instances
-        if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
+        if (Other != none && Other != Instigator && Other.Base != Instigator && Other.Owner != Instigator)
         {
-            return none;
-        }
+            // This is a bit of a hack, but it prevents bots from killing other players in most instances
+            if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
+            {
+                return none;
+            }
 
-        if (Other != none && Other != Instigator && Other.Base != Instigator)
-        {
             WeapAttach = ROWeaponAttachment(Weapon.ThirdPersonActor);
 
             if (!Other.bWorldGeometry)
             {
-                // Update hit effect except for pawns (blood), other than vehicles // line replaced as part of player hit detection TEST
-//              if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') && !Other.IsA('ROVehicleWeapon')))
+                // Update hit effect, except for non-vehicle pawns (blood)
                 if (Other.IsA('Vehicle') || Other.IsA('ROVehicleWeapon') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume')))
                 {
                     WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
 
-//              if (Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir)) // removed as part of player hit detection TEST
-//              {
-//                  WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
-//              }
-
+                // Damage the actor that we hit
                 if (Other.IsA('ROVehicle'))
                 {
                     Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
@@ -277,17 +269,19 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
             }
             else
             {
+                // Update hit effect
                 if (WeapAttach != none)
                 {
                     WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
 
+                // Damage a destroyable static mesh actor
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
                         ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
 
-                    if (RODestroyableStaticMesh(Other).bWontStopBullets)
+                    if (RODestroyableStaticMesh(Other).bWontStopBullets) // bullet will continue, so make sure we don't exit without spawning projectile
                     {
                         Other = none;
                     }
@@ -295,16 +289,14 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
             }
         }
 
-        // Return because we already hit something
+        // Exit without spawning projectile because we already hit something & have handled damage & effects
         if (Other != none)
         {
             return none;
         }
     }
 
-//  if (ProjectileClass != none)
-//      SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir); // Matt: replaced by below
-
+    // Spawn a tracer projectile if one is due (based on TracerFrequency)
     if (Level.NetMode == NM_Standalone && bUsesTracers && TracerProjectileClass != none)
     {
         NextTracerCounter++;
@@ -334,7 +326,8 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
         }
     }
 
-    if (!bSpawnedTracer && ProjectileClass != none) // Matt: added so we spawn bullet OR tracer, not both
+    // Spawn a normal projectile if we didn't spawn a tracer
+    if (!bSpawnedTracer && ProjectileClass != none)
     {
         SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
     }

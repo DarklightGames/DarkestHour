@@ -7,7 +7,7 @@ class DH_BrenCarrierMG extends DHVehicleMG;
 
 defaultproperties
 {
-    bForceSkelUpdate=true // added as part of player hit detection TEST
+    bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     NumMags=20
     HUDOverlayReloadAnim="reload_empty"
     ReloadDuration=7.0

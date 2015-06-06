@@ -7,7 +7,7 @@ class DH_M3A1HalftrackMG extends DHVehicleMG;
 
 defaultproperties
 {
-    bForceSkelUpdate=true // added as part of player hit detection TEST
+    bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     NumMags=8
     HUDOverlayReloadAnim="Reloads"
     ReloadDuration=6.7

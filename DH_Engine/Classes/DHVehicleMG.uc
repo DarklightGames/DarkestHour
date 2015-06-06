@@ -363,127 +363,6 @@ simulated function int GetNumMags()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ***************************  GUNNER HIT DETECTION  ****************************  //
-///////////////////////////////////////////////////////////////////////////////////////
-
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // TEMP
-{
-    log("HitDriverArea called on" @ Tag @ " SHOULD NOT HAPPEN !?");
-    return false;
-}
-
-simulated function bool HitDriver(vector HitLocation, vector Momentum) // TEMP
-{
-    log("HitDriver called on" @ Tag @ " SHOULD NOT HAPPEN !?");
-    return false;
-}
-
-/* // removed as part of player hit detection TEST
-// Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the player's collision box?"
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // TEST
-{
-    local vector HitOffset;
-
-    // If MG has no gunshield then we can only have hit the player's collision box
-    if (!bHasGunShield)
-    {
-        return true;
-    }
-
-    HitOffset = (Hitlocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
-
-    // We must have hit the player's collision box (HitOffset.X is how far the HitLocation is in front of the mesh origin)
-    if (HitOffset.X <= MaxPlayerHitX)
-    {
-        if (bDriverDebugging)
-        {
-            Log("HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Assume hit player's collision box");
-
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Assume hit player's collision box");
-            }
-        }
-
-        return true;
-    }
-    // We can't have hit the player so we must have hit the MG itself (or some other collision box)
-    else
-    {
-        if (bDriverDebugging)
-        {
-            Log("HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Must have missed player's collision box");
-
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "HitOffset.X =" @ HitOffset.X @ "MaxPlayerHitX =" @ MaxPlayerHitX @ " Must have missed player's collision box");
-            }
-        }
-
-        return false;
-    }
-}
-
-// Matt: slightly different concept to work more accurately & simply with projectiles
-// Think of this function as asking "is there an exposed player there & did we actually hit him, not just his collision box?"
-simulated function bool HitDriver(vector Hitlocation, vector Momentum)
-{
-    // True if player is present & is not buttoned up & we hit one of the hit points representing his head or torso
-    return MGPawn != none && MGPawn.Driver != none && MGPawn.DriverPositions[MGPawn.DriverPositionIndex].bExposed &&
-        (IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1));
-}
-
-// Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
-simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
-{
-    local  coords  C;
-    local  vector  HeadLoc, B, M, Diff;
-    local  float   t, DotMM, Distance;
-
-    if (VehHitpoints[Index].PointBone == '')
-    {
-        return false;
-    }
-
-    C = GetBoneCoords(VehHitpoints[Index].PointBone);
-    HeadLoc = C.Origin + (VehHitpoints[Index].PointHeight * VehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
-
-    // Express snipe trace line in terms of B + tM
-    B = Loc;
-    M = Ray * 150.0;
-
-    // Find point-line squared distance
-    Diff = HeadLoc - B;
-    t = M dot Diff;
-
-    if (t > 0.0)
-    {
-        DotMM = M dot M;
-
-        if (t < DotMM)
-        {
-            t = t / DotMM;
-            Diff = Diff - (t * M);
-        }
-        else
-        {
-            t = 1.0;
-            Diff -= M;
-        }
-    }
-    else
-    {
-        t = 0.0;
-    }
-
-    Distance = Sqrt(Diff dot Diff);
-
-    return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
-}
-*/
-
-///////////////////////////////////////////////////////////////////////////////////////
 //  ******************  SETUP, UPDATE, CLEAN UP, MISCELLANEOUS  *******************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -532,6 +411,18 @@ simulated function int LimitYaw(int yaw)
     }
 
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+}
+
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // Matt: TEMP
+{
+    log("HitDriverArea() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
+    return false;
+}
+
+simulated function bool HitDriver(vector HitLocation, vector Momentum) // Matt: TEMP
+{
+    log("HitDriver() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
+    return false;
 }
 
 // Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
