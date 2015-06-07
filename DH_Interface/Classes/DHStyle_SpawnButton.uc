@@ -36,10 +36,10 @@ defaultproperties
     ImgStyle(3)=ISTY_Scaled
     ImgStyle(4)=ISTY_Scaled
 
-    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnPoint'
-    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnPoint'
-    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnPointSelected'
-    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnPointSelected'
+    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnPointDiffuse'
+    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnPointDiffuse'
+    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnPointDiffuse'
+    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnPointDiffuse'
     Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnPointDisabled'
 
     ImgColors(0)=(R=255,G=255,B=255,A=255)
