@@ -3650,6 +3650,11 @@ simulated function DrawSpectatingHud(Canvas C)
                             // Press ESC to select a spawn point
                             S = default.SelectSpawnPointText;
                         }
+                        else
+                        {
+                            // You will deploy as a {0} in {2} | Press ESC to change
+                            S = default.SpawnInfantryText;
+                        }
                     }
                     else if (PC.SpawnVehicleIndex != 255)
                     {
@@ -3678,7 +3683,7 @@ simulated function DrawSpectatingHud(Canvas C)
                     break;
             }
 
-            if (PC.bUseNativeRoleNames && PRI.RoleInfo != none)
+            if (PC.bUseNativeRoleNames)
             {
                 S = Repl(S, "{0}", PRI.RoleInfo.AltName);
             }
