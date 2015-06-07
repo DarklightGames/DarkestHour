@@ -11,11 +11,13 @@ enum ELoadoutMode
 };
 
 var automated   FloatingImage               i_Background;
-
 var automated   ROGUIProportionalContainer  c_Teams;
 var automated   GUIButton                       b_Axis;
+var automated   GUIImage                        i_Axis;
 var automated   GUIButton                       b_Allies;
+var automated   GUIImage                        i_Allies;
 var automated   GUIButton                       b_Spectate;
+var automated   GUIImage                        i_Spectate;
 var automated   GUIImage                    i_Reinforcements;
 var automated   GUILabel                    l_Reinforcements;
 var automated   GUIImage                    i_RoundTime;
@@ -86,6 +88,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         return;
     }
 
+    switch (GRI.AlliedNationID)
+    {
+        case 0: // USA
+            i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_usa';
+            break;
+        case 1: // UK
+            i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_uk';
+            break;
+        case 2: // Canada
+            i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_canada';
+            break;
+    }
+
     li_Roles = DHGUIList(lb_Roles.List);
     li_Vehicles = DHGUIList(lb_Vehicles.List);
 
@@ -100,8 +115,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Team buttons
     c_Teams.ManageComponent(b_Allies);
+    c_Teams.ManageComponent(i_Allies);
     c_Teams.ManageComponent(b_Axis);
+    c_Teams.ManageComponent(i_Axis);
     c_Teams.ManageComponent(b_Spectate);
+    c_Teams.ManageComponent(i_Spectate);
 
     c_Loadout.ManageComponent(c_Equipment);
     c_Loadout.ManageComponent(c_Vehicle);
@@ -266,6 +284,8 @@ function UpdateSpawnPoints()
 
 function UpdateStatus()
 {
+    b_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
+    b_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
     l_Status.Caption = GetStatusText();
 }
 
@@ -905,25 +925,25 @@ defaultproperties
     i_Background=FloatingBackground
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=FooterContainerObject
-        WinWidth=1.0
         WinHeight=0.05
+        WinWidth=1.0
         WinLeft=0.0
         WinTop=0.95
     End Object
     c_Footer=FooterContainerObject
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=TeamsContainerObject
-        WinWidth=0.26
         WinHeight=0.05
+        WinWidth=0.26
         WinLeft=0.02
         WinTop=0.02
     End Object
     c_Teams=TeamsContainerObject
 
     Begin Object Class=GUIButton Name=AxisButtonObject
-        Caption="Axis"
-        WinWidth=0.333
+        StyleName="DHDeployTabButton"
         WinHeight=1.0
+        WinWidth=0.4
         WinTop=0.0
         WinLeft=0.0
         OnClick=OnClick
@@ -931,27 +951,60 @@ defaultproperties
     End Object
     b_Axis=AxisButtonObject
 
-    Begin Object Class=GUIButton Name=AlliesButtonObject
-        Caption="Allies"
-        WinWidth=0.333
+    Begin Object Class=GUIImage Name=AxisImageObject
         WinHeight=1.0
+        WinWidth=0.2
         WinTop=0.0
-        WinLeft=0.333334
+        WinLeft=0.025
+        Image=material'DH_GUI_tex.DeployMenu.flag_germany'
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+    End Object
+    i_Axis=AxisImageObject
+
+    Begin Object Class=GUIButton Name=AlliesButtonObject
+        StyleName="DHDeployTabButton"
+        WinHeight=1.0
+        WinWidth=0.4
+        WinTop=0.0
+        WinLeft=0.4
         OnClick=OnClick
         Hint="Join Allies"
     End Object
     b_Allies=AlliesButtonObject
 
-    Begin Object Class=GUIButton Name=SpectateButtonObject
-        Caption="Spectate"
-        WinWidth=0.333
+    Begin Object Class=GUIImage Name=AlliesImageObject
         WinHeight=1.0
+        WinWidth=0.2
+        WinTop=0.00
+        WinLeft=0.425
+        Image=material'DH_GUI_tex.DeployMenu.flag_usa'
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+    End Object
+    i_Allies=AlliesImageObject
+
+    Begin Object Class=GUIButton Name=SpectateButtonObject
+        StyleName="DHDeployTabButton"
+        WinHeight=1.0
+        WinWidth=0.2
         WinTop=0.0
-        WinLeft=0.666667
+        WinLeft=0.8
         OnClick=OnClick
         Hint="Spectate"
     End Object
     b_Spectate=SpectateButtonObject
+
+    Begin Object Class=GUIImage Name=SpectateImageObject
+        WinHeight=1.0
+        WinWidth=0.2
+        WinTop=0.0
+        WinLeft=0.8
+        Image=material'DH_GUI_tex.DeployMenu.spectate'
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
+    End Object
+    i_Spectate=SpectateImageObject
 
     Begin Object Class=GUIImage Name=ReinforcementsImageObject
         WinWidth=0.04
@@ -1049,7 +1102,7 @@ defaultproperties
     LoadoutTabContainer=LoadoutTabContainerObject
 
     Begin Object Class=GUIButton Name=EquipmentButtonObject
-        Caption="Equipment"
+        StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
         WinTop=0.0
@@ -1059,7 +1112,7 @@ defaultproperties
     b_EquipmentButton=EquipmentButtonObject
 
     Begin Object Class=GUIButton Name=VehicleButtonObject
-        Caption="Vehicle"
+        StyleName="DHDeployTabButton"
         WinWidth=0.5
         WinHeight=1.0
         WinTop=0.0
