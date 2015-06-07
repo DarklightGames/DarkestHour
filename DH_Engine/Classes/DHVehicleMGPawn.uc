@@ -88,9 +88,9 @@ simulated function PostNetReceive()
     // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
-        if (Driver == none && DriverPositionIndex > 0 && !IsLocallyControlled() && Level.NetMode == NM_Client)
+        if (Driver == none && DriverPositionIndex != InitialPositionIndex && !IsLocallyControlled() && Level.NetMode == NM_Client)
         {
-            // do nothing
+            // do nothing if non-owning net client receives a new DPI but there's no gunner (& it isn't the InitialPI), as player must have just exited MG & DPI is about to be reset
         }
         else
         {
