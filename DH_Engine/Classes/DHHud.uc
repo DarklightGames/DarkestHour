@@ -3683,7 +3683,7 @@ simulated function DrawSpectatingHud(Canvas C)
                     break;
             }
 
-            if (PC.bUseNativeRoleNames)
+            if (PC.bUseNativeRoleNames && PRI.RoleInfo != none)
             {
                 S = Repl(S, "{0}", PRI.RoleInfo.AltName);
             }
