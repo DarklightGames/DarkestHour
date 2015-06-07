@@ -435,6 +435,7 @@ simulated event HandleWhizSound()
 
 // Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
 // Matt: part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
+// Also so player pawn's CullDistance is not set to 5000 (83m) when in vehicle, as this caused players to disappear at quite close ranges when often should be highly visible , e.g. AT gunner
 simulated event StartDriving(Vehicle V)
 {
     local DHVehicleCannonPawn CP;
@@ -464,7 +465,7 @@ simulated event StartDriving(Vehicle V)
 
         if (V.bDrawDriverinTP)
         {
-            CullDistance = 5000.0;
+//          CullDistance = 5000.0;
         }
         else
         {
