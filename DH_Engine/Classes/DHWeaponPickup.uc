@@ -6,6 +6,8 @@
 class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
+var     ObjectMap               NotifyParameters;         // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+
 // Ammo
 var     array<int>  AmmoMags;
 var     int         LoadedMagazineIndex;
@@ -21,8 +23,6 @@ var     vector                  BarrelSteamEmitterOffset; // offset for the emit
 
 var     bool                    bTraceFlag;
 
-var     ObjectMap               NotifyParameters;
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -30,25 +30,21 @@ replication
         bBarrelSteamActive;
 }
 
-simulated function PreBeginPlay()
+// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
+// Also to set up new NotifyParameters object, including pickup's InventoryType, which gets passed to screen messages & allows them to display weapon's name
+simulated function PostBeginPlay()
 {
-    super.PreBeginPlay();
+    super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
         NotifyParameters = new class'ObjectMap';
         NotifyParameters.Insert("InventoryClass", InventoryType);
-    }
-}
 
-// Modified to set bNetNotify on a net client if weapon type has barrels, so we receive PostNetReceive triggering when bBarrelSteamActive toggles
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
-    {
-        bNetNotify = class<DHProjectileWeapon>(InventoryType).default.InitialBarrels > 0;
+        if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
+        {
+            bNetNotify = class<DHProjectileWeapon>(InventoryType).default.InitialBarrels > 0;
+        }
     }
 }
 
@@ -168,7 +164,7 @@ static function string GetLocalString(optional int Switch, optional PlayerReplic
     }
 }
 
-// Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
+// Modified to add the Controller to NotifyParameters object & pass that to screen message, allowing it to display both the use/pick up key & weapon name
 simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))

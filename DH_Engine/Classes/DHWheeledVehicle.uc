@@ -35,12 +35,13 @@ struct CarHitpoint
 var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
 
 // General
-var     byte        SpawnVehicleType;
+var     byte        SpawnVehicleType;            // set by DHSpawnManager & used here for engine on/off hints
 var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
 var     float       PointValue;                  // used for scoring
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly players, to avoid re-spawning vehicle
 var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly pawn found // Matt: seems to duplicate FriendlyResetDistance?
+var     ObjectMap   NotifyParameters;            // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Driver positions & view
@@ -86,9 +87,6 @@ var     name                        ResupplyDecoAttachBone;
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
 
-// Notifications
-var     ObjectMap   NotifyParameters;
-
 replication
 {
     // Variables the server will replicate to all clients
@@ -109,6 +107,7 @@ replication
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to spawn any sound or resuppply attachments & so net clients show unoccupied rider positions on the HUD vehicle icon
+// Also to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
@@ -140,9 +139,9 @@ simulated function PostBeginPlay()
         WeaponPawns.Length = PassengerWeapons.Length;
     }
 
-    // Clientside sound & decorative attachments
     if (Level.NetMode != NM_DedicatedServer)
     {
+        // Clientside sound & decorative attachments
         if (EngineSound != none && EngineSoundBone != '' && EngineSoundAttach == none)
         {
             EngineSoundAttach = Spawn(class'ROSoundAttachment');
@@ -163,6 +162,7 @@ simulated function PostBeginPlay()
             AttachToBone(ResupplyDecoAttachment, ResupplyDecoAttachBone);
         }
 
+        // Set up new NotifyParameters object
         NotifyParameters = new class'ObjectMap';
         NotifyParameters.Insert("VehicleClass", Class);
     }
@@ -1687,6 +1687,7 @@ simulated function ObjectCrushed(float ReductionTime)
     bCrushedAnObject = true;
 }
 
+// Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)

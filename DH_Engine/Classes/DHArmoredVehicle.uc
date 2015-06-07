@@ -38,13 +38,13 @@ struct NewHitpoint
 var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
-var     byte        SpawnVehicleType;
-var     ObjectMap   NotifyParameters;
+var     byte        SpawnVehicleType;       // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
+var     ObjectMap   NotifyParameters;       // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
@@ -185,15 +185,8 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-simulated function PreBeginPlay()
-{
-    super.PreBeginPlay();
-
-    NotifyParameters = new class'ObjectMap';
-    NotifyParameters.Insert("VehicleClass", Class);
-}
-
 // Modified to set fire damage properties, to select any random schurzen model, & so net clients show unoccupied rider positions on the HUD vehicle icon
+// Also to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
     local byte RandomNumber, CumulativeChance, i;
@@ -241,9 +234,9 @@ simulated function PostBeginPlay()
         WeaponPawns.Length = PassengerWeapons.Length;
     }
 
-    // Clientside treads & sound attachments
     if (Level.NetMode != NM_DedicatedServer)
     {
+        // Clientside treads & sound attachments
         SetupTreads();
 
         if (RumbleSound != none && RumbleSoundBone != '' && InteriorRumbleSoundAttach == none)
@@ -252,6 +245,10 @@ simulated function PostBeginPlay()
             InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
         }
+
+        // Set up new NotifyParameters object
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("VehicleClass", Class);
     }
 }
 
@@ -3576,6 +3573,7 @@ simulated function ObjectCrushed(float ReductionTime)
     bCrushedAnObject = true;
 }
 
+// Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
