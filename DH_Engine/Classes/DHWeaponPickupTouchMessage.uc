@@ -5,8 +5,7 @@
 
 class DHWeaponPickupTouchMessage extends ROTouchMessagePlus;
 
-// Provides the weapon touch message on the player's screen, relying on the weapon class being passed as the OptionalObject
-// Used with placeable weapon pickups, where leveller may have used generic class & set weapon type in editor, meaning no class default weapon type & static functions can't access weapon properties
+// Provides weapon pick up screen message, relying on pickup's NotifyParameters being passed as OptionalObject, so we can display both the use/pick up key & weapon name
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;

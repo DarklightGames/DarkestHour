@@ -172,23 +172,6 @@ function SetRespawn()
     StartSleeping();
 }
 
-// Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
-// Avoid calling HandlePickup() for a human player & instead do what that function does, except for the modified message call
-function AnnouncePickup(Pawn Receiver)
-{
-    if (Receiver.IsHumanControlled())
-    {
-        PlayerController(Receiver.Controller).ReceiveLocalizedMessage(MessageClass,,,, InventoryType);
-    }
-    else
-    {
-        Receiver.HandlePickup(self); // bots don't need a messages, so just revert to default call to HandlePickup()
-    }
-
-    PlaySound(PickupSound, SLOT_Interact);
-    MakeNoise(0.2);
-}
-
 // Modified to call InitPickup() & to skip over the duplication & redundancy in the Supers
 // Note that this function gets called when a new round starts, so we always start with InitPickup() & not just if match is reset in the middle of a round
 function Reset()

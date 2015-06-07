@@ -185,6 +185,5 @@ defaultproperties
     CollisionRadius=25.0
     CollisionHeight=3.0
     BarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
-    MessageClass=class'DHWeaponPickupMessage' // new message classes that are passed the weapon class & use it to lookup the weapon name (for touch or pickup screen messages)
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
 }

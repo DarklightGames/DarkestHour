@@ -2794,6 +2794,11 @@ function PawnDied(Pawn P)
     }
 }
 
+// Emptied out so human player doesn't receive "you picked up the [weapon name]" messages when they pick up a weapon
+function HandlePickup(Pickup pick)
+{
+}
+
 defaultproperties
 {
     // Sway values
