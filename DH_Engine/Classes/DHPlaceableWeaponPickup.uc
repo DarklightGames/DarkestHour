@@ -16,27 +16,32 @@ replication
         WeaponType;
 }
 
-// Emptied out the Super in WeaponPickup, as we won't yet have an InventoryType (have to wait until PostNetBeginPlay, when net client receives replicated WeaponType)
+// Emptied out as net client won't yet have InventoryType (have to wait until PostNetBeginPlay, when client receives replicated WeaponType)
+simulated function PreBeginPlay()
+{
+}
+
+// Emptied out as net client won't yet have InventoryType (have to wait until PostNetBeginPlay, when client receives replicated WeaponType)
 simulated event PostBeginPlay()
 {
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        NotifyParameters.Insert("InventoryClass", default.WeaponType);
-    }
 }
 
 // Modified to set InventoryType from the replicated WeaponType, then setting other properties from that weapon's normal PickupClass
 // A smart leveller using this generic placeable pickup will at least set StaticMesh in the editor, so it displays correctly in editor & can be positioned accurately
+// Also to do some stuff usually done in earlier BeginPlay events, but here a net client has only just received the replicated WeaponType to set its InventoryType
 simulated event PostNetBeginPlay()
 {
     local class<Pickup> PickupClass;
 
     if (WeaponType != none)
     {
+        // Set InventoryType from replicated WeaponType specified by leveller, & now do some stuff usually done in earlier BeginPlay events
         InventoryType = WeaponType;
 
-        MaxDesireability = 1.2 * WeaponType.default.AIRating;
+        super.PreBeginPlay();
+        super.PostBeginPlay();
 
+        // Set pickup properties from InventoryType's PickupClass
         PickupClass = InventoryType.default.PickupClass;
 
         if (PickupClass != none)
@@ -168,7 +173,7 @@ function SetRespawn()
 }
 
 // Modified to pass the weapon class when calling ReceiveLocalizedMessage(), which allows the message class to access the weapon's name
-// Avoid calling HandlePickup() for a human player & instead do what that funbction does, except for the modfied message call
+// Avoid calling HandlePickup() for a human player & instead do what that function does, except for the modified message call
 function AnnouncePickup(Pawn Receiver)
 {
     if (Receiver.IsHumanControlled())

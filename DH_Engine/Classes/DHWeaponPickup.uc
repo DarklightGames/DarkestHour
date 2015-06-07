@@ -37,7 +37,7 @@ simulated function PreBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         NotifyParameters = new class'ObjectMap';
-        NotifyParameters.Insert("InventoryClass", default.InventoryType);
+        NotifyParameters.Insert("InventoryClass", InventoryType);
     }
 }
 
