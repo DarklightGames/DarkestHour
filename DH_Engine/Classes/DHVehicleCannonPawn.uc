@@ -1056,12 +1056,10 @@ simulated function SwitchWeapon(byte F)
 // Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
 function ServerChangeDriverPosition(byte F)
 {
-    if (StopExitToRiderPosition(F - 2)) // driver (1) becomes -1, which for byte becomes 255
+    if (!StopExitToRiderPosition(F - 2)) // pressing 1 to switch to driver's position means F-2 becomes 255 (as a byte), which doesn't count as a blocked rider position
     {
-        return;
+        super.ServerChangeDriverPosition(F);
     }
-
-    super.ServerChangeDriverPosition(F);
 }
 
 // Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
