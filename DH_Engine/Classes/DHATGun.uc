@@ -45,6 +45,13 @@ simulated function PostBeginPlay()
     {
         PlayAnim(BeginningIdleAnim);
     }
+
+    // Set up new NotifyParameters object
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("VehicleClass", Class);
+    }
 }
 
 // Modified as everything in DHArmoredVehicle & ROWheeledVehicle is irrelevant to AT gun
