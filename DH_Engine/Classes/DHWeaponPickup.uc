@@ -21,8 +21,6 @@ var     class<ROMGSteam>        BarrelSteamEmitterClass;
 var     ROMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
-var     bool                    bTraceFlag;
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -175,8 +173,6 @@ simulated event NotifySelected(Pawn User)
 
         LastNotifyTime = Level.TimeSeconds;
     }
-
-    bTraceFlag = true;
 }
 
 defaultproperties
