@@ -2216,7 +2216,7 @@ exec function CommunicationMenu()
 }
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
-simulated function int GetSpawnTime(DHRoleInfo RI, int WeaponIndex, byte MagCount)
+simulated function int GetSpawnTime(DHRoleInfo RI, int WeaponIndex, byte MagCount, byte VehiclePoolIndex)
 {
     local int T;
     local DHGameReplicationInfo GRI;
@@ -2632,7 +2632,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         }
 
         // If SpawnAmmoAmount is 0 or 255 it will calculate a normal default setting value
-        SpawnTime = GetSpawnTime(RI, newWeapon1, SpawnAmmoAmount);
+        SpawnTime = GetSpawnTime(RI, newWeapon1, SpawnAmmoAmount, SpawnVehicleIndex);
     }
     else
     {
@@ -2789,7 +2789,7 @@ function PawnDied(Pawn P)
 
         if (RI != none)
         {
-            SpawnTime = GetSpawnTime(RI, DesiredPrimary, SpawnAmmoAmount);
+            SpawnTime = GetSpawnTime(RI, DesiredPrimary, SpawnAmmoAmount, VehiclePoolIndex);
         }
     }
 }

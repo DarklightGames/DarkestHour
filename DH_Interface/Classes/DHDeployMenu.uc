@@ -4,6 +4,9 @@
 //==============================================================================
 class DHDeployMenu extends UT2K4GUIPage;
 
+const   SPAWN_POINTS_MAX =                  48; // Max spawn points total (make sure this matches GRI)
+const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
+
 enum ELoadoutMode
 {
     LM_Equipment,
@@ -13,9 +16,9 @@ enum ELoadoutMode
 var automated   FloatingImage               i_Background;
 
 var automated   ROGUIProportionalContainer  c_Teams;
-var automated   GUIGFXButton                    b_Axis;
-var automated   GUIGFXButton                    b_Allies;
-var automated   GUIGFXButton                    b_Spectate;
+var automated   GUIButton                       b_Axis;
+var automated   GUIButton                       b_Allies;
+var automated   GUIButton                       b_Spectate;
 var automated   GUIImage                    i_Reinforcements;
 var automated   GUILabel                    l_Reinforcements;
 var automated   GUIImage                    i_RoundTime;
@@ -24,13 +27,15 @@ var automated   ROGUIProportionalContainer  c_Roles;
 var automated   DHGUIListBox                    lb_Roles;
 var             DHGUIList                       li_Roles;
 var automated   ROGUIProportionalContainer  LoadoutTabContainer;
-var automated   GUIGFXButton                    b_EquipmentButton;
-var automated   GUIGFXButton                    b_VehicleButton;
+var automated   GUIButton                       b_EquipmentButton;
+var automated   GUIButton                       b_VehicleButton;
 var automated   GUILabel                    l_Loadout;
 var automated   ROGUIProportionalContainer  c_Loadout;
-var automated   ROGUIProportionalContainer        c_Equipment;
-var automated   ROGUIProportionalContainer        c_Vehicle;
+var automated   ROGUIProportionalContainer      c_Equipment;
+var automated   ROGUIProportionalContainer      c_Vehicle;
 var automated   ROGUIProportionalContainer  c_Map;
+var automated   ROGUIProportionalContainer      p_Map;
+var automated   ROGUIProportionalContainer          i_Map;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
@@ -44,20 +49,31 @@ var             DHGUIList                   li_Vehicles;
 var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
 
-var automated   array<DHGUIButton>          b_MenuOptions;
+var automated   GUIButton                   b_SpawnPoints[SPAWN_POINTS_MAX],
+                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX];
 
-var automated   DHDeploymentMapMenu         MapComponent;
+var automated   array<DHGUIButton>          b_MenuOptions;
+var automated   GUIImage                    i_Apply;
 
 var DHGameReplicationInfo                   GRI;
 var DHPlayer                                PC;
 
+var localized string                        NoneText;
+var localized   string                      SelectRoleText;
+var localized   string                      SelectSpawnPointText;
+var localized   string                      SelectVehicleText;
+
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after recieving a successful team change
 // signal from InternalOnMessage.
-var byte                                    CurrentTeam;
+var             byte                        CurrentTeam;
 
-var ELoadoutMode                            LoadoutMode;
-var localized string                        NoneString;
+var             ELoadoutMode                LoadoutMode;
+
+var             byte                        SpawnPoint;
+var             byte                        SpawnVehicle;
+
+var             DHHud                       MyHud;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -75,6 +91,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     if (GRI == none)
+    {
+        return;
+    }
+
+    MyHud = DHHud(PC.myHUD);
+
+    if (MyHud == none)
     {
         return;
     }
@@ -102,7 +125,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     LoadoutTabContainer.ManageComponent(b_EquipmentButton);
     LoadoutTabContainer.ManageComponent(b_VehicleButton);
 
-    c_Map.ManageComponent(MapComponent);
+    p_Map.ManageComponent(i_Map);
+
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        p_Map.ManageComponent(b_SpawnPoints[i]);
+    }
+
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        p_Map.ManageComponent(b_SpawnVehicles[i]);
+    }
+
+    c_Map.ManageComponent(p_Map);
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
     c_Equipment.ManageComponent(i_SecondaryWeapon);
@@ -126,6 +161,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function SetLoadoutMode(ELoadoutMode Mode)
 {
+    local int i;
+
     LoadoutMode = Mode;
 
     // Colin: GUIComponent visiblity is not properly hierarchical, so we
@@ -139,19 +176,27 @@ function SetLoadoutMode(ELoadoutMode Mode)
     cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 0);
     cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 0);
 
-    //TODO: hide other shit
+    for (i = 0; i < arraycount(i_GivenItems); ++i)
+    {
+        if (i_GivenItems[i] != none)
+        {
+            i_GivenItems[i].SetVisibility(Mode == LM_Equipment);
+        }
+    }
 
-    UpdateMap();
+    UpdateSpawnPoints();
 }
 
 function Timer()
 {
     UpdateRoles();
     UpdateVehicles();
+    UpdateRoundStatus();
     UpdateStatus();
+    UpdateSpawnPoints();
 }
 
-function UpdateStatus()
+function UpdateRoundStatus()
 {
     local int RoundTime;
 
@@ -171,6 +216,101 @@ function UpdateStatus()
     l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
 }
 
+function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
+{
+    local float MapScale;
+    local vector MapCenter;
+
+    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
+    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
+    Location = MyHud.GetAdjustedHudLocation(Location - MapCenter, false);
+
+    X = FClamp((Location.X / MapScale) + 0.5, 0.0, 1.0);
+    Y = FClamp((Location.Y / MapScale) + 0.5, 0.0, 1.0);
+}
+
+function UpdateSpawnPoints()
+{
+    local int i, j;
+    local float X, Y;
+    local TexRotator TR;
+
+    // Spawn points
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] != none &&
+            GRI.SpawnPoints[i].TeamIndex == CurrentTeam &&
+            GRI.IsSpawnPointActive(GRI.SpawnPoints[i]) &&
+            ((LoadoutMode == LM_Equipment && GRI.SpawnPoints[i].CanSpawnInfantry()) ||
+             (LoadoutMode == LM_Vehicle && GRI.SpawnPoints[i].CanSpawnVehicles())))
+        {
+            GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
+
+            b_SpawnPoints[i].Tag = i;
+            b_SpawnPoints[i].SetVisibility(true);
+            b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
+        }
+        else
+        {
+            b_SpawnPoints[i].SetVisibility(false);
+        }
+    }
+
+    // Spawn vehicles
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        if (LoadoutMode != LM_Vehicle &&
+            GRI.SpawnVehicles[i].VehicleClass != none &&
+            GRI.SpawnVehicles[i].TeamIndex == CurrentTeam)
+        {
+            GetMapCoords(GRI.SpawnVehicles[i].Location, X, Y, b_SpawnVehicles[i].WinWidth, b_SpawnVehicles[i].WinHeight);
+
+            b_SpawnVehicles[i].Tag = i;
+            b_SpawnVehicles[i].SetPosition(X, Y, b_SpawnVehicles[i].WinWidth, b_SpawnVehicles[i].WinHeight, true);
+            b_SpawnVehicles[i].SetVisibility(true);
+
+            for (j = 0; j < arraycount(b_SpawnVehicles[i].Style.Images); ++j)
+            {
+                TR = TexRotator(b_SpawnVehicles[i].Style.Images[j]);
+
+                if (TR != none)
+                {
+                    //TODO: verify correctness and take map rotation into consideration
+                    TR.Rotation.Roll = GRI.SpawnVehicles[i].Location.Z;
+                }
+            }
+        }
+        else
+        {
+            b_SpawnVehicles[i].SetVisibility(false);
+        }
+    }
+}
+
+function UpdateStatus()
+{
+    l_Status.Caption = GetStatusText();
+}
+
+function string GetStatusText()
+{
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(li_Roles.GetObject());
+
+    if (RI == none)
+    {
+        return default.SelectRoleText;
+    }
+
+    if (SpawnPoint == 255 && SpawnVehicle == 255)
+    {
+        return default.SelectSpawnPointText;
+    }
+
+    return class'DHLib'.static.GetDurationString(Max(0, PC.GetSpawnTime(RI, cb_PrimaryWeapon.GetIndex(), 0, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())))), "m:ss");
+}
+
 function PopulateVehicles()
 {
     local int i;
@@ -188,7 +328,7 @@ function PopulateVehicles()
 
     li_Vehicles.SortList();
 
-    li_Vehicles.Insert(0, default.NoneString, none,, true);
+    li_Vehicles.Insert(0, default.NoneText, none,, true);
 
     UpdateVehicles();
     AutoSelectVehicle();
@@ -306,13 +446,10 @@ function UpdateRoles()
     }
 }
 
-function UpdateMap()
-{
-    MapComponent.Update();
-}
-
 function bool OnClick(GUIComponent Sender)
 {
+    local int i;
+
     switch (Sender)
     {
         // Disconnect
@@ -383,7 +520,58 @@ function bool OnClick(GUIComponent Sender)
             break;
 
         default:
+            for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+            {
+                if (Sender == b_SpawnPoints[i])
+                {
+                    SpawnPoint = b_SpawnPoints[i].Tag;
+                    break;
+                }
+            }
+
+            for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+            {
+                if (Sender == b_SpawnVehicles[i])
+                {
+                    SpawnVehicle = b_SpawnVehicles[i].Tag;
+                    break;
+                }
+            }
+
             break;
+    }
+
+    return false;
+}
+
+
+
+function bool OnDblClick(GUIComponent Sender)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        if (Sender == b_SpawnPoints[i])
+        {
+            SpawnPoint = b_SpawnPoints[i].Tag;
+
+            Apply();
+
+            return true;
+        }
+    }
+
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        if (Sender == b_SpawnVehicles[i])
+        {
+            SpawnVehicle = b_SpawnVehicles[i].Tag;
+
+            Apply();
+
+            return true;
+        }
     }
 
     return false;
@@ -411,13 +599,16 @@ function Apply()
 
     //TODO: ammunition?
 
+    Log(SpawnPoint);
+    Log(SpawnVehicle);
+
     PC.ServerSetPlayerInfo(255,
                            RoleIndex,
                            cb_PrimaryWeapon.GetIndex(),
                            cb_SecondaryWeapon.GetIndex(),
-                           MapComponent.SpawnPoint,
+                           SpawnPoint,
                            GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
-                           MapComponent.SpawnVehicle,
+                           SpawnVehicle,
                            0);
 }
 
@@ -613,17 +804,16 @@ function CloseMenu()
 // Colin: This function centers the map component inside of it's container.
 function bool MapContainerPreDraw(Canvas C)
 {
-    //TODO: have the entire map be drawn identically to the DHHud map
     local float Offset;
 
     Offset = (c_Map.ActualWidth() - c_Map.ActualHeight()) / 2.0;
     Offset /= ActualWidth();
 
-    MapComponent.SetPosition(c_Map.WinLeft + Offset,
-                             c_Map.WinTop,
-                             c_Map.ActualHeight(),
-                             c_Map.ActualHeight(),
-                             true);
+    p_Map.SetPosition(c_Map.WinLeft + Offset,
+                      c_Map.WinTop,
+                      c_Map.ActualHeight(),
+                      c_Map.ActualHeight(),
+                      true);
 
     return true;
 }
@@ -682,14 +872,17 @@ function InternalOnChange(GUIComponent Sender)
                 cb_SecondaryWeapon.SetIndex(0);
             }
 
-            for (i = 0; i < RI.default.GivenItems.Length; ++i)
+            if (RI != none)
             {
-                WeaponClass = class<Weapon>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
-
-                if (WeaponClass != none)
+                for (i = 0; i < RI.default.GivenItems.Length; ++i)
                 {
-                    //TODO: do proper placement logic
-                    i_GivenItems[j++].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
+                    WeaponClass = class<Weapon>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
+
+                    if (WeaponClass != none)
+                    {
+                        //TODO: do proper placement logic
+                        i_GivenItems[j++].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
+                    }
                 }
             }
 
@@ -750,11 +943,30 @@ function OnTeamChanged(byte Team)
     PopulateRoles();
     PopulateVehicles();
 
-    UpdateMap();
+    UpdateSpawnPoints();
+    UpdateStatus();
+    UpdateRoundStatus();
+}
+
+function bool OnDrawMap(Canvas C)
+{
+    local ROHud.AbsoluteCoordsInfo SubCoords;
+
+    SubCoords.PosX = i_Map.ActualLeft();
+    SubCoords.PosY = i_Map.ActualTop();
+    SubCoords.Width = i_Map.ActualWidth();
+    SubCoords.Height = i_Map.ActualHeight();
+
+    DHHud(PlayerOwner().myHUD).DrawMap(C, SubCoords);
+
+    return false;
 }
 
 defaultproperties
 {
+    SpawnPoint=255
+    SpawnVehicle=255
+
     // GUI Components
     OnMessage=InternalOnMessage
     bRenderWorld=true
@@ -789,33 +1001,36 @@ defaultproperties
     End Object
     c_Teams=TeamsContainerObject
 
-    Begin Object Class=GUIGFXButton Name=AxisButtonObject
+    Begin Object Class=GUIButton Name=AxisButtonObject
         Caption="Axis"
         WinWidth=0.333
         WinHeight=1.0
         WinTop=0.0
         WinLeft=0.0
         OnClick=OnClick
+        Hint="Join Axis"
     End Object
     b_Axis=AxisButtonObject
 
-    Begin Object Class=GUIGFXButton Name=AlliesButtonObject
+    Begin Object Class=GUIButton Name=AlliesButtonObject
         Caption="Allies"
         WinWidth=0.333
         WinHeight=1.0
         WinTop=0.0
         WinLeft=0.333334
         OnClick=OnClick
+        Hint="Join Allies"
     End Object
     b_Allies=AlliesButtonObject
 
-    Begin Object Class=GUIGFXButton Name=SpectateButtonObject
+    Begin Object Class=GUIButton Name=SpectateButtonObject
         Caption="Spectate"
         WinWidth=0.333
         WinHeight=1.0
         WinTop=0.0
         WinLeft=0.666667
         OnClick=OnClick
+        Hint="Spectate"
     End Object
     b_Spectate=SpectateButtonObject
 
@@ -860,6 +1075,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.19
         WinTop=0.07
+        Hint="Time Remaining"
     End Object
     l_RoundTime=RoundTimeLabelObject
 
@@ -913,7 +1129,7 @@ defaultproperties
     End Object
     LoadoutTabContainer=LoadoutTabContainerObject
 
-    Begin Object Class=GUIGFXButton Name=EquipmentButtonObject
+    Begin Object Class=GUIButton Name=EquipmentButtonObject
         Caption="Equipment"
         WinWidth=0.5
         WinHeight=1.0
@@ -923,7 +1139,7 @@ defaultproperties
     End Object
     b_EquipmentButton=EquipmentButtonObject
 
-    Begin Object Class=GUIGFXButton Name=VehicleButtonObject
+    Begin Object Class=GUIButton Name=VehicleButtonObject
         Caption="Vehicle"
         WinWidth=0.5
         WinHeight=1.0
@@ -968,7 +1184,7 @@ defaultproperties
         WinHeight=0.91
         WinLeft=0.3
         WinTop=0.02
-        OnPreDraw = MapContainerPreDraw;
+        OnPreDraw=MapContainerPreDraw
     End Object
     c_Map=MapContainerObject
 
@@ -1059,13 +1275,29 @@ defaultproperties
     End Object
     b_MenuOptions(7)=ApplyButtonObject
 
-    Begin Object Class=DHDeploymentMapMenu Name=MapComponentObject
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapPanelObject
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
+        bNeverFocus=true
+        TopPadding=0.0
+        LeftPadding=0.0
+        RightPadding=0.0
+        BottomPadding=0.0
+        ColPadding=0.0
     End Object
-    MapComponent=MapComponentObject
+    p_Map=MapPanelObject
+
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapImageObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        OnDraw=OnDrawMap
+        bNeverFocus=true
+    End Object
+    i_Map=MapImageObject
 
     Begin Object Class=GUIImage Name=PrimaryWeaponImageObject
         WinWidth=1.0
@@ -1129,5 +1361,113 @@ defaultproperties
     End Object
     i_Vehicle=VehicleImageObject
 
-    NoneString="None"
+    Begin Object Class=GUIImage Name=ApplyImageObject
+        WinWidth=0.05
+        WinHeight=0.05
+        WinLeft=0.95
+        WinTop=0.95
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=material'DH_GUI_tex.DeployMenu.infantry'
+    End Object
+    i_Apply=ApplyImageObject
+
+    Begin Object Class=GUILabel Name=StatusLabelObject
+        WinWidth=0.26
+        WinHeight=0.05
+        WinLeft=0.02
+        WinTop=0.88
+        TextAlign=TXTA_Center
+        VertAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+    End Object
+    l_Status=StatusLabelObject
+
+    // Spawn points
+    Begin Object Class=GUIButton Name=SpawnPointButton
+        StyleName="DHSpawnButtonStyle"
+        WinTop=0.5
+        WinLeft=0.5
+        WinWidth=0.04
+        WinHeight=0.04
+        bTabStop=false
+        OnClick=OnClick
+        OnDblClick=OnDblClick
+        bVisible=false
+    End Object
+
+    //TODO: This is begging to be put into a loop somewhere
+    b_SpawnPoints(0)=SpawnPointButton
+    b_SpawnPoints(1)=SpawnPointButton
+    b_SpawnPoints(2)=SpawnPointButton
+    b_SpawnPoints(3)=SpawnPointButton
+    b_SpawnPoints(4)=SpawnPointButton
+    b_SpawnPoints(5)=SpawnPointButton
+    b_SpawnPoints(6)=SpawnPointButton
+    b_SpawnPoints(7)=SpawnPointButton
+    b_SpawnPoints(8)=SpawnPointButton
+    b_SpawnPoints(9)=SpawnPointButton
+    b_SpawnPoints(10)=SpawnPointButton
+    b_SpawnPoints(11)=SpawnPointButton
+    b_SpawnPoints(12)=SpawnPointButton
+    b_SpawnPoints(13)=SpawnPointButton
+    b_SpawnPoints(14)=SpawnPointButton
+    b_SpawnPoints(15)=SpawnPointButton
+    b_SpawnPoints(16)=SpawnPointButton
+    b_SpawnPoints(17)=SpawnPointButton
+    b_SpawnPoints(18)=SpawnPointButton
+    b_SpawnPoints(19)=SpawnPointButton
+    b_SpawnPoints(20)=SpawnPointButton
+    b_SpawnPoints(21)=SpawnPointButton
+    b_SpawnPoints(22)=SpawnPointButton
+    b_SpawnPoints(23)=SpawnPointButton
+    b_SpawnPoints(24)=SpawnPointButton
+    b_SpawnPoints(25)=SpawnPointButton
+    b_SpawnPoints(26)=SpawnPointButton
+    b_SpawnPoints(27)=SpawnPointButton
+    b_SpawnPoints(28)=SpawnPointButton
+    b_SpawnPoints(29)=SpawnPointButton
+    b_SpawnPoints(30)=SpawnPointButton
+    b_SpawnPoints(31)=SpawnPointButton
+    b_SpawnPoints(32)=SpawnPointButton
+    b_SpawnPoints(33)=SpawnPointButton
+    b_SpawnPoints(34)=SpawnPointButton
+    b_SpawnPoints(35)=SpawnPointButton
+    b_SpawnPoints(36)=SpawnPointButton
+    b_SpawnPoints(37)=SpawnPointButton
+    b_SpawnPoints(38)=SpawnPointButton
+    b_SpawnPoints(39)=SpawnPointButton
+    b_SpawnPoints(40)=SpawnPointButton
+    b_SpawnPoints(41)=SpawnPointButton
+    b_SpawnPoints(42)=SpawnPointButton
+    b_SpawnPoints(43)=SpawnPointButton
+    b_SpawnPoints(44)=SpawnPointButton
+    b_SpawnPoints(45)=SpawnPointButton
+    b_SpawnPoints(46)=SpawnPointButton
+    b_SpawnPoints(47)=SpawnPointButton
+
+    // Spawn Vehicle Buttons
+    Begin Object Class=GUIButton Name=SpawnVehicleButton
+        StyleName="DHSpawnButtonStyle"
+        WinWidth=0.04
+        WinHeight=0.04
+        bTabStop=false
+        OnClick=OnClick
+        OnDblClick=OnDblClick
+        bVisible=false
+    End Object
+
+    b_SpawnVehicles(0)=SpawnVehicleButton
+    b_SpawnVehicles(1)=SpawnVehicleButton
+    b_SpawnVehicles(2)=SpawnVehicleButton
+    b_SpawnVehicles(3)=SpawnVehicleButton
+    b_SpawnVehicles(4)=SpawnVehicleButton
+    b_SpawnVehicles(5)=SpawnVehicleButton
+    b_SpawnVehicles(6)=SpawnVehicleButton
+    b_SpawnVehicles(7)=SpawnVehicleButton
+
+    NoneText="None"
+    SelectRoleText="Select a role"
+    SelectSpawnPointText="Select a spawn point"
+    SelectVehicleText="Select a vehicle"
 }

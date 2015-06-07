@@ -1705,61 +1705,28 @@ simulated function DrawVehiclePhysiscsWheels()
     }
 }
 
-// Renders the objectives on the HUD similar to the scoreboard
-simulated function DrawObjectives(Canvas C)
+simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
 {
-    local DHPlayerReplicationInfo PRI;
-    local AbsoluteCoordsInfo      MapCoords, SubCoords;
-    local SpriteWidget  Widget;
-    local Actor         A;
-    local DHPlayer      Player;
-    local Controller    P;
-    local int           i, j, OwnerTeam, ObjCount, SecondaryObjCount;
-    local bool          bShowRally, bShowArtillery, bShowResupply, bShowArtyCoords, bShowNeutralObj, bShowMGResupplyRequest, bShowHelpRequest, bShowAttackDefendRequest;
-    local bool          bShowArtyStrike, bShowDestroyableItems, bShowDestroyedItems, bShowVehicleResupply, bHasSecondaryObjectives;
-    local float         MyMapScale, XL, YL, YL_one, Time;
-    local vector        Temp, MapCenter;
-    // PSYONIX: DEBUG
-    local ROVehicleWeaponPawn WeaponPawn;
-    local Vehicle       V;
-    local float         PawnRotation, X, Y, StrX, StrY;
-    local string        s;
-    // Net debug
-    local Actor         NetActor;
-    local Pawn          NetPawn;
-    local int           Pos;
-    // AT Gun
-    local bool          bShowATGun;
-    local DHPawn        DHP;
-    local DHRoleInfo    RI;
-
-    // Avoid access none if DHGRI isn't set yet
-    if (DHGRI == none)
-    {
-        return;
-    }
-
-    // Update time
-    if (!DHGRI.bMatchHasBegun)
-    {
-        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
-    }
-    else
-    {
-        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
-    }
+    local int                   i;
+    local Actor                 A;
+    local Controller            P;
+    local float                 MyMapScale;
+    local vector                Temp, MapCenter;
+    local ROVehicleWeaponPawn   WeaponPawn;
+    local Vehicle               V;
+    local float                 PawnRotation;
+    local Actor                 NetActor;
+    local Pawn                  NetPawn;
+    local int                   Pos;
+    local DHPawn                DHP;
+    local int                   OwnerTeam;
+    local SpriteWidget          Widget;
+    local string                S;
+    local DHPlayer              Player;
+    local DHRoleInfo            RI;
 
     // Get player
     Player = DHPlayer(PlayerOwner);
-
-    // Get PRI
-    PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
-
-    // Get Role info
-    if (PRI != none && PRI.RoleInfo != none)
-    {
-        RI = DHRoleInfo(PRI.RoleInfo);
-    }
 
     // Get player team - if none, we won't draw team-specific information on the map
     if (PlayerOwner != none)
@@ -1769,57 +1736,6 @@ simulated function DrawObjectives(Canvas C)
     else
     {
         OwnerTeam = 255;
-    }
-
-    // Set map coords based on resolution - we want to keep a 4:3 aspect ratio for the map
-    MapCoords.Height = C.ClipY * 0.9;
-    MapCoords.PosY = C.ClipY * 0.05;
-    MapCoords.Width = MapCoords.Height * 4.0 / 3.0;
-    MapCoords.PosX = (C.ClipX - MapCoords.Width) / 2.0;
-
-    // Calculate map offset (for animation)
-    if (bAnimateMapIn)
-    {
-        AnimateMapCurrentPosition -= (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
-
-        if (AnimateMapCurrentPosition <= 0.0)
-        {
-            AnimateMapCurrentPosition = 0.0;
-            bAnimateMapIn = false;
-        }
-    }
-    else if (bAnimateMapOut)
-    {
-        AnimateMapCurrentPosition += (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
-
-        if (AnimateMapCurrentPosition >= default.AnimateMapCurrentPosition)
-        {
-            AnimateMapCurrentPosition = default.AnimateMapCurrentPosition;
-            bAnimateMapOut = false;
-        }
-    }
-
-    MapCoords.PosX += C.ClipX * AnimateMapCurrentPosition;
-
-    // Draw map background
-    DrawSpriteWidgetClipped(C, MapBackground, MapCoords, true);
-
-    // Calculate absolute coordinates of level map
-    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, SubCoords);
-
-    // Save coordinates for use in menu page
-    MapLevelImageCoordinates = SubCoords;
-
-    // Draw coordinates text on sides of the map
-    for (i = 0; i < 9; ++i)
-    {
-        MapCoordTextXWidget.PosX = (Float(i) + 0.5) / 9.0;
-        MapCoordTextXWidget.Text = MapCoordTextX[i];
-        DrawTextWidgetClipped(C, MapCoordTextXWidget, SubCoords);
-
-        MapCoordTextYWidget.PosY = MapCoordTextXWidget.PosX;
-        MapCoordTextYWidget.Text = MapCoordTextY[i];
-        DrawTextWidgetClipped(C, MapCoordTextYWidget, SubCoords);
     }
 
     // Draw level map
@@ -1866,13 +1782,11 @@ simulated function DrawObjectives(Canvas C)
         if (DHGRI.ResupplyAreas[i].ResupplyType == 1)
         {
             // Tank resupply icon
-            bShowVehicleResupply = true;
             DrawIconOnMap(C, SubCoords, MapIconVehicleResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
         }
         else
         {
             // Player resupply icon
-            bShowResupply = true;
             DrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
         }
     }
@@ -1993,7 +1907,7 @@ simulated function DrawObjectives(Canvas C)
                     Widget.TextureScale = 0.04f;
                     Widget.RenderStyle = STY_Normal;
 
-                    s = "" $ NetActor;
+                    S = "" $ NetActor;
 
                     // Remove the package name, if it exists
                     Pos = InStr(s, ".");
@@ -2016,7 +1930,6 @@ simulated function DrawObjectives(Canvas C)
 
         if (Temp != vect(0.0, 0.0, 0.0))
         {
-            bShowArtyCoords = true;
             Widget = MapIconArtyStrike;
             Widget.Tints[0].A = 125;
             Widget.Tints[1].A = 125;
@@ -2031,12 +1944,10 @@ simulated function DrawObjectives(Canvas C)
                 if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {
                     DrawIconOnMap(C, SubCoords, MapIconDestroyedItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
-                    bShowDestroyedItems = true;
                 }
                 else
                 {
                     DrawIconOnMap(C, SubCoords, MapIconDestroyableItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
-                    bShowDestroyableItems = true;
                 }
             }
         }
@@ -2048,7 +1959,6 @@ simulated function DrawObjectives(Canvas C)
         if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
         {
             DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
-            bShowArtyStrike = true;
         }
 
         // Draw the rally points
@@ -2066,7 +1976,6 @@ simulated function DrawObjectives(Canvas C)
             // Draw the marked rally point
             if (Temp != vect(0.0, 0.0, 0.0))
             {
-                bShowRally = true;
                 DrawIconOnMap(C, SubCoords, MapIconRally[OwnerTeam], MyMapScale, Temp, MapCenter);
             }
         }
@@ -2081,7 +1990,6 @@ simulated function DrawObjectives(Canvas C)
                     continue;
                 }
 
-                bShowArtillery = true;
                 DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AxisRadios[i].Location, MapCenter);
             }
         }
@@ -2094,7 +2002,6 @@ simulated function DrawObjectives(Canvas C)
                     continue;
                 }
 
-                bShowArtillery = true;
                 DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AlliedRadios[i].Location, MapCenter);
             }
         }
@@ -2111,7 +2018,6 @@ simulated function DrawObjectives(Canvas C)
                         continue;
                     }
 
-                    bShowArtillery = true;
                     DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAxisRadios[i].Location, MapCenter);
                 }
             }
@@ -2124,80 +2030,75 @@ simulated function DrawObjectives(Canvas C)
                         continue;
                     }
 
-                    bShowArtillery = true;
                     DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAlliedRadios[i].Location, MapCenter);
                 }
             }
         }
 
-        // Draw help requests
-        if (OwnerTeam == AXIS_TEAM_INDEX)
+    // Draw help requests
+    if (OwnerTeam == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
         {
-            for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
+            if (DHGRI.AxisHelpRequests[i].requestType == 255)
             {
-                if (DHGRI.AxisHelpRequests[i].requestType == 255)
-                {
-                    continue;
-                }
-
-                switch (DHGRI.AxisHelpRequests[i].requestType)
-                {
-                    case 0: // help request at objective
-                        bShowHelpRequest = true;
-                        Widget = MapIconHelpRequest;
-                        Widget.Tints[0].A = 125;
-                        Widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
-                        break;
-
-                    case 1: // attack request
-                    case 2: // defend request
-                        bShowAttackDefendRequest = true;
-                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
-                        break;
-
-                    case 3: // mg resupply requests
-                        bShowMGResupplyRequest = true;
-                        DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
-                        break;
-
-                    case 4: // help request at coords
-                        bShowHelpRequest = true;
-                        DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
-                        break;
-
-                    default:
-                        Log("Unknown requestType found in AxisHelpRequests[" $ i $ "]:" @ DHGRI.AxisHelpRequests[i].requestType);
-                }
+                continue;
             }
 
-            // Draw all mortar targets on the map
-            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
+            switch (DHGRI.AxisHelpRequests[i].requestType)
             {
-                for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
-                {
-                    if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
-                    {
-                        DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
-                    }
-                }
-            }
+                case 0: // help request at objective
+                    Widget = MapIconHelpRequest;
+                    Widget.Tints[0].A = 125;
+                    Widget.Tints[1].A = 125;
+                    DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                    break;
 
-            // Draw hit location for mortar observer's confirmed hits on his own target
-            if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
-            {
-                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
-                {
-                    DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
-                }
-            }
+                case 1: // attack request
+                case 2: // defend request
+                    DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                    break;
 
-            // Draw hit location for mortar operator if he has a valid hit location
-            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
-            {
-                DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
+                case 3: // mg resupply requests
+                    DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                    break;
+
+                case 4: // help request at coords
+                    DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                    break;
+
+                default:
+                    Log("Unknown requestType found in AxisHelpRequests[" $ i $ "]:" @ DHGRI.AxisHelpRequests[i].requestType);
             }
         }
+
+        // Draw all mortar targets on the map
+        if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
+        {
+            for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
+            {
+                if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
+                {
+                    DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                }
+            }
+        }
+
+        // Draw hit location for mortar observer's confirmed hits on his own target
+        if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
+        {
+            if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
+            {
+                DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
+            }
+        }
+
+        // Draw hit location for mortar operator if he has a valid hit location
+        if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
+        {
+            DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
+        }
+    }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
             for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
@@ -2210,7 +2111,6 @@ simulated function DrawObjectives(Canvas C)
                 switch (DHGRI.AlliedHelpRequests[i].requestType)
                 {
                     case 0: // help request at objective
-                        bShowHelpRequest = true;
                         Widget = MapIconHelpRequest;
                         Widget.Tints[0].A = 125;
                         Widget.Tints[1].A = 125;
@@ -2219,17 +2119,14 @@ simulated function DrawObjectives(Canvas C)
 
                     case 1: // attack request
                     case 2: // defend request
-                        bShowAttackDefendRequest = true;
                         DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 3: // mg resupply requests
-                        bShowMGResupplyRequest = true;
                         DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
                         break;
 
                     case 4: // help request at coords
-                        bShowHelpRequest = true;
                         DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
                         break;
 
@@ -2283,7 +2180,6 @@ simulated function DrawObjectives(Canvas C)
         }
         else
         {
-            bShowNeutralObj = true;
             Widget = MapIconNeutral;
         }
 
@@ -2418,6 +2314,137 @@ simulated function DrawObjectives(Canvas C)
         DrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter);
         DrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter);
     }
+}
+
+// Renders the objectives on the HUD similar to the scoreboard
+simulated function DrawObjectives(Canvas C)
+{
+    local DHPlayerReplicationInfo PRI;
+    local AbsoluteCoordsInfo      MapCoords, SubCoords;
+    local SpriteWidget  Widget;
+    local DHPlayer      Player;
+    local int           i, j, OwnerTeam, ObjCount, SecondaryObjCount;
+    local bool          bShowRally;
+    local bool          bShowArtillery;
+    local bool          bShowResupply;
+    local bool          bShowArtyCoords;
+    local bool          bShowNeutralObj;
+    local bool          bShowMGResupplyRequest;
+    local bool          bShowHelpRequest;
+    local bool          bShowAttackDefendRequest;
+    local bool          bShowArtyStrike;
+    local bool          bShowDestroyableItems;
+    local bool          bShowDestroyedItems;
+    local bool          bShowVehicleResupply;
+    local bool          bHasSecondaryObjectives;
+    local float         XL, YL, YL_one, Time;
+    // PSYONIX: DEBUG
+    local float         X, Y, StrX, StrY;
+    local string        s;
+    // AT Gun
+    local bool          bShowATGun;
+    local DHRoleInfo    RI;
+
+    // Avoid access none if DHGRI isn't set yet
+    if (DHGRI == none)
+    {
+        return;
+    }
+
+    // Update time
+    if (!DHGRI.bMatchHasBegun)
+    {
+        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
+    }
+    else
+    {
+        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
+    }
+
+    // Get player
+    Player = DHPlayer(PlayerOwner);
+
+    // Get PRI
+    PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
+
+    // Get Role info
+    if (PRI != none && PRI.RoleInfo != none)
+    {
+        RI = DHRoleInfo(PRI.RoleInfo);
+    }
+
+    // Get player team - if none, we won't draw team-specific information on the map
+    if (PlayerOwner != none)
+    {
+        OwnerTeam = PlayerOwner.GetTeamNum();
+    }
+    else
+    {
+        OwnerTeam = 255;
+    }
+
+    // Set map coords based on resolution - we want to keep a 4:3 aspect ratio for the map
+    MapCoords.Height = C.ClipY * 0.9;
+    MapCoords.PosY = C.ClipY * 0.05;
+    MapCoords.Width = MapCoords.Height * 4.0 / 3.0;
+    MapCoords.PosX = (C.ClipX - MapCoords.Width) / 2.0;
+
+    // Calculate map offset (for animation)
+    if (bAnimateMapIn)
+    {
+        AnimateMapCurrentPosition -= (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
+
+        if (AnimateMapCurrentPosition <= 0.0)
+        {
+            AnimateMapCurrentPosition = 0.0;
+            bAnimateMapIn = false;
+        }
+    }
+    else if (bAnimateMapOut)
+    {
+        AnimateMapCurrentPosition += (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
+
+        if (AnimateMapCurrentPosition >= default.AnimateMapCurrentPosition)
+        {
+            AnimateMapCurrentPosition = default.AnimateMapCurrentPosition;
+            bAnimateMapOut = false;
+        }
+    }
+
+    MapCoords.PosX += C.ClipX * AnimateMapCurrentPosition;
+
+    // Draw map background
+    DrawSpriteWidgetClipped(C, MapBackground, MapCoords, true);
+
+    // Calculate absolute coordinates of level map
+    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, SubCoords);
+
+    // Save coordinates for use in menu page
+    MapLevelImageCoordinates = SubCoords;
+
+    // Draw coordinates text on sides of the map
+    for (i = 0; i < 9; ++i)
+    {
+        MapCoordTextXWidget.PosX = (Float(i) + 0.5) / 9.0;
+        MapCoordTextXWidget.Text = MapCoordTextX[i];
+        DrawTextWidgetClipped(C, MapCoordTextXWidget, SubCoords);
+
+        MapCoordTextYWidget.PosY = MapCoordTextXWidget.PosX;
+        MapCoordTextYWidget.Text = MapCoordTextY[i];
+        DrawTextWidgetClipped(C, MapCoordTextYWidget, SubCoords);
+    }
+
+    //==========================================================================
+    // START MAP DRAWING
+    //==========================================================================
+
+    DrawMap(C, SubCoords);
+
+    //TODO: fetch legend variables
+
+    //==========================================================================
+    // END MAP DRAWING
+    //==========================================================================
 
     // Draw timer
     DrawTextWidgetClipped(C, MapTimerTitle, MapCoords, XL, YL, YL_one);
@@ -2454,9 +2481,72 @@ simulated function DrawObjectives(Canvas C)
     DrawLegendElement(C, SubCoords, MapAxisFlagIcon, LegendAxisObjectiveText);
     DrawLegendElement(C, SubCoords, MapAlliesFlagIcons[DHGRI.AlliedNationID], LegendAlliesObjectiveText);
 
+    // Draw objectives
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
+    {
+        if (DHGRI.DHObjectives[i] != none &&
+            DHGRI.DHObjectives[i].ObjState == OBJ_Neutral)
+        {
+            bShowNeutralObj = true;
+            break;
+        }
+    }
+
     if (bShowNeutralObj || bShowAllItemsInMapLegend)
     {
         DrawLegendElement(C, SubCoords, MapIconNeutral, LegendNeutralObjectiveText);
+    }
+
+    // Artillery
+    if (OwnerTeam == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHGRI.AxisRadios); ++i)
+        {
+            if (DHGRI.AxisRadios[i] != none && (!DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') || DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
+            {
+                bShowArtillery = true;
+                break;
+            }
+        }
+    }
+    else if (OwnerTeam == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHGRI.AlliedRadios); ++i)
+        {
+            if (DHGRI.AlliedRadios[i] != none && (!DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') || DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
+            {
+                bShowArtillery = true;
+                break;
+            }
+        }
+    }
+
+    // Draw player-carried Artillery radio icons if player is an artillery officer
+    if (RI != none && RI.bIsArtilleryOfficer)
+    {
+        if (OwnerTeam == AXIS_TEAM_INDEX)
+        {
+            for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); ++i)
+            {
+                if (DHGRI.CarriedAxisRadios[i] != none)
+                {
+                    bShowArtillery = true;
+                    break;
+                }
+
+            }
+        }
+        else if (OwnerTeam == ALLIES_TEAM_INDEX)
+        {
+            for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); ++i)
+            {
+                if (DHGRI.CarriedAlliedRadios[i] != none)
+                {
+                    bShowArtillery = true;
+                    break;
+                }
+            }
+        }
     }
 
     if (bShowArtillery || bShowAllItemsInMapLegend)
@@ -2474,14 +2564,69 @@ simulated function DrawObjectives(Canvas C)
         DrawLegendElement(C, SubCoords, MapIconResupply, LegendResupplyAreaText);
     }
 
+    // Resupply
+    for (i = 0; i < arraycount(DHGRI.ResupplyAreas); ++i)
+    {
+        if (DHGRI.ResupplyAreas[i].bActive && (DHGRI.ResupplyAreas[i].Team == OwnerTeam || DHGRI.ResupplyAreas[i].Team == NEUTRAL_TEAM_INDEX))
+        {
+            if (DHGRI.ResupplyAreas[i].ResupplyType == 1)
+            {
+                // Tank resupply icon
+                bShowVehicleResupply = true;
+            }
+            else
+            {
+                // Player resupply icon
+                bShowResupply = true;
+            }
+        }
+    }
+
     if (bShowVehicleResupply)
     {
         DrawLegendElement(C, SubCoords, MapIconVehicleResupply, LegendResupplyAreaText);
     }
 
+    // Rally Points
+    for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
+    {
+        if ((OwnerTeam == AXIS_TEAM_INDEX && DHGRI.AxisRallyPoints[i].RallyPointLocation != vect(0.0, 0.0, 0.0)) ||
+            (OwnerTeam == ALLIES_TEAM_INDEX && DHGRI.AlliedRallyPoints[i].RallyPointLocation != vect(0.0, 0.0, 0.0)))
+        {
+            bShowRally = true;
+            break;
+        }
+    }
+
     if ((bShowRally || bShowAllItemsInMapLegend) && OwnerTeam != 255)
     {
         DrawLegendElement(C, SubCoords, MapIconRally[OwnerTeam], LegendRallyPointText);
+    }
+
+    // Artillery coords & destroyable items [?]
+    if (Player != none)
+    {
+        // Draw the marked arty strike
+        if (Player.SavedArtilleryCoords != vect(0.0, 0.0, 0.0))
+        {
+            bShowArtyCoords = true;
+        }
+
+        // Draw the destroyable/destroyed targets
+        if (Player.Destroyables.Length != 0)
+        {
+            for (i = 0; i < Player.Destroyables.Length; ++i)
+            {
+                if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
+                {
+                    bShowDestroyedItems = true;
+                }
+                else
+                {
+                    bShowDestroyableItems = true;
+                }
+            }
+        }
     }
 
     if (bShowArtyCoords || bShowAllItemsInMapLegend)
@@ -2492,6 +2637,13 @@ simulated function DrawObjectives(Canvas C)
         Widget.Tints[TeamIndex].A = 255;
     }
 
+
+    // Artillery strike
+    if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
+    {
+        bShowArtyStrike = true;
+    }
+
     if (bShowArtyStrike || bShowAllItemsInMapLegend)
     {
         DrawLegendElement(C, SubCoords, MapIconArtyStrike, LegendArtyStrikeText);
@@ -2500,6 +2652,64 @@ simulated function DrawObjectives(Canvas C)
     if ((bShowMGResupplyRequest || bShowAllItemsInMapLegend) && OwnerTeam != 255)
     {
         DrawLegendElement(C, SubCoords, MapIconMGResupplyRequest[OwnerTeam], LegendMGResupplyText);
+    }
+
+    //Requests
+    if (OwnerTeam == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
+        {
+            switch (DHGRI.AxisHelpRequests[i].requestType)
+            {
+                case 0: // help request at objective
+                    bShowHelpRequest = true;
+                    break;
+
+                case 1: // attack request
+                case 2: // defend request
+                    bShowAttackDefendRequest = true;
+                    break;
+
+                case 3: // mg resupply requests
+                    bShowMGResupplyRequest = true;
+                    break;
+
+                case 4: // help request at coords
+                    bShowHelpRequest = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+    else if (OwnerTeam == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
+        {
+            switch (DHGRI.AlliedHelpRequests[i].requestType)
+            {
+                case 0: // help request at objective
+                    bShowHelpRequest = true;
+                    break;
+
+                case 1: // attack request
+                case 2: // defend request
+                    bShowAttackDefendRequest = true;
+                    break;
+
+                case 3: // mg resupply requests
+                    bShowMGResupplyRequest = true;
+                    break;
+
+                case 4: // help request at coords
+                    bShowHelpRequest = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 
     if (bShowHelpRequest || bShowAllItemsInMapLegend)
