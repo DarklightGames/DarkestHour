@@ -128,11 +128,11 @@ defaultproperties
         OnClick=OnClick
         //OnDblClick=OnDblClick
         bVisible=false
-        CheckedOverlay(0)=material'DH_GUI_Tex.DeployMenu.spawn_point_check'
-        CheckedOverlay(1)=material'DH_GUI_Tex.DeployMenu.spawn_point_check'
-        CheckedOverlay(2)=material'DH_GUI_Tex.DeployMenu.spawn_point_check'
-        CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_check'
-        CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_check'
+        CheckedOverlay(0)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(1)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(2)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         OnCheckChanged=InternalOnCheckChanged
     End Object
 
