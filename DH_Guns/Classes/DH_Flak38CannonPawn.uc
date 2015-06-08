@@ -5,8 +5,31 @@
 
 class DH_Flak38CannonPawn extends DHATGunCannonPawn;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_Flak38_tex.utx
+simulated function InitializeCannon() // TEMP
+{
+    super.InitializeCannon();
+    SetScale(1.5);
+}
+    
+exec function SetScale(float NewValue) // TEMP
+{
+    if (NewValue > 0.0)
+    {
+        VehicleBase.SetDrawScale(NewValue);
+        Gun.SetDrawScale(NewValue);
+        log("DrawScale =" @ Gun.DrawScale);
+    }
+}
+
+exec function SetDrivePos(int NewX, int NewY, int NewZ) // TEMP
+{
+    DrivePos.X = NewX;
+    DrivePos.Y = NewY;
+    DrivePos.Z = NewZ;
+    DetachDriver(Driver);
+    AttachDriver(Driver);
+    log("DrivePos =" @ DrivePos);
+}
 
 // Emptied out as shells inherits RangeSettings from Sd.Kfz.234/1 armored car, but flak 38 has no range settings on the gunsight:
 function IncrementRange();
@@ -15,7 +38,7 @@ function DecrementRange();
 defaultproperties
 {
     OverlayCenterSize=1.0
-    CannonScopeOverlay=texture'DH_Flakvierling38_tex.flak.flakv38_sight'
+    CannonScopeOverlay=texture'DH_Artillery_tex.ATGun_Hud.Flakvierling38_sight'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
     DriverPositions(0)=(ViewLocation=(X=30.0),ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret',TransitionUpAnim="optic_out",DriverTransitionAnim="Vt3485_driver_idle_close",bDrawOverlays=true,bExposed=true)
@@ -25,6 +48,7 @@ defaultproperties
     GunClass=class'DH_Guns.DH_Flak38Cannon'
     CameraBone="Camera_com"
     DriveAnim="Vt3485_driver_idle_close"
+    DrivePos=(X=0.0,Y=-1.0,Z=17.0)  // TEMP - suits DrawScale of 1.5
     ExitPositions(0)=(X=-150.0,Y=0.0,Z=0.0)
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0)
     ExitPositions(2)=(X=-100.0,Y=20.0,Z=0.0)

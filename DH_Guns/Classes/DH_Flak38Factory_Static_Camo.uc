@@ -9,5 +9,5 @@ defaultproperties
 {
     VehicleClass=class'DH_Guns.DH_Flak38Gun_Static_Camo'
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_static'
-    Skins(0)=texture'DH_Flak38_tex.Flak38.flak38_gun_01_b_d'
+    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun_camo'
 }

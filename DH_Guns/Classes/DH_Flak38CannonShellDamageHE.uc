@@ -5,10 +5,8 @@
 
 class DH_Flak38CannonShellDamageHE extends DH_Sdkfz2341CannonShellDamageHE;
 
-#exec OBJ LOAD FILE=..\Textures\DH_Flak38_tex.utx
-
 defaultproperties
 {
-    HUDIcon=texture'DH_Flakvierling38_tex.flak.flakv38_icon'
+    HUDIcon=texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon' // TODO: add one specifically for single barrelled Flak 38
     DeathString="%o was killed by %k's Flak 38 HE shell."
 }

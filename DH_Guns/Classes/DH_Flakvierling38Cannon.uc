@@ -5,9 +5,6 @@
 
 class DH_Flakvierling38Cannon extends DH_Sdkfz2341Cannon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_Flakvierling38_tex.utx
-
 var     name        BarrelBones[4];       // bone names for each
 var     byte        BarrelBoneIndex;      // bone index for each gun starting with the top 2
 var     name        FireAnimations[4];    // alternating shoot anims for both 'open' & 'closed' positions, i.e. on the sights or with gunner's head raised
@@ -294,6 +291,6 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'
     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
-    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flakv_turret'
-    Skins(0)=texture'DH_Flakvierling38_tex.flak.FlakVeirling'
+    Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
+    Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
 }

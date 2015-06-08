@@ -17,7 +17,7 @@ defaultproperties
     TreadHitMinAngle=1.9
     TransRatio=0.0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak43CannonPawn',WeaponBone="Turret_placement")
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DestructionLinearMomentum=(Min=100.0,Max=350.0)

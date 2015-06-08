@@ -6,7 +6,6 @@
 class DH_Flak38Cannon extends DH_Sdkfz2341Cannon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_Flak38_tex.utx
 
 var     name   SightBone;
 var     name   TraverseWheelBone;
@@ -97,5 +96,5 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
-    Skins(0)=texture'DH_Flak38_tex.Flak38.flak38_gun_01_a_d'
+    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
 }
