@@ -59,7 +59,7 @@ var localized   string                      SelectSpawnPointText;
 var localized   string                      SelectVehicleText;
 
 // Colin: The reason this variable is needed is because the PlayerController's
-// GetTeamNum function is not reliable after recieving a successful team change
+// GetTeamNum function is not reliable after receiving a successful team change
 // signal from InternalOnMessage.
 var             byte                        CurrentTeam;
 
@@ -777,7 +777,10 @@ function InternalOnChange(GUIComponent Sender)
 
             for (i = 0; i < arraycount(i_GivenItems); ++i)
             {
-                i_GivenItems[j].Image = none;
+                if (i_GivenItems[i] != none)
+                {
+                    i_GivenItems[i].Image = none;
+                }
             }
 
             cb_PrimaryWeapon.Clear();
@@ -821,7 +824,7 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     WeaponClass = class<Weapon>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
 
-                    if (WeaponClass != none)
+                    if (WeaponClass != none && i_GivenItems[i] != none && class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass) != none)
                     {
                         //TODO: do proper placement logic
                         i_GivenItems[j++].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
@@ -844,11 +847,19 @@ function InternalOnChange(GUIComponent Sender)
             break;
 
         case cb_PrimaryWeapon:
-            i_PrimaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_PrimaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
+            if (class<Inventory>(cb_PrimaryWeapon.GetObject()) != none && class<ROWeaponAttachment>(class<Inventory>(cb_PrimaryWeapon.GetObject()).default.AttachmentClass) != none)
+            {
+                i_PrimaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_PrimaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
+            }
+
             break;
 
         case cb_SecondaryWeapon:
-            i_SecondaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_SecondaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
+            if (class<Inventory>(cb_SecondaryWeapon.GetObject()) != none && class<ROWeaponAttachment>(class<Inventory>(cb_SecondaryWeapon.GetObject()).default.AttachmentClass) != none)
+            {
+                i_SecondaryWeapon.Image = class<ROWeaponAttachment>(class<Inventory>(cb_SecondaryWeapon.GetObject()).default.AttachmentClass).default.MenuImage;
+            }
+
             break;
 
         case li_Vehicles:
