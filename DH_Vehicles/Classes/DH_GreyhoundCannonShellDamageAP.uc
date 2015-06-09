@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundCannonShellDamageAP extends DHTankShellImpactDamage
+class DH_GreyhoundCannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
 //Damage class for shells in the 37mm to 50mm calibers

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AT57CannonShellDamageAP extends DHTankShellImpactDamage
+class DH_AT57CannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties

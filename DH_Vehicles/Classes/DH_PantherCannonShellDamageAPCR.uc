@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PantherCannonShellDamageAPCR extends DHTankShellImpactDamage
+class DH_PantherCannonShellDamageAPCR extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_17PounderCannonShellDamageAP extends DHTankShellImpactDamage
+class DH_17PounderCannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties

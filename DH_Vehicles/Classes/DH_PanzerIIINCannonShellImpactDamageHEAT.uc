@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIINCannonShellImpactDamageHEAT extends DHTankShellImpactDamage
+class DH_PanzerIIINCannonShellImpactDamageHEAT extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties

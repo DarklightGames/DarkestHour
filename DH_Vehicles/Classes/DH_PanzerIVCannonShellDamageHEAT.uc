@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVCannonShellDamageHEAT extends DHHEATCannonShellDamage
+class DH_PanzerIVCannonShellDamageHEAT extends DHCannonShellDamageHEAT
     abstract;
 
 defaultproperties

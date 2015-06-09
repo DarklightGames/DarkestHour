@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TigerCannonShellDamageAP extends DHTankShellImpactDamage
+class DH_TigerCannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2342CannonShellDamageAP extends DHTankShellImpactDamage
+class DH_Sdkfz2342CannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
 //Damage class for shells in the 37mm to 50mm calibers

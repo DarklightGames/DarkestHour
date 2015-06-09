@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFireFlyCannonShellDamageAP extends DHTankShellImpactDamage
+class DH_ShermanFireFlyCannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties

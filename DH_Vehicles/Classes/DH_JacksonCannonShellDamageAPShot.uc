@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JacksonCannonShellDamageAPShot extends DHTankShellImpactDamage
+class DH_JacksonCannonShellDamageAPShot extends DHCannonShellDamageImpact
     abstract;
 
 defaultproperties
