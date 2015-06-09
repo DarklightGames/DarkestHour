@@ -15,7 +15,6 @@ defaultproperties
     DeathString="%o was burned up in his tank in a fire that %k started."
     FemaleSuicide="%o burned up in her tank."
     MaleSuicide="%o burned up in his tank."
-    bArmorStops=false
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

@@ -12,7 +12,6 @@ defaultproperties
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.95
     DeathString="%o was ripped apart by shrapnel from %k's Sherman 76mm HE shell."
-    bArmorStops=true
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

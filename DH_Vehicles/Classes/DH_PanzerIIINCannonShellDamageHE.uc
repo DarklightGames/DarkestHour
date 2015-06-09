@@ -12,7 +12,6 @@ defaultproperties
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.85
     DeathString="%o was ripped apart by shrapnel from %k's Panzer III HE shell."
-    bArmorStops=true // Matt: added to be consistent with all other relatively low power HE shells
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

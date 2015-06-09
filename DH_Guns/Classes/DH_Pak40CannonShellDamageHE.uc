@@ -15,7 +15,6 @@ defaultproperties
     DeathString="%o was ripped apart by shrapnel from %k's Pak40 HE shell."
     FemaleSuicide="%o fired her Pak40 HE shell prematurely."
     MaleSuicide="%o fired his Pak40 shell prematurely."
-    bArmorStops=true
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

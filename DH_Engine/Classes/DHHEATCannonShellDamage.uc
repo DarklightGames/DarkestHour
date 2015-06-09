@@ -12,7 +12,6 @@ defaultproperties
     APCDamageModifier=0.4
     VehicleDamageModifier=0.85
     TreadDamageModifier=0.2
-    bArmorStops=true
     bExtraMomentumZ=false
     KDeathVel=150.0
     HumanObliterationThreshhold=400

@@ -14,7 +14,6 @@ defaultproperties
     DeathString="%o was ripped apart by shrapnel from %k's Cromwell 6 Pounder HE shell."
     FemaleSuicide="%o fired her Cromwell 6 Pounder HE shell prematurely."
     MaleSuicide="%o fired his Cromwell 6 Pounder HE shell prematurely."
-    bArmorStops=true
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

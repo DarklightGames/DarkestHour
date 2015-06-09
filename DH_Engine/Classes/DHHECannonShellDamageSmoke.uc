@@ -12,7 +12,6 @@ defaultproperties
     APCDamageModifier=0.75
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.5
-    bArmorStops=true
     bLocationalHit=true
     KDamageImpulse=3000.0
     VehicleMomentumScaling=1.1

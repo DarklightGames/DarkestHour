@@ -13,7 +13,6 @@ defaultproperties
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.85
     DeathString="%o was ripped apart by shrapnel from %k's Jagdpanzer IV HE shell."
-    bArmorStops=true
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

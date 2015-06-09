@@ -16,7 +16,6 @@ defaultproperties
     DeathString="%o was torn apart by a mortar shell."
     FemaleSuicide="%o was careless with her own mortar shell."
     MaleSuicide="%o was careless with his own mortar shell."
-    bArmorStops=false
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

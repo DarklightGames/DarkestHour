@@ -12,7 +12,6 @@ defaultproperties
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.15
     DeathString="%o was ripped apart by shrapnel from %k's Sdkfz 234/2 HE shell."
-    bArmorStops=true
     VehicleMomentumScaling=0.05
     HumanObliterationThreshhold=100
 }

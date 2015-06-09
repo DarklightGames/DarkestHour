@@ -12,7 +12,6 @@ defaultproperties
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.5
     DeathString="%o was ripped apart by shrapnel from %k's Stuart HE shell."
-    bArmorStops=true
     KDamageImpulse=3000.0
     VehicleMomentumScaling=1.1
     HumanObliterationThreshhold=180
