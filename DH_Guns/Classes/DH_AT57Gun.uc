@@ -16,7 +16,7 @@ defaultproperties
     VehicleHudThreadsScale=0.6
     TransRatio=0.0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_AT57CannonPawn',WeaponBone="Turret_placement")
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.57mmGun.AT57mm_dest'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.57mmGun.AT57mm_destroyed'
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
