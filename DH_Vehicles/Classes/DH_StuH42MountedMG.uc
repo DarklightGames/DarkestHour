@@ -50,6 +50,7 @@ defaultproperties
     InitialPrimaryAmmo=75
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
+    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
     Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
     bCollideActors=true
     bBlockActors=true
