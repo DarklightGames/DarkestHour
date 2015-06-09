@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2342CannonShellHE extends DHTankCannonShellHE;
+class DH_Sdkfz2342CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HellcatCannonShell extends DHTankCannonShell;
+class DH_HellcatCannonShell extends DHCannonShell;
 
 defaultproperties
 {

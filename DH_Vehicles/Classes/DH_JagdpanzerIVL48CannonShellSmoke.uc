@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpanzerIVL48CannonShellSmoke extends DHTankCannonShellSmoke;
+class DH_JagdpanzerIVL48CannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
 {

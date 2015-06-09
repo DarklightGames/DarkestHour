@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanM4A3105CannonShellHEAT extends DHTankCannonShellHEAT;
+class DH_ShermanM4A3105CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {

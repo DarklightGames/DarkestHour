@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GCannonShellSmoke extends DHTankCannonShellSmoke;
+class DH_Stug3GCannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
 {

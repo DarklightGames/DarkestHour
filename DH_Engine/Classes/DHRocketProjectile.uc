@@ -4,7 +4,7 @@
 //==============================================================================
 
 // Matt: originally extended DHAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
-class DHRocketProjectile extends DHTankCannonShellHEAT
+class DHRocketProjectile extends DHCannonShellHEAT
     abstract;
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
@@ -140,7 +140,7 @@ defaultproperties
     LifeSpan=15.0
     ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
 
-//  Override unwanted defaults now inherited from DHTankCannonShellHEAT & DHTankCannonShell:
+//  Override unwanted defaults now inherited from DHCannonShellHEAT & DHCannonShell:
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     BlurEffectScalar=1.9

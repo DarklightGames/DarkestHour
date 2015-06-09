@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TigerCannonShell extends DHGermanTankCannonShell;
+class DH_TigerCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {

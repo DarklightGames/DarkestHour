@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GCannonShell extends DHGermanTankCannonShell;
+class DH_Stug3GCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {

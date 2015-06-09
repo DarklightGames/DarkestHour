@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_17PounderCannonShellHE extends DHTankCannonShellHE;
+class DH_17PounderCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {

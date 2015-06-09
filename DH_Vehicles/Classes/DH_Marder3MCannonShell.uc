@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Marder3MCannonShell extends DHGermanTankCannonShell;
+class DH_Marder3MCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {

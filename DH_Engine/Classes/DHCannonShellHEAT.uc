@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTankCannonShellHEAT extends DHTankCannonShell
+class DHCannonShellHEAT extends DHCannonShell
     abstract;
 
 // Penetration:

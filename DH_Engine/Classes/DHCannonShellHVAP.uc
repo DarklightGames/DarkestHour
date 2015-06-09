@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHGermanTankCannonShell extends DHTankCannonShell
+class DHCannonShellHVAP extends DHCannonShell
     abstract;
 
 defaultproperties
 {
-    bIsAlliedShell=false
-    TracerEffect=class'DH_Effects.DH_OrangeTankShellTracerBig'
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+    RoundType=RT_HVAP
+    bShatterProne=true
 }

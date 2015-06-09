@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanM4A3105CannonShellHE extends DHTankCannonShellHE;
+class DH_ShermanM4A3105CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {

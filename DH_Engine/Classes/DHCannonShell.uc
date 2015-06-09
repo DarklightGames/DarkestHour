@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTankCannonShell extends DHAntiVehicleProjectile
+class DHCannonShell extends DHAntiVehicleProjectile
     abstract;
 
 var     array<sound>        ExplosionSound;       // sound of the round exploding (array for random selection)

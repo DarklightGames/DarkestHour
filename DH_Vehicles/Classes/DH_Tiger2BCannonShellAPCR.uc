@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BCannonShellAPCR extends DHTankCannonShellHVAP;
+class DH_Tiger2BCannonShellAPCR extends DHCannonShellHVAP;
 
 defaultproperties
 {

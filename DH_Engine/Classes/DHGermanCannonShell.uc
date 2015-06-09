@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTankCannonShellAPDS extends DHTankCannonShell
+class DHGermanCannonShell extends DHCannonShell
     abstract;
 
 defaultproperties
 {
-    RoundType=RT_APDS
-    bShatterProne=true
+    bIsAlliedShell=false
+    TracerEffect=class'DH_Effects.DH_OrangeTankShellTracerBig'
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
 }

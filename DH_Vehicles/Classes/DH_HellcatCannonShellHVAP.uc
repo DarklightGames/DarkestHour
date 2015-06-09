@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HellcatCannonShellHVAP extends DHTankCannonShellHVAP;
+class DH_HellcatCannonShellHVAP extends DHCannonShellHVAP;
 
 defaultproperties
 {

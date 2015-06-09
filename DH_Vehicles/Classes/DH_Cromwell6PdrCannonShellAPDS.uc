@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrCannonShellAPDS extends  DHTankCannonShellAPDS;
+class DH_Cromwell6PdrCannonShellAPDS extends  DHCannonShellAPDS;
 
 defaultproperties
 {

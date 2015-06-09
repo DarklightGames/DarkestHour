@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVCannonShellHEAT extends DHTankCannonShellHEAT;
+class DH_PanzerIVCannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {

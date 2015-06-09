@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AchillesCannonShell extends DHTankCannonShell;
+class DH_AchillesCannonShell extends DHCannonShell;
 
 defaultproperties
 {

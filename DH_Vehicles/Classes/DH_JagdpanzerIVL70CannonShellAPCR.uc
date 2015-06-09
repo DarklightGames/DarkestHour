@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpanzerIVL70CannonShellAPCR extends DHTankCannonShellHVAP;
+class DH_JagdpanzerIVL70CannonShellAPCR extends DHCannonShellHVAP;
 
 defaultproperties
 {

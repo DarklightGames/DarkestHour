@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WolverineCannonShellSmoke extends DHTankCannonShellSmoke;
+class DH_WolverineCannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
 {

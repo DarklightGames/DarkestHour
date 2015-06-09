@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak88CannonShell extends DHGermanTankCannonShell;
+class DH_Flak88CannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
