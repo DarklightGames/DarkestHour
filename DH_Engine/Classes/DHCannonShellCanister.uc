@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTankCannonShellCanister extends DHBullet
-    abstract;
+class DHCannonShellCanister extends DHBullet;
 
 var int NumberOfProjectilesPerShot; // the number of separate small projectiles launched by each canister shot
 

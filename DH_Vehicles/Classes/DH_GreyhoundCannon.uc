@@ -8,7 +8,7 @@ class DH_GreyhoundCannon extends DHVehicleCannon;
 defaultproperties
 {
     InitialTertiaryAmmo=8
-    TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
+    TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     TertiarySpread=0.04
     SecondarySpread=0.00145
     ManualRotationsPerSecond=0.04

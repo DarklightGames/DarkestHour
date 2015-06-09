@@ -256,7 +256,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 FireMode = 2;
 
                 // No spread here for canister shot, as it is randomised separately for each projectile fired (in the Fire function)
-                if (bUsesTertiarySpread && TertiarySpread > 0.0 && class<DHTankCannonShellCanister>(TertiaryProjectileClass) == none)
+                if (bUsesTertiarySpread && TertiarySpread > 0.0 && class<DHCannonShellCanister>(TertiaryProjectileClass) == none)
                 {
                     ProjectileSpread = TertiarySpread;
                 }
@@ -353,10 +353,10 @@ state ProjectileFireMode
         local int     ProjectilesToFire, i;
 
         // If firing canister shot
-        if (class<DHTankCannonShellCanister>(ProjectileClass) != none)
+        if (class<DHCannonShellCanister>(ProjectileClass) != none)
         {
             bCanisterIsFiring = true;
-            ProjectilesToFire = class<DHTankCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
+            ProjectilesToFire = class<DHCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
             WeaponFireVector = vector(WeaponFireRotation);
 
             for (i = 1; i <= ProjectilesToFire; ++i)

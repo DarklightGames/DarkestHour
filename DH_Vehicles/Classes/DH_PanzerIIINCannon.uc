@@ -8,7 +8,7 @@ class DH_PanzerIIINCannon extends DHVehicleCannon;
 defaultproperties
 {
     InitialTertiaryAmmo=14
-    TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterGerman'
+    TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     TertiarySpread=0.04
     SecondarySpread=0.0039
     ManualRotationsPerSecond=0.04
