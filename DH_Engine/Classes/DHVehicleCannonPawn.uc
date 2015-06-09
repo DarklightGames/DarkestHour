@@ -1342,7 +1342,7 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
     if ((DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex) && DHPlayer(Controller) != none)
     {
-        TurnSpeedFactor = DHPlayer(Controller).DHScopeTurnSpeedFactor;
+        TurnSpeedFactor = DHPlayer(Controller).DHISTurnSpeedFactor;
         YawChange *= TurnSpeedFactor;
         PitchChange *= TurnSpeedFactor;
     }
