@@ -46,6 +46,10 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_ext'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
+    Skins(1)=texture'Weapons3rd_tex.German.mg34_world'
+    bMatchSkinToVehicle=true
+    MatchedSkins(0)=(MGSkinIndex=0,VehicleSkinIndex=0)
     bCollideActors=true
     bProjTarget=true
     bBlockActors=true

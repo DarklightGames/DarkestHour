@@ -30,6 +30,16 @@ var     bool    bDriverDebugging;     // screen & log messages to debug player/g
 var class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
 var DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
+// Option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
+struct  MatchedSkin
+{
+    var byte    MGSkinIndex;          // index number of MG skin to be matched to vehicle
+    var byte    VehicleSkinIndex;     // index number of vehicle skin to match it to
+};
+
+var     bool    bMatchSkinToVehicle;     // tells MG to skin to match 1 or more of its skins to the vehicle camo variant
+var     array<MatchedSkin> MatchedSkins; // array of skins indexes to match (in practice usually just 1 member & probably matching skin index 0 to 0)
+
 // Stuff for fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HullMGFireEffect;
 var     class<VehicleDamagedEffect> FireEffectClass;
@@ -89,8 +99,11 @@ simulated function PostBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from MG pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have MGPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
+// Includes option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
 simulated function InitializeMG(DHVehicleMGPawn MGPwn)
 {
+    local int i;
+
     if (MGPwn != none)
     {
         MGPawn = MGPwn;
@@ -110,6 +123,18 @@ simulated function InitializeMG(DHVehicleMGPawn MGPwn)
             if (DHArmoredVehicle(MGPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartMGFire();
+            }
+        }
+
+        // Match MG skin(s) to vehicle skin(s), e.g. for gunshield
+        if (bMatchSkinToVehicle)
+        {
+            for (i = 0; i < MatchedSkins.Length; ++i)
+            {
+                if (MatchedSkins[i].MGSkinIndex < Skins.Length && MatchedSkins[i].VehicleSkinIndex < MGPawn.VehicleBase.Skins.Length)
+                {
+                    Skins[MatchedSkins[i].MGSkinIndex] = MGPawn.VehicleBase.Skins[MatchedSkins[i].VehicleSkinIndex];
+                }
             }
         }
     }

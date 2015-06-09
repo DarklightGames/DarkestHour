@@ -33,4 +33,7 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=225
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_MG'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
+    bMatchSkinToVehicle=true
+    MatchedSkins(0)=(MGSkinIndex=0,VehicleSkinIndex=0)
 }
