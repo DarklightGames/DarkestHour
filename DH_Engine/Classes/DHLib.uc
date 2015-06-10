@@ -75,6 +75,17 @@ static final function vector VHalf(vector A, vector B)
     return (A + B) / VSize(A + B);
 }
 
+static final function vector VClamp(vector V, vector A, vector B)
+{
+    local vector R;
+
+    R.X = FClamp(V.X, A.X, B.X);
+    R.Y = FClamp(V.Y, A.Y, B.Y);
+    R.Z = FClamp(V.Z, A.Z, B.Z);
+
+    return R;
+}
+
 static final function int IndexOf(array<Object> _Array, Object O)
 {
     local int i;
