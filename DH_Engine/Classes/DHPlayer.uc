@@ -92,7 +92,7 @@ replication
         ServerSetIsInSpawnMenu;
 }
 
-function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2) { } // No longer used
+function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // No longer used
 
 // Modified to bypass more RO shit design
 event InitInputSystem()
@@ -2398,7 +2398,7 @@ exec function ChangeTeam(int N) { }
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
 // Theel: this function is a fucking mess
-function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewSpawnAmmoCount)
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewSpawnAmmoCount)
 {
     local DarkestHourGame DHG;
     local DHRoleInfo RI;
@@ -2601,7 +2601,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     }
 
     // Set weapons
-    ChangeWeapons(newWeapon1, newWeapon2, 0);
+    ChangeWeapons(NewWeapon1, NewWeapon2, 0);
 
     // Handle ammo
     if (PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none)
@@ -2624,15 +2624,11 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         }
         else
         {
-            //TODO: Theel Debug Remove once we determine this isn't being ran
-            Warn("===============================================");
-            Warn("Ammo failed to set correctly, setting to 1!!!!!");
-            Warn("===============================================");
             SpawnAmmoAmount = 1;
         }
 
         // If SpawnAmmoAmount is 0 or 255 it will calculate a normal default setting value
-        SpawnTime = GetSpawnTime(RI, newWeapon1, SpawnAmmoAmount, SpawnVehicleIndex);
+        SpawnTime = GetSpawnTime(RI, NewWeapon1, SpawnAmmoAmount, SpawnVehicleIndex);
     }
     else
     {
@@ -2640,15 +2636,15 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     }
 
     // return result to client
-    if (newTeam == AXIS_TEAM_INDEX)
+    if (NewTeam == AXIS_TEAM_INDEX)
     {
         ClientChangePlayerInfoResult(97);   // successfully picked axis team
     }
-    else if (newTeam == ALLIES_TEAM_INDEX)
+    else if (NewTeam == ALLIES_TEAM_INDEX)
     {
         ClientChangePlayerInfoResult(98);   // successfully picked allies team
     }
-    else if (newTeam == 254)
+    else if (NewTeam == 254)
     {
         ClientChangePlayerInfoResult(96);   // successfully picked spectator team
     }

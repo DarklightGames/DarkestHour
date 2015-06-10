@@ -2,6 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
+
 class DHGUIMapComponent extends GUIPanel;
 
 const   SPAWN_POINTS_MAX =                  48; // Max spawn points total (make sure this matches GRI)
@@ -62,23 +63,15 @@ function SelectSpawnPoint(byte SpawnPointIndex, byte SpawnVehicleIndex)
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        if (b_SpawnPoints[i].Tag == SpawnPointIndex)
-        {
-            b_SpawnPoints[i].SetChecked(true);
-
-            return;
-        }
+        b_SpawnPoints[i].SetChecked(b_SpawnPoints[i].Tag == SpawnPointIndex);
     }
 
     for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
     {
-        if (b_SpawnVehicles[i].Tag == SpawnVehicleIndex)
-        {
-            b_SpawnVehicles[i].SetChecked(true);
-
-            return;
-        }
+        b_SpawnVehicles[i].SetChecked(b_SpawnVehicles[i].Tag == SpawnVehicleIndex);
     }
+
+    OnSpawnPointChanged(SpawnPointIndex, SpawnVehicleIndex);
 }
 
 function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)

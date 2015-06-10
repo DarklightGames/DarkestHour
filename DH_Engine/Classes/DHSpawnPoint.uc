@@ -11,7 +11,8 @@ enum ESpawnPointType
 {
     ESPT_Infantry,
     ESPT_Vehicles,
-    ESPT_Both
+    ESPT_Mortars,
+    ESPT_All
 };
 
 enum ESpawnPointMethod
@@ -55,12 +56,17 @@ function PostBeginPlay()
 
 simulated function bool CanSpawnInfantry()
 {
-    return Type == ESPT_Infantry || Type == ESPT_Both;
+    return Type == ESPT_Infantry || Type == ESPT_All;
 }
 
 simulated function bool CanSpawnVehicles()
 {
-    return Type == ESPT_Vehicles || Type == ESPT_Both;
+    return Type == ESPT_Vehicles || Type == ESPT_All;
+}
+
+simulated function bool CanSpawnMortars()
+{
+    return Type == ESPT_Mortars || Type == ESPT_All;
 }
 
 defaultproperties

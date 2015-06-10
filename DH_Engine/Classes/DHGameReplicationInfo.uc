@@ -213,7 +213,8 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
     }
 }
 
-simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, optional bool bCheckType, optional bool bTypeIsVehicle)
+//TODO: this is a poorly named function and it's functionality is nonsensical
+simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, DHRoleInfo RI, class<Vehicle> VehicleClass)
 {
     local DHSpawnPoint SP;
 
@@ -237,21 +238,64 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
         return false;
     }
 
-    // optional type check
-    if (bCheckType)
+    if (RI == none)
     {
-        // Confirm the types
-        if (bTypeIsVehicle && SP.Type == ESPT_Infantry)
+        return false;
+    }
+
+    return (SP.CanSpawnInfantry() && VehicleClass == none) ||
+    (SP.CanSpawnVehicles() && ((VehicleClass != none && SP.TeamIndex == VehicleClass.default.Team) || RI.default.bCanBeTankCrew)) ||
+    (SP.CanSpawnMortars() && RI.default.bCanUseMortars);
+}
+
+// Colin: The rules for spawn point availability are a little bit
+// complicated, so here's a run-down:
+//
+// Players not spawning vehicles can spawn at any spawn point marked as
+// SPT_Infantry.
+//
+// Mortar operators can use any spawn point marked as SPT_Mortar.
+//
+// Vehicles can be spawned at any spawn point marked as SPT_Vehicles.
+//
+// Tank crewmen not spawning tanks can use any spawn point marked as
+// SPT_Vehicle (so that vehicle crews can spawn together)
+simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)
+{
+    local class<Vehicle> VehicleClass;
+
+    // Determine what we are trying to spawn as
+    if (SpawnPointIndex == 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex != 255)
+    {
+        // Trying to spawn at spawn vehicle
+        if (CanSpawnAtVehicle(Team, SpawnVehicleIndex))
         {
-            return false; //Not valid type
+            return true;
         }
-        else if (!bTypeIsVehicle && SP.Type == ESPT_Vehicles)
+    }
+    else if (SpawnPointIndex != 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex == 255)
+    {
+        // Trying to spawn as Infantry at a SP
+        if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, none))
         {
-            return false; //Not valid type
+            return true;
+        }
+    }
+    else if (SpawnPointIndex != 255 && VehiclePoolIndex != 255 && SpawnVehicleIndex == 255)
+    {
+        // Trying to spawn a vehicle
+        if (IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
+        {
+            VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
+
+            if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, VehicleClass))
+            {
+                return true;
+            }
         }
     }
 
-    return true;
+    return false;
 }
 
 //------------------------------------------------------------------------------
@@ -299,7 +343,7 @@ simulated function bool IsVehiclePoolActive(byte VehiclePoolIndex)
     return VehiclePoolIsActives[VehiclePoolIndex] != 0;
 }
 
-simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInfo RI)
+simulated function bool IsVehiclePoolIndexValid(RORoleInfo RI, byte VehiclePoolIndex)
 {
     local class<ROVehicle> VehicleClass;
 
@@ -346,6 +390,16 @@ simulated function byte GetVehiclePoolSpawnsRemaining(byte PoolIndex)
     }
 
     return VehiclePoolMaxSpawns[PoolIndex] - VehiclePoolSpawnCounts[PoolIndex];
+}
+
+simulated function class<Vehicle> GetVehiclePoolVehicleClass(byte VehiclePoolIndex)
+{
+    if (VehiclePoolIndex == 255 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    {
+        return none;
+    }
+
+    return VehiclePoolVehicleClasses[VehiclePoolIndex];
 }
 
 //------------------------------------------------------------------------------
@@ -422,12 +476,12 @@ function bool RemoveSpawnVehicle(Vehicle V)
     return false;
 }
 
-simulated function bool CanSpawnAtVehicle(byte Index, PlayerController PC)
+simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
 {
     //TODO: add contested check here
     if (Index >= arraycount(SpawnVehicles) ||
         SpawnVehicles[Index].VehicleClass == none ||
-        SpawnVehicles[Index].TeamIndex != PC.GetTeamNum())
+        SpawnVehicles[Index].TeamIndex != Team)
     {
         return false;
     }
@@ -437,7 +491,7 @@ simulated function bool CanSpawnAtVehicle(byte Index, PlayerController PC)
     return true;
 }
 
-simulated function GetActiveSpawnVehicleIndices(PlayerController PC, out array<int> Indices)
+simulated function GetActiveSpawnVehicleIndices(byte Team, out array<int> Indices)
 {
     local int i;
 
@@ -445,20 +499,20 @@ simulated function GetActiveSpawnVehicleIndices(PlayerController PC, out array<i
 
     for (i = 0; i < arraycount(SpawnVehicles); ++i)
     {
-        if (CanSpawnAtVehicle(i, PC))
+        if (CanSpawnAtVehicle(Team, i))
         {
             Indices[Indices.Length] = i;
         }
     }
 }
 
-simulated function int GetVehiclePoolIndex(class<Vehicle> VehicleClass)
+simulated function byte GetVehiclePoolIndex(class<Vehicle> VehicleClass)
 {
     local int i;
 
     if (VehicleClass == none)
     {
-        return -1;
+        return 255;
     }
 
     for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
@@ -469,49 +523,7 @@ simulated function int GetVehiclePoolIndex(class<Vehicle> VehicleClass)
         }
     }
 
-    return -1;
-}
-
-//------------------------------------------------------------------------------
-// Check function
-//------------------------------------------------------------------------------
-
-simulated function bool AreIndicesValid(DHPlayer DHP)
-{
-    if (DHP.SpawnPointIndex == 255 && DHP.VehiclePoolIndex == 255 && DHP.SpawnVehicleIndex == 255)
-    {
-        // All indices are null
-        return false;
-    }
-
-    // Determine what we are trying to spawn as
-    if (DHP.SpawnPointIndex == 255 && DHP.VehiclePoolIndex == 255)
-    {
-        // Trying to spawn at Spawn Vehicle
-        if (CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP))
-        {
-            return true;
-        }
-    }
-    else if (DHP.SpawnPointIndex != 255 && DHP.VehiclePoolIndex == 255)
-    {
-        // Trying to spawn as Infantry at a SP
-        if (IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum(), true, false))
-        {
-            return true;
-        }
-    }
-    else if (DHP.SpawnPointIndex != 255 && DHP.VehiclePoolIndex != 255)
-    {
-        // Trying to spawn a vehicle
-        if (IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum(), true, true) &&
-            IsVehiclePoolIndexValid(DHP.VehiclePoolIndex, ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return 255;
 }
 
 

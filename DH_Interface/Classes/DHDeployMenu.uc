@@ -2,6 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
+
 class DHDeployMenu extends UT2K4GUIPage;
 
 enum ELoadoutMode
@@ -229,15 +230,14 @@ function UpdateSpawnPoints()
     local int i, j;
     local float X, Y;
     local TexRotator TR;
+    local DHRoleInfo RI;
+
+    RI = DHRoleInfo(li_Roles.GetObject());
 
     // Spawn points
     for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)
     {
-        if (GRI.SpawnPoints[i] != none &&
-            GRI.SpawnPoints[i].TeamIndex == CurrentTeam &&
-            GRI.IsSpawnPointActive(GRI.SpawnPoints[i]) &&
-            ((LoadoutMode == LM_Equipment && GRI.SpawnPoints[i].CanSpawnInfantry()) ||
-             (LoadoutMode == LM_Vehicle && GRI.SpawnPoints[i].CanSpawnVehicles())))
+        if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())), SpawnVehicleIndex))
         {
             GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight);
 
@@ -247,6 +247,13 @@ function UpdateSpawnPoints()
         }
         else
         {
+            // If spawn point that was previously selected is now hidden,
+            // deselect it.
+            if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
+            {
+                p_Map.SelectSpawnPoint(255, 255);
+            }
+
             p_Map.b_SpawnPoints[i].SetVisibility(false);
         }
     }
@@ -254,7 +261,7 @@ function UpdateSpawnPoints()
     // Spawn vehicles
     for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
     {
-        if (LoadoutMode != LM_Vehicle &&
+        if (li_Vehicles.GetObject() == none &&
             GRI.SpawnVehicles[i].VehicleClass != none &&
             GRI.SpawnVehicles[i].TeamIndex == CurrentTeam)
         {
@@ -277,6 +284,13 @@ function UpdateSpawnPoints()
         }
         else
         {
+            // If spawn point that was previously selected is now hidden,
+            // deselect it.
+            if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
+            {
+                p_Map.SelectSpawnPoint(255, 255);
+            }
+
             p_Map.b_SpawnVehicles[i].SetVisibility(false);
         }
     }
@@ -287,6 +301,19 @@ function UpdateStatus()
     b_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
     b_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
     l_Status.Caption = GetStatusText();
+
+    if (GRI.AreSpawnSettingsValid(CurrentTeam,
+                                  DHRoleInfo(li_Roles.GetObject()),
+                                  SpawnPointIndex,
+                                  GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
+                                  SpawnVehicleIndex))
+    {
+        b_MenuOptions[7].EnableMe();
+    }
+    else
+    {
+        b_MenuOptions[7].DisableMe();
+    }
 }
 
 function string GetStatusText()
@@ -526,6 +553,11 @@ function Apply()
     local RORoleInfo RI;
     local int RoleIndex;
     local byte Team;
+
+    if (b_MenuOptions[7].MenuState == MSAT_Disabled)
+    {
+        return;
+    }
 
     RI = RORoleInfo(li_Roles.GetObject());
 
@@ -874,6 +906,8 @@ function InternalOnChange(GUIComponent Sender)
             {
                 i_Vehicle.Image = none;
             }
+
+            UpdateSpawnPoints();
 
             break;
 

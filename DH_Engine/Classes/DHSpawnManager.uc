@@ -9,7 +9,8 @@ enum ESpawnPointType
 {
     ESPT_Infantry,
     ESPT_Vehicles,
-    ESPT_Both
+    ESPT_Mortars,
+    ESPT_All
 };
 
 enum ESpawnPointMethod
@@ -186,11 +187,11 @@ function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator Spawn
         return;
     }
 
-    //Check spawn point
-    SpawnError = GetSpawnPointError(C, ESPT_Vehicles);
-
-    if (SpawnError != SpawnError_None)
+    //Check spawn settings
+    if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
     {
+        SpawnError = SpawnError_Fatal;
+
         return;
     }
 
@@ -492,7 +493,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     Offset = C.Pawn.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Check if we can spawn at the vehicle
-    if (GRI.CanSpawnAtVehicle(C.SpawnVehicleIndex, C))
+    if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
     {
         ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
         class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
@@ -619,65 +620,6 @@ function bool TeleportPlayer(Controller C, vector SpawnLocation, rotator SpawnRo
     return false;
 }
 
-function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
-{
-    local DHSpawnPoint SP;
-
-    if (C.SpawnPointIndex >= SpawnPoints.Length)
-    {
-        if (class'DH_LevelInfo'.static.DHDebugMode())
-        {
-            Warn("[DHSM] Fatal error in DrySpawnInfantry (either invalid indices passed in or pool's VehicleClass is none)");
-        }
-
-        return SpawnError_Fatal;
-    }
-
-    SP = SpawnPoints[C.SpawnPointIndex];
-
-    if (SP == none || (SP.Type != ESPT_Both && SP.Type != SpawnPointType))
-    {
-        if (class'DH_LevelInfo'.static.DHDebugMode())
-        {
-            Warn("[DHSM] Fatal error, requested spawn point is null or incorrect type");
-        }
-
-        return SpawnError_Fatal;
-    }
-
-    if (C.GetTeamNum() != SP.TeamIndex)
-    {
-        if (class'DH_LevelInfo'.static.DHDebugMode())
-        {
-            Warn("[DHSM] Spawn point team index (" $ SP.TeamIndex $ ") does not match player's (" $ C.GetTeamNum() $ ")");
-        }
-
-        return SpawnError_BadTeamSpawnPoint;
-    }
-
-    if (!GRI.IsSpawnPointIndexActive(C.SpawnPointIndex))
-    {
-        if (class'DH_LevelInfo'.static.DHDebugMode())
-        {
-            Warn("[DHSM] Spawn point" @ C.SpawnPointIndex @ "is inactive");
-        }
-
-        return SpawnError_SpawnInactive;
-    }
-
-    if (SP.Type != ESPT_Both && SP.Type != SpawnPointType)
-    {
-        if (class'DH_LevelInfo'.static.DHDebugMode())
-        {
-            Warn("Spawnpoint types do not match");
-        }
-
-        return SpawnError_SpawnPointsDontMatch;
-    }
-
-    return SpawnError_None;
-}
-
 function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
 {
     if (C == none)
@@ -690,7 +632,7 @@ function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return SpawnError_Fatal;
     }
 
-    if (SP == none || (SP.Type != ESPT_Both && SP.Type != ESPT_Vehicles))
+    if (SP == none || (SP.Type != ESPT_All && SP.Type != ESPT_Vehicles))
     {
         return SpawnError_Fatal;
     }
@@ -734,11 +676,11 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
         return;
     }
 
-    //Spawn point sanity check
-    SpawnError = GetSpawnPointError(C, ESPT_Infantry);
-
-    if (SpawnError != SpawnError_None)
+    //Check spawn settings
+    if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
     {
+        SpawnError = SpawnError_Fatal;
+
         return;
     }
 
