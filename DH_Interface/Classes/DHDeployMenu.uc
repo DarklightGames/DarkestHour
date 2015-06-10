@@ -302,7 +302,8 @@ function UpdateStatus()
     b_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
     l_Status.Caption = GetStatusText();
 
-    if (GRI.AreSpawnSettingsValid(CurrentTeam,
+    if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
+        GRI.AreSpawnSettingsValid(CurrentTeam,
                                   DHRoleInfo(li_Roles.GetObject()),
                                   SpawnPointIndex,
                                   GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
