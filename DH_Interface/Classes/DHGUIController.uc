@@ -166,6 +166,7 @@ defaultproperties
     DefaultStyleNames(81)="DH_Interface.DHStyle_TabButton"
     DefaultStyleNames(82)="DH_Interface.DHStyle_ListHighlight"
     DefaultStyleNames(83)="DH_Interface.DHStyle_DeployTabButton"
+    DefaultStyleNames(84)="DH_Interface.DHStyle_DeployContinueButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
