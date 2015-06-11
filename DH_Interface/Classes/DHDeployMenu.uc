@@ -174,9 +174,8 @@ function SetLoadoutMode(ELoadoutMode Mode)
 function Timer()
 {
     // Colin: The GRI might not be set when we first open the menu if the player
-    // opens it very quickly. This state will sit and wait until the GRI is confirmed
-    // to be present.
-    // TODO: bonus marks, have it show a 'loading' screen
+    // opens it very quickly. This state will sit and wait until the GRI is
+    // confirmed to be present.
     local byte Team;
 
     if (GRI == none)
@@ -185,6 +184,21 @@ function Timer()
 
         if (GRI != none)
         {
+            // Colin: Now that we have the GRI, we can set the Allied flag on
+            // the team button.
+            switch (GRI.AlliedNationID)
+            {
+                case 0: // USA
+                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_usa';
+                    break;
+                case 1: // UK
+                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_uk';
+                    break;
+                case 2: // Canada
+                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_canada';
+                    break;
+            }
+
             // Colin: This bullshit is used by RO code to circumvent the
             // fact we can't send initialization parameters to the menu.
             if (PC.ForcedTeamSelectOnRoleSelectPage != -5)
@@ -335,19 +349,6 @@ function UpdateStatus()
         return;
     }
 
-    switch (GRI.AlliedNationID)
-    {
-        case 0: // USA
-            i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_usa';
-            break;
-        case 1: // UK
-            i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_uk';
-            break;
-        case 2: // Canada
-            i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_canada';
-            break;
-    }
-
     b_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
     b_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
     l_Status.Caption = GetStatusText();
@@ -356,6 +357,7 @@ function UpdateStatus()
 function string GetStatusText()
 {
     local DHRoleInfo RI;
+    local int SpawnTime;
 
     RI = DHRoleInfo(li_Roles.GetObject());
 
@@ -369,7 +371,9 @@ function string GetStatusText()
         return default.SelectSpawnPointText;
     }
 
-    return class'DHLib'.static.GetDurationString(Max(0, PC.GetSpawnTime(RI, cb_PrimaryWeapon.GetIndex(), 0, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())))), "m:ss");
+    SpawnTime = PC.GetSpawnTime(RI, cb_PrimaryWeapon.GetIndex(), 0, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())));
+
+    return class'DHLib'.static.GetDurationString(Max(0, SpawnTime), "m:ss");
 }
 
 function PopulateVehicles()
@@ -399,7 +403,7 @@ function UpdateVehicles()
 {
     local int i, j;
     local class<ROVehicle> VehicleClass;
-    local RORoleInfo RI;
+    local DHRoleInfo RI;
     local bool bDisabled;
     local string S;
     local float RespawnTime;
@@ -409,7 +413,7 @@ function UpdateVehicles()
         return;
     }
 
-    RI = RORoleInfo(li_Roles.GetObject());
+    RI = DHRoleInfo(li_Roles.GetObject());
 
     for (i = 0; i < li_Vehicles.ItemCount; ++i)
     {
@@ -438,7 +442,8 @@ function UpdateVehicles()
                 S @= "[" $ GRI.GetVehiclePoolSpawnsRemaining(j) $ "]";
             }
 
-            RespawnTime = Max(0.0, GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime);
+            RespawnTime = GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime;
+            RespawnTime = Max(RespawnTime, PC.NextVehicleSpawnTime - GRI.ElapsedTime);
 
             if (RespawnTime > 0)
             {
@@ -979,6 +984,7 @@ function InternalOnChange(GUIComponent Sender)
 
             // Colin: Vehicle eligibility may have changed, update vehicles.
             UpdateVehicles();
+            UpdateStatus();
 
             break;
 
@@ -1012,6 +1018,7 @@ function InternalOnChange(GUIComponent Sender)
             }
 
             UpdateSpawnPoints();
+            UpdateStatus();
 
             break;
 

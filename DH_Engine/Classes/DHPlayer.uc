@@ -58,7 +58,7 @@ var     Vehicle                 SpawnVehicle;               // used for vehicle 
 var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
 var     int                     SpawnTime;                  // the amount of time it will take the player to respawn from LastKilledTime
 var     float                   LastKilledTime;             // the time at which last death occured
-var     float                   LastVehicleSpawnTime;
+var     int                     NextVehicleSpawnTime;
 
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
@@ -71,7 +71,7 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         SpawnAmmoAmount, DHPrimaryWeapon, DHSecondaryWeapon,
-        bSpawnPointInvalidated;
+        bSpawnPointInvalidated, NextVehicleSpawnTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -129,10 +129,6 @@ event ClientReset()
             A.Reset();
         }
     }
-
-    //Reset deploy stuff
-    SpawnTime = default.SpawnTime;
-    LastKilledTime = 0;
 
     //Reset camera stuff
     bBehindView = false;
@@ -2232,8 +2228,8 @@ simulated function int GetSpawnTime(DHRoleInfo RI, int WeaponIndex, byte MagCoun
 
     if (VehiclePoolIndex != 255)
     {
-        //TODO: might need to do more thorough checks here
         T = Max(T, GRI.VehiclePoolNextAvailableTimes[VehiclePoolIndex] - GRI.ElapsedTime);
+        T = Max(T, NextVehicleSpawnTime - GRI.ElapsedTime);
     }
 
     return T;
@@ -2670,10 +2666,12 @@ function Reset()
 {
     super.Reset();
 
-    SpawnPointIndex = -1;
-    SpawnVehicleIndex = -1;
-    VehiclePoolIndex = -1;
-    LastKilledTime = 0;
+    SpawnTime = default.SpawnTime;
+    SpawnPointIndex = default.SpawnPointIndex;
+    SpawnVehicleIndex = default.SpawnVehicleIndex;
+    VehiclePoolIndex = default.VehiclePoolIndex;
+    LastKilledTime = default.LastKilledTime;
+    NextVehicleSpawnTime = default.NextVehicleSpawnTime;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)

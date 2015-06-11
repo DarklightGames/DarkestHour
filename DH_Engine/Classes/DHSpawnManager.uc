@@ -332,12 +332,12 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
         SpawnInfantry(C, SpawnError);
     }
 
-    // We have a pawn so lets edit ammo and fade from black
+    // We have a pawn so let's fade from black
     if (DHPawn(C.Pawn) != none)
     {
         if (C.VehiclePoolIndex != 255) // Vehicle spawn
         {
-            C.LastVehicleSpawnTime = Level.TimeSeconds;
+            C.NextVehicleSpawnTime = GRI.ElapsedTime + 60;
 
             C.ClientFadeFromBlack(0.0, true); // Black out, the fade will start when the pawn is put back into the vehicle
             C.SetTimer(1.0, false); // Tell the player to check after 1 second to re enter the vehicle and fade from black
