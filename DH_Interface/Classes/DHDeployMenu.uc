@@ -442,17 +442,17 @@ function UpdateVehicles()
                 S @= "[" $ GRI.GetVehiclePoolSpawnsRemaining(j) $ "]";
             }
 
+            if (GRI.VehiclePoolMaxActives[j] != 255)
+            {
+                S @= "{" $ GRI.VehiclePoolActiveCounts[j] $ "/" $ GRI.VehiclePoolMaxActives[j] $ "}";
+            }
+
             RespawnTime = GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime;
             RespawnTime = Max(RespawnTime, PC.NextVehicleSpawnTime - GRI.ElapsedTime);
 
             if (RespawnTime > 0)
             {
                 S @= "(" $ class'DHLib'.static.GetDurationString(RespawnTime, "m:ss") $ ")";
-            }
-
-            if (GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j])
-            {
-                S @= "*MAX*";
             }
 
             li_Vehicles.SetItemAtIndex(i, S);
