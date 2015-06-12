@@ -172,8 +172,6 @@ defaultproperties
     Skins(2)=texture'axis_vehicles_tex.Treads.Tiger1_treads'
     Skins(3)=texture'axis_vehicles_tex.int_vehicles.tiger1_int'
     SoundPitch=32
-    SoundRadius=5000.0
-    TransientSoundRadius=10000.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

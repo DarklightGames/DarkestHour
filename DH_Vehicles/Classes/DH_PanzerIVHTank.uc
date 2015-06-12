@@ -187,8 +187,6 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     Skins(4)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     Skins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'

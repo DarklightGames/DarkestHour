@@ -170,8 +170,6 @@ defaultproperties
     Skins(2)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
     Skins(3)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
     Skins(4)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'

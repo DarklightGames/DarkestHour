@@ -150,8 +150,6 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
     Skins(1)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
     Skins(2)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

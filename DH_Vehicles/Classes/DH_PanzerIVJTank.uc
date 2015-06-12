@@ -191,8 +191,6 @@ defaultproperties
     Skins(5)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo2'
     Skins(6)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     Skins(7)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_ext'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

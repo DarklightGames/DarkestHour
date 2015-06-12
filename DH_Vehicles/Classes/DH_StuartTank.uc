@@ -178,8 +178,6 @@ defaultproperties
     Skins(2)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
     Skins(3)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
     SoundPitch=32
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)

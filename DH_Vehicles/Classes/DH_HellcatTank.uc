@@ -191,8 +191,6 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
     Skins(4)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
     Skins(5)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

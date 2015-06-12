@@ -166,8 +166,6 @@ defaultproperties
     Health=150
     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'
     Skins(0)=texture'DH_Allied_MilitarySM.American.GMC'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

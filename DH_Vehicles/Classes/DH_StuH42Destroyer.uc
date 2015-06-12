@@ -186,8 +186,6 @@ defaultproperties
     Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
     Skins(3)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
     Skins(4)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
-    SoundRadius=800.0
-    TransientSoundRadius=1200.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

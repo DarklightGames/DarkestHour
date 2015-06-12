@@ -144,8 +144,6 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
     Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

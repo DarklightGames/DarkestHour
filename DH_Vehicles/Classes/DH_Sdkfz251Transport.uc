@@ -9,12 +9,6 @@ class DH_Sdkfz251Transport extends DHApcVehicle;
 
 defaultproperties
 {
-    // TEST TEST TEST THEEL THIS NEEDS REMOVED (EXPERIENMENTAL ONLY)
-
-    SoundRadius=100.0
-    TransientSoundRadius=5000.0
-
-
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0

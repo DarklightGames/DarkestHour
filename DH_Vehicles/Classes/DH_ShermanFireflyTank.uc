@@ -195,8 +195,6 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
     Skins(4)=texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
     Skins(5)=texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
-    SoundRadius=800.0
-    TransientSoundRadius=1500.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
