@@ -192,8 +192,8 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
     Skins(4)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
     SoundPitch=32
-    SoundRadius=5000.0
-    TransientSoundRadius=10000.0
+    SoundRadius=100.0
+    TransientSoundRadius=128.0
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
