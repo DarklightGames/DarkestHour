@@ -153,7 +153,7 @@ defaultproperties
     DHTextLogo=texture'DH_GUI_Tex.Menu.DHTextLogo'
 
     // The official backgrounds
-    Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
+    Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
 
     Begin Object class=DrawOpImage Name=OpTopBorder
         Image=texture'DH_GUI_Tex.Menu.DHSectionTopper'
