@@ -2645,7 +2645,7 @@ state DeadSpectating
 
         if (bSpawnPointInvalidated)
         {
-            ClientReplaceMenu("DH_Interface.DHDeployMenu");
+            PlayerMenu();
         }
     }
 }
