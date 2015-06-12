@@ -305,6 +305,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             // If cannon is empty we can't fire
             if (!ConsumeAmmo(FireMode))
             {
+                Log(Tag @ "AttemptFire returning false as ConsumeAmmo returned false (no ammo): FireMode =" @ FireMode); // DEBUG
                 CannonPawn.ClientVehicleCeaseFire(bAltFire);
 
                 return false;
@@ -340,6 +341,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         return true;
     }
+    else if (!bAltFire && Role == ROLE_Authority) Log(Tag @ "AttemptFire returning false: CannonReloadState =" @ GetEnum(enum'ECannonReloadState', CannonReloadState)
+        @ " bClientCanFireCannon =" @ bClientCanFireCannon); // DEBUG
 
     return false;
 }
@@ -1107,13 +1110,13 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 //  ********************  HIT DETECTION, PENETRATION & DAMAGE  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // Matt: TEMP
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // Matt: DEBUG
 {
     log("HitDriverArea() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
     return false;
 }
 
-simulated function bool HitDriver(vector HitLocation, vector Momentum) // Matt: TEMP
+simulated function bool HitDriver(vector HitLocation, vector Momentum) // Matt: DEBUG
 {
     log("HitDriver() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
     return false;

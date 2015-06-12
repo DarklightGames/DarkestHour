@@ -213,7 +213,18 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
     }
 }
 
-//TODO: this is a poorly named function and it's functionality is nonsensical
+// Colin: The rules for spawn point availability are a little bit
+// complicated, so here's a run-down:
+//
+// Players not spawning vehicles can spawn at any spawn point marked as
+// SPT_Infantry.
+//
+// Mortar operators can use any spawn point marked as SPT_Mortar.
+//
+// Vehicles can be spawned at any spawn point marked as SPT_Vehicles.
+//
+// Tank crewmen not spawning tanks can use any spawn point marked as
+// SPT_Vehicle (so that vehicle crews can spawn together)
 simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, DHRoleInfo RI, class<Vehicle> VehicleClass)
 {
     local DHSpawnPoint SP;
@@ -244,22 +255,10 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
     }
 
     return (SP.CanSpawnInfantry() && VehicleClass == none) ||
-    (SP.CanSpawnVehicles() && ((VehicleClass != none && SP.TeamIndex == VehicleClass.default.Team) || RI.default.bCanBeTankCrew)) ||
+    (SP.CanSpawnVehicles() && ((class<ROVehicle>(VehicleClass) != none && SP.TeamIndex == class<ROVehicle>(VehicleClass).default.VehicleTeam) || RI.default.bCanBeTankCrew)) ||
     (SP.CanSpawnMortars() && RI.default.bCanUseMortars);
 }
 
-// Colin: The rules for spawn point availability are a little bit
-// complicated, so here's a run-down:
-//
-// Players not spawning vehicles can spawn at any spawn point marked as
-// SPT_Infantry.
-//
-// Mortar operators can use any spawn point marked as SPT_Mortar.
-//
-// Vehicles can be spawned at any spawn point marked as SPT_Vehicles.
-//
-// Tank crewmen not spawning tanks can use any spawn point marked as
-// SPT_Vehicle (so that vehicle crews can spawn together)
 simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)
 {
     local class<Vehicle> VehicleClass;

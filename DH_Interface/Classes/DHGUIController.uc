@@ -167,6 +167,7 @@ defaultproperties
     DefaultStyleNames(82)="DH_Interface.DHStyle_ListHighlight"
     DefaultStyleNames(83)="DH_Interface.DHStyle_DeployTabButton"
     DefaultStyleNames(84)="DH_Interface.DHStyle_DeployContinueButton"
+    DefaultStyleNames(85)="DH_Interface.DHStyle_SpawnVehicleButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

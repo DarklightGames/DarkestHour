@@ -31,6 +31,12 @@ enum ESpawnVehicleType
     ESVT_Always
 };
 
+struct VehiclePoolSlot
+{
+    var ROVehicle   Vehicle;
+    var int         RespawnTime;
+};
+
 struct VehiclePool
 {
     var() name              Tag;
@@ -47,6 +53,8 @@ struct VehiclePool
     var() name              OnDepleteActivatePool;      //vehicle pool to activate when this pool has been depleted (uses pool tag)
     var() name              OnVehicleDestroyedEvent;    //event to trigger when vehicle from this pool is destroyed
     var() name              OnVehicleSpawnedEvent;      //event to trigger when vehicle from this pool is spawned
+
+    var array<VehiclePoolSlot> Slots;
 };
 
 //TODO: these were basically used for debug, reduce this down to a simple binary
@@ -146,6 +154,11 @@ function PostBeginPlay()
         }
 
         GRI.VehiclePoolVehicleClasses[i] = VehiclePools[i].VehicleClass;
+
+        if (VehiclePools[i].MaxActive != 255)
+        {
+            VehiclePools[i].Slots.Length = VehiclePools[i].MaxActive;
+        }
     }
 
     for (i = 0; i < arraycount(GRI.MaxTeamVehicles); ++i)
@@ -156,7 +169,7 @@ function PostBeginPlay()
 
 function Reset()
 {
-    local int i;
+    local int i, j;
 
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
@@ -171,6 +184,12 @@ function Reset()
         GRI.VehiclePoolMaxSpawns[i] = VehiclePools[i].MaxSpawns;
         GRI.VehiclePoolNextAvailableTimes[i] = 0.0;
         GRI.VehiclePoolSpawnCounts[i] = 0;
+
+        for (j = 0; j < VehiclePools[i].Slots.Length; ++j)
+        {
+            VehiclePools[i].Slots[j].Vehicle = none;
+            VehiclePools[i].Slots[j].RespawnTime = 0;
+        }
     }
 
     super.Reset();
@@ -351,6 +370,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
 function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
 {
+    local int i;
     local ROVehicle V;
     local vector SpawnLocation;
     local rotator SpawnRotation;
@@ -443,9 +463,19 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         --GRI.MaxTeamVehicles[V.default.VehicleTeam];
 
         //Update pool properties
-        GRI.VehiclePoolNextAvailableTimes[C.VehiclePoolIndex] = GRI.ElapsedTime + VehiclePools[C.VehiclePoolIndex].RespawnTime;
         GRI.VehiclePoolActiveCounts[C.VehiclePoolIndex] += 1;
         GRI.VehiclePoolSpawnCounts[C.VehiclePoolIndex] += 1;
+
+        //Assign this newly spawned vehicle to a slot so we can track it's
+        //respawn time.
+        for (i = 0; i < VehiclePools[C.VehiclePoolIndex].Slots.Length; ++i)
+        {
+            if (VehiclePools[C.VehiclePoolIndex].Slots[i].Vehicle == none)
+            {
+                VehiclePools[C.VehiclePoolIndex].Slots[i].Vehicle = V;
+                break;
+            }
+        }
 
         if (VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent != '')
         {
@@ -750,7 +780,7 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 
 event VehicleDestroyed(Vehicle V)
 {
-    local int i;
+    local int i, j, NextAvailableTime;
 
     super.VehicleDestroyed(V);
 
@@ -803,6 +833,35 @@ event VehicleDestroyed(Vehicle V)
 
                 //Send "Vehicle reinforcements have been depleted." message
                 BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 200 + i,,, self);
+            }
+
+            // Find this vehicle's slot and set the slot's respawn time!
+            for (j = 0; j < VehiclePools[i].Slots.Length; ++j)
+            {
+                if (VehiclePools[i].Slots[j].Vehicle == V)
+                {
+                    VehiclePools[i].Slots[j].Vehicle = none;
+                    VehiclePools[i].Slots[j].RespawnTime = GRI.ElapsedTime + VehiclePools[i].RespawnTime;
+
+                    break;
+                }
+            }
+
+            if (VehiclePools[i].Slots.Length > 0)
+            {
+                //Set the next available time to the lowest value in the vehicle
+                //pool slots' respawn times list.
+                NextAvailableTime = 2147483647;
+
+                for (j = 0; j < VehiclePools[i].Slots.Length; ++j)
+                {
+                    if (VehiclePools[i].Slots[j].Vehicle == none)
+                    {
+                        NextAvailableTime = Min(NextAvailableTime, VehiclePools[i].Slots[j].RespawnTime);
+                    }
+                }
+
+                GRI.VehiclePoolNextAvailableTimes[i] = NextAvailableTime;
             }
 
             break;
