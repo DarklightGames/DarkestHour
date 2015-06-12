@@ -14,9 +14,10 @@ function VerifyTeamChatters()
     local int OpposingIndex;
     local PlayerController PC;
 
-    for (P=Level.ControllerList; P!=none; P=P.nextController)
+    for (P = Level.ControllerList; P != none; P = P.NextController)
     {
         PC = PlayerController(P);
+
         if (PC != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
             if (P.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
@@ -41,15 +42,13 @@ function VerifyTeamChatters()
                 Level.Game.ChangeVoiceChannel(P.PlayerReplicationInfo, FixedChannel.ChannelIndex, ChatChannel.ChannelIndex);
 
                 if (P.PlayerReplicationInfo != none)
+                {
                     P.PlayerReplicationinfo.ActiveChannel = FixedChannel.ChannelIndex;
+                }
 
                 PC.ActiveRoom = FixedChannel;
                 PC.ClientSetActiveRoom(FixedChannel.ChannelIndex);
             }
-//          else
-//          {
-//              log(P.PlayerReplicationInfo.PlayerName$" is in the right channel!!! Opposing Index = "$OpposingIndex$" team "$P.PlayerReplicationInfo.Team.TeamIndex);
-//          }
         }
     }
 }
