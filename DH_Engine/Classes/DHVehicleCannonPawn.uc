@@ -581,7 +581,9 @@ function Fire(optional float F)
         {
             Cannon.ServerManualReload();
         }
+        else Log(Tag @ "Fire() not calling super: CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon); // DEBUG
     }
+    else Log(Tag @ "Fire() not calling super: CanFire =" @ CanFire()); // DEBUG
 }
 
 // Modified to check CanFire(), to skip over obsolete RO functionality in ROTankCannonPawn, & to add dry-fire sound if trying to fire empty MG
@@ -852,7 +854,7 @@ simulated function NextViewPoint()
 // Emptied out as no longer used (see NextViewPoint() above)
 simulated function AnimateTransition()
 {
-    Log ("AnimateTransition() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!"); // Matt: TEMP
+    Log ("AnimateTransition() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!"); // Matt: DEBUG
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
@@ -1609,6 +1611,12 @@ function ServerToggleDebugExits()
         class'DHVehicleCannonPawn'.default.bDebugExitPositions = !class'DHVehicleCannonPawn'.default.bDebugExitPositions;
         Log("DHVehicleCannonPawn.bDebugExitPositions =" @ class'DHVehicleCannonPawn'.default.bDebugExitPositions);
     }
+}
+
+exec function LogCannon() // DEBUG
+{
+    Log(Tag @ "CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon @ " ProjectileClass =" @ Cannon.ProjectileClass);
+    Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " 'ViewTransition' =" @ IsInState('ViewTransition') @ "DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
 }
 
 defaultproperties
