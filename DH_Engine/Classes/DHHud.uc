@@ -3581,8 +3581,9 @@ simulated function DrawSpectatingHud(Canvas C)
     local DHSpawnPoint            SP;
     local DHPlayer                PC;
     local class<Vehicle>          SVC;
-    local float  Scale, Time, X, Y, strX, strY, NameWidth, SmallH, XL;
+    local float  Scale, X, Y, strX, strY, NameWidth, SmallH, XL;
     local string S;
+    local int Time;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3630,7 +3631,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
         else if (DHGRI.bMatchHasBegun && DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            Time = FMax(Ceil(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds), 0.0);
+            Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
 
             switch (PC.ClientLevelInfo.SpawnMode)
             {

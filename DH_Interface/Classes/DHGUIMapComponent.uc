@@ -15,7 +15,7 @@ var             DHHud                       MyHud;
 var             DHGameReplicationInfo       GRI;
 var             DHPlayer                    PC;
 
-delegate OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex);
+delegate OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -108,6 +108,33 @@ function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)
     }
 }
 
+function bool OnDblClick(GUIComponent Sender)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        if (Sender == b_SpawnPoints[i])
+        {
+            OnSpawnPointChanged(b_SpawnPoints[i].Tag, 255, true);
+
+            return true;
+        }
+    }
+
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        if (Sender == b_SpawnVehicles[i])
+        {
+            OnSpawnPointChanged(255, b_SpawnVehicles[i].Tag, true);
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     OnDraw=InternalOnDraw
@@ -119,7 +146,7 @@ defaultproperties
         WinHeight=0.04
         bTabStop=false
         OnClick=OnClick
-        //OnDblClick=OnDblClick
+        OnDblClick=OnDblClick
         bVisible=false
         CheckedOverlay(0)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         CheckedOverlay(1)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
@@ -181,14 +208,18 @@ defaultproperties
 
     // Spawn Vehicle Buttons
     Begin Object Class=DHGUICheckBoxButton Name=SpawnVehicleButton
-        StyleName="DHSpawnButtonStyle"
+        StyleName="DHSpawnVehicleButtonStyle"
         WinWidth=0.04
         WinHeight=0.04
         bTabStop=false
         OnCheckChanged=InternalOnCheckChanged
         OnDblClick=OnDblClick
         bVisible=false
-        bCheckBox=true
+        CheckedOverlay(0)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(1)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(2)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
     End Object
 
     b_SpawnVehicles(0)=SpawnVehicleButton

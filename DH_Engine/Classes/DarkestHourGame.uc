@@ -2024,7 +2024,6 @@ function RestartPlayer(Controller C)
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
     local DHPlayer PC;
-    local DHPawn P;
     local byte SpawnError;
 
     PC = DHPlayer(C);
@@ -2049,16 +2048,6 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
             PC.ClientReplaceMenu("DH_Interface.DHDeployMenu");
 
             return;
-        }
-    }
-
-    if (PC != none)
-    {
-        P = DHPawn(PC.Pawn);
-
-        if (P != none)
-        {
-            P.SetAmmoAmount(PC.SpawnAmmoAmount);
         }
     }
 }

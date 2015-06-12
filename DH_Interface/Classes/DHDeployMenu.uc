@@ -46,6 +46,7 @@ var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[6];
 var automated   DHGUIListBox                lb_Vehicles;
+var automated   GUISlider                   s_Ammunition;
 var             DHGUIList                   li_Vehicles;
 var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
@@ -56,10 +57,9 @@ var automated   array<GUIButton>            b_MenuOptions;
 var DHGameReplicationInfo                   GRI;
 var DHPlayer                                PC;
 
-var localized string                        NoneText;
+var localized   string                      NoneText;
 var localized   string                      SelectRoleText;
 var localized   string                      SelectSpawnPointText;
-var localized   string                      SelectVehicleText;
 
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -261,12 +261,12 @@ function GetMapCoords(vector Location, out float X, out float Y, optional float 
     Location = DHHud(PlayerOwner().MyHud).GetAdjustedHudLocation(Location - MapCenter, false);
 
     X = FClamp(0.5 + (Location.X / MapScale) - (Width / 2),
-               0.0 + (Width / 2),
-               1.0 - (Width / 2));
+               0.0,
+               1.0 - Width);
 
     Y = FClamp(0.5 + (Location.Y / MapScale) - (Height / 2),
-               0.0 + (Height / 2),
-               1.0 - (Height / 2));
+               0.0,
+               1.0 - Height);
 }
 
 function UpdateSpawnPoints()
@@ -282,32 +282,48 @@ function UpdateSpawnPoints()
     for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)
     {
         if (GRI != none &&
-            GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())), SpawnVehicleIndex))
+            GRI.SpawnPoints[i].TeamIndex == CurrentTeam &&
+            GRI.IsSpawnPointIndexActive(i))
         {
             GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight);
 
             p_Map.b_SpawnPoints[i].Tag = i;
-            p_Map.b_SpawnPoints[i].SetVisibility(true);
             p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
+            p_Map.b_SpawnPoints[i].SetVisibility(true);
+
+            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())), 255))
+            {
+                p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
+            }
+            else
+            {
+                if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
+                {
+                    p_Map.SelectSpawnPoint(255, 255);
+                }
+
+                p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
+            }
         }
         else
         {
             // If spawn point that was previously selected is now hidden,
             // deselect it.
+            p_Map.b_SpawnPoints[i].SetVisibility(false);
+
             if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
             {
                 p_Map.SelectSpawnPoint(255, 255);
             }
-
-            p_Map.b_SpawnPoints[i].SetVisibility(false);
         }
     }
 
-    // Spawn vehicles
+    // Spawn Vehicles
+    // Colin: Spawn vehicles will always display, but will simply be disabled
+    // when selecting them is not an option.
     for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
     {
-        if (li_Vehicles.GetObject() == none &&
-            GRI != none &&
+        if (GRI != none &&
             GRI.SpawnVehicles[i].VehicleClass != none &&
             GRI.SpawnVehicles[i].TeamIndex == CurrentTeam)
         {
@@ -317,27 +333,32 @@ function UpdateSpawnPoints()
             p_Map.b_SpawnVehicles[i].SetPosition(X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight, true);
             p_Map.b_SpawnVehicles[i].SetVisibility(true);
 
-            for (j = 0; j < arraycount(p_Map.b_SpawnVehicles[i].Style.Images); ++j)
+            if (li_Vehicles.GetObject() == none)
             {
-                TR = TexRotator(p_Map.b_SpawnVehicles[i].Style.Images[j]);
+                // If spawn point that was previously selected is now hidden,
+                // deselect it.
+                p_Map.b_SpawnVehicles[i].MenuStateChange(MSAT_Blurry);
+            }
+            else
+            {
+                p_Map.b_SpawnVehicles[i].MenuStateChange(MSAT_Disabled);
 
-                if (TR != none)
+                if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
                 {
-                    //TODO: verify correctness and take map rotation into consideration
-                    TR.Rotation.Roll = GRI.SpawnVehicles[i].Location.Z;
+                    p_Map.SelectSpawnPoint(255, 255);
                 }
             }
         }
         else
         {
+            p_Map.b_SpawnVehicles[i].SetVisibility(false);
+
             // If spawn point that was previously selected is now hidden,
             // deselect it.
             if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
             {
                 p_Map.SelectSpawnPoint(255, 255);
             }
-
-            p_Map.b_SpawnVehicles[i].SetVisibility(false);
         }
     }
 }
@@ -352,6 +373,16 @@ function UpdateStatus()
     b_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
     b_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
     l_Status.Caption = GetStatusText();
+
+    // Suicide button status
+    if (PC.Pawn != none)
+    {
+        b_MenuOptions[1].MenuStateChange(MSAT_Blurry);
+    }
+    else
+    {
+        b_MenuOptions[1].MenuStateChange(MSAT_Disabled);
+    }
 }
 
 function string GetStatusText()
@@ -371,7 +402,7 @@ function string GetStatusText()
         return default.SelectSpawnPointText;
     }
 
-    SpawnTime = PC.GetSpawnTime(RI, cb_PrimaryWeapon.GetIndex(), 0, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())));
+    SpawnTime = Max(0, PC.GetNextSpawnTime(RI, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject()))) - GRI.ElapsedTime);
 
     return class'DHLib'.static.GetDurationString(Max(0, SpawnTime), "m:ss");
 }
@@ -620,8 +651,6 @@ function Apply()
         return;
     }
 
-    //TODO: ammunition?
-
     SetButtonsEnabled(false);
 
     PC.ServerSetPlayerInfo(255,
@@ -630,8 +659,7 @@ function Apply()
                            cb_SecondaryWeapon.GetIndex(),
                            SpawnPointIndex,
                            GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
-                           SpawnVehicleIndex,
-                           0);
+                           SpawnVehicleIndex);
 }
 
 function SetButtonsEnabled(bool bEnable)
@@ -851,7 +879,6 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         }
     }
 
-    Log("got return value");
     SetButtonsEnabled(true);
 }
 
@@ -950,8 +977,8 @@ function InternalOnChange(GUIComponent Sender)
 
             if (PC.GetRoleInfo() == RI)
             {
-                cb_PrimaryWeapon.SetIndex(PC.PrimaryWeapon);
-                cb_SecondaryWeapon.SetIndex(PC.SecondaryWeapon);
+                cb_PrimaryWeapon.SetIndex(PC.DesiredPrimary);
+                cb_SecondaryWeapon.SetIndex(PC.DesiredSecondary);
             }
             else
             {
@@ -1033,7 +1060,7 @@ function ChangeTeam(byte Team)
     {
         SetButtonsEnabled(false);
 
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255, 255);
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
     }
 }
 
@@ -1050,13 +1077,18 @@ function OnTeamChanged(byte Team)
     UpdateRoundStatus();
 }
 
-function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex)
+function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick)
 {
     self.SpawnPointIndex = SpawnPointIndex;
     self.SpawnVehicleIndex = SpawnVehicleIndex;
 
     UpdateStatus();
     UpdateButtons();
+
+    if (bDoubleClick)
+    {
+        Apply();
+    }
 }
 
 defaultproperties
@@ -1303,7 +1335,7 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=LoadoutContainerObject
         WinWidth=0.26
-        WinHeight=0.48
+        WinHeight=0.43
         WinLeft=0.02
         WinTop=0.45
         LeftPadding=0.05
@@ -1514,6 +1546,5 @@ defaultproperties
     NoneText="None"
     SelectRoleText="Select a role"
     SelectSpawnPointText="Select a spawn point"
-    SelectVehicleText="Select a vehicle"
     bButtonsEnabled=true
 }

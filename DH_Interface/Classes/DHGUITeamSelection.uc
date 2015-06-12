@@ -149,15 +149,15 @@ function SelectTeam(int Team)
 
     if (Team == -1) // Spectate
     {
-        DHP.ServerSetPlayerInfo(254, 255, 0, 0, 255, 255, 255, 255);
+        DHP.ServerSetPlayerInfo(254, 255, 0, 0, 255, 255, 255);
     }
     else if (Team == -2) // Auto-select
     {
-        DHP.ServerSetPlayerInfo(250, 255, 0, 0, 255, 255, 255, 255);
+        DHP.ServerSetPlayerInfo(250, 255, 0, 0, 255, 255, 255);
     }
     else // Allies or Axis
     {
-        DHP.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255, 255);
+        DHP.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
     }
 }
 

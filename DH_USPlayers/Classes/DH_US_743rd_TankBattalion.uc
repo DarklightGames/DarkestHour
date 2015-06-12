@@ -8,11 +8,5 @@ class DH_US_743rd_TankBattalion extends DH_American_Units
 
 defaultproperties
 {
-    DefaultStartAmmoPercent=0.5
-    MinStartAmmoPercent=0.5
-    MaxStartAmmoPercent=0.5
-    DeployTimeMod=0
-    MinAmmoTimeMod=0
-    MaxAmmoTimeMod=0
     RolePawnClass="DH_USPlayers.DH_USTankerPawn"
 }

@@ -22,10 +22,11 @@ function SetChecked(bool bNewChecked)
 }
 
 // Colin: Modified to simply call SetChecked so we don't need to duplicate
-// delegate calling logic.
+// delegate calling logic. We also don't want clicking a selected button to
+// become unselected when clicked again.
 function bool InternalOnClick(GUIComponent Sender)
 {
-    if (bCheckBox)
+    if (bCheckBox && !bChecked)
     {
         SetChecked(!bChecked);
     }
