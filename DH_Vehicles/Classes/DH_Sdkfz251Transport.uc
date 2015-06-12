@@ -12,7 +12,7 @@ defaultproperties
     // TEST TEST TEST THEEL THIS NEEDS REMOVED (EXPERIENMENTAL ONLY)
 
     SoundRadius=100.0
-    TransientSoundRadius=128.0
+    TransientSoundRadius=5000.0
 
 
     FriendlyResetDistance=6000.0
