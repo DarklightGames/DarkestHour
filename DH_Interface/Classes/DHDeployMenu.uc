@@ -688,6 +688,8 @@ function SetButtonsEnabled(bool bEnable)
 
 function UpdateButtons()
 {
+    local bool bContinueEnabled;
+
     if (bButtonsEnabled)
     {
         if (CurrentTeam != ALLIES_TEAM_INDEX)
@@ -720,13 +722,7 @@ function UpdateButtons()
                                   GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
                                   SpawnVehicleIndex))
         {
-            b_MenuOptions[7].EnableMe();
-            i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_blurry';
-        }
-        else
-        {
-            b_MenuOptions[7].DisableMe();
-            i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_disabled';
+            bContinueEnabled = true;
         }
     }
     else
@@ -734,9 +730,6 @@ function UpdateButtons()
         b_Allies.DisableMe();
         b_Axis.DisableMe();
         b_Spectate.DisableMe();
-
-        b_MenuOptions[7].DisableMe();
-        i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_disabled';
     }
 
     if (LoadoutMode == LM_Equipment && li_Vehicles.GetObject() != none)
@@ -746,6 +739,17 @@ function UpdateButtons()
     else
     {
         i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
+    }
+
+    if (bContinueEnabled)
+    {
+        b_MenuOptions[7].EnableMe();
+        i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_blurry';
+    }
+    else
+    {
+        b_MenuOptions[7].DisableMe();
+        i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_disabled';
     }
 }
 
