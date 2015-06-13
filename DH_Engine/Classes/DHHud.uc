@@ -3624,7 +3624,7 @@ simulated function DrawSpectatingHud(Canvas C)
         S = "";
 
         // Draw deploy text
-        if (PRI == none || PRI.Team == none || PRI.bIsSpectator)
+        if (PRI == none || PRI.Team == none || PRI.bOnlySpectator)
         {
             // Press ESC to join a team
             S = default.JoinTeamText;
