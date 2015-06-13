@@ -50,7 +50,6 @@ var     float       OverlayKnobRaisingAnimRate;
 var     float       OverlayKnobTurnAnimRate;
 
 // HUD
-var     texture     HUDMortarTexture;
 var     texture     HUDHighExplosiveTexture;
 var     texture     HUDSmokeTexture;
 var     texture     HUDArcTexture;
@@ -847,7 +846,6 @@ defaultproperties
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
     ElevationAdjustmentDelay=0.125
-    HUDMortarTexture=texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2'
     HUDHighExplosiveTexture=texture'DH_Mortars_tex.60mmMortarM2.M49A2-HE'
     HUDSmokeTexture=texture'DH_Mortars_tex.60mmMortarM2.M302-WP'
     HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
