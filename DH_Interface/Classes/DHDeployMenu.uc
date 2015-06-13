@@ -69,6 +69,7 @@ var localized   string                      SelectSpawnPointText;
 // GetTeamNum function is not reliable after receiving a successful team change
 // signal from InternalOnMessage.
 var             byte                        CurrentTeam;
+var             float                       NextChangeTeamTime;
 
 var             ELoadoutMode                LoadoutMode;
 
@@ -1119,7 +1120,8 @@ function InternalOnChange(GUIComponent Sender)
 
 function ChangeTeam(byte Team)
 {
-    if (Team != CurrentTeam)
+    if (Team != CurrentTeam &&
+        PC.Level.TimeSeconds >= NextChangeTeamTime)
     {
         SetButtonsEnabled(false);
 
@@ -1138,6 +1140,8 @@ function OnTeamChanged(byte Team)
     UpdateStatus();
     UpdateButtons();
     UpdateRoundStatus();
+
+    NextChangeTeamTime = PC.Level.TimeSeconds + class'DarkestHourGame'.default.ChangeTeamInterval;
 }
 
 function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick)

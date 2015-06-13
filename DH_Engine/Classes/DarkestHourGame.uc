@@ -26,6 +26,8 @@ var()   config bool                 bSessionKickOnSecondFFViolation;
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
+var     float                       ChangeTeamInterval;
+
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
@@ -2136,7 +2138,7 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 {
     local UnrealTeamInfo NewTeam;
-    local DHPlayer       P;
+    local DHPlayer       PC;
 
     if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
     {
@@ -2155,7 +2157,17 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         return true;
     }
 
-    NewTeam = Teams[PickTeam(num,Other)];
+    PC = DHPlayer(Other);
+
+    // Colin: There is a 5 second buffer time between switching teams. This
+    // stops players from being able to rapid-fire switch teams and spam
+    // others with team-change messages.
+    if (PC != none && PC.NextChangeTeamTime >= Level.TimeSeconds)
+    {
+        return false;
+    }
+
+    NewTeam = Teams[PickTeam(Num, Other)];
 
     // Check if already on this team
     if (Other.PlayerReplicationInfo.Team == NewTeam)
@@ -2169,21 +2181,19 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     {
         Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
 
-        P = DHPlayer(Other);
-
-        if (P != none)
+        if (PC != none)
         {
-            P.DesiredRole = -1;
-            P.CurrentRole = -1;
-            P.PrimaryWeapon = -1;
-            P.SecondaryWeapon = -1;
-            P.GrenadeWeapon = -1;
-            P.bWeaponsSelected = false;
+            PC.DesiredRole = -1;
+            PC.CurrentRole = -1;
+            PC.PrimaryWeapon = -1;
+            PC.SecondaryWeapon = -1;
+            PC.GrenadeWeapon = -1;
+            PC.bWeaponsSelected = false;
 
             // DARKEST HOUR
-            P.SpawnPointIndex = 255;
-            P.SpawnVehicleIndex = 255;
-            P.VehiclePoolIndex = 255;
+            PC.SpawnPointIndex = 255;
+            PC.SpawnVehicleIndex = 255;
+            PC.VehiclePoolIndex = 255;
         }
     }
 
@@ -2206,6 +2216,11 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     // Since we're changing teams, remove all rally points/help requests/etc
     ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
+
+    if (PC != none)
+    {
+        PC.NextChangeTeamTime = Level.TimeSeconds + default.ChangeTeamInterval;
+    }
 
     return true;
 }
@@ -2789,4 +2804,6 @@ defaultproperties
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
     GameMessageClass=class'DH_Engine.DHGameMessage'
+
+    ChangeTeamInterval=5.0
 }

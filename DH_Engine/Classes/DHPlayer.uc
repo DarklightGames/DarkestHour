@@ -64,6 +64,8 @@ var     int                     DHSecondaryWeapon;
 
 var     bool                    bSpawnPointInvalidated;
 
+var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
