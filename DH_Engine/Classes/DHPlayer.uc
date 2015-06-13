@@ -1908,6 +1908,21 @@ simulated exec function PlayerCollisionDebug()
     }
 }
 
+simulated exec function VehicleCamDistance(int NewDistance)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
+    {
+        //Get the current vehicle the player is in
+        if (Pawn.IsA('Vehicle'))
+        {
+            //Change the instance's TPCamDistance
+            Vehicle(Pawn).TPCamDistance = NewDistance;
+            Vehicle(Pawn).TPCamDistRange.Min = NewDistance;
+            Vehicle(Pawn).TPCamDistRange.Max = NewDistance;
+        }
+    }
+}
+
 // DH version, but only showing the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
 simulated exec function DriverCollisionDebug()
 {
