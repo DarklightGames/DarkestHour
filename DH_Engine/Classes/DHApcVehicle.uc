@@ -14,7 +14,6 @@ var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
 var     float               TreadVelocityScale;
 var     rotator             LeftTreadPanDirection, RightTreadPanDirection;
 var     sound               LeftTreadSound, RightTreadSound;
-var     float               TreadSoundVolume;
 var     ROSoundAttachment   LeftTreadSoundAttach, RightTreadSoundAttach;
 var     name                LeftTrackSoundBone, RightTrackSoundBone;
 
