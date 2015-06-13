@@ -15,8 +15,10 @@ var automated   FloatingImage               i_Background;
 var automated   ROGUIProportionalContainer  c_Teams;
 var automated   GUIButton                       b_Axis;
 var automated   GUIImage                        i_Axis;
+var automated   GUILabel                        l_Axis;
 var automated   GUIButton                       b_Allies;
 var automated   GUIImage                        i_Allies;
+var automated   GUILabel                        l_Allies;
 var automated   GUIButton                       b_Spectate;
 var automated   GUIImage                        i_Spectate;
 var automated   GUIImage                    i_Reinforcements;
@@ -35,8 +37,10 @@ var automated   GUILabel                    l_Loadout;
 var automated   ROGUIProportionalContainer  c_Loadout;
 var automated   ROGUIProportionalContainer      c_Equipment;
 var automated   ROGUIProportionalContainer      c_Vehicle;
-var automated   ROGUIProportionalContainer  c_Map;
-var automated   DHGUIMapComponent               p_Map;
+var automated   ROGUIProportionalContainer  c_MapRoot;
+var automated   ROGUIProportionalContainer      c_Map;
+var automated   GUIImage                            i_MapBorder;
+var automated   DHGUIMapComponent                   p_Map;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
@@ -44,7 +48,7 @@ var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
-var automated   GUIImage                    i_GivenItems[6];
+var automated   GUIImage                    i_GivenItems[5];
 var automated   DHGUIListBox                lb_Vehicles;
 var automated   GUISlider                   s_Ammunition;
 var             DHGUIList                   li_Vehicles;
@@ -73,6 +77,8 @@ var             byte                        SpawnVehicleIndex;
 
 var             bool                        bButtonsEnabled;
 
+var             material                    VehicleNoneMaterial;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -93,11 +99,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         c_Footer.ManageComponent(b_MenuOptions[i]);
     }
 
+    c_Footer.ManageComponent(i_Arrows);
+
     // Team buttons
     c_Teams.ManageComponent(b_Allies);
     c_Teams.ManageComponent(i_Allies);
+    c_Teams.ManageComponent(l_Allies);
     c_Teams.ManageComponent(b_Axis);
     c_Teams.ManageComponent(i_Axis);
+    c_Teams.ManageComponent(l_Axis);
     c_Teams.ManageComponent(b_Spectate);
     c_Teams.ManageComponent(i_Spectate);
 
@@ -109,6 +119,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     LoadoutTabContainer.ManageComponent(i_EquipmentButton);
     LoadoutTabContainer.ManageComponent(i_VehiclesButton);
 
+    c_MapRoot.ManageComponent(c_Map);
+
+    c_Map.ManageComponent(i_MapBorder);
     c_Map.ManageComponent(p_Map);
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
@@ -161,10 +174,22 @@ function SetLoadoutMode(ELoadoutMode Mode)
         case LM_Equipment:
             b_EquipmentButton.DisableMe();
             b_VehicleButton.EnableMe();
+
+            if (li_Vehicles.GetObject() != none)
+            {
+                i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
+            }
+            else
+            {
+                i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
+            }
+
             break;
         case LM_Vehicle:
             b_EquipmentButton.EnableMe();
             b_VehicleButton.DisableMe();
+            i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
+
             break;
     }
 
@@ -271,9 +296,8 @@ function GetMapCoords(vector Location, out float X, out float Y, optional float 
 
 function UpdateSpawnPoints()
 {
-    local int i, j;
+    local int i;
     local float X, Y;
-    local TexRotator TR;
     local DHRoleInfo RI;
 
     RI = DHRoleInfo(li_Roles.GetObject());
@@ -282,6 +306,7 @@ function UpdateSpawnPoints()
     for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)
     {
         if (GRI != none &&
+            GRI.SpawnPoints[i] != none &&
             GRI.SpawnPoints[i].TeamIndex == CurrentTeam &&
             GRI.IsSpawnPointIndexActive(i))
         {
@@ -319,8 +344,6 @@ function UpdateSpawnPoints()
     }
 
     // Spawn Vehicles
-    // Colin: Spawn vehicles will always display, but will simply be disabled
-    // when selecting them is not an option.
     for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
     {
         if (GRI != none &&
@@ -370,8 +393,9 @@ function UpdateStatus()
         return;
     }
 
-    b_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
-    b_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
+    l_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
+    l_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
+
     l_Status.Caption = GetStatusText();
 
     // Suicide button status
@@ -561,7 +585,6 @@ function bool OnClick(GUIComponent Sender)
         // Suicide
         case b_MenuOptions[1]:
             PlayerOwner().ConsoleCommand("SUICIDE");
-            CloseMenu();
             break;
 
         // Kick Vote
@@ -695,7 +718,7 @@ function UpdateButtons()
 
         // Colin: Continue button should always be clickable if we're using the old
         // spawning system. If we're using the new spawning system, we have to check
-        // that our pending parameters are
+        // that our pending parameters are valid.
         if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
             GRI.AreSpawnSettingsValid(CurrentTeam,
                                   DHRoleInfo(li_Roles.GetObject()),
@@ -912,18 +935,18 @@ function CloseMenu()
     }
 }
 
-// Colin: This function centers the map component inside of it's container.
+// Colin: This function centers the map inside of it's root container.
 function bool MapContainerPreDraw(Canvas C)
 {
     local float Offset;
 
-    Offset = (c_Map.ActualWidth() - c_Map.ActualHeight()) / 2.0;
+    Offset = (c_MapRoot.ActualWidth() - c_MapRoot.ActualHeight()) / 2.0;
     Offset /= ActualWidth();
 
-    p_Map.SetPosition(c_Map.WinLeft + Offset,
-                      c_Map.WinTop,
-                      c_Map.ActualHeight(),
-                      c_Map.ActualHeight(),
+    c_Map.SetPosition(c_MapRoot.WinLeft + Offset,
+                      c_MapRoot.WinTop,
+                      c_MapRoot.ActualHeight(),
+                      c_MapRoot.ActualHeight(),
                       true);
 
     return true;
@@ -934,7 +957,8 @@ function InternalOnChange(GUIComponent Sender)
     local int i, j;
     local RORoleInfo RI;
     local class<Vehicle> VehicleClass;
-    local class<Weapon> WeaponClass;
+    local class<Inventory> InventoryClass;
+    local Material InventoryMaterial;
 
     switch (Sender)
     {
@@ -986,16 +1010,51 @@ function InternalOnChange(GUIComponent Sender)
                 cb_SecondaryWeapon.SetIndex(0);
             }
 
+            j = 1;
+
             if (RI != none)
             {
+                for (i = 0; i < arraycount(RI.default.Grenades); ++i)
+                {
+                    InventoryClass = RI.default.Grenades[i].Item;
+
+                    if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
+                    {
+                        InventoryMaterial = class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass).default.MenuImage;
+
+                        if (InventoryMaterial != none)
+                        {
+                            i_GivenItems[j++].Image = InventoryMaterial;
+                        }
+                    }
+                }
+
                 for (i = 0; i < RI.default.GivenItems.Length; ++i)
                 {
-                    WeaponClass = class<Weapon>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
+                    InventoryClass = class<Inventory>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
 
-                    if (WeaponClass != none && i_GivenItems[i] != none && class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass) != none)
+                    if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
                     {
-                        //TODO: do proper placement logic
-                        i_GivenItems[j++].Image = class<ROWeaponAttachment>(WeaponClass.default.AttachmentClass).default.menuImage;
+                        InventoryMaterial = class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass).default.MenuImage;
+
+                        if (InventoryMaterial != none)
+                        {
+                            if (InventoryMaterial.MaterialUSize() > InventoryMaterial.MaterialVSize())
+                            {
+                                //Weapon material is wider than it is high.
+                                //This means it's probably a rocket or some
+                                //other long thing that needs to be put in our
+                                //"wide" slot (0).
+                                i_GivenItems[0].Image = InventoryMaterial;
+                            }
+                            else
+                            {
+                                if (j < arraycount(i_GivenItems))
+                                {
+                                    i_GivenItems[j++].Image = InventoryMaterial;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1041,7 +1100,7 @@ function InternalOnChange(GUIComponent Sender)
             }
             else
             {
-                i_Vehicle.Image = none;
+                i_Vehicle.Image = default.VehicleNoneMaterial;
             }
 
             UpdateSpawnPoints();
@@ -1152,6 +1211,17 @@ defaultproperties
     End Object
     i_Axis=AxisImageObject
 
+    Begin Object Class=GUILabel Name=AxisLabelObject
+        WinHeight=1.0
+        WinWidth=0.35
+        WinTop=0.0
+        WinLeft=0.05
+        TextAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+    End Object
+    l_Axis=AxisLabelObject
+
     Begin Object Class=GUIButton Name=AlliesButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
@@ -1174,6 +1244,17 @@ defaultproperties
     End Object
     i_Allies=AlliesImageObject
 
+    Begin Object Class=GUILabel Name=AlliesLabelObject
+        WinHeight=1.0
+        WinWidth=0.35
+        WinTop=0.0
+        WinLeft=0.45
+        TextAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+    End Object
+    l_Allies=AlliesLabelObject
+
     Begin Object Class=GUIButton Name=SpectateButtonObject
         StyleName="DHDeployTabButton"
         WinHeight=1.0
@@ -1189,7 +1270,7 @@ defaultproperties
         WinHeight=1.0
         WinWidth=0.2
         WinTop=0.0
-        WinLeft=0.8
+        WinLeft=0.85
         Image=material'DH_GUI_tex.DeployMenu.spectate'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
@@ -1199,7 +1280,7 @@ defaultproperties
     Begin Object Class=GUIImage Name=ReinforcementsImageObject
         WinWidth=0.04
         WinHeight=0.05
-        WinLeft=0.02
+        WinLeft=0.06
         WinTop=0.07
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -1213,8 +1294,9 @@ defaultproperties
         TextColor=(R=255,G=255,B=255,A=255)
         WinWidth=0.09
         WinHeight=0.05
-        WinLeft=0.06
+        WinLeft=0.10
         WinTop=0.07
+        TextFont="DHMenuFont"
     End Object
     l_Reinforcements=ReinforcementsLabelObject
 
@@ -1238,6 +1320,7 @@ defaultproperties
         WinLeft=0.19
         WinTop=0.07
         Hint="Time Remaining"
+        TextFont="DHMenuFont"
     End Object
     l_RoundTime=RoundTimeLabelObject
 
@@ -1298,6 +1381,7 @@ defaultproperties
         WinTop=0.0
         WinLeft=0.0
         OnClick=OnClick
+        Hint="Equipment"
     End Object
     b_EquipmentButton=EquipmentButtonObject
 
@@ -1319,6 +1403,7 @@ defaultproperties
         WinTop=0.0
         WinLeft=0.5
         OnClick=OnClick
+        Hint="Vehicles"
     End Object
     b_VehicleButton=VehicleButtonObject
 
@@ -1363,14 +1448,14 @@ defaultproperties
     End Object
     c_Vehicle=VehicleContainerObject
 
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainerObject
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapRootContainerObject
         WinWidth=0.68
         WinHeight=0.91
         WinLeft=0.3
         WinTop=0.02
         OnPreDraw=MapContainerPreDraw
     End Object
-    c_Map=MapContainerObject
+    c_MapRoot=MapRootContainerObject
 
     Begin Object Class=DHGUIButton Name=DisconnectButtonObject
         Caption="Disconnect"
@@ -1451,20 +1536,49 @@ defaultproperties
     //Continue Button
     Begin Object Class=GUIGFXButton Name=ContinueButtonObject
         Caption="Continue"
-        CaptionAlign=TXTA_Right
+        CaptionAlign=TXTA_Center
         StyleName="DHDeployContinueButtonStyle"
         WinHeight=1.0
         WinTop=0.0
         OnClick=OnClick
-        Graphic=material'DH_GUI_tex.DeployMenu.arrow_sequence'
+        Graphic=material'DH_GUI_tex.DeployMenu.arrow_blurry'
     End Object
     b_MenuOptions(7)=ContinueButtonObject
 
-    Begin Object Class=DHGUIMapComponent Name=MapComponentObject
+    Begin Object Class=GUIImage Name=ArrowImageObject
+        Image=material'DH_GUI_tex.DeployMenu.arrow_blurry'
+        ImageRenderStyle=ISTY_Stretched
+        WinHeight=1.0
+        WinLeft=0.875
+        WinWidth=0.125
+    End Object
+    i_Arrows=ArrowImageObject
+
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainerObject
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
+        bNeverFocus=true
+    End Object
+    c_Map=MapContainerObject
+
+    Begin Object Class=GUIImage Name=MapBorderImageObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        bNeverFocus=true
+        ImageStyle=ISTY_Scaled
+        Image=material'DH_GUI_tex.DeployMenu.map_border'
+    End Object
+    i_MapBorder=MapBorderImageObject
+
+    Begin Object Class=DHGUIMapComponent Name=MapComponentObject
+        WinWidth=0.89
+        WinHeight=0.89
+        WinLeft=0.055
+        WinTop=0.055
         bNeverFocus=true
         OnSpawnPointChanged=OnSpawnPointChanged
     End Object
@@ -1492,7 +1606,7 @@ defaultproperties
     cb_PrimaryWeapon=PrimaryWeaponComboBoxObject
 
     Begin Object Class=GUIImage Name=SecondaryWeaponImageObject
-        WinWidth=0.5
+        WinWidth=0.333334
         WinHeight=0.333334
         WinLeft=0.0
         WinTop=0.333334
@@ -1513,14 +1627,54 @@ defaultproperties
     cb_SecondaryWeapon=SecondaryWeaponComboBoxObject
 
     Begin Object Class=GUIImage Name=GivenItemImageObject0
-        WinWidth=0.5
+        WinWidth=0.666667
         WinHeight=0.333334
-        WinLeft=0.5
+        WinLeft=0.333334
         WinTop=0.333334
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
     End Object
     i_GivenItems(0)=GivenItemImageObject0
+
+    Begin Object Class=GUIImage Name=GivenItemImageObject1
+        WinWidth=0.25
+        WinHeight=0.333334
+        WinLeft=0.0
+        WinTop=0.666667
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_GivenItems(1)=GivenItemImageObject1
+
+    Begin Object Class=GUIImage Name=GivenItemImageObject2
+        WinWidth=0.25
+        WinHeight=0.333334
+        WinLeft=0.25
+        WinTop=0.666667
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_GivenItems(2)=GivenItemImageObject2
+
+    Begin Object Class=GUIImage Name=GivenItemImageObject3
+        WinWidth=0.25
+        WinHeight=0.333334
+        WinLeft=0.5
+        WinTop=0.666667
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_GivenItems(3)=GivenItemImageObject3
+
+    Begin Object Class=GUIImage Name=GivenItemImageObject4
+        WinWidth=0.25
+        WinHeight=0.333334
+        WinLeft=0.64
+        WinTop=0.666667
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+    End Object
+    i_GivenItems(4)=GivenItemImageObject4
 
     Begin Object Class=GUIImage Name=VehicleImageObject
         WinWidth=1.0
@@ -1540,6 +1694,7 @@ defaultproperties
         TextAlign=TXTA_Center
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
     End Object
     l_Status=StatusLabelObject
 
@@ -1547,4 +1702,6 @@ defaultproperties
     SelectRoleText="Select a role"
     SelectSpawnPointText="Select a spawn point"
     bButtonsEnabled=true
+
+    VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
 }
