@@ -23,12 +23,8 @@ replication
         Bitfield;
 }
 
-
 simulated function PostBeginPlay()
 {
-    //local DHObstacleInstance Obstacle;
-    //local int i;
-
     super.PostBeginPlay();
 
     foreach AllActors(class'DHObstacleInfo', Info)
@@ -42,41 +38,6 @@ simulated function PostBeginPlay()
 
         return;
     }
-
-    /*foreach AllActors(class'DHObstacleInstance', Obstacle)
-    {
-        if (Info.Obstacles.Length >= MAX_OBSTACLES)
-        {
-            Warn(Obstacle @ "discarded, exceeds limit of manageable DHObstacle actors");
-
-            Obstacle.Destroy();
-
-            continue;
-        }
-
-        Obstacle.Info.Index = Info.Obstacles.Length;
-
-        for (i = 0; i < Info.Types.Length; ++i)
-        {
-            if (Obstacle.StaticMesh != Info.Types[i].IntactStaticMesh)
-            {
-                continue;
-            }
-
-            Obstacle.Info.TypeIndex = i;
-
-            break;
-        }
-
-        if (Obstacle.Info.TypeIndex == OBSTACLE_TYPE_INDEX_INVALID)
-        {
-            Log("Obstacle with static mesh" @ Obstacle.StaticMesh @ "was unable to be matched to obstacle info!");
-
-            continue;
-        }
-
-        Info.Obstacles[Info.Obstacles.Length] = Obstacle;
-    }*/
 }
 
 function DebugObstacles(optional int Option)
@@ -142,7 +103,33 @@ simulated function GetBitfieldIndexAndMask(int Index, out int ByteIndex, out byt
 
 simulated event PostNetBeginPlay()
 {
+    local int i, j, ObstacleIndex;
+    local byte Mask;
+    local bool bIsCleared;
+
     super.PostNetBeginPlay();
+
+    if (Role < ROLE_Authority)
+    {
+        for (i = 0; i < arraycount(Bitfield); ++i)
+        {
+            for (j = 0; j < 8; ++j)
+            {
+                Mask = (1 << j);
+
+                bIsCleared = (Bitfield[i] & Mask) == Mask;
+
+                ObstacleIndex = (i * 8) + j;
+
+                if (ObstacleIndex >= 0 &&
+                    ObstacleIndex < Info.Obstacles.Length &&
+                    Info.Obstacles[ObstacleIndex] != none)
+                {
+                    Info.Obstacles[ObstacleIndex].SetCleared(bIsCleared);
+                }
+            }
+        }
+    }
 }
 
 simulated event PostNetReceive()

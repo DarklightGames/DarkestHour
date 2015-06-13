@@ -56,7 +56,10 @@ simulated state Intact
     {
         local DarkestHourGame G;
 
-        Log("Damage taken: " $ Damage @ "DamageType: " $ DamageType);
+        if (class'DH_LevelInfo'.static.DHDebugMode())
+        {
+            Log("Damage taken: " $ Damage @ "DamageType: " $ DamageType);
+        }
 
         if (Role == ROLE_Authority &&
             Info.CanBeDestroyedByExplosives() &&
@@ -101,7 +104,6 @@ simulated function SetCleared(bool bIsCleared)
 
             if (ClearSound != none)
             {
-                //TODO: figure out the best way to do this
                 PlaySound(ClearSound, SLOT_None, 255.0, true, 60.0);
             }
 
