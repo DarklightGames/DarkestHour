@@ -10,7 +10,7 @@ var automated BackgroundImage               bg_Background2,
 
 var automated GUIButton                     b_Disconnect, b_Settings;
 
-var DHPlayer                                DHP;
+var DHPlayer                                PC;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -18,18 +18,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super(UT2K4GUIPage).InitComponent(MyController, MyOwner);
 
-    DHP = DHPlayer(PlayerOwner());
+    PC = DHPlayer(PlayerOwner());
 
-    if (DHP == none)
+    if (PC == none)
     {
         return;
     }
 
-    GRI = ROGameReplicationInfo(DHP.GameReplicationInfo);
+    GRI = ROGameReplicationInfo(PC.GameReplicationInfo);
 
-    if (GRI != none) // Matt: restated function & modified to avoid "accessed none" errors for GRI
+    // Matt: restated function & modified to avoid "accessed none" errors for GRI
+    if (GRI != none)
     {
-        loadBriefing();
+        LoadBriefing();
 
         // Set initial values
         l_TeamBriefing[0].SetContent(GRI.UnitName[AXIS_TEAM_INDEX] $ "||" $ Briefing[AXIS_TEAM_INDEX]);
@@ -90,14 +91,15 @@ function SetBackground()
 
 function SelectTeamSuccessfull()
 {
-    if (DHP == none || Controller == none)
+    if (PC == none || Controller == none)
     {
         return;
     }
 
-    if (selectedTeam != -1)
+    if (SelectedTeam != -1)
     {
-        DHP.ForcedTeamSelectOnRoleSelectPage = selectedTeam;
+        PC.ForcedTeamSelectOnRoleSelectPage = SelectedTeam;
+
         Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
     }
     else
@@ -139,21 +141,21 @@ function bool InternalOnClick( GUIComponent Sender )
 
 function SelectTeam(int Team)
 {
-    selectedTeam = Team;
+    SelectedTeam = Team;
 
     SetButtonsState(true);
 
     if (Team == -1) // Spectate
     {
-        DHP.ServerSetPlayerInfo(254, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(254, 255, 0, 0, 255, 255, 255);
     }
     else if (Team == -2) // Auto-select
     {
-        DHP.ServerSetPlayerInfo(250, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(250, 255, 0, 0, 255, 255, 255);
     }
     else // Allies or Axis
     {
-        DHP.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
     }
 }
 
@@ -188,7 +190,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 return;
 
             default: // Couldn't change teams: get error msg
-                ErrorMessage = class'ROGUIRoleSelection'.static.getErrorMessageForId(result);
+                ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForId(result);
         }
 
         SetButtonsState(false);
