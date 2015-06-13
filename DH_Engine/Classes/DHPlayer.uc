@@ -5,7 +5,6 @@
 
 class DHPlayer extends ROPlayer;
 
-var     bool                    bSwappedTeams;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
