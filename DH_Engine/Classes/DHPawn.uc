@@ -2387,7 +2387,10 @@ state PutWeaponAway
             // Unhide the weapon now
             if (Weapon.ThirdPersonActor != none)
             {
-                Weapon.ThirdPersonActor.bHidden = false;
+                if (DrivenVehicle == none) // Matt: added 'if' so we don't make the 3rd person weapon attachment visible again if player just got into a vehicle
+                {
+                    Weapon.ThirdPersonActor.bHidden = false;
+                }
             }
             else
             {
