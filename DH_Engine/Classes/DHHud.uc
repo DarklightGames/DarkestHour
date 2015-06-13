@@ -2280,8 +2280,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     }
 
     // Draw the map scale indicator
-    MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
-    DrawTextWidgetClipped(C, MapScaleText, subCoords);
+    //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
+    //DrawTextWidgetClipped(C, MapScaleText, subCoords);
 
     // Draw player icon
     if (A != none)
