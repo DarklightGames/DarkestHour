@@ -721,10 +721,12 @@ function UpdateButtons()
                                   SpawnVehicleIndex))
         {
             b_MenuOptions[7].EnableMe();
+            i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_blurry';
         }
         else
         {
             b_MenuOptions[7].DisableMe();
+            i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_disabled';
         }
     }
     else
@@ -734,6 +736,7 @@ function UpdateButtons()
         b_Spectate.DisableMe();
 
         b_MenuOptions[7].DisableMe();
+        i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_disabled';
     }
 
     if (LoadoutMode == LM_Equipment && li_Vehicles.GetObject() != none)
@@ -1544,23 +1547,23 @@ defaultproperties
     b_MenuOptions(6)=SettingsButtonObject
 
     //Continue Button
-    Begin Object Class=GUIGFXButton Name=ContinueButtonObject
+    Begin Object Class=DHGUIButton Name=ContinueButtonObject
         Caption="Continue"
         CaptionAlign=TXTA_Center
         StyleName="DHDeployContinueButtonStyle"
         WinHeight=1.0
         WinTop=0.0
         OnClick=OnClick
-        Graphic=material'DH_GUI_tex.DeployMenu.arrow_blurry'
     End Object
     b_MenuOptions(7)=ContinueButtonObject
 
     Begin Object Class=GUIImage Name=ArrowImageObject
         Image=material'DH_GUI_tex.DeployMenu.arrow_blurry'
-        ImageRenderStyle=ISTY_Stretched
         WinHeight=1.0
         WinLeft=0.875
         WinWidth=0.125
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_BottomLeft
     End Object
     i_Arrows=ArrowImageObject
 
@@ -1714,4 +1717,5 @@ defaultproperties
     bButtonsEnabled=true
 
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
+    NextChangeTeamTime=0.0
 }
