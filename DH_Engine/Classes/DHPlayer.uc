@@ -2227,7 +2227,8 @@ exec function CommunicationMenu()
     ClientReplaceMenu("ROInterface.ROCommunicationPage");
 }
 
-// This function returns the time at which
+// This function returns the time the player will be able to spawn next
+// given some spawn parameters (DHRoleInfo and VehiclePoolIndex).
 simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
 {
     local int T;
@@ -2235,7 +2236,10 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI == none || GRI == none || PlayerReplicationInfo == none)
+    if (RI == none ||
+        GRI == none ||
+        PlayerReplicationInfo == none &&
+        PlayerReplicationInfo.Team != none)
     {
         return 0;
     }
