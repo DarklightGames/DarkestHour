@@ -805,38 +805,42 @@ function AutoSelectRole()
 {
     local int i;
 
-    if (PC.GetRoleInfo() != none)
+    // Colin: PC.GetRoleInfo() can be invalid by the time it gets here. For
+    // example, when switching teams, the client can (and likely will) get here
+    // before PC.GetRoleInfo() is updated. Luckily, we can check the result of
+    // SelectByObject and run the default behavior (select an infinite role)
+    // if it fails.
+    if (PC.GetRoleInfo() != none &&
+        li_Roles.SelectByObject(PC.GetRoleInfo()) != -1)
     {
-        li_Roles.SelectByObject(PC.GetRoleInfo());
+        return;
+    }
+
+    if (CurrentTeam == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+        {
+            if (GRI.DHAxisRoles[i] != none &&
+                GRI.DHAxisRoles[i].GetLimit(GRI.MaxPlayers) == 0)
+            {
+                li_Roles.SelectByObject(GRI.DHAxisRoles[i]);
+            }
+        }
+    }
+    else if(CurrentTeam == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
+        {
+            if (GRI.DHAlliesRoles[i] != none &&
+                GRI.DHAlliesRoles[i].GetLimit(GRI.MaxPlayers) == 0)
+            {
+                li_Roles.SelectByObject(GRI.DHAlliesRoles[i]);
+            }
+        }
     }
     else
     {
-        if (CurrentTeam == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
-            {
-                if (GRI.DHAxisRoles[i] != none &&
-                    GRI.DHAxisRoles[i].GetLimit(GRI.MaxPlayers) == 0)
-                {
-                    li_Roles.SelectByObject(GRI.DHAxisRoles[i]);
-                }
-            }
-        }
-        else if(CurrentTeam == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
-            {
-                if (GRI.DHAlliesRoles[i] != none &&
-                    GRI.DHAlliesRoles[i].GetLimit(GRI.MaxPlayers) == 0)
-                {
-                    li_Roles.SelectByObject(GRI.DHAlliesRoles[i]);
-                }
-            }
-        }
-        else
-        {
-            li_Roles.SelectByObject(none);
-        }
+        li_Roles.SelectByObject(none);
     }
 }
 
