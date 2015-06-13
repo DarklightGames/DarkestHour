@@ -176,15 +176,6 @@ function SetLoadoutMode(ELoadoutMode Mode)
             b_EquipmentButton.DisableMe();
             b_VehicleButton.EnableMe();
 
-            if (li_Vehicles.GetObject() != none)
-            {
-                i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
-            }
-            else
-            {
-                i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
-            }
-
             break;
         case LM_Vehicle:
             b_EquipmentButton.EnableMe();
@@ -195,13 +186,15 @@ function SetLoadoutMode(ELoadoutMode Mode)
     }
 
     UpdateSpawnPoints();
+    UpdateButtons();
 }
 
 function Timer()
 {
     // Colin: The GRI might not be set when we first open the menu if the player
-    // opens it very quickly. This state will sit and wait until the GRI is
-    // confirmed to be present.
+    // opens it very quickly. This timer will sit and wait until the GRI is
+    // confirmed to be present before populating any lists or running any
+    // regular timer logic.
     local byte Team;
 
     if (GRI == none)
@@ -741,6 +734,15 @@ function UpdateButtons()
         b_Spectate.DisableMe();
 
         b_MenuOptions[7].DisableMe();
+    }
+
+    if (LoadoutMode == LM_Equipment && li_Vehicles.GetObject() != none)
+    {
+        i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
+    }
+    else
+    {
+        i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
     }
 }
 
