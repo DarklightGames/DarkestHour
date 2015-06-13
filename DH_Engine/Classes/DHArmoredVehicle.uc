@@ -3309,6 +3309,8 @@ simulated function SetupTreads()
     {
         LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
         LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+        LeftTreadSoundAttach.SoundRadius = SoundRadius;
+        LeftTreadSoundAttach.TransientSoundRadius = TransientSoundRadius;
         AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
     }
 
@@ -3316,6 +3318,8 @@ simulated function SetupTreads()
     {
         RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
         RightTreadSoundAttach.AmbientSound = RightTreadSound;
+        RightTreadSoundAttach.SoundRadius = SoundRadius;
+        RightTreadSoundAttach.TransientSoundRadius = TransientSoundRadius;
         AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
     }
 }
@@ -3369,26 +3373,12 @@ simulated function UpdateMovementSound()
 {
     if (LeftTreadSoundAttach != none)
     {
-        if (bLeftTrackDamaged)
-        {
-            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
-        }
-        else
-        {
-            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
-        }
+        LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
     }
 
     if (RightTreadSoundAttach != none)
     {
-        if (bRightTrackDamaged)
-        {
-            RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
-        }
-        else
-        {
-            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
-        }
+        RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
     }
 
     if (InteriorRumbleSoundAttach != none)
@@ -3791,6 +3781,7 @@ function exec DamageTank()
 
 defaultproperties
 {
+    SoundVolume=200.0
     SoundRadius=200.0
     TransientSoundRadius=600.0
     UnbuttonedPositionIndex=2
