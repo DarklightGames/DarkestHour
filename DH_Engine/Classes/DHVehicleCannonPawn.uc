@@ -191,13 +191,13 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified so player's view turns with a turret, to properly handle vehicle roll, & to handle dual-magnification optics & FPCamPos camera offset for all positions not just overlays
-// Also to optimise generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
+// Modified so player's view turns with a turret, to properly handle vehicle roll, to handle dual-magnification optics,
+// to handle FPCamPos camera offset for any position (not just overlays), & to optimise & simplify generally
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local vector CamViewOffsetWorld, VehicleZ;
-    local float  CamViewOffsetZAmount;
+    local quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local rotator BaseRotation;
+    local bool    bOnGunsight, bCameraRotationNotRelative, bOffsetFromBaseRotation;
 
     ViewActor = self;
 
@@ -206,71 +206,78 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    // If player is on gunsight, use cannon's CameraBone for camera location & match camera rotation to cannon's aim (GunsightPositions may be 2 for dual-magnification optics)
-    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='')
+    // If player is on gunsight, use CameraBone for camera location & use cannon's aim for camera rotation
+    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='') // GunsightPositions may be 2 for dual-magnification optics
     {
-        // Get camera rotation using weapon's aim, but factor in the vehicle's rotation, as aim is relative to vehicle
-        RelativeQuat = QuatFromRotator(Gun.CurrentAim);
-        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
-        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
-
-        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
-
-        // Get camera location & adjust for any offset positioning
+        bOnGunsight = true;
         CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation) + CamViewOffsetWorld; // FPCamPos offset is relative to weapon's aim
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
+        CameraRotation = Gun.CurrentAim;
     }
+    // Otherwise use PlayerCameraBone for camera location & use PC's rotation for camera rotation (unless camera is locked during a transition)
     else
     {
-        // If camera is locked during a current transition, lock view to PlayerCameraBone
+        CameraLocation = Gun.GetBoneCoords(PlayerCameraBone).Origin;
+
+        // If camera is locked during a current transition, lock rotation to PlayerCameraBone
         if (bLockCameraDuringTransition && IsInState('ViewTransition'))
         {
             CameraRotation = Gun.GetBoneRotation(PlayerCameraBone);
+            bCameraRotationNotRelative = true; // this rotation isn't relative to the vehicle
         }
-        // Otherwise, player can look around (e.g. cupola, periscope, unbuttoned or binoculars), so use PC's rotation for camera rotation
+        // Otherwise, player can look around, e.g. cupola, periscope, unbuttoned or binoculars
         else
         {
             CameraRotation = PC.Rotation;
+
+            // If there's a camera position offset, we'll need to make that relative to the vehicle (note Gun.Rotation is same as vehicle base)
+            if (FPCamPos != vect(0.0, 0.0, 0.0))
+            {
+                bOffsetFromBaseRotation = true;
+                BaseRotation = Gun.Rotation;
+            }
 
             // If vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
             if (Cannon != none && Cannon.bHasTurret)
             {
                 CameraRotation.Yaw += Cannon.CurrentAim.Yaw;
+
+                if (bOffsetFromBaseRotation) // also factor turret yaw into BaseRotation, if we're going to be applying a camera position offset
+                {
+                    BaseRotation.Yaw += Cannon.CurrentAim.Yaw;
+                }
             }
-
-            // Factor in the vehicle's rotation (because PC's rotation is relative to vehicle)
-            RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
-            VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
-            NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-            CameraRotation = QuatToRotator(NonRelativeQuat);
-        }
-
-        // Get camera location & adjust for any offset positioning
-        CameraLocation = Gun.GetBoneCoords(PlayerCameraBone).Origin;
-        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation) + CamViewOffsetWorld; // FPCamPos offset is relative to vehicle rotation
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Gun.Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
 
+    // If CameraRotation is currently relative to vehicle, now factor in the vehicle's rotation (note Gun.Rotation is same as vehicle base)
+    if (!bCameraRotationNotRelative)
+    {
+        RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
+        VehicleQuat = QuatFromRotator(Gun.Rotation);
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
+    }
+
+    // Custom aim update
+    if (bOnGunsight)
+    {
+        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
+        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
+    }
+
+    // Adjust camera location for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
+    if (bOffsetFromBaseRotation)
+    {
+        CameraLocation = CameraLocation + (FPCamPos >> BaseRotation);
+    }
+    else if (FPCamPos != vect(0.0, 0.0, 0.0))
+    {
+        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+    }
+
     // Finalise the camera with any shake
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
 // Modified to remove irrelevant stuff about driver weapon crosshair & to optimise
