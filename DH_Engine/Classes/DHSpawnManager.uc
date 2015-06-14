@@ -457,6 +457,9 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         //Add vehicle to vehicles array
         Vehicles[Vehicles.Length] = V;
 
+        //Set vehicle's team
+        V.SetTeamNum(V.default.VehicleTeam);
+
         //Increment team vehicle count
         ++TeamVehicleCounts[V.default.VehicleTeam];
 
