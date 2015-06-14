@@ -641,12 +641,10 @@ simulated function SetNextTimer(optional float Now)
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise generally
+// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise & simplify generally
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local vector CamViewOffsetWorld, VehicleZ;
-    local float  CamViewOffsetZAmount;
+    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -661,20 +659,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
         VehicleQuat = QuatFromRotator(Rotation);
         NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
+        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
     }
 
-    // Get camera location & adjust for any offset positioning
+    // Get camera location & adjust for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
     CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-    CameraLocation = CameraLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-    if (bFPNoZFromCameraPitch)
-    {
-        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-    }
+    CameraLocation = CameraLocation + (FPCamPos >> Rotation);
 
     // Finalise the camera with any shake
     if (PC != none)
