@@ -23,20 +23,28 @@ static function string GetString(optional int Switch, optional PlayerReplication
     {
         case 0:
             S = default.TargetInvalid;
+            break;
         case 1:
             S = default.NoMortarOperators;
+            break;
         case 2:
             S = default.TargetMarked;
+            break;
         case 3:
             S = default.TargetCancelled;
+            break;
         case 4:
             S = default.CannotMarkTargetYet;
+            break;
         case 5:
             S = default.CannotCancelTargetYet;
+            break;
         case 6:
             S = default.TooManyMortarTargets;
+            break;
         case 7:
             S = default.NoTargetToCancel;
+            break;
         default:
             return default.TargetInvalid;
     }
