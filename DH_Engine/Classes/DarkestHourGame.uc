@@ -1280,7 +1280,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
         MrRoboto = ROBot(aPlayer);
     }
 
-    if (Playa != none && Playa.DesiredRole != i)
+    if (Playa != none)
     {
         Playa.DesiredRole = i;
 
