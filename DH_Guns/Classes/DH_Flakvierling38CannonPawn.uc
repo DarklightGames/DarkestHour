@@ -9,6 +9,17 @@ class DH_Flakvierling38CannonPawn extends DHATGunCannonPawn;
 function IncrementRange();
 function DecrementRange();
 
+// Modified to update sight & aiming wheel rotation, if gun has moved
+function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
+{
+    super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+
+    if (Level.NetMode != NM_DedicatedServer && ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)) && DH_Flakvierling38Cannon(Gun) != none)
+    {
+        DH_Flakvierling38Cannon(Gun).UpdateSightAndWheelRotation();
+    }
+}
+
 // Matt: hack solution to workaround maddening problem in single player only, where view yaw on gunsight is wrong & high pitch even starts to turn the gun !
 // Problem is in calculation of CameraRotation when on gunsights, so this hack reverts back to an old, inferior calculation to apply vehicle's rotation, without using quats
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)

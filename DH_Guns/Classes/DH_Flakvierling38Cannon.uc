@@ -21,26 +21,6 @@ replication
         bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
 }
 
-// Modified to animate sights & aiming wheels
-simulated function Tick(float DeltaTime)
-{
-    local rotator SightRotation;
-    local rotator ElevationWheelRotation;
-    local rotator TraverseWheelRotation;
-
-    // Sight
-    SightRotation.Pitch = -CurrentAim.Pitch;
-    SetBoneRotation(SightBone, SightRotation, 1);
-
-    // Elevation wheel
-    ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
-    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
-
-    // Traverse wheel
-    TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
-    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
-}
-
 // Modified to remove handling of mixed mag (instead is handled in SpawnProjectile() as that now fires two projectiles), to toggle bSecondGunPairFiring & to remove AltFire
 state ProjectileFireMode
 {
@@ -252,6 +232,21 @@ simulated function InitEffects()
             FlashEmitters[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
         }
     }
+}
+
+// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+simulated function UpdateSightAndWheelRotation()
+{
+    local rotator SightRotation, ElevationWheelRotation, TraverseWheelRotation;
+
+    SightRotation.Pitch = -CurrentAim.Pitch;
+    SetBoneRotation(SightBone, SightRotation, 1);
+
+    ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
+    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
+
+    TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
+    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
 }
 
 // Added the following functions from DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DH_ROTankCannon:
