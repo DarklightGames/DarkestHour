@@ -18,10 +18,13 @@ static function string GetString(optional int Switch, optional PlayerReplication
     {
         case 0:
             S = default.LoadedGunner;
+            break;
         case 1:
             S = default.BeenLoaded;
+            break;
         case 2:
             S = default.UnLoaded;
+            break;
     }
 
     if (RelatedPRI_1 != none)
