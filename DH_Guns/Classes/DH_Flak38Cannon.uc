@@ -79,6 +79,11 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellMixed'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
+    bLimitYaw=true // when on trailer, the wheels block much traverse
+    YawStartConstraint=-3500.0
+    YawEndConstraint=5000.0
+    MaxPositiveYaw=4200
+    MaxNegativeYaw=-2650
     SightBone="arm"
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
