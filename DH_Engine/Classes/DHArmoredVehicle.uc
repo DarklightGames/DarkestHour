@@ -177,8 +177,12 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
-        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones only during development
+        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine, // these ones only during development
+        ServerLogSwitch; // DEBUG (temp)
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
+
+    reliable if (Role == ROLE_Authority) // DEBUG (temp)
+        ClientLogSwitch;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3777,6 +3781,34 @@ function exec DamageTank()
         Health /= 2;
         EngineHealth /= 2;
     }
+}
+
+exec function LogSwitch(optional int Index) // DEBUG x 3 (Matt: use if you ever find you can't switch to commander's position when you should be able to)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[Index]);
+    Log("CLIENT:" @ Tag @ " PassengerWeapons.Length =" @ PassengerWeapons.Length @ " WeaponPawns.Length =" @ WeaponPawns.Length @ " WeaponPawn["$Index$"] =" @ WeaponPawn.Tag);
+    Log("CLIENT: Driver =" @ Driver.Tag @ " WP.Driver =" @ WeaponPawn.Driver @ " Same team =" @ Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam
+        @ " WP.bTeamLocked =" @ bTeamLocked @ " WP.Team =" @ WeaponPawn.Team);
+    Log("CLIENT: CanExit() =" @ CanExit() @ " StopExitToRiderPosition() =" @ StopExitToRiderPosition(Index) @ " PassengerWeapons["$Index$"] is rider pawn ="
+        @ class<ROPassengerPawn>(PassengerWeapons[Index].WeaponPawnClass) != none @ " ViewTransition =" @ IsInState('ViewTransition'));
+    if (Role < ROLE_Authority) ServerLogSwitch(Index);
+}
+function ServerLogSwitch(int Index)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[Index]);
+    ClientLogSwitch(Index, PassengerWeapons.Length, WeaponPawns.Length, WeaponPawn, Driver, WeaponPawn.Driver, Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam,
+        bTeamLocked, WeaponPawn.Team, CanExit(), StopExitToRiderPosition(Index), class<ROPassengerPawn>(PassengerWeapons[Index].WeaponPawnClass) != none, IsInState('ViewTransition'));
+}
+simulated function ClientLogSwitch(int Index, int PassengerWeaponsLength, int WeaponPawnsLength, VehicleWeaponPawn WeaponPawn, Pawn SDriver, Pawn WeaponPawnDriver, bool bSameTeam,
+    bool bVTeamLocked, int bWPTeam, bool bCanExit, bool bStopExitToRiderPosition, bool bIsRiderPawn, bool bInViewTrans)
+{
+    Log("SERVER:" @ Tag @ " PassengerWeapons.Length =" @ PassengerWeaponsLength @ " WeaponPawns.Length =" @ WeaponPawnsLength @ " WeaponPawn["$Index$"] =" @ WeaponPawn.Tag);
+    Log("SERVER: Driver =" @ SDriver.Tag @ " WP.Driver =" @ WeaponPawnDriver @ " Same team =" @ Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam
+        @ " WP.bTeamLocked =" @ bVTeamLocked @ " WP.Team =" @ bWPTeam); 
+    Log("SERVER: CanExit() =" @ bCanExit @ " StopExitToRiderPosition() =" @ bStopExitToRiderPosition @ " PassengerWeapons["$Index$"] is rider pawn ="
+        @ bIsRiderPawn @ " ViewTransition =" @ bInViewTrans);
 }
 
 defaultproperties
