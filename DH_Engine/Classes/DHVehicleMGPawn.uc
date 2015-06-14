@@ -631,7 +631,6 @@ simulated function NextViewPoint()
 // Emptied out as no longer used (see NextViewPoint() above)
 simulated function AnimateTransition()
 {
-    Log ("AnimateTransition() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!"); // Matt: TEMP
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position,

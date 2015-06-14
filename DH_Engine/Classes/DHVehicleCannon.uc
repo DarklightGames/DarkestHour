@@ -1107,15 +1107,14 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 //  ********************  HIT DETECTION, PENETRATION & DAMAGE  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // Matt: DEBUG
+// Matt: deprecated functions - return false just in case they get called
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 {
-    log("HitDriverArea() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
     return false;
 }
 
-simulated function bool HitDriver(vector HitLocation, vector Momentum) // Matt: DEBUG
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
-    log("HitDriver() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
     return false;
 }
 

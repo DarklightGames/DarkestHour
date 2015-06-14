@@ -438,15 +438,14 @@ simulated function int LimitYaw(int yaw)
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
-simulated function bool HitDriverArea(vector HitLocation, vector Momentum) // Matt: TEMP
+// Matt: deprecated functions - return false just in case they get called
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 {
-    log("HitDriverArea() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
     return false;
 }
 
-simulated function bool HitDriver(vector HitLocation, vector Momentum) // Matt: TEMP
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
-    log("HitDriver() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!");
     return false;
 }
 
