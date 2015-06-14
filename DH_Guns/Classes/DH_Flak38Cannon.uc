@@ -65,7 +65,7 @@ defaultproperties
     NumSecMags=4
     NumTertMags=4
     AddedPitch=50
-    WeaponFireOffset=64.0
+    WeaponFireOffset=15.0
     RotationsPerSecond=0.05
     FireInterval=0.15
     FlashEmitterClass=class'DH_Guns.DH_Flak38MuzzleFlash'
