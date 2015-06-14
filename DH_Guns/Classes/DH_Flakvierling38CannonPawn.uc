@@ -9,6 +9,104 @@ class DH_Flakvierling38CannonPawn extends DHATGunCannonPawn;
 function IncrementRange();
 function DecrementRange();
 
+// Matt: hack solution to workaround maddening problem in single player only, where view yaw on gunsight is wrong & high pitch even starts to turn the gun !
+// Problem is in calculation of CameraRotation when on gunsights, so this hack reverts back to an old, inferior calculation to apply vehicle's rotation, without using quats
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+{
+    local quat    RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local rotator BaseRotation;
+    local bool    bOnGunsight, bCameraRotationNotRelative, bOffsetFromBaseRotation;
+
+    ViewActor = self;
+
+    if (PC == none || Gun == none)
+    {
+        return;
+    }
+
+    // If player is on gunsight, use CameraBone for camera location & use cannon's aim for camera rotation
+    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='')
+    {
+        bOnGunsight = true;
+        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
+        CameraRotation = Gun.CurrentAim;
+    }
+    // Otherwise use PlayerCameraBone for camera location & use PC's rotation for camera rotation (unless camera is locked during a transition)
+    else
+    {
+        CameraLocation = Gun.GetBoneCoords(PlayerCameraBone).Origin;
+
+        // If camera is locked during a current transition, lock rotation to PlayerCameraBone
+        if (bLockCameraDuringTransition && IsInState('ViewTransition'))
+        {
+            CameraRotation = Gun.GetBoneRotation(PlayerCameraBone);
+            bCameraRotationNotRelative = true;
+        }
+        // Otherwise, player can look around
+        else
+        {
+            CameraRotation = PC.Rotation;
+
+            // If there's a camera position offset, we'll need to make that relative to the vehicle (note Gun.Rotation is same as vehicle base)
+            if (FPCamPos != vect(0.0, 0.0, 0.0))
+            {
+                bOffsetFromBaseRotation = true;
+                BaseRotation = Gun.Rotation;
+            }
+
+            // If vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
+            if (Cannon != none && Cannon.bHasTurret)
+            {
+                CameraRotation.Yaw += Cannon.CurrentAim.Yaw;
+
+                if (bOffsetFromBaseRotation) // also factor turret yaw into BaseRotation, if we're going to be applying a camera position offset
+                {
+                    BaseRotation.Yaw += Cannon.CurrentAim.Yaw;
+                }
+            }
+        }
+    }
+
+    // If CameraRotation is currently relative to vehicle, now factor in the vehicle's rotation (note Gun.Rotation is same as vehicle base)
+    if (!bCameraRotationNotRelative)
+    {
+        // Hack so in single player we use this old, inferior calculation
+        if (Level.NetMode == NM_Standalone && bOnGunsight)
+        {
+            CameraRotation = rotator(vector(CameraRotation) >> Gun.Rotation);
+            CameraRotation.Roll =  VehicleBase.Rotation.Roll;
+        }
+        else
+        {
+            RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
+            VehicleQuat = QuatFromRotator(Gun.Rotation);
+            NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+            CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
+        }
+    }
+
+    // Custom aim update
+    if (bOnGunsight)
+    {
+        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
+        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
+    }
+
+    // Adjust camera location for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
+    if (bOffsetFromBaseRotation)
+    {
+        CameraLocation = CameraLocation + (FPCamPos >> BaseRotation);
+    }
+    else if (FPCamPos != vect(0.0, 0.0, 0.0))
+    {
+        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+    }
+
+    // Finalise the camera with any shake
+    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+}
+
 defaultproperties
 {
     OverlayCenterSize=1.0
