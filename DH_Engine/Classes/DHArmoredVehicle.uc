@@ -3782,8 +3782,8 @@ function exec DamageTank()
 defaultproperties
 {
     SoundVolume=200.0
-    SoundRadius=200.0
-    TransientSoundRadius=600.0
+    SoundRadius=600.0
+    TransientSoundRadius=700.0
     UnbuttonedPositionIndex=2
     bAllowRiders=true
     FirstRiderPositionIndex=2
