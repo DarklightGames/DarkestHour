@@ -107,8 +107,7 @@ function bool PlaceExitingDriver()
     local int    i;
     local vector TryPlace, Extent, ZOffset;
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     for (i = 0; i < ExitPositions.Length; ++i)

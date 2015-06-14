@@ -962,19 +962,13 @@ function bool PlaceExitingDriver()
     local int    i, StartIndex;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
 
-    if (Driver == none)
+    if (Driver == none || VehicleBase == none)
     {
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    if (VehicleBase == none)
-    {
-        return false;
-    }
 
     // Debug exits - uses DHVehicleMGPawn class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DHVehicleMGPawn'.default.bDebugExitPositions)

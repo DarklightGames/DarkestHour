@@ -1556,8 +1556,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Debug exits - uses DHArmoredVehicle class default, allowing bDebugExitPositions to be toggled for all DHArmoredVehicles
