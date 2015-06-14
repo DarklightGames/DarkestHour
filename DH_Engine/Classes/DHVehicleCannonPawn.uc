@@ -59,9 +59,10 @@ var     float       PoweredMaxRotateThreshold;
 //var   bool        bHasLightedOptics;
 
 // Debugging help
-var     bool        bShowCenter;    // shows centering cross in tank sight for testing purposes
-var     bool        bDebuggingText; // on screen messages if damage prevents turret or gun from moving properly
-var     bool        bDebugExitPositions;
+var     bool        bDebugSights;        // shows centering cross in tank sight for testing purposes
+var     bool        bDebuggingText;      // on screen messages if damage prevents turret or gun from moving properly
+var     bool        bDebugExitPositions; // spawns a debug tracer at each player exit position
+var     bool        bDebugCamera;        // in behind view, draws a red dot at current camera location with a line showing camera rotation
 
 replication
 {
@@ -310,7 +311,7 @@ simulated function DrawHUD(Canvas Canvas)
                 if (DriverPositionIndex < GunsightPositions)
                 {
                     // Debug - draw cross on the center of the screen
-                    if (bShowCenter)
+                    if (bDebugSights)
                     {
                         PosX = Canvas.SizeX / 2.0;
                         PosY = Canvas.SizeY / 2.0;
@@ -429,6 +430,19 @@ simulated function DrawHUD(Canvas Canvas)
     else if (HUDOverlay != none)
     {
         ActivateOverlay(false);
+    }
+
+    // Debug option to show camera location & rotation in behind viewred dot (inside white sphere to make more visible) & camera rotation as red line (needs "show sky" in console)
+    if (bDebugCamera && PC != none && PC.bBehindView && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+        DrawDebugSphere(CameraLocation, 1.0, 4, 255, 0, 0);       // camera location shown as very small red sphere, like a large dot
+        DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
+
+        if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='') // only draw camera rotation if on gunsight 
+        {
+            DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0);
+        }
     }
 }
 
@@ -1604,6 +1618,16 @@ function ServerToggleDebugExits()
     {
         class'DHVehicleCannonPawn'.default.bDebugExitPositions = !class'DHVehicleCannonPawn'.default.bDebugExitPositions;
         Log("DHVehicleCannonPawn.bDebugExitPositions =" @ class'DHVehicleCannonPawn'.default.bDebugExitPositions);
+    }
+}
+
+// New exec to toggle camera debug (location & rotation) for this cannon
+exec function ToggleCameraDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDebugCamera = !bDebugCamera;
+        Log(Tag @ "bDebugCamera =" @ bDebugCamera);
     }
 }
 
