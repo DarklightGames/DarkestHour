@@ -73,14 +73,16 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits, ServerToggleDriverDebug; // only during development
+        ServerToggleDebugExits, ServerToggleDriverDebug, // only during development
+        ServerLogCannon; // DEBUG (temp)
 //      ServerChangeDriverPos      // Matt: removed function
 //      ServerToggleExtraRoundType // Matt: removed function as is pointless - normal RO ServerToggleRoundType can be called; it's only the functionality in Gun.ToggleRoundType() that changes
 //      DamageCannonOverlay        // Matt: removed as isn't called by client
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientDamageCannonOverlay;
+        ClientDamageCannonOverlay,
+        ClientLogCannon; // DEBUG (temp)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -581,9 +583,7 @@ function Fire(optional float F)
         {
             Cannon.ServerManualReload();
         }
-        else Log(Tag @ "Fire() not calling super: CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon); // DEBUG
     }
-    else Log(Tag @ "Fire() not calling super: CanFire =" @ CanFire()); // DEBUG
 }
 
 // Modified to check CanFire(), to skip over obsolete RO functionality in ROTankCannonPawn, & to add dry-fire sound if trying to fire empty MG
@@ -1613,10 +1613,22 @@ function ServerToggleDebugExits()
     }
 }
 
-exec function LogCannon() // DEBUG
+exec function LogCannon() // DEBUG x 3 (Matt: use if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
-    Log(Tag @ "CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon @ " ProjectileClass =" @ Cannon.ProjectileClass);
-    Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " 'ViewTransition' =" @ IsInState('ViewTransition') @ "DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
+    Log("CLIENT:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon
+        @ " ProjectileClass =" @ Cannon.ProjectileClass);
+    Log("CLIENT: PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex
+        @ " Controller =" @ Controller.Tag);
+    if (Role < ROLE_Authority) ServerLogCannon();
+}
+function ServerLogCannon()
+{
+    ClientLogCannon(Cannon.CannonReloadState, Cannon.bClientCanFireCannon, Cannon.ProjectileClass, Cannon.PrimaryAmmoCount(), IsInState('ViewTransition'), DriverPositionIndex, Controller.Tag);
+}
+simulated function ClientLogCannon(int CannonReloadState, bool bClientCanFireCannon, Class ProjectileClass, int PrimaryAmmoCount, bool bIsInViewTrans, int SDriverPositionIndex, name ControllerTag)
+{
+    Log("SERVER:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', CannonReloadState) @ " bClientCanFireCannon =" @ bClientCanFireCannon @ " ProjectileClass =" @ ProjectileClass);
+    Log("SERVER: PrimaryAmmoCount() =" @ PrimaryAmmoCount @ " ViewTransition =" @ bIsInViewTrans @ " DriverPositionIndex =" @ SDriverPositionIndex @ " Controller =" @ ControllerTag);
 }
 
 defaultproperties

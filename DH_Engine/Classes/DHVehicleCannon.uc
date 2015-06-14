@@ -305,7 +305,6 @@ event bool AttemptFire(Controller C, bool bAltFire)
             // If cannon is empty we can't fire
             if (!ConsumeAmmo(FireMode))
             {
-                Log(Tag @ "AttemptFire returning false as ConsumeAmmo returned false (no ammo): FireMode =" @ FireMode); // DEBUG
                 CannonPawn.ClientVehicleCeaseFire(bAltFire);
 
                 return false;
@@ -341,8 +340,6 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         return true;
     }
-    else if (!bAltFire && Role == ROLE_Authority) Log(Tag @ "AttemptFire returning false: CannonReloadState =" @ GetEnum(enum'ECannonReloadState', CannonReloadState)
-        @ " bClientCanFireCannon =" @ bClientCanFireCannon); // DEBUG
 
     return false;
 }
