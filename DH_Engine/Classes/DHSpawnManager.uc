@@ -814,7 +814,7 @@ event VehicleDestroyed(Vehicle V)
             if (!GRI.IsVehiclePoolInfinite(i))
             {
                 //Send "Vehicle has been destroyed." message
-                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 100 + i,,, self);
+                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 100 + i,,, self);
             }
 
             if (VehiclePools[i].OnVehicleDestroyedEvent != '')
@@ -835,7 +835,7 @@ event VehicleDestroyed(Vehicle V)
                 }
 
                 //Send "Vehicle reinforcements have been depleted." message
-                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 200 + i,,, self);
+                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 200 + i,,, self);
             }
 
             // Find this vehicle's slot and set the slot's respawn time!
