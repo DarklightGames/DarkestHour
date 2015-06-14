@@ -42,6 +42,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     local vector     BarrelLocation[2], StartLocation, HitLocation, HitNormal, Extent;
     local rotator    BarrelRotation[2], FireRot;
     local Projectile P;
+    local bool       bMixedMag;
     local int        i;
 
     if (!bSecondGunPairFiring)
@@ -55,9 +56,14 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         GetBarrelLocationAndRotation(2, BarrelLocation[1], BarrelRotation[1]);
     }
 
+    if (ProjClass == PrimaryProjectileClass)
+    {
+        bMixedMag = true;
+    }
+
     for (i = 0; i < 2; ++i)
     {
-        if (ProjectileClass == PrimaryProjectileClass)
+        if (bMixedMag)
         {
             if (bMixedMagFireAP)
             {
@@ -78,13 +84,23 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             FireRot.Pitch += AddedPitch;
         }
 
-        if (!Owner.TraceThisActor(HitLocation, HitNormal, BarrelLocation[i], WeaponFireLocation + vector(BarrelRotation[i]) * (Owner.CollisionRadius * 1.5), Extent))
+        if (bDoOffsetTrace)
         {
-            StartLocation = HitLocation;
+            Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+            Extent.Z = ProjClass.default.CollisionHeight;
+
+            if (!Owner.TraceThisActor(HitLocation, HitNormal, BarrelLocation[i], BarrelLocation[i] + vector(BarrelRotation[i]) * (Owner.CollisionRadius * 1.5), Extent))
+            {
+                StartLocation = HitLocation;
+            }
+            else
+            {
+                StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
+            }
         }
         else
         {
-            StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
+            StartLocation = BarrelLocation[i];
         }
 
         P = Spawn(ProjClass, none,, StartLocation, FireRot);
