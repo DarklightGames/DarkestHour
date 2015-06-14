@@ -784,10 +784,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         if (bBehindViewChanged)
         {
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-            }
+            FixPCRotation(PC); // switching to behind view, so make rotation non-relative to vehicle
 
             for (i = 0; i < DriverPositions.Length; ++i)
             {
@@ -822,10 +819,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
     else
     {
-        if (bPCRelativeFPRotation)
-        {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
-        }
+        PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // switching back from behind view, so make rotation relative to vehicle again
 
         if (bBehindViewChanged)
         {
@@ -3816,11 +3810,9 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     PlayerCameraBone="Camera_driver"
-    bPCRelativeFPRotation=true // this is inherited default, but adding here as a note that vehicles must have this as it's now assumed in some critical functions
     FPCamPos=(X=0.0,Y=0.0,Z=0.0)
     bEngineOff=true
     bSavedEngineOff=true
-    bDisableThrottle=false
     IgnitionSwitchInterval=4.0
     EngineHealth=300
     DamagedEffectHealthSmokeFactor=0.85
@@ -3871,4 +3863,11 @@ defaultproperties
     ViewShakeOffsetMag=(X=0.0,Z=0.0)
     ViewShakeOffsetFreq=0.0
     TouchMessageClass=class'DHVehicleTouchMessage'
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=false
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
+    bDesiredBehindView=false
+    bDisableThrottle=false
 }

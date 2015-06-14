@@ -293,11 +293,8 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged)
         {
             // Switching to behind view, so make rotation non-relative to vehicle
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-                SetRotation(PC.Rotation);
-            }
+            FixPCRotation(PC);
+            SetRotation(PC.Rotation);
 
             if (DriverPositions.Length > 0)
             {
@@ -341,11 +338,8 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged)
         {
             // Switching back from behind view, so make rotation relative to vehicle again
-            if (bPCRelativeFPRotation)
-            {
-                PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
-                SetRotation(PC.Rotation);
-            }
+            PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
+            SetRotation(PC.Rotation);
 
             if (DriverPositions.Length > 0)
             {
@@ -1076,7 +1070,8 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
     SetRotation(NewRotation);
 
-    if (bCustomAiming && CanFire())
+    // Custom aim update
+    if (CanFire())
     {
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
@@ -1194,7 +1189,7 @@ simulated function MatchRotationToGunAim(optional Controller C)
     }
 }
 
-// Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit
+// Modified so PC's rotation, which was relative to vehicle, gets set to the correct non-relative rotation on exit
 // Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the MG pawn's rotation to the vehicle
 simulated function FixPCRotation(PlayerController PC)
 {
@@ -1315,11 +1310,14 @@ defaultproperties
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
-    bPCRelativeFPRotation=true // MG pawn must have this as it's now assumed in some critical functions
-    bCustomAiming=true // several things just don't work quite right without custom aiming
-    bDesiredBehindView=false
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
+    bPCRelativeFPRotation=true
+    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset, including for single position MGs
+    bDesiredBehindView=false
+    bCustomAiming=true // several things just don't work quite right without custom aiming
 }

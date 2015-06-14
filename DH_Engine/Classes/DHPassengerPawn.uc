@@ -344,9 +344,12 @@ defaultproperties
     bKeepDriverAuxCollision=true
     DriverDamageMult=1.0
     CameraBone="body"
-    bAllowViewChange=false
-    bDesiredBehindView=false
     WeaponFOV=90.0
     TPCamDistance=200.0
     EntryRadius=375.0
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
+    bAllowViewChange=false
+    bDesiredBehindView=false
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset
 }

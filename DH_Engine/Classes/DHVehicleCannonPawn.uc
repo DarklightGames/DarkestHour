@@ -471,11 +471,8 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             }
 
             // Switching to behind view, so make rotation non-relative to vehicle
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-                SetRotation(PC.Rotation);
-            }
+            FixPCRotation(PC);
+            SetRotation(PC.Rotation);
 
             if (DriverPositions.Length > 0)
             {
@@ -519,19 +516,16 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged)
         {
             // Switching back from behind view, so make rotation relative to vehicle again
-            if (bPCRelativeFPRotation)
+            ViewRotation = PC.Rotation;
+
+            // Remove any turret yaw from player's rotation, as in 1st person view the turret yaw will be added by SpecialCalcFirstPersonView()
+            if (Cannon.bHasTurret)
             {
-                ViewRotation = PC.Rotation;
-
-                // Remove any turret yaw from player's rotation, as in 1st person view the turret yaw will be added by SpecialCalcFirstPersonView()
-                if (Cannon.bHasTurret)
-                {
-                    ViewRotation.Yaw -= Cannon.CurrentAim.Yaw;
-                }
-
-                PC.SetRotation(rotator(vector(ViewRotation) << Gun.Rotation));
-                SetRotation(PC.Rotation);
+                ViewRotation.Yaw -= Cannon.CurrentAim.Yaw;
             }
+
+            PC.SetRotation(rotator(vector(ViewRotation) << Gun.Rotation));
+            SetRotation(PC.Rotation);
 
             if (DriverPositions.Length > 0)
             {
@@ -1477,7 +1471,7 @@ simulated function MatchRotationToGunAim(optional Controller C)
     }
 }
 
-// Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit, including turret rotation
+// Modified so PC's rotation, which was relative to vehicle, gets set to the correct non-relative rotation on exit, including turret rotation
 // Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the cannon pawn's rotation to the vehicle
 simulated function FixPCRotation(PlayerController PC)
 {
@@ -1646,9 +1640,6 @@ defaultproperties
     GunsightPositions=1
     OverlayCenterSize=0.9
     PlayerCameraBone="Camera_com"
-    bPCRelativeFPRotation=true // cannon pawn must have this as it's now assumed in some critical functions
-    bFPNoZFromCameraPitch=true
-    bDesiredBehindView=false
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
@@ -1661,4 +1652,10 @@ defaultproperties
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=false
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
+    bDesiredBehindView=false
 }
