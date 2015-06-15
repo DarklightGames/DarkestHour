@@ -23,4 +23,5 @@ defaultproperties
     DriveAnim="crouch_idlehold_bayo"
     EntryRadius=200.0
     SoundVolume=130
+    ExitPositions(0)=(X=-84.00,Y=-27.00,Z=43.00)
 }
