@@ -31,7 +31,7 @@ defaultproperties
     WheelSuspensionTravel=10.0
     WheelSuspensionMaxRenderTravel=5.0
     ChassisTorqueScale=0.095
-    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
+    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=20.0),(InVal=500.0,OutVal=15.0),(InVal=600.0,OutVal=10.0),(InVal=1000000000.0,OutVal=8.0)))
     GearRatios(0)=-0.35
     GearRatios(3)=0.6
     GearRatios(4)=0.75
@@ -57,7 +57,7 @@ defaultproperties
     DisintegrationHealth=-100000.0
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-150.0,Y=0.0,Z=65.0)
-    SteeringScaleFactor=4.0
+    SteeringScaleFactor=2.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=90.0)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,ViewFOV=90.0)
