@@ -11,5 +11,5 @@ defaultproperties
     DrivePos=(X=-42.0,Y=-30.0,Z=3.0)
     DriveAnim="VHalftrack_Rider2_idle"
     EntryRadius=225.0
-    FPCamViewOffset=(X=0.0,Z=0.0)
+    FPCamPos=(X=0.0,Z=0.0)
 }

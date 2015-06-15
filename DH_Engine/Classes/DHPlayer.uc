@@ -2545,7 +2545,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     }
 
     // Attempt to change role
-    if (newRole != 255)
+    if (newRole != 255 && DesiredRole != NewRole)
     {
         ChangeRole(newRole);
 

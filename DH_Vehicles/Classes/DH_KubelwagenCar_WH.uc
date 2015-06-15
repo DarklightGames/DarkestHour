@@ -143,7 +143,6 @@ defaultproperties
     ExitPositions(2)=(X=-25.0,Y=-110.0,Z=25.0)
     ExitPositions(3)=(X=-40.0,Y=110.0,Z=25.0)
     EntryRadius=160.0
-    FPCamViewOffset=(Z=2.0)
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
     VehicleNameString="Volkswagen Type 82"

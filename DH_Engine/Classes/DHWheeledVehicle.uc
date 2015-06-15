@@ -295,12 +295,10 @@ function Timer()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise generally
+// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise & simplify generally
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local vector CamViewOffsetWorld, VehicleZ;
-    local float  CamViewOffsetZAmount;
+    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -315,20 +313,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
         VehicleQuat = QuatFromRotator(Rotation);
         NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
+        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
     }
 
-    // Get camera location & adjust for any offset positioning
+    // Get camera location & adjust for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
     CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-    CameraLocation = CameraLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-    if (bFPNoZFromCameraPitch)
-    {
-        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-    }
+    CameraLocation = CameraLocation + (FPCamPos >> Rotation);
 
     // Finalise the camera with any shake
     if (PC != none)
@@ -426,10 +416,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         if (bBehindViewChanged)
         {
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-            }
+            FixPCRotation(PC); // switching to behind view, so make rotation non-relative to vehicle
 
             for (i = 0; i < DriverPositions.Length; ++i)
             {
@@ -464,10 +451,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
     else
     {
-        if (bPCRelativeFPRotation)
-        {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
-        }
+        PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // switching back from behind view, so make rotation relative to vehicle again
 
         if (bBehindViewChanged)
         {
@@ -986,8 +970,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Debug exits - uses DHWheeledVehicle class default, allowing bDebugExitPositions to be toggled for all DHWheeledVehicles
@@ -1838,10 +1821,8 @@ defaultproperties
     PointValue=1.0
     bKeepDriverAuxCollision=true
     PlayerCameraBone="Camera_driver"
-    bPCRelativeFPRotation=true // this is inherited default, but adding here as a note that vehicles must have this as it's now assumed in some critical functions
     bEngineOff=true
     bSavedEngineOff=true
-    bDisableThrottle=false
     IgnitionSwitchInterval=4.0
     EngineHealth=30
     HealthMax=175.0
@@ -1871,4 +1852,11 @@ defaultproperties
     ImpactDamageMult=0.5
     TouchMessageClass=class'DHVehicleTouchMessage'
     ObjectiveGetOutDist=1500.0
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=false
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
+    bDesiredBehindView=false
+    bDisableThrottle=false
 }

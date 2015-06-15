@@ -266,19 +266,13 @@ function bool PlaceExitingDriver()
     local int    i, StartIndex;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
 
-    if (Driver == none)
+    if (Driver == none || VehicleBase == none)
     {
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    if (VehicleBase == none)
-    {
-        return false;
-    }
 
     // Debug exits - uses DHPassengerPawn class default, allowing bDebugExitPositions to be toggled for all passenger pawns
     if (class'DHPassengerPawn'.default.bDebugExitPositions)
@@ -344,9 +338,12 @@ defaultproperties
     bKeepDriverAuxCollision=true
     DriverDamageMult=1.0
     CameraBone="body"
-    bAllowViewChange=false
-    bDesiredBehindView=false
     WeaponFOV=90.0
     TPCamDistance=200.0
     EntryRadius=375.0
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
+    bAllowViewChange=false
+    bDesiredBehindView=false
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset
 }

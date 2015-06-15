@@ -177,8 +177,12 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
-        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones only during development
+        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine, // these ones only during development
+        ServerLogSwitch; // DEBUG (temp)
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
+
+    reliable if (Role == ROLE_Authority) // DEBUG (temp)
+        ClientLogSwitch;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -637,12 +641,10 @@ simulated function SetNextTimer(optional float Now)
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise generally
+// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise & simplify generally
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local vector CamViewOffsetWorld, VehicleZ;
-    local float  CamViewOffsetZAmount;
+    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
 
     ViewActor = self;
 
@@ -657,20 +659,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
         VehicleQuat = QuatFromRotator(Rotation);
         NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
+        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
     }
 
-    // Get camera location & adjust for any offset positioning
+    // Get camera location & adjust for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
     CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-    CameraLocation = CameraLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-    if (bFPNoZFromCameraPitch)
-    {
-        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-    }
+    CameraLocation = CameraLocation + (FPCamPos >> Rotation);
 
     // Finalise the camera with any shake
     if (PC != none)
@@ -790,10 +784,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         if (bBehindViewChanged)
         {
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-            }
+            FixPCRotation(PC); // switching to behind view, so make rotation non-relative to vehicle
 
             for (i = 0; i < DriverPositions.Length; ++i)
             {
@@ -828,10 +819,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
     else
     {
-        if (bPCRelativeFPRotation)
-        {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
-        }
+        PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // switching back from behind view, so make rotation relative to vehicle again
 
         if (bBehindViewChanged)
         {
@@ -1568,8 +1556,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Debug exits - uses DHArmoredVehicle class default, allowing bDebugExitPositions to be toggled for all DHArmoredVehicles
@@ -3779,6 +3766,34 @@ function exec DamageTank()
     }
 }
 
+exec function LogSwitch(optional int Index) // DEBUG x 3 (Matt: use if you ever find you can't switch to commander's position when you should be able to)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[Index]);
+    Log("CLIENT:" @ Tag @ " PassengerWeapons.Length =" @ PassengerWeapons.Length @ " WeaponPawns.Length =" @ WeaponPawns.Length @ " WeaponPawn["$Index$"] =" @ WeaponPawn.Tag);
+    Log("CLIENT: Driver =" @ Driver.Tag @ " WP.Driver =" @ WeaponPawn.Driver @ " Same team =" @ Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam
+        @ " WP.bTeamLocked =" @ bTeamLocked @ " WP.Team =" @ WeaponPawn.Team);
+    Log("CLIENT: CanExit() =" @ CanExit() @ " StopExitToRiderPosition() =" @ StopExitToRiderPosition(Index) @ " PassengerWeapons["$Index$"] is rider pawn ="
+        @ class<ROPassengerPawn>(PassengerWeapons[Index].WeaponPawnClass) != none @ " ViewTransition =" @ IsInState('ViewTransition'));
+    if (Role < ROLE_Authority) ServerLogSwitch(Index);
+}
+function ServerLogSwitch(int Index)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[Index]);
+    ClientLogSwitch(Index, PassengerWeapons.Length, WeaponPawns.Length, WeaponPawn, Driver, WeaponPawn.Driver, Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam,
+        bTeamLocked, WeaponPawn.Team, CanExit(), StopExitToRiderPosition(Index), class<ROPassengerPawn>(PassengerWeapons[Index].WeaponPawnClass) != none, IsInState('ViewTransition'));
+}
+simulated function ClientLogSwitch(int Index, int PassengerWeaponsLength, int WeaponPawnsLength, VehicleWeaponPawn WeaponPawn, Pawn SDriver, Pawn WeaponPawnDriver, bool bSameTeam,
+    bool bVTeamLocked, int bWPTeam, bool bCanExit, bool bStopExitToRiderPosition, bool bIsRiderPawn, bool bInViewTrans)
+{
+    Log("SERVER:" @ Tag @ " PassengerWeapons.Length =" @ PassengerWeaponsLength @ " WeaponPawns.Length =" @ WeaponPawnsLength @ " WeaponPawn["$Index$"] =" @ WeaponPawn.Tag);
+    Log("SERVER: Driver =" @ SDriver.Tag @ " WP.Driver =" @ WeaponPawnDriver @ " Same team =" @ Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam
+        @ " WP.bTeamLocked =" @ bVTeamLocked @ " WP.Team =" @ bWPTeam); 
+    Log("SERVER: CanExit() =" @ bCanExit @ " StopExitToRiderPosition() =" @ bStopExitToRiderPosition @ " PassengerWeapons["$Index$"] is rider pawn ="
+        @ bIsRiderPawn @ " ViewTransition =" @ bInViewTrans);
+}
+
 defaultproperties
 {
     SoundVolume=200.0
@@ -3794,11 +3809,9 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     PlayerCameraBone="Camera_driver"
-    bPCRelativeFPRotation=true // this is inherited default, but adding here as a note that vehicles must have this as it's now assumed in some critical functions
     FPCamPos=(X=0.0,Y=0.0,Z=0.0)
     bEngineOff=true
     bSavedEngineOff=true
-    bDisableThrottle=false
     IgnitionSwitchInterval=4.0
     EngineHealth=300
     DamagedEffectHealthSmokeFactor=0.85
@@ -3849,4 +3862,11 @@ defaultproperties
     ViewShakeOffsetMag=(X=0.0,Z=0.0)
     ViewShakeOffsetFreq=0.0
     TouchMessageClass=class'DHVehicleTouchMessage'
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=false
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
+    bDesiredBehindView=false
+    bDisableThrottle=false
 }

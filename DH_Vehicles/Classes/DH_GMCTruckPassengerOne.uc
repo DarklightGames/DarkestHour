@@ -10,5 +10,5 @@ defaultproperties
     CameraBone="passenger1"
     DrivePos=(X=2.0,Y=0.0,Z=5.0)
     DriveAnim="VHalftrack_Rider1_idle"
-    FPCamViewOffset=(X=2.0,Z=14.0)
+    FPCamPos=(X=2.0,Z=14.0)
 }

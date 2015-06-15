@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak38Cannon_ALT extends DH_Flak38Cannon;
+class DH_Flak38Cannon_Alt extends DH_Flak38Cannon;
 
 defaultproperties
 {

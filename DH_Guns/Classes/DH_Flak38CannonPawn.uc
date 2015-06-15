@@ -8,7 +8,8 @@ class DH_Flak38CannonPawn extends DHATGunCannonPawn;
 simulated function InitializeCannon() // TEMP
 {
     super.InitializeCannon();
-    SetScale(1.5);
+    VehicleBase.SetDrawScale(1.5);
+    Gun.SetDrawScale(1.5);
 }
     
 exec function SetScale(float NewValue) // TEMP
@@ -34,6 +35,17 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ) // TEMP
 // Emptied out as shells inherits RangeSettings from Sd.Kfz.234/1 armored car, but flak 38 has no range settings on the gunsight:
 function IncrementRange();
 function DecrementRange();
+
+// Modified to update sight rotation, if gun pitch has changed
+function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
+{
+    super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+
+    if (Level.NetMode != NM_DedicatedServer && PitchChange != 0.0 && !bGunPivotDamaged && DH_Flak38Cannon(Gun) != none)
+    {
+        DH_Flak38Cannon(Gun).UpdateSightRotation();
+    }
+}
 
 defaultproperties
 {

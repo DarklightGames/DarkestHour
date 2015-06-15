@@ -3,13 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackPassengerTwo extends DHPassengerPawn;
+class DH_Flak38CannonPawn_Static extends DH_Flak38CannonPawn;
 
 defaultproperties
 {
-    PositionInArray=2
-    CameraBone="passenger_l_3"
-    DrivePos=(X=2.0,Y=0.0,Z=1.0)
-    DriveAnim="VHalftrack_Rider2_idle"
-    FPCamPos=(X=2.0,Z=-2.0)
+    GunClass=class'DH_Guns.DH_Flak38Cannon_Static'
 }

@@ -40,7 +40,7 @@ calls to the server and sending the Elevation variable to the owning
 client.  Client calls this function to update the server's elevation
 setting at specific times such as firing or leaving the mortar.
 
-Exploitation would be completetly beneign and pointless.
+Exploitation would be completely benign and pointless.
 - Basnett
 */
 simulated function ClientReplicateElevation(float Elevation)

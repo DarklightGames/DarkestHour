@@ -143,13 +143,11 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to make into a generic function, avoiding need for overrides in subclasses, & to properly handle vehicle roll
-// Also optimised generally - although there's code repetition here, in a many-times-a-second function it's better to repeat code than add unnecessary stuff to shorten the code
+// Modified to make into a generic function, avoiding need for overrides in subclasses, to properly handle vehicle roll, & to optimise & simplify generally
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat   RelativeQuat, VehicleQuat, NonRelativeQuat;
-    local vector CamViewOffsetWorld, VehicleZ;
-    local float  CamViewOffsetZAmount;
+    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+    local bool bOnTheGun;
 
     ViewActor = self;
 
@@ -158,66 +156,57 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    // MG uses custom aim & player is in a firing position, so follow the gun's aim
-    if (bCustomAiming && CanFire())
+    // Player is on the gun, so use MG's aim for camera rotation
+    if (CanFire())
     {
-        // Get camera rotation from gun's aim, but factor in the vehicle's rotation, as aim is relative to vehicle
-        RelativeQuat = QuatFromRotator(Gun.CurrentAim);
-        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
-        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
+        bOnTheGun = true;
+        CameraRotation = Gun.CurrentAim;
+    }
+    // Otherwise, player can look around, so use PC's rotation for camera rotation
+    else
+    {
+        CameraRotation = PC.Rotation;
+    }
 
-        if (bCustomAiming)
-        {
-            PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-            PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
-        }
+    // CameraRotation is currently relative to vehicle, so now factor in the vehicle's rotation (note Gun.Rotation is same as vehicle base)
+    RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
+    VehicleQuat = QuatFromRotator(Gun.Rotation);
+    NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+    CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
 
-        // Get camera location - use GunsightCameraBone if there is one, otherwise use normal CameraBone
-        if (GunsightCameraBone != '')
-        {
-            CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
-        }
-        else
-        {
-            CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-        }
+    // Custom aim update
+    if (bOnTheGun)
+    {
+        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
+        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
+    }
 
-        // Adjust camera location for any offset positioning
-        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation) + CamViewOffsetWorld; // FPCamPos offset is relative to weapon's aim
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> CameraRotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
+    // Get camera location - use GunsightCameraBone if there is one & player is one the gun, otherwise use normal CameraBone
+    if (GunsightCameraBone != '' && bOnTheGun)
+    {
+        CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
     }
     else
     {
-        // Get camera rotation from PC rotation, but factor in the vehicle's rotation, as PC rotation is relative to vehicle
-        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
-        VehicleQuat = QuatFromRotator(Gun.Rotation); // Gun's rotation is same as vehicle base
-        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = QuatToRotator(NonRelativeQuat);
-
-        // Get camera location & adjust for any offset positioning
         CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-        CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation) + CamViewOffsetWorld; // FPCamPos offset is relative to vehicle rotation
+    }
 
-        if (bFPNoZFromCameraPitch)
+    // Adjust camera location for any offset positioning (FPCamPos is either set in default props or from any ViewLocation in DriverPositions)
+    if (FPCamPos != vect(0.0, 0.0, 0.0))
+    {
+        if (bOnTheGun)
         {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Gun.Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+            CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+        }
+        else
+        {
+            CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation);
         }
     }
 
     // Finalise the camera with any shake
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
 // Modified to optimise & make into generic function to handle all MG types
@@ -304,11 +293,8 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged)
         {
             // Switching to behind view, so make rotation non-relative to vehicle
-            if (bPCRelativeFPRotation)
-            {
-                FixPCRotation(PC);
-                SetRotation(PC.Rotation);
-            }
+            FixPCRotation(PC);
+            SetRotation(PC.Rotation);
 
             if (DriverPositions.Length > 0)
             {
@@ -352,11 +338,8 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged)
         {
             // Switching back from behind view, so make rotation relative to vehicle again
-            if (bPCRelativeFPRotation)
-            {
-                PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
-                SetRotation(PC.Rotation);
-            }
+            PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
+            SetRotation(PC.Rotation);
 
             if (DriverPositions.Length > 0)
             {
@@ -648,7 +631,6 @@ simulated function NextViewPoint()
 // Emptied out as no longer used (see NextViewPoint() above)
 simulated function AnimateTransition()
 {
-    Log ("AnimateTransition() called on" @ Tag @ " SHOULD NOT HAPPEN NOW !!!"); // Matt: TEMP
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position,
@@ -980,19 +962,13 @@ function bool PlaceExitingDriver()
     local int    i, StartIndex;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
 
-    if (Driver == none)
+    if (Driver == none || VehicleBase == none)
     {
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
+    Extent = Driver.GetCollisionExtent();
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    if (VehicleBase == none)
-    {
-        return false;
-    }
 
     // Debug exits - uses DHVehicleMGPawn class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DHVehicleMGPawn'.default.bDebugExitPositions)
@@ -1087,7 +1063,8 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 
     SetRotation(NewRotation);
 
-    if (bCustomAiming && CanFire())
+    // Custom aim update
+    if (CanFire())
     {
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
@@ -1205,7 +1182,7 @@ simulated function MatchRotationToGunAim(optional Controller C)
     }
 }
 
-// Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit
+// Modified so PC's rotation, which was relative to vehicle, gets set to the correct non-relative rotation on exit
 // Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the MG pawn's rotation to the vehicle
 simulated function FixPCRotation(PlayerController PC)
 {
@@ -1326,11 +1303,14 @@ defaultproperties
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
-    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
-    bPCRelativeFPRotation=true // MG pawn must have this as it's now assumed in some critical functions
-    bCustomAiming=true // several things just don't work quite right without custom aiming
-    bDesiredBehindView=false
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
+
+    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
+    bPCRelativeFPRotation=true
+    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset, including for single position MGs
+    bDesiredBehindView=false
+    bCustomAiming=true // several things just don't work quite right without custom aiming
 }

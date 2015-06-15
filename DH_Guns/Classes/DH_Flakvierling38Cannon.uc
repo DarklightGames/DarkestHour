@@ -21,26 +21,6 @@ replication
         bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
 }
 
-// Modified to animate sights & aiming wheels
-simulated function Tick(float DeltaTime)
-{
-    local rotator SightRotation;
-    local rotator ElevationWheelRotation;
-    local rotator TraverseWheelRotation;
-
-    // Sight
-    SightRotation.Pitch = -CurrentAim.Pitch;
-    SetBoneRotation(SightBone, SightRotation, 1);
-
-    // Elevation wheel
-    ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
-    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
-
-    // Traverse wheel
-    TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
-    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
-}
-
 // Modified to remove handling of mixed mag (instead is handled in SpawnProjectile() as that now fires two projectiles), to toggle bSecondGunPairFiring & to remove AltFire
 state ProjectileFireMode
 {
@@ -62,6 +42,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     local vector     BarrelLocation[2], StartLocation, HitLocation, HitNormal, Extent;
     local rotator    BarrelRotation[2], FireRot;
     local Projectile P;
+    local bool       bMixedMag;
     local int        i;
 
     if (!bSecondGunPairFiring)
@@ -75,9 +56,14 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         GetBarrelLocationAndRotation(2, BarrelLocation[1], BarrelRotation[1]);
     }
 
+    if (ProjClass == PrimaryProjectileClass)
+    {
+        bMixedMag = true;
+    }
+
     for (i = 0; i < 2; ++i)
     {
-        if (ProjectileClass == PrimaryProjectileClass)
+        if (bMixedMag)
         {
             if (bMixedMagFireAP)
             {
@@ -98,13 +84,23 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             FireRot.Pitch += AddedPitch;
         }
 
-        if (!Owner.TraceThisActor(HitLocation, HitNormal, BarrelLocation[i], WeaponFireLocation + vector(BarrelRotation[i]) * (Owner.CollisionRadius * 1.5), Extent))
+        if (bDoOffsetTrace)
         {
-            StartLocation = HitLocation;
+            Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+            Extent.Z = ProjClass.default.CollisionHeight;
+
+            if (!Owner.TraceThisActor(HitLocation, HitNormal, BarrelLocation[i], BarrelLocation[i] + vector(BarrelRotation[i]) * (Owner.CollisionRadius * 1.5), Extent))
+            {
+                StartLocation = HitLocation;
+            }
+            else
+            {
+                StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
+            }
         }
         else
         {
-            StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
+            StartLocation = BarrelLocation[i];
         }
 
         P = Spawn(ProjClass, none,, StartLocation, FireRot);
@@ -252,6 +248,21 @@ simulated function InitEffects()
             FlashEmitters[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
         }
     }
+}
+
+// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+simulated function UpdateSightAndWheelRotation()
+{
+    local rotator SightRotation, ElevationWheelRotation, TraverseWheelRotation;
+
+    SightRotation.Pitch = -CurrentAim.Pitch;
+    SetBoneRotation(SightBone, SightRotation, 1);
+
+    ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
+    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
+
+    TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
+    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
 }
 
 // Added the following functions from DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DH_ROTankCannon:
