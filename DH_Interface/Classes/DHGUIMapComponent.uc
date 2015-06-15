@@ -154,6 +154,7 @@ defaultproperties
         CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         OnCheckChanged=InternalOnCheckChanged
+        bCanClickUncheck=false
     End Object
 
     //TODO: This is begging to be put into a loop somewhere

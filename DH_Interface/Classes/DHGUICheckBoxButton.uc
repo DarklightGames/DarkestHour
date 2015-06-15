@@ -5,6 +5,8 @@
 
 class DHGUICheckBoxButton extends GUICheckBoxButton;
 
+var bool bCanClickUncheck;
+
 delegate OnCheckChanged(GUIComponent Sender, bool bChecked);
 
 // Colin: Modified to not call OnChange if the checked status was not actually
@@ -26,7 +28,7 @@ function SetChecked(bool bNewChecked)
 // become unselected when clicked again.
 function bool InternalOnClick(GUIComponent Sender)
 {
-    if (bCheckBox && !bChecked)
+    if (bCheckBox && (!bChecked || bCanClickUncheck))
     {
         SetChecked(!bChecked);
     }
@@ -36,4 +38,5 @@ function bool InternalOnClick(GUIComponent Sender)
 
 defaultproperties
 {
+    bCanClickUncheck=true
 }
