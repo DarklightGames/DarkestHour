@@ -32,13 +32,6 @@ function PickupFunction(Pawn Other)
     super.PickupFunction(Other);
 
     AttachToPawn(Instigator);
-
-    SetTimer(0.1, false);
-}
-
-function Timer()
-{
-    Destroy();
 }
 
 function AttachToPawn(Pawn P)
@@ -111,6 +104,42 @@ function AttachToPawn(Pawn P)
     }
 
     P.AttachToBone(ArtilleryTrigger, AttachBoneName);
+}
+
+simulated function Weapon WeaponChange(byte F, bool bSilent)
+{
+    if (Inventory != none)
+    {
+        return Inventory.WeaponChange(F,bSilent);
+    }
+    else
+    {
+        return none;
+    }
+}
+
+simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
+{
+    if (Inventory != none)
+    {
+        return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
+    }
+    else
+    {
+        return none;
+    }
+}
+
+simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
+{
+    if (Inventory != none)
+    {
+        return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
+    }
+    else
+    {
+        return none;
+    }
 }
 
 defaultproperties
