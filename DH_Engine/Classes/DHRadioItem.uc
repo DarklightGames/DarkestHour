@@ -106,11 +106,13 @@ function AttachToPawn(Pawn P)
     P.AttachToBone(ArtilleryTrigger, AttachBoneName);
 }
 
+// Colin: The following functions make it impossible to select the radio as the
+// current weapon.
 simulated function Weapon WeaponChange(byte F, bool bSilent)
 {
     if (Inventory != none)
     {
-        return Inventory.WeaponChange(F,bSilent);
+        return Inventory.WeaponChange(F, bSilent);
     }
     else
     {
