@@ -64,11 +64,8 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHVAP'
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(3)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
-    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
+    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
+    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
     SoundVolume=80
     SoundRadius=300.0
 }

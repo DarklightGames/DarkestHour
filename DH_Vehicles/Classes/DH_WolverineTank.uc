@@ -183,10 +183,11 @@ defaultproperties
     Health=500
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
     Skins(3)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(4)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
+    Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
+    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

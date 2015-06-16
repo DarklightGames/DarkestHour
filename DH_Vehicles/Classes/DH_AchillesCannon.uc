@@ -84,9 +84,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    Skins(2)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
-    Skins(3)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    Skins(4)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
+    Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
     SoundVolume=130
     SoundRadius=300.0
 }

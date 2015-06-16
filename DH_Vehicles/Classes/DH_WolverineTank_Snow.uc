@@ -10,5 +10,4 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn_Snow')
     Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow'
     Skins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.M10_turret_snow'
-    Skins(4)=texture'DH_VehiclesUS_tex2.ext_vehicles.M10_turret_snow'
 }
