@@ -77,7 +77,7 @@ defaultproperties
     MaxPositiveYaw=1820
     MaxNegativeYaw=-1820
     bLimitYaw=true
-    BeginningIdleAnim="Overlay_Idle"
+    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=35
     InitialSecondaryAmmo=5
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'

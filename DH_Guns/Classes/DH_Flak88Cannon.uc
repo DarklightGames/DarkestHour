@@ -65,7 +65,6 @@ defaultproperties
     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
-    BeginningIdleAnim="Vt3485_driver_idle_close"
     InitialPrimaryAmmo=50
     InitialSecondaryAmmo=42
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
