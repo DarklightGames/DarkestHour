@@ -99,8 +99,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    Skins(2)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(3)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
     SoundVolume=130
     SoundRadius=300.0
 }

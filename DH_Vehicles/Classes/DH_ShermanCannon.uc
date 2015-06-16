@@ -83,9 +83,9 @@ defaultproperties
     InitialAltAmmo=200
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellHE'
-    Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_turret_ext'
+    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_scoop_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
     Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int2'
     SoundVolume=130

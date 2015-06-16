@@ -8,5 +8,5 @@ class DH_ShermanFactory_DDay extends DH_ShermanFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_ShermanTank_DDay'
-    Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_scoop_ext'
+    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_DDay_body_ext'
 }

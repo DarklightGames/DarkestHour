@@ -188,8 +188,8 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_ext'
     Skins(2)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
     Skins(3)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
-    Skins(4)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    Skins(5)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
+    Skins(4)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
+    Skins(5)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
     CollisionRadius=175.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

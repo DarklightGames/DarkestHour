@@ -33,5 +33,5 @@ defaultproperties
     MaxNegativeYaw=-7000
     bLimitYaw=true
     InitialPrimaryAmmo=200
-    Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_MG_ext'
+    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman_MG'
 }

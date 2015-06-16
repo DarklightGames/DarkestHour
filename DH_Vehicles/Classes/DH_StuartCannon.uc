@@ -85,6 +85,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
-    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
     SoundVolume=80
 }
