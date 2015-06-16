@@ -2805,5 +2805,5 @@ defaultproperties
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
     GameMessageClass=class'DH_Engine.DHGameMessage'
 
-    ChangeTeamInterval=5.0
+    ChangeTeamInterval=1.0
 }
