@@ -1725,6 +1725,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     local DHPlayer              Player;
     local DHRoleInfo            RI;
 
+    if (DHGRI == none)
+    {
+        return;
+    }
+
     // Get player
     Player = DHPlayer(PlayerOwner);
 
