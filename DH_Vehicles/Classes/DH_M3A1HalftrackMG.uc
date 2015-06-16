@@ -47,9 +47,4 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=200
     Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
-//    bCollideActors=true // all collision removed as part of player hit detection TEST
-//    bProjTarget=true
-//    bBlockActors=true
-//    bBlockNonZeroExtentTraces=true
-//    bBlockZeroExtentTraces=true
 }

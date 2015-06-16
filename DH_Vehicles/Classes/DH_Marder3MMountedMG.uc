@@ -46,9 +46,4 @@ defaultproperties
     BeginningIdleAnim="loader_close_idle"
     InitialPrimaryAmmo=75
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
-//    bCollideActors=true // all collision removed as part of player hit detection TEST
-//    bProjTarget=true
-//    bBlockActors=true
-//    bBlockNonZeroExtentTraces=true
-//    bBlockZeroExtentTraces=true
 }
