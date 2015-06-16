@@ -10,6 +10,7 @@ defaultproperties
     OverlayCenterSize=0.555
     UnbuttonedPositionIndex=0
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    RaisedPositionIndex=1
     BinocPositionIndex=2
     WeaponFOV=14.4
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'

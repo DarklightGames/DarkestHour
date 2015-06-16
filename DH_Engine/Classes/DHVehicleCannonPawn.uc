@@ -14,7 +14,8 @@ var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload 
 // Position stuff
 var     int         InitialPositionIndex;     // initial player position on entering
 var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
-var     int         PeriscopePositionIndex;
+var     int         RaisedPositionIndex;      // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
+var     int         PeriscopePositionIndex;   // index position of commander's periscope
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
 var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
 var     bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
@@ -90,10 +91,15 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to calculate & set CannonScopeOverlay variables once instead of every DrawHUD
+// Modified to match RaisedPositionIndex to UnbuttonedPositionIndex by default, & to calculate & set CannonScopeOverlay variables once instead of every DrawHUD
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    if (RaisedPositionIndex == -1) // default value -1 signifies match to UPI, just to save having to set it in most vehicles (set RPI in vehicle subclass def props if different)
+    {
+        RaisedPositionIndex = UnbuttonedPositionIndex;
+    }
 
     if (Level.NetMode != NM_DedicatedServer && CannonScopeOverlay != none)
     {
@@ -1653,7 +1659,8 @@ defaultproperties
 {
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=2
-    PeriscopePositionIndex=-1
+    RaisedPositionIndex=-1    // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
+    PeriscopePositionIndex=-1 // -1 signifies no periscope by default
     GunsightPositions=1
     OverlayCenterSize=0.9
     PlayerCameraBone="Camera_com"

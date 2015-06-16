@@ -512,7 +512,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 }
 
 // Modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
-// Also to avoid playing unnecessary shoot animations on a server
+// Also to check against RaisedPositionIndex instead of bExposed (allows lowered commander in open turret to be exposed), to play shoot 'open' or 'closed' firing animation
+// And to avoid playing unnecessary shoot animations altogether on a server
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     if (Role == ROLE_Authority)
@@ -548,7 +549,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             CannonDustEmitter = Spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
         }
 
-        if (CannonPawn != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed)
+        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= CannonPawn.RaisedPositionIndex) // check against RaisedPositionIndex instead of whether position is bExposed
         {
             if (HasAnim(TankShootOpenAnim))
             {

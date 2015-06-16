@@ -207,7 +207,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             }
         }
 
-        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= 2)
+        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= CannonPawn.RaisedPositionIndex)
         {
             FireAnimationIndex = int(bSecondGunPairFiring) + 2;
         }

@@ -9,41 +9,6 @@ class DH_Flak38Cannon extends DH_Sdkfz2341Cannon;
 
 var  name  SightBone;
 
-// Modified to play shoot open or closed firing animation based on DriverPositionIndex, as all DriverPositionsan are always bExposed in an AT gun
-simulated function FlashMuzzleFlash(bool bWasAltFire)
-{
-    if (Role == ROLE_Authority)
-    {
-        FiringMode = byte(bWasAltFire);
-        FlashCount++;
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-    }
-    else
-    {
-        CalcWeaponFire(bWasAltFire);
-    }
-
-    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
-    {
-        if (FlashEmitter != none)
-        {
-            FlashEmitter.Trigger(self, Instigator);
-        }
-
-        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= 2)
-        {
-            if (HasAnim(TankShootOpenAnim))
-            {
-                PlayAnim(TankShootOpenAnim);
-            }
-            else if (HasAnim(TankShootClosedAnim))
-            {
-                PlayAnim(TankShootClosedAnim);
-            }
-        }
-    }
-}
-
 // New function to update sight rotation, called by cannon pawn when gun pitch changes
 simulated function UpdateSightRotation()
 {

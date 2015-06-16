@@ -254,6 +254,7 @@ simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, 
 defaultproperties
 {
     UnbuttonedPositionIndex=0
+    RaisedPositionIndex=1
     bMustBeTankCrew=false
     bHasAltFire=false
     PitchUpLimit=6000
