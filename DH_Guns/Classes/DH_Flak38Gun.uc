@@ -14,7 +14,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_rot' // TODO: add one for Flak 38
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_look' // TODO: add one for Flak 38
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak38CannonPawn',WeaponBone="turret_placement")
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling38_dest' // TODO: add one for Flak 38
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_trailer_dest'
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DamagedEffectClass=none
