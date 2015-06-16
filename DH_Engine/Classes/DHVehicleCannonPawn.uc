@@ -133,6 +133,15 @@ simulated function InitializeCannon()
     {
         SetManualTurret(true);
     }
+
+    if (Role < ROLE_Authority && Driver != none)
+    {
+        // When vehicle with a player in cannon slot gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
+        // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+        // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
+        DetachDriver(Driver);
+        AttachDriver(Driver);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +155,7 @@ simulated function PostNetReceive()
 {
     local int i;
 
-    // Player has changed position // Matt: TODO - add fix for driver position problems upon replication
+    // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
         if (Driver == none && DriverPositionIndex != InitialPositionIndex && !IsLocallyControlled() && Level.NetMode == NM_Client)
