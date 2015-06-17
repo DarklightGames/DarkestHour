@@ -14,9 +14,11 @@ var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload 
 // Position stuff
 var     int         InitialPositionIndex;     // initial player position on entering
 var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
-var     int         RaisedPositionIndex;      // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
 var     int         PeriscopePositionIndex;   // index position of commander's periscope
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+var     int         RaisedPositionIndex;      // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
+var     name        RaisedPositionIdleAnim;   // starting idle animation for net client to play on cannon if commander is raised up (when actor 1st replicated)
+var     name        RaisedPosDriverIdleAnim;  // starting idle animation for net client to play on commander if he is raised up (when actor 1st replicated)
 var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
 var     bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
@@ -112,6 +114,7 @@ simulated function PostBeginPlay()
 // Matt: new function to do any extra set up in the cannon classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 // Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
+// Also to make sure net clients get the cannon & commander in the correct (or at least acceptable) position when vehicle is replicated to client
 simulated function InitializeCannon()
 {
     Cannon = DHVehicleCannon(Gun);
@@ -141,6 +144,20 @@ simulated function InitializeCannon()
         // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
         DetachDriver(Driver);
         AttachDriver(Driver);
+
+        // Commander is in raised position, so animate the cannon & the commander into the correct position
+        if (DriverPositionIndex >= RaisedPositionIndex)
+        {
+            if (Gun.HasAnim(RaisedPositionIdleAnim))
+            {
+                Gun.PlayAnim(RaisedPositionIdleAnim);
+            }
+
+            if (Driver.HasAnim(RaisedPosDriverIdleAnim))
+            {
+                Driver.PlayAnim(RaisedPosDriverIdleAnim);
+            }
+        }
     }
 }
 
@@ -158,16 +175,22 @@ simulated function PostNetReceive()
     // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
-        if (Driver == none && DriverPositionIndex != InitialPositionIndex && !IsLocallyControlled() && Level.NetMode == NM_Client)
-        {
+//      if (Driver == none && DriverPositionIndex != 0 && !IsLocallyControlled() && Level.NetMode == NM_Client) // Matt: removed as TEST
+//      {
             // do nothing if non-owning net client receives a new DPI but there's no commander (& it isn't the InitialPI), as player must have just exited cannon & DPI is about to be reset
-        }
-        else
-        {
+//      }
+//      else
+//      {
             LastPositionIndex = SavedPositionIndex;
             SavedPositionIndex = DriverPositionIndex;
-            NextViewPoint();
-        }
+
+            // Matt: added 'if' to avoid duplication/conflict with InitializeCannon(), which now handles the starting anims when vehicle replicates to a net client
+            // Also no point playing transition anim if there's no Driver (if he's just left, the BeginningIdleAnim will play)
+            if (Driver != none && bInitializedVehicleGun)
+            {
+                NextViewPoint();
+            }
+//      }
     }
 
     // Initialize the cannon (added VehicleBase != none, so we guarantee that VB is available to InitializeCannon)
@@ -454,7 +477,7 @@ simulated function DrawHUD(Canvas Canvas)
         DrawDebugSphere(CameraLocation, 1.0, 4, 255, 0, 0);       // camera location shown as very small red sphere, like a large dot
         DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
 
-        if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='') // only draw camera rotation if on gunsight 
+        if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='') // only draw camera rotation if on gunsight
         {
             DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0);
         }
@@ -1668,9 +1691,10 @@ defaultproperties
 {
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=2
-    RaisedPositionIndex=-1    // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
     PeriscopePositionIndex=-1 // -1 signifies no periscope by default
     GunsightPositions=1
+    RaisedPositionIndex=-1    // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
+    RaisedPositionIdleAnim="com_idle_open"
     OverlayCenterSize=0.9
     PlayerCameraBone="Camera_com"
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'

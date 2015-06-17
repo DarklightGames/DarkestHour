@@ -19,6 +19,9 @@ var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to 
 // Position stuff
 var     int         InitialPositionIndex;        // initial player position on entering
 var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
+var     int         RaisedPositionIndex;         // lowest position where player is raised up (e.g. unbuttoned or standing above MG)
+var     name        RaisedPositionIdleAnim;      // starting idle animation for net client to play on MG if player is raised up (when actor 1st replicated)
+var     name        RaisedPosDriverIdleAnim;     // starting idle animation for net client to play on player if he is raised up (when actor 1st replicated)
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bPlayerCollisionBoxMoves;    // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
@@ -60,6 +63,7 @@ simulated function PostBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+// Using it to make sure net clients get the MG & player in the correct (or at least acceptable) position when vehicle is replicated to client
 simulated function InitializeMG()
 {
     MGun = DHVehicleMG(Gun);
@@ -71,6 +75,29 @@ simulated function InitializeMG()
     else
     {
         Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleMG, so lots of things are not going to work!");
+    }
+
+    if (Role < ROLE_Authority && Driver != none)
+    {
+        // When vehicle with a player in MG slot gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
+        // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+        // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
+        DetachDriver(Driver);
+        AttachDriver(Driver);
+
+        // Player is in raised position, so animate the MG & the player into the correct position
+        if (DriverPositionIndex >= RaisedPositionIndex)
+        {
+            if (Gun.HasAnim(RaisedPositionIdleAnim))
+            {
+                Gun.PlayAnim(RaisedPositionIdleAnim);
+            }
+
+            if (Driver.HasAnim(RaisedPosDriverIdleAnim))
+            {
+                Driver.PlayAnim(RaisedPosDriverIdleAnim);
+            }
+        }
     }
 }
 
@@ -88,16 +115,22 @@ simulated function PostNetReceive()
     // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
-        if (Driver == none && DriverPositionIndex != InitialPositionIndex && !IsLocallyControlled() && Level.NetMode == NM_Client)
-        {
+//      if (Driver == none && DriverPositionIndex != InitialPositionIndex && !IsLocallyControlled() && Level.NetMode == NM_Client) // TEST removed
+//      {
             // do nothing if non-owning net client receives a new DPI but there's no gunner (& it isn't the InitialPI), as player must have just exited MG & DPI is about to be reset
-        }
-        else
-        {
+//      }
+//      else
+//      {
             LastPositionIndex = SavedPositionIndex;
             SavedPositionIndex = DriverPositionIndex;
-            NextViewPoint();
-        }
+
+            // Matt: added 'if' to avoid duplication/conflict with InitializeMG(), which now handles the starting anims when vehicle replicates to a net client
+            // Also no point playing transition anim if there's no Driver (if he's just left, the BeginningIdleAnim will play)
+            if (Driver != none && bInitializedVehicleGun)
+            {
+                NextViewPoint();
+            }
+//      }
     }
 
     // Initialize the MG (added VehicleBase != none, so we guarantee that VB is available to InitializeMG)
@@ -1300,6 +1333,7 @@ function ServerToggleDebugExits()
 defaultproperties
 {
     UnbuttonedPositionIndex=1
+    RaisedPositionIndex=255 // set in subclass if relevant
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'

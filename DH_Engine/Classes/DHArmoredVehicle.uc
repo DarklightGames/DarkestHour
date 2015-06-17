@@ -55,13 +55,15 @@ var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 // Positions & view
 var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
 var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
+var     name        UnbuttonedIdleAnim;           // starting idle animation for net client to play on vehicle if driver is unbuttoned (when actor 1st replicated)
+var     name        UnbuttonedDriverIdleAnim;     // starting idle animation for net client to play on driver if he is unbuttoned (when actor 1st replicated)
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     name        PlayerCameraBone;             // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     bool        bLockCameraDuringTransition;  // lock the camera's rotation to the camera bone during view transitions
 var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
-var     texture     PeriscopeOverlay;
+var     texture     PeriscopeOverlay;             // driver's periscope overlay texture
 
 // Armor penetration
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
@@ -259,6 +261,7 @@ simulated function PostBeginPlay()
 }
 
 // Modified to initialize engine-related properties, to spawn any decorative schurzen attachment & to set bClientInitialized flag
+// Also so when a vehicle with driver unbuttoned gets replicated to a net client, we animate the vehicle & the driver into the correct position
 simulated function PostNetBeginPlay()
 {
     super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
@@ -279,10 +282,24 @@ simulated function PostNetBeginPlay()
         }
     }
 
-    // Flags on net client that we've completed initialization of replicated actor
     if (Role < ROLE_Authority)
     {
+        // Flags on net client that we've completed initialization of replicated actor
         bClientInitialized = true;
+
+        // Driver is unbuttoned, so animate the vehicle & the driver into the correct position
+        if (Driver != none && DriverPositionIndex >= UnbuttonedPositionIndex)
+        {
+            if (HasAnim(UnbuttonedIdleAnim))
+            {
+                PlayAnim(UnbuttonedIdleAnim);
+            }
+
+            if (Driver.HasAnim(UnbuttonedDriverIdleAnim))
+            {
+                Driver.PlayAnim(UnbuttonedDriverIdleAnim);
+            }
+        }
     }
 }
 
@@ -319,7 +336,13 @@ simulated function PostNetReceive()
     {
         PreviousPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
-        NextViewPoint();
+
+        // Matt: added 'if' to avoid duplication/conflict with PostNetBeginPlay(), which now handles the starting anims when vehicle replicates to a net client
+        // Also no point playing transition anim if there's no Driver (if he's just left, the BeginningIdleAnim will play)
+        if (Driver != none && bClientInitialized)
+        {
+            NextViewPoint();
+        }
     }
 
     // Engine has been switched on or off (but if not bClientInitialized, then actor has just replicated & SetEngine() will get called in PostBeginPlay)
@@ -3823,6 +3846,7 @@ defaultproperties
     SoundRadius=600.0
     TransientSoundRadius=700.0
     UnbuttonedPositionIndex=2
+    UnbuttonedIdleAnim="driver_hatch_idle_open"
     bAllowRiders=true
     FirstRiderPositionIndex=2
     bMustUnbuttonToSwitchToRider=true
