@@ -278,7 +278,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
                 // Damage a destroyable static mesh actor
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
                         ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
 
                     if (RODestroyableStaticMesh(Other).bWontStopBullets) // bullet will continue, so make sure we don't exit without spawning projectile

@@ -11,7 +11,7 @@ simulated function InitializeCannon() // TEMP
     VehicleBase.SetDrawScale(1.5);
     Gun.SetDrawScale(1.5);
 }
-    
+
 exec function SetScale(float NewValue) // TEMP
 {
     if (NewValue > 0.0)

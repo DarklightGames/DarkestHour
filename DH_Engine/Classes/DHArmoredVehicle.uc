@@ -3807,7 +3807,7 @@ simulated function ClientLogSwitch(int Index, int PassengerWeaponsLength, int We
 {
     Log("SERVER:" @ Tag @ " PassengerWeapons.Length =" @ PassengerWeaponsLength @ " WeaponPawns.Length =" @ WeaponPawnsLength @ " WeaponPawn["$Index$"] =" @ WeaponPawn.Tag);
     Log("SERVER: Driver =" @ SDriver.Tag @ " WP.Driver =" @ WeaponPawnDriver @ " Same team =" @ Driver.GetTeamNum() == WeaponPawn.VehicleBase.VehicleTeam
-        @ " WP.bTeamLocked =" @ bVTeamLocked @ " WP.Team =" @ bWPTeam); 
+        @ " WP.bTeamLocked =" @ bVTeamLocked @ " WP.Team =" @ bWPTeam);
     Log("SERVER: StopExitToRiderPosition() =" @ bStopExitToRiderPosition @ " PassengerWeapons["$Index$"] is rider pawn =" @ bIsRiderPawn
         @ " ViewTransition =" @ bInViewTrans @ " bCanBeTankCrew =" @ bCanBeTankCrew);
 }
