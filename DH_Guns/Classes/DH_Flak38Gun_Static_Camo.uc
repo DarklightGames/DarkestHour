@@ -9,4 +9,5 @@ defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak38CannonPawn_Static_Camo')
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun_camo'
+    DestroyedMeshSkins(0)=material'DH_Artillery_tex.Flak38.Flak38_gun_dest_camo'
 }
