@@ -81,6 +81,7 @@ var     float       TraverseDamageChance;      // chance that shrapnel will dama
 var     float       OpticsDamageChance;        // chance that shrapnel will break gunsight optics
 var     texture     DamagedPeriscopeOverlay;   // gunsight overlay to show if optics have been broken
 var     float       TreadDamageThreshold;      // minimum TreadDamageModifier in DamageType to possibly break treads
+var array<Material> DestroyedMeshSkins;        // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 
 // Engine
 var     bool        bEngineOff;                // tank engine is simply switched off
@@ -3376,13 +3377,27 @@ simulated function UpdateMovementSound()
     }
 }
 
-// Modified to destroy extra attachments & effects
+// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
+    local int i;
+
     super.DestroyAppearance();
 
     Disable('Tick'); // otherwise Tick spams "accessed none" errors for Left/RightTreadPanner & it's inconvenient to check != none in Tick
+
     DestroyAttachments();
+
+    if (Level.NetMode != NM_DedicatedServer && DestroyedMeshSkins.Length > 0)
+    {
+        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+        {
+            if (DestroyedMeshSkins[i] != none)
+            {
+                Skins[i] = DestroyedMeshSkins[i];
+            }
+        }
+    }
 }
 
 // New function to destroy effects & attachments when the vehicle gets destroyed

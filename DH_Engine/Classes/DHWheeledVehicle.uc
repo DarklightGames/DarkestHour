@@ -38,6 +38,7 @@ var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small p
 var     byte        SpawnVehicleType;            // set by DHSpawnManager & used here for engine on/off hints
 var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
 var     float       PointValue;                  // used for scoring
+var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly players, to avoid re-spawning vehicle
 var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly pawn found // Matt: seems to duplicate FriendlyResetDistance?
@@ -1513,13 +1514,27 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
     }
 }
 
-// Modified to destroy extra attachments & effects
+// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
+    local int i;
+
     super.DestroyAppearance();
 
     Disable('Tick'); // otherwise Tick spams "accessed none" errors for Left/RightTreadPanner & it's inconvenient to check != none in Tick
+
     DestroyAttachments();
+
+    if (Level.NetMode != NM_DedicatedServer && DestroyedMeshSkins.Length > 0)
+    {
+        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+        {
+            if (DestroyedMeshSkins[i] != none)
+            {
+                Skins[i] = DestroyedMeshSkins[i];
+            }
+        }
+    }
 }
 
 // New function to destroy effects & attachments when the vehicle gets destroyed
