@@ -121,10 +121,17 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
 
+    if (bMultiPosition) // inherits bMultiPosition & although isn't actually multi-position, this allows it to switch to an 'internal' mesh on entering
+    {
+        Gotostate('EnteringVehicle');
+    }
+
+//  PendingPositionIndex = 0; // not relevant as mortar only has 1 position
+//  StoredVehicleRotation = VehicleBase.Rotation; // called a split second before we receive VehicleBase, so just get "accessed none" & StoredVehicleRotation isn't used in mortar anyway
+
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
     PC.SetFOV(WeaponFOV);
-//  StoredVehicleRotation = VehicleBase.Rotation; // called a split second before we receive VehicleBase, so just get "accessed none" & StoredVehicleRotation isn't used in mortar anyway
 
     // From here on is mortar specific - above is just re-stating the Super from CannonPawn, as everything in ROVehWepPawn is irrelevant or unwanted
     GotoState('Idle');
@@ -841,7 +848,6 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
 
 defaultproperties
 {
-    bMultiPosition=false
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
