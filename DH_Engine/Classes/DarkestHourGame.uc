@@ -2228,7 +2228,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 // Modified to support one normal kick, then session kick for FF violation
 function HandleFFViolation(PlayerController Offender)
 {
-    local bool   bSuccess;
+    local bool   bSuccess, bFoundID;
     local string OffenderID;
     local int    i;
 
@@ -2240,29 +2240,31 @@ function HandleFFViolation(PlayerController Offender)
     OffenderID = Offender.GetPlayerIDHash();
 
     BroadcastLocalizedMessage(GameMessageClass, 14, Offender.PlayerReplicationInfo);
-    log("Kicking" @ Offender.GetHumanReadableName() @ "due to a friendly fire violation.");
+    Log("Kicking" @ Offender.GetHumanReadableName() @ "due to a friendly fire violation.");
 
     // The player has been kicked once and needs to be session kicked
     if (FFPunishment == FFP_Kick && bSessionKickOnSecondFFViolation)
     {
         for (i = 0; i < FFViolationIDs.Length; ++i)
         {
-            //Level.Game.Broadcast(self, "FFViolationID" $ i $ ":" @ FFViolationIDs[i], 'Say');
             if (FFViolationIDs[i] == OffenderID)
             {
+                bFoundID = true;
                 AccessControl.BanPlayer(Offender, true); //Session kick
-                //Level.Game.Broadcast(self, "This offender would be session kicked:" @ OffenderID, 'Say');
+                Offender.PlayerReplicationInfo.FFKills = 0.0; // Reset FFKills or else this can get called multiple times for large TKs
                 return; // need to stop here because the player has been session kicked
             }
         }
-        // The player hasn't yet been punished, but is being kicked now so lets add him to FFViolationIDs
-        FFViolationIDs.Insert(0, 1);
-        FFViolationIDs[0] = OffenderID;
+
+        if (!bFoundID)
+        {
+            FFViolationIDs.Insert(0, 1);
+            FFViolationIDs[0] = OffenderID;
+        }
     }
 
     if (FFPunishment == FFP_Kick)
     {
-        //Level.Game.Broadcast(self, "This offender would be kicked:" @ OffenderID, 'Say');
         bSuccess = KickPlayer(Offender);
     }
     else if (FFPunishment == FFP_SessionBan)
@@ -2276,7 +2278,11 @@ function HandleFFViolation(PlayerController Offender)
 
     if (!bSuccess)
     {
-        log("Unable to remove" @ Offender.GetHumanReadableName() @ "from the server.");
+        Log("Unable to remove" @ Offender.GetHumanReadableName() @ "from the server.");
+    }
+    else
+    {
+        Offender.PlayerReplicationInfo.FFKills = 0.0; // Reset FFKills or else this can get called multiple times for large TKs
     }
 }
 
