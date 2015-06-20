@@ -2238,7 +2238,7 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
     if (RI == none ||
         GRI == none ||
         PlayerReplicationInfo == none &&
-        PlayerReplicationInfo.Team != none)
+        PlayerReplicationInfo.Team == none)
     {
         return 0;
     }
