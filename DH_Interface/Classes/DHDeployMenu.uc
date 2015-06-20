@@ -1015,8 +1015,8 @@ function InternalOnChange(GUIComponent Sender)
 
             if (PC.GetRoleInfo() == RI)
             {
-                cb_PrimaryWeapon.SetIndex(PC.DesiredPrimary);
-                cb_SecondaryWeapon.SetIndex(PC.DesiredSecondary);
+                cb_PrimaryWeapon.SetIndex(PC.DHPrimaryWeapon);
+                cb_SecondaryWeapon.SetIndex(PC.DHSecondaryWeapon);
             }
             else
             {
