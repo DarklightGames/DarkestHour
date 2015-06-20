@@ -104,13 +104,21 @@ function bool TryToDrive(Pawn P)
         }
 
         // Bot tries to enter the VehicleBase if it has no driver
-        if (VehicleBase.Driver == none && !P.IsHumanControlled())
+        if (!P.IsHumanControlled() && VehicleBase.Driver == none)
         {
             return VehicleBase.TryToDrive(P);
         }
     }
 
-    return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
+    // Passed all checks, so allow player to enter the vehicle
+    if (bEnterringUnlocks && bTeamLocked)
+    {
+        bTeamLocked = false;
+    }
+
+    KDriverEnter(P);
+
+    return true;
 }
 
 // Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
@@ -129,77 +137,76 @@ function KDriverEnter(Pawn P)
 // Optimises network performance generally & specifically avoids a rider camera bug when unsuccessfully trying to switch to another vehicle position
 simulated function SwitchWeapon(byte F)
 {
-    local  ROVehicleWeaponPawn  WeaponPawn;
-    local  bool                 bMustBeTankerToSwitch;
-    local  byte                 ChosenWeaponPawnIndex;
+    local VehicleWeaponPawn WeaponPawn;
+    local bool              bMustBeTankerToSwitch;
+    local byte              ChosenWeaponPawnIndex;
 
     if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
     {
         ServerChangeDriverPosition(F);
     }
 
-    if (VehicleBase != none)
+    if (VehicleBase == none)
     {
-        if (F == 1)
+        return;
+    }
+
+    // Trying to switch to driver position
+    if (F == 1)
+    {
+        // Stop call to server as there is already a human driver
+        if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
         {
-            // Stop call to server as driver position already has a human player
-            if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
-            {
-                return;
-            }
-
-            if (VehicleBase.bMustBeTankCommander)
-            {
-                bMustBeTankerToSwitch = true;
-            }
-        }
-        else
-        {
-            ChosenWeaponPawnIndex = F - 2;
-
-            // Stop call to server if player has selected an invalid weapon position or the current position
-            if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
-            {
-                return;
-            }
-
-            if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
-            {
-                WeaponPawn = ROVehicleWeaponPawn(VehicleBase.WeaponPawns[ChosenWeaponPawnIndex]);
-            }
-
-            if (WeaponPawn != none)
-            {
-                // Stop call to server as weapon position already has a human player
-                if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
-                {
-                    return;
-                }
-
-                if (WeaponPawn.bMustBeTankCrew)
-                {
-                    bMustBeTankerToSwitch = true;
-                }
-            }
-            // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
-            // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
-            else if (class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
-            {
-                return;
-            }
-        }
-
-        // Stop call to server if player has selected a tank crew role but isn't a tanker
-        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
-            ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
-        {
-            ReceiveLocalizedMessage(class'DHVehicleMessage', 0); // not qualified to operate vehicle
-
             return;
         }
 
-        ServerChangeDriverPosition(F);
+        if (VehicleBase.bMustBeTankCommander)
+        {
+            bMustBeTankerToSwitch = true;
+        }
     }
+    // Trying to switch to non-driver position
+    else
+    {
+        ChosenWeaponPawnIndex = F - 2;
+
+        // Stop call to server if player has selected an invalid weapon position or the current position
+        // Note that if player presses 0, which is invalid choice, the byte index will end up as 254 & so will still fail this test (which is what we want)
+        if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
+        {
+            return;
+        }
+
+        // Stop call to server if weapon position already has a human player
+        // Note we don't try to stop call to server if weapon pawn doesn't exist, as probably won't on net client, but will get replicated if player enters position on server
+        if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
+        {
+            WeaponPawn = VehicleBase.WeaponPawns[ChosenWeaponPawnIndex];
+
+            if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+            {
+                return;
+            }
+            else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
+                Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
+        }
+
+        if (class<ROVehicleWeaponPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+    }
+
+    // Stop call to server if player has selected a tank crew role but isn't a tanker
+    if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
+        && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    {
+        ReceiveLocalizedMessage(class'DHVehicleMessage', 0); // not qualified to operate vehicle
+
+        return;
+    }
+
+    ServerChangeDriverPosition(F);
 }
 
 // Modified to give player the same momentum as the vehicle when exiting

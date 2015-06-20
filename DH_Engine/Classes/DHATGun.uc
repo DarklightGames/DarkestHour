@@ -66,11 +66,18 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Modified to remove restriction on entering while crouched, to allow human to kick bot off a gun, & to remove stuff not relevant to an AT gun
+// Modified to allow human to kick bot off a gun & to remove stuff not relevant to an AT gun
 function bool TryToDrive(Pawn P)
 {
+    // Deny entry if gun has 'driver' or is dead, or if player on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Driver != none || Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
+    {
+        return false;
+    }
+
     // Trying to enter a gun that isn't on our team
-    if (P != none && P.GetTeamNum() != VehicleTeam)
+    if (P.GetTeamNum() != VehicleTeam)
     {
         // Deny entry to TeamLocked enemy gun or non-TeamLocked gun that already has an enemy occupant
         if (bTeamLocked || (Driver != none && P.GetTeamNum() != Driver.GetTeamNum()) || (WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum()))
@@ -79,13 +86,6 @@ function bool TryToDrive(Pawn P)
 
             return false;
         }
-    }
-
-    // Deny entry if gun has 'driver' or is dead, or if player on fire or reloading a weapon (plus several very obscure other reasons)
-    if (Driver != none || Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
-        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
-    {
-        return false;
     }
 
     // The gun is already manned
