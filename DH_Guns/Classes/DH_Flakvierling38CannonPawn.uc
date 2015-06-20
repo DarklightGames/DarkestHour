@@ -20,7 +20,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-// Matt: hack solution to workaround maddening problem in single player only, where view yaw on gunsight is wrong & high pitch even starts to turn the gun !
+// Matt: hack solution to workaround maddening problem in single player or on listen server, where view yaw on gunsight is wrong & high pitch even starts to turn the gun !
 // Problem is in calculation of CameraRotation when on gunsights, so this hack reverts back to an old, inferior calculation to apply vehicle's rotation, without using quats
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
@@ -81,8 +81,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     // If CameraRotation is currently relative to vehicle, now factor in the vehicle's rotation (note Gun.Rotation is same as vehicle base)
     if (!bCameraRotationNotRelative)
     {
-        // Hack so in single player we use this old, inferior calculation
-        if (Level.NetMode == NM_Standalone && bOnGunsight)
+        // Hack so in single player or on listen server, we use this old, inferior calculation
+        if ((Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && bOnGunsight)
         {
             CameraRotation = rotator(vector(CameraRotation) >> Gun.Rotation);
             CameraRotation.Roll =  VehicleBase.Rotation.Roll;
