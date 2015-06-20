@@ -4188,33 +4188,6 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
     }
 }
 
-function SetAmmoAmount(byte AmmoAmount)
-{
-    local Inventory Inv;
-    local DHProjectileWeapon Wep;
-    local int i;
-
-    // Cycle inventory and change ammo on needed items
-    for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
-    {
-        Wep = DHProjectileWeapon(Inv);
-
-        // Only change primary weapon
-        if (Wep != none && Wep.InventoryGroup == 1)
-        {
-            Wep.SetNumMags(AmmoAmount);
-        }
-
-        // Some odd prevention measure that exists in other things like this
-        i++;
-
-        if (i > 500)
-        {
-            break;
-        }
-    }
-}
-
 simulated function float BobFunction(float T, float Amplitude, float Frequency, float Decay)
 {
     return Amplitude * ((Sin(Frequency * T)) / (Frequency ** ((Decay / Frequency) * T)));
