@@ -4572,4 +4572,9 @@ defaultproperties
     IronsightBobAmplitude=4.0
     IronsightBobFrequency=4.0
     IronsightBobDecay=6.0
+
+    // Matt: Mesh gets set by .upl file, but seems to be an initial delay until that takes effect & pawn spawns with Mesh from defaultproperties
+    // So unless Mesh is overridden in subclass, pawn spawn with inherited 'Characters_anm.ger_rifleman_tunic' mesh (many German roles do this)
+    // That can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
+    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat'
 }
