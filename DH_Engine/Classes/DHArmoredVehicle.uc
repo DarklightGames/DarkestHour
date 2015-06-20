@@ -701,7 +701,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
 // Modified to add support for periscope overlay & to remove irrelevant stuff about driver weapon crosshair
 // Also to optimise a little, including to omit calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
-simulated function DrawHUD(Canvas Canvas)
+simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local vector           CameraLocation;
@@ -722,14 +722,14 @@ simulated function DrawHUD(Canvas Canvas)
                 if (DriverPositionIndex == 0 && PeriscopeOverlay != none)
                 {
                     // Save current HUD opacity & then set up for drawing overlays
-                    SavedOpacity = Canvas.ColorModulate.W;
-                    Canvas.ColorModulate.W = 1.0;
-                    Canvas.DrawColor.A = 255;
-                    Canvas.Style = ERenderStyle.STY_Alpha;
+                    SavedOpacity = C.ColorModulate.W;
+                    C.ColorModulate.W = 1.0;
+                    C.DrawColor.A = 255;
+                    C.Style = ERenderStyle.STY_Alpha;
 
-                    DrawPeriscopeOverlay(Canvas);
+                    DrawPeriscopeOverlay(C);
 
-                    Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+                    C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
                 }
             }
             // Draw any HUD overlay
@@ -740,14 +740,14 @@ simulated function DrawHUD(Canvas Canvas)
                 HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                 HUDOverlay.SetRotation(CameraRotation);
 
-                Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+                C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
             }
         }
 
         // Draw vehicle, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, self);
+            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
         }
     }
     else if (HUDOverlay != none)
@@ -757,13 +757,13 @@ simulated function DrawHUD(Canvas Canvas)
 }
 
 // New function to draw any textured driver's periscope overlay
-simulated function DrawPeriscopeOverlay(Canvas Canvas)
+simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
+    ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to revert to Super in Pawn, skipping unnecessary stuff in ROWheeledVehicle & ROVehicle, as this is a many-times-a-second function & so should be optimised

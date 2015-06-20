@@ -320,7 +320,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 }
 
 // Modified to remove irrelevant stuff about driver weapon crosshair & to optimise
-simulated function DrawHUD(Canvas Canvas)
+simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local vector           CameraLocation;
@@ -340,10 +340,10 @@ simulated function DrawHUD(Canvas Canvas)
             if (HUDOverlay == none)
             {
                 // Save current HUD opacity & then set up for drawing overlays
-                SavedOpacity = Canvas.ColorModulate.W;
-                Canvas.ColorModulate.W = 1.0;
-                Canvas.DrawColor.A = 255;
-                Canvas.Style = ERenderStyle.STY_Alpha;
+                SavedOpacity = C.ColorModulate.W;
+                C.ColorModulate.W = 1.0;
+                C.DrawColor.A = 255;
+                C.Style = ERenderStyle.STY_Alpha;
 
                 // Draw gunsights
                 if (DriverPositionIndex < GunsightPositions)
@@ -351,29 +351,29 @@ simulated function DrawHUD(Canvas Canvas)
                     // Debug - draw cross on the center of the screen
                     if (bDebugSights)
                     {
-                        PosX = Canvas.SizeX / 2.0;
-                        PosY = Canvas.SizeY / 2.0;
-                        Canvas.SetPos(0.0, 0.0);
-                        Canvas.DrawVertical(PosX - 1.0, PosY - 3.0);
-                        Canvas.DrawVertical(PosX, PosY - 3.0);
-                        Canvas.SetPos(0.0, PosY + 3.0);
-                        Canvas.DrawVertical(PosX - 1.0, PosY - 3.0);
-                        Canvas.DrawVertical(PosX, PosY - 3.0);
-                        Canvas.SetPos(0.0, 0.0);
-                        Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-                        Canvas.DrawHorizontal(PosY, PosX - 3.0);
-                        Canvas.SetPos(PosX + 3.0, 0.0);
-                        Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
-                        Canvas.DrawHorizontal(PosY, PosX - 3.0);
+                        PosX = C.SizeX / 2.0;
+                        PosY = C.SizeY / 2.0;
+                        C.SetPos(0.0, 0.0);
+                        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+                        C.DrawVertical(PosX, PosY - 3.0);
+                        C.SetPos(0.0, PosY + 3.0);
+                        C.DrawVertical(PosX - 1.0, PosY - 3.0);
+                        C.DrawVertical(PosX, PosY - 3.0);
+                        C.SetPos(0.0, 0.0);
+                        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+                        C.DrawHorizontal(PosY, PosX - 3.0);
+                        C.SetPos(PosX + 3.0, 0.0);
+                        C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+                        C.DrawHorizontal(PosY, PosX - 3.0);
                     }
 
                     // Draw the gunsight overlays
                     if (CannonScopeOverlay != none)
                     {
-                        ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-                        Canvas.SetPos(0.0, 0.0);
+                        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+                        C.SetPos(0.0, 0.0);
 
-                        Canvas.DrawTile(CannonScopeOverlay, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                        C.DrawTile(CannonScopeOverlay, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                             OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
                     }
 
@@ -381,28 +381,28 @@ simulated function DrawHUD(Canvas Canvas)
                     {
                         if (Gun != none && Gun.ProjectileClass != none)
                         {
-                            Canvas.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY);
+                            C.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * C.ClipY);
                         }
                         else
                         {
-                            Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2.0,
-                                ScopePositionY * Canvas.ClipY / ScreenRatio / OverlayCenterScale - Canvas.ClipY * (1.0 / ScreenRatio / OverlayCenterScale - 1.0) / 2.0);
+                            C.SetPos(ScopePositionX * C.ClipY / ScreenRatio / OverlayCenterScale - (C.ClipX / OverlayCenterScale - C.ClipX) / 2.0,
+                                ScopePositionY * C.ClipY / ScreenRatio / OverlayCenterScale - C.ClipY * (1.0 / ScreenRatio / OverlayCenterScale - 1.0) / 2.0);
                         }
 
-                        Canvas.DrawTile(CannonScopeCenter, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                        C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                             OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
                     }
 
-                    Canvas.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY);
+                    C.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * C.ClipY);
 
                     if (bShowRangeRing && Gun != none)
                     {
                         // Draw the range ring
-                        PosX = (float(Canvas.SizeX) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
-                        PosY = (float(Canvas.SizeY) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
+                        PosX = (float(C.SizeX) - float(C.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
+                        PosY = (float(C.SizeY) - float(C.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
 
-                        Canvas.SetPos(OverlayCorrectionX + PosX + (Canvas.SizeY * (1.0 - ScopeCenterScale) * 4.0 / OverlayCenterScale / 3.0 / 2.0),
-                            OverlayCorrectionY + Canvas.SizeY * (1.0 - ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0) / 2.0);
+                        C.SetPos(OverlayCorrectionX + PosX + (C.SizeY * (1.0 - ScopeCenterScale) * 4.0 / OverlayCenterScale / 3.0 / 2.0),
+                            OverlayCorrectionY + C.SizeY * (1.0 - ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0) / 2.0);
 
                         if (Gun.CurrentRangeIndex < 20)
                         {
@@ -415,38 +415,38 @@ simulated function DrawHUD(Canvas Canvas)
 
                         ScopeCenterRotator.Rotation.Yaw = RotationFactor;
 
-                        Canvas.DrawTileScaled(ScopeCenterRotator, Canvas.SizeY / 512.0 * ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0,
-                            Canvas.SizeY / 512.0 * ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0);
+                        C.DrawTileScaled(ScopeCenterRotator, C.SizeY / 512.0 * ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0,
+                            C.SizeY / 512.0 * ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0);
                     }
 
                     // Draw the range setting
                     if (bShowRangeText && Gun != none)
                     {
-                        Canvas.Style = ERenderStyle.STY_Normal;
-                        SavedColor = Canvas.DrawColor;
+                        C.Style = ERenderStyle.STY_Normal;
+                        SavedColor = C.DrawColor;
                         WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
-                        Canvas.DrawColor = WhiteColor;
-                        MapX = RangePositionX * Canvas.ClipX;
-                        MapY = RangePositionY * Canvas.ClipY;
-                        Canvas.SetPos(MapX, MapY);
-                        Canvas.Font = class'ROHUD'.static.GetSmallMenuFont(Canvas);
-                        Canvas.StrLen(Gun.GetRange() @ RangeText, XL, YL);
-                        Canvas.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
-                        Canvas.DrawColor = SavedColor;
+                        C.DrawColor = WhiteColor;
+                        MapX = RangePositionX * C.ClipX;
+                        MapY = RangePositionY * C.ClipY;
+                        C.SetPos(MapX, MapY);
+                        C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
+                        C.StrLen(Gun.GetRange() @ RangeText, XL, YL);
+                        C.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+                        C.DrawColor = SavedColor;
                     }
                 }
                 // Draw periscope overlay
                 else if (DriverPositionIndex == PeriscopePositionIndex)
                 {
-                    DrawPeriscopeOverlay(Canvas);
+                    DrawPeriscopeOverlay(C);
                 }
                 // Draw binoculars overlay
                 else if (DriverPositionIndex == BinocPositionIndex)
                 {
-                    DrawBinocsOverlay(Canvas);
+                    DrawBinocsOverlay(C);
                 }
 
-                Canvas.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
+                C.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
             }
             // Draw any HUD overlay
             else if (!Level.IsSoftwareRendering())
@@ -455,14 +455,14 @@ simulated function DrawHUD(Canvas Canvas)
                 SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
                 HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                 HUDOverlay.SetRotation(CameraRotation);
-                Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+                C.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
             }
         }
 
         // Draw vehicle, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+            ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
         }
     }
     else if (HUDOverlay != none)
@@ -485,25 +485,25 @@ simulated function DrawHUD(Canvas Canvas)
 }
 
 // New function to draw any textured commander's periscope overlay
-simulated function DrawPeriscopeOverlay(Canvas Canvas)
+simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
+    C.SetPos(0.0, 0.0);
 
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,
         PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to simply draw the BinocsOverlay, without additional drawing
-simulated function DrawBinocsOverlay(Canvas Canvas)
+simulated function DrawBinocsOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
+    ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to switch to external mesh & default FOV for behind view

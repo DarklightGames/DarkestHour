@@ -243,7 +243,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 }
 
 // Modified to optimise & make into generic function to handle all MG types
-simulated function DrawHUD(Canvas Canvas)
+simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local vector           CameraLocation, GunOffset, x, y, z;
@@ -274,14 +274,14 @@ simulated function DrawHUD(Canvas Canvas)
                         GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
                         GunOffset += HUDOverlayOffset;
                         HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+                        C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
                     }
                     else
                     {
                         CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
                         HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                         HUDOverlay.SetRotation(CameraRotation);
-                        Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+                        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
                     }
                 }
             }
@@ -289,25 +289,25 @@ simulated function DrawHUD(Canvas Canvas)
             else if (MGOverlay != none)
             {
                 // Save current HUD opacity & then set up for drawing overlays
-                SavedOpacity = Canvas.ColorModulate.W;
-                Canvas.ColorModulate.W = 1.0;
-                Canvas.DrawColor.A = 255;
-                Canvas.Style = ERenderStyle.STY_Alpha;
+                SavedOpacity = C.ColorModulate.W;
+                C.ColorModulate.W = 1.0;
+                C.DrawColor.A = 255;
+                C.Style = ERenderStyle.STY_Alpha;
 
-                ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-                Canvas.SetPos(0.0, 0.0);
+                ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+                C.SetPos(0.0, 0.0);
 
-                Canvas.DrawTile(MGOverlay, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                C.DrawTile(MGOverlay, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                     OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-                Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+                C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
             }
         }
 
         // Draw vehicle, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+            ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
         }
     }
     else if (HUDOverlay != none)

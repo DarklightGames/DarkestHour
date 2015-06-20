@@ -331,7 +331,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
 // Modified to remove irrelevant stuff about driver weapon crosshair & to optimise a little
 // Includes omitting calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
-simulated function DrawHUD(Canvas Canvas)
+simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local vector           CameraLocation;
@@ -358,14 +358,14 @@ simulated function DrawHUD(Canvas Canvas)
                 HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                 HUDOverlay.SetRotation(CameraRotation);
 
-                Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+                C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
             }
         }
 
         // Draw vehicle, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, self);
+            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
         }
     }
     else if (HUDOverlay != none)

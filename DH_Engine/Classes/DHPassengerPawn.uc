@@ -65,7 +65,7 @@ function AltFire(optional float F)
 }
 
 // Modified to remove everything except drawing basic vehicle HUD info
-simulated function DrawHUD(Canvas Canvas)
+simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
 
@@ -74,14 +74,21 @@ simulated function DrawHUD(Canvas Canvas)
     // Draw vehicle, turret, passenger list
     if (PC != none && !PC.bBehindView && ROHud(PC.myHUD) != none && VehicleBase != none)
     {
-        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
     }
 }
 
 // Modified to fix bug where you couldn't switch between rider positions if a tanker hadn't yet entered the tank, & to remove obsolete stuff & duplication from the Supers
 function bool TryToDrive(Pawn P)
 {
-    if (VehicleBase != none && P != none)
+    // Deny entry if vehicle has driver or is dead, or if player is crouching or on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Driver != none || Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
+    {
+        return false;
+    }
+
+    if (VehicleBase != none)
     {
         // Trying to enter a vehicle that isn't on our team
         if (P.GetTeamNum() != VehicleBase.VehicleTeam) // VehicleTeam reliably gives the team, even if vehicle hasn't yet been entered
