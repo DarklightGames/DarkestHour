@@ -265,7 +265,6 @@ defaultproperties
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     HudName="Gunner"
-    bHasFireImpulse=false
     FireImpulse=(X=-1000.0)
     EntryRadius=130.0
     ExitPositions(0)=(X=-40.0,Y=-10.0,Z=50.0)

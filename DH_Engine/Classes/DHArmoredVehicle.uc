@@ -1285,7 +1285,7 @@ function ServerChangeViewPoint(bool bForward)
             }
             else if ((DriverPositionIndex == UnbuttonedPositionIndex || bPlayerCollisionBoxMoves) && Level.NetMode == NM_DedicatedServer)
             {
-                GoToState('ViewTransition');
+                GotoState('ViewTransition');
             }
         }
     }
@@ -1302,7 +1302,7 @@ function ServerChangeViewPoint(bool bForward)
             }
             else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
             {
-                GoToState('ViewTransition');
+                GotoState('ViewTransition');
             }
         }
     }

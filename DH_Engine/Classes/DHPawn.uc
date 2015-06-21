@@ -4488,21 +4488,22 @@ event KImpact(actor other, vector pos, vector impactVel, vector impactNorm)
     }
 }
 
-// Modified to have radius (so deaths can't be hurd like gunshots)
+// Modified to have radius (so deaths can't be heard like gunshots)
 function PlayDyingSound()
 {
-    if( Level.Netmode == NM_Client || bGibbed)
+    if (Level.NetMode == NM_Client || bGibbed)
     {
         return;
     }
 
-    if ( HeadVolume.bWaterVolume )
+    if (HeadVolume.bWaterVolume)
     {
-        PlaySound(GetSound(EST_Drown), SLOT_Pain,2.5*TransientSoundVolume,true,80);
+        PlaySound(GetSound(EST_Drown), SLOT_Pain, 2.5 * TransientSoundVolume, true, 80.0);
+
         return;
     }
 
-    PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20,200), true, 80,, true);
+    PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20.0, 200.0), true, 80.0,, true);
 }
 
 defaultproperties
