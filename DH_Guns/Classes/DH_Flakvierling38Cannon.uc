@@ -273,17 +273,17 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
 
 defaultproperties
 {
-    BarrelBones(0)="g1"
-    BarrelBones(1)="G2"
-    BarrelBones(2)="g3"
-    BarrelBones(3)="g4"
+    BarrelBones(0)="g1" // top right barrel
+    BarrelBones(1)="G2" // top left
+    BarrelBones(2)="g3" // bottom right
+    BarrelBones(3)="g4" // bottom left
     FireAnimations(0)="shoot_open"        // on sights, 1st gun pair
     FireAnimations(1)="Shoot_open2"       // on sights, 2nd gun pair
     FireAnimations(2)="shoot_unbuttoned"  // raised head, 1st gun pair
     FireAnimations(3)="shoot_unbuttoned2" // raised head, 2nd gun pair
     SightBone="Object002"
-    TraverseWheelBone="yaw_w"
-    ElevationWheelBone="pitch_w"
+    TraverseWheelBone="pitch_w" // these are the wrong way round in the model - "pitch_w" is actually the traversing wheel & "yaw_w" is the elevating wheel
+    ElevationWheelBone="yaw_w"
     NumMags=12
     NumSecMags=4
     NumTertMags=4
