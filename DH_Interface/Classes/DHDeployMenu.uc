@@ -1028,9 +1028,9 @@ function InternalOnChange(GUIComponent Sender)
 
             if (RI != none)
             {
-                for (i = 0; i < arraycount(RI.default.Grenades); ++i)
+                for (i = 0; i < arraycount(RI.Grenades); ++i)
                 {
-                    InventoryClass = RI.default.Grenades[i].Item;
+                    InventoryClass = RI.Grenades[i].Item;
 
                     if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
                     {
@@ -1043,9 +1043,9 @@ function InternalOnChange(GUIComponent Sender)
                     }
                 }
 
-                for (i = 0; i < RI.default.GivenItems.Length; ++i)
+                for (i = 0; i < RI.GivenItems.Length; ++i)
                 {
-                    InventoryClass = class<Inventory>(DynamicLoadObject(RI.default.GivenItems[i], class'class'));
+                    InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'class'));
 
                     if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
                     {
