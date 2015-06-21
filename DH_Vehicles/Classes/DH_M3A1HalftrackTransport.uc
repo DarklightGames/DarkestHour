@@ -120,8 +120,8 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.7
     VehicleHudOccupantsY(7)=0.8
     VehicleHudEngineY=0.25
-    VehHitpoints(0)=(PointOffset=(X=2.0,Z=19.0),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=15.0,PointBone="driver_player",PointOffset=(X=2.0,Z=-2.0),HitPointType=HP_Driver)
+    VehHitpoints(0)=(PointOffset=(X=13.0,Y=10.0,Z=22.0),bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=15.0,PointBone="driver_player",PointOffset=(X=-2.0,Y=9.0,Z=3.0),HitPointType=HP_Driver)
     VehHitpoints(2)=(PointRadius=35.0,PointScale=1.0,PointBone="Engine",PointOffset=(Z=-20.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
     EngineHealth=125
     DriverAttachmentBone="driver_player"
