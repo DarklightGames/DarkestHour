@@ -17,6 +17,10 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bCanBeResupplied;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerDestroyMortar;
 }
 
 //GotoState called from DHPawn.Died to let us know the owner is dead and we should destroy ourselves.
@@ -25,6 +29,13 @@ simulated state PendingDestroy
 Begin:
 Sleep(5.0);
 Destroy();
+}
+
+// Called by net client after un-deploying mortar & putting it back into carried inventory, so mortar 'vehicle' actors are now destroyed
+// Only called after client has completed the exiting process & it is safe for the server to destroy the vehicle actors (otherwise everything gets screwed up !)
+function ServerDestroyMortar()
+{
+    Destroy();
 }
 
 simulated function PostBeginPlay()

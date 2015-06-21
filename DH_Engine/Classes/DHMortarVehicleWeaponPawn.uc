@@ -83,6 +83,20 @@ simulated function DecrementRange() { }
 
 simulated function PostNetReceive()
 {
+    // When a manned mortar gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
+    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+    // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
+    if (!bInitializedVehicleGun && Gun != none)
+    {
+        bInitializedVehicleGun = true;
+
+        if (Driver != none)
+        {
+            DetachDriver(Driver);
+            AttachDriver(Driver);
+        }
+    }
+
     if (CurrentDriverAnimation != OldDriverAnimation)
     {
         switch (CurrentDriverAnimation)
@@ -121,21 +135,10 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
 
-    if (bMultiPosition) // inherits bMultiPosition & although isn't actually multi-position, this allows it to switch to an 'internal' mesh on entering
-    {
-        Gotostate('EnteringVehicle');
-    }
-
-//  PendingPositionIndex = 0; // not relevant as mortar only has 1 position
-//  StoredVehicleRotation = VehicleBase.Rotation; // called a split second before we receive VehicleBase, so just get "accessed none" & StoredVehicleRotation isn't used in mortar anyway
-
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
     PC.SetFOV(WeaponFOV);
-
-    // From here on is mortar specific - above is just re-stating the Super from CannonPawn, as everything in ROVehWepPawn is irrelevant or unwanted
     GotoState('Idle');
-
     DHP = DHPlayer(PC);
 
     if (DHP != none)
@@ -153,16 +156,22 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
     super.ClientKDriverLeave(PC);
 
-    DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
-
     PCRot = Gun.GetBoneRotation(DHMortarVehicleWeapon(Gun).MuzzleBoneName);
     PCRot.Pitch = 0;
     PCRot.Roll = 0;
     PC.Pawn.SetRotation(PCRot);
 
-    GotoState('Idle');
-
     PC.FixFOV();
+
+    if (IsInState('Undeploying'))
+    {
+        DHMortarVehicle(VehicleBase).ServerDestroyMortar();
+    }
+    else
+    {
+        DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
+        GotoState('');
+    }
 }
 
 simulated state Busy
@@ -192,7 +201,7 @@ simulated state Busy
             {
                 DriverLeaveAmmunitionTransfer(P);
 
-                GotoState('Idle'); // reset state for the next person who comes on.
+                GotoState(''); // reset state for the next person who gets on the mortar
 
                 if (DHPlayer(P.Controller) != none)
                 {
@@ -474,7 +483,6 @@ simulated function ServerUndeploy()
 
     KDriverLeave(true);
     W.GiveTo(PC.Pawn);
-    VehicleBase.Destroy();
 }
 
 simulated function DrawHUD(Canvas C)
@@ -730,7 +738,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+        if (DriverPositionIndex == 0 && !IsInState('ViewTransition'))
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
@@ -848,6 +856,8 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
 
 defaultproperties
 {
+    bMultiPosition=false
+    bSinglePositionExposed=true
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
