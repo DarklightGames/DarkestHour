@@ -172,7 +172,7 @@ simulated function Tick(float DeltaTime)
     }
 
     // Forces us to equip a mortar if we have one on us.
-    if (Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && Weapon.Name != 'DH_Kz8cmGrW42Weapon' && Weapon.Name != 'DH_M2MortarWeapon')
+    if (Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && DHMortarWeapon(Weapon) == none)
     {
         SwitchWeapon(9); // mortars are inventory group 9, deal with it
     }
@@ -201,7 +201,7 @@ simulated function bool HasMortarInInventory()
 
     for (I = Inventory; I != none; I = I.Inventory)
     {
-        if (I.Name == 'DH_Kz8cmGrW42Weapon' || I.Name == 'DH_M2MortarWeapon')
+        if (DHMortarWeapon(I) != none)
         {
             return true;
         }
