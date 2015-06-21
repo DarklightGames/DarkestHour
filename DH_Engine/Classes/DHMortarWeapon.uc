@@ -24,7 +24,7 @@ replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerDeployEnd, ServerDeployBegin;
+        ServerDeployEnd;
 }
 
 simulated function bool HasAmmo()
@@ -121,18 +121,9 @@ simulated function ClientDeploy()
     R.Pitch = 0;
 
     P.SetLockViewRotation(true, R);
-
-    //--------------------
-    //Let's start
-    ServerDeployBegin();
 }
 
-simulated function ServerDeployBegin()
-{
-    //TODO: Test that we'll be able to get off of this.
-}
-
-simulated function ServerDeployEnd()
+function ServerDeployEnd()
 {
     local DHMortarVehicle V;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
@@ -156,6 +147,7 @@ simulated function ServerDeployEnd()
     }
 
     V = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
+    V.SetTeamNum(VehicleClass.default.VehicleTeam);
     V.TryToDrive(P);
 
     Destroy();
