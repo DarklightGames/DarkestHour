@@ -1707,23 +1707,21 @@ simulated function DrawVehiclePhysiscsWheels()
 
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
 {
-    local int                   i;
-    local Actor                 A;
-    local Controller            P;
-    local float                 MyMapScale;
-    local vector                Temp, MapCenter;
-    local ROVehicleWeaponPawn   WeaponPawn;
-    local Vehicle               V;
-    local float                 PawnRotation;
-    local Actor                 NetActor;
-    local Pawn                  NetPawn;
-    local int                   Pos;
-    local DHPawn                DHP;
-    local int                   OwnerTeam;
-    local SpriteWidget          Widget;
-    local string                S;
-    local DHPlayer              Player;
-    local DHRoleInfo            RI;
+    local int                       i, Pos, OwnerTeam;
+    local Actor                     A;
+    local Controller                P;
+    local float                     MyMapScale, PawnRotation;
+    local vector                    Temp, MapCenter;
+    local ROVehicleWeaponPawn       WeaponPawn;
+    local Vehicle                   V;
+    local Actor                     NetActor;
+    local Pawn                      NetPawn;
+    local DHPawn                    DHP;
+    local SpriteWidget              Widget;
+    local string                    S;
+    local DHPlayer                  Player;
+    local DHRoleInfo                RI;
+    local DHPlayerReplicationInfo   PRI;
 
     if (DHGRI == none)
     {
@@ -1960,6 +1958,14 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
 
     if (OwnerTeam != 255)
     {
+        PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
+
+        // Get Role info
+        if (PRI != none)
+        {
+            RI = DHRoleInfo(PRI.RoleInfo);
+        }
+
         // Draw the in-progress arty strikes
         if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
         {
@@ -2040,70 +2046,70 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             }
         }
 
-    // Draw help requests
-    if (OwnerTeam == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
+        // Draw help requests
+        if (OwnerTeam == AXIS_TEAM_INDEX)
         {
-            if (DHGRI.AxisHelpRequests[i].requestType == 255)
+            for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
             {
-                continue;
-            }
-
-            switch (DHGRI.AxisHelpRequests[i].requestType)
-            {
-                case 0: // help request at objective
-                    Widget = MapIconHelpRequest;
-                    Widget.Tints[0].A = 125;
-                    Widget.Tints[1].A = 125;
-                    DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
-                    break;
-
-                case 1: // attack request
-                case 2: // defend request
-                    DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
-                    break;
-
-                case 3: // mg resupply requests
-                    DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
-                    break;
-
-                case 4: // help request at coords
-                    DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
-                    break;
-
-                default:
-                    Log("Unknown requestType found in AxisHelpRequests[" $ i $ "]:" @ DHGRI.AxisHelpRequests[i].requestType);
-            }
-        }
-
-        // Draw all mortar targets on the map
-        if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
-        {
-            for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
-            {
-                if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
+                if (DHGRI.AxisHelpRequests[i].requestType == 255)
                 {
-                    DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                    continue;
+                }
+
+                switch (DHGRI.AxisHelpRequests[i].requestType)
+                {
+                    case 0: // help request at objective
+                        Widget = MapIconHelpRequest;
+                        Widget.Tints[0].A = 125;
+                        Widget.Tints[1].A = 125;
+                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        break;
+
+                    case 1: // attack request
+                    case 2: // defend request
+                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        break;
+
+                    case 3: // mg resupply requests
+                        DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                        break;
+
+                    case 4: // help request at coords
+                        DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                        break;
+
+                    default:
+                        Log("Unknown requestType found in AxisHelpRequests[" $ i $ "]:" @ DHGRI.AxisHelpRequests[i].requestType);
                 }
             }
-        }
 
-        // Draw hit location for mortar observer's confirmed hits on his own target
-        if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
-        {
-            if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
+            // Draw all mortar targets on the map
+            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
             {
-                DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
+                for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
+                {
+                    if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
+                    {
+                        DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                    }
+                }
+            }
+
+            // Draw hit location for mortar observer's confirmed hits on his own target
+            if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
+            {
+                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
+                {
+                    DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
+                }
+            }
+
+            // Draw hit location for mortar operator if he has a valid hit location
+            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
+            {
+                DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
             }
         }
-
-        // Draw hit location for mortar operator if he has a valid hit location
-        if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
-        {
-            DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
-        }
-    }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
             for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
