@@ -2780,6 +2780,24 @@ function HandlePickup(Pickup pick)
 {
 }
 
+function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
+{
+    Log("======================================================================");
+    Log("*                        AddHudDeathMessage                          *");
+    Log("======================================================================");
+    Log("Killer" @ Killer);
+    Log("Victim" @ Victim);
+    Log("DamageType" @ DamageType);
+
+    if (ROHud(myHud) == none)
+        return;
+
+    ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
+
+    if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && (Player != none) && (Player.Console != none))
+        Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType),0);
+}
+
 defaultproperties
 {
     // Sway values
