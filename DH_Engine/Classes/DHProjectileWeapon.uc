@@ -1821,8 +1821,8 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
 // Modified to handle picking up spare ammo magazines from a WeaponPickup, which is a new system in DH
 function bool HandlePickupQuery(Pickup Item)
 {
-    local DHWeaponPickup DHWP;
-    local int i;
+    local int i, Count, MagCount, RoundsRemaining;
+    local DHWeaponPickup WP;
 
     // If no passed item, prevent pick up & stop checking rest of Inventory chain
     if (Item == none)
@@ -1830,41 +1830,45 @@ function bool HandlePickupQuery(Pickup Item)
         return true;
     }
 
-    // Pickup weapon is same as this weapon, so see if we can pick up any spare mags from it
+    // Pickup weapon is same as this weapon, so see if we can pick up any spare
+    // mags from it
     if (Class == Item.InventoryType && WeaponPickup(Item) != none)
     {
-        DHWP = DHWeaponPickup(Item);
+        WP = DHWeaponPickup(Item);
 
-        // If we already have max mags, prevent pick up & stop checking rest of Inventory chain (same if pickup isn't a DHWeaponPickup & won't have stored mags)
-        if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags || DHWP == none)
+        // If we already have max mags, prevent pick up & stop checking rest of
+        // Inventory chain (same if pickup isn't a DHWeaponPickup & won't have
+        // stored mags)
+        if (WP != none)
         {
-            return true;
-        }
+            // Colin: Going to keep it simple here. This function is just going to
+            // pool all the ammunition together and give as many magazines as it can
+            // rather than some complicated thing where we have to sort out which
+            // magazines are more full and what to take.
 
-        i = DHWP.LoadedMagazineIndex; // start with pickup's loaded mag, although 1st thing we'll do is cycle to the next mag as it's most likely to be unused
-
-        // First, we'll look for any fairly full mags to pick up
-        while (PrimaryAmmoArray.Length < MaxNumPrimaryMags && DHWP.AmmoMags.Length > 0)
-        {
-            i = ++i % DHWP.AmmoMags.Length; // cycle to next pickup mag, looping back to 0 when exceeds mag array length
-
-            // Pick up the mag if it feels heavy (more then half full)
-            if (float(DHWP.AmmoMags[i]) / float(MaxAmmo(0)) > 0.5)
+            // Count up all the rounds of ammunition in the pickup
+            for (i = 0; i < WP.AmmoMags.Length; ++i)
             {
-                PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[i];
-                DHWP.AmmoMags.Remove(i, 1);
-                --i; // need to adjust for array member being removed, otherwise we'll skip the next mag
+                Count += WP.AmmoMags[i];
             }
-        }
 
-        // If we're still not carrying max mags, we'll loop through again & pick up any mags this time
-        for (i = 0; i < DHWP.AmmoMags.Length && PrimaryAmmoArray.Length < MaxNumPrimaryMags; ++i)
-        {
-            if (DHWP.AmmoMags[i] > 0)
+            // Calculate the amount of full magazines
+            MagCount = Count / MaxAmmo(0);
+
+            // Calculate the amount of remaining ammunition after filling up as many
+            // magazines as we could
+            RoundsRemaining = Count % MaxAmmo(0);
+
+            // Add full magazines
+            for (i = 0; PrimaryAmmoArray.Length < MaxNumPrimaryMags && i < MagCount; ++i)
             {
-                PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[i];
-                DHWP.AmmoMags.Remove(i, 1);
-                --i;
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = MaxAmmo(0);
+            }
+
+            // Add magazine
+            if (PrimaryAmmoArray.Length < MaxNumPrimaryMags && RoundsRemaining > 0)
+            {
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = RoundsRemaining;
             }
         }
 
