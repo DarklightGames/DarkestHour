@@ -40,10 +40,6 @@ event InitGame(string Options, out string Error)
     }
 }
 
-// Deprecated functions
-function NotifyObjectiveManagers() {}
-
-
 function PostBeginPlay()
 {
     local DHGameReplicationInfo DHGRI;
