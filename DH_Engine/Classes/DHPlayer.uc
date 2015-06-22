@@ -2623,6 +2623,10 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 ClientChangePlayerInfoResult(19);
             }
         }
+        else
+        {
+            ClientChangePlayerInfoResult(0);
+        }
     }
 }
 
