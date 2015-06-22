@@ -834,7 +834,7 @@ function ServerSaveMortarTarget()
     VT.Destroy();
 
     // Check that there are mortar operators available and that we haven't set a mortar target in the last 30 seconds
-    if (TeamIndex == 0) // axis
+    if (TeamIndex == AXIS_TEAM_INDEX) // axis
     {
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
@@ -858,7 +858,7 @@ function ServerSaveMortarTarget()
             }
         }
     }
-    else
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
@@ -891,7 +891,7 @@ function ServerSaveMortarTarget()
     // Zero out the z coordinate for 2D distance checking on round hits
     HitLocation.Z = 0.0;
 
-    if (TeamIndex == 0) // axis
+    if (TeamIndex == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
@@ -908,7 +908,7 @@ function ServerSaveMortarTarget()
             }
         }
     }
-    else // allies
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
