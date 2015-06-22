@@ -620,10 +620,6 @@ simulated function UpdateInstigator()
     {
         Instigator = InstigatorController.Pawn;
     }
-    else
-    {
-        Instigator = none;
-    }
 }
 
 // New function to separate this out, allowing easier subclassing of Explode function & avoid some other code repetition

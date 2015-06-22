@@ -523,10 +523,6 @@ simulated function UpdateInstigator()
     {
         Instigator = InstigatorController.Pawn;
     }
-    else
-    {
-        Instigator = none;
-    }
 }
 
 // Modified to destroy tracer when it falls to ground
