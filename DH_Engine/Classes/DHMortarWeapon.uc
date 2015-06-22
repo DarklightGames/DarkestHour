@@ -120,6 +120,7 @@ simulated function ClientDeploy()
     R = P.Rotation;
     R.Pitch = 0;
 
+    P.bIsDeployingMortar = true;
     P.SetLockViewRotation(true, R);
 }
 
