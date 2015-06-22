@@ -2652,8 +2652,6 @@ function Reset()
     VehiclePoolIndex = default.VehiclePoolIndex;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
-
-    Log("RESETTING PLAYER");
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -2786,13 +2784,6 @@ function HandlePickup(Pickup pick)
 
 function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
-    Log("======================================================================");
-    Log("*                        AddHudDeathMessage                          *");
-    Log("======================================================================");
-    Log("Killer" @ Killer);
-    Log("Victim" @ Victim);
-    Log("DamageType" @ DamageType);
-
     if (ROHud(myHud) == none)
         return;
 
