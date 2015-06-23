@@ -10,8 +10,6 @@ defaultproperties
 {
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=0
-//  RaisedPositionIndex=1
-//  RaisedPosDriverIdleAnim="VHalftrack_com_idle_open" // note no RaisedPositionIdleAnim as MG anim only moves camera, which isn't relevant to other net clients
     FirstPersonGunShakeScale=2.0
     WeaponFOV=60.0
     DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",/*DriverTransitionAnim="Vhalftrack_com_close",*/ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)

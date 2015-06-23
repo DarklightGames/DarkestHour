@@ -255,7 +255,6 @@ defaultproperties
 {
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=1
-    RaisedPositionIdleAnim="" // the cannon up/down anim on AT guns generally only moves the camera, which isn't relevant to other net clients (add in subclass if required)
     bMustBeTankCrew=false
     bHasAltFire=false
     PitchUpLimit=6000

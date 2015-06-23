@@ -30,9 +30,6 @@ simulated state ViewTransition
 defaultproperties
 {
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-    RaisedPositionIndex=1
-    RaisedPositionIdleAnim="com_idle_open"
-    RaisedPosDriverIdleAnim="VPanzer3_com_idle_open"
     OverlayCenterSize=0.7
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.85

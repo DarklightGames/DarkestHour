@@ -170,6 +170,7 @@ simulated function PostBeginPlay()
 }
 
 // Modified to initialize engine-related properties & to set bClientInitialized flag
+// Also to make sure net clients get the vehicle & driver in the correct position when vehicle is replicated to client
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
@@ -179,6 +180,11 @@ simulated function PostNetBeginPlay()
     if (Role < ROLE_Authority)
     {
         bClientInitialized = true;
+
+        if (Driver != none)
+        {
+            SetPlayerPosition();
+        }
     }
 }
 
@@ -213,7 +219,13 @@ simulated function PostNetReceive()
     {
         PreviousPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
-        NextViewPoint();
+
+        // Matt: added 'if' to avoid duplication/conflict with SetPlayerPosition(), which now handles the starting anims when vehicle replicates to a net client
+        // Also no point playing transition anim if there's no driver (if he's just left, the BeginningIdleAnim will play)
+        if (Driver != none && bClientInitialized)
+        {
+            NextViewPoint();
+        }
     }
 
     // Engine has been switched on or off (but if not bClientInitialized, then actor has just replicated & SetEngine() will get called in PostBeginPlay)
@@ -1493,6 +1505,73 @@ simulated function UpdatePrecacheMaterials()
     if (DestroyedVehicleMesh != none)
     {
         Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
+    }
+}
+
+// New function to set correct initial position of player & vehicle on a net client, when this actor is replicated
+simulated function SetPlayerPosition()
+{
+    local name WeaponAnim, PlayerAnim;
+    local int  i;
+
+    // Fix driver attachment position - on replication, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
+    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+    // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
+    DetachDriver(Driver);
+    AttachDriver(Driver);
+
+    // Put vehicle & player in correct animation pose - if player not in initial position, we need to recreate the up/down anims that will have played to get there
+    if (DriverPositionIndex != InitialPositionIndex)
+    {
+        if (DriverPositionIndex > InitialPositionIndex)
+        {
+            // Step down through each position until we find the 'most recent' transition up anim & player transition anim (or have reached the initial position)
+            for (i = DriverPositionIndex; i > InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); --i)
+            {
+                if (WeaponAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
+                {
+                    WeaponAnim = DriverPositions[i - 1].TransitionUpAnim;
+                }
+
+                // DriverTransitionAnim only relevant if there is also one in the position below
+                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i - 1].DriverTransitionAnim != '')
+                {
+                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
+                }
+            }
+        }
+        else
+        {
+            // Step up through each position until we find the 'most recent' transition down anim & player transition anim (or have reached the initial position)
+            for (i = DriverPositionIndex; i < InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); ++i)
+            {
+                if (WeaponAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
+                {
+                    WeaponAnim = DriverPositions[i + 1].TransitionDownAnim;
+                }
+
+                // DriverTransitionAnim only relevant if there is also one in the position above
+                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i + 1].DriverTransitionAnim != '')
+                {
+                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
+                }
+            }
+        }
+
+        // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
+        // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
+        if (WeaponAnim != '')
+        {
+            PlayAnim(WeaponAnim);
+            SetAnimFrame(1.0);
+        }
+
+        if (PlayerAnim != '')
+        {
+            Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
+            Driver.PlayAnim(PlayerAnim);
+            Driver.SetAnimFrame(1.0);
+        }
     }
 }
 

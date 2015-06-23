@@ -55,8 +55,6 @@ var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 // Positions & view
 var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
 var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
-var     name        UnbuttonedIdleAnim;           // starting idle animation for net client to play on vehicle if driver is unbuttoned (when actor 1st replicated)
-var     name        UnbuttonedDriverIdleAnim;     // starting idle animation for net client to play on driver if he is unbuttoned (when actor 1st replicated)
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
@@ -261,13 +259,22 @@ simulated function PostBeginPlay()
 }
 
 // Modified to initialize engine-related properties, to spawn any decorative schurzen attachment & to set bClientInitialized flag
-// Also so when a vehicle with driver unbuttoned gets replicated to a net client, we animate the vehicle & the driver into the correct position
+// Also to make sure net clients get the vehicle & driver in the correct position when vehicle is replicated to client
 simulated function PostNetBeginPlay()
 {
     super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
 
-    // Initialize engine-related properties
     SetEngine();
+
+    if (Role < ROLE_Authority)
+    {
+        bClientInitialized = true;
+
+        if (Driver != none)
+        {
+            SetPlayerPosition();
+        }
+    }
 
     // Only spawn schurzen if a valid attachment class has been selected
     if (SchurzenTexture != none && Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none)
@@ -279,26 +286,6 @@ simulated function PostNetBeginPlay()
             Schurzen.Skins[0] = SchurzenTexture; // set the deco attachment's camo skin
             AttachToBone(Schurzen, 'body');
             Schurzen.SetRelativeLocation(SchurzenOffset);
-        }
-    }
-
-    if (Role < ROLE_Authority)
-    {
-        // Flags on net client that we've completed initialization of replicated actor
-        bClientInitialized = true;
-
-        // Driver is unbuttoned, so animate the vehicle & the driver into the correct position
-        if (Driver != none && DriverPositionIndex >= UnbuttonedPositionIndex)
-        {
-            if (HasAnim(UnbuttonedIdleAnim))
-            {
-                PlayAnim(UnbuttonedIdleAnim);
-            }
-
-            if (Driver.HasAnim(UnbuttonedDriverIdleAnim))
-            {
-                Driver.PlayAnim(UnbuttonedDriverIdleAnim);
-            }
         }
     }
 }
@@ -337,8 +324,8 @@ simulated function PostNetReceive()
         PreviousPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
 
-        // Matt: added 'if' to avoid duplication/conflict with PostNetBeginPlay(), which now handles the starting anims when vehicle replicates to a net client
-        // Also no point playing transition anim if there's no Driver (if he's just left, the BeginningIdleAnim will play)
+        // Matt: added 'if' to avoid duplication/conflict with SetPlayerPosition(), which now handles the starting anims when vehicle replicates to a net client
+        // Also no point playing transition anim if there's no driver (if he's just left, the BeginningIdleAnim will play)
         if (Driver != none && bClientInitialized)
         {
             NextViewPoint();
@@ -3264,6 +3251,67 @@ simulated function UpdatePrecacheMaterials()
     }
 }
 
+// New function to set correct initial position of player & vehicle on a net client, when this actor is replicated
+simulated function SetPlayerPosition()
+{
+    local name WeaponAnim, PlayerAnim;
+    local int  i;
+
+    // Put vehicle & player in correct animation pose - if player not in initial position, we need to recreate the up/down anims that will have played to get there
+    if (DriverPositionIndex != InitialPositionIndex)
+    {
+        if (DriverPositionIndex > InitialPositionIndex)
+        {
+            // Step down through each position until we find the 'most recent' transition up anim & player transition anim (or have reached the initial position)
+            for (i = DriverPositionIndex; i > InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); --i)
+            {
+                if (WeaponAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
+                {
+                    WeaponAnim = DriverPositions[i - 1].TransitionUpAnim;
+                }
+
+                // DriverTransitionAnim only relevant if there is also one in the position below
+                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i - 1].DriverTransitionAnim != '')
+                {
+                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
+                }
+            }
+        }
+        else
+        {
+            // Step up through each position until we find the 'most recent' transition down anim & player transition anim (or have reached the initial position)
+            for (i = DriverPositionIndex; i < InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); ++i)
+            {
+                if (WeaponAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
+                {
+                    WeaponAnim = DriverPositions[i + 1].TransitionDownAnim;
+                }
+
+                // DriverTransitionAnim only relevant if there is also one in the position above
+                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i + 1].DriverTransitionAnim != '')
+                {
+                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
+                }
+            }
+        }
+
+        // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
+        // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
+        if (WeaponAnim != '')
+        {
+            PlayAnim(WeaponAnim);
+            SetAnimFrame(1.0);
+        }
+
+        if (PlayerAnim != '')
+        {
+            Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
+            Driver.PlayAnim(PlayerAnim);
+            Driver.SetAnimFrame(1.0);
+        }
+    }
+}
+
 // Modified to optimise & to avoid accessed none errors
 // Also, for HullMG it looks for any VehicleWeapon that is flagged bIsMountedTankMG, instead of specifically a ROMountedTankMG, so more generic
 simulated function UpdateTurretReferences()
@@ -3842,7 +3890,6 @@ defaultproperties
     SoundRadius=600.0
     TransientSoundRadius=700.0
     UnbuttonedPositionIndex=2
-    UnbuttonedIdleAnim="driver_hatch_idle_open"
     bAllowRiders=true
     FirstRiderPositionIndex=2
     bMustUnbuttonToSwitchToRider=true

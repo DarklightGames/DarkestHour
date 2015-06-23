@@ -10,9 +10,6 @@ defaultproperties
 {
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=0
-    RaisedPositionIndex=1
-    RaisedPositionIdleAnim="com_idle_open"
-//  RaisedPosDriverIdleAnim="VHalftrack_com_idle_open"
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",/*DriverTransitionAnim="Vhalftrack_com_close",*/ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)

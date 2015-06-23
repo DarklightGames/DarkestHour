@@ -19,9 +19,6 @@ var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to 
 // Position stuff
 var     int         InitialPositionIndex;        // initial player position on entering
 var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
-var     int         RaisedPositionIndex;         // lowest position where player is raised up (e.g. unbuttoned or standing above MG)
-var     name        RaisedPositionIdleAnim;      // starting idle animation for net client to play on MG if player is raised up (when actor 1st replicated)
-var     name        RaisedPosDriverIdleAnim;     // starting idle animation for net client to play on player if he is raised up (when actor 1st replicated)
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bPlayerCollisionBoxMoves;    // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
@@ -63,7 +60,7 @@ simulated function PostBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-// Using it to make sure net clients get the MG & player in the correct (or at least acceptable) position when vehicle is replicated to client
+// Using it to make sure net clients get the MG & player in the correct position when vehicle is replicated to client
 simulated function InitializeMG()
 {
     MGun = DHVehicleMG(Gun);
@@ -79,25 +76,7 @@ simulated function InitializeMG()
 
     if (Role < ROLE_Authority && Driver != none)
     {
-        // When vehicle with a player in MG slot gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
-        // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
-        // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
-        DetachDriver(Driver);
-        AttachDriver(Driver);
-
-        // Player is in raised position, so animate the MG & the player into the correct position
-        if (DriverPositionIndex >= RaisedPositionIndex)
-        {
-            if (Gun.HasAnim(RaisedPositionIdleAnim))
-            {
-                Gun.PlayAnim(RaisedPositionIdleAnim);
-            }
-
-            if (Driver.HasAnim(RaisedPosDriverIdleAnim))
-            {
-                Driver.PlayAnim(RaisedPosDriverIdleAnim);
-            }
-        }
+        SetPlayerPosition();
     }
 }
 
@@ -115,22 +94,15 @@ simulated function PostNetReceive()
     // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
-//      if (Driver == none && DriverPositionIndex != InitialPositionIndex && !IsLocallyControlled() && Level.NetMode == NM_Client) // TEST removed
-//      {
-            // do nothing if non-owning net client receives a new DPI but there's no gunner (& it isn't the InitialPI), as player must have just exited MG & DPI is about to be reset
-//      }
-//      else
-//      {
-            LastPositionIndex = SavedPositionIndex;
-            SavedPositionIndex = DriverPositionIndex;
+        LastPositionIndex = SavedPositionIndex;
+        SavedPositionIndex = DriverPositionIndex;
 
-            // Matt: added 'if' to avoid duplication/conflict with InitializeMG(), which now handles the starting anims when vehicle replicates to a net client
-            // Also no point playing transition anim if there's no Driver (if he's just left, the BeginningIdleAnim will play)
-            if (Driver != none && bInitializedVehicleGun)
-            {
-                NextViewPoint();
-            }
-//      }
+        // Matt: added 'if' to avoid duplication/conflict with SetPlayerPosition(), which now handles the starting anims when vehicle replicates to a net client
+        // Also no point playing transition anim if there's no 'Driver' (if he's just left, the BeginningIdleAnim will play)
+        if (Driver != none && bInitializedVehicleGun)
+        {
+            NextViewPoint();
+        }
     }
 
     // Initialize the MG (added VehicleBase != none, so we guarantee that VB is available to InitializeMG)
@@ -1092,6 +1064,73 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
     }
 }
 
+// New function to set correct initial position of player & MG on a net client, when this actor is replicated
+simulated function SetPlayerPosition()
+{
+    local name WeaponAnim, PlayerAnim;
+    local int  i;
+
+    // Fix driver attachment position - on replication, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
+    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+    // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
+    DetachDriver(Driver);
+    AttachDriver(Driver);
+
+    // Put MG & player in correct animation pose - if player not in initial position, we need to recreate the up/down anims that will have played to get there
+    if (DriverPositionIndex != InitialPositionIndex)
+    {
+        if (DriverPositionIndex > InitialPositionIndex)
+        {
+            // Step down through each position until we find the 'most recent' transition up anim & player transition anim (or have reached the initial position)
+            for (i = DriverPositionIndex; i > InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); --i)
+            {
+                if (WeaponAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
+                {
+                    WeaponAnim = DriverPositions[i - 1].TransitionUpAnim;
+                }
+
+                // DriverTransitionAnim only relevant if there is also one in the position below
+                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i - 1].DriverTransitionAnim != '')
+                {
+                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
+                }
+            }
+        }
+        else
+        {
+            // Step up through each position until we find the 'most recent' transition down anim & player transition anim (or have reached the initial position)
+            for (i = DriverPositionIndex; i < InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); ++i)
+            {
+                if (WeaponAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
+                {
+                    WeaponAnim = DriverPositions[i + 1].TransitionDownAnim;
+                }
+
+                // DriverTransitionAnim only relevant if there is also one in the position above
+                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i + 1].DriverTransitionAnim != '')
+                {
+                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
+                }
+            }
+        }
+
+        // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
+        // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
+        if (WeaponAnim != '' && Gun != none)
+        {
+            Gun.PlayAnim(WeaponAnim);
+            Gun.SetAnimFrame(1.0);
+        }
+
+        if (PlayerAnim != '')
+        {
+            Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
+            Driver.PlayAnim(PlayerAnim);
+            Driver.SetAnimFrame(1.0);
+        }
+    }
+}
+
 // Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
 // Also to add in the ironsights turn speed factor if the player is controlling the MG
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
@@ -1350,7 +1389,6 @@ function ServerToggleDebugExits()
 defaultproperties
 {
     UnbuttonedPositionIndex=1
-    RaisedPositionIndex=255 // set in subclass if relevant
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
