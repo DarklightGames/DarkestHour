@@ -13,12 +13,6 @@ enum ESpawnPointType
     ESPT_All
 };
 
-enum ESpawnPointMethod
-{
-    ESPM_Hints,
-    ESPM_Radius
-};
-
 //Spawn Vehicle Type
 var const byte SVT_None;
 var const byte SVT_EngineOff;
@@ -231,27 +225,10 @@ function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator Spawn
         return;
     }
 
-    switch (SP.Method)
-    {
-        case ESPM_Hints:
-            if (!GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation))
-            {
-                SpawnError = SpawnError_Blocked;
-
-                return;
-            }
-            break;
-        case ESPM_Radius:
-            //TODO: do a proper radius check
-            SpawnLocation = SP.Location;
-            SpawnRotation = SP.Rotation;
-            break;
-    }
-
-    SpawnError = SpawnError_None;
+    GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation);
 }
 
-function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
+function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
 {
     local Pawn P;
     local Controller C;
@@ -327,8 +304,6 @@ function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHi
         SpawnLocation = LocationHints[LocationHintIndex].Location;
         SpawnRotation = LocationHints[LocationHintIndex].Rotation;
     }
-
-    return true;
 }
 
 function SpawnPlayer(DHPlayer C, out byte SpawnError)
@@ -726,23 +701,7 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
         return;
     }
 
-    switch (SP.Method)
-    {
-        case ESPM_Hints:
-            if (!GetSpawnLocation(SP, Sp.InfantryLocationHints, class'DHPawn'.default.CollisionRadius, SpawnLocation, SpawnRotation))
-            {
-                SpawnError = SpawnError_Blocked;
-
-                return;
-            }
-
-            break;
-        case ESPM_Radius:
-            SpawnLocation = SP.Location;
-            SpawnRotation = SP.Rotation;
-
-            break;
-    }
+    GetSpawnLocation(SP, Sp.InfantryLocationHints, class'DHPawn'.default.CollisionRadius, SpawnLocation, SpawnRotation);
 
     SpawnError = SpawnError_None;
 }

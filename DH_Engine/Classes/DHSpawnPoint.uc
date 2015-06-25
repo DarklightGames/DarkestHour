@@ -15,14 +15,7 @@ enum ESpawnPointType
     ESPT_All
 };
 
-enum ESpawnPointMethod
-{
-    ESPM_Hints,
-    ESPM_Radius
-};
-
 var() ESpawnPointType Type;
-var() ESpawnPointMethod Method;
 var() bool bIsInitiallyActive;
 var() name InfantryLocationHintTag;
 var() name VehicleLocationHintTag;
@@ -77,7 +70,6 @@ defaultproperties
     RemoteRole=ROLE_None
     DrawScale=1.5
     SpawnProtectionTime=5.0
-    Method=ESPM_LocationHint
     bCollideWhenPlacing=true
     CollisionRadius=+00040.0
     CollisionHeight=+00043.0
