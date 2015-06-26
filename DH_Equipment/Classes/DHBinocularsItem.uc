@@ -21,39 +21,63 @@ function bool FillAmmo()  {return false;}
 // Modified to add fire button functionality for mortar observer or artillery officer roles to mark targets
 simulated function Fire(float F)
 {
+    local DHPawn P;
     local DHRoleInfo RI;
+    local DHPlayer PC;
 
-    if (bUsingSights && DHPawn(Instigator) != none && Instigator.IsLocallyControlled())
+    if (bUsingSights && Instigator != none && Instigator.IsLocallyControlled())
     {
-        RI = DHPawn(Instigator).GetRoleInfo();
+        P = DHPawn(Instigator);
+
+        if (P != none)
+        {
+            RI = P.GetRoleInfo();
+        }
 
         if (RI != none)
         {
+            PC = DHPlayer(Instigator.Controller);
+        }
+
+        if (PC != none)
+        {
             if (RI.bIsMortarObserver)
             {
-                if (DHPlayer(Instigator.Controller) != none)
-                {
-                    DHPlayer(Instigator.Controller).ServerSaveMortarTarget();
-                }
+                PC.ServerSaveMortarTarget(false);
             }
-            else if (RI.bIsArtilleryOfficer && DHPlayer(Instigator.Controller) != none)
+            else if (RI.bIsArtilleryOfficer)
             {
-                DHPlayer(Instigator.Controller).ServerSaveArtilleryPosition();
+                PC.ServerSaveArtilleryPosition();
             }
         }
     }
 }
 
-// Modified to add alt fire button functionality for mortar observer to cancel a mortar target
+// Modified to add alt fire button functionality for mortar observer or to mark smoke targets
 simulated function AltFire(float F)
 {
     local DHPawn P;
+    local DHRoleInfo RI;
+    local DHPlayer PC;
 
-    P = DHPawn(Instigator);
-
-    if (P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver && Instigator.IsLocallyControlled())
+    if (bUsingSights && Instigator != none && Instigator.IsLocallyControlled())
     {
-        DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
+        P = DHPawn(Instigator);
+
+        if (P != none)
+        {
+            RI = P.GetRoleInfo();
+        }
+
+        if (RI != none)
+        {
+            PC = DHPlayer(Instigator.Controller);
+        }
+
+        if (PC != none && RI.bIsMortarObserver)
+        {
+            PC.ServerSaveMortarTarget(true);
+        }
     }
 }
 

@@ -8,12 +8,10 @@ class DHMortarTargetMessage extends ROCriticalMessage
 
 var localized string TargetInvalid;
 var localized string NoMortarOperators;
-var localized string TargetMarked;
-var localized string TargetCancelled;
+var localized string TargetMarkedHE;
+var localized string TargetMarkedSmoke;
 var localized string CannotMarkTargetYet;
-var localized string CannotCancelTargetYet;
 var localized string TooManyMortarTargets;
-var localized string NoTargetToCancel;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -28,22 +26,16 @@ static function string GetString(optional int Switch, optional PlayerReplication
             S = default.NoMortarOperators;
             break;
         case 2:
-            S = default.TargetMarked;
+            S = default.TargetMarkedHE;
             break;
         case 3:
-            S = default.TargetCancelled;
+            S = default.TargetMarkedSmoke;
             break;
         case 4:
             S = default.CannotMarkTargetYet;
             break;
-        case 5:
-            S = default.CannotCancelTargetYet;
-            break;
         case 6:
             S = default.TooManyMortarTargets;
-            break;
-        case 7:
-            S = default.NoTargetToCancel;
             break;
         default:
             return default.TargetInvalid;
@@ -65,8 +57,10 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
             return 11;
         case 1:     // NoMortarOperators
             return 11;
-        case 2:     // TargetMarked
-            return 3;
+        case 2:     // TargetMarkedHE
+            return 14;
+        case 3:     // TargetMarkedSmoke
+            return 15;
         case 4:     // CannotMarkTargetYet
             return 11;
         default:
@@ -78,10 +72,9 @@ defaultproperties
 {
     TargetInvalid="Invalid mortar target"
     NoMortarOperators="There are no mortar operators available"
-    TargetMarked="{0} has marked a mortar target"
-    TargetCancelled="{0} has cancelled a mortar target marker"
+    TargetMarkedHE="{0} has marked a mortar high-explosive target"
+    TargetMarkedSmoke="{0} has marked a mortar smoke target"
     CannotMarkTargetYet="You cannot mark another mortar target marker yet"
-    CannotCancelTargetYet="You cannot cancel your mortar target yet"
     TooManyMortarTargets="There are too many active mortar targets"
-    NoTargetToCancel="You have no mortar target to cancel"
+    iconTexture=material'DH_GUI_tex.GUI.criticalmessages_icons'
 }

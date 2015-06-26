@@ -292,7 +292,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
             //Give additional points to the observer and the mortarman for working together for a kill!
             if (!bAlreadyDead && Pawn(Victims) != none && Pawn(Victims).Health <= 0 && DamageInstigator.GetTeamNum() != Pawn(Victims).GetTeamNum())
             {
-                GetClosestMortarTargetController(C);
+                C = GetClosestMortarTargetController();
 
                 if (C != none)
                 {
@@ -334,72 +334,77 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
     bHurtEntry = false;
 }
 
-simulated function GetClosestMortarTargetController(out Controller C)
+simulated function Controller GetClosestMortarTargetController()
 {
     local DHGameReplicationInfo GRI;
     local float  Distance, ClosestDistance;
     local int i, ClosestIndex;
 
     ClosestIndex = 255;
-    ClosestDistance = 5250.0; // 100 meters
+    ClosestDistance = class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (GRI == none)
     {
-        return;
+        return none;
     }
 
-    if (DamageInstigator.GetTeamNum() == 0)
+    switch (DamageInstigator.GetTeamNum())
     {
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
-        {
-            if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].bCancelled != 0)
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
             {
-                continue;
+                if (GRI.GermanMortarTargets[i].Controller == none)
+                {
+                    continue;
+                }
+
+                Distance = VSize(Location - GRI.GermanMortarTargets[i].Location);
+
+                if (Distance <= ClosestDistance)
+                {
+                    ClosestDistance = Distance;
+                    ClosestIndex = i;
+                }
             }
 
-            Distance = VSize(Location - GRI.GermanMortarTargets[i].Location);
-
-            if (Distance <= ClosestDistance)
+            if (ClosestIndex == 255)
             {
-                ClosestDistance = Distance;
-                ClosestIndex = i;
+                return none;
             }
-        }
 
-        if (ClosestIndex == 255)
-        {
-            return;
-        }
+            return GRI.GermanMortarTargets[ClosestIndex].Controller;
 
-        C = GRI.GermanMortarTargets[ClosestIndex].Controller;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
+            {
+                if (GRI.AlliedMortarTargets[i].Controller == none)
+                {
+                    continue;
+                }
+
+                Distance = VSize(Location - GRI.AlliedMortarTargets[i].Location);
+
+                if (Distance <= ClosestDistance)
+                {
+                    ClosestDistance = Distance;
+                    ClosestIndex = i;
+                }
+            }
+
+            if (ClosestIndex == 255)
+            {
+                return none;
+            }
+
+            return GRI.AlliedMortarTargets[ClosestIndex].Controller;
+
+        default:
+            break;
     }
-    else
-    {
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
-        {
-            if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].bCancelled != 0)
-            {
-                continue;
-            }
 
-            Distance = VSize(Location - GRI.AlliedMortarTargets[i].Location);
-
-            if (Distance <= ClosestDistance)
-            {
-                ClosestDistance = Distance;
-                ClosestIndex = i;
-            }
-        }
-
-        if (ClosestIndex == 255)
-        {
-            return;
-        }
-
-        C = GRI.AlliedMortarTargets[ClosestIndex].Controller;
-    }
+    return none;
 }
 
 simulated function Destroyed()

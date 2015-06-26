@@ -41,8 +41,9 @@ var     bool                    bLockJump;
 var     bool                    bMantleDebug;
 var     int                     MantleLoopCount;
 
+// Mortars
 var     byte                    MortarTargetIndex;
-var     vector                  MortarHitLocation;
+var     vector                  MortarHitLocation;          // z-component is used to flag whether or not to display the hit on the map (1.0) or not (0.0)
 
 // Debug:
 var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
@@ -65,6 +66,8 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
+const MORTAR_TARGET_TIME_INTERVAL = 5;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -80,7 +83,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
-        ServerSaveMortarTarget, ServerCancelMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
+        ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -276,6 +279,8 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 // Menu for the player's entire selection process
 exec function PlayerMenu(optional int Tab)
 {
+    Log("PlayerMenu" @ Tab);
+
     bPendingMapDisplay = false;
 
     if (!bWeaponsSelected)
@@ -730,76 +735,7 @@ simulated function float GetMaxViewDistance()
     }
 }
 
-function ServerCancelMortarTarget()
-{
-    local DHGameReplicationInfo GRI;
-    local DHPlayerReplicationInfo PRI;
-    local bool bTargetCancelled;
-
-    // Null target index - no target to cancel
-    if (MortarTargetIndex == 255)
-    {
-        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 7);
-
-        return;
-    }
-
-    if (GameReplicationInfo != none)
-    {
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
-    }
-
-    if (PlayerReplicationInfo != none)
-    {
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-    }
-
-    if (GetTeamNum() == 0)
-    {
-        if (Level.TimeSeconds - GRI.GermanMortarTargets[MortarTargetIndex].Time < 15)
-        {
-            // You cannot cancel your mortar target yet
-            ReceiveLocalizedMessage(class'DHMortarTargetMessage', 5);
-
-            return;
-        }
-        else
-        {
-            GRI.GermanMortarTargets[MortarTargetIndex].bCancelled = 1;
-            MortarTargetIndex = 255; // reset our mortar target index to null value
-            bTargetCancelled = true;
-        }
-    }
-    else
-    {
-        if (Level.TimeSeconds - GRI.AlliedMortarTargets[MortarTargetIndex].Time < 15)
-        {
-            // You cannot cancel your mortar target yet
-            ReceiveLocalizedMessage(class'DHMortarTargetMessage', 5);
-
-            return;
-        }
-        else
-        {
-            GRI.AlliedMortarTargets[MortarTargetIndex].bCancelled = 1;
-            MortarTargetIndex = 255; // reset our mortar target index to null value
-            bTargetCancelled = true;
-        }
-    }
-
-    if (bTargetCancelled)
-    {
-        // [DH]Basnett has cancelled a mortar target
-        Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PRI);
-    }
-    else
-    {
-        // You have no mortar target to cancel
-        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 7);
-    }
-}
-
-function ServerSaveMortarTarget()
+function ServerSaveMortarTarget(bool bIsSmoke)
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
@@ -838,7 +774,9 @@ function ServerSaveMortarTarget()
     {
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
-            if (GRI.GermanMortarTargets[i].Controller == self && GRI.GermanMortarTargets[i].Time != 0.0 && Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < 15.0)
+            if (GRI.GermanMortarTargets[i].Controller == self &&
+                GRI.GermanMortarTargets[i].Time != 0.0 &&
+                Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < MORTAR_TARGET_TIME_INTERVAL)
             {
                 // You cannot mark another mortar target yet
                 ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
@@ -850,7 +788,9 @@ function ServerSaveMortarTarget()
         // Go through the roles and find a mortar operator role that has someone on it
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
-            if (GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
+            if (GRI.DHAxisRoles[i]!= none &&
+                GRI.DHAxisRoles[i].bCanUseMortars &&
+                GRI.DHAxisRoleCount[i] > 0)
             {
                 // Mortar operator available!
                 bMortarsAvailable = true;
@@ -862,7 +802,9 @@ function ServerSaveMortarTarget()
     {
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
-            if (GRI.AlliedMortarTargets[i].Controller == self && GRI.AlliedMortarTargets[i].Time != 0.0 && Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < 15.0)
+            if (GRI.AlliedMortarTargets[i].Controller == self &&
+                GRI.AlliedMortarTargets[i].Time != 0.0 &&
+                Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < MORTAR_TARGET_TIME_INTERVAL)
             {
                 ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
 
@@ -872,7 +814,9 @@ function ServerSaveMortarTarget()
 
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
-            if (GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
+            if (GRI.DHAlliesRoles[i] != none &&
+                GRI.DHAlliesRoles[i].bCanUseMortars &&
+                GRI.DHAlliesRoleCount[i] > 0)
             {
                 bMortarsAvailable = true;
                 break;
@@ -895,13 +839,14 @@ function ServerSaveMortarTarget()
     {
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
-            if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
+            if (GRI.GermanMortarTargets[i].Controller == none ||
+                GRI.GermanMortarTargets[i].Controller == self)
             {
                 GRI.GermanMortarTargets[i].Controller = self;
                 GRI.GermanMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.GermanMortarTargets[i].Location = HitLocation;
                 GRI.GermanMortarTargets[i].Time = Level.TimeSeconds;
-                GRI.GermanMortarTargets[i].bCancelled = 0;
+                GRI.GermanMortarTargets[i].bIsSmoke = bIsSmoke;
                 MortarTargetIndex = i;
                 bMortarTargetMarked = true;
                 break;
@@ -912,13 +857,14 @@ function ServerSaveMortarTarget()
     {
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
-            if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
+            if (GRI.AlliedMortarTargets[i].Controller == none ||
+                GRI.AlliedMortarTargets[i].Controller == self)
             {
                 GRI.AlliedMortarTargets[i].Controller = self;
                 GRI.AlliedMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
                 GRI.AlliedMortarTargets[i].Time = Level.TimeSeconds;
-                GRI.AlliedMortarTargets[i].bCancelled = 0;
+                GRI.AlliedMortarTargets[i].bIsSmoke = bIsSmoke;
                 MortarTargetIndex = i;
                 bMortarTargetMarked = true;
                 break;
@@ -929,7 +875,14 @@ function ServerSaveMortarTarget()
     if (bMortarTargetMarked)
     {
         // [DH]Basnett has marked a mortar target
-        Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo,,);
+        if (bIsSmoke)
+        {
+            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PlayerReplicationInfo,,);
+        }
+        else
+        {
+            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo,,);
+        }
     }
     else
     {
@@ -2652,6 +2605,9 @@ function Reset()
     VehiclePoolIndex = default.VehiclePoolIndex;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
+
+    MortarTargetIndex = default.MortarTargetIndex;
+    MortarHitLocation = default.MortarHitLocation;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)

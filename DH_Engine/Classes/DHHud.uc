@@ -17,7 +17,9 @@ var SpriteWidget        MapIconCarriedRadio;
 var SpriteWidget        CanMantleIcon;
 var SpriteWidget        CanCutWireIcon;
 var SpriteWidget        VoiceIcon;
-var SpriteWidget        MapIconMortarTarget;
+var SpriteWidget        MapIconMortarHETarget;
+var SpriteWidget        MapIconMortarSmokeTarget;
+var SpriteWidget        MapIconMortarArrow;
 var SpriteWidget        MapIconMortarHit;
 var SpriteWidget        MapLevelOverlay;
 var TextWidget          MapScaleText;
@@ -1710,7 +1712,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     local int                       i, Pos, OwnerTeam;
     local Actor                     A;
     local Controller                P;
-    local float                     MyMapScale, PawnRotation;
+    local float                     MyMapScale, PawnRotation, ArrowRotation;
     local vector                    Temp, MapCenter;
     local ROVehicleWeaponPawn       WeaponPawn;
     local Vehicle                   V;
@@ -2088,9 +2090,31 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             {
                 for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
                 {
-                    if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
+                    if (DHGRI.GermanMortarTargets[i].Controller != none)
                     {
-                        DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                        // Colin: Mortar targets have an arrow that points in the
+                        // direction of player's mortar hit.
+                        if (Player.MortarHitLocation.X != 0.0 &&
+                            Player.MortarHitLocation.Y != 0.0 &&
+                            Player.MortarHitLocation.Z == 0.0)
+                        {
+                            // Calculate arrow rotation
+                            Temp = Normal(Player.MortarHitLocation - DHGRI.GermanMortarTargets[i].Location);
+                            ArrowRotation = class'DHLib'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
+                            ArrowRotation -= class'DHLib'.static.DegreesToUnreal(DHGRI.OverheadOffset);
+                            TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
+
+                            DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                        }
+
+                        if (DHGRI.GermanMortarTargets[i].bIsSmoke)
+                        {
+                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                        }
+                        else
+                        {
+                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                        }
                     }
                 }
             }
@@ -2098,14 +2122,15 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             // Draw hit location for mortar observer's confirmed hits on his own target
             if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
             {
-                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
+                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].Controller != none &&
+                    DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0))
                 {
                     DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
                 }
             }
 
             // Draw hit location for mortar operator if he has a valid hit location
-            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
+            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation.Z == 1.0)
             {
                 DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
             }
@@ -2149,23 +2174,48 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             // Draw all mortar targets on the map
             for (i = 0; i < arraycount(DHGRI.AlliedMortarTargets); ++i)
             {
-                if (DHGRI.AlliedMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.AlliedMortarTargets[i].bCancelled == 0)
+                if (DHGRI.AlliedMortarTargets[i].Controller != none)
                 {
-                    DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
+                    // Colin: Mortar targets have an arrow that points in the
+                    // direction of player's mortar hit.
+                    if (Player.MortarHitLocation.X != 0.0 &&
+                        Player.MortarHitLocation.Y != 0.0 &&
+                        Player.MortarHitLocation.Z == 0.0)
+                    {
+                        // Calculate arrow rotation
+                        Temp = Normal(Player.MortarHitLocation - DHGRI.AlliedMortarTargets[i].Location);
+                        ArrowRotation = class'DHLib'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
+                        ArrowRotation -= class'DHLib'.static.DegreesToUnreal(DHGRI.OverheadOffset);
+                        TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
+
+                        DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
+                    }
+
+                    if (DHGRI.AlliedMortarTargets[i].bIsSmoke)
+                    {
+                        DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
+                    }
+                    else
+                    {
+                        DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
+                    }
                 }
             }
 
             // Draw hit location for mortar observer's confirmed hits on his own target
-            if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
+            if (RI != none &&
+                RI.bIsMortarObserver && Player != none &&
+                Player.MortarTargetIndex != 255)
             {
-                if (DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
+                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].Controller != none &&
+                    DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0))
                 {
                     DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
                 }
             }
 
             // Draw hit location for mortar operator if he has a valid hit location
-            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
+            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation.Z == 1.0)
             {
                 DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
             }
@@ -2450,8 +2500,6 @@ simulated function DrawObjectives(Canvas C)
     //==========================================================================
 
     DrawMap(C, SubCoords);
-
-    //TODO: fetch legend variables
 
     //==========================================================================
     // END MAP DRAWING
@@ -4115,7 +4163,9 @@ defaultproperties
     CanMantleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     CanCutWireIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     VoiceIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Communication.Voice',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=63),TextureScale=0.5,DrawPivot=DP_MiddleMiddle,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapIconMortarTarget=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,A=255),Tints[1]=(R=255,A=255))
+    MapIconMortarHETarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=127,Y1=0,X2=192,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconMortarSmokeTarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
     VehicleAltAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

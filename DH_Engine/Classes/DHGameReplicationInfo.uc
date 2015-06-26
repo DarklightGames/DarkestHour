@@ -11,7 +11,7 @@ struct MortarTargetInfo
     var vector      HitLocation;
     var float       Time;
     var DHPlayer    Controller;
-    var byte        bCancelled;
+    var bool        bIsSmoke;
 };
 
 struct SpawnVehicle
@@ -42,6 +42,10 @@ var byte                DHAxisRoleBotCount[ROLES_MAX];
 var byte                DHAxisRoleCount[ROLES_MAX];
 
 const MORTAR_TARGETS_MAX = 2;
+
+// Colin: The maximum distance a mortar strike can be away from a marked target
+// for a hit indicator to show on the map
+var float MortarTargetDistanceThreshold;
 
 var MortarTargetInfo    AlliedMortarTargets[MORTAR_TARGETS_MAX];
 var MortarTargetInfo    GermanMortarTargets[MORTAR_TARGETS_MAX];
@@ -586,8 +590,30 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
     }
 }
 
+simulated function ClearMortarTarget(Controller C)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(GermanMortarTargets); ++i)
+    {
+        if (GermanMortarTargets[i].Controller == C)
+        {
+            GermanMortarTargets[i].Controller = none;
+        }
+    }
+
+    for (i = 0; i < arraycount(AlliedMortarTargets); ++i)
+    {
+        if (AlliedMortarTargets[i].Controller == C)
+        {
+            AlliedMortarTargets[i].Controller = none;
+        }
+    }
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
+    MortarTargetDistanceThreshold=15088 //250 meters in UU
 }

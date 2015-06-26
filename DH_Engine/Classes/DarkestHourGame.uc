@@ -2968,6 +2968,34 @@ exec function DebugSpawnBots(optional bool bSpawnEnemies)
     }
 }
 
+// Colin: We are hijacking this function a little bit to also clear mortar
+// targets. Beats overriding a bunch of other functions, even though the name
+// is no longer really representative of what it does anymore.
+function ClearSavedRequestsAndRallyPoints(ROPlayer PC, bool bKeepRallyPoints)
+{
+    local DHGameReplicationInfo GRI;
+
+    if (PC == none || PC.PlayerReplicationInfo == none)
+    {
+        return;
+    }
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        // Clear rally points & help requests
+        GRI.AddHelpRequest(PC.PlayerReplicationInfo, 0, -1);
+
+        if (!bKeepRallyPoints)
+        {
+            GRI.AddRallyPoint(PC.PlayerReplicationInfo, vect(0, 0, 0), true);
+        }
+
+        GRI.ClearMortarTarget(PC);
+    }
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH

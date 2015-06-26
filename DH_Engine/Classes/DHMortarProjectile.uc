@@ -18,8 +18,6 @@ var float   DudChance;
 // So we can track who fired this round
 var PlayerController DamageInstigator;
 
-const TargetHitDistanceThreshold = 5250; // 100 meters
-
 var class<Emitter> HitDirtEmitterClass;
 var class<Emitter> HitSnowEmitterClass;
 var class<Emitter> HitWoodEmitterClass;
@@ -277,9 +275,14 @@ function SetHitLocation(vector HitLocation)
 
     // Index of 255 means we didn't find a nearby target
     ClosestMortarTargetIndex = 255;
-    ClosestMortarTargetDistance = TargetHitDistanceThreshold;
+    ClosestMortarTargetDistance = class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold;
 
-    if (TeamIndex == 0)
+    // Set the X/Y component of our players' mortar hit location
+    C.MortarHitLocation.X = HitLocation.X;
+    C.MortarHitLocation.Y = HitLocation.Y;
+    C.MortarHitLocation.Z = 0.0;
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
     {
         // Find the closest mortar target
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
@@ -301,12 +304,11 @@ function SetHitLocation(vector HitLocation)
         // If we still have a mortar target index of 255, it means none of the targets were close enough
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0.0, 0.0, 0.0);
+            GRI.GermanMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
 
-            return;
+            // A 1.0 in the Z-component indicates to display the hit on the map
+            C.MortarHitLocation.Z = 1.0;
         }
-
-        GRI.GermanMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
     }
     else
     {
@@ -328,17 +330,14 @@ function SetHitLocation(vector HitLocation)
         }
 
         // If we still have a mortar target index of 255, it means none of the targets were close enough
-        if (ClosestMortarTargetIndex == 255)
+        if (ClosestMortarTargetIndex != 255)
         {
-            C.MortarHitLocation = vect(0.0, 0.0, 0.0);
+            GRI.AlliedMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
 
-            return;
+            // A 1.0 in the Z-component indicates to display the hit on the map
+            C.MortarHitLocation.Z = 1.0;
         }
-
-        GRI.AlliedMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
     }
-
-    C.MortarHitLocation = HitLocation;
 }
 
 simulated function DoHitEffects(vector HitLocation, vector HitNormal)
