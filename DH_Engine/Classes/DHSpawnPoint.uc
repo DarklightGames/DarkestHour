@@ -20,6 +20,12 @@ var() bool bIsInitiallyActive;
 var() name InfantryLocationHintTag;
 var() name VehicleLocationHintTag;
 var() float SpawnProtectionTime;
+
+// Colin: The spawn manager will defer evaluation of any location hints that
+// have enemies within this distance. In layman's terms, the spawn manager will
+// prefer to spawn players at location hints where there are not enemies nearby.
+var() float LocationHintDeferDistance;
+
 var int TeamIndex;
 
 var   array<DHLocationHint> InfantryLocationHints;
@@ -73,4 +79,5 @@ defaultproperties
     bCollideWhenPlacing=true
     CollisionRadius=+00040.0
     CollisionHeight=+00043.0
+    LocationHintDeferDistance=2048.0
 }
