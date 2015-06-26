@@ -1256,6 +1256,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     local RORoleInfo RI;
     local DHPlayer   Playa;
     local ROBot      MrRoboto;
+    local DHGameReplicationInfo GRI;
 
     if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
     {
@@ -1339,6 +1340,13 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
             // Since we're changing roles, clear all associated requests/rally points
             ClearSavedRequestsAndRallyPoints(Playa, false);
+
+            GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+            if (GRI != none && DHPlayer(aPlayer) != none && DHPlayer(aPlayer).MortarTargetIndex != 255)
+            {
+                GRI.ClearMortarTarget(aPlayer.PlayerReplicationInfo.Team.TeamIndex, DHPlayer(aPlayer).MortarTargetIndex);
+            }
         }
         else
         {
@@ -1400,14 +1408,6 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local int i, num;
     local float FFPenalty;
     local RORoleInfo KilledRI, KillerRI;
-
-    Log("======================================================================");
-    Log("*                              Killed                                *");
-    Log("======================================================================");
-    Log("Killer" @ Killer);
-    Log("Killed" @ Killed);
-    Log("KilledPawn" @ KilledPawn);
-    Log("DamageType" @ DamageType);
 
     if (Killed == none)
     {
@@ -2161,19 +2161,13 @@ function ResetMortarTargets()
     // Clear mortar allied targets
     for (k = 0; k < arraycount(GRI.AlliedMortarTargets); ++k)
     {
-        GRI.AlliedMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
-        GRI.AlliedMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
-        GRI.AlliedMortarTargets[k].Controller = none;
-        GRI.AlliedMortarTargets[k].Time = 0;
+        GRI.ClearMortarTarget(ALLIES_TEAM_INDEX, k);
     }
 
     // Clear mortar german targets
     for (k = 0; k < arraycount(GRI.GermanMortarTargets); ++k)
     {
-        GRI.GermanMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
-        GRI.GermanMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
-        GRI.GermanMortarTargets[k].Controller = none;
-        GRI.GermanMortarTargets[k].Time = 0;
+        GRI.ClearMortarTarget(AXIS_TEAM_INDEX, k);
     }
 }
 
@@ -2375,8 +2369,12 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 // Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
 function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 {
+    local int OldTeam;
     local UnrealTeamInfo NewTeam;
     local DHPlayer       PC;
+    local DHGameReplicationInfo GRI;
+
+    OldTeam = Other.GetTeamNum();
 
     if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
     {
@@ -2454,6 +2452,12 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     // Since we're changing teams, remove all rally points/help requests/etc
     ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none && DHPlayer(Other) != none && DHPlayer(Other).MortarTargetIndex != 255)
+    {
+        GRI.ClearMortarTarget(OldTeam, DHPlayer(Other).MortarTargetIndex);
+    }
 
     if (PC != none)
     {
@@ -2968,32 +2972,20 @@ exec function DebugSpawnBots(optional bool bSpawnEnemies)
     }
 }
 
-// Colin: We are hijacking this function a little bit to also clear mortar
-// targets. Beats overriding a bunch of other functions, even though the name
-// is no longer really representative of what it does anymore.
-function ClearSavedRequestsAndRallyPoints(ROPlayer PC, bool bKeepRallyPoints)
+function NotifyLogout(Controller Exiting)
 {
     local DHGameReplicationInfo GRI;
 
-    if (PC == none || PC.PlayerReplicationInfo == none)
-    {
-        return;
-    }
+    ClearSavedRequestsAndRallyPoints(ROPlayer(Exiting), false);
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI != none)
+    if (GRI != none && DHPlayer(Exiting) != none && DHPlayer(Exiting).MortarTargetIndex != 255)
     {
-        // Clear rally points & help requests
-        GRI.AddHelpRequest(PC.PlayerReplicationInfo, 0, -1);
-
-        if (!bKeepRallyPoints)
-        {
-            GRI.AddRallyPoint(PC.PlayerReplicationInfo, vect(0, 0, 0), true);
-        }
-
-        GRI.ClearMortarTarget(PC);
+        GRI.ClearMortarTarget(Exiting.PlayerReplicationInfo.Team.TeamIndex, DHPlayer(Exiting).MortarTargetIndex);
     }
+
+    super.Destroyed();
 }
 
 defaultproperties

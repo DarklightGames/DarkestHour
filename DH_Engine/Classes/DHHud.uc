@@ -1709,7 +1709,7 @@ simulated function DrawVehiclePhysiscsWheels()
 
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
 {
-    local int                       i, Pos, OwnerTeam;
+    local int                       i, Pos, OwnerTeam, Distance;
     local Actor                     A;
     local Controller                P;
     local float                     MyMapScale, PawnRotation, ArrowRotation;
@@ -1720,7 +1720,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     local Pawn                      NetPawn;
     local DHPawn                    DHP;
     local SpriteWidget              Widget;
-    local string                    S;
+    local string                    S, DistanceString;
     local DHPlayer                  Player;
     local DHRoleInfo                RI;
     local DHPlayerReplicationInfo   PRI;
@@ -1729,9 +1729,6 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     {
         return;
     }
-
-    // Get player
-    Player = DHPlayer(PlayerOwner);
 
     // Get player team - if none, we won't draw team-specific information on the map
     if (PlayerOwner != none)
@@ -1742,6 +1739,9 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     {
         OwnerTeam = 255;
     }
+
+    // Get player
+    Player = DHPlayer(PlayerOwner);
 
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
@@ -2090,17 +2090,18 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             {
                 for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
                 {
-                    if (DHGRI.GermanMortarTargets[i].Controller != none)
+                    if (DHGRI.GermanMortarTargets[i].bIsActive)
                     {
                         // Colin: Mortar targets have an arrow that points in the
                         // direction of player's mortar hit.
                         if (RI.bCanUseMortars &&
+                            Player != none &&
                             Player.MortarHitLocation.X != 0.0 &&
                             Player.MortarHitLocation.Y != 0.0 &&
                             Player.MortarHitLocation.Z == 0.0)
                         {
                             // Calculate arrow rotation
-                            Temp = Normal(Player.MortarHitLocation - DHGRI.GermanMortarTargets[i].Location);
+                            Temp = Normal(DHGRI.GermanMortarTargets[i].Location - Player.MortarHitLocation);
                             ArrowRotation = class'DHLib'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
                             ArrowRotation -= class'DHLib'.static.DegreesToUnreal(DHGRI.OverheadOffset);
                             TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
@@ -2108,13 +2109,20 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                             DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
                         }
 
+                        if (RI != none && RI.bIsMortarObserver && PlayerOwner.Pawn != none)
+                        {
+                            Distance = int(class'DHLib'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.GermanMortarTargets[i].Location)));
+                            Distance = (Distance / 5) * 5;  // round to the nearest 5 meters
+                            DistanceString = string(Distance) @ "m";
+                        }
+
                         if (DHGRI.GermanMortarTargets[i].bIsSmoke)
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter,, DistanceString);
                         }
                         else
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter,, DistanceString);
                         }
                     }
                 }
@@ -2123,7 +2131,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             // Draw hit location for mortar observer's confirmed hits on his own target
             if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
             {
-                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].Controller != none &&
+                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bIsActive &&
                     DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0))
                 {
                     DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
@@ -2131,7 +2139,10 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             }
 
             // Draw hit location for mortar operator if he has a valid hit location
-            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation.Z == 1.0)
+            if (RI != none &&
+                RI.bCanUseMortars &&
+                Player != none &&
+                Player.MortarHitLocation.Z == 1.0)
             {
                 DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
             }
@@ -2177,17 +2188,18 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             {
                 for (i = 0; i < arraycount(DHGRI.AlliedMortarTargets); ++i)
                 {
-                    if (DHGRI.AlliedMortarTargets[i].Controller != none)
+                    if (DHGRI.AlliedMortarTargets[i].bIsActive)
                     {
                         // Colin: Mortar targets have an arrow that points in the
                         // direction of player's mortar hit.
                         if (RI.bCanUseMortars &&
+                            Player != none &&
                             Player.MortarHitLocation.X != 0.0 &&
                             Player.MortarHitLocation.Y != 0.0 &&
                             Player.MortarHitLocation.Z == 0.0)
                         {
                             // Calculate arrow rotation
-                            Temp = Normal(Player.MortarHitLocation - DHGRI.AlliedMortarTargets[i].Location);
+                            Temp = Normal(DHGRI.AlliedMortarTargets[i].Location - Player.MortarHitLocation);
                             ArrowRotation = class'DHLib'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
                             ArrowRotation -= class'DHLib'.static.DegreesToUnreal(DHGRI.OverheadOffset);
                             TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
@@ -2195,13 +2207,20 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                             DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
                         }
 
-                        if (DHGRI.GermanMortarTargets[i].bIsSmoke)
+                        if (RI != none && RI.bIsMortarObserver && PlayerOwner.Pawn != none)
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
+                            Distance = int(class'DHLib'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.AlliedMortarTargets[i].Location)));
+                            Distance = (Distance / 5) * 5;  // round to the nearest 5 meters
+                            DistanceString = string(Distance) @ "m";
+                        }
+
+                        if (DHGRI.AlliedMortarTargets[i].bIsSmoke)
+                        {
+                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter,, DistanceString);
                         }
                         else
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
+                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter,, DistanceString);
                         }
                     }
                 }
@@ -2212,7 +2231,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                 RI.bIsMortarObserver && Player != none &&
                 Player.MortarTargetIndex != 255)
             {
-                if (DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].Controller != none &&
+                if (DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].bIsActive &&
                     DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0))
                 {
                     DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.AlliedMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);

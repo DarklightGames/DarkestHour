@@ -334,7 +334,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
     bHurtEntry = false;
 }
 
-simulated function Controller GetClosestMortarTargetController()
+function Controller GetClosestMortarTargetController()
 {
     local DHGameReplicationInfo GRI;
     local float  Distance, ClosestDistance;

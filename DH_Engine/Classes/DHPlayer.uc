@@ -74,11 +74,12 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
-        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime;
+        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
+        MortarTargetIndex, MortarHitLocation;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsInStateMantling, MortarTargetIndex, MortarHitLocation;
+        bIsInStateMantling;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -842,6 +843,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
             if (GRI.GermanMortarTargets[i].Controller == none ||
                 GRI.GermanMortarTargets[i].Controller == self)
             {
+                GRI.GermanMortarTargets[i].bIsActive = true;
                 GRI.GermanMortarTargets[i].Controller = self;
                 GRI.GermanMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.GermanMortarTargets[i].Location = HitLocation;
@@ -860,6 +862,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
             if (GRI.AlliedMortarTargets[i].Controller == none ||
                 GRI.AlliedMortarTargets[i].Controller == self)
             {
+                GRI.GermanMortarTargets[i].bIsActive = true;
                 GRI.AlliedMortarTargets[i].Controller = self;
                 GRI.AlliedMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.AlliedMortarTargets[i].Location = HitLocation;

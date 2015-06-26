@@ -256,12 +256,7 @@ function SetHitLocation(vector HitLocation)
 
     PRI = DHPlayerReplicationInfo(DamageInstigator.PlayerReplicationInfo);
 
-    if (PRI == none || PRI.RoleInfo == none)
-    {
-        return;
-    }
-
-    if (DamageInstigator.Pawn == none)
+    if (PRI == none || PRI.RoleInfo == none || DamageInstigator.Pawn == none)
     {
         return;
     }
@@ -276,6 +271,8 @@ function SetHitLocation(vector HitLocation)
     // Index of 255 means we didn't find a nearby target
     ClosestMortarTargetIndex = 255;
     ClosestMortarTargetDistance = class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold;
+
+    Log("HitLocation" @ HitLocation);
 
     // Set the X/Y component of our players' mortar hit location
     C.MortarHitLocation.X = HitLocation.X;
@@ -302,7 +299,7 @@ function SetHitLocation(vector HitLocation)
         }
 
         // If we still have a mortar target index of 255, it means none of the targets were close enough
-        if (ClosestMortarTargetIndex == 255)
+        if (ClosestMortarTargetIndex != 255)
         {
             GRI.GermanMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
 
@@ -310,7 +307,7 @@ function SetHitLocation(vector HitLocation)
             C.MortarHitLocation.Z = 1.0;
         }
     }
-    else
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
         // Find the closest mortar target
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
@@ -338,6 +335,9 @@ function SetHitLocation(vector HitLocation)
             C.MortarHitLocation.Z = 1.0;
         }
     }
+
+    Log("C.PlayerReplicationInfo.PlayerName" @ C.PlayerReplicationInfo.PlayerName);
+    Log("C.MortarHitLocation" @ C.MortarHitLocation);
 }
 
 simulated function DoHitEffects(vector HitLocation, vector HitNormal)

@@ -5,13 +5,15 @@
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
-struct MortarTargetInfo
+struct MortarTarget
 {
-    var vector      Location;
-    var vector      HitLocation;
-    var float       Time;
-    var DHPlayer    Controller;
-    var bool        bIsSmoke;
+    var bool                    bIsActive;
+    var DHPlayer                Controller;
+    var byte                    TeamIndex;
+    var vector                  Location;
+    var vector                  HitLocation;
+    var float                   Time;
+    var bool                    bIsSmoke;
 };
 
 struct SpawnVehicle
@@ -47,8 +49,8 @@ const MORTAR_TARGETS_MAX = 2;
 // for a hit indicator to show on the map
 var float MortarTargetDistanceThreshold;
 
-var MortarTargetInfo    AlliedMortarTargets[MORTAR_TARGETS_MAX];
-var MortarTargetInfo    GermanMortarTargets[MORTAR_TARGETS_MAX];
+var MortarTarget        AlliedMortarTargets[MORTAR_TARGETS_MAX];
+var MortarTarget        GermanMortarTargets[MORTAR_TARGETS_MAX];
 
 var int                 DHSpawnCount[2];
 
@@ -590,24 +592,25 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
     }
 }
 
-simulated function ClearMortarTarget(Controller C)
+function ClearMortarTarget(byte TeamIndex, byte Index)
 {
-    local int i;
-
-    for (i = 0; i < arraycount(GermanMortarTargets); ++i)
+    if (TeamIndex == AXIS_TEAM_INDEX)
     {
-        if (GermanMortarTargets[i].Controller == C)
+        if (GermanMortarTargets[Index].Controller != none)
         {
-            GermanMortarTargets[i].Controller = none;
+            GermanMortarTargets[Index].Controller.MortarTargetIndex = 255;
         }
+
+        GermanMortarTargets[Index].bIsActive = false;
     }
-
-    for (i = 0; i < arraycount(AlliedMortarTargets); ++i)
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
-        if (AlliedMortarTargets[i].Controller == C)
+        if (AlliedMortarTargets[Index].Controller != none)
         {
-            AlliedMortarTargets[i].Controller = none;
+            AlliedMortarTargets[Index].Controller.MortarTargetIndex = 255;
         }
+
+        AlliedMortarTargets[Index].bIsActive = false;
     }
 }
 
