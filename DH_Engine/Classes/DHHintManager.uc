@@ -176,7 +176,7 @@ defaultproperties
     Hints(8)=(Title="Mortar Targets",Text="A mortar observer can mark targets that become visible on your map. When a round lands near a target marker, the location of the impact will be marked your map. Use these markers to zero in on your target.")
     Hints(9)=(Title="Mortar Leaving",Text="You may leave your mortar at any time by pressing the %Use% key. While you are off your mortar, you can retrieve ammunition at a resupply area or from your teammates.")
     Hints(10)=(Title="Mortar Undeploy",Text="To undeploy your mortar, press the %Deploy% key. Undeploying your mortar will reset your elevation and traverse settings.")
-    Hints(11)=(Title="Mortar Targeting",Text="You can mark targets for your team's mortar operators with your binoculars by pressing %FIRE%. To cancel a target, press %ALTFIRE%.")
+    Hints(11)=(Title="Mortar Targeting",Text="You can mark targets for your team's mortar operators while sighted with your binoculars. Pressing %FIRE% to mark a high-explosive target or press %ALTFIRE% to request a smoke target.")
     Hints(12)=(Title="Artillery Officer",Text="You are an artillery officer. You can mark artillery targets with binoculars. Call in long-range artillery with from a radio position or with the help of a radio operator.")
     Hints(13)=(Title="Radio Operator",Text="You are a radio operator! Stay close to your artillery officer so he can call in artillery strikes!")
     Hints(14)=(Title="Deployment Vehicle",Text="You are driving a deployment vehicle! When there are no enemies nearby, your team can use it as a spawn point!")
