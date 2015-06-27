@@ -33,16 +33,6 @@ function UpdateResupplyStatus(bool bCurrentWeapon)
 // Modified as faust can be fired from the hip, unlike other rocket weapons
 simulated function bool CanFire(optional bool bShowFailureMessage)
 {
-    if (Instigator != none && Instigator.bIsCrawling)
-    {
-        if (bShowFailureMessage && Instigator.IsHumanControlled())
-        {
-            WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 0,,, self); // can't fire prone
-        }
-
-        return false;
-    }
-
     return true;
 }
 

@@ -7,6 +7,8 @@ class DH_PanzerFaustFire extends DHRocketFire;
 
 defaultproperties
 {
+    ExhaustLength=32.0
+    ExhaustDamage=200.0
     ExhaustDamageType=class'DH_ATWeapons.DH_PanzerfaustExhaustDamType'
     MuzzleBone="Warhead"
     FireSounds(0)=SoundGroup'Inf_Weapons.panzerfaust60.panzerfaust60_fire01'
