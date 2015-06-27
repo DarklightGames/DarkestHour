@@ -142,7 +142,7 @@ simulated function float GetPenetration(vector Distance)
 }
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor
-// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+// If we hit collision mesh actor (probably turret, maybe an exposed vehicle MG), we switch the hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
@@ -231,7 +231,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                 // Removed SetDelayedDamageInstigatorController() as irrelevant to VehWeapon (empty function), & we'll let VehWeapon call SetDDIC on Vehicle only if it's calling TakeDamage on it
 
-                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // changed from Location to HitLocation
+                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
 
                 if (DamageRadius > 0 && HitVehicle.Health > 0)
                 {
@@ -259,7 +259,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (Role == ROLE_Authority)
                 {
-                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints); // changed from Location to HitLocation
+                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
                 }
 
                 // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on
@@ -278,7 +278,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (Role == ROLE_Authority)
             {
-                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // changed from Location to HitLocation
+                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
@@ -613,7 +613,7 @@ simulated function CheckForSplash(vector SplashLocation)
     }
 }
 
-// New function to update Instigator reference to ensure damage is attributed to correct player, as player may have switched to different pawn since firing, e.g. changed vehicle position
+// New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since firing, e.g. changed vehicle position
 simulated function UpdateInstigator()
 {
     if (InstigatorController != none)

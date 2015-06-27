@@ -2576,14 +2576,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     HitCheckDistance = DriverHitCheckDist;
                 }
 
-                if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
+                if (IsPointShot(HitLocation, Momentum, 1.0, i, HitCheckDistance))
                 {
-                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
                     bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
                 }
             }
         }
-        else if (bProjectilePenetrated && Damage > 0 && IsPointShot(Hitlocation, Momentum, 1.0, i))
+        else if (bProjectilePenetrated && Damage > 0 && IsPointShot(HitLocation, Momentum, 1.0, i))
         {
             if (bLogPenetration)
             {
@@ -2598,7 +2598,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Hit vehicle engine");
                 }
 
-                DamageEngine(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                 Damage *= 0.55; // reduce damage to vehicle itself if hit engine
 
                 // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitPoints
@@ -2648,7 +2648,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
         {
-            if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
+            if (IsNewPointShot(HitLocation,Momentum, 1.0, i))
             {
                 if (bLogPenetration)
                 {
@@ -2818,12 +2818,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
         {
             // Calculate height of HitLocation is in relation to hull mesh origin, expressed as an angle in radians
-            HitDir =  Hitlocation - Location;
+            HitDir =  HitLocation - Location;
             GetAxes(Rotation, X, Y, Z);
             InAngle = Acos(Normal(HitDir) dot Normal(Z));
 
             // Calculate height of hit above/below hull mesh origin, having applied hull's rotation // NEW METHOD FOR LATER, replacing 3 lines above
-//          HitDir =  Hitlocation - Location;
+//          HitDir =  HitLocation - Location;
 //          HitHeight = (HitDir << Rotation).Z;
 
             // We hit low enough to possibly hit one of the tracks
@@ -2907,7 +2907,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Call the Super from Vehicle (skip over others)
-    super(Vehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
     if (bProjectilePenetrated && !bOnFire && Damage > 0 && Health > 0)

@@ -1319,14 +1319,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     HitCheckDistance = DriverHitCheckDist;
                 }
 
-                if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
+                if (IsPointShot(HitLocation,Momentum, 1.0, i, HitCheckDistance))
                 {
-                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
                     bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
                 }
             }
         }
-        else if (Damage > 0 && IsPointShot(Hitlocation, Momentum, 1.0, i))
+        else if (Damage > 0 && IsPointShot(HitLocation, Momentum, 1.0, i))
         {
             // Engine hit
             if (VehHitpoints[i].HitPointType == HP_Engine)
@@ -1336,7 +1336,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Hit vehicle engine");
                 }
 
-                DamageEngine(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
             }
             // Hit ammo store
             else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
@@ -1353,7 +1353,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Call the Super from Vehicle (skip over others)
-    super(Vehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
 // Modified so if we hit a vehicle we use its velocity to calculate damage, & also to factor in an ObjectCollisionResistance for this vehicle
@@ -1426,7 +1426,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 }
 
 // Modified to kill engine if zero health
-function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
     // Apply new damage
     if (EngineHealth > 0)
