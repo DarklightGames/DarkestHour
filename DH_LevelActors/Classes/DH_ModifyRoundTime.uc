@@ -56,6 +56,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
             break;
     }
 
+    // This will synchronize the time change for all clients.
+    GameReplicationInfoInstance.ElapsedQuarterMinute = GameReplicationInfoInstance.ElapsedTime;
+
     //If we want to broadcast the round time modification.
     if (bShowMessage)
         Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', 0, none, none, self);
