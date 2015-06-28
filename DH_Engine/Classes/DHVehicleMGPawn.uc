@@ -288,11 +288,9 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// Modified to switch to external mesh & default FOV for behind view
+// Modified to switch to external mesh & unzoomed FOV for behind view
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
-    local int i;
-
     if (PC.bBehindView)
     {
         if (bBehindViewChanged)
@@ -301,29 +299,9 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             FixPCRotation(PC);
             SetRotation(PC.Rotation);
 
-            if (DriverPositions.Length > 0)
-            {
-                for (i = 0; i < DriverPositions.Length; ++i)
-                {
-                    DriverPositions[i].PositionMesh = Gun.default.Mesh;
-                    DriverPositions[i].ViewFOV = PC.DefaultFOV;
-                    DriverPositions[i].ViewPositiveYawLimit = 65535;
-                    DriverPositions[i].ViewNegativeYawLimit = -65535;
-                    DriverPositions[i].ViewPitchUpLimit = 65535;
-                    DriverPositions[i].ViewPitchDownLimit = 1;
-                }
-
-                SwitchMesh(DriverPositionIndex);
-
-                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            }
-            else
-            {
-                PC.SetFOV(PC.DefaultFOV);
-                Gun.bLimitYaw = false;
-                PitchUpLimit = 65535;
-                PitchDownLimit = 1;
-            }
+            // Switch to external vehicle mesh & unzoomed view
+            SwitchMesh(-1); // -1 signifies switch to default external mesh
+            PC.SetFOV(PC.DefaultFOV);
         }
 
         bOwnerNoSee = false;
@@ -346,29 +324,16 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
             SetRotation(PC.Rotation);
 
+            // Switch back to position's normal vehicle mesh, view FOV & 1st person camera offset
             if (DriverPositions.Length > 0)
             {
-                for (i = 0; i < DriverPositions.Length; ++i)
-                {
-                    DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
-                    DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
-                    DriverPositions[i].ViewPositiveYawLimit = default.DriverPositions[i].ViewPositiveYawLimit;
-                    DriverPositions[i].ViewNegativeYawLimit = default.DriverPositions[i].ViewNegativeYawLimit;
-                    DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
-                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
-                }
-
                 SwitchMesh(DriverPositionIndex);
-
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
             else
             {
                 PC.SetFOV(WeaponFOV);
-                Gun.bLimitYaw = Gun.default.bLimitYaw;
-                PitchUpLimit = default.PitchUpLimit;
-                PitchDownLimit = default.PitchDownLimit;
             }
         }
 
@@ -662,8 +627,8 @@ simulated function AnimateTransition()
 {
 }
 
-// Modified to enable or disable player's hit detection when moving to or from an exposed position,
-// to use Sleep to control exit from state, to improve timing of FOV & camera position changes,
+// Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
+// to improve timing of FOV & camera position changes, to avoid switching mesh, FOV & camera position if in behind view,
 // & to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
 simulated state ViewTransition
 {
@@ -671,7 +636,7 @@ simulated state ViewTransition
     {
         StoredVehicleRotation = VehicleBase.Rotation;
 
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
             // Switch to mesh for new position as may be different
             SwitchMesh(DriverPositionIndex);
@@ -741,7 +706,7 @@ simulated state ViewTransition
         if (Level.NetMode != NM_DedicatedServer)
         {
             // Set any zoom & camera offset for new position, if we've moved to a more (or equal) zoomed position (if not, we've already done this at start of transition)
-            if (WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled())
+            if (WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled() && !PlayerController(Controller).bBehindView)
             {
                 PlayerController(Controller).SetFOV(WeaponFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
@@ -1165,10 +1130,16 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     }
 }
 
-// Modified to correct apparent error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
+// Modified so we don't limit view pitch if in behind view
+// Also to correct apparent error in ROVehicleWeaponPawn, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
 function int LocalLimitPitch(int pitch)
 {
     pitch = pitch & 65535;
+
+    if (IsHumanControlled() && PlayerController(Controller).bBehindView)
+    {
+        return pitch;
+    }
 
     if (DriverPositions.Length > 0)
     {

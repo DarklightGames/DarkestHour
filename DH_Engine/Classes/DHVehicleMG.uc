@@ -422,10 +422,11 @@ simulated function UpdatePrecacheMaterials()
     }
 }
 
-// Modified to enforce use of rotation relative to vehicle (bPCRelativeFPRotation) & to use yaw limits from DriverPositions in a multi position MG
+// Modified to enforce use of rotation relative to vehicle (bPCRelativeFPRotation), to use yaw limits from DriverPositions in a multi position MG,
+// & so we don't limit view yaw if in behind view
 simulated function int LimitYaw(int yaw)
 {
-    if (!bLimitYaw)
+    if (!bLimitYaw || (Instigator != none && Instigator.IsHumanControlled() && PlayerController(Instigator.Controller).bBehindView))
     {
         return yaw;
     }

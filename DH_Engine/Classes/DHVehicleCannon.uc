@@ -1658,7 +1658,8 @@ simulated function UpdatePrecacheStaticMeshes()
 }
 
 // Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)
-// Also to enforce use of rotation relative to vehicle (bPCRelativeFPRotation) & to use yaw limits from DriverPositions in a multi position cannon
+// Also to enforce use of rotation relative to vehicle (bPCRelativeFPRotation), to use yaw limits from DriverPositions in a multi position cannon,
+// & so we don't limit view yaw if in behind view
 simulated function int LimitYaw(int yaw)
 {
     local int CurrentPosition;
@@ -1667,7 +1668,7 @@ simulated function int LimitYaw(int yaw)
     // bLimitYaw is used by native code to limit (or not) cannon's turning, which ignores anything that happens in this function
     // This function is best thought of as LimitViewYaw() & would be better placed in the cannon pawn class (but needs to stay as is because it is called by UpdateRotation() in PC class)
     // bLimitYaw should not be used here - the view yaw limits should be based on ViewNegativeYawLimit & ViewPositiveYawLimit in DriverPositions
-    if (!bLimitYaw)
+    if (!bLimitYaw || (Instigator != none && Instigator.IsHumanControlled() && PlayerController(Instigator.Controller).bBehindView))
     {
         return yaw;
     }

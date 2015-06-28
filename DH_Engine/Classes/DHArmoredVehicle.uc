@@ -753,23 +753,43 @@ simulated function DrawPeriscopeOverlay(Canvas C)
     C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
+// Modified so we don't limit view yaw if in behind view
+simulated function int LimitYaw(int yaw)
+{
+    local int NewYaw;
+
+    if (!bLimitYaw || (IsHumanControlled() && PlayerController(Controller).bBehindView))
+    {
+        return yaw;
+    }
+
+    NewYaw = yaw;
+
+    if (yaw > DriverPositions[DriverPositionIndex].ViewPositiveYawLimit)
+    {
+        NewYaw = DriverPositions[DriverPositionIndex].ViewPositiveYawLimit;
+    }
+    else if (yaw < DriverPositions[DriverPositionIndex].ViewNegativeYawLimit)
+    {
+        NewYaw = DriverPositions[DriverPositionIndex].ViewNegativeYawLimit;
+    }
+
+    return NewYaw;
+}
+
 // Modified to revert to Super in Pawn, skipping unnecessary stuff in ROWheeledVehicle & ROVehicle, as this is a many-times-a-second function & so should be optimised
 function int LimitPitch(int pitch, optional float DeltaTime)
 {
     return super(Pawn).LimitPitch(pitch, DeltaTime);
 }
 
-// Modified to correct apparent error in ROVehicle, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
+// Modified so we don't limit view pitch if in behind view
+// Also to correct apparent error in ROVehicle, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
 function int LimitPawnPitch(int pitch)
 {
     pitch = pitch & 65535;
 
-    if (!bLimitPitch)
-    {
-        return pitch;
-    }
-
-    if (DriverPositions.Length > 0)
+    if (bLimitPitch && !(IsHumanControlled() && PlayerController(Controller).bBehindView) && DriverPositions.Length > 0)
     {
         if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
         {
@@ -787,34 +807,22 @@ function int LimitPawnPitch(int pitch)
     return pitch;
 }
 
-// Modified to switch to external mesh & default FOV for behind view
+// Modified to switch to external mesh & unzoomed FOV for behind view
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
-    local int i;
-
     if (PC.bBehindView)
     {
         if (bBehindViewChanged)
         {
             FixPCRotation(PC); // switching to behind view, so make rotation non-relative to vehicle
 
-            for (i = 0; i < DriverPositions.Length; ++i)
+            // Switch to external vehicle mesh & unzoomed view
+            if (Mesh != default.Mesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
             {
-                DriverPositions[i].PositionMesh = default.Mesh;
-                DriverPositions[i].ViewFOV = PC.DefaultFOV;
+                LinkMesh(default.Mesh);
             }
 
-            bDontUsePositionMesh = true;
-
-            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
-            {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
-
-            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-
-            bLimitYaw = false;
-            bLimitPitch = false;
+            PC.SetFOV(PC.DefaultFOV);
         }
 
         bOwnerNoSee = false;
@@ -833,25 +841,15 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // switching back from behind view, so make rotation relative to vehicle again
 
-        if (bBehindViewChanged)
+        // Switch back to position's normal vehicle mesh & view FOV
+        if (bBehindViewChanged && DriverPositions.Length > 0)
         {
-            for (i = 0; i < DriverPositions.Length; ++i)
-            {
-                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
-                DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
-            }
-
-            bDontUsePositionMesh = default.bDontUsePositionMesh;
-
-            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
+            if (Mesh != DriverPositions[DriverPositionIndex].PositionMesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
 
             PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-
-            bLimitYaw = default.bLimitYaw;
-            bLimitPitch = default.bLimitPitch;
         }
 
         bOwnerNoSee = !bDrawMeshInFP;
@@ -1295,25 +1293,28 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified to use Sleep to control exit from state, to avoid unnecessary stuff on a server, to add handling of FOV changes & better handling of locked camera
+// Modified to use Sleep to control exit from state, to avoid unnecessary stuff on a server,
+// to add handling of FOV changes & better handling of locked camera, & to avoid switching mesh & FOV if in behind view
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
-            // Switch to mesh for new position as may be different
-            // Switch to mesh for new position if it's different
-            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && !bDontUsePositionMesh &&
-                (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
+            if (!(IsHumanControlled() && PlayerController(Controller).bBehindView))
             {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
+                // Switch to mesh for new position if it's different
+                if (Mesh != DriverPositions[DriverPositionIndex].PositionMesh && !bDontUsePositionMesh
+                    && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
+                {
+                    LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
 
-            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
-            {
-                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
+                if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+                {
+                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                }
             }
 
             // Play any transition animation for the driver
@@ -1363,7 +1364,7 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled())
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
             // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
             if (DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV)
