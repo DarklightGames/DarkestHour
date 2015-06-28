@@ -49,22 +49,6 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
    return true;
 }
 
-// Limit the left and right movement of the gun
-simulated function int LimitYaw(int yaw)
-{
-    if (!bLimitYaw)
-    {
-        return yaw;
-    }
-
-    if (CannonPawn != none)
-    {
-        return Clamp(yaw, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewNegativeYawLimit, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewPositiveYawLimit);
-    }
-
-    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
-}
-
 defaultproperties
 {
     bHasTurret=false
