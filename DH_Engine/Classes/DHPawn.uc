@@ -8,97 +8,95 @@ class DHPawn extends ROPawn
 
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
+// General
+var     float   TeleSpawnProtEnds;        // is set when a player teleports for "spawn" protection in selectable spawn maps
+var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
+var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
+var     bool    bChuteDeleted;
+var     bool    bHatShotOff;
+var     bool    bHasBeenPossessed;        // fixes players getting new ammunition when they get out of vehicles
+var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
+var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
+var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
+
 // Resupply
-var bool bHasMGAmmo;
-var bool bHasATAmmo;
-var bool bHasMortarAmmo;
-var bool bWeaponNeedsReload; // whether an AT weapon is loaded or not
-var bool bCanMGResupply;
-var bool bCanATResupply;
-var bool bCanATReload;
-var bool bCanMortarResupply;
-var int  MortarHEAmmo, MortarSmokeAmmo;
+var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
+var     bool    bHasMGAmmo;
+var     bool    bHasATAmmo;
+var     bool    bHasMortarAmmo;
+var     bool    bCanMGResupply;
+var     bool    bCanATResupply;
+var     bool    bCanATReload;
+var     bool    bCanMortarResupply;
+var     int     MortarHEAmmo;
+var     int     MortarSmokeAmmo;
 
-var bool bChuteDeleted;
-var bool bHatShotOff;
-var float MinHurtSpeed; // when a moving player lands, if they're moving faster than this speed they'll take damage
+// Mortars
+var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy upon death
+var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
+var     bool    bMortarCanBeResupplied;
+var     bool    bLockViewRotation;
+var     rotator LockViewRotation;
 
-var float  IronsightBobTime;
-var vector IronsightBob;
+// Obstacle clearing
+var     bool    bCanCutWire;
+var     bool    bIsCuttingWire;
 
-var(Sounds) class<DHPawnSoundGroup> DHSoundGroupClass;
+// Ironsight bob
+var     float   IronsightBobTime;
+var     vector  IronsightBob;
+var     float   IronsightBobAmplitude;
+var     float   IronsightBobFrequency;
+var     float   IronsightBobDecay;
 
 // Radioman
-var ROArtilleryTrigger  CarriedRadioTrigger; // For storing the trigger on a radioman each spawn, for the purpose of deleting it on death
-var int                 GRIRadioPos;         // For storing radioman's specific radio arty trigger position in ROGRI.AlliedRadios array
+var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
+var     int                 GRIRadioPos;         // for storing radioman's specific radio arty trigger position in ROGRI.AlliedRadios array
 
-var float           TeleSpawnProtEnds;       // Is set when a player teleports for "spawn" protection in selectable spawn maps
-
-var() array<sound>  HelmetHitSounds;
-var() array<sound>  PlayerHitSounds;
+// Sounds
+var(Sounds) class<DHPawnSoundGroup> DHSoundGroupClass;
+var() array<sound>                  PlayerHitSounds;
+var() array<sound>                  HelmetHitSounds;
 
 // Mantling
-var vector      MantleEndPoint;        // Player's final location after mantle
-var bool        bCanMantle;            // Used for HUD icon display
-var bool        bSetMantleEyeHeight;   // For lowering eye height during mantle
-var bool        bIsMantling;           // Fairly straightforward
-var bool        bMantleSetPitch;       // To prevent climbing/bob until view pitch is level
-var bool        bCrouchMantle;         // Whether a climb ends in a crouch or not, for tight spaces
-var bool        bMantleAnimRun;        // Has the anim been started on the server/remote clients yet?
-var bool        bCancelledMantle;      // Whether a mantle has ended naturally or been aborted
-var bool        bMantleDebug;          // Show debug output while mantling
-var float       MantleHeight;          // How high we're climbing
-var float       StartMantleTime;       // Used for smoothing out pitch at mantle start
-var int         MantleYaw;             // for locking rotation during climb
-var vector      RootLocation;
-var vector      RootDelta;
-var vector      NewAcceleration;       // Acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
-var bool        bEndMantleBob;         // Initiates the pre mantle head bob up motion
+var     vector  MantleEndPoint;      // player's final location after mantle
+var     bool    bCanMantle;          // used for HUD icon display
+var     bool    bSetMantleEyeHeight; // for lowering eye height during mantle
+var     bool    bIsMantling;         // fairly straightforward
+var     bool    bMantleSetPitch;     // to prevent climbing/bob until view pitch is level
+var     bool    bCrouchMantle;       // whether a climb ends in a crouch or not, for tight spaces
+var     bool    bMantleAnimRun;      // has the anim been started on the server/remote clients yet?
+var     bool    bCancelledMantle;    // whether a mantle has ended naturally or been aborted
+var     bool    bMantleDebug;        // show debug output while mantling
+var     float   MantleHeight;        // how high we're climbing
+var     float   StartMantleTime;     // used for smoothing out pitch at mantle start
+var     int     MantleYaw;           // for locking rotation during climb
+var     vector  RootLocation;
+var     vector  RootDelta;
+var     vector  NewAcceleration;     // acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
+var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
+var     sound   MantleSound;
 
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
 var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S,
                                 MantleAnim_68S, MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S, MantleAnim_88S;
-
-var             sound           MantleSound;
-
 // Burning
-var bool                bOnFire;                         // Whether Pawn is on fire or not
-var bool                bBurnFXOn;                       // Whether Fire FX are enabled or not
-var bool                bCharred;                        // For switching in a charred overlay after the fire goes out
-var class<Emitter>      FlameEffect;                     // The fire sprite emitter class
-var Emitter             FlameFX;                         // Spawned instance of the above
-var Material            BurningOverlayMaterial;          // Overlay for when player is on fire
-var Material            DeadBurningOverlayMaterial;      // Overlay for when player is on fire and dead
-var Material            CharredOverlayMaterial;          // Overlay for dead, burned players after flame extinguished
-var Material            BurnedHeadgearOverlayMaterial;   // Overlay for burned hat
-var int                 FireDamage;
-var class<DamageType>   FireDamageClass;    // The damage type that started the fire
-var int                 BurnTimeLeft;       // Number of seconds remaining for a corpse to burn
-var float               LastBurnTime;       // Last time we did fire damage to the Pawn
-var Pawn                FireStarter;        // Who set a player on fire
-
-var bool                bHasBeenPossessed;  // Fixes players getting new ammunition when they get out of vehicles.
-
-// Mortars
-var     Actor   OwnedMortar;                // Mortar vehicle associated with this actor, used to destroy upon death.
-var     bool    bIsDeployingMortar;         // Whether or not the pawn is deploying his mortar.  Used for disabling movement.
-var     bool    bMortarCanBeResupplied;
-
-// Obstacle clearing
-var bool                bCanCutWire;
-var bool                bIsCuttingWire;
-
-var bool                bLockViewRotation;
-var rotator             LockViewRotation;
-
-var float               StanceChangeStaminaDrain; // How much stamina is lost by changing stance
-
-
-var float IronsightBobAmplitude;
-var float IronsightBobFrequency;
-var float IronsightBobDecay;
+var     bool                bOnFire;                       // whether Pawn is on fire or not
+var     bool                bBurnFXOn;                     // whether Fire FX are enabled or not
+var     bool                bCharred;                      // for switching in a charred overlay after the fire goes out
+var     class<Emitter>      FlameEffect;                   // the fire sprite emitter class
+var     Emitter             FlameFX;                       // spawned instance of the above
+var     Material            BurningOverlayMaterial;        // overlay for when player is on fire
+var     Material            DeadBurningOverlayMaterial;    // overlay for when player is on fire and dead
+var     Material            CharredOverlayMaterial;        // overlay for dead, burned players after flame extinguished
+var     Material            BurnedHeadgearOverlayMaterial; // overlay for burned hat
+var     int                 FireDamage;
+var     class<DamageType>   FireDamageClass;               // the damage type that started the fire
+var     int                 BurnTimeLeft;                  // number of seconds remaining for a corpse to burn
+var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
+var     Pawn                FireStarter;                   // who set a player on fire
 
 replication
 {
@@ -435,7 +433,9 @@ simulated event HandleWhizSound()
 
 // Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
 // Matt: part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
-// Also so player pawn's CullDistance is not set to 5000 (83m) when in vehicle, as this caused players to disappear at quite close ranges when often should be highly visible , e.g. AT gunner
+// Also so player pawn's CullDistance is not set to 5000 (83m) when in vehicle, as caused players to disappear at quite close ranges when often should be highly visible , e.g. AT gunner
+// And some fixes where vehicle is replicating to net client, which may not have received all relevant actors yet (e.g. Driver, Gun)
+// Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
 simulated event StartDriving(Vehicle V)
 {
     local DHVehicleCannonPawn CP;
@@ -461,7 +461,17 @@ simulated event StartDriving(Vehicle V)
     {
         SetCollision(false, false, false);
         bCollideWorld = false;
-        V.AttachDriver(self);
+
+        // If vehicle just replicated to net client & it doesn't yet have VehicleWeapon actor, tell vehicle it needs to attach Driver when it receives Gun actor
+        if (Role < ROLE_Authority && VehicleWeaponPawn(V) != none && VehicleWeaponPawn(V).Gun == none && VehicleWeaponPawn(V).GunClass != none)
+        {
+            bNeedToAttachDriver = true;
+        }
+        else
+        {
+            V.AttachDriver(self);
+            bNeedToAttachDriver = false;
+        }
 
         if (V.bDrawDriverinTP)
         {
@@ -477,16 +487,27 @@ simulated event StartDriving(Vehicle V)
     bPhysicsAnimUpdate = false;
     bWaitForAnim = false;
 
-    if (V.bDrawDriverinTP && !V.bHideRemoteDriver)
+    // Play initial driver animation
+    if (V.bDrawDriverinTP && !V.bHideRemoteDriver && HasAnim(V.DriveAnim))
     {
-        if (HasAnim(V.DriveAnim))
+        // If vehicle has just replicated to net client, playing DriveAnim may override a correct driver anim just played by vehicle's SetPlayerPosition() function
+        // So if bClientSkipDriveAnim is flagged & we haven't already played DriveAnim, we avoid playing DriveAnim now (but reset the flag so it's only this 1st time)
+        if (Role < ROLE_Authority && bClientSkipDriveAnim)
+        {
+            bClientSkipDriveAnim = false;
+        }
+        else
         {
             LoopAnim(V.DriveAnim);
-        }
+            SetAnimFrame(0.5);
+            SmoothViewYaw = Rotation.Yaw;
+            SetTwistLook(0, 0);
 
-        SetAnimFrame(0.5);
-        SmoothViewYaw = Rotation.Yaw;
-        SetTwistLook(0, 0);
+            if(Role < ROLE_Authority && !bClientPlayedDriveAnim)
+            {
+                bClientPlayedDriveAnim = true;
+            }
+        }
     }
 
     if (PlayerShadow != none)
@@ -2839,7 +2860,7 @@ simulated event SetAnimAction(name NewAction)
             PlayAnim(UsedAction,, 0.1);
             AnimBlendToAlpha(1, 0.0, 0.05);
         }
-        else if (Physics == PHYS_Falling || (Physics == PHYS_Walking && Velocity.Z != 0))
+        else if (Physics == PHYS_Falling || (Physics == PHYS_Walking && Velocity.Z != 0.0))
         {
             if (CheckTauntValid(UsedAction))
             {

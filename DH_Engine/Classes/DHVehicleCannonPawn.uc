@@ -7,9 +7,10 @@ class DHVehicleCannonPawn extends ROTankCannonPawn
     abstract;
 
 // General
-var     DHVehicleCannon Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
-var     name            PlayerCameraBone;     // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
-var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     DHVehicleCannon     Cannon;           // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
+var     name        PlayerCameraBone;         // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
+var     texture     AltAmmoReloadTexture;     // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     bool        bNeedToInitializeDriver;  // clientside flag that we need to do some player set up, once we receive the Driver actor
 
 // Position stuff
 var     int         InitialPositionIndex;     // initial player position on entering
@@ -109,10 +110,20 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to make sure net clients get the cannon & player in the correct position when vehicle is replicated to client
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Role < ROLE_Authority && bDriving)
+    {
+        bNeedToInitializeDriver = true;
+    }
+}
+
 // Matt: new function to do any extra set up in the cannon classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 // Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
-// Also to make sure net clients get the cannon & commander in the correct position when vehicle is replicated to client
 simulated function InitializeCannon()
 {
     Cannon = DHVehicleCannon(Gun);
@@ -133,11 +144,6 @@ simulated function InitializeCannon()
     else
     {
         SetManualTurret(true);
-    }
-
-    if (Role < ROLE_Authority && Driver != none)
-    {
-        SetPlayerPosition();
     }
 }
 
@@ -196,6 +202,13 @@ simulated function PostNetReceive()
         }
 
         VehicleBase.WeaponPawns[PositionInArray] = self;
+    }
+
+    // Initialize the 'Driver'
+    if (bNeedToInitializeDriver && Driver != none && Gun != none)
+    {
+        bNeedToInitializeDriver = false;
+        SetPlayerPosition();
     }
 }
 
@@ -1272,14 +1285,18 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // New function to set correct initial position of player & cannon on a net client, when this actor is replicated
 simulated function SetPlayerPosition()
 {
-    local name WeaponAnim, PlayerAnim;
+    local name VehicleAnim, PlayerAnim;
     local int  i;
 
-    // Fix driver attachment position - on replication, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
+    // Fix driver attachment position - on replication, AttachDriver() only works if client has received cannon actor, which it may not have yet
     // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
-    // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
-    DetachDriver(Driver);
-    AttachDriver(Driver);
+    // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here to make sure client has correct positioning
+    if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver)
+    {
+        DetachDriver(Driver); // just in case Driver is attached at this point, possibly incorrectly
+        AttachDriver(Driver);
+        DHPawn(Driver).bNeedToAttachDriver = false;
+    }
 
     // Put cannon & player in correct animation pose - if player not in initial position, we need to recreate the up/down anims that will have played to get there
     if (DriverPositionIndex != InitialPositionIndex)
@@ -1287,11 +1304,11 @@ simulated function SetPlayerPosition()
         if (DriverPositionIndex > InitialPositionIndex)
         {
             // Step down through each position until we find the 'most recent' transition up anim & player transition anim (or have reached the initial position)
-            for (i = DriverPositionIndex; i > InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); --i)
+            for (i = DriverPositionIndex; i > InitialPositionIndex && (VehicleAnim == ''|| PlayerAnim == ''); --i)
             {
-                if (WeaponAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
+                if (VehicleAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
                 {
-                    WeaponAnim = DriverPositions[i - 1].TransitionUpAnim;
+                    VehicleAnim = DriverPositions[i - 1].TransitionUpAnim;
                 }
 
                 // DriverTransitionAnim only relevant if there is also one in the position below
@@ -1304,11 +1321,11 @@ simulated function SetPlayerPosition()
         else
         {
             // Step up through each position until we find the 'most recent' transition down anim & player transition anim (or have reached the initial position)
-            for (i = DriverPositionIndex; i < InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); ++i)
+            for (i = DriverPositionIndex; i < InitialPositionIndex && (VehicleAnim == ''|| PlayerAnim == ''); ++i)
             {
-                if (WeaponAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
+                if (VehicleAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
                 {
-                    WeaponAnim = DriverPositions[i + 1].TransitionDownAnim;
+                    VehicleAnim = DriverPositions[i + 1].TransitionDownAnim;
                 }
 
                 // DriverTransitionAnim only relevant if there is also one in the position above
@@ -1321,14 +1338,22 @@ simulated function SetPlayerPosition()
 
         // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
-        if (WeaponAnim != '' && Gun != none)
+        if (VehicleAnim != '' && Gun != none && Gun.HasAnim(VehicleAnim))
         {
-            Gun.PlayAnim(WeaponAnim);
+            Gun.PlayAnim(VehicleAnim);
             Gun.SetAnimFrame(1.0);
         }
 
-        if (PlayerAnim != '')
+        if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
         {
+            // When vehicle replicates to net client, StartDriving() event gets called on player pawn if vehicle has a 'Driver'
+            // StartDriving() plays DriveAnim on the driver, which is for the usual initial driver position, but that would override our correct PlayerAnim here
+            // So if player pawn hasn't already played DriveAnim, set a flag to stop it playing DriveAnim in StartDriving(), although only this 1st time
+            if (DHPawn(Driver) != none && !DHPawn(Driver).bClientPlayedDriveAnim)
+            {
+                DHPawn(Driver).bClientSkipDriveAnim = true;
+            }
+
             Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
             Driver.PlayAnim(PlayerAnim);
             Driver.SetAnimFrame(1.0);

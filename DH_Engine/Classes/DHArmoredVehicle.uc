@@ -45,6 +45,7 @@ var     float       SpikeTime;              // the time an empty, disabled vehic
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
 var     ObjectMap   NotifyParameters;       // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     bool        bNeedToInitializeDriver;// clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Obstacle crushing
@@ -155,7 +156,7 @@ var     bool        bPenetrationText;
 var     bool        bDebugTreadText;
 var     bool        bLogPenetration;
 var     bool        bDebugExitPositions;
-var     bool        bBypassClientSwitchWeaponChecks; // TEMP
+var     bool        bBypassClientSwitchWeaponChecks; // TEMP DEBUG
 
 replication
 {
@@ -270,9 +271,9 @@ simulated function PostNetBeginPlay()
     {
         bClientInitialized = true;
 
-        if (Driver != none)
+        if (bDriving)
         {
-            SetPlayerPosition();
+            bNeedToInitializeDriver = true;
         }
     }
 
@@ -316,6 +317,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters), damaged tracks & fire effects, instead of constantly checking in Tick
+// Also to initialize driver-related stuff when we receive the Driver actor
 simulated function PostNetReceive()
 {
     // Player has changed position
@@ -366,6 +368,13 @@ simulated function PostNetReceive()
     else if (EngineHealth <= 0 && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0) && Health > 0)
     {
         SetFireEffects();
+    }
+
+    // Initialize the driver
+    if (bNeedToInitializeDriver && Driver != none)
+    {
+        bNeedToInitializeDriver = false;
+        SetPlayerPosition();
     }
 }
 
@@ -3255,7 +3264,7 @@ simulated function UpdatePrecacheMaterials()
 // New function to set correct initial position of player & vehicle on a net client, when this actor is replicated
 simulated function SetPlayerPosition()
 {
-    local name WeaponAnim, PlayerAnim;
+    local name VehicleAnim, PlayerAnim;
     local int  i;
 
     // Put vehicle & player in correct animation pose - if player not in initial position, we need to recreate the up/down anims that will have played to get there
@@ -3264,11 +3273,11 @@ simulated function SetPlayerPosition()
         if (DriverPositionIndex > InitialPositionIndex)
         {
             // Step down through each position until we find the 'most recent' transition up anim & player transition anim (or have reached the initial position)
-            for (i = DriverPositionIndex; i > InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); --i)
+            for (i = DriverPositionIndex; i > InitialPositionIndex && (VehicleAnim == ''|| PlayerAnim == ''); --i)
             {
-                if (WeaponAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
+                if (VehicleAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
                 {
-                    WeaponAnim = DriverPositions[i - 1].TransitionUpAnim;
+                    VehicleAnim = DriverPositions[i - 1].TransitionUpAnim;
                 }
 
                 // DriverTransitionAnim only relevant if there is also one in the position below
@@ -3281,11 +3290,11 @@ simulated function SetPlayerPosition()
         else
         {
             // Step up through each position until we find the 'most recent' transition down anim & player transition anim (or have reached the initial position)
-            for (i = DriverPositionIndex; i < InitialPositionIndex && (WeaponAnim == ''|| PlayerAnim == ''); ++i)
+            for (i = DriverPositionIndex; i < InitialPositionIndex && (VehicleAnim == ''|| PlayerAnim == ''); ++i)
             {
-                if (WeaponAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
+                if (VehicleAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
                 {
-                    WeaponAnim = DriverPositions[i + 1].TransitionDownAnim;
+                    VehicleAnim = DriverPositions[i + 1].TransitionDownAnim;
                 }
 
                 // DriverTransitionAnim only relevant if there is also one in the position above
@@ -3298,14 +3307,22 @@ simulated function SetPlayerPosition()
 
         // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
         // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
-        if (WeaponAnim != '')
+        if (VehicleAnim != '' && HasAnim(VehicleAnim))
         {
-            PlayAnim(WeaponAnim);
+            PlayAnim(VehicleAnim);
             SetAnimFrame(1.0);
         }
 
-        if (PlayerAnim != '')
+        if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
         {
+            // When vehicle replicates to net client, StartDriving() event gets called on player pawn if vehicle has a driver
+            // StartDriving() plays DriveAnim on the driver, which is for the usual initial driver position, but that would override our correct PlayerAnim here
+            // So if player pawn hasn't already played DriveAnim, set a flag to stop it playing DriveAnim in StartDriving(), although only this 1st time
+            if (DHPawn(Driver) != none && !DHPawn(Driver).bClientPlayedDriveAnim)
+            {
+                DHPawn(Driver).bClientSkipDriveAnim = true;
+            }
+
             Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
             Driver.PlayAnim(PlayerAnim);
             Driver.SetAnimFrame(1.0);
