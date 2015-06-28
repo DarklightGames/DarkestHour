@@ -18,7 +18,7 @@ var()   name        WA_SightDown_ReloadEmpty;
 // Overwritten to allow for Bren deployed anims
 simulated function PlayIdle()
 {
-    if (instigator.bBipodDeployed)
+    if (Instigator != none && Instigator.bBipodDeployed)
     {
         LoopAnim(WA_SightUp_Idle);
 

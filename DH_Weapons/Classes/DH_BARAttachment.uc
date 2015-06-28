@@ -17,7 +17,7 @@ var()   name        WA_SightDown_ReloadEmpty;
 // Overwritten to allow for BAR deployed anims - not the best way of doing this but saves having to overwrite functions in ROPawn
 simulated function PlayIdle()
 {
-    if (instigator.bBipodDeployed)
+    if (Instigator != none && Instigator.bBipodDeployed)
     {
         LoopAnim(WA_SightUp_Idle);
 
