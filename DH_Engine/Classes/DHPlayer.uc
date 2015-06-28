@@ -2752,6 +2752,15 @@ function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo 
         Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType),0);
 }
 
+// Modified to avoid possible spamming of "accessed none" errors
+function RORoleInfo GetRoleInfo()
+{
+    if (ROPlayerReplicationInfo(PlayerReplicationInfo) != none)
+    {
+        return ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo;
+    }
+}
+
 defaultproperties
 {
     // Sway values
