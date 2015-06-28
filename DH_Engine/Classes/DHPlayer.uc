@@ -2018,15 +2018,55 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
 // Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
 exec function LeaveBody(optional bool bKeepPRI)
 {
-    local Pawn OldPawn;
+    local ROVehicleWeaponPawn WP;
+    local ROVehicle           V;
+    local Pawn                OldPawn;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
     {
+        // If player is in vehicle with an interior mesh, switch to default exterior mesh & play the appropriate animations to put vehicle & player in correct position
+        V = ROVehicle(Pawn);
+
+        if (V != none)
+        {
+            if (V.Mesh != V.default.Mesh)
+            {
+                V.LinkMesh(V.default.Mesh);
+
+                if (DHWheeledVehicle(V) != none)
+                {
+                    DHWheeledVehicle(V).SetPlayerPosition();
+                }
+                else if (DHArmoredVehicle(V) != none)
+                {
+                    DHArmoredVehicle(V).SetPlayerPosition();
+                }
+            }
+        }
+        else
+        {
+            WP = ROVehicleWeaponPawn(Pawn);
+
+            if (WP != none && WP.Gun.Mesh != none && WP.Gun.Mesh != WP.Gun.default.Mesh)
+            {
+                WP.Gun.LinkMesh(WP.Gun.default.Mesh);
+
+                if (DHVehicleCannonPawn(WP) != none)
+                {
+                    DHVehicleCannonPawn(WP).SetPlayerPosition();
+                }
+                else if (DHVehicleMGPawn(WP) != none)
+                {
+                    DHVehicleMGPawn(WP).SetPlayerPosition();
+                }
+            }
+        }
+
         OldPawn = Pawn;
         ServerLeaveBody(bKeepPRI);
 
-        // Attempt to fix 'pin head', where old pawn's head is shrunk to 10% by state Dead.BeginState() - but generally ineffective as happens before state Dead (ViewTarget is key)
-        if (Pawn.IsA('DHPawn'))
+        // Attempt to fix 'pin head', where pawn's head is shrunk to 10% by state Dead.BeginState() - but generally ineffective as happens before state Dead (ViewTarget is key)
+        if (DHPawn(OldPawn) != none)
         {
             OldPawn.SetHeadScale(OldPawn.default.HeadScale);
         }
