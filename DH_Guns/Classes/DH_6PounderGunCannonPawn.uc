@@ -23,6 +23,7 @@ defaultproperties
     GunClass=class'DH_Guns.DH_6PounderGunCannon'
     CameraBone="Gun"
     DrivePos=(Z=-32.0)
+    DriveAnim="crouch_idle_binoc"
     ExitPositions(0)=(X=-150.0,Y=0.0,Z=0.0)
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0)
     ExitPositions(2)=(X=-100.0,Y=20.0,Z=0.0)
