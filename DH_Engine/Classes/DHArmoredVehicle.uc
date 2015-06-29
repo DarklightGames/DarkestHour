@@ -3120,38 +3120,10 @@ function DamageTrack(bool bLeftTrack)
     SetDamagedTracks();
 }
 
-// Modified so will pass radius damage on to each VehicleWeaponPawn, as originally lack of vehicle driver caused early exit
+// Emptied out as blast damage to exposed vehicle occupants is now handled from HurtRadius() in the projectile class
 function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local vector Direction;
-    local float  DamageScale, Distance;
-    local int    i;
-
-    // Damage the driver (but not if he has collision as whatever is causing the radius damage will hit the driver by itself)
-    if (Driver != none && !Driver.bCollideActors && DriverPositions[DriverPositionIndex].bExposed && EventInstigator != none && !bRemoteControlled)
-    {
-        Direction = Driver.Location - HitLocation;
-        Distance = FMax(1.0, VSize(Direction));
-        Direction = Direction / Distance;
-        DamageScale = 1.0 - FMax(0.0, (Distance - Driver.CollisionRadius) / DamageRadius);
-
-        if (DamageScale > 0.0)
-        {
-            Driver.SetDelayedDamageInstigatorController(EventInstigator);
-
-            Driver.TakeDamage(DamageScale * DamageAmount, EventInstigator.Pawn, Driver.Location - (0.5 * (Driver.CollisionHeight + Driver.CollisionRadius)) * Direction,
-                DamageScale * Momentum * Direction, DamageType);
-        }
-    }
-
-    // Pass DriverRadiusDamage on to each VehicleWeaponPawn (but not if it has collision as whatever is causing the radius damage will hit the VWP by itself)
-    for (i = 0; i < WeaponPawns.Length; ++i)
-    {
-        if (!WeaponPawns[i].bCollideActors)
-        {
-            WeaponPawns[i].DriverRadiusDamage(DamageAmount, DamageRadius, EventInstigator, DamageType, Momentum, HitLocation);
-        }
-    }
+    return;
 }
 
 // Modified to randomise explosion damage & radius and to add a DestroyedBurningSound

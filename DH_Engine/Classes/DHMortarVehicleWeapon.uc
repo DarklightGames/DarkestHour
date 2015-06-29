@@ -115,19 +115,18 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     P = Spawn(ProjClass, Owner,, SpawnLocation, SpawnRotation);
 
     if (!bDebugNoSpread)
-        P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
-    else
-        P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
-
-    if (DHMortarProjectile(P) != none && Pawn(Owner) != none)
     {
-        DHMortarProjectile(P).DamageInstigator = PlayerController(Pawn(Owner).Controller);
+        P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
+    }
+    else
+    {
+        P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
+    }
 
-        if (bDebug)
-        {
-            DHMortarProjectile(P).DebugForward = DebugForward;
-            DHMortarProjectile(P).DebugRight = DebugRight;
-        }
+    if (bDebug && DHMortarProjectile(P) != none)
+    {
+        DHMortarProjectile(P).DebugForward = DebugForward;
+        DHMortarProjectile(P).DebugRight = DebugRight;
     }
 
     PlaySound(FireSound,, 4.0);

@@ -1397,6 +1397,12 @@ event TakeImpactDamage(float AccelMag)
     }
 }
 
+// Emptied out as blast damage to exposed vehicle occupants is now handled from HurtRadius() in the projectile class
+function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
+{
+    return;
+}
+
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {

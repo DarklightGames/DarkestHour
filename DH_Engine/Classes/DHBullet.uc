@@ -519,7 +519,7 @@ simulated function Deflect(vector HitNormal)
 // New function to update Instigator reference to ensure damage is attributed to correct player, as player may have switched to different pawn since firing, e.g. changed vehicle position
 simulated function UpdateInstigator()
 {
-    if (InstigatorController != none)
+    if (InstigatorController != none && InstigatorController.Pawn != none)
     {
         Instigator = InstigatorController.Pawn;
     }
