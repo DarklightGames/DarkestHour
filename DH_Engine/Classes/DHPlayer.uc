@@ -2049,7 +2049,7 @@ exec function LeaveBody(optional bool bKeepPRI)
         {
             WP = ROVehicleWeaponPawn(Pawn);
 
-            if (WP != none && WP.Gun.Mesh != none && WP.Gun.Mesh != WP.Gun.default.Mesh)
+            if (WP != none && WP.Gun != none && WP.Gun.Mesh != WP.Gun.default.Mesh)
             {
                 WP.Gun.LinkMesh(WP.Gun.default.Mesh);
 
