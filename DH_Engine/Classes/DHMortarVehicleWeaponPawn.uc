@@ -427,14 +427,6 @@ simulated state KnobRaised
     }
 }
 
-simulated state KnobLowering extends Busy
-{
-Begin:
-    PlayOverlayAnimation(OverlayKnobLoweringAnim, false, OverlayKnobLoweringAnimRate);
-    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
-    GotoState('Idle');
-}
-
 // New state where mortar is being fired
 simulated state Firing extends Busy
 {

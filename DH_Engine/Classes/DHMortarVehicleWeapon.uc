@@ -47,16 +47,6 @@ simulated function ClientReplicateElevation(float Elevation)
     self.Elevation = Elevation;
 }
 
-simulated function PostNetReceive()
-{
-    super.PostNetReceive();
-
-    if (Role == ROLE_Authority && Elevation != NewElevation)
-    {
-        Elevation = NewElevation;
-    }
-}
-
 // Modified to initialize ammo
 simulated function PostBeginPlay()
 {
