@@ -463,8 +463,10 @@ simulated event StartDriving(Vehicle V)
         SetCollision(false, false, false);
         bCollideWorld = false;
 
-        // If vehicle just replicated to net client & it doesn't yet have VehicleWeapon actor, tell vehicle it needs to attach Driver when it receives Gun actor
-        if (Role < ROLE_Authority && VehicleWeaponPawn(V) != none && VehicleWeaponPawn(V).Gun == none && VehicleWeaponPawn(V).GunClass != none)
+        // If vehicle just replicated to net client & it doesn't yet have the necessary actor to attach to, tell vehicle it needs to attach Driver when it receives relevant actor
+        // VehicleWeapon (Gun) actor is needed by most VehicleWeaponPawns, but rider pawns need the VehicleBase to attach to
+        if (Role < ROLE_Authority && VehicleWeaponPawn(V) != none &&
+            ((VehicleWeaponPawn(V).GunClass != none && VehicleWeaponPawn(V).Gun == none) || (VehicleWeaponPawn(V).GunClass == none && VehicleWeaponPawn(V).VehicleBase == none)))
         {
             bNeedToAttachDriver = true;
         }

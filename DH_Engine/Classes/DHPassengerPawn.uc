@@ -23,6 +23,7 @@ This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI 
 Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
 */
 
+var bool bNeedToInitializeDriver; // clientside flag that we need to do some player set up, once we receive the Driver actor
 var bool bDebugExitPositions;
 
 replication
@@ -43,6 +44,17 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to make sure net clients attach the player in the correct position when vehicle is replicated to client
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Role < ROLE_Authority && bDriving)
+    {
+        bNeedToInitializeDriver = true;
+    }
+}
+
 // Sets bTearOff to true on a server when player exits, purely so server decides the actor is no longer net relevant, kills off the clientside actor & closes the net channel
 // But we don't want the clientside actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
 // So we delay the next update to the client for longer than the server's 5 second delay before it kills a clientside actor after it becomes net irrelevant
@@ -52,6 +64,59 @@ function Timer()
     {
         NetUpdateTime = Level.TimeSeconds + (6.0 * Level.Game.GameSpeed);
         bTearOff = true;
+    }
+}
+
+// Modified to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleBase actor, which it may not have yet
+// Also to remove stuff not relevant to a passenger pawn, as it has no VehicleWeapon
+simulated function PostNetReceive()
+{
+    local int i;
+
+    // Initialize the vehicle base
+    if (!bInitializedVehicleBase && VehicleBase != none)
+    {
+        bInitializedVehicleBase = true;
+
+        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
+        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
+            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+        {
+            VehicleBase.WeaponPawns[PositionInArray] = self;
+
+            return;
+        }
+
+        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+        {
+            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+            {
+                return;
+            }
+        }
+
+        VehicleBase.WeaponPawns[PositionInArray] = self;
+    }
+
+    // Make sure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleBase actor, which it may not have yet
+    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+    // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here
+    if (bNeedToInitializeDriver && Driver != none && VehicleBase != none)
+    {
+        bNeedToInitializeDriver = false;
+
+        if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver)
+        {
+            DetachDriver(Driver);
+            AttachDriver(Driver);
+            DHPawn(Driver).bNeedToAttachDriver = false;
+        }
+    }
+
+    // If we've initialized the vehicle base & 'driver', we can now switch off PostNetReceive
+    if (bInitializedVehicleBase && !bNeedToInitializeDriver)
+    {
+        bNetNotify = false;
     }
 }
 
