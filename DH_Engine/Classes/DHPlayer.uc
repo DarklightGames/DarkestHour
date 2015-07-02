@@ -68,6 +68,8 @@ var     float                   NextChangeTeamTime;         // the time at which
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
+var bool bLogWeaponAttachment; // TEMP DEBUG
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -2796,6 +2798,19 @@ function RORoleInfo GetRoleInfo()
     {
         return ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo;
     }
+}
+
+exec function ToggleLogWeapon() // TEMP DEBUG
+{
+    local DHGameReplicationInfo GRI;
+    if (Role == ROLE_Authority || (PlayerReplicationInfo!= none && PlayerReplicationInfo.bAdmin))
+    {
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+        GRI.bLogWeaponAttachment = !GRI.bLogWeaponAttachment;
+        Log("bLogWeaponAttachment =" @ GRI.bLogWeaponAttachment);
+        if (Role < ROLE_Authority) ConsoleCommand("Admin ToggleLogWeapon");
+    }
+    else Log("In multiplayer, you need to log in as admin to use debug exec ToggleLogWeapon");
 }
 
 defaultproperties

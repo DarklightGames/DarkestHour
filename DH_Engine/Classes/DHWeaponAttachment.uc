@@ -37,6 +37,14 @@ simulated function PostBeginPlay()
 // Modified to remove setting bayonet & barrel variables (PostNetReceive handles it & bOldBayonetAttached is unused anyway)
 simulated function PostNetBeginPlay()
 {
+    local DHGameReplicationInfo GRI; // TEMP DEBUG
+    if (Role < ROLE_Authority && Instigator != none && Instigator.IsHumanControlled())
+    {
+        GRI = DHGameReplicationInfo(PlayerController(Instigator.Controller).GameReplicationInfo);
+        if (GRI != none && GRI.bLogWeaponAttachment) Log(Tag @ "spawned");
+    }
+///////////////////////////////////////////////////////////////////////////
+
     super(WeaponAttachment).PostNetBeginPlay(); // skip over Super in ROWeaponAttachment
 
     if (ROPawn(Instigator) != none)
@@ -199,6 +207,12 @@ simulated event ThirdPersonEffects()
     {
         ROPawn(Instigator).StartFiring(true, bAltRapidFire);
     }
+}
+
+simulated function Hide(bool NewbHidden) // TEMP DEBUG
+{
+	bHidden = NewbHidden;
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).bLogWeaponAttachment) Log(Tag @ "Hide setting bHidden =" @ bHidden);
 }
 
 defaultproperties

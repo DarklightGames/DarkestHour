@@ -80,10 +80,13 @@ const OBJECTIVES_MAX = 32;
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
+var bool bLogWeaponAttachment; // TEMP DEBUG
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
+        bLogWeaponAttachment, // TEMP DEBUG
         DHSpawnCount,
         DHAxisRoles,
         DHAlliesRoles,
