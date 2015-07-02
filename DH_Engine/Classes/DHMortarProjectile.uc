@@ -234,7 +234,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
         }
 
-        Log((DebugForward dot (HitLocation - OrigLoc) * UU2M) @ (DebugRight dot (HitLocation - OrigLoc) * UU2M)); // HITLOC
+        Log((DebugForward dot (HitLocation - OrigLoc) * UU2M) @ (DebugRight dot (HitLocation - OrigLoc) * UU2M));
     }
 }
 

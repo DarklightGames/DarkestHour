@@ -37,7 +37,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0))); // HITLOC
+        SmokeEmitter = Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0)));
         SmokeEmitter.SetBase(self); // base the emitter on the grenade so if it bursts in mid-air the smoke emission travels with the grenade
         PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
         AmbientSound = SmokeLoopSound;
