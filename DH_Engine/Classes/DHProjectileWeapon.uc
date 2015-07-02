@@ -598,7 +598,7 @@ simulated state StartCrawling
                 Direction = ROPawn(Instigator).Get8WayDirection();
             }
 
-            if (Direction == 0 ||  Direction == 2 ||  Direction == 3 || Direction == 4 || Direction == 5)
+            if (Direction == 0 || Direction == 2 || Direction == 3 || Direction == 4 || Direction == 5)
             {
                 if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
                 {
@@ -674,7 +674,7 @@ simulated state Crawling
                 Direction = ROPawn(Instigator).Get8WayDirection();
             }
 
-            if (Direction == 0 ||  Direction == 2 ||  Direction == 3 || Direction == 4 || Direction == 5)
+            if (Direction == 0 || Direction == 2 || Direction == 3 || Direction == 4 || Direction == 5)
             {
                 if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
                 {

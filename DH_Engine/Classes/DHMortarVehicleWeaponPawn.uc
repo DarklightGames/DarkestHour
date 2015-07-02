@@ -410,7 +410,7 @@ simulated state KnobRaised
         }
         // We've stopped adjusting traverse
         else if (bTraversing)
-        {                
+        {
             bTraversing = false;
             HUDOverlay.StopAnimating(true);
 

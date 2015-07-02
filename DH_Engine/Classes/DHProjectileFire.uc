@@ -183,7 +183,7 @@ function CalcSpreadModifiers()
         Spread *= 500.0;
     }
 
-    if (!ROP.Weapon.bUsingSights  && !ROP.bBipodDeployed)
+    if (!ROP.Weapon.bUsingSights && !ROP.bBipodDeployed)
     {
         Spread *= HipSpreadModifier;
     }
