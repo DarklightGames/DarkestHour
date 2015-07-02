@@ -2007,15 +2007,15 @@ function DestroyRadioTrigger()
     CarriedRadioTrigger.Destroy();
 }
 
-// Add inventory based on role and weapons choices
-// MergeTODO: this doesn't seem too bad, except we need to turn nades back on for bots at some point
+// Modified to allow player to carry more than 1 type of grenade
+// Also to add != "none" (string) checks before calling CreateInventory(), avoiding calling GetInventoryClass("none") on base mutator & the log errors created every time a player spawns
 function AddDefaultInventory()
 {
-    local int i;
-    local string S;
-    local DHPlayer P;
-    local DHBot B;
+    local DHPlayer   P;
+    local DHBot      B;
     local RORoleInfo RI;
+    local string     S;
+    local int        i;
 
     if (Controller == none)
     {
@@ -2023,68 +2023,79 @@ function AddDefaultInventory()
     }
 
     P = DHPlayer(Controller);
-    B = DHBot(Controller);
 
     if (IsLocallyControlled())
     {
         if (P != none)
         {
-            RI = P.GetRoleInfo();
             S = P.GetPrimaryWeapon();
 
-            if (S != "")
+            if (S != "None" && S != "")
             {
                 CreateInventory(S);
             }
 
             S = P.GetSecondaryWeapon();
 
-            if (S != "")
+            if (S != "None" && S != "")
             {
                 CreateInventory(S);
             }
 
-            for (i = 0; i < 3; ++i)
-            {
-                S = string(RI.Grenades[i].Item);
-
-                if (S != "")
-                {
-                    CreateInventory(S);
-                }
-            }
+            RI = P.GetRoleInfo();
 
             if (RI != none)
             {
+                for (i = 0; i < arraycount(RI.Grenades); ++i)
+                {
+                    S = string(RI.Grenades[i].Item);
+
+                    if (S != "None" && S != "")
+                    {
+                        CreateInventory(S);
+                    }
+                }
+
                 for (i = 0; i < RI.GivenItems.Length; ++i)
                 {
-                    CreateInventory(RI.GivenItems[i]);
+                    if (RI.GivenItems[i] != "")
+                    {
+                        CreateInventory(RI.GivenItems[i]);
+                    }
                 }
             }
         }
-        else if (B != none)
+        else
         {
-            S = B.GetPrimaryWeapon();
+            B = DHBot(Controller);
 
-            if (S != "")
+            if (B != none)
             {
-                CreateInventory(S);
-            }
+                S = B.GetPrimaryWeapon();
 
-            S = B.GetSecondaryWeapon();
-
-            if (S != "")
-            {
-                CreateInventory(S);
-            }
-
-            RI = B.GetRoleInfo();
-
-            if (RI != none)
-            {
-                for (i = 0; i < RI.GivenItems.Length; ++i)
+                if (S != "None" && S != "")
                 {
-                    CreateInventory(RI.GivenItems[i]);
+                    CreateInventory(S);
+                }
+
+                S = B.GetSecondaryWeapon();
+
+                if (S != "None" && S != "")
+                {
+                    CreateInventory(S);
+                }
+
+                RI = B.GetRoleInfo();
+
+                if (RI != none)
+                {
+                    for (i = 0; i < RI.GivenItems.Length; ++i)
+                    {
+                        if (RI.GivenItems[i] != "")
+                        {
+                            CreateInventory(RI.GivenItems[i]);
+                        }
+                    }
                 }
             }
         }
@@ -2103,15 +2114,18 @@ function AddDefaultInventory()
             {
                 for (i = RI.GivenItems.Length - 1; i >= 0; --i)
                 {
-                    CreateInventory(RI.GivenItems[i]);
+                    if (RI.GivenItems[i] != "")
+                    {
+                        CreateInventory(RI.GivenItems[i]);
+                    }
                 }
             }
 
-            for (i = 0; i < 3; ++i)
+            for (i = 0; i < arraycount(RI.Grenades); ++i)
             {
                 S = string(RI.Grenades[i].Item);
 
-                if (S != "")
+                if (S != "None" && S != "")
                 {
                     CreateInventory(S);
                 }
@@ -2119,32 +2133,40 @@ function AddDefaultInventory()
 
             S = P.GetSecondaryWeapon();
 
-            if (S != "")
+            if (S != "None" && S != "")
             {
                 CreateInventory(S);
             }
 
             S = P.GetPrimaryWeapon();
 
-            if (S != "")
+            if (S != "None" && S != "")
             {
                 CreateInventory(S);
             }
         }
     }
 
-    NetUpdateTime = Level.TimeSeconds - 1;
+    NetUpdateTime = Level.TimeSeconds - 1.0;
 
-    // HACK FIXME
     if (Inventory != none)
     {
         Inventory.OwnerEvent('LoadOut');
     }
 
-    if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer && IsLocallyControlled())
+    if (Level.NetMode == NM_Standalone || (Level.NetMode == NM_ListenServer && IsLocallyControlled()))
     {
         bRecievedInitialLoadout = true;
         Controller.ClientSwitchToBestWeapon();
+    }
+}
+
+// Modified to add != "none" check (in string format), which avoids calling GetInventoryClass("none") on the base mutator & the log errors that creates every time a player spawns
+function CreateInventory(string InventoryClassName)
+{
+    if (InventoryClassName != "None" && InventoryClassName != "")
+    {
+        super.CreateInventory(InventoryClassName);
     }
 }
 
