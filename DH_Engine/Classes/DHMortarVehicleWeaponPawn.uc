@@ -355,6 +355,9 @@ simulated state KnobRaised
 
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
     {
+        local int CurrentYaw;
+
+        // Adjusting pitch, so we need to move the player's hand down from traverse knob, meaning we exit this state
         if (PitchChange != 0.0)
         {
             GotoState('KnobRaisedToIdle');
@@ -362,14 +365,33 @@ simulated state KnobRaised
             return;
         }
 
-        if (bTraversing && YawChange == 0.0)
+        // If adjusting traverse, make sure we haven't gone beyond the traverse limits (zero YawChange if we have)
+        if (YawChange != 0.0 && Gun != none)
         {
-            bTraversing = false;
-            HUDOverlay.StopAnimating(true);
+            CurrentYaw = Gun.CurrentAim.Yaw;
 
-            return;
+            if (CurrentYaw > 32768) // convert to negative yaw format
+            {
+                CurrentYaw -= 65536;
+            }
+
+            CurrentYaw = -CurrentYaw; // Matt: I'm sure this is because the vehicle base skeletal mesh is upside down !
+
+            // Block traverse if within 10 rotational units of yaw limit - a fudge factor, as sometimes Gun stops slightly short of limit
+            if (YawChange > 0.0)
+            {
+                if (CurrentYaw >= (Gun.MaxPositiveYaw - 10))
+                {
+                    YawChange = 0.0;
+                }
+            }
+            else if (CurrentYaw <= (Gun.MaxNegativeYaw + 10))
+            {
+                YawChange = 0.0;
+            }
         }
 
+        // Adjusting traverse
         if (YawChange != 0.0)
         {
             bTraversing = true;
@@ -383,7 +405,16 @@ simulated state KnobRaised
                 HUDOverlay.LoopAnim(OverlayKnobTurnLeftAnim, OverlayKnobTurnAnimRate, 0.125);
             }
 
-            super.HandleTurretRotation(DeltaTime, -YawChange, 0);
+            super.HandleTurretRotation(DeltaTime, -YawChange, 0); // Matt: I'm sure the minus YawChange is because the vehicle base skeletal mesh is upside down !
+
+        }
+        // We've stopped adjusting traverse
+        else if (bTraversing)
+        {                
+            bTraversing = false;
+            HUDOverlay.StopAnimating(true);
+
+            return;
         }
     }
 }
