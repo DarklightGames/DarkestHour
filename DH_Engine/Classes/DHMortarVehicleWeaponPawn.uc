@@ -14,10 +14,11 @@ struct DigitSet
 
 var     class<DHMortarWeapon> WeaponClass;
 
-// Aim & firing
+// Deploying, aim & firing
 var     bool        bPendingFire;
 var     bool        bTraversing;
 var     bool        bCanUndeploy;
+var     float       UndeployingDuration;
 var     float       LastElevationTime;
 var     float       ElevationAdjustmentDelay;
 
@@ -150,28 +151,49 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
+// Modified to match player's rotation to where mortar is aimed, to destroy mortar if player just undeployed, or to record elevation on server if player just exited
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local rotator PCRot;
+    local DHMortarVehicleWeapon MVW;
+    local rotator               NewRotation;
 
     super.ClientKDriverLeave(PC);
 
-    PCRot = Gun.GetBoneRotation(DHMortarVehicleWeapon(Gun).MuzzleBoneName);
-    PCRot.Pitch = 0;
-    PCRot.Roll = 0;
-    PC.Pawn.SetRotation(PCRot);
+    MVW = DHMortarVehicleWeapon(Gun);
 
-    PC.FixFOV();
+    if (PC != none)
+    {
+        if (MVW != none && MVW.MuzzleBoneName != '' && PC.Pawn != none)
+        {
+            NewRotation = Gun.GetBoneRotation(MVW.MuzzleBoneName);
+            NewRotation.Pitch = 0;
+            NewRotation.Roll = 0;
+            PC.Pawn.SetRotation(NewRotation);
+        }
 
-    if (IsInState('Undeploying'))
-    {
-        DHMortarVehicle(VehicleBase).ServerDestroyMortar();
+        PC.FixFOV();
     }
-    else
+
+    if (Role < ROLE_Authority)
     {
-        DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
-        GotoState('');
+        // If undeploying, owning net client now tells server to destroy mortar vehicle (& so all associated actors), as we've completed vehicle exit/unpossess process
+        if (IsInState('Undeploying'))
+        {
+            if (DHMortarVehicle(VehicleBase) != none)
+            {
+                DHMortarVehicle(VehicleBase).ServerDestroyMortar();
+
+                return;
+            }
+        }
+        // Or if player has exited mortar, leaving it deployed on the ground, client send current elevation setting to be recorded on server
+        else if (MVW != none)
+        {
+            MVW.ClientReplicateElevation(MVW.Elevation);
+        }
     }
+
+    GotoState('');
 }
 
 simulated state Busy
@@ -183,40 +205,7 @@ simulated state Busy
     function AltFire(optional float F) { }
     simulated exec function SwitchFireMode() { }
     exec function Deploy() { }
-
-    function bool KDriverLeave(bool bForceLeave)
-    {
-        local bool bDriverLeft;
-        local Pawn P;
-
-        P = Driver;
-
-        bDriverLeft = false;
-
-        if (IsInState('Undeploying'))
-        {
-            bDriverLeft = super.KDriverLeave(bForceLeave);
-
-            if (bDriverLeft)
-            {
-                DriverLeaveAmmunitionTransfer(P);
-
-                GotoState(''); // reset state for the next person who gets on the mortar
-
-                if (DHPlayer(P.Controller) != none)
-                {
-                    DHPlayer(P.Controller).ClientToggleDuck();
-                }
-
-                if (DHPawn(P) != none)
-                {
-                    DHPawn(P).CheckIfMortarCanBeResupplied();
-                }
-            }
-        }
-
-        return bDriverLeft;
-    }
+    function bool KDriverLeave(bool bForceLeave) {return false;}
 }
 
 simulated state Idle
@@ -452,12 +441,54 @@ Begin:
     GotoState('FireToIdle');
 }
 
+// New state when player is undeploying the mortar
 simulated state Undeploying extends Busy
 {
 Begin:
-    PlayOverlayAnimation(OverlayUndeployingAnim, false, 1.0);
-    Sleep(HUDOverlay.GetAnimDuration(OverlayUndeployingAnim));
-    ServerUndeploy();
+    if (IsLocallyControlled()) // single player, or owning net client or listen server
+    {
+        PlayOverlayAnimation(OverlayUndeployingAnim, false, 1.0);
+        ServerUndeploy(HUDOverlay.GetAnimDuration(OverlayUndeployingAnim));
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        Sleep(UndeployingDuration);
+        Undeploy();
+    }
+}
+
+// New client-to-server function called when player undeploys mortar, to send server to state Undeploying
+function ServerUndeploy(float AnimDuration)
+{
+    UndeployingDuration = AnimDuration; // server doesn't have HUDOverlay, so client passes animation duration so server can time destruction of mortar actors
+
+    if (!IsInState('Undeploying'))
+    {
+        GotoState('Undeploying');
+    }
+}
+
+// New function to exit mortar, give player back his mortar inventory item, & maybe destroy mortar vehicle actors (some server modes have to wait until client finishes exiting)
+function Undeploy()
+{
+    local DHMortarWeapon W;
+    local PlayerController PC;
+
+    if (Role == ROLE_Authority && IsInState('Undeploying'))
+    {
+        PC = PlayerController(Controller);
+        W = Spawn(WeaponClass, PC.Pawn);
+        global.KDriverLeave(true); // normally an empty function in any state derived from state Busy, so call the normal, non-state function instead
+        W.GiveTo(PC.Pawn);
+
+        // Standalone or owning listen server destroys mortar vehicle (& so all associated actors) immediately, as ClientKDriverLeave() will already have executed locally
+        // Dedicated server or non-owning listen server instead waits until owning net client executes ClientKDriverLeave() & calls ServerDestroyMortar() on server
+        if (IsLocallyControlled())
+        {
+            DHMortarVehicle(VehicleBase).ServerDestroyMortar();
+        }
+    }
 }
 
 function bool KDriverLeave(bool bForceLeave)
@@ -473,7 +504,7 @@ function bool KDriverLeave(bool bForceLeave)
     {
         DriverLeaveAmmunitionTransfer(P);
 
-        GotoState('Idle'); // reset state for the next person who comes on
+        GotoState(''); // reset state for the next person who gets on the mortar
 
         if (DHPlayer(P.Controller) != none)
         {
@@ -502,18 +533,6 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, bool bLoop, float
             HUDOverlay.PlayAnim(OverlayAnimation, Rate);
         }
     }
-}
-
-simulated function ServerUndeploy()
-{
-    local DHMortarWeapon W;
-    local PlayerController PC;
-
-    PC = PlayerController(Controller);
-    W = Spawn(WeaponClass, PC.Pawn);
-
-    KDriverLeave(true);
-    W.GiveTo(PC.Pawn);
 }
 
 simulated function DrawHUD(Canvas C)
