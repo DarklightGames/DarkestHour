@@ -506,30 +506,29 @@ function Undeploy()
 function bool KDriverLeave(bool bForceLeave)
 {
     local Pawn P;
-    local bool bDriverLeft;
 
     P = Driver;
 
-    bDriverLeft = super.KDriverLeave(bForceLeave);
-
-    if (bDriverLeft)
+    if (super.KDriverLeave(bForceLeave))
     {
         DriverLeaveAmmunitionTransfer(P);
-
-        GotoState(''); // reset state for the next person who gets on the mortar
-
-        if (DHPlayer(P.Controller) != none)
-        {
-            DHPlayer(P.Controller).ClientToggleDuck();
-        }
 
         if (DHPawn(P) != none)
         {
             DHPawn(P).CheckIfMortarCanBeResupplied();
         }
+
+        if (P != none && DHPlayer(P.Controller) != none)
+        {
+            DHPlayer(P.Controller).ClientToggleDuck();
+        }
+
+        GotoState(''); // reset state for the next person who gets on the mortar
+
+        return true;
     }
 
-    return bDriverLeft;
+    return false;
 }
 
 // New function to play an animation on the HUDOverlay
@@ -845,16 +844,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 // Modified to flag that the mortar no longer needs resupply
 function bool ResupplyAmmo()
 {
-    local bool bResupplySuccessful;
-
-    bResupplySuccessful = super.ResupplyAmmo();
-
-    if (bResupplySuccessful)
+    if (super.ResupplyAmmo())
     {
         DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
+
+        return true;
     }
 
-    return bResupplySuccessful;
+    return false;
 }
 
 // Modified to transfer player's mortar ammo to the mortar when player enters
@@ -893,13 +890,10 @@ function DriverEnterTransferAmmunition(Pawn P)
 // New function to flag whether or not mortar has less than full ammo & so can be resupplied
 function CheckCanBeResupplied()
 {
-    if (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo || Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo)
+    if (DHMortarVehicle(VehicleBase) != none)
     {
-        DHMortarVehicle(VehicleBase).bCanBeResupplied = true;
-    }
-    else
-    {
-        DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
+        DHMortarVehicle(VehicleBase).bCanBeResupplied = 
+            Gun != none && (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo || Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo);
     }
 }
 

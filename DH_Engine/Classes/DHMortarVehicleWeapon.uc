@@ -34,17 +34,17 @@ replication
         ClientReplicateElevation;
 }
 
-simulated function ClientReplicateElevation(float Elevation)
 // Added in 5.1 to replace constantly sending Elevate() & Depress() calls to server and sending Elevation variable to owning client
 // Client calls this function to update server's elevation setting at specific times such as firing or leaving the mortar
 // Exploitation would be completely benign and pointless - Basnett
+simulated function ClientReplicateElevation(float NewElevation)
 {
     if (bDebug && Role == ROLE_Authority)
     {
         Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ NewElevation);
     }
 
-    self.Elevation = Elevation;
+    Elevation = NewElevation;
 }
 
 // Modified to initialize ammo

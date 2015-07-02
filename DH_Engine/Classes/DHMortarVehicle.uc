@@ -101,15 +101,19 @@ function bool TryToDrive(Pawn P)
         return false;
     }
 
-    if (bEnteredOnce && DHP.Weapon != none && DHP.Weapon.IsA('DHMortarWeapon'))
+    if (bEnteredOnce)
     {
-        return false;
+        if (DHMortarWeapon(DHP.Weapon) != none)
+        {
+            return false; // no entry if player is holding an undeployed mortar
+        }
+    }
+    else
+    {
+        bEnteredOnce = true;
     }
 
     WeaponPawns[0].KDriverEnter(DHP);
-
-    bEnteredOnce = true;
-
     SetMortarOwner(DHP);
 
     return true;
