@@ -82,6 +82,8 @@ replication
 simulated function IncrementRange() { }
 simulated function DecrementRange() { }
 
+// Modified to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleWeapon actor, which it may not have yet
+// Also to remove stuff not relevant to a mortar, as is not multi-position
 simulated function PostNetReceive()
 {
     // When a manned mortar gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
@@ -121,33 +123,44 @@ simulated function PostNetReceive()
     }
 }
 
+// New client-to-server function to set CurrentDriverAnimation on server, to be replicated to other net clients
 simulated function SetCurrentAnimation(byte Index)
 {
     CurrentDriverAnimation = Index;
 }
 
+// New client-to-server function to fire the mortar, after the firing animation has played (there's a delay firing a mortar, as the round is dropped down the tube)
 simulated function ServerFire()
 {
-    Gun.Fire(Controller);
+    if (Gun != none)
+    {
+        Gun.Fire(Controller);
+    }
 }
 
-// Matt: modified to avoid an "accessed none" error (need to remove a reference to VehicleBase in the Super in ROVehicleWeaponPawn)
+// Modified to add mortar hints & also to avoid an "accessed none" error (need to remove a reference to VehicleBase in the Super in ROVehicleWeaponPawn)
+// Also removes some multi-position stuff that isn't relevant to mortar
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
 
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
-    PC.SetFOV(WeaponFOV);
     GotoState('Idle');
-    DHP = DHPlayer(PC);
 
-    if (DHP != none)
+    if (PC != none)
     {
-        DHP.QueueHint(7, false);
-        DHP.QueueHint(8, false);
-        DHP.QueueHint(9, false);
-        DHP.QueueHint(10, false);
+        PC.SetFOV(WeaponFOV);
+
+        DHP = DHPlayer(PC);
+
+        if (DHP != none)
+        {
+            DHP.QueueHint(7, false);
+            DHP.QueueHint(8, false);
+            DHP.QueueHint(9, false);
+            DHP.QueueHint(10, false);
+        }
     }
 }
 
@@ -196,6 +209,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     GotoState('');
 }
 
+// New base state for various new states where mortar is busy doing something, so several operations are disabled (functions emptied out)
 simulated state Busy
 {
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
@@ -208,6 +222,7 @@ simulated state Busy
     function bool KDriverLeave(bool bForceLeave) {return false;}
 }
 
+// New state where mortar is not busy doing something, so can be fired, exited, undeployed, etc
 simulated state Idle
 {
     simulated function BeginState()
@@ -239,7 +254,7 @@ simulated state Idle
 
             return;
         }
-        else if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay)
+        else if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && DHMortarVehicleWeapon(Gun) != none)
         {
             LastElevationTime = Level.TimeSeconds;
 
@@ -259,6 +274,7 @@ simulated state Idle
     }
 }
 
+// New state after firing, before returning to Idle state
 simulated state FireToIdle extends Busy
 {
     simulated function Fire(optional float F)
@@ -289,7 +305,7 @@ Begin:
     }
     else
     {
-        ClientMessage("Missing animation: " @ DriverUnflinchAnim);
+        ClientMessage("Missing animation: DriverUnflinchAnim" @ DriverUnflinchAnim);
     }
 
     if (bPendingFire && DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
@@ -302,6 +318,7 @@ Begin:
     }
 }
 
+// New function to shake player's view when firing
 simulated function ClientShakeView()
 {
     if (Controller != none && DHPlayer(Controller) != none)
@@ -311,6 +328,7 @@ simulated function ClientShakeView()
     }
 }
 
+// New state where player's hand is raising to traverse adjustment knob
 simulated state KnobRaising extends Busy
 {
 Begin:
@@ -319,6 +337,7 @@ Begin:
     GotoState('KnobRaised');
 }
 
+// New state where player's hand is raised on traverse adjustment knob
 simulated state KnobRaised
 {
     simulated function BeginState()
@@ -416,6 +435,7 @@ Begin:
     GotoState('Idle');
 }
 
+// New state where mortar is being fired
 simulated state Firing extends Busy
 {
 Begin:
@@ -521,6 +541,7 @@ function bool KDriverLeave(bool bForceLeave)
 }
 
 simulated function PlayOverlayAnimation(name OverlayAnimation, bool bLoop, float Rate)
+// New function to play an animation on the HUDOverlay
 {
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayAnimation))
     {
@@ -707,6 +728,7 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+// New state where player's hand is moving from traverse adjustment knob to fire the mortar
 simulated state KnobRaisedToFire extends Busy
 {
 Begin:
@@ -715,6 +737,7 @@ Begin:
     GotoState('Firing');
 }
 
+// New state where player's hand is moving from traverse adjustment knob to undeploy the mortar
 simulated state KnobRaisedToUndeploy extends Busy
 {
 Begin:
@@ -723,6 +746,7 @@ Begin:
     GotoState('Undeploying');
 }
 
+// New state where player's hand is moving from traverse adjustment knob to an idle position
 simulated state KnobRaisedToIdle extends Busy
 {
 Begin:
@@ -821,6 +845,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
+// Modified to flag that the mortar no longer needs resupply
 function bool ResupplyAmmo()
 {
     local bool bResupplySuccessful;
@@ -835,6 +860,7 @@ function bool ResupplyAmmo()
     return bResupplySuccessful;
 }
 
+// Modified to transfer player's mortar ammo to the mortar when player enters
 function KDriverEnter(Pawn P)
 {
     // Big giant hack to allow us to access the PRI of the gunner
@@ -846,7 +872,7 @@ function KDriverEnter(Pawn P)
     GotoState('Idle');
 }
 
-// This transfers the ammunition to the weapon upon entering the mortar
+// New function to handle transfer of player's mortar ammo to the mortar when player enters
 function DriverEnterTransferAmmunition(Pawn P)
 {
     local DHPawn DHP;
@@ -867,6 +893,7 @@ function DriverEnterTransferAmmunition(Pawn P)
     CheckCanBeResupplied();
 }
 
+// New function to flag whether or not mortar has less than full ammo & so can be resupplied
 function CheckCanBeResupplied()
 {
     if (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo || Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo)
@@ -879,7 +906,7 @@ function CheckCanBeResupplied()
     }
 }
 
-// This transfers the ammunition to the player upon exiting the mortar
+// New function to handle transfer of mortar's ammo to the player when he exits
 function DriverLeaveAmmunitionTransfer(Pawn P)
 {
     local DHPawn DHP;

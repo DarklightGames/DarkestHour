@@ -34,19 +34,15 @@ replication
         ClientReplicateElevation;
 }
 
-/*
-Added in 5.1 to replace constantly sending Elevate() and Depress()
-calls to the server and sending the Elevation variable to the owning
-client.  Client calls this function to update the server's elevation
-setting at specific times such as firing or leaving the mortar.
-
-Exploitation would be completely benign and pointless.
-- Basnett
-*/
 simulated function ClientReplicateElevation(float Elevation)
+// Added in 5.1 to replace constantly sending Elevate() & Depress() calls to server and sending Elevation variable to owning client
+// Client calls this function to update server's elevation setting at specific times such as firing or leaving the mortar
+// Exploitation would be completely benign and pointless - Basnett
 {
     if (bDebug && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ Elevation);
+    {
+        Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ NewElevation);
+    }
 
     self.Elevation = Elevation;
 }
@@ -61,6 +57,7 @@ simulated function PostNetReceive()
     }
 }
 
+// Modified to initialize ammo
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -74,18 +71,16 @@ simulated function PostBeginPlay()
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
-    local vector X, Y, Z, SpawnLocation;
-    local rotator SpawnRotation;
-    local coords MuzzleBoneCoords;
-    local float SpreadYaw;
-    local rotator R;
-    local vector DebugForward, DebugRight;
+    local coords     MuzzleBoneCoords;
+    local vector     X, Y, Z, DebugForward, DebugRight, SpawnLocation;
+    local rotator    R, SpawnRotation;
+    local float      SpreadYaw;
 
     MuzzleBoneCoords = GetBoneCoords(MuzzleBoneName);
     GetAxes(Rotation - CurrentAim, X, Y, Z);
 
-    X.Z = 0;
-    Y.Z = 0;
+    X.Z = 0.0;
+    Y.Z = 0.0;
 
     X = Normal(X);
     Y = Normal(Y);
@@ -134,14 +129,17 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
+// New functions to handle elevation & depression of mortar's firing angle
 simulated function Elevate()
 {
     if (Elevation < ElevationMaximum)
     {
         Elevation += ElevationStride;
 
-        if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
+        if (Instigator != none && DHPlayer(Instigator.Controller) != none)
+        {
+            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+        }
     }
 }
 
@@ -151,12 +149,14 @@ simulated function Depress()
     {
         Elevation -= ElevationStride;
 
-        if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
+        if (Instigator != none && DHPlayer(Instigator.Controller) != none)
+        {
+            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+        }
     }
 }
 
-//TODO: Charge settings.
+//TODO: charge settings
 function IncrementRange() { return; }
 function DecrementRange() { return; }
 
@@ -167,7 +167,9 @@ state ProjectileFireMode
         if (bDebugCalibrate)
         {
             for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
+            {
                 SpawnProjectile(PendingProjectileClass, false);
+            }
         }
         else
         {
@@ -179,7 +181,7 @@ state ProjectileFireMode
                 //Shake view here, (proper timing and all)
                 DHMortarVehicleWeaponPawn(Instigator).ClientShakeView();
 
-                // We fired one off, so we are now eligible for resupply.
+                // We fired one off, so we are now eligible for resupply
                 DHMortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = true;
             }
         }
@@ -191,9 +193,13 @@ state ProjectileFireMode
 function ToggleRoundType()
 {
     if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
+    {
         PendingProjectileClass = SecondaryProjectileClass;
+    }
     else
+    {
         PendingProjectileClass = PrimaryProjectileClass;
+    }
 }
 
 simulated function bool HasPendingAmmo()
