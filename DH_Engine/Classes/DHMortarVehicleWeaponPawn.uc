@@ -406,11 +406,11 @@ simulated state KnobRaised
 
             if (YawChange > 0.0)
             {
-                HUDOverlay.LoopAnim(OverlayKnobTurnRightAnim, OverlayKnobTurnAnimRate, 0.125);
+                PlayOverlayAnimation(OverlayKnobTurnRightAnim, true, 0.125);
             }
             else
             {
-                HUDOverlay.LoopAnim(OverlayKnobTurnLeftAnim, OverlayKnobTurnAnimRate, 0.125);
+                PlayOverlayAnimation(OverlayKnobTurnLeftAnim, true, 0.125);
             }
 
             super.HandleTurretRotation(DeltaTime, -YawChange, 0); // Matt: I'm sure the minus YawChange is because the vehicle base skeletal mesh is upside down !
