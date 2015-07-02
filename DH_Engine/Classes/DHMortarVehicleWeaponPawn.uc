@@ -227,7 +227,7 @@ simulated state Idle
 {
     simulated function BeginState()
     {
-        PlayOverlayAnimation(OverlayIdleAnim, true, 1.0);
+        PlayOverlayAnimation(OverlayIdleAnim, true);
     }
 
     simulated function Fire(optional float F)
@@ -342,7 +342,7 @@ simulated state KnobRaised
 {
     simulated function BeginState()
     {
-        PlayOverlayAnimation(OverlayKnobIdleAnim, true, 1.0);
+        PlayOverlayAnimation(OverlayKnobIdleAnim, true);
     }
 
     simulated function Fire(optional float F)
@@ -440,7 +440,7 @@ simulated state Firing extends Busy
 {
 Begin:
     DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
-    PlayOverlayAnimation(OverlayFiringAnim, false, 1.0);
+    PlayOverlayAnimation(OverlayFiringAnim);
 
     if (Level.NetMode == NM_Standalone) //TODO: Remove, single-player testing?
     {
@@ -467,7 +467,7 @@ simulated state Undeploying extends Busy
 Begin:
     if (IsLocallyControlled()) // single player, or owning net client or listen server
     {
-        PlayOverlayAnimation(OverlayUndeployingAnim, false, 1.0);
+        PlayOverlayAnimation(OverlayUndeployingAnim);
         ServerUndeploy(HUDOverlay.GetAnimDuration(OverlayUndeployingAnim));
     }
 
@@ -540,11 +540,16 @@ function bool KDriverLeave(bool bForceLeave)
     return bDriverLeft;
 }
 
-simulated function PlayOverlayAnimation(name OverlayAnimation, bool bLoop, float Rate)
 // New function to play an animation on the HUDOverlay
+simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLoop, optional float Rate)
 {
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayAnimation))
     {
+        if (Rate == 0.0) // default to 1.0 if no rate was passed
+        {
+            Rate = 1.0;
+        }
+
         if (bLoop)
         {
             HUDOverlay.LoopAnim(OverlayAnimation, Rate);
@@ -732,7 +737,7 @@ simulated function DrawHUD(Canvas C)
 simulated state KnobRaisedToFire extends Busy
 {
 Begin:
-    HUDOverlay.PlayAnim(OverlayKnobLoweringAnim);
+    PlayOverlayAnimation(OverlayKnobLoweringAnim);
     Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
     GotoState('Firing');
 }
@@ -741,7 +746,7 @@ Begin:
 simulated state KnobRaisedToUndeploy extends Busy
 {
 Begin:
-    HUDOverlay.PlayAnim(OverlayKnobLoweringAnim);
+    PlayOverlayAnimation(OverlayKnobLoweringAnim);
     Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
     GotoState('Undeploying');
 }
@@ -750,7 +755,7 @@ Begin:
 simulated state KnobRaisedToIdle extends Busy
 {
 Begin:
-    HUDOverlay.PlayAnim(OverlayKnobLoweringAnim);
+    PlayOverlayAnimation(OverlayKnobLoweringAnim);
     Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
     GotoState('Idle');
 }
