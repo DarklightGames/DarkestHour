@@ -17,6 +17,100 @@ function GetOutOfVehicle()
     Vehicle(Pawn).KDriverLeave(true);
 }
 
+// MOdified to avoid "accessed none" log spam errors on Weapon
+function ChooseAttackMode()
+{
+    local float EnemyStrength, RetreatThreshold, WeaponRating;
+
+    GoalString = " ChooseAttackMode last seen" @ Level.TimeSeconds - LastSeenTime;
+
+    // Should I run away?
+    if (Squad == none || Enemy == none || Pawn == none)
+    {
+        Log("HERE 1 Squad" @ Squad @ "Enemy" @ Enemy @ "Pawn" @ Pawn);
+    }
+
+    EnemyStrength = RelativeStrength(Enemy);
+
+    if (Vehicle(Pawn) != none)
+    {
+        VehicleFightEnemy(true, EnemyStrength);
+
+        return;
+    }
+
+    if (!bFrustrated && !Squad.MustKeepEnemy(Enemy))
+    {
+        RetreatThreshold = Aggressiveness;
+
+        if (Pawn != none && Pawn.Weapon != none && Pawn.Weapon.CurrentRating > 0.5)
+        {
+            RetreatThreshold = RetreatThreshold + 0.35 - (Skill * 0.05);
+        }
+
+        if (EnemyStrength > RetreatThreshold)
+        {
+            GoalString = "Retreat";
+
+            if (PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none && FRand() < 0.05)
+            {
+                SendMessage(none, 'Other', GetMessageIndex('INJURED'), 15, 'TEAM');
+            }
+
+            DoRetreat();
+
+            return;
+        }
+    }
+
+    if (Squad != none && Squad.PriorityObjective(self) == 0 && (Skill + Tactics) > 2.0 && (EnemyStrength > -0.3 || (Pawn != none && Pawn.Weapon != none && Pawn.Weapon.AIRating < 0.5)))
+    {
+        if (Pawn == none || Pawn.Weapon == none)
+        {
+            WeaponRating = 0.0;
+        }
+        else if (Pawn.Weapon.AIRating < 0.5)
+        {
+            if (EnemyStrength > 0.3)
+            {
+                WeaponRating = 0.0;
+            }
+            else
+            {
+                WeaponRating = Pawn.Weapon.CurrentRating / 2000.0;
+            }
+        }
+        else if (EnemyStrength > 0.3)
+        {
+            WeaponRating = Pawn.Weapon.CurrentRating / 2000.0;
+        }
+        else
+        {
+            WeaponRating = Pawn.Weapon.CurrentRating / 1000.0;
+        }
+
+        // Fall back to better pickup?
+        if (FindInventoryGoal(WeaponRating))
+        {
+            if (InventorySpot(RouteGoal) == none)
+            {
+                GoalString = "fallback - inventory goal is not pickup but" @ RouteGoal;
+            }
+            else
+            {
+                GoalString = "Fallback to better pickup" @ InventorySpot(RouteGoal).MarkedItem @ "hidden" @ InventorySpot(RouteGoal).MarkedItem.bHidden;
+            }
+
+            GotoState('FallBack');
+
+            return;
+        }
+    }
+
+    GoalString = "ChooseAttackMode FightEnemy";
+    FightEnemy(true, EnemyStrength);
+}
+
 // Added code to get bots using ironsights in a rudimentary fashion
 state RangedAttack
 {

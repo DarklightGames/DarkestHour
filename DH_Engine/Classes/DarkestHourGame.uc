@@ -3068,6 +3068,8 @@ defaultproperties
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
     GameMessageClass=class'DH_Engine.DHGameMessage'
+    TeamAIType(0)=class'DH_Engine.DHTeamAI'
+    TeamAIType(1)=class'DH_Engine.DHTeamAI'
 
     ChangeTeamInterval=1.0
 }
