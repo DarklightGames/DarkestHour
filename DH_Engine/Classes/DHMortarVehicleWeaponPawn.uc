@@ -406,11 +406,11 @@ simulated state KnobRaised
 
             if (YawChange > 0.0)
             {
-                PlayOverlayAnimation(OverlayKnobTurnRightAnim, true, 0.125);
+                PlayOverlayAnimation(OverlayKnobTurnRightAnim, true, OverlayKnobTurnAnimRate, 0.125);
             }
             else
             {
-                PlayOverlayAnimation(OverlayKnobTurnLeftAnim, true, 0.125);
+                PlayOverlayAnimation(OverlayKnobTurnLeftAnim, true, OverlayKnobTurnAnimRate, 0.125);
             }
 
             super.HandleTurretRotation(DeltaTime, -YawChange, 0); // Matt: I'm sure the minus YawChange is because the vehicle base skeletal mesh is upside down !
@@ -532,7 +532,7 @@ function bool KDriverLeave(bool bForceLeave)
 }
 
 // New function to play an animation on the HUDOverlay
-simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLoop, optional float Rate)
+simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLoop, optional float Rate, optional float TweenTime)
 {
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayAnimation))
     {
@@ -543,11 +543,11 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLo
 
         if (bLoop)
         {
-            HUDOverlay.LoopAnim(OverlayAnimation, Rate);
+            HUDOverlay.LoopAnim(OverlayAnimation, Rate, TweenTime);
         }
         else
         {
-            HUDOverlay.PlayAnim(OverlayAnimation, Rate);
+            HUDOverlay.PlayAnim(OverlayAnimation, Rate, TweenTime);
         }
     }
 }
