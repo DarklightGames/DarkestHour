@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMortarVehicleWeapon extends ROTankCannon;
+class DHMortarVehicleWeapon extends ROVehicleWeapon
+    abstract;
 
 const RAD2DEG = 57.29577951;
 const DEG2RAD = 0.01745329;
@@ -21,6 +22,7 @@ var     float           SpreadYawMin;
 var     float           SpreadYawMax;
 var     class<Emitter>  FireEmitterClass;
 var     sound           FireSound;
+var  class<Projectile>  PendingProjectileClass; // from ROTankCannon
 
 // Debugging
 var     bool            bDebug;
@@ -29,6 +31,10 @@ var     bool            bDebugCalibrate;
 
 replication
 {
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        PendingProjectileClass;
+
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ClientReplicateElevation;
@@ -180,6 +186,7 @@ state ProjectileFireMode
     function AltFire(Controller C) { }
 }
 
+// Modified from ROTankCannon, to allow toggle even if don't have new round type
 function ToggleRoundType()
 {
     if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
@@ -197,6 +204,41 @@ simulated function bool HasPendingAmmo()
     return MainAmmoCharge[GetPendingRoundIndex()] > 0;
 }
 
+// From ROTankCannon
+simulated function int GetPendingRoundIndex()
+{
+    if (PendingProjectileClass == none)
+    {
+        if (ProjectileClass == PrimaryProjectileClass)
+        {
+            return 0;
+        }
+        else if (ProjectileClass == SecondaryProjectileClass)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
+    }
+    else
+    {
+        if (PendingProjectileClass == PrimaryProjectileClass)
+        {
+            return 0;
+        }
+        else if (PendingProjectileClass == SecondaryProjectileClass)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
+    }
+}
+
 simulated function bool IsHighExplosivePending()
 {
     return PendingProjectileClass == PrimaryProjectileClass;
@@ -207,8 +249,29 @@ simulated function bool IsSmokePending()
     return PendingProjectileClass == SecondaryProjectileClass;
 }
 
+// From ROTankCannon
+simulated function UpdatePrecacheStaticMeshes()
+{
+    if (PrimaryProjectileClass != none)
+    {
+        Level.AddPrecacheStaticMesh(PrimaryProjectileClass.default.StaticMesh);
+    }
+
+    if (SecondaryProjectileClass != none)
+    {
+        Level.AddPrecacheStaticMesh(SecondaryProjectileClass.default.StaticMesh);
+    }
+
+    super.UpdatePrecacheStaticMeshes();
+}
+
 defaultproperties
 {
+    // From ROTankCannon:
+    bUseTankTurretRotation=true
+    bMultipleRoundTypes=true
+    AIInfo(0)=(bInstantHit=false,AimError=0.0,RefireRate=5.0)
+
     Elevation=75.0
     ElevationMaximum=90.0
     ElevationMinimum=45.0

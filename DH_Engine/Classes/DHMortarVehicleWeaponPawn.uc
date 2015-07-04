@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMortarVehicleWeaponPawn extends ROTankCannonPawn
+class DHMortarVehicleWeaponPawn extends ROVehicleWeaponPawn
     abstract;
 
 struct DigitSet
@@ -72,7 +72,7 @@ replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerUndeploy, ServerFire, SetCurrentAnimation;
+        ServerUndeploy, ServerFire, SetCurrentAnimation, ServerToggleRoundType;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -250,7 +250,7 @@ simulated state Idle
     {
         if (YawChange == 0.0 && PitchChange == 0.0)
         {
-            super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+            global.HandleTurretRotation(DeltaTime, 0.0, 0.0);
 
             return;
         }
@@ -413,7 +413,7 @@ simulated state KnobRaised
                 PlayOverlayAnimation(OverlayKnobTurnLeftAnim, true, OverlayKnobTurnAnimRate, 0.125);
             }
 
-            super.HandleTurretRotation(DeltaTime, -YawChange, 0); // Matt: I'm sure the minus YawChange is because the vehicle base skeletal mesh is upside down !
+            global.HandleTurretRotation(DeltaTime, -YawChange, 0); // Matt: I'm sure the minus YawChange is because the vehicle base skeletal mesh is upside down !
 
         }
         // We've stopped adjusting traverse
@@ -424,6 +424,23 @@ simulated state KnobRaised
 
             return;
         }
+    }
+}
+
+// From ROTankCannonPawn
+function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
+{
+    if (Gun == none || !Gun.bUseTankTurretRotation)
+    {
+        return;
+    }
+
+    UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
+
+    if (ROPlayer(Controller) != none)
+    {
+        ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 }
 
@@ -797,11 +814,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CameraRotation = PC.Rotation;
     }
 
-    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
-    {
-        CameraRotation = Gun.GetBoneRotation('Camera_com');
-    }
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)
@@ -922,8 +934,42 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
     }
 }
 
+// From ROTankCannonPawn
+exec function SwitchFireMode()
+{
+    if (Gun != none && Gun.bMultipleRoundTypes)
+    {
+        if (PlayerController(Controller) != none)
+        {
+            PlayerController(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+        }
+
+        ServerToggleRoundType();
+    }
+}
+
+// From ROTankCannonPawn
+function ServerToggleRoundType()
+{
+    if (DHMortarVehicleWeapon(Gun) != none)
+    {
+        DHMortarVehicleWeapon(Gun).ToggleRoundType();
+    }
+}
+
+// From ROTankCannonPawn
+simulated function bool PointOfView()
+{
+    return false;
+}
+
 defaultproperties
 {
+    // From ROTankCannonPawn:
+	bCustomAiming=true
+    bAllowViewChange=false
+    PositionInArray=0    
+    
     bMultiPosition=false
     bSinglePositionExposed=true
     OverlayKnobLoweringAnimRate=1.25
