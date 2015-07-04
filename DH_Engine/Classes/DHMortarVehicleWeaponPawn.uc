@@ -548,6 +548,17 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
+// Modified so mortar is destroyed a few seconds after player dies
+function DriverDied()
+{
+    super.DriverDied();
+    
+    if (DHMortarVehicle(VehicleBase) != none)
+    {
+        DHMortarVehicle(VehicleBase).GotoState('PendingDestroy');
+    }
+}
+
 // New function to play an animation on the HUDOverlay
 simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLoop, optional float Rate, optional float TweenTime)
 {
@@ -869,8 +880,6 @@ function bool ResupplyAmmo()
 // Modified to transfer player's mortar ammo to the mortar when player enters
 function KDriverEnter(Pawn P)
 {
-    // Big giant hack to allow us to access the PRI of the gunner
-    VehicleBase.PlayerReplicationInfo = P.PlayerReplicationInfo;
     DriverEnterTransferAmmunition(P);
 
     super.KDriverEnter(P);
@@ -929,8 +938,6 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
         {
             DHMortarVehicle(VehicleBase).bCanBeResupplied = true;
         }
-
-        VehicleBase.PlayerReplicationInfo = none; // reset back to none
     }
 }
 
