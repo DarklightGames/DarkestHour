@@ -45,8 +45,6 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    MinCommanderHitHeight=44.0 // note there is no other collision box (e.g. mantlet) so every hit on the jagdtiger cannon is actually a hit on commander's collision box
-    VehHitpoints(0)=(PointRadius=10.0,PointScale=1.0,PointBone="com_player")
     YawBone="Gun"
     YawStartConstraint=-2000.0
     YawEndConstraint=2000.0

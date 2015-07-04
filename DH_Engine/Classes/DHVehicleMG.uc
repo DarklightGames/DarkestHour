@@ -21,11 +21,6 @@ var     float   ReloadDuration;       // time duration of reload (set automatica
 var     float   ReloadStartTime;      // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
 var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
-// Player hit detection
-var     bool    bHasGunShield;        // this MG has a gunshield that may protect the player
-var     float   MaxPlayerHitX;        // maximum distance along X-axis where a projectile must have hit player's collision box (hit location offset, relative to mesh origin)
-var     bool    bDriverDebugging;     // screen & log messages to debug player/gunshield hit detection
-
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
 var DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;

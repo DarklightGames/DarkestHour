@@ -49,8 +49,6 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    MinCommanderHitHeight=18.0 // note there is no other collision box (e.g. mantlet) so every hit on the jagdpanzer IV cannon is actually a hit on commander's collision box
-    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-1.0,Z=-1.0))
     YawBone="Turret"
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0

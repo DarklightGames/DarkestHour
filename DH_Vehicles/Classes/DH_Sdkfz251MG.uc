@@ -13,10 +13,6 @@ defaultproperties
     ReloadDuration=6.59
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-    bHasGunShield=true
-    MaxPlayerHitX=-18.0
-    VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=0.0,Y=0.0,Z=15.0))
-    VehHitpoints(1)=(PointRadius=15.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=0.0,Y=0.0,Z=-5.0))
     hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun"

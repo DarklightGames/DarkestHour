@@ -21,7 +21,6 @@ var     bool        bNeedToInitializeDriver;     // clientside flag that we need
 var     int         InitialPositionIndex;        // initial player position on entering
 var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
-var     bool        bPlayerCollisionBoxMoves;    // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 // Gunsight
 var     float       OverlayCenterSize;           // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width

@@ -35,8 +35,6 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-12.0,Y=-12.0,Z=-35.0))
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-12.0,Y=-12.0,Z=-55.0))
     YawBone="Turret"
     YawStartConstraint=-6000.0
     YawEndConstraint=6000.0

@@ -13,8 +13,6 @@ defaultproperties
     ReloadDuration=6.7
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
-    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=0.0,Y=-0.5,Z=29.0))
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-3.5,Y=-3.0,Z=8.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun_protection"

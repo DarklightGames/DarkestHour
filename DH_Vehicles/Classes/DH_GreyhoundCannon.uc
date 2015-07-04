@@ -36,9 +36,6 @@ defaultproperties
     AltFireTracerFrequency=5
     bUsesTracers=true
     bAltFireTracersOnly=true
-    MinCommanderHitHeight=40.5;
-    VehHitpoints(0)=(PointRadius=8.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=12.0,Y=4.0,Z=-3.0))
-    VehHitpoints(1)=(PointRadius=12.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=12.0,Y=4.0,Z=-20.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"

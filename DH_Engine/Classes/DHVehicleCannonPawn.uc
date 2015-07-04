@@ -19,7 +19,6 @@ var     int         PeriscopePositionIndex;   // index position of commander's p
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
 var     int         RaisedPositionIndex;      // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
 var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
-var     bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 // Gunsight or periscope overlay
 var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
@@ -76,7 +75,6 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits, ServerToggleDriverDebug, // only during development
         ServerLogCannon; // DEBUG (temp)
 //      ServerChangeDriverPos      // Matt: removed function
 //      ServerToggleExtraRoundType // Matt: removed function as is pointless - normal RO ServerToggleRoundType can be called; it's only the functionality in Gun.ToggleRoundType() that changes
@@ -1675,24 +1673,6 @@ exec function ToggleViewLimit()
                 }
             }
         }
-    }
-}
-
-// Allows 'Driver' (commander) debugging to be toggled for all cannon pawns
-exec function ToggleDriverDebug()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ServerToggleDriverDebug();
-    }
-}
-
-function ServerToggleDriverDebug()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        class'DHVehicleCannon'.default.bDriverDebugging = !class'DHVehicleCannon'.default.bDriverDebugging;
-        Log("DHVehicleCannon.bDriverDebugging =" @ class'DHVehicleCannon'.default.bDriverDebugging);
     }
 }
 

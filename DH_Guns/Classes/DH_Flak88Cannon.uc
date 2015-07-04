@@ -41,8 +41,6 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-15.0,Z=17.0))
-    VehHitpoints(1)=(PointRadius=16.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-15.0,Z=-5.0))
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000

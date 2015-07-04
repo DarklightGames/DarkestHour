@@ -13,8 +13,6 @@ defaultproperties
     ReloadDuration=7.0
     TracerProjectileClass=class'DH_BrenVehicleTracerBullet'
     TracerFrequency=5
-	VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=6.0,Y=-6.0,Z=22.0))
-	VehHitpoints(1)=(PointRadius=15.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=4.0,Y=-5.0,Z=2.0))
     hudAltAmmoIcon=texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun_protection"

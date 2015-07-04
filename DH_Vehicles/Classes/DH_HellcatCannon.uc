@@ -35,8 +35,6 @@ defaultproperties
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
     AddedPitch=52
-    MinCommanderHitHeight=47.0;
-    VehHitpoints(0)=(PointRadius=13.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-15.0))
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000

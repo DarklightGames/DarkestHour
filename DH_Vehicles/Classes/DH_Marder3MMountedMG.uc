@@ -13,8 +13,6 @@ defaultproperties
     ReloadDuration=6.59
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="loader_player",PointOffset=(X=10.0,Z=-10.0))
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="loader_player",PointOffset=(X=10.0,Z=-30.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
     PitchBone="mg_pitch"

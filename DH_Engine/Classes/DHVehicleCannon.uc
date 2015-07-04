@@ -8,10 +8,7 @@ class DHVehicleCannon extends ROTankCannon
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
-// General
-var     DHVehicleCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
-var     bool                bHasTurret;               // this cannon is in a fully rotating turret
-var     float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
+var     DHVehicleCannonPawn CannonPawn; // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 
 // Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];   // using byte for more efficient replication
@@ -37,6 +34,7 @@ var     bool                bHasAddedSideArmor;       // has side skirts that wi
 // Manual/powered turret
 var     float               ManualRotationsPerSecond;
 var     float               PoweredRotationsPerSecond;
+var     bool                bHasTurret; // this cannon is in a fully rotating turret
 
 // Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
 var     class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -54,7 +52,6 @@ var     bool                bDrawPenetration;
 var     bool                bDebuggingText;
 var     bool                bPenetrationText;
 var     bool                bLogPenetration;
-var     bool                bDriverDebugging;
 var     config bool         bGunFireDebug;
 var     config bool         bGunsightSettingMode;
 
