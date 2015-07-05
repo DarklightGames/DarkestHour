@@ -23,6 +23,7 @@ defaultproperties
     GunIdleAnim="deploy_idle_GrW42"
     GunFiringAnim="deploy_fire_GrW42"
     WeaponClass=class'DH_Mortars.DH_Kz8cmGrW42Weapon'
+    UndeployingDuration=1.4
     HUDHighExplosiveTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
     HUDSmokeTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
     HUDArcTexture=texture'DH_Mortars_tex.HUD.ArcG'

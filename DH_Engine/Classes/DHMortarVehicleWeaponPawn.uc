@@ -21,7 +21,7 @@ var     bool        bNeedToInitializeDriver; // clientside flag that we need to 
 var     bool        bPendingFire;
 var     bool        bTraversing;
 var     bool        bCanUndeploy;
-var     float       UndeployingDuration;
+var     float       UndeployingDuration;     // needs literal as server doesn't have HUDOverlay actor & so can't use GetAnimDuration on it
 var     float       LastElevationTime;
 var     float       ElevationAdjustmentDelay;
 
@@ -75,7 +75,7 @@ replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerUndeploy, ServerFire, SetCurrentAnimation, ServerToggleRoundType;
+        ServerUndeploying, ServerFire, SetCurrentAnimation, ServerToggleRoundType;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -546,7 +546,7 @@ Begin:
     if (IsLocallyControlled()) // single player, or owning net client or listen server
     {
         PlayOverlayAnimation(OverlayUndeployingAnim);
-        ServerUndeploy(HUDOverlay.GetAnimDuration(OverlayUndeployingAnim));
+        ServerUndeploying();
     }
 
     if (Role == ROLE_Authority)
@@ -557,10 +557,8 @@ Begin:
 }
 
 // New client-to-server function called when player undeploys mortar, to send server to state Undeploying
-function ServerUndeploy(float AnimDuration)
+function ServerUndeploying()
 {
-    UndeployingDuration = AnimDuration; // server doesn't have HUDOverlay, so client passes animation duration so server can time destruction of mortar actors
-
     if (!IsInState('Undeploying'))
     {
         GotoState('Undeploying');
@@ -1048,6 +1046,7 @@ defaultproperties
     
     bMultiPosition=false
     bSinglePositionExposed=true
+    UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25

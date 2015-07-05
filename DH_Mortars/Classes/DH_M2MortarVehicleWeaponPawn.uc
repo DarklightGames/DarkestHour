@@ -35,4 +35,5 @@ defaultproperties
     HUDOverlayClass=class'DH_Mortars.DH_M2MortarOverlay'
     HUDOverlayOffset=(Z=-2.0)
     HUDOverlayFOV=90.0
+    UndeployingDuration=2.7
 }
