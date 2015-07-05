@@ -12,8 +12,10 @@ struct DigitSet
     var IntBox      TextureCoords[11];
 };
 
+// General
 var     class<DHMortarWeapon> WeaponClass;
 var     DHMortarVehicleWeapon Mortar;        // just a reference to the mortar VW actor, for convenience & to avoid lots of casts
+var     bool        bNeedToInitializeDriver; // clientside flag that we need to do some player set up, once we receive the Driver actor
 
 // Deploying, aim & firing
 var     bool        bPendingFire;
@@ -99,26 +101,15 @@ simulated function InitializeMortar()
     }
 }
 
-// Modified to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleWeapon actor, which it may not have yet
-// Also to remove stuff not relevant to a mortar, as is not multi-position
+// Modified to play animations on the mortar & the player, when a new value is received by a net client
+// Also to call InitializeMortar when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), same as DH cannon pawn
+// Also to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleWeapon actor, which it may not have yet
+// And to remove stuff not relevant to a mortar, as is not multi-position
 simulated function PostNetReceive()
 {
-    // Initialize the mortar
-    // When a manned mortar gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
-    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
-    // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
-    if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
-    {
-        bInitializedVehicleGun = true;
-        InitializeMortar();
+    local int i;
 
-        if (Driver != none)
-        {
-            DetachDriver(Driver);
-            AttachDriver(Driver);
-        }
-    }
-
+    // Play animations
     if (CurrentDriverAnimation != OldDriverAnimation)
     {
         switch (CurrentDriverAnimation)
@@ -139,6 +130,53 @@ simulated function PostNetReceive()
         }
 
         OldDriverAnimation = CurrentDriverAnimation;
+    }
+
+    // Initialize the mortar
+    if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
+    {
+        bInitializedVehicleGun = true;
+        InitializeMortar();
+    }
+
+    // Initialize the vehicle base
+    if (!bInitializedVehicleBase && VehicleBase != none)
+    {
+        bInitializedVehicleBase = true;
+
+        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
+        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
+            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+        {
+            VehicleBase.WeaponPawns[PositionInArray] = self;
+
+            return;
+        }
+
+        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+        {
+            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+            {
+                return;
+            }
+        }
+
+        VehicleBase.WeaponPawns[PositionInArray] = self;
+    }
+
+    // Fix 'driver' attachment position - on replication, AttachDriver() only works if client has received MortarVehicleWeapon actor, which it may not have yet
+    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+    // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here
+    if (bNeedToInitializeDriver && Driver != none && VehicleBase != none)
+    {
+        bNeedToInitializeDriver = false;
+
+        if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver)
+        {
+            DetachDriver(Driver);
+            AttachDriver(Driver);
+            DHPawn(Driver).bNeedToAttachDriver = false;
+        }
     }
 }
 
