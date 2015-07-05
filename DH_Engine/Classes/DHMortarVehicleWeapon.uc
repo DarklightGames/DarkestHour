@@ -294,6 +294,7 @@ defaultproperties
     bMultipleRoundTypes=true
     AIInfo(0)=(bInstantHit=false,AimError=0.0,RefireRate=5.0)
 
+    bForceSkelUpdate=true // necessary for player hit detection, as makes server update the mortar mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     Elevation=75.0
     ElevationMaximum=90.0
     ElevationMinimum=45.0
