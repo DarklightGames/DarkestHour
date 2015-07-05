@@ -13,6 +13,7 @@ struct DigitSet
 };
 
 var     class<DHMortarWeapon> WeaponClass;
+var     DHMortarVehicleWeapon Mortar;        // just a reference to the mortar VW actor, for convenience & to avoid lots of casts
 
 // Deploying, aim & firing
 var     bool        bPendingFire;
@@ -82,16 +83,34 @@ replication
 simulated function IncrementRange() { }
 simulated function DecrementRange() { }
 
+// Matt: new function to do any extra set up in the mortar classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
+// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+simulated function InitializeMortar()
+{
+    Mortar = DHMortarVehicleWeapon(Gun);
+
+    if (Mortar != none)
+    {
+        Mortar.InitializeMortar(self);
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMortarVehicleWeapon, so lots of things are not going to work!");
+    }
+}
+
 // Modified to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleWeapon actor, which it may not have yet
 // Also to remove stuff not relevant to a mortar, as is not multi-position
 simulated function PostNetReceive()
 {
+    // Initialize the mortar
     // When a manned mortar gets replicated to a net client, AttachDriver() gets called but does nothing as client doesn't yet have a Gun reference
     // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
     // As a fix, call AttachDriver() here to make sure client has correct positioning (Driver may or may not be attached at this point, possibly incorrectly, so detach first)
-    if (!bInitializedVehicleGun && Gun != none)
+    if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
     {
         bInitializedVehicleGun = true;
+        InitializeMortar();
 
         if (Driver != none)
         {
@@ -120,6 +139,18 @@ simulated function PostNetReceive()
         }
 
         OldDriverAnimation = CurrentDriverAnimation;
+    }
+}
+
+// Modified to call InitializeMortar to do any extra set up in the mortar classes
+// This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
+function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
+{
+    super.AttachToVehicle(VehiclePawn, WeaponBone);
+
+    if (Role == ROLE_Authority)
+    {
+        InitializeMortar();
     }
 }
 

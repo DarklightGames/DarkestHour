@@ -9,6 +9,8 @@ class DHMortarVehicleWeapon extends ROVehicleWeapon
 const RAD2DEG = 57.29577951;
 const DEG2RAD = 0.01745329;
 
+var     DHMortarVehicleWeaponPawn   MortarPawn; // just a reference to the mortar pawn actor, for convenience & to avoid casts
+
 // Trajectory
 var     float           NewElevation;
 var     float           Elevation;
@@ -62,6 +64,26 @@ simulated function PostBeginPlay()
 
     MainAmmoCharge[0] = 0;
     MainAmmoCharge[1] = 0;
+}
+
+// Matt: new function to do any extra set up in the mortar classes (called from mortar pawn) - can be subclassed to do any weapon specific setup
+// Crucially, we know that we have MortarPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
+simulated function InitializeMortar(DHMortarVehicleWeaponPawn MortarPwn)
+{
+    if (MortarPwn != none)
+    {
+        MortarPawn = MortarPwn;
+
+        if (Role < ROLE_Authority)
+        {
+            SetOwner(MortarPawn);
+            Instigator = MortarPawn;
+        }
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHMortarVehicleWeaponPawn, so lots of things are not going to work!");
+    }
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
