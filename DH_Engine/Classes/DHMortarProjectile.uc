@@ -733,5 +733,6 @@ defaultproperties
     HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
     DrawType=DT_None
     LifeSpan=60.0
+    BallisticCoefficient=1.0
     bBlockHitPointTraces=false
 }

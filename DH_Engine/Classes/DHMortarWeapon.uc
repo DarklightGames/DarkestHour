@@ -326,6 +326,9 @@ function bool FillAmmo()
 
 defaultproperties
 {
+    SelectAnim="Draw"
+    PutDownAnim="putaway"
+    DeployAnimation="Deploy"
     DeployRadius=32.0
     DeployAngleMaximum=0.349066
     FireModeClass(0)=class'DH_Engine.DHMortarWeaponFire'

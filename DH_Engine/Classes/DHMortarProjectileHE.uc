@@ -182,8 +182,18 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    MyDamageType=class'DH_Engine.DHMortarDamageType'
     AirExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
     GroundExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
     SnowExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
     WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
+    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    MomentumTransfer=75000.0
+    ShakeRotMag=(Z=100.0)
+    ShakeRotRate=(Z=2500.0)
+    ShakeRotTime=3.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=200.0)
+    ShakeOffsetTime=5.0
 }

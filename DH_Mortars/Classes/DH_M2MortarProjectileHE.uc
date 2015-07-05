@@ -21,21 +21,10 @@ defaultproperties
     GroundExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
     SnowExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
     WaterExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
-    ShakeRotMag=(Z=100.0)
-    ShakeRotRate=(Z=2500.0)
-    ShakeRotTime=3.0
-    ShakeOffsetMag=(Z=5.0)
-    ShakeOffsetRate=(Z=200.0)
-    ShakeOffsetTime=5.0
     BlurTime=4.0
     BlurEffectScalar=2.0
-    BallisticCoefficient=1.0
     MaxSpeed=4800.0
-    Damage=233.332993
+    Damage=233.33
     DamageRadius=640.0
-    MomentumTransfer=75000.0
-    MyDamageType=class'DH_Mortars.DH_M2MortarDamageType'
-    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
     Tag="M49A2 HE"
 }

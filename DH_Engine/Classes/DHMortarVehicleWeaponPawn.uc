@@ -1046,27 +1046,39 @@ defaultproperties
     
     bMultiPosition=false
     bSinglePositionExposed=true
+    bKeepDriverAuxCollision=true
+    bDrawMeshInFP=false
+    bPCRelativeFPRotation=true
+    CameraBone="Camera"
+    WeaponFOV=90.0
+    HUDOverlayFOV=90.0
+    HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
+    Digits=(DigitTexture=texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))
+    GunIdleAnim="deploy_idle"
+    GunFiringAnim="deploy_fire"
+    OverlayIdleAnim="deploy_idle"
+    OverlayFiringAnim="Fire"
+    OverlayKnobRaisingAnim="knob_raise"
+    OverlayKnobLoweringAnim="knob_lower"
+    OverlayKnobTurnLeftAnim="traverse_left"
+    OverlayKnobTurnRightAnim="traverse_right"
+    OverlayUndeployingAnim="undeploy"
     UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
     ElevationAdjustmentDelay=0.125
-    HUDHighExplosiveTexture=texture'DH_Mortars_tex.60mmMortarM2.M49A2-HE'
-    HUDSmokeTexture=texture'DH_Mortars_tex.60mmMortarM2.M302-WP'
-    HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
     bCanUndeploy=true
     ShakeScale=2.25
     BlurTime=0.5
     BlurEffectScalar=1.35
-    Digits=(DigitTexture=texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))
-    bDrawMeshInFP=false
-    bPCRelativeFPRotation=true
     ExitPositions(0)=(X=-48.0)
     ExitPositions(1)=(X=-48.0,Y=-48.0)
     ExitPositions(2)=(X=-48.0,Y=48.0)
     ExitPositions(3)=(Y=-48.0)
     ExitPositions(4)=(Y=48.0)
     ExitPositions(5)=(Z=64.0)
-    bKeepDriverAuxCollision=true
-    WeaponFOV=90.0
+    TPCamDistance=128.0
+    TPCamLookat=(Z=16.0)
+    TPCamDistRange=(Min=128.0,Max=128.0)
 }

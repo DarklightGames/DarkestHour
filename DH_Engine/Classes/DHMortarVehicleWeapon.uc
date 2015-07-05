@@ -295,14 +295,18 @@ defaultproperties
     AIInfo(0)=(bInstantHit=false,AimError=0.0,RefireRate=5.0)
 
     bForceSkelUpdate=true // necessary for player hit detection, as makes server update the mortar mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
+    bOwnerNoSee=true
+    GunnerAttachmentBone="com_player"
+    MuzzleBoneName="Muzzle"
+    YawBone="Vehicle_attachment01"
+    bLimitYaw=true
+    PitchUpLimit=0
+    PitchDownLimit=0
     Elevation=75.0
     ElevationMaximum=90.0
     ElevationMinimum=45.0
     ElevationStride=0.5
     FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
-    PitchUpLimit=0
-    PitchDownLimit=0
-    bOwnerNoSee=true
-    CollisionHeight=0.0
-    CollisionRadius=0.0
+    SpreadYawMin=728.0
+    SpreadYawMax=364.0
 }

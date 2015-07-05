@@ -9,12 +9,9 @@ class DH_Kz8cmGrW42Weapon extends DHMortarWeapon;
 
 defaultproperties
 {
-    DeployAnimation="Deploy"
     VehicleClass=class'DH_Mortars.DH_Kz8cmGrW42Vehicle'
-    SelectAnim="Draw"
-    PutDownAnim="putaway"
-    Description="Kurz 8cm Granatwerfer 42"
     AttachmentClass=class'DH_Mortars.DH_Kz8cmGrW42Attachment'
+    Description="Kurz 8cm Granatwerfer 42"
     ItemName="Kurz 8cm Granatwerfer 42"
     Mesh=SkeletalMesh'DH_Mortars_1st.Kz8cmGrW42'
 }

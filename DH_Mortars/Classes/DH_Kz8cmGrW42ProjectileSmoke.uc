@@ -9,7 +9,6 @@ class DH_Kz8cmGrW42ProjectileSmoke extends DHMortarProjectileSmoke;
 
 defaultproperties
 {
-    BallisticCoefficient=1.0
     MaxSpeed=3936.0
     Tag="8cm Nb."
 }
