@@ -20,9 +20,9 @@ defaultproperties
     OverlayKnobIdleAnim="traverse_idle"
     OverlayKnobTurnLeftAnim="traverse_left"
     OverlayKnobTurnRightAnim="traverse_right"
-    GunIdleAnim="deploy_idle_GrW42"
-    GunFiringAnim="deploy_fire_GrW42"
     WeaponClass=class'DH_Mortars.DH_Kz8cmGrW42Weapon'
+    GunIdleAnim="deploy_idle"
+    GunFiringAnim="deploy_fire"
     UndeployingDuration=1.4
     HUDHighExplosiveTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
     HUDSmokeTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'

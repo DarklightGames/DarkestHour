@@ -10,7 +10,9 @@ class DH_Kz8cmGrW42Attachment extends DHMortarAttachment;
 defaultproperties
 {
     PA_MortarDeployAnim="deploy_GrW42"
-    WA_MortarDeployAnim="deploy_GrW42"
+    WA_MortarDeployAnim="Deploy"
+    WA_Idle="Idle"
+    WA_Fire="Idle"
     PA_MovementAnims(0)="stand_jogF_GrW42"
     PA_MovementAnims(1)="stand_jogB_GrW42"
     PA_MovementAnims(2)="stand_jogL_GrW42"
@@ -43,9 +45,7 @@ defaultproperties
     PA_IdleCrouchAnim="crouch_idle_GrW42"
     PA_IdleRestAnim="stand_Idle_GrW42"
     PA_IdleWeaponAnim="stand_Idle_GrW42"
-    WA_Idle="idle_GrW42"
-    WA_Fire="idle_GrW42"
     MenuImage=texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
-    Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_chr'
+    Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_carried'
 }
 

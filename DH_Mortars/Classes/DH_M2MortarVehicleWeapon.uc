@@ -26,5 +26,5 @@ defaultproperties
     InitialSecondaryAmmo=4
     PrimaryProjectileClass=class'DH_Mortars.DH_M2MortarProjectileHE'
     SecondaryProjectileClass=class'DH_Mortars.DH_M2MortarProjectileSmoke'
-    Mesh=SkeletalMesh'DH_Mortars_3rd.M2_Mortar_turret'
+    Mesh=SkeletalMesh'DH_Mortars_3rd.M2Mortar_deployed'
 }

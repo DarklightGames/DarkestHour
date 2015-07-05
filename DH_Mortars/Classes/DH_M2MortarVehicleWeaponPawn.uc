@@ -20,8 +20,8 @@ defaultproperties
     OverlayKnobIdleAnim="knob_lidle"
     OverlayKnobTurnLeftAnim="traverse_left"
     OverlayKnobTurnRightAnim="traverse_right"
-    GunIdleAnim="idle_M2Mortar"
-    GunFiringAnim="fire_M2Mortar"
+    GunIdleAnim="deploy_idle"
+    GunFiringAnim="deploy_fire"
     WeaponClass=class'DH_Mortars.DH_M2MortarWeapon'
     HUDArcTexture=texture'DH_Mortars_tex.HUD.ArcA'
     bMustBeTankCrew=false

@@ -10,6 +10,9 @@ class DH_M2MortarAttachment extends DHMortarAttachment;
 defaultproperties
 {
     PA_MortarDeployAnim="deploy_M2Mortar"
+    WA_MortarDeployAnim="Deploy"
+    WA_Idle="Idle"
+    WA_Fire="Idle"
     PA_MovementAnims(0)="stand_jogF_M2Mortar"
     PA_MovementAnims(1)="stand_jogB_M2Mortar"
     PA_MovementAnims(2)="stand_jogL_M2Mortar"
@@ -42,8 +45,6 @@ defaultproperties
     PA_IdleCrouchAnim="crouch_idle_M2Mortar"
     PA_IdleRestAnim="stand_idle_M2Mortar"
     PA_IdleWeaponAnim="stand_idle_M2Mortar"
-    WA_Idle="idle_M2"
-    WA_Fire="idle_M2"
     MenuImage=texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2'
-    Mesh=SkeletalMesh'DH_Mortars_3rd.M2_Mortar_chr'
+    Mesh=SkeletalMesh'DH_Mortars_3rd.M2Mortar_carried'
 }

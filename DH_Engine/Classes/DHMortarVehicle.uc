@@ -153,4 +153,5 @@ defaultproperties
     bOwnerNoSee=false
     CollisionRadius=20.0
     CollisionHeight=10.0
+    Mesh=SkeletalMesh'DH_Mortars_3rd.MortarBase_generic' // not visible, just a 1 bone mesh to attach VehicleWeapon to, so don't need separate models for different mortars
 }
