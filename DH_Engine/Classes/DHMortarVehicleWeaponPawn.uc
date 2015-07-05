@@ -30,9 +30,6 @@ const   IdleAnimIndex = 0;
 const   FiringAnimIndex = 1;
 const   UnflinchAnimIndex = 2;
 
-var     name        GunIdleAnim;
-var     name        GunFiringAnim;
-var     name        DriverIdleAnim;
 var     name        DriverFiringAnim;
 var     name        DriverUnflinchAnim;
 var     byte        CurrentDriverAnimation;
@@ -115,15 +112,15 @@ simulated function PostNetReceive()
         switch (CurrentDriverAnimation)
         {
             case IdleAnimIndex:
-                Gun.LoopAnim(GunIdleAnim);
-                Driver.LoopAnim(DriverIdleAnim);
+                Gun.LoopAnim(Gun.BeginningIdleAnim);
+                Driver.LoopAnim(DriveAnim);
                 break;
             case FiringAnimIndex:
-                Gun.PlayAnim(GunFiringAnim);
+                Mortar.PlayAnim(Mortar.GunFiringAnim);
                 Driver.PlayAnim(DriverFiringAnim);
                 break;
             case UnflinchAnimIndex:
-                Gun.LoopAnim(GunIdleAnim);
+                Gun.LoopAnim(Gun.BeginningIdleAnim);
                 Driver.PlayAnim(DriverUnflinchAnim);
             default:
                 break;
@@ -360,7 +357,7 @@ simulated state FireToIdle extends Busy
 Begin:
     if (Level.NetMode == NM_Standalone) // single-player
     {
-        Gun.LoopAnim(GunIdleAnim);
+        Gun.LoopAnim(Gun.BeginningIdleAnim);
         Driver.PlayAnim(DriverUnflinchAnim);
     }
     else // multi-player
@@ -522,7 +519,7 @@ Begin:
 
     if (Level.NetMode == NM_Standalone) //TODO: Remove, single-player testing?
     {
-        Gun.PlayAnim(GunFiringAnim);
+        Mortar.PlayAnim(Mortar.GunFiringAnim);
         Driver.PlayAnim(DriverFiringAnim);
     }
     else
@@ -1054,8 +1051,6 @@ defaultproperties
     HUDOverlayFOV=90.0
     HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
     Digits=(DigitTexture=texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))
-    GunIdleAnim="deploy_idle"
-    GunFiringAnim="deploy_fire"
     OverlayIdleAnim="deploy_idle"
     OverlayFiringAnim="Fire"
     OverlayKnobRaisingAnim="knob_raise"

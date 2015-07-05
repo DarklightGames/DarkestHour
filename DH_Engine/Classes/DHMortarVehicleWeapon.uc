@@ -19,12 +19,13 @@ var     float           ElevationMinimum;
 var     float           ElevationStride;
 
 // Firing & effects
+var     name            GunFiringAnim;
 var     name            MuzzleBoneName;
 var     float           SpreadYawMin;
 var     float           SpreadYawMax;
-var     class<Emitter>  FireEmitterClass;
 var     sound           FireSound;
 var  class<Projectile>  PendingProjectileClass; // from ROTankCannon
+var     int             PlayerResupplyAmounts[2];
 
 // Debugging
 var     bool            bDebug;
@@ -221,6 +222,15 @@ function ToggleRoundType()
     }
 }
 
+// New function to handle resupply of mortar ammo by another player
+function PlayerResupply()
+{
+    MainAmmoCharge[0] = Clamp(MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, default.InitialPrimaryAmmo);
+    MainAmmoCharge[1] = Clamp(MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, default.InitialSecondaryAmmo);
+
+    DHMortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
+}
+
 simulated function bool HasPendingAmmo()
 {
     return MainAmmoCharge[GetPendingRoundIndex()] > 0;
@@ -296,6 +306,8 @@ defaultproperties
 
     bForceSkelUpdate=true // necessary for player hit detection, as makes server update the mortar mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     bOwnerNoSee=true
+    BeginningIdleAnim="deploy_idle"
+    GunFiringAnim="deploy_fire"
     GunnerAttachmentBone="com_player"
     MuzzleBoneName="Muzzle"
     YawBone="Vehicle_attachment01"
@@ -306,7 +318,6 @@ defaultproperties
     ElevationMaximum=90.0
     ElevationMinimum=45.0
     ElevationStride=0.5
-    FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
     SpreadYawMin=728.0
     SpreadYawMax=364.0
 }

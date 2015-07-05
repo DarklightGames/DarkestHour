@@ -1161,23 +1161,21 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
 
 function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
 {
-    local VehicleWeapon VW;
+    local DHMortarVehicleWeapon MVW;
 
-    if (V == none || V.WeaponPawns[0] == none || V.WeaponPawns[0].Gun == none)
+    if (V != none || V.WeaponPawns[0] != none)
     {
-        return false;
+        MVW = DHMortarVehicleWeapon(V.WeaponPawns[0].Gun);
+
+        if (MVW != none && (MVW.MainAmmoCharge[0] != MVW.default.InitialPrimaryAmmo || MVW.MainAmmoCharge[1] != MVW.default.InitialSecondaryAmmo))
+        {
+            MVW.PlayerResupply();
+
+            return true;
+        }
     }
 
-    VW = V.WeaponPawns[0].Gun;
-
-    if (VW.MainAmmoCharge[0] == VW.default.InitialPrimaryAmmo && VW.MainAmmoCharge[1] == VW.default.InitialSecondaryAmmo)
-    {
-        return false;
-    }
-
-    V.PlayerResupply();
-
-    return true;
+    return false;
 }
 
 // Handle assisted reload

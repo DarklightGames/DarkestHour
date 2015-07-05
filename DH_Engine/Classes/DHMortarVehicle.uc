@@ -8,7 +8,6 @@ class DHMortarVehicle extends ROVehicle
 
 var     bool        bEnteredOnce;
 var     bool        bCanBeResupplied;
-var     int         PlayerResupplyAmounts[2];
 var     ObjectMap   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 replication
@@ -46,20 +45,6 @@ simulated function PostBeginPlay()
     {
         NotifyParameters = new class'ObjectMap';
         NotifyParameters.Insert("VehicleClass", Class);
-    }
-}
-
-// New function to handle resupply of mortar ammo by another player
-function PlayerResupply()
-{
-    WeaponPawns[0].Gun.MainAmmoCharge[0] = Clamp(WeaponPawns[0].Gun.MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, WeaponPawns[0].GunClass.default.InitialPrimaryAmmo);
-    WeaponPawns[0].Gun.MainAmmoCharge[1] = Clamp(WeaponPawns[0].Gun.MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, WeaponPawns[0].GunClass.default.InitialSecondaryAmmo);
-
-    // If we're full of ammo now, then we can't be resupplied
-    if (WeaponPawns[0].Gun.MainAmmoCharge[0] == WeaponPawns[0].GunClass.default.InitialPrimaryAmmo && 
-        WeaponPawns[0].Gun.MainAmmoCharge[1] == WeaponPawns[0].GunClass.default.InitialSecondaryAmmo)
-    {
-        bCanBeResupplied = false;
     }
 }
 

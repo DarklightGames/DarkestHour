@@ -14,6 +14,7 @@ var sound   DescendingSound;
 
 var bool    bDud;
 var float   DudChance;
+var class<Emitter> FireEmitterClass;
 
 var class<Emitter> HitDirtEmitterClass;
 var class<Emitter> HitSnowEmitterClass;
@@ -93,7 +94,7 @@ simulated function PostBeginPlay()
     {
         if (Location != vect(0.0, 0.0, 0.0))
         {
-            Spawn(class'DH_Effects.DH_MortarFireEffect',,, Location, Rotation);
+            Spawn(FireEmitterClass,,, Location, Rotation);
         }
 
         Enable('Tick');
@@ -720,8 +721,9 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
 
 defaultproperties
 {
-    DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
     DudChance=0.01
+    FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
+    DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'

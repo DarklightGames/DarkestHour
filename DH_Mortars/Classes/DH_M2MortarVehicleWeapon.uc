@@ -13,6 +13,8 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Mortars.DH_M2MortarProjectileSmoke'
     InitialPrimaryAmmo=24
     InitialSecondaryAmmo=4
+    PlayerResupplyAmounts(0)=6
+    PlayerResupplyAmounts(1)=1
     FireSound=SoundGroup'DH_WeaponSounds.Mortars.6cmFireSG'
     RotationsPerSecond=0.015625
     MaxPositiveYaw=1274
