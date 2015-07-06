@@ -35,20 +35,7 @@ replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ClientReplicateElevation;
-}
-
-// Added in 5.1 to replace constantly sending Elevate() & Depress() calls to server and sending Elevation variable to owning client
-// Client calls this function to update server's elevation setting at specific times such as firing or leaving the mortar
-// Exploitation would be completely benign and pointless - Basnett
-simulated function ClientReplicateElevation(float NewElevation)
-{
-    if (bDebug && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ NewElevation);
-    }
-
-    Elevation = NewElevation;
+        ServerSetFiringSettings;
 }
 
 // Modified to initialize ammo
@@ -79,6 +66,39 @@ simulated function InitializeMortar(DHMortarVehicleWeaponPawn MortarPwn)
     else
     {
         Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHMortarVehicleWeaponPawn, so lots of things are not going to work!");
+    }
+}
+
+// New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar 
+// Don't need to keep updating these properties between server & owning client, & any exploitation would be completely benign and pointless - Basnett
+simulated function SendFiringSettingsToServer()
+{
+    if (ProjectileClass == default.SecondaryProjectileClass)
+    {
+        ServerSetFiringSettings(1, Elevation);
+    }
+    else
+    {
+        ServerSetFiringSettings(0, Elevation);
+    }
+}
+
+function ServerSetFiringSettings(byte FireMode, float NewElevation)
+{
+    if (FireMode == 0)
+    {
+        ProjectileClass = PrimaryProjectileClass;
+    }
+    else
+    {
+        ProjectileClass = SecondaryProjectileClass;
+    }
+
+    Elevation = NewElevation;
+
+    if (bDebug && Role == ROLE_Authority)
+    {
+        Level.Game.Broadcast(self, "ServerSetFiringSettings: Role =" @ GetEnum(enum'ENetRole', Role) @ " Elevation =" @ NewElevation @ " ProjectileClass =" @ ProjectileClass);
     }
 }
 

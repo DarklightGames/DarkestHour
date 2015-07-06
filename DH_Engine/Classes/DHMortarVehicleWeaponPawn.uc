@@ -265,10 +265,10 @@ simulated function ClientKDriverLeave(PlayerController PC)
                 return;
             }
         }
-        // Or if player has exited mortar, leaving it deployed on the ground, client send current elevation setting to be recorded on server
-        else if (MVW != none)
+        // Or if player has exited mortar, leaving it deployed on the ground, client sends current projectile class & elevation setting to be recorded on server
+        else if (Mortar != none)
         {
-            MVW.ClientReplicateElevation(MVW.Elevation);
+            Mortar.SendFiringSettingsToServer();
         }
     }
 
@@ -514,7 +514,6 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 simulated state Firing extends Busy
 {
 Begin:
-    DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
     PlayOverlayAnimation(OverlayFiringAnim);
 
     if (Level.NetMode == NM_Standalone) //TODO: Remove, single-player testing?
@@ -524,6 +523,11 @@ Begin:
     }
     else
     {
+        if (Role < ROLE_Authority && Mortar != none)
+        {
+            Mortar.SendFiringSettingsToServer();
+        }
+
         SetCurrentAnimation(FiringAnimIndex);
     }
 
