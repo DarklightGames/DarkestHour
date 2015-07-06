@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHStyle_SpawnVehicleButton extends GUIStyles;
+class DHStyle_SpawnVehicleBlockedButton extends GUIStyles;
 
 defaultproperties
 {
-    KeyName="DHSpawnVehicleButtonStyle"
+    KeyName="DHSpawnVehicleBlockedButtonStyle"
     FontNames(0)="DHMenuFont"
     FontNames(1)="DHMenuFont"
     FontNames(2)="DHMenuFont"
@@ -36,11 +36,11 @@ defaultproperties
     ImgStyle(3)=ISTY_Scaled
     ImgStyle(4)=ISTY_Scaled
 
-    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
-    Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnVehicle'
+    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnVehicleDisabled'
+    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnVehicleDisabled'
+    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnVehicleDisabled'
+    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnVehicleDisabled'
+    Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnVehicleDisabled'
 
     ImgColors(0)=(R=255,G=255,B=255,A=255)
     ImgColors(1)=(R=255,G=255,B=255,A=255)

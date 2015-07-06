@@ -293,6 +293,8 @@ function UpdateSpawnPoints()
     local int i;
     local float X, Y;
     local DHRoleInfo RI;
+    local vector L;
+    local eFontScale FS;
 
     RI = DHRoleInfo(li_Roles.GetObject());
 
@@ -344,13 +346,33 @@ function UpdateSpawnPoints()
             GRI.SpawnVehicles[i].VehicleClass != none &&
             GRI.SpawnVehicles[i].TeamIndex == CurrentTeam)
         {
-            GetMapCoords(GRI.SpawnVehicles[i].Location, X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight);
+            if (GRI.SpawnVehicles[i].Vehicle != none)
+            {
+                L = GRI.SpawnVehicles[i].Vehicle.Location;
+            }
+            else
+            {
+                L = GRI.SpawnVehicles[i].Location;
+            }
+
+            GetMapCoords(L, X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight);
 
             p_Map.b_SpawnVehicles[i].Tag = i;
             p_Map.b_SpawnVehicles[i].SetPosition(X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight, true);
             p_Map.b_SpawnVehicles[i].SetVisibility(true);
 
-            if (li_Vehicles.GetObject() == none)
+            if (GRI.SpawnVehicles[i].bIsBlocked)
+            {
+                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleBlockedButtonStyle";
+            }
+            else
+            {
+                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleButtonStyle";
+            }
+
+            p_Map.b_SpawnVehicles[i].Style = Controller.GetStyle(p_Map.b_SpawnVehicles[i].StyleName, FS);
+
+            if (li_Vehicles.GetObject() == none && !GRI.SpawnVehicles[i].bIsBlocked)
             {
                 // If spawn point that was previously selected is now hidden,
                 // deselect it.

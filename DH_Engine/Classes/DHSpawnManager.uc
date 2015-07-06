@@ -78,6 +78,7 @@ var const byte SpawnPointType_Vehicles;
 const SPAWN_POINTS_MAX = 48;
 const VEHICLE_POOLS_MAX = 32;
 const SPAWN_VEHICLES_MAX = 8;
+const SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
 var() array<VehiclePool>                VehiclePools;
 var() byte                              MaxTeamVehicles[2];
@@ -159,6 +160,8 @@ function PostBeginPlay()
     {
         GRI.MaxTeamVehicles[i] = MaxTeamVehicles[i];
     }
+
+    SetTimer(1.0, true);
 }
 
 function Reset()
@@ -1062,6 +1065,55 @@ function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageCla
                 PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
             }
         }
+    }
+}
+
+function Timer()
+{
+    local int i, j;
+    local Vehicle V;
+    local Pawn P;
+    local DHObjective O;
+    local bool bIsBlocked;
+
+    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
+    {
+        bIsBlocked = false;
+
+        V = GRI.SpawnVehicles[i].Vehicle;
+
+        if (V == none)
+        {
+            continue;
+        }
+
+        // Colin:
+        foreach V.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
+        {
+            if (P != none && P.Controller != none)
+            {
+                if (V.GetTeamNum() != P.GetTeamNum())
+                {
+                    bIsBlocked = true;
+
+                    break;
+                }
+            }
+        }
+
+        for (j = 0; j < arraycount(GRI.DHObjectives); ++j)
+        {
+            O = GRI.DHObjectives[j];
+
+            if (O != none && O.bActive && O.WithinArea(V))
+            {
+                bIsBlocked = true;
+
+                break;
+            }
+        }
+
+        GRI.SpawnVehicles[i].bIsBlocked = bIsBlocked;
     }
 }
 

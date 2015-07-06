@@ -9,12 +9,12 @@ var Array<string>       RODefaultStyleNames;      // Holds the name of all style
 
 event InitializeController()
 {
-        super.InitializeController();
+    super.InitializeController();
 
-        RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
-        RegisterStyle(class'ROInterface.ROSTY2SelectButton');
-        RegisterStyle(class'ROInterface.ROSTY2SelectTab');
-        RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
+    RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
+    RegisterStyle(class'ROInterface.ROSTY2SelectButton');
+    RegisterStyle(class'ROInterface.ROSTY2SelectTab');
+    RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
 
     LastGameType = "DH_Engine.DarkestHourGame";
     Log("DHGUIController initialized ");
@@ -168,7 +168,8 @@ defaultproperties
     DefaultStyleNames(83)="DH_Interface.DHStyle_DeployTabButton"
     DefaultStyleNames(84)="DH_Interface.DHStyle_DeployContinueButton"
     DefaultStyleNames(85)="DH_Interface.DHStyle_SpawnVehicleButton"
-    DefaultStyleNames(86)="DH_Interface.DHDeployContinueButtonStyle"
+    DefaultStyleNames(86)="DH_Interface.DHStyle_DeployContinueButton"
+    DefaultStyleNames(87)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

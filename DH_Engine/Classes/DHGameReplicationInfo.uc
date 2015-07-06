@@ -22,6 +22,7 @@ struct SpawnVehicle
     var vector          Location;
     var class<Vehicle>  VehicleClass;
     var Vehicle         Vehicle;
+    var bool            bIsBlocked;
 };
 
 const RADIOS_MAX = 10;
@@ -489,7 +490,8 @@ simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
     //TODO: add contested check here
     if (Index >= arraycount(SpawnVehicles) ||
         SpawnVehicles[Index].VehicleClass == none ||
-        SpawnVehicles[Index].TeamIndex != Team)
+        SpawnVehicles[Index].TeamIndex != Team ||
+        SpawnVehicles[Index].bIsBlocked)
     {
         return false;
     }
