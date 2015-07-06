@@ -6,14 +6,11 @@
 class DHMortarProjectile extends ROBallisticProjectile
     abstract;
 
-const UU2M = 0.01904762;
-const UU2FT = 0.0625;
-
-// Sounds
-var sound   DescendingSound;
-
 var bool    bDud;
 var float   DudChance;
+
+var sound   DescendingSound;
+
 var class<Emitter> FireEmitterClass;
 
 var class<Emitter> HitDirtEmitterClass;
@@ -21,6 +18,7 @@ var class<Emitter> HitSnowEmitterClass;
 var class<Emitter> HitWoodEmitterClass;
 var class<Emitter> HitRockEmitterClass;
 var class<Emitter> HitWaterEmitterClass;
+
 var sound HitDirtSound;
 var sound HitRockSound;
 var sound HitWaterSound;
@@ -235,7 +233,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
         }
 
-        Log((DebugForward dot (HitLocation - OrigLoc) * UU2M) @ (DebugRight dot (HitLocation - OrigLoc) * UU2M));
+        Log(class'DHLib'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ class'DHLib'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
     }
 }
 
