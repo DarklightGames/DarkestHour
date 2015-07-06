@@ -24,7 +24,6 @@ var     name            MuzzleBoneName;
 var     float           SpreadYawMin;
 var     float           SpreadYawMax;
 var     sound           FireSound;
-var  class<Projectile>  PendingProjectileClass; // from ROTankCannon
 var     int             PlayerResupplyAmounts[2];
 
 // Debugging
@@ -34,10 +33,6 @@ var     bool            bDebugCalibrate;
 
 replication
 {
-    // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        PendingProjectileClass;
-
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ClientReplicateElevation;
@@ -61,7 +56,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    PendingProjectileClass = PrimaryProjectileClass;
+    ProjectileClass = PrimaryProjectileClass;
 
     MainAmmoCharge[0] = 0;
     MainAmmoCharge[1] = 0;
@@ -187,15 +182,15 @@ state ProjectileFireMode
         {
             for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
             {
-                SpawnProjectile(PendingProjectileClass, false);
+                SpawnProjectile(ProjectileClass, false);
             }
         }
         else
         {
-            if (HasPendingAmmo())
+            if (HasAmmo(GetRoundIndex()))
             {
-                SpawnProjectile(PendingProjectileClass, false);
-                MainAmmoCharge[GetPendingRoundIndex()]--;
+                SpawnProjectile(ProjectileClass, false);
+                --MainAmmoCharge[GetRoundIndex()];
 
                 //Shake view here, (proper timing and all)
                 DHMortarVehicleWeaponPawn(Instigator).ClientShakeView();
@@ -212,13 +207,13 @@ state ProjectileFireMode
 // Modified from ROTankCannon, to allow toggle even if don't have new round type
 function ToggleRoundType()
 {
-    if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
+    if (ProjectileClass == PrimaryProjectileClass)
     {
-        PendingProjectileClass = SecondaryProjectileClass;
+        ProjectileClass = SecondaryProjectileClass;
     }
     else
     {
-        PendingProjectileClass = PrimaryProjectileClass;
+        ProjectileClass = PrimaryProjectileClass;
     }
 }
 
@@ -231,54 +226,21 @@ function PlayerResupply()
     DHMortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
 }
 
-simulated function bool HasPendingAmmo()
+// New function to return the FireMode index, based on whether HE or smoke rounds are selected (similar to GetPendingRoundIndex in ROTankCannon)
+simulated function int GetRoundIndex()
 {
-    return MainAmmoCharge[GetPendingRoundIndex()] > 0;
-}
-
-// From ROTankCannon
-simulated function int GetPendingRoundIndex()
-{
-    if (PendingProjectileClass == none)
+    if (ProjectileClass == PrimaryProjectileClass)
     {
-        if (ProjectileClass == PrimaryProjectileClass)
-        {
-            return 0;
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            return 1;
-        }
-        else
-        {
-            return 2;
-        }
+        return 0;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        return 1;
     }
     else
     {
-        if (PendingProjectileClass == PrimaryProjectileClass)
-        {
-            return 0;
-        }
-        else if (PendingProjectileClass == SecondaryProjectileClass)
-        {
-            return 1;
-        }
-        else
-        {
-            return 2;
-        }
+        return 2;
     }
-}
-
-simulated function bool IsHighExplosivePending()
-{
-    return PendingProjectileClass == PrimaryProjectileClass;
-}
-
-simulated function bool IsSmokePending()
-{
-    return PendingProjectileClass == SecondaryProjectileClass;
 }
 
 // From ROTankCannon

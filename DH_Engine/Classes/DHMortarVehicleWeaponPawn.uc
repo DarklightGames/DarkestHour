@@ -298,7 +298,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
+        if (Mortar != none && Mortar.HasAmmo(Mortar.GetRoundIndex()))
         {
             GotoState('Firing');
         }
@@ -374,7 +374,7 @@ Begin:
         ClientMessage("Missing animation: DriverUnflinchAnim" @ DriverUnflinchAnim);
     }
 
-    if (bPendingFire && DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
+    if (bPendingFire && Mortar != none && Mortar.HasAmmo(Mortar.GetRoundIndex()))
     {
         GotoState('Firing');
     }
@@ -413,7 +413,7 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
+        if (Mortar != none && Mortar.HasAmmo(Mortar.GetRoundIndex()))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -700,7 +700,7 @@ simulated function DrawHUD(Canvas C)
             TraverseString $= String(Traverse);
 
             // Draw current round type icon
-            RoundIndex = Mortar.GetPendingRoundIndex();
+            RoundIndex = Mortar.GetRoundIndex();
 
             if (Mortar.HasAmmo(RoundIndex))
             {
@@ -754,7 +754,7 @@ simulated function DrawHUD(Canvas C)
             // Draw current round type name
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-            C.DrawText(Mortar.PendingProjectileClass.default.Tag);
+            C.DrawText(Mortar.ProjectileClass.default.Tag);
 
             // Draw the elevation indicator icon
             C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
