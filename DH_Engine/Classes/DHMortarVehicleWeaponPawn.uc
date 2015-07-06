@@ -647,92 +647,62 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLo
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector  CameraLocation, Loc;
-    local rotator CameraRotation;
-    local Actor   ViewActor;
-    local float   HUDScale, Elevation, Traverse;
-    local byte    Quotient, Remainder;
-    local int     SizeX, SizeY, PendingRoundIndex;
-    local string  TraverseString;
+    local Actor            ViewActor;
+    local vector           CameraLocation, Loc;
+    local rotator          CameraRotation;
+    local float            HUDScale, Elevation, Traverse;
+    local int              SizeX, SizeY, RoundIndex;
+    local byte             Quotient, Remainder;
+    local string           TraverseString;
 
     PC = PlayerController(Controller);
 
-    if (PC == none)
+    if (PC != none && !PC.bBehindView)
     {
-        super.RenderOverlays(C);
-
-        return;
-    }
-    else
-    {
-        SpecialCalcBehindView(PC, ViewActor, CameraLocation, CameraRotation);
-    }
-
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
-    {
-        SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-
-        if (!Level.IsSoftwareRendering())
+        if (HUDOverlay != none && !Level.IsSoftwareRendering() && Mortar != none)
         {
-            if (DHMortarVehicleWeapon(Gun) != none)
+            // Get camera rotation & location
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+
+            // Draw HUDOverlay
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
+            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+
+            if (PC.myHUD == none || PC.myHUD.bHideHUD)
             {
-                Elevation = DHMortarVehicleWeapon(Gun).Elevation;
+                return;
             }
 
-            Traverse = Gun.CurrentAim.Yaw;
+            // Set drawing font & scale
+            C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+            HUDScale = C.SizeY / 1280.0;
 
-            if (Traverse > 32768.0)
+            // Get elevation & traverse
+            Elevation = Mortar.Elevation;
+            Traverse = class'DHLib'.static.UnrealToDegrees(Mortar.CurrentAim.Yaw);
+
+            if (Traverse > 180.0) // convert to +/-
             {
-                Traverse -= 65536.0;
+                Traverse -= 360.0;
             }
 
-            // Convert to degrees and use make clockwise rotations positive
-            Traverse /= -182.0444;
+            Traverse = -Traverse; // Matt: all the yaw stuff seems back to front !
 
             TraverseString = "T: ";
 
-            // Add a + at the beginning to explicitly state a positive rotation
-            if (Traverse > 0.0)
+            if (Traverse > 0.0) // add a + at the beginning to explicitly state a positive rotation
             {
                 TraverseString $= "+";
             }
 
             TraverseString $= String(Traverse);
 
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            // Draw current round type icon
+            RoundIndex = Mortar.GetPendingRoundIndex();
 
-            //CameraRotation.Pitch += (Elevation - 60) * 182.0444444444444;
-
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-
-            HUDOverlay.SetRotation(CameraRotation);
-
-            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-
-            if (PC.myHUD != none && PC.myHUD.bHideHUD)
-            {
-                return;
-            }
-
-            C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
-
-            HUDScale = C.SizeY / 1280.0;
-
-            C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
-            C.SetDrawColor(255, 255, 255, 255);
-            C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
-
-            // Draw rounds
-            C.SetPos(256.0 * HUDScale, C.SizeY - (256.0 * HUDScale));
-
-            PendingRoundIndex = DHMortarVehicleWeapon(Gun).GetPendingRoundIndex();
-
-            C.SetDrawColor(0, 0, 0, 255);
-            C.SetPos(HUDScale * 10.0, C.SizeY - (HUDScale * 94.0));
-            C.DrawText(DHMortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
-
-            if (Gun.HasAmmo(PendingRoundIndex))
+            if (Mortar.HasAmmo(RoundIndex))
             {
                 C.SetDrawColor(255, 255, 255, 255);
             }
@@ -743,7 +713,7 @@ simulated function DrawHUD(Canvas C)
 
             C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
 
-            if (PendingRoundIndex == 0)
+            if (RoundIndex == 0)
             {
                 C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
             }
@@ -752,23 +722,23 @@ simulated function DrawHUD(Canvas C)
                 C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
             }
 
-            // Drawing
-            if (Gun.MainAmmoCharge[PendingRoundIndex] < 10)
+            // Draw current round type quantity
+            C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
+
+            if (Mortar.MainAmmoCharge[RoundIndex] < 10)
             {
-                C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-                Quotient = Gun.MainAmmoCharge[PendingRoundIndex];
+                Quotient = Mortar.MainAmmoCharge[RoundIndex];
 
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
 
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].X1,
-                    Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].Y1, SizeX, SizeY);
+                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Mortar.MainAmmoCharge[RoundIndex]].X1,
+                    Digits.TextureCoords[Mortar.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
             }
             else
             {
-                C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-                Quotient = Gun.MainAmmoCharge[PendingRoundIndex] / 10;
-                Remainder = Gun.MainAmmoCharge[PendingRoundIndex] % 10;
+                Quotient = Mortar.MainAmmoCharge[RoundIndex] / 10;
+                Remainder = Mortar.MainAmmoCharge[RoundIndex] % 10;
 
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
@@ -781,36 +751,32 @@ simulated function DrawHUD(Canvas C)
                 C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
             }
 
+            // Draw current round type name
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-            C.DrawText(DHMortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
+            C.DrawText(Mortar.PendingProjectileClass.default.Tag);
+
+            // Draw the elevation indicator icon
+            C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
+            C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
 
             HUDArrowTexture.Rotation.Yaw = class'DHLib'.static.DegreesToUnreal(Elevation + 180.0);
             Loc.X = Cos(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
             Loc.Y = Sin(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
-
-            C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
             C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
 
-            C.SetDrawColor(0, 0, 0, 255);
-            C.SetPos(HUDScale * 10.0, C.SizeY - (HUDScale * 30.0));
-            C.DrawText("E:" @ String(Elevation));
-
+            // Draw elevation & traverse text
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
             C.DrawText("E:" @ String(Elevation));
-
-            C.SetDrawColor(0, 0, 0, 255);
-            C.SetPos(HUDScale * 10.0, C.SizeY - (HUDScale * 62.0));
-            C.DrawText(TraverseString);
 
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
             C.DrawText(TraverseString);
         }
     }
-    else
+    else if (HUDOverlay != none)
     {
         ActivateOverlay(false);
     }
@@ -845,87 +811,34 @@ Begin:
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector  x, y, z;
-    local vector  VehicleZ, CamViewOffsetWorld;
-    local float   CamViewOffsetZAmount;
-    local coords  CamBoneCoords;
     local rotator WeaponAimRot;
-    local quat    AQuat, BQuat, CQuat;
 
-    GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
 
-    WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll = VehicleBase.Rotation.Roll;
-
-    if (ROPlayer(Controller) != none)
+    if (Gun != none)
     {
-        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-    }
+        WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
+        WeaponAimRot.Roll = Gun.Rotation.Roll;
 
-    // This makes the camera stick to the cannon, but you have no control
-    if (DriverPositionIndex == 0)
-    {
+        // Custom aim update
+        if (PC != none)
+        {
+            PC.WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
+            PC.WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
+        }
+
+        // Set camera location & rotation
+        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin + (FPCamPos >> WeaponAimRot);
         CameraRotation = rotator(Gun.GetBoneCoords(CameraBone).XAxis);
-        CameraRotation.Roll = 0; // make the cannon view have no roll
-    }
-    else if (bPCRelativeFPRotation)
-    {
-        // First, rotate the headbob by the player controllers rotation (looking around)
-        AQuat = QuatFromRotator(PC.Rotation);
-        BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
-        CQuat = QuatProduct(AQuat,BQuat);
+        CameraRotation.Roll = 0; // make the mortar view have no roll
 
-        // Then, rotate that by the vehicles rotation to get the final rotation
-        AQuat = QuatFromRotator(VehicleBase.Rotation);
-        BQuat = QuatProduct(CQuat,AQuat);
-
-        // Make it back into a rotator!
-        CameraRotation = QuatToRotator(BQuat);
-    }
-    else
-    {
-        CameraRotation = PC.Rotation;
-    }
-
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-
-    if (CameraBone != '' && Gun != none)
-    {
-        CamBoneCoords = Gun.GetBoneCoords(CameraBone);
-
-        if (DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+        // Finalise the camera with any shake
+        if (PC != none)
         {
-            CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
-        }
-        else
-        {
-            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
-        }
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
-
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+            CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
         }
     }
-    else
-    {
-        CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
 // Modified to flag that the mortar no longer needs resupply
