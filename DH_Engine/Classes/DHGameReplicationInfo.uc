@@ -619,6 +619,72 @@ function ClearMortarTarget(byte TeamIndex, byte Index)
     }
 }
 
+function AddCarriedRadioTrigger(ROArtilleryTrigger AT)
+{
+    local int i;
+
+    if (AT == none)
+    {
+        return;
+    }
+
+    if (AT.TeamCanUse == AT_Axis || AT.TeamCanUse == AT_Both)
+    {
+        for (i = 0; i < arraycount(CarriedAxisRadios); ++i)
+        {
+            if (CarriedAxisRadios[i] == none)
+            {
+                CarriedAxisRadios[i] = AT;
+
+                break;
+            }
+        }
+    }
+    else if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
+    {
+        for (i = 0; i < arraycount(CarriedAlliedRadios); ++i)
+        {
+            if (CarriedAlliedRadios[i] == none)
+            {
+                CarriedAlliedRadios[i] = AT;
+
+                break;
+            }
+        }
+    }
+}
+
+function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
+{
+    local int i;
+
+    if (AT == none)
+    {
+        return;
+    }
+
+    if (AT.TeamCanUse == AT_Axis || AT.TeamCanUse == AT_Both)
+    {
+        for (i = 0; i < arraycount(CarriedAxisRadios); ++i)
+        {
+            if (CarriedAxisRadios[i] == AT)
+            {
+                CarriedAxisRadios[i] = none;
+            }
+        }
+    }
+    else if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
+    {
+        for (i = 0; i < arraycount(CarriedAlliedRadios); ++i)
+        {
+            if (CarriedAlliedRadios[i] == AT)
+            {
+                CarriedAlliedRadios[i] = none;
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1

@@ -27,28 +27,12 @@ simulated function PreBeginPlay()
     super.PreBeginPlay();
 }
 
-function PickupFunction(Pawn Other)
-{
-    super.PickupFunction(Other);
-
-    AttachToPawn(Instigator);
-}
-
 function AttachToPawn(Pawn P)
 {
-    local int i;
-    local DarkestHourGame DHG;
     local DHGameReplicationInfo GRI;
     local DHPawn DHP;
 
-    DHG = DarkestHourGame(Level.Game);
-
-    if (DHG == none)
-    {
-        return;
-    }
-
-    GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     DHP = DHPawn(P);
 
     if (GRI == none || DHP == none)
@@ -75,33 +59,7 @@ function AttachToPawn(Pawn P)
 
     DHP.CarriedRadioTrigger = ArtilleryTrigger;
 
-    if (TeamCanUse == AXIS_TEAM_INDEX || TeamCanUse == NEUTRAL_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
-        {
-            if (GRI.CarriedAxisRadios[i] == none)
-            {
-                GRI.CarriedAxisRadios[i] = ArtilleryTrigger;
-                DHP.GRIRadioPos = i;
-
-                break;
-            }
-        }
-    }
-
-    if (TeamCanUse == ALLIES_TEAM_INDEX || TeamCanUse == NEUTRAL_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
-        {
-            if (GRI.CarriedAlliedRadios[i] == none)
-            {
-                GRI.CarriedAlliedRadios[i] = ArtilleryTrigger;
-                DHP.GRIRadioPos = i;
-
-                break;
-            }
-        }
-    }
+    GRI.AddCarriedRadioTrigger(ArtilleryTrigger);
 
     P.AttachToBone(ArtilleryTrigger, AttachBoneName);
 }

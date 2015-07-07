@@ -50,7 +50,6 @@ var     float   IronsightBobDecay;
 
 // Radioman
 var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
-var     int                 GRIRadioPos;         // for storing radioman's specific radio arty trigger position in ROGRI.AlliedRadios array
 
 // Sounds
 var(Sounds) class<DHPawnSoundGroup> DHSoundGroupClass;
@@ -2003,27 +2002,18 @@ singular function GiveChute()
 // Destroys carried radio triggers and removes them from the minimap
 function DestroyRadioTrigger()
 {
-    local DHGameReplicationInfo TmpGRI;
+    local DHGameReplicationInfo GRI;
 
     if (CarriedRadioTrigger == none)
     {
         return;
     }
 
-    TmpGRI = DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo);
+    Level.Game.Broadcast(self, "DestroyRadioTrigger");
 
-    if (TmpGRI != none)
-    {
-        if (CarriedRadioTrigger.TeamCanUse == AT_Allies)
-        {
-            TmpGRI.CarriedAlliedRadios[GRIRadioPos] = none;
-        }
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (CarriedRadioTrigger.TeamCanUse == AT_Axis)
-        {
-            TmpGRI.CarriedAxisRadios[GRIRadioPos] = none;
-        }
-    }
+    GRI.RemoveCarriedRadioTrigger(CarriedRadioTrigger);
 
     CarriedRadioTrigger.Destroy();
 }
