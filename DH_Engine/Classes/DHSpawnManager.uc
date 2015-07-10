@@ -475,6 +475,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     local int i;
     local array<int> ExitPositionIndices;
     local vector Offset;
+    local int VehiclePoolIndex;
 
     G = DarkestHourGame(Level.Game);
 
@@ -504,36 +505,65 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     Offset = C.Pawn.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Check if we can spawn at the vehicle
-    if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
+    while (true)
     {
-        ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
-        class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
-
-        // Attempt to spawn at exit positions
-        for (i = 0; i < ExitPositionIndices.Length; ++i)
+        if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
         {
-            if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
+            ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
+            class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
+
+            VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
+
+            if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_EngineOff)
             {
-                return C.Pawn;
+                // Attempt to spawn at exit positions
+                for (i = 0; i < ExitPositionIndices.Length; ++i)
+                {
+                    if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
+                    {
+                        return C.Pawn;
+                    }
+                }
+
+                // All exit positions were blocked, attempt to just get in the vehicle
+                if (V.TryToDrive(C.Pawn))
+                {
+                    // Attempting to get into the vehicle failed, kill the pawn we spawned earlier
+                    return C.Pawn;
+                }
+
+                break;
+            }
+            else if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_Always)
+            {
+                // Attempt to just get in the vehicle
+                if (V.TryToDrive(C.Pawn))
+                {
+                    // Attempting to get into the vehicle failed, kill the pawn we spawned earlier
+                    return C.Pawn;
+                }
+
+                // Unable to enter vehicle, attempt to spawn at exit positions
+                for (i = 0; i < ExitPositionIndices.Length; ++i)
+                {
+                    if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
+                    {
+                        return C.Pawn;
+                    }
+                }
+
+                break;
             }
         }
-
-        // All exit positions were blocked, attempt to just get in the vehicle
-        if (!V.TryToDrive(C.Pawn))
+        else
         {
-            // Attempting to get into the vehicle failed, kill the pawn we spawned earlier
-            C.Pawn.Suicide();
-
-            return none;
+            break;
         }
     }
-    else
-    {
-        // Cannot spawn at vehicle
-        C.Pawn.Suicide();
 
-        return none;
-    }
+    C.Pawn.Suicide();
+
+    return none;
 }
 
 function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
