@@ -44,6 +44,16 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     }
 }
 
+function ResetClicked()
+{
+    class'PlayerInput'.static.ResetConfig("MouseSamplingTime");
+    class'DHPlayer'.static.ResetConfig("DHISTurnSpeedFactor");
+    class'DHPlayer'.static.ResetConfig("DHScopeTurnSpeedFactor");
+
+    super.ResetClicked();
+}
+
+// Theel: TODO the save config stuff here might be able to be moved to SaveSettings() (but not really worth the hassle)
 function OnInputChange(GUIComponent Sender)
 {
     local PlayerController PC;
@@ -80,13 +90,123 @@ function OnInputChange(GUIComponent Sender)
     }
 }
 
-function ResetClicked()
+// Override to fix Epic Games setting save bug
+function SaveSettings()
 {
-    class'PlayerInput'.static.ResetConfig("MouseSamplingTime");
-    class'DHPlayer'.static.ResetConfig("DHISTurnSpeedFactor");
-    class'DHPlayer'.static.ResetConfig("DHScopeTurnSpeedFactor");
+    local PlayerController PC;
+    local bool bSave, bInputSave, bIForce;
 
-    super.ResetClicked();
+    super(Settings_Tabs).SaveSettings();
+
+    PC = PlayerOwner();
+
+    if (PC == none)
+    {
+        Warn("No player controller detected! - Exiting -");
+        return;
+    }
+
+    if (bool(PC.ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick")) != bJoystick)
+        PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager UseJoystick" @ bJoystick);
+
+    if (bool(PC.ConsoleCommand("get ini:Engine.Engine.RenderDevice ReduceMouseLag")) != bLag)
+        PC.ConsoleCommand("set ini:Engine.Engine.RenderDevice ReduceMouseLag"@bLag);
+
+    if (PC.bSnapToLevel != bSlope)
+    {
+        PC.bSnapToLevel = bSlope;
+        bSave = true;
+    }
+
+    if (PC.bEnableWeaponForceFeedback != bWFX)
+    {
+        PC.bEnableWeaponForceFeedback = bWFX;
+        bSave = true;
+        bIForce = true;
+    }
+
+    if (PC.bEnablePickupForceFeedback != bPFX)
+    {
+        PC.bEnablePickupForceFeedback = bPFX;
+        bIForce = true;
+        bSave = true;
+    }
+
+    if (PC.bEnableDamageForceFeedback != bDFX)
+    {
+        PC.bEnableDamageForceFeedback = bDFX;
+        bIForce = true;
+        bSave = true;
+    }
+
+    if (PC.bEnableGUIForceFeedback != bGFX)
+    {
+        PC.bEnableGUIForceFeedback = bGFX;
+        bIForce = true;
+        bSave = true;
+    }
+
+    if (Controller.MenuMouseSens != FMax(0.0, fMSens))
+    {
+        Controller.SaveConfig();
+    }
+
+    if (class'PlayerInput'.default.DoubleClickTime != FMax(0.0, fDodge))
+    {
+        class'PlayerInput'.default.DoubleClickTime = fDodge;
+        PC.ConsoleCommand("set Engine.PlayerInput bEnableDodging" @ string(fDodge));
+        bInputSave = true;
+    }
+
+    if (class'PlayerInput'.default.MouseAccelThreshold != FMax(0.0, fAccel))
+    {
+        PC.SetMouseAccel(fAccel);
+        PC.ConsoleCommand("set Engine.PlayerInput MouseAccelThreshold" @ fAccel);
+        bInputSave = true;
+    }
+
+    if (class'PlayerInput'.default.MouseSmoothingStrength != FMax(0.0, fSmoothing))
+    {
+        PC.ConsoleCommand("SetSmoothingStrength"@fSmoothing);
+        PC.ConsoleCommand("set Engine.PlayerInput MouseSmoothingStrength" @ fSmoothing);
+        bInputSave = true;
+    }
+
+    if (class'PlayerInput'.default.bInvertMouse != bInvert)
+    {
+        PC.InvertMouse(string(bInvert));
+        PC.ConsoleCommand("set Engine.PlayerInput bInvertMouse" @ string(bInvert));
+        bInputSave = true;
+    }
+
+    if (class'PlayerInput'.default.MouseSmoothingMode != byte(bSmoothing))
+    {
+        PC.SetMouseSmoothing(int(bSmoothing));
+        PC.ConsoleCommand("set Engine.PlayerInput MouseSmoothingMode" @ int(bSmoothing));
+        bInputSave = true;
+    }
+
+    if (class'PlayerInput'.default.MouseSensitivity != FMax(0.0, fSens))
+    {
+        PC.SetSensitivity(fSens);
+        PC.ConsoleCommand("set Engine.PlayerInput MouseSensitivity" @ fSens);
+        bInputSave = true;
+    }
+
+    if (bInputSave)
+    {
+        class'PlayerInput'.static.StaticSaveConfig();
+    }
+
+    if (bIForce)
+    {
+        PC.bForceFeedbackSupported = PC.ForceFeedbackSupported(bGFX || bWFX || bPFX || bDFX);
+    }
+
+    if (bSave)
+    {
+        PC.SaveConfig();
+    }
 }
 
 defaultproperties

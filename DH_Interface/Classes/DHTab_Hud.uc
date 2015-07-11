@@ -23,14 +23,28 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
 {
-//  local DHHud H;
+    local DHHud H;
+    local ROHud ROH;
+    local DHPlayer DHP;
 
-//  H = DHHud(PlayerOwner().myHud);
+    DHP = DHPlayer(PlayerOwner());
+    if (DHP != none)
+    {
+        H = DHHud(DHP.myHUD);
+    }
+    ROH = ROHud(PlayerOwner().myHUD);
 
     switch (Sender)
     {
         case ch_SimpleColours:
-            bSimpleColours = class'DHHud'.default.bSimpleColours;
+            if (H != none)
+            {
+                bSimpleColours = H.bSimpleColours;
+            }
+            else
+            {
+                bSimpleColours = class'DHHud'.default.bSimpleColours;
+            }
             ch_SimpleColours.SetComponentValue(bSimpleColours, true);
             break;
         case ch_ShowDeathMessages:
@@ -41,8 +55,80 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             bShowVoiceIcon = class'DHHud'.default.bShowVoiceIcon;
             ch_ShowVoiceIcon.SetComponentValue(bShowVoiceIcon, true);
             break;
+        case ch_UseNativeRoleNames:
+            if (DHP != none)
+            {
+                bUseNativeRoleNames = DHP.bUseNativeRoleNames;
+            }
+            else
+            {
+                bUseNativeRoleNames = class'DHPlayer'.default.bUseNativeRoleNames;
+            }
+            bUseNativeRoleNamesD = bUseNativeRoleNames;
+            ch_UseNativeRoleNames.SetComponentValue(bUseNativeRoleNames,true);
+            break;
+        case ch_ShowMapFirstSpawn:
+            if (DHP != none)
+            {
+                bShowMapOnFirstSpawn = DHP.bShowMapOnFirstSpawn;
+            }
+            else
+            {
+                bShowMapOnFirstSpawn = class'DHPlayer'.default.bShowMapOnFirstSpawn;
+            }
+            bShowMapOnFirstSpawnD=bShowMapOnFirstSpawn;
+            ch_ShowMapFirstSpawn.SetComponentValue(bShowMapOnFirstSpawn,true);
+            break;
+        case ch_ShowCompass:
+            if (ROH != none)
+            {
+                bShowCompass = ROH.bShowCompass;
+            }
+            else
+            {
+                bShowCompass = class'ROHud'.default.bShowCompass;
+            }
+            ch_ShowCompass.SetComponentValue(bShowCompass,true);
+            break;
+        case ch_ShowMapUpdatedText:
+            if (ROH != none)
+            {
+                bShowMapUpdatedText = ROH.bShowMapUpdatedText;
+            }
+            else
+            {
+                bShowMapUpdatedText = class'ROHud'.default.bShowMapUpdatedText;
+            }
+            ch_ShowMapUpdatedText.SetComponentValue(bShowMapUpdatedText,true);
+            break;
+        case sl_Opacity:
+            fOpacity = (PlayerOwner().myHUD.HudOpacity / 255) * 100;
+            sl_Opacity.SetValue(fOpacity);
+            break;
+        case sl_Scale:
+            fScale = PlayerOwner().myHUD.HudScale * 100;
+            sl_Scale.SetValue(fScale);
+            break;
+        case co_Hints:
+            if (DHP != none)
+            {
+                if (DHP.bShowHints)
+                    HintLevel = 1;
+                else
+                    HintLevel = 2;
+            }
+            else
+            {
+                if (class'DHPlayer'.default.bShowHints)
+                    HintLevel = 1;
+                else
+                    HintLevel = 2;
+            }
+            HintLevelD = HintLevel;
+            co_Hints.SilentSetIndex(HintLevel);
+            break;
         default:
-            super.InternalOnLoadINI(sender, s);
+            super(UT2K4Tab_HudSettings).InternalOnLoadINI(sender, s);
     }
 }
 
@@ -54,8 +140,6 @@ function SaveSettings()
 
     super(UT2K4Tab_HudSettings).SaveSettings();
 
-    //Red Orchestra SaveSettings Begin
-
     PC = PlayerOwner();
     H = DHHud(PlayerOwner().myHud);
 
@@ -64,6 +148,7 @@ function SaveSettings()
         if (DHPlayer(PC) != none)
         {
             DHPlayer(PC).bUseNativeRoleNames = bUseNativeRoleNames;
+            PC.ConsoleCommand("set DH_Engine.DHPlayer bUseNativeRoleNames" @ string(bUseNativeRoleNames));
             DHPlayer(PC).SaveConfig();
         }
         else
@@ -78,6 +163,7 @@ function SaveSettings()
         if (DHPlayer(PC) != none)
         {
             DHPlayer(PC).bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
+            PC.ConsoleCommand("set DH_Engine.DHPlayer bShowMapOnFirstSpawn" @ string(bShowMapOnFirstSpawn));
             DHPlayer(PC).SaveConfig();
         }
         else
@@ -87,40 +173,27 @@ function SaveSettings()
         }
     }
 
-    if (H == none)
-    {
-        class'DHHud'.default.bSimpleColours = bSimpleColours;
-        class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-        class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
-        class'DHHud'.StaticSaveConfig();
-        return;
-    }
+    //var int HintLevel, HintLevelD; // 0 = all hints, 1 = new hints, 2 = no hints
 
-    if (H.bShowCompass != bShowCompass)
-    {
-        H.bShowCompass = bShowCompass;
-        bSave = true;
-    }
-
-    if (H.bShowMapUpdatedText != bShowMapUpdatedText)
-    {
-        H.bShowMapUpdatedText = bShowMapUpdatedText;
-        bSave = true;
-    }
-
+    //function is a mess but there's sort of no way around it since you need to run the console commands randomly
     if (HintLevelD != HintLevel)
     {
-        if (HintLevel == 0)
+        if (HintLevel == 0) // 0 = all hints
         {
-            if (DHPlayer(PC) != none)
+            if (DHPlayer(PC) != none)   // Colin: Player is in a level
             {
                 DHPlayer(PC).bShowHints = true;
+                PC.ConsoleCommand("set DH_Engine.DHPlayer bShowHints" @ true);
                 DHPlayer(PC).UpdateHintManagement(true);
+
                 if (DHPlayer(PC).DHHintManager != none)
+                {
                     DHPlayer(PC).DHHintManager.NonStaticReset();
+                }
+
                 DHPlayer(PC).SaveConfig();
             }
-            else
+            else    // Colin: Player is outside of a level
             {
                 class'DHHintManager'.static.StaticReset();
                 class'DHPlayer'.default.bShowHints = true;
@@ -131,46 +204,65 @@ function SaveSettings()
         {
             if (DHPlayer(PC) != none)
             {
-                DHPlayer(PC).bShowHints = (HintLevel == 1);
-                DHPlayer(PC).UpdateHintManagement(HintLevel == 1);
+                DHPlayer(PC).bShowHints = (HintLevel == 1); //true if (new hints), false if (no hints)
+                PC.ConsoleCommand("set DH_Engine.DHPlayer bShowHints" @ string(HintLevel == 1));
+                DHPlayer(PC).UpdateHintManagement(HintLevel == 1); //true if (new hints), false if (no hints)
                 DHPlayer(PC).SaveConfig();
             }
             else
             {
-                class'DHPlayer'.default.bShowHints = (HintLevel == 1);
+                class'DHPlayer'.default.bShowHints = (HintLevel == 1); //true if (new hints), false if (no hints)
                 class'DHPlayer'.static.StaticSaveConfig();
             }
         }
     }
 
-    if (H.bSimpleColours != bSimpleColours)
-    {
-        H.bSimpleColours = bSimpleColours;
-        bSave = true;
-    }
-
-    if (H.bShowDeathMessages != bShowDeathMessages)
-    {
-        H.bShowDeathMessages = bShowDeathMessages;
-        bSave = true;
-    }
-
-    if (H.bShowVoiceIcon != bShowVoiceIcon)
-    {
-        H.bShowVoiceIcon = bShowVoiceIcon;
-        bSave = true;
-    }
-
-    if (bSave)
-        H.SaveConfig();
-
-    //Red Orchestra SaveSettings End
-
     if (H != none)
     {
+        if (H.bShowCompass != bShowCompass)
+        {
+            H.bShowCompass = bShowCompass;
+            PC.ConsoleCommand("set ROEngine.ROHud bShowCompass" @ string(bShowCompass));
+            bSave = true;
+        }
+
+        if (H.bShowMapUpdatedText != bShowMapUpdatedText)
+        {
+            H.bShowMapUpdatedText = bShowMapUpdatedText;
+            PC.ConsoleCommand("set ROEngine.ROHud bShowMapUpdatedText" @ string(bShowMapUpdatedText));
+            bSave = true;
+        }
+
+        if (H.bSimpleColours != bSimpleColours)
+        {
+            H.bSimpleColours = bSimpleColours;
+            PC.ConsoleCommand("set DH_Engine.DHHud bSimpleColours" @ string(bSimpleColours));
+            bSave = true;
+        }
+
+        if (H.bShowDeathMessages != bShowDeathMessages)
+        {
+            H.bShowDeathMessages = bShowDeathMessages;
+            PC.ConsoleCommand("set DH_Engine.DHHud bShowDeathMessages" @ string(bShowDeathMessages));
+            bSave = true;
+        }
+
+        if (H.bShowVoiceIcon != bShowVoiceIcon)
+        {
+            H.bShowVoiceIcon = bShowVoiceIcon;
+            PC.ConsoleCommand("set DH_Engine.DHHud bShowVoiceIcon" @ string(bShowVoiceIcon));
+            bSave = true;
+        }
+
+        if (bSave)
+        {
+            H.SaveConfig();
+        }
     }
     else
     {
+        class'DHHud'.default.bShowCompass = bShowCompass;
+        class'DHHud'.default.bShowMapUpdatedText = bShowMapUpdatedText;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
         class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
