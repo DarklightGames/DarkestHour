@@ -167,7 +167,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
     local DHPawn             HitPawn;
-    local vector             TempHitLocation, HitNormal, X, Y, Z;
+    local Actor              A;
+    local vector             PawnHitLocation, TempHitLocation, HitNormal, X, Y, Z;
     local array<int>         HitPoints;
     local float              BulletDistance, V;
     local bool               bDoDeflection;
@@ -278,20 +279,44 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // Trace to see if bullet path will actually hit one of the player pawn's various body hit points
-        Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
+        // Use the Instigator pawn to do the trace, as that makes a HitPointTrace work better, as it ignores the Instigator & its bullet whip attachment
+        // Matt: temporarily make Instigator use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
+        Instigator.bUseCollisionStaticMesh = bUseCollisionStaticMesh;
+        Other = Instigator.HitPointTrace(PawnHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
         HitPawn = DHPawn(Other);
+
+        // HitPointTrace says we hit a player pawn, but we need to verify that as the result is unreliable
+        // In particular, doesn't seem to work well when we have multiple vehicle occupants & for some reason the trace sometimes passes through a blocking vehicle & hits player
+        if (HitPawn != none)
+        {
+            // Trace along path from where we hit player's whip attachment to where we traced a hit on player pawn, & check if any blocking actor is in the way
+            foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
+            {
+                // Our trace has reached the hit player, so we're done
+                if (A == HitPawn)
+                {
+                    break;
+                }
+                // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
+                else if ((A.bBlockActors || A.bWorldGeometry) && !A.bDeleteMe && A.bBlockHitPointTraces
+                    && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+                {
+                    HitPawn = none;
+                    break;
+                }
+            }
+        }
+
+        // Reset Instigator collision properties & reset WhizType for next collision
+        Instigator.bUseCollisionStaticMesh = Instigator.default.bUseCollisionStaticMesh;
+        WhizType = default.WhizType;
 
         // Bullet won't hit the player, so we'll exit now
         if (HitPawn == none)
         {
-            if (!bHasDeflected)
+            if (bDebugMode && !bHasDeflected)
             {
-                WhizType = default.WhizType; // reset for next collision
-
-                if (bDebugMode)
-                {
-                    Log(">>> Bullet.ProcessTouch: EXITING as hit bullet whip attachment but didn't hit player (HitPointTrace returned" @ Other $ ")");
-                }
+                Log(">>> Bullet.ProcessTouch: EXITING as hit bullet whip attachment but didn't hit player (HitPointTrace returned" @ Other $ ")");
             }
 
             return;
@@ -325,7 +350,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                         Log(">>> Bullet.ProcessTouch: ProcessLocationalDamage on HitPawn" @ HitPawn.Tag);
                     }
 
-                    HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
+                    HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, PawnHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
                 }
             }
             // Damage something else
