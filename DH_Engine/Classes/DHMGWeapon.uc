@@ -193,7 +193,7 @@ Begin:
 
     SetTimer(FastTweenTime, false);
 }
-    
+
 simulated event RenderOverlays(Canvas Canvas)
 {
     local ROPlayer Playa;

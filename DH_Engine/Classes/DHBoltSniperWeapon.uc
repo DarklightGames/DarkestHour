@@ -292,7 +292,7 @@ function byte GetRoundsToLoad()
 
     CurrentMagLoad = AmmoAmount(0);
     InitialAmount = AmmoClass[0].default.InitialAmount;
-    
+
     if (bTwoMagsCapacity)
     {
         InitialAmount *= 2;

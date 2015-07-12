@@ -620,7 +620,7 @@ function bool KDriverLeave(bool bForceLeave)
 function DriverDied()
 {
     super.DriverDied();
-    
+
     if (DHMortarVehicle(VehicleBase) != none)
     {
         DHMortarVehicle(VehicleBase).GotoState('PendingDestroy');
@@ -894,7 +894,7 @@ function CheckCanBeResupplied()
 {
     if (DHMortarVehicle(VehicleBase) != none)
     {
-        DHMortarVehicle(VehicleBase).bCanBeResupplied = 
+        DHMortarVehicle(VehicleBase).bCanBeResupplied =
             Gun != none && (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo || Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo);
     }
 }
@@ -954,10 +954,10 @@ simulated function bool PointOfView()
 defaultproperties
 {
     // From ROTankCannonPawn:
-	bCustomAiming=true
+    bCustomAiming=true
     bAllowViewChange=false
-    PositionInArray=0    
-    
+    PositionInArray=0
+
     bMultiPosition=false
     bSinglePositionExposed=true
     bKeepDriverAuxCollision=true

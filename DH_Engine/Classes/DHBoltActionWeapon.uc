@@ -77,7 +77,7 @@ simulated state WorkingBolt extends WeaponBusy
         if (InstigatorIsLocallyControlled())
         {
             GetAnimParams(0, Anim, Frame, Rate);
-            
+
             if (Anim == BoltIronAnim || Anim == BoltHipAnim)
             {
                 bWaitingToBolt = false;

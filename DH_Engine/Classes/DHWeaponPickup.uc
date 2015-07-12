@@ -84,11 +84,11 @@ function InitDroppedPickupFor(Inventory Inv)
         {
             if (i == W.CurrentMagIndex)
             {
-            	AmmoMags[AmmoMags.Length] = W.AmmoAmount(0);
+                AmmoMags[AmmoMags.Length] = W.AmmoAmount(0);
             }
             else
             {
-            	AmmoMags[AmmoMags.Length] = W.PrimaryAmmoArray[i];
+                AmmoMags[AmmoMags.Length] = W.PrimaryAmmoArray[i];
             }
         }
 

@@ -35,7 +35,7 @@ simulated function AnimEnd(int Channel)
         super(DHProjectileWeapon).AnimEnd(channel);
     }
 }
-   
+
 // Tells bot whether to charge or back off while using this weapon
 function float SuggestAttackStyle()
 {

@@ -69,7 +69,7 @@ simulated function InitializeMortar(DHMortarVehicleWeaponPawn MortarPwn)
     }
 }
 
-// New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar 
+// New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar
 // Don't need to keep updating these properties between server & owning client, & any exploitation would be completely benign and pointless - Basnett
 simulated function SendFiringSettingsToServer()
 {

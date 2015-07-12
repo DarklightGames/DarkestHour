@@ -20,7 +20,7 @@ singular function Touch(Actor Other)
     {
         return;
     }
-    
+
     if (Role == ROLE_Authority)
     {
         // Hurt the vehicle itself

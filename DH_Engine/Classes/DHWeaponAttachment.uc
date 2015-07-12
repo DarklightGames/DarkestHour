@@ -211,7 +211,7 @@ simulated event ThirdPersonEffects()
 
 simulated function Hide(bool NewbHidden) // TEMP DEBUG
 {
-	bHidden = NewbHidden;
+    bHidden = NewbHidden;
     if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).bLogWeaponAttachment) Log(Tag @ "Hide setting bHidden =" @ bHidden);
 }
 

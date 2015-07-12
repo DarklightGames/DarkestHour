@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DHRocketExhaustDamageType extends DHGrenadeDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {
