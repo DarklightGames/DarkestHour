@@ -5,43 +5,40 @@
 
 class DHProjectileFire extends ROWeaponFire;
 
-var()           int         ProjPerFire;                // How many projectiles are spawn each fire, set to 1
-var()           vector      ProjSpawnOffset;            // +x forward, +y right, +z up
-var()           vector      FAProjSpawnOffset;          // ProjSpawnOffset for free-aim mode +x forward, +y right, +z up
+// Projectile spawning & pre-launch trace
+var     int             ProjPerFire;                 // how many projectiles are spawned each fire (normally 1)
+var     vector          ProjSpawnOffset;             // positional offset to spawn projectile
+var     vector          FAProjSpawnOffset;           // positional offset to spawn projectile for free-aim mode
+var     int             AddedPitch;                  // additional pitch to add to firing calculations (primarily used for rocket launchers)
+var     bool            bUsePreLaunchTrace;          // use pre-projectile spawn trace to see if we hit anything close before launching projectile (saves CPU and net usage)
+var     float           PreLaunchTraceDistance;      // how long of a pre launch trace to use (shorter for SMGs and pistols, longer for rifles and MGs)
 
-var(DHProjectileFire) int   AddedPitch;                 // Additional pitch to add to firing calculations. Primarily used for rockect launchers
+// Weapon spread/inaccuracy
+var     float           AppliedSpread;               // spread applied to the projectile
+var     float           CrouchSpreadModifier;        // modifier applied when player is crouched
+var     float           ProneSpreadModifier;         // modifier applied when player is prone
+var     float           BipodDeployedSpreadModifier; // modifier applied when player is using a bipod deployed weapon
+var     float           RestDeploySpreadModifier;    // modifier applied when players weapon is rest deployed
+var     float           HipSpreadModifier;           // modifier applied when player is firing from the hip
+var     float           LeanSpreadModifier;          // modifier applied when player is firing while leaning
 
-var             bool        bUsePreLaunchTrace;         // Use the pre-projectile spawn trace to see if anything close is hit before launching projectile. Saves CPU and Net usuage
-var             float       PreLaunchTraceDistance;     // How long of a pre launch trace to use. Shorter for SMGs and pistols, longer for rifles and MGs.
+// Tracers
+var     bool            bUsesTracers;                // true if the weapon uses tracers
+var     int             TracerFrequency;             // how often a tracer is loaded in (as in, 1 in TracerFrequency)
+var     byte            NextTracerCounter;           // count up shots fired, so we know when it's time to fire a tracer round
+var class<Projectile>   TracerProjectileClass;       // class for the tracer bullet for this weapon (now a real bullet that does damage, as well as tracer effects)
 
-// var          float       SnapTraceDistance;          // Essentially the distance before which no supersonic crack is heard from a bullet // Matt: removed as not being used anywhere
+// Ironsight animations
+var     name            FireIronAnim;                // firing animation for firing in ironsights
+var     name            FireIronLoopAnim;            // looping fire animation for firing in ironsights
+var     name            FireIronEndAnim;             // end anim for firing in ironsights
 
-// Tracer stuff
-var()           bool        bUsesTracers;               // true if the weapon uses tracers in it's ammo loadout
-var()           int         TracerFrequency;            // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
-var             byte        NextTracerCounter;
-//var class<DH_ClientTracer>DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: replaced by TracerProjectileClass
-var     class<Projectile>   TracerProjectileClass;      // class for the tracer bullet for this weapon (now a real bullet that does damage, as well as tracer effects)
-
-// Weapon spread/inaccuracy variables
-var             float       AppliedSpread;              // spread applied to the projectile
-var()           float       CrouchSpreadModifier;       // Modifier applied when player is crouched
-var()           float       ProneSpreadModifier;        // Modifier applied when player is prone
-var()           float       BipodDeployedSpreadModifier;// Modifier applied when player is using a bipod deployed weapon
-var()           float       RestDeploySpreadModifier;   // Modifier applied when players weapon is rest deployed
-var()           float       HipSpreadModifier;          // Modifier applied when player is firing from the hip
-var()           float       LeanSpreadModifier;         // Modifier applied when player is firing while leaning
-
-var(FireAnims)  name        FireIronAnim;               // Firing animation for firing in ironsights
-var(FireAnims)  name        FireIronLoopAnim;           // Looping Fire animation for firing in ironsights
-var(FireAnims)  name        FireIronEndAnim;            // End anim for firing in ironsights
-
-var             bool        bShouldBlurOnFire;
-var             float       BlurTime;
-var             float       BlurTimeIronsight;
-var             float       BlurScale;
-var             float       BlurScaleIronsight;
-
+// Screen blur when firing
+var     bool            bShouldBlurOnFire;           // whether or not to add slight screen blur upon firing
+var     float           BlurTime;                    // how long to blur when firing non-ironsighted
+var     float           BlurTimeIronsight;           // how long to blur when firing ironsighted
+var     float           BlurScale;                   // blur effect scale when firing non-ironsighted
+var     float           BlurScaleIronsight;          // blur effect scale when firing ironsighted
 
 function float MaxRange()
 {
