@@ -212,10 +212,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         GetAxes(Rotation, X, Y, Z);
     }
 
-    // We hit the WhipAttachment around a player pawn
+    // We hit the bullet whip attachment around a player pawn
     if (ROBulletWhipAttachment(Other) != none)
     {
-        if (Other.Base != none && Other.Base.bDeleteMe)
+        if ((Other.Base != none && Other.Base.bDeleteMe) || Instigator == none)
         {
             return;
         }
@@ -231,9 +231,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
             BulletDistance = class'DHLib'.static.UnrealToMeters(VSize(HitLocation - OrigLoc)); // calculate distance travelled by bullet in metres
 
-            // If it's FF at close range, we won't suppress, so send a different WT through
-            if (BulletDistance < 10.0 && InstigatorController != none && Other != none && DHPawn(Other.Base) != none &&
-                DHPawn(Other.Base).Controller != none && InstigatorController.SameTeamAs(DHPawn(Other.Base).Controller))
+            // If it's friendly fire at close range, we won't suppress, so send a different WhizType in the HitPointTrace
+            if (BulletDistance < 10.0 && InstigatorController != none && DHPawn(Other.Base) != none && InstigatorController.SameTeamAs(DHPawn(Other.Base).Controller))
             {
                 WhizType = 3;
             }
