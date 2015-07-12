@@ -23,7 +23,6 @@ var     float           DampenFactor;
 var     float           DampenFactorParallel;
 
 // Debugging
-var globalconfig bool   bDebugMode;         // if true, give a detailed report in log & some screen messages
 var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
@@ -173,24 +172,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local float              BulletDistance, V;
     local bool               bDoDeflection;
 
-    if (bDebugMode && !bHasDeflected)
-    {
-        if (Pawn(Other) != none)
-        {
-            if (Instigator != none)
-            {
-                Instigator.ClientMessage("Bullet.ProcessTouch on" @ Other.Tag @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation @ "Velocity =" @ VSize(Velocity));
-            }
-
-            Log(Tag @ ">>> Bullet.ProcessTouch on" @ Pawn(Other).PlayerReplicationInfo.PlayerName @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation @
-                " Velocity =" @ VSize(Velocity) @ " Instigator =" @ Instigator.Tag);
-        }
-        else
-        {
-            Log(Tag @ ">>> Bullet.ProcessTouch on" @ Other.Tag @ " HitLoc =" @ HitLocation @ " Velocity =" @ VSize(Velocity) @ " Instigator =" @ Instigator.Tag);
-        }
-    }
-
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || !Other.bBlockHitPointTraces ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
@@ -217,16 +198,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     if (!bHasDeflected)
     {
         V = VSize(Velocity);
-
-        if (bDebugMode)
-        {
-            Log(">>> Bullet.ProcessTouch: V =" @ V @ " Velocity =" @ Velocity);
-
-            if (Pawn(Other) != none && Instigator != none)
-            {
-                Instigator.ClientMessage("Bullet.ProcessTouch: V =" @ V @ " Velocity =" @ Velocity);
-            }
-        }
     }
 
     // Get the axes, based on bullet's direction
@@ -239,11 +210,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     {
         V = default.Speed;
         GetAxes(Rotation, X, Y, Z);
-
-        if (bDebugMode)
-        {
-            Log(">>> Bullet.ProcessTouch: speed was < 25 (must have collided right after launch), so assigned default speed of" @ V);
-        }
     }
 
     // We hit the WhipAttachment around a player pawn
@@ -314,76 +280,33 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // Bullet won't hit the player, so we'll exit now
         if (HitPawn == none)
         {
-            if (bDebugMode && !bHasDeflected)
-            {
-                Log(">>> Bullet.ProcessTouch: EXITING as hit bullet whip attachment but didn't hit player (HitPointTrace returned" @ Other $ ")");
-            }
-
             return;
-        }
-
-        if (bDebugMode && !bHasDeflected)
-        {
-            Log(">>> Bullet.ProcessTouch: hit bullet whip attachment & trace returned HitPawn" @ Other.Tag @ " WhizType =" @ WhizType);
         }
     }
 
-    if (!bHasDeflected)
+    // Do any damage
+    if (!bHasDeflected && Role == ROLE_Authority && V > (MinPenetrateVelocity * ScaleFactor))
     {
-        if (bDebugMode)
+        UpdateInstigator();
+
+        // Damage a player pawn
+        if (HitPawn != none)
         {
-            Log(">>> Bullet.ProcessTouch: V =" @ V @ " (MinPenetrateVelocity * ScaleFactor) =" @ MinPenetrateVelocity * ScaleFactor);
-        }
-
-        // Do any damage
-        if (Role == ROLE_Authority && V > (MinPenetrateVelocity * ScaleFactor))
-        {
-            UpdateInstigator();
-
-            // Damage a player pawn
-            if (HitPawn != none)
+            if (!HitPawn.bDeleteMe)
             {
-                if (!HitPawn.bDeleteMe)
-                {
-                    if (bDebugMode)
-                    {
-                        Log(">>> Bullet.ProcessTouch: ProcessLocationalDamage on HitPawn" @ HitPawn.Tag);
-                    }
-
-                    HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, PawnHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
-                }
-            }
-            // Damage something else
-            else
-            {
-                if (bDebugMode)
-                {
-                    Log(">>> Bullet.ProcessTouch: TakeDamage on" @ Other.Tag);
-                }
-
-                // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
-                if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none)
-                {
-                    DHArmoredVehicle(HitVehicleWeapon.Base).bProjectilePenetrated = false;
-                }
-
-                Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
-            }
-
-            if (bDebugMode && Pawn(Other) != none)
-            {
-                if (Instigator != none)
-                {
-                    Instigator.ClientMessage("Bullet.ProcessTouch: RESULT on" @ Other.Tag @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation);
-                }
-
-                Log(self @ ">>> Bullet.ProcessTouch: RESULT on" @ Pawn(Other).PlayerReplicationInfo.PlayerName @ " Health =" @ Pawn(Other).Health @ " HitLoc =" @ HitLocation);
+                HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, PawnHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
             }
         }
-
-        if (bDebugMode)
+        // Damage something else
+        else
         {
-            Log(">>> ------------------------------------------------------------------------------------------------------------"); // separating line in log
+            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
+            if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none)
+            {
+                DHArmoredVehicle(HitVehicleWeapon.Base).bProjectilePenetrated = false;
+            }
+
+            Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
         }
     }
 
