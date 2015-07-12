@@ -205,92 +205,23 @@ function CalcSpreadModifiers()
 function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
     local Projectile         SpawnedProjectile;
-    local vector             ProjectileDir, End, HitLocation, HitNormal;
-    local Actor              Other;
-    local ROPawn             HitPawn;
     local ROWeaponAttachment WeapAttach;
-    local array<int>         HitPoints;
-    local bool               bSpawnedTracer;
+    local Actor              Other;
+    local vector             HitLocation, HitNormal;
+    local bool               bPreLaunchTraceHitSomething;
 
     // Do any additional pitch changes before launching the projectile
     Dir.Pitch += AddedPitch;
 
-    // Perform pre-launch trace
-    if (bUsePreLaunchTrace)
+    // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here
+    // Matt: temporarily make Instigator use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
+    if (bUsePreLaunchTrace && Instigator != none)
     {
-        ProjectileDir = vector(Dir);
-        End = Start + PreLaunchTraceDistance * ProjectileDir;
+        Instigator.bUseCollisionStaticMesh = ProjectileClass.default.bUseCollisionStaticMesh;
+        bPreLaunchTraceHitSomething = PreLaunchTrace(Start, vector(Dir));
+        Instigator.bUseCollisionStaticMesh = Instigator.default.bUseCollisionStaticMesh; // reset Instigator collision properties
 
-        // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0); // WhizType was 1, but set to 0 to prevent sound triggering
-
-        if (Other != none && Other != Instigator && Other.Base != Instigator && Other.Owner != Instigator)
-        {
-            // This is a bit of a hack, but it prevents bots from killing other players in most instances
-            if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
-            {
-                return none;
-            }
-
-            WeapAttach = ROWeaponAttachment(Weapon.ThirdPersonActor);
-
-            if (!Other.bWorldGeometry)
-            {
-                // Update hit effect, except for non-vehicle pawns (blood)
-                if (Other.IsA('Vehicle') || Other.IsA('ROVehicleWeapon') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume')))
-                {
-                    WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
-                }
-
-                // Damage the actor that we hit
-                if (Other.IsA('ROVehicle'))
-                {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
-                        ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), class<DHBullet>(ProjectileClass).default.MyVehicleDamage);
-                }
-                else
-                {
-                    HitPawn = DHPawn(Other);
-
-                    if (HitPawn != none)
-                    {
-                        if (!HitPawn.bDeleteMe)
-                        {
-                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
-                                ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType, HitPoints);
-                        }
-                    }
-                    else
-                    {
-                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
-                            ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
-                    }
-                }
-            }
-            else
-            {
-                // Update hit effect
-                if (WeapAttach != none)
-                {
-                    WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
-                }
-
-                // Damage a destroyable static mesh actor
-                if (RODestroyableStaticMesh(Other) != none)
-                {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
-                        ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
-
-                    if (RODestroyableStaticMesh(Other).bWontStopBullets) // bullet will continue, so make sure we don't exit without spawning projectile
-                    {
-                        Other = none;
-                    }
-                }
-            }
-        }
-
-        // Exit without spawning projectile because we already hit something & have handled damage & effects
-        if (Other != none)
+        if (bPreLaunchTraceHitSomething)
         {
             return none;
         }
@@ -301,12 +232,16 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     {
         NextTracerCounter++;
 
-        if (NextTracerCounter == TracerFrequency)
+        if (NextTracerCounter >= TracerFrequency)
         {
-                // If the person is looking at themselves in third person, spawn the tracer from the tip of the 3rd person weapon
-                if (WeapAttach != none && !Instigator.IsFirstPerson())
+            // If the person is looking at themselves in third person, spawn the tracer from the tip of the 3rd person weapon
+            if (Instigator != none && !Instigator.IsFirstPerson())
+            {
+                WeapAttach = ROWeaponAttachment(Weapon.ThirdPersonActor);
+
+                if (WeapAttach != none)
                 {
-                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65525.0, Start, true);
+                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65535.0, Start, true);
 
                     if (Other != none)
                     {
@@ -314,25 +249,119 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
                         Dir = rotator(Normal(HitLocation - Start));
                     }
                 }
+            }
 
-                SpawnedProjectile = Spawn(TracerProjectileClass,,, Start, Dir);
+            SpawnedProjectile = Spawn(TracerProjectileClass,,, Start, Dir);
 
-                if (SpawnedProjectile != none)
-                {
-                    bSpawnedTracer = true;
-                }
-
-                NextTracerCounter = 0; // reset for next tracer spawn
+            NextTracerCounter = 0; // reset for next tracer spawn
         }
     }
 
     // Spawn a normal projectile if we didn't spawn a tracer
-    if (!bSpawnedTracer && ProjectileClass != none)
+    if (SpawnedProjectile == none && ProjectileClass != none)
     {
         SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
     }
 
     return SpawnedProjectile;
+}
+
+// New function to perform a pre-launch trace to see if we hit something fairly close, where ballistics aren't a factor & a simple trace will give an accurate hit result
+// If we do hit something valid, we handle the damage & hit effects here, meaning we can avoid spawning the projectile (& replicating it on a server)
+// We have to use our Instigator pawn to do traces, because we aren't an actor & so can't access trace functions
+function bool PreLaunchTrace(vector Start, vector Direction)
+{
+    local Actor      Other, A;
+    local ROPawn     HitPlayer;
+    local vector     End, HitLocation, TempHitLocation, HitNormal, TempHitNormal, Momentum;
+    local int        Damage;
+    local array<int> HitPoints;
+
+    // Start with a precision HitPointTrace to see if we hit a player pawn, including a vehicle occupant who won't have collision & so won't be caught by a normal Trace
+    // HitPointTraces don't like short traces, so we have to do a long trace first, then check whether any player we hit was within PreLaunchTraceDistance
+    End = Start + (65535.0 * Direction);
+    HitPlayer = ROPawn(Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0)); // WhizType 0 to prevent sound triggering, as it's close
+
+    if (HitPlayer != none && VSizeSquared(HitLocation - Start) > (PreLaunchTraceDistance ** 2)) // use VSizeSquared comparison for more efficient processing
+    {
+        HitPlayer = none;
+    }
+
+    // Now do a normal trace to see if we hit another blocking actor (limit trace length it if we hit a player, as there's no point checking beyond that HitLocation)
+    // Have to do this even if we have a HitPlayer, because HitPointTrace is unreliable & the trace often passes through a blocking vehicle & hits a shielded player
+    if (HitPlayer != none)
+    {
+        End = HitLocation;
+    }
+    else
+    {
+        End = Start + (PreLaunchTraceDistance * Direction); // normal length trace
+    }
+
+    foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
+    {
+        // Ignore anything that doesn't block or that a bullet's ProcessTouch() would ignore
+        if ((A.bBlockActors || A.bWorldGeometry) && !A.bDeleteMe && A.bBlockHitPointTraces
+            && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+        {
+            Other = A;
+            HitLocation = TempHitLocation;
+            HitNormal = TempHitNormal;
+
+            // Cancel any hit that HitPointTrace registered on a player, as our standard trace has hit a closer, blocking actor
+            if (HitPlayer != none && Other != HitPlayer)
+            {
+                HitPlayer = none;
+            }
+
+            break;
+        }
+    }
+
+    // Hit nothing close, so return false & spawn projectile as normal
+    if (Other == none && HitPlayer == none)
+    {
+        return false;
+    }
+
+    // We hit a destroyable static mesh actor, but it doesn't stop bullets, which complicates the trace as it ought to continue
+    // This is a rare event, so simplest solution is to return false & spawn projectile as normal (it will smash the destro mesh & continue its flight)
+    // (We could return PreLaunchTrace(HitLocation, Direction), to continue tracing from where we hit, but we'd have to build in a trace count to guard against a recursive loop)
+    if (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets)
+    {
+        return false;
+    }
+
+    // This is a bit of a hack, but it prevents bots from killing other players in most instances
+    if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
+    {
+        return true;
+    }
+
+    // Update hit effect (not if we hit a player, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
+    if (HitPlayer == none && ROWeaponAttachment(Weapon.ThirdPersonActor) != none && (Other.bWorldGeometry || Other.IsA('Vehicle') || Other.IsA('VehicleWeapon')))
+    {
+        ROWeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other, HitLocation, HitNormal);
+    }
+
+    // Finally handle damage on whatever we've hit
+    Damage = ProjectileClass.default.Damage;
+    Momentum = ProjectileClass.default.MomentumTransfer * Direction;
+
+    if (HitPlayer != none)
+    {
+        HitPlayer.ProcessLocationalDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType, HitPoints);
+    }
+    else if (Other.IsA('ROVehicle') && class<ROBullet>(ProjectileClass) != none)
+    {
+        Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<ROBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
+    }
+    else if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
+    {
+        Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType);
+    }
+
+    return true;
 }
 
 function PlayFiring()
@@ -413,7 +442,7 @@ defaultproperties
 {
     ProjPerFire=1
     bUsePreLaunchTrace=true
-    PreLaunchTraceDistance=2624.0
+    PreLaunchTraceDistance=2624.0 // 43.5m
     CrouchSpreadModifier=0.85
     ProneSpreadModifier=0.7
     BipodDeployedSpreadModifier=0.5

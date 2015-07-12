@@ -321,96 +321,16 @@ state FireLoop
     }
 }
 
-/* =================================================================================== *
-* SpawnProjectile()
-*   Launches a server side only projectile . Also performs a prelaunch trace to see if
-*   we would hit something close before spawning a bullet. This way we don't ever
-*   spawn a bullet if we would hit something so close that the ballistics wouldn't
-*   matter anyway. Don't use pre-launch trace for things like rocket launchers
-* =================================================================================== */
-function Projectile SpawnProjectile(vector Start, Rotator Dir)
+// Matt: modified to disable bullet replication, so actor won't be replicated to clients (was the only difference in the server bullet class)
+function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
-    local Projectile         SpawnedProjectile;
-    local vector             ProjectileDir, End, HitLocation, HitNormal;
-    local Actor              Other;
-    local ROPawn             HitPawn;
-    local DHWeaponAttachment WeapAttach;
-    local array<int>         HitPoints;
+    local Projectile SpawnedProjectile;
 
-    // Do any additional pitch changes before launching the projectile
-    Dir.Pitch += AddedPitch;
+    SpawnedProjectile = super.SpawnProjectile(Start, Dir);
 
-    // Perform prelaunch trace
-    if (bUsePreLaunchTrace)
+    if (DHBullet(SpawnedProjectile) != none)
     {
-        ProjectileDir = vector(Dir);
-        End = Start + PreLaunchTraceDistance * ProjectileDir;
-//      SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir; // Matt: removed as not being used
-
-        // Lets avoid all that casting
-        WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
-
-        // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound trigger
-
-        if (Other != none && Other != Instigator && Other.Base != Instigator)
-        {
-            if (!Other.bWorldGeometry)
-            {
-                if (Other.IsA('ROVehicle'))
-                {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
-                        class<ROBullet>(ProjectileClass).default.MyVehicleDamage);
-                }
-                else
-                {
-                    HitPawn = ROPawn(Other);
-
-                    if (HitPawn != none)
-                    {
-                        if (!HitPawn.bDeleteMe)
-                        {
-                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
-                                class<ROBullet>(ProjectileClass).default.MyDamageType, HitPoints);
-                        }
-                    }
-                    else
-                    {
-                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
-                            class<ROBullet>(ProjectileClass).default.MyDamageType);
-                    }
-                }
-            }
-            else
-            {
-                if (RODestroyableStaticMesh(Other) != none)
-                {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
-                        class<ROBullet>(ProjectileClass).default.MyDamageType);
-
-                    if (RODestroyableStaticMesh(Other).bWontStopBullets)
-                    {
-                        Other = none;
-                    }
-                }
-            }
-        }
-
-        // Return because we already hit something
-        if (Other != none)
-        {
-            return none;
-        }
-    }
-
-    if (ProjectileClass != none)
-    {
-        SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
-
-        if (DHBullet(SpawnedProjectile) != none) // Matt: added to disable bullet replication, so actor won't be replicated to clients (the only difference in server bullet)
-        {
-            DHBullet(SpawnedProjectile).SetAsServerBullet();
-        }
+        DHBullet(SpawnedProjectile).SetAsServerBullet();
     }
 
     return SpawnedProjectile;

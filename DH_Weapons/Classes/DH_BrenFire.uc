@@ -99,7 +99,7 @@ defaultproperties
     BipodDeployFireEndAnim="deploy_shoot_end"
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
-    PreLaunchTraceDistance=2624.0
+    PreLaunchTraceDistance=2624.0 // 43.5m (revert to usual distance, as auto weapons use the half the usual)
     bUsesTracers=true
     TracerFrequency=5
     TracerProjectileClass=class'DH_BrenTracerBullet'
