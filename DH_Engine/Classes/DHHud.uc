@@ -38,6 +38,7 @@ var localized string    SelectSpawnPointText;
 var localized string    SpawnInfantryText;
 var localized string    SpawnVehicleText;
 var localized string    SpawnAtVehicleText;
+var localized string    ReinforcementsDepletedText;
 
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -3712,74 +3713,81 @@ simulated function DrawSpectatingHud(Canvas C)
             // Press ESC to join a team
             S = default.JoinTeamText;
         }
-        else if (DHGRI.bMatchHasBegun && DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
+        else if (DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
-
-            switch (PC.ClientLevelInfo.SpawnMode)
+            if (DHGRI.DHSpawnCount[PRI.Team.TeamIndex] > 0)
             {
-                case ESM_DarkestHour:
-                    if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
-                    {
-                        // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
-                        S = default.SpawnVehicleText;
-                        S = Repl(S, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
-                    }
-                    else if (PC.SpawnPointIndex != 255)
-                    {
-                        SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
+                Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
 
-                        if (SP == none)
+                switch (PC.ClientLevelInfo.SpawnMode)
+                {
+                    case ESM_DarkestHour:
+                        if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+                        {
+                            // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
+                            S = default.SpawnVehicleText;
+                            S = Repl(S, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
+                        }
+                        else if (PC.SpawnPointIndex != 255)
+                        {
+                            SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
+
+                            if (SP == none)
+                            {
+                                // Press ESC to select a spawn point
+                                S = default.SelectSpawnPointText;
+                            }
+                            else
+                            {
+                                // You will deploy as a {0} in {2} | Press ESC to change
+                                S = default.SpawnInfantryText;
+                            }
+                        }
+                        else if (PC.SpawnVehicleIndex != 255)
+                        {
+                            SVC = DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehicleClass;
+
+                            if (SVC != none)
+                            {
+                                // You will deploy as a {0} at a {1} in {2} | Press ESC to change
+                                S = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
+                            }
+                            else
+                            {
+                                // Press ESC to select a spawn point
+                                S = default.SelectSpawnPointText;
+                            }
+                        }
+                        else
                         {
                             // Press ESC to select a spawn point
                             S = default.SelectSpawnPointText;
                         }
-                        else
-                        {
-                            // You will deploy as a {0} in {2} | Press ESC to change
-                            S = default.SpawnInfantryText;
-                        }
-                    }
-                    else if (PC.SpawnVehicleIndex != 255)
-                    {
-                        SVC = DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehicleClass;
 
-                        if (SVC != none)
-                        {
-                            // You will deploy as a {0} at a {1} in {2} | Press ESC to change
-                            S = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
-                        }
-                        else
-                        {
-                            // Press ESC to select a spawn point
-                            S = default.SelectSpawnPointText;
-                        }
+                        break;
+                    case ESM_RedOrchestra:
+                        S = default.ReinforcementText;
+                        break;
+                }
+
+                if (PRI.RoleInfo != none)
+                {
+                    if (PC.bUseNativeRoleNames)
+                    {
+                        S = Repl(S, "{0}", PRI.RoleInfo.AltName);
                     }
                     else
                     {
-                        // Press ESC to select a spawn point
-                        S = default.SelectSpawnPointText;
+                        S = Repl(S, "{0}", PRI.RoleInfo.MyName);
                     }
+                }
 
-                    break;
-                case ESM_RedOrchestra:
-                    S = default.ReinforcementText;
-                    break;
+                S = Repl(S, "{2}", GetTimeString(Time));
             }
-
-            if (PRI.RoleInfo != none)
+            else
             {
-                if (PC.bUseNativeRoleNames)
-                {
-                    S = Repl(S, "{0}", PRI.RoleInfo.AltName);
-                }
-                else
-                {
-                    S = Repl(S, "{0}", PRI.RoleInfo.MyName);
-                }
+                S = default.ReinforcementsDepletedText;
             }
-
-            S = Repl(S, "{2}", GetTimeString(Time));
         }
 
         Y += 4.0 * Scale + strY;
@@ -4266,6 +4274,7 @@ defaultproperties
     JoinTeamText="Press ESC to join a team"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
     ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
+    ReinforcementsDepletedText="Reinforcements depleted!"
 
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"

@@ -28,6 +28,10 @@ var     class<DHObstacleManager>    ObstacleManagerClass;
 
 var     float                       ChangeTeamInterval;
 
+var     array<float>                ReinforcementMessagePercentages;
+var     int                         TeamReinforcementMessageIndices[2];
+var     int                         bTeamOutOfReinforcements[2];
+
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
@@ -1405,7 +1409,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
     local Controller P;
-    local int i, num;
+    local int i, Num;
     local float FFPenalty;
     local RORoleInfo KilledRI, KillerRI;
 
@@ -1625,22 +1629,26 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     }
 
     DiscardInventory(KilledPawn);
-    NotifyKilled(Killer,Killed,KilledPawn);
+    NotifyKilled(Killer, Killed, KilledPawn);
 
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; ++i)
     {
         if (SpawnLimitReached(i))
         {
-            num = 0;
+            Num = 0;
 
             for (P = Level.ControllerList; P != none; P = P.NextController)
             {
                 if (P.bIsPlayer && P.Pawn != none && P.Pawn.Health > 0 && P.PlayerReplicationInfo.Team.TeamIndex == i)
-                    num++;
+                {
+                    ++Num;
+                }
             }
 
-            if (num == 0)
+            if (Num == 0)
+            {
                 EndRound(int(!bool(i)));    // It looks like a hack, but hey, it's the easiest way to find the opposite team :)
+            }
         }
     }
 }
@@ -1680,12 +1688,12 @@ state RoundInPlay
         local Controller P, NextC;
         local Actor A;
         local int i;
-        local ROGameReplicationInfo GRI;
+        local DHGameReplicationInfo GRI;
         local ROVehicleFactory ROV;
 
         // Reset all round properties
         RoundStartTime = ElapsedTime;
-        GRI = ROGameReplicationInfo(GameReplicationInfo);
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
         GRI.RoundStartTime = RoundStartTime;
 
         SpawnCount[AXIS_TEAM_INDEX] = 0;
@@ -1782,8 +1790,14 @@ state RoundInPlay
 
         ResetMortarTargets();
 
-        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
-        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+        GRI.DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
+        GRI.DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+
+        TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] = 0;
+        TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
+
+        bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
+        bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
     }
 
     // Modified for DHObjectives
@@ -2033,13 +2047,6 @@ state RoundInPlay
                     {
                         RestartPlayer(P);
                     }
-
-                    // If spawn limit has now been reached, send a message out
-                    if (SpawnLimitReached(i))
-                    {
-                        SendReinforcementMessage(i, 1);
-                        break;
-                    }
                 }
             }
         }
@@ -2174,42 +2181,81 @@ function ResetMortarTargets()
 // Handle reinforcment checks and balances
 function HandleReinforcements(Controller C)
 {
-    local DHPlayer DHP;
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local float ReinforcementPercent;
+    local bool bIsDefendingTeam;
 
-    DHP = DHPlayer(C);
+    PC = DHPlayer(C);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // Don't subtract / calc reinforcements as the player didn't get a pawn
-    if (DHP == none || DHP.Pawn == none)
+    if (PC == none || PC.Pawn == none || GRI == none)
     {
         return;
     }
 
     //TODO: look into improving or rewriting this, as this is garbage looking
-    if (DHP.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    if (PC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
     {
-        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
+        GRI.DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
-        // if the Allies have used up 85% of their reinforcements, send them a reinforcements low message
-        if (SpawnCount[ALLIES_TEAM_INDEX] == Int(LevelInfo.Allies.SpawnLimit * 0.85))
+        ReinforcementPercent = float(GRI.DHSpawnCount[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
+
+        while ( TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
+                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
         {
-            SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
+            SendReinforcementMessage(ALLIES_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+
+            ++TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX];
         }
     }
-    else if (DHP.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
+    else if (PC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
     {
-        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
+        GRI.DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
 
-        // If Axis has used up 85% of their reinforcements, send them a reinforcements low message
-        if (SpawnCount[AXIS_TEAM_INDEX] == Int(LevelInfo.Axis.SpawnLimit * 0.85))
+        ReinforcementPercent = float(GRI.DHSpawnCount[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
+
+        while ( TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
+                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
         {
-            SendReinforcementMessage(AXIS_TEAM_INDEX, 0);
+            SendReinforcementMessage(AXIS_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
+
+            ++TeamReinforcementMessageIndices[AXIS_TEAM_INDEX];
         }
     }
 
-    if (DHP.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
+    if (PC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
     {
-        DHP.NotifyOfMapInfoChange();
-        DHP.bFirstRoleAndTeamChange = true;
+        PC.NotifyOfMapInfoChange();
+        PC.bFirstRoleAndTeamChange = true;
+    }
+
+    if (GRI.DHSpawnCount[PC.PlayerReplicationInfo.Team.TeamIndex] == 0)
+    {
+        if (bTeamOutOfReinforcements[PC.PlayerReplicationInfo.Team.TeamIndex] == 0)
+        {
+            // Colin: Determine if player's team is defending
+            bIsDefendingTeam = (PC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
+                               (PC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
+
+            // Colin: Team is just now out of reinforcements.
+            bTeamOutOfReinforcements[PC.PlayerReplicationInfo.Team.TeamIndex] = 1;
+
+            if (bIsDefendingTeam && bTeamOutOfReinforcements[int(!bool(PC.PlayerReplicationInfo.Team.TeamIndex))] == 0)
+            {
+                // Colin: If this team is defending and the attackers are
+                // not out of reinforcements, set the round time to be the
+                // original round duration.
+                SetRoundTime(RoundDuration);
+            }
+            else if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || (LevelInfo.DefendingSide == SIDE_none && bTeamOutOfReinforcements[int(!bool(PC.PlayerReplicationInfo.Team.TeamIndex))] == 1))
+            {
+                // Colin: If this team is attacking OR both teams are out of
+                // reinforcements, set the round time to 60 seconds.
+                SetRoundTime(Min(GetRoundTime(), 60));
+            }
+        }
     }
 }
 
@@ -2356,12 +2402,6 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
         if (bHandleReinforcements)
         {
             HandleReinforcements(C);
-        }
-
-        // If we've reached the last reinforcement, lets alert the team
-        if (SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex))
-        {
-            SendReinforcementMessage(C.PlayerReplicationInfo.Team.TeamIndex, 1);
         }
     }
 }
@@ -2988,6 +3028,74 @@ function NotifyLogout(Controller Exiting)
     super.Destroyed();
 }
 
+function SendReinforcementMessage(int Team, int Num)
+{
+    local Controller P;
+
+    for (P = Level.ControllerList; P != none; P = P.NextController)
+    {
+        if (PlayerController(P) != none &&
+            P.PlayerReplicationInfo.Team != none &&
+            P.PlayerReplicationInfo.Team.TeamIndex == Team)
+        {
+            PlayerController(P).ReceiveLocalizedMessage(class'DHReinforcementMsg', Num);
+        }
+    }
+}
+
+function int GetRoundTime()
+{
+    return (RoundStartTime + RoundDuration) - ElapsedTime;
+}
+
+function SetRoundTime(int RoundTime)
+{
+    local DHGameReplicationInfo GRI;
+    local int ElapsedTimeDelta;
+    local int i, j;
+    local Controller C;
+    local DHPlayer PC;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        ElapsedTimeDelta = (GRI.RoundDuration + GRI.RoundStartTime - RoundTime) - ElapsedTime;
+
+        ElapsedTime += ElapsedTimeDelta;
+        LastReinforcementTime[AXIS_TEAM_INDEX] += ElapsedTimeDelta;
+        LastReinforcementTime[ALLIES_TEAM_INDEX] += ElapsedTimeDelta;
+        GRI.ElapsedTime += ElapsedTimeDelta;
+        GRI.ElapsedQuarterMinute = GRI.ElapsedTime;
+
+        for (i = 0; i < arraycount(GRI.VehiclePoolNextAvailableTimes); ++i)
+        {
+            GRI.VehiclePoolNextAvailableTimes[i] += ElapsedTimeDelta;
+        }
+
+        if (SpawnManager != none)
+        {
+            for (i = 0; i < SpawnManager.VehiclePools.Length; ++i)
+            {
+                for (j = 0; j < SpawnManager.VehiclePools[i].Slots.Length; ++j)
+                {
+                    SpawnManager.VehiclePools[i].Slots[j].RespawnTime += ElapsedTimeDelta;
+                }
+            }
+        }
+
+        for (C = Level.ControllerList; C != none; C = C.nextController)
+        {
+            PC = DHPlayer(C);
+
+            if (PC != none)
+            {
+                PC.NextSpawnTime += ElapsedTimeDelta;
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH
@@ -3072,4 +3180,9 @@ defaultproperties
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
 
     ChangeTeamInterval=1.0
+
+    ReinforcementMessagePercentages(0)=0.5
+    ReinforcementMessagePercentages(1)=0.25
+    ReinforcementMessagePercentages(2)=0.1
+    ReinforcementMessagePercentages(3)=0.0
 }
