@@ -28,6 +28,5 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_RedSmokeAttachment'
     ItemName="M16 Red Smoke Grenade"
     Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
-    bCanThrow=false
     InventoryGroup=8
 }

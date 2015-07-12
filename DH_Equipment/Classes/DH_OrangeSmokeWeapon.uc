@@ -28,6 +28,5 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_OrangeSmokeAttachment'
     ItemName="RauchSichtzeichen Orange 160"
     Mesh=SkeletalMesh'DH_GermanSmokeGrenade_1st.OrangeSmokeGrenade'
-    bCanThrow=false
     InventoryGroup=8
 }
