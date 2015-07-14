@@ -241,7 +241,8 @@ function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
 }
 
 // Modified to use bTraceActors option in the trace (making GetVehicleHitInfo() redundant), to use MuzzleBone location for more accurate trace,
-// to skip function on any authority role & not just standalone (listen server will also already have the info), & to remove pointlessly setting NetUpdateTime on net client
+// to handle new collision mesh actor, to remove pointlessly setting NetUpdateTime on net client,
+// & to skip function on any authority role & not just standalone (listen server will also already have the info)
 simulated function GetHitInfo()
 {
     local vector Offset, HitLocation;
@@ -250,6 +251,12 @@ simulated function GetHitInfo()
     {
         Offset = 20.0 * Normal(GetBoneCoords(MuzzleBoneName).Origin - mHitLocation);
         mHitActor = Trace(HitLocation, mHitNormal, mHitLocation - Offset, mHitLocation + Offset, true);
+
+        // If we hit collision mesh actor (probably turret, maybe an exposed vehicle MG), we switch mHitActor to be the real VehicleWeapon & proceed as if we'd hit that actor
+        if (DHCollisionStaticMeshActor(mHitActor) != none)
+        {
+            mHitActor = mHitActor.Owner;
+        }
 
         // Debug option - draws a line representing the trace (enabled if DHBullet.bDebugROBallistics is set true in config file or in bullet's default properties)
         if (Instigator != none && Instigator.Weapon != none && class<DHBullet>(Instigator.Weapon.default.FireModeClass[0].default.ProjectileClass) != none

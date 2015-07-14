@@ -78,7 +78,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DHVehicleWeaponCollisionMeshActor(Victims) != none)
+        if (DHCollisionStaticMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
         }
@@ -172,7 +172,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         Victims = LastTouched;
         LastTouched = none;
 
-        if (DHVehicleWeaponCollisionMeshActor(Victims) != none)
+        if (DHCollisionStaticMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
         }
@@ -359,15 +359,13 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    if (DHVehicleWeaponCollisionMeshActor(Other) != none)
-    {
-        Other = Other.Owner;
-    }
-
-//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
-
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
+        if (Other.IsA('DHCollisionStaticMeshActor'))
+        {
+            Other = Other.Owner;
+        }
+
         LastTouched = Other;
 
         if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))

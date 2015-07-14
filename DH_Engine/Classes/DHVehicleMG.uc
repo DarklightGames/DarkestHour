@@ -22,8 +22,8 @@ var     float   ReloadStartTime;      // records the level time the reload start
 var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
-var class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
-var DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
+var     DHCollisionStaticMeshActor  CollisionMeshActor;
+var     StaticMesh                  CollisionStaticMesh; // specify a valid static mesh in MG's default props & the col static mesh will automatically be used
 
 // Option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
 struct  MatchedSkin
@@ -60,35 +60,42 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to handle new collision static mesh actor, if one has been specified
+// Matt: modified to handle new collision static mesh actor, if one has been specified, & also to set ReloadDuration
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    // Just so the client's MGPawn doesn't have to do this many times per second to display reload progress on the HUD
-    // This will be ignored if MG has a HUDOverlay with a reload animation, as a literal ReloadDuration value will have to be set in default properties
-    if (ReloadDuration <= 0.0 && ReloadSound != none)
+    if (CollisionStaticMesh != none)
     {
-        ReloadDuration = GetSoundDuration(ReloadSound);
-    }
-
-    if (CollisionMeshActorClass != none)
-    {
-        CollisionMeshActor = Spawn(CollisionMeshActorClass, self); // vital that this VehicleWeapon owns the col mesh actor
+        CollisionMeshActor = Spawn(class'DHCollisionStaticMeshActor', self); // vital that this VehicleWeapon owns the col mesh actor
 
         if (CollisionMeshActor != none)
         {
             // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
             SetCollision(false, false); // bCollideActors & bBlockActors both false
-            bBlockNonZeroExtentTraces = false;
             bBlockZeroExtentTraces = false;
+            bBlockNonZeroExtentTraces = false;
+            bBlockHitPointTraces = false;
+            bProjTarget = false;
+            bIgnoreEncroachers = false;
 
             // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the MG
+            CollisionMeshActor.bHardAttach = true;
             AttachToBone(CollisionMeshActor, YawBone);
 
             // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the MG
-            SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+            CollisionMeshActor.SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+
+            // Finally set the static mesh for the col mesh actor
+            CollisionMeshActor.SetStaticMesh(CollisionStaticMesh);
         }
+    }
+
+    // Set here, just so a net client's MGPawn doesn't have to do this many times per second to display reload progress on the HUD
+    // This will be ignored if MG has a HUDOverlay with a reload animation, as a literal ReloadDuration value will have to be set in default properties
+    if (ReloadDuration <= 0.0 && ReloadSound != none)
+    {
+        ReloadDuration = GetSoundDuration(ReloadSound);
     }
 }
 

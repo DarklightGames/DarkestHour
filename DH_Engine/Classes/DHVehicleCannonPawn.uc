@@ -1705,6 +1705,30 @@ exec function ToggleCameraDebug()
     }
 }
 
+// New exec to toggles showing any collision static mesh actor
+exec function ShowColMesh()
+{
+    if (Cannon != none && Cannon.CollisionMeshActor != none && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Level.NetMode != NM_DedicatedServer)
+    {
+        // If in normal mode, with CSM hidden, we toggle the CSM to be visible
+        if (Cannon.CollisionMeshActor.bHidden)
+        {
+            Cannon.CollisionMeshActor.bHidden = false;
+        }
+        // Or if CSM has already been made visible & so is the turret, we next toggle the turret to be hidden
+        else if (Cannon.Skins[0] != texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
+        {
+            Cannon.CollisionMeshActor.HideOwner(true); // can't simply make Cannon bHidden, as that also hides all attached actors, including col mesh & player
+        }
+        // Or if CSM has already been made visible & the turret has been hidden, we now go back to normal mode, by toggling turret back to visible & CSM to hidden
+        else
+        {
+            Cannon.CollisionMeshActor.HideOwner(false);
+            Cannon.CollisionMeshActor.bHidden = true;
+        }
+    }
+}
+
 exec function LogCannon() // DEBUG x 3 (Matt: use if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("CLIENT:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon

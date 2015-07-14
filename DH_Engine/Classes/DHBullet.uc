@@ -123,18 +123,18 @@ simulated function Tick(float DeltaTime)
 }
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor
-// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor instead
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    if (DHVehicleWeaponCollisionMeshActor(Other) != none)
-    {
-        Other = Other.Owner;
-    }
-
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
+        if (Other.IsA('DHCollisionStaticMeshActor'))
+        {
+            Other = Other.Owner;
+        }
+
         LastTouched = Other;
 
         if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
@@ -173,8 +173,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local bool               bDoDeflection;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
-    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || !Other.bBlockHitPointTraces ||
-        Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
+    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
+        || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
     }
@@ -262,12 +262,22 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 {
                     break;
                 }
-                // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
-                else if ((A.bBlockActors || A.bWorldGeometry) && !A.bDeleteMe && A.bBlockHitPointTraces
-                    && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+
+                // We hit a blocking actor in the way, but do some checks on it
+                if (A.bBlockActors || A.bWorldGeometry)
                 {
-                    HitPawn = none;
-                    break;
+                    // If hit collision mesh actor (probably turret, maybe exposed vehicle MG), switch hit actor to be real VehicleWeapon & proceed as if we'd hit that actor
+                    if (A.IsA('DHCollisionStaticMeshActor'))
+                    {
+                        A = A.Owner;
+                    }
+
+                    // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
+                    if (!A.bDeleteMe && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+                    {
+                        HitPawn = none;
+                        break;
+                    }
                 }
             }
         }

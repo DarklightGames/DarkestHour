@@ -36,9 +36,9 @@ var     float               ManualRotationsPerSecond;
 var     float               PoweredRotationsPerSecond;
 var     bool                bHasTurret; // this cannon is in a fully rotating turret
 
-// Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
-var     class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
-var     DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
+// Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
+var     DHCollisionStaticMeshActor  CollisionMeshActor;
+var     StaticMesh                  CollisionStaticMesh; // specify a valid static mesh in cannon's default props & the col static mesh will automatically be used
 
 // Fire effects - Ch!cKeN
 var     VehicleDamagedEffect        TurretHatchFireEffect;
@@ -70,32 +70,25 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to fix minor bug where 1st key press to switch round type key didn't do anything
+// Matt: modified to handle new collision static mesh actor, if one has been specified
+// Also to fix minor bug where 1st key press to switch round type key didn't do anything
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Role == ROLE_Authority && bMultipleRoundTypes)
+    if (CollisionStaticMesh != none)
     {
-        PendingProjectileClass = PrimaryProjectileClass;
-    }
-}
-
-// Matt: modified to handle new collision static mesh actor, if one has been specified
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
-
-    if (CollisionMeshActorClass != none)
-    {
-        CollisionMeshActor = Spawn(CollisionMeshActorClass, self); // vital that this VehicleWeapon owns the col mesh actor
+        CollisionMeshActor = Spawn(class'DHCollisionStaticMeshActor', self); // vital that this VehicleWeapon owns the col mesh actor
 
         if (CollisionMeshActor != none)
         {
             // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
             SetCollision(false, false); // bCollideActors & bBlockActors both false
-            bBlockNonZeroExtentTraces = false;
             bBlockZeroExtentTraces = false;
+            bBlockNonZeroExtentTraces = false;
+            bBlockHitPointTraces = false;
+            bProjTarget = false;
+            bIgnoreEncroachers = false;
 
             // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the turret
             CollisionMeshActor.bHardAttach = true;
@@ -103,7 +96,15 @@ simulated function PostNetBeginPlay()
 
             // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the turret
             CollisionMeshActor.SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+
+            // Finally set the static mesh for the col mesh actor
+            CollisionMeshActor.SetStaticMesh(CollisionStaticMesh);
         }
+    }
+
+    if (Role == ROLE_Authority && bMultipleRoundTypes)
+    {
+        PendingProjectileClass = PrimaryProjectileClass;
     }
 }
 

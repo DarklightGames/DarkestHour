@@ -279,9 +279,9 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     End = Start + (65535.0 * Direction);
     HitPlayer = ROPawn(Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0)); // WhizType 0 to prevent sound triggering, as it's close
 
-    if (HitPlayer != none && VSizeSquared(HitLocation - Start) > (PreLaunchTraceDistance ** 2)) // use VSizeSquared comparison for more efficient processing
+    if (HitPlayer != none && VSizeSquared(HitLocation - Start) > (PreLaunchTraceDistance ** 2)) // VSizeSquared comparison for more efficient processing
     {
-        HitPlayer = none;
+        HitPlayer = none; // out of pre-launch trace range, so ignore the player
     }
 
     // Now do a normal trace to see if we hit another blocking actor (limit trace length it if we hit a player, as there's no point checking beyond that HitLocation)
@@ -297,21 +297,36 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 
     foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
     {
-        // Ignore anything that doesn't block or that a bullet's ProcessTouch() would ignore
-        if ((A.bBlockActors || A.bWorldGeometry) && !A.bDeleteMe && A.bBlockHitPointTraces
-            && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+        // Our trace has reached a player we have already registered a hit on, so nothing is in the way
+        if (A == HitPlayer)
         {
-            Other = A;
-            HitLocation = TempHitLocation;
-            HitNormal = TempHitNormal;
+            break;
+        }
 
-            // Cancel any hit that HitPointTrace registered on a player, as our standard trace has hit a closer, blocking actor
-            if (HitPlayer != none && Other != HitPlayer)
+        // We hit a blocking actor, but do some checks on it
+        if (A.bBlockActors || A.bWorldGeometry)
+        {
+            // Matt: if hit a collision mesh actor (probably turret, maybe exposed vehicle MG), we switch hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor
+            if (DHCollisionStaticMeshActor(A) != none && A.Owner != none)
             {
-                HitPlayer = none;
+                A = A.Owner;
             }
 
-            break;
+            // Register a hit on the blocking actor, providing it isn't anything ProcessTouch would normally ignore
+            if (!A.bDeleteMe && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+            {
+                Other = A;
+                HitLocation = TempHitLocation;
+                HitNormal = TempHitNormal;
+
+                // Cancel any hit that HitPointTrace registered on a player, as the blocking actor was in the way
+                if (HitPlayer != none && Other != HitPlayer)
+                {
+                    HitPlayer = none;
+                }
+
+                break;
+            }
         }
     }
 

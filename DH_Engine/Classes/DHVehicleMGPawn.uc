@@ -1381,6 +1381,30 @@ function ServerToggleDebugExits()
     }
 }
 
+// New exec to toggles showing any collision static mesh actor
+exec function ShowColMesh()
+{
+    if (MGun != none && MGun.CollisionMeshActor != none && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Level.NetMode != NM_DedicatedServer)
+    {
+        // If in normal mode, with CSM hidden, we toggle the CSM to be visible
+        if (MGun.CollisionMeshActor.bHidden)
+        {
+            MGun.CollisionMeshActor.bHidden = false;
+        }
+        // Or if CSM has already been made visible & so is the turret, we next toggle the turret to be hidden
+        else if (MGun.Skins[0] != texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
+        {
+            MGun.CollisionMeshActor.HideOwner(true); // can't simply make MG bHidden, as that also hides all attached actors, including col mesh & player
+        }
+        // Or if CSM has already been made visible & the turret has been hidden, we now go back to normal mode, by toggling turret back to visible & CSM to hidden
+        else
+        {
+            MGun.CollisionMeshActor.HideOwner(false);
+            MGun.CollisionMeshActor.bHidden = true;
+        }
+    }
+}
+
 defaultproperties
 {
     UnbuttonedPositionIndex=1
