@@ -6,7 +6,7 @@
 class DHVehicleCannon extends ROTankCannon
     abstract;
 
-#exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
+#exec OBJ LOAD FILE=..\Sounds\DH_Vehicle_Reloads.uax
 
 var     DHVehicleCannonPawn CannonPawn; // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 

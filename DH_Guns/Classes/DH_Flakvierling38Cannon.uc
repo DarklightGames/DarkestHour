@@ -265,7 +265,7 @@ simulated function UpdateSightAndWheelRotation()
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
 }
 
-// Added the following functions from DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DH_ROTankCannon:
+// Added the following functions from DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DHVehicleCannon:
 simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;

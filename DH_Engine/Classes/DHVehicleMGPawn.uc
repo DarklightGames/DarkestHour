@@ -1096,7 +1096,7 @@ simulated function SetPlayerPosition()
         }
 
         // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
-        // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
+        // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & MG are already in
         if (VehicleAnim != '' && Gun != none && Gun.HasAnim(VehicleAnim))
         {
             Gun.PlayAnim(VehicleAnim);
