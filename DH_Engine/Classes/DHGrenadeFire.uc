@@ -356,7 +356,7 @@ event ModeTick(float dt)
 
 event ModeHoldFire()
 {
-    if (Weapon.Role == ROLE_Authority && !(DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).bHasReleaseLever))
+    if (Weapon != none && Weapon.Role == ROLE_Authority && !(DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).bHasReleaseLever))
     {
         DHExplosiveWeapon(Weapon).bPrimed = true;
     }
