@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHCollisionStaticMeshActor extends StaticMeshActor;
+class DHCollisionStaticMeshActor extends StaticMeshActor
+    notplaceable;
 
 /**
 Matt, July 2015: this actor is a way of getting a collision static mesh to work on a VehicleWeapon (generally a turret, but maybe an exposed MG or a gun shield)
