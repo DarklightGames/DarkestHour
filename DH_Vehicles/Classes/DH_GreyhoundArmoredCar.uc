@@ -134,12 +134,12 @@ defaultproperties
     VehicleMass=5.0
     DrivePos=(X=5.0,Y=-2.0,Z=5.0)
     DriveAnim="VBA64_driver_idle_close"
-    ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)
-    ExitPositions(1)=(X=-73.0,Y=1.0,Z=207.0)
-    ExitPositions(2)=(X=-124.0,Y=-161.0,Z=64.0)
-    ExitPositions(3)=(X=-245.0,Y=-42.0,Z=63.0)
-    ExitPositions(4)=(X=-249.0,Y=31.0,Z=63.0)
-    ExitPositions(5)=(X=-126.0,Y=169.0,Z=64.0)
+    ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)  //driver
+    ExitPositions(1)=(X=30.0,Y=-5.0,Z=210.0)    //commander
+    ExitPositions(2)=(X=-124.0,Y=-161.0,Z=64.0) //passenger (l)
+    ExitPositions(3)=(X=-245.0,Y=-42.0,Z=63.0)  //passenger (rl)
+    ExitPositions(4)=(X=-249.0,Y=31.0,Z=63.0)   //passenger (rr)
+    ExitPositions(5)=(X=-126.0,Y=169.0,Z=64.0)  //passenger (r)
     EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="M8 Armored Car"

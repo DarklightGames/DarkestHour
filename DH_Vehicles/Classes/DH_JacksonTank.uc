@@ -160,7 +160,7 @@ defaultproperties
     DrivePos=(X=-3.0,Y=0.0,Z=-3.0)
     DriveAnim="VPanzer3_driver_idle_close"
     ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  //driver
-    ExitPositions(1)=(X=-20.0,Y=0.0,Z=250.0)    //commander
+    ExitPositions(1)=(X=20.0,Y=40.0,Z=250.0)    //commander
     ExitPositions(2)=(X=-125.0,Y=-150.0,Z=75.0) //passenger (l)
     ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  //passenger (rl)
     ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   //passenger (rr)

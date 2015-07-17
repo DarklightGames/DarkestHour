@@ -168,12 +168,12 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=12.0,Y=0.0,Z=-18.0)
     DriveAnim="VPanzer3_driver_idle_close"
-    ExitPositions(0)=(X=107.0,Y=-41.0,Z=98.0)
-    ExitPositions(1)=(X=-29.0,Y=-37.0,Z=164.0)
-    ExitPositions(2)=(X=-125.0,Y=-158.0,Z=5.0)
-    ExitPositions(3)=(X=-244.0,Y=-37.0,Z=5.0)
-    ExitPositions(4)=(X=-241.0,Y=34.0,Z=5.0)
-    ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)
+    ExitPositions(0)=(X=107.0,Y=-41.0,Z=98.0)  //driver
+    ExitPositions(1)=(X=40.0,Y=-15.0,Z=165.0)  //commander
+    ExitPositions(2)=(X=-125.0,Y=-158.0,Z=5.0) //passenger (l)
+    ExitPositions(3)=(X=-244.0,Y=-37.0,Z=5.0)  //passenger (rl)
+    ExitPositions(4)=(X=-241.0,Y=34.0,Z=5.0)   //passenger (rr)
+    ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)  //passenger (r)
     EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="M18 Hellcat"
