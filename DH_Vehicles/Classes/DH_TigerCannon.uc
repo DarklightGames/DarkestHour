@@ -104,6 +104,7 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_turret_Coll'
     SoundVolume=120
     SoundRadius=300.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'

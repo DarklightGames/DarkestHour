@@ -51,6 +51,7 @@ defaultproperties
     Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
     MatchedSkins(0)=(MGSkinIndex=0,VehicleSkinIndex=0)
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.StuH.StuH_remoteMG_coll'
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true
