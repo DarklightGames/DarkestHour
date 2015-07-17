@@ -50,7 +50,6 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
     Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
-    MatchedSkins(0)=(MGSkinIndex=0,VehicleSkinIndex=0)
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true

@@ -51,7 +51,7 @@ simulated function PostBeginPlay()
     if (Owner != none)
     {
         SetCollision(Owner.default.bCollideActors, Owner.default.bBlockActors);
-        bCollideWorld = Owner.default.bCollideWorld; 
+        bCollideWorld = Owner.default.bCollideWorld;
         SetCollisionSize(Owner.CollisionRadius, Owner.CollisionHeight);
         KSetBlockKarma(Owner.default.bBlockKarma);
         bBlockZeroExtentTraces = Owner.default.bBlockZeroExtentTraces;

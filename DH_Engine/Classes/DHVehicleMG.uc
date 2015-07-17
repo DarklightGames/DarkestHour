@@ -6,7 +6,9 @@
 class DHVehicleMG extends ROMountedTankMG
     abstract;
 
+// General
 var  DHVehicleMGPawn  MGPawn;         // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+var     bool    bMatchSkinToVehicle;  // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MGPawn & MG classes
 
 // Ammo & firing
 var     class<Projectile> TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
@@ -24,16 +26,6 @@ var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var     DHCollisionStaticMeshActor  CollisionMeshActor;
 var     StaticMesh                  CollisionStaticMesh; // specify a valid static mesh in MG's default props & the col static mesh will automatically be used
-
-// Option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
-struct  MatchedSkin
-{
-    var byte    MGSkinIndex;          // index number of MG skin to be matched to vehicle
-    var byte    VehicleSkinIndex;     // index number of vehicle skin to match it to
-};
-
-var     bool    bMatchSkinToVehicle;     // tells MG to skin to match 1 or more of its skins to the vehicle camo variant
-var     array<MatchedSkin> MatchedSkins; // array of skins indexes to match (in practice usually just 1 member & probably matching skin index 0 to 0)
 
 // Stuff for fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HullMGFireEffect;
@@ -128,16 +120,10 @@ simulated function InitializeMG(DHVehicleMGPawn MGPwn)
             }
         }
 
-        // Match MG skin(s) to vehicle skin(s), e.g. for gunshield
+        // Match MG skin zero to vehicle skin zero, e.g. for gunshield
         if (bMatchSkinToVehicle)
         {
-            for (i = 0; i < MatchedSkins.Length; ++i)
-            {
-                if (MatchedSkins[i].MGSkinIndex < Skins.Length && MatchedSkins[i].VehicleSkinIndex < MGPawn.VehicleBase.Skins.Length)
-                {
-                    Skins[MatchedSkins[i].MGSkinIndex] = MGPawn.VehicleBase.Skins[MatchedSkins[i].VehicleSkinIndex];
-                }
-            }
+            Skins[0] = MGPawn.VehicleBase.Skins[0];
         }
     }
     else
