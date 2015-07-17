@@ -47,7 +47,6 @@ var     bool        bNeedToInitializeDriver;     // clientside flag that we need
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Driver positions & view
-var     bool        bPlayerCollisionBoxMoves;    // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
@@ -722,7 +721,8 @@ simulated function PrevWeapon()
     }
 }
 
-// Modified so if player has moving collision box, server goes to state ViewTransition just to play animations
+// Modified to call NextViewPoint() for all modes, including dedicated server
+// New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -731,15 +731,7 @@ function ServerChangeViewPoint(bool bForward)
         {
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
-            {
-                GotoState('ViewTransition');
-            }
+            NextViewPoint();
         }
     }
     else
@@ -748,21 +740,22 @@ function ServerChangeViewPoint(bool bForward)
         {
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
-            {
-                GotoState('ViewTransition');
-            }
+            NextViewPoint();
         }
     }
 }
 
-// Modified to use Sleep to control exit from state, to avoid unnecessary stuff on a server,
-// to add handling of FOV changes & better handling of locked camera, & to avoid switching mesh & FOV if in behind view
+// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
+simulated function NextViewPoint()
+{
+    if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[PreviousPositionIndex].bExposed)
+    {
+        GotoState('ViewTransition');
+    }
+}
+
+// Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
+// to add handling of FOV changes & better handling of locked camera, to avoid switching mesh & FOV if in behind view, & to avoid unnecessary stuff on a server
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -791,37 +784,37 @@ simulated state ViewTransition
                     }
                 }
             }
+        }
+
+        if (Driver != none)
+        {
+            // If moving to an exposed position, enable the driver's hit detection
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[PreviousPositionIndex].bExposed && Driver.IsA('ROPawn'))
+            {
+                ROPawn(Driver).ToggleAuxCollision(true);
+            }
 
             // Play any transition animation for the driver
-            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
+            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
             {
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }
         }
 
+        // Play any transition animation for the vehicle itself & set a duration to control when we exit this state
         ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
-        // Play any transition animation for the vehicle itself
-        // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if driver's collision box moves)
         if (PreviousPositionIndex < DriverPositionIndex)
         {
             if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
             {
-                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-                {
-                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-                }
-
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
                 ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
             }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-            {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-            }
-
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
             ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
         }
     }
@@ -852,6 +845,12 @@ simulated state ViewTransition
             {
                 Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation));
             }
+        }
+
+        // If moving to an unexposed position, disable the driver's hit detection
+        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[PreviousPositionIndex].bExposed && ROPawn(Driver) != none)
+        {
+            ROPawn(Driver).ToggleAuxCollision(false);
         }
     }
 
@@ -1929,7 +1928,6 @@ function ServerKillEngine()
 defaultproperties
 {
     PointValue=1.0
-    bKeepDriverAuxCollision=true
     PlayerCameraBone="Camera_driver"
     bEngineOff=true
     bSavedEngineOff=true
@@ -1962,6 +1960,8 @@ defaultproperties
     ImpactDamageMult=0.5
     TouchMessageClass=class'DHVehicleTouchMessage'
     ObjectiveGetOutDist=1500.0
+    VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
+    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true
@@ -1969,4 +1969,5 @@ defaultproperties
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
     bDisableThrottle=false
+    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 }

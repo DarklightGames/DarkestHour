@@ -8,6 +8,8 @@ class DH_HigginsBoat extends DHBoatVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
+var     texture     BinocsOverlay;
+
 var     sound       RampDownSound;
 var     sound       RampUpSound;
 var     float       RampSoundVolume;
@@ -39,59 +41,14 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            // Switch to mesh for new position if it's different
-            if (DriverPositions[DriverPositionIndex].PositionMesh != Mesh && !bDontUsePositionMesh &&
-                (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
-            {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
+        super.HandleTransition();
 
-            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
-            {
-                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                {
-                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-                }
-                else
-                {
-                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-                }
-            }
-
-            // Play any transition animation for the driver
-            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
-            {
-                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-            }
-        }
-
-        ViewTransitionDuration = 0.0;
-
-        // Play any transition animation for the vehicle itself - plus the ramp/up down sounds that are specific to the Higgins boat
         if (PreviousPositionIndex < DriverPositionIndex)
         {
-            if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
-            {
-                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-                {
-                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-                }
-
-                ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-                PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
-            }
+            PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
         }
-        else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
+        else
         {
-            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-            {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-            }
-
-            ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
             PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
         }
     }
@@ -174,6 +131,47 @@ function RampDownIdle()
     DestAnimName = RampDownIdleAnim;
 }
 
+// Modified to handle binoculars overlay
+simulated function DrawHUD(Canvas C)
+{
+    local PlayerController PC;
+    local float            SavedOpacity;
+
+    PC = PlayerController(Controller);
+
+    if (PC != none && !PC.bBehindView)
+    {
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
+        }
+
+        // Draw binoculars overlay
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        {
+            SavedOpacity = C.ColorModulate.W;
+            C.ColorModulate.W = 1.0;
+            C.DrawColor.A = 255;
+            C.Style = ERenderStyle.STY_Alpha;
+
+            DrawBinocsOverlay(C);
+
+            C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+        }
+    }
+}
+
+// New function, same as tank cannon pawn
+simulated function DrawBinocsOverlay(Canvas C)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+}
+
 event RanInto(Actor Other)
 {
 }
@@ -185,9 +183,9 @@ function bool EncroachingOn(Actor Other)
 
 defaultproperties
 {
-    bPlayerCollisionBoxMoves=true // actually it doesn't, but this is a simple way of making the server play the ramp up/down animations, which is necessary to move the ramp collision box
     bEngineOff=false
     bSavedEngineOff=false
+    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
     RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     RampSoundVolume=180.0
@@ -254,7 +252,8 @@ defaultproperties
     SteeringScaleFactor=2.0
     BeginningIdleAnim="Higgins-Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Drop",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,bDrawOverlays=true,ViewFOV=12.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(1)=0.57
@@ -272,8 +271,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.4
     VehicleHudOccupantsY(7)=0.5
     VehicleHudEngineY=0.0
-    VehHitpoints(0)=(PointBone="driver_player",PointOffset=(Z=45.0))
-    VehHitpoints(1)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0))
+    VehHitpoints(0)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0))
     bIsApc=true
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=LFWheel

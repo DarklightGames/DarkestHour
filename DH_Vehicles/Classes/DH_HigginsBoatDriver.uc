@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsBoatDriver extends DH_HigginsPassengerPawn;
+class DH_HigginsBoatDriver extends DH_HigginsPassengerPawn; // TEST - appears to be an unused & unnecessary class, so probably going to delete - Matt, July 2015
 
 var     texture     BinocsOverlay;
 
 // Modified to handle binoculars overlay
-simulated function DrawHUD(Canvas Canvas)
+simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local float            SavedOpacity;
@@ -20,32 +20,32 @@ simulated function DrawHUD(Canvas Canvas)
         // Draw vehicle, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+            ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
         }
 
         // Draw binoculars overlay
         if (DriverPositionIndex == 1)
         {
-            SavedOpacity = Canvas.ColorModulate.W;
-            Canvas.ColorModulate.W = 1.0;
-            Canvas.DrawColor.A = 255;
-            Canvas.Style = ERenderStyle.STY_Alpha;
+            SavedOpacity = C.ColorModulate.W;
+            C.ColorModulate.W = 1.0;
+            C.DrawColor.A = 255;
+            C.Style = ERenderStyle.STY_Alpha;
 
-            DrawBinocsOverlay(Canvas);
+            DrawBinocsOverlay(C);
 
-            Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+            C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
         }
     }
 }
 
 // New function, same as tank cannon pawn
-simulated function DrawBinocsOverlay(Canvas Canvas)
+simulated function DrawBinocsOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Limit the left and right movement of the driver
@@ -78,8 +78,8 @@ defaultproperties
 {
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     HudName="Engineer"
-    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000)
-    DriverPositions(1)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(1)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,bDrawOverlays=true)
     bMultiPosition=true
     CameraBone="Camera_com"
     DrivePos=(X=0.0,Y=0.0,Z=-15.0)

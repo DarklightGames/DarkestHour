@@ -436,10 +436,7 @@ simulated event HandleWhizSound()
 // Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
 simulated event StartDriving(Vehicle V)
 {
-    local DHVehicleCannonPawn CP;
-    local DHVehicleMGPawn     MGP;
-    local bool                bKeepAuxCollisionCylinder;
-    local int                 i;
+    local int i;
     local DHGameReplicationInfo GRI; // TEMP DEBUG
 
     DrivenVehicle = V;
@@ -535,31 +532,8 @@ simulated event StartDriving(Vehicle V)
     }
 
     // Either keep or disable collision for player pawn's AuxCollisionCylinder (the bullet whip attachment)
-    if (V.bKeepDriverAuxCollision)
-    {
-        bKeepAuxCollisionCylinder = true;
-
-        CP = DHVehicleCannonPawn(V);
-
-        if (CP != none)
-        {
-            if (!CP.DriverPositions[CP.InitialPositionIndex].bExposed)
-            {
-                bKeepAuxCollisionCylinder = false;
-            }
-        }
-        else
-        {
-            MGP = DHVehicleMGPawn(V);
-
-            if (MGP != none && !MGP.DriverPositions[MGP.InitialPositionIndex].bExposed)
-            {
-                bKeepAuxCollisionCylinder = false;
-            }
-        }
-    }
-
-    ToggleAuxCollision(bKeepAuxCollisionCylinder);
+    // Only keep it if the vehicle is set to bKeepDriverAuxCollision & the player is in an exposed position
+    ToggleAuxCollision(V.bKeepDriverAuxCollision && InExposedVehiclePosition(V));
 
     if (Weapon != none)
     {
@@ -570,6 +544,24 @@ simulated event StartDriving(Vehicle V)
 
         Weapon.NotifyOwnerJumped();
     }
+}
+
+// New function to determine whether player occupying a vehicle (including a VehicleWeaponPawn) is exposed & can be hit
+simulated function bool InExposedVehiclePosition(Vehicle V)
+{
+    local ROVehicleWeaponPawn VWP;
+    local ROVehicle           Veh;
+
+    VWP = ROVehicleWeaponPawn(V);
+
+    if (VWP != none)
+    {
+        return VWP.bSinglePositionExposed || VWP.DriverPositions[VWP.DriverPositionIndex].bExposed;
+    }
+
+    Veh = ROVehicle(V);
+
+    return Veh != none && Veh.DriverPositions[Veh.DriverPositionIndex].bExposed;
 }
 
 simulated function StopDriving(Vehicle V) // TEMP DEBUG

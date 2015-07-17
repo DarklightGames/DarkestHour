@@ -79,9 +79,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.35
-
-    VehHitpoints(0)=(PointBone="Camera_driver",bPenetrationPoint=false)
-    VehHitpoints(1)=(PointBone="Engine",PointOffset=(X=16.0),DamageMultiplier=1.0)
+    VehHitpoints(0)=(PointOffset=(X=16.0))
     EngineHealth=35
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel

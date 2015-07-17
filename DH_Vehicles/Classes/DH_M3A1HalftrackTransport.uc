@@ -100,8 +100,8 @@ defaultproperties
     VehicleTeam=1
     SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M3A1Halftrack_body'
     VehicleHudOccupantsX(0)=0.45
@@ -120,9 +120,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.7
     VehicleHudOccupantsY(7)=0.8
     VehicleHudEngineY=0.25
-    VehHitpoints(0)=(PointOffset=(X=13.0,Y=10.0,Z=22.0),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=15.0,PointBone="driver_player",PointOffset=(X=-2.0,Y=9.0,Z=3.0),HitPointType=HP_Driver)
-    VehHitpoints(2)=(PointRadius=35.0,PointScale=1.0,PointBone="Engine",PointOffset=(Z=-20.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(Z=-20.0))
     EngineHealth=125
     DriverAttachmentBone="driver_player"
 
