@@ -112,6 +112,9 @@ simulated function PostBeginPlay()
 // Crucially, we know that we have CannonPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
 {
+    local DHArmoredVehicle AV;
+    local int              i;
+
     if (CannonPwn != none)
     {
         CannonPawn = CannonPwn;
@@ -122,15 +125,27 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
             Instigator = CannonPawn;
         }
 
-        if (DHArmoredVehicle(CannonPawn.VehicleBase) != none)
+        AV = DHArmoredVehicle(CannonPawn.VehicleBase);
+
+        if (AV != none)
         {
             // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-            DHArmoredVehicle(CannonPawn.VehicleBase).CannonTurret = self;
+            AV.CannonTurret = self;
 
             // If vehicle is burning, start the turret hatch fire effect
-            if (DHArmoredVehicle(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (AV.bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartTurretFire();
+            }
+
+            // Option to skin the cannon mesh using CannonSkins specified in vehicle class
+            // TODO: have only added tiger in this way, so add other CannonSkins later & make a big reduction in DH_Vehicles classes - Matt, July 2015
+            if (AV.CannonSkins.Length > 0)
+            {
+                for (i = 0; i < AV.CannonSkins.Length; ++i)
+                {
+                    Skins[i] = AV.CannonSkins[i];
+                }
             }
         }
     }

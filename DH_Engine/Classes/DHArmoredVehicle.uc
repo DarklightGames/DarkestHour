@@ -38,6 +38,7 @@ struct NewHitpoint
 var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
 
 // General
+var     array<Material> CannonSkins;        // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     byte        SpawnVehicleType;       // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
