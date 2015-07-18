@@ -229,28 +229,6 @@ exec function DebugExit()
     }
 }
 
-// Draws a debugging cylinder out of wireframe lines - same as in ROHud but uses DrawStayingDebugLine(), so they stay on the screen
-simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
-{
-    local float  AngleDelta;
-    local vector LastVertex, Vertex;
-    local int    SideIndex;
-
-    AngleDelta = 2.0 * PI / NumSides;
-    LastVertex = Base + X * Radius;
-
-    for (SideIndex = 0; SideIndex < NumSides; ++SideIndex)
-    {
-        Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1.0)) + Y * Sin(AngleDelta * (SideIndex + 1.0))) * Radius;
-
-        DrawStayingDebugLine(LastVertex - Z * HalfHeight, Vertex - Z * HalfHeight, R, G, B);
-        DrawStayingDebugLine(LastVertex + Z * HalfHeight, Vertex + Z * HalfHeight, R, G, B);
-        DrawStayingDebugLine(LastVertex - Z * HalfHeight, LastVertex + Z * HalfHeight, R, G, B);
-
-        LastVertex = Vertex;
-    }
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=0

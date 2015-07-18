@@ -96,8 +96,6 @@ simulated function PostBeginPlay()
 // Includes option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
 simulated function InitializeMG(DHVehicleMGPawn MGPwn)
 {
-    local int i;
-
     if (MGPwn != none)
     {
         MGPawn = MGPwn;
