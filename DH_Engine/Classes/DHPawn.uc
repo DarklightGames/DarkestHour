@@ -4563,6 +4563,30 @@ function PlayDyingSound()
     PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20.0, 200.0), true, 80.0,, true);
 }
 
+// Modified to avoid "accessed none" errors on Species
+simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
+{
+    if (Rec.Species == none || ForceDefaultCharacter())
+    {
+        Rec = class'xUtil'.static.FindPlayerRecord(GetDefaultCharacter());
+    }
+
+    Species = Rec.Species;
+    RagdollOverride = Rec.Ragdoll;
+
+    if (Species == none || !Species.static.Setup(self, Rec))
+    {
+        Rec = class'xUtil'.static.FindPlayerRecord(GetDefaultCharacter());
+
+        if (Species == none || !Species.static.Setup(self, Rec))
+        {
+            return;
+        }
+    }
+
+    ResetPhysicsBasedAnim();
+}
+
 defaultproperties
 {
     StanceChangeStaminaDrain=1.5
