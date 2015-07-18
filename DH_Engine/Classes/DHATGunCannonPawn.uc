@@ -223,7 +223,7 @@ exec function DebugExit()
 
                 DrawStayingDebugLine(VehicleBase.Location, TryPlace, 0, 255, 0);
 
-                DrawDebugCylinder(TryPlace, X, Y, Z, class'DH_Engine.DHPawn'.default.CollisionRadius, class'DH_Engine.DHPawn'.default.CollisionHeight, 10, 0, 255, 0);
+                class'DHLib'.static.DrawStayingDebugCylinder(self, TryPlace, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, 0, 255, 0);
             }
         }
     }

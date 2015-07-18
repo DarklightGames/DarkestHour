@@ -315,3 +315,28 @@ static final function string GetDurationString(int Seconds, string Format)
 
     return S;
 }
+
+// Draws a debugging cylinder out of wireframe lines - same as in ROHud but uses DrawStayingDebugLine(), so they stay on the screen
+static final function DrawStayingDebugCylinder(Actor A, vector Base, vector X, vector Y, vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
+{
+    local float  AngleDelta;
+    local vector LastVertex, Vertex;
+    local int    SideIndex;
+
+    if (A != none && Radius > 0.0 && HalfHeight > 0.0 && NumSides > 0)
+    {
+        AngleDelta = 2.0 * PI / NumSides;
+        LastVertex = Base + X * Radius;
+
+        for (SideIndex = 0; SideIndex < NumSides; ++SideIndex)
+        {
+            Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1.0)) + Y * Sin(AngleDelta * (SideIndex + 1.0))) * Radius;
+
+            A.DrawStayingDebugLine(LastVertex - Z * HalfHeight, Vertex - Z * HalfHeight, R, G, B);
+            A.DrawStayingDebugLine(LastVertex + Z * HalfHeight, Vertex + Z * HalfHeight, R, G, B);
+            A.DrawStayingDebugLine(LastVertex - Z * HalfHeight, LastVertex + Z * HalfHeight, R, G, B);
+
+            LastVertex = Vertex;
+        }
+    }
+}
