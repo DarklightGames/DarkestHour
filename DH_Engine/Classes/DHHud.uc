@@ -1602,11 +1602,12 @@ simulated function DrawDriverPointSphere()
 // Engine is blue, ammo stores are red, gun traverse & pivot are gold, periscopes are pink, others are white
 simulated function DrawVehiclePointSphere()
 {
-    local ROVehicle       V;
-    local DHArmoredVehicle    TC;
-    local Coords          CO;
-    local vector          Loc;
-    local int             i;
+    local ROVehicle        V;
+    local DHArmoredVehicle AV;
+    local Coords           CO;
+    local vector           Loc;
+    local color            C;
+    local int              i;
 
     foreach DynamicActors(class'ROVehicle', V)
     {
@@ -1622,43 +1623,47 @@ simulated function DrawVehiclePointSphere()
 
                     if (V.VehHitpoints[i].HitPointType == HP_Engine)
                     {
-                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 0, 255); // blue
+                        C = BlueColor;
                     }
                     else if (V.VehHitpoints[i].HitPointType == HP_AmmoStore)
                     {
-                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 255, 0, 0); // red
+                        C = RedColor;
                     }
                     else
                     {
-                        V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 200, 200, 200); // gray
+                        C = GrayColor;
                     }
+
+                    V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
                 }
             }
 
-            TC = DHArmoredVehicle(V);
+            AV = DHArmoredVehicle(V);
 
-            if (TC != none)
+            if (AV != none)
             {
-                for (i = 0; i < TC.NewVehHitpoints.Length; ++i)
+                for (i = 0; i < AV.NewVehHitpoints.Length; ++i)
                 {
-                    if (TC.NewVehHitpoints[i].PointBone != '')
+                    if (AV.NewVehHitpoints[i].PointBone != '')
                     {
-                        CO = TC.GetBoneCoords(TC.NewVehHitpoints[i].PointBone);
-                        Loc = CO.Origin + (TC.NewVehHitpoints[i].PointHeight * TC.NewVehHitpoints[i].PointScale * CO.XAxis);
-                        Loc = Loc + (TC.NewVehHitpoints[i].PointOffset >> TC.Rotation);
+                        CO = AV.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
+                        Loc = CO.Origin + (AV.NewVehHitpoints[i].PointHeight * AV.NewVehHitpoints[i].PointScale * CO.XAxis);
+                        Loc = Loc + (AV.NewVehHitpoints[i].PointOffset >> AV.Rotation);
 
-                        if (TC.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || TC.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                        if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
                         {
-                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 0); // gold
+                            C = GoldColor;
                         }
-                        else if (TC.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || TC.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
+                        else if (AV.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || AV.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
                         {
-                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 0, 255); // pink
+                            C = PurpleColor;
                         }
                         else
                         {
-                            TC.DrawDebugSphere(Loc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
+                            C = WhiteColor;
                         }
+
+                        AV.DrawDebugSphere(Loc, AV.NewVehHitpoints[i].PointRadius * AV.NewVehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
                     }
                 }
             }
