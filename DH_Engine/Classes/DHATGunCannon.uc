@@ -9,9 +9,10 @@ class DHATGunCannon extends DHVehicleCannon
 // Modified to use 3 part reload instead of usual 4 part
 simulated function Timer()
 {
-    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
+    // Do not proceed with reload if no player in cannon position or if cannon has no ammo - set a repeating timer to keep checking (but reduced from 20 times a second !)
+    if (CannonPawn == none || CannonPawn.Controller == none || PrimaryAmmoCount() < 1)
     {
-        SetTimer(0.05, true);
+        SetTimer(0.5, true);
     }
     else if (CannonReloadState == CR_Empty)
     {
