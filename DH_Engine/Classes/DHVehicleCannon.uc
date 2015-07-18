@@ -148,6 +148,11 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
                 }
             }
         }
+        // Option for cannon to be mounted on a DHWheeledVehicle (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
+        else if (DHWheeledVehicle(CannonPawn.VehicleBase) != none)
+        {
+            DHWheeledVehicle(CannonPawn.VehicleBase).Cannon = self;
+        }
     }
     else
     {

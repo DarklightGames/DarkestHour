@@ -800,20 +800,21 @@ simulated function DrawHudPassC(Canvas C)
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
-    local  ROTreadCraft           AV;
-    local  ROWheeledVehicle       WheeledVehicle;
-    local  ROVehicleWeaponPawn    WeaponPawn;
-    local  ROVehicleWeapon        VehWeapon;
-    local  ROTankCannon           Cannon;
-    local  PlayerReplicationInfo  PRI;
-    local  AbsoluteCoordsInfo     Coords, Coords2;
-    local  SpriteWidget           Widget;
-    local  color                  VehicleColor;
-    local  rotator                MyRot;
-    local  int                    i, Current, Pending;
-    local  float                  f, XL, YL, Y_one, MyScale, ProportionOfReloadRemaining;
-    local  float                  ModifiedVehicleOccupantsTextYOffset; // used to offset text vertically when drawing coaxial ammo info
-    local  array<string>          Lines;
+    local ROTreadCraft          AV;
+    local ROWheeledVehicle      WheeledVehicle;
+    local DHWheeledVehicle      DHWV;
+    local ROVehicleWeaponPawn   WeaponPawn;
+    local ROVehicleWeapon       VehWeapon;
+    local ROTankCannon          Cannon;
+    local PlayerReplicationInfo PRI;
+    local AbsoluteCoordsInfo    Coords, Coords2;
+    local SpriteWidget          Widget;
+    local TexRotator            VehicleHudTurret, VehicleHudTurretLook;
+    local color                 VehicleColor;
+    local rotator               MyRot;
+    local int                   i, Current, Pending;
+    local float                 f, XL, YL, Y_one, MyScale, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset; // offsets text vertically when drawing coaxial ammo info
+    local array<string>         Lines;
 
     if (bHideHud)
     {
@@ -894,18 +895,22 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
     }
 
-    // Draw armored fighting vehicle specific stuff
     AV = ROTreadCraft(Vehicle);
 
+    // Setup/draw armored fighting vehicle specific stuff
     if (AV != none)
     {
-        // Update turret references
+        // Update turret references, if necessary
         if (AV.CannonTurret == none)
         {
             AV.UpdateTurretReferences();
         }
 
-        // Draw threads (if needed)
+        Cannon = AV.CannonTurret;
+        VehicleHudTurret = AV.VehicleHudTurret;
+        VehicleHudTurretLook = AV.VehicleHudTurretLook;
+
+        // Draw any damaged treads
         if (AV.bLeftTrackDamaged)
         {
             VehicleThreads[0].TextureScale = AV.VehicleHudThreadsScale;
@@ -921,45 +926,62 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleThreads[1].PosY = AV.VehicleHudThreadsPosY;
             DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
         }
+    }
+    // Added option for a non-armoured fighting vehicle to have a mounted cannon (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
+    else
+    {
+        DHWV = DHWheeledVehicle(Vehicle);
 
-        // Update & draw look turret (if needed)
-        if (Passenger != none && Passenger.IsA('ROTankCannonPawn'))
+        if (DHWV != none && DHWV.Cannon != none)
         {
-            AV.VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
-            Widget.WidgetTexture = AV.VehicleHudTurretLook;
+            Cannon = DHWV.Cannon;
+            VehicleHudTurret = DHWV.VehicleHudTurret;
+            VehicleHudTurretLook = DHWV.VehicleHudTurretLook;
+        }
+    }
+
+    // Update & draw turret (if needed)
+    if (ROTankCannonPawn(Passenger) != none)
+    {
+        // Update & draw look turret
+        if (VehicleHudTurretLook != none)
+        {
+            VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
+            Widget.WidgetTexture = VehicleHudTurretLook;
             Widget.Tints[0].A /= 2;
             Widget.Tints[1].A /= 2;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
             Widget.Tints[0] = VehicleColor;
             Widget.Tints[1] = VehicleColor;
+        }
 
-            // Draw ammo count since we're a gunner
-            if (bShowWeaponInfo)
+        // Draw ammo count since we're a gunner
+        if (bShowWeaponInfo)
+        {
+            // Shift passengers list farther to the right
+            VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
+
+            // Draw icon
+            VehicleAmmoIcon.WidgetTexture = Passenger.AmmoShellTexture;
+            DrawSpriteWidget(Canvas, VehicleAmmoIcon);
+
+            // Draw reload state icon (if needed)
+            VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
+            VehicleAmmoReloadIcon.Scale = Passenger.GetAmmoReloadState();
+            DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
+
+            // Draw ammo count
+            if (Passenger != none && Passenger.Gun != none)
             {
-                // Shift passengers list farther to the right
-                VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
+                VehicleAmmoAmount.Value = Passenger.Gun.PrimaryAmmoCount();
+            }
 
-                // Draw icon
-                VehicleAmmoIcon.WidgetTexture = Passenger.AmmoShellTexture;
-                DrawSpriteWidget(Canvas, VehicleAmmoIcon);
+            DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
 
-                // Draw reload state icon (if needed)
-                VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
-                VehicleAmmoReloadIcon.Scale = Passenger.GetAmmoReloadState();
-                DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
-
-                // Draw ammo count
-                if (Passenger != none && Passenger.Gun != none)
-                {
-                    VehicleAmmoAmount.Value = Passenger.Gun.PrimaryAmmoCount();
-                }
-
-                DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
-
-                // Draw ammo type
-                Cannon = ROTankCannon(Passenger.Gun);
-
-                if (Cannon != none && Cannon.bMultipleRoundTypes)
+            // Draw ammo type
+            if (Cannon != none)
+            {
+                if (Cannon.bMultipleRoundTypes)
                 {
                     // Get ammo types
                     Current = Cannon.GetRoundsDescription(Lines);
@@ -1010,47 +1032,44 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     }
                 }
 
-                if (Cannon != none)
+                // Draw coaxial gun ammo info if needed
+                if (Cannon.AltFireProjectileClass != none)
                 {
-                    // Draw coaxial gun ammo info if needed
-                    if (Cannon.AltFireProjectileClass != none)
+                    // Draw coaxial gun ammo icon
+                    VehicleAltAmmoIcon.WidgetTexture = Cannon.hudAltAmmoIcon;
+                    DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
+
+                    // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
+                    if (DHVehicleCannonPawn(Passenger) != none)
                     {
-                        // Draw coaxial gun ammo icon
-                        VehicleAltAmmoIcon.WidgetTexture = Cannon.hudAltAmmoIcon;
-                        DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
+                        ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
 
-                        // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
-                        if (DHVehicleCannonPawn(Passenger) != none)
+                        if (ProportionOfReloadRemaining > 0.0)
                         {
-                            ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
-
-                            if (ProportionOfReloadRemaining > 0.0)
-                            {
-                                VehicleAltAmmoReloadIcon.WidgetTexture = DHVehicleCannonPawn(Passenger).AltAmmoReloadTexture;
-                                VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
-                                DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
-                            }
+                            VehicleAltAmmoReloadIcon.WidgetTexture = DHVehicleCannonPawn(Passenger).AltAmmoReloadTexture;
+                            VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
+                            DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                         }
-
-                        // Draw coaxial gun ammo amount
-                        VehicleAltAmmoAmount.Value = Cannon.GetNumMags();
-                        DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
-
-                        // Shift occupants list position to accommodate coaxial gun ammo info
-                        ModifiedVehicleOccupantsTextYOffset = VehicleAltAmmoOccupantsTextOffset * MyScale;
                     }
+
+                    // Draw coaxial gun ammo amount
+                    VehicleAltAmmoAmount.Value = Cannon.GetNumMags();
+                    DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
+
+                    // Shift occupants list position to accommodate coaxial gun ammo info
+                    ModifiedVehicleOccupantsTextYOffset = VehicleAltAmmoOccupantsTextOffset * MyScale;
                 }
             }
         }
+    }
 
-        // Update & draw turret
-        if (AV.CannonTurret != none)
-        {
-            MyRot = rotator(vector(AV.CannonTurret.CurrentAim) >> AV.CannonTurret.Rotation);
-            AV.VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
-            Widget.WidgetTexture = AV.VehicleHudTurret;
-            DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
-        }
+    // Update & draw any turret
+    if (Cannon != none && VehicleHudTurret != none)
+    {
+        MyRot = rotator(vector(Cannon.CurrentAim) >> Cannon.Rotation);
+        VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
+        Widget.WidgetTexture = VehicleHudTurret;
+        DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
     }
 
     // Draw MG ammo info (if needed)

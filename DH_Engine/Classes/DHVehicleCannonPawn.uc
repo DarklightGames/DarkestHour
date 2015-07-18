@@ -455,7 +455,7 @@ simulated function DrawHUD(Canvas C)
         ActivateOverlay(false);
     }
 
-    // Debug option to show camera location & rotation in behind viewred dot (inside white sphere to make more visible) & camera rotation as red line (needs "show sky" in console)
+    // Debug option to show camera location & rotation in behind view (needs "show sky" in console)
     if (bDebugCamera && PC != none && PC.bBehindView && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
     {
         SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);

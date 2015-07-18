@@ -63,6 +63,11 @@ var     float       LastCrushedTime;             // records time object was crus
 var     float       ObjectCrushStallTime;        // how long the movement stall lasts
 var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
 
+// Option to have mounted cannon - variables used by HUD (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
+var     ROTankCannon    Cannon;                  // reference to cannon actor
+var     TexRotator      VehicleHudTurret;        // same as ROTreadCraft
+var     TexRotator      VehicleHudTurretLook;    // same as ROTreadCraft
+
 // New sounds & sound attachment actors
 var     float               MaxPitchSpeed;
 var     sound               EngineSound;
