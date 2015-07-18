@@ -41,7 +41,7 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim=
-    ExitPositions(0)=(Y=-200.0,Z=100.0)
+    ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     EntryRadius=500.0
     DriverDamageMult=1.0
     VehicleNameString="17 Pounder AT-Gun"

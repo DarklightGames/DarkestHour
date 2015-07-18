@@ -1695,6 +1695,24 @@ function ServerToggleDebugExits()
     }
 }
 
+// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
+exec function DrawExits()
+{
+    if (DHArmoredVehicle(VehicleBase) != none)
+    {
+        DHArmoredVehicle(VehicleBase).DrawExits();
+    }
+}
+
+// New debugging exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
+exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
+{
+    if (DHArmoredVehicle(VehicleBase) != none)
+    {
+        DHArmoredVehicle(VehicleBase).SetExitPos(Index, NewX, NewY, NewZ);
+    }
+}
+
 // New exec to toggle camera debug (location & rotation) for this cannon
 exec function ToggleCameraDebug()
 {

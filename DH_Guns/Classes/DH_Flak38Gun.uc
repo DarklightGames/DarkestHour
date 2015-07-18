@@ -24,6 +24,7 @@ defaultproperties
     VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flakv38_base' // TODO: add one for Flak 38 (perhaps only for wheeled version; flakvierling might be ok for static base Flak 38)
     VehicleHudOccupantsX(0)=0.0
     VehicleHudOccupantsX(1)=0.0
+    ExitPositions(1)=(X=-30.0,Y=85.0,Z=50.0)
     VehicleNameString="Flak 38"
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_trailer'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'

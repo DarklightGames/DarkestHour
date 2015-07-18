@@ -6,140 +6,15 @@
 class DHATGunCannonPawn extends DHVehicleCannonPawn
     abstract;
 
-var bool bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
-
-// Options
-// 1: Implemented: modified PlaceExitingDriver so that it handles placing the player on exit better
-// 2: Implemented: keep the player at his current position and send him a msg - if they are smart they can suicide to get off the gun
-//
-// This is a combination of the KDriverLeave over-rides in VehicleWeaponPawn and ROVehicleWeaponPawn
-// When the leaves fails (returns false) it jumps into ServerChangeDriverPosition if there is not a place to put the player, which then puts player in driver's seat
-event bool KDriverLeave(bool bForceLeave)
+// Modified to show player a message if no valid exit can be found
+function bool KDriverLeave(bool bForceLeave)
 {
-    local bool              bSuperDriverLeave;
-    local Controller        C;
-    local PlayerController  PC;
-
-    C = Controller;
-
-    if (!bForceLeave && !Level.Game.CanLeaveVehicle(self, Driver))
+    if (super.KDriverLeave(bForceLeave))
     {
-        return false;
-    }
-
-    if (PlayerReplicationInfo != none && PlayerReplicationInfo.HasFlag != none)
-    {
-        Driver.HoldFlag(PlayerReplicationInfo.HasFlag);
-    }
-
-    // Do nothing if we're not being driven
-    if (Controller == none)
-    {
-        return false;
-    }
-
-    Driver.bHardAttach = false;
-    Driver.bCollideWorld = true;
-    Driver.SetCollision(true, true);
-
-    // Let's look for an unobstructed exit point - if we find one then we know we can dismount the gun
-    if (PlaceExitingDriver())
-    {
-        DriverPositionIndex = 0;
-
-        bDriving = false;
-
-        // Reconnect Controller to Driver
-        if (C.RouteGoal == self)
-        {
-            C.RouteGoal = none;
-        }
-
-        if (C.MoveTarget == self)
-        {
-            C.MoveTarget = none;
-        }
-
-        C.bVehicleTransition = true;
-        Controller.UnPossess();
-
-        if (Driver != none && Driver.Health > 0)
-        {
-            Driver.SetOwner(C);
-            C.Possess(Driver);
-            PC = PlayerController(C);
-
-            if (PC != none)
-            {
-                PC.ClientSetViewTarget(Driver); // set PlayerController to view the person that got out
-            }
-
-            Driver.StopDriving(self);
-        }
-
-        C.bVehicleTransition = false;
-
-        if (C == Controller) // if controller didn't change, clear it
-        {
-            Controller = none;
-        }
-
-        Level.Game.DriverLeftVehicle(self, Driver);
-
-        // Car now has no driver
-        Driver = none;
-        DriverLeft();
-
-        bSuperDriverLeave = true;
-    }
-    else
-    {
-        C.Pawn.ReceiveLocalizedMessage(class'DHATCannonMessage', 4); // no exit can be found
-        bSuperDriverLeave = false;
-    }
-
-    return bSuperDriverLeave;
-}
-
-// Overridden to handle vehicle exiting better for fixed AT guns
-function bool PlaceExitingDriver()
-{
-    local int    i;
-    local vector TryPlace, Extent, ZOffset;
-
-    Extent = Driver.GetCollisionExtent();
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        if (bRelativeExitPos)
-        {
-            if (VehicleBase != none)
-            {
-                TryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-            }
-            else if (Gun != none)
-            {
-                TryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-            }
-            else
-            {
-                TryPlace = Location + (ExitPositions[i] >> Rotation);
-            }
-        }
-        else
-        {
-            TryPlace = ExitPositions[i];
-        }
-
-        // Now see if we can place the player there
-        if (!Driver.SetLocation(TryPlace))
-        {
-            continue;
-        }
-
         return true;
     }
+
+    ReceiveLocalizedMessage(class'DHATCannonMessage', 4); // no exit can be found
 
     return false;
 }
@@ -184,51 +59,6 @@ function float GetAmmoReloadState()
     return 0.0;
 }
 
-// New function to debug location of exit positions, which are drawn as green cylinders
-exec function DebugExit()
-{
-    local int    i;
-    local vector X, Y, Z, TryPlace, ZOffset;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        bDebugExit = !bDebugExit;
-        ClearStayingDebugLines();
-
-        if (bDebugExit)
-        {
-            GetAxes(VehicleBase.Rotation, X, Y, Z);
-
-            for (i = 0; i < ExitPositions.Length; ++i)
-            {
-                if (bRelativeExitPos)
-                {
-                    if (VehicleBase != none)
-                    {
-                        TryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-                    }
-                    else if (Gun != none)
-                    {
-                        TryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-                    }
-                    else
-                    {
-                        TryPlace = Location + (ExitPositions[i] >> Rotation);
-                    }
-                }
-                else
-                {
-                    TryPlace = ExitPositions[i];
-                }
-
-                DrawStayingDebugLine(VehicleBase.Location, TryPlace, 0, 255, 0);
-
-                class'DHLib'.static.DrawStayingDebugCylinder(self, TryPlace, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, 0, 255, 0);
-            }
-        }
-    }
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=0
@@ -244,20 +74,4 @@ defaultproperties
     HudName="Gunner"
     FireImpulse=(X=-1000.0)
     EntryRadius=130.0
-    ExitPositions(0)=(X=-40.0,Y=-10.0,Z=50.0)
-    ExitPositions(1)=(X=-40.0,Y=-10.0,Z=60.0)
-    ExitPositions(2)=(X=-40.0,Y=25.0,Z=50.0)
-    ExitPositions(3)=(X=-40.0,Y=-25.0,Z=50.0)
-    ExitPositions(4)=(Y=68.0,Z=50.0)
-    ExitPositions(5)=(Y=-68.0,Z=50.0)
-    ExitPositions(6)=(Y=68.0,Z=25.0)
-    ExitPositions(7)=(Y=-68.0,Z=25.0)
-    ExitPositions(8)=(X=-60.0,Y=-5.0,Z=25.0)
-    ExitPositions(9)=(X=-90.0,Z=50.0)
-    ExitPositions(10)=(X=-90.0,Y=-45.0,Z=50.0)
-    ExitPositions(11)=(X=-90.0,Y=45.0,Z=50.0)
-    ExitPositions(12)=(X=-90.0,Z=20.0)
-    ExitPositions(13)=(X=-90.0,Z=75.0)
-    ExitPositions(14)=(X=-125.0,Z=60.0)
-    ExitPositions(15)=(X=-250.0,Z=75.0)
 }

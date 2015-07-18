@@ -42,7 +42,7 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim=
-    ExitPositions(0)=(Y=-200.0,Z=100.0)
+    ExitPositions(1)=(X=-50.0,Y=50.0,Z=50.0)
     EntryRadius=475.0
     DriverDamageMult=1.0
     VehicleNameString="FlaK 36 Gun"

@@ -206,6 +206,22 @@ defaultproperties
     bMultiPosition=false
     TouchMessage="Use the "
     VehicleMass=5.0
+    ExitPositions(0)=(X=0.0,Y=0.0,Z=100.0)  // last resort (because we start at index 1 for a cannon pawn)
+    ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0) // index 1 is gunner's 1st choice exit position
+    ExitPositions(2)=(X=-150.0,Y=0.0,Z=0.0) // all the rest are generic fallbacks to try different positions to try & get the player off the gun
+    ExitPositions(3)=(X=-100.0,Y=25.0,Z=0.0)
+    ExitPositions(4)=(X=-100.0,Y=-25.0,Z=0.0)
+    ExitPositions(5)=(X=-100.0,Y=50.0,Z=0.0)
+    ExitPositions(6)=(X=-100.0,Y=-50.0,Z=0.0)
+    ExitPositions(7)=(X=-50.0,Y=50.0,Z=0.0)
+    ExitPositions(8)=(X=-50.0,Y=-50.0,Z=0.0)
+    ExitPositions(9)=(X=-50.0,Y=50.0,Z=50.0)
+    ExitPositions(10)=(X=-50.0,Y=-50.0,Z=50.0)
+    ExitPositions(11)=(X=-75.0,Y=75.0,Z=50.0)
+    ExitPositions(12)=(X=-75.0,Y=-75.0,Z=50.0)
+    ExitPositions(13)=(X=-100.0,Y=0.0,Z=75.0)
+    ExitPositions(14)=(X=-100.0,Y=75.0,Z=75.0)
+    ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
     VehicleNameString="AT gun"
     MaxDesireability=1.9
     bSpecialHUD=false

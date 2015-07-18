@@ -22,22 +22,6 @@ defaultproperties
     CameraBone="Gun"
     DrivePos=(X=-15.0,Z=-5.0)
     DriveAnim="Vt3485_driver_idle_close"
-    ExitPositions(0)=(X=-150.0,Y=0.0,Z=0.0)
-    ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0)
-    ExitPositions(2)=(X=-100.0,Y=20.0,Z=0.0)
-    ExitPositions(3)=(X=-100.0,Y=-20.0,Z=0.0)
-    ExitPositions(4)=(Y=50.0,Z=0.0)
-    ExitPositions(5)=(Y=-50.0,Z=0.0)
-    ExitPositions(6)=(X=-50.0,Y=-50.0,Z=0.0)
-    ExitPositions(7)=(X=-50.0,Y=50.0,Z=0.0)
-    ExitPositions(8)=(X=-75.0,Y=75.0,Z=0.0)
-    ExitPositions(9)=(X=-75.0,Y=-75.0,Z=0.0)
-    ExitPositions(10)=(X=-40.0,Y=0.0,Z=5.0)
-    ExitPositions(11)=(X=-60.0,Y=0.0,Z=5.0)
-    ExitPositions(12)=(X=-60.0,Z=10.0)
-    ExitPositions(13)=(X=-60.0,Z=15.0)
-    ExitPositions(14)=(X=-60.0,Z=20.0)
-    ExitPositions(15)=(Z=5.0)
     EntryRadius=325.0
     SoundVolume=100
 }

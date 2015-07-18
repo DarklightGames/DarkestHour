@@ -87,6 +87,7 @@ var     name                        ResupplyDecoAttachBone;
 // Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
+var     bool        bDrawExitPositions;
 
 replication
 {
@@ -1908,6 +1909,71 @@ function ServerToggleDebugExits()
     {
         class'DHWheeledVehicle'.default.bDebugExitPositions = !class'DHWheeledVehicle'.default.bDebugExitPositions;
         Log("DHWheeledVehicle.bDebugExitPositions =" @ class'DHWheeledVehicle'.default.bDebugExitPositions);
+    }
+}
+
+// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
+exec function DrawExits()
+{
+    local vector ExitPosition, ZOffset, X, Y, Z;
+    local color  C;
+    local int    i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDrawExitPositions = !bDrawExitPositions;
+        ClearStayingDebugLines();
+
+        if (bDrawExitPositions)
+        {
+            ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+            GetAxes(Rotation, X, Y, Z);
+
+            for (i = ExitPositions.Length - 1; i >= 0; --i)
+            {
+                if (i == 0)
+                {
+                    C = class'HUD'.default.BlueColor; // driver
+                }
+                else
+                {
+                    if (i - 1 < WeaponPawns.Length)
+                    {
+                        if (ROTankCannonPawn(WeaponPawns[i - 1]) != none)
+                        {
+                            C = class'HUD'.default.RedColor; // commander
+                        }
+                        else if (ROMountedTankMGPawn(WeaponPawns[i - 1]) != none)
+                        {
+                            C = class'HUD'.default.GoldColor; // machine gunner
+                        }
+                        else
+                        {
+                            C = class'HUD'.default.WhiteColor; // rider
+                        }
+                    }
+                    else
+                    {
+                        C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                    }
+                }
+
+                ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
+                class'DHLib'.static.DrawStayingDebugCylinder(self, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
+            }
+        }
+    }
+}
+
+// New debugging exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
+exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
+{
+    if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
+    {
+        ExitPositions[Index].X = NewX;
+        ExitPositions[Index].Y = NewY;
+        ExitPositions[Index].Z = NewZ;
+        Log(VehicleNameString @ "new ExitPositions[" $ Index $ "] =" @ ExitPositions[Index]);
     }
 }
 
