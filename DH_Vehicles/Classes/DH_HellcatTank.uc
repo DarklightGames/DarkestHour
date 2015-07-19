@@ -107,8 +107,8 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointRadius=10.0,PointOffset=(X=-5.0,Y=-5.0,Z=-5.0),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0),DamageMultiplier=1.0)
+    VehHitpoints(0)=(PointRadius=10.0,PointOffset=(X=-5.0,Y=-5.0,Z=-5.0))
+    VehHitpoints(1)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0))
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"

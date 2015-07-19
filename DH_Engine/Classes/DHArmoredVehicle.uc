@@ -4016,4 +4016,6 @@ defaultproperties
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
     bDisableThrottle=false
+    VehHitpoints(0)=(bPenetrationPoint=false) // bPenetrationPoint is deprecated but shown false just to avoid any confusion
+    VehHitpoints(1)=(DamageMultiplier=1.0)    // TakeDamage() doesn't use DamageMultiplier for engine, but shown as 1.0 just to avoid any confusion
 }

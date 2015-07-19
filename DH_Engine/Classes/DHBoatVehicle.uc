@@ -151,7 +151,6 @@ defaultproperties
     ImpactDamageMult=0.001
     DriverTraceDistSquared=4000000.0 // Matt: default 2000 from ROWheeledVehicle, but squared for new DistSquared variable
     InitialPositionIndex=0
-    VehHitpoints(0)=(PointBone="Driver")
     VehicleMass=12.0
     bKeyVehicle=true
     bFPNoZFromCameraPitch=true

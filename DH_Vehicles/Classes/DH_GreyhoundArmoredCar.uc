@@ -72,8 +72,8 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointOffset=(X=4.0),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointBone="Engine",PointOffset=(Z=-10.0),DamageMultiplier=1.0)
+    VehHitpoints(0)=(PointOffset=(X=-3.0,Y=2.0,Z=6.5))
+    VehHitpoints(1)=(PointBone="Engine",PointOffset=(Z=-10.0))
     EngineHealth=100
     bIsApc=true
     DriverAttachmentBone="driver_attachment"

@@ -35,7 +35,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.0
     VehicleHudOccupantsY(1)=0.6
     VehicleHudOccupantsY(2)=0.0
-    VehHitpoints(0)=(PointRadius=0.0,PointBone="turret_attachment",bPenetrationPoint=false)
+    VehHitpoints(0)=(PointRadius=0.0,PointBone="turret_attachment")
     VehHitpoints(1)=(PointRadius=0.0,PointBone="turret_attachment")
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true

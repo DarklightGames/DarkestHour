@@ -109,8 +109,8 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
     bVehicleHudUsesLargeTexture=true
-    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.0,Z=-5.0),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0),DamageMultiplier=1.0)
+    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.0,Z=-5.0))
+    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0))
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=75.0,Y=22.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(4)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
