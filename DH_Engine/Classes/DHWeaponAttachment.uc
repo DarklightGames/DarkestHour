@@ -293,6 +293,5 @@ defaultproperties
 {
     bNetNotify=true
     bSpawnShellsOutBottom=false
-    PA_CrouchIronBoltActionAnim=crouch_bolt_kar // for some stupid reason, crouch_boltiron_kar doesn't exist any more, so fall back to non iron-sighted version
     ROMGSteamEmitterClass=class'ROEffects.ROMGSteam'
 }
