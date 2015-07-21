@@ -2800,6 +2800,27 @@ function RORoleInfo GetRoleInfo()
     }
 }
 
+// New debug exec to adjust DrivePos (vehicle occupant positional offset from attachment bone)
+exec function SetDrivePos(int NewX, int NewY, int NewZ)
+{
+    local Vehicle V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none && V.Driver != none)
+        {
+            Log(V.Tag @ " new DrivePos =" @ NewX @ NewY @ NewZ @ "(was" @ V.DrivePos $ ")");
+            V.DrivePos.X = NewX;
+            V.DrivePos.Y = NewY;
+            V.DrivePos.Z = NewZ;
+            V.DetachDriver(V.Driver);
+            V.AttachDriver(V.Driver);
+        }
+    }
+}
+
 exec function ToggleLogWeapon() // TEMP DEBUG
 {
     local DHGameReplicationInfo GRI;
