@@ -3827,6 +3827,26 @@ simulated exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
+// New debug exec to adjust VehHitPoints hit detection sphere representing driver's head
+exec function SetDriverHP(int NewRadius, int NewX, int NewY, int NewZ, optional int Index)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < VehHitPoints.Length)
+    {
+        if (NewRadius <= 0.0)
+        {
+            NewRadius = VehHitPoints[Index].PointRadius; // leaving NewRadius as zero signifies no change the radius, just the offset
+        }
+
+        Log(VehicleNameString @ " new VehHitPoints[" $ Index $ "] = radius" @ NewRadius @ " offset" @ NewX @ NewY @ NewZ
+            @ "(was radius" @ VehHitPoints[Index].PointRadius @ " offset" @ VehHitPoints[Index].PointOffset $ ")");
+
+        VehHitPoints[Index].PointRadius = NewRadius;
+        VehHitPoints[Index].PointOffset.X = NewX;
+        VehHitPoints[Index].PointOffset.Y = NewY;
+        VehHitPoints[Index].PointOffset.Z = NewZ;
+    }
+}
+
 // Handy new execs during development for testing engine or track damage
 function exec KillEngine()
 {
