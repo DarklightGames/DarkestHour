@@ -93,8 +93,8 @@ defaultproperties
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(1)=0.5
@@ -109,7 +109,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
     bVehicleHudUsesLargeTexture=true
-    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.0,Z=-5.0))
+    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(X=-2.0,Y=-1.5,Z=-3.0))
     VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0))
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=75.0,Y=22.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -170,7 +170,7 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Right_Drive_Wheel'
     VehicleMass=13.5
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=3.0,Y=0.0,Z=7.0)
+    DrivePos=(X=7.0,Y=0.0,Z=11.0)
     ExitPositions(0)=(X=125.0,Y=-25.0,Z=200.0)      //driver's hatch
     ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)        //commander's hatch
     ExitPositions(2)=(X=-100.0,Y=-150.0,Z=75.0)     //passenger (l)

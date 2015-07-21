@@ -41,7 +41,7 @@ defaultproperties
     bHasAltFire=false
     CameraBone="loader_cam"
     GunsightCameraBone="Gun"
-    DrivePos=(Z=-9.0)
+    DrivePos=(X=-1.5,Y=5.0,Z=-12.0)
     DriveAnim="VPanzer3_com_idle_close"
     EntryRadius=130.0
     PitchUpLimit=6000

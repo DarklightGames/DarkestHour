@@ -91,8 +91,8 @@ defaultproperties
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsY(0)=0.32
@@ -107,7 +107,7 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointRadius=10.0,PointOffset=(X=-5.0,Y=-5.0,Z=-5.0))
+    VehHitpoints(0)=(PointRadius=10.0,PointOffset=(X=-3.0,Y=-3.0,Z=-12.0))
     VehHitpoints(1)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0))
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -166,8 +166,8 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.Right_Drive_Wheel'
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=12.0,Y=0.0,Z=-18.0)
-    DriveAnim="VPanzer3_driver_idle_close"
+    DrivePos=(X=2.0,Y=0.0,Z=-20.0)
+    DriveAnim="VPanzer3_driver_idle_open"
     ExitPositions(0)=(X=107.0,Y=-41.0,Z=98.0)  //driver
     ExitPositions(1)=(X=40.0,Y=-15.0,Z=165.0)  //commander
     ExitPositions(2)=(X=-125.0,Y=-158.0,Z=5.0) //passenger (l)

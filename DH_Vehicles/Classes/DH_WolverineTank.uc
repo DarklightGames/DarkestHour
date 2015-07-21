@@ -87,8 +87,8 @@ defaultproperties
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsY(0)=0.32
@@ -103,7 +103,7 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.6
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointOffset=(X=2.0))
+    VehHitpoints(0)=(PointOffset=(X=2.0,Y=0.0,Z=-2.0))
     VehHitpoints(1)=(PointRadius=35.0,PointOffset=(X=-90.0,Z=-35.0))
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -163,8 +163,8 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.Right_Drive_Wheel'
     VehicleMass=13.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=-3.0,Y=0.0,Z=3.0)
-    DriveAnim="VPanzer3_driver_idle_close"
+    DrivePos=(X=-3.0,Y=0.0,Z=4.0)
+    DriveAnim="VPanzer3_driver_idle_open"
     ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  //driver
     ExitPositions(1)=(X=40.0,Y=-15.0,Z=250.0)   //commander
     ExitPositions(2)=(X=-125.0,Y=-150.0,Z=75.0) //passenger (l)

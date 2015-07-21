@@ -76,8 +76,8 @@ defaultproperties
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
     VehicleHudOccupantsX(0)=0.55
     VehicleHudOccupantsX(1)=0.45
@@ -89,7 +89,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.5
     VehicleHudEngineX=0.51
     VehicleHudEngineY=0.47
-    VehHitpoints(0)=(PointRadius=8.0,PointOffset=(X=-2.0,Z=-14.0))
+    VehHitpoints(0)=(PointRadius=8.0,PointOffset=(X=0.0,Y=1.0,Z=-12.0))
     VehHitpoints(1)=(PointRadius=30.0,PointOffset=(Z=-5.0))
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -147,8 +147,12 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.Right_Drive_Wheel'
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=-3.0,Y=0.0,Z=4.0)
-    DriveAnim="VPanzer3_driver_idle_close"
+
+    // Matt, TODO: this is poor positioning, as body pokes through side of hull mesh, but we need to align the player with the 'head' sphere in the collision static mesh
+    // When a new col static is made for hull, we can reposition col head sphere, then make DrivePos=(X=-5,Y=0,Z=2) & VehHitpoints(0) Radius=9 & Offset=(X=-1,Y=-3,Z=-11)
+    DrivePos=(X=-5.0,Y=5.0,Z=0.0)
+
+    DriveAnim="VPanzer3_driver_idle_open"
     ExitPositions(0)=(X=78.0,Y=96.0,Z=5.0)
     ExitPositions(1)=(X=-133.0,Y=-27.0,Z=120.0)
     ExitPositions(2)=(X=-135.0,Y=24.0,Z=120.0)

@@ -88,8 +88,8 @@ defaultproperties
     SteeringScaleFactor=2.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=15000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger2B_body'
     VehicleHudOccupantsX(0)=0.44
     VehicleHudOccupantsX(2)=0.57
@@ -104,7 +104,7 @@ defaultproperties
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
     bVehicleHudUsesLargeTexture=true
-    VehHitpoints(0)=(PointOffset=(X=-3.0))
+    VehHitpoints(0)=(PointOffset=(X=5.0,Y=3.0,Z=-3.0))
     VehHitpoints(1)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0))
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
@@ -166,8 +166,8 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Tiger2BTank.Right_Drive_Wheel'
     VehicleMass=16.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=10.0,Y=2.0,Z=-25.0)
-    DriveAnim="VPanther_driver_idle_close"
+    DrivePos=(X=3.0,Y=3.0,Z=-21.0)
+    DriveAnim="VPanzer3_driver_idle_open"
     ExitPositions(0)=(X=165.0,Y=-30.0,Z=80.0)
     ExitPositions(1)=(X=-35.0,Y=-30.0,Z=145.0)
     ExitPositions(2)=(X=165.0,Y=40.0,Z=80.0)

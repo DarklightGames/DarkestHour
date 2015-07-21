@@ -22,7 +22,7 @@ defaultproperties
     DriverPositions(4)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_StuH42Cannon'
     CameraBone="Turret"
-    DrivePos=(Z=-6.0)
+    DrivePos=(X=0.0,Y=0.0,Z=-7.0)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.0
     PitchUpLimit=6000

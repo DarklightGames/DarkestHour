@@ -72,7 +72,7 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointOffset=(X=-3.0,Y=2.0,Z=6.5))
+    VehHitpoints(0)=(PointOffset=(X=-3.0,Y=2.0,Z=7.0))
     VehHitpoints(1)=(PointBone="Engine",PointOffset=(Z=-10.0))
     EngineHealth=100
     bIsApc=true
@@ -132,7 +132,7 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
     VehicleMass=5.0
-    DrivePos=(X=5.0,Y=-2.0,Z=5.0)
+    DrivePos=(X=10.0,Y=-5.0,Z=2.0)
     DriveAnim="VBA64_driver_idle_close"
     ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)  //driver
     ExitPositions(1)=(X=30.0,Y=-5.0,Z=210.0)    //commander

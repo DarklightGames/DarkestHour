@@ -22,7 +22,7 @@ defaultproperties
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
-    DrivePos=(Y=-5.0,Z=14.0)
+    DrivePos=(X=0.0,Y=-7.0,Z=13.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
     EntryRadius=130.0

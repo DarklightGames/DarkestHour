@@ -22,7 +22,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_17PounderGunCannon'
     CameraBone="gun01"
-    DrivePos=(X=-12.0,Y=-12.0,Z=-49.0)
+    DrivePos=(X=-40.0,Y=-4.0,Z=-42.0)
     DriveAnim="crouch_idlehold_bayo"
     EntryRadius=200.0
     SoundVolume=130

@@ -122,7 +122,7 @@ defaultproperties
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LRWheel'
     VehicleMass=3.5
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=6.0)
+    DrivePos=(X=13.0,Y=-1.0,Z=-5.0)
     DriveAnim="VUC_driver_idle_close"
     ExitPositions(0)=(X=70.0,Y=-130.0,Z=60.0)
     ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)

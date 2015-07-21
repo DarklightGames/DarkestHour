@@ -134,7 +134,7 @@ defaultproperties
     VehicleMass=2.0
     bHasHandbrake=true
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=-1.0,Y=3.0,Z=-12.0)
+    DrivePos=(X=-2.0,Y=6.5,Z=-10.0)
     DriveAnim="Vhalftrack_driver_idle"
     ExitPositions(0)=(X=40.0,Y=-110.0,Z=25.0)
     ExitPositions(1)=(X=25.0,Y=110.0,Z=25.0)

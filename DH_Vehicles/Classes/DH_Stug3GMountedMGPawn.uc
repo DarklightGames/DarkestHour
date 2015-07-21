@@ -36,7 +36,7 @@ defaultproperties
     CameraBone="loader_cam"
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonOffsetZScale=3.0
-    DrivePos=(X=16.0,Z=20.0)
+    DrivePos=(X=4.5,Y=3.0,Z=19.5)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
     EntryRadius=130.0

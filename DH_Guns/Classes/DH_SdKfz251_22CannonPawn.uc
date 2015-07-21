@@ -38,6 +38,6 @@ defaultproperties
     GunClass=class'DH_Guns.DH_SdKfz251_22Cannon'
     WeaponAttachmentOffset=(X=-42.76,Y=0.3,Z=37.95) // don't have a bone for the Pak40 attachment, so this offsets from the hull's 'body' bone
     DriverPositions(1)=(DriverTransitionAnim="stand_idlehold_bayo",ViewPositiveYawLimit=2400,ViewNegativeYawLimit=-5100) // anim better positions the standing gunner in a vehicle
-    DrivePos=(X=-10.0,Z=-56.0)
+    DrivePos=(X=-11.0,Y=-1.0,Z=-57.0)
     EntryRadius=130.0
 }

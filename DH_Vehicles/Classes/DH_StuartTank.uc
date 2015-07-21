@@ -81,8 +81,8 @@ defaultproperties
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(3)=0.35
@@ -94,7 +94,8 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsY(5)=0.72
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(X=5.0,Y=1.0,Z=-1.0))
+
+    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(X=2.0,Y=7.0,Z=-8.0)) // TODO: the 'head' sphere in the collision static mesh is in totally wrong place, so need new col mesh
     VehHitpoints(1)=(PointOffset=(X=-73.0,Z=10.0))
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -155,8 +156,8 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_StuartTank.Right_Drive_Wheel'
     VehicleMass=7.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.0,Y=8.0,Z=0.0)
-    DriveAnim="VPanzer3_driver_idle_close"
+    DrivePos=(X=1.0,Y=7.0,Z=-10.0)
+    DriveAnim="VPanzer3_driver_idle_open"
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
     ExitPositions(1)=(X=0.0,Y=0.0,Z=225.0)     // commander hatch
     ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // mg hatch
