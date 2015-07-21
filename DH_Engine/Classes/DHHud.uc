@@ -1395,6 +1395,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 function DrawPlayerNames(Canvas C)
 {
     local vector          HitLocation, HitNormal, ViewPos, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
+    local int             PawnOwnerTeam;
     local float           StrX, StrY;
     local string          ResupplyMessage;
     local bool            bCouldMGResupply, bCouldMortarResupply, bCouldATResupply, bCouldATReload;
@@ -1409,13 +1410,11 @@ function DrawPlayerNames(Canvas C)
 
     ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0);
     HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true));
+    PawnOwnerTeam = PawnOwner.GetTeamNum();
     Mortar = DHMortarVehicle(HitPawn);
 
-    // Record NamedPlayer & possibly NameTime, if we're looking at a team-mate, or an unmanned mortar or if we're spectating (so we see all player names)
-    if (HitPawn != none && HitPawn != PawnOwner && (                                                                          // looking at another pawn (not self)
-        (HitPawn.PlayerReplicationInfo != none && HitPawn.PlayerReplicationInfo.Team == PawnOwner.PlayerReplicationInfo.Team) // team-mate
-        || (Mortar != none && Mortar.VehicleTeam == PawnOwner.GetTeamNum())                                                   // unmanned mortar of same team
-        ||  PawnOwner.PlayerReplicationInfo.Team == none))                                                                    // viewing player is a spectator
+    // Record NamedPlayer & possibly NameTime, if we're looking at a player or a mortar on the same team
+    if (HitPawn != none && HitPawn != PawnOwner && (HitPawn.GetTeamNum() == PawnOwnerTeam || (Mortar != none && Mortar.VehicleTeam == PawnOwnerTeam)))
     {
         if (NamedPlayer != HitPawn || Level.TimeSeconds - NameTime > 0.5)
         {
@@ -1444,41 +1443,47 @@ function DrawPlayerNames(Canvas C)
             // Set resupply/reload flags
             if (MyDHP != none)
             {
-                OtherDHP = DHPawn(NamedPlayer);
-
-                if (OtherDHP != none)
+                // Resupply a deployed mortar
+                if (Mortar != none)
                 {
-                    // AT weapon assisted reload
-                    if (OtherDHP.bWeaponNeedsReload)
-                    {
-                        bCouldATReload = true;
-                    }
-                    else if (OtherDHP.bWeaponNeedsResupply)
-                    {
-                        // AT weapon resupply
-                        if (DHRocketWeaponAttachment(OtherDHP.WeaponAttachment) != none)
-                        {
-                            if (MyDHP.bHasATAmmo)
-                            {
-                                bCouldATResupply = true;
-                            }
-                        }
-                        // MG resupply
-                        else if (MyDHP.bHasMGAmmo)
-                        {
-                            bCouldMGResupply = true;
-                        }
-                    }
-                    // Mortar resupply
-                    else if (OtherDHP.bMortarCanBeResupplied && MyDHP.bHasMortarAmmo)
+                    if (Mortar.bCanBeResupplied && MyDHP.bHasMortarAmmo)
                     {
                         bCouldMortarResupply = true;
                     }
                 }
-                // Resupply an unmanned mortar weapon (not a player)
-                else if (Mortar != none && Mortar.bCanBeResupplied && MyDHP.bHasMortarAmmo)
+                else
                 {
-                    bCouldMortarResupply = true;
+                    OtherDHP = DHPawn(NamedPlayer);
+
+                    if (OtherDHP != none)
+                    {
+                        // AT weapon assisted reload
+                        if (OtherDHP.bWeaponNeedsReload)
+                        {
+                            bCouldATReload = true;
+                        }
+                        else if (OtherDHP.bWeaponNeedsResupply)
+                        {
+                            // AT weapon resupply
+                            if (DHRocketWeaponAttachment(OtherDHP.WeaponAttachment) != none)
+                            {
+                                if (MyDHP.bHasATAmmo)
+                                {
+                                    bCouldATResupply = true;
+                                }
+                            }
+                            // MG resupply
+                            else if (MyDHP.bHasMGAmmo)
+                            {
+                                bCouldMGResupply = true;
+                            }
+                        }
+                        // Mortar resupply (a player carrying an undeployed mortar)
+                        else if (OtherDHP.bMortarCanBeResupplied && MyDHP.bHasMortarAmmo)
+                        {
+                            bCouldMortarResupply = true;
+                        }
+                    }
                 }
 
                 // If we could resupply/reload the player, set the appropriate message
@@ -1542,7 +1547,7 @@ function DrawPlayerNames(Canvas C)
                 C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
                 C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
             }
-            // Or if we don't have a player name but have resupply text, then just draw that (must be an unmanned mortar that can be resupplied)
+            // Or if we don't have a player name but have resupply text, then just draw that (must be a deployed mortar that can be resupplied)
             else if (ResupplyMessage != "")
             {
                 C.DrawColor = WhiteColor;
