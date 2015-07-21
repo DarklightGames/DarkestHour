@@ -564,20 +564,91 @@ simulated function bool InExposedVehiclePosition(Vehicle V)
     return Veh != none && Veh.DriverPositions[Veh.DriverPositionIndex].bExposed;
 }
 
-simulated function StopDriving(Vehicle V) // TEMP DEBUG
+// Modified to avoid restoring collision to players who have exited vehicle because they have been killed (otherwise their collision makes the vehicle jump around)
+simulated function StopDriving(Vehicle V)
 {
-    local DHGameReplicationInfo GRI;
+    local DHGameReplicationInfo GRI; // TEMP DEBUG
 
-    super(Pawn).StopDriving(V);
+    if (Role == ROLE_Authority && IsHumanControlled() && V != none)
+    {
+        V.PlayerStartTime = Level.TimeSeconds + 12.0;
+    }
+
+    CullDistance = default.CullDistance;
+    NetUpdateTime = Level.TimeSeconds - 1.0;
+
+    if (V != none && V.Weapon != none)
+    {
+        V.Weapon.ImmediateStopFire();
+    }
+
+    if (Physics == PHYS_Karma)
+    {
+        return;
+    }
+
+    DrivenVehicle = none;
+    bIgnoreForces = false;
+    bHardAttach = false;
+    bWaitForAnim = false;
+    bCanTeleport = true;
+
+    if (Health > 0) // added Health check so we don't restore collision for dead player
+    {
+        bCollideWorld = true;
+    }
+
+    PlayWaiting();
+
+    if (V != none)
+    {
+        V.DetachDriver(self);
+    }
+
+    bPhysicsAnimUpdate = default.bPhysicsAnimUpdate;
+
+    if (Health > 0) // added Health check so we don't restore collision for dead player
+    {
+        SetCollision(true, true);
+    }
+
+    if (Role == ROLE_Authority && Health > 0 && (V == none || !V.bRemoteControlled || V.bHideRemoteDriver))
+    {
+        Acceleration = vect(0.0, 0.0, 24000.0);
+
+        if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
+        {
+            SetPhysics(PHYS_Swimming);
+        }
+        else
+        {
+            SetPhysics(PHYS_Falling);
+        }
+
+        SetBase(none);
+        bHidden = false;
+    }
+
+    bOwnerNoSee = default.bOwnerNoSee;
+
+    if (Weapon != none)
+    {
+        PendingWeapon = none;
+        Weapon.BringUp();
+    }
 
     if (PlayerShadow != none)
+    {
         PlayerShadow.bShadowActive = true;
+    }
 
     if (WeaponAttachment != none)
     {
+        // TEMP DEBUG
         if (Role == ROLE_Authority) GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         else if (IsHumanControlled()) GRI = DHGameReplicationInfo(PlayerController(Controller).GameReplicationInfo);
         if (GRI != none && GRI.bLogWeaponAttachment) Log("StopDriving making visible (calling Hide(false))" @ WeaponAttachment.Tag);
+        // END DEBUG
 
         WeaponAttachment.Hide(false);
     }
