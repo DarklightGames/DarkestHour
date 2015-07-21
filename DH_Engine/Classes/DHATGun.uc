@@ -228,6 +228,8 @@ defaultproperties
     CollisionRadius=75.0
     CollisionHeight=100.0
     MinBrakeFriction=40.0
+	VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
+	VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
