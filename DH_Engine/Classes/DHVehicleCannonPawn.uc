@@ -1723,6 +1723,19 @@ exec function ToggleCameraDebug()
     }
 }
 
+// New debug exec to set 1st person camera position
+exec function SetCamPos(int NewX, int NewY, int NewZ)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Tag @ "new DriverPositions[" $ DriverPositionIndex $ "].ViewLocation =" @ NewX @ NewY @ NewZ @ "(old was" @ DriverPositions[DriverPositionIndex].ViewLocation $ ")");
+        DriverPositions[DriverPositionIndex].ViewLocation.X = NewX;
+        DriverPositions[DriverPositionIndex].ViewLocation.Y = NewY;
+        DriverPositions[DriverPositionIndex].ViewLocation.Z = NewZ;
+        FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+    }
+}
+
 // New exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
