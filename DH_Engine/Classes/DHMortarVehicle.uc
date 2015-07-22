@@ -6,6 +6,7 @@
 class DHMortarVehicle extends ROVehicle
     abstract;
 
+var     DHPawn      OwningPawn;
 var     bool        bEnteredOnce;
 var     bool        bCanBeResupplied;
 var     ObjectMap   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
@@ -97,15 +98,32 @@ function bool TryToDrive(Pawn P)
         bEnteredOnce = true;
     }
 
-    // Cancel any pending destruction
-    if (IsInState('PendingDestroy'))
-    {
-        GotoState('');
-    }
-
     WeaponPawns[0].KDriverEnter(DHP);
+    SetMortarOwner(DHP);
 
     return true;
+}
+
+// Record the player manning the mortar, including to clear any previous owner & cancel any pending mortar destruction (if previous owner has been killed)
+simulated function SetMortarOwner(DHPawn P)
+{
+    if (P != none)
+    {
+        // A new player is manning the mortar, so remove any previously recorded ownership
+        if (OwningPawn != none && OwningPawn != P)
+        {
+            OwningPawn.OwnedMortar = none;
+        }
+
+        OwningPawn = P;
+        P.OwnedMortar = self;
+
+        // Cancel any pending destruction
+        if (IsInState('PendingDestroy'))
+        {
+            GotoState('');
+        }
+    }
 }
 
 // No possibility of damage to mortar base

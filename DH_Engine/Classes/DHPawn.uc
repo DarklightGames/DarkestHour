@@ -32,6 +32,7 @@ var     int     MortarHEAmmo;
 var     int     MortarSmokeAmmo;
 
 // Mortars
+var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
 var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
 var     bool    bMortarCanBeResupplied;
 var     bool    bLockViewRotation;
@@ -1806,6 +1807,11 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     }
 
     DestroyRadioTrigger();
+
+    if (OwnedMortar != none)
+    {
+        OwnedMortar.GotoState('PendingDestroy');
+    }
 
     if (DrivenVehicle != none)
     {

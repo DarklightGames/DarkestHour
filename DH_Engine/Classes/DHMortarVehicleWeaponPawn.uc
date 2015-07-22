@@ -616,17 +616,6 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified so mortar is destroyed a few seconds after player dies
-function DriverDied()
-{
-    super.DriverDied();
-
-    if (DHMortarVehicle(VehicleBase) != none)
-    {
-        DHMortarVehicle(VehicleBase).GotoState('PendingDestroy');
-    }
-}
-
 // New function to play an animation on the HUDOverlay
 simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLoop, optional float Rate, optional float TweenTime)
 {
