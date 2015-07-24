@@ -795,7 +795,7 @@ simulated state ViewTransition
         if (Driver != none)
         {
             // If moving to an exposed position, enable the driver's hit detection
-            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[PreviousPositionIndex].bExposed && Driver.IsA('ROPawn'))
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[PreviousPositionIndex].bExposed && ROPawn(Driver) != none)
             {
                 ROPawn(Driver).ToggleAuxCollision(true);
             }

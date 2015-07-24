@@ -599,8 +599,9 @@ simulated function PrevWeapon()
     }
 }
 
-// Modified to call NextViewPoint() for all modes, including dedicated server
+// Modified to send dedicated server to state ViewTransition if player is moving to or from an exposed position
 // New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
+// But if player is only moving from one unexposed position to another, the server doesn't need to do this, as player can't be shot & server has no other need to play anims
 // Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
 function ServerChangeViewPoint(bool bForward)
 {
@@ -610,7 +611,12 @@ function ServerChangeViewPoint(bool bForward)
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
-            NextViewPoint();
+
+            if ((Level.NetMode == NM_DedicatedServer && (DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed))
+                || Level.Netmode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                GotoState('ViewTransition'); // originally called NextViewPoint(), but for any authority role that just goes to state ViewTransition anyway
+            }
         }
     }
     else
@@ -619,24 +625,14 @@ function ServerChangeViewPoint(bool bForward)
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
-            NextViewPoint();
+
+            if ((Level.NetMode == NM_DedicatedServer && (DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed))
+                || Level.Netmode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                GotoState('ViewTransition');
+            }
         }
     }
-}
-
-// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
-// Avoids calling AnimateTransition() & instead uses state ViewTransition in all relevant situations, as ViewTransition controls timing of enabling/disabling player hit detection
-simulated function NextViewPoint()
-{
-    if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed)
-    {
-        GotoState('ViewTransition');
-    }
-}
-
-// Emptied out as no longer used (see NextViewPoint() above)
-simulated function AnimateTransition()
-{
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
@@ -672,7 +668,7 @@ simulated state ViewTransition
         if (Driver != none)
         {
             // If moving to an exposed position, enable the player's hit detection
-            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && Driver.IsA('ROPawn'))
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
             {
                 ROPawn(Driver).ToggleAuxCollision(true);
             }
@@ -687,18 +683,21 @@ simulated state ViewTransition
         // Play any transition animation for the MG itself & set a duration to control when we exit this state
         ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
-        if (LastPositionIndex < DriverPositionIndex)
+        if (Gun != none)
         {
-            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+            if (LastPositionIndex < DriverPositionIndex)
             {
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+                {
+                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                    ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                }
             }
-        }
-        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
-        {
-            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
+            {
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+                ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            }
         }
     }
 
@@ -743,6 +742,51 @@ Begin:
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('');
+}
+
+// Modified to enable or disable player's hit detection when moving to or from an exposed position
+simulated function AnimateTransition()
+{
+    if (Driver != none)
+    {
+        // Enable/disable the player's hit detection if he is moving to an exposed/unexposed position
+        if (bKeepDriverAuxCollision && ROPawn(Driver) != none)
+        {
+            if (DriverPositions[DriverPositionIndex].bExposed)
+            {
+                if (!DriverPositions[LastPositionIndex].bExposed)
+                {
+                    ROPawn(Driver).ToggleAuxCollision(true);
+                }
+            }
+            else if (DriverPositions[LastPositionIndex].bExposed)
+            {
+                ROPawn(Driver).ToggleAuxCollision(false);
+            }
+        }
+
+        // Play any transition animation for the player
+        if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
+        {
+            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+        }
+    }
+
+    // Play any transition animation for the MG itself
+    if (Gun != none)
+    {
+        if (LastPositionIndex < DriverPositionIndex)
+        {
+            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+            {
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+            }
+        }
+        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
+        {
+            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
