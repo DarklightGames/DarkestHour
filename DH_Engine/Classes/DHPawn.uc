@@ -115,11 +115,9 @@ replication
 //      bCrouchMantle, MantleHeight; // Matt: removed as are set independently on server & client & so don't seem to need to be replicated
 }
 
+// Modified to use DH version of bullet whip attachment actor (& removes needlessly setting some variables to what will be default values anyway)
 simulated function PostBeginPlay()
 {
-    super.PostBeginPlay();
-
-    // From UnrealPawn
     if (Level.bStartup && !bNoDefaultInventory)
     {
         AddDefaultInventory();
@@ -129,19 +127,11 @@ simulated function PostBeginPlay()
 
     UpdateShadow();
 
-    // end from UnrealPawn
-
-    SavedBreathSound = 0;
-
-    if (AuxCollisionCylinder == none)
-    {
-        AuxCollisionCylinder = Spawn(class'DHBulletWhipAttachment', self);
-        AttachToBone(AuxCollisionCylinder, 'spine');
-    }
-
+    AuxCollisionCylinder = Spawn(class'DHBulletWhipAttachment', self);
+    AttachToBone(AuxCollisionCylinder, 'spine');
     SavedAuxCollision = AuxCollisionCylinder.bCollideActors;
+
     LastResupplyTime = Level.TimeSeconds - 1.0;
-    bTouchingResupply = false;
 }
 
 simulated function Tick(float DeltaTime)
