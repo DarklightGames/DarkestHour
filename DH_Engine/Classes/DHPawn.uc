@@ -115,7 +115,8 @@ replication
 //      bCrouchMantle, MantleHeight; // Matt: removed as are set independently on server & client & so don't seem to need to be replicated
 }
 
-// Modified to use DH version of bullet whip attachment actor (& removes needlessly setting some variables to what will be default values anyway)
+// Modified to use DH version of bullet whip attachment actor, & to remove its SavedAuxCollision (deprecated as now we simply enable or disable collision in ToggleAuxCollision function)
+// Also removes needlessly setting some variables to what will be default values anyway for a spawning actor
 simulated function PostBeginPlay()
 {
     if (Level.bStartup && !bNoDefaultInventory)
@@ -129,7 +130,6 @@ simulated function PostBeginPlay()
 
     AuxCollisionCylinder = Spawn(class'DHBulletWhipAttachment', self);
     AttachToBone(AuxCollisionCylinder, 'spine');
-    SavedAuxCollision = AuxCollisionCylinder.bCollideActors;
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
 }
@@ -446,7 +446,7 @@ simulated event StartDriving(Vehicle V)
 
     if (!V.bRemoteControlled || V.bHideRemoteDriver)
     {
-        SetCollision(false, false, false);
+        SetCollision(false, false);
         bCollideWorld = false;
 
         // If vehicle just replicated to net client & it doesn't yet have the necessary actor to attach to, tell vehicle it needs to attach Driver when it receives relevant actor
@@ -646,6 +646,15 @@ simulated function StopDriving(Vehicle V)
 
     ToggleAuxCollision(true);
     SetAnimAction('ClearAnims');
+}
+
+// Modified to deprecate SavedAuxCollision & simply enable or disable collision based on passed bool
+simulated function ToggleAuxCollision(bool bEnabled)
+{
+    if (AuxCollisionCylinder != none)
+    {
+        AuxCollisionCylinder.SetCollision(bEnabled, false);
+    }
 }
 
 // Added bullet impact sounds for helmets and players
@@ -1775,7 +1784,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     // Turn off the auxiliary collision when the player dies
     if (AuxCollisionCylinder != none)
     {
-        AuxCollisionCylinder.SetCollision(false, false, false);
+        AuxCollisionCylinder.SetCollision(false, false);
     }
 
     DamageBeyondZero = Health;
