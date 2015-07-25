@@ -1496,6 +1496,14 @@ static function StaticPrecache(LevelInfo L)
         }
     }
 
+    for (i = 0; i < default.DestroyedMeshSkins.Length; ++i)
+    {
+        if (default.DestroyedMeshSkins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.DestroyedMeshSkins[i]);
+        }
+    }
+
     L.AddPrecacheMaterial(default.VehicleHudImage);
     L.AddPrecacheMaterial(default.MPHMeterMaterial);
 
@@ -1508,13 +1516,28 @@ static function StaticPrecache(LevelInfo L)
     {
         L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
     }
+
+    if (default.ResupplyDecoAttachmentClass != none && default.ResupplyDecoAttachmentClass.default.StaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.ResupplyDecoAttachmentClass.default.StaticMesh);
+    }
 }
 
 // Modified to removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
 // Also to add extra material properties & remove obsolete stuff
 simulated function UpdatePrecacheMaterials()
 {
+    local int i;
+
     super(Actor).UpdatePrecacheMaterials(); // pre-caches the Skins array
+
+    for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+    {
+        if (DestroyedMeshSkins[i] != none)
+        {
+            Level.AddPrecacheMaterial(DestroyedMeshSkins[i]);
+        }
+    }
 
     Level.AddPrecacheMaterial(VehicleHudImage);
     Level.AddPrecacheMaterial(MPHMeterMaterial);
@@ -1527,6 +1550,11 @@ simulated function UpdatePrecacheMaterials()
     if (DestroyedVehicleMesh != none)
     {
         Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
+    }
+
+    if (ResupplyDecoAttachmentClass != none && ResupplyDecoAttachmentClass.default.StaticMesh != none)
+    {
+        Level.AddPrecacheStaticMesh(ResupplyDecoAttachmentClass.default.StaticMesh);
     }
 }
 

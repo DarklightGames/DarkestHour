@@ -3182,6 +3182,14 @@ static function StaticPrecache(LevelInfo L)
         }
     }
 
+    for (i = 0; i < default.DestroyedMeshSkins.Length; ++i)
+    {
+        if (default.DestroyedMeshSkins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.DestroyedMeshSkins[i]);
+        }
+    }
+
     L.AddPrecacheMaterial(default.VehicleHudImage);
     L.AddPrecacheMaterial(default.MPHMeterMaterial);
     L.AddPrecacheMaterial(default.DamagedTreadPanner);
@@ -3196,11 +3204,26 @@ static function StaticPrecache(LevelInfo L)
     if (default.SchurzenTexture != none)
     {
         L.AddPrecacheMaterial(default.SchurzenTexture);
+
+        for (i = 0; i < arraycount(default.SchurzenTypes); ++i)
+        {
+            L.AddPrecacheStaticMesh(default.SchurzenTypes[i].SchurzenStaticMesh);
+        }
     }
 
     if (default.DestroyedVehicleMesh != none)
     {
         L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
+    }
+
+    if (default.DamagedTrackStaticMeshLeft != none)
+    {
+        L.AddPrecacheStaticMesh(default.DamagedTrackStaticMeshLeft);
+    }
+
+    if (default.DamagedTrackStaticMeshRight != none)
+    {
+        L.AddPrecacheStaticMesh(default.DamagedTrackStaticMeshRight);
     }
 }
 
@@ -3208,7 +3231,17 @@ static function StaticPrecache(LevelInfo L)
 // Also to add extra material properties & remove obsolete stuff
 simulated function UpdatePrecacheMaterials()
 {
+    local int i;
+
     super(Actor).UpdatePrecacheMaterials(); // pre-caches the Skins array
+
+    for (i = 0; i < DestroyedMeshSkins.Length; ++i)
+    {
+        if (DestroyedMeshSkins[i] != none)
+        {
+            Level.AddPrecacheMaterial(DestroyedMeshSkins[i]);
+        }
+    }
 
     Level.AddPrecacheMaterial(VehicleHudImage);
     Level.AddPrecacheMaterial(MPHMeterMaterial);
@@ -3224,11 +3257,26 @@ simulated function UpdatePrecacheMaterials()
     if (SchurzenTexture != none)
     {
         Level.AddPrecacheMaterial(SchurzenTexture);
+
+        for (i = 0; i < arraycount(SchurzenTypes); ++i)
+        {
+            Level.AddPrecacheStaticMesh(SchurzenTypes[i].SchurzenStaticMesh);
+        }
     }
 
     if (DestroyedVehicleMesh != none)
     {
         Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
+    }
+
+    if (DamagedTrackStaticMeshLeft != none)
+    {
+        Level.AddPrecacheStaticMesh(DamagedTrackStaticMeshLeft);
+    }
+
+    if (DamagedTrackStaticMeshRight != none)
+    {
+        Level.AddPrecacheStaticMesh(DamagedTrackStaticMeshRight);
     }
 }
 
