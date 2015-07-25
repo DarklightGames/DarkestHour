@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleDecoAttachment extends RODummyAttachment
-    abstract;
+class DHVehicleDecoAttachment extends RODummyAttachment;
 
 // Emptied out to remove auto-attachment to bone
 simulated function PostBeginPlay()

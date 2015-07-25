@@ -12,11 +12,11 @@ class DH_JagdpantherTank extends DHArmoredVehicle;
 defaultproperties
 {
     SchurzenTexture=texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2' // ideally get better matching texture made, but for now this is passable match
-    SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
-    SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
-    SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides
-    SchurzenTypes(3)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenFour',PercentChance=15)  // most badly damaged, with 3 panels missing
-    SchurzenOffset=(X=28.4,Y=5.8,Z=-14.2)
+    SchurzenTypes(0)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
+    SchurzenTypes(1)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
+    SchurzenTypes(2)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
+    SchurzenTypes(3)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
+    SchurzenOffset=(X=-18.0,Y=-1.65,Z=-14.0)
     SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
     NewVehHitpoints(0)=(PointRadius=8.0,PointScale=1.0,PointBone="body",PointOffset=(X=55.0,Y=-40.0,Z=77.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_Traverse)

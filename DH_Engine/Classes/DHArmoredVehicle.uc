@@ -140,8 +140,8 @@ var     sound       DestroyedBurningSound;
 // Schurzen
 struct SchurzenType
 {
-    var class<RODummyAttachment> SchurzenClass; // a possible schurzen decorative attachment class, with different degrees of damage
-    var byte                     PercentChance; // the % chance of this deco attachment being the one spawned
+    var StaticMesh  SchurzenStaticMesh;       // a possible schurzen decorative attachment mesh, with different degrees of damage
+    var byte        PercentChance;            // the % chance of this deco attachment being the one spawned
 };
 
 var     SchurzenType        SchurzenTypes[4]; // an array of possible schurzen attachments
@@ -280,16 +280,13 @@ simulated function PostNetBeginPlay()
     }
 
     // Only spawn schurzen if a valid attachment class has been selected
-    if (SchurzenTexture != none && Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none)
+    if (Level.NetMode != NM_DedicatedServer && SchurzenTexture != none && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenStaticMesh != none)
     {
-        Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
-
-        if (Schurzen != none)
-        {
-            Schurzen.Skins[0] = SchurzenTexture; // set the deco attachment's camo skin
-            AttachToBone(Schurzen, 'body');
-            Schurzen.SetRelativeLocation(SchurzenOffset);
-        }
+        Schurzen = Spawn(class'DHVehicleDecoAttachment');
+        Schurzen.SetStaticMesh(SchurzenTypes[SchurzenIndex].SchurzenStaticMesh);
+        Schurzen.Skins[0] = SchurzenTexture;
+        AttachToBone(Schurzen, 'body');
+        Schurzen.SetRelativeLocation(SchurzenOffset);
     }
 }
 

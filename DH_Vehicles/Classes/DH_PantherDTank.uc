@@ -10,11 +10,10 @@ class DH_PantherDTank extends DHArmoredVehicle;
 defaultproperties
 {
     SchurzenTexture=none // we don't have a schurzen skin for this camo variant, so add here if one gets made
-    SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
-    SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
-    SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides
-    SchurzenTypes(3)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenFour',PercentChance=15)  // most badly damaged, with 3 panels missing
-    SchurzenOffset=(X=45.5,Y=7.45,Z=-1.0)
+    SchurzenTypes(0)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
+    SchurzenTypes(1)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
+    SchurzenTypes(2)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
+    SchurzenTypes(3)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
     SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
     UnbuttonedPositionIndex=1
     MaxCriticalSpeed=932.0
