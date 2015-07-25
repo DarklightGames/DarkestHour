@@ -9,6 +9,5 @@ class DH_OpelBlitzDecoAttachment extends DHVehicleDecoAttachment;
 
 defaultproperties
 {
-    DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark'
 }
