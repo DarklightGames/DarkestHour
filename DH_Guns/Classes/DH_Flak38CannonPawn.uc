@@ -22,16 +22,6 @@ exec function SetScale(float NewValue) // TEMP
     }
 }
 
-exec function SetDrivePos(int NewX, int NewY, int NewZ) // TEMP
-{
-    DrivePos.X = NewX;
-    DrivePos.Y = NewY;
-    DrivePos.Z = NewZ;
-    DetachDriver(Driver);
-    AttachDriver(Driver);
-    log("DrivePos =" @ DrivePos);
-}
-
 // Emptied out as shells inherits RangeSettings from Sd.Kfz.234/1 armored car, but flak 38 has no range settings on the gunsight:
 function IncrementRange();
 function DecrementRange();

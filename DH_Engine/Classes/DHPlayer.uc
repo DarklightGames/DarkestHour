@@ -2801,9 +2801,10 @@ function RORoleInfo GetRoleInfo()
 }
 
 // New debug exec to adjust DrivePos (vehicle occupant positional offset from attachment bone)
-exec function SetDrivePos(int NewX, int NewY, int NewZ)
+exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
 {
     local Vehicle V;
+    local vector  OldDrivePos;
 
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
@@ -2811,12 +2812,24 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ)
 
         if (V != none && V.Driver != none)
         {
-            Log(V.Tag @ " new DrivePos =" @ NewX @ NewY @ NewZ @ "(was" @ V.DrivePos $ ")");
-            V.DrivePos.X = NewX;
-            V.DrivePos.Y = NewY;
-            V.DrivePos.Z = NewZ;
+            OldDrivePos = V.DrivePos;
+
+            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5) 
+            {
+                V.DrivePos.X = Float(NewX) / 10.0;
+                V.DrivePos.Y = Float(NewY) / 10.0;
+                V.DrivePos.Z = Float(NewZ) / 10.0;
+            }
+            else
+            {
+                V.DrivePos.X = NewX;
+                V.DrivePos.Y = NewY;
+                V.DrivePos.Z = NewZ;
+            }
+
             V.DetachDriver(V.Driver);
             V.AttachDriver(V.Driver);
+            Log(V.Tag @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
         }
     }
 }
