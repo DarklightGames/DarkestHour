@@ -22,7 +22,7 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_JagdtigerCannon'
     bHasAltFire=false
     CameraBone="Turret_placement1"
-    DrivePos=(X=5.0,Y=3.0,Z=3.0)
+    DrivePos=(X=2.0,Y=6.0,Z=-3.0)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.0
     PitchUpLimit=6000
