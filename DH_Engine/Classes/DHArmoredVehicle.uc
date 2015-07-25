@@ -98,8 +98,8 @@ var     sound       DamagedShutDownSound;      // sound played when damaged engi
 var     int         LeftTreadIndex, RightTreadIndex;
 var     rotator     LeftTreadPanDirection, RightTreadPanDirection;
 var     material    DamagedTreadPanner;
-var     class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
-var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
+var     RODummyAttachment   DamagedTrackLeft, DamagedTrackRight;                     // static mesh attachment to show damaged track, e.g. broken track links (clientside only)
+var     StaticMesh          DamagedTrackStaticMeshLeft, DamagedTrackStaticMeshRight; // the static mesh to use for damaged left & right tracks
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
@@ -3388,9 +3388,10 @@ simulated function SetDamagedTracks()
         }
 
         // Matt: added support for spawning damaged track model as decorative static mesh
-        if (DamagedTrackLeftClass != none && DamagedTrackLeft == none)
+        if (DamagedTrackStaticMeshLeft != none && DamagedTrackLeft == none)
         {
-            DamagedTrackLeft = Spawn(DamagedTrackLeftClass);
+            DamagedTrackLeft = Spawn(class'DHVehicleDecoAttachment');
+            DamagedTrackLeft.SetStaticMesh(DamagedTrackStaticMeshLeft);
             DamagedTrackLeft.Skins[0] = default.Skins[LeftTreadIndex]; // sets damaged tread skin to match treads for this tank (i.e. whether normal or snowy)
             AttachToBone(DamagedTrackLeft, 'Body');
         }
@@ -3405,9 +3406,10 @@ simulated function SetDamagedTracks()
             RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
         }
 
-        if (DamagedTrackRightClass != none && DamagedTrackRight == none)
+        if (DamagedTrackStaticMeshRight != none && DamagedTrackRight == none)
         {
-            DamagedTrackRight = Spawn(DamagedTrackRightClass);
+            DamagedTrackRight = Spawn(class'DHVehicleDecoAttachment');
+            DamagedTrackRight.SetStaticMesh(DamagedTrackStaticMeshRight);
             DamagedTrackRight.Skins[0] = default.Skins[RightTreadIndex];
             AttachToBone(DamagedTrackRight, 'Body');
         }
