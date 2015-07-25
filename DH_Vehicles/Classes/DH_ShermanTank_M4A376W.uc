@@ -14,6 +14,8 @@ defaultproperties
 {
     LeftTreadIndex=5
     RightTreadIndex=4
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_right'
     MaxCriticalSpeed=638.0
     AmmoIgnitionProbability=0.5
     TreadDamageThreshold=0.75
