@@ -43,12 +43,19 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to calculate & set texture MGOverlay variables once instead of every DrawHUD
+// Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
+// Also to calculate & set texture MGOverlay variables once instead of every DrawHUD
 simulated function PostBeginPlay()
 {
     local float OverlayCenterScale;
 
     super.PostBeginPlay();
+
+    if (Role == ROLE_Authority && InitialPositionIndex > 0)
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        LastPositionIndex = InitialPositionIndex;
+    }
 
     if (Level.NetMode != NM_DedicatedServer && MGOverlay != none)
     {
@@ -58,14 +65,21 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to make sure net clients get the MG & player in the correct position when vehicle is replicated to client
+// Modified for net client to flag if bNeedToInitializeDriver, & to match clientside position indexes to replicated DriverPositionIndex
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    if (Role < ROLE_Authority && bDriving)
+    if (Role < ROLE_Authority)
     {
-        bNeedToInitializeDriver = true;
+        if (bDriving)
+        {
+            bNeedToInitializeDriver = true;
+        }
+
+        SavedPositionIndex = DriverPositionIndex;
+        LastPositionIndex = DriverPositionIndex;
+        PendingPositionIndex = DriverPositionIndex;
     }
 }
 
@@ -97,14 +111,14 @@ simulated function PostNetReceive()
     local int i;
 
     // Player has changed position
-    if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
+    // Checking bInitializedVehicleGun means we do nothing on the 1st call to this function, which happens before PostNetBeginPlay() has matched position indexes
+    // Meaning we leave SetPlayerPosition() to handle any initial anims & don't call NextViewPoint() initially, which would only interfere with SetPlayerPosition()
+    if (DriverPositionIndex != SavedPositionIndex && bInitializedVehicleGun && bMultiPosition)
     {
         LastPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
 
-        // Matt: added 'if' to avoid duplication/conflict with SetPlayerPosition(), which now handles the starting anims when vehicle replicates to a net client
-        // Also no point playing transition anim if there's no 'Driver' (if he's just left, the BeginningIdleAnim will play)
-        if (Driver != none && bInitializedVehicleGun)
+        if (Driver != none) // no point playing transition anim if there's no 'Driver' (if he's just left, the BeginningIdleAnim will play)
         {
             NextViewPoint();
         }

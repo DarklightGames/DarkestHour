@@ -126,6 +126,13 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
+        if (InitialPositionIndex > 0)
+        {
+            DriverPositionIndex = InitialPositionIndex;
+            PreviousPositionIndex = InitialPositionIndex;
+        }
+
         // Spawn the actual resupply actor - this is not the visual attachment, it's the real thing on the server
         if (ResupplyAttachmentClass != none && ResupplyAttachBone != '' && ResupplyAttachment == none)
         {
@@ -175,22 +182,27 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to initialize engine-related properties & to set bClientInitialized flag
-// Also to make sure net clients get the vehicle & driver in the correct position when vehicle is replicated to client
+// Modified to initialize engine-related properties
+// Also on net client to flag if bNeedToInitializeDriver, to match clientside position indexes to replicated DriverPositionIndex, & to flag bClientInitialized when done
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
     SetEngine();
 
+    // Net client initialisation, based on replicated info about driving status/position
     if (Role < ROLE_Authority)
     {
-        bClientInitialized = true;
-
         if (bDriving)
         {
             bNeedToInitializeDriver = true;
         }
+
+        SavedPositionIndex = DriverPositionIndex;
+        PreviousPositionIndex = DriverPositionIndex;
+        PendingPositionIndex = DriverPositionIndex;
+
+        bClientInitialized = true;
     }
 }
 
@@ -222,14 +234,13 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 simulated function PostNetReceive()
 {
     // Driver has changed position
-    if (DriverPositionIndex != SavedPositionIndex)
+    // Checking bClientInitialized means we do nothing until PostNetBeginPlay() has matched position indexes, meaning we leave SetPlayerPosition() to handle any initial anims
+    if (DriverPositionIndex != SavedPositionIndex && bClientInitialized)
     {
         PreviousPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
 
-        // Matt: added 'if' to avoid duplication/conflict with SetPlayerPosition(), which now handles the starting anims when vehicle replicates to a net client
-        // Also no point playing transition anim if there's no driver (if he's just left, the BeginningIdleAnim will play)
-        if (Driver != none && bClientInitialized)
+        if (Driver != none) // no point playing transition anim if there's no driver (if he's just left, the BeginningIdleAnim will play)
         {
             NextViewPoint();
         }
