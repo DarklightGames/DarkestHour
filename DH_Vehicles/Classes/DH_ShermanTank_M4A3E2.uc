@@ -14,6 +14,7 @@ defaultproperties
 {
     LeftTreadIndex=5
     RightTreadIndex=4
+    TreadHitMaxHeight=65.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_right'
     MaxCriticalSpeed=638.0
@@ -62,7 +63,6 @@ defaultproperties
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
     WheelRotationScale=700
-    TreadHitMinAngle=1.3
     FrontLeftAngle=335.0
     FrontRightAngle=25.0
     RearRightAngle=155.0
