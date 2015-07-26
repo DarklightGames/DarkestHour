@@ -14,33 +14,32 @@ var     SoundGroup  CommonwealthRequestSound;
 var     SoundGroup  CommonwealthConfirmSound;
 var     SoundGroup  CommonwealthDenySound;
 
-function UsedBy(Pawn user)
+function UsedBy(Pawn User)
 {
-    local DHPlayer DHPC;
+    local DHRoleInfo   RI;
+    local DHPlayer     DHPC;
     local ROVolumeTest VolumeTest;
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo RI;
-    local bool bIsInNoArtyVolume;
-    local DarkestHourGame DHG;
+    local sound        RequestSound;
 
-    if (!bAvailable)
+    if (!bAvailable || User == none)
     {
        return;
     }
 
-    DHG = DarkestHourGame(Level.Game);
+    SavedUser = none;
 
-    if (DHG == none)
+    if (DHPawn(User) != none)
+    {
+        RI = DHPawn(User).GetRoleInfo();
+    }
+
+    // Don't let non-commanders call in arty
+    if (RI == none || !RI.bIsArtilleryOfficer)
     {
         return;
     }
 
-    SavedUser = none;
-
-    if (user.Controller != none)
-    {
-        DHPC = DHPlayer(user.Controller);
-    }
+    DHPC = DHPlayer(User.Controller);
 
     // Bots can't call arty yet
     if (DHPC == none)
@@ -48,97 +47,65 @@ function UsedBy(Pawn user)
         return;
     }
 
-    PRI = DHPlayerReplicationInfo(DHPC.PlayerReplicationInfo);
-
-    if (DHPawn(user) == none)
+    // Exit if no co-ordinates selected (with message)
+    if (DHPC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
     {
-        return;
-    }
-
-    RI = DHPawn(user).GetRoleInfo();
-
-    // Don't let non-commanders call in arty
-    if (PRI == none || RI == none || !RI.bIsArtilleryOfficer)
-    {
-        return;
-    }
-
-    if (DHPC != none && DHPC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
-    {
-        DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4);
+        DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4); // no co-ords selected
 
         return;
     }
 
-    // Don't let the player call in an arty strike on a location that has become an active
-    // NoArtyVolume after they marked the location.
-    if (DHPC != none)
-    {
-        VolumeTest = Spawn(class'ROVolumeTest', self,, DHPC.SavedArtilleryCoords);
+    // Don't let the player call in an arty strike on a location that has become an active NoArtyVolume after they marked the location.
+    VolumeTest = Spawn(class'ROVolumeTest', self,, DHPC.SavedArtilleryCoords);
 
-        if (VolumeTest != none)
+    if (VolumeTest != none)
+    {
+        if (VolumeTest.IsInNoArtyVolume())
         {
-            bIsInNoArtyVolume = VolumeTest.IsInNoArtyVolume();
-        }
-
-        VolumeTest.Destroy();
-
-        if (bIsInNoArtyVolume)
-        {
-            DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
+            VolumeTest.Destroy();
+            DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid target
 
             return;
         }
+
+        VolumeTest.Destroy();
     }
 
-    if (ApprovePlayerTeam(user.GetTeamNum()))
+    // If player is of a team that can use this trigger, call in an arty strike
+    if (ApprovePlayerTeam(DHPC.GetTeamNum()))
     {
-        SavedUser = user;
         bAvailable = false;
+        SavedUser = User;
+        DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 1); // request strike
 
-        if (SavedUser.Controller != none)
+        if (DHPC.GetTeamNum() == AXIS_TEAM_INDEX)
         {
-            DHPC = DHPlayer(SavedUser.Controller);
+            RequestSound = GermanRequestSound;
         }
-
-        if (DHPC != none)
+        else if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).DHLevelInfo != none)
         {
-            DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 1);
-        }
-
-        if (user.GetTeamNum() == AXIS_TEAM_INDEX)
-        {
-            user.PlaySound(GermanRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
-
-            SetTimer(GetSoundDuration(GermanRequestSound), false);
-        }
-        else
-        {
-            switch (DHG.DHLevelInfo.AlliedNation)
+            switch (DarkestHourGame(Level.Game).DHLevelInfo.AlliedNation)
             {
                 case NATION_USA:
                 case NATION_Canada:
-                    user.PlaySound(RussianRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
-
-                    SetTimer(GetSoundDuration(RussianRequestSound), false);
-
+                    RequestSound = RussianRequestSound;
                     break;
+
                 case NATION_Britain:
-                    user.PlaySound(CommonwealthRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
-
-                    SetTimer(GetSoundDuration(CommonwealthRequestSound), false);
-
+                    RequestSound = CommonwealthRequestSound;
                     break;
             }
         }
+
+        User.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
+        SetTimer(GetSoundDuration(RequestSound), false);
     }
 }
 
 function Touch(Actor Other)
 {
-    local DHPlayerReplicationInfo PRI;
     local Pawn P;
-    local DHRoleInfo RI;
+    local DHPlayerReplicationInfo PRI;
 
     P = Pawn(Other);
 
@@ -149,34 +116,26 @@ function Touch(Actor Other)
 
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-    if (PRI == none || PRI.RoleInfo == none)
+    // Check touching player is an artillery officer of a team that can use this trigger
+    if (PRI != none && DHRoleInfo(PRI.RoleInfo) != none && DHRoleInfo(PRI.RoleInfo).bIsArtilleryOfficer && ApprovePlayerTeam(P.GetTeamNum()))
     {
-        return;
-    }
-
-    RI = DHRoleInfo(PRI.RoleInfo);
-
-    if (RI != none && RI.bIsArtilleryOfficer && ApprovePlayerTeam(P.GetTeamNum()))
-    {
-        if (TriggerDelay > 0)
+        if (TriggerDelay > 0.0)
         {
-            if (Level.TimeSeconds - TriggerTime < TriggerDelay)
+            if ((Level.TimeSeconds - TriggerTime) < TriggerDelay)
             {
-                return;
+                return; // can't be used again yet
             }
 
             TriggerTime = Level.TimeSeconds;
         }
 
-        // Send a string message to the toucher.
-        if (Message != "")
+        if (!P.IsHumanControlled())
         {
-            P.ClientMessage(Message);
+            UsedBy(P); // bot uses the arty trigger immediately
         }
-
-        if (AIController(P.Controller) != none)
+        else if (Message != "")
         {
-            UsedBy(P);
+            P.ClientMessage(Message); // display a 'use' string message to the touching player
         }
     }
 }
