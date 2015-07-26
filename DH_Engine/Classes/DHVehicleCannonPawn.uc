@@ -525,7 +525,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             SetRotation(PC.Rotation);
 
             // Switch to external vehicle mesh & unzoomed view
-            SwitchMesh(-1); // -1 signifies switch to default external mesh
+            SwitchMesh(-1, true); // -1 signifies switch to default external mesh
             PC.SetFOV(PC.DefaultFOV);
         }
 
@@ -560,7 +560,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             // Switch back to position's normal vehicle mesh, view FOV & 1st person camera offset
             if (DriverPositions.Length > 0)
             {
-                SwitchMesh(DriverPositionIndex);
+                SwitchMesh(DriverPositionIndex, true);
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
@@ -1200,8 +1200,8 @@ function DriverLeft()
     DrivingStatusChanged(); // the Super from Vehicle
 }
 
-// Modified so mesh rotation is matched in all net modes, not just standalone as in the RO original (not sure why they did that)
-// Also to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
+// Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
+// Also to use new SwitchMesh() function, including to match mesh rotation in all net modes, not just standalone as in the RO original (not sure why they did that)
 simulated state LeavingVehicle
 {
     simulated function HandleExit()
@@ -1569,7 +1569,7 @@ simulated function ClientDamageCannonOverlay()
 }
 
 // New function to handle switching between external & internal mesh, including copying cannon's aimed direction to new mesh (just saves code repetition)
-simulated function SwitchMesh(int PositionIndex)
+simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
     local mesh    NewMesh;
     local rotator TurretYaw, TurretPitch;
@@ -1599,6 +1599,12 @@ simulated function SwitchMesh(int PositionIndex)
                 // Switch to the new mesh
                 Gun.LinkMesh(NewMesh);
 
+                // Option to play any necessary animations to get the new mesh in the correct position, e.g. with switching to/from behind view
+                if (bUpdateAnimations)
+                {
+                    SetPlayerPosition();
+                }
+
                 // Now make the new mesh you swap to have the same rotation as the old one
                 Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
                 Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
@@ -1606,6 +1612,11 @@ simulated function SwitchMesh(int PositionIndex)
             else
             {
                 Gun.LinkMesh(NewMesh);
+
+                if (bUpdateAnimations)
+                {
+                    SetPlayerPosition();
+                }
             }
         }
     }
@@ -1679,7 +1690,7 @@ exec function ToggleMesh()
             }
         }
 
-        SwitchMesh(DriverPositionIndex);
+        SwitchMesh(DriverPositionIndex, true);
     }
 }
 

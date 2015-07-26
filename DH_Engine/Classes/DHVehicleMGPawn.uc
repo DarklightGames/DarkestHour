@@ -326,7 +326,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             SetRotation(PC.Rotation);
 
             // Switch to external vehicle mesh & unzoomed view
-            SwitchMesh(-1); // -1 signifies switch to default external mesh
+            SwitchMesh(-1, true); // -1 signifies switch to default external mesh
             PC.SetFOV(PC.DefaultFOV);
         }
 
@@ -353,7 +353,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             // Switch back to position's normal vehicle mesh, view FOV & 1st person camera offset
             if (DriverPositions.Length > 0)
             {
-                SwitchMesh(DriverPositionIndex);
+                SwitchMesh(DriverPositionIndex, true);
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
@@ -1260,7 +1260,7 @@ function int LocalLimitPitch(int pitch)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to handle switching between external & internal mesh, including copying MG's aimed direction to new mesh (just saves code repetition)
-simulated function SwitchMesh(int PositionIndex)
+simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
     local mesh    NewMesh;
     local rotator MGYaw, MGPitch;
@@ -1283,6 +1283,12 @@ simulated function SwitchMesh(int PositionIndex)
         {
             // Switch to the new mesh
             Gun.LinkMesh(NewMesh);
+
+            // Option to play any necessary animations to get the new mesh in the correct position, e.g. with switching to/from behind view
+            if (bUpdateAnimations)
+            {
+                SetPlayerPosition();
+            }
 
             // Now make the new mesh you swap to have the same rotation as the old one
             if (VehicleBase != none)
@@ -1365,7 +1371,7 @@ exec function ToggleMesh()
             }
         }
 
-        SwitchMesh(DriverPositionIndex);
+        SwitchMesh(DriverPositionIndex, true);
     }
 }
 

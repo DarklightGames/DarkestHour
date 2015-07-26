@@ -836,11 +836,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             FixPCRotation(PC); // switching to behind view, so make rotation non-relative to vehicle
 
             // Switch to external vehicle mesh & unzoomed view
-            if (Mesh != default.Mesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
-            {
-                LinkMesh(default.Mesh);
-            }
-
+            SwitchMesh(-1, true); // -1 signifies switch to default external mesh
             PC.SetFOV(PC.DefaultFOV);
         }
 
@@ -863,11 +859,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         // Switch back to position's normal vehicle mesh & view FOV
         if (bBehindViewChanged && DriverPositions.Length > 0)
         {
-            if (Mesh != DriverPositions[DriverPositionIndex].PositionMesh && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
-            {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
-
+            SwitchMesh(DriverPositionIndex, true);
             PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
         }
 
@@ -1184,10 +1176,7 @@ simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-        if (DriverPositions[InitialPositionIndex].PositionMesh != Mesh)
-        {
-            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
-        }
+        SwitchMesh(InitialPositionIndex);
 
         if (HasAnim(BeginningIdleAnim))
         {
@@ -1322,12 +1311,8 @@ simulated state ViewTransition
         {
             if (!(IsHumanControlled() && PlayerController(Controller).bBehindView))
             {
-                // Switch to mesh for new position if it's different
-                if (Mesh != DriverPositions[DriverPositionIndex].PositionMesh && !bDontUsePositionMesh
-                    && (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
-                {
-                    LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+                // Switch to mesh for new position as may be different
+                SwitchMesh(DriverPositionIndex);
 
                 // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
                 if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
@@ -3607,6 +3592,38 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New function to handle switching between external & internal mesh (just saves code repetition)
+simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
+{
+    local mesh NewMesh;
+
+    if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+    {
+        // If switching to a valid driver position, get its PositionMesh
+        if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length)
+        {
+            NewMesh = DriverPositions[PositionIndex].PositionMesh;
+        }
+        // Else switch to default external mesh (pass PositionIndex of -1 to signify this, as it's an invalid position)
+        else
+        {
+            NewMesh = default.Mesh;
+        }
+
+        // Only switch mesh if we actually have a different new mesh
+        if (NewMesh != Mesh && NewMesh != none)
+        {
+            LinkMesh(NewMesh);
+
+            // Option to play any necessary animations to get the new mesh in the correct position, e.g. with switching to/from behind view
+            if (bUpdateAnimations)
+            {
+                SetPlayerPosition();
+            }
+        }
+    }
+}
+
 // Modified to stop vehicle from prematurely destroying itself when on fire & to include setting ResetTime for an empty vehicle away from its spawn (moved from DriverLeft)
 function MaybeDestroyVehicle()
 {
@@ -3817,7 +3834,7 @@ exec function ToggleMesh()
             }
         }
 
-        LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+        SwitchMesh(DriverPositionIndex, true);
     }
 }
 
