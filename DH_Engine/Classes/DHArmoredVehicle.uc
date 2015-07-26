@@ -279,6 +279,8 @@ simulated function PostNetBeginPlay()
     // Net client initialisation, based on replicated info about driving status/position
     if (Role < ROLE_Authority)
     {
+        bSavedEngineOff = bEngineOff;
+
         if (bDriving)
         {
             bNeedToInitializeDriver = true;
@@ -348,6 +350,7 @@ simulated function PostNetReceive()
     if (bEngineOff != bSavedEngineOff && bClientInitialized)
     {
         bSavedEngineOff = bEngineOff;
+        IgnitionSwitchTime = Level.TimeSeconds; // so next time we can run a clientside time check to make sure engine toggle is valid, before sending call to ServerStartEngine()
         SetEngine();
     }
 
@@ -1610,7 +1613,8 @@ function bool PlaceExitingDriver()
 // Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
-    if (Throttle == 0.0) // clientside check to prevent unnecessary replicated function call to server if invalid
+    // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
+    if (Role == ROLE_Authority || (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval))
     {
         ServerStartEngine();
     }
