@@ -1155,7 +1155,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
     LocDir.Z = 0.0;
     HitDir =  HitLocation - Location;
     HitDir.Z = 0.0;
-    HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
+    HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
     GetAxes(Rotation, X, Y, Z);
     Side = Y dot HitDir;
 
@@ -1198,7 +1198,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
 
         // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
         InAngle = Acos(Normal(-HitRotation) dot Normal(X));
-        InAngleDegrees = InAngle * 57.2957795131;
+        InAngleDegrees = class'DHLib'.static.RadiansToDegrees(InAngle);
 
         // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to opposite side
         if (InAngleDegrees > 90.0)
@@ -1245,7 +1245,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(Y));
-        InAngleDegrees = InAngle * 57.2957795131;
+        InAngleDegrees = class'DHLib'.static.RadiansToDegrees(InAngle);
 
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
@@ -1284,7 +1284,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
-        InAngleDegrees = InAngle * 57.2957795131;
+        InAngleDegrees = class'DHLib'.static.RadiansToDegrees(InAngle);
 
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
@@ -1329,7 +1329,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(-Y));
-        InAngleDegrees = InAngle * 57.2957795131;
+        InAngleDegrees = class'DHLib'.static.RadiansToDegrees(InAngle);
 
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
@@ -1369,7 +1369,7 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     local bool  bProjectilePenetrated;
 
     // Convert angle back to degrees
-    CompoundAngleDegrees = CompoundAngle * 57.2957795131;
+    CompoundAngleDegrees = class'DHLib'.static.RadiansToDegrees(CompoundAngle);
 
     if (CompoundAngleDegrees > 90.0)
     {
@@ -1409,23 +1409,16 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     return bProjectilePenetrated;
 }
 
-// Returns the compound hit angle
+// Returns the compound hit angle (now we pass AOI to this function in radians, to save unnecessary processing to & from degrees)
 simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 {
-    local float ArmorSlope, CompoundAngle;
-
-//  AOI = Abs(AOI * 0.01745329252); // we now pass AOI to this function in radians, to save unnecessary processing to & from degrees
-    ArmorSlope = Abs(ArmorSlopeDegrees * 0.01745329252); // convert the angle degrees to radians
-    CompoundAngle = Acos(Cos(ArmorSlope) * Cos(AOI));
-
-    return CompoundAngle;
+    return Acos(Cos(class'DHLib'.static.DegreesToRadians(Abs(ArmorSlopeDegrees))) * Cos(AOI));
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
 simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
-    local float CompoundExp, CompoundAngleFixed;
-    local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
+    local float CompoundExp, RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
 
     if (P.RoundType == RT_HVAP)
     {
@@ -1468,9 +1461,7 @@ simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, floa
     }
     else if (P.RoundType == RT_HEAT)
     {
-        CompoundAngleFixed = Abs(CompoundAngleDegrees * 0.01745329252); // convert angle back to radians
-
-        return 1.0 / Cos(CompoundAngleFixed);
+        return 1.0 / Cos(class'DHLib'.static.DegreesToRadians(Abs(CompoundAngleDegrees)));
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
     {
@@ -1547,12 +1538,12 @@ simulated function float ArmorSlopeTable(DHAntiVehicleProjectile P, float Compou
         else if (CompoundAngleDegrees <= 45.0)  return 1.72  * (OverMatchFactor ** 0.1655);
         else if (CompoundAngleDegrees <= 50.0)  return 1.94  * (OverMatchFactor ** 0.2035);
         else if (CompoundAngleDegrees <= 55.0)  return 2.12  * (OverMatchFactor ** 0.2427);
-        else if (CompoundAngleDegrees <= 60.0)  return 2.56  * (OverMatchFactor ** 0.245);
-        else if (CompoundAngleDegrees <= 65.0)  return 3.2  * (OverMatchFactor ** 0.3354);
+        else if (CompoundAngleDegrees <= 60.0)  return 2.56  * (OverMatchFactor ** 0.2450);
+        else if (CompoundAngleDegrees <= 65.0)  return 3.20  * (OverMatchFactor ** 0.3354);
         else if (CompoundAngleDegrees <= 70.0)  return 3.98  * (OverMatchFactor ** 0.3478);
         else if (CompoundAngleDegrees <= 75.0)  return 5.17  * (OverMatchFactor ** 0.3831);
         else if (CompoundAngleDegrees <= 80.0)  return 8.09  * (OverMatchFactor ** 0.4131);
-        else                                    return 11.32 * (OverMatchFactor ** 0.455); // at 85 degrees
+        else                                    return 11.32 * (OverMatchFactor ** 0.4550); // at 85 degrees
     }
 
     return 1.0; // fail-safe neutral return value

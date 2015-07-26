@@ -2048,7 +2048,7 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
 simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float  HitAngleDegrees, Side, InAngle, InAngleDegrees;
+    local float  HitAngleDegrees, Side, InAngle;
     local vector LocDir, HitDir, X, Y, Z;
     local bool   bPenetrated;
 
@@ -2059,7 +2059,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
     LocDir.Z = 0.0;
     HitDir =  HitLocation - Location;
     HitDir.Z = 0.0;
-    HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
+    HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
     GetAxes(Rotation, X, Y, Z);
     Side = Y dot HitDir;
 
@@ -2092,10 +2092,9 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
 
         // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
         InAngle = Acos(Normal(-HitRotation) dot Normal(X));
-        InAngleDegrees = InAngle * 57.2957795131;
 
         // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to opposite side
-        if (InAngleDegrees > 90.0)
+        if (class'DHLib'.static.RadiansToDegrees(InAngle) > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
@@ -2141,10 +2140,9 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(Y));
-        InAngleDegrees = InAngle * 57.2957795131;
 
         // Fix hit detection bug
-        if (InAngleDegrees > 90.0)
+        if (class'DHLib'.static.RadiansToDegrees(InAngle) > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
@@ -2180,10 +2178,9 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
-        InAngleDegrees = InAngle * 57.2957795131;
 
         // Fix hit detection bug
-        if (InAngleDegrees > 90.0)
+        if (class'DHLib'.static.RadiansToDegrees(InAngle) > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
@@ -2228,10 +2225,9 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(-Y));
-        InAngleDegrees = InAngle * 57.2957795131;
 
         // Fix hit detection bug
-        if (InAngleDegrees > 90.0)
+        if (class'DHLib'.static.RadiansToDegrees(InAngle) > 90.0)
         {
             if (bPenetrationText && Role == ROLE_Authority)
             {
@@ -2266,7 +2262,7 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
 
     // Convert angle back to degrees
-    CompoundAngleDegrees = CompoundAngle * 57.2957795131;
+    CompoundAngleDegrees = class'DHLib'.static.RadiansToDegrees(CompoundAngle);
 
     if (CompoundAngleDegrees > 90.0)
     {
@@ -2300,23 +2296,16 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     return bProjectilePenetrated;
 }
 
-// Returns the compound hit angle
+// Returns the compound hit angle (now we pass AOI to this function in radians, to save unnecessary processing to & from degrees)
 simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 {
-    local float ArmorSlope, CompoundAngle;
-
-//  AOI = Abs(AOI * 0.01745329252); // now we pass AOI to this function in radians, to save unnecessary processing to & from degrees
-    ArmorSlope = Abs(ArmorSlopeDegrees * 0.01745329252); // convert the angle degrees to radians
-    CompoundAngle = Acos(Cos(ArmorSlope) * Cos(AOI));
-
-    return CompoundAngle;
+    return Acos(Cos(class'DHLib'.static.DegreesToRadians(Abs(ArmorSlopeDegrees))) * Cos(AOI));
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
 simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
-    local float CompoundExp, CompoundAngleFixed;
-    local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
+    local float CompoundExp, RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
 
     if (P.RoundType == RT_HVAP)
     {
@@ -2359,9 +2348,7 @@ simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, floa
     }
     else if (P.RoundType == RT_HEAT)
     {
-        CompoundAngleFixed = Abs(CompoundAngleDegrees * 0.01745329252); // convert angle back to radians
-
-        return 1.0 / Cos(CompoundAngleFixed);
+        return 1.0 / Cos(class'DHLib'.static.DegreesToRadians(Abs(CompoundAngleDegrees)));
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
     {
@@ -2500,7 +2487,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
     local vector     HitDir, LocDir, X, Y, Z;
-    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side;
+    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
     local int        InstigatorTeam, PossibleDriverDamage, i;
     local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
 
@@ -2865,7 +2852,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 LocDir = vector(Rotation);
                 LocDir.Z = 0.0;
                 HitDir.Z = 0.0;
-                HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
+                HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
                 Side = Y dot HitDir;
 
                 if (Side < 0.0)
@@ -2877,10 +2864,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
                 {
                     // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
-                    InAngle = Acos(Normal(-Momentum) dot Normal(Y)) * 57.2957795131;
+                    InAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(Y)));
 
                     // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to left side (same as in DHShouldPenetrate)
-                    if (InAngle > 90.0)
+                    if (InAngleDegrees > 90.0)
                     {
                         if (!bLeftTrackDamaged)
                         {
@@ -2920,10 +2907,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Left track hit
                 else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
                 {
-                    InAngle = Acos(Normal(-Momentum) dot Normal(-Y)) * 57.2957795131;
+                    InAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(-Y)));
 
                     // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to right side
-                    if (InAngle > 90.0)
+                    if (InAngleDegrees > 90.0)
                     {
                         if (!bRightTrackDamaged)
                         {
