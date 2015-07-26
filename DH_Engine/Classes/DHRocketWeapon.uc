@@ -108,7 +108,7 @@ simulated function bool PutDown()
 
         if (InstigatorIsLocalHuman())
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
+            Instigator.ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
         }
     }
 
@@ -125,11 +125,11 @@ simulated function NotifyOwnerJumped()
         // Clumsy, but different mode timings mean on net client the player will be controlling the vehicle, while in single player he will be controlling the player pawn
         if (Instigator.DrivenVehicle.IsLocallyControlled() && Instigator.DrivenVehicle.IsHumanControlled())
         {
-            PlayerController(Instigator.DrivenVehicle.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
+            Instigator.DrivenVehicle.ReceiveLocalizedMessage(class'DHATLoadMessage', 2); // rocket unloaded
         }
         else if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2);
+            Instigator.ReceiveLocalizedMessage(class'DHATLoadMessage', 2);
         }
     }
 
@@ -157,7 +157,7 @@ simulated function bool CanFire(optional bool bShowFailureMessage)
     {
         if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
+            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 1,,, self); // can't fire from hip
         }
 
         return false;
@@ -228,7 +228,7 @@ simulated function bool AllowReload()
     {
         if (Instigator.IsHumanControlled())
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 4,,, self); // can't reload prone
+            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 4,,, self); // can't reload prone
         }
 
         return false;
@@ -342,7 +342,7 @@ function bool AssistedReload()
         // If weapon isn't shouldered (ironsighted), give a screen message
         else if (InstigatorIsHumanControlled())
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 6,,, self); // must shoulder weapon for assisted reload
+            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 6,,, self); // must shoulder weapon for assisted reload
         }
     }
 

@@ -135,7 +135,10 @@ simulated function ClientKDriverEnter(PlayerController PC)
 // Modified to use a different AT cannon message class
 function DenyEntry(Pawn P, int MessageNum)
 {
-    P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNum);
+    if (P != none)
+    {
+        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNum);
+    }
 }
 
 // Modified to remove lots of irrelevant tank stuff & to use APCDamageModifier instead of TankDamageModifier

@@ -3746,9 +3746,7 @@ simulated event NotifySelected(Pawn User)
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
         NotifyParameters.Insert("Controller", User.Controller);
-
-        PlayerController(User.Controller).ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
-
+        User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
     }
 }

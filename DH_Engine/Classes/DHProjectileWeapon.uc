@@ -1602,15 +1602,15 @@ function PerformReload()
     {
         if (AmmoStatus(0) > 0.5)
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 0);
+            Instigator.ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 0);
         }
         else if (AmmoStatus(0) > 0.2)
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 1);
+            Instigator.ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 1);
         }
         else
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 2);
+            Instigator.ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 2);
         }
     }
 
