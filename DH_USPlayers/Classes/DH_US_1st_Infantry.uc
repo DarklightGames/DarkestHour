@@ -8,7 +8,11 @@ class DH_US_1st_Infantry extends DH_American_Units
 
 function class<ROHeadgear> GetHeadgear()
 {
-    if (FRand() < 0.2)
+    if (Headgear.Length == 0)
+    {
+        return none;
+    }
+    else if (Headgear.Length == 1 || FRand() < 0.2)
     {
         return Headgear[0];
     }

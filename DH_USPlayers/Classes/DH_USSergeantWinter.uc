@@ -7,12 +7,22 @@ class DH_USSergeantWinter extends DH_US_Winter_Infantry;
 
 function class<ROHeadgear> GetHeadgear()
 {
-    if (FRand() < 0.2)
+    if (Headgear.Length == 0)
+    {
+        return none;
+    }
+    else if (Headgear.Length == 1 || FRand() < 0.2)
+    {
         return Headgear[0];
-    else if (FRand() < 0.4)
+    }
+    else if (Headgear.Length == 2 || FRand() < 0.4)
+    {
         return Headgear[1];
+    }
     else
+    {
         return Headgear[2];
+    }
 }
 
 defaultproperties

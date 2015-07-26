@@ -7,19 +7,21 @@ class DH_FJ45Mortarman extends DH_FJ_1945;
 
 function class<ROHeadgear> GetHeadgear()
 {
-    local int RandNum;
-    RandNum = Rand(3);
+    if (Headgear.Length == 0)
+    {
+        return none;
+    }
 
-    switch (RandNum)
+    switch (Rand(Min(3, Headgear.Length))) // random index number between 0 and 3 (or length of Headgear array, if less than 3)
     {
         case 0:
-             return Headgear[0];
+            return Headgear[0];
         case 1:
-             return Headgear[1];
+            return Headgear[1];
         case 2:
-             return Headgear[2];
+            return Headgear[2];
         default:
-             return Headgear[0];
+            return Headgear[0];
     }
 }
 
