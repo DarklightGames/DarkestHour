@@ -2814,7 +2814,7 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
         {
             OldDrivePos = V.DrivePos;
 
-            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5) 
+            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
             {
                 V.DrivePos.X = Float(NewX) / 10.0;
                 V.DrivePos.Y = Float(NewY) / 10.0;
