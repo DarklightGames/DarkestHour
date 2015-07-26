@@ -89,7 +89,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.5
     VehicleHudEngineX=0.51
     VehicleHudEngineY=0.47
-    VehHitpoints(0)=(PointRadius=8.0,PointOffset=(X=0.0,Y=1.0,Z=-12.0))
+    VehHitpoints(0)=(PointRadius=9.0,PointOffset=(X=-1.0,Y=-3.0,Z=-11.0))
     VehHitpoints(1)=(PointRadius=30.0,PointOffset=(Z=-5.0))
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -147,11 +147,7 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.Right_Drive_Wheel'
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true
-
-    // Matt, TODO: this is poor positioning, as body pokes through side of hull mesh, but we need to align the player with the 'head' sphere in the collision static mesh
-    // When a new col static is made for hull, we can reposition col head sphere, then make DrivePos=(X=-5,Y=0,Z=2) & VehHitpoints(0) Radius=9 & Offset=(X=-1,Y=-3,Z=-11)
-    DrivePos=(X=-5.0,Y=5.0,Z=0.0)
-
+    DrivePos=(X=-5.0,Y=0.0,Z=2.0)
     DriveAnim="VPanzer3_driver_idle_open"
     ExitPositions(0)=(X=78.0,Y=96.0,Z=5.0)
     ExitPositions(1)=(X=-133.0,Y=-27.0,Z=120.0)

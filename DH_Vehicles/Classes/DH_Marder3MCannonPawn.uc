@@ -21,7 +21,7 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_Marder3MCannon'
     bHasAltFire=false
     CameraBone="Gun"
-    DrivePos=(X=-10.0,Y=5.0,Z=22.0) // Y=-4 is an ideal position, but left boot pokes through side of vehicle, so had to shift commander to the right
+    DrivePos=(X=-10.0,Y=4.7,Z=21.5) // (X=-14.5,Y=-0.5,Z=21.5) is an ideal position, but left boot pokes through side of vehicle, so had to shift commander to the right
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.0
     PitchUpLimit=6000
