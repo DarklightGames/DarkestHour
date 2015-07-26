@@ -94,7 +94,7 @@ var     sound       DamagedStartUpSound;       // sound played when trying to st
 var     sound       DamagedShutDownSound;      // sound played when damaged engine shuts down
 
 // Treads
-//var   float       TreadHitMaxHeight; // the height (in Unreal units) of the top of the treads above the hull mesh origin, used to detect tread hits // NEW METHOD FOR LATER (see notes in TakeDamage)
+var     float       TreadHitMaxHeight; // height (in Unreal units) of the top of the treads above hull mesh origin, used to detect tread hits (see notes in TakeDamage)
 var     int         LeftTreadIndex, RightTreadIndex;
 var     rotator     LeftTreadPanDirection, RightTreadPanDirection;
 var     material    DamagedTreadPanner;
@@ -2500,9 +2500,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
     local vector     HitDir, LocDir, X, Y, Z;
-    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, InAngle, HitAngleDegrees, Side; // HitHeight
+    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side;
     local int        InstigatorTeam, PossibleDriverDamage, i;
-    local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation;
+    local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
@@ -2817,34 +2817,55 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
         }
 
-    // Matt UK May 2015: in future I intend to add a modified method for track hit detection that works properly, with the changes shown commented out below
-    // Problem with original RO method above is the InAngle calculation is distorted by the position of the hit along the vehicle mesh's X axis
-    // My new method is simpler & works, producing consistent results along the length of the hull
-    // To implement it needs each tracked vehicle to have TreadHitMaxHeight set, being the height (in Unreal units) of the top of the tracks above the hull mesh origin
-    // I don't have time to do this for the 6.0 release, so will add later
+        // Matt UK July 2015: added a modified alternative method for track hit detection that works properly
+        // Problem with original RO method above is the InAngle calculation is distorted by the position of the hit along the vehicle mesh's X axis
+        // New method is simpler & works, producing consistent results along the length of the hull
+        // To implement, it needs each tracked vehicle to have TreadHitMaxHeight set, being the height (in Unreal units) of the top of the tracks above the hull mesh origin
+        // I don't have time to do this for the 6.0 release, so will add later
+        // Both methods are functional - just add a TreadHitMaxHeight that isn't zero to use the new method
 
         // Check if we hit & damaged either track
         if (TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
         {
-            // Calculate height of HitLocation is in relation to hull mesh origin, expressed as an angle in radians
-            HitDir =  HitLocation - Location;
-            GetAxes(Rotation, X, Y, Z);
-            InAngle = Acos(Normal(HitDir) dot Normal(Z));
+            // Work out the height of the HitLocation, in relation to the hull mesh origin
+            if (TreadHitMaxHeight != 0.0)
+            {
+                // New, better method - straightforward height in units (difference in Z axis, having factored in hull's rotation)
+                bUsingTreadHitMaxHeight = true;
+                HitDir =  HitLocation - Location;
+                HitHeight = (HitDir << Rotation).Z;
 
-            // Calculate height of hit above/below hull mesh origin, having applied hull's rotation // NEW METHOD FOR LATER, replacing 3 lines above
-//          HitDir =  HitLocation - Location;
-//          HitHeight = (HitDir << Rotation).Z;
+                if (HitHeight <= TreadHitMaxHeight)
+                {
+                    bHitLowEnoughToHitTrack = true;
+                }
+            }
+            else
+            {
+                // Old, flawed method - height expressed as an angle in radians
+                HitDir =  HitLocation - Location;
+                GetAxes(Rotation, X, Y, Z);
+                InAngle = Acos(Normal(HitDir) dot Normal(Z));
+
+                if (InAngle > TreadHitMinAngle)
+                {
+                    bHitLowEnoughToHitTrack = true;
+                }
+            }
 
             // We hit low enough to possibly hit one of the tracks
-            if (InAngle > TreadHitMinAngle)
-//          if (HitHeight <= TreadHitMaxHeight) // NEW METHOD FOR LATER, replacing 'if' line above
+            if (bHitLowEnoughToHitTrack)
             {
                 // Now figure out which side of the vehicle we hit
+                if (bUsingTreadHitMaxHeight)
+                {
+                    GetAxes(Rotation, X, Y, Z);
+                }
+
                 LocDir = vector(Rotation);
                 LocDir.Z = 0.0;
                 HitDir.Z = 0.0;
                 HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
-//              GetAxes(Rotation, X, Y, Z); // NEW METHOD FOR LATER, moved down here from further up
                 Side = Y dot HitDir;
 
                 if (Side < 0.0)
@@ -2867,7 +2888,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                             if (bDebugTreadText && Role == ROLE_Authority)
                             {
-                                Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged"); // (HitHeight =" @ HitHeight $ ")");
+                                if (bUsingTreadHitMaxHeight)
+                                {
+                                    Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged (HitHeight =" @ HitHeight $ ")");
+                                }
+                                else
+                                {
+                                    Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged");
+                                }
                             }
                         }
                     }
@@ -2878,7 +2906,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                         if (bDebugTreadText && Role == ROLE_Authority)
                         {
-                            Level.Game.Broadcast(self, "Right track damaged"); // (HitHeight =" @ HitHeight $ ")"); // NEW METHOD FOR LATER - add extra debug detail
+                            if (bUsingTreadHitMaxHeight)
+                            {
+                                Level.Game.Broadcast(self, "Right track damaged (HitHeight =" @ HitHeight $ ")");
+                            }
+                            else
+                            {
+                                Level.Game.Broadcast(self, "Right track damaged");
+                            }
                         }
                     }
                 }
@@ -2896,7 +2931,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                             if (bDebugTreadText && Role == ROLE_Authority)
                             {
-                                Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged"); // (HitHeight =" @ HitHeight $ ")");
+                                if (bUsingTreadHitMaxHeight)
+                                {
+                                    Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged (HitHeight =" @ HitHeight $ ")");
+                                }
+                                else
+                                {
+                                    Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged");
+                                }
                             }
                         }
                     }
@@ -2907,7 +2949,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                         if (bDebugTreadText && Role == ROLE_Authority)
                         {
-                            Level.Game.Broadcast(self, "Left track damaged"); // (HitHeight =" @ HitHeight $ ")");
+                            if (bUsingTreadHitMaxHeight)
+                            {
+                                Level.Game.Broadcast(self, "Left track damaged (HitHeight =" @ HitHeight $ ")");
+                            }
+                            else
+                            {
+                                Level.Game.Broadcast(self, "Left track damaged");
+                            }
                         }
                     }
                 }
