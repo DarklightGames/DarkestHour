@@ -831,7 +831,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             if (DHPlayer(Controller) != none && DarkestHourGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
                 DHPlayer(Controller).ThrowWeapon();
-                DHPlayer(Controller).ReceiveLocalizedMessage(class'ROWeaponLostMessage');
+                ReceiveLocalizedMessage(class'ROWeaponLostMessage');
             }
         }
         else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Head)
@@ -1092,24 +1092,14 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
     {
         if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
         {
-            // Send notification message to gunner & remove resupply request
-            if (DHPlayer(Gunner.Controller) != none)
-            {
-                DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
+            Gunner.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
+            ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to supplier
 
-                if (Gunner.Controller != none && Gunner.Controller.PlayerReplicationInfo != none && DarkestHourGame(Level.Game).GameReplicationInfo != none)
-                {
-                    ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RemoveMGResupplyRequestFor(Gunner.Controller.PlayerReplicationInfo);
-                }
+            if (Gunner.Controller.PlayerReplicationInfo != none && ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none) // remove any resupply request
+            {
+                ROGameReplicationInfo(Level.Game.GameReplicationInfo).RemoveMGResupplyRequestFor(Gunner.Controller.PlayerReplicationInfo);
             }
 
-            // Send notification message to supplier
-            if (IsHumanControlled())
-            {
-                PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo);
-            }
-
-            // Score point
             if (bIsATWeapon)
             {
                 DarkestHourGame(Level.Game).ScoreATResupply(Controller, Gunner.Controller);
@@ -1132,19 +1122,12 @@ function TossMortarAmmo(DHPawn P)
 
         if (DarkestHourGame(Level.Game) != none && Controller != none && P.Controller != none)
         {
-            // Send notification message to gunner & remove resupply request
-            if (DHPlayer(P.Controller) != none)
-            {
-                DHPlayer(P.Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
+            P.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
+            ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo); // notification message to supplier
 
-                if (ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo) != none)
-                    ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
-            }
-
-            // Send notification message to supplier
-            if (IsHumanControlled())
+            if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none) // remove any resupply request
             {
-                PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
+                ROGameReplicationInfo(Level.Game.GameReplicationInfo).RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
             }
 
             DarkestHourGame(Level.Game).ScoreMortarResupply(Controller, P.Controller);
@@ -1156,17 +1139,10 @@ function TossMortarAmmo(DHPawn P)
 
 function TossMortarVehicleAmmo(DHMortarVehicle V)
 {
-    local DarkestHourGame G;
-    local DHGameReplicationInfo GRI;
+    local DarkestHourGame  G;
     local PlayerController Recipient;
-    local PlayerController PC;
 
-    if (V == none || Controller == none || !bHasMortarAmmo)
-    {
-        return;
-    }
-
-    if (!ResupplyMortarVehicleWeapon(V))
+    if (V == none || Controller == none || !bHasMortarAmmo || !ResupplyMortarVehicleWeapon(V))
     {
         return;
     }
@@ -1185,35 +1161,19 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
         Recipient = PlayerController(V.WeaponPawns[0].Controller);
     }
 
-    // Send notification message to gunner & remove resupply request
     if (Recipient != none)
     {
-        if (Controller.PlayerReplicationInfo != none)
-        {
-            Recipient.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
-        }
+        Recipient.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to recipient
+        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);            // notification message to supplier
 
-        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
-
-        if (GRI != none)
+        if (DHGameReplicationInfo(G.GameReplicationInfo) != none) // remove any resupply request
         {
-            GRI.RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
+            DHGameReplicationInfo(G.GameReplicationInfo).RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
         }
     }
-
-    PC = PlayerController(Controller);
-
-    // Send notification message to supplier
-    if (PC != none)
+    else
     {
-        if (Recipient != none)
-        {
-            PC.ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
-        }
-        else
-        {
-            PC.ReceiveLocalizedMessage(class'DHResupplyMessage', 2);
-        }
+        ReceiveLocalizedMessage(class'DHResupplyMessage', 2); // notification message to supplier
     }
 
     G.ScoreMortarResupply(Controller, Recipient);
@@ -1248,31 +1208,18 @@ function LoadWeapon(Pawn Gunner)
     {
         if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
         {
-            // Send notification message to gunner
-            if (DHPlayer(Gunner.Controller) != none)
-            {
-                DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo); // been reloaded by [player]
-            }
+            Gunner.ReceiveLocalizedMessage(class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo); // notification message to recipient (been reloaded by [player])
+            ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to loader (you loaded [player])
 
-            // Send notification message to loader
-            if (IsHumanControlled())
-            {
-                PlayerController(Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // you loaded [player]
-            }
-
-            // Score point
             DarkestHourGame(Level.Game).ScoreATReload(Controller, Gunner.Controller);
         }
 
         PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
+    // Notify loader of failed attempt
     else
     {
-        // Notify loader of failed attempt
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).ReceiveLocalizedMessage(class'DHATLoadFailMessage', 0, Gunner.Controller.PlayerReplicationInfo);
-        }
+        ReceiveLocalizedMessage(class'DHATLoadFailMessage', 0, Gunner.Controller.PlayerReplicationInfo);
     }
 }
 
