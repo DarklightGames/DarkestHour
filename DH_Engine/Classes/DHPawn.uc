@@ -4668,6 +4668,7 @@ defaultproperties
     StanceChangeStaminaDrain=1.5
     Stamina=40.0
     MinHurtSpeed=475.0
+    Species=class'DH_Engine.DHSPECIES_Human'
     DHSoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
