@@ -1627,6 +1627,30 @@ simulated function SetPlayerPosition()
     }
 }
 
+// Modified to avoid "accessed none" errors on rider pawns that don't always exist on net clients
+function SetTeamNum(byte NewTeam)
+{
+    local byte OriginalTeam;
+    local int  i;
+
+    OriginalTeam = Team;
+    PrevTeam = NewTeam;
+    Team = NewTeam;
+
+    if (NewTeam != OriginalTeam)
+    {
+        TeamChanged();
+    }
+
+    for (i = 0; i < WeaponPawns.length; ++i)
+    {
+        if (WeaponPawns[i] != none)
+        {
+            WeaponPawns[i].SetTeamNum(NewTeam);
+        }
+    }
+}
+
 // New function to update movement sound volumes, similar to a tracked vehicle updating its tread sounds
 // Although here we optimise by incorporating MotionSoundVolume as a passed function argument instead of a separate instance variable
 simulated function UpdateMovementSound(float MotionSoundVolume)

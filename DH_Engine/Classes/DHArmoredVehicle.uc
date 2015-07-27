@@ -3413,6 +3413,30 @@ simulated function UpdateTurretReferences()
     }
 }
 
+// Modified to avoid "accessed none" errors on rider pawns that don't always exist on net clients
+function SetTeamNum(byte NewTeam)
+{
+    local byte OriginalTeam;
+    local int  i;
+
+    OriginalTeam = Team;
+    PrevTeam = NewTeam;
+    Team = NewTeam;
+
+    if (NewTeam != OriginalTeam)
+    {
+        TeamChanged();
+    }
+
+    for (i = 0; i < WeaponPawns.length; ++i)
+    {
+        if (WeaponPawns[i] != none)
+        {
+            WeaponPawns[i].SetTeamNum(NewTeam);
+        }
+    }
+}
+
 // Modified to replace literal for pan direction, so can be easily subclassed, & to incorporate extra tread sounds that were spawned in PostBeginPlay()
 simulated function SetupTreads()
 {
