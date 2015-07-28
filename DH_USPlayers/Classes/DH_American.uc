@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_American extends ROSPECIES_Human;
+class DH_American extends DHSPECIES_Human;
 
 defaultproperties
 {
