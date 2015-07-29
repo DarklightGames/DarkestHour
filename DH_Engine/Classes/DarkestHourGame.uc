@@ -2303,10 +2303,7 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
-    local DHPlayer PC;
     local byte SpawnError;
-
-    PC = DHPlayer(C);
 
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
@@ -2323,11 +2320,9 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     {
         SpawnError = DHRestartPlayer(C, bHandleReinforcements);
 
-        if (PC != none && SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+        if (PlayerController(C) != none && SpawnError != class'DHSpawnManager'.default.SpawnError_None)
         {
-            PC.ClientReplaceMenu("DH_Interface.DHDeployMenu");
-
-            return;
+            PlayerController(C).ClientReplaceMenu("DH_Interface.DHDeployMenu");
         }
     }
 }
