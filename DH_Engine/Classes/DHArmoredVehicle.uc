@@ -1145,10 +1145,18 @@ function KDriverEnter(Pawn P)
     Driver.bSetPCRotOnPossess = false; // so when player gets out he'll be facing the same direction as he was inside the vehicle
 }
 
-// Modified to add engine start/stop hint & to enforce bDesiredBehindView = false (avoids view rotation bug)
+// Modified to workaround a common camera problem when spawning into/near to a spawn vehicle
+// Also to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer P;
+
+    // Matt: this is to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
+    // See notes in DHWheeledVehicle.ClientKDriverEnter()
+    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    {
+        PC.GotoState('PlayerWalking');
+    }
 
     bDesiredBehindView = false; // true values can exist in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
 

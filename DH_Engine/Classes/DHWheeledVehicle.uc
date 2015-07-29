@@ -621,10 +621,28 @@ function KDriverEnter(Pawn P)
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
 }
 
-// Modified to add engine start/stop hint & to enforce bDesiredBehindView = false (avoids view rotation bug)
+// Modified to workaround a common camera problem when spawning into/near to a spawn vehicle
+// Also to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer P;
+
+    // Matt: this is to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
+    // Network/replication timing issues mean the player often ends up with a disconnected, screwed-up camera position
+    // The spawn process involves spawning a player pawn, possessing it, then entering the vehicle
+    // Entering results in unpossessing the player pawn, possessing vehicle, moving (effectively teleporting) player pawn to vehicle's location & attaching it as the 'Driver' pawn
+    // Because vehicle can be on other side of the map & not currently net relevant to the net client, the vehicle actors may not exist on the client & have to be spawned locally
+    // There are a complex series of interactions, which don't always happen in the same order, because actors are not always replicated in the same order
+    // The bottom line is that the PlayerController is often in state 'Spectating' when the critical PC.ClientRestart() function gets called at the end of vehicle possession
+    // State 'Spectating' ignores PC.ClientRestart(), most critically resulting in the PC's ViewTarget not being set to the vehicle & POVChanged() not being called on the vehicle
+    // After experimenting with various workarounds, I believe this is probably the simplest & cleanest, & it appears to work reliably
+    // We send the client's PlayerController to state 'PlayerWalking' because that's the normal state a player would be in when entering a vehicle (it's neutral)
+    // It is essentially a hack, but it seems to be an effective, safe & minimal hack to achieve a specific & vital purpose (so it's a 'good hack'!)
+    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    {
+        Log(Tag @ "ClientKDriverEnter sending PC to state 'PlayerWalking'"); // TEMP
+        PC.GotoState('PlayerWalking');
+    }
 
     bDesiredBehindView = false; // true values can exist in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
 

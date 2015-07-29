@@ -790,8 +790,16 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero, to start facing same way as cannon, & to consolidate & optimise the Supers
+// Also to workaround a common camera problem when spawning into/near to a spawn vehicle
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    // Matt: this is to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
+    // See notes in DHWheeledVehicle.ClientKDriverEnter()
+    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    {
+        PC.GotoState('PlayerWalking');
+    }
+
     if (bMultiPosition)
     {
         SavedPositionIndex = InitialPositionIndex;

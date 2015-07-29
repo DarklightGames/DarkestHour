@@ -198,6 +198,17 @@ function KDriverEnter(Pawn P)
     super.KDriverEnter(P);
 }
 
+// Matt: modified to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating')) // see notes in DHWheeledVehicle.ClientKDriverEnter() 
+    {
+        PC.GotoState('PlayerWalking');
+    }
+
+    super.ClientKDriverEnter(PC);
+}
+
 // Modified to add clientside checks before sending the function call to the server
 // Optimises network performance generally & specifically avoids a rider camera bug when unsuccessfully trying to switch to another vehicle position
 simulated function SwitchWeapon(byte F)
