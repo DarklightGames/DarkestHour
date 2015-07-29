@@ -504,7 +504,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     Offset = C.Pawn.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Check if we can spawn at the vehicle
+    // Check if we can deploy into or near the vehicle
     while (true)
     {
         if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
@@ -516,7 +516,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
             if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_EngineOff)
             {
-                // Attempt to spawn at exit positions
+                // 1st choice - attempt to deploy at exit positions
                 for (i = 0; i < ExitPositionIndices.Length; ++i)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
@@ -525,10 +525,9 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                     }
                 }
 
-                // All exit positions were blocked, attempt to just get in the vehicle
+                // 2nd choice - if all exit positions were blocked, attempt to just get in the vehicle
                 if (V.TryToDrive(C.Pawn))
                 {
-                    // Attempting to get into the vehicle failed, kill the pawn we spawned earlier
                     return C.Pawn;
                 }
 
@@ -536,14 +535,13 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
             }
             else if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_Always)
             {
-                // Attempt to just get in the vehicle
+                // 1st choice - attempt to just get in the vehicle
                 if (V.TryToDrive(C.Pawn))
                 {
-                    // Attempting to get into the vehicle failed, kill the pawn we spawned earlier
                     return C.Pawn;
                 }
 
-                // Unable to enter vehicle, attempt to spawn at exit positions
+                // 2nd choice - if unable to enter vehicle, attempt to deploy at exit positions
                 for (i = 0; i < ExitPositionIndices.Length; ++i)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
@@ -561,7 +559,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
         }
     }
 
-    C.Pawn.Suicide();
+    C.Pawn.Suicide(); // attempting to deploy into or near the vehicle failed, so kill the pawn we spawned earlier
 
     return none;
 }
