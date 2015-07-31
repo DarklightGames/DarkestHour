@@ -685,6 +685,24 @@ function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
     }
 }
 
+// Modified to avoid "accessed none" errors on PRI.Team // TEST added x 2
+function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool bRemoveFromList)
+{
+    if (PRI != none && PRI.Team != none)
+    {
+        super.AddRallyPoint(PRI, NewLoc, bRemoveFromList);
+    }
+}
+
+// Modified to avoid "accessed none" errors on PRI.Team
+function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestType, optional vector RequestLocation)
+{
+    if (PRI != none && PRI.Team != none)
+    {
+        super.AddHelpRequest(PRI, ObjectiveID, RequestType, RequestLocation);
+    }
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1
