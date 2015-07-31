@@ -346,7 +346,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
     }
 }
 
-function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
+function SpawnVehicle(DHPlayer C, out byte SpawnError)
 {
     local int i;
     local ROVehicle V;
@@ -360,21 +360,21 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (!ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander)
     {
-        return none;
+        return;
     }
 
     SpawnError = SpawnError_Fatal;
 
     if (C == none || C.Pawn != none)
     {
-        return none;
+        return;
     }
 
     DrySpawnVehicle(C, SpawnLocation, SpawnRotation, SpawnError);
 
     if (SpawnError != SpawnError_None)
     {
-        return none;
+        return;
     }
 
     // This calls old restartplayer (spawn in black room) and avoids reinforcment subtraction (because we will subtract later)
@@ -383,7 +383,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     // Make sure player has a pawn
     if (C.Pawn == none)
     {
-        return none;
+        return;
     }
 
     V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
@@ -392,7 +392,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     {
         SpawnError = SpawnError_Failed;
 
-        return none;
+        return;
     }
 
     if (V.IsA('DHWheeledVehicle'))
@@ -421,7 +421,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
 
         SpawnError = SpawnError_TryToDriveFailed;
 
-        return none;
+        return;
     }
     else
     {
@@ -465,10 +465,10 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         }
     }
 
-    return V;
+    return;
 }
 
-function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
+function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 {
     local DarkestHourGame G;
     local Vehicle V;
@@ -481,14 +481,14 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (G == none)
     {
-        return none;
+        return;
     }
 
     V = GRI.SpawnVehicles[C.SpawnVehicleIndex].Vehicle;
 
     if (V == none)
     {
-        return none;
+        return;
     }
 
     // Spawn pawn in black room
@@ -499,7 +499,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (C.Pawn == none)
     {
-        return none;
+        return;
     }
 
     Offset = C.Pawn.default.CollisionHeight * vect(0.0, 0.0, 0.5);
@@ -521,14 +521,14 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
                     {
-                        return C.Pawn;
+                        return;
                     }
                 }
 
                 // 2nd choice - if all exit positions were blocked, attempt to just get in the vehicle
                 if (V.TryToDrive(C.Pawn))
                 {
-                    return C.Pawn;
+                    return;
                 }
 
                 break;
@@ -538,7 +538,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                 // 1st choice - attempt to just get in the vehicle
                 if (V.TryToDrive(C.Pawn))
                 {
-                    return C.Pawn;
+                    return;
                 }
 
                 // 2nd choice - if unable to enter vehicle, attempt to deploy at exit positions
@@ -546,7 +546,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
                     {
-                        return C.Pawn;
+                        return;
                     }
                 }
 
@@ -560,8 +560,6 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     }
 
     C.Pawn.Suicide(); // attempting to deploy into or near the vehicle failed, so kill the pawn we spawned earlier
-
-    return none;
 }
 
 function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
