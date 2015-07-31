@@ -471,7 +471,7 @@ function SpawnVehicle(DHPlayer C, out byte SpawnError)
 function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 {
     local DarkestHourGame G;
-    local Vehicle V;
+    local Vehicle V, EntryVehicle;
     local int i;
     local array<int> ExitPositionIndices;
     local vector Offset;
@@ -526,7 +526,9 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                 }
 
                 // 2nd choice - if all exit positions were blocked, attempt to just get in the vehicle
-                if (V.TryToDrive(C.Pawn))
+                EntryVehicle = FindEntryVehicle(C.Pawn, ROVehicle(V));
+
+                if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
                 {
                     return;
                 }
@@ -536,12 +538,15 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
             else if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_Always)
             {
                 // 1st choice - attempt to just get in the vehicle
-                if (V.TryToDrive(C.Pawn))
+                EntryVehicle = FindEntryVehicle(C.Pawn, ROVehicle(V));
+
+                if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
                 {
                     return;
                 }
 
                 // 2nd choice - if unable to enter vehicle, attempt to deploy at exit positions
+                // Matt TODO: think we need to add a vehicle speed check, to avoid deploying player at exit position of speeding vehicle they can't enter, probably because it's full
                 for (i = 0; i < ExitPositionIndices.Length; ++i)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
@@ -655,6 +660,63 @@ function bool TeleportPlayer(Controller C, vector SpawnLocation, rotator SpawnRo
     }
 
     return false;
+}
+
+// Similar to FindEntryVehicle() function in a Vehicle class, it checks for a suitable vehicle position to enter, before we call TryToDrive() on the vehicle
+// We need to do this, otherwise if we TryToDrive() a vehicle that already has a driver, we fail to enter that vehicle, so here we try to find an empty, valid weapon pawn to enter
+// Deliberately ignores driver position, to discourage players from deploying into a spawn vehicle, which may be carefully positioned by the team, & immediately driving off in it
+// Prioritises passenger positions over real weapon positions (MGs or cannons), so players deploying into spawn vehicle are less likely to be exposed & have a moment to orient themselves
+function Vehicle FindEntryVehicle(Pawn P, ROVehicle V)
+{
+    local VehicleWeaponPawn        WP;
+    local array<VehicleWeaponPawn> RealWeaponPawns;
+    local bool bPlayerIsTankCrew;
+    local int  i;
+
+    if (P == none || V == none)
+    {
+        return none;
+    }
+
+    // Record whether player is allowed to use tanks
+    bPlayerIsTankCrew = P != none && P.Controller != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none &&
+        ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
+
+    // Loop through the weapon pawns to check if we can enter one (but skip real weapon positions, like MGs & cannons, on this 1st pass, so we prioritise passenger slots)
+    for (i = 0; i < V.WeaponPawns.Length; ++i)
+    {
+        WP = V.WeaponPawns[i];
+
+        if (WP != none)
+        {
+            // If weapon pawn is not a passenger slot (i.e. it's an MG or cannon), skip it on this 1st pass, but record it to check later if we don't find a valid passenger slot
+            if (!WP.IsA('ROPassengerPawn'))
+            {
+                RealWeaponPawns[RealWeaponPawns.Length] = WP;
+                continue;
+            }
+
+            // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
+            if (WP.Driver == none && (bPlayerIsTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
+            {
+                return WP;
+            }
+        }
+    }
+
+    // We didn't find a valid passenger slot, so now try any real weapon positions that we skipped on the 1st pass
+    for (i = 0; i < RealWeaponPawns.Length; ++i)
+    {
+        WP = RealWeaponPawns[i];
+
+        // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
+        if (WP.Driver == none && (bPlayerIsTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
+        {
+            return WP;
+        }
+    }
+
+    return none; // there are no empty, usable vehicle positions
 }
 
 function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
