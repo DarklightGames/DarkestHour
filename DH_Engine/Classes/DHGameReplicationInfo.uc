@@ -685,7 +685,7 @@ function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
     }
 }
 
-// Modified to avoid "accessed none" errors on PRI.Team // TEST added x 2
+// Modified to avoid "accessed none" errors on PRI.Team
 function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool bRemoveFromList)
 {
     if (PRI != none && PRI.Team != none)
