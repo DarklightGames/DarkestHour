@@ -438,7 +438,7 @@ defaultproperties
 {
     // IP variables
     WaitString="Join Public Test Server"
-    ConnectingString="Connecting - Press Esc to Cancel"
+    ConnectingString="Connecting - Press [ESC] to Cancel"
     GetQuickPlayAddr="darkesthourgame.com"
     GetRequest="GET /quickplayip.php HTTP/1.1" //CAREFUL! quickplayip.php needs to be lowercase
     ReReadyPause=0.25
