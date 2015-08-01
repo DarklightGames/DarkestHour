@@ -128,6 +128,46 @@ simulated function PostNetReceive()
     }
 }
 
+// Modified to avoid "accessed none" errors on VehicleBase & to generally optimise & match other DH vehicle classes
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+{
+    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
+
+    ViewActor = self;
+
+    // CameraRotation is currently relative to vehicle, so now factor in the vehicle's rotation
+    if (VehicleBase != none)
+    {
+        RelativeQuat = QuatFromRotator(PC.Rotation);
+        VehicleQuat = QuatFromRotator(VehicleBase.Rotation);
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+    }
+    else
+    {
+        CameraRotation = PC.Rotation;
+    }
+
+    // CameraLocation uses the player's 'head' bone if possible, otherwise there's a fall-back
+    if (Driver != none && bUseDriverHeadBoneCam)
+    {
+        CameraLocation = Driver.GetBoneCoords('head').Origin;
+    }
+    else
+    {
+        CameraLocation = GetCameraLocationStart();
+    }
+
+    // Adjust camera location for any FPCamPos offset positioning
+    if (FPCamPos != vect(0.0, 0.0, 0.0))
+    {
+        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+    }
+
+    // Finalise the camera with any shake
+    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+}
+
 // Emptied out to prevent unnecessary replicated function calls to server
 function Fire(optional float F)
 {
@@ -453,6 +493,7 @@ defaultproperties
     EntryRadius=375.0
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
+    bPCRelativeFPRotation=true
     bAllowViewChange=false
     bDesiredBehindView=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset
