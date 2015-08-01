@@ -589,7 +589,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     // Fix for 1st problem described above, where net client may be in state 'Spectating' when deploying into a spawn vehicle
     if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
     {
-        Log(Tag @ "ClientKDriverEnter sending PC to state 'PlayerWalking'"); //  TEMP
         PC.GotoState('PlayerWalking');
     }
 
