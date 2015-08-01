@@ -523,6 +523,95 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 //  ******************************** VEHICLE ENTRY  ******************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Modified to simplify by removing the ClosestWeaponPawn stuff - it really doesn't matter which is closest
+// We only check player distance vs EntryRadius for the vehicle itself & if it has a driver, we just loop through the weapon pawns in turn
+function Vehicle FindEntryVehicle(Pawn P)
+{
+    local VehicleWeaponPawn WP;
+    local Vehicle           VehicleGoal;
+    local Bot               B;
+    local bool              bPlayerIsTankCrew;
+    local float             Distance;
+    local int               i;
+
+    B = Bot(P.Controller);
+
+    // Bots know what they want
+    if (B != none)
+    {
+        VehicleGoal = Vehicle(B.RouteGoal);
+
+        if (VehicleGoal == none)
+        {
+            return none;
+        }
+
+        if (VehicleGoal == self)
+        {
+            if (Driver == none)
+            {
+                return self;
+            }
+
+            return none;
+        }
+
+        for (i = 0; i < WeaponPawns.Length; ++i)
+        {
+            WP = WeaponPawns[i];
+
+            if (VehicleGoal == WP && WP != none)
+            {
+                if (WP.Driver == none)
+                {
+                    return WP;
+                }
+
+                if (Driver == none)
+                {
+                    return self;
+                }
+
+                return none;
+            }
+        }
+
+        return none;
+    }
+
+    // Check whether we are in entry range of the vehicle
+    Distance = VSize(P.Location - (Location + (EntryPosition >> Rotation)));
+
+    if (Distance > EntryRadius)
+    {
+        return none; // not in range to enter
+    }
+
+    // Record whether player is allowed to use tanks
+    bPlayerIsTankCrew = P != none && P.Controller != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none &&
+        ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
+
+    // Enter driver position if it's empty & player isn't barred by tank crew restriction
+    if (Driver == none && (bPlayerIsTankCrew || !bMustBeTankCommander))
+    {
+        return self;
+    }
+
+    // Otherwise loop through the weapon pawns to check if we can enter one
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        WP = WeaponPawns[i];
+
+        // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
+        if (WP != none && WP.Driver == none && (bPlayerIsTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
+        {
+            return WP;
+        }
+    }
+
+    return none; // there are no empty, usable vehicle positions
+}
+
 // Modified to prevent entry if player is on fire
 function bool TryToDrive(Pawn P)
 {
