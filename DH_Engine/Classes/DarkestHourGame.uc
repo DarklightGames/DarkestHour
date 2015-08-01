@@ -2968,7 +2968,7 @@ exec function DebugSpawnBots(optional bool bSpawnEnemies)
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         // Get the player
-        for (C = Level.ControllerList; C != None; C = C.NextController)
+        for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             if (DHPlayer(C) != none && C.bIsPlayer)
             {
@@ -2977,27 +2977,23 @@ exec function DebugSpawnBots(optional bool bSpawnEnemies)
             }
         }
 
-        // Spawn the bots & teleport to the player
-        for (C = Level.ControllerList; C != None; C = C.NextController)
+        if (DHP != none)
         {
-            if (ROBot(C) != None && ROBot(C).Pawn == none)
+            // Spawn the bots & teleport to the player
+            for (C = Level.ControllerList; C != none; C = C.NextController)
             {
                 B = ROBot(C);
 
-                if (!bSpawnEnemies && DHP.GetTeamNum() != B.GetTeamNum())
+                if (B != none && B.Pawn == none)
                 {
-                    continue;
-                }
-
-                DeployRestartPlayer(C, false, true);
-
-                if (B.Pawn != none && DHP.Pawn != none)
-                {
-                    if (SpawnManager.TeleportPlayer(B, DHP.Pawn.Location, DHP.Pawn.Rotation))
+                    if (!bSpawnEnemies && DHP.GetTeamNum() != B.GetTeamNum())
                     {
-                        // if successful teleport (nothing for now)
+                        continue;
                     }
-                    else
+
+                    DeployRestartPlayer(B, false, true);
+
+                    if (B != none && B.Pawn != none && DHP.Pawn != none && SpawnManager != none && !SpawnManager.TeleportPlayer(B, DHP.Pawn.Location, DHP.Pawn.Rotation))
                     {
                         B.Pawn.Suicide(); // kill the pawn if it failed to teleport
                     }
