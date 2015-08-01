@@ -1409,30 +1409,32 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
     local Controller P;
-    local int i, Num;
-    local float FFPenalty;
-    local RORoleInfo KilledRI, KillerRI;
+    local float      FFPenalty;
+    local int        Num, i;
 
     if (Killed == none)
     {
         return;
     }
 
-    if ((Killer != none) && Killer.bIsPlayer && (Killed != none) && Killed.bIsPlayer)
+    if (Killer != none && Killer.bIsPlayer && Killed.bIsPlayer && DamageType != none)
     {
         DamageType.static.IncrementKills(Killer);
     }
 
-    if (Killed != none && Killed.bIsPlayer)
+    if (Killed.bIsPlayer)
     {
-        Killed.PlayerReplicationInfo.Deaths += 1;
+        if (Killed.PlayerReplicationInfo != none)
+        {
+            Killed.PlayerReplicationInfo.Deaths += 1.0;
+        }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
 
-        // Remove any help requests that the killed player might have had
-        ClearSavedRequestsAndRallyPoints(ROPlayer(Killed), true);
+        ClearSavedRequestsAndRallyPoints(ROPlayer(Killed), true); // remove any help/rally requests by killed player
 
-        if ((Killer == Killed) || (Killer == none))
+        // If player suicided or there is no Killer
+        if (Killer == Killed || Killer == none)
         {
             if (Killer == none)
             {
@@ -1443,46 +1445,50 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 KillEvent("K", Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
             }
         }
+        // Friendly fire
         else
         {
-            if (bTeamGame && (Killer.PlayerReplicationInfo != none) && (Killer.PlayerReplicationInfo.Team == Killed.PlayerReplicationInfo.Team))
+            if (bTeamGame && Killer.PlayerReplicationInfo != none && Killed.PlayerReplicationInfo != none && Killer.PlayerReplicationInfo.Team == Killed.PlayerReplicationInfo.Team)
             {
-                //ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills++;
-                // Allow admins to handle different types of damage differently
-
-                //log("DamageType = "$DamageType$" DamageType ChildOf NadeDamage = "$ClassIsChildOf(DamageType,class'ROGrenadeDamType')$" DamageType.ISA(NadeDamage) = "$DamageType.IsA('ROGrenadeDamType'));
-                if (DamageType.IsA('ROArtilleryDamType') || ClassIsChildOf(DamageType,class'ROArtilleryDamType'))
+                // Allow server admins an option of reducing damage from different types of friendly fire
+                if (DamageType != none)
                 {
-                    FFPenalty = (1.0 * FFArtyScale);
-                    //log("Damage was arty FFArtyScale = "$FFArtyScale$" FFKills = "$ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills);
-                }
-                else if (ClassIsChildOf(DamageType,class'ROGrenadeDamType') || ClassIsChildOf(DamageType,class'ROSatchelDamType') || ClassIsChildOf(DamageType,class'ROTankShellExplosionDamage'))
-                {
-                    FFPenalty = (1.0 * FFExplosivesScale);
-                    //log("Damage was explosion FFExplosivesScale = "$FFExplosivesScale$" FFKills = "$ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills);
-                }
-                else
-                {
-                    FFPenalty = 1.0;
-                    //log("Damage was "$DamageType$" FriendlyFireScale = "$FriendlyFireScale$" FFKills = "$ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills);
+                    if (class<ROArtilleryDamType>(DamageType) != none)
+                    {
+                        FFPenalty = FFArtyScale;
+                    }
+                    else if (class<ROGrenadeDamType>(DamageType) != none || class<ROSatchelDamType>(DamageType) != none || class<ROTankShellExplosionDamage>(DamageType) != none)
+                    {
+                        FFPenalty = FFExplosivesScale;
+                    }
+                    else
+                    {
+                        FFPenalty = 1.0;
+                    }
                 }
 
-                ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills += FFPenalty;
+                if (ROPlayerReplicationInfo(Killer.PlayerReplicationInfo) != none)
+                {
+                    ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills += FFPenalty; // increase recorded FF kills
+                }
 
                 if (PlayerController(Killer) != none)
                 {
                     BroadcastLocalizedMessage(GameMessageClass, 13, Killer.PlayerReplicationInfo);
 
-                    //Store the last killer into the Killed player's controller
+                    // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
                     if (bForgiveFFKillsEnabled && ROPlayer(Killed) != none)
                     {
-                        PlayerController(Killed).ReceiveLocalizedMessage(GameMessageClass, 18, Killer.PlayerReplicationInfo);
+                        ROPlayer(Killed).ReceiveLocalizedMessage(GameMessageClass, 18, Killer.PlayerReplicationInfo);
                         ROPlayer(Killed).LastFFKiller = ROPlayerReplicationInfo(Killer.PlayerReplicationInfo);
                         ROPlayer(Killed).LastFFKillAmount = FFPenalty;
                     }
 
-                    if (ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills > FFKillLimit)
+                    // Take action if player has exceeded FF kills limit
+                    if (ROPlayerReplicationInfo(Killer.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills > FFKillLimit)
+                    {
                         HandleFFViolation(PlayerController(Killer));
+                    }
                 }
 
                 KillEvent("TK", Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
@@ -1494,143 +1500,11 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         }
     }
 
-    if (Killed != none)
-        ScoreKill(Killer, Killed);
-
-    // Update Stats and Achievements with this Kill
-    if (KilledPawn != none && Killer != Killed && ROPlayer(Killer) != none &&
-         Killer.PlayerReplicationInfo != none && Killer.PlayerReplicationInfo.Team != Killed.PlayerReplicationInfo.Team &&
-         ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements) != none)
-    {
-        KillerRI = ROPlayer(Killer).GetRoleInfo();
-
-        // Killed Player(could be infantry or tanker)
-        if (Killed != none)
-        {
-            ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddKill();
-
-            if (ROPlayer(Killed) != none)
-            {
-                KilledRI = ROPlayer(Killed).GetRoleInfo();
-            }
-            else if (ROPlayerReplicationInfo(KilledPawn.PlayerReplicationInfo) != none)
-            {
-                KilledRI = ROPlayerReplicationInfo(KilledPawn.PlayerReplicationInfo).RoleInfo;
-            }
-
-            // They were driving a vehicle
-            if (KilledPawn.DrivenVehicle != none)
-            {
-                if (KilledPawn.DrivenVehicle.Health > 0 && KilledPawn.DrivenVehicle.IsA('ROTankCannonPawn') && (!KilledPawn.DrivenVehicle.IsA('AssaultGunCannonPawn') || KilledPawn.DrivenVehicle.IsA('Stug3CannonPawn')))
-                {
-                    ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddCommanderKill();
-                }
-            }
-            else if (KilledPawn.IsA('ROPawn') && (ClassIsChildOf(DamageType, class'ROTankShellExplosionDamage') || DamageType.Name == 'ROTankShellImpactDamage'))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddInfantryKillWithTankShell();
-            }
-            else if (ClassIsChildOf(DamageType, class'ROWeaponBashDamType') || ClassIsChildOf(DamageType, class'ROWeaponBayonetDamType'))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddMeleeKill();
-            }
-            else if (ClassIsChildOf(DamageType, class'ROArtilleryDamType'))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddArtilleryKill();
-            }
-            else if (Killer.Pawn != none && Killer.Pawn.Weapon != none)
-            {
-                if (Killer.Pawn.Weapon.IsA('ROBoltActionWeapon'))
-                {
-                    ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).PlayerKilledPlayerWithBoltActionRifle(VSizeSquared(KilledPawn.Location - Killer.Pawn.Location));
-                }
-                else if (Killer.Pawn.Weapon.IsA('ROMGbase'))
-                {
-                    ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddLMGKill();
-                }
-                else if (Killer.Pawn.Weapon.IsA('ROSniperWeapon'))
-                {
-                    if (KillerRI.PrimaryWeaponType != WT_Sniper &&
-                         ((Killer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && (Killer.Pawn.Weapon.IsA('MN9130ScopedWeapon') || Killer.Pawn.Weapon.IsA('SVT40ScopedWeapon'))) ||
-                          (Killer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && (Killer.Pawn.Weapon.IsA('G43ScopedWeapon') || Killer.Pawn.Weapon.IsA('Kar98ScopedWeapon')))))
-                    {
-                        ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddSniperRifleKill(true);
-                    }
-                    else
-                    {
-                        ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddSniperRifleKill(false);
-                    }
-
-                    if (KilledRI != none && KillerRI != none && KilledRI.PrimaryWeaponType == WT_Sniper && KillerRI.PrimaryWeaponType == WT_Sniper)
-                    {
-                        ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).SniperKilledSniper();
-                    }
-                }
-            }
-
-            if (KillerRI != none && KillerRI.PrimaryWeaponType == WT_Assault)
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddKillAsAssault();
-            }
-        }
-
-        // Destroyed Any Vehicle
-        if (KilledPawn.IsA('ROVehicle') && !KilledPawn.IsA('ATGun'))
-        {
-            if (Killer.Pawn.IsA('TigerTankCannonPawn') || Killer.Pawn.IsA('TigerTank') || Killer.Pawn.IsA('TigerMountedMGPawn'))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddDestroyedVehicleFromTiger();
-            }
-
-            if (KilledPawn.IsA('Sdkfz251Transport'))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).DestroyedHalfTrack(Killed != none);
-            }
-            else if (KilledPawn.IsA('UniCarrierTransport'))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).DestroyedUniCarrier(Killed != none);
-            }
-        }
-        // Destroyed A Tank
-        else if ((KilledPawn.IsA('ROTankCannonPawn') && !KilledPawn.IsA('ATGunCannonPawn')) && Killer.Pawn != none)
-        {
-            if (KilledPawn.IsA('TigerTankCannonPawn') && (Killer.Pawn.IsA('T3476TankCannonPawn') || Killer.Pawn.IsA('T3476Tank')))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).DestroyedTigerTankWithT3476();
-            }
-
-            if ((Killer.Pawn.IsA('ROTankCannonPawn') || (Killer.Pawn.DrivenVehicle != none && Killer.Pawn.DrivenVehicle.IsA('ROTankCannonPawn'))))
-            {
-                ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddDestroyedTank(VSizeSquared(KilledPawn.Location - Killer.Pawn.Location));
-            }
-            else if (KillerRI != none)
-            {
-                if ((KillerRI.IsA('ROGEPanzerGrenadierH') || KillerRI.IsA('ROGEGreatPanzerGrenadier')) && (DamageType.Name == 'PanzerFaustImpactDamType' || DamageType.Name == 'PanzerFaustDamType'))
-                {
-                    ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddDestroyedTankWithPanzerfaust();
-                }
-                else if ((KillerRI.IsA('ROSUAntiTankRKKF') || KillerRI.IsA('ROSUAntiTankPJRKKA')) && DamageType.Name == 'PTRDDamType')
-                {
-                    ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).AddDestroyedTankWithPTRD();
-                }
-            }
-        }
-        else if (KilledPawn.IsA('UniCarrierGunPawn') || KilledPawn.IsA('UniCarrierPassengerOne') || KilledPawn.IsA('UniCarrierPassengerTwo') ||
-                  KilledPawn.IsA('UniCarrierPassengerThree') || KilledPawn.IsA('UniCarrierPassengerFour'))
-        {
-            ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).KilledUniCarrierPassenger(Killed != none);
-        }
-        else if (KilledPawn.IsA('Sdkfz251GunPawn') || KilledPawn.IsA('Sdkfz251PassengerOne') || KilledPawn.IsA('Sdkfz251PassengerTwo') ||
-                  KilledPawn.IsA('Sdkfz251PassengerThree') || KilledPawn.IsA('Sdkfz251PassengerFour') || KilledPawn.IsA('Sdkfz251PassengerFive') ||
-                  KilledPawn.IsA('Sdkfz251PassengerSix'))
-        {
-            ROSteamStatsAndAchievements(Killer.PlayerReplicationInfo.SteamStatsAndAchievements).KilledHalftrackPassenger(Killed != none);
-        }
-    }
-
+    ScoreKill(Killer, Killed);
     DiscardInventory(KilledPawn);
     NotifyKilled(Killer, Killed, KilledPawn);
 
+    // Check whether we need to end the round because neither team has any reinforcements left
     for (i = 0; i < 2; ++i)
     {
         if (SpawnLimitReached(i))
@@ -1647,7 +1521,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
             if (Num == 0)
             {
-                EndRound(int(!bool(i)));    // It looks like a hack, but hey, it's the easiest way to find the opposite team :)
+                EndRound(int(!bool(i))); // it looks like a hack, but hey, it's the easiest way to find the opposite team :)
             }
         }
     }
