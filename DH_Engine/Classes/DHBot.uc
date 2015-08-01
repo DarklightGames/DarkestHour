@@ -257,6 +257,186 @@ Begin:
     GoTo('Begin');
 }
 
+// Modified to avoid "accessed none" errors on Pawn.Weapon
+function FightEnemy(bool bCanCharge, float EnemyStrength)
+{
+    local float  EnemyDistance, AdjustedCombatStyle;
+    local bool   bOldForcedCharge, bFarAway;
+    local vector X, Y, Z;
+
+    if (Squad == none || Enemy == none || Pawn == none)
+    {
+        log("HERE 3 Squad" @ Squad @ "Enemy" @ Enemy @ "Pawn" @ Pawn);
+    }
+
+    if (Vehicle(Pawn) != none)
+    {
+        VehicleFightEnemy(bCanCharge, EnemyStrength);
+
+        return;
+    }
+
+    if (Enemy == FailedHuntEnemy && Level.TimeSeconds == FailedHuntTime)
+    {
+        GoalString = "FAILED HUNT - HANG OUT";
+
+        if (EnemyVisible())
+        {
+            bCanCharge = false;
+        }
+        else if (FindInventoryGoal(0.0))
+        {
+            SetAttractionState();
+
+            return;
+        }
+        else
+        {
+            WanderOrCamp(true);
+
+            return;
+        }
+    }
+
+    bOldForcedCharge = bMustCharge;
+    bMustCharge = false;
+    EnemyDistance = VSize(Pawn.Location - Enemy.Location);
+
+    if (Pawn.Weapon != none)
+    {
+        AdjustedCombatStyle = CombatStyle + Pawn.Weapon.SuggestAttackStyle();
+    }
+
+    Aggression = (1.5 * FRand()) - 0.8 + (2.0 * AdjustedCombatStyle) - (0.5 * EnemyStrength) + (FRand() * (Normal(Enemy.Velocity - Pawn.Velocity) dot Normal(Enemy.Location - Pawn.Location)));
+
+    if (Enemy.Weapon != none)
+    {
+        Aggression += 2.0 * Enemy.Weapon.SuggestDefenseStyle();
+    }
+
+    if (EnemyDistance > MAXSTAKEOUTDIST)
+    {
+        Aggression += 0.5;
+    }
+
+    if (Pawn.Physics == PHYS_Walking || Pawn.Physics == PHYS_Falling)
+    {
+        if (Pawn.Location.Z > Enemy.Location.Z + TACTICALHEIGHTADVANTAGE)
+        {
+            Aggression = FMax(0.0, Aggression - 1.0 + AdjustedCombatStyle);
+        }
+        else if (Skill < 4.0 && EnemyDistance > (0.65 * MAXSTAKEOUTDIST))
+        {
+            bFarAway = true;
+            Aggression += 0.5;
+        }
+        else if (Pawn.Location.Z < Enemy.Location.Z - Pawn.CollisionHeight) // below enemy
+        {
+            Aggression += CombatStyle;
+        }
+    }
+
+    if (!EnemyVisible())
+    {
+        if (Squad.MustKeepEnemy(Enemy))
+        {
+            GoalString = "Hunt priority enemy";
+            GotoState('Hunting');
+
+            return;
+        }
+
+        GoalString = "Enemy not visible";
+
+        if (!bCanCharge)
+        {
+            GoalString = "Stake Out - no charge";
+            DoStakeOut();
+        }
+        else if (Squad.IsDefending(self) && LostContact(4.0) && ClearShot(LastSeenPos, false))
+        {
+            GoalString = "Stake Out "$LastSeenPos;
+            DoStakeOut();
+        }
+        else if (((Aggression < 1.0 && !LostContact(3.0 + (2.0 * FRand()))) || IsSniping()) && CanStakeOut())
+        {
+            GoalString = "Stake Out2";
+            DoStakeOut();
+        }
+        else
+        {
+            GoalString = "Hunt";
+            GotoState('Hunting');
+        }
+
+        return;
+    }
+
+    // See enemy - decide whether to charge it or strafe around/stand & fire
+    BlockedPath = none;
+    Target = Enemy;
+
+    if ((Pawn.Weapon != none && Pawn.Weapon.bMeleeWeapon) || (bCanCharge && bOldForcedCharge))
+    {
+        GoalString = "Charge";
+        DoCharge();
+
+        return;
+    }
+
+    if (Pawn.RecommendLongRangedAttack())
+    {
+        GoalString = "Long Ranged Attack";
+        DoRangedAttackOn(Enemy);
+
+        return;
+    }
+
+    if (bCanCharge && Skill < 5.0 && bFarAway && Aggression > 1.0 && FRand() < 0.5)
+    {
+        GoalString = "Charge closer";
+        DoCharge();
+
+        return;
+    }
+
+    if ((Pawn.Weapon != none && Pawn.Weapon.RecommendRangedAttack()) || IsSniping() || ((FRand() > 0.17 * (Skill + Tactics - 1.0)) && !DefendMelee(EnemyDistance)))
+    {
+        GoalString = "Ranged Attack";
+        DoRangedAttackOn(Enemy);
+
+        return;
+    }
+
+    if (bCanCharge && Aggression > 1.0)
+    {
+        GoalString = "Charge 2";
+        DoCharge();
+
+        return;
+    }
+
+    GoalString = "Do tactical move";
+
+    if (Pawn.Weapon != none && !Pawn.Weapon.RecommendSplashDamage() && FRand() < 0.7 && ((3.0 * Jumpiness) + (FRand() * Skill)) > 3.0)
+    {
+        GetAxes(Pawn.Rotation, X, Y, Z);
+        GoalString = "Try to Duck ";
+
+        if (FRand() < 0.5)
+        {
+            Y *= -1.0;
+            TryToDuck(Y, true);
+        }
+        else
+        {
+            TryToDuck(Y, false);
+        }
+    }
+
+    DoTacticalMove();
+}
+
 defaultproperties
 {
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
