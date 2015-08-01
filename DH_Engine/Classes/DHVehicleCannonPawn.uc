@@ -10,7 +10,6 @@ class DHVehicleCannonPawn extends ROTankCannonPawn
 var     DHVehicleCannon     Cannon;           // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
 var     name        PlayerCameraBone;         // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     texture     AltAmmoReloadTexture;     // used to show coaxial MG reload progress on the HUD, like the cannon reload
-var     bool        bNeedToInitializeDriver;  // clientside flag that we need to do some player set up, once we receive the Driver actor
 
 // Position stuff
 var     int         InitialPositionIndex;     // initial player position on entering
@@ -52,6 +51,11 @@ var     float       ManualMinRotateThreshold;
 var     float       ManualMaxRotateThreshold;
 var     float       PoweredMinRotateThreshold;
 var     float       PoweredMaxRotateThreshold;
+
+// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
+var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
+var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the cannon actor
+var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
 // NEW DH CODE: Illuminated sights
 //var   texture     NormalCannonScopeOverlay;
@@ -137,6 +141,7 @@ simulated function PostNetBeginPlay()
 // Matt: new function to do any extra set up in the cannon classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 // Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
+// Also to send net client into state 'EnteringVehicle' if client was unable to when ClientKDriverEnter() was called, due to not then having cannon actor (replication timing issues)
 simulated function InitializeCannon()
 {
     Cannon = DHVehicleCannon(Gun);
@@ -144,6 +149,12 @@ simulated function InitializeCannon()
     if (Cannon != none)
     {
         Cannon.InitializeCannon(self);
+
+        if (bNeedToEnterVehicle)
+        {
+            bNeedToEnterVehicle = false;
+            GotoState('EnteringVehicle');
+        }
     }
     else
     {
@@ -196,6 +207,12 @@ simulated function PostNetReceive()
     if (!bInitializedVehicleBase && VehicleBase != none)
     {
         bInitializedVehicleBase = true;
+
+        // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
+        if (bNeedToStoreVehicleRotation)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
 
         // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
         if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
@@ -790,11 +807,10 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero, to start facing same way as cannon, & to consolidate & optimise the Supers
-// Also to workaround a common camera problem when spawning into/near to a spawn vehicle
+// Matt: also to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes in DHVehicleMGPawn.ClientKDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Matt: this is to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
-    // See notes in DHWheeledVehicle.ClientKDriverEnter()
+    // Fix for problem where net client may be in state 'Spectating' when deploying into a spawn vehicle
     if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
     {
         PC.GotoState('PlayerWalking');
@@ -804,16 +820,32 @@ simulated function ClientKDriverEnter(PlayerController PC)
     {
         SavedPositionIndex = InitialPositionIndex;
         PendingPositionIndex = InitialPositionIndex;
-        Gotostate('EnteringVehicle');
+
+        if (Gun != none)
+        {
+            Gotostate('EnteringVehicle');
+        }
+        else
+        {
+            bNeedToEnterVehicle = true; // fix for problem where net client may not yet have VehicleWeapon actor when deploying into spawn vehicle
+        }
+
     }
     else if (PC != none)
     {
         PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
 
-    // Matt: appears to do nothing as not used anywhere in Unrealscript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
-    // Also in HandleTransition(), but I can't see it's having an effect there
-    StoredVehicleRotation = VehicleBase.Rotation;
+    // Matt: StoredVehicleRotation appears redundant as not used anywhere in UScript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
+    // It's also in HandleTransition(), but I can't see it's having an effect there
+    if (VehicleBase != none)
+    {
+        StoredVehicleRotation = VehicleBase.Rotation;
+    }
+    else
+    {
+        bNeedToStoreVehicleRotation = true; // fix for problem where net client may not yet have VehicleBase actor when deploying into spawn vehicle
+    }
 
     super(Vehicle).ClientKDriverEnter(PC);
 

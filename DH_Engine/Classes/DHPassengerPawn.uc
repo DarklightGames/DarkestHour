@@ -23,8 +23,10 @@ This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI 
 Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
 */
 
-var bool bNeedToInitializeDriver; // clientside flag that we need to do some player set up, once we receive the Driver actor
-var bool bDebugExitPositions;
+var     bool    bNeedToInitializeDriver;     // clientside flag that we need to do some player set up, once we receive the Driver actor
+var     bool    bNeedToStoreVehicleRotation; // clientside flag that we need to set StoredVehicleRotation, once we receive the VehicleBase actor
+
+var     bool    bDebugExitPositions;
 
 replication
 {
@@ -77,6 +79,12 @@ simulated function PostNetReceive()
     if (!bInitializedVehicleBase && VehicleBase != none)
     {
         bInitializedVehicleBase = true;
+
+        // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
+        if (bNeedToStoreVehicleRotation)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
 
         // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
         if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
@@ -198,15 +206,27 @@ function KDriverEnter(Pawn P)
     super.KDriverEnter(P);
 }
 
-// Matt: modified to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
+// Matt: modified to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes in DHVehicleMGPawn.ClientKDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating')) // see notes in DHWheeledVehicle.ClientKDriverEnter() 
+    // Fix for problem where net client may be in state 'Spectating' when deploying into a spawn vehicle
+    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
     {
         PC.GotoState('PlayerWalking');
     }
 
-    super.ClientKDriverEnter(PC);
+    if (VehicleBase != none)
+    {
+        StoredVehicleRotation = VehicleBase.Rotation;
+    }
+    else
+    {
+        bNeedToStoreVehicleRotation = true; // fix for problem where net client may not yet have VehicleBase actor when deploying into spawn vehicle
+    }
+
+    super(VehicleWeaponPawn).ClientKDriverEnter(PC);
+
+    PC.SetFOV(WeaponFOV);
 }
 
 // Modified to add clientside checks before sending the function call to the server

@@ -15,7 +15,6 @@ var     name        GunsightCameraBone;          // optional separate camera bon
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
 var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
 var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
-var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some player set up, once we receive the Driver actor
 
 // Position stuff
 var     int         InitialPositionIndex;        // initial player position on entering
@@ -28,6 +27,11 @@ var     float       OverlayCenterTexStart;
 var     float       OverlayCenterTexSize;
 var     float       OverlayCorrectionX;
 var     float       OverlayCorrectionY;
+
+// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
+var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
+var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the MG actor
+var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
 // Debugging help
 var     bool        bDebugExitPositions;
@@ -85,6 +89,7 @@ simulated function PostNetBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+// We use it to send net client into state 'EnteringVehicle' if client was unable to when ClientKDriverEnter() was called, due to not then having MG actor (replication timing issues)
 simulated function InitializeMG()
 {
     MGun = DHVehicleMG(Gun);
@@ -92,6 +97,12 @@ simulated function InitializeMG()
     if (MGun != none)
     {
         MGun.InitializeMG(self);
+
+        if (bNeedToEnterVehicle)
+        {
+            bNeedToEnterVehicle = false;
+            GotoState('EnteringVehicle');
+        }
     }
     else
     {
@@ -135,6 +146,12 @@ simulated function PostNetReceive()
     if (!bInitializedVehicleBase && VehicleBase != none)
     {
         bInitializedVehicleBase = true;
+
+        // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
+        if (bNeedToStoreVehicleRotation)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
 
         // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
         if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
@@ -546,19 +563,47 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim, & to consolidate & optimise the Supers)
-// Also to workaround a common camera problem when spawning into/near to a spawn vehicle
+// Matt: also to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes below)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Matt: this is to fix a common problem on net clients when spawning into/near a spawn vehicle (same problem as when spawning into MDVs in DH v5)
-    // See notes in DHWheeledVehicle.ClientKDriverEnter()
+/*  The process of deploying into a spawn vehicle involves spawning a player pawn, possessing it, then entering the vehicle
+    Entering results in unpossessing the player pawn, possessing vehicle, moving (effectively teleporting) player pawn to vehicle's location & attaching it as the 'Driver' pawn
+    Because vehicle can be on other side of the map & not currently net relevant to the client, the vehicle actors may not exist on the client & have to be spawned locally
+    There are a complex series of interactions, which don't always happen in the same order, because actors are not always replicated in the same order
+
+ 1. First problem is that the PlayerController is often in state 'Spectating' when the critical PC.ClientRestart() function gets called at the end of vehicle possession
+    State 'Spectating' ignores PC.ClientRestart(), most critically resulting in the PC's ViewTarget not being set to the vehicle & POVChanged() not being called on the vehicle
+    This gives a completely screwed up camera view, until the player switches to another vehicle position or exits
+    After experimenting with various workarounds, I believe the fix below is probably the simplest & cleanest, & it appears to work reliably
+    We send the client's PlayerController to state 'PlayerWalking' because that's the normal state a player would be in when entering a vehicle (so it's effectively neutral)
+    It is essentially a hack, but it seems to be an effective, safe & minimal hack to achieve a specific & vital purpose (so it's a 'good hack'!)
+
+ 2. Second problem affects VehicleWeaponPawns with a VehicleWeapon, i.e. MGs & cannons, where client may not yet have received the VehicleWeapon actor through replication
+    Without VW actor, state 'EnteringVehicle' will fail to switch to an interior mesh or play BeginningIdleAnim, which can really screw things up, until player transitions or exits
+    Fix is if we don't yet have VW actor, we avoid going into state 'EnteringVehicle' now & instead flag that we need to as soon as PostNetReceive() detects we receive VW actor
+
+ 3. Third, lesser problem is that client may not yet have received the VehicleBase actor through replication, in which case we can't set StoredVehicleRotation
+    Without StoredVehicleRotation, the player gets an unwanted camera swivelling effect on entering the vehicle
+    Fix is if we don't yet have VehicleBase actor, we flag that we need to set StoredVehicleRotatio as soon as PostNetReceive() detects we receive VehicleBase actor */
+
+    // Fix for 1st problem described above, where net client may be in state 'Spectating' when deploying into a spawn vehicle
     if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
     {
+        Log(Tag @ "ClientKDriverEnter sending PC to state 'PlayerWalking'"); //  TEMP
         PC.GotoState('PlayerWalking');
     }
 
     if (bMultiPosition)
     {
-        Gotostate('EnteringVehicle');
+        if (Gun != none)
+        {
+            Gotostate('EnteringVehicle');
+        }
+        else
+        {
+            bNeedToEnterVehicle = true; // fix for 2nd problem described above, where net client may not yet have VehicleWeapon actor when deploying into spawn vehicle
+        }
+
         SavedPositionIndex = InitialPositionIndex;
         PendingPositionIndex = InitialPositionIndex;
     }
@@ -567,9 +612,16 @@ simulated function ClientKDriverEnter(PlayerController PC)
         PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
 
-    // Matt: appears to do nothing as not used anywhere in Unrealscript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
-    // Also in HandleTransition(), but I can't see it's having an effect there
-    StoredVehicleRotation = VehicleBase.Rotation;
+    // Matt: StoredVehicleRotation appears redundant as not used anywhere in UScript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
+    // It's also in HandleTransition(), but I can't see it's having an effect there
+    if (VehicleBase != none)
+    {
+        StoredVehicleRotation = VehicleBase.Rotation;
+    }
+    else
+    {
+        bNeedToStoreVehicleRotation = true; // fix for 3rd problem described above, where net client may not yet have VehicleBase actor when deploying into spawn vehicle
+    }
 
     super(Vehicle).ClientKDriverEnter(PC);
 
