@@ -53,7 +53,6 @@ var     SkyZoneInfo             SavedSkyZone;               // saves the origina
 var     byte                    SpawnPointIndex;
 var     byte                    SpawnVehicleIndex;
 var     byte                    VehiclePoolIndex;
-var     Vehicle                 SpawnVehicle;               // used for vehicle spawning to remember last vehicle player spawned (only used by server)
 var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
 var     int                     NextSpawnTime;              // the next time the player will be able to spawn
 var     int                     LastKilledTime;             // the time at which last death occured
@@ -979,22 +978,6 @@ function ClientSetBehindView(bool B)
 
 state PlayerWalking
 {
-    function Timer()
-    {
-        // Handle check if we should try to enter spawned vehicle
-        if (SpawnVehicle != none)
-        {
-            ClientFadeFromBlack(4.0);
-
-            if (Pawn != none)
-            {
-                SpawnVehicle.TryToDrive(Pawn);
-            }
-
-            SpawnVehicle = none; // Remove it even if it failed
-        }
-    }
-
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
     {
@@ -2478,7 +2461,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 SpawnPointIndex = 255;
                 SpawnVehicleIndex = 255;
                 VehiclePoolIndex = 255;
-                SpawnVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;

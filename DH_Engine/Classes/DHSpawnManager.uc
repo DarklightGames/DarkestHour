@@ -329,20 +329,10 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
         SpawnInfantry(C, SpawnError);
     }
 
-    // We have a pawn so let's fade from black
-    if (DHPawn(C.Pawn) != none)
+    // Fade out from blackout to normal view
+    if (C.Pawn != none)
     {
-        if (C.VehiclePoolIndex != 255) // Vehicle spawn
-        {
-            C.NextVehicleSpawnTime = GRI.ElapsedTime + 60;
-
-            C.ClientFadeFromBlack(0.0, true); // Black out, the fade will start when the pawn is put back into the vehicle
-            C.SetTimer(1.0, false); // Tell the player to check after 1 second to re enter the vehicle and fade from black
-        }
-        else
-        {
-            C.ClientFadeFromBlack(2.0);
-        }
+        C.ClientFadeFromBlack(3.0);
     }
 }
 
@@ -425,9 +415,6 @@ function SpawnVehicle(DHPlayer C, out byte SpawnError)
     }
     else
     {
-        V.KDriverLeave(true); // Force leave the vehicle to update the position
-        C.SpawnVehicle = V; // Set controller SpawnVehicle to be used for delayed re-entry
-
         //ParentFactory must be set after any calls to Destroy are made so that
         //VehicleDestroyed is not called in the event that TryToDrive fails
         V.ParentFactory = self;
