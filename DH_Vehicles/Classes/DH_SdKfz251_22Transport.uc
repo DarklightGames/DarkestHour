@@ -27,7 +27,7 @@ defaultproperties
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-	ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
+    ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
     VehicleNameString="Sd.Kfz.251/22 'pakwagen'"
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
