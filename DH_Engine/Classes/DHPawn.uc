@@ -780,63 +780,70 @@ simulated function ProcessHitFX()
     }
 }
 
-// Theel: This function makes no sense to me, why is it not exiting the loop? why is it calling TakeDamage and PlaySound multiple times??????
+// Modified to add extra effects if certain body parts are hit (chest or head), to play a hit sound, & to remove duplicated calls to TakeDamage()
 function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocation, vector Momentum, class<DamageType> DamageType, array<int> PointsHit)
 {
-    local int    ActualDamage, OriginalDamage, CumulativeDamage, TotalDamage, i;
-    local int    HighestDamagePoint, HighestDamageAmount;
+    local int    OriginalDamage, BodyPartDamage, CumulativeDamage, HighestDamageAmount, HighestDamagePoint, i;
     local vector HitDirection;
 
-    OriginalDamage = damage;
-
     // If someone else has killed this player, return
-    if (bDeleteMe || PointsHit.Length < 1 || Health <= 0)
+    if (bDeleteMe || Health <= 0 || PointsHit.Length < 1)
     {
         return;
     }
 
+    OriginalDamage = Damage;
+
+    // Loop through array of body parts that have been hit
     for (i = 0; i < PointsHit.Length; ++i)
     {
-        // If someone else has killed this player, return
-        if (bDeleteMe || Health <= 0)
+        // Calculate damage to this body part & cumulative damage
+        BodyPartDamage = OriginalDamage * Hitpoints[PointsHit[i]].DamageMultiplier;
+        BodyPartDamage = Level.Game.ReduceDamage(BodyPartDamage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+
+        if (BodyPartDamage < 1)
         {
-            return;
+            continue;
         }
 
-        ActualDamage = OriginalDamage;
-        ActualDamage *= Hitpoints[PointsHit[i]].DamageMultiplier;
-        TotalDamage += ActualDamage;
-        ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
-        CumulativeDamage += ActualDamage;
+        // Update cumulative damage & break out of the for loop if it's enough to kill the player
+        CumulativeDamage += BodyPartDamage;
 
-        if (ActualDamage > HighestDamageAmount)
+        if (CumulativeDamage >= Health)
         {
-            HighestDamageAmount = ActualDamage;
+            break;
+        }
+
+        // Check if damage to this body part is the highest damage yet
+        if (BodyPartDamage > HighestDamageAmount)
+        {
+            HighestDamageAmount = BodyPartDamage;
             HighestDamagePoint = PointsHit[i];
         }
 
+        // If we've been shot in the foot or leg & are sprinting, we fall to the ground & are winded (zero stamina)
         if (Hitpoints[PointsHit[i]].HitPointType == PHP_Leg || Hitpoints[PointsHit[i]].HitPointType == PHP_Foot)
         {
-            // If we've been shot in the foot or the leg, we have a chance to 'fall' and drop our weapon.
-            if (ActualDamage > 0 && DHPlayer(Controller) != none && !bIsCrawling && bIsSprinting)
+            if (bIsSprinting && !bIsCrawling && DHPlayer(Controller) != none)
             {
-                // Zero stamina and fall to the ground if shot in the leg or foot
                 Stamina = 0.0;
                 ClientForceStaminaUpdate(Stamina);
                 DHPlayer(Controller).ClientProne();
             }
         }
+        // If we've been shot in the hand, we have a chance of dropping our weapon
         else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Hand && FRand() > 0.5)
         {
-            if (DHPlayer(Controller) != none && DarkestHourGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
+            if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
                 DHPlayer(Controller).ThrowWeapon();
                 ReceiveLocalizedMessage(class'ROWeaponLostMessage');
             }
         }
+        // If we've been shot in the head, our vision is jarred
         else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Head)
         {
-            if (DHPlayer(Controller) != none && DarkestHourGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
+            if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
                 HitDirection = Location - HitLocation;
                 HitDirection.Z = 0.0;
@@ -845,48 +852,31 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
                 DHPlayer(Controller).PlayerJarred(HitDirection, 15.0);
             }
         }
+        // If we've been shot in the chest, we're winded (lose half stamina) - Basnett
         else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Torso)
         {
-            if (DHPlayer(Controller) != none && DarkestHourGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
+            if (IsHumanControlled() && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
-                // Lose half your stamina if you're shot in the chest - Basnett
                 Stamina = 0.0;
-                StaminaRecoveryRate /= 2;
+                StaminaRecoveryRate /= 2.0;
                 ClientForceStaminaUpdate(Stamina);
             }
         }
 
         // Update the locational damage list
         UpdateDamageList(PointsHit[i] - 1);
-
-        // Lets exit out if one of the shots killed the player
-        if (CumulativeDamage >=  Health)
-        {
-            if (DamageType.default.HumanObliterationThreshhold != 1000001)
-            {
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
-            }
-
-            HitDamageType = DamageType;
-            TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
-        }
     }
 
-    if (TotalDamage > 0)
+    // Damage the player & play hit sound (but make sure no one else has killed this player)
+    if (CumulativeDamage > 0 && !bDeleteMe && Health > 0)
     {
-        // If someone else has killed this player, return
-        if (bDeleteMe || Health <= 0)
-        {
-            return;
-        }
-
         if (DamageType.default.HumanObliterationThreshhold != 1000001)
         {
             PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 100.0,, 15.0);
         }
 
         HitDamageType = DamageType;
-        TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
+        TakeDamage(CumulativeDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
     }
 }
 
