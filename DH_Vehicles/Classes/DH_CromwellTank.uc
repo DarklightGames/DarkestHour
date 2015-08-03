@@ -92,18 +92,22 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
-    VehicleHudOccupantsX(0)=0.56
-    VehicleHudOccupantsX(1)=0.52
-    VehicleHudOccupantsX(2)=0.46
+    VehicleHudOccupantsX(0)=0.42
+    VehicleHudOccupantsY(0)=0.39
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.5
+    VehicleHudOccupantsX(2)=0.58
+    VehicleHudOccupantsY(2)=0.39
     VehicleHudOccupantsX(3)=0.4
-    VehicleHudOccupantsY(3)=0.67
-    VehicleHudOccupantsX(4)=0.4
-    VehicleHudOccupantsY(4)=0.76
-    VehicleHudOccupantsX(5)=0.625
-    VehicleHudOccupantsY(5)=0.76
-    VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.67
-    VehicleHudEngineX=0.51
+    VehicleHudOccupantsY(3)=0.8
+    VehicleHudOccupantsX(4)=0.45
+    VehicleHudOccupantsY(4)=0.85
+    VehicleHudOccupantsX(5)=0.55
+    VehicleHudOccupantsY(5)=0.85
+    VehicleHudOccupantsX(6)=0.6
+    VehicleHudOccupantsY(6)=0.8
+    VehicleHudEngineX=0.5
+    VehicleHudEngineY=0.8
     VehHitpoints(0)=(PointBone="body",PointOffset=(X=123.0,Y=26.0,Z=23.0))
     VehHitpoints(1)=(PointRadius=35.0,PointOffset=(X=-95.0,Z=2.0))
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

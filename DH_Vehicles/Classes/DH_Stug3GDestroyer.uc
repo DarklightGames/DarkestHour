@@ -32,6 +32,7 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_look'
+    bVehicleHudUsesLargeTexture=true
     VehicleHudThreadsPosX(0)=0.37
     VehicleHudThreadsPosY=0.51
     VehicleHudThreadsScale=0.66

@@ -310,7 +310,10 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
 
     // Making the player's name show up in white in the kill list
-    if (PlayerOwner != none && Killer != none && PlayerOwner.PlayerReplicationInfo != none && PlayerOwner.PlayerReplicationInfo.PlayerName == Killer.PlayerName)
+    if (PlayerOwner != none &&
+        Killer != none &&
+        PlayerOwner.PlayerReplicationInfo != none &&
+        PlayerOwner.PlayerReplicationInfo.PlayerName == Killer.PlayerName)
     {
         O.KillerColor = WhiteColor;
     }
@@ -872,6 +875,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Widget.Tints[0] = VehicleColor;
     Widget.Tints[1] = VehicleColor;
 
+
+    // Draw clock face (without numbers)
+    Widget.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
+    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+
     // Draw vehicle icon
     Widget.WidgetTexture = Vehicle.VehicleHudImage;
     DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
@@ -1062,6 +1070,10 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             }
         }
     }
+
+    // Draw clock numbers
+    Widget.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
+    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
 
     // Update & draw any turret
     if (Cannon != none && VehicleHudTurret != none)
@@ -3230,11 +3242,11 @@ function DisplayMessages(Canvas C)
     }
 
     // Removes expired obituaries
-    for (i = 0; i < DHObituaries.Length; ++i)
+    for (i = DHObituaries.Length - 1; i >= 0; --i)
     {
         if (Level.TimeSeconds > DHObituaries[i].EndOfLife)
         {
-            DHObituaries.Remove(i--, 1);
+            DHObituaries.Remove(i, 1);
         }
     }
 

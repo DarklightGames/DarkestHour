@@ -98,27 +98,39 @@ defaultproperties
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
     SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.0,bExposed=true,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.halftrack_body'
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="Vhalftrack_driver_idle",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vhalftrack_driver_idle",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz251_body'
+
     VehicleHudOccupantsX(0)=0.45
+    VehicleHudOccupantsY(0)=0.4
+
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.5
+
     VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsX(3)=0.45
-    VehicleHudOccupantsX(4)=0.45
-    VehicleHudOccupantsX(5)=0.55
-    VehicleHudOccupantsX(6)=0.55
-    VehicleHudOccupantsX(7)=0.55
-    VehicleHudOccupantsY(0)=0.45
-    VehicleHudOccupantsY(1)=0.525
     VehicleHudOccupantsY(2)=0.6
+
+    VehicleHudOccupantsX(3)=0.45
     VehicleHudOccupantsY(3)=0.7
+
+    VehicleHudOccupantsX(4)=0.45
     VehicleHudOccupantsY(4)=0.8
+
+    VehicleHudOccupantsX(5)=0.55
     VehicleHudOccupantsY(5)=0.6
+
+    VehicleHudOccupantsX(6)=0.55
     VehicleHudOccupantsY(6)=0.7
+
+    VehicleHudOccupantsX(7)=0.55
     VehicleHudOccupantsY(7)=0.8
-    VehicleHudEngineY=0.25
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=15.0,Z=-15.0))
+
+    VehicleHudEngineY=0.3
+
+    VehHitpoints(0)=(PointBone="Camera_driver",bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=30.0,PointBone="Engine",PointOffset=(X=15.0,Z=-15.0),DamageMultiplier=1.0)
     EngineHealth=150
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -172,7 +184,6 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RRight_Drive_Wheel'
     VehicleMass=8.5
-    DrivePos=(X=2.0,Y=2.0,Z=3.5)
     DriveAnim="Vhalftrack_driver_idle"
 
     ExitPositions(0)=(X=-240.0,Y=-30.0,Z=5.0)   // Back 1 Driver
@@ -232,3 +243,4 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag'
 }
+

@@ -30,8 +30,8 @@ defaultproperties
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.stuh42_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.stuh42_turret_look'
     VehicleHudThreadsPosX(0)=0.37
     VehicleHudThreadsPosY=0.51
     VehicleHudThreadsScale=0.66
@@ -88,7 +88,7 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_open"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=12000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,ViewFOV=90.0)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuh42_body'
     VehicleHudOccupantsX(0)=0.44
     VehicleHudOccupantsX(1)=0.44
     VehicleHudOccupantsX(2)=0.59

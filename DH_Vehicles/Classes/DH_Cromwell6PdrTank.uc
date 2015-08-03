@@ -38,11 +38,12 @@ defaultproperties
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="body"
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Look'
-    VehicleHudThreadsPosX(0)=0.37
-    VehicleHudThreadsPosY=0.48
-    VehicleHudThreadsScale=0.7
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Look'
+    VehicleHudThreadsPosX(0)=0.35
+    VehicleHudThreadsPosX(1)=0.65
+    VehicleHudThreadsPosY=0.57
+    VehicleHudThreadsScale=1.0
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
