@@ -1238,17 +1238,29 @@ simulated function SetPlayerPosition()
 }
 
 // Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
-// Also to add in the ironsights turn speed factor if the player is controlling the MG
+// Also to apply the ironsights turn speed factor if the player is controlling the MG
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    local float   TurnSpeedFactor;
-    local rotator NewRotation;
+    local DHPlayer C;
+    local float    TurnSpeedFactor;
+    local rotator  NewRotation;
 
-    if (CanFire() && DHPlayer(Controller) != none)
+    if (CanFire())
     {
-        TurnSpeedFactor = DHPlayer(Controller).DHISTurnSpeedFactor;
-        YawChange *= TurnSpeedFactor;
-        PitchChange *= TurnSpeedFactor;
+        C = DHPlayer(Controller);
+
+        if (C != none)
+        {
+            C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
+            C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
+
+            // Apply ironsights turn speed factor
+            TurnSpeedFactor = C.DHISTurnSpeedFactor;
+            YawChange *= TurnSpeedFactor;
+            PitchChange *= TurnSpeedFactor;
+        }
+
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
     }
 
     NewRotation = Rotation;
@@ -1257,18 +1269,6 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
 
     SetRotation(NewRotation);
-
-    // Custom aim update
-    if (CanFire())
-    {
-        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-            PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
-        }
-    }
 }
 
 // Modified so we don't limit view pitch if in behind view
