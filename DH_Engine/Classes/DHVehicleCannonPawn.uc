@@ -9,6 +9,7 @@ class DHVehicleCannonPawn extends ROTankCannonPawn
 // General
 var     DHVehicleCannon     Cannon;           // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
 var     RODummyAttachment   BinocsAttachment; // decorative actor spawned locally when commander is using binoculars
+var     bool        bPlayerHasBinocs;         // on entering, records whether player has binoculars
 var     name        PlayerCameraBone;         // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     texture     AltAmmoReloadTexture;     // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
@@ -77,6 +78,10 @@ replication
         bTurretRingDamaged, bGunPivotDamaged;
 //      UnbuttonedPositionIndex;      // Matt: removed as never changes & doesn't need to be replicated
 //      bOpticsDamaged; // bOpticsLit // Matt: removed as not even used clientside
+
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        bPlayerHasBinocs;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -816,6 +821,12 @@ function KDriverEnter(Pawn P)
     {
         ClientDamageCannonOverlay();
     }
+
+    // Records whether player has binoculars
+    if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
+    {
+        bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
+    }
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero, to start facing same way as cannon, & to consolidate & optimise the Supers
@@ -891,10 +902,16 @@ simulated state EnteringVehicle
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+// Also to prevent player from moving to binoculars position if he doesn't have any binocs
 simulated function NextWeapon()
 {
     if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
     {
+        if ((DriverPositionIndex + 1) == BinocPositionIndex && !bPlayerHasBinocs) // can't go to binocs if don't have them
+        {
+            return;
+        }
+
         PendingPositionIndex = DriverPositionIndex + 1;
         ServerChangeViewPoint(true);
     }
@@ -913,12 +930,18 @@ simulated function PrevWeapon()
 // New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
 // But if player is only moving from one unexposed position to another, the server doesn't need to do this, as player can't be shot & server has no other need to play anims
 // Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
+// Also to prevent player from moving to binoculars position if he doesn't have any binocs
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
     {
         if (DriverPositionIndex < (DriverPositions.Length - 1))
         {
+            if ((DriverPositionIndex + 1) == BinocPositionIndex && !bPlayerHasBinocs) // can't go to binocs if don't have them
+            {
+                return;
+            }
+
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
