@@ -252,6 +252,31 @@ function bool FillAmmo()
     return false;
 }
 
+// Modified to avoid "accessed none" errors on Instigator
+simulated state Idle
+{
+    simulated function BeginState()
+    {
+        if (ClientState == WS_BringUp)
+        {
+            PlayIdle();
+            ClientState = WS_ReadyToFire;
+        }
+
+        // If we started sprinting during another activity, as soon as it completes start the weapon sprinting
+        if (Instigator != none && Instigator.bIsSprinting)
+        {
+            SetSprinting(true);
+        }
+
+        // Send the weapon to crawling if we started crawling during some other activity that couldn't be interrupted
+        if (Instigator != none && Instigator.bIsCrawling && CanStartCrawlMoving() && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
+            GotoState('StartCrawling');
+        }
+    }
+}
+
 // Implemented in subclasses as required
 simulated state PostFiring
 {
