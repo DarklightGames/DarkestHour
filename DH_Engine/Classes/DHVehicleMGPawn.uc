@@ -21,6 +21,13 @@ var     int         InitialPositionIndex;        // initial player position on e
 var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 
+// Binoculars
+var     int         BinocPositionIndex;          // the position index for when the commander is looking through thier binocs
+var     bool        bPlayerHasBinocs;            // on entering, records whether player has binoculars
+var     texture     BinocsOverlay;               // 1st person texture overlay to draw when in binocs position
+var     vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
+var     RODummyAttachment   BinocsAttachment;    // decorative actor spawned locally when commander is using binoculars
+
 // Gunsight
 var     float       OverlayCenterSize;           // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var     float       OverlayCenterTexStart;
@@ -38,6 +45,10 @@ var     bool        bDebugExitPositions;
 
 replication
 {
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        bPlayerHasBinocs;
+
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerToggleDebugExits; // only during development
@@ -107,6 +118,17 @@ simulated function InitializeMG()
     else
     {
         Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleMG, so lots of things are not going to work!");
+    }
+}
+
+// Modified to destroy any binoculars attachment
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (BinocsAttachment != none)
+    {
+        BinocsAttachment.Destroy();
     }
 }
 
@@ -273,8 +295,13 @@ simulated function DrawHUD(Canvas C)
         // Player is in a position where an overlay should be drawn
         if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
         {
+            // Draw binoculars overlay
+            if (DriverPositionIndex == BinocPositionIndex && BinocsOverlay != none)
+            {
+                DrawBinocsOverlay(C);
+            }
             // Draw any HUD overlay
-            if (HUDOverlay != none)
+            else if (HUDOverlay != none)
             {
                 if (!Level.IsSoftwareRendering())
                 {
@@ -329,6 +356,16 @@ simulated function DrawHUD(Canvas C)
     {
         ActivateOverlay(false);
     }
+}
+
+// New function to draw the BinocsOverlay (same as cannon pawn)
+simulated function DrawBinocsOverlay(Canvas C)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view
@@ -560,6 +597,12 @@ function KDriverEnter(Pawn P)
             MGun.HandleReload();
         }
     }
+
+    // Records whether player has binoculars
+    if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
+    {
+        bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
+    }
 }
 
 // Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim, & to consolidate & optimise the Supers)
@@ -654,10 +697,16 @@ simulated state EnteringVehicle
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+// Also to prevent player from moving to binoculars position if he doesn't have any binocs
 simulated function NextWeapon()
 {
     if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
     {
+        if ((DriverPositionIndex + 1) == BinocPositionIndex && !bPlayerHasBinocs) // can't go to binocs if don't have them
+        {
+            return;
+        }
+
         PendingPositionIndex = DriverPositionIndex + 1;
         ServerChangeViewPoint(true);
     }
@@ -676,12 +725,18 @@ simulated function PrevWeapon()
 // New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
 // But if player is only moving from one unexposed position to another, the server doesn't need to do this, as player can't be shot & server has no other need to play anims
 // Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
+// Also to prevent player from moving to binoculars position if he doesn't have any binocs
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
     {
         if (DriverPositionIndex < (DriverPositions.Length - 1))
         {
+            if ((DriverPositionIndex + 1) == BinocPositionIndex && !bPlayerHasBinocs) // can't go to binocs if don't have them
+            {
+                return;
+            }
+
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
@@ -710,7 +765,8 @@ function ServerChangeViewPoint(bool bForward)
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
 // to improve timing of FOV & camera position changes, to avoid switching mesh, FOV & camera position if in behind view,
-// & to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
+// to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong,
+// & to handle any binoculars, including to spawn/destroy a binocs attachment & add workaround for RO bug where player may play wrong animation when moving off binocs
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -746,10 +802,15 @@ simulated state ViewTransition
                 ROPawn(Driver).ToggleAuxCollision(true);
             }
 
-            // Play any transition animation for the player
+            // Play any transition animation for the player & handle any binoculars
             if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
             {
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+
+                if (DriverPositionIndex == BinocPositionIndex)
+                {
+                    HandleBinoculars(true);
+                }
             }
         }
 
@@ -804,6 +865,12 @@ simulated state ViewTransition
             }
         }
 
+        // If moving off binoculars, destroy binocs attachment & reset player's rotation & attachment positioning to defaults
+        if (LastPositionIndex == BinocPositionIndex)
+        {
+            HandleBinoculars(false);
+        }
+
         // If moving to an unexposed position, disable the player's hit detection
         if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
         {
@@ -818,6 +885,7 @@ Begin:
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position
+// Also to handle any binoculars, including to spawn/destroy a binocs attachment & add workaround for RO bug where player may play wrong animation when moving off binocs
 simulated function AnimateTransition()
 {
     if (Driver != none)
@@ -838,10 +906,19 @@ simulated function AnimateTransition()
             }
         }
 
-        // Play any transition animation for the player
+        // Play any transition animation for the player & handle any binoculars
         if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
         {
             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+
+            if (DriverPositionIndex == BinocPositionIndex)
+            {
+                HandleBinoculars(true);
+            }
+            else if (LastPositionIndex == BinocPositionIndex)
+            {
+                HandleBinoculars(false);
+            }
         }
     }
 
@@ -1024,13 +1101,22 @@ simulated state LeavingVehicle
 }
 
 // Modified to play idle animation for all modes, so other net players see things like closed hatches & also any collision stuff is re-set (including on server)
+// Also to destroy any binoculars attachment when player leaves vehicle
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
 
-    if (!bDriving && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    if (!bDriving)
     {
-        Gun.PlayAnim(Gun.BeginningIdleAnim);
+        if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+        {
+            Gun.PlayAnim(Gun.BeginningIdleAnim);
+        }
+
+        if (BinocsAttachment != none)
+        {
+            BinocsAttachment.Destroy();
+        }
     }
 }
 
@@ -1233,7 +1319,85 @@ simulated function SetPlayerPosition()
             Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
             Driver.PlayAnim(PlayerAnim);
             Driver.SetAnimFrame(1.0);
+
+            if (DriverPositionIndex == BinocPositionIndex)
+            {
+                HandleBinoculars(true);
+            }
         }
+    }
+}
+
+// New function to spawn or destroy a binoculars attachment (decorative only) & to handle adjustment to player's rotation & attachment positioning to suit binocs pose
+// Also to add a workaround for an RO bug where player may player wrong animation when moving off binocs
+// RelativeRotation & RelativeLocation are set on a server & will be replicated to net clients, but we still set them on clients so it happens instantly, without waiting for replication
+simulated function HandleBinoculars(bool bMovingOntoBinocs)
+{
+    local rotator DesiredRelativeRotation;
+    local vector  DesiredRelativeLocation;
+
+    // On binocs, remove any player rotation (DriveRot), as some MGs turn player sideways when on the gun & that's no good for the binocs pose
+    if (DriveRot != rot(0, 0, 0))
+    {
+        if (bMovingOntoBinocs)
+        {
+            DesiredRelativeRotation = rot(0, 0, 0);
+        }
+        else
+        {
+            DesiredRelativeRotation = DriveRot; // revert to default if moving off binocs
+        }
+
+        if (Driver.RelativeRotation != DesiredRelativeRotation)
+        {
+            Driver.SetRelativeRotation(DesiredRelativeRotation);
+        }
+    }
+
+    // Option to adjust player attachment positioning to suit binocs pose
+    if (BinocsDrivePos != vect(0.0, 0.0, 0.0))
+    {
+        if (bMovingOntoBinocs)
+        {
+            DesiredRelativeLocation = BinocsDrivePos + Driver.default.PrePivot;
+        }
+        else
+        {
+            DesiredRelativeLocation = DrivePos + Driver.default.PrePivot; // revert to default if moving off binocs
+        }
+
+        if (Driver.RelativeLocation != DesiredRelativeLocation)
+        {
+            Driver.SetRelativeLocation(DesiredRelativeLocation);
+        }
+    }
+
+    // Spawn binocs attachment & attach to player, or destroy if moving off binocs
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (bMovingOntoBinocs)
+        {
+            if (BinocsAttachment == none)
+            {
+                BinocsAttachment = Spawn(class'DHVehicleDecoAttachment');
+                BinocsAttachment.SetDrawType(DT_Mesh);
+                BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger');
+            }
+
+            Driver.AttachToBone(BinocsAttachment, 'weapon_rhand');
+        }
+        else if (BinocsAttachment != none)
+        {
+            BinocsAttachment.Destroy();
+        }
+    }
+
+    // Workaround for bug where player may do an odd 'arms waving' transition when coming down from the binocs position
+    // Caused by the one-way nature of RO's DriverTransitionAnim, resulting in a player unbuttoning anim, as it assumes we are moving UP to the unbuttoned position
+    // We jump straight to end of the transition anim, so it effectively become an idle anim for the new position
+    if (!bMovingOntoBinocs)
+    {
+        Driver.SetAnimFrame(1.0);
     }
 }
 
@@ -1242,25 +1406,33 @@ simulated function SetPlayerPosition()
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local DHPlayer C;
-    local float    TurnSpeedFactor;
     local rotator  NewRotation;
+    local bool     bCanFire;
 
-    if (CanFire())
+    bCanFire = CanFire();
+
+    if (bCanFire || DriverPositionIndex == BinocPositionIndex)
     {
         C = DHPlayer(Controller);
 
-        if (C != none)
+        // Modify view movement speed by the controller's ironsights turn speed factor
+        if (C!= none)
         {
-            C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
-            C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
-
-            // Apply ironsights turn speed factor
-            TurnSpeedFactor = C.DHISTurnSpeedFactor;
-            YawChange *= TurnSpeedFactor;
-            PitchChange *= TurnSpeedFactor;
+            YawChange *= C.DHISTurnSpeedFactor;
+            PitchChange *= C.DHISTurnSpeedFactor;
         }
 
-        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+        // Custom aim update
+        if (bCanFire)
+        {
+            UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+
+            if (C != none)
+            {
+                C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
+                C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
+            }
+        }
     }
 
     NewRotation = Rotation;
@@ -1528,9 +1700,41 @@ exec function ShowColMesh()
     }
 }
 
+// New debug exec to adjust BinocsDrivePos (in binoculars position, the option for a different player offset from attachment bone)
+exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    local vector OldBinocsDrivePos;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        OldBinocsDrivePos = BinocsDrivePos;
+
+        if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+        {
+            BinocsDrivePos.X = Float(NewX) / 10.0;
+            BinocsDrivePos.Y = Float(NewY) / 10.0;
+            BinocsDrivePos.Z = Float(NewZ) / 10.0;
+        }
+        else
+        {
+            BinocsDrivePos.X = NewX;
+            BinocsDrivePos.Y = NewY;
+            BinocsDrivePos.Z = NewZ;
+        }
+
+        if (DriverPositionIndex == BinocPositionIndex && Driver != none)
+        {
+            Driver.SetRelativeLocation(BinocsDrivePos + Driver.default.PrePivot);
+        }
+
+        Log(Tag @ " new BinocsDrivePos =" @ BinocsDrivePos @ "(was" @ OldBinocsDrivePos $ ")");
+    }
+}
+
 defaultproperties
 {
     UnbuttonedPositionIndex=1
+    BinocPositionIndex=-1 // none by default, so set an invalid position
     OverlayCenterSize=1.0
     MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
