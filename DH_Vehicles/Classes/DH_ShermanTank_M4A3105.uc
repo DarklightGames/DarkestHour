@@ -35,8 +35,8 @@ defaultproperties
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="Turret_placement"
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman105_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman105_turret_look'
     VehicleHudThreadsPosY=0.51
     VehicleHudThreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
@@ -96,7 +96,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Shermanm4a3e2_body'
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(2)=0.56
     VehicleHudOccupantsX(3)=0.375

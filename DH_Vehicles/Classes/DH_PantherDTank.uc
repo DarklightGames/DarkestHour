@@ -36,8 +36,8 @@ defaultproperties
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panther_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panther_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
     VehicleHudThreadsPosX(0)=0.38
     VehicleHudThreadsPosX(1)=0.63
     VehicleHudThreadsPosY=0.49
@@ -91,7 +91,8 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
-    VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panther_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
+    bVehicleHudUsesLargeTexture=true
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(2)=0.55
