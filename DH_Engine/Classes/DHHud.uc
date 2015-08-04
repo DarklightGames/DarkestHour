@@ -875,10 +875,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Widget.Tints[0] = VehicleColor;
     Widget.Tints[1] = VehicleColor;
 
-
     // Draw clock face (without numbers)
-    Widget.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
-    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
+    DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
     // Draw vehicle icon
     Widget.WidgetTexture = Vehicle.VehicleHudImage;
@@ -1072,8 +1071,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Draw clock numbers
-    Widget.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
-    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
+    DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
     // Update & draw any turret
     if (Cannon != none && VehicleHudTurret != none)
