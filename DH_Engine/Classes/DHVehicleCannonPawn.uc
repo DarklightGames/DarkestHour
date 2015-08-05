@@ -1291,10 +1291,20 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
+// Matt: modified to fix major bug where player death would mean next player who enters would find turret rotating wildly to remain facing towards a fixed point
+// Also to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
 function DriverDied()
 {
     super(Vehicle).DriverDied(); // need to skip over Super in ROVehicleWeaponPawn (& Super in VehicleWeaponPawn adds nothing)
+
+    // Added to match KDriverLeave() to fix major bug (resetting Gun.bActive is the key)
+    if (Gun != none)
+    {
+        Gun.bActive = false;
+        Gun.FlashCount = 0;
+        Gun.NetUpdateFrequency = Gun.default.NetUpdateFrequency;
+        Gun.NetPriority = Gun.default.NetPriority;
+    }
 
     if (VehicleBase != none && VehicleBase.Health > 0)
     {
