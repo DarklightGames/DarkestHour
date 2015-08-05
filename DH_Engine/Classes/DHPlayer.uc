@@ -2060,7 +2060,8 @@ exec function LeaveBody(optional bool bKeepPRI)
 
 function ServerLeaveBody(optional bool bKeepPRI)
 {
-    local Vehicle V;
+    local Vehicle           V;
+    local VehicleWeaponPawn WP;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
     {
@@ -2078,6 +2079,18 @@ function ServerLeaveBody(optional bool bKeepPRI)
             V.Throttle = 0.0;
             V.Steering = 0.0;
             V.Rise = 0.0;
+
+            WP = VehicleWeaponPawn(V);
+
+            // If player was in a VehicleWeapon, reset properties (similar to KdriverLeave & now DriverDied as well)
+            // Resetting bActive is critical, otherwise weapon swings around when vehicle is driven
+            if (WP != none && WP.Gun != none)
+            {
+                WP.Gun.bActive = false;
+                WP.Gun.FlashCount = 0;
+                WP.Gun.NetUpdateFrequency = WP.Gun.default.NetUpdateFrequency;
+                WP.Gun.NetPriority = WP.Gun.default.NetPriority;
+            }
         }
         else
         {
