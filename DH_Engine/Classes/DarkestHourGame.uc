@@ -32,6 +32,9 @@ var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         bTeamOutOfReinforcements[2];
 
+var     float                       TeamAttritionRates[2];      //The amount of reinforcements lost per second
+var     float                       TeamAttritionCounter[2];    //When this hits over 1
+
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
@@ -1677,6 +1680,7 @@ state RoundInPlay
     // Modified for DHObjectives
     function NotifyObjStateChanged()
     {
+        local DHGameReplicationInfo GRI;
         local int i, Num[2], NumReq[2], NumObj, NumObjReq;
 
         for (i = 0; i < arraycount(DHObjectives); ++i)
@@ -1710,6 +1714,15 @@ state RoundInPlay
             }
 
             NumObj++;
+        }
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            // Calculate attrition rates
+            TeamAttritionRates[ALLIES_TEAM_INDEX] = DHLevelInfo.AttritionRate * (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj) / 60.0;
+            TeamAttritionRates[AXIS_TEAM_INDEX]   = DHLevelInfo.AttritionRate * (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj) / 60.0;
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
@@ -1890,11 +1903,11 @@ state RoundInPlay
     {
         local int i, ArtilleryStrikeInt;
         local Controller P;
-        local ROGameReplicationInfo GRI;
+        local DHGameReplicationInfo GRI;
 
         global.Timer();
 
-        GRI = ROGameReplicationInfo(GameReplicationInfo);
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
 
         if (NeedPlayers() && AddBot() && RemainingBots > 0)
         {
@@ -1922,6 +1935,19 @@ state RoundInPlay
                         RestartPlayer(P);
                     }
                 }
+            }
+        }
+
+        // If team is taking attrition losses, decrement their reinforcements
+        for (i = 0; i < 2; ++i)
+        {
+            TeamAttritionCounter[i] += TeamAttritionRates[i];
+
+            if (TeamAttritionCounter[i] >= 1.0)
+            {
+                TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
+
+                GRI.DHSpawnCount[i] += TeamAttritionCounter[i] / 1.0;
             }
         }
 
