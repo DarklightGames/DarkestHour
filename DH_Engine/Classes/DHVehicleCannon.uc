@@ -95,7 +95,7 @@ simulated function PostBeginPlay()
             AttachToBone(CollisionMeshActor, YawBone);
 
             // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the turret
-            CollisionMeshActor.SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+            CollisionMeshActor.SetRelativeLocation((Location - GetBoneCoords(YawBone).Origin) << Rotation);
 
             // Finally set the static mesh for the col mesh actor
             CollisionMeshActor.SetStaticMesh(CollisionStaticMesh);
