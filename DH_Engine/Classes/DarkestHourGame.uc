@@ -1680,7 +1680,7 @@ state RoundInPlay
         TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
 
         bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
-        bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
+        bTeamOutOfReinforcements[AXIS_TEAM_INDEX] = 0;
     }
 
     // Modified for DHObjectives
