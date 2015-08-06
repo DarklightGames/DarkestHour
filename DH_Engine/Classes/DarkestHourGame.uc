@@ -1941,7 +1941,7 @@ state RoundInPlay
         }
 
         // If round time is up, the defending team wins, if any
-        if (ElapsedTime > RoundStartTime + RoundDuration)
+        if (RoundDuration != 0 && ElapsedTime > RoundStartTime + RoundDuration)
         {
             if (LevelInfo.DefendingSide == SIDE_Axis)
             {
@@ -2910,7 +2910,7 @@ function SendReinforcementMessage(int Team, int Num)
 
 function int GetRoundTime()
 {
-    return (RoundStartTime + RoundDuration) - ElapsedTime;
+    return Max(0, (RoundStartTime + RoundDuration) - ElapsedTime);
 }
 
 function SetRoundTime(int RoundTime)

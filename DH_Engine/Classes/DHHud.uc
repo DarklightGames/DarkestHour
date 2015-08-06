@@ -29,6 +29,7 @@ var SpriteWidget        MapAlliesFlagIcons[3];
 
 var localized string    LegendCarriedArtilleryRadioText;
 
+var localized string    NoTimeLimitText;
 var localized string    NeedReloadText;
 var localized string    CanReloadText;
 var localized string    AndMoreText;
@@ -2480,11 +2481,11 @@ simulated function DrawObjectives(Canvas C)
     // Update time
     if (!DHGRI.bMatchHasBegun)
     {
-        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
+        CurrentTime = Max(0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
     }
     else
     {
-        CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
+        CurrentTime = Max(0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
     }
 
     // Get player
@@ -3734,7 +3735,14 @@ simulated function DrawSpectatingHud(Canvas C)
             CurrentTime = DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime;
         }
 
-        S = default.TimeRemainingText $ GetTimeString(CurrentTime);
+        if (DHGRI.RoundDuration == 0)
+        {
+            S = default.TimeRemainingText $ default.NoTimeLimitText;
+        }
+        else
+        {
+            S = default.TimeRemainingText $ GetTimeString(CurrentTime);
+        }
 
         X = 8.0 * Scale;
         Y = 8.0 * Scale;
@@ -4315,6 +4323,7 @@ defaultproperties
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
     ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
+    NoTimeLimitText="Unlimited"
 
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"

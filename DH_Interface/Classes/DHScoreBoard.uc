@@ -193,7 +193,14 @@ simulated function UpdateScoreBoard (Canvas C)
             CurrentTime = ROGameReplicationInfo(GRI).RoundStartTime + ROGameReplicationInfo(GRI).RoundDuration - GRI.ElapsedTime;
         }
 
-        S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
+        if (ROGameReplicationInfo(GRI).RoundDuration == 0)
+        {
+            S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).default.NoTimeLimitText;
+        }
+        else
+        {
+            S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
+        }
 
         if (ROGameReplicationInfo(GRI).bShowServerIPOnScoreboard && PlayerController(Owner) != none)
         {

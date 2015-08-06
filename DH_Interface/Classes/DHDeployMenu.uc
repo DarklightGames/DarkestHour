@@ -259,15 +259,22 @@ function UpdateRoundStatus()
 
         if (!GRI.bMatchHasBegun)
         {
-            RoundTime = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+            RoundTime = Max(0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
         }
         else
         {
-            RoundTime = GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime;
+            RoundTime = Max(0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
         }
     }
 
-    l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
+    if (GRI.RoundDuration == 0)
+    {
+        l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
+    }
+    else
+    {
+        l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
+    }
 }
 
 function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
