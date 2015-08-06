@@ -1576,6 +1576,12 @@ state RoundInPlay
         SpawnCount[AXIS_TEAM_INDEX] = 0;
         SpawnCount[ALLIES_TEAM_INDEX] = 0;
 
+        TeamAttritionRates[AXIS_TEAM_INDEX] = 0;
+        TeamAttritionRates[ALLIES_TEAM_INDEX] = 0;
+
+        TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
+        TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
+
         // Arty
         GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
         GRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
@@ -1722,7 +1728,9 @@ state RoundInPlay
         {
             // Calculate attrition rates
             TeamAttritionRates[ALLIES_TEAM_INDEX] = DHLevelInfo.AttritionRate * (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj) / 60.0;
+            Log("Allied Attrition Rate:" @ TeamAttritionRates[ALLIES_TEAM_INDEX]);
             TeamAttritionRates[AXIS_TEAM_INDEX]   = DHLevelInfo.AttritionRate * (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj) / 60.0;
+            Log("Axis Attrition Rate:" @ TeamAttritionRates[AXIS_TEAM_INDEX]);
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
@@ -1945,9 +1953,11 @@ state RoundInPlay
 
             if (TeamAttritionCounter[i] >= 1.0)
             {
+                SpawnCount[i] += int(TeamAttritionCounter[i]); //actual value?
+                GRI.DHSpawnCount[i] -= int(TeamAttritionCounter[i]); //visual value?
+                //Log("Subtracting reinforcements:" @ TeamAttritionCounter[i]);
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
-
-                GRI.DHSpawnCount[i] += TeamAttritionCounter[i] / 1.0;
+                //Log("new value:" @ TeamAttritionCounter[i]);
             }
         }
 
