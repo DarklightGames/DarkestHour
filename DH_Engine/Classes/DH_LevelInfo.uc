@@ -28,18 +28,19 @@ var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
 
 //These variables need removed
-var() byte SmokeBrightnessOverride; //Used to override the lighting brightness of smoke emitters
-var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other emitters in the level
+var() byte SmokeBrightnessOverride;     //Used to override the lighting brightness of smoke emitters
+var() rangevector WindDirectionSpeed;   //Used to make smoke grenades match other emitters in the level
 
-var() sound AlliesWinsMusic; //Optional override for Allies victory music
-var() sound AxisWinsMusic; //Optional override for Axis victory music
+var() sound AlliesWinsMusic;            //Optional override for Allies victory music
+var() sound AxisWinsMusic;              //Optional override for Axis victory music
 
 var() ESpawnMode SpawnMode;
+var() int AttritionRate;                //Colin: Attrition rate defines the maximum rate of reinforcement drain when the enemy controls all objectives.
 
-var() Material LoadingScreenRef; // Used to stop loading screen image from being removed on save (not otherwise used)
-                                 // Must be set to myLevel.GUI.LoadingScreen to work!
+var() Material LoadingScreenRef;        //Used to stop loading screen image from being removed on save (not otherwise used)
+                                        //Must be set to myLevel.GUI.LoadingScreen to work!
 
-var const bool bDHDebugMode; // flag for whether debug commands can be run
+var const bool bDHDebugMode;            // flag for whether debug commands can be run
 
 singular static function bool DHDebugMode()
 {
