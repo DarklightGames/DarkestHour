@@ -1953,11 +1953,8 @@ state RoundInPlay
 
             if (TeamAttritionCounter[i] >= 1.0)
             {
-                SpawnCount[i] += int(TeamAttritionCounter[i]); //actual value?
-                GRI.DHSpawnCount[i] -= int(TeamAttritionCounter[i]); //visual value?
-                //Log("Subtracting reinforcements:" @ TeamAttritionCounter[i]);
+                ReduceReinforcements(i, TeamAttritionCounter[i]);
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
-                //Log("new value:" @ TeamAttritionCounter[i]);
             }
         }
 
@@ -2058,6 +2055,66 @@ state RoundOver
     }
 }
 
+function ReduceReinforcements(int Team, int Amount)
+{
+    local DHGameReplicationInfo GRI;
+    local bool                  bIsDefendingTeam;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Count up the spawns
+    SpawnCount[Team] += Amount;
+
+    // Update GRI with the new value
+    switch (Team)
+    {
+        case ALLIES_TEAM_INDEX:
+            GRI.DHSpawnCount[Team] = Max(0, LevelInfo.Allies.SpawnLimit - SpawnCount[Team]);
+            break;
+        case AXIS_TEAM_INDEX:
+            GRI.DHSpawnCount[Team] = Max(0, LevelInfo.Axis.SpawnLimit - SpawnCount[Team]);
+            break;
+    }
+
+    // Check for zero reinforcements
+    if (GRI.DHSpawnCount[Team] == 0)
+    {
+        Log("DHSPawnCount = 0");
+
+        if (bTeamOutOfReinforcements[Team] == 0)
+        {
+            Log("=== A team ran out of reinforcements!!!!! ===");
+
+            // Colin: Determine if player's team is defending
+            bIsDefendingTeam = (Team == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
+                               (Team == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
+
+            // Colin: Team is just now out of reinforcements.
+            bTeamOutOfReinforcements[Team] = 1;
+
+            if (bIsDefendingTeam && bTeamOutOfReinforcements[int(!bool(Team))] == 0)
+            {
+                // Colin: if this team is defending and the attackers are
+                // not out of reinforcements, set the round time to be the
+                // original round duration.
+                SetRoundTime(RoundDuration);
+            }
+            else if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || (LevelInfo.DefendingSide == SIDE_none && bTeamOutOfReinforcements[Team] == 1))
+            {
+                // Colin: If this team is attacking OR both teams are out of
+                // reinforcements, set the round time to 60 seconds.
+                Log("=== MODIFYING ROUND TIME!!! ===");
+                SetRoundTime(Min(GetRoundTime(), 60));
+            }
+        }
+    }
+}
+
 function ResetMortarTargets()
 {
     local int k;
@@ -2094,7 +2151,6 @@ function HandleReinforcements(Controller C)
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
     local float ReinforcementPercent;
-    local bool bIsDefendingTeam;
 
     PC = DHPlayer(C);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -2108,7 +2164,7 @@ function HandleReinforcements(Controller C)
     //TODO: look into improving or rewriting this, as this is garbage looking
     if (PC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
     {
-        GRI.DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
+        ReduceReinforcements(ALLIES_TEAM_INDEX, 1);
 
         ReinforcementPercent = float(GRI.DHSpawnCount[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
 
@@ -2122,7 +2178,7 @@ function HandleReinforcements(Controller C)
     }
     else if (PC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
     {
-        GRI.DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
+        ReduceReinforcements(AXIS_TEAM_INDEX, 1);
 
         ReinforcementPercent = float(GRI.DHSpawnCount[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
 
@@ -2139,33 +2195,6 @@ function HandleReinforcements(Controller C)
     {
         PC.NotifyOfMapInfoChange();
         PC.bFirstRoleAndTeamChange = true;
-    }
-
-    if (GRI.DHSpawnCount[PC.PlayerReplicationInfo.Team.TeamIndex] == 0)
-    {
-        if (bTeamOutOfReinforcements[PC.PlayerReplicationInfo.Team.TeamIndex] == 0)
-        {
-            // Colin: Determine if player's team is defending
-            bIsDefendingTeam = (PC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
-                               (PC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
-
-            // Colin: Team is just now out of reinforcements.
-            bTeamOutOfReinforcements[PC.PlayerReplicationInfo.Team.TeamIndex] = 1;
-
-            if (bIsDefendingTeam && bTeamOutOfReinforcements[int(!bool(PC.PlayerReplicationInfo.Team.TeamIndex))] == 0)
-            {
-                // Colin: If this team is defending and the attackers are
-                // not out of reinforcements, set the round time to be the
-                // original round duration.
-                SetRoundTime(RoundDuration);
-            }
-            else if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || (LevelInfo.DefendingSide == SIDE_none && bTeamOutOfReinforcements[int(!bool(PC.PlayerReplicationInfo.Team.TeamIndex))] == 1))
-            {
-                // Colin: If this team is attacking OR both teams are out of
-                // reinforcements, set the round time to 60 seconds.
-                SetRoundTime(Min(GetRoundTime(), 60));
-            }
-        }
     }
 }
 
@@ -2516,6 +2545,29 @@ function ChooseWinner()
     local int i, Num[2], NumReq[2], AxisScore, AlliedScore;
     local float AxisReinforcementsPercent, AlliedReinforcementsPercent;
 
+    AxisReinforcementsPercent = (1 - (float(SpawnCount[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit)) * 100;
+    AlliedReinforcementsPercent = (1 - (float(SpawnCount[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit)) * 100;
+
+    if (DHLevelInfo.AttritionRate > 0.0)
+    {
+        // This game is using attrition; therefore, the winner is the one with higher reinforcements (no concern over objective counts)
+        if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
+        {
+            EndRound(AXIS_TEAM_INDEX);
+            return;
+        }
+        else if (AlliedReinforcementsPercent > AxisReinforcementsPercent)
+        {
+            EndRound(ALLIES_TEAM_INDEX);
+            return;
+        }
+        else // Both teams have same reinforcements so its a tie "No Decisive Victory"
+        {
+            EndRound(2);
+            return;
+        }
+    }
+
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i] == None)
@@ -2597,9 +2649,6 @@ function ChooseWinner()
             return;
         }
     }
-
-    AxisReinforcementsPercent = (1 - (float(SpawnCount[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit)) * 100;
-    AlliedReinforcementsPercent = (1 - (float(SpawnCount[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit)) * 100;
 
     if( AxisReinforcementsPercent != AlliedReinforcementsPercent )
     {
@@ -2949,6 +2998,13 @@ function int GetRoundTime()
     return Max(0, (RoundStartTime + RoundDuration) - ElapsedTime);
 }
 
+// Theel:
+// TODO:
+// Okay so this function doesn't seem to be working, of course I've put in some extra lines in hopes that it'd work
+// Known issue might be the new change to allowing Round Duration to be 0
+// However this function needs to also have an optional bool to indicate to players that the round time was modified, similiar to the level actor functionality
+// This will hopefully prevent people from wondering why the round suddenly ends
+// Once this is functional, domination + reinf attrition is working in SP (need to test MP still)
 function SetRoundTime(int RoundTime)
 {
     local DHGameReplicationInfo GRI;
@@ -2963,9 +3019,11 @@ function SetRoundTime(int RoundTime)
     {
         ElapsedTimeDelta = (GRI.RoundDuration + GRI.RoundStartTime - RoundTime) - ElapsedTime;
 
+        RoundDuration = RoundTime;
         ElapsedTime += ElapsedTimeDelta;
         LastReinforcementTime[AXIS_TEAM_INDEX] += ElapsedTimeDelta;
         LastReinforcementTime[ALLIES_TEAM_INDEX] += ElapsedTimeDelta;
+        GRI.RoundDuration = RoundTime;
         GRI.ElapsedTime += ElapsedTimeDelta;
         GRI.ElapsedQuarterMinute = GRI.ElapsedTime;
 
