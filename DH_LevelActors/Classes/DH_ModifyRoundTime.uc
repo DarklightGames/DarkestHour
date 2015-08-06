@@ -61,7 +61,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     //If we want to broadcast the round time modification.
     if (bShowMessage)
+    {
         Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', 0, none, none, self);
+    }
 }
 
 defaultproperties

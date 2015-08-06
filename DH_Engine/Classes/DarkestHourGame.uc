@@ -1976,18 +1976,8 @@ state RoundInPlay
         // If round time is up, the defending team wins, if any
         if (RoundDuration != 0 && ElapsedTime > RoundStartTime + RoundDuration)
         {
-            if (LevelInfo.DefendingSide == SIDE_Axis)
-            {
-                EndRound(AXIS_TEAM_INDEX);
-            }
-            else if (LevelInfo.DefendingSide == SIDE_Allies)
-            {
-                EndRound(ALLIES_TEAM_INDEX);
-            }
-            else
-            {
-                ChooseWinner();
-            }
+            Level.Game.Broadcast(self, "The battle ended because time ran out", 'Say');
+            ChooseWinner();
         }
     }
 }
@@ -2084,12 +2074,8 @@ function ReduceReinforcements(int Team, int Amount)
     // Check for zero reinforcements
     if (GRI.DHSpawnCount[Team] == 0)
     {
-        Log("DHSPawnCount = 0");
-
         if (bTeamOutOfReinforcements[Team] == 0)
         {
-            Log("=== A team ran out of reinforcements!!!!! ===");
-
             // Colin: Determine if player's team is defending
             bIsDefendingTeam = (Team == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
                                (Team == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
@@ -2104,12 +2090,19 @@ function ReduceReinforcements(int Team, int Amount)
                 // original round duration.
                 SetRoundTime(RoundDuration);
             }
-            else if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || (LevelInfo.DefendingSide == SIDE_none && bTeamOutOfReinforcements[Team] == 1))
+            else if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
             {
-                // Colin: If this team is attacking OR both teams are out of
-                // reinforcements, set the round time to 60 seconds.
-                Log("=== MODIFYING ROUND TIME!!! ===");
-                SetRoundTime(Min(GetRoundTime(), 60));
+                // Colin: if this team is attacking OR there is no defending side
+                // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
+                if (RoundDuration == 0 && DHLevelInfo.AttritionRate > 0.0)
+                {
+                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero with attrition", 'Say');
+                    Choosewinner();
+                }
+                else
+                {
+                    SetRoundTime(Min(GetRoundTime(), 60));
+                }
             }
         }
     }
@@ -2548,26 +2541,46 @@ function ChooseWinner()
     AxisReinforcementsPercent = (1 - (float(SpawnCount[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit)) * 100;
     AlliedReinforcementsPercent = (1 - (float(SpawnCount[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit)) * 100;
 
+    // Attrition check
+    // Check to see who has more reinforcements
     if (DHLevelInfo.AttritionRate > 0.0)
     {
         // This game is using attrition; therefore, the winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
         {
+            Level.Game.Broadcast(self, "The Axis won the battle because they have more reinforcements", 'Say');
             EndRound(AXIS_TEAM_INDEX);
             return;
         }
         else if (AlliedReinforcementsPercent > AxisReinforcementsPercent)
         {
+            Level.Game.Broadcast(self, "The Allies won the battle because they have more reinforcements", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
             return;
         }
         else // Both teams have same reinforcements so its a tie "No Decisive Victory"
         {
+            Level.Game.Broadcast(self, "Neither side won the battle because they have equal reinforcements", 'Say');
             EndRound(2);
             return;
         }
     }
 
+    // Attack/Defend check
+    // Check to see if a defending side won (this is most common type of win)
+    if (LevelInfo.DefendingSide == SIDE_Axis)
+    {
+        Level.Game.Broadcast(self, "The defending Axis won the battle because they still hold an objective", 'Say');
+        EndRound(AXIS_TEAM_INDEX);
+    }
+    else if (LevelInfo.DefendingSide == SIDE_Allies)
+    {
+        Level.Game.Broadcast(self, "The defending Allies won the battle because they still hold an objective", 'Say');
+        EndRound(ALLIES_TEAM_INDEX);
+    }
+
+    // Attack/Attack check
+    // Count objectives (required and total)
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i] == None)
@@ -2594,15 +2607,18 @@ function ChooseWinner()
         }
     }
 
+    // Side with more required objectives wins, if equal, then total objectives, if equal then continues
     if( NumReq[AXIS_TEAM_INDEX] != NumReq[ALLIES_TEAM_INDEX] )
     {
         if( NumReq[AXIS_TEAM_INDEX] > NumReq[ALLIES_TEAM_INDEX] )
         {
+            Level.Game.Broadcast(self, "The Axis won the battle because they control a greater number of crucial objectives", 'Say');
             EndRound(AXIS_TEAM_INDEX);
             return;
         }
         else
         {
+            Level.Game.Broadcast(self, "The Allies won the battle because they control a greater number of crucial objectives", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
             return;
         }
@@ -2611,16 +2627,19 @@ function ChooseWinner()
     {
         if( Num[AXIS_TEAM_INDEX] > Num[ALLIES_TEAM_INDEX] )
         {
+            Level.Game.Broadcast(self, "The Axis won the battle because they control a greater number of objectives", 'Say');
             EndRound(AXIS_TEAM_INDEX);
             return;
         }
         else
         {
+            Level.Game.Broadcast(self, "The Allies won the battle because they control a greater number of objectives", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
             return;
         }
     }
 
+    // Get team score (combined player score)
     for (C = Level.ControllerList; C != None; C = C.NextController)
     {
         if (C.PlayerReplicationInfo != None && C.PlayerReplicationInfo.Team != None )
@@ -2636,35 +2655,42 @@ function ChooseWinner()
         }
     }
 
+    // Highest score wins, if equal continue
     if( AxisScore != AlliedScore )
     {
         if( AxisScore > AlliedScore )
         {
+            Level.Game.Broadcast(self, "The Axis won the battle because they have a higher score than the Allies", 'Say');
             EndRound(AXIS_TEAM_INDEX);
             return;
         }
         else
         {
+            Level.Game.Broadcast(self, "The Allies won the battle because they have a higher score than the Axis", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
             return;
         }
     }
 
+    // Highest reinforcements percent wins, if equal continue
     if( AxisReinforcementsPercent != AlliedReinforcementsPercent )
     {
         if( AxisReinforcementsPercent > AlliedReinforcementsPercent )
         {
+            Level.Game.Broadcast(self, "The Axis won the battle because they have more reinforcements", 'Say');
             EndRound(AXIS_TEAM_INDEX);
             return;
         }
         else
         {
+            Level.Game.Broadcast(self, "The Allies won the battle because they have more reinforcements", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
             return;
         }
     }
 
-    // If by some crazy turn of events everything above this is still equal, then STILL do a "No Decisive Victory"
+    // If by some crazy turn of events everything above this is still equal, then do a "No Decisive Victory"
+    Level.Game.Broadcast(self, "No clear victor because both sides have equal Objectives, Score, Reinforcements, and there is no attrition", 'Say');
     EndRound(2);
 }
 
@@ -3005,7 +3031,7 @@ function int GetRoundTime()
 // However this function needs to also have an optional bool to indicate to players that the round time was modified, similiar to the level actor functionality
 // This will hopefully prevent people from wondering why the round suddenly ends
 // Once this is functional, domination + reinf attrition is working in SP (need to test MP still)
-function SetRoundTime(int RoundTime)
+function SetRoundTime(int RoundTime, optional bool bNotifyPlayers)
 {
     local DHGameReplicationInfo GRI;
     local int ElapsedTimeDelta;
@@ -3019,11 +3045,11 @@ function SetRoundTime(int RoundTime)
     {
         ElapsedTimeDelta = (GRI.RoundDuration + GRI.RoundStartTime - RoundTime) - ElapsedTime;
 
-        RoundDuration = RoundTime;
+        //RoundDuration = RoundTime;
         ElapsedTime += ElapsedTimeDelta;
         LastReinforcementTime[AXIS_TEAM_INDEX] += ElapsedTimeDelta;
         LastReinforcementTime[ALLIES_TEAM_INDEX] += ElapsedTimeDelta;
-        GRI.RoundDuration = RoundTime;
+        //GRI.RoundDuration = RoundTime;
         GRI.ElapsedTime += ElapsedTimeDelta;
         GRI.ElapsedQuarterMinute = GRI.ElapsedTime;
 
@@ -3051,6 +3077,12 @@ function SetRoundTime(int RoundTime)
             {
                 PC.NextSpawnTime += ElapsedTimeDelta;
             }
+        }
+
+        if (bNotifyPlayers)
+        {
+            //Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', 0, none, none, self);
+            // Theel TODO: Add notification for all players that round time was modified
         }
     }
 }
