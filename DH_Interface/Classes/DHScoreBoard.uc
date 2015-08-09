@@ -229,10 +229,7 @@ simulated function UpdateScoreBoard (Canvas C)
 
     Y += CellHeight;
 
-    if (myPRI.Team != none && myPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
-    {
-        DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).DHSpawnCount[0]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    }
+    DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).DHSpawnCount[0]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
 
     if (GRI.RoundLimit != 0)
     {
@@ -413,10 +410,7 @@ simulated function UpdateScoreBoard (Canvas C)
     DrawCell(C, TeamNameAllies @ "-" @ ROGameReplicationInfo(GRI).UnitName[1], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
     Y += CellHeight;
 
-    if (myPRI.Team != none && myPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).DHSpawnCount[1]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    }
+    DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).DHSpawnCount[1]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
 
     if (GRI.RoundLimit != 0)
     {
