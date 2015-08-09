@@ -85,6 +85,7 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
     Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int2'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll'
     SoundVolume=130
     SoundRadius=200.0
 }

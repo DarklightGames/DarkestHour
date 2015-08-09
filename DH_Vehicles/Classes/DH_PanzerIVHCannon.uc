@@ -112,6 +112,7 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_armor_camo1'
     Skins(2)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
     SoundVolume=130
     SoundRadius=200.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'

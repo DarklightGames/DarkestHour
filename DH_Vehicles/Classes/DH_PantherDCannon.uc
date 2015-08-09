@@ -110,6 +110,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll'
     SoundVolume=120
     SoundRadius=300.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'

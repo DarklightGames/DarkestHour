@@ -64,6 +64,7 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.Achilles_turret_coll'
     SoundVolume=80
     SoundRadius=300.0
 }

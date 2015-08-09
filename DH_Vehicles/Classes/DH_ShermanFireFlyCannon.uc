@@ -99,6 +99,7 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_turret_Col'
     SoundVolume=130
     SoundRadius=200.0
 }

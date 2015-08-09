@@ -102,6 +102,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell6pdr_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell6pdr_turret_Coll'
     SoundVolume=130
     SoundRadius=300.0
 }
