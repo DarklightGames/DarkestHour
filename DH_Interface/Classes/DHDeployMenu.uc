@@ -64,6 +64,8 @@ var DHPlayer                                PC;
 var localized   string                      NoneText;
 var localized   string                      SelectRoleText;
 var localized   string                      SelectSpawnPointText;
+var localized   string                      DeployInTimeText;
+var localized   string                      DeployNowText;
 
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -451,7 +453,14 @@ function string GetStatusText()
 
     SpawnTime = Max(0, PC.GetNextSpawnTime(RI, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject()))) - GRI.ElapsedTime);
 
-    return class'DHLib'.static.GetDurationString(Max(0, SpawnTime), "m:ss");
+    if (SpawnTime > 0)
+    {
+        return Repl(default.DeployInTimeText, "{0}", class'DHLib'.static.GetDurationString(SpawnTime, "m:ss"));
+    }
+    else
+    {
+        return default.DeployNowText;
+    }
 }
 
 function PopulateVehicles()
@@ -1747,6 +1756,9 @@ defaultproperties
     NoneText="None"
     SelectRoleText="Select a role"
     SelectSpawnPointText="Select a spawn point"
+    DeployInTimeText="Press Continue to deploy ({0})"
+    DeployNowText="Press Continue to deploy now!"
+
     bButtonsEnabled=true
 
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
