@@ -54,6 +54,7 @@ var MortarTarget        AlliedMortarTargets[MORTAR_TARGETS_MAX];
 var MortarTarget        GermanMortarTargets[MORTAR_TARGETS_MAX];
 
 var int                 DHSpawnCount[2];
+var float               AttritionRate[2];
 
 // Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
 const VEHICLE_POOLS_MAX = 32;
@@ -109,7 +110,8 @@ replication
         SpawnPointIsActives,
         SpawnVehicles,
         MaxTeamVehicles,
-        DHObjectives;
+        DHObjectives,
+        AttritionRate;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;

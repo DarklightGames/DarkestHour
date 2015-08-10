@@ -32,7 +32,6 @@ var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         bTeamOutOfReinforcements[2];
 
-var     float                       TeamAttritionRates[2];      //The amount of reinforcements lost per second
 var     float                       TeamAttritionCounter[2];    //When this hits over 1
 
 // Overridden to make new clamp of MaxPlayers from 64 to 128
@@ -1576,8 +1575,8 @@ state RoundInPlay
         SpawnCount[AXIS_TEAM_INDEX] = 0;
         SpawnCount[ALLIES_TEAM_INDEX] = 0;
 
-        TeamAttritionRates[AXIS_TEAM_INDEX] = 0;
-        TeamAttritionRates[ALLIES_TEAM_INDEX] = 0;
+        GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
+        GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
 
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
@@ -1727,10 +1726,8 @@ state RoundInPlay
         if (GRI != none)
         {
             // Calculate attrition rates
-            TeamAttritionRates[ALLIES_TEAM_INDEX] = DHLevelInfo.AttritionRate * (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj) / 60.0;
-            Log("Allied Attrition Rate:" @ TeamAttritionRates[ALLIES_TEAM_INDEX]);
-            TeamAttritionRates[AXIS_TEAM_INDEX]   = DHLevelInfo.AttritionRate * (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj) / 60.0;
-            Log("Axis Attrition Rate:" @ TeamAttritionRates[AXIS_TEAM_INDEX]);
+            GRI.AttritionRate[ALLIES_TEAM_INDEX] = DHLevelInfo.AttritionRate * (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj) / 60.0;
+            GRI.AttritionRate[AXIS_TEAM_INDEX]   = DHLevelInfo.AttritionRate * (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj) / 60.0;
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
@@ -1949,7 +1946,7 @@ state RoundInPlay
         // If team is taking attrition losses, decrement their reinforcements
         for (i = 0; i < 2; ++i)
         {
-            TeamAttritionCounter[i] += TeamAttritionRates[i];
+            TeamAttritionCounter[i] += GRI.AttritionRate[i];
 
             if (TeamAttritionCounter[i] >= 1.0)
             {

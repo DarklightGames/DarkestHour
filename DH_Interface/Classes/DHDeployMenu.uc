@@ -82,6 +82,9 @@ var             bool                        bButtonsEnabled;
 
 var             material                    VehicleNoneMaterial;
 
+var             color                       WhiteColor;
+var             color                       RedColor;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -257,6 +260,17 @@ function UpdateRoundStatus()
 
     if (GRI != none)
     {
+        if (GRI.AttritionRate[CurrentTeam] > 0.0)
+        {
+            l_Reinforcements.TextColor = default.RedColor;
+            i_Reinforcements.ImageColor = default.RedColor;
+        }
+        else
+        {
+            l_Reinforcements.TextColor = default.WhiteColor;
+            i_Reinforcements.ImageColor = default.WhiteColor;
+        }
+
         l_Reinforcements.Caption = string(GRI.DHSpawnCount[CurrentTeam]);
 
         if (!GRI.bMatchHasBegun)
@@ -267,15 +281,15 @@ function UpdateRoundStatus()
         {
             RoundTime = Max(0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
         }
-    }
 
-    if (GRI.RoundDuration == 0)
-    {
-        l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
-    }
-    else
-    {
-        l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
+        if (GRI.RoundDuration == 0)
+        {
+            l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
+        }
+        else
+        {
+            l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
+        }
     }
 }
 
@@ -1205,6 +1219,30 @@ function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optio
     }
 }
 
+function bool InternalOnPreDraw(Canvas C)
+{
+    local PlayerController PC;
+    local float AttritionRate;
+
+    PC =  PlayerOwner();
+
+    if (GRI != none && PC != none)
+    {
+        AttritionRate = GRI.AttritionRate[PC.GetTeamNum()];
+
+        if (AttritionRate > 0.0)
+        {
+            i_Reinforcements.ImageColor.A = byte((Cos(2.0 * Pi * AttritionRate * PC.Level.TimeSeconds) * 128.0) + 128.0);
+        }
+        else
+        {
+            i_Reinforcements.ImageColor.A = 255;
+        }
+    }
+
+    return super.OnPreDraw(C);
+}
+
 defaultproperties
 {
     SpawnPointIndex=255
@@ -1763,4 +1801,9 @@ defaultproperties
 
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
     NextChangeTeamTime=0.0
+
+    WhiteColor=(R=255,G=255,B=255,A=255)
+    RedColor=(R=255,G=0,B=0,A=255)
+
+    OnPreDraw=InternalOnPreDraw
 }
