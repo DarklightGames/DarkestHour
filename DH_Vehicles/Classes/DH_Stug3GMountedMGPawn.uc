@@ -11,17 +11,6 @@ function bool CanFire()
     return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex);
 }
 
-// Modified to do null UpdateSpecialCustomAim(), otherwise MG faces wrong direction when player enters in buttoned up position, not controlling external MG
-simulated state EnteringVehicle
-{
-    simulated function HandleEnter()
-    {
-        super.HandleEnter();
-
-        UpdateSpecialCustomAim(0.01, 0.0, 0.0);
-    }
-}
-
 defaultproperties
 {
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn

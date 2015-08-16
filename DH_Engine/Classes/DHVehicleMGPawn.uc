@@ -1411,38 +1411,38 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
     }
 }
 
-// Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
-// Also to apply the ironsights turn speed factor if the player is controlling the MG
+// Modified to update custom aim, & to stop player from moving the MG if he's not in a position where he can control the MG
+// Also to apply the ironsights turn speed factor if the player is controlling the MG or is using binoculars
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local DHPlayer C;
     local rotator  NewRotation;
     local bool     bCanFire;
 
+    C = DHPlayer(Controller);
     bCanFire = CanFire();
 
-    if (bCanFire || DriverPositionIndex == BinocPositionIndex)
+    // Modify view movement speed by the controller's ironsights turn speed factor
+    if ((bCanFire || DriverPositionIndex == BinocPositionIndex) && C != none)
     {
-        C = DHPlayer(Controller);
+        YawChange *= C.DHISTurnSpeedFactor;
+        PitchChange *= C.DHISTurnSpeedFactor;
+    }
 
-        // Modify view movement speed by the controller's ironsights turn speed factor
-        if (C!= none)
-        {
-            YawChange *= C.DHISTurnSpeedFactor;
-            PitchChange *= C.DHISTurnSpeedFactor;
-        }
+    // Custom aim updates
+    if (bCanFire)
+    {
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+    }
+    else
+    {
+        UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0); // stops player moving MG if not in a position where he can control it (but 'null' update still required)
+    }
 
-        // Custom aim update
-        if (bCanFire)
-        {
-            UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-            if (C != none)
-            {
-                C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
-                C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
-            }
-        }
+    if (C != none)
+    {
+        C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 
     NewRotation = Rotation;
