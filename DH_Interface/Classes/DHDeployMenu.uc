@@ -82,7 +82,6 @@ var             bool                        bButtonsEnabled;
 
 var             material                    VehicleNoneMaterial;
 
-var             color                       WhiteColor;
 var             color                       RedColor;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -1221,10 +1220,7 @@ function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optio
 
 function bool InternalOnPreDraw(Canvas C)
 {
-    local PlayerController PC;
     local float AttritionRate;
-
-    PC =  PlayerOwner();
 
     if (GRI != none && PC != none)
     {
