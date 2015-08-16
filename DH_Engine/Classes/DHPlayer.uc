@@ -863,7 +863,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
             if (GRI.AlliedMortarTargets[i].Controller == none ||
                 GRI.AlliedMortarTargets[i].Controller == self)
             {
-                GRI.GermanMortarTargets[i].bIsActive = true;
+                GRI.AlliedMortarTargets[i].bIsActive = true;
                 GRI.AlliedMortarTargets[i].Controller = self;
                 GRI.AlliedMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
