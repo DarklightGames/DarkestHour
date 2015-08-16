@@ -2652,8 +2652,8 @@ function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
     self.bIsInSpawnMenu = bIsInSpawnMenu;
 }
 
-// Matt: just added Begin: label, to avoid "label not found" error on calls to ClientGotoState('Spectating', 'Begin')
-state Spectating
+// Matt: just added Begin: label, to avoid "label not found" error on ClientGotoState calls to send client to state 'Spectating' or 'PlayerWaiting' (both child states of this)
+state BaseSpectating
 {
 Begin:
 }
