@@ -40,6 +40,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
+    bExternallyLoadedMG=true
     GunClass=class'DH_Vehicles.DH_StuH42MountedMG'
     bHasAltFire=false
     CameraBone="loader_cam"

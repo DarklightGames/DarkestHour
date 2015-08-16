@@ -8,8 +8,11 @@ class DH_StuH42MountedMG extends DHVehicleMG;
 defaultproperties
 {
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
+    ReloadSounds[0]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // differs from defaults because uses ammo drums & not belts
+    ReloadSounds[1]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
+    ReloadSounds[2]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
+    ReloadSounds[3]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload04_170',Duration=1.34)
     FireAttachBone="gunner_int"
     FireEffectOffset=(X=0.0,Y=0.0,Z=5.0)
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'

@@ -7,7 +7,6 @@ class DH_ShermanMountedMG_M4A176W extends DHVehicleMG;
 
 defaultproperties
 {
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=6
     FireAttachBone="mg_yaw"
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'

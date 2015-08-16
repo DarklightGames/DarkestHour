@@ -7,7 +7,6 @@ class DH_TigerMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7

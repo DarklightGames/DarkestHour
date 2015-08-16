@@ -8,38 +8,18 @@ class DH_BrenCarrierMGPawn extends DHVehicleMGPawn;
 // Modified to better suit the curved magazine of the bren gun
 function float GetAmmoReloadState()
 {
-    local float ProportionOfReloadRemaining;
-
     if (MGun != none)
     {
-        if (MGun.ReadyToFire(false))
+        switch (MGun.ReloadState)
         {
-            return 0.0;
-        }
-        else if (MGun.bReloading)
-        {
-            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
+            case MG_ReadyToFire:    return 0.00;
 
-            if (ProportionOfReloadRemaining >= 0.75)
-            {
-                return 1.0;
-            }
-            else if (ProportionOfReloadRemaining >= 0.5)
-            {
-                return 0.67;
-            }
-            else if (ProportionOfReloadRemaining >= 0.25)
-            {
-                return 0.5;
-            }
-            else
-            {
-                return 0.35;
-            }
-        }
-        else
-        {
-            return 1.0;
+            case MG_Waiting:
+            case MG_Empty:
+            case MG_ReloadedPart1:  return 1.00;
+            case MG_ReloadedPart2:  return 0.67;
+            case MG_ReloadedPart3:  return 0.50;
+            case MG_ReloadedPart4:  return 0.35;
         }
     }
 }

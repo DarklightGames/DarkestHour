@@ -10,7 +10,10 @@ defaultproperties
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     NumMags=8
     HUDOverlayReloadAnim="Reloads"
-    ReloadDuration=6.7
+    ReloadSounds[0]=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
+    ReloadSounds[1]=(Sound=none,Duration=1.52)
+    ReloadSounds[2]=(Sound=none,Duration=2.40)
+    ReloadSounds[3]=(Sound=none,Duration=1.34)
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
