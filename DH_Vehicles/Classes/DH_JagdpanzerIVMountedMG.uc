@@ -7,7 +7,6 @@ class DH_JagdpanzerIVMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
     FireAttachBone="mg_yaw"
     TracerProjectileClass=class'DH_MG42VehicleTracerBullet'

@@ -863,7 +863,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
             if (GRI.AlliedMortarTargets[i].Controller == none ||
                 GRI.AlliedMortarTargets[i].Controller == self)
             {
-                GRI.GermanMortarTargets[i].bIsActive = true;
+                GRI.AlliedMortarTargets[i].bIsActive = true;
                 GRI.AlliedMortarTargets[i].Controller = self;
                 GRI.AlliedMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
@@ -2652,8 +2652,8 @@ function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
     self.bIsInSpawnMenu = bIsInSpawnMenu;
 }
 
-// Matt: just added Begin: label, to avoid "label not found" error on calls to ClientGotoState('Spectating', 'Begin')
-state Spectating
+// Matt: just added Begin: label, to avoid "label not found" error on ClientGotoState calls to send client to state 'Spectating' or 'PlayerWaiting' (both child states of this)
+state BaseSpectating
 {
 Begin:
 }

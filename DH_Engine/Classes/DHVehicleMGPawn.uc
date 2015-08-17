@@ -8,18 +8,13 @@ class DHVehicleMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-// General
 var     DHVehicleMG MGun;                        // just a reference to the DH MG actor, for convenience & to avoid lots of casts
-var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
-var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
-var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
-var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
-var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
 
 // Position stuff
 var     int         InitialPositionIndex;        // initial player position on entering
 var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
+var     bool        bExternallyLoadedMG;         // player must be unbuttoned to load MG
 
 // Binoculars
 var     int         BinocPositionIndex;          // the position index for when the commander is looking through thier binocs
@@ -34,6 +29,13 @@ var     float       OverlayCenterTexStart;
 var     float       OverlayCenterTexSize;
 var     float       OverlayCorrectionX;
 var     float       OverlayCorrectionY;
+
+// Display
+var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
+var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
+var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
+var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
+var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
@@ -453,7 +455,7 @@ function Fire(optional float F)
             Gun.ClientStartFire(Controller, false);
         }
     }
-    else if (MGun != none && !MGun.bReloading)
+    else if (MGun != none && (MGun.ReloadState == MG_Waiting || MGun.bReloadPaused)) // no dry-fire effect if actively reloading
     {
         Gun.ShakeView(false);
         PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5,, 25.0,, true);
@@ -480,38 +482,18 @@ function bool ResupplyAmmo()
 // New function, used by HUD to show coaxial MG reload progress, like the cannon reload
 function float GetAmmoReloadState()
 {
-    local float ProportionOfReloadRemaining;
-
     if (MGun != none)
     {
-        if (MGun.ReadyToFire(false))
+        switch (MGun.ReloadState)
         {
-            return 0.0;
-        }
-        else if (MGun.bReloading)
-        {
-            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
+            case MG_ReadyToFire:    return 0.00;
 
-            if (ProportionOfReloadRemaining >= 0.75)
-            {
-                return 1.0;
-            }
-            else if (ProportionOfReloadRemaining >= 0.5)
-            {
-                return 0.65;
-            }
-            else if (ProportionOfReloadRemaining >= 0.25)
-            {
-                return 0.45;
-            }
-            else
-            {
-                return 0.25;
-            }
-        }
-        else
-        {
-            return 1.0; // must be totally out of ammo, so HUD will draw ammo icon all in red to indicate that MG can't be fired
+            case MG_Waiting:
+            case MG_Empty:
+            case MG_ReloadedPart1:  return 1.00;
+            case MG_ReloadedPart2:  return 0.75;
+            case MG_ReloadedPart3:  return 0.50;
+            case MG_ReloadedPart4:  return 0.25;
         }
     }
 }
@@ -572,11 +554,11 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified so that if MG is reloading when player enters, we update the reload start time, or if MG is out of ammo, we try to start a reload
-// Also to use InitialPositionIndex instead of assuming start in position zero
+// Modified so if MG is not loaded, to try to start a reload or resume any previously paused reload
+// Also to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
 function KDriverEnter(Pawn P)
 {
-    local float PercentageOfReloadDone;
+    local bool bNotLocallyControlled;
 
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
@@ -585,27 +567,26 @@ function KDriverEnter(Pawn P)
 
     if (MGun != none)
     {
-        // If MG is reloading, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
-        if (MGun.bReloading)
+        bNotLocallyControlled = !IsLocallyControlled(); // means a dedicated server, or a listen server with another net player controlling this MG
+
+        if (MGun.ReloadState != MG_ReadyToFire)
         {
-            PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
-            MGun.ClientHandleReload(PercentageOfReloadDone);
+            MGun.TryToReload(false, bNotLocallyControlled); // if not locally controlled, TryToReload avoids calling ClientSetReloadState if starting new reload, as gets called next anyway
         }
-        // If MG is out of ammo, try to start a reload
-        else if (!MGun.HasAmmo(0))
+
+        if (bNotLocallyControlled) // a server passes reload state to net client & tells it to start a reload timer
         {
-            MGun.HandleReload();
+            MGun.ClientSetReloadState(MGun.ReloadState);
         }
     }
 
-    // Records whether player has binoculars
     if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
     {
         bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
     }
 }
 
-// Modified to use InitialPositionIndex instead of assuming start in position zero, & to match rotation to MG's aim, & to consolidate & optimise the Supers)
+// Modified to use InitialPositionIndex instead of assuming position zero, to match rotation to MG's aim, to resume any paused MG reload, & to consolidate & optimise the Supers
 // Matt: also to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes below)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
@@ -764,7 +745,7 @@ function ServerChangeViewPoint(bool bForward)
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
-// to improve timing of FOV & camera position changes, to avoid switching mesh, FOV & camera position if in behind view,
+// to improve timing of FOV & camera position changes, to avoid switching mesh, FOV & camera position if in behind view, to start/resume reload due to position change,
 // to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong,
 // & to handle any binoculars, including to spawn/destroy a binocs attachment & add workaround for RO bug where player may play wrong animation when moving off binocs
 simulated state ViewTransition
@@ -875,6 +856,12 @@ simulated state ViewTransition
         if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
         {
             ROPawn(Driver).ToggleAuxCollision(false);
+        }
+
+        // If MG is not loaded, try to start reloading or resume any previously paused reload
+        if (MGun != none && (MGun.ReloadState == MG_Waiting || MGun.bReloadPaused))
+        {
+            MGun.TryToReload(true);
         }
     }
 
@@ -1411,38 +1398,38 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
     }
 }
 
-// Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
-// Also to apply the ironsights turn speed factor if the player is controlling the MG
+// Modified to update custom aim, & to stop player from moving the MG if he's not in a position where he can control the MG
+// Also to apply the ironsights turn speed factor if the player is controlling the MG or is using binoculars
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local DHPlayer C;
     local rotator  NewRotation;
     local bool     bCanFire;
 
+    C = DHPlayer(Controller);
     bCanFire = CanFire();
 
-    if (bCanFire || DriverPositionIndex == BinocPositionIndex)
+    // Modify view movement speed by the controller's ironsights turn speed factor
+    if ((bCanFire || DriverPositionIndex == BinocPositionIndex) && C != none)
     {
-        C = DHPlayer(Controller);
+        YawChange *= C.DHISTurnSpeedFactor;
+        PitchChange *= C.DHISTurnSpeedFactor;
+    }
 
-        // Modify view movement speed by the controller's ironsights turn speed factor
-        if (C!= none)
-        {
-            YawChange *= C.DHISTurnSpeedFactor;
-            PitchChange *= C.DHISTurnSpeedFactor;
-        }
+    // Custom aim updates
+    if (bCanFire)
+    {
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+    }
+    else
+    {
+        UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0); // stops player moving MG if not in a position where he can control it (but 'null' update still required)
+    }
 
-        // Custom aim update
-        if (bCanFire)
-        {
-            UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-            if (C != none)
-            {
-                C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
-                C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
-            }
-        }
+    if (C != none)
+    {
+        C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 
     NewRotation = Rotation;
@@ -1579,6 +1566,12 @@ simulated function FixPCRotation(PlayerController PC)
     {
         PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. MG pawn's rotation (note Gun's rotation is same as vehicle base)
     }
+}
+
+// New function to check whether player is in a position where he can reload the MG (always true if MG is not bExternallyLoadedMG)
+simulated function bool CanReload(optional bool bIgnoreViewTransition)
+{
+    return !bExternallyLoadedMG || DriverPositionIndex > UnbuttonedPositionIndex || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || bIgnoreViewTransition));
 }
 
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes

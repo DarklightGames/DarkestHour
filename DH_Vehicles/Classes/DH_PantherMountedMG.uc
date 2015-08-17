@@ -7,7 +7,6 @@ class DH_PantherMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=9
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7

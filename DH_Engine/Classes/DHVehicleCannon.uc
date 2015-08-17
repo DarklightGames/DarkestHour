@@ -852,7 +852,7 @@ function bool ResupplyAmmo()
 
         // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
         // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-        if (!HasAmmo(3) && Instigator.Controller != none && Role == ROLE_Authority)
+        if (!HasAmmo(3) && Instigator != none && Instigator.Controller != none && Role == ROLE_Authority)
         {
             HandleReload();
         }

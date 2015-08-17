@@ -7,7 +7,6 @@ class DH_CromwellMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=6
     TracerProjectileClass=class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5

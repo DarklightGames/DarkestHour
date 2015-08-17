@@ -3591,8 +3591,13 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
     local  float  NewY;
     local  int    Count, i;
 
+    if (DHGRI == none || CurrentObj >= arraycount(DHGRI.DHObjectives) || CurrentObj < 0)
+    {
+        return;
+    }
+
     // Do not update label coords if it's disabled in the objective
-    if (DHGRI.DHObjectives[CurrentObj].bDoNotUseLabelShiftingOnSituationMap)
+    if (DHGRI.DHObjectives[CurrentObj] != none && DHGRI.DHObjectives[CurrentObj].bDoNotUseLabelShiftingOnSituationMap)
     {
         DHGRI.DHObjectives[CurrentObj].LabelCoords = LabelCoords;
 
@@ -3948,11 +3953,6 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
     local vector       HUDLocation;
     local float        XL, YL, YL_one, OldFontXScale, OldFontYScale;
 
-    if (DHGRI == none)
-    {
-        return;
-    }
-
     // Calculate proper position
     HUDLocation = Location - MapCenter;
     HUDLocation.Z = 0.0;
@@ -3990,7 +3990,8 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
     // Draw icon
     DrawSpriteWidgetClipped(C, MyIcon, LevelCoords, true, XL, YL, true);
 
-    if (Title != "" && !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)
+    if (Title != "" && DHGRI != none && ObjectiveIndex < arraycount(DHGRI.DHObjectives) && ObjectiveIndex >= 0
+        && DHGRI.DHObjectives[ObjectiveIndex] != none && !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)
     {
         // Setup text info
         MapTexts.text = Title;

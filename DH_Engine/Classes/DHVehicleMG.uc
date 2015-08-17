@@ -16,13 +16,6 @@ var     byte    TracerFrequency;      // how often a tracer is loaded in (as in:
 var     byte    NumMags;              // number of mags carried for this MG (use byte for more efficient replication)
 var     sound   NoAmmoSound;          // 'dry fire' sound when trying to fire empty MG
 
-// Reloading
-var     bool    bReloading;           // this MG is currently reloading
-var     sound   ReloadSound;          // sound of this MG reloading
-var     float   ReloadDuration;       // time duration of reload (set automatically)
-var     float   ReloadStartTime;      // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
-var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
-
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var     DHCollisionStaticMeshActor  CollisionMeshActor;
 var     StaticMesh                  CollisionStaticMesh; // specify a valid static mesh in MG's default props & the col static mesh will automatically be used
@@ -33,11 +26,34 @@ var     class<VehicleDamagedEffect> FireEffectClass;
 var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 
+// Reloading
+struct  ReloadStage
+{
+    var  sound  Sound;
+    var  float  Duration;
+};
+
+enum  EReloadState
+{
+    MG_Empty,
+    MG_ReloadedPart1,
+    MG_ReloadedPart2,
+    MG_ReloadedPart3,
+    MG_ReloadedPart4,
+    MG_ReadyToFire,
+    MG_Waiting, // put waiting at end of list, as ReloadSounds array then matches ReloadState numbering, & also "ReloadState < MG_ReadyToFire" conveniently signifies MG is reloading
+};
+
+var     array<ReloadStage>  ReloadSounds;         // sounds for multi-part reload (optional durations, as servers often use 'index' sound files without actual sounds, breaking MG reload)
+var     EReloadState        ReloadState;          // the stage of MG reload or readiness (similar to a tank cannon)
+var     bool                bReloadPaused;        // MG reload has been paused
+var     name                HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bReloading, NumMags;
+        NumMags;
 
     // Variables the server will replicate to all clients
 //  reliable if (bNetDirty && Role == ROLE_Authority)
@@ -45,14 +61,14 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientHandleReload;
+        ClientSetReloadState;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to handle new collision static mesh actor, if one has been specified, & also to set ReloadDuration
+// Matt: modified to handle new collision static mesh actor, if one has been specified
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -81,13 +97,6 @@ simulated function PostBeginPlay()
             // Finally set the static mesh for the col mesh actor
             CollisionMeshActor.SetStaticMesh(CollisionStaticMesh);
         }
-    }
-
-    // Set here, just so a net client's MGPawn doesn't have to do this many times per second to display reload progress on the HUD
-    // This will be ignored if MG has a HUDOverlay with a reload animation, as a literal ReloadDuration value will have to be set in default properties
-    if (ReloadDuration <= 0.0 && ReloadSound != none)
-    {
-        ReloadDuration = GetSoundDuration(ReloadSound);
     }
 }
 
@@ -141,14 +150,56 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Timer used to reload the MG, after the set reload duration
+// Multi-stage MG reload similar to a tank cannon, but implemented differently to optimise (runs independently on server & owning net client)
 simulated function Timer()
 {
-    if (bReloading && Role == ROLE_Authority)
+    // If already reached final reload stage, always complete reload, regardless of circumstances
+    // Reason: final reload sound will have played, so may be confusing if player cannot fire, especially if would need to unbutton to complete an apparently completed reload
+    if (ReloadState == ReloadSounds.Length)
     {
-        bReloading = false;
-        MainAmmoCharge[0] = InitialPrimaryAmmo;
-        NetUpdateTime = Level.TimeSeconds - 1;
+        ReloadState = MG_ReadyToFire;
+        bReloadPaused = false;
+
+        if (Role == ROLE_Authority)
+        {
+            MainAmmoCharge[0] = InitialPrimaryAmmo;
+        }
+    }
+    else if (ReloadState < ReloadSounds.Length)
+    {
+        // For earlier reload stages, we only proceed if we have a player in a position where he can reload
+        if (!bReloadPaused && MGPawn != none && MGPawn.Controller != none && MGPawn.CanReload())
+        {
+            // Play reloading sound for this stage, if there is one (if MG uses a HUD reload animation, it will usually play its own sound through animation notifies)
+            // Only played locally & not broadcast by server to other players, as is not worth the network load just for a reload sound
+            if (ReloadSounds[ReloadState].Sound != none && MGPawn.IsLocallyControlled())
+            {
+                PlaySound(ReloadSounds[ReloadState].Sound, SLOT_Misc, 2.0, , 150.0,, false);
+            }
+
+            // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
+            if (ReloadSounds[ReloadState].Duration > 0.0)
+            {
+                SetTimer(ReloadSounds[ReloadState].Duration, false);
+            }
+            else
+            {
+                SetTimer(GetSoundDuration(ReloadSounds[ReloadState].Sound), false);
+            }
+
+            // Move to next reload state
+            ReloadState = EReloadState(ReloadState + 1);
+        }
+        // Otherwise pause the reload, including stopping any HUD reload animation
+        else
+        {
+            bReloadPaused = true;
+
+            if (MGPawn != none && MGPawn.HUDOverlay != none)
+            {
+                MGPawn.HUDOverlay.StopAnimating();
+            }
+        }
     }
 }
 
@@ -156,73 +207,43 @@ simulated function Timer()
 //  *********************************** FIRING ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to call HandleReload when empty (& to optimise/shorten a little)
+// Modified to optimise & shorten by removing lots of redundancy for an MG, which doesn't have different round types or alt fire
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     if (FireCountdown <= 0.0 && Role == ROLE_Authority)
     {
-        CalcWeaponFire(bAltFire);
-
-        if (bCorrectAim)
+        // Have ammo - fire
+        if (ConsumeAmmo(0))
         {
-            WeaponFireRotation = AdjustAim(bAltFire);
-        }
+            CalcWeaponFire(bAltFire);
 
-        if (bAltFire)
-        {
-            if (AltFireSpread > 0.0)
+            if (bCorrectAim)
             {
-                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * AltFireSpread);
-            }
-        }
-        else if (Spread > 0.0)
-        {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
-        }
-
-        Instigator.MakeNoise(1.0);
-
-        if (bAltFire)
-        {
-            if (!ConsumeAmmo(2))
-            {
-                MGPawn.ClientVehicleCeaseFire(bAltFire);
-
-                return false;
+                WeaponFireRotation = AdjustAim(bAltFire);
             }
 
-            FireCountdown = AltFireInterval;
-            AltFire(C);
-        }
-        else
-        {
-            if (!bMultipleRoundTypes || ProjectileClass == PrimaryProjectileClass)
+            if (Spread > 0.0)
             {
-                if (!ConsumeAmmo(0))
-                {
-                    MGPawn.ClientVehicleCeaseFire(bAltFire);
-                    HandleReload();
-
-                    return false;
-                }
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
             }
-            else if (ProjectileClass == SecondaryProjectileClass)
-            {
-                if (!ConsumeAmmo(1))
-                {
-                    MGPawn.ClientVehicleCeaseFire(bAltFire);
 
-                    return false;
-                }
+            If (Instigator != none)
+            {
+                Instigator.MakeNoise(1.0);
             }
 
             FireCountdown = FireInterval;
             Fire(C);
+            AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
+
+            return true;
         }
 
-        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
-
-        return true;
+        // Out of ammo - cease fire
+        if (MGPawn != none)
+        {
+            MGPawn.ClientVehicleCeaseFire(bAltFire);
+        }
     }
 
     return false;
@@ -251,33 +272,33 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
-// Modified to stop 'phantom' firing effects (muzzle flash & tracers) from continuing if player has moved to an ineligible firing position while holding fire button down
+// Modified to stop 'phantom' firing effects (muzzle flash & tracers) from continuing if player has moved to an invalid firing position while holding down fire button
 // Also to enable muzzle flash when hosting a listen server, which the original code misses out
 simulated function OwnerEffects()
 {
-    if (Role < ROLE_Authority && !MGPawn.CanFire())
+    if (MGPawn != none && MGPawn.CanFire())
     {
-        MGPawn.ClientVehicleCeaseFire(bIsAltFire); // stops flash & tracers if player unbuttons while holding down fire
+        super.OwnerEffects();
 
-        return;
+        if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none) // added so we get muzzle flash when hosting a listen server
+        {
+            AmbientEffectEmitter.SetEmitterStatus(true);
+        }
     }
-
-    super.OwnerEffects();
-
-    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none) // added so we get muzzle flash when hosting a listen server
+    else
     {
-        AmbientEffectEmitter.SetEmitterStatus(true);
+        MGPawn.ClientVehicleCeaseFire(bIsAltFire); // stops flash & tracers if player has moved to invalid firing position while holding down fire
     }
 }
 
-// Modified to start a reload when empty
+// Modified to try to start a reload if MG is empty
 function CeaseFire(Controller C, bool bWasAltFire)
 {
     super.CeaseFire(C, bWasAltFire);
 
-    if (!bReloading && !HasAmmo(0))
+    if (!HasAmmo(0))
     {
-        HandleReload();
+        TryToReload();
     }
 }
 
@@ -310,10 +331,10 @@ function bool ResupplyAmmo()
     {
         ++NumMags;
 
-        // If MG is out of ammo, start a reload, but only if there is a player in the MG position
-        if (!HasAmmo(0) && Instigator.Controller != none)
+        // If MG is out of ammo & waiting to reload & we have a player on the MG, try to start a reload
+        if (!HasAmmo(0) && ReloadState == MG_Waiting && Instigator != none && Instigator.Controller != none)
         {
-            HandleReload();
+            TryToReload();
         }
 
         return true;
@@ -322,49 +343,111 @@ function bool ResupplyAmmo()
     return false;
 }
 
-// New generic function handling HUDOverlay reloads as well as normal reloads, including making client record ReloadStartTime (used for reload progress on HUD ammo icon)
-function HandleReload()
+// New function to start a reload or resume a previously paused reload
+simulated function TryToReload(optional bool bIgnoreViewTransition, optional bool bSkipClientSetReloadState)
 {
-    if (NumMags > 0 && !bReloading && Role == ROLE_Authority)
+    local bool bStateChanged;
+
+    // Need to start a new reload
+    if (ReloadState >= MG_ReadyToFire)
     {
-        bReloading = true;
-        NumMags--;
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-        ReloadStartTime = Level.TimeSeconds;
-        ClientHandleReload();
-
-        if (MGPawn == none || MGPawn.HUDOverlay == none || !HasAnim(HUDOverlayReloadAnim)) // don't play sound if there's a HUDOverlay with reload animation, as it plays its own sounds
+        if (Role == ROLE_Authority) // a new reload can't be started by a net client
         {
-            PlaySound(ReloadSound, SLOT_None, 1.5,, 25.0,, true);
-        }
+            // Start a reload, if we have a spare mag & a player in a position where he can reload
+            if (NumMags > 0 && MGPawn != none && MGPawn.CanReload(bIgnoreViewTransition))
+            {
+                NumMags--;
+                ReloadState = MG_Empty;
+                ProgressReload();
+                bStateChanged = true;
+            }
+            // Otherwise make sure loading state is waiting (for a player in reloading position or a resupply)
+            else if (ReloadState == MG_ReadyToFire)
+            {
+                ReloadState = MG_Waiting;
+                bStateChanged = true;
+            }
 
-        SetTimer(ReloadDuration, false);
+            // If state changed & actor not locally controlled (dedicated server, or listen server with MG controlled by another player), pass new state to client (unless flagged not to)
+            if (bStateChanged && !bSkipClientSetReloadState && !MGPawn.IsLocallyControlled())
+            {
+                ClientSetReloadState(ReloadState);
+            }
+        }
+    }
+    // Resume a paused reload
+    else if (bReloadPaused)
+    {
+        ProgressReload();
     }
 }
 
-// New server-to-client function called at start of reload or if player enters an MG that is reloading
-// Client records when reload started, which is used to show reload progress on HUD ammo icon (replication optimised to a byte instead of passing start time as float)
-// Also plays any HUDOverlay reload animation, starting it from the appropriate point if a reload is already in progress
-simulated function ClientHandleReload(optional byte PercentageDone)
+// New server-to-client function to pass reload state & to start/resume clientside reload process if relevant
+simulated function ClientSetReloadState(EReloadState NewState)
 {
-    ReloadStartTime = Level.TimeSeconds - (Float(PercentageDone) / 100.0 * ReloadDuration);
+    if (Role < ROLE_Authority)
+    {
+        ReloadState = NewState;
 
+        // If MG is in the middle of a reload
+        if (ReloadState < MG_ReadyToFire)
+        {
+            // Start/resume reloading, as we have a player in a position to reload
+            // If server starts new reload on unbuttoning, may be possible that net client is still in state ViewTransition when it receives this replicated function call
+            // If so, CanReload would return false & reload would be paused on client, but a split second later client would leave ViewTransition & reload would be resumed
+            if (MGPawn != none && MGPawn.CanReload())
+            {
+                ProgressReload();
+            }
+            // Otherwise the reload is paused
+            else
+            {
+                bReloadPaused = true;
+            }
+        }
+    }
+}
+
+// New function to start or resume a reload, including playing any HUD overlay reload animation
+simulated function ProgressReload()
+{
+    local float ReloadSecondsElapsed, TotalReloadDuration;
+    local int   i;
+
+    // Make sure reload isn't set to paused & start a reload timer
+    bReloadPaused = false;
+    SetTimer(0.05, false);
+
+    // If MG uses a HUD reload animation, play it
     if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
     {
         MGPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
-        MGPawn.HUDOverlay.SetAnimFrame(Float(PercentageDone)); // move reload animation to appropriate point
+
+        // If we're resuming a paused reload, move the animation to where it left off (add up the previous stage durations)
+        if (ReloadState > MG_Empty)
+        {
+            for (i = 0; i < ReloadSounds.Length; ++i)
+            {
+                if (i < ReloadState)
+                {
+                    ReloadSecondsElapsed += ReloadSounds[i].Duration;
+                }
+
+                TotalReloadDuration += ReloadSounds[i].Duration;
+            }
+
+            if (ReloadSecondsElapsed > 0.0)
+            {
+                MGPawn.HUDOverlay.SetAnimFrame(ReloadSecondsElapsed / TotalReloadDuration);
+            }
+        }
     }
 }
 
-// Modified to return false if MG reloading
+// Modified to return false if MG is not loaded
 simulated function bool ReadyToFire(bool bAltFire)
 {
-    if (bReloading)
-    {
-        return false;
-    }
-
-    return super.ReadyToFire(bAltFire);
+    return ReloadState == MG_ReadyToFire && super.ReadyToFire(bAltFire);
 }
 
 // Modified to handle MG magazines
@@ -488,6 +571,11 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
+    ReloadState=MG_ReadyToFire
+    ReloadSounds[0]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105) // default is MG34 reload sounds, as is used by most vehicles, even allies
+    ReloadSounds[1]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413)
+    ReloadSounds[2]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843)
+    ReloadSounds[3]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314)  
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireAttachBone="mg_pitch"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)

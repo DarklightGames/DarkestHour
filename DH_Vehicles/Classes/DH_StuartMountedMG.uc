@@ -7,7 +7,6 @@ class DH_StuartMountedMG extends DHVehicleMG;
 
 defaultproperties
 {
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=6
     FireAttachBone="mg_yaw"
     FireEffectOffset=(X=5.0)
