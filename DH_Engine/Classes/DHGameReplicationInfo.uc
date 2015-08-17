@@ -705,6 +705,30 @@ function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestT
     }
 }
 
+// Theel: DEBUG test (removed 32 cap on NewVoiceID)
+simulated function AddPRI(PlayerReplicationInfo PRI)
+{
+    local byte NewVoiceID;
+    local int i;
+
+    if ( Level.NetMode == NM_ListenServer || Level.NetMode == NM_DedicatedServer )
+    {
+        for (i = 0; i < PRIArray.Length; i++)
+        {
+            if ( PRIArray[i].VoiceID == NewVoiceID )
+            {
+                i = -1;
+                NewVoiceID++;
+                continue;
+            }
+        }
+
+        PRI.VoiceID = NewVoiceID;
+    }
+
+    PRIArray[PRIArray.Length] = PRI;
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1
