@@ -1960,7 +1960,8 @@ state RoundInPlay
         {
             ArtilleryStrikeInt = LevelInfo.GetStrikeInterval(i);
 
-            if ((GRI.TotalStrikes[i] < GRI.ArtilleryStrikeLimit[i]) && ElapsedTime > GRI.LastArtyStrikeTime[i] + ArtilleryStrikeInt)
+            // Artillery is not available if out of strikes, if still waiting on next call, or a strike is currently in progress
+            if ((GRI.TotalStrikes[i] < GRI.ArtilleryStrikeLimit[i]) && ElapsedTime > GRI.LastArtyStrikeTime[i] + ArtilleryStrikeInt && GRI.ArtyStrikeLocation[i] == vect(0.0, 0.0, 0.0))
             {
                 GRI.bArtilleryAvailable[i] = 1;
             }
