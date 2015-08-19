@@ -22,7 +22,7 @@ struct SpawnVehicle
     var vector          Location;
     var class<Vehicle>  VehicleClass;
     var Vehicle         Vehicle;
-    var bool            bIsBlocked;
+    var byte            BlockFlags;
 };
 
 const RADIOS_MAX = 10;
@@ -493,7 +493,7 @@ simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
     if (Index >= arraycount(SpawnVehicles) ||
         SpawnVehicles[Index].VehicleClass == none ||
         SpawnVehicles[Index].TeamIndex != Team ||
-        SpawnVehicles[Index].bIsBlocked)
+        SpawnVehicles[Index].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
     {
         return false;
     }

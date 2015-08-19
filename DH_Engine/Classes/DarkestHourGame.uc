@@ -2233,8 +2233,6 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
-    local byte SpawnError;
-
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
@@ -2248,26 +2246,23 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     }
     else
     {
-        SpawnError = DHRestartPlayer(C, bHandleReinforcements);
-
-        if (PlayerController(C) != none && SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+        if (!DHRestartPlayer(C, bHandleReinforcements))
         {
             PlayerController(C).ClientReplaceMenu("DH_Interface.DHDeployMenu");
         }
     }
 }
 
-function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
+function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
-    local byte     SpawnError;
 
     DHC = DHPlayer(C);
 
     if (DHC == none)
     {
-        return class'DHSpawnManager'.default.SpawnError_Fatal;
+        return false;
     }
 
     if ((!bPlayersVsBots || (Level.NetMode == NM_Standalone)) &&
@@ -2289,39 +2284,42 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
         {
             C.Destroy();
 
-            return class'DHSpawnManager'.default.SpawnError_Fatal;
+            return false;
         }
     }
 
     if (bMustJoinBeforeStart && (UnrealPlayer(C) != none) && UnrealPlayer(C).bLatecomer)
     {
-        return class'DHSpawnManager'.default.SpawnError_Fatal;
+        return false;
     }
 
     if (C.PlayerReplicationInfo.bOutOfLives)
     {
-        return class'DHSpawnManager'.default.SpawnError_Fatal;
+        return false;
     }
 
     if (C.IsA('Bot') && TooManyBots(C))
     {
         C.Destroy();
 
-        return class'DHSpawnManager'.default.SpawnError_Fatal;
+        return false;
     }
 
     if (bRestartLevel && Level.NetMode != NM_DedicatedServer && Level.NetMode != NM_ListenServer)
     {
-        return class'DHSpawnManager'.default.SpawnError_Fatal;
+        return false;
     }
 
     if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && IsInState('RoundInPlay'))
     {
-        SpawnManager.SpawnPlayer(DHC, SpawnError);
-
-        if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+        if(!SpawnManager.SpawnPlayer(DHC))
         {
-            return SpawnError;
+            return false;
+        }
+
+        if (DHC.Pawn != none)
+        {
+            DHC.ClientFadeFromBlack(3.0);
         }
 
         if (bHandleReinforcements)
@@ -2329,6 +2327,8 @@ function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
             HandleReinforcements(C);
         }
     }
+
+    return true;
 }
 
 // Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer

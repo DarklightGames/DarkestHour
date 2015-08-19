@@ -66,25 +66,9 @@ var     const byte  SVT_Always;
 var     const byte  SpawnPointType_Infantry;
 var     const byte  SpawnPointType_Vehicles;
 
-// TODO: these were basically used for debug, reduce this down to a simple binary
-// for whether a fatal error occurred or not (the user never needs to know the specifics)
-var const byte SpawnError_None;
-var const byte SpawnError_Fatal;
-var const byte SpawnError_MaxVehicles;
-var const byte SpawnError_Cooldown;
-var const byte SpawnError_SpawnLimit;
-var const byte SpawnError_ActiveLimit;
-var const byte SpawnError_PoolInactive;
-var const byte SpawnError_SpawnInactive;
-var const byte SpawnError_Blocked;
-var const byte SpawnError_Failed;
-var const byte SpawnError_BadTeamPool;
-var const byte SpawnError_BadTeamSpawnPoint;
-var const byte SpawnError_TryToDriveFailed;
-var const byte SpawnError_BadSpawnType;
-var const byte SpawnError_PawnSpawnFailed;
-var const byte SpawnError_IncorrectRole;
-var const byte SpawnError_SpawnPointsDontMatch;
+var     const byte  BlockFlags_None;
+var     const byte  BlockFlags_EnemiesNearby;
+var     const byte  BlockFlags_InObjective;
 
 function PostBeginPlay()
 {
@@ -189,21 +173,19 @@ function Reset()
     super.Reset();
 }
 
-function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation, out byte SpawnError)
+function bool DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation)
 {
     local DHSpawnPoint SP;
 
-    SpawnError = SpawnError_Fatal;
-
     if (C == none || GRI == none)
     {
-        return;
+        return false;
     }
 
     // Check spawn settings
     if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
     {
-        return;
+        return false;
     }
 
     // Check spawn point
@@ -211,18 +193,18 @@ function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator Spawn
 
     if (SP == none)
     {
-        return;
+        return false;
     }
 
     // Check vehicle pool
-    SpawnError = GetVehiclePoolError(C, SP);
-
-    if (SpawnError != SpawnError_None)
+    if (!GetVehiclePoolError(C, SP))
     {
-        return;
+        return false;
     }
 
     GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation);
+
+    return true;
 }
 
 function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
@@ -306,32 +288,26 @@ function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, 
     }
 }
 
-function SpawnPlayer(DHPlayer C, out byte SpawnError)
+function bool SpawnPlayer(DHPlayer C)
 {
     if (C != none)
     {
         if (C.VehiclePoolIndex != 255) // deploy into vehicle
         {
-            SpawnVehicle(C, SpawnError);
+            return SpawnVehicle(C);
         }
         else if (C.SpawnVehicleIndex != 255) // deploy to spawn vehicle
         {
-            SpawnPlayerAtSpawnVehicle(C, SpawnError);
+            return SpawnPlayerAtSpawnVehicle(C);
         }
         else if (SpawnPoints[C.SpawnPointIndex] != none) // deploy to spawn point
         {
-            SpawnInfantry(C, SpawnError);
-        }
-
-        // Fade out from blackout to normal view
-        if (C.Pawn != none)
-        {
-            C.ClientFadeFromBlack(3.0);
+            return SpawnInfantry(C);
         }
     }
 }
 
-function SpawnVehicle(DHPlayer C, out byte SpawnError)
+function bool SpawnVehicle(DHPlayer C)
 {
     local ROVehicle V;
     local vector    SpawnLocation;
@@ -340,26 +316,20 @@ function SpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (C == none || C.Pawn != none)
     {
-        SpawnError = SpawnError_Fatal;
-
-        return;
+        return false;
     }
 
     // Make sure player isn't excluded from a tank crew role
     if (VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander && (ROPlayerReplicationInfo(C.PlayerReplicationInfo) == none
         || ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        SpawnError = SpawnError_IncorrectRole;
-
-        return;
+        return false;
     }
 
     // Some checks that we have valid settings to spawn a vehicle
-    DrySpawnVehicle(C, SpawnLocation, SpawnRotation, SpawnError);
-
-    if (SpawnError != SpawnError_None)
+    if (!DrySpawnVehicle(C, SpawnLocation, SpawnRotation))
     {
-        return;
+        return false;
     }
 
     // This calls old RestartPlayer (spawns player in black room) & avoids reinforcement subtraction (because we will subtract later)
@@ -370,9 +340,7 @@ function SpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (C.Pawn == none)
     {
-        SpawnError = SpawnError_PawnSpawnFailed;
-
-        return;
+        return false;
     }
 
     // Now spawn the vehicle (& make sure it was successful)
@@ -380,9 +348,7 @@ function SpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (V == none)
     {
-        SpawnError = SpawnError_Failed;
-
-        return;
+        return false;
     }
 
     // If we successfully enter the vehicle
@@ -440,11 +406,14 @@ function SpawnVehicle(DHPlayer C, out byte SpawnError)
     {
         V.Destroy();
         C.Pawn.Suicide();
-        SpawnError = SpawnError_TryToDriveFailed;
+
+        return false;
     }
+
+    return true;
 }
 
-function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
+function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
 {
     local Vehicle    V, EntryVehicle;
     local vector     Offset;
@@ -453,9 +422,7 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (C == none || GRI == none || DarkestHourGame(Level.Game) == none)
     {
-        SpawnError = SpawnError_Fatal;
-
-        return;
+        return false;
     }
 
     // Spawn vehicle & make sure it was successful
@@ -463,9 +430,7 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (V == none)
     {
-        SpawnError = SpawnError_Failed;
-
-        return;
+        return false;
     }
 
     // Spawn player pawn in black room & make sure it was successful
@@ -476,12 +441,9 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (C.Pawn == none)
     {
-        SpawnError = SpawnError_PawnSpawnFailed;
-
-        return;
+        return false;
     }
 
-    SpawnError = SpawnError_None;
     Offset = C.Pawn.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Check if we can deploy into or near the vehicle
@@ -503,7 +465,7 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
                     {
-                        return; // success
+                        return true; // success
                     }
                 }
 
@@ -512,7 +474,7 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
                 if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
                 {
-                    return; // success
+                    return true; // success
                 }
 
                 break; // failure
@@ -525,7 +487,7 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
                 if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
                 {
-                    return; // success
+                    return true;
                 }
 
                 // 2nd choice - if unable to enter vehicle, attempt to deploy at an exit position
@@ -535,7 +497,7 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
                     {
-                        return; // success
+                        return true; // success
                     }
                 }
 
@@ -549,8 +511,9 @@ function SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     }
 
     // Attempting to deploy into or near the vehicle failed, so kill the player pawn we spawned earlier
-    SpawnError = SpawnError_TryToDriveFailed;
     C.Pawn.Suicide();
+
+    return false;
 }
 
 function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
@@ -702,66 +665,64 @@ function Vehicle FindEntryVehicle(Pawn P, ROVehicle V)
     return none; // there are no empty, usable vehicle positions
 }
 
-function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
+function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
 {
     if (C == none || GRI == none)
     {
-        return SpawnError_Fatal;
+        return false;
     }
 
     if (C.VehiclePoolIndex >= VEHICLE_POOLS_MAX || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
     {
-        return SpawnError_Fatal;
+        return false;
     }
 
     if (SP == none || (SP.Type != ESPT_All && SP.Type != ESPT_Vehicles))
     {
-        return SpawnError_Fatal;
+        return false;
     }
 
     if (TeamVehicleCounts[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam])
     {
-        return SpawnError_MaxVehicles;
+        return false;
     }
 
     if (!GRI.IsVehiclePoolActive(C.VehiclePoolIndex))
     {
-        return SpawnError_PoolInactive;
+        return false;
     }
 
     if (Level.TimeSeconds < GRI.VehiclePoolNextAvailableTimes[C.VehiclePoolIndex])
     {
-        return SpawnError_Cooldown;
+        return false;
     }
 
     if (GRI.VehiclePoolSpawnCounts[C.VehiclePoolIndex] >= GRI.VehiclePoolMaxSpawns[C.VehiclePoolIndex])
     {
-        return SpawnError_SpawnLimit;
+        return false;
     }
 
     if (GRI.VehiclePoolActiveCounts[C.VehiclePoolIndex] >= GRI.VehiclePoolMaxActives[C.VehiclePoolIndex])
     {
-        return SpawnError_ActiveLimit;
+        return false;
     }
 
-    return SpawnError_None;
+    return true;
 }
 
-function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation, out byte SpawnError)
+function bool DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation)
 {
     local DHSpawnPoint SP;
 
-    SpawnError = SpawnError_Fatal;
-
     if (C == none || GRI == none)
     {
-        return;
+        return false;
     }
 
     // Check spawn settings
     if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
     {
-        return;
+        return false;
     }
 
     // Check spawn point
@@ -769,15 +730,15 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
 
     if (SP == none)
     {
-        return;
+        return false;
     }
 
     GetSpawnLocation(SP, SP.InfantryLocationHints, class'DHPawn'.default.CollisionRadius, SpawnLocation, SpawnRotation);
 
-    SpawnError = SpawnError_None;
+    return true;
 }
 
-function SpawnInfantry(DHPlayer C, out byte SpawnError)
+function bool SpawnInfantry(DHPlayer C)
 {
     local DHPawn  P;
     local vector  SpawnLocation;
@@ -785,28 +746,24 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 
     if (C == none || C.Pawn != none)
     {
-        SpawnError = SpawnError_Fatal;
-
-        return;
+        return false;
     }
 
-    DrySpawnInfantry(C, SpawnLocation, SpawnRotation, SpawnError);
-
-    if (SpawnError != SpawnError_None)
+    if (!DrySpawnInfantry(C, SpawnLocation, SpawnRotation))
     {
-        return;
+        return false;
     }
 
     P = DHPawn(SpawnPawn(C, SpawnLocation, SpawnRotation));
 
     if (P == none)
     {
-        SpawnError = SpawnError_PawnSpawnFailed;
-
-        return;
+        return false;
     }
 
     P.TeleSpawnProtEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+
+    return true;
 }
 
 event VehicleDestroyed(Vehicle V)
@@ -1149,7 +1106,7 @@ function Timer()
     local Vehicle     V;
     local Pawn        P;
     local DHObjective O;
-    local bool        bIsBlocked;
+    local byte        BlockFlags;
     local int         i, j;
 
     if (GRI == none)
@@ -1160,7 +1117,7 @@ function Timer()
     // Loop through all recorded spawn vehicles
     for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
     {
-        bIsBlocked = false;
+        BlockFlags = 0;
 
         V = GRI.SpawnVehicles[i].Vehicle;
 
@@ -1176,29 +1133,28 @@ function Timer()
             {
                 if (V.GetTeamNum() != P.GetTeamNum())
                 {
-                    bIsBlocked = true;
+                    BlockFlags = BlockFlags | BlockFlags_EnemiesNearby;
+
                     break;
                 }
             }
         }
 
-        if (!bIsBlocked)
+        // Check whether this spawn vehicle is inside an active objective
+        for (j = 0; j < arraycount(GRI.DHObjectives); ++j)
         {
-            // Check whether this spawn vehicle is inside an active objective
-            for (j = 0; j < arraycount(GRI.DHObjectives); ++j)
-            {
-                O = GRI.DHObjectives[j];
+            O = GRI.DHObjectives[j];
 
-                if (O != none && O.bActive && O.WithinArea(V))
-                {
-                    bIsBlocked = true;
-                    break;
-                }
+            if (O != none && O.bActive && O.WithinArea(V))
+            {
+                BlockFlags = BlockFlags | BlockFlags_InObjective;
+
+                break;
             }
         }
 
         // Update this spawn vehicle's bIsBlocked setting in the GRI
-        GRI.SpawnVehicles[i].bIsBlocked = bIsBlocked;
+        GRI.SpawnVehicles[i].BlockFlags = BlockFlags;
     }
 }
 
@@ -1213,21 +1169,7 @@ defaultproperties
     SVT_Always=2
     bDirectional=false
     DrawScale=3.0
-
-    SpawnError_None=0
-    SpawnError_Fatal=1
-    SpawnError_MaxVehicles=2
-    SpawnError_Cooldown=3
-    SpawnError_SpawnLimit=4
-    SpawnError_ActiveLimit=5
-    SpawnError_PoolInactive=6
-    SpawnError_SpawnInactive=7
-    SpawnError_Blocked=8
-    SpawnError_Failed=9
-    SpawnError_BadTeamPool=10
-    SpawnError_BadTeamSpawnPoint=11
-    SpawnError_TryToDriveFailed=12
-    SpawnError_BadSpawnType=13
-    SpawnError_IncorrectRole=14
-    SpawnError_SpawnPointsDontMatch=15
+    BlockFlags_None=0
+    BlockFlags_EnemiesNearby=1
+    BlockFlags_InObjective=2
 }

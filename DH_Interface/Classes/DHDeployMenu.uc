@@ -383,7 +383,7 @@ function UpdateSpawnPoints()
             p_Map.b_SpawnVehicles[i].SetPosition(X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight, true);
             p_Map.b_SpawnVehicles[i].SetVisibility(true);
 
-            if (GRI.SpawnVehicles[i].bIsBlocked)
+            if (GRI.SpawnVehicles[i].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
             {
                 p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleBlockedButtonStyle";
             }
@@ -394,7 +394,7 @@ function UpdateSpawnPoints()
 
             p_Map.b_SpawnVehicles[i].Style = Controller.GetStyle(p_Map.b_SpawnVehicles[i].StyleName, FS);
 
-            if (li_Vehicles.GetObject() == none && !GRI.SpawnVehicles[i].bIsBlocked)
+            if (li_Vehicles.GetObject() == none && GRI.SpawnVehicles[i].BlockFlags == class'DHSpawnManager'.default.BlockFlags_None)
             {
                 // If spawn point that was previously selected is now hidden,
                 // deselect it.
