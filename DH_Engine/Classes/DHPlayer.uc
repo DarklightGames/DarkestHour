@@ -2859,8 +2859,8 @@ defaultproperties
     baseSwayPitchAcc=500
 
     // Max turn speed values
-    SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=260.0),(InVal=1.0,OutVal=10000.0)))
-    ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=220.0),(InVal=1.0,OutVal=10000.0)))
+    SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=270.0),(InVal=1.0,OutVal=10000.0)))
+    ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=230.0),(InVal=1.0,OutVal=10000.0)))
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
