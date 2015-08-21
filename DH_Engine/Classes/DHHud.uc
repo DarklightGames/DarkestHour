@@ -40,6 +40,7 @@ var localized string    SpawnInfantryText;
 var localized string    SpawnVehicleText;
 var localized string    SpawnAtVehicleText;
 var localized string    ReinforcementsDepletedText;
+var localized string    SpawnNoRoleText;
 
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -3834,6 +3835,10 @@ simulated function DrawSpectatingHud(Canvas C)
                         S = Repl(S, "{0}", PRI.RoleInfo.MyName);
                     }
                 }
+                else
+                {
+                    S = default.SpawnNoRoleText;
+                }
 
                 S = Repl(S, "{2}", GetTimeString(Time));
             }
@@ -4317,6 +4322,7 @@ defaultproperties
     CaptureBarTeamColors(1)=(R=49,G=57,B=223)
     TeamMessagePrefix="*TEAM* "
 
+    SpawnNoRoleText="You will deploy in {2} | Press ESC to change"
     SpawnInfantryText="You will deploy as a {0} in {2} | Press ESC to change"
     SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press ESC to change"
     SelectSpawnPointText="Press ESC to select a spawn point"
