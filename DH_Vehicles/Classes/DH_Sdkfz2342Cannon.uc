@@ -98,6 +98,7 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll'
     SoundVolume=130
     SoundRadius=200.0
 }

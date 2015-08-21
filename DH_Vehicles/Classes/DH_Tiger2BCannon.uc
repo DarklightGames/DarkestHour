@@ -111,6 +111,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
     SoundVolume=130
     SoundRadius=300.0
     HighDetailOverlayIndex=1
