@@ -11,21 +11,18 @@ function RemoveMember(PlayerReplicationInfo PRI)
 {
     if (PRI != none && IsMember(PRI, true))
     {
-        SetMask(GetMask() & ~(1<<PRI.VoiceID));
+        SetMask(GetMask() & ~(1 << PRI.VoiceID));
     }
 }
 
 function AddMember(PlayerReplicationInfo PRI)
 {
-    local int i;
-    local array<PlayerReplicationInfo> Members;
-
     if (IsMember(PRI) || PRI == none)
     {
         return;
     }
 
-    SetMask(GetMask() | (1<<PRI.VoiceID));
+    SetMask(GetMask() | (1 << PRI.VoiceID));
 
     /*
     if (Level.NetMode != NM_Client)
