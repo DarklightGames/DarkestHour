@@ -489,7 +489,6 @@ function bool RemoveSpawnVehicle(Vehicle V)
 
 simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
 {
-    //TODO: add contested check here
     if (Index >= arraycount(SpawnVehicles) ||
         SpawnVehicles[Index].VehicleClass == none ||
         SpawnVehicles[Index].TeamIndex != Team ||
@@ -497,8 +496,6 @@ simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
     {
         return false;
     }
-
-    //TODO: check exits not blocked?
 
     return true;
 }

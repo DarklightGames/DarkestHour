@@ -757,6 +757,7 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
     Skins(2)=texture'Weapons1st_tex.MG.mg42_barrel'
     Skins(3)=texture'Weapons1st_tex.MG.mg42'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll'
     SoundVolume=100
     SoundRadius=256.0
 }

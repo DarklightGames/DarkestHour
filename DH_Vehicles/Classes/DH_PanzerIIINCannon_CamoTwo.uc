@@ -10,4 +10,5 @@ defaultproperties
     bHasAddedSideArmor=true
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo2'
     Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo2'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3N_turret_armor_Coll'
 }

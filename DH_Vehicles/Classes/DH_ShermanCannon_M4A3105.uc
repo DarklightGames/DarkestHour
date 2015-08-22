@@ -82,6 +82,7 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3105_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'
     SoundVolume=200
     SoundRadius=50.0
 }
