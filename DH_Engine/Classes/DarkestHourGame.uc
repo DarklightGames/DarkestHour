@@ -3085,6 +3085,17 @@ function SetRoundTime(int RoundTime, optional bool bNotifyPlayers)
     }
 }
 
+// THeel DEBUG: Temporary override to allow more than 32 bots
+exec function AddBots(int num)
+{
+    while (--num >= 0)
+    {
+        if ( Level.NetMode != NM_Standalone )
+            MinPlayers = Max(MinPlayers + 1, NumPlayers + NumBots + 1);
+        AddBot();
+    }
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH

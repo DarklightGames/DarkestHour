@@ -40,6 +40,7 @@ var localized string    SpawnInfantryText;
 var localized string    SpawnVehicleText;
 var localized string    SpawnAtVehicleText;
 var localized string    ReinforcementsDepletedText;
+var localized string    TimeElapsedText;
 
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -4325,6 +4326,8 @@ defaultproperties
     ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
     NoTimeLimitText="Unlimited"
+
+    TimeElapsedText="Time Elasped: "
 
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"

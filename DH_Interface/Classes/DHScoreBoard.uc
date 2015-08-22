@@ -5,12 +5,12 @@
 
 class DHScoreBoard extends ROScoreBoard;
 
-const DHMAXPERSIDE = 25;
-const DHMAXPERSIDEWIDE = 25;
+const DHMAXPERSIDE = 40;
+const DHMAXPERSIDEWIDE = 35;
 
 simulated function UpdateScoreBoard (Canvas C)
 {
-    local ROPlayerReplicationInfo myPRI, PRI, GermanPRI[32], RussianPRI[32], UnassignedPRI[32];
+    local ROPlayerReplicationInfo myPRI, PRI, GermanPRI[64], RussianPRI[64], UnassignedPRI[32];
     local color  TeamColor;
     local float  X, Y, CellHeight, XL, YL, LeftY, RightY, CurrentTime;
     local int    i, j, CurMaxPerSide, GECount, RUCount, UnassignedCount, AxisTotalScore, AlliesTotalScore;
@@ -180,7 +180,6 @@ simulated function UpdateScoreBoard (Canvas C)
         }
     }
 
-    // Draw the round timer
     if (ROGameReplicationInfo(GRI) != none)
     {
         // Update round timer
@@ -202,11 +201,17 @@ simulated function UpdateScoreBoard (Canvas C)
             S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
         }
 
+        // Add time elapsed after time remaining
+        CurrentTime = GRI.ElapsedTime - ROGameReplicationInfo(GRI).RoundStartTime;
+        S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeElapsedText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
+
+        // Server IP on scoreboard
         if (ROGameReplicationInfo(GRI).bShowServerIPOnScoreboard && PlayerController(Owner) != none)
         {
             S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.IPText $ PlayerController(Owner).GetServerIP();
         }
 
+        // Server Time on scoreboard
         if (ROGameReplicationInfo(GRI).bShowTimeOnScoreboard)
         {
             S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeText $ Level.Hour $ ":" $ Level.Minute @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
@@ -260,9 +265,10 @@ simulated function UpdateScoreBoard (Canvas C)
     DrawCell(C, PingText, 1, CalcX(BaseGermanX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
     Y += CellHeight;
 
+    CellHeight = YL * 0.85;
     for (i = 0; i < GECount; ++i)
     {
-        // If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
+        // if we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
         if (i >= CurMaxPerSide - 1 && myPRI.Team != none && myPRI.Team.TeamIndex == AXIS_TEAM_INDEX && !bOwnerDrawn)
         {
             // If this is not the owner, skip it
@@ -273,6 +279,8 @@ simulated function UpdateScoreBoard (Canvas C)
         }
         else if (i >= CurMaxPerSide)
         {
+            //Draw "..." to indicate there are more!
+            DrawCell(C,"...", 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
             break;
         }
 
@@ -393,6 +401,7 @@ simulated function UpdateScoreBoard (Canvas C)
             break;
         }
     }
+    CellHeight = YL + (YL * 0.25);
 
     Y += CellHeight;
 
@@ -441,6 +450,7 @@ simulated function UpdateScoreBoard (Canvas C)
     DrawCell(C, PingText, 1, CalcX(BaseRussianX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
     Y += CellHeight;
 
+    CellHeight = YL * 0.85;
     for (i = 0; i < RUCount; ++i)
     {
         // If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
@@ -454,6 +464,8 @@ simulated function UpdateScoreBoard (Canvas C)
         }
         else if (i >= CurMaxPerSide)
         {
+            //Draw "..." to indicate there are more!
+            DrawCell(C,"...", 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
             break;
         }
 
@@ -574,6 +586,7 @@ simulated function UpdateScoreBoard (Canvas C)
             break;
         }
     }
+    CellHeight = YL + (YL * 0.25);
 
     Y += CellHeight;
 
