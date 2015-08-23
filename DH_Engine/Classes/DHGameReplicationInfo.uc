@@ -722,7 +722,7 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
 
         PRI.VoiceID = NewVoiceID;
 
-        Level.Game.Broadcast(self, "Player VoiceID assigned to:" @ PRI.VoiceID, 'Say');
+        Log("Player VoiceID assigned to:" @ PRI.VoiceID);
     }
 
     PRIArray[PRIArray.Length] = PRI;
