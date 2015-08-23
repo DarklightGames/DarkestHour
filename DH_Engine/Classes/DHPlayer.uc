@@ -281,8 +281,6 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 // Menu for the player's entire selection process
 exec function PlayerMenu(optional int Tab)
 {
-    Log("PlayerMenu" @ Tab);
-
     bPendingMapDisplay = false;
 
     if (!bWeaponsSelected)
