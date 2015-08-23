@@ -921,16 +921,22 @@ private function GetVehiclePoolIndicesByTag(name PoolTag, out array<byte> Vehicl
     }
 }
 
-private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, byte Value)
+private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
 {
     if (GRI != none && !GRI.IsVehiclePoolInfinite(VehiclePoolIndex))
     {
-        GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] = Min(int(GRI.VehiclePoolMaxSpawns[VehiclePoolIndex]) + int(Value), 254);
-
-        // Send "vehicle reinforcements have arrived" message
         if (Value > 0)
         {
+            // Send "vehicle reinforcements have arrived" message
             BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
+        }
+
+        GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] = Clamp(int(GRI.VehiclePoolMaxSpawns[VehiclePoolIndex]) + Value, 0, 254);
+
+        if (Value < 0 && GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] == 0)
+        {
+            // Send "vehicle reinforcements have been cut off" message
+            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
         }
     }
 }
@@ -990,7 +996,7 @@ function SetVehiclePoolMaxSpawnsByTag(name VehiclePoolTag, byte MaxSpawns)
     }
 }
 
-function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, byte Value)
+function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
 {
     local array<byte> VehiclePoolIndices;
     local int         i;
@@ -1001,7 +1007,17 @@ function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, byte Value)
 
         for (i = 0; i < VehiclePoolIndices.Length; ++i)
         {
-            GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] += Value;
+            if (Value > 0)
+            {
+                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
+            }
+
+            GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] = Clamp(int(GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]]) + Value, 0, 254);
+
+            if (Value < 0 && GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] == 0)
+            {
+                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
+            }
         }
     }
 }
@@ -1156,6 +1172,11 @@ function Timer()
         if (FindEntryVehicle(false, ROVehicle(V)) == none)
         {
             BlockFlags = BlockFlags | BlockFlags_Full;
+        }
+
+        if (BlockFlags == BlockFlags_None)
+        {
+            GRI.SpawnVehicles[i].Location.Z = float(GRI.ElapsedTime);
         }
 
         // Update this spawn vehicle's bIsBlocked setting in the GRI

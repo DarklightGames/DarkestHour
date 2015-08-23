@@ -8,6 +8,7 @@ class DHGameMessage extends ROGameMessage;
 var localized string VehicleDestroyedMessage;
 var localized string VehicleDepletedMessage;
 var localized string VehicleArrivedMessage;
+var localized string VehicleCutOffMessage;
 
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored
@@ -160,7 +161,11 @@ static function string GetString(
     // is the index into the DHSpawnManager.VehiclePools array.
     if (SM != none)
     {
-        if (Switch >= 300)
+        if (Switch >= 400)
+        {
+            S = default.VehicleCutOffMessage;
+        }
+        else if (Switch >= 300)
         {
             // Vehicle reinforcements have arrived
             S = default.VehicleArrivedMessage;
@@ -187,4 +192,5 @@ defaultproperties
     VehicleDestroyedMessage="{0} has been destroyed."
     VehicleDepletedMessage="{0} reinforcements have been depleted."
     VehicleArrivedMessage="{0} reinforcements have arrived."
+    VehicleCutOffMessage="{0} reinforcements have been cut off."
 }
