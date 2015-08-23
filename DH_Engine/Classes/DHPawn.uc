@@ -2014,8 +2014,6 @@ function DestroyRadioTrigger()
         return;
     }
 
-    Level.Game.Broadcast(self, "DestroyRadioTrigger");
-
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     GRI.RemoveCarriedRadioTrigger(CarriedRadioTrigger);
