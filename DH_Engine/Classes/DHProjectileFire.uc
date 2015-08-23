@@ -453,7 +453,7 @@ simulated function HandleRecoil()
 defaultproperties
 {
     ProjPerFire=1
-    bUsePreLaunchTrace=true
+    bUsePreLaunchTrace=false // TEMP TEST (Matt: to see what difference it makes if we skip the PLT and let DHBullet handle things)
     PreLaunchTraceDistance=2624.0 // 43.5m
     CrouchSpreadModifier=0.85
     ProneSpreadModifier=0.7
