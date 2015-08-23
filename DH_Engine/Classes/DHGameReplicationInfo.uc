@@ -19,7 +19,8 @@ struct MortarTarget
 struct SpawnVehicle
 {
     var byte            TeamIndex;
-    var vector          Location;
+    var int             LocationX;
+    var int             LocationY;
     var class<Vehicle>  VehicleClass;
     var Vehicle         Vehicle;
     var byte            BlockFlags;
@@ -59,13 +60,15 @@ var float               AttritionRate[2];
 // Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
 const VEHICLE_POOLS_MAX = 32;
 
+//TODO: vehicle classes should have been made available in static data for client and server to read
 var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
-var private byte        VehiclePoolIsActives[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolIsActives[VEHICLE_POOLS_MAX];
 var float               VehiclePoolNextAvailableTimes[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolActiveCounts[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolMaxSpawns[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolSpawnCounts[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
 
 var byte                MaxTeamVehicles[2];
 
@@ -149,9 +152,8 @@ simulated event Timer()
         {
             if (SpawnVehicles[i].Vehicle != none)
             {
-                SpawnVehicles[i].Location.X = SpawnVehicles[i].Vehicle.Location.X;
-                SpawnVehicles[i].Location.Y = SpawnVehicles[i].Vehicle.Location.Y;
-                SpawnVehicles[i].Location.Z = SpawnVehicles[i].Vehicle.Rotation.Yaw;
+                SpawnVehicles[i].LocationX = SpawnVehicles[i].Vehicle.Location.X;
+                SpawnVehicles[i].LocationY = SpawnVehicles[i].Vehicle.Location.Y;
             }
         }
     }
@@ -313,11 +315,6 @@ simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte Spa
 // Vehicle Pool Functions
 //------------------------------------------------------------------------------
 
-function SetVehiclePoolVehicleClass(byte VehiclePoolIndex, class<ROVehicle> VehicleClass)
-{
-    VehiclePoolVehicleClasses[VehiclePoolIndex] = VehicleClass;
-}
-
 function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
 {
     local Controller C;
@@ -436,12 +433,12 @@ function int AddSpawnVehicle(Vehicle V)
     {
         if (SpawnVehicles[i].Vehicle == none)
         {
-            SpawnVehicles[i].Location.X = V.Location.X;
-            SpawnVehicles[i].Location.Y = V.Location.Y;
-            SpawnVehicles[i].Location.Z = V.Rotation.Yaw;
+            SpawnVehicles[i].LocationX = V.Location.X;
+            SpawnVehicles[i].LocationY = V.Location.Y;
             SpawnVehicles[i].TeamIndex = V.GetTeamNum();
             SpawnVehicles[i].VehicleClass = V.Class;
             SpawnVehicles[i].Vehicle = V;
+            SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
 
             // Vehicle was successfully added
             return i;
@@ -464,10 +461,12 @@ function bool RemoveSpawnVehicle(Vehicle V)
     {
         if (SpawnVehicles[i].Vehicle == V)
         {
-            SpawnVehicles[i].Location = vect(0.0, 0.0, 0.0);
+            SpawnVehicles[i].LocationX = 0;
+            SpawnVehicles[i].LocationY = 0;
             SpawnVehicles[i].TeamIndex = 0;
             SpawnVehicles[i].VehicleClass = none;
             SpawnVehicles[i].Vehicle = none;
+            SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
 
             for (C = Level.ControllerList; C != none; C = C.NextController)
             {
@@ -708,7 +707,7 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
     local byte NewVoiceID;
     local int i;
 
-    if ( Level.NetMode == NM_ListenServer || Level.NetMode == NM_DedicatedServer )
+    if (Level.NetMode == NM_ListenServer || Level.NetMode == NM_DedicatedServer)
     {
         for (i = 0; i < PRIArray.Length; i++)
         {
@@ -726,6 +725,21 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
     }
 
     PRIArray[PRIArray.Length] = PRI;
+}
+
+simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(SpawnVehicles); ++i)
+    {
+        if (SpawnVehicles[i].Vehicle == V)
+        {
+            return SpawnVehicles[i].BlockFlags;
+        }
+    }
+
+    return class'DHSpawnManager'.default.BlockFlags_None;
 }
 
 defaultproperties

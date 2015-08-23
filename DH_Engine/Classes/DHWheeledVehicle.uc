@@ -35,7 +35,7 @@ struct CarHitpoint
 var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
 
 // General
-var     byte        SpawnVehicleType;            // set by DHSpawnManager & used here for engine on/off hints
+var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
 var     float       PointValue;                  // used for scoring
 var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
@@ -98,7 +98,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, SpawnVehicleType;
+        bEngineOff, bIsSpawnVehicle;
 //      bEngineDead      // Matt: removed variable (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax  // Matt: removed variable (it never changed anyway & didn't need to be replicated)
 //      bResupplyVehicle // Matt: removed variable (it never changed anyway & didn't need to be replicated)
@@ -730,15 +730,9 @@ simulated function ClientKDriverEnter(PlayerController PC)
     {
         P.QueueHint(40, true);
 
-        if (SpawnVehicleType != class'DHSpawnManager'.default.SVT_None)
+        if (bIsSpawnVehicle)
         {
             P.QueueHint(14, true);
-
-            if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
-            {
-                P.QueueHint(15, true);
-            }
-
             P.QueueHint(16, true);
         }
     }
@@ -1069,17 +1063,6 @@ function DriverLeft()
     DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
 }
 
-// Modified to add a hint if player has left a deployment vehicle with the engine running (team can't spawn on it unless engine is off)
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff && !bEngineOff && DHPlayer(PC) != none)
-    {
-        DHPlayer(PC).QueueHint(17, true);
-    }
-
-    super.ClientKDriverLeave(PC);
-}
-
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
 function bool PlaceExitingDriver()
 {
@@ -1171,18 +1154,6 @@ function ServerStartEngine()
             else if (StartUpSound != none)
             {
                 PlaySound(StartUpSound, SLOT_None, 1.0);
-            }
-
-            if (GRI != none && SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
-            {
-                if (bEngineOff)
-                {
-                    GRI.AddSpawnVehicle(self);
-                }
-                else
-                {
-                    GRI.RemoveSpawnVehicle(self);
-                }
             }
         }
         else
@@ -1882,6 +1853,11 @@ function MaybeDestroyVehicle()
 event CheckReset()
 {
     local Pawn P;
+
+    if (bIsSpawnVehicle)
+    {
+        return;
+    }
 
     // Vehicle occupied, so reset ResetTime
     if (!IsVehicleEmpty())

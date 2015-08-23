@@ -46,6 +46,7 @@ var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
 var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
+var automated   GUIImage                        i_SpawnVehicle;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
@@ -144,6 +145,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Equipment.ManageComponent(cb_SecondaryWeapon);
 
     c_Vehicle.ManageComponent(i_Vehicle);
+    c_Vehicle.ManageComponent(i_SpawnVehicle);
     c_Vehicle.ManageComponent(lb_Vehicles);
 
     c_Roles.ManageComponent(lb_Roles);
@@ -179,12 +181,14 @@ function SetLoadoutMode(ELoadoutMode Mode)
         case LM_Equipment:
             b_EquipmentButton.DisableMe();
             b_VehicleButton.EnableMe();
+            i_SpawnVehicle.SetVisibility(false);
 
             break;
         case LM_Vehicle:
             b_EquipmentButton.EnableMe();
             b_VehicleButton.DisableMe();
             i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
+            UpdateVehicleImage();
 
             break;
     }
@@ -374,7 +378,8 @@ function UpdateSpawnPoints()
             }
             else
             {
-                L = GRI.SpawnVehicles[i].Location;
+                L.X = GRI.SpawnVehicles[i].LocationX;
+                L.Y = GRI.SpawnVehicles[i].LocationX;
             }
 
             GetMapCoords(L, X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight);
@@ -1157,17 +1162,7 @@ function InternalOnChange(GUIComponent Sender)
 
         case li_Vehicles:
         case lb_Vehicles:
-            VehicleClass = class<Vehicle>(li_Vehicles.GetObject());
-
-            if (VehicleClass != none)
-            {
-                i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
-            }
-            else
-            {
-                i_Vehicle.Image = default.VehicleNoneMaterial;
-            }
-
+            UpdateVehicleImage();
             UpdateSpawnPoints();
             UpdateStatus();
 
@@ -1175,6 +1170,32 @@ function InternalOnChange(GUIComponent Sender)
 
         default:
             break;
+    }
+}
+
+function UpdateVehicleImage()
+{
+    local class<Vehicle> VehicleClass;
+
+    VehicleClass = class<Vehicle>(li_Vehicles.GetObject());
+
+    if (VehicleClass != none)
+    {
+        i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
+
+        if (GRI.VehiclePoolIsSpawnVehicles[GRI.GetVehiclePoolIndex(VehicleClass)] != 0)
+        {
+            i_SpawnVehicle.Show();
+        }
+        else
+        {
+            i_SpawnVehicle.Hide();
+        }
+    }
+    else
+    {
+        i_Vehicle.Image = default.VehicleNoneMaterial;
+        i_SpawnVehicle.Hide();
     }
 }
 
@@ -1774,6 +1795,20 @@ defaultproperties
         ImageAlign=IMGA_Center
     End Object
     i_Vehicle=VehicleImageObject
+
+    Begin Object Class=GUIImage Name=SpawnVehicleImageObject
+        WinWidth=1.0
+        WinHeight=0.125
+        WinLeft=0.0
+        WinTop=0.0
+        ImageStyle=ISTY_Normal
+        ImageAlign=IMGA_BottomRight
+        Image=material'DH_GUI_Tex.DeployMenu.DeployEnabled'
+        bVisible=false
+    End Object
+    i_SpawnVehicle=SpawnVehicleImageObject
+
+    i_SpawnVehicle
 
     Begin Object Class=GUILabel Name=StatusLabelObject
         WinWidth=0.26

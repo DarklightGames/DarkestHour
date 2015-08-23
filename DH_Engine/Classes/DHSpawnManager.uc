@@ -18,13 +18,6 @@ enum ESpawnPointType
     ESPT_All
 };
 
-enum ESpawnVehicleType
-{
-    ESVT_None,
-    ESVT_EngineOff, // vehicle's engine must be off for players to be able to deploy into it
-    ESVT_Always     // player's can always spawn into or next to vehicle (more like a mobile deploy vehicle from DH v5.0/5.1)
-};
-
 struct VehiclePoolSlot
 {
     var ROVehicle   Vehicle;
@@ -36,7 +29,7 @@ struct VehiclePool
     var() name              Tag;
     var() class<ROVehicle>  VehicleClass;
     var() bool              bIsInitiallyActive;
-    var() ESpawnVehicleType SpawnVehicleType;
+    var() bool              bIsSpawnVehicle;
     var() float             RespawnTime;             // respawn interval in seconds
     var() byte              MaxSpawns;               // how many vehicles can be spawned from this pool
     var() byte              MaxActive;               // how many vehicles from this pool can be active at once
@@ -130,6 +123,7 @@ function PostBeginPlay()
 
         // VP is valid
         GRI.VehiclePoolVehicleClasses[i] = VehiclePools[i].VehicleClass;
+        GRi.VehiclePoolIsSpawnVehicles[i] = byte(VehiclePools[i].bIsSpawnVehicle);
 
         if (VehiclePools[i].MaxActive != 255)
         {
@@ -321,8 +315,10 @@ function bool SpawnVehicle(DHPlayer C)
     }
 
     // Make sure player isn't excluded from a tank crew role
-    if (VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander && (ROPlayerReplicationInfo(C.PlayerReplicationInfo) == none
-        || ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    if (VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander &&
+        (ROPlayerReplicationInfo(C.PlayerReplicationInfo) == none
+            || ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo == none
+            || !ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
         return false;
     }
@@ -363,17 +359,17 @@ function bool SpawnVehicle(DHPlayer C)
         // Start engine
         if (V.IsA('DHWheeledVehicle'))
         {
-            DHWheeledVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
+            DHWheeledVehicle(V).bIsSpawnVehicle = VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle;
             DHWheeledVehicle(V).ServerStartEngine();
         }
         else if (V.IsA('DHArmoredVehicle'))
         {
-            DHArmoredVehicle(V).SpawnVehicleType = VehiclePools[C.VehiclePoolIndex].SpawnVehicleType;
+            DHArmoredVehicle(V).bIsSpawnVehicle = VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle;
             DHArmoredVehicle(V).ServerStartEngine();
         }
 
         // If it's a spawn vehicle that doesn't require the engine to be off, add to GRI's SpawnVehicles array
-        if (VehiclePools[C.VehiclePoolIndex].SpawnVehicleType == ESVT_Always)
+        if (VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle)
         {
             GRI.AddSpawnVehicle(V);
         }
@@ -401,6 +397,11 @@ function bool SpawnVehicle(DHPlayer C)
         {
             TriggerEvent(VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
         }
+
+        // Invalidate spawn point, since we don't want our players repeatedly
+        // spawning the same vehicles with no effort involved.
+        C.VehiclePoolIndex = 255;
+        C.bSpawnPointInvalidated = true;
     }
     // We were unable to enter the vehicle, so destroy it & kill the player, so they aren't stuck in the black room
     else
@@ -421,6 +422,7 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
     local vector        Offset;
     local array<int>    ExitPositionIndices;
     local int           VehiclePoolIndex, i;
+    local bool          bEngineOff;
 
     if (C == none || GRI == none || DarkestHourGame(Level.Game) == none)
     {
@@ -460,9 +462,18 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
             VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
 
             // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
-            if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_EngineOff)
+            if (V.IsA('DHArmoredVehicle'))
             {
-                // 1st choice - attempt to deploy at an exit position
+                bEngineOff = DHArmoredVehicle(V).bEngineOff;
+            }
+            else if (V.IsA('DHWheeledVehicle'))
+            {
+                bEngineOff = DHWheeledVehicle(V).bEngineOff;
+            }
+
+            if (bEngineOff)
+            {
+                // Attempt to deploy at an exit position
                 for (i = 0; i < ExitPositionIndices.Length; ++i)
                 {
                     if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
@@ -470,29 +481,16 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
                         return true; // success
                     }
                 }
-
-                // 2nd choice - if all exit positions were blocked, attempt to deploy into the vehicle
+            }
+            else
+            {
+                // Attempt to deploy into the vehicle
                 EntryVehicle = FindEntryVehicle(C.GetRoleInfo().bCanBeTankCrew, ROVehicle(V));
 
                 if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
                 {
                     return true; // success
                 }
-
-                break; // failure
-            }
-            // Spawn vehicle is the type that always allows players to deploy to it & doesn't need its engine to be off, so it may well be moving
-            else if (VehiclePools[VehiclePoolIndex].SpawnVehicleType == SVT_Always)
-            {
-                // 1st choice - attempt to deploy into the vehicle
-                EntryVehicle = FindEntryVehicle(C.GetRoleInfo().bCanBeTankCrew, ROVehicle(V));
-
-                if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
-                {
-                    return true;
-                }
-
-                break; // failure
             }
         }
         else
@@ -1172,11 +1170,6 @@ function Timer()
         if (FindEntryVehicle(false, ROVehicle(V)) == none)
         {
             BlockFlags = BlockFlags | BlockFlags_Full;
-        }
-
-        if (BlockFlags == BlockFlags_None)
-        {
-            GRI.SpawnVehicles[i].Location.Z = float(GRI.ElapsedTime);
         }
 
         // Update this spawn vehicle's bIsBlocked setting in the GRI

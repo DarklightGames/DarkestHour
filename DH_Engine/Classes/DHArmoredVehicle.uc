@@ -39,7 +39,7 @@ var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small poi
 
 // General
 var     array<Material> CannonSkins;        // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
-var     byte        SpawnVehicleType;       // set by DHSpawnManager & used here for engine on/off hints
+var     bool        bIsSpawnVehicle;        // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
@@ -172,7 +172,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bOnFire, bEngineOnFire, SpawnVehicleType;
+        bEngineOff, bOnFire, bEngineOnFire, bIsSpawnVehicle;
 //      bEngineDead                                 // Matt: removed variable (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax                             // Matt: removed variable (it never changed anyway & didn't need to be replicated)
 //      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
@@ -1121,15 +1121,9 @@ simulated function ClientKDriverEnter(PlayerController PC)
     {
         P.QueueHint(40, true);
 
-        if (SpawnVehicleType != class'DHSpawnManager'.default.SVT_None)
+        if (bIsSpawnVehicle)
         {
             P.QueueHint(14, true);
-
-            if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
-            {
-                P.QueueHint(15, true);
-            }
-
             P.QueueHint(16, true);
         }
     }
@@ -1474,17 +1468,6 @@ function DriverLeft()
     DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
 }
 
-// Modified to add a hint if player has left a deployment vehicle with the engine running (team can't spawn on it unless engine is off)
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    if (SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff && !bEngineOff && DHPlayer(PC) != none)
-    {
-        DHPlayer(PC).QueueHint(17, true);
-    }
-
-    super.ClientKDriverLeave(PC);
-}
-
 // New function to check if player can exit, displaying an "unbutton the hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
@@ -1591,10 +1574,6 @@ function AltFire(optional float F)
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval)
     {
@@ -1616,18 +1595,6 @@ function ServerStartEngine()
             else if (StartUpSound != none)
             {
                 PlaySound(StartUpSound, SLOT_None, 1.0);
-            }
-
-            if (GRI != none && SpawnVehicleType == class'DHSpawnManager'.default.SVT_EngineOff)
-            {
-                if (bEngineOff)
-                {
-                    GRI.AddSpawnVehicle(self);
-                }
-                else
-                {
-                    GRI.RemoveSpawnVehicle(self);
-                }
             }
         }
         else
@@ -3644,6 +3611,11 @@ function MaybeDestroyVehicle()
 event CheckReset()
 {
     local Pawn P;
+
+    if (bIsSpawnVehicle)
+    {
+        return;
+    }
 
     // Vehicle occupied, so reset ResetTime
     if (!IsVehicleEmpty())
