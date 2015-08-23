@@ -35,7 +35,7 @@ var() sound AlliesWinsMusic;            //Optional override for Allies victory m
 var() sound AxisWinsMusic;              //Optional override for Axis victory music
 
 var() ESpawnMode SpawnMode;
-var() int AttritionRate;                //Colin: Attrition rate defines the maximum rate of reinforcement drain when the enemy controls all objectives.
+var() InterpCurve   AttritionRateCurve; //Colin: Attrition rate defines the maximum rate of reinforcement drain when the enemy controls all objectives.
 
 var() Material LoadingScreenRef;        //Used to stop loading screen image from being removed on save (not otherwise used)
                                         //Must be set to myLevel.GUI.LoadingScreen to work!

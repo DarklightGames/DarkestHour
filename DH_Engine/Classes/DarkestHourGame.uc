@@ -1726,8 +1726,8 @@ state RoundInPlay
         if (GRI != none)
         {
             // Calculate attrition rates
-            GRI.AttritionRate[ALLIES_TEAM_INDEX] = DHLevelInfo.AttritionRate * (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj) / 60.0;
-            GRI.AttritionRate[AXIS_TEAM_INDEX]   = DHLevelInfo.AttritionRate * (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj) / 60.0;
+            GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
+            GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj)) / 60.0;
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
@@ -2092,7 +2092,7 @@ function ReduceReinforcements(int Team, int Amount)
             {
                 // Colin: if this team is attacking OR there is no defending side
                 // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
-                if (RoundDuration == 0 && DHLevelInfo.AttritionRate > 0.0)
+                if (RoundDuration == 0 && DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
                 {
                     Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero with attrition", 'Say');
                     Choosewinner();
@@ -2541,7 +2541,7 @@ function ChooseWinner()
 
     // Attrition check
     // Check to see who has more reinforcements
-    if (DHLevelInfo.AttritionRate > 0.0)
+    if (DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
     {
         // This game is using attrition; therefore, the winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
