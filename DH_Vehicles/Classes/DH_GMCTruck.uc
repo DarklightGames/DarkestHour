@@ -16,7 +16,7 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=0.1),(InVal=200.0,OutVal=0.5),(InVal=10000000000.0,OutVal=0.2)))
     WheelLongSlip=0.001
     WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
@@ -30,19 +30,19 @@ defaultproperties
     MinBrakeFriction=4.0
     MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
     TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
-    GearRatios(0)=-0.2
+    GearRatios(0)=-0.3
     GearRatios(1)=0.2
     GearRatios(2)=0.35
     GearRatios(3)=0.65
     GearRatios(4)=0.85
-    TransRatio=0.12
+    TransRatio=0.15
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
     MaxBrakeTorque=20.0
-    SteerSpeed=100.0
+    SteerSpeed=60.0
     TurnDamping=35.0
     StopThreshold=100.0
     HandbrakeThresh=200.0
