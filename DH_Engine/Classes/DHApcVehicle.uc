@@ -22,7 +22,13 @@ var     array<name>         LeftWheelBones, RightWheelBones; // for animation on
 var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
 var     int                 WheelRotationScale;              // allows adjustment of wheel rotation speed for each vehicle
 
+// Optional collision static mesh for driver's armoured visor
+var     DHCollisionStaticMeshActor    VisorColMeshActor;
+var     StaticMesh                    VisorColStaticMesh;
+var     name                          VisorColAttachBone;
+
 // Modified to add treads (from ROTreadCraft)
+// Also to add optional collision static mesh actor to represent a driver's armoured visor, which will raise or lower with driver view changes
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -30,6 +36,20 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetupTreads();
+    }
+
+    if (VisorColStaticMesh != none)
+    {
+        VisorColMeshActor = Spawn(class'DHCollisionStaticMeshActor', self); // vital that this vehicle owns the col mesh actor
+
+        if (VisorColMeshActor != none)
+        {
+            VisorColMeshActor.bHardAttach = true;
+            AttachToBone(VisorColMeshActor, VisorColAttachBone);
+            VisorColMeshActor.SetRelativeRotation(Rotation - GetBoneRotation(VisorColAttachBone)); // because a visor bone may be modelled with rotation in the reference pose
+            VisorColMeshActor.SetRelativeLocation((Location - GetBoneCoords(VisorColAttachBone).Origin) << (Rotation - VisorColMeshActor.RelativeRotation));
+            VisorColMeshActor.SetStaticMesh(VisorColStaticMesh);
+        }
     }
 }
 
@@ -183,7 +203,7 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
     }
 }
 
-// Modified to destroy treads
+// Modified to destroy treads & visor collision mesh
 simulated function DestroyAttachments()
 {
     super.DestroyAttachments();
@@ -212,6 +232,11 @@ simulated function DestroyAttachments()
             RightTreadSoundAttach.Destroy();
         }
     }
+
+    if (VisorColMeshActor != none)
+    {
+        VisorColMeshActor.Destroy();
+    }
 }
 
 // Modified to disable if vehicle takes major damage, as well as if engine is dead
@@ -219,6 +244,15 @@ simulated function DestroyAttachments()
 simulated function bool IsDisabled()
 {
     return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
+}
+
+// New debugging exec function to toggle showing the optional collision mesh representing a driver's armoured visor
+exec function ShowColMesh()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && VisorColMeshActor != none)
+    {
+        VisorColMeshActor.bHidden = !VisorColMeshActor.bHidden;
+    }
 }
 
 defaultproperties
