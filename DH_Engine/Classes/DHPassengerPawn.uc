@@ -488,6 +488,7 @@ defaultproperties
     bKeepDriverAuxCollision=true
     DriverDamageMult=1.0
     CameraBone="body"
+    FPCamPos=(X=0.0,Y=0.0,Z=0.0)
     WeaponFOV=90.0
     TPCamDistance=200.0
     EntryRadius=375.0
@@ -496,5 +497,5 @@ defaultproperties
     bPCRelativeFPRotation=true
     bAllowViewChange=false
     bDesiredBehindView=false
-    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset (but shouldn't need to, as we use player's head bone for camera location)
 }

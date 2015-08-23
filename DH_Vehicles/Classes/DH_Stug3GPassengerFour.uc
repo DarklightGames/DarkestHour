@@ -12,5 +12,4 @@ defaultproperties
     DrivePos=(X=0.0,Y=0.0,Z=57.0)
     DriveRot=(Pitch=1800)
     DriveAnim="crouch_idle_binoc"
-    FPCamPos=(X=0.0,Z=0.0)
 }

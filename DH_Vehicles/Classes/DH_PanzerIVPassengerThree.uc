@@ -11,5 +11,4 @@ defaultproperties
     DrivePos=(X=-150.0,Y=35.0)
     DriveRot=(Yaw=32768)
     DriveAnim="VHalftrack_Rider5_idle"
-    FPCamPos=(X=-150.0,Y=35.0,Z=100.0)
 }

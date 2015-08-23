@@ -10,5 +10,4 @@ defaultproperties
     HudName="Passenger"
     DriverHudName="Coxswain"
     DrivePos=(X=0.0,Y=0.0,Z=20.0)
-    FPCamPos=(X=0.0,Y=0.0,Z=14.0)
 }
