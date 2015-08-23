@@ -110,6 +110,7 @@ replication
         VehiclePoolMaxActives,
         VehiclePoolMaxSpawns,
         VehiclePoolSpawnCounts,
+        VehiclePoolIsSpawnVehicles,
         SpawnPointIsActives,
         SpawnVehicles,
         MaxTeamVehicles,
