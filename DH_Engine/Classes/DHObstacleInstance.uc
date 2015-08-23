@@ -56,11 +56,6 @@ simulated state Intact
     {
         local DarkestHourGame G;
 
-        if (class'DH_LevelInfo'.static.DHDebugMode())
-        {
-            Log("Damage taken: " $ Damage @ "DamageType: " $ DamageType);
-        }
-
         if (Role == ROLE_Authority &&
             Info.CanBeDestroyedByExplosives() &&
             !DamageType.default.bLocationalHit &&
