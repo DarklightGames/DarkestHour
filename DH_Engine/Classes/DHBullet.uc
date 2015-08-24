@@ -172,8 +172,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local bool               bDoDeflection;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
-    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
-        || (Other.IsA('Projectile') && !Other.bProjTarget))
+    if (Other == none || SavedTouchActor == Other || !Other.bBlockHitPointTraces || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
+        || Other.bDeleteMe || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
     }

@@ -313,7 +313,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
             }
 
             // Register a hit on the blocking actor, providing it isn't anything ProcessTouch would normally ignore
-            if (!A.bDeleteMe && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+            if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget))
             {
                 Other = A;
                 HitLocation = TempHitLocation;
