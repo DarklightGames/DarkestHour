@@ -43,12 +43,6 @@ When modelling a new VW col mesh, e.g. a tank turret:
 - Avoid convex angles in the col mesh, as static mesh collision detection doesn't like that, so where necessary split the mesh into separate, convex, 'closed' parts
 */
 
-// Options to control what kind of projectile or damage this collision actor will stop (stops all by default)
-var     bool    bWontStopBullet;           // won't stop a DHBullet
-var     bool    bWontStopShell;            // won't stop a DHAntiVehicleProjectile, e.g. a cannon shell (also includes AT rocket)
-var     bool    bWontStopBlastDamage;      // won't stop blast damage caused by HurtRadius function
-var     bool    bWontStopThrownProjectile; // won't stop a DHThrowableExplosiveProjectile, e.g. grenade or satchel (hard to see utility, but included for completeness)
-
 // Modified to copy the owning VehicleWeapon's collision properties
 simulated function PostBeginPlay()
 {

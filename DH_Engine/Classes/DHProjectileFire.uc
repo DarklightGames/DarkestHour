@@ -306,8 +306,8 @@ function bool PreLaunchTrace(vector Start, vector Direction)
         // We hit a blocking actor, but do some checks on it
         if (A.bBlockActors || A.bWorldGeometry)
         {
-            // Matt: if hit a collision mesh actor (probably turret, maybe exposed vehicle MG), we switch hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor
-            if (DHCollisionStaticMeshActor(A) != none && A.Owner != none)
+            // Matt: if we hit a collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+            if (A.IsA('DHCollisionMeshActor'))
             {
                 A = A.Owner;
             }

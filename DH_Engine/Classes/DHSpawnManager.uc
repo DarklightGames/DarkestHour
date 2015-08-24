@@ -451,51 +451,44 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
     Offset = C.PawnClass.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Check if we can deploy into or near the vehicle
-    while (true)
+    if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
     {
-        if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
+        // Randomise exit locations
+        ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
+        class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
+
+        VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
+
+        // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
+        if (V.IsA('DHArmoredVehicle'))
         {
-            // Randomise exit locations
-            ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
-            class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
+            bEngineOff = DHArmoredVehicle(V).bEngineOff;
+        }
+        else if (V.IsA('DHWheeledVehicle'))
+        {
+            bEngineOff = DHWheeledVehicle(V).bEngineOff;
+        }
 
-            VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
-
-            // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
-            if (V.IsA('DHArmoredVehicle'))
+        if (bEngineOff)
+        {
+            // Attempt to deploy at an exit position
+            for (i = 0; i < ExitPositionIndices.Length; ++i)
             {
-                bEngineOff = DHArmoredVehicle(V).bEngineOff;
-            }
-            else if (V.IsA('DHWheeledVehicle'))
-            {
-                bEngineOff = DHWheeledVehicle(V).bEngineOff;
-            }
-
-            if (bEngineOff)
-            {
-                // Attempt to deploy at an exit position
-                for (i = 0; i < ExitPositionIndices.Length; ++i)
+                if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
                 {
-                    if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
-                    {
-                        return true; // success
-                    }
-                }
-            }
-            else
-            {
-                // Attempt to deploy into the vehicle
-                EntryVehicle = FindEntryVehicle(C.GetRoleInfo().bCanBeTankCrew, ROVehicle(V));
-
-                if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
-                {
-                    return true; // success
+                    return true;
                 }
             }
         }
         else
         {
-            break; // failure
+            // Attempt to deploy into the vehicle
+            EntryVehicle = FindEntryVehicle(C.GetRoleInfo().bCanBeTankCrew, ROVehicle(V));
+
+            if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
+            {
+                return true;
+            }
         }
     }
 
