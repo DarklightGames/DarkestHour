@@ -5,13 +5,13 @@
 
 class DHMinefield_ATMine extends ROMine;
 
-// Overridden to explode on vehicles only // Matt: also modified to handle new VehicleWeapon collision mesh actor
-// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+// Overridden to explode on vehicles only
+// Matt: also to handle new collision mesh actor - if touched by col mesh, we switch touching actor to be col mesh's owner & proceed as if we'd been touched by that actor instead
 singular function Touch(Actor Other)
 {
     local int RandomNum;
 
-    if (DHCollisionStaticMeshActor(Other) != none)
+    if (Other.IsA('DHCollisionMeshActor'))
     {
         Other = Other.Owner;
     }
@@ -53,9 +53,9 @@ singular function Touch(Actor Other)
     SpawnExplosionEffects();
 }
 
-// Matt: modified to handle new VehicleWeapon collision mesh actor
-// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
+// Modified to avoid re-damaging the vehicle that triggered the mine, & to check whether a vehicle is shielding a hit actor from the blast
+// Matt: also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 {
     local Actor  Victims, LastTouched;
     local float  damageScale, dist;
@@ -72,8 +72,8 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
-        // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DHCollisionStaticMeshActor(Victims) != none)
+        // If hit collision mesh actor, switch to its owner
+        if (Victims.IsA('DHCollisionMeshActor'))
         {
             Victims = Victims.Owner;
         }
@@ -114,7 +114,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         LastTouched = none;
 
         // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DHCollisionStaticMeshActor(Victims) != none)
+        if (DHCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
         }

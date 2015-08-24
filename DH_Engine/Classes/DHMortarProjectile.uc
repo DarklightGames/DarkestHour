@@ -139,15 +139,14 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// Matt: modified to handle new VehicleWeapon collision mesh actor
-// If we hit collision mesh actor (probably turret, maybe an exposed vehicle MG), we switch the hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor
+// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
-        if (Other.IsA('DHCollisionStaticMeshActor'))
+        if (Other.IsA('DHCollisionMeshActor'))
         {
             Other = Other.Owner;
         }
@@ -345,8 +344,7 @@ function SetHitLocation(vector HitLocation)
     Log("C.MortarHitLocation" @ C.MortarHitLocation);
 }
 
-// Matt: modified to handle new VehicleWeapon collision mesh actor
-// If we hit collision mesh actor (probably turret, maybe an exposed vehicle MG), we switch the hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor
+// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
@@ -371,8 +369,8 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     // Find all colliding actors within blast radius, which the blast should damage
     foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
-        // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DHCollisionStaticMeshActor(Victims) != none)
+        // If hit collision mesh actor, switch to its owner
+        if (Victims.IsA('DHCollisionMeshActor'))
         {
             Victims = Victims.Owner;
         }
@@ -380,7 +378,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // Don't damage this projectile, an actor already damaged by projectile impact (HurtWall), non-authority actors, or fluids
         if (Victims != self && HurtWall != Victims && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
         {
-            // Do a trace to the actor & if there's a vehicle between the player and explosion, don't apply damage
+            // Do a trace to the actor & if there's a vehicle between it & the explosion, don't apply damage
             TraceHitActor = Trace(TraceHitLocation, TraceHitNormal, Victims.Location, HitLocation);
 
             if (Vehicle(TraceHitActor) != none && TraceHitActor != Victims)
@@ -478,7 +476,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         Victims = LastTouched;
         LastTouched = none;
 
-        if (DHCollisionStaticMeshActor(Victims) != none)
+        if (Victims.IsA('DHCollisionMeshActor'))
         {
             Victims = Victims.Owner;
         }

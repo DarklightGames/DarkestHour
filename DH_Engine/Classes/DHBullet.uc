@@ -122,15 +122,14 @@ simulated function Tick(float DeltaTime)
 //  }
 }
 
-// Matt: modified to handle new VehicleWeapon collision mesh actor
-// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real VehicleWeapon & proceed as if we'd hit that actor instead
+// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
-        if (Other.IsA('DHCollisionStaticMeshActor'))
+        if (Other.IsA('DHCollisionMeshActor'))
         {
             Other = Other.Owner;
         }
@@ -266,8 +265,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 // We hit a blocking actor in the way, but do some checks on it
                 if (A.bBlockActors || A.bWorldGeometry)
                 {
-                    // If hit collision mesh actor (probably turret, maybe exposed vehicle MG), switch hit actor to be real VehicleWeapon & proceed as if we'd hit that actor
-                    if (A.IsA('DHCollisionStaticMeshActor'))
+                    // If hit collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+                    if (A.IsA('DHCollisionMeshActor'))
                     {
                         A = A.Owner;
                     }

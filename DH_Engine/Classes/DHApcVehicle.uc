@@ -23,9 +23,9 @@ var     rotator             LeftWheelRot, RightWheelRot;     // keep track of th
 var     int                 WheelRotationScale;              // allows adjustment of wheel rotation speed for each vehicle
 
 // Optional collision static mesh for driver's armoured visor
-var     DHCollisionStaticMeshActor    VisorColMeshActor;
-var     StaticMesh                    VisorColStaticMesh;
-var     name                          VisorColAttachBone;
+var    DHCollisionMeshActor VisorColMeshActor;
+var    StaticMesh           VisorColStaticMesh;
+var    name                 VisorColAttachBone;
 
 // Modified to add treads (from ROTreadCraft)
 // Also to add optional collision static mesh actor to represent a driver's armoured visor, which will raise or lower with driver view changes
@@ -40,7 +40,7 @@ simulated function PostBeginPlay()
 
     if (VisorColStaticMesh != none)
     {
-        VisorColMeshActor = Spawn(class'DHCollisionStaticMeshActor', self); // vital that this vehicle owns the col mesh actor
+        VisorColMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this vehicle owns the col mesh actor
 
         if (VisorColMeshActor != none)
         {

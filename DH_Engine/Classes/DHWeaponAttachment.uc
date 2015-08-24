@@ -253,7 +253,7 @@ simulated function GetHitInfo()
         mHitActor = Trace(HitLocation, mHitNormal, mHitLocation - Offset, mHitLocation + Offset, true);
 
         // If we hit collision mesh actor (probably turret, maybe an exposed vehicle MG), we switch mHitActor to be the real VehicleWeapon & proceed as if we'd hit that actor
-        if (DHCollisionStaticMeshActor(mHitActor) != none)
+        if (DHCollisionMeshActor(mHitActor) != none)
         {
             mHitActor = mHitActor.Owner;
         }

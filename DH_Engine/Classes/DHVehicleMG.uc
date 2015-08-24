@@ -17,8 +17,8 @@ var     byte    NumMags;              // number of mags carried for this MG (use
 var     sound   NoAmmoSound;          // 'dry fire' sound when trying to fire empty MG
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
-var     DHCollisionStaticMeshActor  CollisionMeshActor;
-var     StaticMesh                  CollisionStaticMesh; // specify a valid static mesh in MG's default props & the col static mesh will automatically be used
+var     DHCollisionMeshActor    CollisionMeshActor;
+var     StaticMesh              CollisionStaticMesh; // specify a valid static mesh in MG's default props & the col static mesh will automatically be used
 
 // Stuff for fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HullMGFireEffect;
@@ -75,7 +75,7 @@ simulated function PostBeginPlay()
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = Spawn(class'DHCollisionStaticMeshActor', self); // vital that this VehicleWeapon owns the col mesh actor
+        CollisionMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this VehicleWeapon owns the col mesh actor
 
         if (CollisionMeshActor != none)
         {
