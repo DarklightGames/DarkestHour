@@ -256,12 +256,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // Trace along path from where we hit player's whip attachment to where we traced a hit on player pawn, & check if any blocking actor is in the way
             foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
             {
-                // Our trace has reached the hit player, so we're done
-                if (A == HitPawn)
-                {
-                    break;
-                }
-
                 // We hit a blocking actor in the way, but do some checks on it
                 if (A.bBlockActors || A.bWorldGeometry)
                 {
@@ -272,7 +266,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     }
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
-                    if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget))
+                    if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget) && A != HitPawn)
                     {
                         HitPawn = none;
                         break;

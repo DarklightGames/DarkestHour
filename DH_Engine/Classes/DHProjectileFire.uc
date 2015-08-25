@@ -297,12 +297,6 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 
     foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
     {
-        // Our trace has reached a player we have already registered a hit on, so nothing is in the way
-        if (A == HitPlayer)
-        {
-            break;
-        }
-
         // We hit a blocking actor, but do some checks on it
         if (A.bBlockActors || A.bWorldGeometry)
         {
@@ -313,7 +307,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
             }
 
             // Register a hit on the blocking actor, providing it isn't anything ProcessTouch would normally ignore
-            if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget))
+            if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget) && A != HitPlayer)
             {
                 Other = A;
                 HitLocation = TempHitLocation;
