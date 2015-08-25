@@ -127,7 +127,8 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    // Added bBlockHitPointTraces check here, so can avoid it at start of ProcessTouch(), meaning owner of col mesh gets handled properly in PT (it will have bBlockHitPointTraces=false)
+    if (Other != none && (Other.bProjTarget || Other.bBlockActors) && Other.bBlockHitPointTraces)
     {
         if (Other.IsA('DHCollisionMeshActor'))
         {
@@ -172,7 +173,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local bool               bDoDeflection;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
-    if (Other == none || SavedTouchActor == Other || !Other.bBlockHitPointTraces || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
+    // Note that bBlockHitPointTraces removed here & instead checked in Touch() event, so an actor owning a collision mesh actor gets handled properly
+    if (Other == none || SavedTouchActor == Other || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
         || Other.bDeleteMe || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
@@ -257,7 +259,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
             {
                 // We hit a blocking actor in the way, but do some checks on it
-                if (A.bBlockActors || A.bWorldGeometry)
+                if ((A.bBlockActors || A.bWorldGeometry) && A.bBlockHitPointTraces)
                 {
                     // If hit collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
                     if (A.IsA('DHCollisionMeshActor'))
@@ -266,7 +268,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     }
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
-                    if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget) && A != HitPawn)
+                    if (A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget) && A != HitPawn)
                     {
                         HitPawn = none;
                         break;
