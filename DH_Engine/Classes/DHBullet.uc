@@ -272,7 +272,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     }
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
-                    if (!A.bDeleteMe && A != Instigator && A.Base != Instigator && A.Owner != Instigator && (!A.IsA('Projectile') || A.bProjTarget))
+                    if (A.bBlockHitPointTraces && A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget))
                     {
                         HitPawn = none;
                         break;
