@@ -154,7 +154,7 @@ static final function float UnrealToDegrees(coerce float Unreal)
 
 static final function float UnrealToRadians(coerce float Unreal)
 {
-    return Unreal * 9.5873799242852576857380474343247e-5;
+    return Unreal * 0.000095873799242852576857380474343247;
 }
 
 static final function float MetersToUnreal(coerce float Meters)
