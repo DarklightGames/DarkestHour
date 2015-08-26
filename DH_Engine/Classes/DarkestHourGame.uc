@@ -2942,45 +2942,44 @@ function CheckTankCrewSpawnAreas()
 }
 
 // New function that spawns bots on the player
-exec function DebugSpawnBots(optional bool bSpawnEnemies)
+function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
 {
     local Controller C;
-    local DHPlayer   DHP;
+    local vector     L;
     local ROBot      B;
+    local int        i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (DHP != none)
     {
-        // Get the player
+        // Spawn the bots & teleport to the player
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            if (DHPlayer(C) != none && C.bIsPlayer)
-            {
-                DHP = DHPlayer(C);
-                break;
-            }
-        }
+            B = ROBot(C);
+            ++i;
 
-        if (DHP != none)
-        {
-            // Spawn the bots & teleport to the player
-            for (C = Level.ControllerList; C != none; C = C.NextController)
+            if (B != none && B.Pawn == none)
             {
-                B = ROBot(C);
-
-                if (B != none && B.Pawn == none)
+                if (B.GetTeamNum() != Team || Team != 2)
                 {
-                    if (!bSpawnEnemies && DHP.GetTeamNum() != B.GetTeamNum())
-                    {
-                        continue;
-                    }
-
-                    DeployRestartPlayer(B, false, true);
-
-                    if (B != none && B.Pawn != none && DHP.Pawn != none && SpawnManager != none && !SpawnManager.TeleportPlayer(B, DHP.Pawn.Location, DHP.Pawn.Rotation))
-                    {
-                        B.Pawn.Suicide(); // kill the pawn if it failed to teleport
-                    }
+                    continue;
                 }
+
+                DeployRestartPlayer(B, false, true);
+
+                L = DHP.Pawn.Location;
+                //L.X = Distance;
+                //L = (DHP.Pawn.Location + L) << DHP.Pawn.Rotation;
+                //Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
+
+                if (B != none && B.Pawn != none && DHP.Pawn != none && SpawnManager != none && !SpawnManager.TeleportPlayer(B, L, DHP.Pawn.Rotation))
+                {
+                    B.Pawn.Suicide(); // kill the pawn if it failed to teleport
+                }
+            }
+
+            if (i >= Num)
+            {
+                break;
             }
         }
     }

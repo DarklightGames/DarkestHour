@@ -489,12 +489,11 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         // Begin handling turning speed
         TurnSpeedFactor = DHStandardTurnSpeedFactor;
 
-        if (DHPwn != none)
+        // Lower look sensitivity for when resting weapon
+        //  Theel: I had it also for sprint & prone, but got complaints from players
+        if (DHPwn != none &&DHPwn.bRestingWeapon)
         {
-            if (DHPwn.bIsCrawling || DHPwn.bIsSprinting || DHPwn.bRestingWeapon)
-            {
-                TurnSpeedFactor = DHHalfTurnSpeedFactor;
-            }
+            TurnSpeedFactor = DHHalfTurnSpeedFactor;
         }
 
         // if sniper scope or binoc
@@ -2260,6 +2259,11 @@ exec function ExitPosTool()
     }
 }
 
+exec function DebugSpawnBots(int Team, int Num, optional int Distance)
+{
+    DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+}
+
 // Modified to actually restart the sway process, not just stop it. This is only called when the player changes stances (crouch prone stand).
 simulated function ResetSwayValues()
 {
@@ -2857,8 +2861,8 @@ defaultproperties
     baseSwayPitchAcc=500
 
     // Max turn speed values
-    SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=300.0),(InVal=1.0,OutVal=10000.0)))
-    ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=260.0),(InVal=1.0,OutVal=10000.0)))
+    SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=170.0),(InVal=1.0,OutVal=10000.0)))
+    ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=130.0),(InVal=1.0,OutVal=10000.0)))
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
