@@ -13,13 +13,13 @@ You can see in the RO vehicle static mesh packages that turret col meshes were m
 Instead turrets only have simple box collision, which give only crude hit detection. TWI must have hit a problem, so why weren't the turret col meshes used?
 The answer is that in UT2004 skeletal meshes, a col mesh can't be attached to a bone, only to the skeletal mesh origin.
 That works fine for a vehicle hull, but a VehicleWeapon actor always faces directly forwards, relative to the hull.
-The actual VW actor doesn't rotate relatively, only it's yaw bone rotates, which makes the weapon rotate visibly - but the actual actor itself isn't rotating.
+The actual VW actor doesn't rotate relative to the vehicle, only it's yaw bone rotates, which makes the mesh visibly turn - but the actual actor itself isn't rotating.
 So the VW col mesh, which is attached to the origin, always stays facing forwards, relative to the hull.
 As soon as the weapon rotates, the col mesh is no longer aligned with the weapon & hit detection is completely screwed up.
 The 1 RO vehicle that does use a turret col mesh is the tiger - to see the screwed up result, in single player type "show collision" in console, rotate turret & take a look !!
 
 This is a workaround that solves the problem. This is the sequence of events, which is actually very simple:
-1. If a CollisionStaticMesh has been specified in the WV class, the VW spawns a separate col static mesh actor in PostBeginPlay, with the VW as col mesh's owner.
+1. If a CollisionStaticMesh has been specified in the WV class, the VW spawns a separate col mesh actor in PostBeginPlay, with the VW as col mesh's owner.
 2. VW attaches col mesh actor to VW's YawBone - col mesh will now rotate with the VW.
 3. VW removes all of its own collision, so no hit will ever be detected on the VW itself.
 4. Col mesh actor copies the VW's normal collision properties, so projectiles will hit the col mesh in the same way & trigger the usual functionality.
@@ -41,9 +41,11 @@ When modelling a new VW col mesh, e.g. a tank turret:
 - So just use the actual turret model as a template for the shape of your new, simple col mesh.
 - Do not include a cannon barrel as if it's hit by a shell it may well cause the whole vehicle to explode.
 - Avoid convex angles in the col mesh, as static mesh collision detection doesn't like that, so where necessary split the mesh into separate, convex, 'closed' parts
+
+Ps - A col mesh actor can be used to represent things other than VehicleWeapons, e.g. driver's armoured visors on halftracks, attached to open & close with hull's visor bone
 */
 
-// Modified to copy the owning VehicleWeapon's collision properties
+// Modified to copy the owning actor's collision properties
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -69,7 +71,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Hides or shows the owning VehicleWeapon - a debug tool
+// Hides or shows the owning actor - a debug tool
 simulated function HideOwner(bool bHide)
 {
     local int i;
@@ -87,7 +89,7 @@ simulated function HideOwner(bool bHide)
     }
 }
 
-// Col mesh actor should never take damage, so just in case we'll call TakeDamage on the owning VehicleWeapon, which would have otherwise have received the call
+// Col mesh actor should never take damage, so just in case we'll call TakeDamage on the owning actor, which would have otherwise have received the damage call
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Owner.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);

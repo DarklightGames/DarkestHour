@@ -88,7 +88,6 @@ simulated function PostBeginPlay()
             bBlockNonZeroExtentTraces = false;
             bBlockHitPointTraces = false;
             bProjTarget = false;
-            bIgnoreEncroachers = false;
 
             // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the turret
             CollisionMeshActor.bHardAttach = true;
