@@ -12,7 +12,6 @@ class DHPawn extends ROPawn
 var     float   TeleSpawnProtEnds;        // is set when a player teleports for "spawn" protection in selectable spawn maps
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
-var     bool    bChuteDeleted;
 var     bool    bHatShotOff;
 var     bool    bHasBeenPossessed;        // fixes players getting new ammunition when they get out of vehicles
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)

@@ -2217,6 +2217,12 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                 }
             }
 
+            Log("RI" @ RI
+                @ "RI.bCanUseMortars" @ RI.bCanUseMortars
+                @ "Player" @ Player
+                @ "Player.PlayerReplicationInfo.Name" @ Player.PlayerReplicationInfo.Name
+                @ "Player.Pawn" @ Player.Pawn);
+
             // Draw hit location for mortar operator if he has a valid hit location
             if (RI != none &&
                 RI.bCanUseMortars &&
