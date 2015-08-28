@@ -372,15 +372,8 @@ function UpdateSpawnPoints()
             GRI.SpawnVehicles[i].VehicleClass != none &&
             GRI.SpawnVehicles[i].TeamIndex == CurrentTeam)
         {
-            if (GRI.SpawnVehicles[i].Vehicle != none)
-            {
-                L = GRI.SpawnVehicles[i].Vehicle.Location;
-            }
-            else
-            {
-                L.X = GRI.SpawnVehicles[i].LocationX;
-                L.Y = GRI.SpawnVehicles[i].LocationX;
-            }
+            L.X = GRI.SpawnVehicles[i].LocationX;
+            L.Y = GRI.SpawnVehicles[i].LocationY;
 
             GetMapCoords(L, X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight);
 
