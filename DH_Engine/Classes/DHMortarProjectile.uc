@@ -723,5 +723,4 @@ defaultproperties
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
     bAlwaysRelevant=true
-    SpeedFudgeScale=10.0
 }
