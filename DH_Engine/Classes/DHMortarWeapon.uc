@@ -187,7 +187,7 @@ simulated function bool CanDeploy()
 
     //-----------------------------
     //Check that we're not in water
-    if (Instigator.PhysicsVolume.bWaterVolume)
+    if (Instigator.PhysicsVolume.bWaterVolume || Instigator.PhysicsVolume.bPainCausing)
     {
         Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 7);
         return false;
