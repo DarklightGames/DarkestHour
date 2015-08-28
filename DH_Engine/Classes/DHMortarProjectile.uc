@@ -276,12 +276,12 @@ function SetHitLocation(vector HitLocation)
     ClosestMortarTargetIndex = 255;
     ClosestMortarTargetDistance = class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold;
 
-    Log("HitLocation" @ HitLocation);
-
     // Set the X/Y component of our players' mortar hit location
     C.MortarHitLocation.X = HitLocation.X;
     C.MortarHitLocation.Y = HitLocation.Y;
     C.MortarHitLocation.Z = 0.0;
+
+    Level.Game.Broadcast(self, "C" @ C @ "C.PlayerReplicationInfo.PlayerName" @ C.PlayerReplicationInfo.PlayerName @ "C.MortarHitLocation" @ C.MortarHitLocation);
 
     if (TeamIndex == AXIS_TEAM_INDEX)
     {
@@ -339,9 +339,6 @@ function SetHitLocation(vector HitLocation)
             C.MortarHitLocation.Z = 1.0;
         }
     }
-
-    Log("C.PlayerReplicationInfo.PlayerName" @ C.PlayerReplicationInfo.PlayerName);
-    Log("C.MortarHitLocation" @ C.MortarHitLocation);
 }
 
 // Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
