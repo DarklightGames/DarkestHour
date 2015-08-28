@@ -43,7 +43,6 @@ var     int                     MantleLoopCount;
 
 // Mortars
 var     byte                    MortarTargetIndex;
-var     vector                  MortarHitLocation;          // z-component is used to flag whether or not to display the hit on the map (1.0) or not (0.0)
 
 // Debug:
 var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
@@ -76,7 +75,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex, MortarHitLocation;
+        MortarTargetIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -774,7 +773,6 @@ function ServerSaveMortarTarget(bool bIsSmoke)
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
             if (GRI.GermanMortarTargets[i].Controller == self &&
-                GRI.GermanMortarTargets[i].Time != 0.0 &&
                 Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < MORTAR_TARGET_TIME_INTERVAL)
             {
                 // You cannot mark another mortar target yet
@@ -802,7 +800,6 @@ function ServerSaveMortarTarget(bool bIsSmoke)
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
             if (GRI.AlliedMortarTargets[i].Controller == self &&
-                GRI.AlliedMortarTargets[i].Time != 0.0 &&
                 Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < MORTAR_TARGET_TIME_INTERVAL)
             {
                 ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
@@ -2646,7 +2643,6 @@ function Reset()
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
 
     MortarTargetIndex = default.MortarTargetIndex;
-    MortarHitLocation = default.MortarHitLocation;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
