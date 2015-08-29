@@ -252,7 +252,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // Trace to see if bullet path will actually hit one of the player pawn's various body hit points
-        // Use the Instigator pawn to do the trace, as that makes a HitPointTrace work better, as it ignores the Instigator & its bullet whip attachment
+        // Use the Instigator pawn to do the trace, as that makes a HitPointTrace work better, as it ignores the Instigator (the firing player) & its bullet whip attachment
         // Matt: temporarily make Instigator use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
         Instigator.bUseCollisionStaticMesh = bUseCollisionStaticMesh;
 
@@ -296,10 +296,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // HitPointTrace says we hit a player, but we need to verify that as HitPointTrace is unreliable & often passes through a blocking vehicle, hitting a shielded player
         if (HitPawn != none)
         {
-            // Trace along path from where we hit player's whip attachment to where we traced a hit on player pawn, & check if any blocking actor is in the way
+            // Trace along path from where we hit player's whip attachment to where we traced a hit on player, checking if any blocking actor is in the way
             foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
             {
-                // We hit a blocking actor in the way, but do some checks on it
+                // We hit a blocking actor, so now check if it's a valid 'stopper'
                 if ((A.bBlockActors || A.bWorldGeometry) && A.bBlockHitPointTraces)
                 {
                     // If hit collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
@@ -361,7 +361,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
     }
 
-    // bDoDeflection is true means this must be a tracer that has hit a VehicleWeapon & not on dedicated server - so deflect unless bullet speed is low
+    // bDoDeflection is true means this must be a tracer that has hit a VehicleWeapon & not on dedicated server - so deflect unless bullet speed is very low (approx 12 m/s)
     if (bDoDeflection && VSizeSquared(Velocity) > 500000.0)
     {
         // Added this trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)

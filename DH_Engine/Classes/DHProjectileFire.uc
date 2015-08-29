@@ -198,7 +198,6 @@ function CalcSpreadModifiers()
 
 // Launches/spawns a projectile, including option to do a pre-launch trace to see if we would hit something close before spawning a bullet
 // If we do then we can avoid spawning the projectile if we'd hit something so close that the ballistics wouldn't matter anyway (don't use this for things like rocket launchers)
-// Matt: modified to remove checks on HitDriverArea() for a VehicleWeapon, as that is now deprecated in new vehicle occupant hit detection system
 function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
     local Projectile         SpawnedProjectile;
@@ -268,15 +267,15 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 // We have to use our Instigator pawn to do traces, because we aren't an actor & so can't access trace functions
 function bool PreLaunchTrace(vector Start, vector Direction)
 {
-    local Actor      Other, A;
+    local Actor        Other, A;
     local array<Actor> SavedColMeshes;
-    local ROPawn     HitPlayer;
-    local vector     End, HitLocation, TempHitLocation, HitNormal, TempHitNormal, Momentum;
-    local int        Damage, i;
-    local array<int> HitPoints;
+    local ROPawn       HitPlayer;
+    local vector       End, HitLocation, TempHitLocation, HitNormal, TempHitNormal, Momentum;
+    local int          Damage, i;
+    local array<int>   HitPoints;
 
-    // Start with a precision HitPointTrace to see if we hit a player pawn, including a vehicle occupant who won't have collision & so won't be caught by a normal Trace
-    // HitPointTraces don't like short traces, so we have to do a long trace first, then check whether any player we hit was within PreLaunchTraceDistance
+    // Start with a special HitPointTrace to see if we hit a player pawn, including a vehicle occupant who won't have collision & so won't be caught by a normal Trace
+    // HitPointTraces don't work well with short traces, so we have to do a long trace first, then check whether any player we hit was within PreLaunchTraceDistance
     End = Start + (65535.0 * Direction);
 
     // Maximum of 3 traces - but we only ever repeat the trace if we hit an invalid col mesh actor, which is very rare, so nearly always only 1 trace will be done
@@ -322,14 +321,14 @@ function bool PreLaunchTrace(vector Start, vector Direction)
         End = Start + (PreLaunchTraceDistance * Direction);
     }
 
-    // Now do a normal trace to see if we hit another blocking actor (limit trace length it if we hit a player, as there's no point checking beyond that HitLocation)
-    // Have to do this even if we have a HitPlayer, because HitPointTrace is unreliable & the trace often passes through a blocking vehicle & hits a shielded player
+    // Now do a normal trace to see if we hit another blocking actor 
+    // Have to do this even if we have a HitPlayer, because HitPointTrace is unreliable & often passes through a blocking vehicle, hitting a shielded player
     foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
     {
-        // We hit a blocking actor, but do some checks on it
+        // We hit a blocking actor, so now check if it's a valid 'stopper'
         if ((A.bBlockActors || A.bWorldGeometry) && A.bBlockHitPointTraces)
         {
-            // Matt: if we hit a collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+            // If we hit a collision mesh actor, switch hit actor to col mesh's owner & proceed as if we'd hit that actor
             if (A.IsA('DHCollisionMeshActor'))
             {
                 // But if col mesh doesn't stop bullets, we ignore it & continue the trace iteration
@@ -347,13 +346,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
                 Other = A;
                 HitLocation = TempHitLocation;
                 HitNormal = TempHitNormal;
-
-                // Cancel any hit that HitPointTrace registered on a player, as the blocking actor was in the way
-                if (HitPlayer != none && Other != HitPlayer)
-                {
-                    HitPlayer = none;
-                }
-
+                HitPlayer = none; // clear any hit that HitPointTrace registered on a player, as our blocking actor is in the way
                 break;
             }
         }
