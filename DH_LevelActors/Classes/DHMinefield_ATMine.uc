@@ -80,6 +80,11 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // If hit collision mesh actor, switch to its owner
         if (Victims.IsA('DHCollisionMeshActor'))
         {
+            if (DHCollisionMeshActor(Victims).bWontStopBlastDamage)
+            {
+                continue; // ignore col mesh actor if it is set not to stop blast damage
+            }
+
             Victims = Victims.Owner;
         }
 

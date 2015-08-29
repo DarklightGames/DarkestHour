@@ -252,9 +252,16 @@ simulated function GetHitInfo()
         Offset = 20.0 * Normal(GetBoneCoords(MuzzleBoneName).Origin - mHitLocation);
         mHitActor = Trace(HitLocation, mHitNormal, mHitLocation - Offset, mHitLocation + Offset, true);
 
-        // If we hit collision mesh actor (probably turret, maybe an exposed vehicle MG), we switch mHitActor to be the real VehicleWeapon & proceed as if we'd hit that actor
+        // If hit a collision mesh actor, we switch mHitActor to col mesh's owner & proceed as if we'd hit that actor
         if (DHCollisionMeshActor(mHitActor) != none)
         {
+            if (DHCollisionMeshActor(mHitActor).bWontStopBullet)
+            {
+                mHitActor = none;
+
+                return; // exit, doing nothing, if col mesh actor is set not to stop a bullet
+            }
+
             mHitActor = mHitActor.Owner;
         }
 

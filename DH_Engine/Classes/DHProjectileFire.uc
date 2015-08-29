@@ -269,32 +269,61 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 function bool PreLaunchTrace(vector Start, vector Direction)
 {
     local Actor      Other, A;
+    local array<Actor> SavedColMeshes;
     local ROPawn     HitPlayer;
     local vector     End, HitLocation, TempHitLocation, HitNormal, TempHitNormal, Momentum;
-    local int        Damage;
+    local int        Damage, i;
     local array<int> HitPoints;
 
     // Start with a precision HitPointTrace to see if we hit a player pawn, including a vehicle occupant who won't have collision & so won't be caught by a normal Trace
     // HitPointTraces don't like short traces, so we have to do a long trace first, then check whether any player we hit was within PreLaunchTraceDistance
     End = Start + (65535.0 * Direction);
-    HitPlayer = ROPawn(Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0)); // WhizType 0 to prevent sound triggering, as it's close
 
-    if (HitPlayer != none && VSizeSquared(HitLocation - Start) > (PreLaunchTraceDistance ** 2)) // VSizeSquared comparison for more efficient processing
+    // Maximum of 3 traces - but we only ever repeat the trace if we hit an invalid col mesh actor, which is very rare, so nearly always only 1 trace will be done
+    for (i = 0; i < 3; ++i)
     {
-        HitPlayer = none; // out of pre-launch trace range, so ignore the player
+        A = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0); // WhizType 0 to prevent sound triggering, as it's close
+
+        // We're primarily interested if we hit a player, but also need to check if hit an invalid collision mesh that doesn't stop bullets (as would need to repeat trace)
+        if (ROPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet))
+        {
+            // Make sure hit actor is within trace range
+            if (VSizeSquared(HitLocation - Start) <= (PreLaunchTraceDistance ** 2.0))
+            {
+                // We hit a player, so record it & limit length of confirmation trace that gets done next, as no point checking beyond the player
+                if (ROPawn(A) != none)
+                {
+                    HitPlayer = ROPawn(A);
+                    End = HitLocation;
+                }
+                // Otherwise, must have hit an invalid collision mesh, so we temporarily disable its collision & re-run the trace
+                // Matt: this is a hack, but I can't think of another solution - the disabled collision is only for a split second & it seems harmless & effective
+                else
+                {
+                    SavedColMeshes[SavedColMeshes.Length] = A; // save reference to col mesh so we can re-enable its collision after tracing
+                    A.SetCollision(false, A.bBlockActors);
+                    continue; // re-run the trace
+                }
+            }
+        }
+
+        break; // generally we're going to exit the for loop after the 1st pass, except in the rare event where we hit an invalid collision mesh
+    }
+
+    // Reset any temporarily disabled collision mesh collision as soon as we finish tracing
+    for (i = 0; i < SavedColMeshes.Length; ++i)
+    {
+        SavedColMeshes[i].SetCollision(true, SavedColMeshes[i].bBlockActors);
+    }
+
+    // If didn't hit a player, set a standard length for normal trace that gets done next
+    if (HitPlayer == none)
+    {
+        End = Start + (PreLaunchTraceDistance * Direction);
     }
 
     // Now do a normal trace to see if we hit another blocking actor (limit trace length it if we hit a player, as there's no point checking beyond that HitLocation)
     // Have to do this even if we have a HitPlayer, because HitPointTrace is unreliable & the trace often passes through a blocking vehicle & hits a shielded player
-    if (HitPlayer != none)
-    {
-        End = HitLocation;
-    }
-    else
-    {
-        End = Start + (PreLaunchTraceDistance * Direction); // normal length trace
-    }
-
     foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
     {
         // We hit a blocking actor, but do some checks on it
@@ -303,6 +332,12 @@ function bool PreLaunchTrace(vector Start, vector Direction)
             // Matt: if we hit a collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
             if (A.IsA('DHCollisionMeshActor'))
             {
+                // But if col mesh doesn't stop bullets, we ignore it & continue the trace iteration
+                if (DHCollisionMeshActor(A).bWontStopBullet)
+                {
+                    continue;
+                }
+
                 A = A.Owner;
             }
 

@@ -45,6 +45,12 @@ When modelling a new VW col mesh, e.g. a tank turret:
 Ps - A col mesh actor can be used to represent things other than VehicleWeapons, e.g. driver's armoured visors on halftracks, attached to open & close with hull's visor bone
 */
 
+// Options to control what kind of projectile or damage this collision actor will stop (stops all by default)
+var     bool    bWontStopBullet;           // won't stop a DHBullet
+var     bool    bWontStopShell;            // won't stop a DHAntiVehicleProjectile, e.g. a cannon shell (also includes AT rocket)
+var     bool    bWontStopBlastDamage;      // won't stop blast damage caused by HurtRadius function
+var     bool    bWontStopThrownProjectile; // won't stop a DHThrowableExplosiveProjectile, e.g. grenade or satchel (hard to see utility, but included for completeness)
+
 // Modified to copy the owning actor's collision properties
 simulated function PostBeginPlay()
 {

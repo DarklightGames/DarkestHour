@@ -79,6 +79,11 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // If hit collision mesh actor, switch to its owner
         if (Victims.IsA('DHCollisionMeshActor'))
         {
+            if (DHCollisionMeshActor(Victims).bWontStopBlastDamage)
+            {
+                continue; // ignore col mesh actor if it is set not to stop blast damage
+            }
+
             Victims = Victims.Owner;
         }
 
@@ -173,6 +178,13 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
         if (Victims.IsA('DHCollisionMeshActor'))
         {
+            if (DHCollisionMeshActor(Victims).bWontStopBlastDamage)
+            {
+                bHurtEntry = false;
+
+                return; // exit, doing nothing, if col mesh actor is set not to stop blast damage
+            }
+
             Victims = Victims.Owner;
         }
 
@@ -361,6 +373,11 @@ simulated singular function Touch(Actor Other)
     {
         if (Other.IsA('DHCollisionMeshActor'))
         {
+            if (DHCollisionMeshActor(Other).bWontStopThrownProjectile)
+            {
+                return; // exit, doing nothing, if col mesh actor is set not to stop a thrown projectile, e.g. grenade or satchel
+            }
+
             Other = Other.Owner;
         }
 

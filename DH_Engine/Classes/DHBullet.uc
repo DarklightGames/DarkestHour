@@ -132,6 +132,11 @@ simulated singular function Touch(Actor Other)
     {
         if (Other.IsA('DHCollisionMeshActor'))
         {
+            if (DHCollisionMeshActor(Other).bWontStopBullet)
+            {
+                return; // exit, doing nothing, if col mesh actor is set not to stop a bullet
+            }
+
             Other = Other.Owner;
         }
 
@@ -167,10 +172,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local ROVehicleHitEffect VehEffect;
     local DHPawn             HitPawn;
     local Actor              A;
+    local array<Actor>       SavedColMeshes;
     local vector             PawnHitLocation, TempHitLocation, HitNormal, X, Y, Z;
-    local array<int>         HitPoints;
-    local float              BulletDistance, V;
     local bool               bDoDeflection;
+    local float              BulletDistance, V;
+    local array<int>         HitPoints;
+    local int                i;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     // Note that bBlockHitPointTraces removed here & instead checked in Touch() event, so an actor owning a collision mesh actor gets handled properly
@@ -248,11 +255,45 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // Use the Instigator pawn to do the trace, as that makes a HitPointTrace work better, as it ignores the Instigator & its bullet whip attachment
         // Matt: temporarily make Instigator use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
         Instigator.bUseCollisionStaticMesh = bUseCollisionStaticMesh;
-        Other = Instigator.HitPointTrace(PawnHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
-        HitPawn = DHPawn(Other);
 
-        // HitPointTrace says we hit a player pawn, but we need to verify that as the result is unreliable
-        // In particular, doesn't seem to work well when we have multiple vehicle occupants & for some reason the trace sometimes passes through a blocking vehicle & hits player
+        // Maximum of 3 traces - but we only ever repeat the trace if we hit an invalid col mesh actor, which is very rare, so nearly always only 1 trace will be done
+        for (i = 0; i < 3; ++i)
+        {
+            A = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
+
+            // We're primarily interested if we hit a player, but also need to check if hit an invalid collision mesh that doesn't stop bullets (as would need to repeat trace)
+            if (DHPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet))
+            {
+                // Make sure hit actor isn't further away than furthest possible point of bullet whip attachment (don't count as valid hit, just let bullet continue)
+                if (VSizeSquared(TempHitLocation - HitLocation) <= (Other.CollisionHeight ** 2.0))
+                {
+                    // We hit a player, so record it
+                    if (DHPawn(A) != none)
+                    {
+                        HitPawn = DHPawn(A);
+                        PawnHitLocation = TempHitLocation;
+                    }
+                    // Otherwise, must have hit an invalid collision mesh, so we temporarily disable its collision & re-run the trace
+                    // Matt: this is a hack, but I can't think of another solution - the disabled collision is only for a split second & it seems harmless & effective
+                    else
+                    {
+                        SavedColMeshes[SavedColMeshes.Length] = A; // save reference to col mesh so we can re-enable its collision after tracing
+                        A.SetCollision(false, A.bBlockActors);
+                        continue; // re-run the trace
+                    }
+                }
+            }
+
+            break; // generally we're going to exit the for loop after the 1st pass, except in the rare event where we hit an invalid col mesh
+        }
+
+        // Reset any temporarily disabled collision mesh collision, now we've finished tracing
+        for (i = 0; i < SavedColMeshes.Length; ++i)
+        {
+            SavedColMeshes[i].SetCollision(true, SavedColMeshes[i].bBlockActors);
+        }
+
+        // HitPointTrace says we hit a player, but we need to verify that as HitPointTrace is unreliable & often passes through a blocking vehicle, hitting a shielded player
         if (HitPawn != none)
         {
             // Trace along path from where we hit player's whip attachment to where we traced a hit on player pawn, & check if any blocking actor is in the way
@@ -264,6 +305,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     // If hit collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
                     if (A.IsA('DHCollisionMeshActor'))
                     {
+                        // But if col mesh doesn't stop bullets, we ignore it & continue the trace iteration
+                        if (DHCollisionMeshActor(A).bWontStopBullet)
+                        {
+                            continue;
+                        }
+
                         A = A.Owner;
                     }
 
