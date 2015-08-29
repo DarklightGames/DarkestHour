@@ -2942,12 +2942,22 @@ function CheckTankCrewSpawnAreas()
 function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
 {
     local Controller C;
-    local vector     L;
     local ROBot      B;
+    local vector     L;
+    local rotator    R;
     local int        i;
 
     if (DHP != none)
     {
+        L = DHP.Pawn.Location;
+                
+        // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
+        if (Distance > 0)
+        {
+            R.Yaw = DHP.Pawn.Rotation.Yaw;
+            L = L + (vector(R) * class'DHLib'.static.MetersToUnreal(Distance));
+        }
+
         // Spawn the bots & teleport to the player
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
@@ -2962,11 +2972,6 @@ function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
                 }
 
                 DeployRestartPlayer(B, false, true);
-
-                L = DHP.Pawn.Location;
-                //L.X = Distance;
-                //L = (DHP.Pawn.Location + L) << DHP.Pawn.Rotation;
-                //Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
 
                 // Kill the pawn if it failed to teleport
                 if (B != none && B.Pawn != none && DHP.Pawn != none && SpawnManager != none && !SpawnManager.TeleportPlayer(B, L, DHP.Pawn.Rotation))
