@@ -33,7 +33,7 @@ defaultproperties
     APCDamageModifier=0.75
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.8
-    WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon"
+    WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
     DeathString="%o was blown up by %k's %w."
     MaleSuicide="%o was careless with his own %w."
     FemaleSuicide="%o was careless with her own %w."
