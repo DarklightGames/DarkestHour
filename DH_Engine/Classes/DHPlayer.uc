@@ -2256,7 +2256,10 @@ exec function ExitPosTool()
     }
 }
 
-exec function DebugSpawnBots(int Team, int Num, optional int Distance)
+// New debug exec to make bots spawn
+// Team is 0 for axis, 1 for allies, 2 for both
+// Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
+exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
 {
     DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
 }

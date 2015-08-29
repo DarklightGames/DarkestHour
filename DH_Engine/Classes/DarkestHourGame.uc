@@ -2952,7 +2952,6 @@ function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             B = ROBot(C);
-            ++i;
 
             if (B != none && B.Pawn == none)
             {
@@ -2969,15 +2968,16 @@ function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
                 //L = (DHP.Pawn.Location + L) << DHP.Pawn.Rotation;
                 //Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
 
+                // Kill the pawn if it failed to teleport
                 if (B != none && B.Pawn != none && DHP.Pawn != none && SpawnManager != none && !SpawnManager.TeleportPlayer(B, L, DHP.Pawn.Rotation))
                 {
-                    B.Pawn.Suicide(); // kill the pawn if it failed to teleport
+                    B.Pawn.Suicide();
                 }
-            }
-
-            if (i >= Num)
-            {
-                break;
+                // Otherwise check if we've reached any specified number of bots to spawn (Num zero signifies no limit, so skip this check)
+                else if (Num > 0 && ++i >= Num)
+                {
+                    break;
+                }
             }
         }
     }
