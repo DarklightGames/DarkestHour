@@ -68,14 +68,14 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to handle new collision static mesh actor, if one has been specified
+// Matt: modified to attach new collision static mesh actor, if one has been specified
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this VehicleWeapon owns the col mesh actor
+        CollisionMeshActor = AttachCollisionMesh(CollisionStaticMesh, YawBone); // attach to MG's yaw bone, so col mesh turns with MG
 
         if (CollisionMeshActor != none)
         {
@@ -85,16 +85,6 @@ simulated function PostBeginPlay()
             bBlockNonZeroExtentTraces = false;
             bBlockHitPointTraces = false;
             bProjTarget = false;
-
-            // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the MG
-            CollisionMeshActor.bHardAttach = true;
-            AttachToBone(CollisionMeshActor, YawBone);
-
-            // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the MG
-            CollisionMeshActor.SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
-
-            // Finally set the static mesh for the col mesh actor
-            CollisionMeshActor.SetStaticMesh(CollisionStaticMesh);
         }
     }
 }
@@ -552,6 +542,37 @@ simulated function StartMGFire()
     }
 }
 
+// New function to spawn, attach & align a collision static mesh actor
+simulated function DHCollisionMeshActor AttachCollisionMesh(StaticMesh ColStaticMesh, name AttachBone, optional class<DHCollisionMeshActor> ColMeshActorClass)
+{
+    local DHCollisionMeshActor ColMeshActor;
+
+    if (ColMeshActorClass == none)
+    {
+        ColMeshActorClass = class'DHCollisionMeshActor';
+    }
+
+    ColMeshActor = Spawn(ColMeshActorClass, self); // vital that this VehicleWeapon owns the col mesh actor
+
+    if (ColMeshActor != none)
+    {
+        // Attach col mesh actor to specified attachment bone, so the col mesh will move with the relevant part of the MG mesh
+        ColMeshActor.bHardAttach = true;
+        AttachToBone(ColMeshActor, AttachBone);
+
+        // The Col mesh will have been modelled on the MG mesh's origin, but is now centred on the attachment bone, so reposition it to align with MG mesh
+        ColMeshActor.SetRelativeLocation((Location - GetBoneCoords(AttachBone).Origin) << Rotation);
+
+        // Finally set the static mesh for the col mesh actor (may be none, if using a subclass of DHCollisionMeshActor & that already specifies a static mesh)
+        if (ColStaticMesh != none)
+        {
+            ColMeshActor.SetStaticMesh(ColStaticMesh);
+        }
+    }
+
+    return ColMeshActor;
+}
+ 
 // Modified to add extra stuff
 simulated function DestroyEffects()
 {
