@@ -2244,12 +2244,9 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
             HandleReinforcements(C);
         }
     }
-    else
+    else if (!DHRestartPlayer(C, bHandleReinforcements) && PlayerController(C) != none)
     {
-        if (!DHRestartPlayer(C, bHandleReinforcements))
-        {
-            PlayerController(C).ClientReplaceMenu("DH_Interface.DHDeployMenu");
-        }
+        PlayerController(C).ClientReplaceMenu("DH_Interface.DHDeployMenu");
     }
 }
 
