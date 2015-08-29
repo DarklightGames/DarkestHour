@@ -21,6 +21,12 @@ replication
         bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
 }
 
+// Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
+simulated function PostBeginPlay()
+{
+    super(DHVehicleCannon).PostBeginPlay();
+}
+
 // Modified to remove handling of mixed mag (instead is handled in SpawnProjectile() as that now fires two projectiles), to toggle bSecondGunPairFiring & to remove AltFire
 state ProjectileFireMode
 {

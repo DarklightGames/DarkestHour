@@ -9,6 +9,12 @@ class DH_Flak38Cannon extends DH_Sdkfz2341Cannon;
 
 var  name  SightBone;
 
+// Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
+simulated function PostBeginPlay()
+{
+    super(DHVehicleCannon).PostBeginPlay();
+}
+
 // New function to update sight rotation, called by cannon pawn when gun pitch changes
 simulated function UpdateSightRotation()
 {

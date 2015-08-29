@@ -5,16 +5,66 @@
 
 class DH_Sdkfz2341Cannon extends DHVehicleCannon;
 
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
+
 var     byte    NumMags;         // using bytes for more efficient replication
 var     byte    NumSecMags;
 var     byte    NumTertMags;
+
 var     bool    bMixedMagFireAP; // flags that a mixed AP/HE mag is due to fire an AP round
+
+// Extra collision static mesh actors for the mesh covers over turret, which open & close like a hatch:
+var     DHCollisionMeshActor  TurretCoverColMeshLeft;
+var     DHCollisionMeshActor  TurretCoverColMeshRight;
+var     StaticMesh            TurretCoverColStaticMeshLeft;
+var     StaticMesh            TurretCoverColStaticMeshRight;
 
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NumMags, NumSecMags, NumTertMags;
+}
+
+// Modified to attach 2 extra collision static mesh actors, to represent the mesh covers over the turret, which open & close like a hatch as the player unbuttons/buttons
+// These collision actors are set so they won't stop bullets or blast damage, as they are only mesh, but will stop grenades, as they were designed for
+// Using literals as it isn't worth defining variables for one specific vehicle
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    // Matt: I would use SM literals here, as it's a one-off, but for some strange reason it won't compile ("Missing StaticMesh name")
+    // The #exec OBJ LOAD FILE directive should fix that, but it seems to have no effect, so I've had to add variables for the SMs
+    TurretCoverColMeshLeft = AttachCollisionMesh(TurretCoverColStaticMeshLeft, 'com_hatch_L');
+    TurretCoverColMeshRight = AttachCollisionMesh(TurretCoverColStaticMeshRight, 'com_hatch_R');
+
+    if (TurretCoverColMeshLeft != none)
+    {
+        TurretCoverColMeshLeft.bWontStopBullet = true;
+        TurretCoverColMeshLeft.bWontStopBlastDamage = true;
+    }
+
+    if (TurretCoverColMeshRight != none)
+    {
+        TurretCoverColMeshRight.bWontStopBullet = true;
+        TurretCoverColMeshRight.bWontStopBlastDamage = true;
+    }
+}
+
+// Modified to include extra collision static mesh actors (not actually effects, but convenient to add here)
+simulated function DestroyEffects()
+{
+    super.DestroyEffects();
+
+    if (TurretCoverColMeshLeft != none)
+    {
+        TurretCoverColMeshLeft.Destroy();
+    }
+
+    if (TurretCoverColMeshRight != none)
+    {
+        TurretCoverColMeshRight.Destroy();
+    }
 }
 
 // Modified as this is an auto-cannon firing from a magazine
@@ -758,6 +808,8 @@ defaultproperties
     Skins(2)=texture'Weapons1st_tex.MG.mg42_barrel'
     Skins(3)=texture'Weapons1st_tex.MG.mg42'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll'
+    TurretCoverColStaticMeshLeft=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverLeft_coll'
+    TurretCoverColStaticMeshRight=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll'
     SoundVolume=100
     SoundRadius=256.0
 }
