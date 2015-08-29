@@ -2261,7 +2261,10 @@ exec function ExitPosTool()
 // Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
 exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
 {
-    DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+    if (DarkestHourGame(Level.Game) != none)
+    {
+        DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+    }
 }
 
 // Modified to actually restart the sway process, not just stop it. This is only called when the player changes stances (crouch prone stand).

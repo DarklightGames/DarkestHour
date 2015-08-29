@@ -2939,49 +2939,55 @@ function CheckTankCrewSpawnAreas()
 }
 
 // New function that spawns bots on the player
-function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
+function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
 {
     local Controller C;
     local ROBot      B;
-    local vector     L;
-    local rotator    R;
+    local vector     TargetLocation, RandomOffset;
+    local rotator    Direction;
     local int        i;
 
-    if (DHP != none)
+    if (DHP != none && DHP.Pawn != none)
     {
-        L = DHP.Pawn.Location;
+        TargetLocation = DHP.Pawn.Location;
                 
         // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
         if (Distance > 0)
         {
-            R.Yaw = DHP.Pawn.Rotation.Yaw;
-            L = L + (vector(R) * class'DHLib'.static.MetersToUnreal(Distance));
+            Direction.Yaw = DHP.Pawn.Rotation.Yaw;
+            TargetLocation = TargetLocation + (vector(Direction) * class'DHLib'.static.MetersToUnreal(Distance));
         }
 
-        // Spawn the bots & teleport to the player
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             B = ROBot(C);
 
-            if (B != none && B.Pawn == none)
+            // Look for bots that aren't in game & are on the the specified team (Team 2 signifies to spawn bots of both teams)
+            if (B != none && B.Pawn == none && (Team == 2 || B.GetTeamNum() == Team))
             {
-                // Don't spawn this bot if it's not on the specified team (& we didn't specify Team 2, meaning spawn both teams)
-                if (Team != 2 && B.GetTeamNum() != Team)
-                {
-                    continue;
-                }
-
+                // Spawn bot
                 DeployRestartPlayer(B, false, true);
 
-                // Kill the pawn if it failed to teleport
-                if (B != none && B.Pawn != none && DHP.Pawn != none && SpawnManager != none && !SpawnManager.TeleportPlayer(B, L, DHP.Pawn.Rotation))
+                if (B != none && B.Pawn != none)
                 {
-                    B.Pawn.Suicide();
-                }
-                // Otherwise check if we've reached any specified number of bots to spawn (Num zero signifies no limit, so skip this check)
-                else if (Num > 0 && ++i >= Num)
-                {
-                    break;
+                    // Randomise location a little, so bots don't all spawn on top of each other
+                    RandomOffset = VRand() * 120.0;
+                    RandomOffset.Z = 0.0;
+
+                    // Move bot to target location
+                    if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
+                    {
+                        // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
+                        if (NumBots > 0 && ++i >= NumBots)
+                        {
+                            break;
+                        }
+                    }
+                    // But if we couldn't move the bot to the target, kill the pawn
+                    else
+                    {
+                        B.Pawn.Suicide();
+                    }
                 }
             }
         }
