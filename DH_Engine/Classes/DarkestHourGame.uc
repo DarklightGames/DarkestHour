@@ -2959,7 +2959,8 @@ function SpawnBots(DHPlayer DHP, int Team, int Num, int Distance)
 
             if (B != none && B.Pawn == none)
             {
-                if (B.GetTeamNum() != Team || Team != 2)
+                // Don't spawn this bot if it's not on the specified team (& we didn't specify Team 2, meaning spawn both teams)
+                if (Team != 2 && B.GetTeamNum() != Team)
                 {
                     continue;
                 }
