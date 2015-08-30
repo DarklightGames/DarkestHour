@@ -988,7 +988,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     LastHitIndex = HitIndex;
 
-    PlayHit(ActualDamage,InstigatedBy, hitLocation, DamageType, Momentum, HitIndex);
+    PlayHit(ActualDamage, InstigatedBy, hitLocation, DamageType, Momentum, HitIndex);
 
     if (Health <= 0)
     {
@@ -1607,7 +1607,7 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
                 }
             }
 
-            BloodHit = Spawn(ProjectileBloodSplatClass,InstigatedBy,, HitLocation, SplatRot);
+            BloodHit = Spawn(ProjectileBloodSplatClass, InstigatedBy,, HitLocation, SplatRot);
         }
     }
 
@@ -2302,7 +2302,7 @@ state PutWeaponAway
 
                 AttachedBackItem = Spawn(class 'BackAttachment', self);
                 AttachedBackItem.InitFor(SwapWeapon);
-                AttachToBone(AttachedBackItem,AttachedBackItem.AttachmentBone);
+                AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone);
             }
 
             SwapWeapon.SetDefaultDisplayProperties();
@@ -2680,7 +2680,7 @@ simulated function PlayEndMantle()
                 PlayAnim(WeaponAttachment.PA_IdleCrouchAnim, 1.0, 0, 0);
             }
 
-            SetCollisionSize(CollisionRadius,CrouchHeight);
+            SetCollisionSize(CollisionRadius, CrouchHeight);
         }
         else
         {
@@ -2704,7 +2704,7 @@ simulated function PlayEndMantle()
                 PlayAnim(IdleCrouchAnim, 1.0, 0, 0);
             }
 
-            SetCollisionSize(CollisionRadius,CrouchHeight);
+            SetCollisionSize(CollisionRadius, CrouchHeight);
         }
         else
         {
@@ -3010,7 +3010,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     Extent.Y = CollisionRadius;
     Extent.Z = 28.0; // half the height of the actual trace
 
-    GetAxes(Rotation,X,Y,Z);
+    GetAxes(Rotation, X, Y, Z);
 
     StartLoc = Location;
     StartLoc.Z += 5.0; // necessary to make the bottom of the extent just clip the MINFLOORZ height and the top hit shoulder height
@@ -3252,7 +3252,7 @@ function PostMantle()
 {
     if (bCrouchMantle)
     {
-        SetCollisionSize(CollisionRadius,CrouchHeight);
+        SetCollisionSize(CollisionRadius, CrouchHeight);
     }
 
     bIsMantling = false;
@@ -3347,7 +3347,7 @@ simulated function CancelMantle()
     SetTimer(0.0, false);
 
     // Make sure our feet haven't clipped through the ground, else we'll fall through the world
-    if (!FastTrace((Location - (vect(0.0, 0.0, 1.0) * CollisionHeight)),Location))
+    if (!FastTrace((Location - (vect(0.0, 0.0, 1.0) * CollisionHeight)), Location))
     {
         MoveSmooth(vect(0.0, 0.0, 20.0));
     }
@@ -4298,7 +4298,7 @@ function CheckBob(float DeltaTime, vector Y)
 {
     local float Speed2D;
     local float OldBobTime;
-    local int m,n;
+    local int   m, n;
     local float BobModifier;
     local float IronsightBobDecayModifier;
     local float IronsightBobAmplitudeModifier;
