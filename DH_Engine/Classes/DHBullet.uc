@@ -265,7 +265,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             if (DHPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet))
             {
                 // Make sure hit actor isn't further away than furthest possible point of bullet whip attachment (don't count as valid hit, just let bullet continue)
-                if (VSizeSquared(TempHitLocation - HitLocation) <= (Other.CollisionHeight ** 2.0))
+                if (VSizeSquared(TempHitLocation - HitLocation) <= 360000.0) // 360k is whip's diameter (600 UU) squared
                 {
                     // We hit a player, so record it
                     if (DHPawn(A) != none)
