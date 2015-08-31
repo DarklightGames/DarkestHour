@@ -15,12 +15,8 @@ var     float                   DHSwayElasticFactor;
 var     float                   DHSwayDampingFactor;
 
 // Rotation clamp values
-var     InterpCurve             SprintMaxTurnCurve;
-var     InterpCurve             ProneMaxTurnCurve;
 var     float                   DHStandardTurnSpeedFactor;
 var     float                   DHHalfTurnSpeedFactor;
-var     float                   LastClampProneTime;
-var     float                   LastClampSprintTime;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
@@ -410,7 +406,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     local ROVehicle ROVeh;
     local DHPawn    DHPwn;
     local ROWeapon  ROWeap;
-    local float     TurnSpeedFactor, MaxTurnSpeed;
+    local float     TurnSpeedFactor;
 
     DHPwn = DHPawn(Pawn);
     ROVeh = ROVehicle(Pawn);
@@ -489,8 +485,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         TurnSpeedFactor = DHStandardTurnSpeedFactor;
 
         // Lower look sensitivity for when resting weapon
-        //  Theel: I had it also for sprint & prone, but got complaints from players
-        if (DHPwn != none &&DHPwn.bRestingWeapon)
+        if (DHPwn != none && DHPwn.bRestingWeapon)
         {
             TurnSpeedFactor = DHHalfTurnSpeedFactor;
         }
@@ -507,41 +502,9 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         }
 
         // Handle viewrotation
-        if (DHPwn != none && DHPwn.bIsCrawling)
-        {
-            MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, 0.0);
+        ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -10000.0, 10000.0);
+        ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -10000.0, 10000.0);
 
-            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
-            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
-            LastClampProneTime = Level.TimeSeconds;
-        }
-        else if (DHPwn != none && DHPwn.bIsSprinting)
-        {
-            MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, 0.0);
-
-            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
-            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
-            LastClampSprintTime = Level.TimeSeconds;
-        }
-        else
-        {
-            // Buffer change in clamp, so the clamp is not so noticable to player
-            if (Level.TimeSeconds - LastClampProneTime < 1.0 && Level.TimeSeconds - LastClampProneTime > 0.0)
-            {
-                MaxTurnSpeed = InterpCurveEval(ProneMaxTurnCurve, Level.TimeSeconds - LastClampProneTime);
-            }
-            else if (Level.TimeSeconds - LastClampSprintTime < 1.0 && Level.TimeSeconds - LastClampSprintTime > 0.0)
-            {
-                MaxTurnSpeed = InterpCurveEval(SprintMaxTurnCurve, Level.TimeSeconds - LastClampSprintTime);
-            }
-            else
-            {
-                MaxTurnSpeed = 10000.0;
-            }
-
-            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -MaxTurnSpeed, MaxTurnSpeed);
-            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -MaxTurnSpeed, MaxTurnSpeed);
-        }
 
         if (Pawn != none && Pawn.Weapon != none && DHPwn != none)
         {
@@ -2342,6 +2305,12 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= 0.25;
     }
 
+    if (P.IsProneTransitioning())
+    {
+        WeaponSwayYawAcc *= 4.5;
+        WeaponSwayPitchAcc *= 4.5;
+    }
+
     if (P.LeanAmount != 0)
     {
         WeaponSwayYawAcc *= 1.45;
@@ -2863,8 +2832,6 @@ defaultproperties
     baseSwayPitchAcc=500
 
     // Max turn speed values
-    SprintMaxTurnCurve=(Points=((InVal=0.0,OutVal=170.0),(InVal=1.0,OutVal=10000.0)))
-    ProneMaxTurnCurve=(Points=((InVal=0.0,OutVal=130.0),(InVal=1.0,OutVal=10000.0)))
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
     DHISTurnSpeedFactor=0.5
