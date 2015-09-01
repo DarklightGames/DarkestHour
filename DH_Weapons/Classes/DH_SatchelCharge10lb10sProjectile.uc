@@ -5,10 +5,6 @@
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
-// from ROSatchelChargeProjectile (used in other classes):
-var PlayerReplicationInfo SavedPRI;
-var Pawn SavedInstigator;
-
 simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)

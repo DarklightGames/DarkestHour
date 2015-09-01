@@ -11,6 +11,10 @@ var class<Emitter> ExplodeDirtEffectClass;
 var class<Emitter> ExplodeSnowEffectClass;
 var class<Emitter> ExplodeMidAirEffectClass;
 
+// For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & used in other classes):
+var PlayerReplicationInfo SavedPRI;
+var Pawn SavedInstigator;
+
 // Modified to optimise
 simulated function Tick(float DeltaTime)
 {
