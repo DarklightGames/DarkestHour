@@ -225,7 +225,6 @@ function CalcSpreadModifiers()
 // Custom projectile spawning for thrown explosives
 function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
-    local ROSatchelChargeProjectile Satchel;
     local Projectile SpawnedProjectile;
     local float      PawnSpeed, ThrowSpeed, SetFuseTime;
     local vector     X, Y, Z;
@@ -248,15 +247,6 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 
     if (Instigator != none)
     {
-        Satchel = ROSatchelChargeProjectile(SpawnedProjectile);
-
-        if (Satchel != none)
-        {
-            Satchel.InstigatorController = Instigator.Controller;
-            Satchel.SavedInstigator = Instigator;
-            Satchel.SavedPRI = Instigator.PlayerReplicationInfo;
-        }
-
         // Dead man drop area
         if (Instigator.Health <= 0)
         {
