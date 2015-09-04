@@ -196,7 +196,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     PlayerDist = VSizeSquared(P.Location - PlayerOwner.Pawn.Location);
 
-    if (PlayerDist > 2560000) // was 1600.0 but now using VSizeSquared for efficient processing (equals 26.5 metres)
+    if (PlayerDist > 2560000.0) // was 1600.0 but now using VSizeSquared for efficient processing (equals 26.5 metres)
     {
         return;
     }
@@ -260,7 +260,7 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
             break;
     }
 
-    AddDHTextMessage(Msg,DHMessageClassType,PRI);
+    AddDHTextMessage(Msg, DHMessageClassType, PRI);
 }
 
 function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerReplicationInfo PRI)
@@ -373,8 +373,8 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
                     // Save strings to message array + calculate resulting XL/YL
                     MessageExtra.Lines.Length = Lines.Length;
                     C.Font = Message.StringFont;
-                    XL = 0;
-                    YL = 0;
+                    XL = 0.0;
+                    YL = 0.0;
 
                     for (j = 0; j < Lines.Length; ++j)
                     {
@@ -1746,7 +1746,7 @@ simulated function DrawPointSphere()
                     P.AuxCollisionCylinder.CollisionRadius, P.AuxCollisionCylinder.CollisionHeight, 10, 255, 255, 255); // white
             }
 
-            for(i = 1; i < P.Hitpoints.Length; ++i) // skip Hitpoints[0], as that's just the big whole body cylinder (an optimisation) & not an actual hit point
+            for (i = 1; i < P.Hitpoints.Length; ++i) // skip Hitpoints[0], as that's just the big whole body cylinder (an optimisation) & not an actual hit point
             {
                 if (P.Hitpoints[i].PointBone != '')
                 {
@@ -1837,7 +1837,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     // Draw level map overlay
     MapLevelOverlay.WidgetTexture = Material'DH_GUI_Tex.GUI.GridOverlay';
 
-    if( MapLevelOverlay.WidgetTexture != none )
+    if (MapLevelOverlay.WidgetTexture != none)
     {
         DrawSpriteWidgetClipped(C, MapLevelOverlay, subCoords, true);
     }
@@ -1881,7 +1881,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
         foreach DynamicActors(class'Vehicle', V)
         {
             Widget = MapIconRally[V.GetTeamNum()];
-            Widget.TextureScale = 0.04f;
+            Widget.TextureScale = 0.04;
 
             if (V.Health <= 0)
             {
@@ -1910,7 +1910,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             if (Bot(P) != none && ROVehicle(P.Pawn) == none)
             {
                 Widget = MapIconTeam[P.GetTeamNum()];
-                Widget.TextureScale = 0.025f;
+                Widget.TextureScale = 0.025;
 
                 DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, P.Pawn.Location, MapCenter, Left(Bot(P).Squad.GetOrders(), 1));
             }
@@ -1926,7 +1926,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
                 {
                     Widget = MapIconNeutral;
-                    Widget.TextureScale = 0.04f;
+                    Widget.TextureScale = 0.04;
                     Widget.RenderStyle = STY_Normal;
                     DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetActor.Location, MapCenter, "");
                 }
@@ -1938,7 +1938,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             foreach DynamicActors(class'Vehicle', V)
             {
                 Widget = MapIconRally[V.GetTeamNum()];
-                Widget.TextureScale = 0.04f;
+                Widget.TextureScale = 0.04;
                 Widget.RenderStyle = STY_Normal;
 
                 if (ROWheeledVehicle(V) != none)
@@ -1952,7 +1952,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
             foreach DynamicActors(class'DHPawn', DHP)
             {
                 Widget = MapIconTeam[DHP.GetTeamNum()];
-                Widget.TextureScale = 0.04f;
+                Widget.TextureScale = 0.04;
                 Widget.RenderStyle = STY_Normal;
 
                 DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, DHP.Location, MapCenter, "");
@@ -1975,7 +1975,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                     Widget = MapIconNeutral;
                 }
 
-                Widget.TextureScale = 0.04f;
+                Widget.TextureScale = 0.04;
                 Widget.RenderStyle = STY_Normal;
 
                 DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetPawn.Location, MapCenter, "");
@@ -1988,7 +1988,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
                 {
                     Widget = MapIconNeutral;
-                    Widget.TextureScale = 0.04f;
+                    Widget.TextureScale = 0.04;
                     Widget.RenderStyle = STY_Normal;
 
                     S = "" $ NetActor;
@@ -4137,7 +4137,7 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
             {
                 if (DHGRI.DHObjectives[i].CompressedCapProgress != 0)
                 {
-                    if(DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                    if (DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                     {
                         if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
                         {
@@ -4202,9 +4202,9 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
             }
             else
             {
-                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 )
+                if (DHGRI.DHObjectives[i].CompressedCapProgress != 0)
                 {
-                    if(DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+                    if (DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
                     {
                         if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
                         {

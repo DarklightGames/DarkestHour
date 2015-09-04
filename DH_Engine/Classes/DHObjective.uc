@@ -140,24 +140,24 @@ function PostBeginPlay()
     ObjState = InitialObjState;
 
     // Override the GameObjective variable bInitiallyActive with DH
-    if ( Role == ROLE_Authority && bOverrideGameObjective)
+    if (Role == ROLE_Authority && bOverrideGameObjective)
     {
         SetActive(bIsInitiallyActive);
     }
 
     // Add self to game objectives
-    if (DarkestHourGame(Level.Game) != None)
+    if (DarkestHourGame(Level.Game) != none)
     {
         DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
     }
 
-    if (ROTeamGame(Level.Game) != None)
+    if (ROTeamGame(Level.Game) != none)
     {
         ROTeamGame(Level.Game).Objectives[ObjNum] = self;
     }
 
     // Add self to game replication info objectives
-    if (DHGRI != None)
+    if (DHGRI != none)
     {
         DHGRI.DHObjectives[ObjNum] = self;
     }

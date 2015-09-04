@@ -909,7 +909,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
         }
         else
         {
-            S = NamePrefixes[NameNumber%10] $ "CliffyB" $ NameSuffixes[NameNumber % 10];
+            S = NamePrefixes[NameNumber % 10] $ "CliffyB" $ NameSuffixes[NameNumber % 10];
             ++NameNumber;
         }
     }
@@ -1010,6 +1010,7 @@ function AddRole(RORoleInfo NewRole)
         if (AlliesRoleIndex >= arraycount(DHAlliesRoles))
         {
             Warn(NewRole @ "ignored when adding Allied roles to the map, exceeded limit");
+
             return;
         }
 
@@ -1022,6 +1023,7 @@ function AddRole(RORoleInfo NewRole)
         if (AxisRoleIndex >= arraycount(DHAxisRoles))
         {
             Warn(NewRole @ "ignored when adding Axis roles to the map, exceeded limit");
+
             return;
         }
 
@@ -1592,9 +1594,9 @@ state RoundInPlay
         for (i = 0; i < arraycount(GRI.AxisRallyPoints); ++i)
         {
             GRI.AlliedRallyPoints[i].OfficerPRI = none;
-            GRI.AlliedRallyPoints[i].RallyPointLocation = vect(0,0,0);
+            GRI.AlliedRallyPoints[i].RallyPointLocation = vect(0.0 ,0.0, 0.0);
             GRI.AxisRallyPoints[i].OfficerPRI = none;
-            GRI.AxisRallyPoints[i].RallyPointLocation = vect(0,0,0);
+            GRI.AxisRallyPoints[i].RallyPointLocation = vect(0.0 ,0.0, 0.0);
         }
 
         // Clear help requests
@@ -1690,7 +1692,7 @@ state RoundInPlay
 
         for (i = 0; i < arraycount(DHObjectives); ++i)
         {
-            if (DHObjectives[i] == None)
+            if (DHObjectives[i] == none)
             {
                 break;
             }
@@ -1754,28 +1756,41 @@ state RoundInPlay
                 }
             }
         }
-        else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[AXIS_TEAM_INDEX] == NumObjReq && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+        else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[AXIS_TEAM_INDEX] == NumObjReq
+            && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
         {
             EndRound(AXIS_TEAM_INDEX);
         }
-        else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[ALLIES_TEAM_INDEX] == NumObjReq && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+        else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
+            && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
         {
             EndRound(ALLIES_TEAM_INDEX);
         }
+        // Check if we're down to last objective
         else
         {
-            // Check if we're down to last objective..
-                  // One non-required objective missing
-            if (Num[AXIS_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+            // One non-required objective missing
+            if (Num[AXIS_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+            {
                 BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
-                  // One required objective missing
-            else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+            }
+            // One required objective missing
+            else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq - 1
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+            {
                 BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
-
-            if (Num[ALLIES_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+            }
+            if (Num[ALLIES_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+            {
                 BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
-            else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+            }
+            else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq - 1
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+            {
                 BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+            }
         }
 
         if (LevelInfo.bUseSpawnAreas)
@@ -2175,7 +2190,7 @@ function HandleReinforcements(Controller C)
 
         ReinforcementPercent = float(GRI.DHSpawnCount[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
 
-        while ( TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
+        while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                 ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
         {
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
@@ -2189,7 +2204,7 @@ function HandleReinforcements(Controller C)
 
         ReinforcementPercent = float(GRI.DHSpawnCount[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
 
-        while ( TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
+        while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                 ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
         {
             SendReinforcementMessage(AXIS_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
@@ -2325,7 +2340,7 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 
     if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && IsInState('RoundInPlay'))
     {
-        if(!SpawnManager.SpawnPlayer(DHC))
+        if (!SpawnManager.SpawnPlayer(DHC))
         {
             return false;
         }
@@ -2472,6 +2487,7 @@ function HandleFFViolation(PlayerController Offender)
                 bFoundID = true;
                 AccessControl.BanPlayer(Offender, true); //Session kick
                 Offender.PlayerReplicationInfo.FFKills = 0.0; // Reset FFKills or else this can get called multiple times for large TKs
+
                 return; // need to stop here because the player has been session kicked
             }
         }
@@ -2506,7 +2522,7 @@ function HandleFFViolation(PlayerController Offender)
     }
 }
 
-// Modified to add all literal references to pre-cache material from vehicle classes, so they aren't repeated again & again for every vehicle (most were already in the Super in ROTeamGame)
+// Modified to add all literal material references from vehicle classes, so they aren't repeated again & again for every vehicle (most were already in the Super in ROTeamGame)
 static function PrecacheGameTextures(LevelInfo myLevel)
 {
     super.PrecacheGameTextures(myLevel);
@@ -2561,18 +2577,21 @@ function ChooseWinner()
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they have more reinforcements", 'Say');
             EndRound(AXIS_TEAM_INDEX);
+
             return;
         }
         else if (AlliedReinforcementsPercent > AxisReinforcementsPercent)
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they have more reinforcements", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
+
             return;
         }
         else // Both teams have same reinforcements so its a tie "No Decisive Victory"
         {
             Level.Game.Broadcast(self, "Neither side won the battle because they have equal reinforcements", 'Say');
             EndRound(2);
+
             return;
         }
     }
@@ -2594,7 +2613,7 @@ function ChooseWinner()
     // Count objectives (required and total)
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
-        if (DHObjectives[i] == None)
+        if (DHObjectives[i] == none)
         {
             break;
         }
@@ -2619,47 +2638,51 @@ function ChooseWinner()
     }
 
     // Side with more required objectives wins, if equal, then total objectives, if equal then continues
-    if( NumReq[AXIS_TEAM_INDEX] != NumReq[ALLIES_TEAM_INDEX] )
+    if (NumReq[AXIS_TEAM_INDEX] != NumReq[ALLIES_TEAM_INDEX])
     {
-        if( NumReq[AXIS_TEAM_INDEX] > NumReq[ALLIES_TEAM_INDEX] )
+        if (NumReq[AXIS_TEAM_INDEX] > NumReq[ALLIES_TEAM_INDEX])
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they control a greater number of crucial objectives", 'Say');
             EndRound(AXIS_TEAM_INDEX);
+
             return;
         }
         else
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they control a greater number of crucial objectives", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
+
             return;
         }
     }
-    else if( Num[AXIS_TEAM_INDEX] != Num[ALLIES_TEAM_INDEX] )
+    else if (Num[AXIS_TEAM_INDEX] != Num[ALLIES_TEAM_INDEX])
     {
-        if( Num[AXIS_TEAM_INDEX] > Num[ALLIES_TEAM_INDEX] )
+        if (Num[AXIS_TEAM_INDEX] > Num[ALLIES_TEAM_INDEX])
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they control a greater number of objectives", 'Say');
             EndRound(AXIS_TEAM_INDEX);
+
             return;
         }
         else
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they control a greater number of objectives", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
+
             return;
         }
     }
 
     // Get team score (combined player score)
-    for (C = Level.ControllerList; C != None; C = C.NextController)
+    for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        if (C.PlayerReplicationInfo != None && C.PlayerReplicationInfo.Team != None )
+        if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.Team != none)
         {
             if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
             {
                 AxisScore += C.PlayerReplicationInfo.Score;
             }
-            else if(C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+            else if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
             {
                 AlliedScore += C.PlayerReplicationInfo.Score;
             }
@@ -2667,35 +2690,39 @@ function ChooseWinner()
     }
 
     // Highest score wins, if equal continue
-    if( AxisScore != AlliedScore )
+    if (AxisScore != AlliedScore)
     {
-        if( AxisScore > AlliedScore )
+        if (AxisScore > AlliedScore)
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they have a higher score than the Allies", 'Say');
             EndRound(AXIS_TEAM_INDEX);
+ 
             return;
         }
         else
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they have a higher score than the Axis", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
+
             return;
         }
     }
 
     // Highest reinforcements percent wins, if equal continue
-    if( AxisReinforcementsPercent != AlliedReinforcementsPercent )
+    if (AxisReinforcementsPercent != AlliedReinforcementsPercent)
     {
-        if( AxisReinforcementsPercent > AlliedReinforcementsPercent )
+        if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they have more reinforcements", 'Say');
             EndRound(AXIS_TEAM_INDEX);
+
             return;
         }
         else
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they have more reinforcements", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
+
             return;
         }
     }
@@ -2708,9 +2735,9 @@ function ChooseWinner()
 //Theel: Convert to use DHObjectives, though this isn't supposed to be used
 function CheckSpawnAreas()
 {
-    local int i, j, h, k;
     local ROSpawnArea Best[2];
-    local bool bReqsMet, bSomeReqsMet;
+    local bool        bReqsMet, bSomeReqsMet;
+    local int         h, i, j, k;
 
     for (i = 0; i < SpawnAreas.Length; ++i)
     {
@@ -2719,12 +2746,12 @@ function CheckSpawnAreas()
             continue;
         }
 
-        if (SpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == None || SpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
+        if (SpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || SpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
         {
             bReqsMet = true;
             bSomeReqsMet = false;
 
-            for (j = 0; j < SpawnAreas[i].AxisRequiredObjectives.Length; j++)
+            for (j = 0; j < SpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
                 if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
@@ -2734,11 +2761,10 @@ function CheckSpawnAreas()
             }
 
             // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns
-            // Instead of just one - Ramm
-            for (h = 0; h < SpawnAreas[i].AxisRequiredObjectives.Length; h++)
+            // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
+            for (h = 0; h < SpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis )
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
                 {
                     bSomeReqsMet = true;
                     break;
@@ -2747,11 +2773,11 @@ function CheckSpawnAreas()
 
             // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
             // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if( SpawnAreas[i].bIncludeNeutralObjectives )
+            if (SpawnAreas[i].bIncludeNeutralObjectives)
             {
-                for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; k++)
+                for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
                         bSomeReqsMet = true;
                         break;
@@ -2763,18 +2789,18 @@ function CheckSpawnAreas()
             {
                 Best[AXIS_TEAM_INDEX] = SpawnAreas[i];
             }
-            else if ( bSomeReqsMet && SpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis )
+            else if (bSomeReqsMet && SpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
             {
                 Best[AXIS_TEAM_INDEX] = SpawnAreas[i];
             }
         }
 
-        if (SpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == None || SpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
+        if (SpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || SpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
         {
             bReqsMet = true;
             bSomeReqsMet = false;
 
-            for (j = 0; j < SpawnAreas[i].AlliesRequiredObjectives.Length; j++)
+            for (j = 0; j < SpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
                 if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
@@ -2784,25 +2810,23 @@ function CheckSpawnAreas()
             }
 
             // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns
-            // Instead of just one - Ramm
-            for (h = 0; h < SpawnAreas[i].AlliesRequiredObjectives.Length; h++)
+            // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
+            for (h = 0; h < SpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
                 if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
                 {
                     bSomeReqsMet = true;
                     break;
-                    //log("Setting Allied  bSomeReqsMet to true");
                 }
             }
 
             // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
             // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if( SpawnAreas[i].bIncludeNeutralObjectives )
+            if (SpawnAreas[i].bIncludeNeutralObjectives)
             {
-                for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; k++)
+                for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
                         bSomeReqsMet = true;
                         break;
@@ -2814,7 +2838,7 @@ function CheckSpawnAreas()
             {
                 Best[ALLIES_TEAM_INDEX] = SpawnAreas[i];
             }
-            else if ( bSomeReqsMet && SpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies )
+            else if (bSomeReqsMet && SpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
             {
                 Best[ALLIES_TEAM_INDEX] = SpawnAreas[i];
             }
@@ -2824,11 +2848,15 @@ function CheckSpawnAreas()
     CurrentSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
     CurrentSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 
-    if (CurrentSpawnArea[AXIS_TEAM_INDEX] == None)
-        log("ROTeamGame: No valid Axis spawn area found!");
+    if (CurrentSpawnArea[AXIS_TEAM_INDEX] == none)
+    {
+        Log("ROTeamGame: no valid Axis spawn area found!");
+    }
 
-    if (CurrentSpawnArea[ALLIES_TEAM_INDEX] == None)
-        log("ROTeamGame: No valid Allied spawn area found!");
+    if (CurrentSpawnArea[ALLIES_TEAM_INDEX] == none)
+    {
+        Log("ROTeamGame: no valid Allied spawn area found!");
+    }
 }
 
 // Theel: This function is no longer used, but I converted to use DHObjectives just in case we make use of it
@@ -2845,12 +2873,12 @@ function CheckTankCrewSpawnAreas()
             continue;
         }
 
-        if (TankCrewSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == None || TankCrewSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
+        if (TankCrewSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || TankCrewSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
         {
             bReqsMet = true;
             bSomeReqsMet = false;
 
-            for (j = 0; j < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; j++)
+            for (j = 0; j < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
                 if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
@@ -2860,11 +2888,10 @@ function CheckTankCrewSpawnAreas()
             }
 
             // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns
-            // Instead of just one - Ramm
-            for (h = 0; h < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; h++)
+            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
+            for (h = 0; h < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis )
+                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
                 {
                     bSomeReqsMet = true;
                     break;
@@ -2872,12 +2899,12 @@ function CheckTankCrewSpawnAreas()
             }
 
             // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
-            // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if( TankCrewSpawnAreas[i].bIncludeNeutralObjectives )
+            // Allows mappers to have spawns be used when objectives are neutral, not just captured
+            if (TankCrewSpawnAreas[i].bIncludeNeutralObjectives)
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
                         bSomeReqsMet = true;
                         break;
@@ -2889,18 +2916,18 @@ function CheckTankCrewSpawnAreas()
             {
                 Best[AXIS_TEAM_INDEX] = TankCrewSpawnAreas[i];
             }
-            else if ( bSomeReqsMet && TankCrewSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis )
+            else if (bSomeReqsMet && TankCrewSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
             {
                 Best[AXIS_TEAM_INDEX] = TankCrewSpawnAreas[i];
             }
         }
 
-        if (TankCrewSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == None || TankCrewSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
+        if (TankCrewSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || TankCrewSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
         {
             bReqsMet = true;
             bSomeReqsMet = false;
 
-            for (j = 0; j < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; j++)
+            for (j = 0; j < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
                 if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
@@ -2910,25 +2937,23 @@ function CheckTankCrewSpawnAreas()
             }
 
             // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns
-            // Instead of just one - Ramm
-            for (h = 0; h < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; h++)
+            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
+            for (h = 0; h < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
                 if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
                 {
                     bSomeReqsMet = true;
                     break;
-                    //log("Setting Allied  bSomeReqsMet to true");
                 }
             }
 
             // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
-            // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if( TankCrewSpawnAreas[i].bIncludeNeutralObjectives )
+            // Allows mappers to have spawns be used when objectives are neutral, not just captured
+            if (TankCrewSpawnAreas[i].bIncludeNeutralObjectives)
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
                         bSomeReqsMet = true;
                         break;
@@ -2940,7 +2965,7 @@ function CheckTankCrewSpawnAreas()
             {
                 Best[ALLIES_TEAM_INDEX] = TankCrewSpawnAreas[i];
             }
-            else if ( bSomeReqsMet && TankCrewSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies )
+            else if (bSomeReqsMet && TankCrewSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
             {
                 Best[ALLIES_TEAM_INDEX] = TankCrewSpawnAreas[i];
             }
@@ -3114,8 +3139,11 @@ exec function AddBots(int num)
 {
     while (--num >= 0)
     {
-        if ( Level.NetMode != NM_Standalone )
+        if (Level.NetMode != NM_Standalone)
+        {
             MinPlayers = Max(MinPlayers + 1, NumPlayers + NumBots + 1);
+        }
+
         AddBot();
     }
 }

@@ -114,7 +114,7 @@ replication
 //      bCrouchMantle, MantleHeight; // Matt: removed as are set independently on server & client & so don't seem to need to be replicated
 }
 
-// Modified to use DH version of bullet whip attachment actor, & to remove its SavedAuxCollision (deprecated as now we simply enable or disable collision in ToggleAuxCollision function)
+// Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
 // Also removes needlessly setting some variables to what will be default values anyway for a spawning actor
 simulated function PostBeginPlay()
 {
@@ -421,7 +421,7 @@ simulated event HandleWhizSound()
 
 // Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
 // Matt: part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
-// Also so player pawn's CullDistance is not set to 5000 (83m) when in vehicle, as caused players to disappear at quite close ranges when often should be highly visible , e.g. AT gunner
+// Also so player's CullDistance isn't set to 5000 (83m) when in vehicle, as caused players to disappear at quite close ranges when often should be highly visible, e.g. AT gunner
 // And some fixes where vehicle is replicating to net client, which may not have received all relevant actors yet (e.g. Driver, Gun)
 // Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
 simulated event StartDriving(Vehicle V)
@@ -491,7 +491,7 @@ simulated event StartDriving(Vehicle V)
             SmoothViewYaw = Rotation.Yaw;
             SetTwistLook(0, 0);
 
-            if(Role < ROLE_Authority && !bClientPlayedDriveAnim)
+            if (Role < ROLE_Authority && !bClientPlayedDriveAnim)
             {
                 bClientPlayedDriveAnim = true;
             }
@@ -1525,7 +1525,7 @@ Begin:
     Sleep(0.2);
     bInvulnerableBody = false;
 
-    if (Level.Game != none && !Level.Game.bGameEnded) // Matt: needs != none check to avoid "accessed none" error on a client (actor has been torn off so usual Role = authority check doesn't work)
+    if (Level.Game != none && !Level.Game.bGameEnded) // needs != none check to avoid "accessed none" error on client (actor has been torn off so usual role authority check doesn't work)
     {
         PlayDyingSound();
     }
@@ -1670,7 +1670,7 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
        }
     }
 
-    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30,90),, true);
+    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30, 90),, true);
 }
 
 // A few minor additions
@@ -2021,7 +2021,7 @@ function DestroyRadioTrigger()
 }
 
 // Modified to allow player to carry more than 1 type of grenade
-// Also to add != "none" (string) checks before calling CreateInventory(), avoiding calling GetInventoryClass("none") on base mutator & the log errors created every time a player spawns
+// Also to add != "none" (string) checks before calling CreateInventory yo avoid calling GetInventoryClass("none") on base mutator & the log errors created each time a player spawns
 function AddDefaultInventory()
 {
     local DHPlayer   P;
@@ -2174,7 +2174,7 @@ function AddDefaultInventory()
     }
 }
 
-// Modified to add != "none" check (in string format), which avoids calling GetInventoryClass("none") on the base mutator & the log errors that creates every time a player spawns
+// Modified to add != "none" check (in string format), which avoids calling GetInventoryClass("none") on the base mutator & the log errors that creates each time a player spawns
 function CreateInventory(string InventoryClassName)
 {
     if (InventoryClassName != "None" && InventoryClassName != "")
@@ -3043,7 +3043,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     EndLoc += X * 7; // brings us to a total of 60uu out from our starting location, which is how far our animations go
     StartLoc = EndLoc;
-    EndLoc.Z = Location.Z - 22; // 36 uu above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
+    EndLoc.Z = Location.Z - 22.0; // 36 UU above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
     // Trace downward to find the top of the object - coming from above to prevent false positives from uneven surfaces
     if (!CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
@@ -3636,7 +3636,8 @@ event UpdateEyeHeight(float DeltaTime)
 
     if (Controller == none)
     {
-        EyeHeight = 0;
+        EyeHeight = 0.0;
+
         return;
     }
 
@@ -3648,7 +3649,7 @@ event UpdateEyeHeight(float DeltaTime)
         if (bCrouchMantle)
         {
             Smooth = FMin(0.65, 10.0 * DeltaTime);
-            EyeHeight = EyeHeight * (1 - 0.1 * Smooth);
+            EyeHeight = EyeHeight * (1.0 - 0.1 * Smooth);
 
             if (EyeHeight < CrouchEyeHeightMod * CrouchHeight + 1.0)
             {
@@ -3701,6 +3702,7 @@ event UpdateEyeHeight(float DeltaTime)
     {
         EyeHeight = default.BaseEyeHeight;
         bUpdateEyeHeight = false;
+
         return;
     }
 
@@ -4265,6 +4267,7 @@ simulated exec function BobAmplitude(optional float F)
     if (F == 0)
     {
         Level.Game.Broadcast(self, "IronsightBobAmplitude" @ IronsightBobAmplitude);
+
         return;
     }
 
@@ -4276,6 +4279,7 @@ simulated exec function BobFrequency(optional float F)
     if (F == 0)
     {
         Level.Game.Broadcast(self, "IronsightBobFrequency" @ IronsightBobFrequency);
+
         return;
     }
 
@@ -4287,6 +4291,7 @@ simulated exec function BobDecay(optional float F)
     if (F == 0)
     {
         Level.Game.Broadcast(self, "IronsightBobDecay" @ IronsightBobDecay);
+
         return;
     }
 
@@ -4296,12 +4301,8 @@ simulated exec function BobDecay(optional float F)
 // Overriden to add some inital weapon bobbing when first iron sighting
 function CheckBob(float DeltaTime, vector Y)
 {
-    local float Speed2D;
-    local float OldBobTime;
+    local float OldBobTime, BobModifier, Speed2D, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
     local int   m, n;
-    local float BobModifier;
-    local float IronsightBobDecayModifier;
-    local float IronsightBobAmplitudeModifier;
 
     OldBobTime = BobTime;
 
@@ -4359,16 +4360,16 @@ function CheckBob(float DeltaTime, vector Y)
         else
         {
             IronsightBobTime = 0.0;
-            IronsightBob = vect(0, 0, 0);
+            IronsightBob = vect(0.0, 0.0, 0.0);
         }
 
         if (bIsCrawling && !bIronSights)
         {
-            BobTime += DeltaTime * ((0.3 + 0.7 * Speed2D / (GroundSpeed * PronePct)) / 2);
+            BobTime += DeltaTime * ((0.3 + 0.7 * Speed2D / (GroundSpeed * PronePct)) / 2.0);
         }
         else if (bIsSprinting)
         {
-            if (Speed2D < 10)
+            if (Speed2D < 10.0)
             {
                 BobTime += 0.2 * DeltaTime;
             }
@@ -4386,7 +4387,7 @@ function CheckBob(float DeltaTime, vector Y)
         }
         else
         {
-            if (Speed2D < 10)
+            if (Speed2D < 10.0)
             {
                 BobTime += 0.2 * DeltaTime;
             }
@@ -4396,19 +4397,19 @@ function CheckBob(float DeltaTime, vector Y)
             }
         }
 
-        WalkBob = Y * (Bob * BobModifier) * Speed2D * Sin(8 * BobTime);
-        AppliedBob = AppliedBob * (1 - FMin(1, 16 * DeltaTime));
+        WalkBob = Y * (Bob * BobModifier) * Speed2D * Sin(8.0 * BobTime);
+        AppliedBob = AppliedBob * (1.0 - FMin(1.0, 16.0 * DeltaTime));
         WalkBob.Z = AppliedBob;
 
-        if (Speed2D > 10)
+        if (Speed2D > 10.0)
         {
-            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * Sin(16 * BobTime);
+            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * Sin(16.0 * BobTime);
         }
 
         if (LandBob > 0.01)
         {
-            AppliedBob += FMin(1, 16 * DeltaTime) * LandBob;
-            LandBob *= (1 - 8*Deltatime);
+            AppliedBob += FMin(1.0, 16.0 * DeltaTime) * LandBob;
+            LandBob *= (1.0 - 8.0 * Deltatime);
         }
     }
     else if (Physics == PHYS_Swimming)
@@ -4419,13 +4420,11 @@ function CheckBob(float DeltaTime, vector Y)
     }
     else
     {
-        BobTime = 0;
-        WalkBob = WalkBob * (1 - FMin(1, 8 * DeltaTime));
+        BobTime = 0.0;
+        WalkBob = WalkBob * (1.0 - FMin(1.0, 8.0 * DeltaTime));
     }
 
-    if (Physics != PHYS_Walking || VSize(Velocity) < 10 ||
-        (PlayerController(Controller) != none &&
-         PlayerController(Controller).bBehindView))
+    if (Physics != PHYS_Walking || VSize(Velocity) < 10.0 || (PlayerController(Controller) != none && PlayerController(Controller).bBehindView))
     {
         return;
     }
@@ -4451,12 +4450,16 @@ simulated state DivingToProne
         NewHeight = default.CollisionHeight - ProneHeight;
 
         if (WeaponAttachment != none)
+        {
             Anim = WeaponAttachment.PA_DiveToProneEndAnim;
+        }
         else
+        {
             Anim = DiveToProneEndAnim;
+        }
 
         PlayAnim(DiveToProneEndAnim, 0.0, 0.0, 0);
-        PrePivot = default.PrePivot + (NewHeight * vect(0,0,1));
+        PrePivot = default.PrePivot + (NewHeight * vect(0.0, 0.0, 1.0));
 
         // Take stamina away with each dive prone
         Stamina = FMax(Stamina - JumpStaminaDrain, 0.0);
@@ -4487,7 +4490,7 @@ event EndCrouch(float HeightAdjust)
     super.EndCrouch(HeightAdjust);
 
     // Take stamina away with each stance change
-    Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2), 0.0);
+    Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
 }
 
 // From crouch to prone
@@ -4514,7 +4517,7 @@ event StartCrouch(float HeightAdjust)
     super.StartCrouch(HeightAdjust);
 
     // Take stamina away with each stance change
-    Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2), 0.0);
+    Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
 }
 
 simulated function vector CalcZoomedDrawOffset(Inventory Inv)
@@ -4523,10 +4526,10 @@ simulated function vector CalcZoomedDrawOffset(Inventory Inv)
 
     if (Controller == none)
     {
-        return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0, 0, 1);
+        return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0.0, 0.0, 1.0);
     }
 
-    DrawOffset = 0.9 / Weapon.DisplayFOV * 100 * ZoomedModifiedPlayerViewOffset(Inv);
+    DrawOffset = 0.9 / Weapon.DisplayFOV * 100.0 * ZoomedModifiedPlayerViewOffset(Inv);
 
     if (IsLocallyControlled())
     {
@@ -4544,11 +4547,11 @@ event KImpact(actor other, vector pos, vector impactVel, vector impactNorm)
     local float VelocitySquared;
     local float RagHitVolume;
 
-    if(Level.TimeSeconds > RagLastSoundTime + RagImpactSoundInterval)
+    if (Level.TimeSeconds > RagLastSoundTime + RagImpactSoundInterval)
     {
         VelocitySquared = VSizeSquared(impactVel);
 
-        RagHitVolume = FMin(4.0,(VelocitySquared/40000));
+        RagHitVolume = FMin(4.0, (VelocitySquared / 40000.0));
 
         PlaySound(RagImpactSound, SLOT_None, RagHitVolume,, 10.0,, true);
         RagLastSoundTime = Level.TimeSeconds;

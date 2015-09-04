@@ -680,19 +680,19 @@ simulated function float GetMaxViewDistance()
     switch (Level.ViewDistanceLevel)
     {
         case VDL_Default_1000m:
-            return 65536;
+            return 65536.0;
 
         case VDL_Medium_2000m:
-            return 131072;
+            return 131072.0;
 
         case VDL_High_3000m:
-            return 196608;
+            return 196608.0;
 
         case VDL_Extreme_4000m:
-            return 262144;
+            return 262144.0;
 
         default:
-            return 65536;
+            return 65536.0;
     }
 }
 
@@ -985,6 +985,7 @@ state PlayerWalking
                     bWaitingToMantle = true;
                     MantleFailTimer = Level.TimeSeconds + 1.0;
                 }
+
                 return;
             }
             else
@@ -1904,7 +1905,7 @@ simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
 
     foreach AllActors(class'ROTreadCraft', V)
     {
-        if (TreadVelocityScale == -1)
+        if (TreadVelocityScale == -1.0)
         {
             V.TreadVelocityScale = V.default.TreadVelocityScale;
         }
@@ -2239,14 +2240,8 @@ simulated function ResetSwayValues()
 // Calculate the weapon sway, modified for DH sway system (large sway from start, reduces, then averages)
 simulated function SwayHandler(float DeltaTime)
 {
-    local float WeaponSwayYawAcc;
-    local float WeaponSwayPitchAcc;
-    local float DeltaSwayYaw;
-    local float DeltaSwayPitch;
-    local float TimeFactor;
-    local float BobFactor;
-    local float StaminaFactor;
     local DHPawn P;
+    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, TimeFactor, BobFactor, StaminaFactor, DeltaSwayYaw, DeltaSwayPitch;
 
     P = DHPawn(Pawn);
 
@@ -2311,19 +2306,19 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= 4.5;
     }
 
-    if (P.LeanAmount != 0)
+    if (P.LeanAmount != 0.0)
     {
         WeaponSwayYawAcc *= 1.45;
         WeaponSwayPitchAcc *= 1.45;
     }
 
     // Add a elastic and damping factor to get sway near the original aim-point and from causing wild oscillations
-    WeaponSwayYawAcc = WeaponSwayYawAcc - (DHSwayElasticFactor*SwayYaw) - (DHSwayDampingFactor*WeaponSwayYawRate);
-    WeaponSwayPitchAcc = WeaponSwayPitchAcc - (DHSwayElasticFactor*SwayPitch) - (DHSwayDampingFactor*WeaponSwayPitchRate);
+    WeaponSwayYawAcc = WeaponSwayYawAcc - (DHSwayElasticFactor * SwayYaw) - (DHSwayDampingFactor * WeaponSwayYawRate);
+    WeaponSwayPitchAcc = WeaponSwayPitchAcc - (DHSwayElasticFactor * SwayPitch) - (DHSwayDampingFactor * WeaponSwayPitchRate);
 
     // Calculation for motion
-    DeltaSwayYaw = (WeaponSwayYawRate * DeltaTime) + (0.5*WeaponSwayYawAcc*DeltaTime*DeltaTime);
-    DeltaSwayPitch = (WeaponSwayPitchRate * DeltaTime) + (0.5*WeaponSwayPitchAcc*DeltaTime*DeltaTime);
+    DeltaSwayYaw = (WeaponSwayYawRate * DeltaTime) + (0.5 * WeaponSwayYawAcc * DeltaTime * DeltaTime);
+    DeltaSwayPitch = (WeaponSwayPitchRate * DeltaTime) + (0.5 * WeaponSwayPitchAcc * DeltaTime * DeltaTime);
 
     // Add actual sway
     SwayYaw += DeltaSwayYaw;
@@ -2331,8 +2326,8 @@ simulated function SwayHandler(float DeltaTime)
 
     if (P.bRestingWeapon)
     {
-        SwayYaw = 0;
-        SwayPitch = 0;
+        SwayYaw = 0.0;
+        SwayPitch = 0.0;
     }
 
     // Update new sway velocity (R = D*T)
@@ -2708,7 +2703,7 @@ function vector GetObjectiveLocation(int Index)
         return GRI.DHObjectives[Index].Location;
     }
 
-    return vect(0, 0, 0);
+    return vect(0.0, 0.0, 0.0);
 }
 
 // Modified to not have player automatically switch to best weapon when player requests to drop weapon
@@ -2719,7 +2714,7 @@ function ServerThrowWeapon()
     if (Pawn.CanThrowWeapon())
     {
         TossVel = vector(GetViewRotation());
-        TossVel = TossVel * ((Pawn.Velocity dot TossVel) + 150) + Vect(0,0,100);
+        TossVel = TossVel * ((Pawn.Velocity dot TossVel) + 150.0) + vect(0.0, 0.0, 100.0);
         Pawn.TossWeapon(TossVel);
     }
 }
@@ -2727,7 +2722,7 @@ function ServerThrowWeapon()
 function PawnDied(Pawn P)
 {
     local DarkestHourGame G;
-    local DHRoleInfo RI;
+    local DHRoleInfo      RI;
 
     if (P == none)
     {
@@ -2757,12 +2752,16 @@ function HandlePickup(Pickup pick)
 function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
     if (ROHud(myHud) == none)
+    {
         return;
+    }
 
     ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
 
-    if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && (Player != none) && (Player.Console != none))
-        Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType),0);
+    if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
+    {
+        Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType), 0);
+    }
 }
 
 // Modified to avoid possible spamming of "accessed none" errors
