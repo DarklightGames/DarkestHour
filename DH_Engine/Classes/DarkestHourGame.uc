@@ -2024,9 +2024,9 @@ state ResetGameCountdown
     }
 }
 
-// Modified to replace ROArtillerySpawner with DHArtillerySpawner
 state RoundOver
 {
+    // Modified to replace ROArtillerySpawner with DHArtillerySpawner
     function BeginState()
     {
         local DHArtillerySpawner AS;
@@ -2039,6 +2039,22 @@ state RoundOver
         foreach DynamicActors(class'DHArtillerySpawner', AS)
         {
             AS.Destroy();
+        }
+    }
+
+    // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
+    function Timer()
+    {
+        global.Timer();
+
+        if (ElapsedTime > RoundStartTime + 5.0)
+        {
+            if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+            {
+                Spawn(class'DHClientResetGame');
+            }
+
+            GotoState('RoundInPlay');
         }
     }
 }
