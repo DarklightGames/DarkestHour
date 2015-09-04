@@ -62,7 +62,7 @@ singular function Touch(Actor Other)
 // Matt: also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor  Victims, TraceHitActor, LastTouched;
+    local Actor  Victims, TraceHitActor;
     local vector Direction, TraceHitLocation, TraceHitNormal;
     local float  DamageScale, Distance;
 
