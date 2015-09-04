@@ -230,7 +230,11 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
     switch (MsgType)
     {
         case 'Say':
-            Msg = PRI.PlayerName $ ":" @ Msg;
+            if (PRI != none && PRI.PlayerName != "")
+            {
+                Msg = PRI.PlayerName $ ":" @ Msg;
+            }
+
             DHMessageClassType = class'DHSayMessage';
             break;
         case 'TeamSay':

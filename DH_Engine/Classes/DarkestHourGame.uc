@@ -2753,7 +2753,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
                     bReqsMet = false;
                     break;
@@ -2764,7 +2764,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
                 {
                     bSomeReqsMet = true;
                     break;
@@ -2777,7 +2777,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
                         bSomeReqsMet = true;
                         break;
@@ -2802,7 +2802,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
                     bReqsMet = false;
                     break;
@@ -2813,7 +2813,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
                 {
                     bSomeReqsMet = true;
                     break;
@@ -2826,7 +2826,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
                         bSomeReqsMet = true;
                         break;
