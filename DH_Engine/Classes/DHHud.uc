@@ -4113,7 +4113,9 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
         for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
         {
             if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || !DHGRI.DHObjectives[i].bRequired)
+            {
                 continue;
+            }
 
             if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
             {
