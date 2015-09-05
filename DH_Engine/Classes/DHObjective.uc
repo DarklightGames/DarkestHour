@@ -151,11 +151,6 @@ function PostBeginPlay()
         DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
     }
 
-    if (ROTeamGame(Level.Game) != none)
-    {
-        ROTeamGame(Level.Game).Objectives[ObjNum] = self;
-    }
-
     // Add self to game replication info objectives
     if (DHGRI != none)
     {
