@@ -1531,6 +1531,56 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     }
 }
 
+// Modified to call ClientAddHudDeathMessage instead of RO's AddHudDeathMessage (also re-factored to shorten & reduce code duplication)
+// Also to fix bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
+function BroadcastDeathMessage(Controller Killer, Controller Killed, class<DamageType> DamageType)
+{
+    local Controller C;
+
+    // Send DM to every human player
+    if (DeathMessageMode == DM_All)
+    {
+        // Loop through al controllers & DM each human player
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            if (DHPlayer(C) != none)
+            {
+                if (Killer == Killed || Killer == none)
+                {
+                    DHPlayer(C).ClientAddHudDeathMessage(none, Killed.PlayerReplicationInfo, DamageType);
+                }
+                else
+                {
+                    DHPlayer(C).ClientAddHudDeathMessage(Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
+                }
+            }
+        }
+    }
+    // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
+    else if (DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal)
+    {
+        // Send DM to a killed human player
+        if (DHPlayer(Killed) != none)
+        {
+            if (Killer == Killed || Killer == none)
+            {
+                DHPlayer(Killed).ClientAddHudDeathMessage(none, Killed.PlayerReplicationInfo, DamageType);
+            }
+            else
+            {
+                DHPlayer(Killed).ClientAddHudDeathMessage(Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
+            }
+        }
+
+        // If mode is Personal, also send DM to the killer (if human)
+        // Had to move this away from the if (DHPlayer(Killed) != none) above, as that stopped a human player from getting a DM for killing a bot
+        if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
+        {
+            DHPlayer(Killer).ClientAddHudDeathMessage(Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
+        }
+    }
+}
+
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
     local int i;

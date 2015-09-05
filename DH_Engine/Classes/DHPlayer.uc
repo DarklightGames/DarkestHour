@@ -85,7 +85,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack;
+        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -2749,19 +2749,27 @@ function HandlePickup(Pickup pick)
 {
 }
 
+// Function emptied out as replaced by ClientAddHudDeathMessage()
 function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
-    if (ROHud(myHud) == none)
-    {
-        return;
-    }
+    Log("DHP.AddHudDeathMessage called - SHOULD NOT HAPPEN NOW !!!"); // TEMP DEBUG
+}
 
-    ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
-
-    if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
+// New function replacing RO's AddHudDeathMessage - only change is that it doesn't have the bNetOwner replication condition
+// That seemed to sometimes prevent this replicated function being called on a net client, meaning that client didn't get the death message
+simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
+{
+    if (ROHud(myHud) != none)
     {
-        Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType), 0);
+        Log("ClientAddHudDeathMessage calling AddDeathMessage on HUD for player" @ PlayerReplicationInfo.PlayerName @ " Killer =" @ Killer.PlayerName @ " Victim =" @ Victim.PlayerName); // TEMP DEBUG
+        ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
+
+        if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
+        {
+            Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType), 0);
+        }
     }
+    else Log("ClientAddHudDeathMessage DOING NOTHING for player" @ PlayerReplicationInfo.PlayerName @ "as no ROHud!  NetMode =" @ GetEnum(enum'ENetMode', Level.NetMode)); // TEMP DEBUG
 }
 
 // Modified to avoid possible spamming of "accessed none" errors
