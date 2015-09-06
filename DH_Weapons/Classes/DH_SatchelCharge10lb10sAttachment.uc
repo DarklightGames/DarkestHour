@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SatchelCharge10lb10sAttachment extends DHGrenadeAttachment;
+class DH_SatchelCharge10lb10sAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {

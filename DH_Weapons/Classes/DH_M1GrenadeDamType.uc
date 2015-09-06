@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1GrenadeDamType extends DHGrenadeDamageType
+class DH_M1GrenadeDamType extends DHThrowableExplosiveDamageType
     abstract;
 
 defaultproperties

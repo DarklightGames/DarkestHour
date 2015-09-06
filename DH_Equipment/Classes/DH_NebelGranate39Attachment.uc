@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_NebelGranate39Attachment extends DHGrenadeAttachment;
+class DH_NebelGranate39Attachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StielGranateFire extends DHGrenadeFire;
+class DH_StielGranateFire extends DHThrownExplosiveFire;
 
 defaultproperties
 {

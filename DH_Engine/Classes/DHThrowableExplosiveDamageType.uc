@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHGrenadeDamageType extends ROGrenadeDamType
+class DHThrowableExplosiveDamageType extends ROGrenadeDamType
     abstract;
 
 static function string DeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim)

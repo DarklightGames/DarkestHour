@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHGrenadeFire extends DHProjectileFire    // Matt - this class would be better as DHThrownExplosiveFire
+class DHThrownExplosiveFire extends DHProjectileFire
     abstract;
 
 var     float   MinimumThrowSpeed;      // minimum speed the explosive will have if just clicking, with no hold time
