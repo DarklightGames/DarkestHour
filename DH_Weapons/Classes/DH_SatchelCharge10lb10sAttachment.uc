@@ -3,26 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SatchelCharge10lb10sAttachment extends DHWeaponAttachment;
-
-simulated event ThirdPersonEffects()
-{
-    if (Level.NetMode != NM_DedicatedServer && ROPawn(Instigator) != none)
-    {
-        if (FlashCount == 0)
-        {
-            ROPawn(Instigator).StopFiring();
-        }
-        else if (FiringMode == 0)
-        {
-            ROPawn(Instigator).StartFiring(bHeavy, bRapidFire);
-        }
-        else
-        {
-            ROPawn(Instigator).StartFiring(bHeavy, bAltRapidFire);
-        }
-    }
-}
+class DH_SatchelCharge10lb10sAttachment extends DHGrenadeAttachment;
 
 defaultproperties
 {
@@ -242,9 +223,6 @@ defaultproperties
     WA_Idle="idle_satchel"
     WA_Fire="idle_satchel"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.satchel'
-    bRapidFire=false
-    LightType=LT_none
-    LightEffect=LE_none
     Mesh=SkeletalMesh'Weapons3rd_anm.satchel'
     Skins(0)=texture'Weapons3rd_tex.German.satchel_world'
 }
