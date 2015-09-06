@@ -11,5 +11,5 @@ defaultproperties
     APCDamageModifier=0.75
     VehicleDamageModifier=1.5
     TreadDamageModifier=0.95
-    DeathString="%o was killed by %k's Sherman 76mm APC shell."
+    DeathString="%o was killed by %k's Sherman 76mm AP shell."
 }

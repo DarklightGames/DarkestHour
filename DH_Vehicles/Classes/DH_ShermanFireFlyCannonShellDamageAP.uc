@@ -9,5 +9,5 @@ class DH_ShermanFireFlyCannonShellDamageAP extends DHCannonShellDamageImpact
 defaultproperties
 {
     APCDamageModifier=0.75
-    DeathString="%o was killed by %k's Sherman Firefly APC shell."
+    DeathString="%o was killed by %k's Sherman Firefly AP shell."
 }
