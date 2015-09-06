@@ -10,5 +10,7 @@ defaultproperties
 {
     HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_M1CarbineWeapon'
-    KDamageImpulse=2250.0
+    KDamageImpulse=1500.0
+    KDeathVel=110.0
+    KDeathUpKick=2.0
 }
