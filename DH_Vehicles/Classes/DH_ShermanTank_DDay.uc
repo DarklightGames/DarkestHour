@@ -169,7 +169,7 @@ defaultproperties
     ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
     EntryRadius=375.0
     DriverDamageMult=1.0
-    VehicleNameString="M4A1 Sherman"
+    VehicleNameString="M4A1 Sherman DD"
     MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)

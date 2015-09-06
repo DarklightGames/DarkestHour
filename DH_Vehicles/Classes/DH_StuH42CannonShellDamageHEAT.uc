@@ -8,6 +8,6 @@ class DH_StuH42CannonShellDamageHEAT extends DHCannonShellDamageHEAT
 
 defaultproperties
 {
-    APCDamageModifier=0.65 // Matt: add this to match Sherman 105, instead of default 0.4
+    APCDamageModifier=0.65
     DeathString="%o was burnt up by %k's StuH42 HEAT shell."
 }

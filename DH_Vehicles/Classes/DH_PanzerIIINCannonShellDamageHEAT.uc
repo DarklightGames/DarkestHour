@@ -8,6 +8,5 @@ class DH_PanzerIIINCannonShellDamageHEAT extends DHCannonShellDamageHEAT
 
 defaultproperties
 {
-    //  APCDamageModifier=0.65 // Matt: removed so uses default 0.4, same as panzer IV
-    DeathString="%o was burnt up by %k's Panzer III HEAT shell."
+    DeathString="%o was burnt up by %k's Panzer III Ausf.N HEAT shell."
 }

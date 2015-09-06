@@ -12,7 +12,7 @@ defaultproperties
     APCDamageModifier=0.35
     VehicleDamageModifier=0.75
     TreadDamageModifier=0.5
-    DeathString="%o was killed by %k's Sd.Kfz.234/1 AP shell."
+    DeathString="%o was killed by %k's Sd.Kfz.234/1 AP round."
     VehicleMomentumScaling=0.3
     HumanObliterationThreshhold=75
 }

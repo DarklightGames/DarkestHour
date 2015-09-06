@@ -12,7 +12,9 @@ defaultproperties
     APCDamageModifier=0.75
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.5
-    bLocationalHit=true
+    DeathString="%o was killed by shrapnel from %k's smoke shell."
+    MaleSuicide="%o was killed by shrapnel from his own smoke shell."
+    FemaleSuicide="%o was killed by shrapnel from her own smoke shell."
     KDamageImpulse=3000.0
     VehicleMomentumScaling=1.1
     HumanObliterationThreshhold=180

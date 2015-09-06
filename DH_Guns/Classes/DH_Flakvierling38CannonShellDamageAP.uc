@@ -8,6 +8,6 @@ class DH_Flakvierling38CannonShellDamageAP extends DH_Sdkfz2341CannonShellDamage
 defaultproperties
 {
     HUDIcon=texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon'
-    DeathString="%o was killed by %k's Flakvierling 38 AP shell."
+    DeathString="%o was killed by %k's Flakvierling 38 AP round."
     HumanObliterationThreshhold=400
 }

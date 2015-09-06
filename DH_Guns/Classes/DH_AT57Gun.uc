@@ -41,7 +41,7 @@ defaultproperties
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0)
     EntryRadius=500.0
     DriverDamageMult=1.0
-    VehicleNameString="57mm M1 AT-Gun"
+    VehicleNameString="57mm M1 AT gun"
     HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000

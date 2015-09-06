@@ -178,7 +178,7 @@ defaultproperties
     ExitPositions(6)=(X=-95.0,Y=160.0,Z=5.0)
     EntryRadius=375.0
     DriverDamageMult=1.0
-    VehicleNameString="Panzer V Ausf.D"
+    VehicleNameString="Panzer V 'Panther' Ausf.D"
     MaxDesireability=2.1
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)

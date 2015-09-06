@@ -12,7 +12,9 @@ defaultproperties
     APCDamageModifier=1.0
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.85
-    bLocationalHit=true
+    DeathString="%o was blown apart by %k's HE shell."
+    MaleSuicide="%o was blown apart his own HE shell."
+    FemaleSuicide="%o was blown apart by her own HE shell."
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

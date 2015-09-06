@@ -186,7 +186,7 @@ defaultproperties
     ExitPositions(6)=(X=-109.0,Y=170.0,Z=60.0)
     EntryRadius=375.0
     DriverDamageMult=1.0
-    VehicleNameString="Jagdpanzer V"
+    VehicleNameString="Jagdpanzer V 'Jagdpanther'"
     MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)

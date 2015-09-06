@@ -6,12 +6,10 @@
 class DH_PanzerIIILCannonShellDamageAP extends DHCannonShellDamageImpact
     abstract;
 
-//Damage class for shells in the 37mm to 50mm calibers
-
 defaultproperties
 {
     APCDamageModifier=0.75
     VehicleDamageModifier=0.85
     TreadDamageModifier=0.75
-    DeathString="%o was killed by %k's Panzer III Ausf.L AP shell."
+    DeathString="%o was killed by %k's Panzer III Ausf.M AP shell."
 }

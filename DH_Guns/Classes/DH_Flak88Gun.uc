@@ -43,7 +43,7 @@ defaultproperties
     ExitPositions(1)=(X=-50.0,Y=50.0,Z=50.0)
     EntryRadius=475.0
     DriverDamageMult=1.0
-    VehicleNameString="FlaK 36 Gun"
+    VehicleNameString="8.8cm FlaK 36 gun"
     HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000

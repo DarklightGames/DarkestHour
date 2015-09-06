@@ -24,7 +24,7 @@ defaultproperties
     VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flak38_body_trailer'
     VehicleHudOccupantsX(0)=0.0
     VehicleHudOccupantsX(1)=0.0
-    VehicleNameString="Flak 38"
+    VehicleNameString="2cm FlaK 38 gun"
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_trailer'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
     Skins(1)=texture'DH_Artillery_tex.Flak38.Flak38_trailer'

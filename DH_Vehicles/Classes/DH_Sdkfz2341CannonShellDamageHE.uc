@@ -11,7 +11,7 @@ defaultproperties
     APCDamageModifier=0.15
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.15
-    DeathString="%o was ripped apart by shrapnel from %k's Sd.Kfz.234/1 HE shell."
+    DeathString="%o was blown apart by %k's Sd.Kfz.234/1 HE round."
     VehicleMomentumScaling=0.05
     HumanObliterationThreshhold=100
 }

@@ -12,9 +12,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.85
-    DeathString="%o was ripped apart by shrapnel from %k's Pak40 HE shell."
-    FemaleSuicide="%o fired her Pak40 HE shell prematurely."
-    MaleSuicide="%o fired his Pak40 shell prematurely."
+    DeathString="%o was blown apart by %k's Pak40 HE shell."
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

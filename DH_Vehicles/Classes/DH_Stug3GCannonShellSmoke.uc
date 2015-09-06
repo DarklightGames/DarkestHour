@@ -35,7 +35,6 @@ defaultproperties
     bMechanicalAiming=true
     ShellDiameter=7.5
     bIsAlliedShell=false
-    //   ShellImpactDamage=class'DH_Vehicles.DH_Stug3GCannonShellDamageAP' // Matt: removed as inconsistent with other smoke shells, which inherit generic DH_TankShellImpactDamage
     BallisticCoefficient=2.1
     Speed=33073.0
     MaxSpeed=33073.0

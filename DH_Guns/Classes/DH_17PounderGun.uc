@@ -42,7 +42,7 @@ defaultproperties
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     EntryRadius=500.0
     DriverDamageMult=1.0
-    VehicleNameString="17 Pounder AT-Gun"
+    VehicleNameString="17 Pounder AT gun"
     HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000

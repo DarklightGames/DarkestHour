@@ -177,7 +177,7 @@ defaultproperties
     ExitPositions(6)=(X=-135.0,Y=175.0,Z=-40.0)
     EntryRadius=375.0
     DriverDamageMult=1.0
-    VehicleNameString="Panzer VI Ausf.B"
+    VehicleNameString="Panzer VI 'King Tiger' Ausf.B"
     MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)

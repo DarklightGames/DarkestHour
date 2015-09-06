@@ -10,5 +10,5 @@ defaultproperties
 {
     APCDamageModifier=0.75
     VehicleDamageModifier=1.5
-    DeathString="%o was killed by %k's Stug III APCBC shell."
+    DeathString="%o was killed by %k's Stug III AP shell."
 }

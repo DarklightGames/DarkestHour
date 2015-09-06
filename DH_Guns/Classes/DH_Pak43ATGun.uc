@@ -41,7 +41,7 @@ defaultproperties
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     EntryRadius=475.0
     DriverDamageMult=1.0
-    VehicleNameString="Pak43/41 AT-Gun"
+    VehicleNameString="8.8 cm Pak43/41 AT gun"
     HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000

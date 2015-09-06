@@ -26,7 +26,7 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.0
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
-    VehicleNameString="Flakvierling 38"
+    VehicleNameString="2cm Flakvierling 38 gun"
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_base'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
 }

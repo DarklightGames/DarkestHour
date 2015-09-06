@@ -12,7 +12,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0
     TreadDamageModifier=0.95
-    DeathString="%o was ripped apart by shrapnel from %k's Hellcat HE shell."
+    DeathString="%o was blown apart by %k's Hellcat HE shell."
     KDeathVel=300.0
     KDeathUpKick=60.0
     KDeadLinZVelScale=0.002

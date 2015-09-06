@@ -9,5 +9,5 @@ class DH_Sherman105CannonShellDamageHEAT extends DHCannonShellDamageHEAT
 defaultproperties
 {
     APCDamageModifier=0.65
-    DeathString="%o was burnt up by %k's Sherman(105) HEAT shell."
+    DeathString="%o was burnt up by %k's Sherman 105mm HEAT shell."
 }

@@ -12,9 +12,7 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=1.5
     TreadDamageModifier=1.0
-    DeathString="%o was ripped apart by shrapnel from %k's Flak 36 HE shell."
-    FemaleSuicide="%o fired her Flak 36 HE shell prematurely."
-    MaleSuicide="%o fired his Flak 36 HE shell prematurely."
+    DeathString="%o was blown apart by %k's FlaK 36 HE shell."
     KDamageImpulse=6000.0
     KDeathVel=300.0
     KDeathUpKick=60.0

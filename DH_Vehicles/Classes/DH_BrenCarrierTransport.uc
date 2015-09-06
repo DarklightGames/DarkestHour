@@ -179,7 +179,7 @@ defaultproperties
     ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
     EntryRadius=375.0
     DriverDamageMult=1.0
-    VehicleNameString="Mk.I Bren Carrier"
+    VehicleNameString="Bren Carrier Mk.I"
     MaxDesireability=0.1
     HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
     HUDOverlayOffset=(Y=-0.8,Z=1.99)
