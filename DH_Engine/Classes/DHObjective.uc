@@ -806,7 +806,7 @@ function Timer()
         else
         {
             // Axis are contesting capture
-            if (!bAxisContesting) // this stops multiple actions each timer loop
+            if (!bAxisContesting && ObjState != OBJ_Neutral) // this stops multiple actions each timer loop
             {
                 HandleContestedActions(AXIS_TEAM_INDEX, true);
                 bAxisContesting = true;
@@ -825,7 +825,7 @@ function Timer()
         else
         {
             // Allies are contesting capture
-            if (!bAlliesContesting) //this stops multiple actions each timer loop
+            if (!bAlliesContesting && ObjState != OBJ_Neutral) //this stops multiple actions each timer loop
             {
                 HandleContestedActions(ALLIES_TEAM_INDEX, true);
                 bAlliesContesting = true;
