@@ -6,18 +6,23 @@
 class DHPawnSoundGroup extends ROPawnSoundGroup
     abstract;
 
-var() sound         BurningPainSoundGroup;
+var     sound   BurningPainSoundGroup;
 
-static function Sound GetHitSound(optional class<DamageType> DamageType)
+static function sound GetHitSound(optional class<DamageType> DamageType)
 {
-    //If they are taking damage because they fell, return a falling pain sound
+    // If they are taking damage because they fell, return a falling pain sound
     if (DamageType.Name == 'Fell')
+    {
         return default.FallingPainSoundGroup;
+    }
 
-    if (DamageType.Name == 'DHBurningDamType')
+    // If they are taking damage because they are burning, return a burning pain sound
+    if (DamageType.Name == 'DHBurningDamageType')
+    {
         return default.BurningPainSoundGroup;
+    }
 
-    //Otherwise, return a wounding pain sound
+    // Otherwise, return a wounding pain sound
     return default.WoundingPainSoundGroup;
 }
 
