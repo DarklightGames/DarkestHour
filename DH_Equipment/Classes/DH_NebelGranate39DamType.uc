@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_NebelGranate39DamType extends DH_USSmokeGrenadeDamType
+class DH_NebelGranate39DamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

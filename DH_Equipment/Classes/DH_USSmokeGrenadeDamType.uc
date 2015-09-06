@@ -10,5 +10,4 @@ defaultproperties
 {
     HUDIcon=texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
     WeaponClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
-    DeathString="%o was burned up by %k's %w."
 }

@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_RedSmokeDamType extends DH_USSmokeGrenadeDamType
+class DH_RedSmokeDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties
 {
+    HUDIcon=texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
     WeaponClass=class'DH_Equipment.DH_RedSmokeWeapon'
 }
