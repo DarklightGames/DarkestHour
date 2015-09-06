@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BCannonShellDamageHE extends ROTankShellExplosionDamage;
+class DH_Tiger2BCannonShellDamageHE extends ROTankShellExplosionDamage
+    abstract;
 
 defaultproperties
 {
