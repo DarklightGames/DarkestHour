@@ -11,6 +11,6 @@ defaultproperties
     TracerEffectClass=class'DH_Effects.DH_GermanYellowOrangeTracer'
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
-    SpeedFudgeScale=0.9
+    SpeedFudgeScale=0.75
     LightHue=30
 }

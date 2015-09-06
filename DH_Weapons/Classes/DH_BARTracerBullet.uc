@@ -11,6 +11,6 @@ defaultproperties
     TracerEffectClass=class'DH_Effects.DH_AmericanRedTracer'
     StaticMesh=StaticMesh'DH_Tracers.US_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'
-    SpeedFudgeScale=0.9
+    SpeedFudgeScale=0.75
     LightHue=0
 }
