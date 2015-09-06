@@ -2766,7 +2766,7 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
 
         if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
         {
-            Player.Console.Message(class'RODeathMessage'.Static.GetString(0, Killer, Victim, DamageType), 0);
+            Player.Console.Message(class'DHDeathMessage'.static.GetString(0, Killer, Victim, DamageType), 0.0);
         }
     }
     else Log("ClientAddHudDeathMessage DOING NOTHING for player" @ PlayerReplicationInfo.PlayerName @ "as no ROHud!  NetMode =" @ GetEnum(enum'ENetMode', Level.NetMode)); // TEMP DEBUG

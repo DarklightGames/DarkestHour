@@ -1737,7 +1737,7 @@ simulated function DHCollisionMeshActor AttachCollisionMesh(StaticMesh ColStatic
 
     return ColMeshActor;
 }
-    
+
 // Modified to add extra stuff
 simulated function DestroyEffects()
 {

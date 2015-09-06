@@ -25,4 +25,4 @@ defaultproperties
     KDeathUpKick=30.0
     KDeadLinZVelScale=0.005
     KDeadAngVelScale=0.0036
-}a
+}

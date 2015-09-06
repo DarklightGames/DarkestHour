@@ -51,7 +51,7 @@ singular function Touch(Actor Other)
         // Hurt others around it
         HurtRadius(Damage, DamageRadius, MyDamageType, Momentum, Location);
 
-        // Disable mine's collision, as it has exploded 
+        // Disable mine's collision, as it has exploded
         SetCollision(false, false, false);
     }
 

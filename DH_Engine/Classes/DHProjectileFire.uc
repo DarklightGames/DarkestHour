@@ -321,7 +321,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
         End = Start + (PreLaunchTraceDistance * Direction);
     }
 
-    // Now do a normal trace to see if we hit another blocking actor 
+    // Now do a normal trace to see if we hit another blocking actor
     // Have to do this even if we have a HitPlayer, because HitPointTrace is unreliable & often passes through a blocking vehicle, hitting a shielded player
     foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
     {

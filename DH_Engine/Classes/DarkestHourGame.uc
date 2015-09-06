@@ -2746,7 +2746,7 @@ function ChooseWinner()
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they have a higher score than the Allies", 'Say');
             EndRound(AXIS_TEAM_INDEX);
- 
+
             return;
         }
         else
@@ -3041,7 +3041,7 @@ function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
     if (DHP != none && DHP.Pawn != none)
     {
         TargetLocation = DHP.Pawn.Location;
-                
+
         // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
         if (Distance > 0)
         {
