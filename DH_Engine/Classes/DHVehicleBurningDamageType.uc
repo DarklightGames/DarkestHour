@@ -12,9 +12,9 @@ defaultproperties
     TankDamageModifier=1.0
     APCDamageModifier=1.0
     VehicleDamageModifier=1.0
-    DeathString="%o was burned up in his tank in a fire that %k started."
-    FemaleSuicide="%o burned up in her tank."
-    MaleSuicide="%o burned up in his tank."
+    DeathString="%o was burned up in a vehicle fire that %k started."
+    MaleSuicide="%o burned up in a vehicle fire."
+    FemaleSuicide="%o burned up in a vehicle fire."
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

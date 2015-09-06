@@ -29,9 +29,9 @@ static function string SuicideMessage(PlayerReplicationInfo Victim)
 
 defaultproperties
 {
-    DeathString="%o was smacked by %k's %w."
-    MaleSuicide="%o smacked himself with his %w."
-    FemaleSuicide="%o smacked herself with her %w."
+    DeathString="%o was bludgeoned to death by %k's %w."
+    MaleSuicide="%o bludgeoned himself to death with his own %w."
+    FemaleSuicide="%o bludgeoned herself to death with her own %w."
     GibModifier=0.0
     KDamageImpulse=400.0
     HumanObliterationThreshhold=1000001

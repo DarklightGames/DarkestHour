@@ -13,9 +13,9 @@ defaultproperties
     VehicleDamageModifier=0.5
     TreadDamageModifier=0.75
     bCauseViewJarring=true
-    DeathString="%o collided with %k's vehicle."
-    FemaleSuicide="%o was killed in a vehicle crash."
+    DeathString="%o was killed in a crash with %k's vehicle."
     MaleSuicide="%o was killed in a vehicle crash."
+    FemaleSuicide="%o was killed in a vehicle crash."
     bLocationalHit=false
     bDetonatesGoop=true
     bDelayedDamage=true

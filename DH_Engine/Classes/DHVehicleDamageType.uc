@@ -30,8 +30,8 @@ static function string SuicideMessage(PlayerReplicationInfo Victim)
 defaultproperties
 {
     DeathString="%o was killed by %k's %w"
-    FemaleSuicide="%o turned the gun on herself."
-    MaleSuicide="%o turned the gun on himself."
+    MaleSuicide="%o was killed by his own %w"
+    FemaleSuicide="%o was killed by her own %w"
     GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
     KDamageImpulse=200.0

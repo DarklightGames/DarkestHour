@@ -30,8 +30,8 @@ static function string SuicideMessage(PlayerReplicationInfo Victim)
 defaultproperties
 {
     DeathString="%o was killed by %k's %w."
-    FemaleSuicide="%o was careless with her %w."
-    MaleSuicide="%o was careless with his %w."
+    MaleSuicide="%o was killed by his own %w."
+    FemaleSuicide="%o was killed by her own %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
     DeathOverlayTime=999.0
 }

@@ -8,9 +8,9 @@ class DHExitMovingVehicleDamageType extends DamageType
 
 defaultproperties
 {
-    DeathString="%o broke his neck jumping from a speeding vehicle."
-    FemaleSuicide="%o broke her neck jumping from a speeding vehicle."
-    MaleSuicide="%o broke his neck jumping from a speeding vehicle."
+    DeathString="%o was killed jumping from a speeding vehicle."
+    FemaleSuicide="%o was killed jumping from a speeding vehicle."
+    MaleSuicide="%o was killed jumping from a speeding vehicle."
     bLocationalHit=false
     bCausedByWorld=true
     GibModifier=0.0

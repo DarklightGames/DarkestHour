@@ -9,9 +9,9 @@ class DHBurningDamageType extends ROWeaponDamageType
 defaultproperties
 {
     HUDIcon=texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill'
-    DeathString="%o was burned to a crisp by a fire that %k lit."
-    FemaleSuicide="%o burned himself to a crisp."
+    DeathString="%o was burned to a crisp by a fire that %k started."
     MaleSuicide="%o burned himself to a crisp."
+    FemaleSuicide="%o burned herself to a crisp."
     bLocationalHit=false
     GibModifier=0.0
 }
