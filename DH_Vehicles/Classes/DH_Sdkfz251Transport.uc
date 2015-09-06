@@ -202,7 +202,7 @@ defaultproperties
     EntryRadius=375.0
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
-    VehicleNameString="SdKfz-251 Halftrack"
+    VehicleNameString="Sd.Kfz.251 Halftrack"
     MaxDesireability=1.2
     HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'
     HUDOverlayOffset=(Z=0.8)

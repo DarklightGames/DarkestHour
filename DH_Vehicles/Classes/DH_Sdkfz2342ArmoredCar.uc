@@ -102,7 +102,7 @@ defaultproperties
     ExitPositions(5)=(X=-300.0,Y=0.0,Z=35.0)
     EntryRadius=375.0
     DriverDamageMult=1.0
-    VehicleNameString="Sdkfz 234/2 Armored Car"
+    VehicleNameString="Sd.Kfz.234/2 Armored Car"
     MaxDesireability=0.1
     PitchUpLimit=500
     PitchDownLimit=58000
