@@ -739,5 +739,5 @@ defaultproperties
     LifeSpan=60.0
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
-    bAlwaysRelevant=true
+    bAlwaysRelevant=true // always relevant to every net client, so they hear the whistle sound, & for smoke rounds so the smoke effect always gets spawned
 }
