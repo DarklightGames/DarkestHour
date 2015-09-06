@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHCannonShellDamageImpact extends ROTankShellImpactDamage
+class DHShellImpactDamageType extends ROTankShellImpactDamage
     abstract;
 
 defaultproperties

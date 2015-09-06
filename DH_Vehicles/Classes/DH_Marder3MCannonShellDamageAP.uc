@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Marder3MCannonShellDamageAP extends DHCannonShellDamageImpact
+class DH_Marder3MCannonShellDamageAP extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

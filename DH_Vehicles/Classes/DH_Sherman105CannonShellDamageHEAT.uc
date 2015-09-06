@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sherman105CannonShellDamageHEAT extends DHCannonShellDamageHEAT
+class DH_Sherman105CannonShellDamageHEAT extends DHShellHEATDamageType
     abstract;
 
 defaultproperties

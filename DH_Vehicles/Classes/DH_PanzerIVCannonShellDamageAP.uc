@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVCannonShellDamageAP extends DHCannonShellDamageImpact
+class DH_PanzerIVCannonShellDamageAP extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

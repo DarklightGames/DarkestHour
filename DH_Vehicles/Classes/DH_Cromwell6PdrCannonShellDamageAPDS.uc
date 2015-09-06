@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrCannonShellDamageAPDS extends DHCannonShellDamageImpact
+class DH_Cromwell6PdrCannonShellDamageAPDS extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

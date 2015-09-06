@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHCannonShellDamageAPExplosion extends ROTankShellExplosionDamage
+class DHShellAPExplosionDamageType extends ROTankShellExplosionDamage
     abstract;
 
 defaultproperties

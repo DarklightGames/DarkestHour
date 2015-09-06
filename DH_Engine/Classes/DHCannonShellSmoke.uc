@@ -68,7 +68,7 @@ defaultproperties
     MaxSpeed=500.0
     Damage=75.0
     DamageRadius=50.0
-    MyDamageType=class'DHCannonShellDamageSmoke'
+    MyDamageType=class'DH_Engine.DHShellSmokeDamageType'
     LifeSpan=12.0
     AmbientGlow=50
 //  SoundVolume=175 // Matt: removed as affects shell's flight 'whistle' & smoke sounds (i.e. AmbientSound), not the explosion sound volume (same with radius below)

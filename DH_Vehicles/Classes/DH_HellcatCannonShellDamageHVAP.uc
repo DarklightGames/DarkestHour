@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HellcatCannonShellDamageHVAP extends DHCannonShellDamageImpact
+class DH_HellcatCannonShellDamageHVAP extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

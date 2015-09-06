@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundCannonShellDamageAP extends DHCannonShellDamageImpact
+class DH_GreyhoundCannonShellDamageAP extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

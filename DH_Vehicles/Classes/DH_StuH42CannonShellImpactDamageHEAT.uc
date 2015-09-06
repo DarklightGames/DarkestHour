@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StuH42CannonShellImpactDamageHEAT extends DHCannonShellDamageImpact
+class DH_StuH42CannonShellImpactDamageHEAT extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

@@ -302,7 +302,7 @@ defaultproperties
     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
     DamageRadius=300.0
-    MyDamageType=class'DHCannonShellDamageHEAT'
+    MyDamageType=class'DH_Engine.DHShellHEATDamageType'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
     LifeSpan=10.0

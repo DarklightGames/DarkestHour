@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BCannonShellDamageAP extends DHCannonShellDamageImpact
+class DH_Tiger2BCannonShellDamageAP extends DHShellImpactDamageType
     abstract;
 
 defaultproperties

@@ -80,7 +80,7 @@ defaultproperties
     WoodHitSound=none
     WaterHitSound=none
     DamageRadius=300.0
-    MyDamageType=class'DHCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHEDamageType'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
     LifeSpan=10.0
