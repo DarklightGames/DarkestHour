@@ -14,7 +14,7 @@ defaultproperties
     ReloadSounds[1]=(Sound=none,Duration=1.83)
     ReloadSounds[2]=(Sound=none,Duration=2.00)
     ReloadSounds[3]=(Sound=none,Duration=1.34)
-    TracerProjectileClass=class'DH_BrenVehicleTracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
     TracerFrequency=5
     hudAltAmmoIcon=texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
     YawBone="Gun_protection"
@@ -33,7 +33,7 @@ defaultproperties
     FireSoundClass=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
     AmbientSoundScaling=5.0
     FireEndSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_BrenVehicleBullet'
+    ProjectileClass=class'DH_Weapons.DH_BrenBullet'
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=5.0,Y=5.0,Z=5.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

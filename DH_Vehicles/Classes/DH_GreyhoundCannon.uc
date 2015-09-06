@@ -32,7 +32,7 @@ defaultproperties
     AddedPitch=26
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=6
-    AltTracerProjectileClass=class'DH_30CalVehicleTracerBullet'
+    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     AltFireTracerFrequency=5
     bUsesTracers=true
     bAltFireTracersOnly=true
@@ -54,7 +54,7 @@ defaultproperties
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-    AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
     ShakeRotMag=(Z=50.0)
     ShakeRotRate=(Z=600.0)
     ShakeRotTime=4.0

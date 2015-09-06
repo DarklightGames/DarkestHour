@@ -62,7 +62,7 @@ defaultproperties
     RangeSettings(25)=3000
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=9
-    AltTracerProjectileClass=class'DH_MG34VehicleTracerBullet'
+    AltTracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     AltFireTracerFrequency=7
     bUsesTracers=true
     bAltFireTracersOnly=true
@@ -84,7 +84,7 @@ defaultproperties
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
-    AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     ShakeRotMag=(Z=50.0)
     ShakeRotRate=(Z=1000.0)
     ShakeRotTime=4.0

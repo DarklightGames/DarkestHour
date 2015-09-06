@@ -746,7 +746,7 @@ defaultproperties
     RangeSettings(12)=1200
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=12
-    AltTracerProjectileClass=class'DH_MG42VehicleTracerBullet'
+    AltTracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
     AltFireTracerFrequency=7
     bUsesTracers=true
     bAltFireTracersOnly=true
@@ -777,7 +777,7 @@ defaultproperties
     FireForce="Explosion05"
     bIsRepeatingFF=true // added, as strongly suspect this should be true, like a tank mounted MG
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
-    AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet''
     ShakeRotMag=(Z=5.0)
     ShakeRotRate=(Z=100.0)
     ShakeRotTime=2.0

@@ -14,7 +14,7 @@ defaultproperties
     ReloadSounds[1]=(Sound=none,Duration=1.52)
     ReloadSounds[2]=(Sound=none,Duration=2.40)
     ReloadSounds[3]=(Sound=none,Duration=1.34)
-    TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Gun_protection"
@@ -35,7 +35,7 @@ defaultproperties
     FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     DamageMin=100
     DamageMax=100
-    ProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
+    ProjectileClass=class'DH_Weapons.DH_30CalBullet'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

@@ -14,7 +14,7 @@ defaultproperties
     ReloadSounds[1]=(Sound=none,Duration=1.94)
     ReloadSounds[2]=(Sound=none,Duration=2.12)
     ReloadSounds[3]=(Sound=none,Duration=1.32)
-    TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
@@ -33,7 +33,7 @@ defaultproperties
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AmbientSoundScaling=2.5
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
+    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)

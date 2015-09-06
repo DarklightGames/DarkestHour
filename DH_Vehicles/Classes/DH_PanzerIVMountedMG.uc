@@ -9,7 +9,7 @@ defaultproperties
 {
     NumMags=5
     FireEffectOffset=(X=0.0)
-    TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
@@ -26,7 +26,7 @@ defaultproperties
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AmbientSoundScaling=2.0
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
+    ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     MaxPositiveYaw=2730
