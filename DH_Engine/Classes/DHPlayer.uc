@@ -2757,17 +2757,13 @@ function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo 
 
 // New function replacing RO's AddHudDeathMessage - only change is that it doesn't have the bNetOwner replication condition
 // That seemed to sometimes prevent this replicated function being called on a net client, meaning that client didn't get the death message
+// Also avoids showing a console death message at this stage - instead that gets handled in DHHud.AddDeathMessage() & is delayed until the screen DM is shown
 simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
     if (ROHud(myHud) != none)
     {
         Log("ClientAddHudDeathMessage calling AddDeathMessage on HUD for player" @ PlayerReplicationInfo.PlayerName @ " Killer =" @ Killer.PlayerName @ " Victim =" @ Victim.PlayerName); // TEMP DEBUG
         ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
-
-        if (!class'DHDeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
-        {
-            Player.Console.Message(class'DHDeathMessage'.static.GetString(0, Killer, Victim, DamageType), 0.0);
-        }
     }
     else Log("ClientAddHudDeathMessage DOING NOTHING for player" @ PlayerReplicationInfo.PlayerName @ "as no ROHud!  NetMode =" @ GetEnum(enum'ENetMode', Level.NetMode)); // TEMP DEBUG
 }

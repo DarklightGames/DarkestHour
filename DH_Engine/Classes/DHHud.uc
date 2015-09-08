@@ -57,7 +57,8 @@ var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
 var float               ObituaryFadeInTime;
 var float               ObituaryDelayTime;
 
-var array<Obituary>     DHObituaries;
+var array<Obituary>     DHObituaries;         // replaced RO's Obituaries static array, so we can have more than 4 death messages
+var array<string>       ConsoleDeathMessages; // paired with DHObituaries array & holds accompanying console death messages
 
 const VOICE_ICON_DIST_MAX = 2624.672119;
 
@@ -298,10 +299,12 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
     TextMessages[i].PRI = PRI;
 }
 
-// Adds a death message to the HUD
+// Modified to use new DHObituaries array instead of RO's Obituaries array
+// Also to save a console death message in a paired ConsoleDeathMessages array, so it can be displayed later, only when the delayed screen death message is shown
 function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
     local Obituary O;
+    local int      IndexPosition;
 
     if (Victim == none)
     {
@@ -328,7 +331,14 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
         O.KillerColor = WhiteColor;
     }
 
-    DHObituaries[DHObituaries.Length] = O;
+    IndexPosition = DHObituaries.Length;
+    DHObituaries[IndexPosition] = O;
+
+    // Save console death message in a paired ConsoleDeathMessages array
+    if (!class'DHDeathMessage'.default.bNoConsoleDeathMessages)
+    {
+        ConsoleDeathMessages[IndexPosition] = class'DHDeathMessage'.static.GetString(0, Killer, Victim, DamageType);
+    }
 }
 
 // Modified to correct bug that sometimes screwed up layout of critical message, resulting in very long text lines going outside of message background & sometimes off screen
@@ -3236,7 +3246,7 @@ simulated function DrawVoiceIconC(Canvas C, Pawn P)
     DrawSpriteWidget(C, VoiceIcon);
 }
 
-// For disabling death messages from being displayed - Colin
+// Modified to handle delay before displaying death messages, with fade in & out - Basnett, 2011
 function DisplayMessages(Canvas C)
 {
     local int   i;
@@ -3251,53 +3261,63 @@ function DisplayMessages(Canvas C)
         return;
     }
 
-    // Removes expired obituaries
+    // Removes expired obituaries (& paired console death message)
     for (i = DHObituaries.Length - 1; i >= 0; --i)
     {
         if (Level.TimeSeconds > DHObituaries[i].EndOfLife)
         {
             DHObituaries.Remove(i, 1);
+
+            if (i < ConsoleDeathMessages.Length)
+            {
+                ConsoleDeathMessages.Remove(i, 1);
+            }
         }
     }
 
     Scale = C.ClipX / 1600.0;
-
     C.Font = GetConsoleFont(C);
-
     Y = 8.0 * Scale;
 
-    // Offset death msgs if we're displaying a hint
+    // Offset death messages if we're displaying a hint
     if (bDrawHint)
     {
         Y += 2.0 * Y + (HintCoords.Y + HintCoords.YL) * C.ClipY;
     }
 
+    // Loop thorugh Obituaries & display if due
     for (i = 0; i < DHObituaries.Length; ++i)
     {
         O = DHObituaries[i];
 
         TimeOfDeath = O.EndOfLife - default.ObituaryLifeSpan;
         FadeInBeginTime = TimeOfDeath + default.ObituaryDelayTime;
-        FadeInEndTime = FadeInBeginTime + default.ObituaryFadeInTime;
-        FadeOutBeginTime = O.EndOfLife - default.ObituaryFadeInTime;
 
-        //Death message delay and fade in - Basnett, 2011
+        // Ignore this one if not due for display yet
         if (Level.TimeSeconds < FadeInBeginTime)
         {
             continue;
         }
 
-        Alpha = 255;
+        FadeInEndTime = FadeInBeginTime + default.ObituaryFadeInTime;
+        FadeOutBeginTime = O.EndOfLife - default.ObituaryFadeInTime;
 
+        // Adjust alpha (transparency) if message is fading in
         if (Level.TimeSeconds > FadeInBeginTime && Level.TimeSeconds < FadeInEndTime)
         {
-            Alpha = Byte(((Level.TimeSeconds - FadeInBeginTime) / default.ObituaryFadeInTime) * 255.0);
+            Alpha = byte(((Level.TimeSeconds - FadeInBeginTime) / default.ObituaryFadeInTime) * 255.0);
         }
+        // Or if message is fading out
         else if (Level.TimeSeconds > FadeOutBeginTime)
         {
-            Alpha = Byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / default.ObituaryFadeInTime) * 255.0)));
+            Alpha = byte(Abs(255.0 - (((Level.TimeSeconds - FadeOutBeginTime) / default.ObituaryFadeInTime) * 255.0)));
+        }
+        else
+        {
+            Alpha = 255;
         }
 
+        // Draw the death message
         C.TextSize(O.VictimName, XL, YL);
 
         X = C.ClipX - 8.0 * Scale - XL;
@@ -3326,6 +3346,17 @@ function DisplayMessages(Canvas C)
         }
 
         Y += 44.0 * Scale;
+
+        // If paired console death message hasn't been shown yet, do it now
+        if (ConsoleDeathMessages[i] != "")
+        {
+            if (PlayerConsole != none)
+            {
+                PlayerConsole.Message(ConsoleDeathMessages[i], 0.0);
+            }
+
+            ConsoleDeathMessages[i] = ""; // clear the message string, so this isn't repeated
+        }
     }
 }
 
