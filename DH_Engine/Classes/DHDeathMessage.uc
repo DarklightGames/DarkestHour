@@ -5,7 +5,8 @@
 
 class DHDeathMessage extends RODeathMessage;
 
-// Modified to make into a generic function, avoiding the need for repeated functionality in various DamageType classes
+// Modified to handle suicided death messages, if Killer is same as Killed
+// Also to make into a generic function, avoiding the need for repeated functionality in various DamageType classes to insert a weapon name
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local PlayerReplicationInfo Killer, Victim;
