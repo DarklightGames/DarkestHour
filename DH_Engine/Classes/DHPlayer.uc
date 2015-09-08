@@ -2764,7 +2764,7 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
         Log("ClientAddHudDeathMessage calling AddDeathMessage on HUD for player" @ PlayerReplicationInfo.PlayerName @ " Killer =" @ Killer.PlayerName @ " Victim =" @ Victim.PlayerName); // TEMP DEBUG
         ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
 
-        if (!class'RODeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
+        if (!class'DHDeathMessage'.default.bNoConsoleDeathMessages && Player != none && Player.Console != none)
         {
             Player.Console.Message(class'DHDeathMessage'.static.GetString(0, Killer, Victim, DamageType), 0.0);
         }

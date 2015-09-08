@@ -1532,10 +1532,24 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 }
 
 // Modified to call ClientAddHudDeathMessage instead of RO's AddHudDeathMessage (also re-factored to shorten & reduce code duplication)
-// Also to fix bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
+// Also to pass Killer's PRI even if Killer is same as Killed, so DHDeathMessage class can work out foir itself whether it needs to display a suicide message
+// And fixed bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
 function BroadcastDeathMessage(Controller Killer, Controller Killed, class<DamageType> DamageType)
 {
+    local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
+
+    if (DeathMessageMode == DM_None || Killed == none)
+    {
+        return;
+    }
+
+    if (Killer != none)
+    {
+        KillerPRI = Killer.PlayerReplicationInfo;
+    }
+
+    KilledPRI = Killed.PlayerReplicationInfo;
 
     // Send DM to every human player
     if (DeathMessageMode == DM_All)
@@ -1545,14 +1559,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         {
             if (DHPlayer(C) != none)
             {
-                if (Killer == Killed || Killer == none)
-                {
-                    DHPlayer(C).ClientAddHudDeathMessage(none, Killed.PlayerReplicationInfo, DamageType);
-                }
-                else
-                {
-                    DHPlayer(C).ClientAddHudDeathMessage(Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
-                }
+                DHPlayer(C).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
             }
         }
     }
@@ -1562,21 +1569,14 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
         {
-            if (Killer == Killed || Killer == none)
-            {
-                DHPlayer(Killed).ClientAddHudDeathMessage(none, Killed.PlayerReplicationInfo, DamageType);
-            }
-            else
-            {
-                DHPlayer(Killed).ClientAddHudDeathMessage(Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
-            }
+            DHPlayer(Killed).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
         }
 
         // If mode is Personal, also send DM to the killer (if human)
         // Had to move this away from the if (DHPlayer(Killed) != none) above, as that stopped a human player from getting a DM for killing a bot
         if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
         {
-            DHPlayer(Killer).ClientAddHudDeathMessage(Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
+            DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
         }
     }
 }
@@ -3277,6 +3277,7 @@ defaultproperties
     VotingHandlerType="DH_Engine.DHVotingHandler"
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
+    DeathMessageClass=class'DH_Engine.DHDeathMessage'
     GameMessageClass=class'DH_Engine.DHGameMessage'
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
