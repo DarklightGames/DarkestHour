@@ -1019,7 +1019,6 @@ function InternalOnChange(GUIComponent Sender)
 {
     local int i, j;
     local RORoleInfo RI;
-    local class<Vehicle> VehicleClass;
     local class<Inventory> InventoryClass;
     local Material InventoryMaterial;
 
