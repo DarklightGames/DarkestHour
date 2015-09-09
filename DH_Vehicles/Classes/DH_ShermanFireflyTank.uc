@@ -17,12 +17,12 @@ defaultproperties
     MaxCriticalSpeed=693.0
     TreadDamageThreshold=0.75
     FireAttachBone="Player_Driver"
-    HullFireChance=0.5
-    UFrontArmorFactor=6.4
+    HullFireChance=0.45
+    UFrontArmorFactor=5.1
     URightArmorFactor=3.8
     ULeftArmorFactor=3.8
     URearArmorFactor=3.8
-    UFrontArmorSlope=47.0
+    UFrontArmorSlope=55.0
     URearArmorSlope=10.0
     PointValue=3.0
     MaxPitchSpeed=150.0
