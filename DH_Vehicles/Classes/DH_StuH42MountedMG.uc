@@ -42,7 +42,7 @@ defaultproperties
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
     ShakeOffsetTime=2.0
     AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.0,RefireRate=0.07058)
-    CustomPitchUpLimit=4500
+    CustomPitchUpLimit=1500 // Matt: reduced from 4500 so that MG stock doesn't sink into roof
     CustomPitchDownLimit=63500
     MaxPositiveYaw=5500
     MaxNegativeYaw=-5500
