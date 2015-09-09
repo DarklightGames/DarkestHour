@@ -5,6 +5,14 @@
 
 class DHServerBrowser extends ROUT2k4ServerBrowser;
 
+function CreateTabs()
+{
+    super.CreateTabs();
+
+    // Activate the Internet tab immediately
+    c_Tabs.ActivateTabByName(PanelCaption[2], true);
+}
+
 defaultproperties
 {
     CurrentGameType="DH_Engine.DarkestHourGame"
@@ -61,12 +69,16 @@ defaultproperties
         Y2=1024
     End Object
     i_Background=BackgroundImage'DH_Interface.DHServerBrowser.PageBackground'
-    PanelClass(0)="DH_Interface.DHBrowser_MOTD"
-    PanelClass(1)="DH_Interface.DHBrowser_IRC"
-    PanelClass(2)="DH_Interface.DHBrowser_ServerListPageFavorites"
-    PanelClass(3)="DH_Interface.DHBrowser_ServerListPageLAN"
-    PanelClass(4)="DH_Interface.DHBrowser_ServerListPageInternet"
-    PanelHint(1)="DH integrated IRC client"
-    PanelHint(3)="View all DH servers currently running on your LAN"
-    PanelHint(4)="Choose from DH servers across the world"
+    PanelClass(0)="DH_Interface.DHBrowser_ServerListPageFavorites"
+    PanelClass(1)="DH_Interface.DHBrowser_ServerListPageLAN"
+    PanelClass(2)="DH_Interface.DHBrowser_ServerListPageInternet"
+    PanelClass(3)=""
+    PanelClass(4)=""
+    PanelClass(5)=""
+    PanelHint(0)="Choose a server to join from among your favorites"
+    PanelHint(1)="View all DH servers currently running on your LAN"
+    PanelHint(2)="Choose from DH servers across the world"
+    PanelCaption(0)="Favorites"
+    PanelCaption(1)="LAN"
+    PanelCaption(2)="Internet"
 }
