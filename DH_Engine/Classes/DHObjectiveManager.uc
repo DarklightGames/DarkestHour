@@ -18,7 +18,7 @@ function ObjectiveStateChanged()
 {
     local int i,j,k;
     local DarkestHourGame DHGame;
-    local bool bReqsMet;
+    local bool bReadyForModification;
 
     DHGame =  DarkestHourGame(Level.Game);
 
@@ -26,13 +26,11 @@ function ObjectiveStateChanged()
     {
         for (k = 0; k < ArrayCount(DHGame.DHObjectives); k++)
         {
-            bReqsMet = true;
-
             for (j = 0; j < ObjectiveManagers[i].AxisRequiredObjectives.Length; j++)
             {
                 if (DHGame.DHObjectives[ObjectiveManagers[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
-                    bReqsMet = false;
+                    bReadyForModification = true;
                     break;
                 }
             }
@@ -41,19 +39,23 @@ function ObjectiveStateChanged()
             {
                 if (DHGame.DHObjectives[ObjectiveManagers[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
-                    bReqsMet = false;
+                    bReadyForModification = true;
                     break;
                 }
             }
 
-            if (bReqsMet)
+            if (bReadyForModification)
             {
                 for (j = 0; j < ObjectiveManagers[i].AxisObjectivesToModify.Length; j++)
                 {
-                    if( ObjectiveManagers[i].ActivationStyle ==  AS_Activate )
-                        DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]].bActive = true; // bObjActive
+                    if (ObjectiveManagers[i].ActivationStyle == AS_Activate)
+                    {
+                        DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]].bActive = true;
+                    }
                     else
-                        DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]].bActive = false;    // bObjActive
+                    {
+                        DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]].bActive = false;
+                    }
 
                     DHGame.FindNewObjectives(DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]]);
                     DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]].NotifyStateChanged();
@@ -61,10 +63,14 @@ function ObjectiveStateChanged()
 
                 for (j = 0; j < ObjectiveManagers[i].AlliesObjectivesToModify.Length; j++)
                 {
-                    if( ObjectiveManagers[i].ActivationStyle ==  AS_Activate )
-                        DHGame.DHObjectives[ObjectiveManagers[i].AlliesObjectivesToModify[j]].bActive = true; // bObjActive
+                    if (ObjectiveManagers[i].ActivationStyle == AS_Activate)
+                    {
+                        DHGame.DHObjectives[ObjectiveManagers[i].AlliesObjectivesToModify[j]].bActive = true;
+                    }
                     else
-                        DHGame.DHObjectives[ObjectiveManagers[i].AlliesObjectivesToModify[j]].bActive = false;  // bObjActive
+                    {
+                        DHGame.DHObjectives[ObjectiveManagers[i].AlliesObjectivesToModify[j]].bActive = false;
+                    }
 
                     DHGame.FindNewObjectives(DHGame.DHObjectives[ObjectiveManagers[i].AlliesObjectivesToModify[j]]);
                     DHGame.DHObjectives[ObjectiveManagers[i].AlliesObjectivesToModify[j]].NotifyStateChanged();
