@@ -18,7 +18,7 @@ function ObjectiveStateChanged()
 {
     local int i,j,k;
     local DarkestHourGame DHGame;
-    local bool bReadyForModification;
+    local bool bReadyToModify;
 
     DHGame =  DarkestHourGame(Level.Game);
 
@@ -26,11 +26,13 @@ function ObjectiveStateChanged()
     {
         for (k = 0; k < ArrayCount(DHGame.DHObjectives); k++)
         {
+            bReadyToModify = true;
+
             for (j = 0; j < ObjectiveManagers[i].AxisRequiredObjectives.Length; j++)
             {
                 if (DHGame.DHObjectives[ObjectiveManagers[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
-                    bReadyForModification = true;
+                    bReadyToModify = false;
                     break;
                 }
             }
@@ -39,12 +41,12 @@ function ObjectiveStateChanged()
             {
                 if (DHGame.DHObjectives[ObjectiveManagers[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
-                    bReadyForModification = true;
+                    bReadyToModify = false;
                     break;
                 }
             }
 
-            if (!bReadyForModification)
+            if (bReadyToModify)
             {
                 for (j = 0; j < ObjectiveManagers[i].AxisObjectivesToModify.Length; j++)
                 {
