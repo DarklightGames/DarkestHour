@@ -8,7 +8,7 @@ class DH_StuH42MountedMG extends DHVehicleMG;
 defaultproperties
 {
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
-    NumMags=8
+    NumMags=12
     ReloadSounds[0]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // differs from defaults because uses ammo drums & not belts
     ReloadSounds[1]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
     ReloadSounds[2]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
@@ -47,7 +47,7 @@ defaultproperties
     MaxPositiveYaw=5500
     MaxNegativeYaw=-5500
     BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=75
+    InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'

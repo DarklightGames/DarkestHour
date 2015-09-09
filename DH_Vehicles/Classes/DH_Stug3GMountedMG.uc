@@ -8,7 +8,7 @@ class DH_Stug3GMountedMG extends DHVehicleMG;
 defaultproperties
 {
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
-    NumMags=8
+    NumMags=12
     HUDOverlayReloadAnim="Bipod_Reload_s"
     ReloadSounds[0]=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
     ReloadSounds[1]=(Sound=none,Duration=1.94)
@@ -47,7 +47,7 @@ defaultproperties
     MaxNegativeYaw=-5500
     bLimitYaw=true
     BeginningIdleAnim="loader_button_idle"
-    InitialPrimaryAmmo=75
+    InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'

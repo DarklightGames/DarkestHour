@@ -8,7 +8,7 @@ class DH_Marder3MMountedMG extends DHVehicleMG;
 defaultproperties
 {
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
-    NumMags=8
+    NumMags=24
     HUDOverlayReloadAnim="Bipod_Reload_s"
     ReloadSounds[0]=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
     ReloadSounds[1]=(Sound=none,Duration=1.94)
@@ -45,6 +45,6 @@ defaultproperties
     MaxNegativeYaw=-5500
     bLimitYaw=true
     BeginningIdleAnim="loader_close_idle"
-    InitialPrimaryAmmo=75
+    InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
 }
