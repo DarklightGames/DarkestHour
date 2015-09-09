@@ -44,7 +44,7 @@ function ObjectiveStateChanged()
                 }
             }
 
-            if (bReadyForModification)
+            if (!bReadyForModification)
             {
                 for (j = 0; j < ObjectiveManagers[i].AxisObjectivesToModify.Length; j++)
                 {
