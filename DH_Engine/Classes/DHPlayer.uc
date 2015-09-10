@@ -437,17 +437,17 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     }
 
     // Added FreeCam control for better view control
-    if (bFreeCam == true)
+    if (bFreeCam)
     {
         if (bHudLocksPlayerRotation)
         {
             // No camera change if we're locking rotation
         }
-        else if (bFreeCamZoom == true)
+        else if (bFreeCamZoom)
         {
             CameraDeltaRad += DeltaTime * 0.25 * aLookUp;
         }
-        else if (bFreeCamSwivel == true)
+        else if (bFreeCamSwivel)
         {
             CameraSwivel.Yaw += DHHalfTurnSpeedFactor * DeltaTime * aTurn;
             CameraSwivel.Pitch += DHHalfTurnSpeedFactor * DeltaTime * aLookUp;
