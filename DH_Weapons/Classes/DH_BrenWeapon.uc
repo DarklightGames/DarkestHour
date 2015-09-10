@@ -7,8 +7,20 @@ class DH_BrenWeapon extends DHBipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Bren_1st.ukx
 
+var     sound   FireModeSwitchSound;
+
+// Modified to play the click sound that would usually be played in the select animation (we don't have a select anim for the Bren)
+simulated function ToggleFireMode()
+{
+    super.ToggleFireMode();
+
+    PlaySound(FireModeSwitchSound,, 2.0);
+}
+
 defaultproperties
 {
+    bHasSelectFire=true
+    FireModeSwitchSound=sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01'
     bCanBeResupplied=true
     NumMagsToResupply=2
     SightUpIronBringUp="Deploy"
