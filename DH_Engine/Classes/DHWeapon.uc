@@ -557,6 +557,10 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
             SetTimer(AnimTimer, false);
         }
     }
+    else // if there is no valid animation, just call the timer immediately, as we'll often need it to do something like exit the current state
+    {
+        Timer();
+    }
 }
 
 defaultproperties
