@@ -7,14 +7,15 @@ class DHVehicleMG extends ROMountedTankMG
     abstract;
 
 // General
-var  DHVehicleMGPawn  MGPawn;         // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
-var     bool    bMatchSkinToVehicle;  // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MGPawn & MG classes
+var     DHVehicleMGPawn MGPawn;              // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+var     bool            bMatchSkinToVehicle; // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MGPawn & MG classes
+var     vector          MGAttachmentOffset;  // optional positional offset when attaching the MG mesh to the hull (allows correction of modelling errors)
 
 // Ammo & firing
-var     class<Projectile> TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
-var     byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
-var     byte    NumMags;              // number of mags carried for this MG (use byte for more efficient replication)
-var     sound   NoAmmoSound;          // 'dry fire' sound when trying to fire empty MG
+var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
+var     byte                TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
+var     byte                NumMags;               // number of mags carried for this MG (use byte for more efficient replication)
+var     sound               NoAmmoSound;           // 'dry fire' sound when trying to fire empty MG
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var     DHCollisionMeshActor    CollisionMeshActor;
@@ -94,6 +95,12 @@ simulated function PostBeginPlay()
 // Includes option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
 simulated function InitializeMG(DHVehicleMGPawn MGPwn)
 {
+    // Set any optional attachment offset, when attaching MG to hull (set separately on net client as replication is unreliable & loses fractional precision)
+    if (MGAttachmentOffset != vect(0.0, 0.0, 0.0))
+    {
+        SetRelativeLocation(MGAttachmentOffset);
+    }
+
     if (MGPwn != none)
     {
         MGPawn = MGPwn;

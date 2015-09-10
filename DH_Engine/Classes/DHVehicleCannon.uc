@@ -8,7 +8,8 @@ class DHVehicleCannon extends ROTankCannon
 
 #exec OBJ LOAD FILE=..\Sounds\DH_Vehicle_Reloads.uax
 
-var     DHVehicleCannonPawn CannonPawn; // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     DHVehicleCannonPawn CannonPawn;             // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     vector              CannonAttachmentOffset; // optional positional offset when attaching the cannon/turret mesh to the hull (allows correction of modelling errors)
 
 // Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];   // using byte for more efficient replication
@@ -103,6 +104,12 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
 {
     local DHArmoredVehicle AV;
     local int              i;
+
+    // Set any optional attachment offset, when attaching cannon/turret to hull (set separately on net client as replication is unreliable & loses fractional precision)
+    if (CannonAttachmentOffset != vect(0.0, 0.0, 0.0))
+    {
+        SetRelativeLocation(CannonAttachmentOffset);
+    }
 
     if (CannonPwn != none)
     {
