@@ -7,6 +7,7 @@ class DH_Cromwell6PdrCannon extends DHVehicleCannon;
 
 defaultproperties
 {
+    CannonAttachmentOffset=(X=0.0,Y=0.0,Z=2.5) // to correct positioning of turret, as it was sunk very slightly down into hull
     SecondarySpread=0.00175
     TertiarySpread=0.0036
     ManualRotationsPerSecond=0.029
