@@ -8,6 +8,16 @@ class DHVehicleFactory extends ROVehicleFactory
 
 var() name FactoryDepletedEvent;
 
+// Modified to call UpdatePrecacheMaterials(), allowing any subclassed factory materials to be cached
+// And we no longer call StaticPrecache on the VehicleClass from here, as that gets done in our UpdatePrecacheMaterials(), so we don't want to do it twice
+simulated function PostBeginPlay()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+		UpdatePrecacheMaterials();
+    }
+}
+
 // Modified to trigger any FactoryDepletedEvent when last vehicle is spawned
 // Also so factory is owner of spawned vehicle, allowing vehicle to access factory's properties during vehicle's initialization (allows use of leveller-specified properties in factory)
 function SpawnVehicle()
@@ -76,11 +86,6 @@ function SpawnVehicle()
             log("Spawned vehicle failed for" @ self);
         }
     }
-}
-
-// Matt: emptied out as we call StaticPrecache on the VehicleClass in PostBeginPlay(), so we don't want to do it twice
-simulated function UpdatePrecacheMaterials()
-{
 }
 
 defaultproperties
