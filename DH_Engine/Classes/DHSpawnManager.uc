@@ -129,6 +129,11 @@ function PostBeginPlay()
         {
             VehiclePools[i].Slots.Length = VehiclePools[i].MaxActive;
         }
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            VehiclePools[i].VehicleClass.static.StaticPrecache(Level);
+        }
     }
 
     for (i = 0; i < arraycount(GRI.MaxTeamVehicles); ++i)
