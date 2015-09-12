@@ -11,5 +11,4 @@ defaultproperties
     DrivePos=(X=-125.0,Y=75.0,Z=115.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_Rider3_idle"
-    CameraBone="Jackson_body_ext"
 }

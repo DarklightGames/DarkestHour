@@ -8,8 +8,6 @@ class DH_ShermanPassengerTwo extends DHPassengerPawn;
 defaultproperties
 {
     PositionInArray=3
-    CameraBone="passenger_2"
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveRot=(Yaw=32768)
     DriveAnim="VHalftrack_Rider4_idle"
 }

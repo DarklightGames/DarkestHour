@@ -8,7 +8,6 @@ class DH_OpelBlitzPassengerFive extends DHPassengerPawn;
 defaultproperties
 {
     PositionInArray=4
-    CameraBone="passenger_r_1"
     DrivePos=(X=-1.0,Y=0.0,Z=-4.0)
     DriveAnim="VHalftrack_Rider5_idle"
 }

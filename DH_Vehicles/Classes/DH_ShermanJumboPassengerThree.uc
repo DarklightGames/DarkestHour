@@ -8,8 +8,7 @@ class DH_ShermanJumboPassengerThree extends DHPassengerPawn;
 defaultproperties
 {
     PositionInArray=4
-    CameraBone="passenger_3"
-    DrivePos=(Y=0.0,Z=5.0)
+    DrivePos=(X=0.0,Y=0.0,Z=5.0)
     DriveRot=(Yaw=32768)
     DriveAnim="VHalftrack_Rider5_idle"
 }

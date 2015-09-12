@@ -269,6 +269,35 @@ simulated function ClientKDriverEnter(PlayerController PC)
     PC.SetFOV(WeaponFOV);
 }
 
+// Modified just to avoid confusing attachment to CameraBone & instead use the usual WeaponBone specified in the vehicle's PassengerWeapons array
+simulated function AttachDriver(Pawn P)
+{
+    local name AttachBone;
+
+    if (VehicleBase != none && VehicleBase.PassengerWeapons[PositionInArray].WeaponBone != '')
+    {
+        AttachBone = VehicleBase.PassengerWeapons[PositionInArray].WeaponBone;
+        P.bHardAttach = true;
+        P.SetLocation(VehicleBase.GetBoneCoords(AttachBone).Origin);
+        P.SetPhysics(PHYS_None);
+        VehicleBase.AttachToBone(P, AttachBone);
+        P.SetRelativeLocation(DrivePos + P.default.PrePivot);
+        P.SetRelativeRotation(DriveRot);
+        P.PrePivot = vect(0.0, 0.0, 0.0);
+    }
+}
+
+// Modified to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
+simulated function DetachDriver(Pawn P)
+{
+    P.PrePivot = P.default.PrePivot;
+
+    if (VehicleBase != none)
+    {
+        VehicleBase.DetachFromBone(P);
+    }
+}
+
 // Modified to add clientside checks before sending the function call to the server
 // Optimises network performance generally & specifically avoids a rider camera bug when unsuccessfully trying to switch to another vehicle position
 simulated function SwitchWeapon(byte F)
@@ -487,7 +516,7 @@ defaultproperties
     bSinglePositionExposed=true
     bKeepDriverAuxCollision=true
     DriverDamageMult=1.0
-    CameraBone="body"
+    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     FPCamPos=(X=0.0,Y=0.0,Z=0.0)
     WeaponFOV=90.0
     TPCamDistance=200.0

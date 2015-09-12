@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsPassengerTwo extends DH_HigginsPassengerPawn;
+class DH_HigginsPassengerTwo extends DHPassengerPawn;
 
 defaultproperties
 {
     PositionInArray=2
-    CameraBone="passenger_L2"
+    DrivePos=(X=0.0,Y=0.0,Z=20.0)
     DriveAnim="higgins_rider2_idle"
 }

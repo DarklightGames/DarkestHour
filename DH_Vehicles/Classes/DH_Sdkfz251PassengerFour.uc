@@ -8,7 +8,5 @@ class DH_Sdkfz251PassengerFour extends DHPassengerPawn;
 defaultproperties
 {
     PositionInArray=4
-    CameraBone="passenger_r_1"
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VHalftrack_Rider4_idle"
 }

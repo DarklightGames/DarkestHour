@@ -8,7 +8,6 @@ class DH_WillysJeepPassengerThree extends DHPassengerPawn;
 defaultproperties
 {
     PositionInArray=2
-    CameraBone="Passenger4"
     DrivePos=(X=0.0,Y=0.0,Z=7.0)
     DriveAnim="VHalftrack_Rider2_idle"
     EntryRadius=225.0
