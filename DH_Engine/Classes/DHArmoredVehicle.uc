@@ -147,8 +147,8 @@ struct SchurzenType
 var     SchurzenType        SchurzenTypes[4]; // an array of possible schurzen attachments
 var     byte                SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
 var     RODummyAttachment   Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
-var     vector              SchurzenOffset;   // the positional offset from the attachment bone
-var     Material            SchurzenTexture;  // the camo skin for the schurzen attachment
+var     vector              SchurzenOffset;   // optional positional offset from the attachment bone
+var     material            SchurzenTexture;  // the camo skin for the schurzen attachment
 
 // Debugging help & customizable stuff
 var     bool        bDrawPenetration;
@@ -2042,7 +2042,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
             Level.Game.Broadcast(self, "Front hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm, slope =" @ UFrontArmorSlope);
         }
 
-        // Check whether or not we penetrated & return true or flase accordingly
+        // Check whether or not we penetrated & return true or false accordingly
         // Checking that PenetrationNumber > ArmorFactor 1st is a quick pre-check that it's worth doing more complex calculations in CheckPenetration()
         return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
     }
