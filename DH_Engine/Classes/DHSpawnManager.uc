@@ -67,7 +67,7 @@ var     const byte  BlockFlags_Full;
 function PostBeginPlay()
 {
     local DHSpawnPoint SP;
-    local bool         bIsVehiclePoolValid;
+    local bool         bVehiclePoolIsInvalid;
     local int          i, j;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -95,33 +95,34 @@ function PostBeginPlay()
     // Check VehiclePools array
     for (i = 0; i < VehiclePools.Length; ++i)
     {
-        // Remove VP if it has no specified vehicle class
-        if (VehiclePools[i].VehicleClass == none)
+        if (VehiclePools[i].VehicleClass != none)
         {
-            VehiclePools.Remove(i--, 1);
-            continue;
-        }
-
-        bIsVehiclePoolValid = true;
-
-        // Remove VP if its vehicle class is not unique
-        for (j = i - 1; j >= 0; --j)
-        {
-            if (VehiclePools[i].VehicleClass == VehiclePools[j].VehicleClass) // vehicle class already exists, mark as non-unique
+            // Make sure VP's vehicle class isn't a duplicate of another class
+            for (j = i - 1; j >= 0; --j)
             {
-                bIsVehiclePoolValid = false;
-                break;
+                // Vehicle class already exists in array
+                if (VehiclePools[i].VehicleClass == VehiclePools[j].VehicleClass)
+                {
+                    bVehiclePoolIsInvalid = true;
+                    break;
+                }
             }
         }
+        // VP doesn't have a specified vehicle class
+        else
+        {
+            bVehiclePoolIsInvalid = true;
+        }
 
-        if (!bIsVehiclePoolValid)
+        // Remove VP if it is invalid (no specified class or it's a duplicate)
+        if (bVehiclePoolIsInvalid)
         {
             Warn("VehiclePools[" $ i $ "].VehicleClass (" $ VehiclePools[i].VehicleClass $ ") is not unique and will be removed!");
             VehiclePools.Remove(i--, 1);
             continue;
         }
 
-        // VP is valid
+        // VP is valid so copy to GRI, set length of its Slots array, & pre-cache the vehicle class
         GRI.VehiclePoolVehicleClasses[i] = VehiclePools[i].VehicleClass;
         GRi.VehiclePoolIsSpawnVehicles[i] = byte(VehiclePools[i].bIsSpawnVehicle);
 
@@ -136,6 +137,7 @@ function PostBeginPlay()
         }
     }
 
+    // Copy the set maximum number of vehicles for each team to the GRI
     for (i = 0; i < arraycount(GRI.MaxTeamVehicles); ++i)
     {
         GRI.MaxTeamVehicles[i] = MaxTeamVehicles[i];
