@@ -33,6 +33,12 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    // If an already destroyed vehicle gets replicated, there's nothing more we want to do here; it will only spawn pointless stuff
+    if (Health <= 0)
+    {
+        return;
+    }
+
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetupTreads();

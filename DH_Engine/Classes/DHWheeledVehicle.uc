@@ -115,16 +115,31 @@ replication
 
 // Modified to spawn any sound or resuppply attachments & so net clients show unoccupied rider positions on the HUD vehicle icon
 // Also to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
+// And to skip lots of pointless stuff on a net client if an already destroyed vehicle gets replicated
 simulated function PostBeginPlay()
 {
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
-    if (HasAnim(BeginningIdleAnim))
+    // Play neutral idle animation, unless vehicle is not using a skeletal mesh, e.g. is already destroyed & has switched to destroyed static mesh
+    if (DrawType == DT_Mesh && HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
     }
 
-    if (Role == ROLE_Authority)
+    // Net client
+    if (Role < ROLE_Authority)
+    {
+        // If an already destroyed vehicle gets replicated, there's nothing more we want to do here; it will only spawn pointless effects
+        if (Health <= 0)
+        {
+            return;
+        }
+
+        // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
+        // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
+        WeaponPawns.Length = PassengerWeapons.Length;
+    }
+    else
     {
         // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
         if (InitialPositionIndex > 0)
@@ -145,12 +160,6 @@ simulated function PostBeginPlay()
         {
             bDriverAlreadyEntered = true;
         }
-    }
-    else
-    {
-        // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
-        // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
-        WeaponPawns.Length = PassengerWeapons.Length;
     }
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -183,17 +192,23 @@ simulated function PostBeginPlay()
 }
 
 // Modified to initialize engine-related properties
-// Also on net client to flag if bNeedToInitializeDriver, to match clientside position indexes to replicated DriverPositionIndex, & to flag bClientInitialized when done
+// Also on net client to flag if bNeedToInitializeDriver, to match clientside position indexes to replicated DriverPositionIndex, & to flag bClientInitialized
+// And to skip lots of pointless stuff on a net client if an already destroyed vehicle gets replicated
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
-
-    SetEngine();
 
     // Net client initialisation, based on replicated info about driving status/position
     if (Role < ROLE_Authority)
     {
         bSavedEngineOff = bEngineOff;
+        bClientInitialized = true;
+
+        // If an already destroyed vehicle gets replicated, there's nothing more we want to do here; it will only turn the engine on & set irrelevant variables
+        if (Health <= 0)
+        {
+            return;
+        }
 
         if (bDriving)
         {
@@ -203,9 +218,9 @@ simulated function PostNetBeginPlay()
         SavedPositionIndex = DriverPositionIndex;
         PreviousPositionIndex = DriverPositionIndex;
         PendingPositionIndex = DriverPositionIndex;
-
-        bClientInitialized = true;
     }
+
+    SetEngine();
 }
 
 // Modified to destroy extra attachments & effects - including the DestructionEffect emitter
@@ -1173,7 +1188,7 @@ function ServerStartEngine()
 // New function to set up the engine properties
 simulated function SetEngine()
 {
-    if (bEngineOff)
+    if (bEngineOff || Health <= 0 || EngineHealth <= 0)
     {
         TurnDamping = 0.0;
 
