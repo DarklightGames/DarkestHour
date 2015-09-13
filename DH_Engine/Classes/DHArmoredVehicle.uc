@@ -304,9 +304,16 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Modified to destroy extra attachments & effects
+// Modified to destroy extra attachments & effects - including the DestructionEffect emitter
+// That's because if an already exploded vehicle replicates to a net client, the vehicle gets Destroyed() before the natural LifeSpan of the emitter
+// That left the DestructionEffect burning away in mid air after the vehicle has disappeared (the Super calls Kill() on the emitter, but it doesn't seem to work)
 simulated function Destroyed()
 {
+    if (Role < ROLE_Authority && DestructionEffect != none)
+    {
+        DestructionEffect.Destroy(); // has to go before the Super, as that fails to destroy it, but does clear the actor reference
+    }
+
     super(ROVehicle).Destroyed();
 
     DestroyAttachments();
@@ -3120,6 +3127,81 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         NetUpdateTime = Level.TimeSeconds - 1.0;
         KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
+    }
+}
+
+// Modified to prevent an already blown up vehicle from triggering an explosion on a net client, if the vehicle becomes net relevant & replicates to that client
+// If vehicle has previously exploded, ExplosionCount will be 1, & when that replicates in the initial batch of variables, it triggers native code to call this function
+// In that situation we just want to spawn the DestructionEffect, skipping the explosion sound & view shake
+simulated event ClientVehicleExplosion(bool bFinal)
+{
+    local PlayerController PC;
+    local float            Dist, Scale;
+
+    // On net client, only do these things if bClientInitialized, meaning we haven't just received this actor through replication, so it must have just blown up
+    if (bClientInitialized || Role == ROLE_Authority)
+    {
+        // View shake
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            PC = Level.GetLocalPlayerController();
+
+            if (PC != none && PC.ViewTarget != none)
+            {
+                Dist = VSize(Location - PC.ViewTarget.Location);
+
+                if (Dist < (ExplosionRadius * 2.5))
+                {
+                    if (Dist < ExplosionRadius)
+                    {
+                        Scale = 1.0;
+                    }
+                    else
+                    {
+                        Scale = ((ExplosionRadius * 2.5) - Dist) / ExplosionRadius;
+                    }
+
+                    PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+                }
+            }
+        }
+
+        // Explosion sound
+        if (ExplosionSounds.Length > 0)
+        {
+            PlaySound(ExplosionSounds[Rand(ExplosionSounds.Length)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume,, ExplosionSoundRadius);
+        }
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // Low detail explosion effects
+        if (Level.bDropDetail || Level.DetailMode == DM_Low)
+        {
+            if (bFinal)
+            {
+                DestructionEffect = Spawn(DisintegrationEffectLowClass,,, Location, Rotation);
+            }
+            else
+            {
+                DestructionEffect = Spawn(DestructionEffectLowClass, self);
+            }
+        }
+        // Standard explosion effects
+        else
+        {
+            if (bFinal)
+            {
+                DestructionEffect = Spawn(DisintegrationEffectClass,,, Location, Rotation);
+            }
+            else
+            {
+                DestructionEffect = Spawn(DestructionEffectClass, self);
+            }
+        }
+
+        DestructionEffect.LifeSpan = TimeTilDissapear;
+        DestructionEffect.SetBase(self);
     }
 }
 
