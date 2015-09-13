@@ -1000,7 +1000,10 @@ simulated function int GetPendingRoundIndex()
     }
 }
 
-// Modified to optimise slightly
+// Modified to fix occasional bug where for some reason bClientCanFireCannon doesn't get set correctly on a net client (seems to be when exiting cannon almost at same time as firing)
+// To solve that we remove the check on bClientCanFireCannon, so if client at least has CannonReloadState == CR_ReadyToFire, it sends the call off to the server
+// The server is the authoritative check on whether the cannon can fire, so even if the client side is hacked or goes wrong, the worst we get is phantom firing effects
+// Also to optimise slightly
 simulated function bool ReadyToFire(bool bAltFire)
 {
     local int Mode;
@@ -1011,10 +1014,11 @@ simulated function bool ReadyToFire(bool bAltFire)
     }
     else
     {
-        if (CannonReloadState != CR_ReadyToFire || !bClientCanFireCannon)
+        if (CannonReloadState != CR_ReadyToFire) // removed check on bClientCanFireCannon
         {
             return false;
         }
+        else if (!bClientCanFireCannon) log(Tag @ "ReadyToFire: bypassing bClientCanFireCannon being false"); // TEMP DEBUG
 
         if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
         {
@@ -1031,6 +1035,33 @@ simulated function bool ReadyToFire(bool bAltFire)
     }
 
     return HasAmmo(Mode);
+}
+
+// Modified to fix occasional bug where for some reason bClientCanFireCannon doesn't get set correctly on a net client (seems to be when exiting cannon almost at same time as firing)
+// To fix that we remove the check on bClientCanFireCannon, so we proceed if the client at least has CannonReloadState == CR_ReadyToFire
+// The server is the authoritative check on whether the cannon can fire, so even if the client side is hacked or goes wrong, the worst we get is phantom firing effects
+simulated function ClientStartFire(Controller C, bool bAltFire)
+{
+    bIsAltFire = bAltFire;
+
+    if ((!bIsAltFire && CannonReloadState == CR_ReadyToFire) || (bIsAltFire && FireCountdown <= 0.0)) // removed check on bClientCanFireCannon
+    {
+        if (!bIsAltFire && !bClientCanFireCannon) Log(Tag @ "ClientStartFire: bypassing bClientCanFireCannon being false"); // TEMP DEBUG
+
+        if (bIsRepeatingFF)
+        {
+            if (bIsAltFire)
+            {
+                ClientPlayForceFeedback(AltFireForce);
+            }
+            else
+            {
+                ClientPlayForceFeedback(FireForce);
+            }
+        }
+
+        OwnerEffects();
+    }
 }
 
 // Modified to handle DH's extended ammo system
