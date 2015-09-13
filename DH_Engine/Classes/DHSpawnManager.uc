@@ -926,7 +926,7 @@ private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
         if (Value > 0)
         {
             // Send "vehicle reinforcements have arrived" message
-            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
+            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
         }
 
         GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] = Clamp(int(GRI.VehiclePoolMaxSpawns[VehiclePoolIndex]) + Value, 0, 254);
@@ -934,7 +934,7 @@ private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
         if (Value < 0 && GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] == 0)
         {
             // Send "vehicle reinforcements have been cut off" message
-            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
+            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
         }
     }
 }
@@ -1007,14 +1007,14 @@ function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
         {
             if (Value > 0)
             {
-                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
+                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
             }
 
             GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] = Clamp(int(GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]]) + Value, 0, 254);
 
             if (Value < 0 && GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] == 0)
             {
-                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.Team, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
+                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
             }
         }
     }
