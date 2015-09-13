@@ -72,7 +72,7 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_DDay')
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_DDay',WeaponBone="Turret_placement")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
     StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
