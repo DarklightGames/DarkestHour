@@ -93,14 +93,19 @@ function PostBeginPlay()
     }
 
     // Check VehiclePools array
-    for (i = 0; i < VehiclePools.Length; ++i)
+    for (i = VehiclePools.Length - 1; i >= 0; --i)
     {
-        if (VehiclePools[i].VehicleClass != none)
+        // VP doesn't have a specified vehicle class, so is invalid
+        if (VehiclePools[i].VehicleClass == none)
+        {
+            bVehiclePoolIsInvalid = true;
+        }
+        else
         {
             // Make sure VP's vehicle class isn't a duplicate of another class
             for (j = i - 1; j >= 0; --j)
             {
-                // Vehicle class already exists in array
+                // Same vehicle class already exists earlier in array, so is invalid
                 if (VehiclePools[i].VehicleClass == VehiclePools[j].VehicleClass)
                 {
                     bVehiclePoolIsInvalid = true;
@@ -108,17 +113,13 @@ function PostBeginPlay()
                 }
             }
         }
-        // VP doesn't have a specified vehicle class
-        else
-        {
-            bVehiclePoolIsInvalid = true;
-        }
 
         // Remove VP if it is invalid (no specified class or it's a duplicate)
         if (bVehiclePoolIsInvalid)
         {
-            Warn("VehiclePools[" $ i $ "].VehicleClass (" $ VehiclePools[i].VehicleClass $ ") is not unique and will be removed!");
-            VehiclePools.Remove(i--, 1);
+            Warn("VehiclePools[" $ i $ "] is invalid & has been removed! (VehicleClass =" @ VehiclePools[i].VehicleClass $ ")");
+            VehiclePools.Remove(i, 1);
+            bVehiclePoolIsInvalid = false; // reset for next VP to be checked
             continue;
         }
 
