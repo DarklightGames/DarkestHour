@@ -264,10 +264,10 @@ simulated function UpdateSightAndWheelRotation()
     SightRotation.Pitch = -CurrentAim.Pitch;
     SetBoneRotation(SightBone, SightRotation, 1);
 
-    ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
+    ElevationWheelRotation.Pitch = -CurrentAim.Pitch * 32;
     SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
 
-    TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
+    TraverseWheelRotation.Roll = -CurrentAim.Yaw * 32;
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
 }
 
