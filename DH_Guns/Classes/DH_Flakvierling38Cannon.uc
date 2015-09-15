@@ -310,4 +310,5 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
+    CollisionStaticMesh=none
 }

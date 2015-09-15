@@ -58,4 +58,5 @@ defaultproperties
     SightBone="arm"
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    CollisionStaticMesh=none
 }
