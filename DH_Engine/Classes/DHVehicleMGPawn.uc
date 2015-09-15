@@ -1400,11 +1400,14 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
 
 // Modified to update custom aim, & to stop player from moving the MG if he's not in a position where he can control the MG
 // Also to apply the ironsights turn speed factor if the player is controlling the MG or is using binoculars
+// And to apply RotationsPerSecond limit on MGs swivel speed, which would otherwise be ignored in 1st person for player on MG, because MGs are bInstantRotation weapons
+// While all other players would see a more slowly turning MG, which is very misleading, because gradual rotation via RPS is still used for other players to smooth rotation changes
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local DHPlayer C;
     local rotator  NewRotation;
     local bool     bCanFire;
+    local float    MaxChange;
 
     C = DHPlayer(Controller);
     bCanFire = CanFire();
@@ -1416,14 +1419,23 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
         PitchChange *= C.DHISTurnSpeedFactor;
     }
 
-    // Custom aim updates
     if (bCanFire)
     {
+        // Limit rotation speed of MG to it's specified RotationsPerSecond, as MGs are bInstantRotation weapons, which would otherwise ignore RPS in 1st person
+        if (Gun != none)
+        {
+            MaxChange = Gun.RotationsPerSecond * DeltaTime * 65536;
+            YawChange = FClamp(YawChange, -MaxChange, MaxChange);
+            PitchChange = FClamp(PitchChange, -MaxChange, MaxChange);
+        }
+
+        // Normal custom aim update
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
     }
+    // Stops player moving MG if not in a position where he can control it (but 'null' update still required)
     else
     {
-        UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0); // stops player moving MG if not in a position where he can control it (but 'null' update still required)
+        UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0);
     }
 
     if (C != none)
@@ -1732,6 +1744,12 @@ exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bSca
 
         Log(Tag @ " new BinocsDrivePos =" @ BinocsDrivePos @ "(was" @ OldBinocsDrivePos $ ")");
     }
+}
+
+exec function SetRPS(float NewValue) // TEMP DEBUG
+{
+    Gun.RotationsPerSecond = NewValue;
+    Log(Tag @ ": RotationsPerSecond =" @ Gun.RotationsPerSecond);
 }
 
 defaultproperties
