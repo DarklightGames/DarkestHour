@@ -19,7 +19,6 @@ defaultproperties
     CustomPitchDownLimit=63000
     WeaponFireAttachmentBone="mg_yaw"
     WeaponFireOffset=20.0
-    RotationsPerSecond=1.0
     bInstantFire=false
     Spread=0.002
     FireInterval=0.07058

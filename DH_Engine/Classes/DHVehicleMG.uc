@@ -607,7 +607,7 @@ defaultproperties
     FireAttachBone="mg_pitch"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    RotationsPerSecond=0.2
+    RotationsPerSecond=0.25
     YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
     YawEndConstraint=65535
 }

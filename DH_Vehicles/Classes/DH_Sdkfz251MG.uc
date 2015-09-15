@@ -24,6 +24,7 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=40.0
+    RotationsPerSecond=0.5
     bInstantFire=false
     Spread=0.002
     FireInterval=0.07058

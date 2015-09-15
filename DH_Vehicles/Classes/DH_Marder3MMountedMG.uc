@@ -24,7 +24,7 @@ defaultproperties
     WeaponFireAttachmentBone="tip"
     GunnerAttachmentBone="loader_player"
     WeaponFireOffset=0.0
-    RotationsPerSecond=0.05
+    RotationsPerSecond=0.5
     bInstantFire=false
     Spread=0.002
     FireInterval=0.07058

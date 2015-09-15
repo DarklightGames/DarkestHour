@@ -26,7 +26,7 @@ defaultproperties
     WeaponFireAttachmentBone="tip"
     GunnerAttachmentBone="loader_attachment"
     WeaponFireOffset=0.0 // override inherited from ROMountedTankMG
-    RotationsPerSecond=0.05
+    RotationsPerSecond=0.5
     bInstantFire=false
     Spread=0.002
     FireInterval=0.07058

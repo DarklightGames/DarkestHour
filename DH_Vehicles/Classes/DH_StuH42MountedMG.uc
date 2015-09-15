@@ -25,7 +25,6 @@ defaultproperties
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="loader_attachment"
     WeaponFireOffset=3.0
-    RotationsPerSecond=0.05
     bInstantFire=false
     Spread=0.002
     FireInterval=0.07058
