@@ -12,7 +12,6 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=2.0
     TreadDamageModifier=1.0
-    DeathString="%o was blown apart by %k's Jagdtiger HE shell."
     KDamageImpulse=6000.0
     KDeathVel=300.0
     KDeathUpKick=60.0

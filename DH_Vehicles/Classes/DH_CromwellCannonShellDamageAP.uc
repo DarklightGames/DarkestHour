@@ -11,5 +11,4 @@ defaultproperties
     APCDamageModifier=0.75
     VehicleDamageModifier=1.5
     TreadDamageModifier=0.85
-    DeathString="%o was killed by %k's Cromwell AP shell."
 }

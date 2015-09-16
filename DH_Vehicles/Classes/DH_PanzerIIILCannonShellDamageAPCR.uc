@@ -11,5 +11,4 @@ defaultproperties
     APCDamageModifier=0.65
     VehicleDamageModifier=0.85
     TreadDamageModifier=0.75
-    DeathString="%o was killed by %k's Panzer III Ausf.M APCR shell."
 }

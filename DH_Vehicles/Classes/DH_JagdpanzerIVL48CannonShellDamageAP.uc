@@ -10,5 +10,4 @@ defaultproperties
 {
     APCDamageModifier=0.75
     VehicleDamageModifier=1.5
-    DeathString="%o was killed by %k's JagdpanzerIV/L48 AP shell."
 }

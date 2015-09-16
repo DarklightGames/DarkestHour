@@ -8,5 +8,4 @@ class DH_PanzerIIINCannonShellDamageHEAT extends DHShellHEATDamageType
 
 defaultproperties
 {
-    DeathString="%o was burnt up by %k's Panzer III Ausf.N HEAT shell."
 }

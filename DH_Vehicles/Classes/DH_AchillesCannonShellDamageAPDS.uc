@@ -10,5 +10,4 @@ defaultproperties
 {
     APCDamageModifier=0.5
     TreadDamageModifier=0.85
-    DeathString="%o was killed by %k's Achilles APDS shell."
 }

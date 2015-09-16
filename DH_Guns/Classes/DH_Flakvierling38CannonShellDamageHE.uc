@@ -8,5 +8,4 @@ class DH_Flakvierling38CannonShellDamageHE extends DH_Sdkfz2341CannonShellDamage
 defaultproperties
 {
     HUDIcon=texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon'
-    DeathString="%o was blown apart by %k's Flakvierling 38 HE round."
 }

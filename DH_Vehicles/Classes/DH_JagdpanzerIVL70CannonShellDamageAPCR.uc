@@ -10,5 +10,4 @@ defaultproperties
 {
     APCDamageModifier=0.5
     TreadDamageModifier=0.95
-    DeathString="%o was killed by %k's Jagdpanzer IV/L70 APCR shell."
 }

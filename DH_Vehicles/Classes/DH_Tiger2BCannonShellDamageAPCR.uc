@@ -9,5 +9,4 @@ class DH_Tiger2BCannonShellDamageAPCR extends DHShellImpactDamageType
 defaultproperties
 {
     APCDamageModifier=0.5
-    DeathString="%o was killed by %k's King Tiger APCR shell."
 }

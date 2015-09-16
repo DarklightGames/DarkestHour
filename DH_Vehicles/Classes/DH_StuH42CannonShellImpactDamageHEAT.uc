@@ -9,5 +9,4 @@ class DH_StuH42CannonShellImpactDamageHEAT extends DHShellImpactDamageType
 defaultproperties
 {
     APCDamageModifier=0.75
-    DeathString="%o was killed by %k's StuH42 Ausf.G HEAT shell."
 }

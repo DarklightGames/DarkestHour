@@ -9,5 +9,4 @@ class DH_JacksonCannonShellDamageHVAP extends DHShellImpactDamageType
 defaultproperties
 {
     APCDamageModifier=0.5
-    DeathString="%o was killed by %k's Jackson HVAP shell."
 }

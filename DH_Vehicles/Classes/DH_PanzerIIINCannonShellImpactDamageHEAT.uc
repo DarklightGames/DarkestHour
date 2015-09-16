@@ -9,5 +9,4 @@ class DH_PanzerIIINCannonShellImpactDamageHEAT extends DHShellImpactDamageType
 defaultproperties
 {
     APCDamageModifier=0.75
-    DeathString="%o was killed by %k's Panzer III Ausf.N HEAT shell."
 }

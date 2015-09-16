@@ -10,5 +10,4 @@ defaultproperties
 {
     APCDamageModifier=0.65
     TreadDamageModifier=0.75
-    DeathString="%o was killed by %k's Panzer IV HEAT shell."
 }
