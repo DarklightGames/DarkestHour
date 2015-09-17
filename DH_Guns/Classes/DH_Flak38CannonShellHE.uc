@@ -8,6 +8,7 @@ class DH_Flak38CannonShellHE extends DH_Sdkfz2341CannonShellHE;
 defaultproperties
 {
     ShellImpactDamage=class'DH_Guns.DH_Flak38CannonShellDamageHE'
+    MyDamageType=class'DH_Guns.DH_Flak38CannonShellDamageHE'
     // TEST - why do all these properties have to be different from the 234/1? Should probably either be removed or added to 234/1.
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosion'
