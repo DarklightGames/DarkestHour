@@ -17,6 +17,7 @@ enum ESpawnPointType
 
 var() ESpawnPointType Type;
 var() bool bIsInitiallyActive;
+var() name MineVolumeProtectionTag;
 var() name InfantryLocationHintTag;
 var() name VehicleLocationHintTag;
 var() float SpawnProtectionTime;
@@ -28,12 +29,15 @@ var() float LocationHintDeferDistance;
 
 var int TeamIndex;
 
+var DHMineVolume MineVolumeProtectionRef;
+
 var   array<DHLocationHint> InfantryLocationHints;
 var   array<DHLocationHint> VehicleLocationHints;
 
 function PostBeginPlay()
 {
     local DHLocationHint LH;
+    local DHMineVolume MV;
 
     foreach AllActors(class'DHLocationHint', LH)
     {
@@ -46,6 +50,18 @@ function PostBeginPlay()
             else if (LH.Tag == VehicleLocationHintTag)
             {
                 VehicleLocationHints[VehicleLocationHints.Length] = LH;
+            }
+        }
+    }
+
+    if (MineVolumeProtectionTag != '')
+    {
+        foreach AllActors(class'DHMineVolume', MV)
+        {
+            if (MV.Tag == MineVolumeProtectionTag)
+            {
+                MineVolumeProtectionRef = MV;
+                break;
             }
         }
     }

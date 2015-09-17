@@ -3,37 +3,16 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MineVolume extends ROMineVolume;
-
-var()   bool            bInitiallyActive;   //Will start active if true
+class DH_MineVolume extends DHMineVolume;
 
 function PostBeginPlay()
 {
-    super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-    bActive = bInitiallyActive;
-}
-
-//Override to prevent ROTeamGame from changing bActive
-function Activate()
-{
-    if (bUsesSpawnAreas)
-        bActive = true;
-}
-
-//Override to prevent ROTeamGame from changing bActive
-function Deactivate()
-{
-    if (bUsesSpawnAreas)
-        bActive = false;
-}
-
-function Reset()
-{
-    bActive = bInitiallyActive;
+    Level.Game.Broadcast(self, "Level uses DH_MineVolume, but should be using DHMineVolume!!!", 'Say');
+    Warn("Please change the minefield types to DHMineVolume instead of DH_MineVolume.");
 }
 
 defaultproperties
 {
-    bInitiallyActive=true
 }

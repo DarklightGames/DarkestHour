@@ -875,6 +875,11 @@ private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
     if (GRI != none)
     {
         GRI.SetSpawnPointIsActive(SpawnPointIndex, bIsActive);
+
+        if (SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef != none)
+        {
+            SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.bActive = bIsActive;
+        }
     }
 }
 

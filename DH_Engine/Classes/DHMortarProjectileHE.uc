@@ -120,9 +120,9 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    local ROVolumeTest VT;
+    local DHVolumeTest VT;
 
-    VT = Spawn(class'ROVolumeTest',,, HitLocation);
+    VT = Spawn(class'DHVolumeTest',,, HitLocation);
 
     if (VT.IsInNoArtyVolume())
     {

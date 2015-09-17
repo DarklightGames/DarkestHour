@@ -552,7 +552,7 @@ function ServerSaveArtilleryPosition()
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
     local DHRoleInfo   RI;
-    local ROVolumeTest RVT;
+    local DHVolumeTest RVT;
     local Actor        HitActor;
     local Material     HitMaterial;
     local vector       HitLocation, HitNormal, StartTrace;
@@ -625,7 +625,7 @@ function ServerSaveArtilleryPosition()
 
             HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
 
-            RVT = Spawn(class'ROVolumeTest', self,, HitLocation);
+            RVT = Spawn(class'DHVolumeTest', self,, HitLocation);
 
             if ((RVT == none || !RVT.IsInNoArtyVolume()) && HitActor != none && HitNormal != vect(0.0, 0.0, -1.0))
             {
@@ -703,7 +703,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
     local DHPawn       P;
     local Actor        HitActor;
     local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
-    local ROVolumeTest VT;
+    local DHVolumeTest VT;
     local int          TeamIndex, i;
     local bool         bMortarsAvailable, bMortarTargetMarked;
 
@@ -716,7 +716,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
     TraceEnd = TraceStart + (vector(Rotation) * GetMaxViewDistance());
     HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,,);
 
-    VT = Spawn(class'ROVolumeTest', self,, HitLocation);
+    VT = Spawn(class'DHVolumeTest', self,, HitLocation);
 
     // Check that the artillery target is not in a no artillery volume
     if ((VT != none && VT.IsInNoArtyVolume()) || HitActor == none)

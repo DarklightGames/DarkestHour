@@ -18,7 +18,7 @@ function UsedBy(Pawn User)
 {
     local DHRoleInfo   RI;
     local DHPlayer     DHPC;
-    local ROVolumeTest VolumeTest;
+    local DHVolumeTest VolumeTest;
     local sound        RequestSound;
 
     if (!bAvailable || User == none)
@@ -56,7 +56,7 @@ function UsedBy(Pawn User)
     }
 
     // Don't let the player call in an arty strike on a location that has become an active NoArtyVolume after they marked the location.
-    VolumeTest = Spawn(class'ROVolumeTest', self,, DHPC.SavedArtilleryCoords);
+    VolumeTest = Spawn(class'DHVolumeTest', self,, DHPC.SavedArtilleryCoords);
 
     if (VolumeTest != none)
     {

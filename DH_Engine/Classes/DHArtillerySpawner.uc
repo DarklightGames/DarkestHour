@@ -8,7 +8,7 @@ class DHArtillerySpawner extends ROArtillerySpawner;
 // Modified to spawn DHArtilleryShell instead of RO version
 function Timer()
 {
-    local ROVolumeTest RVT;
+    local DHVolumeTest RVT;
     local vector       AimVec;
 
     // Destroy this actor if the round is over or if the arty officer has switched teams or left the server
@@ -24,7 +24,7 @@ function Timer()
         return;
     }
 
-    RVT = Spawn(class'ROVolumeTest', self,, OriginalArtyLocation);
+    RVT = Spawn(class'DHVolumeTest', self,, OriginalArtyLocation);
 
     // If the place this arty is falling has become a NoArtyVolume after the strike was called, cancel the strike
     if (RVT != none && RVT.IsInNoArtyVolume())

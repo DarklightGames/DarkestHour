@@ -161,11 +161,11 @@ simulated function bool CanDeploy()
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
     local Material Material;
     local rotator TraceRotation;
-    local ROVolumeTest VolumeTest;
+    local DHVolumeTest VolumeTest;
 
     P = DHPawn(Instigator);
 
-    VolumeTest = Spawn(class'ROVolumeTest',,, P.Location);
+    VolumeTest = Spawn(class'DHVolumeTest',,, P.Location);
 
     if (VolumeTest.IsInNoArtyVolume())
     {

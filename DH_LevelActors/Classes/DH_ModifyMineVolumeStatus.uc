@@ -6,14 +6,14 @@
 class DH_ModifyMineVolumeStatus extends DH_ModifyActors;
 
 var()   name                    MineVolumeToModify;
-var     DH_MineVolume           MineVolumeReference;
+var     DHMineVolume            MineVolumeReference;
 var()   bool                    UseRandomness;
 var()   int                     RandomPercent; // 100 for always succeed, 0 for always fail
 var()   StatusModifyType        HowToModify;
 
 function PostBeginPlay()
 {
-    local DH_MineVolume ROMV;
+    local DHMineVolume ROMV;
 
     super.PostBeginPlay();
 
@@ -23,7 +23,7 @@ function PostBeginPlay()
     }
 
     // Volume are static so use the all actor list
-    foreach AllActors(class'DH_MineVolume', ROMV, MineVolumeToModify)
+    foreach AllActors(class'DHMineVolume', ROMV, MineVolumeToModify)
     {
         MineVolumeReference = ROMV;
         break;
