@@ -41,7 +41,7 @@ defaultproperties
     DHPenetrationTable(9)=14.0
     DHPenetrationTable(10)=12.7
     ShellDiameter=5.0
-    ShellImpactDamage=class'DH_Vehicles.DH_AchillesCannonShellDamageAPDS'
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAPDS'
     BallisticCoefficient=1.47
     SpeedFudgeScale=0.4
     Speed=77492.0

@@ -3,16 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundCannonShellDamageHE extends ROTankShellExplosionDamage
+class DH_GreyhoundCannonShellDamageHE extends DH_StuartCannonShellDamageHE
     abstract;
 
 defaultproperties
 {
-    TankDamageModifier=0.0
-    APCDamageModifier=0.5
-    VehicleDamageModifier=1.0
-    TreadDamageModifier=0.5
-    KDamageImpulse=3000.0
-    VehicleMomentumScaling=1.1
-    HumanObliterationThreshhold=180
+    APCDamageModifier=0.5 // TEST - this is different to parent, which has 0.45, but should be the same
 }

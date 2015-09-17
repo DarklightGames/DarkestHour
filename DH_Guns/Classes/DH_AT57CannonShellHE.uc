@@ -21,7 +21,7 @@ defaultproperties
     ShellDiameter=5.7
     bHasTracer=true
     PenetrationMag=630.0
-    ShellImpactDamage=class'DH_Guns.DH_AT57CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Guns.DH_6PounderCannonShellDamageAP'
     ImpactDamage=295
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
@@ -33,6 +33,6 @@ defaultproperties
     MaxSpeed=50152.0
     Damage=250.0
     DamageRadius=600.0
-    MyDamageType=class'DH_Guns.DH_AT57CannonShellDamageHE'
+    MyDamageType=class'DH_Guns.DH_6PounderCannonShellDamageHE'
     Tag="M303 HE"
 }

@@ -37,7 +37,7 @@ defaultproperties
     DHPenetrationTable(9)=5.3
     DHPenetrationTable(10)=4.7
     ShellDiameter=7.5
-    ShellImpactDamage=class'DH_Vehicles.DH_CromwellCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
     ImpactDamage=540
     BallisticCoefficient=1.735
     Speed=37358.0

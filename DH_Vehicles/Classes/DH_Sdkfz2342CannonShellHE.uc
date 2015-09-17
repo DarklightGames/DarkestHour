@@ -42,7 +42,7 @@ defaultproperties
     ShellDiameter=5.0
     bIsAlliedShell=false
     PenetrationMag=565.0
-    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2342CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
     ImpactDamage=315
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
@@ -54,6 +54,6 @@ defaultproperties
     MaxSpeed=50392.0
     Damage=260.0
     DamageRadius=565.0
-    MyDamageType=class'DH_Vehicles.DH_Sdkfz2342CannonShellDamageHE'
+    MyDamageType=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageHE'
     Tag="Sprgr.Patr.38"
 }

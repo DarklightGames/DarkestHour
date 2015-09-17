@@ -38,13 +38,13 @@ defaultproperties
     DHPenetrationTable(10)=0.3
     ShellDiameter=7.5
     PenetrationMag=1000.0
-    ShellImpactDamage=class'DH_Vehicles.DH_CromwellCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
     ImpactDamage=475
     BallisticCoefficient=1.686
     Speed=27943.0
     MaxSpeed=27943.0
     Damage=415.0
     DamageRadius=1550.0
-    MyDamageType=class'DH_Vehicles.DH_CromwellCannonShellDamageHE'
+    MyDamageType=class'DH_Vehicles.DH_ShermanCannonShellDamageHE'
     Tag="M48 HE"
 }

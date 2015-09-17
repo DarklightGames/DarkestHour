@@ -22,7 +22,7 @@ defaultproperties
     bShatterProne=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
     TracerEffect=class'DH_Effects.DH_RedTankShellTracer'
-    ShellImpactDamage=class'DH_Vehicles.DH_GreyhoundCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
     ImpactDamage=250
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'

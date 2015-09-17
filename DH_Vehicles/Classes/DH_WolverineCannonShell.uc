@@ -20,7 +20,7 @@ defaultproperties
     DHPenetrationTable(10)=6.8
     ShellDiameter=7.62
     bShatterProne=true
-    ShellImpactDamage=class'DH_Vehicles.DH_WolverineCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     ImpactDamage=580
     BallisticCoefficient=1.627
     Speed=47799.0

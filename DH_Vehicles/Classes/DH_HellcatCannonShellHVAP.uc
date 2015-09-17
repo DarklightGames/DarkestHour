@@ -19,7 +19,7 @@ defaultproperties
     DHPenetrationTable(9)=8.0
     DHPenetrationTable(10)=6.7
     ShellDiameter=7.62
-    ShellImpactDamage=class'DH_Vehicles.DH_HellcatCannonShellDamageHVAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
     ImpactDamage=450
     BallisticCoefficient=0.888
     SpeedFudgeScale=0.4

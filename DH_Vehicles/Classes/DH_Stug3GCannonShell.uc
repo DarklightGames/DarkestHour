@@ -45,7 +45,7 @@ defaultproperties
     DHPenetrationTable(9)=7.6
     DHPenetrationTable(10)=6.8
     ShellDiameter=7.5
-    ShellImpactDamage=class'DH_Vehicles.DH_Stug3GCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIVCannonShellDamageHE'
     ImpactDamage=650
     BallisticCoefficient=2.52
     Speed=45270.0

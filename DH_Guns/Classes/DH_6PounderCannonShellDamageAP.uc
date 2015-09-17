@@ -3,12 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_6PounderCannonShellDamageAP extends DHShellImpactDamageType
+class DH_6PounderCannonShellDamageAP extends DH_Cromwell6PdrCannonShellDamageAP
     abstract;
 
 defaultproperties
 {
     HUDIcon=texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
-    APCDamageModifier=0.75
-    TreadDamageModifier=0.85
 }

@@ -7,7 +7,7 @@ class DH_Flakvierling38CannonShellAP extends DH_Sdkfz2341CannonShell;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Guns.DH_Flakvierling38CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Guns.DH_Flak38CannonShellDamageAP'
     SpeedFudgeScale=0.5
     LightType=LT_Steady
     LightEffect=LE_QuadraticNonIncidence

@@ -7,7 +7,7 @@ class DH_Flakvierling38CannonShellHE extends DH_Sdkfz2341CannonShellHE;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Guns.DH_Flakvierling38CannonShellDamageHE'
+    ShellImpactDamage=class'DH_Guns.DH_Flak38CannonShellDamageAP'
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosion'
     ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'

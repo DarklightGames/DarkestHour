@@ -13,7 +13,7 @@ defaultproperties
     DHPenetrationTable(3)=1.0
     DHPenetrationTable(4)=1.0
     ShellDiameter=3.7
-    ShellImpactDamage=class'DH_Vehicles.DH_GreyhoundCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
     ImpactDamage=185
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
@@ -28,6 +28,6 @@ defaultproperties
     MaxSpeed=53291.0
     Damage=150.0
     DamageRadius=800.0
-    MyDamageType=class'DH_Vehicles.DH_GreyhoundCannonShellDamageHE'
+    MyDamageType=class'DH_Vehicles.DH_GreyhoundCannonShellDamageHE' // TEST - will end up using Stuart's DamageHE, but for now the Greyhound versions is different (but shouldn't be)
     Tag="M63 HE"
 }
