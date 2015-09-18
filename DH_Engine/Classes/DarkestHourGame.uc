@@ -2652,11 +2652,13 @@ function ChooseWinner()
     {
         Level.Game.Broadcast(self, "The defending Axis won the battle because they still hold an objective", 'Say');
         EndRound(AXIS_TEAM_INDEX);
+        return;
     }
     else if (LevelInfo.DefendingSide == SIDE_Allies)
     {
         Level.Game.Broadcast(self, "The defending Allies won the battle because they still hold an objective", 'Say');
         EndRound(ALLIES_TEAM_INDEX);
+        return;
     }
 
     // Attack/Attack check
