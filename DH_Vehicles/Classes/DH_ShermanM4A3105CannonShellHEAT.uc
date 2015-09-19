@@ -26,6 +26,5 @@ defaultproperties
     MaxSpeed=22994.0
     Damage=415.0
     DamageRadius=700.0
-    MyDamageType=class'DH_Vehicles.DH_Sherman105CannonShellDamageHEAT'
     Tag="M67 HEAT"
 }

@@ -54,7 +54,6 @@ defaultproperties
     MaxSpeed=29874.0
     Damage=415.0
     DamageRadius=700.0
-    MyDamageType=class'DH_Vehicles.DH_StuH42CannonShellDamageHEAT'
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
     Tag="Gr.38 Hl/C"
     DrawScale=1.3
