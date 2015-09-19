@@ -8,7 +8,5 @@ class DH_PanzerIIILCannonShellDamageAPCR extends DHShellSubCalibreImpactDamageTy
 
 defaultproperties
 {
-    APCDamageModifier=0.65
-    VehicleDamageModifier=0.85
     TreadDamageModifier=0.75
 }
