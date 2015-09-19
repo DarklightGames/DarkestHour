@@ -13,7 +13,6 @@ defaultproperties
     DHPenetrationTable(3)=0.2
     DHPenetrationTable(4)=0.1
     ShellDiameter=7.62
-    ImpactDamage=125
     BallisticCoefficient=1.368
     Speed=47799.0
     MaxSpeed=47799.0

@@ -62,7 +62,7 @@ defaultproperties
     SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0
-    ImpactDamage=20
+    ImpactDamage=125
     BallisticCoefficient=0.6
     SpeedFudgeScale=0.75
     MaxSpeed=500.0
