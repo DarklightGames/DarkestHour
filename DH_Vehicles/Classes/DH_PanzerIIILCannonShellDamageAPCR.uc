@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIILCannonShellDamageAPCR extends DHShellImpactDamageType
+class DH_PanzerIIILCannonShellDamageAPCR extends DHShellSubCalibreImpactDamageType
     abstract;
 
 defaultproperties

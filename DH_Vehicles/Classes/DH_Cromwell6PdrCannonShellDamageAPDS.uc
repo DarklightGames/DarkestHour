@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrCannonShellDamageAPDS extends DHShellImpactDamageType
+class DH_Cromwell6PdrCannonShellDamageAPDS extends DHShellSubCalibreImpactDamageType
     abstract;
 
 defaultproperties
 {
-    APCDamageModifier=0.5
     TreadDamageModifier=0.95
 }

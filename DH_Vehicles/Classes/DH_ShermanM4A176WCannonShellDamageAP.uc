@@ -8,7 +8,5 @@ class DH_ShermanM4A176WCannonShellDamageAP extends DHShellImpactDamageType
 
 defaultproperties
 {
-    APCDamageModifier=0.75
-    VehicleDamageModifier=1.5
     TreadDamageModifier=0.95
 }

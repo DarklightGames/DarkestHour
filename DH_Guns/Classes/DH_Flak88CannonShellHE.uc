@@ -47,7 +47,7 @@ defaultproperties
     ShellDiameter=8.8
     bIsAlliedShell=false
     PenetrationMag=1020.0
-    ShellImpactDamage=class'DH_Guns.DH_Flak88CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
     ImpactDamage=550
     BallisticCoefficient=2.4
     Speed=49489.0

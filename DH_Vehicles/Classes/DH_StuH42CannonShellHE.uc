@@ -52,7 +52,6 @@ defaultproperties
     ShellDiameter=10.5
     bIsAlliedShell=false
     PenetrationMag=1000.0
-    ShellImpactDamage=class'DH_Vehicles.DH_StuH42CannonShellImpactDamageHEAT'
     ImpactDamage=650
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'

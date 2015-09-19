@@ -8,6 +8,6 @@ class DH_StuartCannonShellDamageAP extends DHShellImpactDamageType
 
 defaultproperties
 {
-    APCDamageModifier=0.75
+    VehicleDamageModifier=1.0
     TreadDamageModifier=0.75
 }

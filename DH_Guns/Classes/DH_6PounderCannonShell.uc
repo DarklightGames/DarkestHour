@@ -43,7 +43,7 @@ defaultproperties
     bShatterProne=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
     TracerEffect=class'DH_Effects.DH_RedTankShellTracer'
-    ShellImpactDamage=class'DH_Guns.DH_6PounderCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
     ImpactDamage=350
     BallisticCoefficient=1.19
     Speed=50152.0

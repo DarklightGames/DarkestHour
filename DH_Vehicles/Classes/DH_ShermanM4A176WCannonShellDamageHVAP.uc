@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanM4A176WCannonShellDamageHVAP extends DHShellImpactDamageType
+class DH_ShermanM4A176WCannonShellDamageHVAP extends DHShellSubCalibreImpactDamageType
     abstract;
 
 defaultproperties
 {
-    APCDamageModifier=0.5
     TreadDamageModifier=0.95
 }

@@ -8,7 +8,5 @@ class DH_ShermanCannonShellDamageAP extends DHShellImpactDamageType
 
 defaultproperties
 {
-    APCDamageModifier=0.75
-    VehicleDamageModifier=1.5
     TreadDamageModifier=0.85
 }

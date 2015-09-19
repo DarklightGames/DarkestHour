@@ -10,4 +10,5 @@ defaultproperties
 {
     RoundType=RT_HVAP
     bShatterProne=true
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
 }

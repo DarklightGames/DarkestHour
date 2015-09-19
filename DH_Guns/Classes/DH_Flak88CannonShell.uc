@@ -45,7 +45,7 @@ defaultproperties
     DHPenetrationTable(9)=10.6
     DHPenetrationTable(10)=9.7
     ShellDiameter=8.8
-    ShellImpactDamage=class'DH_Guns.DH_Flak88CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
     ImpactDamage=775
     BallisticCoefficient=3.3
     Speed=48281.0

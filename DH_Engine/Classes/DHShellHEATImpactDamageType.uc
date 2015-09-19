@@ -3,12 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHCannonShellAPDS extends DHCannonShell
+class DHShellHEATImpactDamageType extends DHShellImpactDamageType
     abstract;
 
 defaultproperties
 {
-    RoundType=RT_APDS
-    bShatterProne=true
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    VehicleDamageModifier=1.0
 }

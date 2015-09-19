@@ -279,6 +279,7 @@ defaultproperties
     bExplodesOnArmor=true
     bExplodesOnHittingWater=true
     bAlwaysDoShakeEffect=true
+    ShellImpactDamage=class'DH_Engine.DHShellHEATImpactDamageType'
     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'

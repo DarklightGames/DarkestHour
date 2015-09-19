@@ -45,7 +45,6 @@ defaultproperties
     DHPenetrationTable(9)=10.3
     DHPenetrationTable(10)=9.1
     ShellDiameter=7.5
-    ShellImpactDamage=class'DH_Vehicles.DH_PantherCannonShellDamageAP'
     ImpactDamage=650
     BallisticCoefficient=2.52
     Speed=55826.0

@@ -53,7 +53,6 @@ defaultproperties
     ShellDiameter=8.8
     bIsAlliedShell=false
     PenetrationMag=1020.0
-    ShellImpactDamage=class'DH_Vehicles.DH_Tiger2BCannonShellDamageAP'
     ImpactDamage=550
     BallisticCoefficient=3.25
     Speed=45264.0

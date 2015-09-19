@@ -19,7 +19,6 @@ defaultproperties
     DHPenetrationTable(9)=12.8
     DHPenetrationTable(10)=12.8
     ShellDiameter=10.5
-    ShellImpactDamage=class'DH_Vehicles.DH_Sherman105ShellImpactDamageHEAT'
     ImpactDamage=650
     BallisticCoefficient=2.96
     SpeedFudgeScale=0.7

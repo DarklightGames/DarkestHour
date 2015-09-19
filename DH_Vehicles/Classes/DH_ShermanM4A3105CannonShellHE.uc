@@ -24,7 +24,6 @@ defaultproperties
     DHPenetrationTable(10)=3.5
     ShellDiameter=10.5
     PenetrationMag=1000.0
-    ShellImpactDamage=class'DH_Vehicles.DH_Sherman105ShellImpactDamageHEAT'
     ImpactDamage=650
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'

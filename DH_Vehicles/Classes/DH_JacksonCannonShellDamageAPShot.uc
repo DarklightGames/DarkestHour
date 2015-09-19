@@ -9,4 +9,5 @@ class DH_JacksonCannonShellDamageAPShot extends DHShellImpactDamageType
 defaultproperties
 {
     APCDamageModifier=0.65
+    VehicleDamageModifier=1.0
 }

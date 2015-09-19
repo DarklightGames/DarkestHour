@@ -8,7 +8,6 @@ class DH_PanzerIIILCannonShellDamageAP extends DHShellImpactDamageType
 
 defaultproperties
 {
-    APCDamageModifier=0.75
     VehicleDamageModifier=0.85
     TreadDamageModifier=0.75
 }

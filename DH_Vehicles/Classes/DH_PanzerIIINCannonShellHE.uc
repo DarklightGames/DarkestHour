@@ -48,7 +48,6 @@ defaultproperties
     ShellDiameter=7.5
     bIsAlliedShell=false
     PenetrationMag=900.0
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIINCannonShellImpactDamageHEAT'
     ImpactDamage=455
     BallisticCoefficient=2.0
     SpeedFudgeScale=0.7

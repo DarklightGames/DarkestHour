@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PantherCannonShellDamageAPCR extends DHShellImpactDamageType
+class DH_PantherCannonShellDamageAPCR extends DHShellSubCalibreImpactDamageType
     abstract;
 
 defaultproperties
 {
-    APCDamageModifier=0.5
     TreadDamageModifier=0.95
 }
