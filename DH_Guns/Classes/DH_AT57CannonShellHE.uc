@@ -33,6 +33,6 @@ defaultproperties
     MaxSpeed=50152.0
     Damage=250.0
     DamageRadius=600.0
-    MyDamageType=class'DH_Guns.DH_6PounderCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
     Tag="M303 HE"
 }

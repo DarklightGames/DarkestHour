@@ -58,6 +58,6 @@ defaultproperties
     MaxSpeed=50152.0
     Damage=250.0
     DamageRadius=600.0
-    MyDamageType=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
     Tag="Mk.X HE-T"
 }

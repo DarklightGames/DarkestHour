@@ -48,7 +48,7 @@ defaultproperties
     Speed=47075.0
     MaxSpeed=47075.0
     Damage=110.0
-    MyDamageType=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'

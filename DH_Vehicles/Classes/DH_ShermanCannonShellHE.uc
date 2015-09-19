@@ -27,6 +27,5 @@ defaultproperties
     MaxSpeed=27943.0
     Damage=415.0
     DamageRadius=1550.0
-    MyDamageType=class'DH_Vehicles.DH_ShermanCannonShellDamageHE'
     Tag="M48 HE"
 }

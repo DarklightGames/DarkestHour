@@ -59,6 +59,6 @@ defaultproperties
     MaxSpeed=45264.0
     Damage=475.0
     DamageRadius=1550.0
-    MyDamageType=class'DH_Vehicles.DH_Tiger2BCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
     Tag="Sprgr.Patr."
 }

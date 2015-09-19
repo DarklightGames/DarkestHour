@@ -54,6 +54,6 @@ defaultproperties
     MaxSpeed=50392.0
     Damage=260.0
     DamageRadius=565.0
-    MyDamageType=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
     Tag="Sprgr.Patr.38"
 }

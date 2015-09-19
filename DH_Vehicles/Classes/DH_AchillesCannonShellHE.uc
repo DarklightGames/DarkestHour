@@ -49,6 +49,5 @@ defaultproperties
     MaxSpeed=53351.0
     Damage=400.0
     DamageRadius=1140.0
-    MyDamageType=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageHE'
     Tag="Mk.I HE-T"
 }

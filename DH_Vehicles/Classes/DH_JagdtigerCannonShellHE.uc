@@ -63,6 +63,6 @@ defaultproperties
     MaxSpeed=53110.0
     Damage=700.0
     DamageRadius=2715.0
-    MyDamageType=class'DH_Vehicles.DH_JagdtigerCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
     Tag="Schw.Spgr.Patr"
 }

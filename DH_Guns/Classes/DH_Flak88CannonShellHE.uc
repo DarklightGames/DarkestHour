@@ -54,6 +54,6 @@ defaultproperties
     MaxSpeed=49489.0
     Damage=475.0
     DamageRadius=1550.0
-    MyDamageType=class'DH_Guns.DH_Flak88CannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE88mmATDamageType'
     Tag="Schw.Sprgr.Patr."
 }

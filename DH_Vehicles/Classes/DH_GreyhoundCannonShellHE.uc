@@ -28,6 +28,6 @@ defaultproperties
     MaxSpeed=53291.0
     Damage=150.0
     DamageRadius=800.0
-    MyDamageType=class'DH_Vehicles.DH_GreyhoundCannonShellDamageHE' // TEST - will end up using Stuart's DamageHE, but for now the Greyhound versions is different (but shouldn't be)
+    MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
     Tag="M63 HE"
 }

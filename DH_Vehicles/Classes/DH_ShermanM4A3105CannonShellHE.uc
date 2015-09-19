@@ -36,7 +36,7 @@ defaultproperties
     MaxSpeed=28486.0
     Damage=500.0
     DamageRadius=1350.0
-    MyDamageType=class'DH_Vehicles.DH_Sherman105CannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
     Tag="M1 HE"
     DrawScale=1.3
 }

@@ -26,6 +26,6 @@ defaultproperties
     MaxSpeed=49609.0
     Damage=450.0
     DamageRadius=1570.0
-    MyDamageType=class'DH_Vehicles.DH_JacksonCannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
     Tag="M71 HE"
 }

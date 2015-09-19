@@ -49,6 +49,6 @@ defaultproperties
     MaxSpeed=33073.0
     Damage=415.0
     DamageRadius=1350.0
-    MyDamageType=class'DH_Guns.DH_Pak40CannonShellDamageHE'
+    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     Tag="Sprgr.Patr.34"
 }

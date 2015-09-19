@@ -3,18 +3,15 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHShellAPExplosionDamageType extends DHShellExplosionDamageType
+class DHShellHE37mmDamageType extends DHShellExplosionDamageType
     abstract;
 
 defaultproperties
 {
-    TankDamageModifier=0.0
-    APCDamageModifier=0.05
-    VehicleDamageModifier=0.25
-    TreadDamageModifier=0.05
+    TreadDamageModifier=0.15
     VehicleMomentumScaling=1.0
-    KDamageImpulse=1000.0
-    KDeathVel=150.0
+    KDamageImpulse=2000.0
+    KDeathVel=250.0
     KDeathUpKick=50.0
     HumanObliterationThreshhold=180
 }

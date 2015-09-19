@@ -3,19 +3,18 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHShellSmokeDamageType extends ROTankShellExplosionDamage
+class DHShellSmokeDamageType extends DHShellExplosionDamageType
     abstract;
 
 defaultproperties
 {
     TankDamageModifier=0.0
-    APCDamageModifier=0.75
-    VehicleDamageModifier=1.0
-    TreadDamageModifier=0.5
-    DeathString="%o was killed by shrapnel from %k's smoke shell."
-    MaleSuicide="%o was killed by shrapnel from his own smoke shell."
-    FemaleSuicide="%o was killed by shrapnel from her own smoke shell."
-    KDamageImpulse=3000.0
-    VehicleMomentumScaling=1.1
+    APCDamageModifier=0.25
+    VehicleDamageModifier=0.5
+    TreadDamageModifier=0.25
+    VehicleMomentumScaling=1.0
+    KDamageImpulse=1000.0
+    KDeathVel=150.0
+    KDeathUpKick=50.0
     HumanObliterationThreshhold=180
 }
