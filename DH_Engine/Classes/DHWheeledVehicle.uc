@@ -1424,7 +1424,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     HitCheckDistance = DriverHitCheckDist;
                 }
 
-                if (IsPointShot(HitLocation,Momentum, 1.0, i, HitCheckDistance))
+                if (IsPointShot(HitLocation, Momentum, 1.0, i, HitCheckDistance))
                 {
                     Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
                     bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)

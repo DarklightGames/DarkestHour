@@ -2597,7 +2597,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
         {
-            if (IsNewPointShot(HitLocation,Momentum, 1.0, i))
+            if (IsNewPointShot(HitLocation, Momentum, 1.0, i))
             {
                 if (bLogPenetration)
                 {

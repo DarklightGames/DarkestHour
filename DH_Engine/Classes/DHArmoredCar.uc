@@ -155,7 +155,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     HitCheckDistance = DriverHitCheckDist;
                 }
 
-                if (IsPointShot(Hitlocation,Momentum, 1.0, i, HitCheckDistance))
+                if (IsPointShot(Hitlocation, Momentum, 1.0, i, HitCheckDistance))
                 {
                     Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
                 }
