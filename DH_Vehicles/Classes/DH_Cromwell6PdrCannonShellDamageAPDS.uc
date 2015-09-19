@@ -8,5 +8,5 @@ class DH_Cromwell6PdrCannonShellDamageAPDS extends DHShellSubCalibreImpactDamage
 
 defaultproperties
 {
-    TreadDamageModifier=0.95
+    TreadDamageModifier=0.75
 }

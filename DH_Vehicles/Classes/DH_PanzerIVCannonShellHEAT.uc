@@ -47,7 +47,6 @@ defaultproperties
     ShellDiameter=7.5
     bIsAlliedShell=false
     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIVCannonShellImpactDamageHEAT'
     ImpactDamage=650
     BallisticCoefficient=2.1
     Speed=33073.0

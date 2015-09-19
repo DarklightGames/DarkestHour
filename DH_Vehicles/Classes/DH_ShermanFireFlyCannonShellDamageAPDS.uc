@@ -8,5 +8,5 @@ class DH_ShermanFireFlyCannonShellDamageAPDS extends DHShellSubCalibreImpactDama
 
 defaultproperties
 {
-    TreadDamageModifier=0.85
+    TreadDamageModifier=0.95
 }

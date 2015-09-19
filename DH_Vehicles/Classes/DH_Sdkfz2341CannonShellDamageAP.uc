@@ -13,5 +13,5 @@ defaultproperties
     VehicleDamageModifier=0.75
     TreadDamageModifier=0.5
     VehicleMomentumScaling=0.3
-    HumanObliterationThreshhold=75
+    HumanObliterationThreshhold=400
 }
