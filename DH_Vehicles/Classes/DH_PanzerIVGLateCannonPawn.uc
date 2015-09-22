@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_PanzerIVGLateCannonPawn extends DHGermanCannonPawn;
- 
+
 defaultproperties
 {
     ScopeCenterScale=0.635
