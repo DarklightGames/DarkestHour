@@ -7,19 +7,20 @@ class DHVehicleCannonPawn extends ROTankCannonPawn
     abstract;
 
 // General
-var     DHVehicleCannon     Cannon;           // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
-var     RODummyAttachment   BinocsAttachment; // decorative actor spawned locally when commander is using binoculars
-var     bool        bPlayerHasBinocs;         // on entering, records whether player has binoculars
-var     name        PlayerCameraBone;         // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
-var     texture     AltAmmoReloadTexture;     // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     DHVehicleCannon     Cannon;            // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
+var     RODummyAttachment   BinocsAttachment;  // decorative actor spawned locally when commander is using binoculars
+var     bool        bPlayerHasBinocs;          // on entering, records whether player has binoculars
+var     name        PlayerCameraBone;          // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
+var     texture     AltAmmoReloadTexture;      // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Position stuff
-var     int         InitialPositionIndex;     // initial player position on entering
-var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
-var     int         PeriscopePositionIndex;   // index position of commander's periscope
-var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
-var     int         RaisedPositionIndex;      // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
-var     float       ViewTransitionDuration;   // used to control the time we stay in state ViewTransition
+var     int         InitialPositionIndex;      // initial player position on entering
+var     int         UnbuttonedPositionIndex;   // lowest position number where player is unbuttoned
+var     int         PeriscopePositionIndex;    // index position of commander's periscope
+var     int         GunsightPositions;         // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+var     int         IntermediatePositionIndex; // optional 'intermediate' animation position, i.e. between closed & open/raised positions (used to play special firing anim)
+var     int         RaisedPositionIndex;       // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
+var     float       ViewTransitionDuration;    // used to control the time we stay in state ViewTransition
 
 // Gunsight or periscope overlay
 var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
@@ -2015,9 +2016,10 @@ defaultproperties
 {
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=2
-    PeriscopePositionIndex=-1 // -1 signifies no periscope by default
+    PeriscopePositionIndex=-1    // -1 signifies no periscope by default
     GunsightPositions=1
-    RaisedPositionIndex=-1    // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
+    RaisedPositionIndex=-1       // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
+    IntermediatePositionIndex=-1 // -1 signifies no intermediate position by default
     OverlayCenterSize=0.9
     PlayerCameraBone="Camera_com"
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'

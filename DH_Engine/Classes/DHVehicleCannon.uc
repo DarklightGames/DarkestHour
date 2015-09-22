@@ -10,6 +10,7 @@ class DHVehicleCannon extends ROTankCannon
 
 var     DHVehicleCannonPawn CannonPawn;             // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var     vector              CannonAttachmentOffset; // optional positional offset when attaching the cannon/turret mesh to the hull (allows correction of modelling errors)
+var     name                ShootIntermediateAnim;  // cannon firing animation if player is in an 'intermediate' animation position, i.e. between closed & open/raised positions
 
 // Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];   // using byte for more efficient replication
@@ -527,7 +528,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
 // Modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 // Also to check against RaisedPositionIndex instead of bExposed (allows lowered commander in open turret to be exposed), to play shoot 'open' or 'closed' firing animation
-// And to avoid playing unnecessary shoot animations altogether on a server
+// And to add new option for 'intermediate' position with its own firing animation, e.g. some AT guns have open sight position, between optics ('closed') & raised head position
+// Also to avoid playing unnecessary shoot animations altogether on a server
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     if (Role == ROLE_Authority)
@@ -568,6 +570,13 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             if (HasAnim(TankShootOpenAnim))
             {
                 PlayAnim(TankShootOpenAnim);
+            }
+        }
+        else if (CannonPawn != none && CannonPawn.DriverPositionIndex == CannonPawn.IntermediatePositionIndex)
+        {
+            if (HasAnim(ShootIntermediateAnim))
+            {
+                PlayAnim(ShootIntermediateAnim);
             }
         }
         else if (HasAnim(TankShootClosedAnim))
