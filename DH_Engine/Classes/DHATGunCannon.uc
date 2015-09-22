@@ -6,6 +6,14 @@
 class DHATGunCannon extends DHVehicleCannon
     abstract;
 
+// Modified to remove AltFire
+state ProjectileFireMode
+{
+    function AltFire(Controller C)
+    {
+    }
+}
+
 // Modified to use 3 part reload instead of usual 4 part
 simulated function Timer()
 {
