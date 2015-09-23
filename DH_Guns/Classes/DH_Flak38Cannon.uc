@@ -7,7 +7,9 @@ class DH_Flak38Cannon extends DH_Sdkfz2341Cannon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
 
-var  name  SightBone;
+var     name        SightBone;
+var     name        TraverseWheelBone;
+var     name        ElevationWheelBone;
 
 // Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
 simulated function PostBeginPlay()
@@ -15,13 +17,19 @@ simulated function PostBeginPlay()
     super(DHVehicleCannon).PostBeginPlay();
 }
 
-// New function to update sight rotation, called by cannon pawn when gun pitch changes
-simulated function UpdateSightRotation()
+// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+simulated function UpdateSightAndWheelRotation()
 {
-    local rotator SightRotation;
+    local rotator SightRotation, ElevationWheelRotation, TraverseWheelRotation;
 
     SightRotation.Pitch = -CurrentAim.Pitch;
-    SetBoneRotation(SightBone, SightRotation, 1);
+    SetBoneRotation(SightBone, SightRotation);
+
+    ElevationWheelRotation.Pitch = -CurrentAim.Pitch * 32;
+    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation);
+
+    TraverseWheelRotation.Yaw = -CurrentAim.Yaw * 32;
+    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation);
 }
 
 // Added the following functions from DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DHVehicleCannon:
@@ -40,22 +48,24 @@ defaultproperties
     RotationsPerSecond=0.05
     FireInterval=0.15
     FlashEmitterClass=class'DH_Guns.DH_Flak38MuzzleFlash'
-    ProjectileClass=class'DH_Guns.DH_Flak38CannonShellMixed'
+    ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     AltFireProjectileClass=none
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=40
     InitialTertiaryAmmo=40
-    PrimaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellMixed'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
-    bLimitYaw=true // when on trailer, the wheels block much traverse
-    YawStartConstraint=-3500.0
-    YawEndConstraint=5000.0
-    MaxPositiveYaw=4200
-    MaxNegativeYaw=-2650
-    SightBone="arm"
+    BeginningIdleAnim="optic_idle_in"
+    TankShootClosedAnim="shoot_optic"
+    ShootIntermediateAnim="shoot_opensight"
+    TankShootOpenAnim="shoot_lookover"
+    GunnerAttachmentBone="Turret" // this gunner doesn't move (i.e. animation pose), so we don't need a dedicated attachment bone
+    SightBone="Sight_arm"
+    TraverseWheelBone="Traverse_wheel"
+    ElevationWheelBone="Elevation_wheel"
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
     CollisionStaticMesh=none

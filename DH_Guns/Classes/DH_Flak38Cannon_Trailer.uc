@@ -3,11 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak38Cannon_Static extends DH_Flak38Cannon;
+class DH_Flak38Cannon_Trailer extends DH_Flak38Cannon;
 
 defaultproperties
 {
-    bLimitYaw=false
-    YawStartConstraint=0
-    YawEndConstraint=65535
+    bLimitYaw=true // when on trailer, the wheels don't allow much traverse
+    YawStartConstraint=-3500.0
+    YawEndConstraint=5000.0
+    MaxPositiveYaw=4200
+    MaxNegativeYaw=-2650
 }

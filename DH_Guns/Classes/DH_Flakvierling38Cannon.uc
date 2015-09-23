@@ -283,10 +283,10 @@ defaultproperties
     BarrelBones(1)="G2" // top left
     BarrelBones(2)="g3" // bottom right
     BarrelBones(3)="g4" // bottom left
-    FireAnimations(0)="shoot_open"        // on sights, 1st gun pair
-    FireAnimations(1)="Shoot_open2"       // on sights, 2nd gun pair
-    FireAnimations(2)="shoot_unbuttoned"  // raised head, 1st gun pair
-    FireAnimations(3)="shoot_unbuttoned2" // raised head, 2nd gun pair
+    FireAnimations(0)="shoot_loweredA"  // on sights, 1st gun pair
+    FireAnimations(1)="shoot_loweredB"  // on sights, 2nd gun pair
+    FireAnimations(2)="shoot_lookoverA" // raised head, 1st gun pair
+    FireAnimations(3)="shoot_lookoverB" // raised head, 2nd gun pair
     SightBone="Object002"
     TraverseWheelBone="pitch_w" // these are the wrong way round in the model - "pitch_w" is actually the traversing wheel & "yaw_w" is the elevating wheel
     ElevationWheelBone="yaw_w"

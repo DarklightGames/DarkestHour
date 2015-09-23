@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak38CannonPawn_Camo extends DH_Flak38CannonPawn;
+class DH_Flak38Factory_Snow extends DH_Flak38Factory;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_Flak38Cannon_Camo'
+    VehicleClass=class'DH_Guns.DH_Flak38Gun_Snow'
+    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun_snow'
 }

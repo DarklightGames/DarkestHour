@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak38Cannon_Static_Camo extends DH_Flak38Cannon_Static;
+class DH_Flak38Factory_Trailer extends DH_Flak38Factory;
 
 defaultproperties
 {
-    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun_camo'
+    VehicleClass=class'DH_Guns.DH_Flak38Gun_Trailer'
+    Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_trailer'
+    Skins(1)=texture'DH_Artillery_tex.Flak38.Flak38_trailer'
 }
