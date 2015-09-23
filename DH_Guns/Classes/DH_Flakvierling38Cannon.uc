@@ -3,28 +3,25 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flakvierling38Cannon extends DH_Sdkfz2341Cannon;
+class DH_Flakvierling38Cannon extends DH_Flak38Cannon;
+
+// Model TODO: Correct swapped over naming of elevation & traverse wheel bones ('pitch_w' to 'Traverse_wheel' & 'yaw_w' to 'Elevation_wheel')
+//             Correct rotation of traverse wheel bone so it can be yawed (then remove UpdateSightAndWheelRotation() override)
+//             Rename Object002 to 'Sights'
+//             Add Piotr's half poly turret mesh & new skin
+//             Add shoot anims for optic position (& add to FireAnimations array, to give 6 firing anims)
 
 var     name        BarrelBones[4];       // bone names for each
 var     byte        BarrelBoneIndex;      // bone index for each gun starting with the top 2
 var     name        FireAnimations[4];    // alternating shoot anims for both 'open' & 'closed' positions, i.e. on the sights or with gunner's head raised
 var     bool        bSecondGunPairFiring; // false = fire top right & bottom left guns, true = fire top left & bottom right guns
 var     Emitter     FlashEmitters[4];     // we will have a separate flash emitter for each barrel
-var     name        SightBone;
-var     name        TraverseWheelBone;
-var     name        ElevationWheelBone;
 
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
-}
-
-// Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
-simulated function PostBeginPlay()
-{
-    super(DHVehicleCannon).PostBeginPlay();
 }
 
 // Modified to remove handling of mixed mag (instead is handled in SpawnProjectile() as that now fires two projectiles), to toggle bSecondGunPairFiring & to remove AltFire
@@ -113,21 +110,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
         if (P != none)
         {
-            if (bInheritVelocity)
-            {
-                P.Velocity = Instigator.Velocity;
-            }
-
             FlashMuzzleFlash(bAltFire);
-
-            if (bAmbientFireSound)
-            {
-                AmbientSound = FireSoundClass;
-            }
-            else
-            {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-            }
+            PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
         }
     }
 
@@ -146,7 +130,7 @@ simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLoca
     }
 
     BarrelBoneCoords = GetBoneCoords(BarrelBones[Index]);
-    CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
+    CurrentFireOffset = WeaponFireOffset * vect(1.0, 0.0, 0.0);
 
     BarrelRotation = rotator(vector(CurrentAim) >> Rotation);
     BarrelLocation = BarrelBoneCoords.Origin + (CurrentFireOffset >> BarrelRotation);
@@ -256,25 +240,19 @@ simulated function InitEffects()
     }
 }
 
-// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
+// Modified as flakvierling's traverse wheel bone is inconsistently rotated, so we need to match its roll (instead of yaw) to the gun's yaw
 simulated function UpdateSightAndWheelRotation()
 {
     local rotator SightRotation, ElevationWheelRotation, TraverseWheelRotation;
 
     SightRotation.Pitch = -CurrentAim.Pitch;
-    SetBoneRotation(SightBone, SightRotation, 1);
+    SetBoneRotation(SightBone, SightRotation);
 
     ElevationWheelRotation.Pitch = -CurrentAim.Pitch * 32;
-    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
+    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation);
 
     TraverseWheelRotation.Roll = -CurrentAim.Yaw * 32;
-    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
-}
-
-// Added the following functions from DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DHVehicleCannon:
-simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
-{
-   return true;
+    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation);
 }
 
 defaultproperties
@@ -290,25 +268,8 @@ defaultproperties
     SightBone="Object002"
     TraverseWheelBone="pitch_w" // these are the wrong way round in the model - "pitch_w" is actually the traversing wheel & "yaw_w" is the elevating wheel
     ElevationWheelBone="yaw_w"
-    NumMags=12
-    NumSecMags=4
-    NumTertMags=4
-    AddedPitch=50
     WeaponFireOffset=64.0
-    RotationsPerSecond=0.05
-    FireInterval=0.15
-    FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
-    ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'
-    AltFireProjectileClass=none
-    CustomPitchUpLimit=15474
-    CustomPitchDownLimit=64990
-    InitialPrimaryAmmo=40
-    InitialSecondaryAmmo=40
-    InitialTertiaryAmmo=40
-    PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'
-    SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
-    TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
+    GunnerAttachmentBone="com_attachment"
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
-    CollisionStaticMesh=none
 }
