@@ -1724,8 +1724,8 @@ state RoundInPlay
 
         ResetMortarTargets();
 
-        GRI.DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
-        GRI.DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+        GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
+        GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
 
         TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] = 0;
         TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
@@ -2143,15 +2143,15 @@ function ReduceReinforcements(int Team, int Amount)
     switch (Team)
     {
         case ALLIES_TEAM_INDEX:
-            GRI.DHSpawnCount[Team] = Max(0, LevelInfo.Allies.SpawnLimit - SpawnCount[Team]);
+            GRI.SpawnsRemaining[Team] = Max(0, LevelInfo.Allies.SpawnLimit - SpawnCount[Team]);
             break;
         case AXIS_TEAM_INDEX:
-            GRI.DHSpawnCount[Team] = Max(0, LevelInfo.Axis.SpawnLimit - SpawnCount[Team]);
+            GRI.SpawnsRemaining[Team] = Max(0, LevelInfo.Axis.SpawnLimit - SpawnCount[Team]);
             break;
     }
 
     // Check for zero reinforcements
-    if (GRI.DHSpawnCount[Team] == 0)
+    if (GRI.SpawnsRemaining[Team] == 0)
     {
         if (bTeamOutOfReinforcements[Team] == 0)
         {
@@ -2238,7 +2238,7 @@ function HandleReinforcements(Controller C)
     {
         ReduceReinforcements(ALLIES_TEAM_INDEX, 1);
 
-        ReinforcementPercent = float(GRI.DHSpawnCount[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
+        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
 
         while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                 ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
@@ -2252,7 +2252,7 @@ function HandleReinforcements(Controller C)
     {
         ReduceReinforcements(AXIS_TEAM_INDEX, 1);
 
-        ReinforcementPercent = float(GRI.DHSpawnCount[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
+        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
 
         while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                 ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])

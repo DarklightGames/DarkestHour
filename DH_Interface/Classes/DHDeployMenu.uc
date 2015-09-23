@@ -274,7 +274,7 @@ function UpdateRoundStatus()
             i_Reinforcements.ImageColor = default.WhiteColor;
         }
 
-        l_Reinforcements.Caption = string(GRI.DHSpawnCount[CurrentTeam]);
+        l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
 
         if (!GRI.bMatchHasBegun)
         {

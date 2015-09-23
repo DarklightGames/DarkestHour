@@ -3809,7 +3809,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
         else if (DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            if (DHGRI.DHSpawnCount[PRI.Team.TeamIndex] > 0)
+            if (DHGRI.SpawnsRemaining[PRI.Team.TeamIndex] > 0)
             {
                 Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
 
