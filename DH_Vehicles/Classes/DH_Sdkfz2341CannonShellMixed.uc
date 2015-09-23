@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2341CannonShellMixed extends DH_Sdkfz2341CannonShell;
+class DH_Sdkfz2341CannonShellMixed extends DH_Sdkfz2341CannonShell
+    abstract;
 
 // This is only a dummy class and this projectile should never be spawned, so just in case we'll destroy & log
 simulated function PreBeginPlay()
