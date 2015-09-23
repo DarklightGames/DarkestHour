@@ -54,7 +54,7 @@ var float MortarTargetDistanceThreshold;
 var MortarTarget        AlliedMortarTargets[MORTAR_TARGETS_MAX];
 var MortarTarget        GermanMortarTargets[MORTAR_TARGETS_MAX];
 
-var int                 DHSpawnCount[2];
+var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
 
 // Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
@@ -92,7 +92,7 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bLogWeaponAttachment, // TEMP DEBUG
-        DHSpawnCount,
+        SpawnsRemaining,
         DHAxisRoles,
         DHAlliesRoles,
         DHAlliesRoleCount,
