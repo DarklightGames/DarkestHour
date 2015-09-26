@@ -240,6 +240,7 @@ function Timer()
 
             OnTeamChanged(Team);
 
+            // Colin: Automatically select the player's spawn point.
             p_Map.SelectSpawnPoint(PC.SpawnPointIndex, PC.SpawnVehicleIndex);
         }
     }
@@ -258,8 +259,6 @@ function Timer()
 function UpdateRoundStatus()
 {
     local int RoundTime;
-
-    //TODO: update team numbers on tabs
 
     if (GRI != none)
     {
