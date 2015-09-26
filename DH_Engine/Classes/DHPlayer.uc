@@ -2858,6 +2858,7 @@ defaultproperties
     PawnClass=class'DH_Engine.DHPawn'
     SpawnPointIndex=255
     VehiclePoolIndex=255
+    SpawnVehicleIndex=255
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
