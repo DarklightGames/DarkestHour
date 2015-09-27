@@ -2502,6 +2502,12 @@ function HandleFFViolation(PlayerController Offender)
         return;
     }
 
+    // Stop if the controller is pending deletion
+    if (Offender.bDeleteMe || Offender.bPendingDelete || Offender.bPendingDestroy)
+    {
+        return;
+    }
+
     OffenderID = Offender.GetPlayerIDHash();
 
     BroadcastLocalizedMessage(GameMessageClass, 14, Offender.PlayerReplicationInfo);
@@ -2516,9 +2522,7 @@ function HandleFFViolation(PlayerController Offender)
             {
                 bFoundID = true;
                 AccessControl.BanPlayer(Offender, true); //Session kick
-                Offender.PlayerReplicationInfo.FFKills = 0.0; // Reset FFKills or else this can get called multiple times for large TKs
-
-                return; // need to stop here because the player has been session kicked
+                return;
             }
         }
 
@@ -2545,10 +2549,6 @@ function HandleFFViolation(PlayerController Offender)
     if (!bSuccess)
     {
         Log("Unable to remove" @ Offender.GetHumanReadableName() @ "from the server.");
-    }
-    else
-    {
-        Offender.PlayerReplicationInfo.FFKills = 0.0; // Reset FFKills or else this can get called multiple times for large TKs
     }
 }
 
