@@ -190,7 +190,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         }
         else
         {
-            VoteCount =  1;
+            VoteCount = 1;
             TextMessage = lmsgMapVotedFor;
         }
     }

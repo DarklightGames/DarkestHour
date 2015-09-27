@@ -123,7 +123,7 @@ simulated function PostBeginPlay()
     {
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
         OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(CannonScopeOverlay.USize) / 2.0;
-        OverlayCenterTexSize =  Float(CannonScopeOverlay.USize) * OverlayCenterScale;
+        OverlayCenterTexSize = Float(CannonScopeOverlay.USize) * OverlayCenterScale;
     }
 }
 

@@ -180,7 +180,7 @@ state SpeechMenuVisible
        local int i;
 
        DHGRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
-       DHPRI =  DHPlayerReplicationInfo(ViewportOwner.Actor.PlayerReplicationInfo);
+       DHPRI = DHPlayerReplicationInfo(ViewportOwner.Actor.PlayerReplicationInfo);
        SMArraySize = 0;
        PreviousStateName = ROSMS_Commanders;
 
@@ -227,7 +227,7 @@ state SpeechMenuVisible
        local int i;
 
        DHGRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
-       DHPRI =  DHPlayerReplicationInfo(ViewportOwner.Actor.PlayerReplicationInfo);
+       DHPRI = DHPlayerReplicationInfo(ViewportOwner.Actor.PlayerReplicationInfo);
        SMArraySize = 0;
        PreviousStateName = ROSMS_Commanders;
 

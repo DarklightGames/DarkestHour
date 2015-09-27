@@ -1715,7 +1715,7 @@ function HitThis(ROArtilleryTrigger RAT)
     {
         ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self); // strike confirmed
 
-        if (PawnTeam ==  0)
+        if (PawnTeam == 0)
         {
             RAT.PlaySound(RAT.GermanConfirmSound, SLOT_None, 3.0, false, 100, 1.0, true);
         }
@@ -1740,7 +1740,7 @@ function HitThis(ROArtilleryTrigger RAT)
     }
     else
     {
-        if (PawnTeam ==  0)
+        if (PawnTeam == 0)
         {
             RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100, 1.0, true);
         }

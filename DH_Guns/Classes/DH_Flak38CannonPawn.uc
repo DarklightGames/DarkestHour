@@ -112,7 +112,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         if ((Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && bOnGunsight)
         {
             CameraRotation = rotator(vector(CameraRotation) >> Gun.Rotation);
-            CameraRotation.Roll =  VehicleBase.Rotation.Roll;
+            CameraRotation.Roll = VehicleBase.Rotation.Roll;
         }
         else
         {

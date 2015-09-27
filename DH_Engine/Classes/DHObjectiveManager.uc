@@ -20,7 +20,7 @@ function ObjectiveStateChanged()
     local DarkestHourGame DHGame;
     local bool bReadyToModify;
 
-    DHGame =  DarkestHourGame(Level.Game);
+    DHGame = DarkestHourGame(Level.Game);
 
     for (i = 0; i < ObjectiveManagers.Length; i++)
     {

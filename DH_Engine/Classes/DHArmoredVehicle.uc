@@ -464,7 +464,7 @@ simulated function Tick(float DeltaTime)
         // Update tread & interior rumble sounds dependent on speed
         if (MySpeed > 0.1)
         {
-            MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
+            MotionSoundTemp = MySpeed / MaxPitchSpeed * 255.0;
             MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
         }
         else
@@ -2009,7 +2009,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
     // Figure out which side we hit
     LocDir = vector(Rotation);
     LocDir.Z = 0.0;
-    HitDir =  HitLocation - Location;
+    HitDir = HitLocation - Location;
     HitDir.Z = 0.0;
     HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
     GetAxes(Rotation, X, Y, Z);
@@ -2772,7 +2772,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 // New, better method - straightforward height in units (difference in Z axis, having factored in hull's rotation)
                 bUsingTreadHitMaxHeight = true;
-                HitDir =  HitLocation - Location;
+                HitDir = HitLocation - Location;
                 HitHeight = (HitDir << Rotation).Z;
 
                 if (HitHeight <= TreadHitMaxHeight)
@@ -2783,7 +2783,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             else
             {
                 // Old, flawed method - height expressed as an angle in radians
-                HitDir =  HitLocation - Location;
+                HitDir = HitLocation - Location;
                 GetAxes(Rotation, X, Y, Z);
                 InAngle = Acos(Normal(HitDir) dot Normal(Z));
 

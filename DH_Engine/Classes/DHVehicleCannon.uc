@@ -1189,7 +1189,7 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
     // Figure out which side we hit
     LocDir = vector(Rotation);
     LocDir.Z = 0.0;
-    HitDir =  HitLocation - Location;
+    HitDir = HitLocation - Location;
     HitDir.Z = 0.0;
     HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
     GetAxes(Rotation, X, Y, Z);

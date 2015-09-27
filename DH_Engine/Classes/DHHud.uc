@@ -540,7 +540,7 @@ simulated function DrawHudPassC(Canvas C)
     {
         if (Vehicle(PawnOwner) != none)
         {
-            if (Level.TimeSeconds - PawnOwner.LastResupplyTime <=  1.5)
+            if (Level.TimeSeconds - PawnOwner.LastResupplyTime <= 1.5)
             {
                 DrawSpriteWidget(C, ResupplyZoneResupplyingVehicleIcon);
             }
@@ -551,7 +551,7 @@ simulated function DrawHudPassC(Canvas C)
         }
         else
         {
-            if (Level.TimeSeconds - PawnOwner.LastResupplyTime <=  1.5)
+            if (Level.TimeSeconds - PawnOwner.LastResupplyTime <= 1.5)
             {
                 DrawSpriteWidget(C, ResupplyZoneResupplyingPlayerIcon);
             }
@@ -1858,7 +1858,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
 
     // Calculate level map constants
     Temp = DHGRI.SouthWestBounds - DHGRI.NorthEastBounds;
-    MapCenter =  Temp / 2.0  + DHGRI.NorthEastBounds;
+    MapCenter = Temp / 2.0  + DHGRI.NorthEastBounds;
     MyMapScale = Abs(Temp.X);
 
     if (MyMapScale ~= 0.0)

@@ -66,7 +66,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             break;
 
         case ch_MotionBlur:
-            bMotionBlur =  bool(PC.ConsoleCommand("get ROEngine.ROPlayer bUseBlurEffect"));
+            bMotionBlur = bool(PC.ConsoleCommand("get ROEngine.ROPlayer bUseBlurEffect"));
             bMotionBlurD = bMotionBlur;
             ch_MotionBlur.SetComponentValue(bMotionBlur,true);
             break;

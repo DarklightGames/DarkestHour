@@ -47,7 +47,7 @@ simulated function PostBeginPlay()
     {
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
         OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(TexturedScopeTexture.USize) / 2.0;
-        OverlayCenterTexSize =  float(TexturedScopeTexture.USize) * OverlayCenterScale;
+        OverlayCenterTexSize = float(TexturedScopeTexture.USize) * OverlayCenterScale;
     }
 }
 
