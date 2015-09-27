@@ -221,7 +221,7 @@ defaultproperties
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
     bPlayerFOVZooms=true
-    PlayerFOVZoom=10
+    PlayerFOVZoom=12.0
     IronSightDisplayFOV=70.0
     DisplayFOV=70.0
     ZoomInTime=0.4
