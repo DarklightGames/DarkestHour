@@ -52,10 +52,10 @@ defaultproperties
     AltFireProjectileClass=none
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
-    InitialPrimaryAmmo=40
-    InitialSecondaryAmmo=40
-    InitialTertiaryAmmo=40
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=20
+    InitialTertiaryAmmo=20
     SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
     BeginningIdleAnim="optic_idle_in"

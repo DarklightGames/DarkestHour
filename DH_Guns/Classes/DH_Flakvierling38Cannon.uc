@@ -257,6 +257,9 @@ simulated function UpdateSightAndWheelRotation()
 
 defaultproperties
 {
+    InitialPrimaryAmmo=40 // actually represents 80 round (4 magazines of 20 rounds each), but every time we fire we use 2 rounds (so think of it as 40 double shots)
+    InitialSecondaryAmmo=40
+    InitialTertiaryAmmo=40
     BarrelBones(0)="g1" // top right barrel
     BarrelBones(1)="G2" // top left
     BarrelBones(2)="g3" // bottom right
