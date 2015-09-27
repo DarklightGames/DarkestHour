@@ -47,7 +47,6 @@ defaultproperties
     WeaponFireOffset=15.0
     RotationsPerSecond=0.05
     FireInterval=0.15
-    FlashEmitterClass=class'DH_Guns.DH_Flak38MuzzleFlash'
     AltFireProjectileClass=none
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
