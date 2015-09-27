@@ -1624,9 +1624,6 @@ state RoundInPlay
         GRI = DHGameReplicationInfo(GameReplicationInfo);
         GRI.RoundStartTime = RoundStartTime;
 
-        SpawnCount[AXIS_TEAM_INDEX] = 0;
-        SpawnCount[ALLIES_TEAM_INDEX] = 0;
-
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
 
@@ -1656,19 +1653,6 @@ state RoundInPlay
             GRI.AlliedHelpRequests[i].requestType = 255;
             GRI.AxisHelpRequests[i].OfficerPRI = none;
             GRI.AxisHelpRequests[i].requestType = 255;
-        }
-
-        // Just in case the limit is set to a ridiculously low value, handle it right
-        if (!SpawnLimitReached(AXIS_TEAM_INDEX))
-        {
-            GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 1;
-            GRI.SpawnCount[AXIS_TEAM_INDEX] = 100;
-        }
-
-        if (!SpawnLimitReached(ALLIES_TEAM_INDEX))
-        {
-            GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 1;
-            GRI.SpawnCount[ALLIES_TEAM_INDEX] = 100;
         }
 
         // Reset all controllers
@@ -2015,7 +1999,7 @@ state RoundInPlay
 
             if (TeamAttritionCounter[i] >= 1.0)
             {
-                ReduceReinforcements(i, TeamAttritionCounter[i]);
+                ModifyReinforcements(i, -TeamAttritionCounter[i]);
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
             }
         }
@@ -2124,7 +2108,7 @@ state RoundOver
     }
 }
 
-function ReduceReinforcements(int Team, int Amount)
+function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcements)
 {
     local DHGameReplicationInfo GRI;
     local bool                  bIsDefendingTeam;
@@ -2136,18 +2120,14 @@ function ReduceReinforcements(int Team, int Amount)
         return;
     }
 
-    // Count up the spawns
-    SpawnCount[Team] += Amount;
-
     // Update GRI with the new value
-    switch (Team)
+    if (!bSetReinforcements)
     {
-        case ALLIES_TEAM_INDEX:
-            GRI.SpawnsRemaining[Team] = Max(0, LevelInfo.Allies.SpawnLimit - SpawnCount[Team]);
-            break;
-        case AXIS_TEAM_INDEX:
-            GRI.SpawnsRemaining[Team] = Max(0, LevelInfo.Axis.SpawnLimit - SpawnCount[Team]);
-            break;
+        GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] += Amount);
+    }
+    else
+    {
+        GRI.SpawnsRemaining[Team] = Max(0, Amount);
     }
 
     // Check for zero reinforcements
@@ -2236,7 +2216,7 @@ function HandleReinforcements(Controller C)
     //TODO: look into improving or rewriting this, as this is garbage looking
     if (PC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
     {
-        ReduceReinforcements(ALLIES_TEAM_INDEX, 1);
+        ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
         ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
 
@@ -2250,7 +2230,7 @@ function HandleReinforcements(Controller C)
     }
     else if (PC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
     {
-        ReduceReinforcements(AXIS_TEAM_INDEX, 1);
+        ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
         ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
 
@@ -2614,9 +2594,18 @@ function ChooseWinner()
     local Controller C;
     local int i, Num[2], NumReq[2], AxisScore, AlliedScore;
     local float AxisReinforcementsPercent, AlliedReinforcementsPercent;
+    local DHGameReplicationInfo DHGRI;
 
-    AxisReinforcementsPercent = (1 - (float(SpawnCount[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit)) * 100;
-    AlliedReinforcementsPercent = (1 - (float(SpawnCount[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit)) * 100;
+    // Setup some GRI stuff
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (DHGRI == none)
+    {
+        return;
+    }
+
+    AxisReinforcementsPercent = (float(DHGRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit) * 100;
+    AlliedReinforcementsPercent = (float(DHGRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
 
     // Attrition check
     // Check to see who has more reinforcements
@@ -3118,6 +3107,19 @@ function SendReinforcementMessage(int Team, int Num)
     }
 }
 
+// Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
+function bool SpawnLimitReached(int Team)
+{
+    if (DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] <= 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 function int GetRoundTime()
 {
     return Max(0, (RoundStartTime + RoundDuration) - ElapsedTime);
@@ -3186,7 +3188,7 @@ function SetRoundTime(int RoundTime, optional bool bNotifyPlayers)
     }
 }
 
-// THeel DEBUG: Temporary override to allow more than 32 bots
+// Override to allow more than 32 bots
 exec function AddBots(int num)
 {
     while (--num >= 0)

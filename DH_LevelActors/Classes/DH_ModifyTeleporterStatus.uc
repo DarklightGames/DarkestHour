@@ -49,7 +49,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     // RandomPercentToFail was not higher than randomnum
     switch (HowToModify)
     {
-        case HTM_Activate: //Because SpawnCount goes up, to add reinforcements you must subtract from SpawnCount
+        case HTM_Activate:
             for (i = 0; i < TeleReferences.Length; ++i){
                 TeleReferences[i].bEnabled = true;
             }
