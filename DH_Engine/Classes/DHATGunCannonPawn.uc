@@ -30,11 +30,6 @@ simulated function SetManualTurret(bool bManual)
 {
 }
 
-// Emptied out as AT gun has no alt fire mode, so just ensures nothing happens
-function AltFire(optional float F)
-{
-}
-
 // Emptied out as can't switch positions in an AT gun
 simulated function SwitchWeapon(byte F)
 {
