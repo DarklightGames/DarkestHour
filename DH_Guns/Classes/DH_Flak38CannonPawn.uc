@@ -47,6 +47,26 @@ function Fire(optional float F)
     }
 }
 
+// From Sd.Kfz.234/1 cannon pawn
+function float GetAmmoReloadState()
+{
+    if (ROTankCannon(Gun) != none)
+    {
+        switch (ROTankCannon(Gun).CannonReloadState)
+        {
+            case CR_ReadyToFire:    return 0.0;
+            case CR_Waiting:
+            case CR_Empty:
+            case CR_ReloadedPart1:  return 1.0;
+            case CR_ReloadedPart2:  return 0.6;
+            case CR_ReloadedPart3:  return 0.5;
+            case CR_ReloadedPart4:  return 0.4;
+        }
+    }
+
+    return 0.0;
+}
+
 // Matt: hack solution to workaround maddening problem in single player or on listen server, where view yaw on gunsight is wrong & high pitch even starts to turn the gun !
 // Problem is in calculation of CameraRotation when on gunsights, so this hack reverts back to an old, inferior calculation to apply vehicle's rotation, without using quats
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
