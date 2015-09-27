@@ -48,11 +48,9 @@ defaultproperties
     RotationsPerSecond=0.05
     FireInterval=0.15
     FlashEmitterClass=class'DH_Guns.DH_Flak38MuzzleFlash'
-    ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     AltFireProjectileClass=none
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=20
