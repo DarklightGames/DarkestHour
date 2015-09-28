@@ -1007,7 +1007,7 @@ simulated state ViewTransition
         if (Driver != none)
         {
             // If moving to an exposed position, enable the player's hit detection
-            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && ROPawn(Driver) != none)
             {
                 ROPawn(Driver).ToggleAuxCollision(true);
             }
@@ -1093,7 +1093,7 @@ simulated state ViewTransition
         }
 
         // If moving to an unexposed position, disable the player's hit detection
-        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
+        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && ROPawn(Driver) != none)
         {
             ROPawn(Driver).ToggleAuxCollision(false);
         }
@@ -1112,7 +1112,7 @@ simulated function AnimateTransition()
     if (Driver != none)
     {
         // Enable/disable the player's hit detection if he is moving to an exposed/unexposed position
-        if (bKeepDriverAuxCollision && ROPawn(Driver) != none)
+        if (ROPawn(Driver) != none)
         {
             if (DriverPositions[DriverPositionIndex].bExposed)
             {
@@ -2030,7 +2030,6 @@ exec function CannonFireBug() // TEMP DEBUG
 
 defaultproperties
 {
-    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     UnbuttonedPositionIndex=2
     PeriscopePositionIndex=-1    // -1 signifies no periscope by default
     GunsightPositions=1
@@ -2056,4 +2055,5 @@ defaultproperties
     bFPNoZFromCameraPitch=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
+    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 }

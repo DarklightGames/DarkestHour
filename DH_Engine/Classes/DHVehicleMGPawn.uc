@@ -778,7 +778,7 @@ simulated state ViewTransition
         if (Driver != none)
         {
             // If moving to an exposed position, enable the player's hit detection
-            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[LastPositionIndex].bExposed && ROPawn(Driver) != none)
             {
                 ROPawn(Driver).ToggleAuxCollision(true);
             }
@@ -853,7 +853,7 @@ simulated state ViewTransition
         }
 
         // If moving to an unexposed position, disable the player's hit detection
-        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && bKeepDriverAuxCollision && ROPawn(Driver) != none)
+        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[LastPositionIndex].bExposed && ROPawn(Driver) != none)
         {
             ROPawn(Driver).ToggleAuxCollision(false);
         }
@@ -878,7 +878,7 @@ simulated function AnimateTransition()
     if (Driver != none)
     {
         // Enable/disable the player's hit detection if he is moving to an exposed/unexposed position
-        if (bKeepDriverAuxCollision && ROPawn(Driver) != none)
+        if (ROPawn(Driver) != none)
         {
             if (DriverPositions[DriverPositionIndex].bExposed)
             {
