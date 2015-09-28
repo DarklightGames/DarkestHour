@@ -2305,10 +2305,10 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
+    SetCharacter(C);
+
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
-        SetCharacter(C);
-
         super(TeamGame).RestartPlayer(C);
 
         if (bHandleReinforcements)
