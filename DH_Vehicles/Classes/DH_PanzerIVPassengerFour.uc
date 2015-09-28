@@ -8,7 +8,7 @@ class DH_PanzerIVPassengerFour extends DHPassengerPawn;
 defaultproperties
 {
     PositionInArray=5
-    DrivePos=(X=-115.0,Y=70.0,Z=0.0)
+    DrivePos=(X=-115.0,Y=70.0,Z=55.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_Rider6_idle"
 }
