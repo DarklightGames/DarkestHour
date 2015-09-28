@@ -11,9 +11,11 @@ defaultproperties
 {
     VehicleClass=class'DH_Mortars.DH_M2MortarVehicle'
     AttachmentClass=class'DH_Mortars.DH_M2MortarAttachment'
-    HighExplosiveMaximum=20
-    SmokeMaximum=4
     PlayerViewOffset=(Z=-2.0)
     ItemName="60mm Mortar M2"
     Mesh=SkeletalMesh'DH_Mortars_1st.M2_Mortar1st'
+    HighExplosiveMaximum=24
+    HighExplosiveResupplyCount=6
+    SmokeMaximum=4
+    SmokeResupplyCount=1
 }

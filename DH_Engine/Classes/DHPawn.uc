@@ -4113,7 +4113,9 @@ function DropWeaponInventory(vector TossVel)
 
 function bool ResupplyMortarAmmunition()
 {
+    local int i;
     local DHRoleInfo RI;
+    local class<DHMortarWeapon> W;
 
     RI = GetRoleInfo();
 
@@ -4122,63 +4124,51 @@ function bool ResupplyMortarAmmunition()
         return false;
     }
 
-    if (GetTeamNum() == 0) // axis
+    for (i = 0; i < RI.GivenItems.Length; ++i)
     {
-        MortarHEAmmo = Clamp(MortarHEAmmo + 4, 0, 16);
-        MortarSmokeAmmo = Clamp(MortarSmokeAmmo + 1, 0, 4);
+        W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
 
-        if (MortarHEAmmo == 16 && MortarSmokeAmmo == 4)
+        if (W == none)
         {
-            bMortarCanBeResupplied = false;
+            continue;
         }
+
+        MortarHEAmmo = Clamp(MortarHEAmmo + W.default.HighExplosiveResupplyCount, 0, W.default.HighExplosiveMaximum);
+        MortarSmokeAmmo = Clamp(MortarSmokeAmmo + W.default.SmokeResupplyCount, 0, W.default.SmokeMaximum);
+
+        CheckIfMortarCanBeResupplied();
 
         return true;
     }
-    else if (GetTeamNum() == 1) // allies
-    {
-        MortarHEAmmo = Clamp(MortarHEAmmo + 6, 0, 24);
-        MortarSmokeAmmo = Clamp(MortarSmokeAmmo + 1, 0, 4);
 
-        if (MortarHEAmmo == 24 && MortarSmokeAmmo == 4)
-        {
-            bMortarCanBeResupplied = false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-function FillMortarAmmunition()
-{
-    if (GetTeamNum() == 0) // axis
-    {
-        MortarHEAmmo = 16;
-        MortarSmokeAmmo = 4;
-    }
-    else // allies
-    {
-        MortarHEAmmo = 24;
-        MortarSmokeAmmo = 4;
-    }
-
-    bMortarCanBeResupplied = false;
+    return false;
 }
 
 function CheckIfMortarCanBeResupplied()
 {
+    local int i;
+    local DHRoleInfo RI;
+    local class<DHMortarWeapon> W;
+
+    RI = GetRoleInfo();
+
     bMortarCanBeResupplied = false;
 
-    if (GetTeamNum() == 0 && MortarHEAmmo < 16 || MortarSmokeAmmo < 4) // axis
+    if (RI == none || !RI.bCanUseMortars)
     {
-        bMortarCanBeResupplied = true;
+        return;
     }
-    else if (GetTeamNum() == 1 && MortarHEAmmo < 24 || MortarSmokeAmmo < 4) // allies
+
+    for (i = 0; i < RI.GivenItems.Length; ++i)
     {
-        bMortarCanBeResupplied = true;
+        W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+
+        if (W == none)
+        {
+            continue;
+        }
+
+        bMortarCanBeResupplied = MortarHEAmmo < W.default.HighExplosiveMaximum || MortarSmokeAmmo < W.default.SmokeMaximum;
     }
 }
 

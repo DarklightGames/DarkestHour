@@ -14,4 +14,8 @@ defaultproperties
     Description="Kurz 8cm Granatwerfer 42"
     ItemName="Kurz 8cm Granatwerfer 42"
     Mesh=SkeletalMesh'DH_Mortars_1st.Kz8cmGrW42'
+    HighExplosiveMaximum=16
+    HighExplosiveResupplyCount=4
+    SmokeMaximum=4
+    SmokeResupplyCount=1
 }

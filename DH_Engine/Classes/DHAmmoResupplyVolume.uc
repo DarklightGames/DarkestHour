@@ -125,9 +125,10 @@ function Timer()
         {
             if (RI.bCanUseMortars)
             {
-                DHP.FillMortarAmmunition();
-
-                bResupplied = true;
+                if (DHP.ResupplyMortarAmmunition())
+                {
+                    bResupplied = true;
+                }
             }
 
             if (!DHP.bHasMortarAmmo && RI.bCarriesMortarAmmo)

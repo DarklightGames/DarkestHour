@@ -316,12 +316,29 @@ function bool ResupplyAmmo()
 
 function bool FillAmmo()
 {
-    //------------------------------------------------
-    //Give the ammunition to the pawn, not the weapon.
-    DHPawn(Instigator).MortarHEAmmo = HighExplosiveMaximum;
-    DHPawn(Instigator).MortarSmokeAmmo = SmokeMaximum;
+    local DHPawn P;
+    local bool bReturn;
 
-    return true;
+    P = DHPawn(Instigator);
+
+    if (P != none)
+    {
+
+
+        if (P.MortarHEAmmo < HighExplosiveMaximum)
+        {
+            P.MortarHEAmmo = HighExplosiveMaximum;
+            bReturn = true;
+        }
+
+        if (P.MortarSmokeAmmo < SmokeMaximum)
+        {
+            P.MortarSmokeAmmo = SmokeMaximum;
+            bReturn = true;
+        }
+    }
+
+    return bReturn;
 }
 
 defaultproperties
