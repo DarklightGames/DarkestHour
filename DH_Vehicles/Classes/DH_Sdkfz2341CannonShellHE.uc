@@ -37,11 +37,11 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
     ImpactDamage=125
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+    ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosionSnow'
+    ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
+    ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
     AmbientVolumeScale=2.0
     BallisticCoefficient=0.77
     SpeedFudgeScale=0.75
