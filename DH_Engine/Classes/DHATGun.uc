@@ -82,7 +82,7 @@ function bool TryToDrive(Pawn P)
         // Deny entry to TeamLocked enemy gun or non-TeamLocked gun that already has an enemy occupant
         if (bTeamLocked || (Driver != none && P.GetTeamNum() != Driver.GetTeamNum()) || (WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum()))
         {
-            DenyEntry(P, 1); // can't use enemy gun
+            DisplayVehicleMessage(1, P); // can't use enemy gun
 
             return false;
         }
@@ -94,7 +94,7 @@ function bool TryToDrive(Pawn P)
         // Deny entry if gun is already manned by a human, or a bot is trying to man a gun already occupied by another bot
         if (WeaponPawns[0].IsHumanControlled() || !P.IsHumanControlled())
         {
-            DenyEntry(P, 3); // gun is crewed
+            DisplayVehicleMessage(3, P); // gun is crewed
 
             return false;
         }
@@ -133,11 +133,20 @@ simulated function ClientKDriverEnter(PlayerController PC)
 }
 
 // Modified to use a different AT cannon message class
-function DenyEntry(Pawn P, int MessageNum)
+function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
 {
-    if (P != none)
+    if (P == none)
     {
-        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNum);
+        P = self;
+    }
+
+    if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
+    {
+        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNumber,,, Controller);
+    }
+    else
+    {
+        P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNumber);
     }
 }
 

@@ -211,7 +211,7 @@ function bool TryToDrive(Pawn P)
                 return VehicleBase.TryToDrive(P);
             }
 
-            DenyEntry(P, 1); // can't use enemy vehicle
+            P.ReceiveLocalizedMessage(class'DHVehicleMessage', 1); // can't use enemy vehicle
 
             return false;
         }

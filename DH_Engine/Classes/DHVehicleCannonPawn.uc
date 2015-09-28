@@ -775,7 +775,7 @@ function bool TryToDrive(Pawn P)
                 return VehicleBase.TryToDrive(P);
             }
 
-            DenyEntry(P, 1); // can't use enemy vehicle
+            DisplayVehicleMessage(1, P); // can't use enemy vehicle
 
             return false;
         }
@@ -787,11 +787,11 @@ function bool TryToDrive(Pawn P)
         }
     }
 
-    // Vehicle can only be used by tank crew & player is not a tanker role, so next check if there are any available rider positions before denying entry
+    // Deny entry if player is not a tanker role & weapon can only be used by tank crew
     if (bMustBeTankCrew && !(ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none
         && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew) && P.IsHumanControlled())
     {
-        DenyEntry(P, 0); // not qualified to operate vehicle
+        DisplayVehicleMessage(0, P); // not qualified to operate vehicle
 
         return false;
     }
@@ -1249,7 +1249,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
         && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        DenyEntry(self, 0); // not qualified to operate vehicle
+        DisplayVehicleMessage(0); // not qualified to operate vehicle
 
         return;
     }
@@ -1368,7 +1368,7 @@ simulated function bool CanExit()
 {
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
-        ReceiveLocalizedMessage(class'DHVehicleMessage', 4,,, Controller); // must unbutton the hatch
+        DisplayVehicleMessage(4,, true); // must unbutton the hatch
 
         return false;
     }
@@ -1816,6 +1816,24 @@ simulated function FixPCRotation(PlayerController PC)
         }
 
         PC.SetRotation(rotator(vector(ViewRelativeRotation) >> Gun.Rotation)); // Gun's rotation is same as vehicle base
+    }
+}
+
+// New function, replacing RO's DenyEntry() function so we use the DH message class (also re-factored slightly to makes passed Pawn optional)
+function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+{
+    if (P == none)
+    {
+        P = self;
+    }
+
+    if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
+    {
+        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber,,, Controller);
+    }
+    else
+    {
+        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
     }
 }
 

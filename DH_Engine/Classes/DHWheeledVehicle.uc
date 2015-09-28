@@ -687,7 +687,7 @@ function bool TryToDrive(Pawn P)
 
         if (bCantEnterEnemyVehicle)
         {
-            DenyEntry(P, 1); // can't use enemy vehicle
+            DisplayVehicleMessage(1, P); // can't use enemy vehicle
 
             return false;
         }
@@ -697,7 +697,7 @@ function bool TryToDrive(Pawn P)
     if (bMustBeTankCommander && !(ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none
         && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew) && P.IsHumanControlled())
     {
-       DenyEntry(P, 0); // not qualified to operate vehicle
+       DisplayVehicleMessage(0, P); // not qualified to operate vehicle
 
        return false;
     }
@@ -1025,7 +1025,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
         && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        DenyEntry(self, 0); // not qualified to operate vehicle
+        DisplayVehicleMessage(0); // not qualified to operate vehicle
 
         return;
     }
@@ -2055,6 +2055,24 @@ simulated event NotifySelected(Pawn User)
         NotifyParameters.Insert("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
+    }
+}
+
+// New function, replacing RO's DenyEntry() function so we use the DH message class (also re-factored slightly to makes passed Pawn optional)
+function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+{
+    if (P == none)
+    {
+        P = self;
+    }
+
+    if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
+    {
+        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber,,, Controller);
+    }
+    else
+    {
+        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
     }
 }
 

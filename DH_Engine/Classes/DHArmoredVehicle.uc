@@ -1020,7 +1020,7 @@ function bool TryToDrive(Pawn P)
     // Don't allow entry to burning vehicle (with message)
     if (bOnFire || bEngineOnFire)
     {
-        DenyEntry(P, 9); // vehicle is on fire
+        DisplayVehicleMessage(9, P); // vehicle is on fire
 
         return false;
     }
@@ -1058,7 +1058,7 @@ function bool TryToDrive(Pawn P)
 
         if (bCantEnterEnemyVehicle)
         {
-            DenyEntry(P, 1); // can't use enemy vehicle
+            DisplayVehicleMessage(1, P); // can't use enemy vehicle
 
             return false;
         }
@@ -1071,7 +1071,7 @@ function bool TryToDrive(Pawn P)
         // Check first to ensure riders are allowed
         if (!bAllowRiders)
         {
-            DenyEntry(P, 3); // can't ride on this vehicle
+            DisplayVehicleMessage(3, P); // can't ride on this vehicle
 
             return false;
         }
@@ -1088,7 +1088,7 @@ function bool TryToDrive(Pawn P)
             }
         }
 
-        DenyEntry(P, 3); // all rider positions full
+        DisplayVehicleMessage(8, P); // all rider positions full
 
         return false;
     }
@@ -1427,7 +1427,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
         && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        DenyEntry(self, 0); // not qualified to operate vehicle
+        DisplayVehicleMessage(0); // not qualified to operate vehicle
 
         return;
     }
@@ -1499,7 +1499,7 @@ simulated function bool CanExit()
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            ReceiveLocalizedMessage(class'DHVehicleMessage', 4,,, Controller); // must unbutton the hatch
+            DisplayVehicleMessage(4,, true); // must unbutton the hatch
         }
         else
         {
@@ -1510,11 +1510,11 @@ simulated function bool CanExit()
 
             if (MGPawn != none && MGPawn.DriverPositions.Length > MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
             {
-                ReceiveLocalizedMessage(class'DHVehicleMessage', 11); // must exit through commander's or MG hatch
+                DisplayVehicleMessage(11); // must exit through commander's or MG hatch
             }
             else
             {
-                ReceiveLocalizedMessage(class'DHVehicleMessage', 5); // must exit through commander's hatch
+                DisplayVehicleMessage(5); // must exit through commander's hatch
             }
         }
 
@@ -3813,6 +3813,24 @@ simulated event NotifySelected(Pawn User)
         NotifyParameters.Insert("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
+    }
+}
+
+// New function, replacing RO's DenyEntry() function so we use the DH message class (also re-factored slightly to makes passed Pawn optional)
+function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+{
+    if (P == none)
+    {
+        P = self;
+    }
+
+    if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
+    {
+        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber,,, Controller);
+    }
+    else
+    {
+        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
     }
 }
 
