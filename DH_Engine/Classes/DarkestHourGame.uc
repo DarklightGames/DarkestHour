@@ -1655,17 +1655,6 @@ state RoundInPlay
             GRI.AxisHelpRequests[i].requestType = 255;
         }
 
-        // Set ReinforcementsComing
-        if (!SpawnLimitReached(AXIS_TEAM_INDEX))
-        {
-            GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 1;
-        }
-
-        if (!SpawnLimitReached(ALLIES_TEAM_INDEX))
-        {
-            GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 1;
-        }
-
         // Reset all controllers
         P = Level.ControllerList;
 
@@ -1721,6 +1710,17 @@ state RoundInPlay
 
         GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
         GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+
+        // Set ReinforcementsComing
+        if (!SpawnLimitReached(AXIS_TEAM_INDEX))
+        {
+            GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 1;
+        }
+
+        if (!SpawnLimitReached(ALLIES_TEAM_INDEX))
+        {
+            GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 1;
+        }
 
         TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] = 0;
         TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
