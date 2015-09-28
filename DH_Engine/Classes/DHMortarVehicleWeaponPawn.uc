@@ -531,6 +531,9 @@ Begin:
         SetCurrentAnimation(FiringAnimIndex);
     }
 
+    //HACK: this ensures that the overlay is always present before firing!
+    ActivateOverlay(true);
+
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
     {
         Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
