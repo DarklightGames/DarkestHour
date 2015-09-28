@@ -2153,14 +2153,7 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
             // Colin: Team is just now out of reinforcements.
             bTeamOutOfReinforcements[Team] = 1;
 
-            if (bIsDefendingTeam && bTeamOutOfReinforcements[int(!bool(Team))] == 0)
-            {
-                // Colin: if this team is defending and the attackers are
-                // not out of reinforcements, set the round time to be the
-                // original round duration.
-                SetRoundTime(RoundDuration);
-            }
-            else if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
+            if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
             {
                 // Colin: if this team is attacking OR there is no defending side
                 // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
@@ -2305,10 +2298,10 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
-    SetCharacter(C);
-
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
+        SetCharacter(C);
+
         super(TeamGame).RestartPlayer(C);
 
         if (bHandleReinforcements)
