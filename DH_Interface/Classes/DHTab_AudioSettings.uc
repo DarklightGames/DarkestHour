@@ -57,7 +57,7 @@ defaultproperties
     sl_EffectsVol=moSlider'DH_Interface.DHTab_AudioSettings.AudioEffectsVolumeSlider'
     Begin Object Class=moSlider Name=VoiceVolume
         MaxValue=10.0
-        MinValue=1.0
+        MinValue=0.0
         Caption="Voice Chat Volume"
         LabelStyleName="DHLargeText"
         OnCreateComponent=VoiceVolume.InternalOnCreateComponent
