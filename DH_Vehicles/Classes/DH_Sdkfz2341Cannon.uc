@@ -230,11 +230,11 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     if (!bAltFire && RangeSettings.Length > 0)
     {
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    }
 
-    if (bCannonShellDebugging && RangeSettings.Length > 0)
-    {
-        Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        if (bCannonShellDebugging)
+        {
+            Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        }
     }
 
     // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
@@ -353,10 +353,11 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 }
 
 // Modified to reinstate use of FireCountDown for cannon as well as coaxial MG, & to prevent reload after each individual shot
-simulated event OwnerEffects()
+simulated function OwnerEffects()
 {
     // Stop the firing effects it we shouldn't be able to fire
-    if (Role < ROLE_Authority && !ReadyToFire(bIsAltFire))
+    // (incorporating extra from DHVehicleCannon to stop 'phantom' coaxial MG firing effects if player has moved to ineligible firing position while holding down fire button)
+    if (Role < ROLE_Authority && (!ReadyToFire(bIsAltFire) || (CannonPawn != none && !CannonPawn.CanFire())))
     {
         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
 
@@ -377,9 +378,9 @@ simulated event OwnerEffects()
 
     ShakeView(bIsAltFire);
 
-    if (bIsAltFire && Level.NetMode == NM_Standalone && AmbientEffectEmitter != none)
+    if (Level.NetMode != NM_DedicatedServer && bIsAltFire && AmbientEffectEmitter != none)
     {
-        AmbientEffectEmitter.SetEmitterStatus(true);
+        AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes
     }
 
     if (Role < ROLE_Authority)
@@ -414,11 +415,6 @@ simulated event OwnerEffects()
 
         if (bIsAltFire)
         {
-            if (AmbientEffectEmitter != none) // moved under this 'if' to optimise
-            {
-                AmbientEffectEmitter.SetEmitterStatus(true);
-            }
-
             if (!bAmbientAltFireSound)
             {
                 PlaySound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
