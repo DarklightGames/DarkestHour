@@ -1981,7 +1981,7 @@ exec function SetCamPos(int NewX, int NewY, int NewZ)
     }
 }
 
-// New exec to toggles showing any collision static mesh actor
+// New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
     if (Cannon != none && Cannon.CollisionMeshActor != none && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Level.NetMode != NM_DedicatedServer)
@@ -2002,6 +2002,48 @@ exec function ShowColMesh()
             Cannon.CollisionMeshActor.HideOwner(false);
             Cannon.CollisionMeshActor.bHidden = true;
         }
+    }
+}
+
+// New debug exec to set the shell's launch position X offset
+exec function SetWeaponFireOffset(float NewValue)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    {
+        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was " @ Gun.WeaponFireOffset $ ")");
+        Gun.WeaponFireOffset = NewValue;
+
+        if (Gun.FlashEmitter != none)
+        {
+            Gun.FlashEmitter.SetRelativeLocation(Gun.WeaponFireOffset * vect(1.0, 0.0, 0.0));
+        }
+    }
+}
+
+// New debug exec to set the coaxial MG's positional offset vector
+exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    local vector OldAltFireOffset;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    {
+        OldAltFireOffset = Gun.AltFireOffset;
+
+        if (bScaleOneTenth)
+        {
+            Gun.AltFireOffset.X = float(NewX) / 10.0;
+            Gun.AltFireOffset.Y = float(NewY) / 10.0;
+            Gun.AltFireOffset.Z = float(NewZ) / 10.0;
+        }
+        else
+        {
+            Gun.AltFireOffset.X = NewX;
+            Gun.AltFireOffset.Y = NewY;
+            Gun.AltFireOffset.Z = NewZ;
+        }
+
+        Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.AltFireOffset);
+        Log(Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was " @ OldAltFireOffset $ ")");
     }
 }
 
