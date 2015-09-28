@@ -10,6 +10,7 @@ class DHVehicleCannon extends ROTankCannon
 
 var     DHVehicleCannonPawn CannonPawn;             // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var     vector              CannonAttachmentOffset; // optional positional offset when attaching the cannon/turret mesh to the hull (allows correction of modelling errors)
+var     float               AltFireSpawnOffsetX;    // optional extra forward offset when spawning coaxial MG bullets, allowing them to clear potential collision with driver's head
 var     name                ShootIntermediateAnim;  // cannon firing animation if player is in an 'intermediate' animation position, i.e. between closed & open/raised positions
 
 // Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
@@ -1700,6 +1701,31 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 
     super.UpdatePrecacheStaticMeshes();
+}
+
+simulated function CalcWeaponFire(bool bWasAltFire)
+{
+    local coords WeaponBoneCoords;
+    local vector CurrentFireOffset;
+
+    // Get bone co-ordinates on which to to base fire location
+    WeaponBoneCoords = GetBoneCoords(WeaponFireAttachmentBone);
+
+    // Calculate fire position offset
+    if (bWasAltFire)
+    {
+        CurrentFireOffset = AltFireOffset + (AltFireSpawnOffsetX * vect(1.0, 0.0, 0.0));
+    }
+    else
+    {
+        CurrentFireOffset = WeaponFireOffset * vect(1.0, 0.0, 0.0);
+    }
+
+    // Calculate rotation of the cannon's aim
+    WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
+
+    // Calculate exact fire location
+    WeaponFireLocation = WeaponBoneCoords.Origin + (CurrentFireOffset >> WeaponFireRotation);
 }
 
 // Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)

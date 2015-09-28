@@ -75,6 +75,7 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=1.0
     AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)
+    AltFireSpawnOffsetX=26.0
     bAmbientAltFireSound=true
     FireInterval=5.0
     AltFireInterval=0.07058

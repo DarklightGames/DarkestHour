@@ -2047,6 +2047,16 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
     }
 }
 
+// New debug exec to set the coaxial MG's launch position optional X offset
+exec function SetAltFireSpawnOffset(float NewValue)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
+    {
+        Log(Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was " @ Cannon.AltFireSpawnOffsetX $ ")");
+        Cannon.AltFireSpawnOffsetX = NewValue;
+    }
+}
+
 exec function LogCannon() // DEBUG x 3 (Matt: use if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("CLIENT:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon

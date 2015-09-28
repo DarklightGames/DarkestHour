@@ -142,12 +142,14 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     local coords WeaponBoneCoords;
     local vector CurrentFireOffset;
 
-    // Calculate fire offset in world space
+    // Get bone co-ordinates on which to to base fire location
     WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
     BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 3);
-    CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
 
-    // Calculate rotation of the gun
+    // Calculate fire position offset
+    CurrentFireOffset = WeaponFireOffset * vect(1.0, 0.0, 0.0);
+
+    // Calculate rotation of the cannon's aim
     WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
 
     // Calculate exact fire location
