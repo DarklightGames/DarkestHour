@@ -2159,7 +2159,7 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
                 // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
                 if (RoundDuration == 0 && DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
                 {
-                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero with attrition", 'Say');
+                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero by attrition", 'Say');
                     Choosewinner();
                 }
                 else
