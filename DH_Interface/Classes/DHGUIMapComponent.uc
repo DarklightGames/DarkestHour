@@ -221,6 +221,7 @@ defaultproperties
         CheckedOverlay(2)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        bCanClickUncheck=false
     End Object
 
     b_SpawnVehicles(0)=SpawnVehicleButton
