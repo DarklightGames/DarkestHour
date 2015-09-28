@@ -55,9 +55,9 @@ defaultproperties
     PitchBone="Turret"
     PitchUpLimit=15000
     PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
+    WeaponFireAttachmentBone="barrel001"
     GunnerAttachmentBone="Commander_attachment"
-    WeaponFireOffset=-80.0
+    WeaponFireOffset=9.0
     FireInterval=4.0
     FireSoundVolume=512.0
     FireForce="Explosion05"

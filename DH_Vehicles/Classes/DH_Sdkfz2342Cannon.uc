@@ -60,10 +60,10 @@ defaultproperties
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
-    WeaponFireAttachmentBone="Gun"
+    WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=175.0
-    AltFireOffset=(X=21.0,Y=14.5,Z=1.5)
+    WeaponFireOffset=-2.0
+    AltFireOffset=(X=-155.0,Y=17.0,Z=2.0)
     bAmbientAltFireSound=true
     FireInterval=4.0
     AltFireInterval=0.05

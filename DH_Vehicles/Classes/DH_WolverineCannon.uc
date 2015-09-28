@@ -38,9 +38,9 @@ defaultproperties
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
-    WeaponFireAttachmentBone="Gun"
+    WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=200.0
+    WeaponFireOffset=15.0
     FireInterval=5.0
     FireSoundVolume=512.0
     FireForce="Explosion05"
