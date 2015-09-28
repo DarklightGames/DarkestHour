@@ -42,10 +42,10 @@ defaultproperties
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
-    WeaponFireAttachmentBone="Gun"
+    WeaponFireAttachmentBone="Gun" // can't use 'Barrel' bone as it's rolled in the mesh, which screws up offsets
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=115.0
-    AltFireOffset=(X=25.0,Y=-23.0,Z=3.5)
+    WeaponFireOffset=106.0
+    AltFireOffset=(X=8.0,Y=-23.5,Z=3.5)
     bAmbientAltFireSound=true
     FireInterval=4.2
     AltFireInterval=0.12

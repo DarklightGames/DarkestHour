@@ -273,7 +273,7 @@ defaultproperties
     SightBone="Object002"
     TraverseWheelBone="pitch_w" // these are the wrong way round in the model - "pitch_w" is actually the traversing wheel & "yaw_w" is the elevating wheel
     ElevationWheelBone="yaw_w"
-    WeaponFireOffset=64.0
+    WeaponFireOffset=40.0
     GunnerAttachmentBone="com_attachment"
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'

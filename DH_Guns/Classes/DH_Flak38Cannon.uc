@@ -44,7 +44,7 @@ defaultproperties
     NumSecMags=4
     NumTertMags=4
     AddedPitch=50
-    WeaponFireOffset=15.0
+    WeaponFireOffset=5.0
     RotationsPerSecond=0.05
     FireInterval=0.15
     AltFireProjectileClass=none

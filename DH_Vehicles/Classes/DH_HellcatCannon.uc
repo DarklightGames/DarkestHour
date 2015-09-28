@@ -41,7 +41,7 @@ defaultproperties
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=10.0
+    WeaponFireOffset=-4.0
     FireInterval=5.0
     FireSoundVolume=512.0
     FireForce="Explosion05"
