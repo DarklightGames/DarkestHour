@@ -937,75 +937,73 @@ simulated function SwitchWeapon(byte F)
     local bool              bMustBeTankerToSwitch;
     local byte              ChosenWeaponPawnIndex;
 
-    if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
+    if (Role < ROLE_Authority) // only do these clientside checks on a net client
     {
-        ServerChangeDriverPosition(F);
-    }
-
-    if (VehicleBase == none)
-    {
-        return;
-    }
-
-    // Trying to switch to driver position
-    if (F == 1)
-    {
-        // Stop call to server as there is already a human driver
-        if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
+        if (VehicleBase == none)
         {
             return;
         }
 
-        if (VehicleBase.bMustBeTankCommander)
+        // Trying to switch to driver position
+        if (F == 1)
         {
-            bMustBeTankerToSwitch = true;
-        }
-    }
-    // Trying to switch to non-driver position
-    else
-    {
-        ChosenWeaponPawnIndex = F - 2;
-
-        // Stop call to server if player has selected an invalid weapon position or the current position
-        // Note that if player presses 0, which is invalid choice, the byte index will end up as 254 & so will still fail this test (which is what we want)
-        if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
-        {
-            return;
-        }
-
-        // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-        if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
-        {
-            return;
-        }
-
-        // Stop call to server if weapon position already has a human player
-        // Note we don't try to stop call to server if weapon pawn doesn't exist, as it may not on net client, but will get replicated if player enters position on server
-        if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
-        {
-            WeaponPawn = VehicleBase.WeaponPawns[ChosenWeaponPawnIndex];
-
-            if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+            // Stop call to server as there is already a human driver
+            if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
             {
                 return;
             }
-            else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
-                Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
-        }
 
-        if (class<ROVehicleWeaponPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
+            if (VehicleBase.bMustBeTankCommander)
+            {
+                bMustBeTankerToSwitch = true;
+            }
+        }
+        // Trying to switch to non-driver position
+        else
         {
-            bMustBeTankerToSwitch = true;
+            ChosenWeaponPawnIndex = F - 2;
+
+            // Stop call to server if player has selected an invalid weapon position or the current position
+            // Note that if player presses 0, which is invalid choice, the byte index will end up as 254 & so will still fail this test (which is what we want)
+            if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
+            {
+                return;
+            }
+
+            // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
+            if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
+            {
+                return;
+            }
+
+            // Stop call to server if weapon position already has a human player
+            // Note we don't try to stop server call if weapon pawn doesn't exist, as it may not on net client, but will get replicated if player enters position on server
+            if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
+            {
+                WeaponPawn = VehicleBase.WeaponPawns[ChosenWeaponPawnIndex];
+
+                if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+                {
+                    return;
+                }
+                else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
+                    Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
+            }
+
+            if (class<ROVehicleWeaponPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
+            {
+                bMustBeTankerToSwitch = true;
+            }
         }
-    }
 
-    // Stop call to server if player has selected a tank crew role but isn't a tanker
-    if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
-        && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
-    {
-        DisplayVehicleMessage(0); // not qualified to operate vehicle
+        // Stop call to server if player has selected a tank crew role but isn't a tanker
+        if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
+            && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+        {
+            DisplayVehicleMessage(0); // not qualified to operate vehicle
 
-        return;
+            return;
+        }
     }
 
     ServerChangeDriverPosition(F);

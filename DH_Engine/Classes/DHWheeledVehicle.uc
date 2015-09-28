@@ -988,46 +988,44 @@ simulated function SwitchWeapon(byte F)
     local bool              bMustBeTankerToSwitch;
     local byte              ChosenWeaponPawnIndex;
 
-    if (Role == ROLE_Authority) // if we're not a net client, skip clientside checks & jump straight to the server function call
+    if (Role < ROLE_Authority) // only do these clientside checks on a net client
     {
-        ServerChangeDriverPosition(F);
-    }
+        ChosenWeaponPawnIndex = F - 2;
 
-    ChosenWeaponPawnIndex = F - 2;
-
-    // Stop call to server if player has selected an invalid weapon position
-    // Note that if player presses 0 or 1, which are invalid choices, the byte index will end up as 254 or 255 & so will still fail this test (which is what we want)
-    if (ChosenWeaponPawnIndex >= PassengerWeapons.Length)
-    {
-        return;
-    }
-
-    // Stop call to server if weapon position already has a human player
-    // Note we don't try to stop call to server if weapon pawn doesn't exist, as it may not on net client, but will get replicated if player enters position on server
-    if (ChosenWeaponPawnIndex < WeaponPawns.Length)
-    {
-        WeaponPawn = WeaponPawns[ChosenWeaponPawnIndex];
-
-        if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+        // Stop call to server if player has selected an invalid weapon position
+        // Note that if player presses 0 or 1, which are invalid choices, the byte index will end up as 254 or 255 & so will still fail this test (which is what we want)
+        if (ChosenWeaponPawnIndex >= PassengerWeapons.Length)
         {
             return;
         }
-        else if (WeaponPawn == none && class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
-            Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
-    }
 
-    if (class<ROVehicleWeaponPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
-    {
-        bMustBeTankerToSwitch = true;
-    }
+        // Stop call to server if weapon position already has a human player
+        // Note we don't try to stop call to server if weapon pawn doesn't exist, as it may not on net client, but will get replicated if player enters position on server
+        if (ChosenWeaponPawnIndex < WeaponPawns.Length)
+        {
+            WeaponPawn = WeaponPawns[ChosenWeaponPawnIndex];
 
-    // Stop call to server if player has selected a tank crew role but isn't a tanker
-    if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
-        && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
-    {
-        DisplayVehicleMessage(0); // not qualified to operate vehicle
+            if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+            {
+                return;
+            }
+            else if (WeaponPawn == none && class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
+                Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
+        }
 
-        return;
+        if (class<ROVehicleWeaponPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+
+        // Stop call to server if player has selected a tank crew role but isn't a tanker
+        if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
+            && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+        {
+            DisplayVehicleMessage(0); // not qualified to operate vehicle
+
+            return;
+        }
     }
 
     ServerChangeDriverPosition(F);
