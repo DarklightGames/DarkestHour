@@ -881,24 +881,21 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Level.NetMode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
-            if (!(IsHumanControlled() && PlayerController(Controller).bBehindView))
-            {
-                // Switch to mesh for new position as may be different
-                SwitchMesh(DriverPositionIndex);
+            // Switch to mesh for new position as may be different
+            SwitchMesh(DriverPositionIndex);
 
-                // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-                if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
+            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
+            {
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
                 {
-                    if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                    {
-                        PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-                    }
-                    else
-                    {
-                        PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-                    }
+                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                }
+                else
+                {
+                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV;
                 }
             }
         }

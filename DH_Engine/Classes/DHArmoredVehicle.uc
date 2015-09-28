@@ -1291,13 +1291,13 @@ simulated state ViewTransition
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
-            if (!(IsHumanControlled() && PlayerController(Controller).bBehindView))
+            if (IsHumanControlled() && !PlayerController(Controller).bBehindView)
             {
                 // Switch to mesh for new position as may be different
                 SwitchMesh(DriverPositionIndex);
 
                 // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-                if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV && IsHumanControlled())
+                if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
                 {
                     PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
                 }
