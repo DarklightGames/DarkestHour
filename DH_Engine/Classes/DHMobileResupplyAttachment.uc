@@ -163,10 +163,11 @@ function Timer()
 
                 if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
                 {
-
                     // Resupply vehicles
                     if (V.ResupplyAmmo())
+                    {
                         bResupplied = true;
+                    }
                 }
 
                 //Mortar specific resupplying.
