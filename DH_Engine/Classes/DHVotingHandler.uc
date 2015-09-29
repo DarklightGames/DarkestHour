@@ -97,7 +97,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     if (P != none && P.MapVoteTime != 0.0 && Level.TimeSeconds < (P.MapVoteTime + MapVoteIntervalDuration))
     {
         TextMessage = lmsgMapVotedTooRecently;
-        Repl(TextMessage, "%seconds%", int(Ceil(P.MapVoteTime + MapVoteIntervalDuration) - Level.TimeSeconds));
+        TextMessage = Repl(TextMessage, "%seconds%", int(Ceil(P.MapVoteTime + MapVoteIntervalDuration) - Level.TimeSeconds));
 
         P.ClientMessage(TextMessage);
 
@@ -200,10 +200,13 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         P.MapVoteTime = Level.TimeSeconds;
     }
 
-    TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
-    TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
-    TextMessage = Repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")");
-    Level.Game.Broadcast(self,TextMessage);
+    if (!DarkestHourGame(Level.Game).IsInState('MatchOver'))
+    {
+        TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
+        TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
+        TextMessage = Repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")");
+        Level.Game.Broadcast(self,TextMessage);
+    }
 
     UpdateVoteCount(MapIndex, GameIndex, VoteCount);
 
