@@ -218,7 +218,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 }
 
 // Overriden to fix accessed none errors. The logic of the function itself is a
-// fucking nightmare and whoever wrote it is a criminal.
+// nightmare and whoever wrote it is a criminal.
 function GetDefaultMap(out int mapidx, out int gameidx)
 {
     local int i, x, y, r, p, GCIdx;
