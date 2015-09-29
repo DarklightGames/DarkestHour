@@ -85,7 +85,7 @@ const OBJECTIVES_MAX = 32;
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
-var bool bLogWeaponAttachment; // TEMP DEBUG
+var bool                bLogWeaponAttachment; // TEMP DEBUG
 
 replication
 {

@@ -45,6 +45,7 @@ var localized string    SpawnAtVehicleText;
 var localized string    ReinforcementsDepletedText;
 var localized string    SpawnNoRoleText;
 var localized string    TimeElapsedText;
+var localized string    MapNameText;
 
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -4375,6 +4376,7 @@ defaultproperties
     NoTimeLimitText="Unlimited"
 
     TimeElapsedText="Time Elasped: "
+    MapNameText="Map: "
 
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"

@@ -217,6 +217,9 @@ simulated function UpdateScoreBoard (Canvas C)
             S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeText $ Level.Hour $ ":" $ Level.Minute @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
         }
 
+        // Show level name on scoreboard
+        S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.MapNameText $ Left(string(Level), InStr(string(Level), "."));;
+
         X = CalcX(BaseGermanX, C);
         Y = CalcY(2.0, C);
 
