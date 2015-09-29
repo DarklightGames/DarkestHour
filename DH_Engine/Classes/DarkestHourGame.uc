@@ -3282,7 +3282,7 @@ defaultproperties
     PlayerControllerClassName="DH_Engine.DHPlayer"
     GameReplicationInfoClass=class'DH_Engine.DHGameReplicationInfo'
     VoiceReplicationInfoClass=class'DH_Engine.DHVoiceReplicationInfo'
-    VotingHandlerType="DH_Engine.DHVotingHandler"
+    VotingHandlerClass=class'DH_Engine.DHVotingHandler'
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
     DeathMessageClass=class'DH_Engine.DHDeathMessage'
