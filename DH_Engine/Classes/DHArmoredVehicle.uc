@@ -1677,8 +1677,8 @@ simulated function SetEngine()
 // New function to spawn exhaust & wheel dust emitters
 simulated function StartEmitters()
 {
-    local int    i;
     local coords WheelCoords;
+    local int    i;
 
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {

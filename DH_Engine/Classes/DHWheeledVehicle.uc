@@ -1230,8 +1230,8 @@ simulated function SetEngine()
 // New function to spawn exhaust & wheel dust emitters
 simulated function StartEmitters()
 {
-    local int    i;
     local coords WheelCoords;
+    local int    i;
 
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
@@ -1255,7 +1255,15 @@ simulated function StartEmitters()
             }
 
             Dust[i].SetBase(self);
-            Dust[i].SetDirtColor(Level.DustColor);
+
+            if (IsA('DHBoatVehicle'))
+            {
+                Dust[i].SetDirtColor(Level.WaterDustColor);
+            }
+            else
+            {
+                Dust[i].SetDirtColor(Level.DustColor);
+            }
         }
 
         for (i = 0; i < ExhaustPipes.Length; ++i)
