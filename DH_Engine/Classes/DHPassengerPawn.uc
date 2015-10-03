@@ -138,9 +138,10 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     // CameraRotation is currently relative to vehicle, so now factor in the vehicle's rotation
     if (VehicleBase != none)
     {
-        RelativeQuat = QuatFromRotator(PC.Rotation);
+        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
         VehicleQuat = QuatFromRotator(VehicleBase.Rotation);
         NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
     }
     else
     {
