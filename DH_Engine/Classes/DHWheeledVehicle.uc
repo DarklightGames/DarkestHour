@@ -2243,7 +2243,7 @@ exec function DrawExits()
     }
 }
 
-// New debugging exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
+// New debug exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
 exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
 {
     if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
@@ -2267,6 +2267,24 @@ function exec KillEngine()
 function ServerKillEngine()
 {
     DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
+}
+
+// New debug exec function to set exhaust emitter location
+exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
+{
+    local vector OldExhaustPosition;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        OldExhaustPosition = ExhaustPipes[Index].ExhaustPosition;
+        ExhaustPipes[Index].ExhaustPosition.X = NewX;
+        ExhaustPipes[Index].ExhaustPosition.Y = NewY;
+        ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
+        //ExhaustPipes[Index].ExhaustEffect.SetBase(none);
+        ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
+        ExhaustPipes[Index].ExhaustEffect.SetBase(self);
+        Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ ExhaustPipes[Index].ExhaustPosition @ "(was " @ OldExhaustPosition $ ")");
+    }
 }
 
 defaultproperties

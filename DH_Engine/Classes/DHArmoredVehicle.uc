@@ -4122,6 +4122,24 @@ function exec DamageTank()
     }
 }
 
+// New debug exec function to set exhaust emitter location
+exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
+{
+    local vector OldExhaustPosition;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        OldExhaustPosition = ExhaustPipes[Index].ExhaustPosition;
+        ExhaustPipes[Index].ExhaustPosition.X = NewX;
+        ExhaustPipes[Index].ExhaustPosition.Y = NewY;
+        ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
+        //ExhaustPipes[Index].ExhaustEffect.SetBase(none);
+        ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
+        ExhaustPipes[Index].ExhaustEffect.SetBase(self);
+        Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ ExhaustPipes[Index].ExhaustPosition @ "(was " @ OldExhaustPosition $ ")");
+    }
+}
+
 exec function LogSwitch(optional int Index) // TEMP DEBUG x 4 (Matt: use if you ever find you can't switch to commander's position when you should be able to)
 {
     local ROVehicleWeaponPawn WeaponPawn;
