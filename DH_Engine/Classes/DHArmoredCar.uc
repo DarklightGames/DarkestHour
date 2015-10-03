@@ -58,6 +58,14 @@ simulated function Tick(float DeltaTime)
         Throttle = 0.0;
         ThrottleAmount = 0.0;
         Steering = 0.0;
+        ForwardVel = 0.0;
+    }
+
+    // Disable Tick if vehicle isn't moving & has no driver
+    if (!bDriving && ForwardVel ~= 0.0)
+    {
+        MinBrakeFriction = LowSpeedBrakeFriction;
+        Disable('Tick');
     }
 }
 

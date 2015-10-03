@@ -413,12 +413,13 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to remove RO disabled throttle stuff & add handling of jammed steering for a damaged track, MaxCriticalSpeed, object crushing, & stopping all movement if vehicle can't move
+// Modified to remove RO disabled throttle stuff & add handling of jammed steering for a damaged track, MaxCriticalSpeed, & object crushing
+// Also to prevent all movement if vehicle can't move (engine off or both tracks disabled), & to disable Tick if vehicle is stationary & has no driver
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
-    local float MotionSoundTemp, MySpeed;
-    local int   i;
+    local float           MySpeed;
+    local int             i;
 
     if (Controller != none)
     {
@@ -456,69 +457,56 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
         MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
-        // Update tread & interior rumble sounds dependent on speed
+        // If vehicle is moving, update sounds, treads & wheels, based on speed
         if (MySpeed > 0.1)
         {
-            MotionSoundTemp = MySpeed / MaxPitchSpeed * 255.0;
-            MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
+            // Update tread & interior rumble sound volumes
+            MotionSoundVolume = FClamp(MySpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
+            UpdateMovementSound();
+
+            // Update tread & wheel movement
+            KGetRigidBodyState(BodyState);
+            LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+
+            if (LeftTreadPanner != none)
+            {
+                LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
+                LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+
+                for (i = 0; i < LeftWheelBones.Length; ++i)
+                {
+                    SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+                }
+            }
+
+            if (RightTreadPanner != none)
+            {
+                RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
+                RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
+
+                for (i = 0; i < RightWheelBones.Length; ++i)
+                {
+                    SetBoneRotation(RightWheelBones[i], RightWheelRot);
+                }
+            }
+
+            // Force player to pull back on throttle if over max speed
+            if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
+            {
+                ROPlayer(Controller).aForward = -32768.0;
+            }
         }
-        else
+        // If vehicle isn't moving, zero the movement sounds & tread movement, but only if we haven't done this already
+        else if (MotionSoundVolume != 0.0)
         {
             MotionSoundVolume = 0.0;
-        }
-
-        UpdateMovementSound();
-
-        // Set tread & wheel movement rates
-        KGetRigidBodyState(BodyState);
-        LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
-
-        if (LeftTreadPanner != none)
-        {
-            LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-
-            if (Velocity dot vector(Rotation) < 0.0)
-            {
-                LeftTreadPanner.PanRate = -1.0 * LeftTreadPanner.PanRate;
-            }
-
-            LeftTreadPanner.PanRate += LinTurnSpeed;
-            LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-        }
-
-        if (RightTreadPanner != none)
-        {
-            RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-
-            if (Velocity dot vector(Rotation) < 0.0)
-            {
-                RightTreadPanner.PanRate = -1.0 * RightTreadPanner.PanRate;
-            }
-
-            RightTreadPanner.PanRate -= LinTurnSpeed;
-            RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
-        }
-
-        // Animate the tank wheels
-        for (i = 0; i < LeftWheelBones.Length; ++i)
-        {
-            SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
-        }
-
-        for (i = 0; i < RightWheelBones.Length; ++i)
-        {
-            SetBoneRotation(RightWheelBones[i], RightWheelRot);
-        }
-
-        // Force player to pull back on throttle if over max speed
-        if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).aForward = -32768.0;
+            UpdateMovementSound();
+            LeftTreadPanner.PanRate = 0.0;
+            RightTreadPanner.PanRate = 0.0;
         }
     }
 
@@ -534,23 +522,6 @@ simulated function Tick(float DeltaTime)
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
-    // If we crushed an object, apply brake & clamp throttle (server only)
-    if (bCrushedAnObject)
-    {
-        if (ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).bPressedJump = true;
-        }
-
-        Throttle = FClamp(Throttle, -0.1, 0.1);
-
-        // If our crush stall time is over, we are no longer crushing
-        if (LastCrushedTime + ObjectCrushStallTime < Level.TimeSeconds)
-        {
-            bCrushedAnObject = false;
-        }
-    }
-
     // Stop all movement if engine off or both tracks damaged
     if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
@@ -558,6 +529,32 @@ simulated function Tick(float DeltaTime)
         Throttle = 0.0;
         ThrottleAmount = 0.0;
         Steering = 0.0;
+        ForwardVel = 0.0;
+    }
+    // If we crushed an object, apply brake & clamp throttle (server only)
+    else if (bCrushedAnObject)
+    {
+        // If our crush stall time is over, we are no longer crushing
+        if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
+        {
+            bCrushedAnObject = false;
+        }
+        else
+        {
+            Throttle = FClamp(Throttle, -0.1, 0.1);
+
+            if (ROPlayer(Controller) != none)
+            {
+                ROPlayer(Controller).bPressedJump = true;
+            }
+        }
+    }
+
+    // Disable Tick if vehicle isn't moving & has no driver
+    if (!bDriving && ForwardVel ~= 0.0)
+    {
+        MinBrakeFriction = LowSpeedBrakeFriction;
+        Disable('Tick');
     }
 }
 
@@ -1174,49 +1171,19 @@ simulated state EnteringVehicle
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
 // Also to play idle animation for other net clients (not just owning client) & on server if collision is animated, so we reset visuals like hatches & any moving collision boxes
-// And to avoid unnecessary stuff on dedicated server & the call to Super in Vehicle class (it only duplicated)
+// We no longer disable Tick when driver exits, as vehicle may still be moving & dust effects need updating as vehicle slows
+// Instead we disable Tick at the end of Tick itself, if vehicle isn't moving & has no driver
 simulated event DrivingStatusChanged()
 {
-    local PlayerController PC;
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // Not moving, so no motion sound or tread movement
-        if (!bDriving)
-        {
-            if (LeftTreadPanner != none)
-            {
-                LeftTreadPanner.PanRate = 0.0;
-            }
-
-            if (RightTreadPanner != none)
-            {
-                RightTreadPanner.PanRate = 0.0;
-            }
-
-            MotionSoundVolume = 0.0;
-            UpdateMovementSound();
-        }
-
-        PC = Level.GetLocalPlayerController();
-
-        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
-        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
-    }
-
+    // Enable Tick if we have a driver (necessary even if engine is off, to prevent vehicle from being driven)
     if (bDriving)
     {
         Enable('Tick');
     }
-    else
+    // Play neutral idle animation if player has exited, but not on a server unless collision is animated
+    else if ((Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && HasAnim(BeginningIdleAnim))
     {
-        Disable('Tick');
-
-        // Play neutral idle animation if player has exited, but not on a server unless collision is animated
-        if ((Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && HasAnim(BeginningIdleAnim))
-        {
-            PlayAnim(BeginningIdleAnim);
-        }
+        PlayAnim(BeginningIdleAnim);
     }
 }
 
@@ -1677,11 +1644,32 @@ simulated function SetEngine()
 // New function to spawn exhaust & wheel dust emitters
 simulated function StartEmitters()
 {
-    local coords WheelCoords;
-    local int    i;
+    local PlayerController PC;
+    local coords           WheelCoords;
+    local bool             bLowDetail;
+    local int              i;
 
-    if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
+    if (Level.NetMode != NM_DedicatedServer)
     {
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        // Note - won't drop detail if player's ViewTarget is the vehicle or anything joined to it, including a VehicleWeaponPawn (will be the case for player in a vehicle position)
+        if (Level.bDropDetail || Level.DetailMode == DM_Low)
+        {
+            PC = Level.GetLocalPlayerController();
+
+            if (PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)))
+            {
+                bDropDetail = true;
+
+                return;
+            }
+
+            bLowDetail = true; // we may not be dropping detail, but we've established that we're on low detail settings, so we'll use this later to avoid checking again
+        }
+
+        bDropDetail = false;
+
+        // Create wheel dust emitters
         Dust.Length = Wheels.Length;
 
         for (i = 0; i < Wheels.Length; ++i)
@@ -1691,11 +1679,10 @@ simulated function StartEmitters()
                 Dust[i].Destroy();
             }
 
-            // Create wheel dust emitters
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
             Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
 
-            if (Level.bDropDetail || Level.DetailMode == DM_Low)
+            if (bLowDetail)
             {
                 Dust[i].MaxSpritePPS = 3;
                 Dust[i].MaxMeshPPS = 3;
@@ -1705,6 +1692,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
+        // Create exhaust emitters
         for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
@@ -1712,8 +1700,7 @@ simulated function StartEmitters()
                 ExhaustPipes[i].ExhaustEffect.Destroy();
             }
 
-            // Create exhaust emitters
-            if (Level.bDropDetail || Level.DetailMode == DM_Low)
+            if (bLowDetail)
             {
                 ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
             }
@@ -1724,9 +1711,11 @@ simulated function StartEmitters()
 
             ExhaustPipes[i].ExhaustEffect.SetBase(self);
 
-            if (!bDriving) // if bDriving, Tick will be enabled & ExhaustEffect will get updated anyway, based on vehicle speed
+            // If we don't have a driver, we do a nil update that just sets the lowest exhaust setting for an idling engine
+            // Note - don't need to do anything if we do have a driver, as Tick will be enabled & exhaust will get updated anyway, based on vehicle speed
+            if (!bDriving)
             {
-                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0); // nil update just sets the lowest setting for an idling engine
+                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0);
             }
         }
 
@@ -1739,7 +1728,7 @@ simulated function StopEmitters()
 {
     local int i;
 
-    if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         for (i = 0; i < Dust.Length; ++i)
         {
@@ -1761,6 +1750,7 @@ simulated function StopEmitters()
     }
 
     bEmittersOn = false;
+    bDropDetail = true; // an optimisation as makes the Super in Tick skip over updating dust & exhaust emitters
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3643,10 +3633,7 @@ simulated function DestroyAttachments()
             Schurzen.Destroy();
         }
 
-        if (bEmittersOn)
-        {
-            StopEmitters();
-        }
+        StopEmitters();
     }
 }
 
@@ -4136,7 +4123,6 @@ exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
         ExhaustPipes[Index].ExhaustPosition.X = NewX;
         ExhaustPipes[Index].ExhaustPosition.Y = NewY;
         ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
-        //ExhaustPipes[Index].ExhaustEffect.SetBase(none);
         ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
         ExhaustPipes[Index].ExhaustEffect.SetBase(self);
         Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ ExhaustPipes[Index].ExhaustPosition @ "(was " @ OldExhaustPosition $ ")");

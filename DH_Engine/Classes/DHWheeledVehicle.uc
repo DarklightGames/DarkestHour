@@ -287,18 +287,12 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to handle engine & interior rumble sounds, object crushing, & stopping all movement if vehicle can't move
+// Modified to handle engine & interior rumble sounds & object crushing, to prevent all movement if engine is off, & to disable Tick if vehicle is stationary & has no driver
 simulated function Tick(float DeltaTime)
 {
     local float MotionSoundVolume;
 
     super(ROWheeledVehicle).Tick(DeltaTime);
-
-    // Very heavy damage to engine limits speed
-    if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
-    {
-        Throttle = FClamp(Throttle, -0.5, 0.5);
-    }
 
     // Update engine & interior rumble sounds dependent on speed
     if (Level.NetMode != NM_DedicatedServer)
@@ -311,23 +305,6 @@ simulated function Tick(float DeltaTime)
         UpdateMovementSound(MotionSoundVolume);
     }
 
-    // If we crushed an object, apply brake & clamp throttle (server only)
-    if (bCrushedAnObject)
-    {
-        if (ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).bPressedJump = true;
-        }
-
-        Throttle = FClamp(Throttle, -0.1, 0.1);
-
-        // If our crush stall time is over, we are no longer crushing
-        if (LastCrushedTime + ObjectCrushStallTime < Level.TimeSeconds)
-        {
-            bCrushedAnObject = false;
-        }
-    }
-
     // Stop all movement if engine off
     if (bEngineOff)
     {
@@ -335,6 +312,37 @@ simulated function Tick(float DeltaTime)
         Throttle = 0.0;
         ThrottleAmount = 0.0;
         Steering = 0.0;
+        ForwardVel = 0.0;
+    }
+    // If we crushed an object, apply brake & clamp throttle (server only)
+    else if (bCrushedAnObject)
+    {
+        // If our crush stall time is over, we are no longer crushing
+        if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
+        {
+            bCrushedAnObject = false;
+        }
+        else
+        {
+            Throttle = FClamp(Throttle, -0.1, 0.1);
+
+            if (ROPlayer(Controller) != none)
+            {
+                ROPlayer(Controller).bPressedJump = true;
+            }
+        }
+    }
+    // Very heavy damage to engine limits speed
+    else if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
+    {
+        Throttle = FClamp(Throttle, -0.5, 0.5);
+    }
+
+    // Disable Tick if vehicle isn't moving & has no driver
+    if (!bDriving && ForwardVel ~= 0.0)
+    {
+        MinBrakeFriction = LowSpeedBrakeFriction;
+        Disable('Tick');
     }
 }
 
@@ -784,39 +792,19 @@ simulated state EnteringVehicle
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
 // Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
-// And to avoid unnecessary stuff on dedicated server & the call to Super in Vehicle class (it only duplicates)
+// We no longer disable Tick when driver exits, as vehicle may still be moving & dust effects need updating as vehicle slows
+// Instead we disable Tick at the end of Tick itself, if vehicle isn't moving & has no driver
 simulated event DrivingStatusChanged()
 {
-    local PlayerController PC;
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // Player has exited
-        if (!bDriving)
-        {
-            // Vehicle will now stop, so no motion sound
-            UpdateMovementSound(0.0);
-
-            // Play neutral idle animation
-            if (HasAnim(BeginningIdleAnim))
-            {
-                PlayAnim(BeginningIdleAnim);
-            }
-        }
-
-        PC = Level.GetLocalPlayerController();
-
-        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
-        bDropDetail = bDriving && PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)) && (Level.bDropDetail || Level.DetailMode == DM_Low);
-    }
-
+    // Enable Tick if we have a driver (necessary even if engine is off, to prevent vehicle from being driven)
     if (bDriving)
     {
         Enable('Tick');
     }
-    else
+    // Play neutral idle animation if player has exited, but not on a server
+    else if (Level.NetMode != NM_DedicatedServer && HasAnim(BeginningIdleAnim))
     {
-        Disable('Tick');
+        PlayAnim(BeginningIdleAnim);
     }
 }
 
@@ -1231,11 +1219,32 @@ simulated function SetEngine()
 // New function to spawn exhaust & wheel dust emitters
 simulated function StartEmitters()
 {
-    local coords WheelCoords;
-    local int    i;
+    local PlayerController PC;
+    local coords           WheelCoords;
+    local bool             bLowDetail;
+    local int              i;
 
-    if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
+    if (Level.NetMode != NM_DedicatedServer)
     {
+        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
+        // Note - won't drop detail if player's ViewTarget is the vehicle or anything joined to it, including a VehicleWeaponPawn (will be the case for player in a vehicle position)
+        if (Level.bDropDetail || Level.DetailMode == DM_Low)
+        {
+            PC = Level.GetLocalPlayerController();
+
+            if (PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)))
+            {
+                bDropDetail = true;
+
+                return;
+            }
+
+            bLowDetail = true; // we may not be dropping detail, but we've established that we're on low detail settings, so we'll use this later to avoid checking again
+        }
+
+        bDropDetail = false;
+
+        // Create wheel dust emitters
         Dust.Length = Wheels.Length;
 
         for (i = 0; i < Wheels.Length; ++i)
@@ -1245,11 +1254,10 @@ simulated function StartEmitters()
                 Dust[i].Destroy();
             }
 
-            // Create wheel dust emitters
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
             Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
 
-            if (Level.bDropDetail || Level.DetailMode == DM_Low)
+            if (bLowDetail)
             {
                 Dust[i].MaxSpritePPS = 3;
                 Dust[i].MaxMeshPPS = 3;
@@ -1257,6 +1265,7 @@ simulated function StartEmitters()
 
             Dust[i].SetBase(self);
 
+            // Boat vehicle uses different 'dirt' colour (white-grey) to simulate a spray effect instead of the usual wheel dust
             if (IsA('DHBoatVehicle'))
             {
                 Dust[i].SetDirtColor(Level.WaterDustColor);
@@ -1267,6 +1276,7 @@ simulated function StartEmitters()
             }
         }
 
+        // Create exhaust emitters
         for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
@@ -1274,8 +1284,7 @@ simulated function StartEmitters()
                 ExhaustPipes[i].ExhaustEffect.Destroy();
             }
 
-            // Create exhaust emitters
-            if (Level.bDropDetail || Level.DetailMode == DM_Low)
+            if (bLowDetail)
             {
                 ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
             }
@@ -1286,9 +1295,11 @@ simulated function StartEmitters()
 
             ExhaustPipes[i].ExhaustEffect.SetBase(self);
 
-            if (!bDriving) // if bDriving, Tick will be enabled & ExhaustEffect will get updated anyway, based on vehicle speed
+            // If we don't have a driver, we do a nil update that just sets the lowest exhaust setting for an idling engine
+            // Note - don't need to do anything if we do have a driver, as Tick will be enabled & exhaust will get updated anyway, based on vehicle speed
+            if (!bDriving)
             {
-                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0); // nil update just sets the lowest setting for an idling engine
+                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0);
             }
         }
 
@@ -1301,7 +1312,7 @@ simulated function StopEmitters()
 {
     local int i;
 
-    if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         for (i = 0; i < Dust.Length; ++i)
         {
@@ -1323,6 +1334,7 @@ simulated function StopEmitters()
     }
 
     bEmittersOn = false;
+    bDropDetail = true; // an optimisation as makes the Super in Tick skip over updating dust & exhaust emitters
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1891,10 +1903,7 @@ simulated function DestroyAttachments()
             ResupplyDecoAttachment.Destroy();
         }
 
-        if (bEmittersOn)
-        {
-            StopEmitters();
-        }
+        StopEmitters();
     }
 }
 
@@ -2292,7 +2301,6 @@ exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
         ExhaustPipes[Index].ExhaustPosition.X = NewX;
         ExhaustPipes[Index].ExhaustPosition.Y = NewY;
         ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
-        //ExhaustPipes[Index].ExhaustEffect.SetBase(none);
         ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
         ExhaustPipes[Index].ExhaustEffect.SetBase(self);
         Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ ExhaustPipes[Index].ExhaustPosition @ "(was " @ OldExhaustPosition $ ")");

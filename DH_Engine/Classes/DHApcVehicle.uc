@@ -63,62 +63,102 @@ simulated function PostBeginPlay()
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
-    local float           MySpeed, LinTurnSpeed;
+    local float           MySpeed, MotionSoundVolume, LinTurnSpeed;
     local int             i;
 
-    super.Tick(DeltaTime);
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
-    // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        MySpeed = Abs(ForwardVel);
+        MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
-        // Set tread & wheel movement rates
-        KGetRigidBodyState(BodyState);
-        LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
-
-        if (LeftTreadPanner != none)
+        // If vehicle is moving, update sounds, treads & wheels, based on speed
+        if (MySpeed > 0.1)
         {
-            LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
+            // Update engine, interior rumble & tread sounds
+            MotionSoundVolume = FClamp(MySpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
+            UpdateMovementSound(MotionSoundVolume);
 
-            if (Velocity dot vector(Rotation) < 0.0)
+            // Update tread & wheel movement rates
+            KGetRigidBodyState(BodyState);
+            LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+
+            if (LeftTreadPanner != none)
             {
-                LeftTreadPanner.PanRate = -1.0 * LeftTreadPanner.PanRate;
+                LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
+                LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
             }
 
-            LeftTreadPanner.PanRate += LinTurnSpeed;
-            LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-        }
-
-        if (RightTreadPanner != none)
-        {
-            RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-
-            if (Velocity dot vector(Rotation) < 0.0)
+            if (RightTreadPanner != none)
             {
-                RightTreadPanner.PanRate = -1.0 * RightTreadPanner.PanRate;
+                RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
+                RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
             }
 
-            RightTreadPanner.PanRate -= LinTurnSpeed;
-            RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
-        }
+            // Animate the wheels
+            for (i = 0; i < LeftWheelBones.Length; ++i)
+            {
+                SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+            }
 
-        // Animate the tank wheels
-        for (i = 0; i < LeftWheelBones.Length; ++i)
-        {
-            SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
-        }
+            for (i = 0; i < RightWheelBones.Length; ++i)
+            {
+                SetBoneRotation(RightWheelBones[i], RightWheelRot);
+            }
 
-        for (i = 0; i < RightWheelBones.Length; ++i)
-        {
-            SetBoneRotation(RightWheelBones[i], RightWheelRot);
+            // Force player to pull back on throttle if over max speed
+            if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
+            {
+                ROPlayer(Controller).aForward = -32768.0;
+            }
         }
+        // If vehicle isn't moving, zero the movement sounds & tread movement
+        else
+        {
+            UpdateMovementSound(0.0);
+            LeftTreadPanner.PanRate = 0.0;
+            RightTreadPanner.PanRate = 0.0;
+        }
+    }
 
-        // Force player to pull back on throttle if over max speed
-        if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
+    // Stop all movement if engine off
+    if (bEngineOff)
+    {
+        Velocity = vect(0.0, 0.0, 0.0);
+        Throttle = 0.0;
+        ThrottleAmount = 0.0;
+        Steering = 0.0;
+        ForwardVel = 0.0;
+    }
+    // If we crushed an object, apply brake & clamp throttle (server only)
+    else if (bCrushedAnObject)
+    {
+        // If our crush stall time is over, we are no longer crushing
+        if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
         {
-            ROPlayer(Controller).aForward = -32768.0;
+            bCrushedAnObject = false;
         }
+        else
+        {
+            Throttle = FClamp(Throttle, -0.1, 0.1);
+
+            if (ROPlayer(Controller) != none)
+            {
+                ROPlayer(Controller).bPressedJump = true;
+            }
+        }
+    }
+    // Very heavy damage to engine limits speed
+    else if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
+    {
+        Throttle = FClamp(Throttle, -0.5, 0.5);
+    }
+
+    // Disable Tick if vehicle isn't moving & has no driver
+    if (!bDriving && ForwardVel ~= 0.0)
+    {
+        MinBrakeFriction = LowSpeedBrakeFriction;
+        Disable('Tick');
     }
 }
 
