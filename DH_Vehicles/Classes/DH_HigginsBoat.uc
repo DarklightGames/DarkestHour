@@ -53,6 +53,13 @@ function KDriverEnter(Pawn P)
 // Also to add Higgins boat hint
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    // Fixes potential problem on net clients when deploying into a spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    {
+        PC.GotoState('PlayerWalking');
+    }
+
+    bDesiredBehindView = false;
     FPCamPos = default.FPCamPos;
     GotoState('EnteringVehicle');
     PendingPositionIndex = DriverPositionIndex;

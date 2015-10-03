@@ -43,12 +43,6 @@ simulated function PostBeginPlay()
     }
 }
 
-// Skip over the Super in DHWheeledVehicle to avoid an engine hint
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    super(ROWheeledVehicle).ClientKDriverEnter(PC);
-}
-
 // Modified to include wash sound attachments
 simulated function Destroyed()
 {
