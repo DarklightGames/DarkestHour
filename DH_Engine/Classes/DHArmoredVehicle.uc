@@ -3711,7 +3711,7 @@ function MaybeDestroyVehicle()
     }
 }
 
-// Modified to use DriverTraceDistSquared instead of literal values (& add debug)
+// Modified so spawn vehicles never respawn when left empty,  to use DriverTraceDistSquared instead of literal values, & to add debug
 event CheckReset()
 {
     local Pawn P;
@@ -3739,24 +3739,27 @@ event CheckReset()
     // Check for friendlies nearby
     foreach CollidingActors(class'Pawn', P, 4000.0)
     {
-        if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum()) // traces only work on friendly players nearby
+        // Found a friendly pawn within range, but now make further checks
+        if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum())
         {
-            if (ROPawn(P) != none && (VSizeSquared(P.Location - Location) < DriverTraceDistSquared)) // changed so compare squared values, as VSizeSquared is more efficient
+            // Don't reset if it's a friendly player pawn within DriverTraceDistSquared, without line of sight check (using squared values as VSizeSquared is more efficient)
+            if (ROPawn(P) != none && (VSizeSquared(P.Location - Location) < DriverTraceDistSquared))
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly player nearby");
+                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly player pawn nearby");
                 }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
 
                 return;
             }
+            // Don't reset if it's a friendly player pawn (including occupied vehicle) that's within line of sight
             else if (FastTrace(P.Location + P.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0)))
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly pawn nearby");
+                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly pawn nearby & in line of sight");
                 }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
