@@ -32,9 +32,50 @@ simulated function PostNetBeginPlay()
         else
         {
             LoopAnim(RampDownIdleAnim);
-            DestAnimName = RampDownIdleAnim;
+            DestroyedAnimName = RampDownIdleAnim;
         }
     }
+}
+
+// Modified to handle binoculars overlay
+simulated function DrawHUD(Canvas C)
+{
+    local PlayerController PC;
+    local float            SavedOpacity;
+
+    PC = PlayerController(Controller);
+
+    if (PC != none && !PC.bBehindView)
+    {
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
+        }
+
+        // Draw binoculars overlay
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        {
+            SavedOpacity = C.ColorModulate.W;
+            C.ColorModulate.W = 1.0;
+            C.DrawColor.A = 255;
+            C.Style = ERenderStyle.STY_Alpha;
+
+            DrawBinocsOverlay(C);
+
+            C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+        }
+    }
+}
+
+// New function, same as tank cannon pawn
+simulated function DrawBinocsOverlay(Canvas C)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position
@@ -114,54 +155,13 @@ function DriverLeft()
 simulated function RampUpIdle()
 {
     LoopAnim(RampUpIdleAnim);
-    DestAnimName = RampUpIdleAnim;
+    DestroyedAnimName = RampUpIdleAnim;
 }
 
 simulated function RampDownIdle()
 {
     LoopAnim(RampDownIdleAnim);
-    DestAnimName = RampDownIdleAnim;
-}
-
-// Modified to handle binoculars overlay
-simulated function DrawHUD(Canvas C)
-{
-    local PlayerController PC;
-    local float            SavedOpacity;
-
-    PC = PlayerController(Controller);
-
-    if (PC != none && !PC.bBehindView)
-    {
-        // Draw vehicle, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none)
-        {
-            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
-        }
-
-        // Draw binoculars overlay
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
-        {
-            SavedOpacity = C.ColorModulate.W;
-            C.ColorModulate.W = 1.0;
-            C.DrawColor.A = 255;
-            C.Style = ERenderStyle.STY_Alpha;
-
-            DrawBinocsOverlay(C);
-
-            C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
-        }
-    }
-}
-
-// New function, same as tank cannon pawn
-simulated function DrawBinocsOverlay(Canvas C)
-{
-    local float ScreenRatio;
-
-    ScreenRatio = float(C.SizeY) / float(C.SizeX);
-    C.SetPos(0.0, 0.0);
-    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    DestroyedAnimName = RampDownIdleAnim;
 }
 
 // Functions emptied as they relate to start/stop engine, which we don't allow in the Higgins boat:
@@ -194,8 +194,7 @@ defaultproperties
     WashSoundBoneR="Wash_R"
     EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
     EngineSoundBone="Engine"
-    DestAnimName="Higgins-Idle"
-    DestAnimRate=1.0
+    DestroyedAnimName="Higgins-Idle"
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -330,7 +329,7 @@ defaultproperties
     Health=800
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
-    DestroyedVehicleTexture=texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
+    DestroyedMeshSkins(0)=texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
     CollisionRadius=100.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

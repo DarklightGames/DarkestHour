@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHBoatVehicle extends DHWheeledVehicle // Matt: originally extended ROWheeledVehicle
+class DHBoatVehicle extends DHWheeledVehicle
     abstract;
 
 var     sound               WashSound;
@@ -12,9 +12,8 @@ var     ROSoundAttachment   WashSoundAttachL;
 var     name                WashSoundBoneR;
 var     ROSoundAttachment   WashSoundAttachR;
 
-var     Material            DestroyedVehicleTexture;
-var     name                DestAnimName;
-var     float               DestAnimRate;
+var     name                DestroyedAnimName;
+var     float               DestroyedAnimRate;
 
 // Modified to spawn wash sound attachments
 simulated function PostBeginPlay()
@@ -43,31 +42,16 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to include wash sound attachments
-simulated function Destroyed()
-{
-    if (WashSoundAttachL != none)
-    {
-        WashSoundAttachL.Destroy();
-    }
-
-    if (WashSoundAttachR != none)
-    {
-        WashSoundAttachR.Destroy();
-    }
-
-    super.Destroyed();
-}
-
-// Modified to avoid switching to static mesh DestroyedVehicleMesh, instead switching the boat skin to a DestroyedVehicleTexture & playing a destroyed animation
+// Modified to avoid switching to static mesh DestroyedVehicleMesh, instead just re-skinning normal mesh with DestroyedMeshSkins & playing a destroyed animation
 simulated event DestroyAppearance()
 {
-    local int         i;
-    local KarmaParams KP;
+    local int i;
 
-    bDestroyAppearance = true; // for replication
+    bDestroyAppearance = true; // replicated, natively triggering this function on net clients
+    NetPriority = 2.0;
+    Disable('Tick');
 
-    // Put brakes on
+    // Zero the driving controls (vehicle will come to a stop naturally)
     Throttle = 0.0;
     Steering = 0.0;
     Rise     = 0.0;
@@ -87,38 +71,46 @@ simulated event DestroyAppearance()
     WeaponPawns.Length = 0;
 
     // Destroy the effects
-    if (Level.NetMode != NM_DedicatedServer)
+    if (DamagedEffect != none)
     {
-        if (bEmittersOn)
-        {
-            StopEmitters();
-        }
+        DamagedEffect.Kill();
+    }
 
-        if (DamagedEffect != none)
+    DestroyAttachments();
+
+    // Switch to destroyed vehicle texture
+    if (Level.NetMode != NM_DedicatedServer && DestroyedMeshSkins.Length > 0)
+    {
+        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
         {
-            DamagedEffect.Kill();
+            if (DestroyedMeshSkins[i] != none)
+            {
+                Skins[i] = DestroyedMeshSkins[i];
+            }
         }
     }
 
-    // Copy linear velocity from actor so it doesn't just stop
-    KP = KarmaParams(KParams);
-
-    if (KP != none)
+    // Loop any destroyed vehicle animation
+    if (DestroyedAnimName != '')
     {
-        KP.KStartLinVel = Velocity;
+        LoopAnim(DestroyedAnimName, DestroyedAnimRate);
+    }
+}
+
+// Modified to include wash sound attachments
+simulated function DestroyAttachments()
+{
+    if (WashSoundAttachL != none)
+    {
+        WashSoundAttachL.Destroy();
     }
 
-    //Become the dead vehicle mesh // Matt: removed as in this case we aren't switching to a destroyed static mesh
-//  SetPhysics(PHYS_None);
-//  KSetBlockKarma(false);
-//  SetDrawType(DT_Mesh);
-//  KSetBlockKarma(true);
-//  SetPhysics(PHYS_Karma);
-//  Skins.Length = 1;
-    NetPriority = 2.0;
+    if (WashSoundAttachR != none)
+    {
+        WashSoundAttachR.Destroy();
+    }
 
-    Skins[0] = DestroyedVehicleTexture;
-    LoopAnim(DestAnimName, DestAnimRate);
+    super.DestroyAttachments();
 }
 
 defaultproperties
@@ -132,6 +124,7 @@ defaultproperties
     ViewShakeRadius=600.0
     ViewShakeOffsetMag=(X=0.5,Z=2.0)
     ViewShakeOffsetFreq=7.0
+    DestroyedAnimRate=1.0
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // reinstate defaults x 3 from ROWheeledVehicle
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
@@ -143,7 +136,7 @@ defaultproperties
     ExplosionRadius=600.0
     ImpactDamageThreshold=5000.0 // reinstate default from ROWheeledVehicle
     ImpactDamageMult=0.001
-    DriverTraceDistSquared=4000000.0 // Matt: default 2000 from ROWheeledVehicle, but squared for new DistSquared variable
+    DriverTraceDistSquared=4000000.0 // default 2000 from ROWheeledVehicle, but squared for new DistSquared variable
     InitialPositionIndex=0
     VehicleMass=12.0
     bKeyVehicle=true
