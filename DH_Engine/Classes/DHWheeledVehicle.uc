@@ -32,24 +32,28 @@ struct CarHitpoint
     var ECarHitPointType  CarHitPointType;       // what type of hit point this is
 };
 
-var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
-
 // General
-var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
-var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
-var     float       PointValue;                  // used for scoring
-var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
-var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly players, to avoid re-spawning vehicle
-var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly pawn found // Matt: seems to duplicate FriendlyResetDistance?
+var     float       PointValue;                  // used for scoring
+var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
+var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning vehicle
+var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly player pawn found (ignoring line of sight check)
 var     ObjectMap   NotifyParameters;            // an object that can hold references to several other objects, which can be used by messages to build a tailored message
-var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-// Driver positions & view
+// Driver
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
+var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
+
+// Damage
+var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
+var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
+var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
+var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
+var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -57,29 +61,21 @@ var     bool        bSavedEngineOff;             // clientside record of current
 var     float       IgnitionSwitchTime;          // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
 var     float       IgnitionSwitchInterval;      // how frequently the engine can be manually switched on/off
 
-// Obstacle crushing & object collision
-var     bool        bCrushedAnObject;            // vehicle has just crushed something, causing temporary movement stall
-var     float       LastCrushedTime;             // records time object was crushed, so we know when the movement stall should end
-var     float       ObjectCrushStallTime;        // how long the movement stall lasts
-var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
-
-// Option to have mounted cannon - variables used by HUD (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
-var     ROTankCannon    Cannon;                  // reference to cannon actor
-var     TexRotator      VehicleHudTurret;        // same as ROTreadCraft
-var     TexRotator      VehicleHudTurretLook;    // same as ROTreadCraft
-
-// New sounds & sound attachment actors
+// Driving sounds
 var     float               MaxPitchSpeed;
 var     sound               EngineSound;
 var     ROSoundAttachment   EngineSoundAttach;
 var     name                EngineSoundBone;
-var     sound               RumbleSound; // interior rumble sound
+var     sound               RumbleSound;         // interior rumble sound
 var     ROSoundAttachment   InteriorRumbleSoundAttach;
 var     name                RumbleSoundBone;
-var     sound               VehicleBurningSound;
-var     sound               DestroyedBurningSound;
-var     sound               DamagedStartUpSound;
-var     float               LastBottomOutTime; // last time a bottom out sound was played
+
+// Object impacts
+var     bool        bCrushedAnObject;            // vehicle has just crushed something, causing temporary movement stall
+var     float       LastCrushedTime;             // records time object was crushed, so we know when the movement stall should end
+var     float       ObjectCrushStallTime;        // how long the movement stall lasts
+var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
+var     float       LastBottomOutTime;           // last time a bottom out sound was played
 
 // Resupply attachments
 var     class<RODummyAttachment>    ResupplyAttachmentClass;
@@ -88,6 +84,11 @@ var     name                        ResupplyAttachBone;
 var     class<RODummyAttachment>    ResupplyDecoAttachmentClass;
 var     RODummyAttachment           ResupplyDecoAttachment;
 var     name                        ResupplyDecoAttachBone;
+
+// Option to have mounted cannon - variables used by HUD (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
+var     ROTankCannon    Cannon;                  // reference to cannon actor
+var     TexRotator      VehicleHudTurret;        // same as ROTreadCraft
+var     TexRotator      VehicleHudTurretLook;    // same as ROTreadCraft
 
 // Debugging
 var     bool        bDebuggingText;
