@@ -1849,7 +1849,7 @@ simulated event DestroyAppearance()
 
     super.DestroyAppearance();
 
-    Disable('Tick'); // otherwise Tick spams "accessed none" errors for Left/RightTreadPanner & it's inconvenient to check != none in Tick
+    Disable('Tick');
 
     DestroyAttachments();
 
