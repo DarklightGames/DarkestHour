@@ -11,6 +11,9 @@ var     name        SightBone;
 var     name        TraverseWheelBone;
 var     name        ElevationWheelBone;
 
+var class<Emitter>  ShellCaseEmitterClass;
+var     Emitter     ShellCaseEmitter;
+
 // Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
 simulated function PostBeginPlay()
 {
@@ -30,6 +33,34 @@ simulated function UpdateSightAndWheelRotation()
 
     TraverseWheelRotation.Yaw = -CurrentAim.Yaw * 32;
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation);
+}
+
+// Modified to spawn an emitter for the ejected shell cases
+// Note we can't simply add a MeshEmitter to FlashEmitterClass because that's attached to barrel bone & when it recoils it messes up the ejected shell case location
+simulated function InitEffects()
+{
+    super.InitEffects();
+
+    if (Level.NetMode != NM_DedicatedServer && ShellCaseEmitter == none)
+    {
+        ShellCaseEmitter = Spawn(ShellCaseEmitterClass);
+
+        if (ShellCaseEmitter != none)
+        {
+            AttachToBone(ShellCaseEmitter, PitchBone);
+        }
+    }
+}
+
+// Modified to trigger new shell case emitter every time we fire
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+    super.FlashMuzzleFlash(bWasAltFire);
+
+    if (ShellCaseEmitter != none)
+    {
+        ShellCaseEmitter.Trigger(self, Instigator);
+    }
 }
 
 // From DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DHVehicleCannon (AT gun will always be penetrated by a shell)
@@ -55,6 +86,7 @@ defaultproperties
     InitialTertiaryAmmo=20
     SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
+    ShellCaseEmitterClass=class'DH_Guns.DH_20mmShellCaseEmitter'
     BeginningIdleAnim="optic_idle_in"
     TankShootClosedAnim="shoot_optic"
     ShootIntermediateAnim="shoot_opensight"

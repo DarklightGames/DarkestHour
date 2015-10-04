@@ -270,6 +270,7 @@ defaultproperties
     FireAnimations(1)="shoot_loweredB"  // on sights, 2nd gun pair
     FireAnimations(2)="shoot_lookoverA" // raised head, 1st gun pair
     FireAnimations(3)="shoot_lookoverB" // raised head, 2nd gun pair
+    ShellCaseEmitterClass=none
     SightBone="Object002"
     TraverseWheelBone="pitch_w" // these are the wrong way round in the model - "pitch_w" is actually the traversing wheel & "yaw_w" is the elevating wheel
     ElevationWheelBone="yaw_w"
