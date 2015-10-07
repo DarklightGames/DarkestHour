@@ -8,16 +8,15 @@ class DHRadioItem extends DHWeapon
 
 var class<DHArtilleryTrigger>   ArtilleryTriggerClass;
 var DHArtilleryTrigger          ArtilleryTrigger;
-var int                         TeamCanUse;
 var name                        AttachBoneName;
 
 simulated function PreBeginPlay()
 {
-    local DHPawn DHP;
+    local DHPawn P;
 
-    DHP = DHPawn(Instigator);
+    P = DHPawn(Instigator);
 
-    if (DHP == none || DHP.CarriedRadioTrigger != none)
+    if (P == none || P.CarriedRadioTrigger != none)
     {
         Destroy();
 
@@ -25,6 +24,20 @@ simulated function PreBeginPlay()
     }
 
     super.PreBeginPlay();
+}
+
+simulated function PostBeginPlay()
+{
+    local DHPawn P;
+
+    P = DHPawn(Instigator);
+
+    if (P != none)
+    {
+        AttachToPawn(P);
+    }
+
+    super.PostBeginPlay();
 }
 
 function AttachToPawn(Pawn P)
@@ -35,14 +48,14 @@ function AttachToPawn(Pawn P)
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     DHP = DHPawn(P);
 
-    if (GRI == none || DHP == none)
+    if (GRI == none || DHP == none || DHP.CarriedRadioTrigger != none)
     {
         return;
     }
 
     ArtilleryTrigger = Spawn(ArtilleryTriggerClass, P);
 
-    switch (TeamCanUse)
+    switch (P.GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
             ArtilleryTrigger.TeamCanUse = AT_Axis;
@@ -107,7 +120,6 @@ defaultproperties
     FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     InventoryGroup=10
-    TeamCanUse=NEUTRAL_TEAM_INDEX
     AttachBoneName="hip"
     ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTrigger'
 }

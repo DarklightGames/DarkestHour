@@ -9,6 +9,5 @@ defaultproperties
 {
     AttachmentClass=class'DH_Equipment.DH_BritishRadioAttachment'
     ItemName="Radio"
-    TeamCanUse=ALLIES_TEAM_INDEX
 }
 
