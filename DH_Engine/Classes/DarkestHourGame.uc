@@ -1623,6 +1623,7 @@ state RoundInPlay
         RoundStartTime = ElapsedTime;
         GRI = DHGameReplicationInfo(GameReplicationInfo);
         GRI.RoundStartTime = RoundStartTime;
+        GRI.RoundEndTime = RoundStartTime + RoundDuration;
 
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
@@ -2031,8 +2032,8 @@ state RoundInPlay
             }
         }
 
-        // If round time is up, the defending team wins, if any
-        if (RoundDuration != 0 && ElapsedTime > RoundStartTime + RoundDuration)
+        // if round time is up, the defending team wins, if any
+        if (RoundDuration != 0 && ElapsedTime > GRI.RoundEndTime)
         {
             Level.Game.Broadcast(self, "The battle ended because time ran out", 'Say');
             ChooseWinner();
@@ -2164,7 +2165,7 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
                 }
                 else
                 {
-                    SetRoundTime(Min(GetRoundTime(), 60));
+                    ModifyRoundTime(Min(GetRoundTime(), 60), 2); //Set time remainging to 60 seconds
                 }
             }
         }
@@ -2289,6 +2290,11 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 exec function DebugWinGame(optional int TeamToWin)
 {
     EndRound(TeamToWin);
+}
+
+exec function DebugSetReinforcements(int Team, int Amount)
+{
+    ModifyReinforcements(Team,Amount,true);
 }
 
 function RestartPlayer(Controller C)
@@ -3126,69 +3132,34 @@ function bool SpawnLimitReached(int Team)
 
 function int GetRoundTime()
 {
-    return Max(0, (RoundStartTime + RoundDuration) - ElapsedTime);
+    return Max(0, DHGameReplicationInfo(GameReplicationInfo).RoundEndTime - ElapsedTime);
 }
 
-// Theel:
-// TODO:
-// Okay so this function doesn't seem to be working, of course I've put in some extra lines in hopes that it'd work
-// Known issue might be the new change to allowing Round Duration to be 0
-// However this function needs to also have an optional bool to indicate to players that the round time was modified, similiar to the level actor functionality
-// This will hopefully prevent people from wondering why the round suddenly ends
-// Once this is functional, domination + reinf attrition is working in SP (need to test MP still)
-function SetRoundTime(int RoundTime, optional bool bNotifyPlayers)
+// This function allows proper time remaining to be adjusted as desired
+function ModifyRoundTime(int RoundTime, int Type)
 {
     local DHGameReplicationInfo GRI;
-    local int ElapsedTimeDelta;
-    local int i, j;
-    local Controller C;
-    local DHPlayer PC;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI != none)
+    if (GRI != none && self.IsInState('RoundInPlay'))
     {
-        ElapsedTimeDelta = (GRI.RoundDuration + GRI.RoundStartTime - RoundTime) - ElapsedTime;
-
-        //RoundDuration = RoundTime;
-        ElapsedTime += ElapsedTimeDelta;
-        LastReinforcementTime[AXIS_TEAM_INDEX] += ElapsedTimeDelta;
-        LastReinforcementTime[ALLIES_TEAM_INDEX] += ElapsedTimeDelta;
-        //GRI.RoundDuration = RoundTime;
-        GRI.ElapsedTime += ElapsedTimeDelta;
-        GRI.ElapsedQuarterMinute = GRI.ElapsedTime;
-
-        for (i = 0; i < arraycount(GRI.VehiclePoolNextAvailableTimes); ++i)
+        switch (Type)
         {
-            GRI.VehiclePoolNextAvailableTimes[i] += ElapsedTimeDelta;
+            case 0: //Add
+                GRI.RoundEndTime += RoundTime;
+                break;
+            case 1: //Subtract
+                GRI.RoundEndTime -= RoundTime;
+                break;
+            case 2: //Set
+                GRI.RoundEndTime = GRI.ElapsedTime + RoundTime;
+                break;
+            default:
+                GRI.RoundEndTime = GRI.ElapsedTime + RoundTime;
+                break;
         }
-
-        if (SpawnManager != none)
-        {
-            for (i = 0; i < SpawnManager.VehiclePools.Length; ++i)
-            {
-                for (j = 0; j < SpawnManager.VehiclePools[i].Slots.Length; ++j)
-                {
-                    SpawnManager.VehiclePools[i].Slots[j].RespawnTime += ElapsedTimeDelta;
-                }
-            }
-        }
-
-        for (C = Level.ControllerList; C != none; C = C.nextController)
-        {
-            PC = DHPlayer(C);
-
-            if (PC != none)
-            {
-                PC.NextSpawnTime += ElapsedTimeDelta;
-            }
-        }
-
-        if (bNotifyPlayers)
-        {
-            //Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', 0, none, none, self);
-            // Theel TODO: Add notification for all players that round time was modified
-        }
+        Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', Type);
     }
 }
 

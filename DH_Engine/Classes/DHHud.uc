@@ -2506,7 +2506,7 @@ simulated function DrawObjectives(Canvas C)
     }
     else
     {
-        CurrentTime = Max(0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
+        CurrentTime = Max(0, DHGRI.RoundEndTime - DHGRI.ElapsedTime);
     }
 
     // Get player
@@ -3779,7 +3779,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
         else
         {
-            CurrentTime = DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime;
+            CurrentTime = DHGRI.RoundEndTime - DHGRI.ElapsedTime;
         }
 
         if (DHGRI.RoundDuration == 0)

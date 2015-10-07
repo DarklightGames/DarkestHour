@@ -180,19 +180,19 @@ simulated function UpdateScoreBoard (Canvas C)
         }
     }
 
-    if (ROGameReplicationInfo(GRI) != none)
+    if (DHGameReplicationInfo(GRI) != none)
     {
         // Update round timer
-        if (!ROGameReplicationInfo(GRI).bMatchHasBegun)
+        if (!DHGameReplicationInfo(GRI).bMatchHasBegun)
         {
-            CurrentTime = ROGameReplicationInfo(GRI).RoundStartTime + ROGameReplicationInfo(GRI).PreStartTime - GRI.ElapsedTime;
+            CurrentTime = DHGameReplicationInfo(GRI).RoundStartTime + DHGameReplicationInfo(GRI).PreStartTime - GRI.ElapsedTime;
         }
         else
         {
-            CurrentTime = ROGameReplicationInfo(GRI).RoundStartTime + ROGameReplicationInfo(GRI).RoundDuration - GRI.ElapsedTime;
+            CurrentTime = DHGameReplicationInfo(GRI).RoundEndTime - GRI.ElapsedTime;
         }
 
-        if (ROGameReplicationInfo(GRI).RoundDuration == 0)
+        if (DHGameReplicationInfo(GRI).RoundDuration == 0)
         {
             S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).default.NoTimeLimitText;
         }
@@ -202,17 +202,17 @@ simulated function UpdateScoreBoard (Canvas C)
         }
 
         // Add time elapsed after time remaining
-        CurrentTime = GRI.ElapsedTime - ROGameReplicationInfo(GRI).RoundStartTime;
+        CurrentTime = GRI.ElapsedTime - DHGameReplicationInfo(GRI).RoundStartTime;
         S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeElapsedText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
 
         // Server IP on scoreboard
-        if (ROGameReplicationInfo(GRI).bShowServerIPOnScoreboard && PlayerController(Owner) != none)
+        if (DHGameReplicationInfo(GRI).bShowServerIPOnScoreboard && PlayerController(Owner) != none)
         {
             S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.IPText $ PlayerController(Owner).GetServerIP();
         }
 
         // Server Time on scoreboard
-        if (ROGameReplicationInfo(GRI).bShowTimeOnScoreboard)
+        if (DHGameReplicationInfo(GRI).bShowTimeOnScoreboard)
         {
             S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeText $ Level.Hour $ ":" $ Level.Minute @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
         }
@@ -233,7 +233,7 @@ simulated function UpdateScoreBoard (Canvas C)
     Y = CalcY(2.0, C);
     Y += CellHeight;
     TeamColor = class'DHHud'.default.SideColors[0];
-    DrawCell(C, TeamNameAxis @ "-" @ ROGameReplicationInfo(GRI).UnitName[0], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
+    DrawCell(C, TeamNameAxis @ "-" @ DHGameReplicationInfo(GRI).UnitName[0], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
 
     Y += CellHeight;
 
@@ -314,7 +314,7 @@ simulated function UpdateScoreBoard (Canvas C)
         }
 
         // Draw name
-        if (Level.NetMode != NM_Standalone && ROGameReplicationInfo(GRI).bPlayerMustReady)
+        if (Level.NetMode != NM_Standalone && DHGameReplicationInfo(GRI).bPlayerMustReady)
         {
             if (GermanPRI[i].bReadyToPlay || GermanPRI[i].bBot)
             {
@@ -419,7 +419,7 @@ simulated function UpdateScoreBoard (Canvas C)
     Y = CalcY(2, C);
     TeamColor = class'DHHud'.default.SideColors[1];
     Y += CellHeight;
-    DrawCell(C, TeamNameAllies @ "-" @ ROGameReplicationInfo(GRI).UnitName[1], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
+    DrawCell(C, TeamNameAllies @ "-" @ DHGameReplicationInfo(GRI).UnitName[1], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
     Y += CellHeight;
 
     DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).SpawnsRemaining[1]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
@@ -499,7 +499,7 @@ simulated function UpdateScoreBoard (Canvas C)
         }
 
         // Draw name
-        if (Level.NetMode != NM_Standalone && ROGameReplicationInfo(GRI).bPlayerMustReady)
+        if (Level.NetMode != NM_Standalone && DHGameReplicationInfo(GRI).bPlayerMustReady)
         {
             if (RussianPRI[i].bReadyToPlay || RussianPRI[i].bBot)
             {

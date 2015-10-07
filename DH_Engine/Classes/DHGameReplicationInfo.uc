@@ -35,6 +35,8 @@ var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
 
+var int                 RoundEndTime;  // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
+
 const ROLES_MAX = 16;
 
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
@@ -92,6 +94,7 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bLogWeaponAttachment, // TEMP DEBUG
+        RoundEndTime,
         SpawnsRemaining,
         DHAxisRoles,
         DHAlliesRoles,

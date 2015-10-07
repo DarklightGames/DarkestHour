@@ -2113,12 +2113,6 @@ function ServerPossessBody(Pawn NewPawn)
     }
 }
 
-exec function DebugRoundPause()
-{
-    DarkestHourGame(Level.Game).RoundDuration = 9999999;
-    DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
-}
-
 function ServerClearObstacle(int Index)
 {
     local DarkestHourGame G;

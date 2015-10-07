@@ -281,7 +281,7 @@ function UpdateRoundStatus()
         }
         else
         {
-            RoundTime = Max(0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
+            RoundTime = Max(0, GRI.RoundEndTime - GRI.ElapsedTime);
         }
 
         if (GRI.RoundDuration == 0)
