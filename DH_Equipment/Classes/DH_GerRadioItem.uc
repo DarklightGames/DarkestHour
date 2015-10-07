@@ -9,6 +9,5 @@ defaultproperties
 {
     AttachmentClass=class'DH_Equipment.DH_GerRadioAttachment'
     ItemName="Torn.Fu.g"
-    TeamCanUse=ALLIES_TEAM_INDEX;
 }
 

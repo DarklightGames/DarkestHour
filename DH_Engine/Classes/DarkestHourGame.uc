@@ -2458,6 +2458,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SecondaryWeapon = -1;
             PC.GrenadeWeapon = -1;
             PC.bWeaponsSelected = false;
+            PC.SavedArtilleryCoords = vect(0, 0, 0);
 
             // DARKEST HOUR
             PC.SpawnPointIndex = 255;
