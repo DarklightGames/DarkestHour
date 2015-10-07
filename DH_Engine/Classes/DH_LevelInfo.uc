@@ -27,10 +27,6 @@ enum ESpawnMode
 var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
 
-//These variables need removed
-var() byte SmokeBrightnessOverride;     //Used to override the lighting brightness of smoke emitters
-var() rangevector WindDirectionSpeed;   //Used to make smoke grenades match other emitters in the level
-
 var() sound AlliesWinsMusic;            //Optional override for Allies victory music
 var() sound AxisWinsMusic;              //Optional override for Axis victory music
 
@@ -50,9 +46,8 @@ singular static function bool DHDebugMode()
 defaultproperties
 {
     Texture=texture'DHEngine_Tex.LevelInfo'
-    SmokeBrightnessOverride=255
     AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
-    bDHDebugMode=false // Matt: TEMP during development to aid testing - remove before release !
+    bDHDebugMode=true // Matt: TEMP during development to aid testing - remove before release !
 }
