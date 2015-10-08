@@ -149,7 +149,6 @@ defaultproperties
     WaterSpeed=200.0
     PitchUpLimit=500
     PitchDownLimit=58000
-    bKeepDriverAuxCollision=false // reinstate default from ROWheeledVehicle
     CollisionRadius=300.0
     CollisionHeight=45.0
 }
