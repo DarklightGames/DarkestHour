@@ -14,7 +14,7 @@ simulated function PostBeginPlay()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-		UpdatePrecacheMaterials();
+        UpdatePrecacheMaterials();
     }
 }
 

@@ -84,7 +84,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
                 Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
-            if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
+            if (DamageRadius > 0.0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
             {
                 Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
             }

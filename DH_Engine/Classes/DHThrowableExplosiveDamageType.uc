@@ -9,8 +9,8 @@ class DHThrowableExplosiveDamageType extends ROGrenadeDamType
 defaultproperties
 {
     DeathString="%o was blown up by %k's %w."
-	MaleSuicide="%o was blown up by his own %w."
-	FemaleSuicide="%o was blown up by her own %w."
+    MaleSuicide="%o was blown up by his own %w."
+    FemaleSuicide="%o was blown up by her own %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
     DeathOverlayTime=999.0
 }

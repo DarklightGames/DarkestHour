@@ -109,17 +109,11 @@ function SetAsServerBullet()
     RemoteRole = ROLE_None;
 }
 
-// Matt: disabled as function now emptied out - see comments below
+// Matt: disabled as function is now emptied out, as don't want delayed destruction stuff from ROBullet - far cleaner just to set short LifeSpan on a server
+// And for a tracer bullet, we don't need to keep setting its rotation to match its direction - simply setting bOrientToVelocity handles this natively
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
-
-//  super.Tick(DeltaTime); // ROBullet Super is not needed as delayed destruction on a server is handled far more efficiently by simply setting a short LifeSpan on a server
-
-//  if (bIsTracerBullet && Level.NetMode != NM_DedicatedServer)
-//  {
-//      SetRotation(rotator(Velocity)); // keep tracer rotation matched to it's direction // not needed as simply setting bOrientToVelocity handles this natively
-//  }
 }
 
 // Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
