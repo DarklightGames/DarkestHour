@@ -236,8 +236,12 @@ function bool TryToDrive(Pawn P)
 }
 
 // Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
+// Also to set rotation to match the way the rider is facing, so his view starts facing the same way
 function KDriverEnter(Pawn P)
 {
+    local rotator NewRotation;
+
+    // On a server, disable bTearOff so this actor replicates to relevant net clients
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         SetTimer(0.0, false); // clear any timer, so we don't risk setting bTearOff to true again just after we enter
@@ -245,11 +249,17 @@ function KDriverEnter(Pawn P)
     }
 
     super.KDriverEnter(P);
+
+    NewRotation.Yaw = DriveRot.Yaw;
+    SetRotation(NewRotation);
 }
 
 // Matt: modified to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+// Also to set rotation to match the way the rider is facing, so his view starts facing the same way
 simulated function ClientKDriverEnter(PlayerController PC)
 {
+    local rotator NewRotation;
+
     // Fix for problem where net client may be in state 'Spectating' when deploying into a spawn vehicle
     if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
     {
@@ -265,9 +275,12 @@ simulated function ClientKDriverEnter(PlayerController PC)
         bNeedToStoreVehicleRotation = true; // fix for problem where net client may not yet have VehicleBase actor when deploying into spawn vehicle
     }
 
-    super(VehicleWeaponPawn).ClientKDriverEnter(PC);
+    super(Vehicle).ClientKDriverEnter(PC);
 
     PC.SetFOV(WeaponFOV);
+
+    NewRotation.Yaw = DriveRot.Yaw;
+    SetRotation(NewRotation);
 }
 
 // Modified just to avoid confusing attachment to CameraBone & instead use the usual WeaponBone specified in the vehicle's PassengerWeapons array
@@ -523,6 +536,8 @@ defaultproperties
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     bPCRelativeFPRotation=true
+    bZeroPCRotOnEntry=false
+    bSetPCRotOnPossess=false
     bAllowViewChange=false
     bDesiredBehindView=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset (but shouldn't need to, as we use player's head bone for camera location)
