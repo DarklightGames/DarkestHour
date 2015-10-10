@@ -8,7 +8,7 @@ class DH_M45QuadmountFactory extends DHATGunFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Guns.DH_M45QuadmountGun'
-    Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'   //TODO: change
-    Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder'  //TODO: change
+    Mesh=SkeletalMesh'DH_M45_anm.m45_base_trailer'
+    Skins(0)=texture'DH_Artillery_tex.m45.m45_trailer'
 }
 
