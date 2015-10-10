@@ -351,8 +351,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // Damage something else
         else
         {
-            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
-            if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none)
+            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet (unless it's an AP bullet)
+            if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none && !IsA('DHBullet_ArmorPiercing'))
             {
                 DHArmoredVehicle(HitVehicleWeapon.Base).bProjectilePenetrated = false;
             }
@@ -415,8 +415,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // Have to use special damage for vehicles, otherwise it doesn't register for some reason
         if (ROVehicle(Wall) != none)
         {
-            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet
-            if (DHArmoredVehicle(Wall) != none)
+            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet (unless it's an AP bullet)
+            if (DHArmoredVehicle(Wall) != none && !IsA('DHBullet_ArmorPiercing'))
             {
                 DHArmoredVehicle(Wall).bProjectilePenetrated = false;
             }
