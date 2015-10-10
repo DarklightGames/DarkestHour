@@ -386,7 +386,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             {
                 Deflect(HitNormal);
             }
-            else
+            // Otherwise destroy if tracer has already deflected & this 'bullet' is now just a client visual effect
+            else if (bHasDeflected)
             {
                 bBounce = false;
                 Bounces = 0;
