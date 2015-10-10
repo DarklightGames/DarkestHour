@@ -58,6 +58,7 @@ defaultproperties
 {
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=1
+    BinocPositionIndex=2
     bMustBeTankCrew=false
     bHasAltFire=false
     PitchUpLimit=6000

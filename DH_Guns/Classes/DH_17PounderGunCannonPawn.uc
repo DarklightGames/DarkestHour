@@ -13,7 +13,6 @@ defaultproperties
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     RangeText="Yards"
-    BinocPositionIndex=2
     WeaponFov=24.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'

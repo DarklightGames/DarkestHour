@@ -10,7 +10,6 @@ defaultproperties
     OverlayCenterSize=0.542
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.57mmGun_sight_background'
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-    BinocPositionIndex=2
     WeaponFov=24.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'

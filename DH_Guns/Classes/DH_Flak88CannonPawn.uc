@@ -11,7 +11,6 @@ defaultproperties
     OverlayCenterSize=0.961
     OverlayCorrectionX=-3
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
-    BinocPositionIndex=2
     WeaponFov=18.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
