@@ -381,8 +381,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         if (bIsTracerBullet)
         {
-            // Deflect off wall unless bullet speed is very low
-            if (Level.NetMode != NM_DedicatedServer && VSizeSquared(Velocity) >= 250000.0)
+            // Deflect off wall unless bullet speed is very low (approx 12 m/s)
+            if (Level.NetMode != NM_DedicatedServer && VSizeSquared(Velocity) > 500000.0)
             {
                 Deflect(HitNormal);
             }
@@ -455,7 +455,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Finally destroy this bullet, or maybe deflect if is tracer
     if (bIsTracerBullet)
     {
-        // Deflect off wall unless bullet speed is low
+        // Deflect off wall unless bullet speed is very low (approx 12 m/s)
         if (Level.NetMode != NM_DedicatedServer && VSizeSquared(Velocity) >= 500000.0)
         {
             Deflect(HitNormal);
