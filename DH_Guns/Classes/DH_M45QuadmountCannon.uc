@@ -184,15 +184,15 @@ simulated function SetBarrelEffectEmitterStatus(bool bActive)
 defaultproperties
 {
     CannonAttachmentOffset=(X=0.0,Y=0.0,Z=6.7)
-    AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet' // 'DH_Vehicles.DH_50CalVehicleBullet'
-    ProjectileClass=class'DH_Weapons.DH_30CalBullet' // 'DH_Vehicles.DH_50CalVehicleBullet' // TEMP just to stop log spam
+    AltFireProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
+    ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet' // TEMP just to stop log spam
     InitialAltAmmo=200
-    NumAltMags=10 // unknown
+    NumAltMags=10 // TEMP - unknown, needs setting
     AltFireInterval=0.133333 // 450 RPM
     bUsesTracers=true
     AltFireTracerFrequency=5
     bAltFireTracersOnly=true
-    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet' // 'DH_Vehicles.DH_50CalVehicleTracerBullet'
+    AltTracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
     BarrelBones(0)="g1"
     BarrelBones(1)="g2"
     BarrelBones(2)="g3"

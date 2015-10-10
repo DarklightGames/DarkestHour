@@ -22,6 +22,12 @@ var     float           TracerPullback;
 var     float           DampenFactor;
 var     float           DampenFactorParallel;
 
+// Vehicle hit effects
+var     sound           VehiclePenetrateSound;
+var     class<Emitter>  VehiclePenetrateEffectClass;
+var     sound           VehicleDeflectSound;
+var     class<Emitter>  VehicleDeflectEffectClass;
+
 // Debugging
 var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
 
@@ -473,6 +479,43 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 }
 
+// New function to check whether we penetrated a vehicle weapon that we hit (default bullet won't penetrate damage any vehicle weapon)
+simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
+{
+    return false;
+}
+
+// New function to check whether we penetrated a vehicle that we hit (default bullet will only penetrate soft skin vehicle, not an armored vehicle or APC)
+simulated function bool PenetrateVehicle(ROVehicle V)
+{
+    return !bHasDeflected && !V.IsA('DHArmoredVehicle') && !V.IsA('DHApcVehicle');
+}
+
+simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, vector HitNormal)
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (bPenetrated)
+        {
+            PlaySound(VehiclePenetrateSound, SLOT_None, 5.5 * TransientSoundVolume,,, 1.5);
+
+            if (EffectIsRelevant(HitLocation, false) && VehiclePenetrateEffectClass != none)
+            {
+                Spawn(VehiclePenetrateEffectClass, ,, HitLocation, rotator(-HitNormal));
+            }
+        }
+        else
+        {
+            PlaySound(VehicleDeflectSound, SLOT_None, 5.5);
+
+            if (EffectIsRelevant(HitLocation, false) && VehicleDeflectEffectClass != none)
+            {
+                Spawn(VehicleDeflectEffectClass,,, HitLocation, rotator(-HitNormal));
+            }
+        }
+    }
+}
+
 // New function to handle tracer deflection off things
 simulated function Deflect(vector HitNormal)
 {
@@ -541,8 +584,12 @@ simulated function Destroyed()
 defaultproperties
 {
     WhizType=1
-    ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
+    ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehiclePenetrateSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
+    VehicleDeflectSound=sound'ProjectileSounds.Bullets.Impact_Metal'
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0
