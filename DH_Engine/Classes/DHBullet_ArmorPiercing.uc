@@ -55,11 +55,10 @@ simulated function bool PenetrateVehicle(ROVehicle V)
 
 defaultproperties
 {
-    VehiclePenetrateEffectClass=class'DH_Effects.DHBulletPenetrateArmorEffect' // custom class with much smaller penetration effects than shell
-    VehiclePenetrateSound=sound'ProjectileSounds.PTRD_penetrate'               // the PTRD penetration sound is ok for an AP bullet
-
-    // PTRD uses these hit effects, but the effect is too much for multiple hits from an MG:
-//  VehiclePenetrateEffectClass=class'TankAPHitPenetrateSmall'
-//  VehicleDeflectEffectClass=class'TankAPHitDeflect'
-//  VehicleDeflectSound=sound'PTRD_deflect'
+    VehiclePenetrateEffectClass=class'DH_Effects.DHBulletPenetrateArmorEffect' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
+    VehiclePenetrateSound=sound'ProjectileSounds.PTRD_penetrate'
+    VehiclePenetrateSoundVolume=5.5
+//  VehicleDeflectEffectClass=class'TankAPHitDeflect' // this effect is too much for multiple hits from an MG, so we'll use the standard bullet deflect effect
+    VehicleDeflectSound=sound'PTRD_deflect'
+    VehicleDeflectSoundVolume=5.5
 }

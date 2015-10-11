@@ -23,10 +23,12 @@ var     float           DampenFactor;
 var     float           DampenFactorParallel;
 
 // Vehicle hit effects
-var     sound           VehiclePenetrateSound;
 var     class<Emitter>  VehiclePenetrateEffectClass;
-var     sound           VehicleDeflectSound;
+var     sound           VehiclePenetrateSound;
+var     float           VehiclePenetrateSoundVolume;
 var     class<Emitter>  VehicleDeflectEffectClass;
+var     sound           VehicleDeflectSound;
+var     float           VehicleDeflectSoundVolume;
 
 // Debugging
 var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
@@ -491,13 +493,14 @@ simulated function bool PenetrateVehicle(ROVehicle V)
     return !bHasDeflected && !V.IsA('DHArmoredVehicle') && !V.IsA('DHApcVehicle');
 }
 
+// New function to handle hit effects for bullet hitting vehicle or vehicle weapon, depending on whether it penetrated (saves code repetition elsewhere)
 simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, vector HitNormal)
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (bPenetrated)
         {
-            PlaySound(VehiclePenetrateSound, SLOT_None, 5.5 * TransientSoundVolume,,, 1.5);
+            PlaySound(VehiclePenetrateSound, SLOT_None, VehiclePenetrateSoundVolume, false, 100.0);
 
             if (EffectIsRelevant(HitLocation, false) && VehiclePenetrateEffectClass != none)
             {
@@ -506,7 +509,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         }
         else
         {
-            PlaySound(VehicleDeflectSound, SLOT_None, 5.5);
+            PlaySound(VehicleDeflectSound, SLOT_None, VehicleDeflectSoundVolume, false, 100.0);
 
             if (EffectIsRelevant(HitLocation, false) && VehicleDeflectEffectClass != none)
             {
@@ -588,8 +591,10 @@ defaultproperties
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
     VehiclePenetrateSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehiclePenetrateSoundVolume=3.0
     VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
     VehicleDeflectSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleDeflectSoundVolume=3.0
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0
