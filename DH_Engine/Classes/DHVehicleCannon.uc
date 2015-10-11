@@ -277,16 +277,16 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     ProjectileSpread = TertiarySpread;
                 }
             }
+        }
 
-            // Now apply any random spread
-            if (ProjectileSpread > 0.0)
+        // Now apply any random spread
+        if (ProjectileSpread > 0.0)
+        {
+            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
+
+            if (!bAltFire)
             {
-                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
-
-                if (!bAltFire)
-                {
-                    WeaponFireRotation += rot(1, 6, 0);
-                }
+                WeaponFireRotation += rot(1, 6, 0);
             }
         }
 
