@@ -30,7 +30,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     for (i = 0; i < 4; ++i)
     {
-        FireRot = BarrelRotation[i];
+        FireRot = rotator(vector(BarrelRotation[i]) + VRand() * FRand() * AltFireSpread);
 
         if (Instigator != none && Instigator.IsHumanControlled())
         {
@@ -189,6 +189,7 @@ defaultproperties
     InitialAltAmmo=200
     NumAltMags=10 // TEMP - unknown, needs setting
     AltFireInterval=0.133333 // 450 RPM
+    AltFireSpread=0.01
     bUsesTracers=true
     AltFireTracerFrequency=5
     bAltFireTracersOnly=true
