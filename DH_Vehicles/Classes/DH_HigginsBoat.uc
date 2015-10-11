@@ -17,8 +17,11 @@ var     float       RampSoundVolume;
 var     name        RampUpIdleAnim; // effectively a replacement for BeginningIdleAnim, which is set to null (just easier that overriding functions to stop unwanted BeginningIdleAnim)
 var     name        RampDownIdleAnim;
 
+var     DHCollisionMeshActor    BoatColMeshActor, RampColMeshActor;
+
 // Modified to loop either the ramp up or down idle animation on a net client (also set a matching destroyed vehicle animation)
 // No benefit on a server as visuals aren't a factor, & in terms of collision the server & clients are going to out of synch whatever we do, so there's no point trying to match
+// Also to workaround the way the boat has been modelled, which screws up the normal use of a collision static mesh in the animation mesh
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
@@ -35,6 +38,29 @@ simulated function PostNetBeginPlay()
             DestroyedAnimName = RampDownIdleAnim;
         }
     }
+
+    // Matt: the Higgins boat is modelled with the wrong rotation & Z location, so in the animation mesh it is given yaw & pitch & a Z axis translation
+    // This completely screws up a collision static mesh in the animation mesh, because the engine doesn't apply the rotation & translation to the col mesh
+    // Also, a col mesh doesn't move with the boat animation, as it pitches & rolls
+    // As a workaround, I've taken the col mesh out of the anim mesh, & instead added it as a col mesh actor, attached to the relevant bone
+    // With a separate col mesh actor for the bow ramp, attached to ramp hinge bone so it lowers & raises with ramp, providing protection to players inside when raised
+    BoatColMeshActor = Spawn(class'DHCollisionMeshActor', self);
+    BoatColMeshActor.bHardAttach = true;
+    AttachToBone(BoatColMeshActor, 'Master1z00');
+    BoatColMeshActor.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll');
+
+    // Instead of complex calcs for the ramp rotation & offset, I've simply set it correctly using literals (from trial & error)
+    RampColMeshActor = Spawn(class'DHCollisionMeshActor', self);
+    RampColMeshActor.bHardAttach = true;
+    AttachToBone(RampColMeshActor, 'Master2z00');
+    RampColMeshActor.SetRelativeRotation(rot(0, 0, 650));
+    RampColMeshActor.SetRelativeLocation(vect(0.0, -252.0, -36.0));
+    RampColMeshActor.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll');
+
+    // Remove enough collision from the boat so it doesn't sink into the ground & it bumps into objects, but its crude collision boxes are ignored by projectiles
+    // NB- can't just set in default props, as col meshes need to copy boat's intended collision settings when they spawn, so have to change these afterwards
+    SetCollision(true, false); // bCollideActors true, but bBlockActors false
+    bProjTarget = false;
 }
 
 // Modified to handle binoculars overlay
@@ -177,6 +203,32 @@ function bool EncroachingOn(Actor Other)
     return false;
 }
 
+// Modified to destroy collision mesh attachments
+simulated function DestroyAttachments()
+{
+    super.DestroyAttachments();
+
+    if (BoatColMeshActor != none)
+    {
+        BoatColMeshActor.Destroy();
+    }
+
+    if (RampColMeshActor != none)
+    {
+        RampColMeshActor.Destroy();
+    }
+}
+
+// New debugging exec function to toggle showing the collision mesh for the boat & bow ramp
+exec function ShowColMesh()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && RampColMeshActor != none)
+    {
+        BoatColMeshActor.bHidden = !BoatColMeshActor.bHidden;
+        RampColMeshActor.bHidden = !RampColMeshActor.bHidden;
+    }
+}
+
 defaultproperties
 {
     InitialPositionIndex=1
@@ -187,14 +239,14 @@ defaultproperties
     RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
     RampSoundVolume=180.0
-    RampUpIdleAnim="Higgins-Idle"
-    RampDownIdleAnim="Ramp_Idle"
+    RampUpIdleAnim="Ramp_idle_raised"
+    RampDownIdleAnim="Ramp_idle_dropped"
     WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
     WashSoundBoneL="Wash_L"
     WashSoundBoneR="Wash_R"
     EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
     EngineSoundBone="Engine"
-    DestroyedAnimName="Higgins-Idle"
+    DestroyedAnimName="Ramp_idle_dropped"
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
