@@ -379,9 +379,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // Matt: modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
 // Bullet is bNetTemporary, meaning it gets torn off on client as soon as it replicates, receiving no further input from server, so delaying destruction on server has no effect
 // Also to handle tracer bullet clientside effects, as well as normal bullet functionality
+// Note this gets called when bullet collides with an ROVehicle (not a VehicleWeapon), as well as world geometry
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local ROVehicleHitEffect      VehEffect;
+    local ROVehicle HitVehicle;
+    local bool      bPenetratedVehicle;
 
     // Hit WallHitActor that we've already hit & recorded
     if (WallHitActor != none && WallHitActor == Wall)
@@ -406,6 +408,25 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     WallHitActor = Wall;
+    HitVehicle = ROVehicle(Wall);
+
+    // Handle hit on a vehicle
+    if (HitVehicle != none)
+    {
+        bPenetratedVehicle = !bHasDeflected && PenetrateVehicle(HitVehicle);
+
+        PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
+
+        if (!bPenetratedVehicle)
+        {
+            bHasDeflected = true; // even if not tracer bullet, this is just a convenient way of skipping damage & allowing us to reach end of function to deflect or destroy
+        }
+    }
+    // Spawn the bullet hit effect on anything other than a vehicle
+    else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
+    {
+        Spawn(ImpactEffect,,, Location, rotator(-HitNormal));
+    }
 
     // Do any damage
     if (Role == ROLE_Authority && !bHasDeflected)
@@ -415,12 +436,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // Have to use special damage for vehicles, otherwise it doesn't register for some reason
         if (ROVehicle(Wall) != none)
         {
-            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet (unless it's an AP bullet)
-            if (DHArmoredVehicle(Wall) != none && !IsA('DHBullet_ArmorPiercing'))
-            {
-                DHArmoredVehicle(Wall).bProjectilePenetrated = false;
-            }
-
             Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
         }
         else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
@@ -429,20 +444,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         }
 
         MakeNoise(1.0);
-    }
-
-    // Spawn the bullet hit effect
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (ROVehicle(Wall) != none)
-        {
-            VehEffect = Spawn(class'ROVehicleHitEffect',,, Location, rotator(-HitNormal));
-            VehEffect.InitHitEffects(Location, HitNormal);
-        }
-        else if (ImpactEffect != none)
-        {
-            Spawn(ImpactEffect,,, Location, rotator(-HitNormal));
-        }
     }
 
     if (!bHasDeflected)
@@ -461,8 +462,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Finally destroy this bullet, or maybe deflect if is tracer
     if (bIsTracerBullet)
     {
-        // Deflect off wall unless bullet speed is very low (approx 12 m/s)
-        if (Level.NetMode != NM_DedicatedServer && VSizeSquared(Velocity) >= 500000.0)
+        // Deflect off wall unless penetrated vehicle or bullet speed is very low (approx 12 m/s)
+        if (Level.NetMode != NM_DedicatedServer && !bPenetratedVehicle && VSizeSquared(Velocity) > 500000.0)
         {
             Deflect(HitNormal);
         }
