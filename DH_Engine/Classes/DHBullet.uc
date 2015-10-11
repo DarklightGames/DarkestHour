@@ -381,7 +381,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // Also to handle tracer bullet clientside effects, as well as normal bullet functionality
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local RODestroyableStaticMesh DestroMesh;
     local ROVehicleHitEffect      VehEffect;
 
     // Hit WallHitActor that we've already hit & recorded
@@ -407,7 +406,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     WallHitActor = Wall;
-    DestroMesh = RODestroyableStaticMesh(Wall);
 
     // Do any damage
     if (Role == ROLE_Authority && !bHasDeflected)
@@ -425,7 +423,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
             Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
         }
-        else if (Mover(Wall) != none || DestroMesh != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+        else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
         {
             Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
         }
@@ -453,7 +451,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // Don't want to destroy the bullet if its going through something like glass
-    if (DestroMesh != none && DestroMesh.bWontStopBullets)
+    if (RODestroyableStaticMesh(Wall) != none && RODestroyableStaticMesh(Wall).bWontStopBullets)
     {
         return;
     }
