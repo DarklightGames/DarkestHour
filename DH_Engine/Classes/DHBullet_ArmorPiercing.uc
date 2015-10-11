@@ -40,16 +40,14 @@ simulated function float GetPenetration(vector Distance)
 // Run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
 simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 {
-    return super.PenetrateVehicleWeapon(VW); // TEMP as the DHShouldPenetrate() function below runs into a class inheritance problem, which needs some changes
-
+    return !VW.IsA('DHVehicleCannon') || DHVehicleCannon(VW).LeftArmorFactor < 2.5; // TEMP just to demo, as DHShouldPenetrate function below runs into class inheritance problem, which needs changes
 //  return !DHVehicleCannon(VW).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
 }
 
 // Run penetration calculations on an armored vehicle, but damage any other vehicle automatically
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return super.PenetrateVehicle(V); // TEMP as the DHShouldPenetrate() function below runs into a class inheritance problem, which needs some changes
-
+    return !V.IsA('DHArmoredVehicle') || DHArmoredVehicle(V).ULeftArmorFactor < 2.5; // TEMP just to demo, as DHShouldPenetrate function below runs into class inheritance problem, which needs changes
 //  return DHArmoredVehicle(V).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
 }
 
