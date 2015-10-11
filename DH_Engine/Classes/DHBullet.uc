@@ -132,13 +132,31 @@ simulated singular function Touch(Actor Other)
     // Added bBlockHitPointTraces check here, so can avoid it at start of ProcessTouch(), meaning owner of col mesh gets handled properly in PT (it will have bBlockHitPointTraces=false)
     if (Other != none && (Other.bProjTarget || Other.bBlockActors) && Other.bBlockHitPointTraces)
     {
+        // Collision static mesh actor handling
         if (Other.IsA('DHCollisionMeshActor'))
         {
+            // If col mesh is set not to stop a bullet then we exit, doing nothing
             if (DHCollisionMeshActor(Other).bWontStopBullet)
             {
-                return; // exit, doing nothing, if col mesh actor is set not to stop a bullet
+                return;
             }
 
+            // If col mesh represents a vehicle, which would normally get a HitWall event instead of Touch, we call HitWall on the vehicle & exit
+            if (Other.Owner.IsA('ROVehicle'))
+            {
+                // Trace the col mesh to get an accurate HitLocation, as the projectile has often travelled further by the time this event gets called
+                // A false return means we successfully traced the col mesh, so we change the projectile's location (as we can't pass HitLocation to HitWall)
+                if (!Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
+                {
+                    SetLocation(HitLocation);
+                }
+
+                HitWall(HitNormal, Other.Owner);
+
+                return;
+            }
+
+            // Switch hit Other to be the col mesh's owner & proceed as if we'd hit that actor
             Other = Other.Owner;
         }
 
