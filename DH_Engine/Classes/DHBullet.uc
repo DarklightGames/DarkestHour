@@ -170,16 +170,15 @@ simulated singular function Touch(Actor Other)
 // Matt: modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    local ROVehicleWeapon    HitVehicleWeapon;
-    local ROVehicleHitEffect VehEffect;
-    local DHPawn             HitPawn;
-    local Actor              A;
-    local array<Actor>       SavedColMeshes;
-    local vector             PawnHitLocation, TempHitLocation, HitNormal, X, Y, Z;
-    local bool               bDoDeflection;
-    local float              BulletDistance, V;
-    local array<int>         HitPoints;
-    local int                i;
+    local ROVehicleWeapon HitVehicleWeapon;
+    local DHPawn          HitPawn;
+    local Actor           A;
+    local array<Actor>    SavedColMeshes;
+    local vector          PawnHitLocation, TempHitLocation, HitNormal, X, Y, Z;
+    local bool            bPenetratedVehicle;
+    local float           BulletDistance, V;
+    local array<int>      HitPoints;
+    local int             i;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     // Note that bBlockHitPointTraces removed here & instead checked in Touch() event, so an actor owning a collision mesh actor gets handled properly
@@ -192,15 +191,29 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     SavedTouchActor = Other;
     HitVehicleWeapon = ROVehicleWeapon(Other);
 
-    // We hit a VehicleWeapons so show the bullet impact effects
-    if (Level.NetMode != NM_DedicatedServer && HitVehicleWeapon != none)
+    // Handle hit on a vehicle weapon
+    if (HitVehicleWeapon != none)
     {
-        VehEffect = Spawn(class'ROVehicleHitEffect',,, HitLocation, rotator(Normal(Velocity)));
-        VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
+        bPenetratedVehicle = !bHasDeflected && PenetrateVehicleWeapon(HitVehicleWeapon);
 
-        if (bIsTracerBullet)
+        PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, Normal(-Velocity));
+
+        // Exit if failed to penetrate, destroying bullet unless it's a tracer deflection
+        if (!bPenetratedVehicle)
         {
-            bDoDeflection = true;
+            // Tracer deflects unless bullet speed is very low (approx 12 m/s)
+            // Added the trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
+            if (Level.NetMode != NM_DedicatedServer && bIsTracerBullet && VSizeSquared(Velocity) > 500000.0)
+            {
+                Trace(HitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true);
+                Deflect(HitNormal);
+            }
+            else
+            {
+                Destroy();
+            }
+
+            return;
         }
     }
 
@@ -353,27 +366,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // Damage something else
         else
         {
-            // Fail-safe to make certain bProjectilePenetrated is always false for a bullet (unless it's an AP bullet)
-            if (HitVehicleWeapon != none && DHArmoredVehicle(HitVehicleWeapon.Base) != none && !IsA('DHBullet_ArmorPiercing'))
-            {
-                DHArmoredVehicle(HitVehicleWeapon.Base).bProjectilePenetrated = false;
-            }
-
             Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
         }
     }
 
-    // bDoDeflection is true means this must be a tracer that has hit a VehicleWeapon & not on dedicated server - so deflect unless bullet speed is very low (approx 12 m/s)
-    if (bDoDeflection && VSizeSquared(Velocity) > 500000.0)
-    {
-        // Added this trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
-        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true);
-        Deflect(HitNormal);
-    }
-    else
-    {
-        Destroy();
-    }
+    // The only way a tracer will deflect is off a vehicle weapon, which is handled above & results in exiting function early, so we can always destroy the bullet here
+    Destroy();
 }
 
 // Matt: modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
