@@ -30,7 +30,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     for (i = 0; i < 4; ++i)
     {
-        FireRot = BarrelRotation[i];
+        FireRot = rotator(vector(BarrelRotation[i]) + VRand() * FRand() * AltFireSpread);
 
         if (Instigator != none && Instigator.IsHumanControlled())
         {
@@ -185,18 +185,19 @@ defaultproperties
 {
     CannonAttachmentOffset=(X=0.0,Y=0.0,Z=6.7)
     AltFireProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
-    ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet' // TEMP just to stop log spam
+    ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet' // just to stop log spam
     InitialAltAmmo=200
     NumAltMags=10 // TEMP - unknown, needs setting
     AltFireInterval=0.133333 // 450 RPM
+    AltFireSpread=0.01
     bUsesTracers=true
     AltFireTracerFrequency=5
     bAltFireTracersOnly=true
     AltTracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
-    BarrelBones(0)="g1"
-    BarrelBones(1)="g2"
-    BarrelBones(2)="g3"
-    BarrelBones(3)="g4"
+    BarrelBones(0)="Barrel_TL"
+    BarrelBones(1)="Barrel_TR"
+    BarrelBones(2)="Barrel_BL"
+    BarrelBones(3)="Barrel_BR"
     HudAltAmmoIcon=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     AltFireOffset=(X=-2.0,Y=0.0,Z=0.0)

@@ -2749,7 +2749,6 @@ function HandlePickup(Pickup pick)
 // Function emptied out as replaced by ClientAddHudDeathMessage()
 function AddHudDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
-    Log("DHP.AddHudDeathMessage called - SHOULD NOT HAPPEN NOW !!!"); // TEMP DEBUG
 }
 
 // New function replacing RO's AddHudDeathMessage - only change is that it doesn't have the bNetOwner replication condition
@@ -2759,10 +2758,8 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
 {
     if (ROHud(myHud) != none)
     {
-        Log("ClientAddHudDeathMessage calling AddDeathMessage on HUD for player" @ PlayerReplicationInfo.PlayerName @ " Killer =" @ Killer.PlayerName @ " Victim =" @ Victim.PlayerName); // TEMP DEBUG
         ROHud(myHud).AddDeathMessage(Killer, Victim, DamageType);
     }
-    else Log("ClientAddHudDeathMessage DOING NOTHING for player" @ PlayerReplicationInfo.PlayerName @ "as no ROHud!  NetMode =" @ GetEnum(enum'ENetMode', Level.NetMode)); // TEMP DEBUG
 }
 
 // Modified to avoid possible spamming of "accessed none" errors

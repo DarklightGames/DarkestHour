@@ -66,6 +66,12 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
     }
 }
 
+exec function SetSpread(float NewValue) // TEMP
+{
+    Gun.AltFireSpread = NewValue;
+    Log("AltFireSpread =" @ Gun.AltFireSpread);
+}
+
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_M45QuadmountCannon'
