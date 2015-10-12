@@ -3178,6 +3178,18 @@ exec function AddBots(int num)
     }
 }
 
+// Override to tell client to save their ROID to their ini so they can easily copy it
+// Note: this will likely also be used for weapon locking and PRI session data storage stuff
+event PostLogin(PlayerController NewPlayer)
+{
+    super.PostLogin(NewPlayer);
+
+    if (DHPlayer(NewPlayer) != none && Level.NetMode == NM_DedicatedServer)
+    {
+        DHPlayer(NewPlayer).ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
+    }
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH

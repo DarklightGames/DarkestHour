@@ -6,9 +6,12 @@
 class DHTab_GameSettings extends ROTab_GameSettings;
 
 var automated moComboBox co_PurgeCacheDays;
+var automated GUILabel l_ID;
+var automated DHGUIButton b_CopyID;
 
 var int PurgeCacheDaysValues[3];
 var localized string PurgeCacheDaysText[3];
+var localized string HashReqText, IDText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -17,11 +20,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     i_BG1.ManageComponent(co_PurgeCacheDays);
+    i_BG2.ManageComponent(l_ID);
+    i_BG2.ManageComponent(b_CopyID);
 
     for (i = 0; i < arraycount(PurgeCacheDaysText); ++i)
     {
         co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
     }
+
+    //l_ID.Caption = DHPlayer(PlayerOwner()).ROIDHash;
 }
 
 function SaveSettings()
@@ -33,6 +40,16 @@ function SaveSettings()
     PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[PurgeCacheDaysIndex]);
 
     super.SaveSettings();
+}
+
+function bool OnClick(GUIComponent Sender)
+{
+    switch (Sender)
+    {
+        case b_CopyID:
+            PlayerOwner().CopyToClipboard(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer ROIDHash", false));
+            break;
+    }
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -61,6 +78,20 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
 
             break;
+        case l_ID:
+            s = PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer ROIDHash", false);
+
+            if (s == "")
+            {
+                l_ID.Caption = default.IDText @ default.HashReqText;
+                b_CopyID.DisableMe();
+            }
+            else
+            {
+                l_ID.Caption = default.IDText @ s;
+                b_CopyID.EnableMe();
+            }
+            break;
     }
 
     co_PurgeCacheDays.SetIndex(PurgeCacheDaysIndex);
@@ -74,6 +105,8 @@ defaultproperties
     PurgeCacheDaysText(0)="Never"
     PurgeCacheDaysText(1)="Monthly"
     PurgeCacheDaysText(2)="Yearly"
+    IDText="ID:"
+    HashReqText="Must join multiplayer first"
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Gameplay"
         WinTop=0.05
@@ -215,4 +248,27 @@ defaultproperties
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
     End Object
     co_PurgeCacheDays=DHmoComboBox'DH_Interface.DHTab_GameSettings.PurgeCacheDaysComboBox'
+    Begin Object class=GUILabel Name=EpicID
+        WinWidth=0.888991
+        WinHeight=0.067703
+        WinLeft=0.054907
+        WinTop=0.858220
+        IniOption="@Internal"
+        OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
+        Caption="You must first join a multiplayer game before your ID is displayed"
+        TextAlign=TXTA_Center
+        bMultiLine=false
+        StyleName="TextLabel"
+        RenderWeight=0.2
+    End Object
+    l_ID=EpicID
+    Begin Object class=DHGUIButton Name=CopyROIDButton
+        Caption="Copy ID To Clipboard"
+        CaptionAlign=TXTA_Center
+        StyleName="DHSmallTextButtonStyle"
+        WinHeight=1.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_CopyID=CopyROIDButton
 }

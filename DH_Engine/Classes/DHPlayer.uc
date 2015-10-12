@@ -20,6 +20,9 @@ var     float                   DHHalfTurnSpeedFactor;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
+// Client ROID hash (this gets set/updated when a player joins a server)
+var     globalconfig string     ROIDHash;
+
 var     vector                  FlinchRotMag;
 var     vector                  FlinchRotRate;
 var     float                   FlinchRotTime;
@@ -85,7 +88,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
+        ClientSaveROIDHash, ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -2816,6 +2819,44 @@ exec function ToggleLogWeapon() // TEMP DEBUG
         if (Role < ROLE_Authority) ConsoleCommand("Admin ToggleLogWeapon");
     }
     else Log("In multiplayer, you need to log in as admin to use debug exec ToggleLogWeapon");
+}
+
+// Override to have the list of players copied into the clipboard of the player whom typed "ListPlayers"
+// The player can then use a regular expression find/replace to split the single line string into multiple lines, with ease of access to the ROIDs
+function ServerListPlayers()
+{
+    local array<PlayerReplicationInfo> AllPRI;
+    local int i;
+    local string ParseString;
+
+    if (Level.TimeSeconds - LastPlayerListTime < 0.9)
+    {
+        return;
+    }
+
+    LastPlayerListTime = Level.TimeSeconds;
+    Level.Game.GameReplicationInfo.GetPRIArray(AllPRI);
+
+    for (i = 0; i < AllPRI.Length; ++i)
+    {
+        if( PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
+        {
+            ClientMessage(Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName@" "$PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
+            ParseString $= Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName@" "$PlayerController(AllPRI[i].Owner).GetPlayerIDHash()$" \\n";
+        }
+        else
+        {
+            ClientMessage(Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName);
+        }
+    }
+
+    CopyToClipboard(ParseString);
+}
+
+function ClientSaveROIDHash(string ROID)
+{
+    ROIDHash = ROID;
+    SaveConfig();
 }
 
 defaultproperties
