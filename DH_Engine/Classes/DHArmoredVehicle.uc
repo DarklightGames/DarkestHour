@@ -3549,17 +3549,31 @@ simulated function SetDamagedTracks()
     }
 }
 
-// Modified to include damaged tracks in the MotionSoundVolume update - and make them a bit louder than undamaged tracks
+// Modified to include damaged tracks in the MotionSoundVolume update - and damaged tracks not as loud
 simulated function UpdateMovementSound()
 {
     if (LeftTreadSoundAttach != none)
     {
-        LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
+        if (bLeftTrackDamaged)
+        {
+            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.5;
+        }
+        else
+        {
+            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
+        }
     }
 
     if (RightTreadSoundAttach != none)
     {
-        RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
+        if (bRightTrackDamaged)
+        {
+            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.5;
+        }
+        else
+        {
+            RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
+        }
     }
 
     if (InteriorRumbleSoundAttach != none)
@@ -4165,7 +4179,7 @@ exec function ToggleBypass()
 
 defaultproperties
 {
-    SoundVolume=200.0
+    SoundVolume=255.0
     SoundRadius=600.0
     TransientSoundRadius=700.0
     UnbuttonedPositionIndex=2
