@@ -82,6 +82,17 @@ replication
 simulated function IncrementRange() { }
 simulated function DecrementRange() { }
 
+// Modified for net client to flag if bNeedToInitializeDriver
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Role < ROLE_Authority && bDriving)
+    {
+        bNeedToInitializeDriver = true;
+    }
+}
+
 // Matt: new function to do any extra set up in the mortar classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeMortar()
@@ -164,7 +175,7 @@ simulated function PostNetReceive()
     // Fix 'driver' attachment position - on replication, AttachDriver() only works if client has received MortarVehicleWeapon actor, which it may not have yet
     // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
     // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here
-    if (bNeedToInitializeDriver && Driver != none && VehicleBase != none)
+    if (bNeedToInitializeDriver && Driver != none && Gun != none)
     {
         bNeedToInitializeDriver = false;
 
