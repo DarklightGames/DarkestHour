@@ -354,7 +354,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
-// Modified to remove irrelevant stuff about driver weapon crosshair & to optimise
+// Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
+// Also to remove irrelevant stuff about driver weapon crosshair & to optimise
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
@@ -499,10 +500,6 @@ simulated function DrawHUD(Canvas C)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
         }
-    }
-    else if (HUDOverlay != none)
-    {
-        ActivateOverlay(false);
     }
 
     // Debug option to show camera location & rotation in behind view (needs "show sky" in console)

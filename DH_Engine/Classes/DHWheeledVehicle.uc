@@ -400,7 +400,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 }
 
-// Modified to remove irrelevant stuff about driver weapon crosshair & to optimise a little
+// Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
+// Also to remove irrelevant stuff about driver weapon crosshair & to optimise a little
 // Includes omitting calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
 simulated function DrawHUD(Canvas C)
 {
@@ -413,24 +414,16 @@ simulated function DrawHUD(Canvas C)
 
     if (PC != none && !PC.bBehindView)
     {
-        // Player is in a position where an overlay should be drawn
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        // Player is in a position where a HUDOverlay should be drawn
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[PreviousPositionIndex].bDrawOverlays)
+            && HUDOverlay != none && !Level.IsSoftwareRendering())
         {
-            if (HUDOverlay == none)
-            {
-                ActivateOverlay(true);
-            }
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
 
-            // Draw any HUD overlay
-            if (HUDOverlay != none && !Level.IsSoftwareRendering())
-            {
-                CameraRotation = PC.Rotation;
-                SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-                HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                HUDOverlay.SetRotation(CameraRotation);
-
-                C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
-            }
+            C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
         }
 
         // Draw vehicle, turret, ammo count, passenger list
@@ -438,10 +431,6 @@ simulated function DrawHUD(Canvas C)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(C, self);
         }
-    }
-    else if (HUDOverlay != none)
-    {
-        ActivateOverlay(false);
     }
 }
 

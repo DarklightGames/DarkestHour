@@ -727,7 +727,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 }
 
-// Modified to add support for periscope overlay & to remove irrelevant stuff about driver weapon crosshair
+// Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
+// Also to add support for periscope overlay & to remove irrelevant stuff about driver weapon crosshair
 // Also to optimise a little, including to omit calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
 simulated function DrawHUD(Canvas C)
 {
@@ -742,7 +743,7 @@ simulated function DrawHUD(Canvas C)
     if (PC != none && !PC.bBehindView)
     {
         // Player is in a position where an overlay should be drawn
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[PreviousPositionIndex].bDrawOverlays))
         {
             if (HUDOverlay == none)
             {
@@ -777,10 +778,6 @@ simulated function DrawHUD(Canvas C)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(C, self);
         }
-    }
-    else if (HUDOverlay != none)
-    {
-        ActivateOverlay(false);
     }
 }
 

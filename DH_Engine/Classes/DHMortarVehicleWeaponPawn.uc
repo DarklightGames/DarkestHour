@@ -531,9 +531,6 @@ Begin:
         SetCurrentAnimation(FiringAnimIndex);
     }
 
-    //HACK: this ensures that the overlay is always present before firing!
-    ActivateOverlay(true);
-
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
     {
         Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
@@ -640,6 +637,8 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLo
     }
 }
 
+// Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
+// Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
@@ -771,10 +770,6 @@ simulated function DrawHUD(Canvas C)
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
             C.DrawText(TraverseString);
         }
-    }
-    else if (HUDOverlay != none)
-    {
-        ActivateOverlay(false);
     }
 }
 
