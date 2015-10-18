@@ -260,10 +260,19 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     local rotator NewRotation;
 
-    // Fix for problem where net client may be in state 'Spectating' when deploying into a spawn vehicle
-    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    // Fix possible replication timing problems on a net client
+    if (Role < ROLE_Authority && PC != none)
     {
-        PC.GotoState('PlayerWalking');
+        // No known problems with these replicated variables in this class, but added to match other Vehicle classes
+        Controller = PC;
+        SetOwner(PC);
+        Role = ROLE_AutonomousProxy;
+
+        // Fix for problem where net client may be in state 'Spectating' when deploying into spawn vehicle
+        if (PC.IsInState('Spectating'))
+        {
+            PC.GotoState('PlayerWalking');
+        }
     }
 
     if (VehicleBase != none)

@@ -833,13 +833,25 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero, to start facing same way as cannon, & to consolidate & optimise the Supers
-// Matt: also to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+// Matt: also to work around various net client problems caused by replication timing issues, 
+// Including common problems when deploying into a spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Fix for problem where net client may be in state 'Spectating' when deploying into a spawn vehicle
-    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    // Fix possible replication timing problems on a net client
+    if (Role < ROLE_Authority && PC != none)
     {
-        PC.GotoState('PlayerWalking');
+        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
+        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
+        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
+        Controller = PC;
+        SetOwner(PC);
+        Role = ROLE_AutonomousProxy;
+
+        // Fix for problem where net client may be in state 'Spectating' when deploying into spawn vehicle
+        if (PC.IsInState('Spectating'))
+        {
+            PC.GotoState('PlayerWalking');
+        }
     }
 
     if (bMultiPosition)

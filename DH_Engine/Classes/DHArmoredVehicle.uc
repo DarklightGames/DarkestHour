@@ -1118,15 +1118,26 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
-// Matt: also to work around a possible camera problem on net clients when deploying into spawn vehicle, caused by replication timing issues
+// Matt: also to work around various net client problems caused by replication timing issues
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer P;
 
-    // Fixes potential problem on net clients when deploying into a spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
-    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    // Fix possible replication timing problems on a net client
+    if (Role < ROLE_Authority && PC != none)
     {
-        PC.GotoState('PlayerWalking');
+        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
+        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
+        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
+        Controller = PC;
+        SetOwner(PC);
+        Role = ROLE_AutonomousProxy;
+
+        // Fix for possible camera problem when deploying into spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+        if (PC.IsInState('Spectating'))
+        {
+            PC.GotoState('PlayerWalking');
+        }
     }
 
     bDesiredBehindView = false; // true values can exist in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)

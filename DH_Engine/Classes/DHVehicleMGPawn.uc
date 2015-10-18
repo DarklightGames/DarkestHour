@@ -584,10 +584,11 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to use InitialPositionIndex instead of assuming position zero, to match rotation to MG's aim, to resume any paused MG reload, & to consolidate & optimise the Supers
-// Matt: also to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes below)
+// Matt: also to workaround various net client problems caused by replication timing issues, including common problems when deploying into a spawn vehicle (see notes below)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-/*  The process of deploying into a spawn vehicle involves spawning a player pawn, possessing it, then entering the vehicle
+/*  SPAWN VEHICLE PROBLEMS:
+    The process of deploying into a spawn vehicle involves spawning a player pawn, possessing it, then entering the vehicle
     Entering results in unpossessing the player pawn, possessing vehicle, moving (effectively teleporting) player pawn to vehicle's location & attaching it as the 'Driver' pawn
     Because vehicle can be on other side of the map & not currently net relevant to the client, the vehicle actors may not exist on the client & have to be spawned locally
     There are a complex series of interactions, which don't always happen in the same order, because actors are not always replicated in the same order
@@ -607,10 +608,21 @@ simulated function ClientKDriverEnter(PlayerController PC)
     Without StoredVehicleRotation, the player gets an unwanted camera swivelling effect on entering the vehicle
     Fix is if we don't yet have VehicleBase actor, we flag that we need to set StoredVehicleRotatio as soon as PostNetReceive() detects we receive VehicleBase actor */
 
-    // Fix for 1st problem described above, where net client may be in state 'Spectating' when deploying into a spawn vehicle
-    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    // Fix possible replication timing problems on a net client
+    if (Role < ROLE_Authority && PC != none)
     {
-        PC.GotoState('PlayerWalking');
+        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
+        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
+        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
+        Controller = PC;
+        SetOwner(PC);
+        Role = ROLE_AutonomousProxy;
+
+        // Fix for 1st problem described above, where net client may be in state 'Spectating' when deploying into spawn vehicle
+        if (PC.IsInState('Spectating'))
+        {
+            PC.GotoState('PlayerWalking');
+        }
     }
 
     if (bMultiPosition)

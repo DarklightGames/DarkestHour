@@ -221,6 +221,16 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
 
+    // Fix possible replication timing problems on a net client
+    // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
+    // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
+    if (Role < ROLE_Authority && PC != none)
+    {
+        Controller = PC; // e.g. DrawHUD() can be called before Controller is replicated
+        SetOwner(PC);
+        Role = ROLE_AutonomousProxy;
+    }
+
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
     GotoState('Idle');
