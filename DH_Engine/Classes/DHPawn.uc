@@ -426,7 +426,8 @@ simulated event HandleWhizSound()
 // Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
 simulated event StartDriving(Vehicle V)
 {
-    local int i;
+    local VehicleWeaponPawn WP;
+    local int               i;
     local DHGameReplicationInfo GRI; // TEMP DEBUG
 
     DrivenVehicle = V;
@@ -450,8 +451,12 @@ simulated event StartDriving(Vehicle V)
 
         // If vehicle just replicated to net client & it doesn't yet have the necessary actor to attach to, tell vehicle it needs to attach Driver when it receives relevant actor
         // VehicleWeapon (Gun) actor is needed by most VehicleWeaponPawns, but rider pawns need the VehicleBase to attach to
-        if (Role < ROLE_Authority && VehicleWeaponPawn(V) != none &&
-            ((VehicleWeaponPawn(V).GunClass != none && VehicleWeaponPawn(V).Gun == none) || (VehicleWeaponPawn(V).GunClass == none && VehicleWeaponPawn(V).VehicleBase == none)))
+        if (Role < ROLE_Authority)
+        {
+            WP = VehicleWeaponPawn(V);
+        }
+
+        if (WP != none && ((WP.Gun == none && WP.GunClass != none) || (WP.GunClass == none && WP.VehicleBase == none)))
         {
             bNeedToAttachDriver = true;
         }
