@@ -6,6 +6,8 @@ import time
 import ConfigParser
 import shutil
 import json
+import tempfile
+import re
 from binascii import crc32
 from datetime import datetime
 from collections import OrderedDict
@@ -138,10 +140,16 @@ def main():
         print 'could not write mod make manifest'
 
     if len(packages_to_compile) == 0:
-        print "no packages to compile"
-        return
+        print 'no packages to compile'
+        sys.exit(0)
 
-    # delete packages marked for compiling
+    # TODO: make these moved to a temporary folder; if the build fails, re-instate the files as though nothing has changed
+    # this is necessary so that the automated build process doesn't commit deletions of files if the build fails!
+    dtemp = tempfile.mkdtemp()
+
+    package_paths = dict()
+
+    # move packages marked for compiling to a temporary directory
     for package in packages_to_compile:
         package_dirs = [ro_sys_dir, mod_sys_dir]
 
@@ -149,10 +157,13 @@ def main():
             package_path = os.path.join(package_dir, package)
 
             if os.path.isfile(package_path):
+                package_paths[package] = package_path
                 try:
-                    os.remove(package_path)
+                    os.rename(package_path, os.path.join(dtemp, package))
+                    break
                 except:
-                    print 'error: failed to delete file ' + package + ' (do you have the game or editor running?)'
+                    #TODO: other files can be left stranded
+                    print 'error: failed to move file ' + package + ' (do you have the game or editor running?)'
                     sys.exit(1)
 
     os.chdir(ro_sys_dir)
@@ -165,6 +176,18 @@ def main():
     ucc_log_file = open('ucc.log', 'rb')
     ucc_log_contents = ucc_log_file.read()
     ucc_log_file.close()
+
+    # search for error messages in log to know if build failed
+    did_build_fail = re.search('Error: (.+)\((\d+)\) : (.+)', ucc_log_contents) is not None
+
+    if did_build_fail:
+        # build failed, move old packages back to original directory
+        for package in package_paths.keys():
+            os.rename(os.path.join(dtemp, package), os.path.join(package_paths[package]))
+        shutil.rmtree(dtemp)
+        sys.exit(1)
+    else:
+        shutil.rmtree(dtemp)
 
     # move compiled packages to mod directory
     for root, dirs, files in os.walk(ro_sys_dir):
