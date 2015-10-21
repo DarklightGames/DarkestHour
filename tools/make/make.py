@@ -2,15 +2,14 @@ import os
 import sys
 import argparse
 import subprocess
-import time
 import ConfigParser
 import shutil
 import json
 import tempfile
 import re
 from binascii import crc32
-from datetime import datetime
 from collections import OrderedDict
+
 
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
@@ -19,11 +18,12 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(OrderedDict, self).__setitem__(key, value)
 
+
 def main():
     # red orchestra directory
     ro_dir = os.environ.get('RODIR')
 
-    if ro_dir == None:
+    if ro_dir is None:
         print 'error: environment variable RODIR is not defined'
         sys.exit(1)
 
@@ -216,4 +216,4 @@ def main():
     ucc_log_file.close()
 
 if __name__ == "__main__":
-   main()
+    main()
