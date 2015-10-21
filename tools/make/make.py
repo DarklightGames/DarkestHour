@@ -43,7 +43,7 @@ def main():
     argparser.add_argument('-mod', required=True)
     argparser.add_argument('-clean', required=False, action='store_true')
     argparser.add_argument('-dumpint', required=False, action='store_true')
-    args = argparser.parse_args(['-mod', 'DarkestHourDev'])
+    args = argparser.parse_args()
 
     # mod directory
     mod_dir = os.path.join(ro_dir, args.mod)
