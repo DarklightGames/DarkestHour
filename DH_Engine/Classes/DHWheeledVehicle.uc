@@ -1133,10 +1133,6 @@ function AltFire(optional float F)
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval)
     {
