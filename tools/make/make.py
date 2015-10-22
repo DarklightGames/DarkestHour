@@ -6,6 +6,8 @@ import time
 import ConfigParser
 import shutil
 import json
+import tempfile
+import re
 from binascii import crc32
 from datetime import datetime
 from collections import OrderedDict
@@ -18,7 +20,7 @@ class MultiOrderedDict(OrderedDict):
             super(OrderedDict, self).__setitem__(key, value)
 
 def main():
-    #red orchestra directory
+    # red orchestra directory
     ro_dir = os.environ.get('RODIR')
 
     if ro_dir == None:
@@ -29,46 +31,51 @@ def main():
         print 'error: environment variable RODIR is not a valid directory'
         sys.exit(1)
 
-    #red orchestra system directory
+    # red orchestra system directory
     ro_sys_dir = os.path.join(ro_dir, 'System')
 
     if not os.path.isdir(ro_sys_dir):
         print 'error: could not resolve red orchestra system directory'
         sys.exit(1)
 
-    #parse options
+    # parse options
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-mod', required=True)
     argparser.add_argument('-clean', required=False, action='store_true')
     argparser.add_argument('-dumpint', required=False, action='store_true')
     args = argparser.parse_args()
 
-    #mod directory
+    # mod directory
     mod_dir = os.path.join(ro_dir, args.mod)
 
     if not os.path.isdir(mod_dir):
         print 'error: could not resolve mod directory'
         sys.exit(1)
 
-    #mod system directory
+    # mod system directory
     mod_sys_dir = os.path.join(mod_dir, 'System')
 
     if not os.path.isdir(mod_sys_dir):
         print 'error could not resolve mod system directory'
         sys.exit(1)
 
-    #mod config path
-    config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
-
-    if not os.path.isfile(config_path):
-        print "error: could not resove mod config file"
-        sys.exit(1)
-
-    #parse config
     config = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
-    config.read(config_path)
 
-    packages = config.get('Editor.EditorEngine', 'editpackages')
+    # mod config path
+    config_path = os.path.join(mod_sys_dir, '.ini')
+
+    if os.path.isfile(config_path):
+        config.read(config_path)
+        packages = config.get('Editor.EditorEngine', 'editpackages')
+    else:
+        # mod config has not been generated, use default configuration
+        config_path = os.path.join(mod_sys_dir, 'Default.ini')
+        if os.path.isfile(config_path):
+            config.read(config_path)
+            packages = config.get('Editor.EditorEngine', '+editpackages')
+        else:
+            print "error: could not resove mod config file"
+            sys.exit(1)
 
     packages_to_compile = []
     package_crcs = dict()
@@ -85,7 +92,7 @@ def main():
         ro_sys_package_path = os.path.join(ro_sys_dir, package + '.u')
 
         if os.path.isfile(ro_sys_package_path):
-            #compiled file exists in root system folder
+            # compiled file exists in root system folder
             continue
 
         if args.clean:
@@ -94,7 +101,7 @@ def main():
 
         mod_sys_package_path = os.path.join(mod_sys_dir, package + '.u')
 
-        #get package modified time
+        # get package modified time
         package_mtime = 0.0
 
         if os.path.isfile(mod_sys_package_path):
@@ -133,10 +140,16 @@ def main():
         print 'could not write mod make manifest'
 
     if len(packages_to_compile) == 0:
-        print "no packages to compile"
-        return
+        print 'no packages to compile'
+        sys.exit(0)
 
-    # delete packages marked for compiling
+    # TODO: make these moved to a temporary folder; if the build fails, re-instate the files as though nothing has changed
+    # this is necessary so that the automated build process doesn't commit deletions of files if the build fails!
+    dtemp = tempfile.mkdtemp()
+
+    package_paths = dict()
+
+    # move packages marked for compiling to a temporary directory
     for package in packages_to_compile:
         package_dirs = [ro_sys_dir, mod_sys_dir]
 
@@ -144,10 +157,13 @@ def main():
             package_path = os.path.join(package_dir, package)
 
             if os.path.isfile(package_path):
+                package_paths[package] = package_path
                 try:
-                    os.remove(package_path)
+                    os.rename(package_path, os.path.join(dtemp, package))
+                    break
                 except:
-                    print 'error: failed to delete file ' + package + ' (do you have the game or editor running?)'
+                    #TODO: other files can be left stranded
+                    print 'error: failed to move file ' + package + ' (do you have the game or editor running?)'
                     sys.exit(1)
 
     os.chdir(ro_sys_dir)
@@ -160,6 +176,18 @@ def main():
     ucc_log_file = open('ucc.log', 'rb')
     ucc_log_contents = ucc_log_file.read()
     ucc_log_file.close()
+
+    # search for error messages in log to know if build failed
+    did_build_fail = re.search('Error: (.+)\((\d+)\) : (.+)', ucc_log_contents) is not None
+
+    if did_build_fail:
+        # build failed, move old packages back to original directory
+        for package in package_paths.keys():
+            os.rename(os.path.join(dtemp, package), os.path.join(package_paths[package]))
+        shutil.rmtree(dtemp)
+        sys.exit(1)
+    else:
+        shutil.rmtree(dtemp)
 
     # move compiled packages to mod directory
     for root, dirs, files in os.walk(ro_sys_dir):
