@@ -3312,7 +3312,7 @@ function DisplayMessages(Canvas C)
         Y += 2.0 * Y + (HintCoords.Y + HintCoords.YL) * C.ClipY;
     }
 
-    // Loop thorugh Obituaries & display if due
+    // Loop through Obituaries & display if due
     for (i = 0; i < DHObituaries.Length; ++i)
     {
         O = DHObituaries[i];
