@@ -1632,15 +1632,10 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 // Also to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
+    // Suicide
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        DamageType = class'ROSuicided';
-        CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
     }
     // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle itself, so we call TD on that
     else if (CannonPawn != none && CannonPawn.VehicleBase != none)

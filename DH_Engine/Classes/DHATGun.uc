@@ -157,14 +157,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local int   i;
 
     // Fix for suicide death messages
-    if (DamageType == class'Suicided')
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+
+        return;
     }
 
     // Set damage modifier from the DamageType

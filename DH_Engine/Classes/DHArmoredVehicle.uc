@@ -2438,15 +2438,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local int        InstigatorTeam, PossibleDriverDamage, i;
     local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
 
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
+    // Suicide/self-destruction
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+        ResetTakeDamageVariables();
+
+        return;
     }
 
     // Quick fix for the vehicle giving itself impact damage
