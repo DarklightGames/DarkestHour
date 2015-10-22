@@ -339,12 +339,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 {
     super.Died(Killer, DamageType, HitLocation);
 
-    if (Killer == none)
+    if (Killer != none)
     {
-        return;
+        DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
     }
-
-    DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

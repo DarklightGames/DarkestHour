@@ -1020,12 +1020,10 @@ simulated function SwitchWeapon(byte F)
 // Modified to prevent moving to another vehicle position while moving between view points
 function ServerChangeDriverPosition(byte F)
 {
-    if (IsInState('ViewTransition'))
+    if (!IsInState('ViewTransition'))
     {
-        return;
+        super.ServerChangeDriverPosition(F);
     }
-
-    super.ServerChangeDriverPosition(F);
 }
 
 // Modified to give players the same momentum as the vehicle when exiting
