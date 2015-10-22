@@ -187,7 +187,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
 
     // If vehicle health is very low, kill the engine (which will start a fire)
-    if (Health <= HealthMax / 3 && Health >= 0)
+    if (Health <= (HealthMax / 3) && Health > 0)
     {
         EngineHealth = 0;
         bEngineOff = true;
