@@ -355,7 +355,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Also to initialize driver-related stuff when we receive the Driver actor
 simulated function PostNetReceive()
 {
-    // Player has changed position
+    // Driver has changed position
     // Checking bClientInitialized means we do nothing until PostNetBeginPlay() has matched position indexes, meaning we leave SetPlayerPosition() to handle any initial anims
     if (DriverPositionIndex != SavedPositionIndex && bClientInitialized)
     {
@@ -2451,7 +2451,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
-    // Quick fix for the thing giving itself impact damage
+    // Quick fix for the vehicle giving itself impact damage
     if (InstigatedBy == self && DamageType != VehicleBurningDamType)
     {
         ResetTakeDamageVariables();
@@ -3907,7 +3907,7 @@ simulated function ShrinkHUD();
 //  ****************************** EXEC FUNCTIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+// New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
@@ -3951,7 +3951,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// New exec function that allows debugging exit positions to be toggled for all DHArmoredVehicles
+// New exec that allows debugging exit positions to be toggled for all DHArmoredVehicles
 exec function ToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -3969,8 +3969,8 @@ function ServerToggleDebugExits()
     }
 }
 
-// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
-simulated exec function DrawExits()
+// New debug exec to draw the location of all exit positions for the vehicle, which are shown as different coloured cylinders
+exec function DrawExits()
 {
     local vector ExitPosition, ZOffset, X, Y, Z;
     local color  C;
@@ -4022,8 +4022,8 @@ simulated exec function DrawExits()
     }
 }
 
-// New debugging exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
-simulated exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
+// New debug exec to set ExitPositions (use it in single player; it's too much hassle on a server)
+exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
 {
     if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
     {
@@ -4054,7 +4054,7 @@ exec function SetDriverHP(int NewRadius, int NewX, int NewY, int NewZ, optional 
     }
 }
 
-// Handy new execs during development for testing engine or track damage
+// New debug exec for testing engine damage
 function exec KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
@@ -4068,6 +4068,7 @@ function ServerKillEngine()
     DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
+// New debug exec for testing track damage
 exec function DamTrack(string Track)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -4096,7 +4097,7 @@ function ServerDamTrack(string Track)
     }
 }
 
-// Handy new execs during development for testing fire damage & effects
+// New debug exec for testing hull fire damage & effects
 exec function HullFire()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -4105,17 +4106,18 @@ exec function HullFire()
     }
 }
 
+function ServerHullFire()
+{
+    if (!bOnFire) StartHullFire(none);
+}
+
+// New debug exec for testing engine fire damage & effects
 exec function EngineFire()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ServerEngineFire();
     }
-}
-
-function ServerHullFire()
-{
-    if (!bOnFire) StartHullFire(none);
 }
 
 function ServerEngineFire()
@@ -4134,7 +4136,7 @@ function exec DamageTank()
     }
 }
 
-// New debug exec function to set exhaust emitter location
+// New debug exec to set exhaust emitter location
 exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
 {
     local vector OldExhaustPosition;

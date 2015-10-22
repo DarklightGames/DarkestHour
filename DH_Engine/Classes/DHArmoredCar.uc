@@ -89,7 +89,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
-    // Quick fix for the thing giving itself impact damage
+    // Quick fix for the vehicle giving itself impact damage
     if (InstigatedBy == self && DamageType != VehicleBurningDamType)
     {
         ResetTakeDamageVariables();

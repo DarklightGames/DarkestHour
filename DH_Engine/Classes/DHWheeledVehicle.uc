@@ -1360,7 +1360,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
-    // Quick fix for the thing giving itself impact damage
+    // Quick fix for the vehicle giving itself impact damage
     if (InstigatedBy == self)
     {
         return;
@@ -1531,7 +1531,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 
     AmbientSound = DestroyedBurningSound;
-    SoundVolume = 255.0;
+    SoundVolume = 255;
     SoundRadius = 600.0;
 
     if (!bDisintegrateVehicle)
@@ -2149,7 +2149,7 @@ simulated function ShrinkHUD();
 //  ****************************** EXEC FUNCTIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+// New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
@@ -2187,13 +2187,13 @@ exec function ToggleViewLimit()
         }
         else
         {
-            bLimitYaw = true;
-            bLimitPitch = true;
+            bLimitYaw = default.bLimitYaw;
+            bLimitPitch = default.bLimitPitch;
         }
     }
 }
 
-// New exec function that allows debugging exit positions to be toggled for all DHWheeledVehicles
+// New exec that allows debugging exit positions to be toggled for all DHWheeledVehicles
 exec function ToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -2211,7 +2211,7 @@ function ServerToggleDebugExits()
     }
 }
 
-// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
+// New debug exec to draw the location of all exit positions for the vehicle, which are shown as different coloured cylinders
 exec function DrawExits()
 {
     local vector ExitPosition, ZOffset, X, Y, Z;
@@ -2264,7 +2264,7 @@ exec function DrawExits()
     }
 }
 
-// New debug exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
+// New debug exec to set ExitPositions (use it in single player; it's too much hassle on a server)
 exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
 {
     if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
@@ -2276,7 +2276,7 @@ exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
-// Handy new execs during development for testing engine damage
+// New debug exec for testing engine damage
 function exec KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
@@ -2290,7 +2290,7 @@ function ServerKillEngine()
     DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
-// New debug exec function to set exhaust emitter location
+// New debug exec to set exhaust emitter location
 exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
 {
     local vector OldExhaustPosition;
