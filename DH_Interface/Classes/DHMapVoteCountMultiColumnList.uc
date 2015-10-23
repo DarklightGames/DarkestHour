@@ -9,6 +9,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 {
     local float CellLeft, CellWidth;
     local GUIStyles DrawStyle;
+    local string RawMapName;
 
     if (VRI == none)
     {
@@ -27,11 +28,12 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     }
 
     GetCellLeftWidth(0, CellLeft, CellWidth);
-
-    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, FontScale);
+    RawMapName = Repl(VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, "DH-", ""); // Remove DH- prefix
+    RawMapName = Repl(RawMapName, ".rom", ""); // Remove .rom if it exists
+    RawMapName = Repl(RawMapName, "_", " "); // Remove _ for space
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, RawMapName, FontScale);
 
     GetCellLeftWidth(1, CellLeft, CellWidth);
-
     DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
 }
 

@@ -2053,6 +2053,7 @@ state ResetGameCountdown
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
+            bSwapTeams = false;
         }
 
         RoundStartTime = ElapsedTime + 10.0;

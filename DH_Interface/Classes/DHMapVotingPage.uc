@@ -17,7 +17,22 @@ function bool AlignBK(Canvas C)
 
 defaultproperties
 {
-    Begin Object Class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
+    Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
+        WinWidth=0.96
+        WinHeight=0.293104
+        WinLeft=0.02
+        WinTop=0.371020
+        bVisibleWhenEmpty=true
+        StyleName="ServerBrowserGrid"
+        bScaleToParent=True
+        bBoundToParent=True
+        FontScale=FNS_Small
+        HeaderColumnPerc(0)=0.60
+        HeaderColumnPerc(1)=0.20
+        HeaderColumnPerc(2)=0.20
+    End Object
+    lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
+    Begin Object class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.4
         HeaderColumnPerc(1)=0.2
         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
