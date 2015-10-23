@@ -128,6 +128,12 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 
         log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")",'MapVote');
 
+        if (MapList[MapIndex].MapName == SwapAndRestartText)
+        {
+            ExitVoteAndSwap();
+            return;
+        }
+
         CloseAllVoteWindows();
 
         bLevelSwitchPending = true;
@@ -506,7 +512,6 @@ function TallyVotes(bool bForceMapSwitch)
         if(bAccumulationMode)
             SaveAccVotes(topmap - topmap/MapCount * MapCount, topmap/MapCount);
 
-        //if(bEliminationMode || bAccumulationMode)
         CurrentGameConfig = topmap/MapCount;
         if( !bAutoDetectMode )
             SaveConfig();
@@ -526,14 +531,13 @@ function ExitVoteAndSwap()
 
     bMidGameVote = false;
 
-    SetTimer(0.0, false); //Stop the timer for now
+    SetTimer(0.0, false); // Stop the timer
 
     DarkestHourGame(Level.Game).bGameEnded = false;
     DarkestHourGame(Level.Game).SwapTeams();
 }
 
-// This function doesn't need p? idk Theel: TODO
-// I can't revote for what I had voted for
+// Resets all player votes
 function ResetMapVotes()
 {
     local int i, x;
