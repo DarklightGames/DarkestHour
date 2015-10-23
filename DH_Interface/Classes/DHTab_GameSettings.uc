@@ -50,6 +50,8 @@ function bool OnClick(GUIComponent Sender)
             PlayerOwner().CopyToClipboard(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer ROIDHash", false));
             break;
     }
+
+    return false;
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)

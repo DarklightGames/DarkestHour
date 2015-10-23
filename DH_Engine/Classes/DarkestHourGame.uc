@@ -34,6 +34,8 @@ var     int                         bTeamOutOfReinforcements[2];
 
 var     float                       TeamAttritionCounter[2];    //When this hits over 1
 
+var     bool                        bSwapTeams;
+
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
@@ -2048,6 +2050,11 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
+        if (bSwapTeams)
+        {
+            ChangeSides(); // Change sides if bSwapTeams is true
+        }
+
         RoundStartTime = ElapsedTime + 10.0;
 
         ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
@@ -2063,6 +2070,7 @@ state ResetGameCountdown
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
+    // Also will call function that auto-opens DHDeployMenu for players
     function Timer()
     {
         global.Timer();
@@ -2076,6 +2084,7 @@ state ResetGameCountdown
 
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
             ResetScores();
+            OpenPlayerMenus();
             GotoState('RoundInPlay');
         }
         else
@@ -3175,6 +3184,50 @@ exec function AddBots(int num)
         }
 
         AddBot();
+    }
+}
+
+// This function will initiate a reset game with swap teams
+exec function SwapTeams()
+{
+    bSwapTeams = true;
+    ResetGame();
+}
+
+// Players change sides
+function ChangeSides()
+{
+    local Controller P;
+
+    // We need to disable auto team balance
+    bPlayersBalanceTeams = false;
+
+    // Cycle through controllers, for each player on a team tell them to change teams
+    for (P = Level.ControllerList; P != none; P = P.NextController)
+    {
+        if (P.bIsPlayer && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex != 2)
+        {
+            ChangeTeam(P, int(!bool(P.PlayerReplicationInfo.Team.TeamIndex)), true);
+            DHPlayer(P).Suicide(); // Slay players as their team has changed and it's confusing if they are still alive while round restarts
+            DHPlayer(P).bWeaponsSelected = true; // The player needs to know that they have selected weapons, otherwise it takes them to the team menu
+        }
+    }
+
+    // Re-enable auto team balance (if applicable)
+    bPlayersBalanceTeams = default.bPlayersBalanceTeams;
+}
+
+// This will request all players to open their DeployMenu
+function OpenPlayerMenus()
+{
+    local Controller P;
+
+    for (P = Level.ControllerList; P != none; P = P.NextController)
+    {
+        if (P.bIsPlayer && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex != 2)
+        {
+            DHPlayer(P).ClientProposeMenu("DH_Interface.DHDeployMenu");
+        }
     }
 }
 
