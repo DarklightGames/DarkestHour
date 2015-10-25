@@ -83,7 +83,7 @@ defaultproperties
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest'
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-113.0,Y=20.0,Z=79.0)
+    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
     VehicleTeam=1
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
