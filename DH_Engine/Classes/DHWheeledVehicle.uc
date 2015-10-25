@@ -1407,41 +1407,44 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // No damage if less than MinVehicleDamageModifier for this vehicle
     if (VehicleDamageMod < MinVehicleDamageModifier)
     {
-        VehicleDamageMod = 0.0;
+        return;
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
     Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
 
-    // Check RO VehHitPoints (engine, ammo)
-    // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-    if (Damage > 0)
+    // Exit if no damage
+    if (Damage < 1)
     {
-        for (i = 0; i < VehHitpoints.Length; ++i)
+        return;
+    }
+
+    // Check RO VehHitpoints (engine, ammo)
+    // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    for (i = 0; i < VehHitpoints.Length; ++i)
+    {
+        if (IsPointShot(HitLocation, Momentum, 1.0, i))
         {
-            if (IsPointShot(HitLocation, Momentum, 1.0, i))
+            // Engine hit
+            if (VehHitpoints[i].HitPointType == HP_Engine)
             {
-                // Engine hit
-                if (VehHitpoints[i].HitPointType == HP_Engine)
+                if (bDebuggingText)
                 {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Hit vehicle engine");
-                    }
-
-                    DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+                    Level.Game.Broadcast(self, "Hit vehicle engine");
                 }
-                // Hit ammo store
-                else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+
+                DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+            }
+            // Hit ammo store
+            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+            {
+                if (bDebuggingText)
                 {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Hit vehicle ammo store");
-                    }
-
-                    Damage *= VehHitpoints[i].DamageMultiplier;
-                    break;
+                    Level.Game.Broadcast(self, "Hit vehicle ammo store");
                 }
+
+                Damage *= VehHitpoints[i].DamageMultiplier;
+                break;
             }
         }
     }

@@ -145,9 +145,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     Damage *= VehicleDamageMod;
 
-    if (bProjectilePenetrated && Damage > 0)
+    // Exit if no damage
+    if (Damage < 1)
     {
-        // Check RO VehHitPoints (engine, ammo)
+        ResetTakeDamageVariables();
+
+        return;
+    }
+
+    if (bProjectilePenetrated)
+    {
+        // Check RO VehHitpoints (engine, ammo)
         // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
         for (i = 0; i < VehHitpoints.Length; ++i)
         {

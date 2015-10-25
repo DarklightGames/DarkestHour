@@ -180,7 +180,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
     Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
 
-    // Check RO VehHitPoints, but only for any ammo store (AT gun has no driver or engine)
+    // Exit if no damage
+    if (Damage < 1)
+    {
+        return;
+    }
+
+    // Check RO VehHitpoints, but only for any ammo store (AT gun has no driver or engine)
     // We will, however, leave the ammo store because we need it to get around a collision issue with the gunner (player) // Matt: TEST what this means
     for (i = 0; i < VehHitpoints.Length; ++i)
     {

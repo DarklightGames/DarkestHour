@@ -2497,9 +2497,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     Damage *= VehicleDamageMod;
 
-    // Check RO VehHitPoints (engine, ammo)
+    // Exit if no damage
+    if (Damage < 1)
+    {
+        ResetTakeDamageVariables();
+
+        return;
+    }
+
+    // Check RO VehHitpoints (engine, ammo)
     // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-    if (bProjectilePenetrated && Damage > 0)
+    if (bProjectilePenetrated)
     {
         for (i = 0; i < VehHitpoints.Length; ++i)
         {
@@ -2521,7 +2529,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                     Damage *= 0.55; // reduce damage to vehicle itself if hit engine
 
-                    // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitPoints
+                    // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitpoints
                     if (bRearHullPenetration)
                     {
                         bEngineStoppedProjectile = true;
@@ -2880,7 +2888,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
-    if (bProjectilePenetrated && !bOnFire && Damage > 0 && Health > 0)
+    if (bProjectilePenetrated && !bOnFire && Health > 0)
     {
         // Random chance of hull fire breaking out
         if (!bEngineStoppedProjectile && ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance)))
