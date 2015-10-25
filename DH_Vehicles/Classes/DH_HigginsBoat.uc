@@ -321,7 +321,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.4
     VehicleHudOccupantsY(7)=0.5
     VehicleHudEngineY=0.0
-    VehHitpoints(0)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0))
+    VehHitpoints(0)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0)) // engine
     bIsApc=true
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=LFWheel

@@ -120,7 +120,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.7
     VehicleHudOccupantsY(7)=0.8
     VehicleHudEngineY=0.25
-    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(Z=-20.0))
+    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(Z=-20.0)) // engine
     EngineHealth=125
     DriverAttachmentBone="driver_player"
 

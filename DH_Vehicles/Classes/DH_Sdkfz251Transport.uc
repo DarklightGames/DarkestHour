@@ -130,7 +130,7 @@ defaultproperties
 
     VehicleHudEngineY=0.3
 
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=15.0,Z=-15.0))
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=15.0,Z=-15.0)) // engine
     EngineHealth=150
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
