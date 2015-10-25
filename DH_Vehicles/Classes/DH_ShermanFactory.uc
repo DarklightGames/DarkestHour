@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFactory extends DH_USVehicles;
+class DH_ShermanFactory extends DH_USVehicles; // M4A1 75mm variant (without wet stowage)
 
 defaultproperties
 {

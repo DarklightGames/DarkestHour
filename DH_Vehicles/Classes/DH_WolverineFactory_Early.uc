@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WolverineFactory_Early extends DH_WolverineFactory;
+class DH_WolverineFactory_Early extends DH_WolverineFactory; // earlier version without HVAP
 
 defaultproperties
 {

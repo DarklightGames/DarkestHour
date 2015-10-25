@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Pak40FactoryLate extends DH_Pak40Factory;
+class DH_Pak40FactoryLate extends DH_Pak40Factory; // late war version with much less ammo
 
 defaultproperties
 {

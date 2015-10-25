@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WolverineTank extends DHArmoredVehicle;
+class DH_WolverineTank extends DHArmoredVehicle; // later version with HVAP instead of smoke rounds
 
 #exec OBJ LOAD FILE=..\Animations\DH_Wolverine_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

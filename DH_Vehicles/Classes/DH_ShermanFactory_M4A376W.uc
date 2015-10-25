@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFactory_M4A376W extends DH_ShermanFactory;
+class DH_ShermanFactory_M4A376W extends DH_ShermanFactory; // later version with HVAP instead of smoke rounds
 
 defaultproperties
 {

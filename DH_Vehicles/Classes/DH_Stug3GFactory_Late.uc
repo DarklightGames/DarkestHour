@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GFactory_Late extends DH_Stug3GFactory;
+class DH_Stug3GFactory_Late extends DH_Stug3GFactory; // late war version with remote-controlled MG & with saukopf mantlet
 
 defaultproperties
 {

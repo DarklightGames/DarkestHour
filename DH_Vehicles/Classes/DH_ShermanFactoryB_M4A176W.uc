@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFactoryB_M4A176W extends DH_ShermanFactory;
+class DH_ShermanFactoryB_M4A176W extends DH_ShermanFactory; // later version with HVAP instead of smoke rounds, & with muzzle brake & sandbags on hull front
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank extends DHArmoredVehicle;
+class DH_ShermanTank extends DHArmoredVehicle; // M4A1 75mm variant (without wet stowage)
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A1_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank_M4A376W_Early extends DH_ShermanTank_M4A376W;
+class DH_ShermanTank_M4A376W_Early extends DH_ShermanTank_M4A376W; // earlier version without HVAP
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WolverineFactory extends DH_USVehicles;
+class DH_WolverineFactory extends DH_USVehicles; // later version with HVAP instead of smoke rounds
 
 defaultproperties
 {

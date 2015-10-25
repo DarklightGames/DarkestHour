@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GDestroyer extends DHArmoredVehicle;
+class DH_Stug3GDestroyer extends DHArmoredVehicle; // earlier version without remote-controlled MG & with boxy mantlet
 
 #exec OBJ LOAD FILE=..\Animations\DH_Stug3G_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
