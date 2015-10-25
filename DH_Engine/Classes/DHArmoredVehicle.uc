@@ -2430,9 +2430,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
     local vector     HitDir, LocDir, X, Y, Z;
-    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
-    local int        InstigatorTeam, PossibleDriverDamage, i;
-    local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
+    local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
+    local int        InstigatorTeam, i;
+    local bool       bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
@@ -2495,81 +2495,65 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         Damage *= RandRange(0.75, 1.08);
     }
 
-    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
     Damage *= VehicleDamageMod;
 
-    // Check RO VehHitPoints (driver, engine, ammo)
-    for (i = 0; i < VehHitpoints.Length; ++i)
+    // Check RO VehHitPoints (engine, ammo)
+    // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    if (bProjectilePenetrated && Damage > 0)
     {
-        // Series of checks to see if we hit the vehicle driver
-        if (VehHitpoints[i].HitPointType == HP_Driver)
+        for (i = 0; i < VehHitpoints.Length; ++i)
         {
-            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && !bHitDriver)
+            if (IsPointShot(HitLocation, Momentum, 1.0, i))
             {
-                // Non-penetrating rounds have a limited HitCheckDistance
-                // For penetrating rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
-                if (!bProjectilePenetrated)
+                if (bLogPenetration)
                 {
-                    HitCheckDistance = DriverHitCheckDist;
+                    Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
                 }
 
-                if (IsPointShot(HitLocation, Momentum, 1.0, i, HitCheckDistance))
-                {
-                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
-                    bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
-                }
-            }
-        }
-        else if (bProjectilePenetrated && Damage > 0 && IsPointShot(HitLocation, Momentum, 1.0, i))
-        {
-            if (bLogPenetration)
-            {
-                Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
-            }
-
-            // Engine hit
-            if (VehHitpoints[i].HitPointType == HP_Engine)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Hit vehicle engine");
-                }
-
-                DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-                Damage *= 0.55; // reduce damage to vehicle itself if hit engine
-
-                // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitPoints
-                if (bRearHullPenetration)
-                {
-                    bEngineStoppedProjectile = true;
-                    break;
-                }
-            }
-            // Hit ammo store
-            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                // Random chance that ammo explodes & vehicle is destroyed
-                if ((bHEATPenetration && FRand() < 0.85) || (!bHEATPenetration && FRand() < AmmoIgnitionProbability))
+                // Engine hit
+                if (VehHitpoints[i].HitPointType == HP_Engine)
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                        Level.Game.Broadcast(self, "Hit vehicle engine");
                     }
 
-                    Damage *= Health;
-                    bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
-                    break;
-                }
-                // Even if ammo did not explode, increase the chance of a fire breaking out
-                else
-                {
-                    if (bDebuggingText)
+                    DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+                    Damage *= 0.55; // reduce damage to vehicle itself if hit engine
+
+                    // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitPoints
+                    if (bRearHullPenetration)
                     {
-                        Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                        bEngineStoppedProjectile = true;
+                        break;
                     }
+                }
+                // Hit ammo store
+                else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+                {
+                    // Random chance that ammo explodes & vehicle is destroyed
+                    if ((bHEATPenetration && FRand() < 0.85) || (!bHEATPenetration && FRand() < AmmoIgnitionProbability))
+                    {
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                        }
 
-                    HullFireChance = FMax(0.75, HullFireChance);
-                    HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                        Damage *= Health;
+                        bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+                        break;
+                    }
+                    // Even if ammo did not explode, increase the chance of a fire breaking out
+                    else
+                    {
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                        }
+
+                        HullFireChance = FMax(0.75, HullFireChance);
+                        HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                    }
                 }
             }
         }

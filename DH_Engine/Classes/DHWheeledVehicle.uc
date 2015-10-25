@@ -1339,9 +1339,8 @@ simulated function StopEmitters()
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local Controller InstigatorController;
-    local float      VehicleDamageMod, HitCheckDistance;
-    local int        InstigatorTeam, PossibleDriverDamage, i;
-    local bool       bHitDriver;
+    local float      VehicleDamageMod;
+    local int        InstigatorTeam, i;
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
@@ -1405,61 +1404,44 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // No damage, except possibly to driver, if less than MinVehicleDamageModifier for this vehicle
+    // No damage if less than MinVehicleDamageModifier for this vehicle
     if (VehicleDamageMod < MinVehicleDamageModifier)
     {
         VehicleDamageMod = 0.0;
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= RandRange(0.75, 1.08);
-    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
-    Damage *= VehicleDamageMod;
+    Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
 
-    // Check RO VehHitPoints (driver, engine, ammo)
-    for (i = 0; i < VehHitpoints.Length; ++i)
+    // Check RO VehHitPoints (engine, ammo)
+    // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    if (Damage > 0)
     {
-        // Series of checks to see if we hit the vehicle driver
-        if (VehHitpoints[i].HitPointType == HP_Driver)
+        for (i = 0; i < VehHitpoints.Length; ++i)
         {
-            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && !bHitDriver)
+            if (IsPointShot(HitLocation, Momentum, 1.0, i))
             {
-                // Lower-powered rounds have a limited HitCheckDistance, as they won't rip through the vehicle
-                // For more powerful rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
-                if (VehicleDamageMod <= 0.25)
+                // Engine hit
+                if (VehHitpoints[i].HitPointType == HP_Engine)
                 {
-                    HitCheckDistance = DriverHitCheckDist;
-                }
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hit vehicle engine");
+                    }
 
-                if (IsPointShot(HitLocation, Momentum, 1.0, i, HitCheckDistance))
-                {
-                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
-                    bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
+                    DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
-            }
-        }
-        else if (Damage > 0 && IsPointShot(HitLocation, Momentum, 1.0, i))
-        {
-            // Engine hit
-            if (VehHitpoints[i].HitPointType == HP_Engine)
-            {
-                if (bDebuggingText)
+                // Hit ammo store
+                else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle engine");
-                }
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hit vehicle ammo store");
+                    }
 
-                DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-            }
-            // Hit ammo store
-            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Hit vehicle ammo store");
+                    Damage *= VehHitpoints[i].DamageMultiplier;
+                    break;
                 }
-
-                Damage *= VehHitpoints[i].DamageMultiplier;
-                break;
             }
         }
     }
