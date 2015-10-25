@@ -297,22 +297,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
-    if (bProjectilePenetrated && !bOnFire && Damage > 0 && Health > 0)
+    // Vehicle is still alive, so check for possibility of a fire breaking out
+    if (Health > 0)
     {
-        // Random chance of hull fire breaking out
-        if ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance))
+        // Random chance of penetration causing a hull fire
+        if (bProjectilePenetrated && !bOnFire && ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance)))
         {
             StartHullFire(InstigatedBy);
         }
-    }
 
-    // If vehicle health is very low, kill the engine & start a fire
-    if (Health >= 0 && Health <= HealthMax / 3)
-    {
-        EngineHealth = 0;
-        bEngineOff = true;
-        StartEngineFire(InstigatedBy);
+        // If vehicle health is very low, kill the engine & start a fire
+        if (Health <= (HealthMax / 3) && EngineHealth > 0)
+        {
+            EngineHealth = 0;
+            bEngineOff = true;
+            StartEngineFire(InstigatedBy);
+        }
     }
 
     ResetTakeDamageVariables();
