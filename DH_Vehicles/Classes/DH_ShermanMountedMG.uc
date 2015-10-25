@@ -32,5 +32,6 @@ defaultproperties
     MaxNegativeYaw=-8000
     bLimitYaw=true
     InitialPrimaryAmmo=200
+    FireEffectOffset=(X=-40,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman_MG'
 }
