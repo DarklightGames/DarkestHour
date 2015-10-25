@@ -2067,6 +2067,23 @@ exec function SetAltFireSpawnOffset(float NewValue)
     }
 }
 
+// New debug exec to adjust location of turret hatch fire position
+exec function SetFEOffset(int NewX, int NewY, int NewZ)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        {
+            Cannon.FireEffectOffset.X = NewX;
+            Cannon.FireEffectOffset.Y = NewY;
+            Cannon.FireEffectOffset.Z = NewZ;
+        }
+
+        Cannon.StartTurretFire();
+        Log(Tag @ "FireEffectOffset =" @ Cannon.FireEffectOffset);
+    }
+}
+
 exec function LogCannon() // DEBUG x 3 (Matt: use if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("CLIENT:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon

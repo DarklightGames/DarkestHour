@@ -4089,6 +4089,51 @@ function ServerEngineFire()
     if (!bEngineOnFire) StartEngineFire(none);
 }
 
+// New debug exec to adjust location of engine smoke/fire position
+exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        {
+            DamagedEffectOffset.X = NewX;
+            DamagedEffectOffset.Y = NewY;
+            DamagedEffectOffset.Z = NewZ;
+        }
+
+        EngineHealth = 0;
+        bEngineOnFire = bEngineFire;
+        bOnFire = false;
+        SetFireEffects();
+        Log(VehicleNameString @ "DamagedEffectOffset =" @ DamagedEffectOffset);
+
+        if (DamagedEffect != none)
+        {
+            DamagedEffect.SetBase(none);
+            DamagedEffect.SetLocation(Location + (DamagedEffectOffset >> Rotation));
+            DamagedEffect.SetBase(self);
+            DamagedEffect.SetEffectScale(DamagedEffectScale);
+        }
+    }
+}
+
+// New debug exec to adjust location of driver's hatch fire position
+exec function SetFEOffset(int NewX, int NewY, int NewZ)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        {
+            FireEffectOffset.X = NewX;
+            FireEffectOffset.Y = NewY;
+            FireEffectOffset.Z = NewZ;
+        }
+
+        StartDriverHatchFire();
+        Log(Tag @ "FireEffectOffset =" @ FireEffectOffset);
+    }
+}
+
 // Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
 // Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
 function exec DamageTank()
