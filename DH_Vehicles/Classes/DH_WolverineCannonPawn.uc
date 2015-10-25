@@ -30,5 +30,4 @@ defaultproperties
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130
-    SoundRadius=200.0
 }
