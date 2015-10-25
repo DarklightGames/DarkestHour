@@ -97,11 +97,10 @@ defaultproperties
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointOffset=(X=-3.0,Y=2.0,Z=-6.0))
-    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0))
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=55.0,Z=32.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=-55.0,Z=32.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-10.0,Z=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=55.0,Z=32.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=-55.0,Z=32.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-10.0,Z=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true

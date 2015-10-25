@@ -4026,26 +4026,6 @@ exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
-// New debug exec to adjust VehHitPoints hit detection sphere representing driver's head
-exec function SetDriverHP(int NewRadius, int NewX, int NewY, int NewZ, optional int Index)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < VehHitPoints.Length)
-    {
-        if (NewRadius <= 0.0)
-        {
-            NewRadius = VehHitPoints[Index].PointRadius; // leaving NewRadius as zero signifies no change the radius, just the offset
-        }
-
-        Log(VehicleNameString @ " new VehHitPoints[" $ Index $ "] = radius" @ NewRadius @ " offset" @ NewX @ NewY @ NewZ
-            @ "(was radius" @ VehHitPoints[Index].PointRadius @ " offset" @ VehHitPoints[Index].PointOffset $ ")");
-
-        VehHitPoints[Index].PointRadius = NewRadius;
-        VehHitPoints[Index].PointOffset.X = NewX;
-        VehHitPoints[Index].PointOffset.Y = NewY;
-        VehHitPoints[Index].PointOffset.Z = NewZ;
-    }
-}
-
 // New debug exec for testing engine damage
 function exec KillEngine()
 {
@@ -4247,6 +4227,8 @@ defaultproperties
     ViewShakeOffsetMag=(X=0.0,Z=0.0)
     ViewShakeOffsetFreq=0.0
     TouchMessageClass=class'DHVehicleTouchMessage'
+    VehHitpoints(0)=(PointRadius=25.0,PointBone="Body",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
+    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true
@@ -4254,7 +4236,5 @@ defaultproperties
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
     bDisableThrottle=false
-    VehHitpoints(0)=(bPenetrationPoint=false) // bPenetrationPoint is deprecated but shown false just to avoid any confusion
-    VehHitpoints(1)=(DamageMultiplier=1.0)    // TakeDamage() doesn't use DamageMultiplier for engine, but shown as 1.0 just to avoid any confusion
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 }
