@@ -107,6 +107,11 @@ function bool CanFire()
     return DriverPositionIndex != BinocPositionIndex;
 }
 
+exec function SetAnim(name NewAnim) // TEMP
+{
+    Driver.PlayAnim(NewAnim);
+}
+
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_M45QuadmountMG'
@@ -120,8 +125,8 @@ defaultproperties
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=0.0,Z=6.0),ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionUpAnim="lookover_up",bExposed=true)
     DriverPositions(1)=(ViewLocation=(X=-15.0,Y=0.0,Z=15.0),ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionDownAnim="lookover_down",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewLocation=(X=-15.0,Y=0.0,Z=15.0),ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-    DrivePos=(X=0.0,Y=0.0,Z=-13.0)
-    DriveAnim="Vt3485_driver_idle_close"
+    DrivePos=(X=10.0,Y=0.0,Z=-37.0)
+    DriveAnim="VSU76_driver_idle_close"
     GunsightCameraBone="Gun"
     CameraBone="Camera_com"
     bSpecialRotateSounds=true

@@ -195,7 +195,7 @@ defaultproperties
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo' // TODO: make ammo icon for 50 cal 'tombstone' ammo chest
     bInstantFire=false
     WeaponFireOffset=2.0
-    GunnerAttachmentBone="com_attachment"
+    GunnerAttachmentBone="Gun"
     BeginningIdleAnim="lookover_idle_down"
     bInstantRotation=true //false
     RotationsPerSecond=0.1667 // 60 degrees per second
@@ -206,7 +206,7 @@ defaultproperties
     YawEndConstraint=10000.0
     YawBone="Turret"
     PitchBone="Gun"
-    CustomPitchUpLimit=16000   // nearly 90 degrees elevation (kept just under to avoid yaw glitching when pitch approaches vertical)
+    CustomPitchUpLimit=10000 // TEST - reduced to stop feet poking through - fine tune based on gunner's final anim & positioning
     CustomPitchDownLimit=63716 // 10 degrees depression
     PitchUpLimit=20000
     PitchDownLimit=45000
