@@ -46,5 +46,6 @@ defaultproperties
     bLimitYaw=true
     BeginningIdleAnim="loader_close_idle"
     InitialPrimaryAmmo=50
+    FireEffectClass=none // there's no MG hatch & the 'turret' fire effect fills the open superstructure
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
 }

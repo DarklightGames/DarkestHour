@@ -61,6 +61,8 @@ defaultproperties
     InitialSecondaryAmmo=6
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHVAP'
+    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=12.0,Y=-25.0,Z=10.0)
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
