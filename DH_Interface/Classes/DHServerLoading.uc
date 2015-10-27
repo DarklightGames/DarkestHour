@@ -9,6 +9,7 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 var localized string DeployingText;
 var localized string AuthorText;
+var localized string LegacyMapText;
 var localized string OfficialMapText;
 var localized string CommunityMapText;
 var localized string UnspecifiedText;
@@ -131,6 +132,11 @@ simulated function SetImage()
         DrawOpImage(Operations[5]).Image = OfficialMapIcon;
         DrawOpText(Operations[6]).Text = OfficialMapText;
     }
+    else if (class'DHMapList'.static.IsMapLegacy(LoadingMapRecord.MapName))
+    {
+        DrawOpImage(Operations[5]).Image = OfficialMapIcon;
+        DrawOpText(Operations[6]).Text = LegacyMapText;
+    }
     else
     {
         DrawOpImage(Operations[5]).Image = CommunityMapIcon;
@@ -146,6 +152,7 @@ defaultproperties
 
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
+    LegacyMapText="Legacy Map"
     OfficialMapText="Official Map"
     OfficialMapIcon=texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CommunityMapText="Community Map"

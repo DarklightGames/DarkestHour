@@ -1020,12 +1020,10 @@ simulated function SwitchWeapon(byte F)
 // Modified to prevent moving to another vehicle position while moving between view points
 function ServerChangeDriverPosition(byte F)
 {
-    if (IsInState('ViewTransition'))
+    if (!IsInState('ViewTransition'))
     {
-        return;
+        super.ServerChangeDriverPosition(F);
     }
-
-    super.ServerChangeDriverPosition(F);
 }
 
 // Modified to give players the same momentum as the vehicle when exiting
@@ -1135,10 +1133,6 @@ function AltFire(optional float F)
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval)
     {
@@ -1345,22 +1339,18 @@ simulated function StopEmitters()
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local Controller InstigatorController;
-    local float      VehicleDamageMod, HitCheckDistance;
-    local int        InstigatorTeam, PossibleDriverDamage, i;
-    local bool       bHitDriver;
+    local float      VehicleDamageMod;
+    local int        InstigatorTeam, i;
 
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
+    // Suicide/self-destruction
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+
+        return;
     }
 
-    // Quick fix for the thing giving itself impact damage
+    // Quick fix for the vehicle giving itself impact damage
     if (InstigatedBy == self)
     {
         return;
@@ -1414,40 +1404,26 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // No damage, except possibly to driver, if less than MinVehicleDamageModifier for this vehicle
+    // No damage if less than MinVehicleDamageModifier for this vehicle
     if (VehicleDamageMod < MinVehicleDamageModifier)
     {
-        VehicleDamageMod = 0.0;
+        return;
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= RandRange(0.75, 1.08);
-    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
-    Damage *= VehicleDamageMod;
+    Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
 
-    // Check RO VehHitPoints (driver, engine, ammo)
+    // Exit if no damage
+    if (Damage < 1)
+    {
+        return;
+    }
+
+    // Check RO VehHitpoints (engine, ammo)
+    // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     for (i = 0; i < VehHitpoints.Length; ++i)
     {
-        // Series of checks to see if we hit the vehicle driver
-        if (VehHitpoints[i].HitPointType == HP_Driver)
-        {
-            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && !bHitDriver)
-            {
-                // Lower-powered rounds have a limited HitCheckDistance, as they won't rip through the vehicle
-                // For more powerful rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
-                if (VehicleDamageMod <= 0.25)
-                {
-                    HitCheckDistance = DriverHitCheckDist;
-                }
-
-                if (IsPointShot(HitLocation, Momentum, 1.0, i, HitCheckDistance))
-                {
-                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
-                    bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
-                }
-            }
-        }
-        else if (Damage > 0 && IsPointShot(HitLocation, Momentum, 1.0, i))
+        if (IsPointShot(HitLocation, Momentum, 1.0, i))
         {
             // Engine hit
             if (VehHitpoints[i].HitPointType == HP_Engine)
@@ -1531,7 +1507,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 
     AmbientSound = DestroyedBurningSound;
-    SoundVolume = 255.0;
+    SoundVolume = 255;
     SoundRadius = 600.0;
 
     if (!bDisintegrateVehicle)
@@ -2149,7 +2125,7 @@ simulated function ShrinkHUD();
 //  ****************************** EXEC FUNCTIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+// New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
@@ -2187,13 +2163,13 @@ exec function ToggleViewLimit()
         }
         else
         {
-            bLimitYaw = true;
-            bLimitPitch = true;
+            bLimitYaw = default.bLimitYaw;
+            bLimitPitch = default.bLimitPitch;
         }
     }
 }
 
-// New exec function that allows debugging exit positions to be toggled for all DHWheeledVehicles
+// New exec that allows debugging exit positions to be toggled for all DHWheeledVehicles
 exec function ToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -2211,7 +2187,7 @@ function ServerToggleDebugExits()
     }
 }
 
-// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
+// New debug exec to draw the location of all exit positions for the vehicle, which are shown as different coloured cylinders
 exec function DrawExits()
 {
     local vector ExitPosition, ZOffset, X, Y, Z;
@@ -2264,7 +2240,7 @@ exec function DrawExits()
     }
 }
 
-// New debug exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
+// New debug exec to set ExitPositions (use it in single player; it's too much hassle on a server)
 exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
 {
     if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
@@ -2276,7 +2252,7 @@ exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
-// Handy new execs during development for testing engine damage
+// New debug exec for testing engine damage
 function exec KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
@@ -2290,7 +2266,7 @@ function ServerKillEngine()
     DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
-// New debug exec function to set exhaust emitter location
+// New debug exec to set exhaust emitter location
 exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
 {
     local vector OldExhaustPosition;

@@ -80,7 +80,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.4
-    VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Engine) // note VHP(0) is inherited default for engine
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Engine)
     EngineHealth=35
     bMultiPosition=false

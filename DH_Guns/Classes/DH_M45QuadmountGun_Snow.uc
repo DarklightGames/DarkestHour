@@ -7,7 +7,7 @@ class DH_M45QuadmountGun_Snow extends DH_M45QuadmountGun;
 
 defaultproperties
 {
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling38_dest' // TEMP - replace with winter M45 destroyed static mesh
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M45QuadmountMGPawn_Snow')
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling38_dest' // TODO: make M45 destroyed static mesh, winter version
     Skins(0)=texture'DH_Artillery_tex.m45.m45_trailer_snow'
-    CannonSkins(0)=texture'DH_Artillery_tex.m45.m45_gun_snow'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank_M4A376W extends DHArmoredVehicle;
+class DH_ShermanTank_M4A376W extends DHArmoredVehicle; // later version with HVAP instead of smoke rounds
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
@@ -108,11 +108,10 @@ defaultproperties
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(X=0.0,Y=0.0,Z=-5.0))
-    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0))
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=20.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=20.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=25.0,Z=20.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-25.0,Z=20.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true

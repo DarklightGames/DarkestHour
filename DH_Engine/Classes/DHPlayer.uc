@@ -88,7 +88,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientSaveROIDHash, ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
+        ClientProposeMenu, ClientSaveROIDHash, ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -1664,15 +1664,14 @@ function bool HasSelectedSpawn()
     return true;
 }
 
-// Modified incase this ever gets called, make it open the deploy menu instead of old RoleMenu
+// Modified incase this ever gets called, make it 'replace' the deploy menu instead of old RoleMenu
 simulated function ClientForcedTeamChange(int NewTeamIndex, int NewRoleIndex)
 {
     // Store the new team and role info
     ForcedTeamSelectOnRoleSelectPage = NewTeamIndex;
     DesiredRole = NewRoleIndex;
 
-    // Open the Deploy menu
-    ClientOpenMenu("DH_Interface.DHDeployMenu");
+    ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
 // Modified to avoid "accessed none" errors
@@ -2848,6 +2847,18 @@ function ServerListPlayers()
     }
 
     CopyToClipboard(ParseString);
+}
+
+// Simliar to ClientOpenMenu(), but only opens menu if no menu is already open
+event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
+{
+    if (GUIController(Player.GUIController).ActivePage == none)
+    {
+        if (!Player.GUIController.OpenMenu(Menu, Msg1, Msg2))
+        {
+            UnPressButtons();
+        }
+    }
 }
 
 function ClientSaveROIDHash(string ROID)

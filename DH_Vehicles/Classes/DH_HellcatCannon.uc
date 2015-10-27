@@ -61,6 +61,8 @@ defaultproperties
     InitialSecondaryAmmo=5
     PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
+    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=15.0,Y=30.0,Z=0.0)
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'

@@ -85,7 +85,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.66
     VehicleHudOccupantsY(3)=0.66
     VehicleHudEngineY=0.28
-    VehHitpoints(0)=(PointRadius=20.0,PointBone="body",PointOffset=(X=65.0,Z=15.0))
+    VehHitpoints(0)=(PointRadius=20.0,PointBone="body",PointOffset=(X=65.0,Z=15.0)) // engine
     VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)

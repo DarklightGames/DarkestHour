@@ -60,11 +60,13 @@ defaultproperties
     InitialSecondaryAmmo=5
     PrimaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHVAP'
+    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=0.0,Y=25.0,Z=10.0)
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.Achilles_turret_coll'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
     SoundVolume=80
     SoundRadius=300.0
 }

@@ -72,7 +72,7 @@ defaultproperties
     StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
-    DamagedEffectOffset=(X=10.0,Y=0.0,Z=30.0)
+    DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
@@ -89,11 +89,10 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.5
     VehicleHudEngineX=0.51
     VehicleHudEngineY=0.47
-    VehHitpoints(0)=(PointRadius=9.0,PointOffset=(X=-1.0,Y=-3.0,Z=-11.0))
-    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(Z=-5.0))
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true

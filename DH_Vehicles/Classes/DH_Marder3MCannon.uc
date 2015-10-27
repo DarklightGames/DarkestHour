@@ -74,6 +74,8 @@ defaultproperties
     InitialSecondaryAmmo=7
     PrimaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShellHE'
+    FireEffectScale=1.75 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
     SoundVolume=130

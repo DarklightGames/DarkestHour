@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GDestroyer_Late extends DH_Stug3GDestroyer;
+class DH_Stug3GDestroyer_Late extends DH_Stug3GDestroyer; // late war version with remote-controlled MG & with saukopf mantlet
 
 defaultproperties
 {

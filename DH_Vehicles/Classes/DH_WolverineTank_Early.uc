@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WolverineTank_Early extends DH_WolverineTank;
+class DH_WolverineTank_Early extends DH_WolverineTank; // earlier version without HVAP
 
 defaultproperties
 {

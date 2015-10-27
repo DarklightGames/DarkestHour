@@ -521,15 +521,9 @@ simulated function bool HitDriver(vector HitLocation, vector Momentum)
 // Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        DamageType = class'ROSuicided';
-        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
     }
 }
 

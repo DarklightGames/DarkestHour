@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank extends DHArmoredVehicle;
+class DH_ShermanTank extends DHArmoredVehicle; // M4A1 75mm variant (without wet stowage)
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A1_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
@@ -83,7 +83,7 @@ defaultproperties
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest'
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-113.0,Y=20.0,Z=79.0)
+    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
     VehicleTeam=1
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
@@ -102,11 +102,10 @@ defaultproperties
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
     VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointOffset=(X=-3.0,Y=2.0,Z=-6.0))
-    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0))
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=55.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=55.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true

@@ -59,7 +59,6 @@ var     int         UnbuttonedPositionIndex;      // lowest DriverPositions inde
 var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
-var     bool        bPlayerCollisionBoxMoves;     // driver's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var     name        PlayerCameraBone;             // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     bool        bLockCameraDuringTransition;  // lock the camera's rotation to the camera bone during view transitions
 var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
@@ -339,12 +338,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 {
     super.Died(Killer, DamageType, HitLocation);
 
-    if (Killer == none)
+    if (Killer != none)
     {
-        return;
+        DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
     }
-
-    DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -355,7 +352,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Also to initialize driver-related stuff when we receive the Driver actor
 simulated function PostNetReceive()
 {
-    // Player has changed position
+    // Driver has changed position
     // Checking bClientInitialized means we do nothing until PostNetBeginPlay() has matched position indexes, meaning we leave SetPlayerPosition() to handle any initial anims
     if (DriverPositionIndex != SavedPositionIndex && bClientInitialized)
     {
@@ -1178,7 +1175,7 @@ simulated state EnteringVehicle
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle animation for other net clients (not just owning client) & on server if collision is animated, so we reset visuals like hatches & any moving collision boxes
+// Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
 // We no longer disable Tick when driver exits, as vehicle may still be moving & dust effects need updating as vehicle slows
 // Instead we disable Tick at the end of Tick itself, if vehicle isn't moving & has no driver
 simulated event DrivingStatusChanged()
@@ -1188,8 +1185,8 @@ simulated event DrivingStatusChanged()
     {
         Enable('Tick');
     }
-    // Play neutral idle animation if player has exited, but not on a server unless collision is animated
-    else if ((Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && HasAnim(BeginningIdleAnim))
+    // Play neutral idle animation if player has exited, but not on a server
+    else if (Level.NetMode != NM_DedicatedServer && HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
     }
@@ -1218,8 +1215,9 @@ simulated function PrevWeapon()
     }
 }
 
-// Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
-// Also so if player has moving collision box, server goes to state ViewTransition just to play animations
+// Modified to call NextViewPoint() for all modes, including dedicated server
+// New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
+// Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -1228,15 +1226,7 @@ function ServerChangeViewPoint(bool bForward)
         {
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if ((DriverPositionIndex == UnbuttonedPositionIndex || bPlayerCollisionBoxMoves) && Level.NetMode == NM_DedicatedServer)
-            {
-                GotoState('ViewTransition');
-            }
+            NextViewPoint();
         }
     }
     else
@@ -1245,69 +1235,67 @@ function ServerChangeViewPoint(bool bForward)
         {
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer)
-            {
-                GotoState('ViewTransition');
-            }
+            NextViewPoint();
         }
     }
 }
 
-// Modified to use Sleep to control exit from state, to avoid unnecessary stuff on a server,
-// to add handling of FOV changes & better handling of locked camera, & to avoid switching mesh & FOV if in behind view
+// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
+simulated function NextViewPoint()
+{
+    if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[PreviousPositionIndex].bExposed)
+    {
+        GotoState('ViewTransition');
+    }
+}
+            
+// Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
+// to add handling of FOV changes & better handling of locked camera, to avoid switching mesh & FOV if in behind view, & to avoid unnecessary stuff on a server
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Level.NetMode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
-            if (IsHumanControlled() && !PlayerController(Controller).bBehindView)
-            {
-                // Switch to mesh for new position as may be different
-                SwitchMesh(DriverPositionIndex);
+            // Switch to mesh for new position as may be different
+            SwitchMesh(DriverPositionIndex);
 
-                // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-                if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
-                {
-                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-                }
+            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
+            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
+            {
+                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+        }
+
+        if (Driver != none)
+        {
+            // If moving to an exposed position, enable the driver's hit detection
+            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[PreviousPositionIndex].bExposed && ROPawn(Driver) != none)
+            {
+                ROPawn(Driver).ToggleAuxCollision(true);
             }
 
             // Play any transition animation for the driver
-            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
+            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
             {
                 Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }
         }
 
+        // Play any transition animation for the vehicle itself & set a duration to control when we exit this state
         ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
 
-        // Play any transition animation for the vehicle itself
-        // On dedicated server we only want to run this section, to set Sleep duration to control leaving state (or play button/unbutton anims if driver's collision box moves)
         if (PreviousPositionIndex < DriverPositionIndex)
         {
             if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
             {
-                if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-                {
-                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-                }
-
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
                 ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
             }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            if (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves)
-            {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-            }
-
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
             ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
         }
     }
@@ -1338,6 +1326,12 @@ simulated state ViewTransition
             {
                 Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation));
             }
+        }
+
+        // If moving to an unexposed position, disable the driver's hit detection
+        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[PreviousPositionIndex].bExposed && ROPawn(Driver) != none)
+        {
+            ROPawn(Driver).ToggleAuxCollision(false);
         }
     }
 
@@ -2436,22 +2430,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
     local vector     HitDir, LocDir, X, Y, Z;
-    local float      VehicleDamageMod, TreadDamageMod, HitCheckDistance, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
-    local int        InstigatorTeam, PossibleDriverDamage, i;
-    local bool       bHitDriver, bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
+    local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
+    local int        InstigatorTeam, i;
+    local bool       bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
 
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
+    // Suicide/self-destruction
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+        ResetTakeDamageVariables();
+
+        return;
     }
 
-    // Quick fix for the thing giving itself impact damage
+    // Quick fix for the vehicle giving itself impact damage
     if (InstigatedBy == self && DamageType != VehicleBurningDamType)
     {
         ResetTakeDamageVariables();
@@ -2503,81 +2495,73 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         Damage *= RandRange(0.75, 1.08);
     }
 
-    PossibleDriverDamage = Damage; // saved in case we need to damage driver, as VehicleDamageMod isn't relevant to driver
     Damage *= VehicleDamageMod;
 
-    // Check RO VehHitPoints (driver, engine, ammo)
-    for (i = 0; i < VehHitpoints.Length; ++i)
+    // Exit if no damage
+    if (Damage < 1)
     {
-        // Series of checks to see if we hit the vehicle driver
-        if (VehHitpoints[i].HitPointType == HP_Driver)
+        ResetTakeDamageVariables();
+
+        return;
+    }
+
+    // Check RO VehHitpoints (engine, ammo)
+    // Note driver hit check is deprecated as we use a new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    if (bProjectilePenetrated)
+    {
+        for (i = 0; i < VehHitpoints.Length; ++i)
         {
-            if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && !bHitDriver)
+            if (IsPointShot(HitLocation, Momentum, 1.0, i))
             {
-                // Non-penetrating rounds have a limited HitCheckDistance
-                // For penetrating rounds, HitCheckDistance will remain default zero, meaning no limit on check distance in IsPointShot()
-                if (!bProjectilePenetrated)
+                if (bLogPenetration)
                 {
-                    HitCheckDistance = DriverHitCheckDist;
+                    Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
                 }
 
-                if (IsPointShot(HitLocation, Momentum, 1.0, i, HitCheckDistance))
-                {
-                    Driver.TakeDamage(PossibleDriverDamage, InstigatedBy, HitLocation, Momentum, DamageType);
-                    bHitDriver = true; // stops any possibility of multiple damage to driver by same projectile if there's more than 1 driver hit point (e.g. head & torso)
-                }
-            }
-        }
-        else if (bProjectilePenetrated && Damage > 0 && IsPointShot(HitLocation, Momentum, 1.0, i))
-        {
-            if (bLogPenetration)
-            {
-                Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
-            }
-
-            // Engine hit
-            if (VehHitpoints[i].HitPointType == HP_Engine)
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, "Hit vehicle engine");
-                }
-
-                DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-                Damage *= 0.55; // reduce damage to vehicle itself if hit engine
-
-                // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitPoints
-                if (bRearHullPenetration)
-                {
-                    bEngineStoppedProjectile = true;
-                    break;
-                }
-            }
-            // Hit ammo store
-            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-            {
-                // Random chance that ammo explodes & vehicle is destroyed
-                if ((bHEATPenetration && FRand() < 0.85) || (!bHEATPenetration && FRand() < AmmoIgnitionProbability))
+                // Engine hit
+                if (VehHitpoints[i].HitPointType == HP_Engine)
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                        Level.Game.Broadcast(self, "Hit vehicle engine");
                     }
 
-                    Damage *= Health;
-                    bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
-                    break;
-                }
-                // Even if ammo did not explode, increase the chance of a fire breaking out
-                else
-                {
-                    if (bDebuggingText)
+                    DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+                    Damage *= 0.55; // reduce damage to vehicle itself if hit engine
+
+                    // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitpoints
+                    if (bRearHullPenetration)
                     {
-                        Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                        bEngineStoppedProjectile = true;
+                        break;
                     }
+                }
+                // Hit ammo store
+                else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+                {
+                    // Random chance that ammo explodes & vehicle is destroyed
+                    if ((bHEATPenetration && FRand() < 0.85) || (!bHEATPenetration && FRand() < AmmoIgnitionProbability))
+                    {
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                        }
 
-                    HullFireChance = FMax(0.75, HullFireChance);
-                    HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                        Damage *= Health;
+                        bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+                        break;
+                    }
+                    // Even if ammo did not explode, increase the chance of a fire breaking out
+                    else
+                    {
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                        }
+
+                        HullFireChance = FMax(0.75, HullFireChance);
+                        HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                    }
                 }
             }
         }
@@ -2904,7 +2888,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
-    if (bProjectilePenetrated && !bOnFire && Damage > 0 && Health > 0)
+    if (bProjectilePenetrated && !bOnFire && Health > 0)
     {
         // Random chance of hull fire breaking out
         if (!bEngineStoppedProjectile && ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance)))
@@ -3907,7 +3891,7 @@ simulated function ShrinkHUD();
 //  ****************************** EXEC FUNCTIONS  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+// New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
@@ -3951,7 +3935,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// New exec function that allows debugging exit positions to be toggled for all DHArmoredVehicles
+// New exec that allows debugging exit positions to be toggled for all DHArmoredVehicles
 exec function ToggleDebugExits()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -3969,8 +3953,8 @@ function ServerToggleDebugExits()
     }
 }
 
-// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
-simulated exec function DrawExits()
+// New debug exec to draw the location of all exit positions for the vehicle, which are shown as different coloured cylinders
+exec function DrawExits()
 {
     local vector ExitPosition, ZOffset, X, Y, Z;
     local color  C;
@@ -4022,8 +4006,8 @@ simulated exec function DrawExits()
     }
 }
 
-// New debugging exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
-simulated exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
+// New debug exec to set ExitPositions (use it in single player; it's too much hassle on a server)
+exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
 {
     if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
     {
@@ -4034,27 +4018,7 @@ simulated exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
-// New debug exec to adjust VehHitPoints hit detection sphere representing driver's head
-exec function SetDriverHP(int NewRadius, int NewX, int NewY, int NewZ, optional int Index)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < VehHitPoints.Length)
-    {
-        if (NewRadius <= 0.0)
-        {
-            NewRadius = VehHitPoints[Index].PointRadius; // leaving NewRadius as zero signifies no change the radius, just the offset
-        }
-
-        Log(VehicleNameString @ " new VehHitPoints[" $ Index $ "] = radius" @ NewRadius @ " offset" @ NewX @ NewY @ NewZ
-            @ "(was radius" @ VehHitPoints[Index].PointRadius @ " offset" @ VehHitPoints[Index].PointOffset $ ")");
-
-        VehHitPoints[Index].PointRadius = NewRadius;
-        VehHitPoints[Index].PointOffset.X = NewX;
-        VehHitPoints[Index].PointOffset.Y = NewY;
-        VehHitPoints[Index].PointOffset.Z = NewZ;
-    }
-}
-
-// Handy new execs during development for testing engine or track damage
+// New debug exec for testing engine damage
 function exec KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
@@ -4068,6 +4032,7 @@ function ServerKillEngine()
     DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
+// New debug exec for testing track damage
 exec function DamTrack(string Track)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -4096,7 +4061,7 @@ function ServerDamTrack(string Track)
     }
 }
 
-// Handy new execs during development for testing fire damage & effects
+// New debug exec for testing hull fire damage & effects
 exec function HullFire()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -4105,6 +4070,12 @@ exec function HullFire()
     }
 }
 
+function ServerHullFire()
+{
+    if (!bOnFire) StartHullFire(none);
+}
+
+// New debug exec for testing engine fire damage & effects
 exec function EngineFire()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -4113,14 +4084,54 @@ exec function EngineFire()
     }
 }
 
-function ServerHullFire()
-{
-    if (!bOnFire) StartHullFire(none);
-}
-
 function ServerEngineFire()
 {
     if (!bEngineOnFire) StartEngineFire(none);
+}
+
+// New debug exec to adjust location of engine smoke/fire position
+exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        {
+            DamagedEffectOffset.X = NewX;
+            DamagedEffectOffset.Y = NewY;
+            DamagedEffectOffset.Z = NewZ;
+        }
+
+        EngineHealth = 0;
+        bEngineOnFire = bEngineFire;
+        bOnFire = false;
+        SetFireEffects();
+        Log(VehicleNameString @ "DamagedEffectOffset =" @ DamagedEffectOffset);
+
+        if (DamagedEffect != none)
+        {
+            DamagedEffect.SetBase(none);
+            DamagedEffect.SetLocation(Location + (DamagedEffectOffset >> Rotation));
+            DamagedEffect.SetBase(self);
+            DamagedEffect.SetEffectScale(DamagedEffectScale);
+        }
+    }
+}
+
+// New debug exec to adjust location of driver's hatch fire position
+exec function SetFEOffset(int NewX, int NewY, int NewZ)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        {
+            FireEffectOffset.X = NewX;
+            FireEffectOffset.Y = NewY;
+            FireEffectOffset.Z = NewZ;
+        }
+
+        StartDriverHatchFire();
+        Log(Tag @ "FireEffectOffset =" @ FireEffectOffset);
+    }
 }
 
 // Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
@@ -4134,7 +4145,7 @@ function exec DamageTank()
     }
 }
 
-// New debug exec function to set exhaust emitter location
+// New debug exec to set exhaust emitter location
 exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
 {
     local vector OldExhaustPosition;
@@ -4253,6 +4264,8 @@ defaultproperties
     ViewShakeOffsetMag=(X=0.0,Z=0.0)
     ViewShakeOffsetFreq=0.0
     TouchMessageClass=class'DHVehicleTouchMessage'
+    VehHitpoints(0)=(PointRadius=25.0,PointBone="Body",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
+    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true
@@ -4260,6 +4273,5 @@ defaultproperties
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
     bDisableThrottle=false
-    VehHitpoints(0)=(bPenetrationPoint=false) // bPenetrationPoint is deprecated but shown false just to avoid any confusion
-    VehHitpoints(1)=(DamageMultiplier=1.0)    // TakeDamage() doesn't use DamageMultiplier for engine, but shown as 1.0 just to avoid any confusion
+    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 }

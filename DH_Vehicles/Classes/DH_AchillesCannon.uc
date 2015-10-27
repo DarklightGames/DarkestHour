@@ -79,11 +79,13 @@ defaultproperties
     InitialSecondaryAmmo=4
     PrimaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
+    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=0.0,Y=20.0,Z=10.0)
     Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
     Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.Achilles_turret_coll'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
     SoundVolume=130
     SoundRadius=300.0
 }

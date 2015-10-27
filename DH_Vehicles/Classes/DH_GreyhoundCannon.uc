@@ -77,9 +77,12 @@ defaultproperties
     InitialAltAmmo=250
     PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
+    FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll'
     SoundVolume=100
     SoundRadius=300.0
 }

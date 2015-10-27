@@ -87,12 +87,11 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger1_body'
     bVehicleHudUsesLargeTexture=true
-    VehHitpoints(0)=(PointOffset=(X=-6.0))
-    VehHitpoints(1)=(PointRadius=40.0,PointHeight=40.0,PointOffset=(X=-100.0,Z=10.0))
-    VehHitpoints(2)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-5.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(5)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-5.0,Y=50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=40.0,PointHeight=40.0,PointOffset=(X=-100.0,Z=10.0)) // engine
+    VehHitpoints(1)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-5.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-5.0,Y=50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true

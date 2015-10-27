@@ -765,7 +765,6 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
     EffectEmitterClass=none
     CannonDustEmitterClass=none // avoids having to override FlashMuzzleFlash function
-    FireEffectOffset=(X=20.0,Y=-5.0,Z=20.0)
     FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireSoundScaling=3.0
@@ -798,6 +797,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
+    FireEffectScale=1.3 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=20.0,Y=-25.0,Z=10.0)
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
     Skins(1)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3gFactory extends DH_GermanVehicles;
+class DH_Stug3gFactory extends DH_GermanVehicles; // earlier version without remote-controlled MG & with boxy mantlet
 
 defaultproperties
 {

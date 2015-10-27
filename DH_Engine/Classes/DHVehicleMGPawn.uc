@@ -1771,6 +1771,23 @@ exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bSca
     }
 }
 
+// New debug exec to adjust location of MG hatch fire position
+exec function SetFEOffset(int NewX, int NewY, int NewZ)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        {
+            MGun.FireEffectOffset.X = NewX;
+            MGun.FireEffectOffset.Y = NewY;
+            MGun.FireEffectOffset.Z = NewZ;
+        }
+
+        MGun.StartMGFire();
+        Log(Tag @ "FireEffectOffset =" @ MGun.FireEffectOffset);
+    }
+}
+
 exec function SetRPS(float NewValue) // TEMP DEBUG
 {
     Gun.RotationsPerSecond = NewValue;

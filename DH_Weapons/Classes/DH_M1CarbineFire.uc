@@ -13,7 +13,7 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'
-    maxVerticalRecoilAngle=600
+    maxVerticalRecoilAngle=550
     maxHorizontalRecoilAngle=150
     ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
     ShellIronSightOffset=(X=15.0)
@@ -36,6 +36,6 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSVT'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=1200.0
-    Spread=165.0
+    Spread=170.0
     SpreadStyle=SS_Random
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JacksonFactory_Early extends DH_JacksonFactory;
+class DH_JacksonFactory_Early extends DH_JacksonFactory; // earlier version without HVAP & without muzzle brake
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GDestroyer extends DHArmoredVehicle;
+class DH_Stug3GDestroyer extends DHArmoredVehicle; // earlier version without remote-controlled MG & with boxy mantlet
 
 #exec OBJ LOAD FILE=..\Animations\DH_Stug3G_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
@@ -103,10 +103,9 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.65
     VehicleHudOccupantsY(5)=0.7
     VehicleHudOccupantsY(6)=0.75
-    VehHitpoints(0)=(PointRadius=2.0,PointOffset=(X=-15.0,Z=-22.0))
-    VehHitpoints(1)=(PointRadius=20.0,PointHeight=25.0,PointOffset=(X=-90.0))
-    VehHitpoints(2)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=-30.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=5.0,Y=30.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=20.0,PointHeight=25.0,PointOffset=(X=-90.0)) // engine
+    VehHitpoints(1)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=-30.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=5.0,Y=30.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
