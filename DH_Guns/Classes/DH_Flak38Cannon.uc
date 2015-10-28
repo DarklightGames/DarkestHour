@@ -69,6 +69,17 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
    return true;
 }
 
+// Modified to add ShellCaseEmitter
+simulated function DestroyEffects()
+{
+    super.DestroyEffects();
+
+    if (ShellCaseEmitter != none)
+    {
+        ShellCaseEmitter.Destroy();
+    }
+}
+
 defaultproperties
 {
     NumMags=12
