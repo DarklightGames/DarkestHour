@@ -25,14 +25,15 @@ var() float SpawnProtectionTime;
 // Colin: The spawn manager will defer evaluation of any location hints that
 // have enemies within this distance. In layman's terms, the spawn manager will
 // prefer to spawn players at location hints where there are not enemies nearby.
-var() float LocationHintDeferDistance;
+var()   float                   LocationHintDeferDistance;
+var()   bool                    bIsInitiallyLocked;
 
-var int TeamIndex;
-
-var DHMineVolume MineVolumeProtectionRef;
-
-var   array<DHLocationHint> InfantryLocationHints;
-var   array<DHLocationHint> VehicleLocationHints;
+// Colin: Locked spawn points will not be affected by enable or disable commands.
+var     bool                    bIsLocked;
+var     int                     TeamIndex;
+var     DHMineVolume            MineVolumeProtectionRef;
+var     array<DHLocationHint>   InfantryLocationHints;
+var     array<DHLocationHint>   VehicleLocationHints;
 
 function PostBeginPlay()
 {
@@ -82,6 +83,13 @@ simulated function bool CanSpawnVehicles()
 simulated function bool CanSpawnMortars()
 {
     return Type == ESPT_Mortars || Type == ESPT_All;
+}
+
+function Reset()
+{
+    super.Reset();
+
+    bIsLocked = bIsInitiallyLocked;
 }
 
 defaultproperties

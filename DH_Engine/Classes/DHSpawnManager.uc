@@ -157,6 +157,8 @@ function Reset()
         SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
     }
 
+    SpawnPoints[i].bIsLocked = SpawnPoints[i].bIsInitiallyLocked;
+
     for (i = 0; i < VehiclePools.Length; ++i)
     {
         SetVehiclePoolIsActive(i, VehiclePools[i].bIsInitiallyActive);
@@ -893,6 +895,19 @@ function SetSpawnPointIsActiveByTag(name SpawnPointTag, bool bIsActive)
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
         SetSpawnPointIsActive(SpawnPointIndices[i], bIsActive);
+    }
+}
+
+function SetSpawnPointIsLockedByTag(name SpawnPointTag, bool bIsLocked)
+{
+    local array<byte> SpawnPointIndices;
+    local int         i;
+
+    GetSpawnPointIndicesByTag(SpawnPointTag, SpawnPointIndices);
+
+    for (i = 0; i < SpawnPointIndices.Length; ++i)
+    {
+        SpawnPoints[i].bIsLocked = bIsLocked;
     }
 }
 

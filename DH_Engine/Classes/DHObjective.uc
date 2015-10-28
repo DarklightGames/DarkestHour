@@ -20,7 +20,9 @@ enum ESpawnPointOperation
 {
     ESPO_Enable,
     ESPO_Disable,
-    ESPO_Toggle
+    ESPO_Toggle,
+    ESPO_Lock,
+    ESPO_Unlock
 };
 
 enum EVehiclePoolOperation
@@ -198,6 +200,12 @@ function DoSpawnPointAction(SpawnPointAction SPA)
             break;
         case ESPO_Toggle:
             VM.ToggleSpawnPointIsActiveByTag(SPA.SpawnPointTag);
+            break;
+        case ESPO_Lock:
+            VM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, true);
+            break;
+        case ESPO_Unlock:
+            VM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, false);
             break;
         default:
             Warn("Unhandled ESpawnPointOperation");
