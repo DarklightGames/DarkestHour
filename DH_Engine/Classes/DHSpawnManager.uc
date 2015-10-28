@@ -180,7 +180,7 @@ function bool DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator 
 {
     local DHSpawnPoint SP;
 
-    if (C == none || GRI == none)
+    if (C == none || GRI == none || C.bSpawnPointInvalidated)
     {
         return false;
     }
@@ -712,7 +712,7 @@ function bool DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator
 {
     local DHSpawnPoint SP;
 
-    if (C == none || GRI == none)
+    if (C == none || GRI == none || C.bSpawnPointInvalidated)
     {
         return false;
     }
