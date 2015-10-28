@@ -182,6 +182,11 @@ function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
     local Controller C;
     local DHPlayer PC;
 
+    if (SpawnPoints[SpawnPointIndex].bIsLocked)
+    {
+        return;
+    }
+
     SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
 
     if (!bIsActive)

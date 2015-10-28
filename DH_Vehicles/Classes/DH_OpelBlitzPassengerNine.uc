@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OpelBlitzPassengerFour extends DHPassengerPawn;
+class DH_OpelBlitzPassengerNine extends DHPassengerPawn;
 
 defaultproperties
 {
-    PositionInArray=3
+    PositionInArray=2
     DrivePos=(X=-1.0,Y=0.0,Z=-4.0)
-    DriveAnim="VHalftrack_Rider4_idle"
+    DriveAnim="VHalftrack_Rider1_idle"
 }
