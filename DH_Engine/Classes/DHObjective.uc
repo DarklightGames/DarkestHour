@@ -11,7 +11,9 @@ enum EObjectiveOperation
 {
     EOO_Activate,
     EOO_Deactivate,
-    EOO_Toggle
+    EOO_Toggle,
+    EOO_Lock,
+    EOO_Unlock
 };
 
 enum ESpawnPointOperation
@@ -65,6 +67,7 @@ var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bAlliesContesting;
 var     bool                        bAxisContesting;
+var     bool                        bIsLocked;
 
 // Capture operations (after capture)
 var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
@@ -171,6 +174,7 @@ function Reset()
     bCheckIfAlliesCleared = false;
     bAlliesContesting = false;
     bAxisContesting = false;
+    bIsLocked = false;
 }
 
 function DoSpawnPointAction(SpawnPointAction SPA)
@@ -243,22 +247,31 @@ function DoVehiclePoolAction(VehiclePoolAction VPA)
 
 function DoObjectiveAction(ObjOperationAction OOA)
 {
-    local DarkesthourGame DHGame;
-    local bool            ToggledStatus;
+    local DarkesthourGame G;
 
-    DHGame = DarkesthourGame(Level.Game);
+    if (bIsLocked)
+    {
+        return;
+    }
+
+    G = DarkesthourGame(Level.Game);
 
     switch (OOA.Operation)
     {
         case EOO_Activate:
-            DHGame.DHObjectives[OOA.ObjectiveNum].SetActive(true);
+            G.DHObjectives[OOA.ObjectiveNum].SetActive(true);
             break;
         case EOO_Deactivate:
-            DHGame.DHObjectives[OOA.ObjectiveNum].SetActive(false);
+            G.DHObjectives[OOA.ObjectiveNum].SetActive(false);
             break;
         case EOO_Toggle:
-            ToggledStatus = !DHGame.DHObjectives[OOA.ObjectiveNum].bActive;
-            DHGame.DHObjectives[OOA.ObjectiveNum].SetActive(ToggledStatus);
+            G.DHObjectives[OOA.ObjectiveNum].SetActive(!G.DHObjectives[OOA.ObjectiveNum].bActive);
+            break;
+        case EOO_Lock:
+            G.DHObjectives[OOA.ObjectiveNum].bIsLocked = true;
+            break;
+        case EOO_Unlock:
+            G.DHObjectives[OOA.ObjectiveNum].bIsLocked = false;
             break;
         default:
             Warn("Unhandled EObjectiveOperation");
