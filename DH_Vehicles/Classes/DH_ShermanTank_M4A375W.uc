@@ -78,7 +78,7 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A375W',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn',WeaponBone="Mg_placement")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanJumboPassengerOne',WeaponBone="Passenger_1")
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanJumboPassengerTwo',WeaponBone="passenger_2")

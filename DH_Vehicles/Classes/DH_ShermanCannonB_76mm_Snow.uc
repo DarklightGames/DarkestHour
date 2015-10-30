@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonPawn_M4A376W extends DH_ShermanCannonPawnA_M4A176W;
+class DH_ShermanCannonB_76mm_Snow extends DH_ShermanCannonB_76mm;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ShermanCannon_M4A376W'
+    Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
+    Skins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
 }
