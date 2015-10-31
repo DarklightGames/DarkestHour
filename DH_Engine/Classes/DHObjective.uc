@@ -202,9 +202,11 @@ function DoSpawnPointAction(SpawnPointAction SPA)
             VM.ToggleSpawnPointIsActiveByTag(SPA.SpawnPointTag);
             break;
         case ESPO_Lock:
+            Log("Locking" @ SPA.SpawnPointTag $ "...");
             VM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, true);
             break;
         case ESPO_Unlock:
+            Log("Unlocking" @ SPA.SpawnPointTag $ "...");
             VM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, false);
             break;
         default:

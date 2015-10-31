@@ -874,6 +874,13 @@ private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> S
 
 private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
+    if (SpawnPoints[SpawnPointIndex].bIsLocked)
+    {
+        Log("SpawnPoint[" $ SpawnPointIndex $ "] is locked and cannot be activated!");
+
+        return;
+    }
+
     if (GRI != none)
     {
         GRI.SetSpawnPointIsActive(SpawnPointIndex, bIsActive);
@@ -905,8 +912,12 @@ function SetSpawnPointIsLockedByTag(name SpawnPointTag, bool bIsLocked)
 
     GetSpawnPointIndicesByTag(SpawnPointTag, SpawnPointIndices);
 
+    Log("SetSpawnPointIsLockedByTag" @ SpawnPointTag @ bIsLocked);
+
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
+        Log("SpawnPoints[" $ i $ "]");
+
         SpawnPoints[i].bIsLocked = bIsLocked;
     }
 }
