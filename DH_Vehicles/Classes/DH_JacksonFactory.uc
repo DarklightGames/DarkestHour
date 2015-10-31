@@ -7,8 +7,6 @@ class DH_JacksonFactory extends DH_USVehicles; // later version with HVAP instea
 
 defaultproperties
 {
-    RespawnTime=1.0
-    bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_JacksonTank'
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_body_ext'
 }

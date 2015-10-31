@@ -7,8 +7,6 @@ class DH_Marder3MFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.0
-    bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_Marder3MDestroyer'
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'

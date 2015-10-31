@@ -273,7 +273,6 @@ event VehicleDestroyed(Vehicle V)
 
 defaultproperties
 {
-    bFactoryActive=true
     bAllowVehicleRespawn=false
     VehicleRespawnLimit=1
 }
