@@ -916,9 +916,7 @@ function SetSpawnPointIsLockedByTag(name SpawnPointTag, bool bIsLocked)
 
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
-        Log("SpawnPoints[" $ i $ "]");
-
-        SpawnPoints[i].bIsLocked = bIsLocked;
+        SpawnPoints[SpawnPointIndices[i]].bIsLocked = bIsLocked;
     }
 }
 
