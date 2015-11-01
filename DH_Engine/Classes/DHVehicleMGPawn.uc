@@ -1434,7 +1434,8 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     if (bCanFire)
     {
         // Limit rotation speed of MG to it's specified RotationsPerSecond, as MGs are bInstantRotation weapons, which would otherwise ignore RPS in 1st person
-        if (Gun != none)
+        // But don't do this in single player mode, as very high FPS apparently cause MG movement to slow to a crawl, & there aren't any other players to worry about
+        if (Level.NetMode != NM_Standalone && Gun != none)
         {
             MaxChange = Gun.RotationsPerSecond * DeltaTime * 65536;
             YawChange = FClamp(YawChange, -MaxChange, MaxChange);
