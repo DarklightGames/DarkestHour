@@ -1068,17 +1068,21 @@ function DriverLeft()
 }
 
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
+// Also to trace from player's actual world location, with a smaller trace extent so player is less likely to snag on objects that wouldn't really block his exit
 function bool PlaceExitingDriver()
 {
+    local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
     local int    i;
-    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
 
     if (Driver == none)
     {
         return false;
     }
 
-    Extent = Driver.GetCollisionExtent();
+    // Set extent & ZOffset, using a smaller extent than original
+    Extent.X = Driver.default.DrivingRadius;
+    Extent.Y = Driver.default.DrivingRadius ;
+    Extent.Z = Driver.default.DrivingHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     // Debug exits - uses DHWheeledVehicle class default, allowing bDebugExitPositions to be toggled for all DHWheeledVehicles
@@ -1092,17 +1096,14 @@ function bool PlaceExitingDriver()
         }
     }
 
+    // Check whether player can be moved to each exit position & use the 1st valid one we find
     for (i = 0; i < ExitPositions.Length; ++i)
     {
         ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
-        if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
-            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
-        {
-            continue;
-        }
-
-        if (Driver.SetLocation(ExitPosition))
+        if (Trace(HitLocation, HitNormal, ExitPosition, Driver.Location + ZOffset - Driver.default.PrePivot, false, Extent) == none
+            && Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none
+            && Driver.SetLocation(ExitPosition))
         {
             return true;
         }
