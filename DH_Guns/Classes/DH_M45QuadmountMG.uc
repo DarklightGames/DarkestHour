@@ -58,13 +58,14 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
     }
 
+    // Play fire effects if we spawned a projectile (only play fire effects once)
     if (LastProjectile != none)
     {
         FlashMuzzleFlash(bAltFire);
         AmbientSound = FireSoundClass;
     }
 
-    return P;
+    return LastProjectile;
 }
 
 // Modified so passed damage on to vehicle base, same as a vehicle cannon
@@ -142,7 +143,7 @@ defaultproperties
     BarrelBones(1)="Barrel_TR"
     BarrelBones(2)="Barrel_BL"
     BarrelBones(3)="Barrel_BR"
-    WeaponFireAttachmentBone="" // clear unwanted bone inherited from a parent class (we don't use one, as we have 4 separate barrel bones)
+    WeaponFireAttachmentBone="Barrel_TL" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
     hudAltAmmoIcon=texture'DH_Artillery_tex.ATGun_Hud.m45_ammo'
     bInstantFire=false
     WeaponFireOffset=0.0
