@@ -17,8 +17,9 @@ defaultproperties
     DHPenetrationTable(6)=9.8
     ShellImpactDamage=class'DH_ATWeapons.DH_BazookaImpactDamType'
     ImpactDamage=575
-    Speed=6337.0
-    MaxSpeed=6337.0
+    BallisticCoefficient=0.0475
+    Speed=4967.0
+    MaxSpeed=4967.0
     MyDamageType=class'DH_ATWeapons.DH_BazookaDamType'
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell'
 }

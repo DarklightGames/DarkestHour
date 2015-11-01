@@ -18,6 +18,7 @@ defaultproperties
     bHasTracer=false
     ShellImpactDamage=class'DH_ATWeapons.DH_PIATImpactDamType'
     ImpactDamage=650
+    DamageRadius=300
     Speed=4526.0
     MaxSpeed=4526.0
     MyDamageType=class'DH_ATWeapons.DH_PIATDamType'

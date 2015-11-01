@@ -13,4 +13,5 @@ defaultproperties
     MuzzleBone="warhead1"
     AmmoClass=class'DH_ATWeapons.DH_BazookaAmmo'
     ProjectileClass=class'DH_ATWeapons.DH_BazookaRocket'
+    Spread=400.0
 }
