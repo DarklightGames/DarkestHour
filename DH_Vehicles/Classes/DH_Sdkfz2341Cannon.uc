@@ -212,7 +212,7 @@ state ProjectileFireMode
     }
 }
 
-// Modified to remove switch to PendingProjectileClass after firing, as this cannon uses a magazine
+// Modified to remove switch to PendingProjectileClass after firing, as this cannon uses a magazine (& remove all redundancy for this weapon)
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
@@ -237,40 +237,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
     }
 
-    // Calculate projectile's starting location - bDoOffsetTrace means we trace from outside vehicle's collision back towards weapon to determine firing offset
-    if (bDoOffsetTrace)
-    {
-        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-        Extent.Z = ProjClass.default.CollisionHeight;
-
-        if (CannonPawn != none && CannonPawn.VehicleBase != none)
-        {
-            if (!CannonPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
-                WeaponFireLocation + vector(WeaponFireRotation) * (CannonPawn.VehicleBase.CollisionRadius * 1.5), Extent))
-            {
-                StartLocation = HitLocation;
-            }
-            else
-            {
-                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-            }
-        }
-        else
-        {
-            if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
-            {
-                StartLocation = HitLocation;
-            }
-            else
-            {
-                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-            }
-        }
-    }
-    else
-    {
-        StartLocation = WeaponFireLocation;
-    }
+    // Projectile's starting location
+    StartLocation = WeaponFireLocation;
 
     if (bCannonShellDebugging)
     {
@@ -280,49 +248,27 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     // Now spawn the projectile
     P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
-    // If pending round type is different, switch round type // note this 'if' is removed & is the only change in this override
-//  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass && !bCanisterIsFiring)
+    // If pending round type is different, switch round type // removed in 234/1
+//  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
 //  {
 //      ProjectileClass = PendingProjectileClass;
 //  }
 
+    // Play firing effects
     if (P != none)
     {
-        if (bInheritVelocity)
+        FlashMuzzleFlash(bAltFire);
+
+        if (bAltFire)
         {
-            P.Velocity = Instigator.Velocity;
+            AmbientSound = AltFireSoundClass;
+            SoundVolume = AltFireSoundVolume;
+            SoundRadius = AltFireSoundRadius;
+            AmbientSoundScaling = AltFireSoundScaling;
         }
-
-        // Play firing effects (unless it's canister in the process of spawning separate projectiles - only do it once at the end)
-        if (!bCanisterIsFiring)
+        else
         {
-            FlashMuzzleFlash(bAltFire);
-
-            if (bAltFire)
-            {
-                if (bAmbientAltFireSound)
-                {
-                    AmbientSound = AltFireSoundClass;
-                    SoundVolume = AltFireSoundVolume;
-                    SoundRadius = AltFireSoundRadius;
-                    AmbientSoundScaling = AltFireSoundScaling;
-                }
-                else
-                {
-                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-                }
-            }
-            else
-            {
-                if (bAmbientFireSound)
-                {
-                    AmbientSound = FireSoundClass;
-                }
-                else
-                {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-                }
-            }
+            PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
         }
     }
 
