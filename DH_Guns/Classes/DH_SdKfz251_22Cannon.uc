@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SdKfz251_22Cannon extends DH_Pak40Cannon_CamoOne;
+class DH_SdKfz251_22Cannon extends DH_Pak40Cannon;
 
 defaultproperties
 {
@@ -19,4 +19,6 @@ defaultproperties
     // Don't have a bone for the Pak40 attachment, so this offsets from the hull's 'body' bone to fit correctly onto the pedestal mount
     // Would be easy to add a weapon attachment bone to the hull mesh, but would then need a modified interior mesh to match
     CannonAttachmentOffset=(X=-42.76,Y=0.3,Z=37.95)
+
+    Skins(0)=texture'DH_Artillery_Tex.Pak40.Pak40'
 }

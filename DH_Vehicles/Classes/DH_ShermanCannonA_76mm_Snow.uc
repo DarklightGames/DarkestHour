@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonA_M4A176W_Snow extends DH_ShermanCannonA_M4A176W;
+class DH_ShermanCannonA_76mm_Snow extends DH_ShermanCannonA_76mm;
+// TODO: make whitewash texture for 76mm turret - this uses a snow-topped texture, which doesn't match when used on the M4A3 whitewashed hull
 
 defaultproperties
 {

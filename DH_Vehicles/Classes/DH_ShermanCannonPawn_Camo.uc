@@ -7,9 +7,5 @@ class DH_ShermanCannonPawn_Camo extends DH_ShermanCannonPawn;
 
 defaultproperties
 {
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
     GunClass=class'DH_Vehicles.DH_ShermanCannon_Camo'
 }

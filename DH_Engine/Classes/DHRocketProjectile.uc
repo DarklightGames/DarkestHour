@@ -113,7 +113,6 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
     StraightFlightTime=0.2
-    PenetrationDamageRadius=250.0
     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
     PenetrationMag=250.0
     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
@@ -127,7 +126,7 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
     BallisticCoefficient=0.05
     Damage=300.0
-    DamageRadius=250.0
+    DamageRadius=180.0
     ExplosionDecal=class'ROEffects.RocketMarkDirt'
     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
     LightType=LT_Steady

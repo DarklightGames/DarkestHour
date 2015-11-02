@@ -5,10 +5,6 @@
 
 class DH_Flak38CannonPawn extends DHATGunCannonPawn;
 
-// Emptied out as shells inherits RangeSettings from Sd.Kfz.234/1 armored car, but FlaK 38 has no range settings on the gunsight:
-function IncrementRange();
-function DecrementRange();
-
 // Modified to update sight rotation, if gun pitch has changed
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
@@ -83,6 +79,6 @@ defaultproperties
     GunClass=class'DH_Guns.DH_Flak38Cannon'
     bHasFireImpulse=false
     CameraBone="Camera_com"
-    DriveAnim="Vt3485_driver_idle_close"
-    DrivePos=(X=-39.0,Y=24.0,Z=15.0)
+    DriveAnim="VIS2_driver_idle_close"
+    DrivePos=(X=-35.0,Y=26.0,Z=13.0)
 }

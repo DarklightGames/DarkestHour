@@ -7,8 +7,6 @@ class DH_StuartFactory_British extends DH_BritishVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.0
-    bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_StuartTank_British'
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_extB'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_body_ext'

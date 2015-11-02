@@ -5,172 +5,123 @@
 
 class DH_M45QuadmountMG extends DHVehicleMG;
 
-var     byte                    BarrelBoneIndex;        // bone index for each gun
-var     name                    BarrelBones[4];         // bone names for 4 barrels
-var     WeaponAmbientEmitter    BarrelEffectEmitter[4]; // separate flash emitter for each barrel
+var     name                        BarrelBones[4];           // bone names for 4 barrels
+var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
+var     WeaponAmbientEmitter        BarrelEffectEmitter[4];   // separate emitter for each barrel, for muzzle flash & ejected shell cases
+
+// Modified to ignore the Super in DHVehicleMG, which calculates whether to fire a tracer
+// Because we have multiple barrels, we let SpawnProjectile handle tracers
+state ProjectileFireMode
+{
+    function Fire(Controller C)
+    {
+        SpawnProjectile(ProjectileClass, false);
+    }
+}
 
 // Modified to handle multiple barrel fire
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
-    local Projectile P;
-    local vector     StartLocation, BarrelLocation[4];
-    local rotator    FireRot, BarrelRotation[4];
-    local int        i;
+    local Projectile P, LastProjectile;
+    local vector     StartLocation, FireOffset, FireRotationVector;
+    local rotator    FireRot;
+    local int        VolleysFired, TracerIndex, i;
 
-    GetBarrelLocationAndRotation(0, BarrelLocation[0], BarrelRotation[0]);
-    GetBarrelLocationAndRotation(1, BarrelLocation[1], BarrelRotation[1]);
-    GetBarrelLocationAndRotation(2, BarrelLocation[2], BarrelRotation[2]);
-    GetBarrelLocationAndRotation(3, BarrelLocation[3], BarrelRotation[3]);
+    // Just to avoid multiple calcs
+    FireRotationVector = vector(WeaponFireRotation);
+    FireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation;
 
-    for (i = 0; i < 4; ++i)
+    // Work out which barrel is due to fire a tracer
+    // With 4 barrels & 1 in 5 tracer loading, it effectively rotates through each barrel & skips a tracer every 5th volley
+    VolleysFired = InitialPrimaryAmmo - MainAmmoCharge[0] - 1;
+    TracerIndex = VolleysFired % TracerFrequency;
+
+    // Spawn a projectile from each barrel
+    for (i = 0; i < arraycount(BarrelBones); ++i)
     {
-        FireRot = rotator(vector(BarrelRotation[i]) + VRand() * FRand() * Spread);
-        StartLocation = BarrelLocation[i];
+        StartLocation = GetBoneCoords(BarrelBones[i]).Origin + FireOffset;
+        FireRot = rotator(FireRotationVector + (VRand() * FRand() * Spread));
 
-        P = Spawn(ProjClass, none,, StartLocation, FireRot);
+        // Switch to tracer class if this barrel matches the current TracerIndex for this volley
+        if (i == TracerIndex && TracerProjectileClass != none)
+        {
+            P = Spawn(TracerProjectileClass, none,, StartLocation, FireRot);
+        }
+        else
+        {
+            P = Spawn(ProjClass, none,, StartLocation, FireRot);
+        }
 
         if (P != none)
         {
-            FlashMuzzleFlash(bAltFire);
-            AmbientSound = FireSoundClass;
+            LastProjectile = P;
         }
     }
 
-    return P;
+    // Play fire effects if we spawned a projectile (only play fire effects once)
+    if (LastProjectile != none)
+    {
+        FlashMuzzleFlash(bAltFire);
+        AmbientSound = FireSoundClass;
+    }
+
+    return LastProjectile;
 }
 
-// Modified to enable the emitter for multiple barrels (also stripping out all redundancy for this weapon)
-simulated function OwnerEffects()
+// Modified so passed damage on to vehicle base, same as a vehicle cannon
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    if (Role < ROLE_Authority)
+    // Suicide
+    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
-        // Stop the firing effects it we shouldn't be able to fire
-        // (incorporating extra from DHVehicleMG to stop 'phantom' firing effects if player has moved to ineligible firing position while holding down fire button)
-        if (!ReadyToFire(bIsAltFire) || (MGPawn != none && !MGPawn.CanFire()))
+        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+    }
+    // Shell's ProcessTouch now calls TD here, but we count this as hit on vehicle itself, so we call TD on that
+    else if (MGPawn.VehicleBase != none)
+    {
+        if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
-            VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
-
-            return;
+            MGPawn.VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
         }
 
-        FireCountdown = FireInterval;
-        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
-
-        FlashMuzzleFlash(bIsAltFire);
-    }
-
-    ShakeView(bIsAltFire);
-    SetBarrelEffectEmitterStatus(true);
-}
-
-// Modified to disable the emitter for multiple barrels
-function CeaseFire(Controller C, bool bWasAltFire)
-{
-    super.CeaseFire(C, bWasAltFire);
-
-    SetBarrelEffectEmitterStatus(false);
-}
-
-// Modified to disable the emitter for multiple barrels (also stripping out all redundancy for this weapon)
-simulated function ClientStopFire(Controller C, bool bWasAltFire)
-{
-    StopForceFeedback(FireForce);
-
-    if (Role < ROLE_Authority)
-    {
-        SetBarrelEffectEmitterStatus(false);
+        MGPawn.VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 }
 
-// New function to get the location & rotation of barrel that is firing
-simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLocation, out rotator BarrelRotation)
-{
-    local coords BarrelBoneCoords;
-    local vector CurrentFireOffset;
-
-    if (Index < 0 || Index >= arraycount(BarrelBones))
-    {
-        return;
-    }
-
-    BarrelBoneCoords = GetBoneCoords(BarrelBones[Index]);
-    CurrentFireOffset = WeaponFireOffset * vect(1.0, 0.0, 0.0);
-
-    BarrelRotation = rotator(vector(CurrentAim) >> Rotation);
-    BarrelLocation = BarrelBoneCoords.Origin + (CurrentFireOffset >> BarrelRotation);
-}
-
-// Modified to get WeaponFireLocation for the barrel that is currently firing
-simulated function CalcWeaponFire(bool bWasAltFire)
-{
-    local coords WeaponBoneCoords;
-    local vector CurrentFireOffset;
-
-    // Get bone co-ordinates on which to to base fire location
-    WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
-    BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 3);
-
-    // Calculate fire position offset
-    CurrentFireOffset = WeaponFireOffset * vect(1.0, 0.0, 0.0);
-
-    // Calculate rotation of the weapon's aim
-    WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
-
-    // Calculate exact fire location
-    WeaponFireLocation = WeaponBoneCoords.Origin + (CurrentFireOffset >> WeaponFireRotation);
-}
-
-// Modified to handle multiple barrels
+// Modified to spawn & set up a separate BarrelEffectEmitter for each barrel
 simulated function InitEffects()
-{
-    local int i;
-
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        return;
-    }
-
-    for (i = 0; i < 4; ++i)
-    {
-        if (AmbientEffectEmitterClass != none && BarrelEffectEmitter[i] == none)
-        {
-            BarrelEffectEmitter[i] = Spawn(AmbientEffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
-
-            if (BarrelEffectEmitter[i] != none)
-            {
-                AttachToBone(BarrelEffectEmitter[i], BarrelBones[i]);
-                BarrelEffectEmitter[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
-
-                // Hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
-                if (i == 0 || i == 2) // left side guns
-                {
-                    BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, 4.0, 2.0);
-                    BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Min = 0.0;
-                    BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Max = 10.0;
-                }
-                else // right side guns
-                {
-                    BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, -4.0, 2.0);
-                    BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Min = -10.0;
-                    BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Max = 0.0;
-                }
-            }
-        }
-    }
-}
-
-// New function to set the emitter status for multiple barrels
-simulated function SetBarrelEffectEmitterStatus(bool bActive)
 {
     local int i;
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < 4; ++i)
+        super.InitEffects();
+
+        for (i = 0; i < arraycount(BarrelBones); ++i)
         {
-            if (BarrelEffectEmitter[i] != none)
+            if (BarrelEffectEmitter[i] == none && BarrelEffectEmitterClass != none)
             {
-                BarrelEffectEmitter[i].SetEmitterStatus(bActive);
+                BarrelEffectEmitter[i] = Spawn(BarrelEffectEmitterClass, self);
+
+                if (BarrelEffectEmitter[i] != none)
+                {
+                    AttachToBone(BarrelEffectEmitter[i], BarrelBones[i]);
+                    BarrelEffectEmitter[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
+
+                    // Hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
+                    if (i == 0 || i == 2) // left side guns
+                    {
+                        BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, 4.0, 2.0);
+                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Min = 0.0;
+                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Max = 10.0;
+                    }
+                    else // right side guns
+                    {
+                        BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, -4.0, 2.0);
+                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Min = -10.0;
+                        BarrelEffectEmitter[i].Emitters[0].StartVelocityRange.Y.Max = 0.0;
+                    }
+                }
             }
         }
     }
@@ -183,8 +134,8 @@ defaultproperties
     bRotateSoundFromPawn=true
     RotateSoundThreshold=750
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
-    InitialPrimaryAmmo=200
-    NumMags=10 // TODO: unknown, needs setting
+    InitialPrimaryAmmo=200 // 200 rounds in each ammo chest, so 800 rounds loaded in total - each trigger pull fires 4 rounds, 1 from each ammo cheat
+    NumMags=2 // means we can reload 4 times & each reload is 4 ammo chests, so really the weapon starts with 20 ammo chests, including the 4 that are loaded
     FireInterval=0.133333 // 450 RPM
     TracerFrequency=5
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
@@ -192,11 +143,12 @@ defaultproperties
     BarrelBones(1)="Barrel_TR"
     BarrelBones(2)="Barrel_BL"
     BarrelBones(3)="Barrel_BR"
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo' // TODO: make ammo icon for 50 cal 'tombstone' ammo chest
+    WeaponFireAttachmentBone="Barrel_TL" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
+    hudAltAmmoIcon=texture'DH_Artillery_tex.ATGun_Hud.m45_ammo'
     bInstantFire=false
-    WeaponFireOffset=2.0
+    WeaponFireOffset=0.0
     GunnerAttachmentBone="Gun"
-    BeginningIdleAnim="lookover_idle_down"
+    BeginningIdleAnim="idle_sights_in"
     bInstantRotation=true //false
     RotationsPerSecond=0.1667 // 60 degrees per second
     bLimitYaw=true
@@ -206,14 +158,15 @@ defaultproperties
     YawEndConstraint=10000.0
     YawBone="Turret"
     PitchBone="Gun"
-    CustomPitchUpLimit=10000 // TEST - reduced to stop feet poking through - fine tune based on gunner's final anim & positioning
+    CustomPitchUpLimit=9700    // 53 degrees elevation - reduced to stop feet poking through
     CustomPitchDownLimit=63716 // 10 degrees depression
     PitchUpLimit=20000
     PitchDownLimit=45000
     FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
     AmbientSoundScaling=5.0
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter'
+    AmbientEffectEmitterClass=class'DH_Guns.DH_M45QuadmountEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters
+    BarrelEffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter'      // this is the real emitter class
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.05,Y=0.0,Z=0.05)
@@ -222,7 +175,6 @@ defaultproperties
     FireEffectClass=none // no hatch fire effect
     CullDistance=0.0 // override unwanted 8k from ROMountedTankMG
     bDoOffsetTrace=false
-    MGAttachmentOffset=(X=0.0,Y=0.0,Z=6.7) // TODO: correct attachment bone positioning in trailer skeletal mesh (this fixes for now)
     Mesh=SkeletalMesh'DH_M45_anm.m45_turret'
     Skins(0)=texture'DH_Artillery_tex.m45.m45_gun'
     Skins(1)=texture'DH_Artillery_tex.m45.m45_sight'

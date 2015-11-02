@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonA_M4A176W_Early extends DH_ShermanCannonA_M4A176W;
+class DH_ShermanCannonA_76mm_Early extends DH_ShermanCannonA_76mm;
 
 defaultproperties
 {

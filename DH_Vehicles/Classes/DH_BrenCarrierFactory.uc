@@ -7,8 +7,6 @@ class DH_BrenCarrierFactory extends DH_BritishVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.0
-    bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_BrenCarrierTransport'
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
 }

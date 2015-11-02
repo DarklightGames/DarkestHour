@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Pak40CannonPawn_CamoOne extends DH_Pak40CannonPawn;
+class DH_ShermanCannonPawnB_76mm_Snow extends DH_ShermanCannonPawnB_76mm;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_Pak40Cannon_CamoOne'
+    GunClass=class'DH_Vehicles.DH_ShermanCannonB_76mm_Snow'
 }

@@ -9,7 +9,8 @@ defaultproperties
 {
     InitialTertiaryAmmo=15
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
-    SecondarySpread=0.0012
+	SecondarySpread=0.00165
+	TertiarySpread=0.0012
     ManualRotationsPerSecond=0.025
     bHasTurret=false
     GunMantletArmorFactor=8.0

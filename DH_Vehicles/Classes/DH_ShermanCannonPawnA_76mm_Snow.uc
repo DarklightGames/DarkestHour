@@ -3,8 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannon_M4A375W_Snow extends DH_ShermanCannon_Snow;
+class DH_ShermanCannonPawnA_76mm_Snow extends DH_ShermanCannonPawnA_76mm;
 
 defaultproperties
 {
+    GunClass=class'DH_Vehicles.DH_ShermanCannonA_76mm_Snow'
 }

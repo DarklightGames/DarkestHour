@@ -11,7 +11,7 @@ defaultproperties
 {
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.m45_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.m45_turret_look'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M45QuadmountMGPawn',WeaponBone="body")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M45QuadmountMGPawn',WeaponBone="turret_placement")
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling38_dest' // TODO: make M45 destroyed static mesh
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'

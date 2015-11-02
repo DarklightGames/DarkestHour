@@ -15,9 +15,12 @@ var class<Emitter>  ShellCaseEmitterClass;
 var     Emitter     ShellCaseEmitter;
 
 // Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
+// Also to remove the RangeSettings array, as FlaK 38 has no range settings on the gunsight
 simulated function PostBeginPlay()
 {
     super(DHVehicleCannon).PostBeginPlay();
+
+    RangeSettings.Length = 0;
 }
 
 // New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
@@ -67,6 +70,17 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
+}
+
+// Modified to add ShellCaseEmitter
+simulated function DestroyEffects()
+{
+    super.DestroyEffects();
+
+    if (ShellCaseEmitter != none)
+    {
+        ShellCaseEmitter.Destroy();
+    }
 }
 
 defaultproperties

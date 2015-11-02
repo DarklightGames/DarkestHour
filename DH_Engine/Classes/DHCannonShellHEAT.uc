@@ -11,8 +11,6 @@ var bool  bInHitWall;
 var float MaxWall;                    // maximum wall penetration
 var float WScale;                     // penetration depth scale factor to take into account; weapon scale
 var float Hardness;                   // wall hardness, calculated in CheckWall for surface type
-var float PenetrationDamage;          // damage done by shell penetrating wall
-var float PenetrationDamageRadius;    // damage radius for shell penetrating wall
 var float EnergyFactor;               // for calculating penetration of projectile
 var float PeneExploWallOut;           // distance out from the wall to spawn penetration explosion
 var bool  bDidPenetrationExplosionFX; // already did the penetration explosion effects
@@ -289,8 +287,6 @@ defaultproperties
     WoodHitSound=none
     WaterHitSound=none
     WScale=1.0
-    PenetrationDamage=250.0
-    PenetrationDamageRadius=500.0
     EnergyFactor=1000.0
     PeneExploWallOut=75.0
     PenetrationScale=0.08

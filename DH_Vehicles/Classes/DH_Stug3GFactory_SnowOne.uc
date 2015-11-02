@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonPawnA_M4A176W_Early extends DH_ShermanCannonPawnA_M4A176W;
+class DH_Stug3GFactory_SnowOne extends DH_Stug3GFactory;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ShermanCannonA_M4A176W_Early'
+    VehicleClass=class'DH_Vehicles.DH_Stug3GDestroyer_SnowOne'
+    Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 }

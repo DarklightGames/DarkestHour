@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonPawnB_M4A176W extends DH_ShermanCannonPawnA_M4A176W;
+class DH_ShermanCannonPawnB_76mm extends DH_ShermanCannonPawnA_76mm;
 
 defaultproperties
 {
@@ -12,5 +12,5 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_extB')
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_extB')
     FireImpulse=(X=-80000.0)
-    GunClass=class'DH_Vehicles.DH_ShermanCannonB_M4A176W'
+    GunClass=class'DH_Vehicles.DH_ShermanCannonB_76mm'
 }

@@ -7,8 +7,6 @@ class DH_TigerFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.0
-    bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_TigerTank'
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_ext'
 }

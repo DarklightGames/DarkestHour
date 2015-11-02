@@ -90,4 +90,5 @@ function SpawnVehicle()
 
 defaultproperties
 {
+    RespawnTime=1.0
 }
