@@ -876,8 +876,6 @@ private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
     if (SpawnPoints[SpawnPointIndex].bIsLocked)
     {
-        Log("SpawnPoint[" $ SpawnPointIndex $ "] is locked and cannot be activated!");
-
         return;
     }
 
@@ -911,8 +909,6 @@ function SetSpawnPointIsLockedByTag(name SpawnPointTag, bool bIsLocked)
     local int         i;
 
     GetSpawnPointIndicesByTag(SpawnPointTag, SpawnPointIndices);
-
-    Log("SetSpawnPointIsLockedByTag" @ SpawnPointTag @ bIsLocked);
 
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
