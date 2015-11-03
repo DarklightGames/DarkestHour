@@ -2804,6 +2804,36 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
     }
 }
 
+// Debug exec for queued hints
+function exec DebugHints()
+{
+    local DHHintManager.HintInfo Hint;
+    local int i;
+
+    if (DHHintManager != none)
+    {
+        Log("DHHintManager: CurrentHintIndex =" @ DHHintManager.CurrentHintIndex @ " QueuedHintIndices.Length =" @ DHHintManager.QueuedHintIndices.Length
+            @ " state =" @ DHHintManager.GetStateName());
+
+        for (i = 0; i < DHHintManager.QueuedHintIndices.Length; ++i)
+        {
+            Hint = DHHintManager.GetHint(DHHintManager.QueuedHintIndices[i]);
+            Log("QueuedHintIndices[" $ i $ "] =" @ DHHintManager.QueuedHintIndices[i] @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
+        }
+
+        for (i = 0; i < DHHintManager.HINT_COUNT; ++i)
+        {
+            if (DHHintManager.bUsedUpHints[i] == 1)
+            {
+                Hint = DHHintManager.GetHint(i);
+                Log("bUsedUpHints[" $ i $ "] :" @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
+            }
+        }
+
+        Log("=====================================================================================================");
+    }
+}
+
 exec function ToggleLogWeapon() // TEMP DEBUG
 {
     local DHGameReplicationInfo GRI;
@@ -2849,7 +2879,7 @@ function ServerListPlayers()
     CopyToClipboard(ParseString);
 }
 
-// Simliar to ClientOpenMenu(), but only opens menu if no menu is already open
+// Similar to ClientOpenMenu(), but only opens menu if no menu is already open
 event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 {
     if (GUIController(Player.GUIController).ActivePage == none)

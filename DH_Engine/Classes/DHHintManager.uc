@@ -8,32 +8,134 @@ class DHHintManager extends Info
 
 struct HintInfo
 {
-    var() localized string      Title;
-    var() localized string      Text;  // actual hint text
-    var int                     Index; // set in code, do not use!
+    var localized string    Title; // hint title, displayed on screen
+    var localized string    Text;  // hint display text
 };
 
-const                           HINT_COUNT = 64;
+const                   HINT_COUNT = 64;
 
-// Config variables
-var()   float                   PostHintDisplayDelay;     // how long to wait before displaying any other hint (value higher than 0 needed)
-
-var()   HintInfo                Hints[HINT_COUNT];
-var     config byte             bUsedUpHints[HINT_COUNT]; // 0 = hint unused, 1 = hint used before
-
-var     int                     CurrentHintIndex;         // index in the SortedHints array
-var     float                   LastHintDisplayTime;
-
-var     array<byte>             QueuedHintIndices;
+var     HintInfo        Hints[HINT_COUNT];        // array of hints in default properties
+var     array<byte>     QueuedHintIndices;        // queue of hints waiting to be displayed in turn
+var     config byte     bUsedUpHints[HINT_COUNT]; // 0 = hint unused, 1 = hint used before (saved in player's local DarkestHouseUser.ini config file)
+var     int             CurrentHintIndex;         // index number of the current or most recently displayed hint
+var     float           PostHintDisplayDelay;     // how long to wait before displaying any other hint (value higher than 0 needed)
 
 function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    LoadHints();
+    StartCheckingForHints();
+}
+
+// Clears any hint queue and starts a repeating hint check timer
+function StartCheckingForHints()
+{
+    QueuedHintIndices.Length = 0;
+    QueueHint(0, true); // toss in the initial "welcome to DH" hint, in case that hasn't been shown (ignored if has been)
     SetTimer(1.0, true);
 }
 
+// Non-state repeating hint check timer goes to DisplayingHint state if it finds any queued hint(s)
+simulated function Timer()
+{
+    if (QueuedHintIndices.Length > 0)
+    {
+        GotoState('DisplayingHint');
+    }
+}
+
+// State while HUD is actively displaying a hint (the one at the front of the queue - index 0)
+state DisplayingHint
+{
+    function BeginState()
+    {
+        local DHPlayer Player;
+
+        Player = DHPlayer(Owner);
+
+        // Make the HUD display the hint at the front of the queue
+        if (Player != none && DHHud(Player.myHud) != none && !DHHud(Player.myHud).bHideHud)
+        {
+            CurrentHintIndex = QueuedHintIndices[0];
+            DHHud(Player.myHud).ShowHint(Hints[CurrentHintIndex].Title, Hints[CurrentHintIndex].Text);
+        }
+        // But exit & resume repeating hint check timer if player doesn't have an active HUD
+        else
+        {
+            SetTimer(1.0, true);
+            GotoState('');
+        }
+    }
+
+    // Receives notification from HUD that hint has finished displaying, so now we go to PostDisplay state
+    function NotifyHintRenderingDone()
+    {
+        GotoState('PostDisplay');
+    }
+}
+
+// State for a set period after a hint has finished displaying
+state PostDisplay
+{
+    // Set a timer to exit this state after a set period
+    function BeginState()
+    {
+        SetTimer(PostHintDisplayDelay, false);
+    }
+
+    // Delete the recently displayed hint, mark it as used, exit state & resume the repeating hint check timer
+    function Timer()
+    {
+        bUsedUpHints[CurrentHintIndex] = 1;
+        SaveConfig();
+        QueuedHintIndices.Remove(0, 1);
+        SetTimer(1.0, true);
+        GotoState('');
+    }
+}
+
+// Tries to add a new hint to the hint queue (valid if not previously used/displayed & same hint not already in the queue)
+function QueueHint(byte HintIndex, bool bForceNext)
+{
+    local int i;
+
+    if (bUsedUpHints[HintIndex] == 1) // exit as we're trying to display a hint that's already been used/shown
+    {
+        return;
+    }
+
+    for (i = 0; i < QueuedHintIndices.Length; ++i)
+    {
+        if (QueuedHintIndices[i] == HintIndex) // exit as we've found our new hint is already in the queue
+        {
+            return;
+        }
+    }
+
+    // bForceNext means our new hint needs to go to the front of the queue
+    if (bForceNext)
+    {
+        // If already displaying a hint, or in the PostHintDisplayDelay period immediately after, then insert our new hint as next one due after current/recent hint (index 1)
+        if (IsInState('DisplayingHint') || IsInState('PostDisplay'))
+        {
+            QueuedHintIndices.Insert(1, 1);
+            QueuedHintIndices[1] = HintIndex;
+        }
+        // Otherwise insert our new hint at the front of the queue (index 0)
+        else
+        {
+            QueuedHintIndices.Insert(0, 1);
+            QueuedHintIndices[0] = HintIndex;
+        }
+    }
+    // Otherwise add new hint at the back of the queue
+    else
+    {
+        QueuedHintIndices[QueuedHintIndices.Length] = HintIndex;
+    }
+}
+
+// Resets previously used/shown hints, so they will be displayed again (called from menu, not in game)
 static function StaticReset()
 {
     local int i;
@@ -46,6 +148,7 @@ static function StaticReset()
     StaticSaveConfig();
 }
 
+// Resets previously used/shown hints, so they will be displayed again, then starts again (called from in game)
 function NonStaticReset()
 {
     local int i;
@@ -56,112 +159,21 @@ function NonStaticReset()
     }
 
     SaveConfig();
-    Reload();
-}
 
-function LoadHints()
-{
-    QueuedHintIndices.Length = 0;
-    QueueHint(0, true);
-}
-
-function Reload()
-{
-    StopHinting();
-    LoadHints();
-}
-
-function QueueHint(byte HintIndex, bool bForceNext)
-{
-    local int i;
-
-    if (bUsedUpHints[HintIndex] == 1)
-    {
-        return;
-    }
-
-    for (i = 0; i < QueuedHintIndices.Length; ++i)
-    {
-        if (QueuedHintIndices[i] == HintIndex)
-        {
-            return;
-        }
-    }
-
-    if (bForceNext)
-    {
-        QueuedHintIndices.Insert(0, 1);
-        QueuedHintIndices[0] = HintIndex;
-    }
-    else
-    {
-        QueuedHintIndices[QueuedHintIndices.Length] = HintIndex;
-    }
-}
-
-function StopHinting()
-{
     GotoState('');
-    SetTimer(0.0, true);
+    SetTimer(0.0, false); // clear any timer
+    StartCheckingForHints();
 }
 
-// Emptied as implemented in WaitHintDone state
-function NotifyHintRenderingDone();
-
-simulated function Timer()
+// Empty as implemented only in DisplayingHint state
+function NotifyHintRenderingDone()
 {
-    if (QueuedHintIndices.Length > 0)
-    {
-        GotoState('WaitHintDone');
-    }
 }
 
-state WaitHintDone
+// Just used in other classes (DHPlayer) to get a member of the Hints array, avoiding "context expression: variable is too large" compiler errors
+function HintInfo GetHint(int Index)
 {
-    function BeginState()
-    {
-        local DHPlayer player;
-
-        player = DHPlayer(Owner);
-
-        if (player != none && DHHud(player.myHud) != none && !DHHud(player.myHud).bHideHud)
-        {
-            CurrentHintIndex = QueuedHintIndices[0];
-            DHHud(player.myHud).ShowHint(Hints[CurrentHintIndex].Title, Hints[CurrentHintIndex].Text);
-        }
-        else
-        {
-            SetTimer(1.0, true);
-            GotoState('');
-        }
-    }
-
-    function NotifyHintRenderingDone()
-    {
-        GotoState('PostDisplay');
-    }
-}
-
-state PostDisplay
-{
-    function BeginState()
-    {
-        LastHintDisplayTime = Level.TimeSeconds;
-        SetTimer(PostHintDisplayDelay, false);
-    }
-
-    function Timer()
-    {
-        bUsedUpHints[CurrentHintIndex] = 1;
-        SaveConfig();
-        QueuedHintIndices.Remove(0, 1);
-        SetTimer(1.0, true);
-        GotoState('');
-    }
-}
-
-function exec DebugHints()
-{
+    return Hints[Index];
 }
 
 defaultproperties
@@ -188,4 +200,8 @@ defaultproperties
     Hints(42)=(Title="Higgins Boat",Text="You are driving a Higgins boat. Lower the bow ramp by pressing %PREVWEAPON% so passengers and yourself can exit. To raise the bow ramp hit %NEXTWEAPON%.")
     Hints(43)=(Title="Resupply Trucks",Text="You are close to a resupply truck. Stand outside the back of the truck to resupply your ammunition.")
     Hints(44)=(Title="Resupply Trucks",Text="You are driving a resupply truck. This vehicle can resupply vehicles, mortars and infantry. Be sure to park it in a safe place.")
+    Hints(46)=(Title="Externally mounted MG",Text="This machine gun is externally mounted and can only be fired or reloaded if you unbutton the hatch")
+    Hints(47)=(Title="Remote controlled MG",Text="This external machine gun is remote controlled from inside the vehicle. You can only fire it from inside the vehicle, but you must unbutton the hatch to reload")
+    Hints(48)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch to reload this externally mounted machine gun")
+    Hints(49)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch to continue reloading this externally mounted machine gun")
 }
