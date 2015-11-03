@@ -361,6 +361,12 @@ simulated function TryToReload(optional bool bIgnoreViewTransition, optional boo
             else if (ReloadState == MG_ReadyToFire)
             {
                 ReloadState = MG_Waiting;
+
+                if (MGPawn != none && !MGPawn.CanReload() && MGPawn.IsLocallyControlled() && DHPlayer(MGPawn.Controller) != none)
+                {
+                    DHPlayer(MGPawn.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG
+                }
+
                 bStateChanged = true;
             }
 
@@ -385,7 +391,7 @@ simulated function ClientSetReloadState(EReloadState NewState)
     {
         ReloadState = NewState;
 
-        // If MG is in the middle of a reload
+        // MG is in the middle of a reload
         if (ReloadState < MG_ReadyToFire)
         {
             // Start/resume reloading, as we have a player in a position to reload
@@ -400,6 +406,12 @@ simulated function ClientSetReloadState(EReloadState NewState)
             {
                 bReloadPaused = true;
             }
+        }
+        // If MG is waiting to start a reload, but player isn't in a position where he can reload, show a hint that he needs to unbutton
+        // Player will get this if he is firing the MG, runs out of ammo, but isn't in a valid reload position, e.g. buttoned up on remote controlled MG
+        else if (ReloadState == MG_Waiting && MGPawn != none && !MGPawn.CanReload() && DHPlayer(MGPawn.Controller) != none)
+        {
+            DHPlayer(MGPawn.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG
         }
     }
 }

@@ -470,6 +470,15 @@ function bool CanFire()
     return true;
 }
 
+// Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
+simulated exec function ROManualReload()
+{
+    if (!CanReload() && MGun != none && MGun.ReloadState != MG_ReadyToFire)
+    {
+        DisplayVehicleMessage(12,, true);
+    }
+}
+
 // Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
@@ -822,6 +831,12 @@ simulated state ViewTransition
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
                 ViewTransitionDuration = Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim);
             }
+        }
+
+        // If MG is reloading but player is no longer in a valid reloading position, show a hint that they must unbutton to resume the reload
+        if (MGun != none && MGun.ReloadState < MG_ReadyToFire && !CanReload() && !MGun.bReloadPaused && DHPlayer(Controller) != none)
+        {
+            DHPlayer(Controller).QueueHint(49, true);
         }
     }
 
@@ -1614,7 +1629,8 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
 // New function to check whether player is in a position where he can reload the MG (always true if MG is not bExternallyLoadedMG)
 simulated function bool CanReload(optional bool bIgnoreViewTransition)
 {
-    return !bExternallyLoadedMG || DriverPositionIndex > UnbuttonedPositionIndex || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || bIgnoreViewTransition));
+    return !bExternallyLoadedMG || DriverPositionIndex > UnbuttonedPositionIndex
+        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || bIgnoreViewTransition));
 }
 
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
