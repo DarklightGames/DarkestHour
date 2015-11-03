@@ -23,21 +23,12 @@ function array<string> GetKeys()
 {
     Strings.Length = 0;
 
-    GetKeysStatic(Head);
+    GetKeysTraverse(Head);
 
     return Strings;
 }
 
-function array<string> GetValues()
-{
-    Strings.Length = 0;
-
-    GetValuesStatic(Head);
-
-    return Strings;
-}
-
-private function GetKeysStatic(DictionaryNode Node)
+private function GetKeysTraverse(DictionaryNode Node)
 {
     if (Node == none)
     {
@@ -48,16 +39,25 @@ private function GetKeysStatic(DictionaryNode Node)
 
     if (Node.LHS != none)
     {
-        GetKeysStatic(Node.LHS);
+        GetKeysTraverse(Node.LHS);
     }
 
     if (Node.RHS != none)
     {
-        GetKeysStatic(Node.RHS);
+        GetKeysTraverse(Node.RHS);
     }
 }
 
-private function GetValuesStatic(DictionaryNode Node)
+function array<string> GetValues()
+{
+    Strings.Length = 0;
+
+    GetValuesTraverse(Head);
+
+    return Strings;
+}
+
+private function GetValuesTraverse(DictionaryNode Node)
 {
     if (Node == none)
     {
@@ -68,12 +68,12 @@ private function GetValuesStatic(DictionaryNode Node)
 
     if (Node.LHS != none)
     {
-        GetValuesStatic(Node.LHS);
+        GetValuesTraverse(Node.LHS);
     }
 
     if (Node.RHS != none)
     {
-        GetValuesStatic(Node.RHS);
+        GetValuesTraverse(Node.RHS);
     }
 }
 
@@ -104,20 +104,9 @@ function bool Get(string Key, optional out string Value)
     return false;
 }
 
-function Add(string Key, string Value)
+function Put(string Key, string Value)
 {
-    if (Head == none)
-    {
-        Head = new class'DictionaryNode';
-        Head.Key = Key;
-        Head.Value = Value;
-    }
-    else
-    {
-        AddStatic(Head, Key, Value);
-    }
-
-    Size += 1;
+    Head = PutStatic(self, Head, Key, Value);
 }
 
 private static function int GetBalance(DictionaryNode Node)
@@ -150,36 +139,14 @@ private static function DictionaryNode FindMin(DictionaryNode Node)
     return Node;
 }
 
-private static function ReplaceNodeInParent(DictionaryNode Node, DictionaryNode S)
-{
-    if (Node.Parent != none)
-    {
-        if (Node == Node.Parent.LHS)
-        {
-            Node.Parent.LHS = S;
-        }
-        else
-        {
-            Node.Parent.RHS = S;
-        }
-    }
-
-    if (S != none)
-    {
-        S.Parent = Node.Parent;
-    }
-}
-
 function Erase(string Key)
 {
-    EraseStatic(Head, Key);
-
-    Size -= 1;
+    Head = EraseStatic(self, Head, Key);
 }
 
-//TODO: erasure needs to balance the tree!
-static function DictionaryNode EraseStatic(DictionaryNode Node, string Key)
+private static function DictionaryNode EraseStatic(Dictionary D, DictionaryNode Node, string Key)
 {
+    local int Balance;
     local DictionaryNode Temp;
 
     if (Node == none)
@@ -189,11 +156,11 @@ static function DictionaryNode EraseStatic(DictionaryNode Node, string Key)
 
     if (Key < Node.Key)
     {
-        return EraseStatic(Node.LHS, Key);
+        Node.LHS = EraseStatic(D, Node.LHS, Key);
     }
     else if (Key > Node.Key)
     {
-        return EraseStatic(Node.RHS, Key);
+        Node.RHS = EraseStatic(D, Node.RHS, Key);
     }
     else
     {
@@ -205,7 +172,7 @@ static function DictionaryNode EraseStatic(DictionaryNode Node, string Key)
             }
             else
             {
-                Temp  = Node.RHS;
+                Temp = Node.RHS;
             }
 
             if (Temp == none)
@@ -215,22 +182,55 @@ static function DictionaryNode EraseStatic(DictionaryNode Node, string Key)
             }
             else
             {
-                Node = Temp;
+                Node.Key = Temp.Key;
+                Node.Value = Temp.Value;
+                Node.LHS = Temp.LHS;
+                Node.RHS = Temp.RHS;
+                Node.Height = Temp.Height;
             }
-        }
-        else if (Node.LHS != none)
-        {
-            ReplaceNodeInParent(Node, Node.LHS);
-        }
-        else if (Node.RHS != none)
-        {
-            ReplaceNodeInParent(Node, Node.RHS);
+
+            D.Size -= 1;
         }
         else
         {
-            ReplaceNodeInParent(Node, none);
+            Temp = FindMin(Node.RHS);
+
+            Node.Key = Temp.Key;
+            Node.RHS = EraseStatic(D, Node.RHS, Temp.Key);
         }
     }
+
+    if (Node == none)
+    {
+        return none;
+    }
+
+    Node.Height = Max(GetHeight(Node.LHS), GetHeight(Node.RHS)) + 1;
+
+    Balance = GetBalance(Node);
+
+    if (Balance > 1 && GetBalance(Node.LHS) >= 0)
+    {
+        return RotateRight(Node);
+    }
+    else if (Balance > 1 && GetBalance(Node.LHS) < 0)
+    {
+        Node.LHS = RotateLeft(Node.LHS);
+
+        return RotateRight(Node);
+    }
+    else if (Balance < -1 && GetBalance(Node.RHS) <= 0)
+    {
+        return RotateLeft(Node);
+    }
+    else if (Balance < -1 && GetBalance(Node.RHS) > 0)
+    {
+        Node.RHS = RotateRight(Node.RHS);
+
+        return RotateLeft(Node);
+    }
+
+    return Node;
 }
 
 private static function DictionaryNode RotateRight(DictionaryNode Y)
@@ -267,41 +267,34 @@ private static function DictionaryNode RotateLeft(DictionaryNode X)
     return Y;
 }
 
-private static function DictionaryNode AddStatic(DictionaryNode Node, string Key, string Value)
+private static function DictionaryNode PutStatic(Dictionary D, DictionaryNode Node, string Key, string Value)
 {
     local int Balance;
 
+    if (Node == none)
+    {
+        Node = new class'DictionaryNode';
+        Node.Key = Key;
+        Node.Value = Value; //TODO: not needed??
+
+        D.Size += 1;
+
+        return Node;
+    }
+
     if (Key < Node.Key)
     {
-        if (Node.LHS != none)
-        {
-            AddStatic(Node.LHS, Key, Value);
-        }
-        else
-        {
-            Node.LHS = new class'DictionaryNode';
-            Node.LHS.Parent = Node;
-            Node.LHS.Key = Key;
-            Node.LHS.Value = Value;
-        }
+        Node.LHS = PutStatic(D, Node.LHS, Key, Value);
     }
     else if (Key > Node.Key)
     {
-        if (Node.RHS != none)
-        {
-            AddStatic(Node.RHS, Key, Value);
-        }
-        else
-        {
-            Node.RHS = new class'DictionaryNode';
-            Node.RHS.Parent = Node;
-            Node.RHS.Key = Key;
-            Node.RHS.Value = Value;
-        }
+        Node.RHS = PutStatic(D, Node.RHS, Key, Value);
     }
     else
     {
-        return none;
+        Node.Value = Value;
+
+        return Node;
     }
 
     Balance = GetBalance(Node);

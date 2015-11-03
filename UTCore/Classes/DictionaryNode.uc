@@ -9,5 +9,4 @@ var string Key;
 var string Value;
 var DictionaryNode LHS;
 var DictionaryNode RHS;
-var DictionaryNode Parent;
 var int Height;

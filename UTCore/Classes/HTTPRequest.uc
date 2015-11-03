@@ -66,7 +66,7 @@ function static Dictionary ParseHeaders(string S)
         Key = Left(Lines[i], j);
         Value = Mid(Lines[i], j + 2);
 
-        Headers.Add(Key, Value);
+        Headers.Put(Key, Value);
     }
 
     return Headers;
