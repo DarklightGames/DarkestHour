@@ -7,5 +7,6 @@ class DH_WaffenSSPawn extends DHPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHGermanCharactersTex.WSS.SS_1'
+    Skins(0)=texture'Characters_tex.ger_heads.ger_face01'
+    Skins(1)=texture'DHGermanCharactersTex.WSS.SS_1'
 }

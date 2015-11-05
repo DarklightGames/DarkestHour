@@ -7,5 +7,6 @@ class DH_HeerPawn extends DHPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHGermanCharactersTex.Heer.WH_1'
+    Skins(0)=texture'Characters_tex.ger_heads.ger_face01'
+    Skins(1)=texture'DHGermanCharactersTex.Heer.WH_1'
 }
