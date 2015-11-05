@@ -187,7 +187,7 @@ defaultproperties
     Skins(2)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(3)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo2'
     Skins(4)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo2'
-    Skins(5)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo2'
+    Skins(5)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
     Skins(6)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     Skins(7)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_ext'
     CollisionRadius=175.0
