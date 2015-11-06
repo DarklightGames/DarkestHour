@@ -2089,6 +2089,33 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
     }
 }
 
+// New debug exec to adjust CannonAttachmentOffset, to reposition turret
+exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    local vector OldOffset;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
+    {
+        OldOffset = Cannon.CannonAttachmentOffset;
+
+        if (bScaleOneTenth)
+        {
+            Cannon.CannonAttachmentOffset.X = float(NewX) / 10.0;
+            Cannon.CannonAttachmentOffset.Y = float(NewY) / 10.0;
+            Cannon.CannonAttachmentOffset.Z = float(NewZ) / 10.0;
+        }
+        else
+        {
+            Cannon.CannonAttachmentOffset.X = NewX;
+            Cannon.CannonAttachmentOffset.Y = NewY;
+            Cannon.CannonAttachmentOffset.Z = NewZ;
+        }
+
+        Cannon.SetRelativeLocation(Cannon.CannonAttachmentOffset);
+        Log(Tag @ "CannonAttachmentOffset =" @ Cannon.CannonAttachmentOffset @ "(was " @ OldOffset $ ")");
+    }
+}
+
 exec function LogCannon() // DEBUG x 3 (Matt: use if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("CLIENT:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon
