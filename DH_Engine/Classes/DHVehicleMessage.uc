@@ -14,6 +14,7 @@ var localized string ExitDriverOrComHatch;
 var localized string ExitCommandersOrMGHatch;
 var localized string OverSpeed;
 var localized string VehicleBurning;
+var localized string UnbuttonToReload;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -54,6 +55,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 11:
             S = default.ExitCommandersOrMGHatch;
             break;
+        case 12:
+            S = default.UnbuttonToReload;
+            break;
         default:
             break;
     }
@@ -79,4 +83,5 @@ defaultproperties
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"
     OverSpeed="Slow down!"
     Vehicleburning="Vehicle is on fire!"
+    UnbuttonToReload="You must unbutton the hatch [%NEXTWEAPON%] to reload"
 }

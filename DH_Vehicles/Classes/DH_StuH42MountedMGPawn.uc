@@ -13,6 +13,17 @@ function bool CanFire()
     return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
 }
 
+// Modified to show a hint that player must be unbuttoned to fire or reload the externally mounted MG
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    super.ClientKDriverEnter(PC);
+
+    if (DHPlayer(PC) != none)
+    {
+        DHPlayer(PC).QueueHint(47, true);
+    }
+}
+
 // Modified so if player buttons up & is now on the gun, rotation is set to match the direction MG is facing (after looking around while unbuttoned)
 simulated state ViewTransition
 {

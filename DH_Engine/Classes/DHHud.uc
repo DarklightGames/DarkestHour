@@ -1166,31 +1166,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             // Draw ammo count
             VehicleMGAmmoAmount.Value = VehWeapon.GetNumMags();
             DrawNumericWidget(Canvas, VehicleMGAmmoAmount, Digits);
-
-            // TEMP to draw M45 quadmount turret
-            if (VehWeapon.IsA('DH_M45QuadmountMG'))
-            {
-                // Update & draw look turret
-                if (VehicleHudTurretLook != none)
-                {
-                    VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
-                    Widget.WidgetTexture = VehicleHudTurretLook;
-                    Widget.Tints[0].A /= 2;
-                    Widget.Tints[1].A /= 2;
-                    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
-                    Widget.Tints[0] = VehicleColor;
-                    Widget.Tints[1] = VehicleColor;
-                }
-
-                // Update & draw any turret
-                if (VehicleHudTurret != none)
-                {
-                    MyRot = rotator(vector(VehWeapon.CurrentAim) >> VehWeapon.Rotation);
-                    VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
-                    Widget.WidgetTexture = VehicleHudTurret;
-                    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
-                }
-            }
         }
     }
 

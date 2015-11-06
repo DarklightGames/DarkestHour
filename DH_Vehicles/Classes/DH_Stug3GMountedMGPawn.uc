@@ -11,6 +11,17 @@ function bool CanFire()
     return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex);
 }
 
+// Modified to show a hint that player must be buttoned to fire, but unbuttoned to reload the remote controlled external MG
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    super.ClientKDriverEnter(PC);
+
+    if (DHPlayer(PC) != none)
+    {
+        DHPlayer(PC).QueueHint(46, true);
+    }
+}
+
 defaultproperties
 {
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn

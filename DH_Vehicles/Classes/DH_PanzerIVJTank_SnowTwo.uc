@@ -3,13 +3,14 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVJTank_SnowTwo extends DH_PanzerIVJTank;
+class DH_PanzerIVJTank_SnowTwo extends DH_PanzerIVJTank; // snow topped version of CamoOne
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex5.utx
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVJCannonPawn_SnowTwo')
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow2'
     Skins(7)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_camo1'
+    CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow2'
+    CannonSkins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_camo1'
 }

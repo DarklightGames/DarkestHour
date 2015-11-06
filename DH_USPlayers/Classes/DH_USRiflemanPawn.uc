@@ -10,4 +10,6 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharacters_anm.US_GI'
     Skins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     Skins(1)=texture'DHUSCharactersTex.29thID.US_29thID_1'
+    Skins(2)=texture'DHUSCharactersTex.Gear.GIGear2'
+    Skins(3)=texture'DHUSCharactersTex.Gear.GIGear1'
 }

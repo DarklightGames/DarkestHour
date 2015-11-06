@@ -155,9 +155,8 @@ function Reset()
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
         SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
+        SpawnPoints[i].bIsLocked = SpawnPoints[i].bIsInitiallyLocked;
     }
-
-    SpawnPoints[i].bIsLocked = SpawnPoints[i].bIsInitiallyLocked;
 
     for (i = 0; i < VehiclePools.Length; ++i)
     {

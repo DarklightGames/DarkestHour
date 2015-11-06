@@ -10,5 +10,5 @@ defaultproperties
     VehicleClass=class'DH_Vehicles.DH_JagdpanzerIVL70Destroyer_CamoTwo'
     Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo3'
     Skins(1)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo3'
-    Skins(2)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo3'
+    Skins(2)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
 }

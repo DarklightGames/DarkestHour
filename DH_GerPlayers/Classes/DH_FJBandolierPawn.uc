@@ -7,8 +7,7 @@ class DH_FJBandolierPawn extends DHPawn;
 
 defaultproperties
 {
-    Stamina=30.0
-    StaminaRecoveryRate=0.7
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Fallschirmjager'
     Skins(0)=texture'DHGermanCharactersTex.Luftwaffe.FJ_Green'
+    Skins(1)=texture'Characters_tex.ger_heads.Ger_face02'
 }

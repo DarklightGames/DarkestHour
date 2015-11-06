@@ -47,7 +47,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 
     // Get camera rotation, based on rotation of weapon's aim, & update custom aim
-    CameraRotation = Gun.GetBoneRotation(CameraBone);    
+    CameraRotation = Gun.GetBoneRotation(CameraBone);
     PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
     PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
 
@@ -71,6 +71,72 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     // Finalise the camera with any shake
     CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+}
+
+// Modified to draw rotating turret on the HUD, like a vehicle cannon (relevant features copied from DHHud & adapted as necessary)
+simulated function DrawHUD(Canvas C)
+{
+    local ROHud.AbsoluteCoordsInfo Coords;
+    local HudBase.SpriteWidget     Widget;
+    local PlayerController PC;
+    local ROHud            HUD;
+    local ROTreadCraft     AV;
+    local color            VehicleColor;
+    local float            VehicleHealthScale;
+    local rotator          MyRot;
+
+    super.DrawHUD(C);
+
+    PC = PlayerController(Controller);
+
+    if (PC != none && !PC.bBehindView && VehicleBase != none && Gun != none)
+    {
+        HUD = ROHud(PC.myHUD);
+        AV = ROTreadCraft(VehicleBase);
+
+        if (HUD != none && AV != none && AV.VehicleHudTurretLook != none && AV.VehicleHudTurret != none)
+        {
+            // Figure where to draw
+            Coords.PosX = C.ClipX * HUD.VehicleIconCoords.X;
+            Coords.Height = C.ClipY * HUD.VehicleIconCoords.YL * HUD.HudScale;
+            Coords.PosY = C.ClipY * HUD.VehicleIconCoords.Y - Coords.Height;
+            Coords.Width = Coords.Height;
+
+            // Figure what colour to draw in
+            VehicleHealthScale = VehicleBase.Health / VehicleBase.HealthMax;
+
+            if (VehicleHealthScale > 0.75)
+            {
+                VehicleColor = class'DHHud'.default.VehicleNormalColor;
+            }
+            else if (VehicleHealthScale > 0.35)
+            {
+                VehicleColor = class'DHHud'.default.VehicleDamagedColor;
+            }
+            else
+            {
+                VehicleColor = class'DHHud'.default.VehicleCriticalColor;
+            }
+
+            Widget = HUD.VehicleIcon;
+            Widget.Tints[0] = VehicleColor;
+            Widget.Tints[1] = VehicleColor;
+
+            // Draw the turret
+            AV.VehicleHudTurretLook.Rotation.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+            Widget.WidgetTexture = AV.VehicleHudTurretLook;
+            Widget.Tints[0].A /= 2;
+            Widget.Tints[1].A /= 2;
+            HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
+            Widget.Tints[0] = VehicleColor;
+            Widget.Tints[1] = VehicleColor;
+
+            MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
+            AV.VehicleHudTurret.Rotation.Yaw = VehicleBase.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = AV.VehicleHudTurret;
+            HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
+        }
+    }
 }
 
 // Modified so when player lifts head away from sights, view rotation is initially zeroed so the view doesn't snap to another rotation

@@ -3195,6 +3195,28 @@ exec function SwapTeams()
     ResetGame();
 }
 
+// This function is for admins who want to change round time on the fly, can pass a value (in minutes) and a type (default: set)
+exec function SetRoundTime(int Minutes, optional string Type)
+{
+    if (Minutes < 0)
+    {
+        return;
+    }
+
+    switch (Type)
+    {
+        case "Add":
+            ModifyRoundTime(Minutes*60, 0);
+        break;
+        case "Subtract":
+            ModifyRoundTime(Minutes*60, 1);
+        break;
+        default:
+            ModifyRoundTime(Minutes*60, 2);
+        break;
+    }
+}
+
 // Players change sides
 function ChangeSides()
 {
