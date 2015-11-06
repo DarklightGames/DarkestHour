@@ -9,7 +9,8 @@ class DH_ShermanTankA_M4A176W_Snow extends DH_ShermanTankA_M4A176W;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawnA_76mm_Snow')
     Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
     Skins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
+    CannonSkins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
+    CannonSkins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
 }

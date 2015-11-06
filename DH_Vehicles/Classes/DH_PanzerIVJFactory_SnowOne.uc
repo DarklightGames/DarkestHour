@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVJFactory_SnowOne extends DH_PanzerIVJFactory;
+class DH_PanzerIVJFactory_SnowOne extends DH_PanzerIVJFactory; // snow topped version of non-camo tank
 
 defaultproperties
 {

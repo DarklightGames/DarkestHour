@@ -7,6 +7,7 @@ class DH_PanzerIVGLateTank_SnowOne extends DH_PanzerIVGLateTank;
 
 defaultproperties
 {
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVGLateCannonPawn_SnowOne')
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.PanzerIV_body_snow1'
+    CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.PanzerIV_body_snow1'
+    CannonSkins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.PanzerIV_armor_snow2' // looks wrong, but is correct
 }

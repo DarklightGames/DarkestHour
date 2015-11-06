@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonPawn_Snow extends DH_ShermanCannonPawn;
+class DH_ShermanCannonPawn_Snow extends DH_ShermanCannonPawn; // TEST - why all this??
 
 defaultproperties
 {
@@ -11,5 +11,4 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext')
-    GunClass=class'DH_Vehicles.DH_ShermanCannon_Snow'
 }
