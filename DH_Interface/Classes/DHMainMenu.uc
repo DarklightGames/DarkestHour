@@ -20,7 +20,7 @@ var     HTTPRequest             MOTDRequest;
 var     string                  QuickPlayIp;
 var     string                  WebsiteURL;
 
-var     localized string        WaitString;
+var     localized string        QuickPlayString;
 var     localized string        ConnectingString;
 var     localized string        ManualURL;
 var     localized string        FixConfigURL;
@@ -34,6 +34,7 @@ var     bool                    bAllowClose;
 var     bool                    bAttemptQuickPlay;
 var     bool                    bSendGet;
 var     bool                    bPageWait;
+var     int                     EllipseCount;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -72,10 +73,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function InternalOnOpen()
 {
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
-
-    b_QuickPlay.Caption = WaitString;
-
-    GetMOTD();
 }
 
 function OnClose(optional bool bCanceled)
@@ -266,8 +263,12 @@ function OnQuickPlayResponse(int Status, Dictionary Headers, string Content)
         PlayerOwner().ClientTravel(Content, TRAVEL_Absolute, false);
         Controller.CloseAll(false, true);
     }
+    else
+    {
+        Log("OnQuickPlayResponse failed:" @ Status @ Content);
+    }
 
-    b_QuickPlay.Caption = b_QuickPlay.default.Caption;
+    b_QuickPlay.Caption = default.QuickPlayString;
 
     KillTimer();
 }
@@ -283,10 +284,19 @@ function OnMOTDResponse(int Status, Dictionary Headers, string Content)
 // Quick play button functions
 event Timer()
 {
+    local int i;
+
     //TODO: if Request is active, show timeout countdown, otherwise no caption
     if (QuickPlayRequest != none)
     {
-        b_QuickPlay.Caption = ConnectingString @ "(Timeout:" @ QuickPlayRequest.GetTimeout() $ ")";
+        b_QuickPlay.Caption = ConnectingString;
+
+        for (i = 0; i <= EllipseCount; ++i)
+        {
+            b_QuickPlay.Caption $= ".";
+        }
+
+        EllipseCount = ++EllipseCount % 3;
     }
 }
 
@@ -294,7 +304,7 @@ function GetMOTD()
 {
     if (MOTDRequest != none)
     {
-        MOTDRequest.Destroy();
+        return;
     }
 
     MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
@@ -308,7 +318,7 @@ function GetQuickPlayIp()
 {
     if (QuickPlayRequest != none)
     {
-        QuickPlayRequest.Destroy();
+        return;
     }
 
     QuickPlayRequest = PlayerOwner().Spawn(class'HTTPRequest');
@@ -317,13 +327,14 @@ function GetQuickPlayIp()
     QuickPlayRequest.OnResponse = OnQuickPlayResponse;
     QuickPlayRequest.Send();
 
+    Timer();
     SetTimer(1, true);
 }
 
 defaultproperties
 {
     // IP variables
-    WaitString="Join Public Test Server"
+    QuickPlayString="Join Public Test Server"
     ConnectingString="Connecting - Press [ESC] to Cancel"
     TimeOutTime=30.0
     bSendGet=true
