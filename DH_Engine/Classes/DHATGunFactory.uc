@@ -6,13 +6,17 @@
 class DHATGunFactory extends DHVehicleFactory
     abstract;
 
+// Matt: commented out all calls to SetATCannonTeamStatus() or SetATCannonActiveStatus() in the GRI, as as in 6.0 we no longer show AT guns on the map
+// So those functions do nothing, except sometimes write "array out of bounds" log errors, as RO's ATCannons array is static & can't cope with more than 14 guns
+// Add back if the map feature is re-enabled in a later release
+
 var()   bool        bUseRandomizer;            // whether or not to use the randomization system
 var     int         GunIndex;                  // the index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
 var()   string      GroupTag;                  // a tag used by the randomizer to spawn at guns by groups
 var     bool        bRandomEvaluated;          // whether or not this AT Gun Factory has been evaluated by the randomizer yet
 var     bool        bMasterFactory;            // this factory is the master gun factory
 var()   int         MaxRandomFactoriesActive;  // the maximum number of AT Gun Factories to have active at one time for a particular Group (based on the grouptag)
-var     array<int> ActivatedIndexes;
+var     array<int>  ActivatedIndexes;
 
 // Add this AT gun to the GRI
 simulated event PostBeginPlay()
@@ -194,12 +198,13 @@ function Activate(ROSideIndex T)
         TeamNum = T;
         bFactoryActive = true;
         SpawningBuildEffects = true;
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonTeamStatus(GunIndex,T);
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, true);
+//      ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonTeamStatus(GunIndex,T);
+//      ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, true);
         Timer();
     }
 }
 
+/*
 function Deactivate()
 {
     super.Deactivate();
@@ -209,13 +214,14 @@ function Deactivate()
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 }
+*/
 
 // Need to handle Reset differently for this actor - if we are using the randomizer, only MasterFactory is reset here & and all other factories are reset by master factory
 simulated function Reset()
 {
     if (Role == ROLE_Authority)
     {
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
+//      ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 
     if (!bUsesSpawnAreas && !bUseRandomizer)
@@ -254,7 +260,8 @@ simulated function SpecialReset()
     Deactivate();
 }
 
-event VehicleDestroyed(Vehicle V)
+/*
+event VehicleDestroyed(Vehicle V) // Matt: deleted as in 6.0 we no longer show AT guns on the map, so this does nothing except maybe write "array out of bounds" log errors
 {
     if (TotalSpawnedVehicles >= VehicleRespawnLimit || !bFactoryActive)
     {
@@ -263,6 +270,7 @@ event VehicleDestroyed(Vehicle V)
 
     super.VehicleDestroyed(V);
 }
+*/
 
 defaultproperties
 {
