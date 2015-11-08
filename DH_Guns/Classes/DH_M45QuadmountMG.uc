@@ -151,11 +151,6 @@ defaultproperties
     BeginningIdleAnim="idle_sights_in"
     bInstantRotation=true //false
     RotationsPerSecond=0.1667 // 60 degrees per second
-    bLimitYaw=true
-    MaxPositiveYaw=9000 // until turret hits wheels
-    MaxNegativeYaw=-9000
-    YawStartConstraint=-10000.0
-    YawEndConstraint=10000.0
     YawBone="Turret"
     PitchBone="Gun"
     CustomPitchUpLimit=9700    // 53 degrees elevation - reduced to stop feet poking through
