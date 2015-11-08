@@ -9,6 +9,6 @@ class DHGermanCannonShell extends DHCannonShell
 defaultproperties
 {
     bIsAlliedShell=false
-    TracerEffect=class'DH_Effects.DH_OrangeTankShellTracerBig'
+    CoronaClass=class'DH_Effects.DH_OrangeTankShellTracerBig'
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
 }

@@ -22,14 +22,12 @@ simulated function PostBeginPlay()
         SmokeTrail = Spawn(class'PanzerfaustTrail', self);
         SmokeTrail.SetBase(self);
 
-        Corona = Spawn(TracerEffect, self);
+        Corona = Spawn(CoronaClass, self);
     }
-
-//  Velocity = Speed * vector(Rotation); // Matt: removed as already done in Super in ROBallisticProjectile
 
     if (PhysicsVolume.bWaterVolume)
     {
-        Velocity = 0.6 * Velocity;
+        Velocity *= 0.6;
     }
 
     super(DHAntiVehicleProjectile).PostBeginPlay();
@@ -113,7 +111,7 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
     StraightFlightTime=0.2
-    TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
+    CoronaClass=class'DH_Effects.DH_OrangeTankShellTracer'
     PenetrationMag=250.0
     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
     ImpactDamage=675
