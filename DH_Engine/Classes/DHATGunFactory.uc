@@ -60,7 +60,7 @@ function EvaluateRandom()
         // Must have a group tag set
         if (GunFactory.GroupTag == "" && GunFactory.bUseRandomizer)
         {
-            Log("Error - GroupTag not set");
+            Warn(GunFactory @ " has bUseRandomizer set to true, but GroupTag is empty");
             continue;
         }
 
@@ -143,13 +143,6 @@ function ProcessRandomActivation()
     // Build an array of all of the AT Gun factories with matching group tags
     foreach DynamicActors(class'DHATGunFactory', GunFactory)
     {
-        // Must have a group tag set
-        if (GunFactory.GroupTag == "")
-        {
-            Log("Error - GroupTag not set");
-            continue;
-        }
-
         if (GunFactory.GroupTag != "" && GunFactory.GroupTag == GroupTag)
         {
             GunFactories[GunFactories.Length] = GunFactory;
