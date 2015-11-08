@@ -270,6 +270,8 @@ function OnQuickPlayResponse(int Status, Dictionary Headers, string Content)
 
     b_QuickPlay.Caption = default.QuickPlayString;
 
+    QuickPlayRequest = none;
+
     KillTimer();
 }
 
@@ -308,8 +310,8 @@ function GetMOTD()
     }
 
     MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    MOTDRequest.Host = "www.darkesthourgame.com";
-    MOTDRequest.Path = "/ingamenews.php";
+    MOTDRequest.Host = "www.darkesthour.darklightgames.com";
+    MOTDRequest.Path = "/game/motd.php";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
 }
@@ -322,8 +324,8 @@ function GetQuickPlayIp()
     }
 
     QuickPlayRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    QuickPlayRequest.Host = "www.darkesthourgame.com";
-    QuickPlayRequest.Path = "/quickplayip.php";
+    QuickPlayRequest.Host = "www.darkesthour.darklightgames.com";
+    QuickPlayRequest.Path = "/game/quickjoinip.php";
     QuickPlayRequest.OnResponse = OnQuickPlayResponse;
     QuickPlayRequest.Send();
 
