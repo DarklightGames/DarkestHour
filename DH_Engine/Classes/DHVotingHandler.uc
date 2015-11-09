@@ -87,7 +87,19 @@ function PlayerExit(Controller Exiting)
     }
 }
 
-// overidden to stop rapid-fire voting
+// function to strip prefix
+function string PrepMapStr(string MapName)
+{
+    local string StrippedMapName;
+
+    StrippedMapName = Repl(MapName, "DH-", ""); // Remove DH- prefix
+    StrippedMapName = Repl(StrippedMapName, ".rom", ""); // Remove .rom if it exists
+    StrippedMapName = Repl(StrippedMapName, "_", " "); // Remove _ for space
+
+    return StrippedMapName;
+}
+
+// overidden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
 function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
     local int Index, VoteCount, PrevMapVote, PrevGameVote;
@@ -122,7 +134,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     if (PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin)  // Administrator Vote
     {
         TextMessage = lmsgAdminMapChange;
-        TextMessage = Repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")");
+        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
 
         Level.Game.Broadcast(self, TextMessage);
 
@@ -212,7 +224,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     {
         TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
         TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
-        TextMessage = Repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")");
+        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
         Level.Game.Broadcast(self,TextMessage);
     }
 
@@ -611,6 +623,11 @@ function LoadMapList()
     }
     Loader.LoadMapList(self);
 
+    if (bUseSwapVote)
+    {
+        AddMap(SwapAndRestartText, "", "");
+    }
+
     log(MapCount $ " maps loaded.",'MapVote');
 
     History.Save();
@@ -633,13 +650,6 @@ function LoadMapList()
             SaveConfig();
             Loader.LoadMapList(self);
         }
-    }
-
-    if (bUseSwapVote)
-    {
-        MapList.Insert(0,1);
-        MapList[0].bEnabled = true;
-        MapList[0].MapName = SwapAndRestartText;
     }
 
     Loader.Destroy();
