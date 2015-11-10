@@ -14,11 +14,11 @@ defaultproperties
     TreadDamageModifier=0.8 // was 1.0 in RO
     WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
     HUDIcon=texture'InterfaceArt_tex.deathicons.satchel'
-	GibModifier=4.0
-	KDamageImpulse=5000.0
+    GibModifier=4.0
+    KDamageImpulse=5000.0
     KDeathVel=300.0
-	KDeathUpKick=75.0
-	KDeadLinZVelScale=0.0015
-	KDeadAngVelScale=0.0015
-	HumanObliterationThreshhold=400
+    KDeathUpKick=75.0
+    KDeadLinZVelScale=0.0015
+    KDeadAngVelScale=0.0015
+    HumanObliterationThreshhold=400
 }

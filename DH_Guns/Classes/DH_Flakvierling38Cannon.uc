@@ -189,7 +189,7 @@ defaultproperties
     FireAnimations(2)="shoot_opensightA" // on open sight, 1st gun pair
     FireAnimations(3)="shoot_opensightB" // on open sight, 2nd gun pair
     FireAnimations(4)="shoot_lookoverA"  // raised head, 1st gun pair
-    FireAnimations(5)="shoot_lookoverB"  // raised head, 2nd gun pair    
+    FireAnimations(5)="shoot_lookoverB"  // raised head, 2nd gun pair
     SightBone="Sight_pivot"
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'

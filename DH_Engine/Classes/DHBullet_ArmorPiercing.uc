@@ -10,7 +10,7 @@ class DHBullet_ArmorPiercing extends DHAntiVehicleProjectile
 const   MinPenetrateVelocity = 163;
 
 var     class<ROHitEffect>  ImpactEffect;
-var     class<ROBulletWhiz> WhizSoundEffect; 
+var     class<ROBulletWhiz> WhizSoundEffect;
 var     class<DamageType>   MyVehicleDamage;
 
 var     int             WhizType;

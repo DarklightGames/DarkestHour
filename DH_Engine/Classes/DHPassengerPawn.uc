@@ -183,7 +183,6 @@ simulated function SetPassengerProperties()
                 DriveRot = WV.PassengerPawns[Index].DriveRot;
                 DriveAnim = WV.PassengerPawns[Index].DriveAnim;
                 FPCamPos = WV.PassengerPawns[Index].FPCamPos;
-
             }
         }
     }
