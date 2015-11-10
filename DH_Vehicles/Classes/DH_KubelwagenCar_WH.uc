@@ -61,9 +61,9 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.0,Y=45.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-140.0,Y=-45.0),ExhaustRotation=(Pitch=34000,Roll=5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerOne',WeaponBone="body")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerTwo',WeaponBone="body")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerThree',WeaponBone="body")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=30.0,Y=29.0,Z=-2.0),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-42.0,Y=-30.0,Z=3.0),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-42.0,Y=30.0,Z=3.0),DriveAnim="VHalftrack_Rider6_idle")
     IdleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
     StartUpSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
     ShutDownSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'

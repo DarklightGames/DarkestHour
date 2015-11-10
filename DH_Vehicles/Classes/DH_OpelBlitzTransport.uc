@@ -7,12 +7,12 @@ class DH_OpelBlitzTransport extends DH_OpelBlitz;
 
 defaultproperties
 {
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerTwo',WeaponBone="passenger_l_1")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerThree',WeaponBone="passenger_l_2")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerFour',WeaponBone="passenger_l_3")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerFive',WeaponBone="passenger_r_1")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerSix',WeaponBone="passenger_r_2")
-    PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerSeven',WeaponBone="passenger_r_3")
+    PassengerPawns(1)=(AttachBone="passenger_l_1",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(2)=(AttachBone="passenger_l_2",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="passenger_l_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(4)=(AttachBone="passenger_r_1",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(5)=(AttachBone="passenger_r_2",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(6)=(AttachBone="passenger_r_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider1_idle")
     VehicleHudOccupantsX(2)=0.45
     VehicleHudOccupantsY(2)=0.6
     VehicleHudOccupantsX(3)=0.45

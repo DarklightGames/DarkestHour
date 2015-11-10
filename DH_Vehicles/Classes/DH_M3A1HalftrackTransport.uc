@@ -83,12 +83,12 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Y=60.0,Z=-10.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackMGPawn',WeaponBone="mg_base")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerOne',WeaponBone="passenger_l_1")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerTwo',WeaponBone="passenger_l_3")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerThree',WeaponBone="passenger_l_5")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFour',WeaponBone="passenger_r_2")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFive',WeaponBone="passenger_r_3")
-    PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerSix',WeaponBone="passenger_r_5")
+    PassengerPawns(0)=(AttachBone="passenger_l_1",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(2)=(AttachBone="passenger_l_5",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="passenger_r_2",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(4)=(AttachBone="passenger_r_3",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(5)=(AttachBone="passenger_r_5",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider6_idle")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'

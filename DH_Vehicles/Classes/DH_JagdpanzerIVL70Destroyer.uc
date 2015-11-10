@@ -83,8 +83,8 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-190.0,Y=49.0,Z=36.0),ExhaustRotation=(Pitch=32768))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVPassengerOne',WeaponBone="body")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVPassengerTwo',WeaponBone="body")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-100.0,Y=0.0,Z=110.0),DriveAnim="prone_idle_nade")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=40.0,Z=110.0),DriveRot=(Yaw=2048),DriveAnim="prone_idle_satchel")
     IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
     StartUpSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
     ShutDownSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'

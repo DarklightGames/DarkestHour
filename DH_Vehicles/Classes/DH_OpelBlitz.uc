@@ -54,7 +54,7 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-30.0,Y=180.0,Z=-50.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerOne',WeaponBone="passenger1")
+    PassengerPawns(0)=(AttachBone="passenger1",DrivePos=(X=2.0,Y=0.0,Z=-6.0),DriveAnim="VHalftrack_Rider1_idle")
     IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
     StartUpSound=sound'Vehicle_Engines.BA64.BA64_engine_start'
     ShutDownSound=sound'Vehicle_Engines.BA64.BA64_engine_stop'

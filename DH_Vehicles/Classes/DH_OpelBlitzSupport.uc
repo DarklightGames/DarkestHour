@@ -11,8 +11,8 @@ defaultproperties
     ResupplyAttachBone="supply"
     ResupplyDecoAttachmentClass=class'DH_OpelBlitzDecoAttachment'
     ResupplyDecoAttachBone="Deco"
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerEight',WeaponBone="passenger_l_3")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerNine',WeaponBone="passenger_r_3")
+    PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(2)=(AttachBone="passenger_r_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider1_idle")
     VehicleHudOccupantsX(2)=0.45
     VehicleHudOccupantsY(2)=0.8
     VehicleHudOccupantsX(3)=0.55

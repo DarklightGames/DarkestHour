@@ -76,10 +76,10 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-105.0,Y=33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-105.0,Y=-33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierMGPawn',WeaponBone="mg_base")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerOne',WeaponBone="passenger_l_1")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerTwo',WeaponBone="passenger_l_2")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerThree',WeaponBone="passenger_r_1")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierPassengerFour',WeaponBone="passenger_r_2")
+    PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VUC_rider1_idle")
+    PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VUC_rider1_idle")
+    PassengerPawns(2)=(AttachBone="passenger_r_1",DriveAnim="VUC_rider1_idle")
+    PassengerPawns(3)=(AttachBone="passenger_r_2",DriveAnim="VUC_rider1_idle")
     IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
     StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
     ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
