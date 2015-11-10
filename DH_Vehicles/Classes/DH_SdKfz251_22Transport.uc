@@ -6,15 +6,18 @@
 class DH_SdKfz251_22Transport extends DH_Sdkfz251Transport;
 
 // Modified to set PassengerWeapons class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
-// Also to remove the rider positions inherited from DH_Sdkfz251Transport
+// Also to remove the MG position & void the PassengerPawns array, as we inherit unwanted positions that can't be used due to the mounted Pak 40
 simulated function PostBeginPlay()
 {
+    // Remove the inherited MG position & riders (note array length adjustment needs to go before the Super)
+    PassengerWeapons.Length = 1;
+    PassengerPawns.Length = 0;
+    VehicleHudOccupantsX.Length = 2;
+    VehicleHudOccupantsY.Length = 2;
+
     super.PostBeginPlay();
 
     PassengerWeapons[0].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_SdKfz251_22CannonPawn", class'Class'));
-    PassengerWeapons.Length = 1;
-    VehicleHudOccupantsX.Length = 2;
-    VehicleHudOccupantsY.Length = 2;
 }
 
 defaultproperties

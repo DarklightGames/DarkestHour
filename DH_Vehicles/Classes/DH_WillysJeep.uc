@@ -58,9 +58,9 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-120.0,Y=30.0,Z=-5.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerOne',WeaponBone="passenger2")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerTwo',WeaponBone="Passenger3")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerThree',WeaponBone="Passenger4")
+    PassengerPawns(0)=(AttachBone="passenger2",DrivePos=(X=5.0,Y=0.0,Z=11.0),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="Passenger3",DrivePos=(X=0.0,Y=0.0,Z=7.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(2)=(AttachBone="Passenger4",DrivePos=(X=0.0,Y=0.0,Z=7.0),DriveAnim="VHalftrack_Rider2_idle")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Jeep.jeep_engine_loop03'
     StartUpSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
     ShutDownSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'

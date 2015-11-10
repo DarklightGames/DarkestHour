@@ -23,6 +23,12 @@ This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI 
 Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
 */
 
+// An array of subclasses, one specifically assigned for each index position in the vehicle's WeaponPawns array, so this actor knows its own PositionInArray
+// Facilitates using a generic passenger pawn class for all vehicles, with properties being specified in vehicle's PassengerPawns array
+// Avoids need for lots of passenger pawn classes for every vehicle, but we need subclasses with PositionInArray as net client has to know its index position
+// Note that if really needed we can still use specific passenger classes with a vehicle, instead of the PassengerPawns array
+var     array<class<DHPassengerPawn> >  PassengerClasses;
+
 var     bool    bNeedToInitializeDriver;     // clientside flag that we need to do some player set up, once we receive the Driver actor
 var     bool    bNeedToStoreVehicleRotation; // clientside flag that we need to set StoredVehicleRotation, once we receive the VehicleBase actor
 
@@ -70,7 +76,7 @@ function Timer()
 }
 
 // Modified to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleBase actor, which it may not have yet
-// Also to remove stuff not relevant to a passenger pawn, as it has no VehicleWeapon
+// Also to call SetPassengerProperties when net client receives VehicleBase, & to remove stuff not relevant to a passenger pawn as it has no VehicleWeapon
 simulated function PostNetReceive()
 {
     local int i;
@@ -79,6 +85,9 @@ simulated function PostNetReceive()
     if (!bInitializedVehicleBase && VehicleBase != none)
     {
         bInitializedVehicleBase = true;
+
+        // Set up our properties from vehicle's PassengerPawns array
+        SetPassengerProperties();
 
         // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
         if (bNeedToStoreVehicleRotation)
@@ -128,6 +137,56 @@ simulated function PostNetReceive()
     }
 }
 
+// Modified to call SetPassengerProperties - this is where we do it for standalones or servers, because we need the VehicleBase
+function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
+{
+    if (Role == ROLE_Authority)
+    {
+        VehicleBase = VehiclePawn; // this is all that's in the super
+        SetPassengerProperties();
+    }
+}
+
+// New function to set up our properties, using what has been specified in the vehicle's PassengerPawns array, allowing use of a generic passenger pawn class
+// Note this will do nothing if specific passenger classes have been used with the vehicle, instead of the PassengerPawns array (because PassengerPawns.Length will be 0)
+simulated function SetPassengerProperties()
+{
+    local DHArmoredVehicle AV;
+    local DHWheeledVehicle WV;
+    local int              Index;
+
+    AV = DHArmoredVehicle(VehicleBase);
+
+    if (AV != none)
+    {
+        Index = PositionInArray - AV.FirstRiderPositionIndex;
+
+        if (Index >= 0 && Index < AV.PassengerPawns.Length)
+        {
+            DrivePos = AV.PassengerPawns[Index].DrivePos;
+            DriveRot = AV.PassengerPawns[Index].DriveRot;
+            DriveAnim = AV.PassengerPawns[Index].DriveAnim;
+            FPCamPos = AV.PassengerPawns[Index].FPCamPos;
+        }
+    }
+    else
+    {
+        WV = DHWheeledVehicle(VehicleBase);
+
+        if (WV != none)
+        {
+            Index = PositionInArray - WV.FirstRiderPositionIndex;
+
+            if (Index >= 0 && Index < WV.PassengerPawns.Length)
+            {
+                DrivePos = WV.PassengerPawns[Index].DrivePos;
+                DriveRot = WV.PassengerPawns[Index].DriveRot;
+                DriveAnim = WV.PassengerPawns[Index].DriveAnim;
+                FPCamPos = WV.PassengerPawns[Index].FPCamPos;
+            }
+        }
+    }
+}
 // Modified to avoid "accessed none" errors on VehicleBase & to generally optimise & match other DH vehicle classes
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
@@ -547,6 +606,17 @@ defaultproperties
     WeaponFOV=90.0
     TPCamDistance=200.0
     EntryRadius=375.0
+
+    PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
+    PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'
+    PassengerClasses(2)=class'DH_Engine.DHPassengerPawnTwo'
+    PassengerClasses(3)=class'DH_Engine.DHPassengerPawnThree'
+    PassengerClasses(4)=class'DH_Engine.DHPassengerPawnFour'
+    PassengerClasses(5)=class'DH_Engine.DHPassengerPawnFive'
+    PassengerClasses(6)=class'DH_Engine.DHPassengerPawnSix'
+    PassengerClasses(7)=class'DH_Engine.DHPassengerPawnSeven'
+    PassengerClasses(8)=class'DH_Engine.DHPassengerPawnEight'
+    PassengerClasses(9)=class'DH_Engine.DHPassengerPawnNine'
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     bPCRelativeFPRotation=true

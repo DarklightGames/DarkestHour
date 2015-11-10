@@ -74,10 +74,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-175.0,Y=-40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerOne',WeaponBone="passenger_01")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerTwo',WeaponBone="passenger_02")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerThree',WeaponBone="passenger_03")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerFour',WeaponBone="passenger_04x")
+    PassengerPawns(0)=(AttachBone="passenger_01",DrivePos=(X=8.0,Y=0.0,Z=3.0),DriveRot=(Yaw=49152),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="passenger_02",DrivePos=(X=-11.0,Y=0.0,Z=78.0),DriveRot=(Pitch=34600),DriveAnim="VUC_rider1_idle")
+    PassengerPawns(2)=(AttachBone="passenger_03",DrivePos=(X=10.0,Y=0.0,Z=84.0),DriveRot=(Pitch=32768,Yaw=26500),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="passenger_04x",DrivePos=(X=0.0,Y=0.0,Z=57.0),DriveRot=(Pitch=1800),DriveAnim="crouch_idle_binoc")
     IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
     StartUpSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
     ShutDownSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'

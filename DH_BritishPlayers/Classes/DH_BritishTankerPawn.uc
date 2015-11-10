@@ -10,5 +10,4 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharacters_anm.Brit_Infantry_Officer'
     Skins(0)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
     Skins(1)=texture'DHBritishCharactersTex.Armoured.BritishTanker'
-    Skins(2)=texture'DHBritishCharactersTex.ParachuteRegiment.BritParaGear'
 }

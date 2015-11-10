@@ -10,5 +10,4 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharacters_anm.US_Airborne'
     Skins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     Skins(1)=texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'
-    Skins(2)=texture'DHUSCharactersTex.Gear.USAB_equipment'
 }

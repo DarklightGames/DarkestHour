@@ -78,10 +78,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerOne',WeaponBone="body")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerTwo',WeaponBone="body")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerThree',WeaponBone="body")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerFour',WeaponBone="body")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-96.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-180.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-96.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'

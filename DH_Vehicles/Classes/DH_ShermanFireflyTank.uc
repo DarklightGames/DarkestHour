@@ -79,10 +79,10 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireflyPassengerOne',WeaponBone="body")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireflyPassengerTwo',WeaponBone="body")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireflyPassengerThree',WeaponBone="body")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireflyPassengerFour',WeaponBone="body")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-120.0,Y=-70.0,Z=35.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-155.0,Y=-25.0,Z=35.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-155.0,Y=25.0,Z=35.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-110.0,Y=70.0,Z=35.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
     StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'

@@ -76,16 +76,16 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-175.0,Y=-30.0,Z=10.0),ExhaustRotation=(Pitch=36000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Cromwell6PdrCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="Mg_attachment")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerOne',WeaponBone="body")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerTwo',WeaponBone="body")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerThree',WeaponBone="body")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerFour',WeaponBone="body")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-151.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-82.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
     StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
     ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-130.0,Y=20.0,Z=72.0)
+    DamagedEffectOffset=(X=-130.0,Y=20.0,Z=72.0) // TEST - need to set like 75mm?
     VehicleTeam=1
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"

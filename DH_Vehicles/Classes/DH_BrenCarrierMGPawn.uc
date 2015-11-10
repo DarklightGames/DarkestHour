@@ -51,10 +51,4 @@ defaultproperties
     HUDOverlayFOV=35.0
     PitchUpLimit=4000
     PitchDownLimit=60000
-    ExitPositions(0)=(X=48.0,Y=-107.0,Z=15.0)
-    ExitPositions(1)=(X=48.0,Y=117.0,Z=15.0)
-    ExitPositions(2)=(X=52.0,Y=-119.0,Z=13.0)
-    ExitPositions(3)=(X=-45.0,Y=-118.0,Z=15.0)
-    ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
-    ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
 }

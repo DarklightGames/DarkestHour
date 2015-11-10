@@ -76,10 +76,10 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=5.0,Z=35.0),ExhaustRotation=(Pitch=22000,Yaw=9000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVHCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerOne',WeaponBone="body")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerTwo',WeaponBone="body")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerThree',WeaponBone="body")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerFour',WeaponBone="body")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-115.0,Y=-70.0,Z=55.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-150.0,Y=-35.0,Z=55.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=35.0,Z=55.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-115.0,Y=70.0,Z=55.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
     IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
     StartUpSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
     ShutDownSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'

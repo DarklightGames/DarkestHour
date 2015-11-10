@@ -32,10 +32,21 @@ struct CarHitpoint
     var ECarHitPointType  CarHitPointType;       // what type of hit point this is
 };
 
+struct PassengerPawn
+{
+    var name    AttachBone;
+    var vector  DrivePos;
+    var rotator DriveRot;
+    var name    DriveAnim;
+    var vector  FPCamPos;
+};
+
 // General
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       PointValue;                  // used for scoring
 var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
+var     int         FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array (note more limited use than in DHArmoredVehicle)
+var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of those classes
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning vehicle
 var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly player pawn found (ignoring line of sight check)
 var     ObjectMap   NotifyParameters;            // an object that can hold references to several other objects, which can be used by messages to build a tailored message
@@ -114,17 +125,34 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to spawn any sound or resuppply attachments & so net clients show unoccupied rider positions on the HUD vehicle icon
-// Also to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
-// And to skip lots of pointless stuff on a net client if an already destroyed vehicle gets replicated
+// Modified to create passenger pawn classes from PassengerWeapons array, to skip lots of pointless stuff on net client if an already destroyed vehicle gets replicated,
+// to make net clients show unoccupied rider positions on the HUD vehicle icon, to spawn any sound or resuppply attachments,
+// to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
+    local byte StartIndex, Index, i;
+
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     // Play neutral idle animation, unless vehicle is not using a skeletal mesh, e.g. is already destroyed & has switched to destroyed static mesh
     if (DrawType == DT_Mesh && HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
+    }
+
+    // Create passenger pawn classes from the PassengerWeapons array
+    if (PassengerPawns.Length > 0)
+    {
+        FirstRiderPositionIndex = PassengerWeapons.Length; // set automatically
+        StartIndex = PassengerWeapons.Length;
+        PassengerWeapons.Length = PassengerWeapons.Length + PassengerPawns.Length;
+
+        for (i = 0; i < PassengerPawns.Length; ++i)
+        {
+            Index = StartIndex + i;
+            PassengerWeapons[Index].WeaponPawnClass = class'DHPassengerPawn'.default.PassengerClasses[Index];
+            PassengerWeapons[Index].WeaponBone = PassengerPawns[i].AttachBone;
+        }
     }
 
     // Net client
@@ -140,6 +168,7 @@ simulated function PostBeginPlay()
         // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
         WeaponPawns.Length = PassengerWeapons.Length;
     }
+    // Authority role
     else
     {
         // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
@@ -156,7 +185,7 @@ simulated function PostBeginPlay()
             AttachToBone(ResupplyAttachment, ResupplyAttachBone);
         }
 
-        // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
+        // For single player mode, we may as well set this here, as it's only intended to stop idiot net players blowing up friendly vehicles in spawn
         if (Level.NetMode == NM_Standalone)
         {
             bDriverAlreadyEntered = true;

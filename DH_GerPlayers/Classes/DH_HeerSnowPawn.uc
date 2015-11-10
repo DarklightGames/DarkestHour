@@ -9,5 +9,4 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Parka'
     Skins(0)=texture'DHGermanCharactersTex.Heer.HeerParkaSnow1'
-    Skins(1)=texture'Characters_tex.ger_heads.Ger_face02'
 }

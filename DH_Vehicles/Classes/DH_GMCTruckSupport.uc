@@ -11,8 +11,8 @@ defaultproperties
     ResupplyAttachBone="supply"
     ResupplyDecoAttachmentClass=class'DH_GMCTruckDecoAttachment'
     ResupplyDecoAttachBone="Deco"
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerEight',WeaponBone="passenger_l_5")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerNine',WeaponBone="passenger_r_5")
+    PassengerPawns(1)=(AttachBone="passenger_l_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(2)=(AttachBone="passenger_r_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider1_idle")
     VehicleHudOccupantsX(2)=0.45
     VehicleHudOccupantsY(2)=0.75
     VehicleHudOccupantsX(3)=0.55

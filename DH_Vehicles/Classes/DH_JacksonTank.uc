@@ -74,10 +74,10 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=40.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonPassengerOne',WeaponBone="Jackson_body_ext")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonPassengerTwo',WeaponBone="Jackson_body_ext")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonPassengerThree',WeaponBone="Jackson_body_ext")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonPassengerFour',WeaponBone="Jackson_body_ext")
+    PassengerPawns(0)=(AttachBone="Jackson_body_ext",DrivePos=(X=-125.0,Y=-65.0,Z=115.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="Jackson_body_ext",DrivePos=(X=-185.0,Y=-35.0,Z=115.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(2)=(AttachBone="Jackson_body_ext",DrivePos=(X=-185.0,Y=35.0,Z=115.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="Jackson_body_ext",DrivePos=(X=-125.0,Y=75.0,Z=115.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
     StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'

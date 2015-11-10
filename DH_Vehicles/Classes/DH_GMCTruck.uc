@@ -55,7 +55,7 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=-35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerOne',WeaponBone="passenger1")
+    PassengerPawns(0)=(AttachBone="passenger1",DrivePos=(X=2.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider1_idle")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'

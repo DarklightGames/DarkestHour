@@ -8,10 +8,10 @@ class DH_ShermanTank_DDay extends DH_ShermanTank;
 var     DHVehicleDecoAttachment     DuctsAttachment;
 
 // Modified to attach a static mesh the intake/exhaust ducts on the back of the tank
-// Also to trim the PassengerWeapons array, as we inherit unwanted rider positions that can't be used due to the large ducts on the engine deck
+// Also to void the PassengerPawns array, as we inherit unwanted rider positions that can't be used due to the large ducts on the engine deck
 simulated function PostBeginPlay()
 {
-    PassengerWeapons.Length = 2; // trim to just turret & hull MG (needs to go before the Super)
+    PassengerPawns.Length = 0; // remove the inherited riders (needs to go before the Super)
 
     super.PostBeginPlay();
 

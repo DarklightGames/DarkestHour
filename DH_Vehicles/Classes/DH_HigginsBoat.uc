@@ -287,12 +287,12 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-280.0,Y=-31.0,Z=99.0),ExhaustRotation=(Pitch=31000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatMGPawn',WeaponBone="mg_base")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="passenger_L1")
-    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="passenger_L2")
-    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="passenger_L3")
-    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="passenger_R1")
-    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="passenger_R2")
-    PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="passenger_R3")
+    PassengerPawns(0)=(AttachBone="passenger_L1",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider1_idle")
+    PassengerPawns(1)=(AttachBone="passenger_L2",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider2_idle")
+    PassengerPawns(2)=(AttachBone="passenger_L3",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider3_idle")
+    PassengerPawns(3)=(AttachBone="passenger_R1",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider4_idle")
+    PassengerPawns(4)=(AttachBone="passenger_R2",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider5_idle")
+    PassengerPawns(5)=(AttachBone="passenger_R3",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider6_idle")
     IdleSound=sound'DH_AlliedVehicleSounds.HigginsIdle01'
     StartUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
     ShutDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
