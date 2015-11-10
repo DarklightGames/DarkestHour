@@ -37,6 +37,15 @@ struct NewHitpoint
 };
 var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
 
+struct PassengerPawn
+{
+    var name    AttachBone;
+    var vector  DrivePos;
+    var rotator DriveRot;
+    var name    DriveAnim;
+    var vector  FPCamPos;
+};
+
 // General
 var     array<Material> CannonSkins;        // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     bool        bIsSpawnVehicle;        // set by DHSpawnManager & used here for engine on/off hints
@@ -58,6 +67,7 @@ var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
 var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
 var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
+var     array<PassengerPawn> PassengerPawns;      // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of those classes
 var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 var     name        PlayerCameraBone;             // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     bool        bLockCameraDuringTransition;  // lock the camera's rotation to the camera bone during view transitions
@@ -193,12 +203,12 @@ replication
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to set fire damage properties, to select any random schurzen model, & so net clients show unoccupied rider positions on the HUD vehicle icon
-// Also to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
-// And to skip lots of pointless stuff on a net client if an already destroyed vehicle gets replicated
+// Modified to create passenger pawn classes from PassengerWeapons array, to skip lots of pointless stuff on net client if an already destroyed vehicle gets replicated,
+// to make net clients show unoccupied rider positions on the HUD vehicle icon, to set fire damage properties, to select any random schurzen model,
+// to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
-    local byte RandomNumber, CumulativeChance, i;
+    local byte StartIndex, Index, RandomNumber, CumulativeChance, i;
 
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
@@ -206,6 +216,20 @@ simulated function PostBeginPlay()
     if (DrawType == DT_Mesh && HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
+    }
+
+    // Create passenger pawn classes from the PassengerWeapons array
+    if (PassengerPawns.Length > 0)
+    {
+        StartIndex = PassengerWeapons.Length;
+        PassengerWeapons.Length = PassengerWeapons.Length + PassengerPawns.Length;
+
+        for (i = 0; i < PassengerPawns.Length; ++i)
+        {
+            Index = StartIndex + i;
+            PassengerWeapons[Index].WeaponPawnClass = class'DHPassengerPawn'.default.PassengerClasses[Index];
+            PassengerWeapons[Index].WeaponBone = PassengerPawns[i].AttachBone;
+        }
     }
 
     // Net client
@@ -221,6 +245,7 @@ simulated function PostBeginPlay()
         // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
         WeaponPawns.Length = PassengerWeapons.Length;
     }
+    // Authority role
     else
     {
         // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
@@ -234,7 +259,7 @@ simulated function PostBeginPlay()
         HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
         EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
 
-        // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
+        // For single player mode, we may as well set this here, as it's only intended to stop idiot net players blowing up friendly vehicles in spawn
         if (Level.NetMode == NM_Standalone)
         {
             bDriverAlreadyEntered = true;
