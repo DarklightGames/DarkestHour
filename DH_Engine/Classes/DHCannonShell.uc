@@ -44,7 +44,7 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
-        Corona = Spawn(TracerEffect, self);
+        Corona = Spawn(CoronaClass, self);
     }
 
     if (PhysicsVolume.bWaterVolume)
@@ -257,7 +257,7 @@ simulated function Destroyed()
 defaultproperties
 {
     bHasTracer=true
-    TracerEffect=class'DH_Effects.DH_RedTankShellTracerBig'
+    CoronaClass=class'DH_Effects.DH_RedTankShellTracerBig'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
@@ -296,7 +296,6 @@ defaultproperties
     TransientSoundVolume=1.0
     TransientSoundRadius=1000.0
     ExplosionSoundVolume=1.0
-    bUseCollisionStaticMesh=true
     bFixedRotationDir=true
     RotationRate=(Roll=50000)
     DesiredRotation=(Roll=30000)

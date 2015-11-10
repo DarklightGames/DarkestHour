@@ -1456,194 +1456,168 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 }
 
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
-// This function now supports more than 1 player with name text above their heads (I've made it support 5)
-// I've also adjusted it to where you don't have to look directly at a player
-// And text gets smaller the farther away
-// It has has many magic numbers that need variables
-// Theel: Todo: This function makes me ill, it needs rewritten, and it should probably store something out side the function so it's not drawing text over text
 function DrawPlayerNames(Canvas C)
 {
-    local vector          HitLocation, HitNormal, ViewPos, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir, eExtent;
+    local vector          HitLocation, HitNormal, ViewPos, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
     local int             PawnOwnerTeam;
-    local float           StrX, StrY, DistanceScale;
+    local float           StrX, StrY;
     local string          ResupplyMessage;
     local bool            bCouldMGResupply, bCouldMortarResupply, bCouldATResupply, bCouldATReload;
     local Pawn            HitPawn;
     local DHPawn          MyDHP, OtherDHP;
     local DHMortarVehicle Mortar;
-    local int             i;
 
     if (PawnOwner == none || PawnOwner.Controller == none)
     {
         return;
     }
 
-    eExtent.X = 100.0;
-    eExtent.Y = 0.0;
-    eExtent.Z = 100.0;
-
     ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0);
+    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true));
+    PawnOwnerTeam = PawnOwner.GetTeamNum();
+    Mortar = DHMortarVehicle(HitPawn);
 
-    foreach PawnOwner.TraceActors(class'Pawn', HitPawn, HitLocation, HitNormal, ViewPos + 2048.0 * vector(PawnOwner.Controller.Rotation), ViewPos, eExtent)
+    // Record NamedPlayer & possibly NameTime, if we're looking at a player or a mortar on the same team
+    if (HitPawn != none && HitPawn != PawnOwner && (HitPawn.GetTeamNum() == PawnOwnerTeam || (Mortar != none && Mortar.VehicleTeam == PawnOwnerTeam)))
     {
-        // Only show 5 names as too many names looks insane
-        if (i >= 5)
+        if (NamedPlayer != HitPawn || Level.TimeSeconds - NameTime > 0.5)
         {
-            break;
+            NamedPlayer = HitPawn;
+            NameTime = Level.TimeSeconds;
         }
+    }
+    else
+    {
+        NamedPlayer = none;
+    }
 
-        PawnOwnerTeam = PawnOwner.GetTeamNum();
-        Mortar = DHMortarVehicle(HitPawn);
+    // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
+    if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
+    {
+        Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
+        GetAxes(PlayerOwner.Rotation, X, Y, Z);
 
-        // Record NamedPlayer & possibly NameTime, if we're looking at a player or a mortar on the same team
-        if (HitPawn != none && HitPawn != PawnOwner && (HitPawn.GetTeamNum() == PawnOwnerTeam || (Mortar != none && Mortar.VehicleTeam == PawnOwnerTeam)))
+        if (Dir dot X > 0.0)
         {
-            if (NamedPlayer != HitPawn || Level.TimeSeconds - NameTime > 0.5)
+            NamedPlayerLoc = NamedPlayer.Location;
+            NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
+
+            MyDHP = DHPawn(PawnOwner);
+
+            // Set resupply/reload flags
+            if (MyDHP != none)
             {
-                NamedPlayer = HitPawn;
-                NameTime = Level.TimeSeconds;
-            }
-        }
-        else
-        {
-            NamedPlayer = none;
-        }
-
-        // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
-        if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
-        {
-            Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
-            GetAxes(PlayerOwner.Rotation, X, Y, Z);
-
-            if (Dir dot X > 0.0)
-            {
-                NamedPlayerLoc = NamedPlayer.Location;
-                NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
-
-                MyDHP = DHPawn(PawnOwner);
-
-                // Set resupply/reload flags
-                if (MyDHP != none)
+                // Resupply a deployed mortar
+                if (Mortar != none)
                 {
-                    // Resupply a deployed mortar
-                    if (Mortar != none)
+                    if (Mortar.bCanBeResupplied && MyDHP.bHasMortarAmmo)
                     {
-                        if (Mortar.bCanBeResupplied && MyDHP.bHasMortarAmmo)
+                        bCouldMortarResupply = true;
+                    }
+                }
+                else
+                {
+                    OtherDHP = DHPawn(NamedPlayer);
+
+                    if (OtherDHP != none)
+                    {
+                        // AT weapon assisted reload
+                        if (OtherDHP.bWeaponNeedsReload)
+                        {
+                            bCouldATReload = true;
+                        }
+                        else if (OtherDHP.bWeaponNeedsResupply)
+                        {
+                            // AT weapon resupply
+                            if (DHRocketWeaponAttachment(OtherDHP.WeaponAttachment) != none)
+                            {
+                                if (MyDHP.bHasATAmmo)
+                                {
+                                    bCouldATResupply = true;
+                                }
+                            }
+                            // MG resupply
+                            else if (MyDHP.bHasMGAmmo)
+                            {
+                                bCouldMGResupply = true;
+                            }
+                        }
+                        // Mortar resupply (a player carrying an undeployed mortar)
+                        else if (OtherDHP.bMortarCanBeResupplied && MyDHP.bHasMortarAmmo)
                         {
                             bCouldMortarResupply = true;
                         }
                     }
-                    else
-                    {
-                        OtherDHP = DHPawn(NamedPlayer);
+                }
 
-                        if (OtherDHP != none)
-                        {
-                            // AT weapon assisted reload
-                            if (OtherDHP.bWeaponNeedsReload)
-                            {
-                                bCouldATReload = true;
-                            }
-                            else if (OtherDHP.bWeaponNeedsResupply)
-                            {
-                                // AT weapon resupply
-                                if (DHRocketWeaponAttachment(OtherDHP.WeaponAttachment) != none)
-                                {
-                                    if (MyDHP.bHasATAmmo)
-                                    {
-                                        bCouldATResupply = true;
-                                    }
-                                }
-                                // MG resupply
-                                else if (MyDHP.bHasMGAmmo)
-                                {
-                                    bCouldMGResupply = true;
-                                }
-                            }
-                            // Mortar resupply (a player carrying an undeployed mortar)
-                            else if (OtherDHP.bMortarCanBeResupplied && MyDHP.bHasMortarAmmo)
-                            {
-                                bCouldMortarResupply = true;
-                            }
-                        }
-                    }
-
-                    // if we could resupply/reload the player, set the appropriate message
-                    if (bCouldMGResupply || bCouldMortarResupply || bCouldATResupply || bCouldATReload)
+                // If we could resupply/reload the player, set the appropriate message
+                if (bCouldMGResupply || bCouldMortarResupply || bCouldATResupply || bCouldATReload)
+                {
+                    // If within 2 metres then we can actually resupply/reload the player
+                    if (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) < 14400.0)
                     {
-                        // If within 2 metres then we can actually resupply/reload the player
-                        if (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) < 14400.0)
+                        if (bCouldATReload)
                         {
-                            if (bCouldATReload)
-                            {
-                                ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
-                            }
-                            else
-                            {
-                                ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                            }
+                            ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
                         }
-                        // Otherwise we'll display a message saying the player needs a resupply/reload
                         else
                         {
-                            if (bCouldATReload)
-                            {
-                                ResupplyMessage = NeedReloadText;
-                            }
-                            else
-                            {
-                                ResupplyMessage = NeedAmmoText;
-                            }
-
-                            // Not close enough to actually resupply/reload, so reset these local variables
-                            bCouldMGResupply = false;
-                            bCouldMortarResupply = false;
-                            bCouldATResupply = false;
-                            bCouldATReload = false;
+                            ResupplyMessage = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                         }
                     }
-
-                    // Now set our pawn's resupply/reload variables (do this only once, as they are replicated)
-                    MyDHP.bCanMGResupply = bCouldMGResupply;
-                    MyDHP.bCanMortarResupply = bCouldMortarResupply;
-                    MyDHP.bCanATResupply = bCouldATResupply;
-                    MyDHP.bCanATReload = bCouldATReload;
-                }
-
-                DistanceScale = FClamp(1.0 - (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) / 2048.0**2), 0.2, 1.0);
-
-                C.Font = GetPlayerNameFont(C);
-                C.FontScaleX = DistanceScale;
-                C.FontScaleY = DistanceScale;
-
-                ScreenPos = C.WorldToScreen(NamedPlayerLoc);
-
-                // Draw player name & any resupply/reload message
-                if (NamedPlayer.PlayerReplicationInfo != none)
-                {
-                    ++i;
-
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
-
-                    if (ResupplyMessage != "")
+                    // Otherwise we'll display a message saying the player needs a resupply/reload
+                    else
                     {
-                        C.DrawColor = WhiteColor;
-                        C.DrawTextClipped(ResupplyMessage);
-                        C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
-                    }
+                        if (bCouldATReload)
+                        {
+                            ResupplyMessage = NeedReloadText;
+                        }
+                        else
+                        {
+                            ResupplyMessage = NeedAmmoText;
+                        }
 
-                    C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
-                    C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
+                        // Not close enough to actually resupply/reload, so reset these local variables
+                        bCouldMGResupply = false;
+                        bCouldMortarResupply = false;
+                        bCouldATResupply = false;
+                        bCouldATReload = false;
+                    }
                 }
-                // Or if we don't have a player name but have resupply text, then just draw that (must be a deployed mortar that can be resupplied)
-                else if (ResupplyMessage != "")
+
+                // Now set our pawn's resupply/reload variables (do this only once, as they are replicated)
+                MyDHP.bCanMGResupply = bCouldMGResupply;
+                MyDHP.bCanMortarResupply = bCouldMortarResupply;
+                MyDHP.bCanATResupply = bCouldATResupply;
+                MyDHP.bCanATReload = bCouldATReload;
+            }
+
+            C.Font = GetPlayerNameFont(C);
+            ScreenPos = C.WorldToScreen(NamedPlayerLoc);
+
+            // Draw player name & any resupply/reload message
+            if (NamedPlayer.PlayerReplicationInfo != none)
+            {
+                C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
+
+                if (ResupplyMessage != "")
                 {
                     C.DrawColor = WhiteColor;
-                    C.TextSize(ResupplyMessage, StrX, StrY);
-                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
                     C.DrawTextClipped(ResupplyMessage);
+                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
                 }
+
+                C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
+                C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
+            }
+            // Or if we don't have a player name but have resupply text, then just draw that (must be a deployed mortar that can be resupplied)
+            else if (ResupplyMessage != "")
+            {
+                C.DrawColor = WhiteColor;
+                C.TextSize(ResupplyMessage, StrX, StrY);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
+                C.DrawTextClipped(ResupplyMessage);
             }
         }
     }

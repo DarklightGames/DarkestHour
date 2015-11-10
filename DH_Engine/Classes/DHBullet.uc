@@ -432,11 +432,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         bPenetratedVehicle = !bHasDeflected && PenetrateVehicle(HitVehicle);
 
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
-
-        if (!bPenetratedVehicle)
-        {
-            bHasDeflected = true; // even if not tracer bullet, this is just a convenient way of skipping damage & allowing us to reach end of function to deflect or destroy
-        }
     }
     // Spawn the bullet hit effect on anything other than a vehicle
     else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
@@ -444,26 +439,26 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         Spawn(ImpactEffect,,, Location, rotator(-HitNormal));
     }
 
-    // Do any damage
-    if (Role == ROLE_Authority && !bHasDeflected)
+    if (!bHasDeflected && (HitVehicle == none || bPenetratedVehicle))
     {
-        UpdateInstigator();
-
-        // Have to use special damage for vehicles, otherwise it doesn't register for some reason
-        if (ROVehicle(Wall) != none)
+        // Do any damage
+        if (Role == ROLE_Authority)
         {
-            Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
-        }
-        else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
-        {
-            Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+            UpdateInstigator();
+
+            // Have to use special damage for vehicles, otherwise it doesn't register for some reason
+            if (ROVehicle(Wall) != none)
+            {
+                Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
+            }
+            else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+            {
+                Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+            }
+
+            MakeNoise(1.0);
         }
 
-        MakeNoise(1.0);
-    }
-
-    if (!bHasDeflected)
-    {
         super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
     }
 
@@ -561,7 +556,7 @@ simulated function Deflect(vector HitNormal)
 
         // Reflect off Wall with damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
-        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread
+//        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread // TEMP TEST
         Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
         Bounces--;
     }

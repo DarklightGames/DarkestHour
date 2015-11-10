@@ -38,7 +38,7 @@ var     sound           ShatterSound[4];         // sound of the round shatterin
 
 // Effects
 var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
-var     class<Effects>  TracerEffect;            // tracer effect class
+var     class<Effects>  CoronaClass;             // tracer effect class
 var     Effects         Corona;                  // shell tracer
 var     bool            bFailedToPenetrateArmor; // flags that we hit an armored vehicle & failed to penetrate it, which makes SpawnExplosionEffects handle it differently
 var     bool            bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
@@ -65,7 +65,7 @@ simulated function PostBeginPlay()
     BCInverse = 1.0 / BallisticCoefficient;
     Velocity = vector(Rotation) * Speed;
 
-    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume.bWaterVolume)
+    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
     {
         Velocity *= 0.5;
     }
@@ -192,8 +192,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local array<int>      HitPoints;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
-    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
-        Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
+    if (Other == none || SavedTouchActor == Other || Other.IsA('ROBulletWhipAttachment') || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
+        || Other.bDeleteMe || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
     }
@@ -207,7 +207,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     {
         SavedHitActor = HitVehicle;
 
-        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal, e.g. for a deflection
+        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -220,7 +220,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
-        if (HitVehicleWeapon.IsA('DHVehicleCannon') && !DHVehicleCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+        if (HitVehicleWeapon.IsA('DHVehicleCannon')
+            && !DHVehicleCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -231,7 +232,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 UpdateInstigator();
 
-                // Removed SetDelayedDamageInstigatorController() as irrelevant to VehWeapon (empty function), & we'll let VehWeapon call SetDDIC on Vehicle only if it's calling TakeDamage on it
+                // Removed SetDelayedDamageInstigatorController() as irrelevant to VehWeapon (empty function),
+                // & we'll let VehWeapon call SetDDIC on Vehicle only if it's calling TakeDamage on it
 
                 HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
 
@@ -901,6 +903,7 @@ simulated function HandleShellDebug(vector RealHitLocation)
 defaultproperties
 {
     RoundType=RT_APC
+    bUseCollisionStaticMesh=true
     bBotNotifyIneffective=true
     bIsAlliedShell=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'

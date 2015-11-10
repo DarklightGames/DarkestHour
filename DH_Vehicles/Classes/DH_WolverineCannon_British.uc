@@ -18,7 +18,7 @@ simulated function PostBeginPlay()
 
         if (StowageAttachment != none)
         {
-            StowageAttachment.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.M10.Wolverine_TurretStowageAttachment');
+            StowageAttachment.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.M10.Brit_M10_StowageAttachment');
             AttachToBone(StowageAttachment, 'Turret');
         }
     }
