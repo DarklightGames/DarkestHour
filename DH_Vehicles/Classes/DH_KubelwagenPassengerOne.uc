@@ -9,5 +9,4 @@ defaultproperties
 {
     DrivePos=(X=30.0,Y=29.0,Z=-2.0)
     DriveAnim="VHalftrack_Rider1_idle"
-    EntryRadius=225.0
 }

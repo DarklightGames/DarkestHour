@@ -11,5 +11,4 @@ defaultproperties
     DrivePos=(X=0.0,Y=0.0,Z=7.0)
     DriveRot=(Yaw=32768)
     DriveAnim="VHalftrack_Rider6_idle"
-    EntryRadius=225.0
 }
