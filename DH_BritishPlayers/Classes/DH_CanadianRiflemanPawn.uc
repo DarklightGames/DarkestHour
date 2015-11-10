@@ -10,5 +10,4 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharacters_anm.Brit_Infantry'
     Skins(0)=texture'DHCanadianCharactersTex.infantry.CanadianRoyalNewBrunswicks'
     Skins(1)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
-    Skins(2)=texture'DHBritishCharactersTex.ParachuteRegiment.BritParaGear'
 }

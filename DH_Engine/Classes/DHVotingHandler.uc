@@ -90,13 +90,11 @@ function PlayerExit(Controller Exiting)
 // function to strip prefix
 function string PrepMapStr(string MapName)
 {
-    local string StrippedMapName;
+    MapName = Repl(MapName, "DH-", ""); // Remove DH- prefix
+    MapName = Repl(MapName, ".rom", ""); // Remove .rom if it exists
+    MapName = Repl(MapName, "_", " "); // Remove _ for space
 
-    StrippedMapName = Repl(MapName, "DH-", ""); // Remove DH- prefix
-    StrippedMapName = Repl(StrippedMapName, ".rom", ""); // Remove .rom if it exists
-    StrippedMapName = Repl(StrippedMapName, "_", " "); // Remove _ for space
-
-    return StrippedMapName;
+    return MapName;
 }
 
 // overidden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote

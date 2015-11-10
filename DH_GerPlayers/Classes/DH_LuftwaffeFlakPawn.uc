@@ -7,6 +7,5 @@ class DH_LuftwaffeFlakPawn extends DHPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'Characters_tex.ger_heads.ger_face01'
-    Skins(1)=texture'DHGermanCharactersTex.Luftwaffe.LW_1'
+    Skins(0)=texture'DHGermanCharactersTex.Luftwaffe.LW_1'
 }
