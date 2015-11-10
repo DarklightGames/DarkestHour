@@ -28,6 +28,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
     }
 
+    ed_PlayerName.MyEditBox.bConvertSpaces = false;
+    ed_PlayerName.MyEditBox.MaxWidth = 32;
+
     //l_ID.Caption = DHPlayer(PlayerOwner()).ROIDHash;
 }
 
