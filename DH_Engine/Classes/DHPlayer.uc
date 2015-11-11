@@ -2628,7 +2628,7 @@ state DeadSpectating
     {
         super.BeginState();
 
-        if (bSpawnPointInvalidated)
+        if (bSpawnPointInvalidated && !bIsInSpawnMenu)
         {
             PlayerMenu();
         }
@@ -2895,6 +2895,11 @@ function ClientSaveROIDHash(string ROID)
 {
     ROIDHash = ROID;
     SaveConfig();
+}
+
+exec function TestUTCore()
+{
+    class'DictionaryTest'.static.Test();
 }
 
 defaultproperties
