@@ -3041,6 +3041,26 @@ function CheckTankCrewSpawnAreas()
     CheckMortarmanSpawnAreas();
 }
 
+// New function that spawns vehicles near the player (Distance is raised to 5 if <5)
+function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance)
+{
+    local class<Pawn>           VehicleClass;
+    local Pawn                  CreatedVehicle;
+    local vector                TargetLocation;
+    local rotator               Direction;
+
+    if (DHP != none && DHP.Pawn != none)
+    {
+        Direction.Yaw = DHP.Pawn.Rotation.Yaw;
+        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHLib'.static.MetersToUnreal(Max(Distance,5)));
+
+        VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
+        CreatedVehicle = spawn(VehicleClass,,, TargetLocation, Direction);
+
+        Level.Game.Broadcast(self, DHP.GetHumanReadableName() @ "spawned a" @ CreatedVehicle.GetHumanReadableName() @ "as admin.");
+    }
+}
+
 // New function that spawns bots on the player
 function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
 {

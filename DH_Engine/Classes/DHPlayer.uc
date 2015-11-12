@@ -2227,6 +2227,14 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
     }
 }
 
+exec function DebugSpawnVehicle(string VehicleClass, int Distance)
+{
+    if (DarkestHourGame(Level.Game) != none)
+    {
+        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance);
+    }
+}
+
 // Modified to actually restart the sway process, not just stop it. This is only called when the player changes stances (crouch prone stand).
 simulated function ResetSwayValues()
 {
