@@ -2227,11 +2227,11 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
     }
 }
 
-exec function DebugSpawnVehicle(string VehicleClass, int Distance)
+exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
 {
     if (DarkestHourGame(Level.Game) != none)
     {
-        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance);
+        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
     }
 }
 

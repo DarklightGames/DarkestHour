@@ -3042,7 +3042,7 @@ function CheckTankCrewSpawnAreas()
 }
 
 // New function that spawns vehicles near the player (Distance is raised to 5 if <5)
-function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance)
+function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional int SetAsCrew)
 {
     local class<Pawn>           VehicleClass;
     local Pawn                  CreatedVehicle;
@@ -3057,7 +3057,12 @@ function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance)
         VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
         CreatedVehicle = spawn(VehicleClass,,, TargetLocation, Direction);
 
-        Level.Game.Broadcast(self, DHP.GetHumanReadableName() @ "spawned a" @ CreatedVehicle.GetHumanReadableName() @ "as admin.");
+        if (bool(SetAsCrew) == true && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo != none)
+        {
+            DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew = true;
+        }
+
+        Level.Game.Broadcast(self, "Admin" @ DHP.GetHumanReadableName() @ "spawned a" @ CreatedVehicle.GetHumanReadableName());
     }
 }
 
