@@ -461,6 +461,8 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
     {
         SetStaticMesh(DeflectedMesh);
     }
+
+    super.DHDeflect(HitLocation, HitNormal, Wall);
 }
 
 // New function just to add readability to functions
