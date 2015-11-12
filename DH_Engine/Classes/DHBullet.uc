@@ -400,6 +400,21 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicle HitVehicle;
     local bool      bPenetratedVehicle;
+    local vector    HitLoc;
+    local Material  HitMat;
+
+    // This stops tracers from bouncing off thin air where the hidden BSP that network cuts is.
+    // It supports network cutting BSP that is textured with a material surface type of `EST_Custom00`
+    if (Wall.bHiddenEd) // `LevelInfo` which is BSP is set to bHiddenEd = true
+    {
+        Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16.0, Location, true,, HitMat);
+
+        if (HitMat != none && HitMat.SurfaceType == EST_Custom00)
+        {
+            Destroy();
+            return;
+        }
+    }
 
     // Hit WallHitActor that we've already hit & recorded
     if (WallHitActor != none && WallHitActor == Wall)
