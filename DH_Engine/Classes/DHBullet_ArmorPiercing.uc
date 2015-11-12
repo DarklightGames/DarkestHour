@@ -419,13 +419,13 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 // Modified to run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
 simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 {
-    return !DHVehicleCannon(VW).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // Modified to run penetration calculations on an armored vehicle, but damage any other vehicle automatically
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return DHArmoredVehicle(V).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // From DHBullet
@@ -461,6 +461,8 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
     {
         SetStaticMesh(DeflectedMesh);
     }
+
+    super.DHDeflect(HitLocation, HitNormal, Wall);
 }
 
 // New function just to add readability to functions
