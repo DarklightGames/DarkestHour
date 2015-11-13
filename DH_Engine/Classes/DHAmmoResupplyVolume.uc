@@ -31,6 +31,9 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    // Force UpdateTime to be default (no overriding it in the editor)
+    UpdateTime = default.UpdateTime;
+
     if (!bUsesSpawnAreas)
     {
         bActive = true;
