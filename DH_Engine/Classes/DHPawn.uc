@@ -110,8 +110,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bMortarCanBeResupplied;
-//      bCrouchMantle, MantleHeight; // Matt: removed as are set independently on server & client & so don't seem to need to be replicated
+        bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
