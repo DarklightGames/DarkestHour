@@ -124,26 +124,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Set damage modifier from the DamageType, using APCDamageModifier instead of TankDamageModifier
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        if (class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
-        {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
-        }
+        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
     }
     else if (class<ROVehicleDamageType>(DamageType) != none)
     {
-        if (class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
-        {
-            VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-        }
+        VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
     if (DamageType != VehicleBurningDamType)
     {
-        Damage *= RandRange(0.75, 1.08);
+        Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
     }
-
-    Damage *= VehicleDamageMod;
+    else
+    {
+        Damage *= VehicleDamageMod;
+    }
 
     // Exit if no damage
     if (Damage < 1)

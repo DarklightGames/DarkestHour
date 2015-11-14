@@ -9,9 +9,9 @@ class DH_50CalDamType extends DHWeaponProjectileDamageType
 defaultproperties
 {
     HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
-    TankDamageModifier=0.15 // 0.15 in 234/1, 1.0 in PTRD
-    APCDamageModifier=0.25 // 0.35 in 234/1, 0.5 in PTRD
-    VehicleDamageModifier=0.25 // 0.75 in 234/1, 0.35 in PTRD, small arms are default 0.1
+    TankDamageModifier=0.1 // 0.15 in 234/1, 1.0 in PTRD
+    APCDamageModifier=0.1 // 0.35 in 234/1, 0.5 in PTRD
+    VehicleDamageModifier=0.1 // 0.75 in 234/1, 0.35 in PTRD, small arms are default 0.1
     TreadDamageModifier=0.25 // 0.5 in 234/1, 1.0 in PTRD
     WeaponClass=class'DH_Weapons.DH_30calWeapon' // 50 cal is vehicle-mounted only, so doesn't have corresponding WeaponClass in DH_Weapons - nevermind, just add its name to death strings below
     DeathString="%o was killed by %k's .50 cal machine gun."

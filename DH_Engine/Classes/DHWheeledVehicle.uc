@@ -60,7 +60,6 @@ var     bool        bNeedToInitializeDriver;     // clientside flag that we need
 
 // Damage
 var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
-var     float       MinVehicleDamageModifier;    // minimum damage modifier (from DamageType) needed to damage this vehicle
 var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
 var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
@@ -1434,15 +1433,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // No damage if less than MinVehicleDamageModifier for this vehicle
-    if (VehicleDamageMod < MinVehicleDamageModifier)
-    {
-        return;
-    }
-
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
-
+    Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
     // Exit if no damage
     if (Damage < 1)
     {
