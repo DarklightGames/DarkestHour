@@ -7,6 +7,20 @@ class DH_PantherDTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Panther_anm.ukx
 
+// Matt: TEMP hack fix for panther 'close' animation not quite finishing in multiplayer, leaving the player's camera in slightly wrong position & glitching the view
+simulated state ViewTransition
+{
+    simulated function EndState()
+    {
+        if (Level.NetMode != NM_DedicatedServer && DriverPositionIndex == 0 && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        {
+            PlayAnim(BeginningIdleAnim);
+        }
+
+        super.EndState();
+    }
+}
+
 defaultproperties
 {
     SchurzenTexture=none // we don't have a schurzen skin for this camo variant, so add here if one gets made
