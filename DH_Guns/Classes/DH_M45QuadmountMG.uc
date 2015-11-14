@@ -172,7 +172,7 @@ defaultproperties
     bDoOffsetTrace=false
     Mesh=SkeletalMesh'DH_M45_anm.m45_turret'
     Skins(0)=texture'DH_Artillery_tex.m45.m45_gun'
-    Skins(1)=texture'DH_Artillery_tex.m45.m45_sight'
+    Skins(1)=material'DH_Artillery_tex.m45.m45_sight_s'
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true
