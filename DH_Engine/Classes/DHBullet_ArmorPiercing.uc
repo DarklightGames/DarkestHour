@@ -454,9 +454,14 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
     }
 }
 
-// Modified so tracer bullet switches to DeflectedMesh (from DHBullet)
+// Modified so tracer bullet switches to DeflectedMesh & to destroy TracerEffect if bullet speed is very low (from DHBullet)
 simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
+    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
+    {
+        TracerEffect.Destroy();
+    }
+
     if (StaticMesh != DeflectedMesh)
     {
         SetStaticMesh(DeflectedMesh);
@@ -485,6 +490,17 @@ simulated function Landed(vector HitNormal)
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     Destroy();
+}
+
+// Modified to destroy any tracer effect
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (TracerEffect != none)
+    {
+        TracerEffect.Destroy();
+    }
 }
 
 defaultproperties

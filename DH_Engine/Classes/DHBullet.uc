@@ -551,7 +551,7 @@ simulated function Deflect(vector HitNormal)
 
     bHasDeflected = true;
 
-    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0)
+    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
     {
         TracerEffect.Destroy();
     }
