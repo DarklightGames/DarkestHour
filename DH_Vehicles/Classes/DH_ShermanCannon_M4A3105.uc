@@ -7,10 +7,10 @@ class DH_ShermanCannon_M4A3105 extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=6
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
-    SecondarySpread=0.003
-    TertiarySpread=0.0036
+    InitialTertiaryAmmo=15
+    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    SecondarySpread=0.0036
+    TertiarySpread=0.00225
     ManualRotationsPerSecond=0.0125
     FrontArmorFactor=9.0
     RightArmorFactor=5.1
@@ -29,8 +29,9 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ProjectileDescriptions(0)="HEAT"
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(2)="HEAT"
     AddedPitch=340
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=5
@@ -49,7 +50,7 @@ defaultproperties
     AltFireOffset=(X=-91.0,Y=-17.0,Z=8.5)
     AltFireSpawnOffsetX=56.0
     bAmbientAltFireSound=true
-    Spread=0.00225
+    Spread=0.003
     FireInterval=10.0
     AltFireInterval=0.12
     FireSoundVolume=512.0
@@ -57,7 +58,7 @@ defaultproperties
     AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     FireForce="Explosion05"
-    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
     ShakeRotMag=(Z=50.0)
     ShakeRotRate=(Z=1000.0)
@@ -76,11 +77,11 @@ defaultproperties
     CustomPitchUpLimit=6372
     CustomPitchDownLimit=63716
     BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=15
-    InitialSecondaryAmmo=45
+    InitialPrimaryAmmo=45
+    InitialSecondaryAmmo=6
     InitialAltAmmo=200
-    PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3105_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'
