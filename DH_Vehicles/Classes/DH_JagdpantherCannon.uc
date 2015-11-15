@@ -50,6 +50,7 @@ defaultproperties
     RangeSettings(28)=3600
     RangeSettings(29)=3800
     RangeSettings(30)=4000
+    AddedPitch=-56.0
     YawBone="Gun"
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0
