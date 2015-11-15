@@ -106,7 +106,4 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
     SoundVolume=130
     SoundRadius=200.0
-    HighDetailOverlay=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
 }

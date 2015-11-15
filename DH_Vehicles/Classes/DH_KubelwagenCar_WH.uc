@@ -173,8 +173,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_KubelwagenCar_WH.KParams0'
-    HighDetailOverlay=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.kubelwagen'
 }

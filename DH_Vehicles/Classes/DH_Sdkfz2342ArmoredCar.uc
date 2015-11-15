@@ -114,6 +114,5 @@ defaultproperties
     CollisionRadius=175.0
     CollisionHeight=60.0
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz2341ArmoredCar.KParams0'
-    HighDetailOverlayIndex=4
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_2'
 }

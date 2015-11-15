@@ -10,5 +10,4 @@ class DH_KubelwagenCar_Snow extends DH_KubelwagenCar_WH;
 defaultproperties
 {
     Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
-    HighDetailOverlay=texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
 }

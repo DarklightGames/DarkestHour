@@ -114,5 +114,4 @@ defaultproperties
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
     SoundVolume=130
     SoundRadius=300.0
-    HighDetailOverlayIndex=1
 }

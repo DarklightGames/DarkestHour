@@ -216,9 +216,6 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdtigerTank.KParams0'
-    HighDetailOverlay=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdtiger'
