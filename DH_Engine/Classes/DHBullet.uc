@@ -571,7 +571,7 @@ simulated function Deflect(vector HitNormal)
 
         // Reflect off Wall with damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
-//        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread // TEMP TEST
+        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread
         Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
         Bounces--;
     }

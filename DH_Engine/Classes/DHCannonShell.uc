@@ -6,7 +6,6 @@
 class DHCannonShell extends DHAntiVehicleProjectile
     abstract;
 
-
 struct RangePoint
 {
     var() int               Range;                // meter distance for this Range setting
