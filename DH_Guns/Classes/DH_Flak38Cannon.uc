@@ -111,5 +111,5 @@ defaultproperties
     ElevationWheelBone="Elevation_wheel"
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    CollisionStaticMesh=none
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'
 }

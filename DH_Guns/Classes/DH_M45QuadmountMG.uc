@@ -173,6 +173,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_M45_anm.m45_turret'
     Skins(0)=texture'DH_Artillery_tex.m45.m45_gun'
     Skins(1)=material'DH_Artillery_tex.m45.m45_sight_s'
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.m45.m45_turret_coll'
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true
