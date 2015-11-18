@@ -63,6 +63,8 @@ simulated function PostBeginPlay()
     Instance.SetStaticMesh(StaticMesh);
     Instance.SetDrawScale(DrawScale);
     Instance.SetDrawScale3D(DrawScale3D);
+    Instance.ScaleGlow = ScaleGlow;
+    Instance.AmbientGlow = AmbientGlow;
 
     Info.Obstacles[Index] = Instance;
 
