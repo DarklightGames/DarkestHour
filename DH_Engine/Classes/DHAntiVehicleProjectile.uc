@@ -829,10 +829,17 @@ simulated function UpdateInstigator()
 // New function just to consolidate long code that's repeated in more than one function
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
 {
-    local vector        TraceHitLocation, TraceHitNormal;
-    local Material      HitMaterial;
-    local ESurfaceTypes SurfType;
-    local bool          bShowDecal, bSnowDecal;
+    local sound          HitSound;
+    local class<Emitter> HitEmitterClass;
+    local vector         TraceHitLocation, TraceHitNormal;
+    local Material       HitMaterial;
+    local ESurfaceTypes  SurfType;
+    local bool           bShowDecal, bSnowDecal;
+
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
 
     // Play random explosion sound if this shell has any
     if (ExplosionSound.Length > 0)
@@ -840,24 +847,19 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)],, ExplosionSoundVolume * TransientSoundVolume);
     }
 
-    // Do a shake effect if projectile always does or if hit a vehicle
-    if (bAlwaysDoShakeEffect || SavedHitActor != none)
+    // Do a shake effect if projectile always causes shake, or if we hit a vehicle
+    if (bAlwaysDoShakeEffect || ROVehicle(SavedHitActor) != none)
     {
         DoShakeEffect();
     }
 
-    // Hit a vehicle - do hit effects
-    if (SavedHitActor != none)
+    // Hit a vehicle - set hit effects
+    if (ROVehicle(SavedHitActor) != none)
     {
-        PlaySound(VehicleHitSound,, 5.5 * TransientSoundVolume);
-
-        if (EffectIsRelevant(HitLocation, false))
-        {
-            Spawn(ShellHitVehicleEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-            bShowDecal = true;
-        }
+        HitSound = VehicleHitSound;
+        HitEmitterClass = ShellHitVehicleEffectClass;
     }
-    // Hit something else - get material type & do effects
+    // Hit something else - get material type & set effects
     else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX && EffectIsRelevant(HitLocation, false))
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
@@ -875,8 +877,8 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         {
             case EST_Snow:
             case EST_Ice:
-                Spawn(ShellHitSnowEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(DirtHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = DirtHitSound;
+                HitEmitterClass = ShellHitSnowEffectClass;
                 bShowDecal = true;
                 bSnowDecal = true;
                 break;
@@ -884,22 +886,21 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
             case EST_Rock:
             case EST_Gravel:
             case EST_Concrete:
-                Spawn(ShellHitRockEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(RockHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = RockHitSound;
+                HitEmitterClass = ShellHitRockEffectClass;
                 bShowDecal = true;
                 break;
 
             case EST_Wood:
             case EST_HollowWood:
-                Spawn(ShellHitWoodEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(WoodHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = WoodHitSound;
+                HitEmitterClass = ShellHitWoodEffectClass;
                 bShowDecal = true;
                 break;
 
             case EST_Water:
-                Spawn(ShellHitWaterEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume); // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
-                bShowDecal = false;
+                HitSound = WaterHitSound; // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
+                HitEmitterClass = ShellHitWaterEffectClass;
                 break;
 
             case EST_Custom00:
@@ -907,15 +908,26 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 break;
 
             default:
-                Spawn(ShellHitDirtEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(DirtHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = DirtHitSound;
+                HitEmitterClass = ShellHitDirtEffectClass;
                 bShowDecal = true;
                 break;
         }
     }
 
+    // Play impact sound & effect
+    if (HitSound != none)
+    {
+        PlaySound(HitSound,, 5.5 * TransientSoundVolume);
+    }
+
+    if (HitEmitterClass != none)
+    {
+        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
+    }
+
     // Spawn explosion decal
-    if (bShowDecal && Level.NetMode != NM_DedicatedServer)
+    if (bShowDecal)
     {
         // Adjust decal position to reverse any offset already applied to passed HitLocation to spawn explosion effects away from hit surface (e.g. PeneExploWall adjustment in HEAT shell)
         if (ActualLocationAdjustment != 0.0)
