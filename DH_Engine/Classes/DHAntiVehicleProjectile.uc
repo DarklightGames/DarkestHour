@@ -315,6 +315,8 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
         return;
     }
 
+    SavedHitActor = Pawn(Wall);
+
     if (bDebuggingText && Role == ROLE_Authority)
     {
         DebugShotDistanceAndSpeed();
@@ -327,8 +329,6 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
 
         return;
     }
-
-    SavedHitActor = Pawn(Wall);
 
 //  super(ROBallisticProjectile).HitWall(HitNormal, Wall); // removed as just duplicates shell debugging
 
