@@ -860,6 +860,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         HitEmitterClass = ShellHitVehicleEffectClass;
     }
     // Hit something else - get material type & set effects
+    // Matt TODO: I am aware of a problem where shell effects aren't playing for other net players - it is failing the EffectIsRelevant test below - I will fix tomorrow (25th Nov)
     else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX && EffectIsRelevant(HitLocation, false))
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
