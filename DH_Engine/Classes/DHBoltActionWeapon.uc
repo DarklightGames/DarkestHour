@@ -9,7 +9,7 @@ class DHBoltActionWeapon extends DHProjectileWeapon
 // Modified to prevent reloading unless the weapon is out of ammo
 simulated function bool AllowReload()
 {
-    if (AmmoAmount(0) <= 0)
+    if (bTwoMagsCapacity || AmmoAmount(0) <= 0)
     {
         return super.AllowReload();
     }

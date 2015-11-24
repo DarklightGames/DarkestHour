@@ -75,13 +75,14 @@ defaultproperties
     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=6372
-    CustomPitchDownLimit=63716
+    CustomPitchDownLimit=64625 // 5 degrees - probably should be 10, but any more & barrel clips hull (a howitzer, so depression isn't really an issue anyway)
     BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=45
     InitialSecondaryAmmo=6
     InitialAltAmmo=200
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
+    CannonAttachmentOffset=(X=8.0,Y=0.0,Z=4.5)
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3105_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'

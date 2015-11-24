@@ -106,8 +106,13 @@ simulated function HandlePrecache()
 
 function class<ROHeadgear> GetHeadgear()
 {
-    local int           i;
-    local float         R, ProbabilitySum;
+    local float R, ProbabilitySum;
+    local int   i;
+
+    if (Headgear.Length == 0)
+    {
+        return none;
+    }
 
     if (Headgear.Length == 1)
     {
@@ -120,7 +125,7 @@ function class<ROHeadgear> GetHeadgear()
     {
         ProbabilitySum += HeadgearProbabilities[i];
 
-        if (r <= ProbabilitySum)
+        if (R <= ProbabilitySum)
         {
             return Headgear[i];
         }
