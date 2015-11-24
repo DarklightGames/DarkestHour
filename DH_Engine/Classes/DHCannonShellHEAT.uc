@@ -277,10 +277,6 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
-    DirtHitSound=none // so don't play in SpawnExplosionEffects, as will be drowned out by ExplosionSound
-    RockHitSound=none
-    WoodHitSound=none
-    WaterHitSound=none
     WScale=1.0
     EnergyFactor=1000.0
     PeneExploWallOut=75.0

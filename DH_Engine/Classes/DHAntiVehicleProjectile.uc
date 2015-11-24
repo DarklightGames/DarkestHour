@@ -641,9 +641,9 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
 
         if (EffectIsRelevant(HitLocation, false))
         {
-            PlaySound(ShatterVehicleHitSound,, 5.5 * TransientSoundVolume);
+            PlaySound(ShatterVehicleHitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
             Spawn(ShellShatterEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
-            PlaySound(ShatterSound[Rand(4)],, 5.5 * TransientSoundVolume);
+            PlaySound(ShatterSound[Rand(4)], SLOT_None, 5.5 * TransientSoundVolume);
         }
 
         bRoundShattered = false; // reset
@@ -660,13 +660,13 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
 
         if (EffectIsRelevant(HitLocation, false))
         {
-            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
+            PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
             Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
 
             // Play random explosion sound if this shell has any
             if (ExplosionSound.Length > 0)
             {
-                PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)],, ExplosionSoundVolume * TransientSoundVolume);
+                PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume);
             }
         }
 
@@ -685,7 +685,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
 
         if (NumDeflections < 2 && EffectIsRelevant(HitLocation, false)) // don't play effects if has deflected several times already
         {
-            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
+            PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
             Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
         }
 
@@ -844,7 +844,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Play random explosion sound if this shell has any
     if (ExplosionSound.Length > 0)
     {
-        PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)],, ExplosionSoundVolume * TransientSoundVolume);
+        PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume);
     }
 
     // Do a shake effect if projectile always causes shake, or if we hit a vehicle
@@ -918,7 +918,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Play impact sound & effect
     if (HitSound != none)
     {
-        PlaySound(HitSound,, 5.5 * TransientSoundVolume);
+        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
     }
 
     if (HitEmitterClass != none)

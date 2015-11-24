@@ -61,10 +61,6 @@ defaultproperties
     ShellHitWoodEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
     ShellHitRockEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
     ShellHitWaterEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
-    DirtHitSound=none // so don't play in SpawnExplosionEffects, as will be drowned out by ExplosionSound
-    RockHitSound=none
-    WoodHitSound=none
-    WaterHitSound=none
     DamageRadius=300.0
     MyDamageType=class'DH_Engine.DHShellHE75mmDamageType'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
