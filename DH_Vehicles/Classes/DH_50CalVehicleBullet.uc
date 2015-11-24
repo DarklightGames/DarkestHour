@@ -19,7 +19,7 @@ defaultproperties
     DHPenetrationTable(9)=0.0  // 2500m
     DHPenetrationTable(10)=0.0 // 3000m
 
-    ShellDiameter=12.7
+    ShellDiameter=1.27
     BallisticCoefficient=0.65 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
     Damage=125.0 // same as PTRD, normal MG and rifle bullets are 115
     MyDamageType=class'DH_Vehicles.DH_50CalDamType'

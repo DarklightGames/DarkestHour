@@ -194,12 +194,12 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-1.5)
+        KCOMOffset=(Z=-1.5) // default is -0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.9
+        KMaxAngularSpeed=0.9 // default is 1.0
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
@@ -209,6 +209,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.KParams0'
-    HighDetailOverlayIndex=5
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l48'
 }

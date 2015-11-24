@@ -5,26 +5,6 @@
 
 class DH_FJ45Mortarman extends DH_FJ_1945;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (Headgear.Length == 0)
-    {
-        return none;
-    }
-
-    switch (Rand(Min(3, Headgear.Length))) // random index number between 0 and 3 (or length of Headgear array, if less than 3)
-    {
-        case 0:
-            return Headgear[0];
-        case 1:
-            return Headgear[1];
-        case 2:
-            return Headgear[2];
-        default:
-            return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     bCanUseMortars=true
@@ -44,8 +24,11 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
     GivenItems(1)="DH_Equipment.DHBinocularsItem"
+    HeadgearProbabilities(0)=0.333
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
+    HeadgearProbabilities(1)=0.333
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
+    HeadgearProbabilities(2)=0.334
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet2'
     PrimaryWeaponType=WT_SemiAuto
     Limit=1

@@ -21,7 +21,7 @@ defaultproperties
     FireImpulse=(X=-110000.0)
     GunClass=class'DH_Vehicles.DH_JagdtigerCannon'
     bHasAltFire=false
-    CameraBone="Turret_placement1"
+    CameraBone="Gun"
     DrivePos=(X=2.0,Y=6.0,Z=-3.0)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.0

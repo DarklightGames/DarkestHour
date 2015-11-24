@@ -5,22 +5,6 @@
 
 class DH_BritishSergeantHampshires extends DH_Hampshires;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (Headgear.Length == 0)
-    {
-        return none;
-    }
-    else if (Headgear.Length == 1 || FRand() < 0.5)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     bIsSquadLeader=true

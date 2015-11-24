@@ -19,8 +19,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_GreaseGunWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(1)=class'DH_USPlayers.DH_USTankerHat'
+    Headgear(0)=class'DH_USPlayers.DH_USTankerHat'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     bCanBeTankCrew=true

@@ -2518,10 +2518,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
     if (DamageType != VehicleBurningDamType)
     {
-        Damage *= RandRange(0.75, 1.08);
+        Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
     }
-
-    Damage *= VehicleDamageMod;
+    else
+    {
+        Damage *= VehicleDamageMod;
+    }
 
     // Exit if no damage
     if (Damage < 1)

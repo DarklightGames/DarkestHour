@@ -419,13 +419,13 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 // Modified to run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
 simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 {
-    return !DHVehicleCannon(VW).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // Modified to run penetration calculations on an armored vehicle, but damage any other vehicle automatically
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return DHArmoredVehicle(V).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // From DHBullet
@@ -454,13 +454,20 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
     }
 }
 
-// Modified so tracer bullet switches to DeflectedMesh (from DHBullet)
+// Modified so tracer bullet switches to DeflectedMesh & to destroy TracerEffect if bullet speed is very low (from DHBullet)
 simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
+    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
+    {
+        TracerEffect.Destroy();
+    }
+
     if (StaticMesh != DeflectedMesh)
     {
         SetStaticMesh(DeflectedMesh);
     }
+
+    super.DHDeflect(HitLocation, HitNormal, Wall);
 }
 
 // New function just to add readability to functions
@@ -483,6 +490,17 @@ simulated function Landed(vector HitNormal)
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     Destroy();
+}
+
+// Modified to destroy any tracer effect
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (TracerEffect != none)
+    {
+        TracerEffect.Destroy();
+    }
 }
 
 defaultproperties

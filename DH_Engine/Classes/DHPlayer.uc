@@ -2227,6 +2227,14 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
     }
 }
 
+exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
+{
+    if (DarkestHourGame(Level.Game) != none)
+    {
+        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
+    }
+}
+
 // Modified to actually restart the sway process, not just stop it. This is only called when the player changes stances (crouch prone stand).
 simulated function ResetSwayValues()
 {
@@ -2628,7 +2636,7 @@ state DeadSpectating
     {
         super.BeginState();
 
-        if (bSpawnPointInvalidated)
+        if (bSpawnPointInvalidated && !bIsInSpawnMenu)
         {
             PlayerMenu();
         }
@@ -2895,6 +2903,11 @@ function ClientSaveROIDHash(string ROID)
 {
     ROIDHash = ROID;
     SaveConfig();
+}
+
+exec function TestUTCore()
+{
+    class'DictionaryTest'.static.Test();
 }
 
 defaultproperties

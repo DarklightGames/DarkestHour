@@ -161,7 +161,7 @@ defaultproperties
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-0.2)
+        KCOMOffset=(Z=-0.2) // default is -0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -175,6 +175,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WillysJeep.KParams0'
-    HighDetailOverlay=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jeep'
 }

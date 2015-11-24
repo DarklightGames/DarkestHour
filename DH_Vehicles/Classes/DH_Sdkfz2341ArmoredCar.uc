@@ -188,7 +188,7 @@ defaultproperties
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.3,Z=-0.525)
+        KCOMOffset=(X=0.3,Z=-0.525) // default is X=0.0, Z=-0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -202,7 +202,6 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz2341ArmoredCar.KParams0'
-    HighDetailOverlayIndex=4
     bAllowRiders=true
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_1'
 }

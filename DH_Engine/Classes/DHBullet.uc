@@ -400,6 +400,21 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicle HitVehicle;
     local bool      bPenetratedVehicle;
+    local vector    HitLoc;
+    local Material  HitMat;
+
+    // This stops tracers from bouncing off thin air where the hidden BSP that network cuts is.
+    // It supports network cutting BSP that is textured with a material surface type of `EST_Custom00`
+    if (Wall.bHiddenEd) // `LevelInfo` which is BSP is set to bHiddenEd = true
+    {
+        Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16.0, Location, true,, HitMat);
+
+        if (HitMat != none && HitMat.SurfaceType == EST_Custom00)
+        {
+            Destroy();
+            return;
+        }
+    }
 
     // Hit WallHitActor that we've already hit & recorded
     if (WallHitActor != none && WallHitActor == Wall)
@@ -536,7 +551,7 @@ simulated function Deflect(vector HitNormal)
 
     bHasDeflected = true;
 
-    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0)
+    if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
     {
         TracerEffect.Destroy();
     }
@@ -556,7 +571,7 @@ simulated function Deflect(vector HitNormal)
 
         // Reflect off Wall with damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
-//        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread // TEMP TEST
+        VNorm = VNorm + VRand() * FRand() * 5000.0; // add random spread
         Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
         Bounces--;
     }

@@ -51,7 +51,7 @@ function ShowPanel(bool bShow)
     }
 }
 
-function InitGameType()
+function InitGameType() // TODO: this is being called twice in single player (current game types gets logged twice), so find out why & probably avoid duplication
 {
     local int i;
     local array<CacheManager.GameRecord> Games;

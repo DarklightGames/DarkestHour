@@ -305,7 +305,7 @@ defaultproperties
 {
     bIsApc=true
     PointValue=2.0
-    MinVehicleDamageModifier=0.25 // needs APCDamageModifier of at least 0.25 to damage this type of vehicle
+    ImpactDamageMult=0.001
     LeftTreadIndex=1
     RightTreadIndex=2
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)

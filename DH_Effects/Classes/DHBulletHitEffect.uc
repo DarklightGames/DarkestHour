@@ -27,6 +27,12 @@ simulated function PostNetBeginPlay()
         ST = EST_Default;
     }
 
+    // Exit function (Custom00 is a material that we don't want to spawn effects on)
+    if (ST == EST_Custom00)
+    {
+        return;
+    }
+
     if (HitEffects[ST].HitDecal != none)
     {
         Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);

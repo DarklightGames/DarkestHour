@@ -7,10 +7,10 @@ class DH_StuH42Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=6
-    TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
-    SecondarySpread=0.0015
-    TertiarySpread=0.00357
+    InitialTertiaryAmmo=10
+    TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
+    SecondarySpread=0.00357
+    TertiarySpread=0.00275
     ManualRotationsPerSecond=0.025
     bHasTurret=false
     GunMantletArmorFactor=5.0
@@ -22,8 +22,9 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ProjectileDescriptions(0)="HEAT"
-    ProjectileDescriptions(2)="Smoke"
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(2)="HEAT"
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -67,7 +68,7 @@ defaultproperties
     WeaponFireOffset=-53.5
     AltFireOffset=(X=-167.0,Y=-10.0,Z=14.5)
     bAmbientAltFireSound=true
-    Spread=0.00275
+    Spread=0.0015
     FireInterval=4.0
     AltFireInterval=0.07
     FireSoundVolume=512.0
@@ -75,7 +76,7 @@ defaultproperties
     AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     FireForce="Explosion05"
-    ProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
+    ProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     ShakeRotMag=(Z=50.0)
     ShakeRotRate=(Z=1000.0)
@@ -97,17 +98,14 @@ defaultproperties
     MaxNegativeYaw=-1820
     bLimitYaw=true
     BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=10
-    InitialSecondaryAmmo=20
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=6
     InitialAltAmmo=150
-    PrimaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
     SoundVolume=130
     SoundRadius=200.0
-    HighDetailOverlay=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
 }

@@ -111,4 +111,5 @@ defaultproperties
     SoundRadius=200.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 }

@@ -5,6 +5,19 @@
 
 class DH_M45QuadmountMGPawn extends DHVehicleMGPawn;
 
+// Matt: modified to add workaround fix for weird problem with opacity of gun sights
+// A net client would not render objects correctly through the glass sights shader material, with some objects being rendered in front of the sights
+// But for some weird reason, if we call SetLocation on the VehicleBase, it cures the problem ! (have to do this each time the actor is spawned on a client)
+simulated function InitializeMG()
+{
+    super.InitializeMG();
+
+    if (Role < ROLE_Authority)
+    {
+        VehicleBase.SetLocation(VehicleBase.Location);
+    }
+}
+
 // From ROTankCannonPawn, so the turret movement keys control the weapon
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {

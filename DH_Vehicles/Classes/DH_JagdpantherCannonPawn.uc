@@ -21,7 +21,7 @@ defaultproperties
     FireImpulse=(X=-110000.0)
     GunClass=class'DH_Vehicles.DH_JagdpantherCannon'
     bHasAltFire=false
-    CameraBone="gun_pitch"
+    CameraBone="Gun"
     DrivePos=(X=-3.0,Y=-2.0,Z=-6.0)
     DriveAnim="VStug3_com_idle_close"
     EntryRadius=130.0

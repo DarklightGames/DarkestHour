@@ -761,7 +761,7 @@ function IncreaseAddedPitch()
 {
     local int MechanicalRangesValue, Correction;
 
-    AddedPitch += 2;
+    AddedPitch += 1;
 
     if (RangeSettings.Length > 0)
     {
@@ -770,9 +770,9 @@ function IncreaseAddedPitch()
 
     Correction = AddedPitch - default.AddedPitch;
 
-    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    if (Instigator != none)
     {
-        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
+        Instigator.ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue + Correction @ "       correction =" @ Correction);
     }
 }
 
@@ -780,7 +780,7 @@ function DecreaseAddedPitch()
 {
     local int MechanicalRangesValue, Correction;
 
-    AddedPitch -= 2;
+    AddedPitch -= 1;
 
     if (RangeSettings.Length > 0)
     {
@@ -789,9 +789,9 @@ function DecreaseAddedPitch()
 
     Correction = AddedPitch - default.AddedPitch;
 
-    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    if (Instigator != none)
     {
-        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
+        Instigator.ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue + Correction @ "       correction =" @ Correction);
     }
 }
 
