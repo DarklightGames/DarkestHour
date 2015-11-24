@@ -44,7 +44,6 @@ var     sound           ShatterSound[4];         // sound of the round shatterin
 var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
 var     class<Effects>  CoronaClass;             // tracer effect class
 var     Effects         Corona;                  // shell tracer
-var     bool            bFailedToPenetrateArmor; // flags that we hit an armored vehicle & failed to penetrate it, which makes SpawnExplosionEffects handle it differently
 var     bool            bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
 
 // Camera shakes
@@ -630,32 +629,66 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
 // Although this has actually been written as a generic function that should handle all or most situations
 simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
 {
+    DoShakeEffect();
+
     // Round shatters on vehicle armor
     if (bRoundShattered)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Shell shattered on vehicle armor & failed to penetrate");
+            Level.Game.Broadcast(self, "Round shattered on vehicle armor & failed to penetrate");
         }
 
-        ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-        bRoundShattered = false; // reset for next hit
+        if (EffectIsRelevant(HitLocation, false))
+        {
+            PlaySound(ShatterVehicleHitSound,, 5.5 * TransientSoundVolume);
+            Spawn(ShellShatterEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            PlaySound(ShatterSound[Rand(4)],, 5.5 * TransientSoundVolume);
+        }
+
+        bRoundShattered = false; // reset
+        bDidExplosionFX = true;  // we've played specific shatter effects, so flag this to avoid calling SpawnExplosionEffects
+        Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round explodes on vehicle armor
     else if (bExplodesOnArmor)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Shell failed to penetrate vehicle armor & exploded");
+            Level.Game.Broadcast(self, "Round failed to penetrate vehicle armor & exploded");
         }
 
-        bFailedToPenetrateArmor = true;  // flag that may make SpawnExplosionEffects do different effects
+        if (EffectIsRelevant(HitLocation, false))
+        {
+            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
+            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+
+            // Play random explosion sound if this shell has any
+            if (ExplosionSound.Length > 0)
+            {
+                PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)],, ExplosionSoundVolume * TransientSoundVolume);
+            }
+        }
+
+        bDidExplosionFX = true;  // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-        bFailedToPenetrateArmor = false; // reset
     }
     // Round deflects off vehicle armor
     else
     {
+        SavedHitActor = none; // don't save hitting this vehicle as we deflected
+
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
+        }
+
+        if (NumDeflections < 2 && EffectIsRelevant(HitLocation, false)) // don't play effects if has deflected several times already
+        {
+            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
+            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+        }
+
         DHDeflect(HitLocation, HitNormal, HitActor);
     }
 
@@ -677,18 +710,11 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
     local vector VNorm;
 
-    if (bDebuggingText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
-    }
-
     if (bDebugBallistics)
     {
         HandleShellDebug(HitLocation);
         bDebugBallistics = false; // so we don't keep getting debug reports on subsequent deflections, only the 1st impact
     }
-
-    SavedHitActor = none; // don't save hitting this actor since we deflected
 
     // Don't let this thing constantly deflect
     if (NumDeflections > 5)
@@ -700,10 +726,11 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 
     NumDeflections++;
 
-    // Once we have bounced, just fall to the ground
+    // Once we have bounced, just fall to the ground & remove the projectile's flight sound
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetPhysics(PHYS_Falling);
+        AmbientSound = none;
     }
 
     bTrueBallistics = false;
@@ -714,51 +741,6 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
     VNorm = (Velocity dot HitNormal) * HitNormal;
     Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
     Speed = VSize(Velocity);
-
-    // Play the deflection effects
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        AmbientSound = none;
-        DoShakeEffect();
-
-        if (NumDeflections < 2)
-        {
-            if (EffectIsRelevant(HitLocation, false))
-            {
-                Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
-            }
-
-            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
-        }
-    }
-}
-
-// Shell shatter for when it hit a tank but didn't penetrate
-simulated function ShatterExplode(vector HitLocation, vector HitNormal)
-{
-    if (bDebuggingText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Round shattered on vehicle armor");
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        DoShakeEffect();
-
-        if (!bDidExplosionFX)
-        {
-            PlaySound(ShatterVehicleHitSound,, 5.5 * TransientSoundVolume);
-
-            if (EffectIsRelevant(Location, false))
-            {
-                Spawn(ShellShatterEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-            }
-
-            PlaySound(ShatterSound[Rand(4)],, 5.5 * TransientSoundVolume);
-        }
-    }
-
-    super(DHAntiVehicleProjectile).Explode(HitLocation, HitNormal);
 }
 
 simulated function DoShakeEffect()

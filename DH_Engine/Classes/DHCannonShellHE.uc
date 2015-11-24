@@ -6,28 +6,14 @@
 class DHCannonShellHE extends DHCannonShell
     abstract;
 
-// Modified to add different effects if didn't penetrate armor & to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
+// Modified to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
 {
     local vector Start, Direction;
     local float  DamageScale, Distance;
     local ROPawn Victims;
 
-    // Effects if failed to penetrate vehicle
-    if (bFailedToPenetrateArmor)
-    {
-        PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
-
-        if (EffectIsRelevant(HitLocation, false))
-        {
-            Spawn(ShellDeflectEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-        }
-    }
-    // Otherwise the normal explosion effects
-    else
-    {
-        super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
-    }
+    super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
 
     // Move karma ragdolls around when this explodes
     if (Level.NetMode != NM_DedicatedServer)
