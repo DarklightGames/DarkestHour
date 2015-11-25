@@ -20,30 +20,20 @@ var globalconfig float PenetrationScale; // global penetration depth scale facto
 var globalconfig float DistortionScale;  // global distortion scale factor
 
 
-// Modified to handle world and object penetration
+// Modified to handle world object penetration
 simulated singular function HitWall(vector HitNormal, Actor Wall)
 {
     local vector X, Y, Z, TempHitLocation, TempHitNormal;
     local float  xH, TempMaxWall;
     local Actor  TraceHitActor;
 
-    // Check to prevent recursive calls
-    if (bInHitWall)
+    // Exit without doing anything if we hit something we don't want to count a hit on
+    if (bInHitWall || (Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe) // HEAT adds bInHitWall check to prevent recursive calls
     {
         return;
     }
 
-    // Have we hit a world item we can penetrate?
-    if ((Wall.bStatic || Wall.bWorldGeometry) && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
-    {
-        bHitWorldObject = true;
-    }
-
-    // From here is the standard function from DHAntiVehicleProjectile
-    if ((Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe)
-    {
-        return;
-    }
+    SavedHitActor = Pawn(Wall);
 
     if (bDebuggingText && Role == ROLE_Authority)
     {
@@ -58,7 +48,11 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
         return;
     }
 
-    SavedHitActor = Pawn(Wall);
+    // Check & record whether we hit a world object we can penetrate (added in HEAT)
+    if ((Wall.bStatic || Wall.bWorldGeometry) && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
+    {
+        bHitWorldObject = true;
+    }
 
     if (Role == ROLE_Authority)
     {
@@ -82,23 +76,24 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
                 Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
-            if (DamageRadius > 0.0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
+            if (DamageRadius > 0.0 && ROVehicle(Wall) != none && ROVehicle(Wall).Health > 0) // need this here as vehicle will be ignored by HurtRadius(), as it's the HurtWall actor
             {
-                Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
+                CheckVehicleOccupantsRadiusDamage(ROVehicle(Wall), Damage, DamageRadius, MyDamageType, MomentumTransfer, Location);
             }
 
             HurtWall = Wall;
         }
-        else if (bBotNotifyIneffective && Instigator != none && ROBot(Instigator.Controller) != none)
+        else if (bBotNotifyIneffective && ROBot(InstigatorController) != none)
         {
-            ROBot(Instigator.Controller).NotifyIneffectiveAttack();
+            ROBot(InstigatorController).NotifyIneffectiveAttack();
         }
     }
 
     Explode(Location + ExploWallOut * HitNormal, HitNormal);
-    // End of the standard function from DHAntiVehicleProjectile // Matt: TEST - should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
 
-    bInHitWall = true;
+    // From here is all added in HEAT: // Matt: TEST - should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
+
+    bInHitWall = true; // set flag to prevent recursive calls
 
     // Do the MaxWall calculations
     GetAxes(Rotation, X, Y, Z);
@@ -282,10 +277,6 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
-    DirtHitSound=none // so don't play in SpawnExplosionEffects, as will be drowned out by ExplosionSound
-    RockHitSound=none
-    WoodHitSound=none
-    WaterHitSound=none
     WScale=1.0
     EnergyFactor=1000.0
     PeneExploWallOut=75.0

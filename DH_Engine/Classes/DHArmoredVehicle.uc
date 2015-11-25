@@ -3810,7 +3810,8 @@ event CheckReset()
 function bool EncroachingOn(Actor Other)
 {
     // If its a player pawn, do lots of damage & call ObjectCrushed()
-    if (Pawn(Other) != none && Vehicle(Other) == none && Other != Instigator && Other.Role == ROLE_Authority && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
+    if (Pawn(Other) != none && Vehicle(Other) == none && Other != Instigator && Other.Role == ROLE_Authority
+        && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
     {
         Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
         ObjectCrushed(2.0);

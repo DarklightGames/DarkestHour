@@ -127,6 +127,25 @@ simulated function InitEffects()
     }
 }
 
+// Modified to destroy BarrelEffectEmitters
+simulated function DestroyEffects()
+{
+    local int i;
+
+    super.DestroyEffects();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        for (i = 0; i < arraycount(BarrelEffectEmitter); ++i)
+        {
+            if (BarrelEffectEmitter[i] != none)
+            {
+                BarrelEffectEmitter[i].Destroy();
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh

@@ -7,9 +7,9 @@ class DHObstacleManager extends Actor
     notplaceable;
 
 const BITFIELD_COUNT = 8;
-const BITFIELD_LENGTH = 16;
-const BITS_PER_FIELD = 128; //BITFIELD_LENGTH * 8
-const MAX_OBSTACLES = 4096; //BITFIELD_LENGTH * BITS_PER_FIELD;
+const BITFIELD_LENGTH = 32;
+const BITS_PER_FIELD = 256; //BITFIELD_LENGTH * 8
+const MAX_OBSTACLES = 2048; //BITFIELD_COUNT * BITS_PER_FIELD;
 const OBSTACLE_TYPE_INDEX_INVALID = -1;
 
 // In order to keep network traffic down while keeping the number of managed

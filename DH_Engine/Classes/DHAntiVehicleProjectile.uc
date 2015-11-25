@@ -44,7 +44,6 @@ var     sound           ShatterSound[4];         // sound of the round shatterin
 var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
 var     class<Effects>  CoronaClass;             // tracer effect class
 var     Effects         Corona;                  // shell tracer
-var     bool            bFailedToPenetrateArmor; // flags that we hit an armored vehicle & failed to penetrate it, which makes SpawnExplosionEffects handle it differently
 var     bool            bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
 
 // Camera shakes
@@ -316,6 +315,8 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
         return;
     }
 
+    SavedHitActor = Pawn(Wall);
+
     if (bDebuggingText && Role == ROLE_Authority)
     {
         DebugShotDistanceAndSpeed();
@@ -328,8 +329,6 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
 
         return;
     }
-
-    SavedHitActor = Pawn(Wall);
 
 //  super(ROBallisticProjectile).HitWall(HitNormal, Wall); // removed as just duplicates shell debugging
 
@@ -630,32 +629,66 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
 // Although this has actually been written as a generic function that should handle all or most situations
 simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
 {
+    DoShakeEffect();
+
     // Round shatters on vehicle armor
     if (bRoundShattered)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Shell shattered on vehicle armor & failed to penetrate");
+            Level.Game.Broadcast(self, "Round shattered on vehicle armor & failed to penetrate");
         }
 
-        ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-        bRoundShattered = false; // reset for next hit
+        if (EffectIsRelevant(HitLocation, false))
+        {
+            PlaySound(ShatterVehicleHitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+            Spawn(ShellShatterEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            PlaySound(ShatterSound[Rand(4)], SLOT_None, 5.5 * TransientSoundVolume);
+        }
+
+        bRoundShattered = false; // reset
+        bDidExplosionFX = true;  // we've played specific shatter effects, so flag this to avoid calling SpawnExplosionEffects
+        Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round explodes on vehicle armor
     else if (bExplodesOnArmor)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Shell failed to penetrate vehicle armor & exploded");
+            Level.Game.Broadcast(self, "Round failed to penetrate vehicle armor & exploded");
         }
 
-        bFailedToPenetrateArmor = true;  // flag that may make SpawnExplosionEffects do different effects
+        if (EffectIsRelevant(HitLocation, false))
+        {
+            PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+
+            // Play random explosion sound if this shell has any
+            if (ExplosionSound.Length > 0)
+            {
+                PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume);
+            }
+        }
+
+        bDidExplosionFX = true;  // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-        bFailedToPenetrateArmor = false; // reset
     }
     // Round deflects off vehicle armor
     else
     {
+        SavedHitActor = none; // don't save hitting this vehicle as we deflected
+
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
+        }
+
+        if (NumDeflections < 2 && EffectIsRelevant(HitLocation, false)) // don't play effects if has deflected several times already
+        {
+            PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+        }
+
         DHDeflect(HitLocation, HitNormal, HitActor);
     }
 
@@ -677,18 +710,11 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
     local vector VNorm;
 
-    if (bDebuggingText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
-    }
-
     if (bDebugBallistics)
     {
         HandleShellDebug(HitLocation);
         bDebugBallistics = false; // so we don't keep getting debug reports on subsequent deflections, only the 1st impact
     }
-
-    SavedHitActor = none; // don't save hitting this actor since we deflected
 
     // Don't let this thing constantly deflect
     if (NumDeflections > 5)
@@ -700,10 +726,11 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 
     NumDeflections++;
 
-    // Once we have bounced, just fall to the ground
+    // Once we have bounced, just fall to the ground & remove the projectile's flight sound
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetPhysics(PHYS_Falling);
+        AmbientSound = none;
     }
 
     bTrueBallistics = false;
@@ -714,51 +741,6 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
     VNorm = (Velocity dot HitNormal) * HitNormal;
     Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
     Speed = VSize(Velocity);
-
-    // Play the deflection effects
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        AmbientSound = none;
-        DoShakeEffect();
-
-        if (NumDeflections < 2)
-        {
-            if (EffectIsRelevant(HitLocation, false))
-            {
-                Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
-            }
-
-            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
-        }
-    }
-}
-
-// Shell shatter for when it hit a tank but didn't penetrate
-simulated function ShatterExplode(vector HitLocation, vector HitNormal)
-{
-    if (bDebuggingText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Round shattered on vehicle armor");
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        DoShakeEffect();
-
-        if (!bDidExplosionFX)
-        {
-            PlaySound(ShatterVehicleHitSound,, 5.5 * TransientSoundVolume);
-
-            if (EffectIsRelevant(Location, false))
-            {
-                Spawn(ShellShatterEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-            }
-
-            PlaySound(ShatterSound[Rand(4)],, 5.5 * TransientSoundVolume);
-        }
-    }
-
-    super(DHAntiVehicleProjectile).Explode(HitLocation, HitNormal);
 }
 
 simulated function DoShakeEffect()
@@ -847,35 +829,38 @@ simulated function UpdateInstigator()
 // New function just to consolidate long code that's repeated in more than one function
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
 {
-    local vector        TraceHitLocation, TraceHitNormal;
-    local Material      HitMaterial;
-    local ESurfaceTypes SurfType;
-    local bool          bShowDecal, bSnowDecal;
+    local sound          HitSound;
+    local class<Emitter> HitEmitterClass;
+    local vector         TraceHitLocation, TraceHitNormal;
+    local Material       HitMaterial;
+    local ESurfaceTypes  SurfType;
+    local bool           bShowDecal, bSnowDecal;
+
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
 
     // Play random explosion sound if this shell has any
     if (ExplosionSound.Length > 0)
     {
-        PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)],, ExplosionSoundVolume * TransientSoundVolume);
+        PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume);
     }
 
-    // Do a shake effect if projectile always does or if hit a vehicle
-    if (bAlwaysDoShakeEffect || SavedHitActor != none)
+    // Do a shake effect if projectile always causes shake, or if we hit a vehicle
+    if (bAlwaysDoShakeEffect || ROVehicle(SavedHitActor) != none)
     {
         DoShakeEffect();
     }
 
-    // Hit a vehicle - do hit effects
-    if (SavedHitActor != none)
+    // Hit a vehicle - set hit effects
+    if (ROVehicle(SavedHitActor) != none)
     {
-        PlaySound(VehicleHitSound,, 5.5 * TransientSoundVolume);
-
-        if (EffectIsRelevant(HitLocation, false))
-        {
-            Spawn(ShellHitVehicleEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-            bShowDecal = true;
-        }
+        HitSound = VehicleHitSound;
+        HitEmitterClass = ShellHitVehicleEffectClass;
     }
-    // Hit something else - get material type & do effects
+    // Hit something else - get material type & set effects
+    // Matt TODO: I am aware of a problem where shell effects aren't playing for other net players - it is failing the EffectIsRelevant test below - I will fix tomorrow (25th Nov)
     else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX && EffectIsRelevant(HitLocation, false))
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
@@ -893,8 +878,8 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         {
             case EST_Snow:
             case EST_Ice:
-                Spawn(ShellHitSnowEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(DirtHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = DirtHitSound;
+                HitEmitterClass = ShellHitSnowEffectClass;
                 bShowDecal = true;
                 bSnowDecal = true;
                 break;
@@ -902,22 +887,21 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
             case EST_Rock:
             case EST_Gravel:
             case EST_Concrete:
-                Spawn(ShellHitRockEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(RockHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = RockHitSound;
+                HitEmitterClass = ShellHitRockEffectClass;
                 bShowDecal = true;
                 break;
 
             case EST_Wood:
             case EST_HollowWood:
-                Spawn(ShellHitWoodEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(WoodHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = WoodHitSound;
+                HitEmitterClass = ShellHitWoodEffectClass;
                 bShowDecal = true;
                 break;
 
             case EST_Water:
-                Spawn(ShellHitWaterEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume); // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
-                bShowDecal = false;
+                HitSound = WaterHitSound; // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
+                HitEmitterClass = ShellHitWaterEffectClass;
                 break;
 
             case EST_Custom00:
@@ -925,15 +909,26 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 break;
 
             default:
-                Spawn(ShellHitDirtEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
-                PlaySound(DirtHitSound,, 5.5 * TransientSoundVolume);
+                HitSound = DirtHitSound;
+                HitEmitterClass = ShellHitDirtEffectClass;
                 bShowDecal = true;
                 break;
         }
     }
 
+    // Play impact sound & effect
+    if (HitSound != none)
+    {
+        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+    }
+
+    if (HitEmitterClass != none)
+    {
+        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
+    }
+
     // Spawn explosion decal
-    if (bShowDecal && Level.NetMode != NM_DedicatedServer)
+    if (bShowDecal)
     {
         // Adjust decal position to reverse any offset already applied to passed HitLocation to spawn explosion effects away from hit surface (e.g. PeneExploWall adjustment in HEAT shell)
         if (ActualLocationAdjustment != 0.0)
