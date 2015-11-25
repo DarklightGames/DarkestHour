@@ -25,7 +25,7 @@ defaultproperties
     DamagedEffectClass=none
     DamagedEffectScale=0.85
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    BeginningIdleAnim=
+    BeginningIdleAnim=""
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
     VehicleHudOccupantsX(0)=0.0

@@ -2,25 +2,49 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
+// Implementation is based on minimal-json (github.com/ralfstx/minimal-json)
+//==============================================================================
 
-class JSONObject extends Object;
+class JSONObject extends JSONValue;
 
-enum EJSONObjectType
+var private Dictionary<string, JSONValue> Values;
+
+function bool IsString()
 {
-    JOT_Primitive,
-    JOT_Object,
-    JOT_Array,
-    JOT_String,
-};
+    return true;
+}
 
-struct JSONData
+function string AsString()
 {
-    var float Number;
-    var string String;
-    var bool Boolean;
-    var array<JSONObject> Array;
-    //var ObjectDictionary Object;
-};
+    return String;
+}
 
-var EJSONObjectType Type;
-var JSONData        Data;
+function JSONValue Get(string Key)
+{
+    return Values.Get(Key);
+}
+
+function Put(string Key, JSONValue)
+{
+    return Values.Put(Key, Value);
+}
+
+function AddString(string Key, string Value)
+{
+    Values.Add(Key, JSONString.static.Create(Value));
+}
+
+function AddInt(string Key, int Value)
+{
+    Values.Add(Key, JSONNumber.static.CreateInt(Value));
+}
+
+function AddFloat(string Key, float Value)
+{
+    Values.Add(Key, JSONNumber.static.CreateFloat(Value));
+}
+
+function AddValue(string Key, JSONValue Value)
+{
+    Values.Add(Key, Value);
+}

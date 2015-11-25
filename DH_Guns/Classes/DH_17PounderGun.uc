@@ -26,7 +26,7 @@ defaultproperties
     DamagedEffectScale=0.85
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
     VehicleTeam=1
-    BeginningIdleAnim=
+    BeginningIdleAnim=""
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
     VehicleHudOccupantsX(0)=0.0
@@ -38,7 +38,7 @@ defaultproperties
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
-    DriveAnim=
+    DriveAnim=""
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=10.0)
     EntryRadius=500.0
     DriverDamageMult=1.0

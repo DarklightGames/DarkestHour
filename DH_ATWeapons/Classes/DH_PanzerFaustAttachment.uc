@@ -115,7 +115,7 @@ defaultproperties
     PA_IdleProneAnim="prone_idle_faust"
     PA_ReloadAnim="stand_reload_faust"
     PA_ProneReloadAnim="prone_reload_faust"
-    PA_ReloadEmptyAnim="reload_k98
+    PA_ReloadEmptyAnim="reload_k98"
     PA_ProneReloadEmptyAnim="prone_reload_faust"
     PA_ProneIdleRestAnim="prone_idle_faust"
     PA_BayonetAttachAnim="bayattach_faust"

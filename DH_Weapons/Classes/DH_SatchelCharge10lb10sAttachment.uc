@@ -159,8 +159,8 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_satchel"
     PA_IdleIronWeaponAnim="stand_idleiron_satchel"
     PA_IdleProneAnim="prone_idle_satchel"
-    PA_ReloadAnim=
-    PA_ProneReloadAnim=
+    PA_ReloadAnim=""
+    PA_ProneReloadAnim=""
     PA_ProneIdleRestAnim="prone_idle_satchel"
     PA_Fire="stand_throw_satchel"
     PA_IronFire="stand_shootiron_satchel"

@@ -71,7 +71,7 @@ defaultproperties
     ImpactDamageMult=0.001
     VehicleTeam=1
     SteeringScaleFactor=4.0
-    BeginningIdleAnim=
+    BeginningIdleAnim=""
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudEngineY=0.25

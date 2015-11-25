@@ -135,8 +135,8 @@ defaultproperties
     PA_IdleIronWeaponAnim="stand_idleiron_binoc"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_binoc"
     PA_IdleProneAnim="prone_idle_binoc"
-    PA_ReloadAnim=
-    PA_ProneReloadAnim=
+    PA_ReloadAnim=""
+    PA_ProneReloadAnim=""
     PA_ProneIdleRestAnim="prone_idle_binoc"
     PA_Fire="stand_shoothip_binoc"
     PA_IronFire="stand_shootiron_binoc"

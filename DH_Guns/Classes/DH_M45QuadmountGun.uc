@@ -17,7 +17,7 @@ defaultproperties
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DamagedEffectClass=none
     VehicleTeam=1
-    BeginningIdleAnim=
+    BeginningIdleAnim=""
     VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.m45_body'
     VehicleHudOccupantsX(0)=0.0
     VehicleHudOccupantsX(1)=0.0

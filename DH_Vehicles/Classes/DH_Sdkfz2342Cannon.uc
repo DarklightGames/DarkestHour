@@ -73,7 +73,7 @@ defaultproperties
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet''
+    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
     ShakeRotMag=(Z=50.0)
     ShakeRotRate=(Z=1000.0)
     ShakeRotTime=4.0

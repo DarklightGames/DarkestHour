@@ -166,8 +166,8 @@ defaultproperties
     ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)        //commander's hatch
     ExitPositions(2)=(X=125.0,Y=25.0,Z=200.0)       //mg's hatch
     ExitPositions(3)=(X=-100.0,Y=-150.0,Z=75.0)     //passenger (l)
-    ExitPositions(4)=(X=-250.0,Y=-35.0.0,Z=75.0)    //passenger (rl)
-    ExitPositions(5)=(X=-250.0,Y=35.0.0,Z=75.0)     //passenger (rr)
+    ExitPositions(4)=(X=-250.0,Y=-35.0,Z=75.0)    //passenger (rl)
+    ExitPositions(5)=(X=-250.0,Y=35.0,Z=75.0)     //passenger (rr)
     ExitPositions(6)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
     ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
     EntryRadius=375.0

@@ -1,0 +1,13 @@
+class Set extends Object;
+
+function bool Put(string Key)
+{
+}
+
+function bool Erase(string Key)
+{
+}
+
+function bool Contains(string Key)
+{
+}

@@ -5,8 +5,7 @@
 
 class Dictionary extends Object;
 
-var DictionaryNode Head;
-
+var private DictionaryNode Head;
 // This is a global string array used by GetKeys and GetValues.
 // Arrays are copied when passed as function arguments, which would be a
 // performance nightmare. Since UnrealScript code runs on a single-thread, this
