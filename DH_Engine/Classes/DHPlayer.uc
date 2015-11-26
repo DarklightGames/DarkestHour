@@ -2636,9 +2636,9 @@ state DeadSpectating
     {
         super.BeginState();
 
-        if (bSpawnPointInvalidated && !bIsInSpawnMenu)
+        if (!PlayerReplicationInfo.bOnlySpectator && bSpawnPointInvalidated)
         {
-            PlayerMenu();
+            ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
 }
@@ -2890,6 +2890,8 @@ function ServerListPlayers()
 // Similar to ClientOpenMenu(), but only opens menu if no menu is already open
 event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 {
+    Log("ClientProposeMenu" @ Menu @ Msg1 @ Msg2);
+
     if (GUIController(Player.GUIController).ActivePage == none)
     {
         if (!Player.GUIController.OpenMenu(Menu, Msg1, Msg2))
@@ -2905,7 +2907,7 @@ function ClientSaveROIDHash(string ROID)
     SaveConfig();
 }
 
-exec function TestUTCore()
+exec function TestUCore()
 {
     class'DictionaryTest'.static.Test();
 }

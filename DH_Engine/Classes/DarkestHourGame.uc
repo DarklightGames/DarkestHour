@@ -2314,6 +2314,8 @@ function RestartPlayer(Controller C)
 
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
+    local DHPlayer PC;
+
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
@@ -2327,7 +2329,12 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     }
     else if (!DHRestartPlayer(C, bHandleReinforcements) && PlayerController(C) != none)
     {
-        PlayerController(C).ClientReplaceMenu("DH_Interface.DHDeployMenu");
+        PC = DHPlayer(C);
+
+        if (PC != none)
+        {
+            PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
+        }
     }
 }
 
