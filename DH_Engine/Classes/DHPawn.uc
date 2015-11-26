@@ -2626,6 +2626,8 @@ simulated function PlayMantle()
     local float AnimTimer;
     local bool  bLocallyControlled;
 
+    const MANTLE_ANIM_RATE = 1.25;
+
     bPhysicsAnimUpdate = false;
     LockRootMotion(1); // lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
     bLocallyControlled = IsLocallyControlled();
@@ -2637,7 +2639,7 @@ simulated function PlayMantle()
     }
 
     Anim = SetMantleAnim();
-    AnimTimer = GetAnimDuration(Anim, 1.0) + 0.1;
+    AnimTimer = GetAnimDuration(Anim, MANTLE_ANIM_RATE) + 0.1;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !bLocallyControlled))
     {
@@ -2649,12 +2651,12 @@ simulated function PlayMantle()
         if (Role < ROLE_Authority && bLocallyControlled)
         {
             SetTimer(AnimTimer + 0.05, false);
-            PlayAnim(Anim, 1.0, 0.15, 0);
+            PlayAnim(Anim, MANTLE_ANIM_RATE, 0.15, 0);
         }
         else
         {
             SetTimer(AnimTimer, false);
-            PlayAnim(Anim, 1.0, 0.1, 0);
+            PlayAnim(Anim, MANTLE_ANIM_RATE, 0.1, 0);
         }
     }
 
