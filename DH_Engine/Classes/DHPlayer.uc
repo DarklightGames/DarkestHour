@@ -88,7 +88,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientProposeMenu, ClientSaveROIDHash, ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
+        ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash, ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -2876,7 +2876,7 @@ function ServerListPlayers()
         if( PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
         {
             ClientMessage(Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName@" "$PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
-            ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ "\\n";
+            ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ Chr(0xA);
         }
         else
         {
@@ -2884,7 +2884,13 @@ function ServerListPlayers()
         }
     }
 
-    CopyToClipboard(ParseString);
+    ClientCopyToClipboard(ParseString);
+}
+
+// New function for server to tell client to copy string into it's clipboard
+function ClientCopyToClipboard(string Str)
+{
+    CopyToClipBoard(Str);
 }
 
 // Similar to ClientOpenMenu(), but only opens menu if no menu is already open
