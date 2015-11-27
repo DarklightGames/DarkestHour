@@ -113,10 +113,10 @@ defaultproperties
     FireVolume=512.0
     maxVerticalRecoilAngle=900
     maxHorizontalRecoilAngle=180
-    PctStandIronRecoil=0.75
-    PctCrouchRecoil=0.65
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.25
+    PctStandIronRecoil=0.42
+    PctCrouchRecoil=0.75
+    PctCrouchIronRecoil=0.32
+    PctProneIronRecoil=0.22
     PctBipodDeployRecoil=0.05
     PctRestDeployRecoil=0.1
     RecoilRate=0.075
@@ -129,7 +129,7 @@ defaultproperties
     FireLoopAnim="Shoot_Loop"
     FireEndAnim="Shoot_End"
     TweenTime=0.0
-    FireRate=0.12
+    FireRate=0.08
     AmmoClass=class'DH_Weapons.DH_FG42Ammo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=150.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
