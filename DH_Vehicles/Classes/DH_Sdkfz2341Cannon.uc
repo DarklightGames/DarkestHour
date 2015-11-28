@@ -216,7 +216,7 @@ state ProjectileFireMode
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
-    local vector     StartLocation, HitLocation, HitNormal, Extent;
+    local vector     StartLocation, HitNormal;
     local rotator    FireRot;
 
     // Calculate projectile's starting rotation
