@@ -3,11 +3,17 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OrangeSmokeEffect extends DH_SmokeEffectBase;
+class DHSmokeEffectBase_Colored extends DHSmokeEffectBase
+    abstract;
+
+var(Texture) texture SmokeTexture;
+var(Time)    float   SmokeReductionDelay; // after this time, Timer() begins to reduce the velocity, size, lifetime & fade time of the smoke particles
 
 simulated function PostBeginPlay()
 {
-    SetTimer(20.0, false);
+    Emitters[0].Texture = SmokeTexture;
+
+    SetTimer(SmokeReductionDelay, false);
 }
 
 simulated function Timer()
@@ -37,6 +43,7 @@ simulated function Timer()
 defaultproperties
 {
     LifeSpan=50.0
+    SmokeReductionDelay=20.0
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
@@ -48,8 +55,6 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         Acceleration=(X=7.0)
-        ColorScale(0)=(Color=(G=155,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.0,Color=(G=155,R=255,A=255))
         Opacity=0.6
         FadeOutStartTime=18.0
         FadeInEndTime=0.5
@@ -63,10 +68,9 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         InitialParticlesPerSecond=5.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'DH_FX_Tex.Smoke.grenadesmokeOrange'
         LifetimeRange=(Min=25.0,Max=30.0)
         StartVelocityRange=(X=(Min=-15.0,Max=15.0),Y=(Min=-10.0,Max=10.0),Z=(Min=40.0,Max=70.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.05,Max=0.05),Z=(Min=0.1,Max=0.1))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_OrangeSmokeEffect.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'DHSmokeEffectBase_Colored.SpriteEmitter0'
 }

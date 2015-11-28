@@ -47,7 +47,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DH_SmokeGrenadeEffect'
+    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
     SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0

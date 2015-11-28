@@ -3,13 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SmokeShellEffect_Large extends Emitter;
-
-// Modified so in single player this effect is removed if the ResetGame option is used (note this won't work on a net client as Reset is only called on the server)
-simulated function Reset()
-{
-    Destroy();
-}
+class DHSmokeEffect_LargeShell extends DHSmokeEffectBase;
 
 defaultproperties
 {
@@ -135,12 +129,4 @@ defaultproperties
         VelocityLossRange=(X=(Min=0.15,Max=0.15),Y=(Min=0.15,Max=0.15),Z=(Min=0.1,Max=0.1))
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter3'
-    AutoDestroy=true
-    bNoDelete=false
-    bNetTemporary=true
-    RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=65.0
-    Style=STY_Masked
-    bHardAttach=true
-    bDirectional=true
 }

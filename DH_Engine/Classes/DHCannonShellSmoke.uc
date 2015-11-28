@@ -58,7 +58,7 @@ defaultproperties
 {
     RoundType=RT_Smoke
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
-    SmokeEmitterClass=class'DH_Effects.DH_SmokeShellEffect'
+    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Shell'
     SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SmokeEffectBase extends Emitter
+class DHSmokeEffectBase extends Emitter
     abstract;
 
 // Modified so in single player this effect is removed if the ResetGame option is used (note this won't work on a net client as Reset is only called on the server)

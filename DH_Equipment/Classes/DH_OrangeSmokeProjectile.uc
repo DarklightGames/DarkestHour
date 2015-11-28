@@ -9,5 +9,5 @@ defaultproperties
 {
     MyDamageType=class'DH_Equipment.DH_OrangeSmokeDamType'
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Ger_OrangeSmokeGrenade_throw'
-    SmokeEmitterClass=class'DH_Effects.DH_OrangeSmokeEffect'
+    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Orange'
 }
