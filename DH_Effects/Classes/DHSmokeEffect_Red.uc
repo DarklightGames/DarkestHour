@@ -7,5 +7,5 @@ class DHSmokeEffect_Red extends DHSmokeEffectBase_Colored;
 
 defaultproperties
 {
-    SmokeTexture=texture'DH_FX_Tex.Smoke.grenadesmokeRed'
+    SmokeColor=(R=255,G=32,B=32)
 }

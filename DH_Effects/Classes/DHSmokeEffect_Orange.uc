@@ -7,5 +7,5 @@ class DHSmokeEffect_Orange extends DHSmokeEffectBase_Colored;
 
 defaultproperties
 {
-    SmokeTexture=texture'DH_FX_Tex.Smoke.grenadesmokeOrange'
+    SmokeColor=(R=255,G=128,B=0)
 }
