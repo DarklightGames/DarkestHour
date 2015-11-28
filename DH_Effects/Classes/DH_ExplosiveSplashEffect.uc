@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ExplosiveSplashEffect extends emitter;
+class DH_ExplosiveSplashEffect extends Emitter;
 
 defaultproperties
 {
