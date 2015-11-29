@@ -111,9 +111,10 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: emptied out to remove delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
+// Matt: disabled no longer use delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
 simulated function Tick(float DeltaTime)
 {
+    Disable('Tick');
 }
 
 // Borrowed from AB: Just using a standard linear interpolation equation here

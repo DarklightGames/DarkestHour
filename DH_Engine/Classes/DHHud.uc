@@ -68,6 +68,18 @@ var bool                bDebugVehicleWheels;    // show all vehicle's physics wh
 
 var DHGameReplicationInfo   DHGRI;
 
+// Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
+simulated function Tick(float deltaTime)
+{
+    Disable('Tick');
+}
+
+// Emptied out as became redundant in RO, but still gets called every Tick from PostRender/DrawHud functions
+// Would only do anything if one of the DamageTime array members was set to > 0, but that only happened in HudBase.DisplayHit() & it was removed in RO
+function DrawDamageIndicators(Canvas C)
+{
+}
+
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_GUI_Tex.GUI.overheadmap_Icons');
