@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GermanYellowOrangeTracer extends Emitter;
+class DHBulletTracer_YellowOrange extends Emitter;
 
 defaultproperties
 {
@@ -30,7 +30,7 @@ defaultproperties
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=1.5,Max=2.5)
     End Object
-    Emitters(0)=TrailEmitter'DH_Effects.DH_GermanYellowOrangeTracer.TrailEmitter0'
+    Emitters(0)=TrailEmitter'DH_Effects.DHBulletTracer_YellowOrange.TrailEmitter0'
     AutoDestroy=true
     bNoDelete=false
     Physics=PHYS_Trailer

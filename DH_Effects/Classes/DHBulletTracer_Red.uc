@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AmericanRedTracer extends Emitter;
+class DHBulletTracer_Red extends Emitter;
 
 defaultproperties
 {
@@ -30,7 +30,7 @@ defaultproperties
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=1.5,Max=2.5)
     End Object
-    Emitters(0)=TrailEmitter'DH_Effects.DH_AmericanRedTracer.TrailEmitter0'
+    Emitters(0)=TrailEmitter'DH_Effects.DHBulletTracer_Red.TrailEmitter0'
     AutoDestroy=true
     bNoDelete=false
     Physics=PHYS_Trailer

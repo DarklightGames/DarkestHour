@@ -3,13 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHCannonShellAPDS extends DHCannonShell
-    abstract;
+class DHShellTracer_Red extends DHShellTracer;
 
 defaultproperties
 {
-    RoundType=RT_APDS
-    bShatterProne=true
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
 }

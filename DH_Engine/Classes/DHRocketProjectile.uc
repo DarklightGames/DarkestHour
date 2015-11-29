@@ -111,7 +111,7 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
     StraightFlightTime=0.2
-    CoronaClass=class'DH_Effects.DH_OrangeTankShellTracer'
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     PenetrationMag=250.0
     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
     ImpactDamage=675

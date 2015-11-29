@@ -149,7 +149,7 @@ simulated function Destroyed()
 defaultproperties
 {
     bHasTracer=true
-    CoronaClass=class'DH_Effects.DH_RedTankShellTracerBig'
+    CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'

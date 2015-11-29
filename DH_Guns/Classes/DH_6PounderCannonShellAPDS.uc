@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_6PounderCannonShellAPDS extends  DHCannonShellAPDS;
+class DH_6PounderCannonShellAPDS extends DHCannonShellAPDS;
 
 defaultproperties
 {
@@ -41,7 +41,6 @@ defaultproperties
     DHPenetrationTable(10)=6.4
     ShellDiameter=3.7
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
-    CoronaClass=class'DH_Effects.DH_RedTankShellTracer'
     ShellImpactDamage=class'DH_Guns.DH_6PounderCannonShellDamageAPDS'
     ImpactDamage=300
     BallisticCoefficient=1.15

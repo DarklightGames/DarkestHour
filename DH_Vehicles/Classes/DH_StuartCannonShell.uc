@@ -21,7 +21,7 @@ defaultproperties
     ShellDiameter=3.7
     bShatterProne=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
-    CoronaClass=class'DH_Effects.DH_RedTankShellTracer'
+    CoronaClass=class'DH_Effects.DHShellTracer_Red'
     ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
     ImpactDamage=250
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'

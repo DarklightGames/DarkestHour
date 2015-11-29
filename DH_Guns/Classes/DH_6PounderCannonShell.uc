@@ -42,7 +42,7 @@ defaultproperties
     ShellDiameter=5.7
     bShatterProne=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
-    CoronaClass=class'DH_Effects.DH_RedTankShellTracer'
+    CoronaClass=class'DH_Effects.DHShellTracer_Red'
     ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
     ImpactDamage=350
     BallisticCoefficient=1.19

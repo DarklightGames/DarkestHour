@@ -46,7 +46,7 @@ defaultproperties
     DHPenetrationTable(10)=10.0
     ShellDiameter=7.5
     bIsAlliedShell=false
-    CoronaClass=class'DH_Effects.DH_OrangeTankShellTracer'
+    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
     ImpactDamage=650
     BallisticCoefficient=2.1
     Speed=33073.0

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrCannonShellAPDS extends  DHCannonShellAPDS;
+class DH_Cromwell6PdrCannonShellAPDS extends DHCannonShellAPDS;
 
 defaultproperties
 {
@@ -45,7 +45,6 @@ defaultproperties
     DHPenetrationTable(10)=6.4
     ShellDiameter=3.7
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
-    CoronaClass=class'DH_Effects.DH_RedTankShellTracer'
     ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAPDS'
     ImpactDamage=300
     BallisticCoefficient=1.15
