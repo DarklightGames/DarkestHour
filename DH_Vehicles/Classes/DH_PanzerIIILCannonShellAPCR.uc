@@ -42,6 +42,7 @@ defaultproperties
     ShellDiameter=5.0
     bIsAlliedShell=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
     ImpactDamage=325
     BallisticCoefficient=0.95
