@@ -8,7 +8,7 @@ class DH_STG44Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"
     PA_MovementAnims(2)="stand_jogL_stg44"

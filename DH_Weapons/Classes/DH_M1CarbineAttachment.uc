@@ -12,7 +12,7 @@ defaultproperties
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
