@@ -757,11 +757,8 @@ simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfa
 {
     switch (SurfaceType)
     {
-        case EST_Ice:
-            HitEmitterClass = HitSnowEmitterClass;
-            return;
-
         case EST_Snow:
+        case EST_Ice:
             HitEmitterClass = HitSnowEmitterClass;
             return;
 
@@ -812,7 +809,7 @@ simulated state Whistle
         local float Pitch;
 
         SetPhysics(PHYS_None);
-        Velocity = vect(0,0,0);
+        Velocity = vect(0.0, 0.0, 0.0);
         SetTimer(GetSoundDuration(DescendingSound), false);
 
         if (Level.NetMode == NM_Standalone || Level.NetMode == NM_Client)

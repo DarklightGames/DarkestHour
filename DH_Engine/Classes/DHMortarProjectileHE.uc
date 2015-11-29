@@ -32,11 +32,8 @@ simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterC
 {
     switch (SurfaceType)
     {
-        case EST_Ice:
-            ExplosionEmitterClass = SnowExplosionEmitterClass;
-            return;
-
         case EST_Snow:
+        case EST_Ice:
             ExplosionEmitterClass = SnowExplosionEmitterClass;
             return;
 
@@ -54,11 +51,8 @@ simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes Sur
 {
     switch (SurfaceType)
     {
-        case EST_Ice:
-            ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
-            return;
-
         case EST_Snow:
+        case EST_Ice:
             ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
             return;
 
@@ -76,11 +70,8 @@ simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalCla
 {
     switch (SurfaceType)
     {
-        case EST_Ice:
-            ExplosionDecalClass = ExplosionDecalSnow;
-            return;
-
         case EST_Snow:
+        case EST_Ice:
             ExplosionDecalClass = ExplosionDecalSnow;
             return;
 
@@ -122,28 +113,29 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
     }
 }
 
+// Modified to stop shell from exploding if it's a dud or if it's in a no arty volume
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local DHVolumeTest VT;
 
-    VT = Spawn(class'DHVolumeTest',,, HitLocation);
-
-    if (VT.IsInNoArtyVolume())
+    // Check if in no arty volume & just make the shell a dud if it is
+    if (!bDud)
     {
-        bDud = true;
+        VT = Spawn(class'DHVolumeTest',,, HitLocation);
+        bDud = VT.IsInNoArtyVolume();
+        VT.Destroy();
     }
 
-    VT.Destroy();
-
+    // If shell is a dud then impact effects only
     if (bDud)
     {
         DoHitEffects(HitLocation, HitNormal);
-        Destroy();
-
-        return;
     }
-
-    super.Explode(HitLocation, HitNormal);
+    // Otherwise explode normally
+    else
+    {
+        super.Explode(HitLocation, HitNormal);
+    }
 
     Destroy();
 }
