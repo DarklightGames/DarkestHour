@@ -3263,6 +3263,14 @@ static function StaticPrecache(LevelInfo L)
         }
     }
 
+    for (i = 0; i < default.CannonSkins.Length; ++i)
+    {
+        if (default.CannonSkins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.CannonSkins[i]);
+        }
+    }
+
     for (i = 0; i < default.DestroyedMeshSkins.Length; ++i)
     {
         if (default.DestroyedMeshSkins[i] != none)

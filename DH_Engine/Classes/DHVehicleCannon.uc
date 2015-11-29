@@ -137,7 +137,6 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
             }
 
             // Option to skin the cannon mesh using CannonSkins specified in vehicle class
-            // TODO: have only added tiger in this way, so add other CannonSkins later & make a big reduction in DH_Vehicles classes - Matt, July 2015
             if (AV.CannonSkins.Length > 0)
             {
                 for (i = 0; i < AV.CannonSkins.Length; ++i)
