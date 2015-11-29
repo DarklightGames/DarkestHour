@@ -437,7 +437,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         {
             PlaySound(VehicleHitSound, SLOT_None, VehiclePenetrateSoundVolume, false, 100.0);
 
-            if (EffectIsRelevant(HitLocation, false) && ShellHitVehicleEffectClass != none)
+            if (EffectIsRelevant(Location, false) && ShellHitVehicleEffectClass != none)
             {
                 Spawn(ShellHitVehicleEffectClass, ,, HitLocation, rotator(-HitNormal));
             }
@@ -446,7 +446,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         {
             PlaySound(VehicleDeflectSound, SLOT_None, VehicleDeflectSoundVolume, false, 100.0);
 
-            if (EffectIsRelevant(HitLocation, false) && ShellDeflectEffectClass != none)
+            if (EffectIsRelevant(Location, false) && ShellDeflectEffectClass != none)
             {
                 Spawn(ShellDeflectEffectClass,,, HitLocation, rotator(-HitNormal));
             }

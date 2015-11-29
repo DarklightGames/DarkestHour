@@ -451,7 +451,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Spawn the bullet hit effect on anything other than a vehicle
     else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
     {
-        Spawn(ImpactEffect,,, Location, rotator(-HitNormal));
+        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to to an EffectIsRelevant() check
     }
 
     if (!bHasDeflected && (HitVehicle == none || bPenetratedVehicle))
@@ -527,7 +527,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         {
             PlaySound(VehiclePenetrateSound, SLOT_None, VehiclePenetrateSoundVolume, false, 100.0);
 
-            if (EffectIsRelevant(HitLocation, false) && VehiclePenetrateEffectClass != none)
+            if (EffectIsRelevant(Location, false) && VehiclePenetrateEffectClass != none)
             {
                 Spawn(VehiclePenetrateEffectClass, ,, HitLocation, rotator(-HitNormal));
             }
@@ -536,12 +536,109 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         {
             PlaySound(VehicleDeflectSound, SLOT_None, VehicleDeflectSoundVolume, false, 100.0);
 
-            if (EffectIsRelevant(HitLocation, false) && VehicleDeflectEffectClass != none)
+            if (EffectIsRelevant(Location, false) && VehicleDeflectEffectClass != none)
             {
                 Spawn(VehicleDeflectEffectClass,,, HitLocation, rotator(-HitNormal));
             }
         }
     }
+}
+
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing vehicle impact effects to be skipped
+// Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
+// Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+{
+    local PlayerController    PC;
+    local Vehicle             V;
+    local VehicleWeaponPawn   VWP;
+    local DHVehicleCannonPawn CP;
+    local rotator             PCRelativeRotation;
+    local vector              PCNonRelativeRotationVector;
+
+    // Only relevant on a dedicated server if the bForceDedicated option has been passed
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return bForceDedicated;
+    }
+
+    // Net clients
+    if (Role < ROLE_Authority)
+    {
+        // Always relevant for the owning net player, i.e. the player that fired the projectile
+        if (Instigator != none && Instigator.IsHumanControlled())
+        {
+            return true;
+        }
+
+        // Not relevant for other net clients if projectile has not been drawn on their screen recently
+        if (SpawnLocation == Location)
+        {
+            if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
+            {
+                return false;
+            }
+        }
+        else if (Instigator == none || (Level.TimeSeconds - Instigator.LastRenderTime) >= 3.0)
+        {
+            return false;
+        }
+    }
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC == none || PC.ViewTarget == none)
+    {
+        return false;
+    }
+
+    // Check to see whether the effect would spawn off to the side or behind where the player is facing, & if so then only spawn if within quite close distance
+    // (doesn't apply to the player that fired the projectile)
+    if (PC.Pawn != Instigator)
+    {
+        V = Vehicle(PC.Pawn);
+
+        // If player is in a vehicle using relative view rotation (nearly all of them), we need to factor in the vehicle's rotation
+        if (V != none && V.bPCRelativeFPRotation)
+        {
+            VWP = VehicleWeaponPawn(V);
+
+            // For vehicle weapons we must use the Gun or VehicleBase rotation (they match), not the weapon pawn's rotation
+            if (VWP != none)
+            {
+                PCRelativeRotation = PC.Rotation;
+                CP = DHVehicleCannonPawn(VWP);
+
+                // For turrets we also need to factor in the turret's yaw
+                if (CP != none && CP.Cannon != none && CP.Cannon.bHasTurret)
+                {
+                    PCRelativeRotation.Yaw += CP.Cannon.CurrentAim.Yaw;
+                }
+
+                PCNonRelativeRotationVector = vector(PCRelativeRotation) >> VWP.Gun.Rotation; // note Gun's rotation is effectively same as the vehicle base
+            }
+            // For vehicle themselves, we just use the vehicle's rotation
+            else
+            {
+                PCNonRelativeRotationVector = vector(PC.Rotation) >> V.Rotation;
+            }
+        }
+        // For player's that aren't in vehicles or the vehicle doesn't use relative view rotation, we simply use the PC's rotation
+        else
+        {
+            PCNonRelativeRotationVector = vector(PC.Rotation);
+        }
+
+        // Effect would spawn off to the side or behind where the player is facing, so only spawn if within quite close distance
+        if (PCNonRelativeRotationVector dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+        {
+            return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+        }
+    }
+
+    // Effect relevance is based on normal distance check
+    // If we got here, it means the effect would spawn broadly in front of where the player is facing, or we are the player responsible for the projectile
+    return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
 // New function to handle tracer deflection off things
@@ -578,6 +675,25 @@ simulated function Deflect(vector HitNormal)
     else
     {
         bBounce = false;
+    }
+}
+
+// Modified to add EffectIsRelevant check before spawning splash effect
+simulated function CheckForSplash(vector SplashLocation)
+{
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
+
+    if (!Level.bDropDetail && Level.DetailMode != DM_Low && SplashEffect != none && !Instigator.PhysicsVolume.bWaterVolume)
+    {
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - vect(0.0, 0.0, 50.0), SplashLocation + vect(0.0, 0.0, 15.0), true);
+        bTraceWater = false;
+
+        if ((FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume)) && EffectIsRelevant(Location, false))
+        {
+            Spawn(SplashEffect,,, HitLocation, rot(16384, 0, 0));
+        }
     }
 }
 

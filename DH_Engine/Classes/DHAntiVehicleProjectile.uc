@@ -639,11 +639,12 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
             Level.Game.Broadcast(self, "Round shattered on vehicle armor & failed to penetrate");
         }
 
-        if (EffectIsRelevant(HitLocation, false))
+        PlaySound(ShatterVehicleHitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+        PlaySound(ShatterSound[Rand(4)], SLOT_None, 5.5 * TransientSoundVolume);
+
+        if (EffectIsRelevant(Location, false))
         {
-            PlaySound(ShatterVehicleHitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
             Spawn(ShellShatterEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
-            PlaySound(ShatterSound[Rand(4)], SLOT_None, 5.5 * TransientSoundVolume);
         }
 
         bRoundShattered = false; // reset
@@ -658,16 +659,16 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
             Level.Game.Broadcast(self, "Round failed to penetrate vehicle armor & exploded");
         }
 
-        if (EffectIsRelevant(HitLocation, false))
+        if (ExplosionSound.Length > 0)
         {
-            PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
-            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume); // random explosion sound
+        }
 
-            // Play random explosion sound if this shell has any
-            if (ExplosionSound.Length > 0)
-            {
-                PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume);
-            }
+        PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+
+        if (EffectIsRelevant(Location, false))
+        {
+            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
         }
 
         bDidExplosionFX = true;  // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
@@ -683,10 +684,14 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
             Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
         }
 
-        if (NumDeflections < 2 && EffectIsRelevant(HitLocation, false)) // don't play effects if has deflected several times already
+        if (NumDeflections < 2) // don't play effects if has deflected several times already
         {
             PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
-            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+
+            if (EffectIsRelevant(Location, false))
+            {
+                Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            }
         }
 
         DHDeflect(HitLocation, HitNormal, HitActor);
@@ -811,8 +816,13 @@ simulated function CheckForSplash(vector SplashLocation)
         if (FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume))
         {
             bDidWaterHitFX = true;
-            Spawn(ShellHitWaterEffectClass,,, HitLocation, rot(16384, 0, 0));
+
             PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
+
+            if (EffectIsRelevant(Location, false))
+            {
+                Spawn(ShellHitWaterEffectClass,,, HitLocation, rot(16384, 0, 0));
+            }
         }
     }
 }
@@ -860,7 +870,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         HitEmitterClass = ShellHitVehicleEffectClass;
     }
     // Hit something else - get material type & set effects
-    else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX && EffectIsRelevant(HitLocation, false))
+    else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX)
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
 
@@ -916,12 +926,13 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     }
 
     // Play impact sound & effect
+    // Moved effect relevance check so only affects hit effect, as impact sound should play even if effect is skipped because it's not on player's screen
     if (HitSound != none)
     {
         PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
     }
 
-    if (HitEmitterClass != none)
+    if (HitEmitterClass != none && EffectIsRelevant(Location, false))
     {
         Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
     }
@@ -944,6 +955,103 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
             Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
         }
     }
+}
+
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing impact/explosion effects to be skipped
+// Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
+// Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+{
+    local PlayerController    PC;
+    local Vehicle             V;
+    local VehicleWeaponPawn   VWP;
+    local DHVehicleCannonPawn CP;
+    local rotator             PCRelativeRotation;
+    local vector              PCNonRelativeRotationVector;
+
+    // Only relevant on a dedicated server if the bForceDedicated option has been passed
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return bForceDedicated;
+    }
+
+    // Net clients
+    if (Role < ROLE_Authority)
+    {
+        // Always relevant for the owning net player, i.e. the player that fired the projectile
+        if (Instigator != none && Instigator.IsHumanControlled())
+        {
+            return true;
+        }
+
+        // Not relevant for other net clients if projectile has not been drawn on their screen recently
+        if (SpawnLocation == Location)
+        {
+            if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
+            {
+                return false;
+            }
+        }
+        else if (Instigator == none || (Level.TimeSeconds - Instigator.LastRenderTime) >= 3.0)
+        {
+            return false;
+        }
+    }
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC == none || PC.ViewTarget == none)
+    {
+        return false;
+    }
+
+    // Check to see whether the effect would spawn off to the side or behind where the player is facing, & if so then only spawn if within quite close distance
+    // (doesn't apply to the player that fired the projectile)
+    if (PC.Pawn != Instigator)
+    {
+        V = Vehicle(PC.Pawn);
+
+        // If player is in a vehicle using relative view rotation (nearly all of them), we need to factor in the vehicle's rotation
+        if (V != none && V.bPCRelativeFPRotation)
+        {
+            VWP = VehicleWeaponPawn(V);
+
+            // For vehicle weapons we must use the Gun or VehicleBase rotation (they match), not the weapon pawn's rotation
+            if (VWP != none)
+            {
+                PCRelativeRotation = PC.Rotation;
+                CP = DHVehicleCannonPawn(VWP);
+
+                // For turrets we also need to factor in the turret's yaw
+                if (CP != none && CP.Cannon != none && CP.Cannon.bHasTurret)
+                {
+                    PCRelativeRotation.Yaw += CP.Cannon.CurrentAim.Yaw;
+                }
+
+                PCNonRelativeRotationVector = vector(PCRelativeRotation) >> VWP.Gun.Rotation; // note Gun's rotation is effectively same as the vehicle base
+            }
+            // For vehicle themselves, we just use the vehicle's rotation
+            else
+            {
+                PCNonRelativeRotationVector = vector(PC.Rotation) >> V.Rotation;
+            }
+        }
+        // For player's that aren't in vehicles or the vehicle doesn't use relative view rotation, we simply use the PC's rotation
+        else
+        {
+            PCNonRelativeRotationVector = vector(PC.Rotation);
+        }
+
+        // Effect would spawn off to the side or behind where the player is facing, so only spawn if within quite close distance
+        if (PCNonRelativeRotationVector dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+        {
+            return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+        }
+    }
+
+    // Effect relevance is based on normal distance check
+    // If we got here, it means the effect would spawn broadly in front of where the player is facing, or we are the player responsible for the projectile
+    return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
 // New function to separate this out, allowing easier subclassing of Explode function & avoid some other code repetition

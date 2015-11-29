@@ -100,13 +100,17 @@ simulated function BlowUp(vector HitLocation)
     super.BlowUp(HitLocation);
 
     GetHitSurfaceType(HitSurfaceType);
-    GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
-    GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
     GetExplosionSound(ExplosionSound, HitSurfaceType);
-    Spawn(ExplosionEmitterClass, self,, HitLocation);
-    Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
     PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
     DoShakeEffect();
+
+    if (EffectIsRelevant(Location, false))
+    {
+        GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
+        GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
+        Spawn(ExplosionEmitterClass, self,, HitLocation);
+        Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
+    }
 }
 
 // Explode in water

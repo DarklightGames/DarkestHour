@@ -182,7 +182,7 @@ simulated event ThirdPersonEffects()
 
 // New function to spawn projectile hit effects - functionality moved here from ThirdPersonEffects(), from where it is still called on an authority role
 // But for net client this gets called by PostNetReceive() when it receives updated SpawnHitCount & mHitLocation, so it knows where to spawn the effect
-simulated function SpawnHitEffect()
+simulated function SpawnHitEffect() // Matt TODO: may want to add EffectIsRelevant check here? (although already has something similar)
 {
     local PlayerController   PC;
     local ROVehicleHitEffect VehEffect;
@@ -198,7 +198,9 @@ simulated function SpawnHitEffect()
 
         PC = Level.GetLocalPlayerController();
 
-        if ((Instigator != none && Instigator.Controller == PC) || VSizeSquared(PC.ViewTarget.Location - mHitLocation) < 16000000.0) // squared distances for efficient processing
+        // Check effect is relevant to player - must either be the local player who fired, or effect would be within a set distance for other players
+        // Using squared distances for efficient processing of distance check (equivalent to 4000 units or 66m)
+        if ((Instigator != none && Instigator.Controller == PC) || VSizeSquared(PC.ViewTarget.Location - mHitLocation) < 16000000.0)
         {
             if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
             {

@@ -33,19 +33,22 @@ simulated function PostNetBeginPlay()
         return;
     }
 
-    if (HitEffects[ST].HitDecal != none)
-    {
-        Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);
-    }
-
     if (HitEffects[ST].HitSound != none)
     {
         PlaySound(HitEffects[ST].HitSound, SLOT_None, RandRange(10.0, 32.0), false, 32.0,, true);
     }
 
-    if (HitEffects[ST].HitEffect != none)
+    if (Owner == none || Owner.EffectIsRelevant(Owner.Location, false)) // added effect relevance check, using owning bullet actor to call the function
     {
-        Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
+        if (HitEffects[ST].HitDecal != none)
+        {
+            Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);
+        }
+
+        if (HitEffects[ST].HitEffect != none)
+        {
+            Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
+        }
     }
 }
 
