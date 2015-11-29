@@ -7,8 +7,8 @@ class DH_WolverineCannonShellHVAP extends DHCannonShellHVAP;
 
 defaultproperties
 {
-    DHPenetrationTable(0)=19.200001
-    DHPenetrationTable(1)=17.700001
+    DHPenetrationTable(0)=19.2
+    DHPenetrationTable(1)=17.7
     DHPenetrationTable(2)=16.5
     DHPenetrationTable(3)=14.6
     DHPenetrationTable(4)=13.7

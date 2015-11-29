@@ -60,7 +60,7 @@ defaultproperties
         WinLeft=0.7935
         WinWidth=0.202128
         WinHeight=0.04
-        RenderWeight=20.700001
+        RenderWeight=20.7
     End Object
     l_Version=GUILabel'DH_Interface.DHBrowser_MOTD.VersionNum'
     PanelCaption="Darkest Hour News"

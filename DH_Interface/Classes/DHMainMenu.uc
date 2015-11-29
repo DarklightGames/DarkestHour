@@ -557,7 +557,7 @@ defaultproperties
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-        RenderWeight=20.700001
+        RenderWeight=20.7
     End Object
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
 

@@ -33,17 +33,17 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=212.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=227.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=26.700001
-    DHPenetrationTable(1)=26.200001
-    DHPenetrationTable(2)=25.299999
+    DHPenetrationTable(0)=26.7
+    DHPenetrationTable(1)=26.2
+    DHPenetrationTable(2)=25.3
     DHPenetrationTable(3)=24.5
-    DHPenetrationTable(4)=23.700001
+    DHPenetrationTable(4)=23.7
     DHPenetrationTable(5)=23.0
-    DHPenetrationTable(6)=22.200001
+    DHPenetrationTable(6)=22.2
     DHPenetrationTable(7)=21.5
-    DHPenetrationTable(8)=20.799999
+    DHPenetrationTable(8)=20.8
     DHPenetrationTable(9)=19.5
-    DHPenetrationTable(10)=18.200001
+    DHPenetrationTable(10)=18.2
     ShellDiameter=12.8
     ImpactDamage=950
     BallisticCoefficient=3.9

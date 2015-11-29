@@ -7,9 +7,9 @@ class DH_JacksonCannonShellAP extends DHCannonShell;
 
 defaultproperties
 {
-    DHPenetrationTable(0)=18.799999
+    DHPenetrationTable(0)=18.8
     DHPenetrationTable(1)=17.9
-    DHPenetrationTable(2)=16.299999
+    DHPenetrationTable(2)=16.3
     DHPenetrationTable(3)=15.0
     DHPenetrationTable(4)=13.7
     DHPenetrationTable(5)=12.5

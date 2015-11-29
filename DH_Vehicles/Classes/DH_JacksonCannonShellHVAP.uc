@@ -9,11 +9,11 @@ defaultproperties
 {
     DHPenetrationTable(0)=30.6
     DHPenetrationTable(1)=29.5
-    DHPenetrationTable(2)=27.799999
-    DHPenetrationTable(3)=26.200001
+    DHPenetrationTable(2)=27.8
+    DHPenetrationTable(3)=26.2
     DHPenetrationTable(4)=24.6
-    DHPenetrationTable(5)=23.200001
-    DHPenetrationTable(6)=21.799999
+    DHPenetrationTable(5)=23.2
+    DHPenetrationTable(6)=21.8
     DHPenetrationTable(7)=17.9
     DHPenetrationTable(8)=14.7
     DHPenetrationTable(9)=13.1
