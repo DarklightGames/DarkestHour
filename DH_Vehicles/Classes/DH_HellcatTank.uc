@@ -213,6 +213,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_HellcatTank.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
-    FirstRiderPositionIndex=1
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m18_hellcat'
 }

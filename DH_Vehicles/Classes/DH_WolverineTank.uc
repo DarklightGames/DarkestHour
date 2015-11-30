@@ -210,6 +210,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WolverineTank.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    FirstRiderPositionIndex=1
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m10_wolverine'
 }

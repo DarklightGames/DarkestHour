@@ -221,6 +221,11 @@ simulated function PostBeginPlay()
     // Create passenger pawn classes from the PassengerWeapons array
     if (PassengerPawns.Length > 0)
     {
+        if (FirstRiderPositionIndex == -1)
+        {
+            FirstRiderPositionIndex = PassengerWeapons.Length; // set automatically, unless has been set specifically
+        }
+
         StartIndex = PassengerWeapons.Length;
         PassengerWeapons.Length = PassengerWeapons.Length + PassengerPawns.Length;
 
@@ -4240,7 +4245,7 @@ defaultproperties
     TransientSoundRadius=700.0
     UnbuttonedPositionIndex=2
     bAllowRiders=true
-    FirstRiderPositionIndex=2
+    FirstRiderPositionIndex=-1 // unless overridden in subclass, -1 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     bMustUnbuttonToSwitchToRider=true
     LeftTreadIndex=1
     RightTreadIndex=2

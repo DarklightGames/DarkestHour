@@ -325,7 +325,6 @@ defaultproperties
 {
     bSpecialTankTurning=false
     PointValue=2.0
-    FirstRiderPositionIndex=1
     DriverKillChance=900.0
     GunnerKillChance=900.0
     CommanderKillChance=600.0
