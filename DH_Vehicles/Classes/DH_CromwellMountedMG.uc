@@ -31,6 +31,7 @@ defaultproperties
     MaxNegativeYaw=-6000
     bLimitYaw=true
     InitialPrimaryAmmo=225
+    FireEffectOffset=(X=-30.0,Y=0.0,Z=15.0) // positions fire on co-driver's hatch
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_MG'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     bMatchSkinToVehicle=true

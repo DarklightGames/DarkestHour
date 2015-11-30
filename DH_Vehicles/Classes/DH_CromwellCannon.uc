@@ -94,6 +94,7 @@ defaultproperties
     InitialAltAmmo=225
     PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'

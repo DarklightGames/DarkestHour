@@ -78,6 +78,7 @@ defaultproperties
     InitialAltAmmo=200
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellHE'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_turret'
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.shermancupolat'

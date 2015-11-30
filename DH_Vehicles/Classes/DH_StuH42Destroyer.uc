@@ -84,6 +84,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.StuH.Stuh_dest'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    FireEffectOffset=(X=25.0,Y=0.0,Z=-25.0)
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_open"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=12000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,ViewFOV=90.0)

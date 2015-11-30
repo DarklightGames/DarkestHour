@@ -91,6 +91,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.Jagdpanzer4.Jagdpanzer4_dest48'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    FireEffectOffset=(X=55.0,Y=0.0,Z=-25.0)
     SteeringScaleFactor=0.75
     BeginningIdleAnim="Overlay_Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)

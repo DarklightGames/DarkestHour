@@ -8,7 +8,6 @@ class DH_ShermanMountedMG extends DHVehicleMG;
 defaultproperties
 {
     NumMags=6
-    FireAttachBone="mg_yaw"
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -32,6 +31,7 @@ defaultproperties
     MaxNegativeYaw=-8000
     bLimitYaw=true
     InitialPrimaryAmmo=200
-    FireEffectOffset=(X=-40,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
+    FireAttachBone="mg_yaw"
+    FireEffectOffset=(X=-40.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman_MG'
 }

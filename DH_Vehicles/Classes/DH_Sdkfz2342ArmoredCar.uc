@@ -58,6 +58,7 @@ defaultproperties
     DisintegrationHealth=-100000.0
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-150.0,Y=0.0,Z=65.0)
+    FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
     SteeringScaleFactor=2.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=90.0)

@@ -32,5 +32,6 @@ defaultproperties
     MaxNegativeYaw=-4000
     bLimitYaw=true
     InitialPrimaryAmmo=150
+    FireEffectOffset=(X=-60.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4_mg_ext'
 }

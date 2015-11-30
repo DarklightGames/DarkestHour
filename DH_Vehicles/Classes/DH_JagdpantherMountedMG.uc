@@ -32,5 +32,6 @@ defaultproperties
     MaxNegativeYaw=-4000
     bLimitYaw=true
     InitialPrimaryAmmo=150
+    FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4_mg_ext'
 }

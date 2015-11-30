@@ -25,7 +25,6 @@ defaultproperties
     RightTreadIndex=1
     MaxCriticalSpeed=1002.0
     TreadDamageThreshold=0.85
-    FireEffectOffset=(X=-15.0)
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=8.2
     URightArmorFactor=5.0
@@ -95,6 +94,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdpanther.Jagdpanther_dest'
     DamagedEffectScale=1.1
     DamagedEffectOffset=(X=-135.0,Y=20.0,Z=108.0)
+    FireEffectOffset=(X=50.0,Y=0.0,Z=-20.0)
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)

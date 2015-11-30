@@ -13,8 +13,6 @@ defaultproperties
     ReloadSounds[1]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
     ReloadSounds[2]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
     ReloadSounds[3]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload04_170',Duration=1.34)
-    FireAttachBone="gunner_int"
-    FireEffectOffset=(X=0.0,Y=0.0,Z=5.0)
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -47,6 +45,8 @@ defaultproperties
     MaxNegativeYaw=-5500
     BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=50
+    FireAttachBone="gunner_int"
+    FireEffectOffset=(X=0.0,Y=0.0,Z=50.0)
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'

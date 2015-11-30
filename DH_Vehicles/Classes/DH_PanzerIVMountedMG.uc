@@ -8,7 +8,6 @@ class DH_PanzerIVMountedMG extends DHVehicleMG;
 defaultproperties
 {
     NumMags=5
-    FireEffectOffset=(X=0.0)
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -33,5 +32,6 @@ defaultproperties
     MaxNegativeYaw=-2730
     bLimitYaw=true
     InitialPrimaryAmmo=150
+    FireEffectOffset=(X=-30.0,Y=0.0,Z=25.0) // positions fire on co-driver's hatch
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4_mg_ext'
 }

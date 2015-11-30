@@ -8,7 +8,6 @@ class DH_JagdpanzerIVMountedMG extends DHVehicleMG;
 defaultproperties
 {
     NumMags=8
-    FireAttachBone="mg_yaw"
     TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -34,5 +33,7 @@ defaultproperties
     bLimitYaw=true
     BeginningIdleAnim="Idle"
     InitialPrimaryAmmo=150
+    FireAttachBone="mg_yaw"
+    FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'
 }

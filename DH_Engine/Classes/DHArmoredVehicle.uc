@@ -199,6 +199,16 @@ replication
         ClientLogSwitch;
 }
 
+exec function VHellFire(optional bool bOff) // TEMP
+{
+    local DHArmoredVehicle V;
+    foreach DynamicActors(class'DHArmoredVehicle', V)
+    {
+        if (!bOff) V.StartDriverHatchFire();
+        else if (V.DriverHatchFireEffect != none) V.DriverHatchFireEffect.Destroy();
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -4290,7 +4300,7 @@ defaultproperties
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireAttachBone="driver_player"
-    FireEffectOffset=(Z=-10.0)
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
     VehicleSpikeTime=60.0
     TimeTilDissapear=90.0
     IdleTimeBeforeReset=200.0

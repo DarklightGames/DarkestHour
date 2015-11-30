@@ -1935,7 +1935,6 @@ defaultproperties
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
     FireAttachBone="com_player"
-    FireEffectOffset=(Z=-20.0)
     FireEffectScale=1.0
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
 }

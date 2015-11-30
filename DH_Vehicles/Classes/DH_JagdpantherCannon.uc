@@ -82,6 +82,7 @@ defaultproperties
     InitialSecondaryAmmo=15
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'

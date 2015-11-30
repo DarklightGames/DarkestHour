@@ -85,6 +85,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-130.0,Y=20.0,Z=72.0)
+    FireEffectOffset=(X=0.0,Y=5.0,Z=-10.0)
     VehicleTeam=1
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"

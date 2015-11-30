@@ -14,8 +14,6 @@ defaultproperties
     ReloadSounds[1]=(Sound=none,Duration=1.94)
     ReloadSounds[2]=(Sound=none,Duration=2.12)
     ReloadSounds[3]=(Sound=none,Duration=1.32)
-    FireAttachBone="gunner_int"
-    FireEffectOffset=(X=0.0,Y=0.0,Z=5.0)
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -48,6 +46,8 @@ defaultproperties
     bLimitYaw=true
     BeginningIdleAnim="loader_button_idle"
     InitialPrimaryAmmo=50
+    FireAttachBone="gunner_int"
+    FireEffectOffset=(X=0.0,Y=0.0,Z=50.0)
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'

@@ -99,6 +99,16 @@ replication
         ClientLogCannon; // DEBUG (temp)
 }
 
+exec function THellFire(optional bool bOff) // TEMP
+{
+    local DHVehicleCannon T;
+    foreach DynamicActors(class'DHVehicleCannon', T)
+    {
+        if (!bOff) T.StartTurretFire();
+        else if (T.TurretHatchFireEffect != none) T.TurretHatchFireEffect.Destroy();
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////

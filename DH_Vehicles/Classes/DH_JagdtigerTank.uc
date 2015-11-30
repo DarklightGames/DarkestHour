@@ -89,6 +89,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdtiger.Jagdtiger_dest'
     DamagedEffectScale=1.25
     DamagedEffectOffset=(X=-135.0,Y=20.0,Z=20.0)
+    FireEffectOffset=(X=10.0,Y=0.0,Z=0.0)
     SteeringScaleFactor=2.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)

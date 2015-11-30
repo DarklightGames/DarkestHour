@@ -96,6 +96,7 @@ defaultproperties
     InitialAltAmmo=150
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll'

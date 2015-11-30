@@ -611,7 +611,6 @@ defaultproperties
     ReloadSounds[3]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314)
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireAttachBone="mg_pitch"
-    FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     RotationsPerSecond=0.25
     YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG

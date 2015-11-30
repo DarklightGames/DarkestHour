@@ -56,6 +56,16 @@ replication
         ServerToggleDebugExits; // only during development
 }
 
+exec function MHellFire(optional bool bOff) // TEMP
+{
+    local DHVehicleMG M;
+    foreach DynamicActors(class'DHVehicleMG', M)
+    {
+        if (!bOff) M.StartMGFire();
+        else if (M.HullMGFireEffect != none) M.HullMGFireEffect.Destroy();
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////

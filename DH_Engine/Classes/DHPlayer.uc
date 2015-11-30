@@ -95,6 +95,26 @@ replication
         ServerSetIsInSpawnMenu;
 }
 
+exec function HellFire(optional bool bOff) // TEMP
+{
+    local DHArmoredVehicle V;
+    foreach DynamicActors(class'DHArmoredVehicle', V)
+    {
+        if (!bOff)
+        {
+            V.StartDriverHatchFire();
+            DHVehicleCannon(V.CannonTurret).StartTurretFire();
+            if (DHVehicleMG(V.HullMG) != none) DHVehicleMG(V.HullMG).StartMGFire();
+        }
+        else
+        {
+            if (V.DriverHatchFireEffect != none) V.DriverHatchFireEffect.Destroy();
+            if (DHVehicleCannon(V.CannonTurret).TurretHatchFireEffect != none) DHVehicleCannon(V.CannonTurret).TurretHatchFireEffect.Destroy();
+            if (DHVehicleMG(V.HullMG).HullMGFireEffect != none) if (DHVehicleMG(V.HullMG) != none) DHVehicleMG(V.HullMG).HullMGFireEffect.Destroy();
+        }
+    }
+}
+
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // No longer used
 
 // Modified to bypass more RO shit design

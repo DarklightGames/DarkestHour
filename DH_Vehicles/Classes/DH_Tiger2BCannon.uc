@@ -108,6 +108,7 @@ defaultproperties
     InitialAltAmmo=150
     PrimaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShellHE'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'

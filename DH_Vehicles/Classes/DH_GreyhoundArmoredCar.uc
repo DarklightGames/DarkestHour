@@ -52,6 +52,7 @@ defaultproperties
     DisintegrationHealth=-100000.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=100.0)
+    FireEffectOffset=(X=5.0,Y=5.0,Z=0.0)
     VehicleTeam=1
     SteeringScaleFactor=2.0
     BeginningIdleAnim="driver_hatch_idle_close"
