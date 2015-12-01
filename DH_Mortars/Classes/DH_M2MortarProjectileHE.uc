@@ -18,9 +18,9 @@ defaultproperties
     SnowExplosionSounds(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     SnowExplosionSounds(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
     SnowExplosionSounds(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
-    GroundExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
-    SnowExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
-    WaterExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
+    AirExplosionEmitterClass=class'DH_Effects.DHMortarExplosion60mm'
+    GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion60mm'
+    SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion60mm'
     BlurTime=4.0
     BlurEffectScalar=2.0
     MaxSpeed=4800.0
