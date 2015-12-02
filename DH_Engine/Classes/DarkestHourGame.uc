@@ -3206,9 +3206,11 @@ function ModifyRoundTime(int RoundTime, int Type)
     }
 }
 
-// Override to allow more than 32 bots
+// Override to allow more than 32 bots (but not too many, 128 max)
 exec function AddBots(int num)
 {
+    num = Clamp(num, 0, 128 - (NumPlayers + NumBots));
+
     while (--num >= 0)
     {
         if (Level.NetMode != NM_Standalone)
@@ -3218,6 +3220,49 @@ exec function AddBots(int num)
 
         AddBot();
     }
+}
+
+// Override to actually kill all bots if no num is given
+exec function KillBots(int num)
+{
+    local Controller C, nextC;
+
+    bPlayersVsBots = false;
+
+    if (num == 0)
+    {
+        num = 128;
+    }
+
+    C = Level.ControllerList;
+
+    if (Level.NetMode != NM_Standalone)
+    {
+        MinPlayers = 0;
+    }
+
+    bKillBots = true;
+
+    while (C != None && num > 0)
+    {
+        nextC = C.NextController;
+
+        if (KillBot(C))
+        {
+            --num;
+        }
+
+        if (nextC != none)
+        {
+            C = nextC;
+        }
+        else
+        {
+            C = none;
+        }
+    }
+
+    bKillBots = false;
 }
 
 // This function will initiate a reset game with swap teams
