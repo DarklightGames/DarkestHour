@@ -11,29 +11,37 @@ var()   int                 FireDamageAmount;
 //Overridden to allow for DH fire damage type, and igniting players on fire
 function CausePainTo(Actor Other)
 {
-    local float depth;
+    local float Depth;
     local Pawn P;
 
-    // FIXMEZONE figure out depth of actor, and base pain on that!!!
-    depth = 1;
+    // FIXMEZONE figure out Depth of actor, and base pain on that!!!
+    Depth = 1;
+
     P = Pawn(Other);
 
     if (DamagePerSec > 0)
     {
         if (Region.Zone.bSoftKillZ && Other.Physics != PHYS_Walking)
+        {
             return;
-        Other.TakeDamage(int(DamagePerSec * depth), none, Location, vect(0.0, 0.0, 0.0), DamageType);
+        }
+
+        Other.TakeDamage(int(DamagePerSec * Depth), none, Location, vect(0.0, 0.0, 0.0), DamageType);
+
         if (P != none && P.Health <= 20)
-            Other.TakeDamage(int(FireDamageAmount * depth), none, Location, vect(0.0, 0.0, 0.0), FireDamageType);
+        {
+           Other.TakeDamage(int(FireDamageAmount * Depth), none, Location, vect(0.0, 0.0, 0.0), FireDamageType);
+        }
 
         if (P != none && P.Controller != none)
+        {
             P.Controller.PawnIsInPain(self);
+        }
 
     }
-    else
+    else if (P != none && P.Health < P.HealthMax)
     {
-        if (P != none && P.Health < P.HealthMax)
-            P.Health = Min(P.HealthMax, P.Health - depth * DamagePerSec);
+        P.Health = Min(P.HealthMax, P.Health - Depth * DamagePerSec);
     }
 }
 

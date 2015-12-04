@@ -7,6 +7,7 @@ class DH_GiveChuteTrigger extends Trigger;
 
 function Touch(Actor Other)
 {
+    local int P;
     local int i;
 
     if (IsRelevant(Other))
@@ -26,13 +27,15 @@ function Touch(Actor Other)
         // Broadcast the Trigger message to all matching actors
         TriggerEvent(Event, self, Other.Instigator);
 
-        if (Pawn(Other) != none && Pawn(Other).Controller != none)
+        P = Pawn(Other);
+
+        if (P != none && P.Controller != none)
         {
             for (i = 0; i < 4; ++i)
             {
-                if (Pawn(Other).Controller.GoalList[i] == self)
+                if (P.Controller.GoalList[i] == self)
                 {
-                    Pawn(Other).Controller.GoalList[i] = none;
+                    P.Controller.GoalList[i] = none;
                     break;
                 }
             }
