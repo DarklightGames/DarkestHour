@@ -7,7 +7,7 @@ class DH_GiveChuteTrigger extends Trigger;
 
 function Touch(Actor Other)
 {
-    local int P;
+    local Pawn P;
     local int i;
 
     if (IsRelevant(Other))
