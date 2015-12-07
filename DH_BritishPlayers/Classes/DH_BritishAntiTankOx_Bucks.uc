@@ -21,7 +21,8 @@ defaultproperties
     Models(4)="para5"
     Models(5)="para6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
