@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ExplosiveSplashEffect extends Emitter;
+class DH_ExplosiveSplashEffect extends Emitter; // substantially different was RO equivalent class 'TankAPHitWaterEffect'
 
 defaultproperties
 {
@@ -40,6 +40,7 @@ defaultproperties
         LifetimeRange=(Min=1.0,Max=1.5)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         FadeIn=true
@@ -75,6 +76,7 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.0,RelativeVelocity=(X=0.1,Y=0.1,Z=0.1))
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
@@ -99,6 +101,7 @@ defaultproperties
         StartVelocityRange=(X=(Min=200.0,Max=400.0),Y=(Min=-75.0,Max=75.0),Z=(Min=-75.0,Max=75.0))
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         FadeOut=true
         FadeIn=true
@@ -123,6 +126,7 @@ defaultproperties
         LifetimeRange=(Min=1.0,Max=1.0)
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter3'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter4
         FadeOut=true
         FadeIn=true
@@ -156,6 +160,7 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.0,RelativeVelocity=(X=0.15,Y=0.1,Z=0.1))
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter4'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter5
         FadeOut=true
         FadeIn=true
@@ -188,6 +193,7 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.0)
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter5'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         FadeOut=true
         RespawnDeadParticles=false
@@ -212,8 +218,8 @@ defaultproperties
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=500.0,Max=800.0))
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter6'
+
     AutoDestroy=true
     bNoDelete=false
     bHighDetail=true
-    RemoteRole=ROLE_None
 }
