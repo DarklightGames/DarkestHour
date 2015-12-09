@@ -956,7 +956,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     if (B != none)
     {
         // Added in ROTreadCraft ("code to get the bots using tanks better")
-        if (WeaponPawns.Length != 0 && IsVehicleEmpty())
+        if (WeaponPawns.Length > 0 && IsVehicleEmpty())
         {
             for (i = WeaponPawns.Length -1; i >= 0; --i)
             {

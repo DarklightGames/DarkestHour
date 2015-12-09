@@ -1236,7 +1236,7 @@ function bool InternalOnPreDraw(Canvas C)
 
     if (GRI != none && PC != none)
     {
-        AttritionRate = GRI.AttritionRate[PC.GetTeamNum()];
+        AttritionRate = GRI.AttritionRate[CurrentTeam];
 
         if (AttritionRate > 0.0)
         {
