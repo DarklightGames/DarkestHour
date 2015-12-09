@@ -12,8 +12,8 @@ defaultproperties
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
     bManualTraverseOnly=true
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
-    RaisedPositionIndex=1
-    BinocPositionIndex=2
+    RaisedPositionIndex=2
+    BinocPositionIndex=3
     WeaponFOV=24.0
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell_reload'
