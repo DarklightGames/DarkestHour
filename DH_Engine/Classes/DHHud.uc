@@ -11,6 +11,14 @@ class DHHud extends ROHud;
 
 const MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the side on the situational map (not on the map itself)
 
+const VOICE_ICON_DIST_MAX = 2624.672119;    // maximum distance from a talking player at which we will show a voice icon
+
+var Pawn                LastTalkingPawn;    // records last pawn for which we showed a voice icon, so we don't need to keep finding it
+
+var DHGameReplicationInfo   DHGRI;
+
+var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
+
 var SpriteWidget        VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
 var SpriteWidget        MapIconCarriedRadio;
@@ -47,26 +55,18 @@ var localized string    SpawnNoRoleText;
 var localized string    TimeElapsedText;
 var localized string    MapNameText;
 
-var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
-var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
-var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
-var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
-
-var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
-
-// For some added suspense:
-var float               ObituaryFadeInTime;
+var float               ObituaryFadeInTime;   // for some added suspense:
 var float               ObituaryDelayTime;
-
 var array<Obituary>     DHObituaries;         // replaced RO's Obituaries static array, so we can have more than 4 death messages
 var array<string>       ConsoleDeathMessages; // paired with DHObituaries array & holds accompanying console death messages
 
-const VOICE_ICON_DIST_MAX = 2624.672119;
+var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
+var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
+var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
+var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
-
-var DHGameReplicationInfo   DHGRI;
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
@@ -834,7 +834,10 @@ simulated function DrawHudPassC(Canvas C)
             DrawTextWidgetClipped(C, PortraitText[1], Coords);
 
             // Draw the voice icon
-            DrawVoiceIcon(C, PortraitPRI);
+            if (bShowVoiceIcon)
+            {
+                DrawVoiceIcon(C);
+            }
         }
     }
 
@@ -3145,112 +3148,78 @@ simulated function UpdateHud()
     }
 }
 
-simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
+simulated function DrawVoiceIcon(Canvas C)
 {
-    local DHPawn                DHP;
-    local ROVehicleWeaponPawn   ROVWP;
-    local ROVehicle             ROV;
+    local Pawn   P;
+    local float  Distance, Scale;
+    local vector ScreenPosition, VoiceLocation, VoiceDirection;
 
-    if (!bShowVoiceIcon)
+    if (PortraitPRI == none || PawnOwner == none || PlayerOwner == none)
     {
         return;
     }
 
-    foreach RadiusActors(class'DHPawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location) // 100 feet
+    // Find the talking pawn, if we don't have one previously recorded or it's now a different player
+    if (LastTalkingPawn == none || LastTalkingPawn.PlayerReplicationInfo != PortraitPRI)
     {
-        if (DHP.Health <= 0 || DHP.PlayerReplicationInfo != PRI)
+        foreach RadiusActors(class'Pawn', P, VOICE_ICON_DIST_MAX, PawnOwner.Location)
         {
-            continue;
+            if (P.PlayerReplicationInfo == PortraitPRI)
+            {
+                if (Vehicle(P) != none)
+                {
+                    LastTalkingPawn = Vehicle(P).Driver;
+                }
+                else
+                {
+                    LastTalkingPawn = P;
+                }
+
+                break;
+            }
+        }
+    }
+
+    if (LastTalkingPawn != none)
+    {
+        // Get location, direction & distance of the talking player
+        VoiceLocation = LastTalkingPawn.GetBoneCoords(LastTalkingPawn.HeadBone).Origin + vect(0.0, 0.0, 32.0);
+        VoiceDirection = VoiceLocation - PlayerOwner.CalcViewLocation;
+        Distance = VSize(VoiceDirection);
+
+        // Don't draw if player is too far away
+        if (Distance > VOICE_ICON_DIST_MAX)
+        {
+            return;
         }
 
-        DrawVoiceIconC(C, DHP);
-
-        return;
-    }
-
-    foreach RadiusActors(class'ROVehicle', ROV, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
-    {
-        if (ROV.Driver == none || ROV.PlayerReplicationInfo != PRI)
+        // Don't draw if player is behind us
+        if (Acos(Normal(VoiceDirection) dot vector(PlayerOwner.CalcViewRotation)) > 1.5705)
         {
-            continue;
+            return;
         }
 
-        DrawVoiceIconC(C, ROV.Driver);
+        // Scale down the voice icon's size & opacity, based on distance, so it is smaller & fainter the further away it is
+        // (apply a minimum, otherwise icon becomes very hard to see)
+        Scale = FMax(0.3, 1.0 - (Distance / VOICE_ICON_DIST_MAX));
 
-        return;
-    }
+        VoiceIcon.TextureScale = Scale * default.VoiceIcon.TextureScale; // set size
 
-    foreach RadiusActors(class'ROVehicleWeaponPawn', ROVWP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
-    {
-        if (ROVWP.Driver == none || ROVWP.PlayerReplicationInfo != PRI)
+        // If the icon is behind world geometry, make it look faint (reduce scale to minimum before setting opacity)
+        if (Scale > 0.3 && !FastTrace(VoiceLocation, PlayerOwner.CalcViewLocation))
         {
-            continue;
+            Scale = 0.3;
         }
 
-        DrawVoiceIconC(C, ROVWP.Driver);
+        VoiceIcon.Tints[0].A = byte(Scale * 255.0); // set opacity
 
-        return;
+        // Set icon screen position & draw the voice icon
+        ScreenPosition = C.WorldToScreen(VoiceLocation);
+        VoiceIcon.PosX = ScreenPosition.X / C.ClipX;
+        VoiceIcon.PosY = ScreenPosition.Y / C.ClipY;
+
+        DrawSpriteWidget(C, VoiceIcon);
     }
-}
-
-simulated function DrawVoiceIconC(Canvas C, Pawn P)
-{
-    local byte    Alpha;
-    local float   Distance, MaxDistance, FalloutDistance;
-    local vector  ScreenPosition, WorldLocation, PawnDirection, CameraLocation;
-    local rotator CameraRotation;
-
-    // TODO: VOICE_ICON_DIST_MAX is a class constant defined as approx 2624 & it looks like it should be 1600 & we're wasting foreach RadiusActors iterations on too wide a radius
-    MaxDistance = 1600.0;
-    FalloutDistance = MaxDistance * 0.66;
-
-    // Get location, direction & distance of the other player
-    WorldLocation = P.GetBoneCoords(P.HeadBone).Origin + vect(0.0, 0.0, 32.0);
-    C.GetCameraLocation(CameraLocation, CameraRotation);
-    PawnDirection = WorldLocation - CameraLocation;
-    Distance = VSize(PawnDirection);
-
-    // Don't draw if player is too far away
-    if (Distance > MaxDistance)
-    {
-        return;
-    }
-
-    // Don't draw if player is behind us
-    PawnDirection = Normal(PawnDirection);
-
-    if (Acos(PawnDirection dot vector(CameraRotation)) > 1.5705)
-    {
-        return;
-    }
-
-    // Set icon screen position
-    ScreenPosition = C.WorldToScreen(WorldLocation);
-    VoiceIcon.PosX = ScreenPosition.X / C.ClipX;
-    VoiceIcon.PosY = ScreenPosition.Y / C.ClipY;
-
-    // If player is further away than the fallout distance, make the icon lighter based on distance
-    Alpha = 255;
-
-    if (Distance > FalloutDistance)
-    {
-        Alpha -= byte(((Distance - FalloutDistance) / (MaxDistance - FalloutDistance)) * 255.0);
-    }
-
-    // If world geometry is between us & the player, make the icon smaller & lighter
-    if (!FastTrace(WorldLocation, CameraLocation))
-    {
-        VoiceIcon.Scale = 0.5;
-        VoiceIcon.Tints[0].A = Alpha / 2;
-    }
-    else
-    {
-        VoiceIcon.Scale = 0.5;
-        VoiceIcon.Tints[0].A = Alpha;
-    }
-
-    // Draw voice icon
-    DrawSpriteWidget(C, VoiceIcon);
 }
 
 // Modified to handle delay before displaying death messages, with fade in & out - Basnett, 2011
