@@ -2172,8 +2172,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         {
             DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
         }
-
-        // Draw the rally points
+/*
+        // Draw the rally points // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
         for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
@@ -2191,7 +2191,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
                 DrawIconOnMap(C, SubCoords, MapIconRally[OwnerTeam], MyMapScale, Temp, MapCenter);
             }
         }
-
+*/
         // Draw Artillery Radio Icons
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
@@ -2566,7 +2566,7 @@ simulated function DrawObjectives(Canvas C)
     local SpriteWidget  Widget;
     local DHPlayer      Player;
     local int           i, j, OwnerTeam, ObjCount, SecondaryObjCount;
-    local bool          bShowRally;
+//  local bool          bShowRally; // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
     local bool          bShowArtillery;
     local bool          bShowResupply;
     local bool          bShowArtyCoords;
@@ -2817,8 +2817,8 @@ simulated function DrawObjectives(Canvas C)
     {
         DrawLegendElement(C, SubCoords, MapIconVehicleResupply, LegendResupplyAreaText);
     }
-
-    // Rally Points
+/*
+    // Rally Points // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
     for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
     {
         if ((OwnerTeam == AXIS_TEAM_INDEX && DHGRI.AxisRallyPoints[i].RallyPointLocation != vect(0.0, 0.0, 0.0)) ||
@@ -2833,7 +2833,7 @@ simulated function DrawObjectives(Canvas C)
     {
         DrawLegendElement(C, SubCoords, MapIconRally[OwnerTeam], LegendRallyPointText);
     }
-
+*/
     // Artillery coords & destroyable items [?]
     if (Player != none)
     {
