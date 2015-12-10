@@ -107,7 +107,6 @@ replication
         bWeaponNeedsReload;
 //      bWeaponIsMG, bWeaponIsAT; // Matt: removed as not used anywhere
 
-
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;

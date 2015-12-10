@@ -323,8 +323,6 @@ function bool FillAmmo()
 
     if (P != none)
     {
-
-
         if (P.MortarHEAmmo < HighExplosiveMaximum)
         {
             P.MortarHEAmmo = HighExplosiveMaximum;

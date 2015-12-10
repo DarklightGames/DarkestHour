@@ -2796,7 +2796,6 @@ simulated function DrawObjectives(Canvas C)
         Widget.Tints[TeamIndex].A = 255;
     }
 
-
     // Artillery strike
     if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
     {

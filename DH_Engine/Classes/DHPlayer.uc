@@ -508,7 +508,6 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -10000.0, 10000.0);
         ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -10000.0, 10000.0);
 
-
         if (Pawn != none && Pawn.Weapon != none && DHPwn != none)
         {
             ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
