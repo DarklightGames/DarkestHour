@@ -1823,21 +1823,21 @@ simulated function DrawVehiclePhysiscsWheels()
     }
 }
 
-simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
+// New function to split out lengthy map drawing functionality from the DrawObjectives() function
+// As this is now called from the DHDeployMenu class as well as DrawObjectives (& also it helps shorten a very length DrawObjectives function)
+simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
     local int                       i, Pos, OwnerTeam, Distance;
     local Actor                     A;
     local Controller                P;
     local float                     MyMapScale, PawnRotation, ArrowRotation;
     local vector                    Temp, MapCenter;
-    local ROVehicleWeaponPawn       WeaponPawn;
     local Vehicle                   V;
     local Actor                     NetActor;
     local Pawn                      NetPawn;
     local DHPawn                    DHP;
     local SpriteWidget              Widget;
     local string                    S, DistanceString;
-    local DHPlayer                  Player;
     local DHRoleInfo                RI;
     local DHPlayerReplicationInfo   PRI;
 
@@ -1855,9 +1855,6 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     {
         OwnerTeam = 255;
     }
-
-    // Get player
-    Player = DHPlayer(PlayerOwner);
 
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
@@ -2410,43 +2407,21 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
         }
     }
 
-    // Get player actor
+    // Get player actor, for drawing player icon
     if (PawnOwner != none)
     {
         A = PawnOwner;
     }
-    else if (PlayerOwner.IsInState('Spectating'))
+    else if (PlayerOwner != none)
     {
-        A = PlayerOwner;
-    }
-    else if (PlayerOwner.Pawn != none)
-    {
-        A = PlayerOwner.Pawn;
-    }
-
-    // Fix for frelled rotation on weapon pawns
-    WeaponPawn = ROVehicleWeaponPawn(A);
-
-    if (WeaponPawn != none)
-    {
-        Player = DHPlayer(WeaponPawn.Controller);
-
-        if (Player != none && WeaponPawn.VehicleBase != none)
+        if (PlayerOwner.IsInState('Spectating'))
         {
-            PawnRotation = -Player.CalcViewRotation.Yaw;
+            A = PlayerOwner;
         }
-        else if (WeaponPawn.VehicleBase != none)
+        else if (PlayerOwner.Pawn != none)
         {
-            PawnRotation = -WeaponPawn.VehicleBase.Rotation.Yaw;
+            A = PlayerOwner.Pawn;
         }
-        else
-        {
-            PawnRotation = -A.Rotation.Yaw;
-        }
-    }
-    else if (A != none)
-    {
-        PawnRotation = -A.Rotation.Yaw;
     }
 
     // Draw the map scale indicator
@@ -2456,23 +2431,35 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     // Draw player icon
     if (A != none)
     {
-        // Set proper icon rotation
-        if (DHGRI.OverheadOffset == 90)
+        // Set icon rotation
+        if (Player != none)
         {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation - 32768;
-        }
-        else if (DHGRI.OverheadOffset == 180)
-        {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation - 49152;
-        }
-        else if (DHGRI.OverheadOffset == 270)
-        {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation;
+            PawnRotation = -Player.CalcViewRotation.Yaw;
         }
         else
         {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation - 16384;
+            log("No Player, PlayerOwner =" @ PlayerOwner @ " PawnOwner =" @ PawnOwner @ " PlayerOwner.Pawn =" @ PlayerOwner.Pawn); // TEMP
+            PawnRotation = -A.Rotation.Yaw;
         }
+
+        switch (DHGRI.OverheadOffset)
+        {
+            case 90:
+                PawnRotation -= 32768;
+                break;
+
+            case 180:
+                PawnRotation -= 49152;
+                break;
+
+            case 270:
+                break;
+
+            default:
+                PawnRotation -= 16384;
+        }
+
+        TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation;
 
         // Draw the player icon
         DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, A.Location, MapCenter);
@@ -2603,7 +2590,7 @@ simulated function DrawObjectives(Canvas C)
     }
 
     // Draw the overhead map
-    DrawMap(C, SubCoords);
+    DrawMap(C, SubCoords, Player);
 
     // Draw the timer legend
     DrawTextWidgetClipped(C, MapTimerTitle, MapCoords, XL, YL, YL_one);
