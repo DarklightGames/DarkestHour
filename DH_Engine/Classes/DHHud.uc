@@ -1642,6 +1642,92 @@ function DrawPlayerNames(Canvas C)
     }
 }
 
+// Modified to fix problem where compass failed to follow view rotation of player driving a vehicle
+simulated function DrawCompass(Canvas C)
+{
+    local Actor              A;
+    local AbsoluteCoordsInfo GlobalCoors;
+    local float              PawnRotation, PlayerRotation, Compensation, XL, YL;
+    local int                OverheadOffset;
+
+    // Get player actor
+    if (PawnOwner != none)
+    {
+        A = PawnOwner;
+    }
+    else if (PlayerOwner != none)
+    {
+        if (PlayerOwner.IsInState('Spectating'))
+        {
+            A = PlayerOwner;
+        }
+        else if (PlayerOwner.Pawn != none)
+        {
+            A = PlayerOwner.Pawn;
+        }
+    }
+
+    if (A != none)
+    {
+        // Figure which direction we're facing
+        if (PlayerOwner != none)
+        {
+            PawnRotation = -PlayerOwner.CalcViewRotation.Yaw; // fix is to always use CalcViewRotation (it's always the last calculated camera rotation)
+        }
+        else
+        {
+            PawnRotation = -A.Rotation.Yaw;
+        }
+
+        // Compensate for map rotation
+        if (PlayerOwner != none && PlayerOwner.GameReplicationInfo != none)
+        {
+            OverheadOffset = PlayerOwner.GameReplicationInfo.OverheadOffset;
+        }
+
+        Compensation = (float(OverheadOffset) / 90.0 * 16384.0) + 16384.0;
+        PlayerRotation = PawnRotation + Compensation;
+
+        // Pre-bind compass rotation to a -32000 to 32000 range relative to PlayerRotation
+        while ((CompassCurrentRotation - PlayerRotation) > 32768)
+        {
+            CompassCurrentRotation -= 65536;
+        }
+
+        while ((CompassCurrentRotation - PlayerRotation) < -32768)
+        {
+            CompassCurrentRotation += 65536;
+        }
+
+        // Update compass & needle rotation
+        CompassCurrentRotation = CompassCurrentRotation + (CompassStabilizationConstant * (PlayerRotation - CompassCurrentRotation) * (Level.TimeSeconds - HudLastRenderTime));
+        TexRotator(CompassNeedle.WidgetTexture).Rotation.Yaw = CompassCurrentRotation;
+    }
+    else // shouldn't ever happen but better safe than log-spammy
+    {
+        PlayerRotation = CompassCurrentRotation;
+    }
+
+    // Draw compass base (fake, only to get sizes)
+    GlobalCoors.width = C.ClipX;
+    GlobalCoors.height = C.ClipY;
+    DrawSpriteWidgetClipped(C, CompassBase, GlobalCoors, true, XL, YL, true, true, true);
+
+    // Calculate needle screen offset
+    CompassNeedle.OffsetX = (GlobalCoors.width * -0.005) + default.CompassNeedle.OffsetX + (CompassBase.OffsetX - XL / HudScale / 2.0);
+    CompassNeedle.OffsetY = default.CompassNeedle.OffsetY + CompassBase.OffsetY - (YL / HudScale / 2.0);
+
+    // Draw the compass needle & base
+    DrawSpriteWidgetClipped(C, CompassNeedle, GlobalCoors, true, XL, YL, true, true, true);
+    DrawSpriteWidgetClipped(C, CompassBase, GlobalCoors, true, XL, YL, true, true, true);
+
+    // Draw icons
+    if (CompassIconsOpacity > 0.0 || bShowObjectives)
+    {
+        DrawCompassIcons(C, CompassNeedle.OffsetX, CompassNeedle.OffsetY, XL / HudScale / 2.0 * CompassIconsPositionRadius, -(A.Rotation.Yaw + 16384), A, GlobalCoors);
+    }
+}
+
 // Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
 // (Badly named, but is an inherited function - best thought of as DrawVehicleOccupantHitPoint)
 simulated function DrawDriverPointSphere()
@@ -2424,10 +2510,6 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
-    // Draw the map scale indicator
-    //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
-    //DrawTextWidgetClipped(C, MapScaleText, subCoords);
-
     // Draw player icon
     if (A != none)
     {
@@ -2438,7 +2520,6 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
         else
         {
-            log("No Player, PlayerOwner =" @ PlayerOwner @ " PawnOwner =" @ PawnOwner @ " PlayerOwner.Pawn =" @ PlayerOwner.Pawn); // TEMP
             PawnRotation = -A.Rotation.Yaw;
         }
 
@@ -2464,6 +2545,10 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         // Draw the player icon
         DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, A.Location, MapCenter);
     }
+
+    // Draw the map scale indicator
+    //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
+    //DrawTextWidgetClipped(C, MapScaleText, subCoords);
 
     // Overhead map debugging
     if (Level.NetMode == NM_Standalone && ROTeamGame(Level.Game).LevelInfo.bDebugOverhead)
