@@ -7,16 +7,16 @@ class DH_ClientMaterialTrigger extends MaterialTrigger;
 
 // whether triggering resets or triggers the materials
 var(MaterialTrigger) enum ETriggerAction {
-  TriggerTriggers,
-  TriggerResets,
-  TriggerDoesNothing
+    TriggerTriggers,
+    TriggerResets,
+    TriggerDoesNothing
 } TriggerAction;
 
 // whether untriggering resets or triggers the materials
 var(MaterialTrigger) enum EUnriggerAction {
-  UntriggerDoesNothing,
-  UntriggerTriggers,
-  UntriggerResets
+    UntriggerDoesNothing,
+    UntriggerTriggers,
+    UntriggerResets
 } UntriggerAction;
 
 // array holding the ReplicationInfos for clientside triggering
@@ -30,14 +30,15 @@ var array<DH_MaterialTriggerReplicationInfo> ReplicatedMaterialTriggers;
 
 function PostBeginPlay()
 {
-  local int i;
+    local int i;
 
-  ReplicatedMaterialTriggers.Length = MaterialsToTrigger.Length;
+    ReplicatedMaterialTriggers.Length = MaterialsToTrigger.Length;
 
-  for (i = 0; i < MaterialsToTrigger.Length; ++i) {
-    ReplicatedMaterialTriggers[i] = Spawn(class'DH_MaterialTriggerReplicationInfo', self);
-    ReplicatedMaterialTriggers[i].SetMaterialToTrigger(string(MaterialsToTrigger[i]));
-  }
+    for (i = 0; i < MaterialsToTrigger.Length; ++i)
+    {
+        ReplicatedMaterialTriggers[i] = Spawn(class'DH_MaterialTriggerReplicationInfo', self);
+        ReplicatedMaterialTriggers[i].SetMaterialToTrigger(string(MaterialsToTrigger[i]));
+    }
 }
 
 //=============================================================================
@@ -49,21 +50,33 @@ function PostBeginPlay()
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-  local int i;
+    local int i;
 
-  if (Other == none)
-    Other = self;
+    if (Other == none)
+    {
+        Other = self;
+    }
 
-  if (TriggerAction == TriggerTriggers) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-      if (ReplicatedMaterialTriggers[i] != none)
-        ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
-  }
-  else if (TriggerAction == TriggerResets) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-      if (ReplicatedMaterialTriggers[i] != none)
-        ReplicatedMaterialTriggers[i].ResetMaterial();
-  }
+    if (TriggerAction == TriggerTriggers)
+    {
+        for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
+        {
+            if (ReplicatedMaterialTriggers[i] != none)
+            {
+                ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
+            }
+        }
+    }
+    else if (TriggerAction == TriggerResets)
+    {
+        for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
+        {
+            if (ReplicatedMaterialTriggers[i] != none)
+            {
+                ReplicatedMaterialTriggers[i].ResetMaterial();
+            }
+        }
+    }
 }
 
 //=============================================================================
@@ -71,24 +84,35 @@ function Trigger(Actor Other, Pawn EventInstigator)
 //
 // Triggers or resets the materials depending on the UntriggerAction property.
 //=============================================================================
-
 function Untrigger(Actor Other, Pawn EventInstigator)
 {
-  local int i;
+    local int i;
 
-  if (Other == none)
-    Other = self;
+    if (Other == none)
+    {
+        Other = self;
 
-  if (UntriggerAction == UntriggerTriggers) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-      if (ReplicatedMaterialTriggers[i] != none)
-        ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
-  }
-  else if (UntriggerAction == UntriggerResets) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-      if (ReplicatedMaterialTriggers[i] != none)
-        ReplicatedMaterialTriggers[i].ResetMaterial();
-  }
+        if (UntriggerAction == UntriggerTriggers)
+        {
+            for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
+            {
+                if (ReplicatedMaterialTriggers[i] != none)
+                {
+                    ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
+                }
+            }
+        }
+        else if (UntriggerAction == UntriggerResets)
+        {
+            for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
+            {
+                if (ReplicatedMaterialTriggers[i] != none)
+                {
+                    ReplicatedMaterialTriggers[i].ResetMaterial();
+                }
+            }
+        }
+    }
 }
 
 simulated function Reset()

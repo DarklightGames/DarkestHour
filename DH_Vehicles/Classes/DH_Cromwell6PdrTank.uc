@@ -94,17 +94,21 @@ defaultproperties
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
     VehicleHudOccupantsX(0)=0.56
-    VehicleHudOccupantsX(1)=0.52
+    VehicleHudOccupantsY(0)=0.38
+    VehicleHudOccupantsX(1)=0.45
+    VehicleHudOccupantsY(1)=0.56
     VehicleHudOccupantsX(2)=0.46
-    VehicleHudOccupantsX(3)=0.4
-    VehicleHudOccupantsY(3)=0.67
-    VehicleHudOccupantsX(4)=0.4
-    VehicleHudOccupantsY(4)=0.76
-    VehicleHudOccupantsX(5)=0.625
-    VehicleHudOccupantsY(5)=0.76
-    VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.67
-    VehicleHudEngineX=0.51
+    VehicleHudOccupantsY(2)=0.38
+    VehicleHudOccupantsX(3)=0.41
+    VehicleHudOccupantsY(3)=0.73
+    VehicleHudOccupantsX(4)=0.41
+    VehicleHudOccupantsY(4)=0.83
+    VehicleHudOccupantsX(5)=0.60
+    VehicleHudOccupantsY(5)=0.83
+    VehicleHudOccupantsX(6)=0.60
+    VehicleHudOccupantsY(6)=0.73
+    VehicleHudEngineX=0.505
+    VehicleHudEngineY=0.76
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-95.0,Z=2.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

@@ -12,5 +12,6 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
     DriverPositions(4)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
+    DriverPositions(5)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stuglate_turret_int')
     GunClass=class'DH_Vehicles.DH_Stug3GCannon_Late'
 }

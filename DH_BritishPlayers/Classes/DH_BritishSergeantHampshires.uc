@@ -18,8 +18,9 @@ defaultproperties
     Models(2)="Hamp_Sarg3"
     bIsLeader=true
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
@@ -28,7 +29,7 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishInfantryBeretHampshires'
     HeadgearProbabilities(1)=0.5
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    PrimaryWeaponType=WT_SMG
+    PrimaryWeaponType=WT_Rifle
     bEnhancedAutomaticControl=true
     Limit=2
 }

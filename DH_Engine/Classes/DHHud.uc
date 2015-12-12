@@ -9,7 +9,15 @@ class DHHud extends ROHud;
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
-const MAX_OBJ_ON_SIT = 12; // The maximum objectives that can be listed down the side on the situational map (not on the map itself)
+const MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the side on the situational map (not on the map itself)
+
+const VOICE_ICON_DIST_MAX = 2624.672119;    // maximum distance from a talking player at which we will show a voice icon
+
+var Pawn                LastTalkingPawn;    // records last pawn for which we showed a voice icon, so we don't need to keep finding it
+
+var DHGameReplicationInfo   DHGRI;
+
+var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
 
 var SpriteWidget        VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
@@ -47,26 +55,18 @@ var localized string    SpawnNoRoleText;
 var localized string    TimeElapsedText;
 var localized string    MapNameText;
 
-var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
-var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
-var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
-var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
-
-var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
-
-// For some added suspense:
-var float               ObituaryFadeInTime;
+var float               ObituaryFadeInTime;   // for some added suspense:
 var float               ObituaryDelayTime;
-
 var array<Obituary>     DHObituaries;         // replaced RO's Obituaries static array, so we can have more than 4 death messages
 var array<string>       ConsoleDeathMessages; // paired with DHObituaries array & holds accompanying console death messages
 
-const VOICE_ICON_DIST_MAX = 2624.672119;
+var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
+var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
+var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
+var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
-
-var DHGameReplicationInfo   DHGRI;
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
@@ -509,7 +509,7 @@ simulated function DrawHudPassC(Canvas C)
     Coords.Width = C.ClipX;
     Coords.Height = C.ClipY;
 
-    // Don't draw the healthfigure when in a vehicle
+    // Damage to body parts (but not when in a vehicle)
     if (bShowPersonalInfo && ROPawn(PawnOwner) != none)
     {
         DrawSpriteWidget(C, HealthFigureBackground);
@@ -519,7 +519,7 @@ simulated function DrawHudPassC(Canvas C)
         DrawLocationHits(C, ROPawn(PawnOwner));
     }
 
-    // Show MG deploy icon if the weapon can be deployed
+    // MG deploy icon if the weapon can be deployed
     if (PawnOwner.bCanBipodDeploy)
     {
         DrawSpriteWidget(C, MGDeployIcon);
@@ -527,18 +527,19 @@ simulated function DrawHudPassC(Canvas C)
 
     if (DHPawn(PawnOwner) != none)
     {
+        // Mantling icon if an object can be climbed
         if (DHPawn(PawnOwner).bCanMantle)
         {
-            // Show Mantling icon if an object can be climbed
             DrawSpriteWidget(C, CanMantleIcon);
         }
+        // Wire cutting icon if an object can be cut
         else if (DHPawn(PawnOwner).bCanCutWire)
         {
             DrawSpriteWidget(C, CanCutWireIcon);
         }
     }
 
-    // Draw the icon for weapon resting
+    // Weapon rest icon
     if (PawnOwner.bRestingWeapon)
     {
         DrawSpriteWidget(C, WeaponRestingIcon);
@@ -575,6 +576,7 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
+    // Spawn vehicle deploy icon
     if (Vehicle(PawnOwner) != none)
     {
         if (PawnOwner.IsA('DHArmoredVehicle'))
@@ -605,8 +607,8 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
-    // Show weapon info
     if (bShowWeaponInfo && PawnOwner.Weapon != none)
+    // Weapon info
     {
         if (AmmoIcon.WidgetTexture != none)
         {
@@ -649,15 +651,16 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
+    // Objective capture bar
     DrawCaptureBar(C);
 
-    // Draw Compass
+    // Compass
     if (bShowCompass)
     {
         DrawCompass(C);
     }
 
-    // Draw the 'map updated' icon
+    // 'Map updated' icon
     if (bShowMapUpdatedIcon)
     {
         Alpha = (Level.TimeSeconds - MapUpdatedIconTime) % 2.0;
@@ -731,12 +734,8 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
+    // Player names
     DrawPlayerNames(C);
-
-    if (bShowRelevancyDebugOverlay && (Level.NetMode == NM_Standalone || (DHGRI != none && DHGRI.bAllowNetDebug)))
-    {
-        DrawNetworkActors(C);
-    }
 
     // Portrait
     if (bShowPortrait || (bShowPortraitVC && Level.TimeSeconds - LastPlayerIDTalkingTime < 2.0))
@@ -769,13 +768,13 @@ simulated function DrawHudPassC(Canvas C)
         }
 
         // Update portrait alpha value (fade in & fade out)
-        if (PortraitTime - Level.TimeSeconds > 0.0)
+        if ((PortraitTime - Level.TimeSeconds) > 0.0)
         {
-            PortraitX = FMax(0.0, PortraitX - 3.0 * (Level.TimeSeconds - hudLastRenderTime));
+            PortraitX = FMax(0.0, PortraitX - 3.0 * (Level.TimeSeconds - HudLastRenderTime));
         }
         else if (PortraitPRI != none)
         {
-            PortraitX = FMin(1.0, PortraitX + 3.0 * (Level.TimeSeconds - hudLastRenderTime));
+            PortraitX = FMin(1.0, PortraitX + 3.0 * (Level.TimeSeconds - HudLastRenderTime));
 
             if (PortraitX == 1.0)
             {
@@ -835,32 +834,45 @@ simulated function DrawHudPassC(Canvas C)
             DrawTextWidgetClipped(C, PortraitText[1], Coords);
 
             // Draw the voice icon
-            DrawVoiceIcon(C, PortraitPRI);
+            if (bShowVoiceIcon)
+            {
+                DrawVoiceIcon(C);
+            }
         }
     }
 
-    // Slow, for debugging only
-    if (bDebugDriverCollision && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    // Debug option - draw actors on the HUD to help debugging network relevancy
+    if (bShowRelevancyDebugOverlay && (Level.NetMode == NM_Standalone || (DHGRI != none && DHGRI.bAllowNetDebug)))
     {
-        DrawDriverPointSphere();
+        DrawNetworkActors(C);
     }
 
-    // Slow, for debugging only
-    if (bDebugVehicleHitPoints && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    // Debug options - slow !
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        DrawVehiclePointSphere();
-    }
+        // Draw all vehicle occupant ('Driver') hit points
+        if (bDebugDriverCollision)
+        {
+            DrawDriverPointSphere();
+        }
 
-    // Slow, for debugging only
-    if (bDebugPlayerCollision && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
-    {
-        DrawPointSphere();
-    }
+        // Draw all vehicle's special hit points
+        if (bDebugVehicleHitPoints)
+        {
+            DrawVehiclePointSphere();
+        }
 
-    // Slow, for debugging only
-    if (bDebugVehicleWheels && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
-    {
-        DrawVehiclePhysiscsWheels();
+        // Draw all player's body part hit points & bullet whip attachment
+        if (bDebugPlayerCollision)
+        {
+            DrawPointSphere();
+        }
+
+        // Draw all vehicle's physics wheels
+        if (bDebugVehicleWheels)
+        {
+            DrawVehiclePhysiscsWheels();
+        }
     }
 }
 
@@ -889,10 +901,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         return;
     }
 
-    //////////////////////////////////////
-    // Draw vehicle icon
-    //////////////////////////////////////
-
     // Figure what the scale is
     MyScale = HudScale; // * ResScaleY;
 
@@ -911,7 +919,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     // Set initial passenger PosX (shifted if we're drawing ammo info, else it's draw closer to the tank icon)
     VehicleOccupantsText.PosX = default.VehicleOccupantsText.PosX;
 
-    // The IS2 is so frelling huge that it needs to use larger textures
+    // Large vehicles may use a larger icon texture
     if (Vehicle.bVehicleHudUsesLargeTexture)
     {
         Widget = VehicleIconAlt;
@@ -1346,7 +1354,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
     }
 
-    // Draw occupant dots
+    // Draw vehicle occupant dots
     for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; ++i)
     {
         if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
@@ -1470,7 +1478,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
 function DrawPlayerNames(Canvas C)
 {
-    local vector          HitLocation, HitNormal, ViewPos, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
+    local vector          HitLocation, HitNormal, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
     local int             PawnOwnerTeam;
     local float           StrX, StrY;
     local string          ResupplyMessage;
@@ -1479,13 +1487,12 @@ function DrawPlayerNames(Canvas C)
     local DHPawn          MyDHP, OtherDHP;
     local DHMortarVehicle Mortar;
 
-    if (PawnOwner == none || PawnOwner.Controller == none)
+    if (PawnOwner == none || PlayerOwner == none)
     {
         return;
     }
 
-    ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0);
-    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true));
+    HitPawn = Pawn(Trace(HitLocation, HitNormal, PlayerOwner.CalcViewLocation + (1600.0 * vector(PlayerOwner.CalcViewRotation)), PlayerOwner.CalcViewLocation, true));
     PawnOwnerTeam = PawnOwner.GetTeamNum();
     Mortar = DHMortarVehicle(HitPawn);
 
@@ -1507,7 +1514,7 @@ function DrawPlayerNames(Canvas C)
     if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
     {
         Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
-        GetAxes(PlayerOwner.Rotation, X, Y, Z);
+        GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
 
         if (Dir dot X > 0.0)
         {
@@ -1566,7 +1573,7 @@ function DrawPlayerNames(Canvas C)
                 if (bCouldMGResupply || bCouldMortarResupply || bCouldATResupply || bCouldATReload)
                 {
                     // If within 2 metres then we can actually resupply/reload the player
-                    if (VSizeSquared(NamedPlayerLoc - PawnOwner.Location) < 14400.0)
+                    if (VSizeSquared(NamedPlayerLoc - MyDHP.Location) < 14400.0)
                     {
                         if (bCouldATReload)
                         {
@@ -1635,7 +1642,94 @@ function DrawPlayerNames(Canvas C)
     }
 }
 
+// Modified to fix problem where compass failed to follow view rotation of player driving a vehicle
+simulated function DrawCompass(Canvas C)
+{
+    local Actor              A;
+    local AbsoluteCoordsInfo GlobalCoors;
+    local float              PawnRotation, PlayerRotation, Compensation, XL, YL;
+    local int                OverheadOffset;
+
+    // Get player actor
+    if (PawnOwner != none)
+    {
+        A = PawnOwner;
+    }
+    else if (PlayerOwner != none)
+    {
+        if (PlayerOwner.IsInState('Spectating'))
+        {
+            A = PlayerOwner;
+        }
+        else if (PlayerOwner.Pawn != none)
+        {
+            A = PlayerOwner.Pawn;
+        }
+    }
+
+    if (A != none)
+    {
+        // Figure which direction we're facing
+        if (PlayerOwner != none)
+        {
+            PawnRotation = -PlayerOwner.CalcViewRotation.Yaw; // fix is to always use CalcViewRotation (it's always the last calculated camera rotation)
+        }
+        else
+        {
+            PawnRotation = -A.Rotation.Yaw;
+        }
+
+        // Compensate for map rotation
+        if (PlayerOwner != none && PlayerOwner.GameReplicationInfo != none)
+        {
+            OverheadOffset = PlayerOwner.GameReplicationInfo.OverheadOffset;
+        }
+
+        Compensation = (float(OverheadOffset) / 90.0 * 16384.0) + 16384.0;
+        PlayerRotation = PawnRotation + Compensation;
+
+        // Pre-bind compass rotation to a -32000 to 32000 range relative to PlayerRotation
+        while ((CompassCurrentRotation - PlayerRotation) > 32768)
+        {
+            CompassCurrentRotation -= 65536;
+        }
+
+        while ((CompassCurrentRotation - PlayerRotation) < -32768)
+        {
+            CompassCurrentRotation += 65536;
+        }
+
+        // Update compass & needle rotation
+        CompassCurrentRotation = CompassCurrentRotation + (CompassStabilizationConstant * (PlayerRotation - CompassCurrentRotation) * (Level.TimeSeconds - HudLastRenderTime));
+        TexRotator(CompassNeedle.WidgetTexture).Rotation.Yaw = CompassCurrentRotation;
+    }
+    else // shouldn't ever happen but better safe than log-spammy
+    {
+        PlayerRotation = CompassCurrentRotation;
+    }
+
+    // Draw compass base (fake, only to get sizes)
+    GlobalCoors.width = C.ClipX;
+    GlobalCoors.height = C.ClipY;
+    DrawSpriteWidgetClipped(C, CompassBase, GlobalCoors, true, XL, YL, true, true, true);
+
+    // Calculate needle screen offset
+    CompassNeedle.OffsetX = (GlobalCoors.width * -0.005) + default.CompassNeedle.OffsetX + (CompassBase.OffsetX - XL / HudScale / 2.0);
+    CompassNeedle.OffsetY = default.CompassNeedle.OffsetY + CompassBase.OffsetY - (YL / HudScale / 2.0);
+
+    // Draw the compass needle & base
+    DrawSpriteWidgetClipped(C, CompassNeedle, GlobalCoors, true, XL, YL, true, true, true);
+    DrawSpriteWidgetClipped(C, CompassBase, GlobalCoors, true, XL, YL, true, true, true);
+
+    // Draw icons
+    if (CompassIconsOpacity > 0.0 || bShowObjectives)
+    {
+        DrawCompassIcons(C, CompassNeedle.OffsetX, CompassNeedle.OffsetY, XL / HudScale / 2.0 * CompassIconsPositionRadius, -(A.Rotation.Yaw + 16384), A, GlobalCoors);
+    }
+}
+
 // Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
+// (Badly named, but is an inherited function - best thought of as DrawVehicleOccupantHitPoint)
 simulated function DrawDriverPointSphere()
 {
     local ROVehicle       V;
@@ -1681,6 +1775,7 @@ simulated function DrawDriverPointSphere()
 
 // Modified to include DHArmoredVehicle's special hit points & to use different colours for different types of hit point
 // Engine is blue, ammo stores are red, gun traverse & pivot are gold, periscopes are pink, others are white
+// (Badly named, but is an inherited function - best thought of as DrawVehicleHitPoints)
 simulated function DrawVehiclePointSphere()
 {
     local ROVehicle        V;
@@ -1753,7 +1848,8 @@ simulated function DrawVehiclePointSphere()
 }
 
 // Modified to avoid drawing the player's own collision in 1st person, as it screws up the view too much and serves no purpose
-// Also to draw the pawn's AuxCollisionCylinder (the DHBulletWhipAttachment), instead of the unnecessary whole body cylinder (it's just an optimisation, not an actual hit point)
+// Also to draw pawn's AuxCollisionCylinder (DHBulletWhipAttachment), instead of unnecessary whole body cylinder (it's just an optimisation, not an actual hit point)
+// (Badly named, but is an inherited function - best thought of as DrawPlayerHitPoints)
 simulated function DrawPointSphere()
 {
     local ROPawn P;
@@ -1813,21 +1909,21 @@ simulated function DrawVehiclePhysiscsWheels()
     }
 }
 
-simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
+// New function to split out lengthy map drawing functionality from the DrawObjectives() function
+// As this is now called from the DHDeployMenu class as well as DrawObjectives (& also it helps shorten a very length DrawObjectives function)
+simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
     local int                       i, Pos, OwnerTeam, Distance;
     local Actor                     A;
     local Controller                P;
     local float                     MyMapScale, PawnRotation, ArrowRotation;
     local vector                    Temp, MapCenter;
-    local ROVehicleWeaponPawn       WeaponPawn;
     local Vehicle                   V;
     local Actor                     NetActor;
     local Pawn                      NetPawn;
     local DHPawn                    DHP;
     local SpriteWidget              Widget;
     local string                    S, DistanceString;
-    local DHPlayer                  Player;
     local DHRoleInfo                RI;
     local DHPlayerReplicationInfo   PRI;
 
@@ -1845,9 +1941,6 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
     {
         OwnerTeam = 255;
     }
-
-    // Get player
-    Player = DHPlayer(PlayerOwner);
 
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
@@ -2079,8 +2172,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
         {
             DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
         }
-
-        // Draw the rally points
+/*
+        // Draw the rally points // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
         for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
@@ -2098,7 +2191,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
                 DrawIconOnMap(C, SubCoords, MapIconRally[OwnerTeam], MyMapScale, Temp, MapCenter);
             }
         }
-
+*/
         // Draw Artillery Radio Icons
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
@@ -2400,73 +2493,62 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords)
         }
     }
 
-    // Get player actor
+    // Get player actor, for drawing player icon
     if (PawnOwner != none)
     {
         A = PawnOwner;
     }
-    else if (PlayerOwner.IsInState('Spectating'))
+    else if (PlayerOwner != none)
     {
-        A = PlayerOwner;
+        if (PlayerOwner.IsInState('Spectating'))
+        {
+            A = PlayerOwner;
+        }
+        else if (PlayerOwner.Pawn != none)
+        {
+            A = PlayerOwner.Pawn;
+        }
     }
-    else if (PlayerOwner.Pawn != none)
+
+    // Draw player icon
+    if (A != none)
     {
-        A = PlayerOwner.Pawn;
-    }
-
-    // Fix for frelled rotation on weapon pawns
-    WeaponPawn = ROVehicleWeaponPawn(A);
-
-    if (WeaponPawn != none)
-    {
-        Player = DHPlayer(WeaponPawn.Controller);
-
-        if (Player != none && WeaponPawn.VehicleBase != none)
+        // Set icon rotation
+        if (Player != none)
         {
             PawnRotation = -Player.CalcViewRotation.Yaw;
-        }
-        else if (WeaponPawn.VehicleBase != none)
-        {
-            PawnRotation = -WeaponPawn.VehicleBase.Rotation.Yaw;
         }
         else
         {
             PawnRotation = -A.Rotation.Yaw;
         }
-    }
-    else if (A != none)
-    {
-        PawnRotation = -A.Rotation.Yaw;
+
+        switch (DHGRI.OverheadOffset)
+        {
+            case 90:
+                PawnRotation -= 32768;
+                break;
+
+            case 180:
+                PawnRotation -= 49152;
+                break;
+
+            case 270:
+                break;
+
+            default:
+                PawnRotation -= 16384;
+        }
+
+        TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation;
+
+        // Draw the player icon
+        DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, A.Location, MapCenter);
     }
 
     // Draw the map scale indicator
     //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
     //DrawTextWidgetClipped(C, MapScaleText, subCoords);
-
-    // Draw player icon
-    if (A != none)
-    {
-        // Set proper icon rotation
-        if (DHGRI.OverheadOffset == 90)
-        {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation - 32768;
-        }
-        else if (DHGRI.OverheadOffset == 180)
-        {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation - 49152;
-        }
-        else if (DHGRI.OverheadOffset == 270)
-        {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation;
-        }
-        else
-        {
-            TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation - 16384;
-        }
-
-        // Draw the player icon
-        DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, A.Location, MapCenter);
-    }
 
     // Overhead map debugging
     if (Level.NetMode == NM_Standalone && ROTeamGame(Level.Game).LevelInfo.bDebugOverhead)
@@ -2484,7 +2566,7 @@ simulated function DrawObjectives(Canvas C)
     local SpriteWidget  Widget;
     local DHPlayer      Player;
     local int           i, j, OwnerTeam, ObjCount, SecondaryObjCount;
-    local bool          bShowRally;
+//  local bool          bShowRally; // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
     local bool          bShowArtillery;
     local bool          bShowResupply;
     local bool          bShowArtyCoords;
@@ -2552,7 +2634,7 @@ simulated function DrawObjectives(Canvas C)
     // Calculate map offset (for animation)
     if (bAnimateMapIn)
     {
-        AnimateMapCurrentPosition -= (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
+        AnimateMapCurrentPosition -= (Level.TimeSeconds - HudLastRenderTime) / AnimateMapSpeed;
 
         if (AnimateMapCurrentPosition <= 0.0)
         {
@@ -2562,7 +2644,7 @@ simulated function DrawObjectives(Canvas C)
     }
     else if (bAnimateMapOut)
     {
-        AnimateMapCurrentPosition += (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
+        AnimateMapCurrentPosition += (Level.TimeSeconds - HudLastRenderTime) / AnimateMapSpeed;
 
         if (AnimateMapCurrentPosition >= default.AnimateMapCurrentPosition)
         {
@@ -2578,9 +2660,7 @@ simulated function DrawObjectives(Canvas C)
 
     // Calculate absolute coordinates of level map
     GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, SubCoords);
-
-    // Save coordinates for use in menu page
-    MapLevelImageCoordinates = SubCoords;
+    MapLevelImageCoordinates = SubCoords; // save coordinates for use in menu page
 
     // Draw coordinates text on sides of the map
     for (i = 0; i < 9; ++i)
@@ -2594,32 +2674,25 @@ simulated function DrawObjectives(Canvas C)
         DrawTextWidgetClipped(C, MapCoordTextYWidget, SubCoords);
     }
 
-    //==========================================================================
-    // START MAP DRAWING
-    //==========================================================================
+    // Draw the overhead map
+    DrawMap(C, SubCoords, Player);
 
-    DrawMap(C, SubCoords);
-
-    //==========================================================================
-    // END MAP DRAWING
-    //==========================================================================
-
-    // Draw timer
+    // Draw the timer legend
     DrawTextWidgetClipped(C, MapTimerTitle, MapCoords, XL, YL, YL_one);
 
     // Calculate seconds & minutes
     Time = CurrentTime;
-    MapTimerTexts[3].Text = String(Int(Time % 10.0));
+    MapTimerTexts[3].Text = string(Int(Time % 10.0));
     Time /= 10.0;
-    MapTimerTexts[2].Text = String(Int(Time % 6.0));
+    MapTimerTexts[2].Text = string(Int(Time % 6.0));
     Time /= 6.0;
-    MapTimerTexts[1].Text = String(Int(Time % 10.0));
+    MapTimerTexts[1].Text = string(Int(Time % 10.0));
     Time /= 10.0;
-    MapTimerTexts[0].Text = String(Int(Time));
+    MapTimerTexts[0].Text = string(Int(Time));
 
-    // Draw timer values
     C.Font = GetFontSizeIndex(C, -2);
 
+    // Draw the time
     for (i = 0; i < 4; ++i)
     {
         DrawTextWidgetClipped(C, MapTimerTexts[i], MapCoords, XL, YL, YL_one);
@@ -2744,8 +2817,8 @@ simulated function DrawObjectives(Canvas C)
     {
         DrawLegendElement(C, SubCoords, MapIconVehicleResupply, LegendResupplyAreaText);
     }
-
-    // Rally Points
+/*
+    // Rally Points // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
     for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
     {
         if ((OwnerTeam == AXIS_TEAM_INDEX && DHGRI.AxisRallyPoints[i].RallyPointLocation != vect(0.0, 0.0, 0.0)) ||
@@ -2760,7 +2833,7 @@ simulated function DrawObjectives(Canvas C)
     {
         DrawLegendElement(C, SubCoords, MapIconRally[OwnerTeam], LegendRallyPointText);
     }
-
+*/
     // Artillery coords & destroyable items [?]
     if (Player != none)
     {
@@ -2795,7 +2868,6 @@ simulated function DrawObjectives(Canvas C)
         Widget.Tints[TeamIndex].A = 255;
     }
 
-
     // Artillery strike
     if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
     {
@@ -2817,7 +2889,7 @@ simulated function DrawObjectives(Canvas C)
     {
         for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
         {
-            switch (DHGRI.AxisHelpRequests[i].requestType)
+            switch (DHGRI.AxisHelpRequests[i].RequestType)
             {
                 case 0: // help request at objective
                     bShowHelpRequest = true;
@@ -2845,7 +2917,7 @@ simulated function DrawObjectives(Canvas C)
     {
         for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
         {
-            switch (DHGRI.AlliedHelpRequests[i].requestType)
+            switch (DHGRI.AlliedHelpRequests[i].RequestType)
             {
                 case 0: // help request at objective
                     bShowHelpRequest = true;
@@ -3029,7 +3101,7 @@ simulated function DrawObjectives(Canvas C)
 
 simulated function DrawLocationHits(Canvas C, ROPawn P)
 {
-    local int          i, Team;
+    local int          Team, i;
     local bool         bNewDrawHits;
     local SpriteWidget Widget;
 
@@ -3147,116 +3219,78 @@ simulated function UpdateHud()
     }
 }
 
-simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
+simulated function DrawVoiceIcon(Canvas C)
 {
-    local DHPawn                DHP;
-    local ROVehicleWeaponPawn   ROVWP;
-    local ROVehicle             ROV;
+    local Pawn   P;
+    local float  Distance, Scale;
+    local vector ScreenPosition, VoiceLocation, VoiceDirection;
 
-    if (!bShowVoiceIcon)
+    if (PortraitPRI == none || PawnOwner == none || PlayerOwner == none)
     {
         return;
     }
 
-    foreach RadiusActors(class'DHPawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location) // 100 feet
+    // Find the talking pawn, if we don't have one previously recorded or it's now a different player
+    if (LastTalkingPawn == none || LastTalkingPawn.PlayerReplicationInfo != PortraitPRI)
     {
-        if (DHP.Health <= 0 || DHP.PlayerReplicationInfo != PRI)
+        foreach RadiusActors(class'Pawn', P, VOICE_ICON_DIST_MAX, PawnOwner.Location)
         {
-            continue;
+            if (P.PlayerReplicationInfo == PortraitPRI)
+            {
+                if (Vehicle(P) != none)
+                {
+                    LastTalkingPawn = Vehicle(P).Driver;
+                }
+                else
+                {
+                    LastTalkingPawn = P;
+                }
+
+                break;
+            }
+        }
+    }
+
+    if (LastTalkingPawn != none)
+    {
+        // Get location, direction & distance of the talking player
+        VoiceLocation = LastTalkingPawn.GetBoneCoords(LastTalkingPawn.HeadBone).Origin + vect(0.0, 0.0, 32.0);
+        VoiceDirection = VoiceLocation - PlayerOwner.CalcViewLocation;
+        Distance = VSize(VoiceDirection);
+
+        // Don't draw if player is too far away
+        if (Distance > VOICE_ICON_DIST_MAX)
+        {
+            return;
         }
 
-        DrawVoiceIconC(C, DHP);
-
-        return;
-    }
-
-    foreach RadiusActors(class'ROVehicle', ROV, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
-    {
-        if (ROV.Driver == none || ROV.PlayerReplicationInfo != PRI)
+        // Don't draw if player is behind us
+        if (Acos(Normal(VoiceDirection) dot vector(PlayerOwner.CalcViewRotation)) > 1.5705)
         {
-            continue;
+            return;
         }
 
-        DrawVoiceIconC(C, ROV.Driver);
+        // Scale down the voice icon's size & opacity, based on distance, so it is smaller & fainter the further away it is
+        // (apply a minimum, otherwise icon becomes very hard to see)
+        Scale = FMax(0.3, 1.0 - (Distance / VOICE_ICON_DIST_MAX));
 
-        return;
-    }
+        VoiceIcon.TextureScale = Scale * default.VoiceIcon.TextureScale; // set size
 
-    foreach RadiusActors(class'ROVehicleWeaponPawn', ROVWP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
-    {
-        if (ROVWP.Driver == none || ROVWP.PlayerReplicationInfo != PRI)
+        // If the icon is behind world geometry, make it look faint (reduce scale to minimum before setting opacity)
+        if (Scale > 0.3 && !FastTrace(VoiceLocation, PlayerOwner.CalcViewLocation))
         {
-            continue;
+            Scale = 0.3;
         }
 
-        DrawVoiceIconC(C, ROVWP.Driver);
+        VoiceIcon.Tints[0].A = byte(Scale * 255.0); // set opacity
 
-        return;
+        // Set icon screen position & draw the voice icon
+        ScreenPosition = C.WorldToScreen(VoiceLocation);
+        VoiceIcon.PosX = ScreenPosition.X / C.ClipX;
+        VoiceIcon.PosY = ScreenPosition.Y / C.ClipY;
+
+        DrawSpriteWidget(C, VoiceIcon);
     }
-}
-
-simulated function DrawVoiceIconC(Canvas C, Pawn P)
-{
-    local byte    Alpha;
-    local float   D, Df, Dm;
-    local vector  ScreenPosition, WorldLocation, PawnDirection, CameraLocation;
-    local rotator CameraRotation;
-
-    Dm = 1600.0;    // distance maximum
-    Df = Dm * 0.66; // distance fallout
-
-    // Get world location for icon placement.
-    WorldLocation = P.GetBoneCoords(P.HeadBone).Origin + vect(0.0, 0.0, 32.0);
-
-    // Get camera location and rotation, how handy!
-    C.GetCameraLocation(CameraLocation, CameraRotation);
-
-    // Get unnormalized direction from the player's eye to the world location
-    PawnDirection = WorldLocation - CameraLocation;
-
-    // Ooh, distance.
-    D = VSize(PawnDirection);
-
-    // Too far away?  Don't bother.
-    if (D > Dm)
-    {
-        return;
-    }
-
-    // Normalize pawn direction now for use
-    PawnDirection = Normal(PawnDirection);
-
-    // Ensure we're not drawing icons from players behind us
-    if (Acos(PawnDirection dot vector(CameraRotation)) > 1.5705)
-    {
-        return;
-    }
-
-    ScreenPosition = C.WorldToScreen(WorldLocation);
-
-    Alpha = 255;
-
-    if (D > Df)
-    {
-        Alpha -= byte(((D - Df) / (Dm - Df)) * 255.0);
-    }
-
-    VoiceIcon.PosX = ScreenPosition.X / C.ClipX;
-    VoiceIcon.PosY = ScreenPosition.Y / C.ClipY;
-
-    // If we can't see the icon from our current location, make it smaller and lighter
-    if (!FastTrace(WorldLocation, CameraLocation))
-    {
-        VoiceIcon.Scale = 0.5;
-        VoiceIcon.Tints[0].A = Alpha / 2;
-    }
-    else
-    {
-        VoiceIcon.Scale = 0.5;
-        VoiceIcon.Tints[0].A = Alpha;
-    }
-
-    DrawSpriteWidget(C, VoiceIcon);
 }
 
 // Modified to handle delay before displaying death messages, with fade in & out - Basnett, 2011
@@ -3394,6 +3428,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     // Get capture info from associated pawn
     P = DHPawn(PawnOwner);
 
+    // Pawn is a player pawn
     if (P != none)
     {
         CurrentCapArea = P.CurrentCapArea;
@@ -3407,9 +3442,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
     }
     else
     {
-        // Not a ROPawn, check if current pawn is a vehicle
         Veh = ROVehicle(PawnOwner);
 
+        // Pawn is a vehicle
         if (Veh != none)
         {
             CurrentCapArea = Veh.CurrentCapArea;
@@ -3423,9 +3458,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
         }
         else
         {
-            // Not a ROVehicle, check if current pawn is a ROVehicleWeaponPawn
             WpnPwn = ROVehicleWeaponPawn(PawnOwner);
 
+            // Pawn is a vehicle weapon pawn
             if (WpnPwn != none)
             {
                 CurrentCapArea = WpnPwn.CurrentCapArea;
@@ -3437,9 +3472,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
                     CurrentCapAlliesCappers = WpnPwn.CurrentCapAlliesCappers;
                 }
             }
+            // Unsupported pawn type - return
             else
             {
-                // Unsupported pawn type, return.
                 return;
             }
         }
@@ -3482,7 +3517,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     }
     else if (CurrentCapProgress > 100)
     {
-        AlliesProgress = Float(CurrentCapProgress - 100) / 100.0;
+        AlliesProgress = float(CurrentCapProgress - 100) / 100.0;
 
         if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
         {
@@ -3491,7 +3526,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     }
     else
     {
-        AxisProgress = Float(CurrentCapProgress) / 100.0;
+        AxisProgress = float(CurrentCapProgress) / 100.0;
 
         if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
         {
@@ -3580,7 +3615,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
     }
 
-    // Draw everything.
+    // Draw everything
     DrawSpriteWidget(Canvas, CaptureBarBackground);
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
@@ -3597,10 +3632,8 @@ simulated function DrawCaptureBar(Canvas Canvas)
         DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
     }
 
-    // Draw the objective name
-    YPos = Canvas.ClipY * CaptureBarBackground.PosY - (CaptureBarBackground.TextureCoords.Y2 + 1.0 + 4.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
+    // Set up to draw the objective name
     s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
-
     CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
 
     // Add a display for the number of cappers in vs the amount needed to capture
@@ -3629,10 +3662,13 @@ simulated function DrawCaptureBar(Canvas Canvas)
         }
     }
 
+    // Draw the objective name
     Canvas.Font = GetConsoleFont(Canvas);
     Canvas.TextSize(s, XL, YL);
     Canvas.DrawColor = WhiteColor;
+    YPos = Canvas.ClipY * CaptureBarBackground.PosY - (CaptureBarBackground.TextureCoords.Y2 + 1.0 + 4.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
     Canvas.SetPos(Canvas.ClipX * CaptureBarBackground.PosX - XL / 2.0, YPos - YL);
+
     Canvas.DrawText(s);
 
     // Add signal so that vehicle passenger list knows to shift text up
@@ -3642,8 +3678,8 @@ simulated function DrawCaptureBar(Canvas Canvas)
 // Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
 simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GRI, int CurrentObj)
 {
-    local  float  NewY;
-    local  int    Count, i;
+    local float NewY;
+    local int   Count, i;
 
     if (DHGRI == none || CurrentObj >= arraycount(DHGRI.DHObjectives) || CurrentObj < 0)
     {
@@ -3676,20 +3712,19 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
         // Check if there's overlap in the X axis
         if (!(LabelCoords.X2 <= DHGRI.DHObjectives[i].LabelCoords.X1 || LabelCoords.X1 >= DHGRI.DHObjectives[i].LabelCoords.X2))
         {
-            // There's overlap! Check if there's overlap in the Y axis.
+            // There's overlap - check if there's overlap in the Y axis
             if (!(LabelCoords.Y2 <= DHGRI.DHObjectives[i].LabelCoords.Y1 || LabelCoords.Y1 >= DHGRI.DHObjectives[i].LabelCoords.Y2))
             {
-                // There's overlap on both axis: the label overlaps. Update the position of the label.
+                // There's overlap on both axes; the label overlaps - update the position of the label
                 NewY = DHGRI.DHObjectives[i].LabelCoords.Y2 - (LabelCoords.Y2 - LabelCoords.Y1) * 0.0;
                 LabelCoords.Y2 = NewY + LabelCoords.Y2 - LabelCoords.Y1;
                 LabelCoords.Y1 = NewY;
 
                 i = -1; // this is to force re-checking of all possible overlaps to ensure that no other label overlaps with this
 
-                // Safety
-                Count++;
+                Count++; // safety check to prevent runaway loop
 
-                if (Count > CurrentObj * 5)
+                if (Count > (CurrentObj * 5))
                 {
                     break;
                 }
@@ -3766,8 +3801,8 @@ simulated function DrawSpectatingHud(Canvas C)
     local DHPlayer                PC;
     local class<Vehicle>          SVC;
     local float  Scale, X, Y, strX, strY, NameWidth, SmallH, XL;
-    local string S;
-    local int Time;
+    local int    Time;
+    local string s;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3796,11 +3831,11 @@ simulated function DrawSpectatingHud(Canvas C)
 
         if (DHGRI.RoundDuration == 0)
         {
-            S = default.TimeRemainingText $ default.NoTimeLimitText;
+            s = default.TimeRemainingText $ default.NoTimeLimitText;
         }
         else
         {
-            S = default.TimeRemainingText $ GetTimeString(CurrentTime);
+            s = default.TimeRemainingText $ GetTimeString(CurrentTime);
         }
 
         X = 8.0 * Scale;
@@ -3808,17 +3843,16 @@ simulated function DrawSpectatingHud(Canvas C)
 
         C.DrawColor = WhiteColor;
         C.Font = GetConsoleFont(C);
-        C.TextSize(S, strX, strY);
+        C.TextSize(s, strX, strY);
         C.SetPos(X, Y);
-        C.DrawTextClipped(S);
+        C.DrawTextClipped(s);
 
-        S = "";
+        s = "";
 
         // Draw deploy text
         if (PRI == none || PRI.Team == none || PRI.bOnlySpectator)
         {
-            // Press ESC to join a team
-            S = default.JoinTeamText;
+            s = default.JoinTeamText; // press ESC to join a team
         }
         else if (DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
@@ -3832,8 +3866,8 @@ simulated function DrawSpectatingHud(Canvas C)
                         if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
                         {
                             // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
-                            S = default.SpawnVehicleText;
-                            S = Repl(S, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
+                            s = default.SpawnVehicleText;
+                            s = Repl(s, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
                         }
                         else if (PC.SpawnPointIndex != 255)
                         {
@@ -3842,12 +3876,12 @@ simulated function DrawSpectatingHud(Canvas C)
                             if (SP == none)
                             {
                                 // Press ESC to select a spawn point
-                                S = default.SelectSpawnPointText;
+                                s = default.SelectSpawnPointText;
                             }
                             else
                             {
                                 // You will deploy as a {0} in {2} | Press ESC to change
-                                S = default.SpawnInfantryText;
+                                s = default.SpawnInfantryText;
                             }
                         }
                         else if (PC.SpawnVehicleIndex != 255)
@@ -3857,23 +3891,24 @@ simulated function DrawSpectatingHud(Canvas C)
                             if (SVC != none)
                             {
                                 // You will deploy as a {0} at a {1} in {2} | Press ESC to change
-                                S = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
+                                s = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
                             }
                             else
                             {
                                 // Press ESC to select a spawn point
-                                S = default.SelectSpawnPointText;
+                                s = default.SelectSpawnPointText;
                             }
                         }
                         else
                         {
                             // Press ESC to select a spawn point
-                            S = default.SelectSpawnPointText;
+                            s = default.SelectSpawnPointText;
                         }
 
                         break;
+
                     case ESM_RedOrchestra:
-                        S = default.ReinforcementText;
+                        s = default.ReinforcementText;
                         break;
                 }
 
@@ -3881,30 +3916,30 @@ simulated function DrawSpectatingHud(Canvas C)
                 {
                     if (PC.bUseNativeRoleNames)
                     {
-                        S = Repl(S, "{0}", PRI.RoleInfo.AltName);
+                        s = Repl(s, "{0}", PRI.RoleInfo.AltName);
                     }
                     else
                     {
-                        S = Repl(S, "{0}", PRI.RoleInfo.MyName);
+                        s = Repl(s, "{0}", PRI.RoleInfo.MyName);
                     }
                 }
                 else
                 {
-                    S = default.SpawnNoRoleText;
+                    s = default.SpawnNoRoleText;
                 }
 
-                S = Repl(S, "{2}", GetTimeString(Time));
+                s = Repl(s, "{2}", GetTimeString(Time));
             }
             else
             {
-                S = default.ReinforcementsDepletedText;
+                s = default.ReinforcementsDepletedText;
             }
         }
 
         Y += 4.0 * Scale + strY;
 
         C.SetPos(X, Y);
-        C.DrawTextClipped(S);
+        C.DrawTextClipped(s);
     }
 
     // Draw player's name
@@ -3983,7 +4018,7 @@ simulated function DrawSpectatingHud(Canvas C)
         {
             C.Font = GetConsoleFont(C);
             C.StrLen("W" ,XL, SmallH);
-            C.SetPos(79 * C.ClipX / 80 - NameWidth, C.ClipY * 0.68);
+            C.SetPos(79.0 * C.ClipX / 80.0 - NameWidth, C.ClipY * 0.68);
             C.DrawText(NowViewing, false);
         }
 
@@ -4006,56 +4041,54 @@ simulated function DrawSpectatingHud(Canvas C)
 function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Icon, float MyMapScale, vector Location, vector MapCenter,
     optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int ObjectiveIndex)
 {
-    local SpriteWidget MyIcon;
-    local FloatBox     Label_coords;
-    local vector       HUDLocation;
-    local float        XL, YL, YL_one, OldFontXScale, OldFontYScale;
+    local FloatBox Label_coords;
+    local vector   HUDLocation;
+    local float    XL, YL, YL_one, OldFontXScale, OldFontYScale;
 
-    // Calculate proper position
+    // Calculate the screen position
     HUDLocation = Location - MapCenter;
     HUDLocation.Z = 0.0;
     HUDLocation = GetAdjustedHudLocation(HUDLocation);
 
-    MyIcon = Icon;
-    MyIcon.PosX = HUDLocation.X / MyMapScale + 0.5;
-    MyIcon.PosY = HUDLocation.Y / MyMapScale + 0.5;
+    Icon.PosX = HUDLocation.X / MyMapScale + 0.5;
+    Icon.PosY = HUDLocation.Y / MyMapScale + 0.5;
 
-    // Bound the values between 0 and 1
-    MyIcon.PosX = FMax(0.0, FMin(1.0, MyIcon.PosX));
-    MyIcon.PosY = FMax(0.0, FMin(1.0, MyIcon.PosY));
+    Icon.PosX = FMax(0.0, FMin(1.0, Icon.PosX));
+    Icon.PosY = FMax(0.0, FMin(1.0, Icon.PosY));
 
     // Set flashing texture if needed
-    if (FlashMode != 0)
+    if (FlashMode > 1)
     {
         if (FlashMode == 2)
         {
-            MyIcon.WidgetTexture = MapIconsFlash;
+            Icon.WidgetTexture = MapIconsFlash;
         }
         else if (FlashMode == 3)
         {
-            MyIcon.WidgetTexture = MapIconsFastFlash;
+            Icon.WidgetTexture = MapIconsFastFlash;
         }
         else if (FlashMode == 4)
         {
-            MyIcon.WidgetTexture = MapIconsAltFlash;
+            Icon.WidgetTexture = MapIconsAltFlash;
         }
         else if (FlashMode == 5)
         {
-            MyIcon.WidgetTexture = MapIconsAltFastFlash;
+            Icon.WidgetTexture = MapIconsAltFastFlash;
         }
     }
 
     // Draw icon
-    DrawSpriteWidgetClipped(C, MyIcon, LevelCoords, true, XL, YL, true);
+    DrawSpriteWidgetClipped(C, Icon, LevelCoords, true, XL, YL, true);
 
+    // Draw title
     if (Title != "" && DHGRI != none && ObjectiveIndex < arraycount(DHGRI.DHObjectives) && ObjectiveIndex >= 0
         && DHGRI.DHObjectives[ObjectiveIndex] != none && !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)
     {
         // Setup text info
         MapTexts.text = Title;
-        MapTexts.PosX = MyIcon.PosX;
-        MapTexts.PosY = MyIcon.PosY;
-        MapTexts.Tints[TeamIndex].A = MyIcon.Tints[TeamIndex].A;
+        MapTexts.PosX = Icon.PosX;
+        MapTexts.PosY = Icon.PosY;
+        MapTexts.Tints[TeamIndex].A = Icon.Tints[TeamIndex].A;
         MapTexts.OffsetY = YL * 0.3;
 
         // Fake render to get desired label pos
@@ -4067,7 +4100,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
         label_coords.X2 = label_coords.X1 + XL;
         label_coords.Y2 = label_coords.Y1 + YL;
 
-        // Iterate through objectives list and check if we should offset label
+        // Iterate through objectives list & check if we should offset label
         UpdateMapIconLabelCoords(label_coords, GRI, ObjectiveIndex);
 
         // Update Y offset
@@ -4086,7 +4119,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
     }
 }
 
-// Modified to make fade to black work with lower hud opacity values
+// Modified to make fade to black work with lower HUD opacity values
 simulated function DrawFadeToBlack(Canvas Canvas)
 {
     local float Alpha;
@@ -4105,7 +4138,7 @@ simulated function DrawFadeToBlack(Canvas Canvas)
         Alpha = 1.0 - Alpha;
     }
 
-    if (Alpha ~= 0)
+    if (Alpha ~= 0.0)
     {
         bFadeToBlack = false;
     }
@@ -4121,8 +4154,7 @@ simulated function DrawFadeToBlack(Canvas Canvas)
     }
 }
 
-// Draw objective information on the G15 LCD
-// Modified in case this function is ever used
+// Draw objective information on the G15 LCD - updated in case this function is ever used
 simulated function DrawLCDObjectives(Canvas C, GUIController GC)
 {
     local int    ObjCount, Row, i;

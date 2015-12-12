@@ -52,7 +52,7 @@ function bool InternalOnDraw(Canvas C)
     SubCoords.Width = ActualWidth();
     SubCoords.Height = ActualHeight();
 
-    DHHud(PlayerOwner().myHUD).DrawMap(C, SubCoords);
+    DHHud(PlayerOwner().myHUD).DrawMap(C, SubCoords, PC);
 
     return false;
 }

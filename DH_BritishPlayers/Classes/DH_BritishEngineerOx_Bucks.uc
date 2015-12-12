@@ -19,7 +19,7 @@ defaultproperties
     Models(4)="para5"
     Models(5)="para6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
@@ -27,6 +27,6 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmet2'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-    PrimaryWeaponType=WT_SMG
+    PrimaryWeaponType=WT_Rifle
     Limit=3
 }

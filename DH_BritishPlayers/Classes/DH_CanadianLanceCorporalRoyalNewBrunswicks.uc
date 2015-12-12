@@ -19,13 +19,14 @@ defaultproperties
     Models(4)="RNB_5"
     Models(5)="RNB_6"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
-    PrimaryWeaponType=WT_SemiAuto
+    PrimaryWeaponType=WT_Rifle
     Limit=2
 }
