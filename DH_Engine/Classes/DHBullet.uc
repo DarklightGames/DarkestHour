@@ -10,6 +10,7 @@ class DHBullet extends ROBullet
 // General
 var     int             WhizType;        // sent in HitPointTrace to only do snaps for supersonic rounds (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
 var     Actor           SavedTouchActor; // added (same as shell) to prevent recurring ProcessTouch on same actor (e.g. was screwing up tracer ricochets from VehicleWeapons like turrets)
+var     sound           WaterHitSound;   // sound of this bullet hitting water
 
 // Tracers
 var     bool            bIsTracerBullet; // just set to true in a tracer bullet subclass of a normal bullet & then the inheritance from this class will handle everything
@@ -40,7 +41,7 @@ simulated function PostBeginPlay()
     BCInverse = 1.0 / BallisticCoefficient;
     Velocity = vector(Rotation) * Speed;
 
-    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
+    if (Role == ROLE_Authority && Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
     {
         Velocity *= 0.5;
     }
@@ -678,21 +679,42 @@ simulated function Deflect(vector HitNormal)
     }
 }
 
-// Modified to add EffectIsRelevant check before spawning splash effect
+// Modified to check for class 'WaterVolume' (or subclass) as well as bWaterVolume=true (DH_WaterVolume has bWaterVolume=false)
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
+{
+    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
+    {
+        Velocity *= 0.5;
+
+        if (Level.Netmode != NM_DedicatedServer)
+        {
+            CheckForSplash(Location);
+        }
+    }
+}
+
+// Modified to remove trace to check whether we hit water, as that ignores a DH_WaterVolume because it has bWaterVolume=false, but we know we've hit water anyway
+// And to add a location adjustment to raise the effect, as the passed SplashLocation is usually below the water surface
+// Also added EffectIsRelevant check before spawning splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
-    local Actor  HitActor;
-    local vector HitLocation, HitNormal;
+    local float Adjustment;
 
-    if (!Level.bDropDetail && Level.DetailMode != DM_Low && SplashEffect != none && !Instigator.PhysicsVolume.bWaterVolume)
+    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
+        && !Level.bDropDetail && Level.DetailMode != DM_Low && (SplashEffect != none || WaterHitSound != none))
     {
-        bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - vect(0.0, 0.0, 50.0), SplashLocation + vect(0.0, 0.0, 15.0), true);
-        bTraceWater = false;
+        PlaySound(WaterHitSound);
 
-        if ((FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume)) && EffectIsRelevant(Location, false))
+        if (SplashEffect != none && EffectIsRelevant(Location, false))
         {
-            Spawn(SplashEffect,,, HitLocation, rot(16384, 0, 0));
+            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
+            // So we'll raise its location - a little hacky, but works pretty well much of the time
+            // The adjustment backs up along the projectile's path & is calculated from its pitch angle
+            // to give an adjustment of at least 10 units vertically, or more for higher speed projectiles
+            Adjustment = FMax(12.0, VSize(Velocity) / 1400.0) / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+
+            Spawn(SplashEffect,,, SplashLocation, rot(16384, 0, 0));
         }
     }
 }
@@ -730,6 +752,7 @@ defaultproperties
     WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
     VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
     VehiclePenetrateSound=sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0

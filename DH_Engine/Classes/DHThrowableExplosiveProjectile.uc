@@ -6,10 +6,13 @@
 class DHThrowableExplosiveProjectile extends ROThrowableExplosiveProjectile
     abstract;
 
-var float          ExplosionSoundRadius;
-var class<Emitter> ExplodeDirtEffectClass;
-var class<Emitter> ExplodeSnowEffectClass;
-var class<Emitter> ExplodeMidAirEffectClass;
+var float           ExplosionSoundRadius;
+var class<Emitter>  ExplodeDirtEffectClass;
+var class<Emitter>  ExplodeSnowEffectClass;
+var class<Emitter>  ExplodeMidAirEffectClass;
+
+var class<Actor>    SplashEffect;  // water splash effect class
+var sound           WaterHitSound; // sound of this bullet hitting water
 
 // For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & used in other classes):
 var PlayerReplicationInfo SavedPRI;
@@ -362,7 +365,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         Speed = VSize(Velocity);
     }
 
-    if (Level.NetMode != NM_DedicatedServer && Speed > 150 && ImpactSound != none)
+    if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
     {
         PlaySound(ImpactSound, SLOT_Misc, 1.1);
     }
@@ -657,7 +660,7 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Water:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
-            ImpactSound = sound'Inf_Weapons.ShellRifleWater';
+            ImpactSound = WaterHitSound;
             break;
 
         case EST_Glass:
@@ -670,11 +673,40 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
 simulated function WeaponLight(); // empty function; can be subclassed
 
-simulated function PhysicsVolumeChange(PhysicsVolume Volume)
+// Modified so if thrown projectile hits water we play a splash effect (same as a bullet or shell) & slow down a lot
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    if (Volume.bWaterVolume)
+    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
     {
         Velocity *= 0.25;
+
+        if (Level.Netmode != NM_DedicatedServer)
+        {
+            CheckForSplash(Location);
+        }
+    }
+}
+
+// Added same as bullet & shell classes to play a water splash effect
+simulated function CheckForSplash(vector SplashLocation)
+{
+    local float Adjustment;
+
+    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
+        && !Level.bDropDetail && Level.DetailMode != DM_Low && (SplashEffect != none || WaterHitSound != none))
+    {
+        PlaySound(WaterHitSound);
+
+        if (SplashEffect != none && EffectIsRelevant(Location, false))
+        {
+            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
+            // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well
+            // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
+            Adjustment = 10.0 / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+
+            Spawn(SplashEffect,,, SplashLocation, rot(16384, 0, 0));
+        }
     }
 }
 
@@ -695,6 +727,8 @@ defaultproperties
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
+    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
     DrawType=DT_StaticMesh
     bDynamicLight=false
     LightType=LT_Pulse

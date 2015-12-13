@@ -513,7 +513,7 @@ defaultproperties
     ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
     VehicleDeflectSound=sound'PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
-    ShellHitWaterEffectClass=class'ROBulletHitWaterEffect'
+    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
 
     DrawType=DT_None
     WhizType=1

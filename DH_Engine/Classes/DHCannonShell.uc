@@ -43,7 +43,7 @@ simulated function PostBeginPlay()
         Corona = Spawn(CoronaClass, self);
     }
 
-    if (PhysicsVolume.bWaterVolume)
+    if (PhysicsVolume.bWaterVolume || WaterVolume(PhysicsVolume) != none)
     {
         Velocity *= 0.6;
     }
@@ -163,7 +163,7 @@ defaultproperties
     ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankAPHitWaterEffect'
+    ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
     AmbientVolumeScale=5.0
     SpeedFudgeScale=0.5
     InitialAccelerationTime=0.2

@@ -4530,6 +4530,69 @@ function CheckBob(float DeltaTime, vector Y)
     }
 }
 
+// Modified to check for class 'WaterVolume' (or subclass) as well as bWaterVolume=true (DH_WaterVolume has bWaterVolume=false)
+simulated function FootStepping(int Side)
+{
+    local Actor    A;
+    local vector   HitLocation, HitNormal, Start, End;
+    local material FloorMaterial;
+    local int      SurfaceTypeID, i;
+    local float    FootStepVolumeModifier;
+
+    // Play water effects if touching water
+    for (i = 0; i < Touching.Length; ++i)
+    {
+        if (WaterVolume(Touching[i]) != none || (PhysicsVolume(Touching[i]) != none && PhysicsVolume(Touching[i]).bWaterVolume) || FluidSurfaceInfo(Touching[i]) != none)
+        {
+            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
+
+            // Play a water ring effect as you walk through the water
+            if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+                && !Touching[i].TraceThisActor(HitLocation, HitNormal, Location - (CollisionHeight * vect(0.0, 0.0, 1.1)), Location))
+            {
+                Spawn(class'WaterRingEmitter',,, HitLocation, rot(16384, 0, 0));
+            }
+
+            return;
+        }
+    }
+
+    // No sound if crawling
+    if (bIsCrawling)
+    {
+        return;
+    }
+    // Lets still play the sounds when walking slow, just play them quieter
+    else if (bIsCrouched || bIsWalking)
+    {
+        FootStepVolumeModifier = QuietFootStepVolume;
+    }
+    else
+    {
+        FootStepVolumeModifier = 1.0;
+    }
+
+    // Get surface type we are walking on
+    if (Base != none && !Base.IsA('LevelInfo') && Base.SurfaceType != 0)
+    {
+        SurfaceTypeID = Base.SurfaceType;
+    }
+    else
+    {
+        Start = Location - (vect(0.0, 0.0, 1.0) * CollisionHeight);
+        End = Start - vect(0.0, 0.0, 16.0);
+        A = Trace(HitLocation, HitNormal, End, Start, false,, FloorMaterial);
+
+        if (FloorMaterial != none)
+        {
+            SurfaceTypeID = FloorMaterial.SurfaceType;
+        }
+    }
+
+    // Play footstep sound, based on surface type and volume modifier
+    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * FootStepVolumeModifier,, FootStepSoundRadius * FootStepVolumeModifier);
+}
+
 // Modified to cause some stamina loss for prone diving
 simulated state DivingToProne
 {

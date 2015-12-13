@@ -104,15 +104,6 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
-// Explode in water
-simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
-{
-    if (NewVolume.bWaterVolume)
-    {
-        Explode(Location, vect(0.0, 0.0, 1.0));
-    }
-}
-
 // Modified to stop shell from exploding if it's a dud or if it's in a no arty volume
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
@@ -129,7 +120,10 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     // If shell is a dud then impact effects only
     if (bDud)
     {
-        DoHitEffects(HitLocation, HitNormal);
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            DoHitEffects(HitLocation, HitNormal);
+        }
     }
     // Otherwise explode normally
     else
