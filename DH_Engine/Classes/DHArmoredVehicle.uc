@@ -199,16 +199,6 @@ replication
         ClientLogSwitch;
 }
 
-exec function VHellFire(optional bool bOff) // TEMP
-{
-    local DHArmoredVehicle V;
-    foreach DynamicActors(class'DHArmoredVehicle', V)
-    {
-        if (!bOff) V.StartDriverHatchFire();
-        else if (V.DriverHatchFireEffect != none) V.DriverHatchFireEffect.Destroy();
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
