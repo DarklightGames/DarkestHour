@@ -208,7 +208,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-    bNetNotify=false // AT gun doesn't use PostNetReceive() as has engine on/off, damaged tracks & hull fires all all irrelevant it
+    bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
     PointValue=2.0
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'

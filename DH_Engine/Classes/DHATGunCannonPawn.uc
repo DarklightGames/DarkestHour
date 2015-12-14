@@ -19,12 +19,6 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to avoid turret damage checks in DHVehicleCannonPawn, just for processing efficiency as this function is called many times per second
-function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
-{
-    super(ROTankCannonPawn).HandleTurretRotation(DeltaTime, YawChange, PitchChange);
-}
-
 // Emptied out so we just use plain RO rotate/pitch sounds & ignore DHVehicleCannonPawn's manual/powered sounds
 simulated function SetManualTurret(bool bManual)
 {
@@ -33,25 +27,6 @@ simulated function SetManualTurret(bool bManual)
 // Emptied out as can't switch positions in an AT gun
 simulated function SwitchWeapon(byte F)
 {
-}
-
-// Modified to use 3 part reload for AT gun, instead of 4 part reload in tank cannon
-function float GetAmmoReloadState()
-{
-    if (ROTankCannon(Gun) != none)
-    {
-        switch (ROTankCannon(Gun).CannonReloadState)
-        {
-            case CR_ReadyToFire:    return 0.0;
-            case CR_Waiting:
-            case CR_Empty:
-            case CR_ReloadedPart1:  return 1.0;
-            case CR_ReloadedPart2:  return 0.66;
-            case CR_ReloadedPart3:  return 0.33;
-        }
-    }
-
-    return 0.0;
 }
 
 defaultproperties
