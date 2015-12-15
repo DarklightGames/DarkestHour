@@ -118,31 +118,47 @@ simulated singular function Touch(Actor Other)
 // From DHBullet
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    local ROVehicleWeapon HitVehicleWeapon;
-    local DHPawn          HitPawn;
-    local Actor           A;
-    local array<Actor>    SavedColMeshes;
-    local vector          PawnHitLocation, TempHitLocation, HitNormal, X, Y, Z;
-    local bool            bPenetratedVehicle;
-    local float           BulletDistance, V;
-    local array<int>      HitPoints;
-    local int             i;
+    local DHPawn       HitPawn;
+    local Actor        InstigatorPlayer, A;
+    local array<Actor> SavedColMeshes;
+    local vector       PawnHitLocation, TempHitLocation, HitNormal, X, Y, Z;
+    local bool         bPenetratedVehicle;
+    local float        BulletDistance, V;
+    local array<int>   HitPoints;
+    local int          i;
 
-    // Exit without doing anything if we hit something we don't want to count a hit on
-    // Note that bBlockHitPointTraces removed here & instead checked in Touch() event, so an actor owning a collision mesh actor gets handled properly
-    if (Other == none || SavedTouchActor == Other || Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator
-        || Other.bDeleteMe || (Other.IsA('Projectile') && !Other.bProjTarget))
+    if (SavedTouchActor == Other) // immediate exit to prevent recurring touches on same actor
     {
         return;
     }
 
     SavedTouchActor = Other;
-    HitVehicleWeapon = ROVehicleWeapon(Other);
+
+    // Checks are normally run to make sure we haven't hit Instigator or its Base or Owner, which is mainly to stop player hitting his own bullet whip attachment
+    // But the whip attachment now retains its collision if player in a vehicle is exposed, so we also need to check on a player in a VehicleWeaponPawn
+    // A VehicleWeaponPawn will be the Instigator, so in that case we record InstigatorPlayer as its 'Driver' & use that in place of Instigator
+    if (VehicleWeaponPawn(Instigator) != none && VehicleWeaponPawn(Instigator).Driver != none)
+    {
+        InstigatorPlayer = VehicleWeaponPawn(Instigator).Driver;
+    }
+    else
+    {
+        InstigatorPlayer = Instigator;
+    }
+
+    // Exit without doing anything if we hit something we don't want to count a hit on
+    // Using InstigatorPlayer instead of Instigator, except for a check on "Other.Owner == Instigator", which stops a VehicleWeapon from somehow shooting itself
+    // Note that bBlockHitPointTraces removed here & instead checked in Touch() event, so an actor owning a collision mesh actor gets handled properly
+    if (Other == none || Other == InstigatorPlayer || Other.Base == InstigatorPlayer || Other.Owner == InstigatorPlayer || Other.Owner == Instigator
+        || Other.bDeleteMe || (Other.IsA('Projectile') && !Other.bProjTarget))
+    {
+        return;
+    }
 
     // Handle hit on a vehicle weapon
-    if (HitVehicleWeapon != none)
+    if (Other.IsA('ROVehicleWeapon'))
     {
-        bPenetratedVehicle = !HasDeflected() && PenetrateVehicleWeapon(HitVehicleWeapon);
+        bPenetratedVehicle = !HasDeflected() && PenetrateVehicleWeapon(ROVehicleWeapon(Other));
 
         PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, Normal(-Velocity));
 
@@ -154,7 +170,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             if (Level.NetMode != NM_DedicatedServer && bHasTracer && VSizeSquared(Velocity) > 500000.0)
             {
                 Trace(HitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true);
-                DHDeflect(HitLocation, HitNormal, HitVehicleWeapon);
+                DHDeflect(HitLocation, HitNormal, Other);
             }
             else
             {
@@ -188,7 +204,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // We hit the bullet whip attachment around a player pawn
     if (ROBulletWhipAttachment(Other) != none)
     {
-        if ((Other.Base != none && Other.Base.bDeleteMe) || Instigator == none)
+        if ((Other.Base != none && Other.Base.bDeleteMe) || InstigatorPlayer == none)
         {
             return;
         }
@@ -197,7 +213,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (!HasDeflected())
         {
             // If bullet collides immediately after launch, it has no location (or so it would appear, go figure) - let's check against the firer's location instead
-            if (OrigLoc == vect(0.0, 0.0, 0.0))
+            if (OrigLoc == vect(0.0, 0.0, 0.0) && Instigator != none)
             {
                 OrigLoc = Instigator.Location;
             }
@@ -217,14 +233,14 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // Trace to see if bullet path will actually hit one of the player pawn's various body hit points
-        // Use the Instigator pawn to do the trace, as that makes a HitPointTrace work better, as it ignores the Instigator (the firing player) & its bullet whip attachment
-        // Matt: temporarily make Instigator use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
-        Instigator.bUseCollisionStaticMesh = bUseCollisionStaticMesh;
+        // Use the InstigatorPlayer to do the trace, as that makes HitPointTrace work better because it ignores the InstigatorPlayer & its own bullet whip attachment
+        // Temporarily make InstigatorPlayer use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
+        InstigatorPlayer.bUseCollisionStaticMesh = bUseCollisionStaticMesh;
 
         // Maximum of 3 traces - but we only ever repeat the trace if we hit an invalid col mesh actor, which is very rare, so nearly always only 1 trace will be done
         for (i = 0; i < 3; ++i)
         {
-            A = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
+            A = InstigatorPlayer.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
 
             // We're primarily interested if we hit a player, but also need to check if hit an invalid collision mesh that doesn't stop bullets (as would need to repeat trace)
             if (DHPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet))
@@ -262,7 +278,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (HitPawn != none)
         {
             // Trace along path from where we hit player's whip attachment to where we traced a hit on player, checking if any blocking actor is in the way
-            foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
+            foreach InstigatorPlayer.TraceActors(class'Actor', A, TempHitLocation, HitNormal, PawnHitLocation, HitLocation)
             {
                 // We hit a blocking actor, so now check if it's a valid 'stopper'
                 if ((A.bBlockActors || A.bWorldGeometry) && A.bBlockHitPointTraces)
@@ -280,7 +296,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     }
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
-                    if (A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget) && A != HitPawn)
+                    if (A != InstigatorPlayer && A.Base != InstigatorPlayer && A.Owner != InstigatorPlayer && A.Owner != Instigator
+                        && !A.bDeleteMe && !(Other.IsA('Projectile') && !Other.bProjTarget) && A != HitPawn)
                     {
                         HitPawn = none;
                         break;
@@ -289,8 +306,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
         }
 
-        // Reset Instigator collision properties & reset WhizType for next collision
-        Instigator.bUseCollisionStaticMesh = Instigator.default.bUseCollisionStaticMesh;
+        // Reset InstigatorPlayer collision properties & reset WhizType for next collision
+        InstigatorPlayer.bUseCollisionStaticMesh = InstigatorPlayer.default.bUseCollisionStaticMesh;
         WhizType = default.WhizType;
 
         // Bullet won't hit the player, so we'll exit now
@@ -513,7 +530,7 @@ defaultproperties
     ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
     VehicleDeflectSound=sound'PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
-    ShellHitWaterEffectClass=class'ROBulletHitWaterEffect'
+    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
 
     DrawType=DT_None
     WhizType=1

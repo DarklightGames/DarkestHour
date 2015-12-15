@@ -2841,6 +2841,23 @@ function exec DebugHints()
     }
 }
 
+// Debug exec to play a sound (playing sounds in RO editor often doesn't work, so this is just a way of trying out sounds)
+exec function SoundPlay(string SoundName, optional float Volume)
+{
+    local sound SoundToPlay;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && SoundName != "")
+    {
+        SoundToPlay = sound(DynamicLoadObject(SoundName, class'Sound'));
+
+        if (SoundToPlay != none)
+        {
+            ClientPlaySound(SoundToPlay, Volume > 0.0, Volume);
+            Log("Playing sound" @ SoundToPlay @ " Volume =" @ Volume);
+        }
+    }
+}
+
 exec function ToggleLogWeapon() // TEMP DEBUG
 {
     local DHGameReplicationInfo GRI;

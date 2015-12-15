@@ -265,7 +265,8 @@ defaultproperties
     ChassisTorqueScale=0.095
     MinBrakeFriction=4.0
     MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
-    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
+    // Note: if boat gets used in a 'real' water volume (i.e. with bWaterVolume=true, which DH_WaterVolumes don't), it will move slowly & TorqueCurve out values will need increasing
+    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0))) 
     GearRatios(0)=-0.2
     GearRatios(1)=0.2
     GearRatios(2)=0.35
@@ -389,7 +390,6 @@ defaultproperties
         KInertiaTensor(5)=4.5
         KLinearDamping=0.05
         KAngularDamping=0.05
-        KBuoyancy=1.2
         KStartEnabled=true
         bKNonSphericalInertia=true
         bHighDetailOnly=false

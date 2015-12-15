@@ -44,7 +44,6 @@ var     sound           ShatterSound[4];         // sound of the round shatterin
 var     bool            bHasTracer;              // will be disabled for HE shells, and any others with no tracers
 var     class<Effects>  CoronaClass;             // tracer effect class
 var     Effects         Corona;                  // shell tracer
-var     bool            bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
@@ -68,7 +67,7 @@ simulated function PostBeginPlay()
     BCInverse = 1.0 / BallisticCoefficient;
     Velocity = vector(Rotation) * Speed;
 
-    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
+    if (Role == ROLE_Authority && Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
     {
         Velocity *= 0.5;
     }
@@ -781,9 +780,9 @@ simulated function DoShakeEffect()
 }
 
 // Modified to blow up certain rounds (e.g. HE or HEAT) when they hit water
-simulated function PhysicsVolumeChange(PhysicsVolume Volume)
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    if (Volume.bWaterVolume)
+    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
@@ -793,7 +792,6 @@ simulated function PhysicsVolumeChange(PhysicsVolume Volume)
         if (bExplodesOnHittingWater)
         {
             Explode(Location, vector(Rotation * -1.0));
-            bDidWaterHitFX = false; // reset so doesn't prevent future explosion effects
         }
         else
         {
@@ -802,28 +800,27 @@ simulated function PhysicsVolumeChange(PhysicsVolume Volume)
     }
 }
 
-// Modified to add bDidWaterHitFX as a flag to prevent SpawnExplosionEffects from playing normal explosion effects when we hit a water volume
+// Modified to remove trace to check whether we hit water, as that ignores a DH_WaterVolume because it has bWaterVolume=false, but we know we've hit water anyway
+// And to add a location adjustment to raise the effect, as the passed SplashLocation is usually below the water surface
+// Also added EffectIsRelevant check before spawning splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
-    local Actor  HitActor;
-    local vector HitLocation, HitNormal;
+    local float Adjustment;
 
-    if (!Level.bDropDetail && Level.DetailMode != DM_Low && ShellHitWaterEffectClass != none && !Instigator.PhysicsVolume.bWaterVolume)
+    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
+        && !Level.bDropDetail && Level.DetailMode != DM_Low && (ShellHitWaterEffectClass != none || WaterHitSound != none))
     {
-        bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - vect(0.0, 0.0, 50.0), SplashLocation + vect(0.0, 0.0, 15.0), true);
-        bTraceWater = false;
+        PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
 
-        if (FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume))
+        if (ShellHitWaterEffectClass != none && EffectIsRelevant(Location, false))
         {
-            bDidWaterHitFX = true;
+            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
+            // So we'll raise it by an arbitrary 10 units in the Z axis, which works pretty well most of the time
+            // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
+            Adjustment = 10.0 / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
 
-            PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
-
-            if (EffectIsRelevant(Location, false))
-            {
-                Spawn(ShellHitWaterEffectClass,,, HitLocation, rot(16384, 0, 0));
-            }
+            Spawn(ShellHitWaterEffectClass,,, SplashLocation, rot(16384, 0, 0));
         }
     }
 }
@@ -871,7 +868,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         HitEmitterClass = ShellHitVehicleEffectClass;
     }
     // Hit something else - get material type & set effects
-    else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX)
+    else if (!PhysicsVolume.bWaterVolume && WaterVolume(PhysicsVolume) == none)
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
 

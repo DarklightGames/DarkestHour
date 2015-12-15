@@ -124,10 +124,14 @@ replication
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
 }
 
+// Modified to build SpawnPoints array
+// Also to disable all default water splash effects in WaterVolumes, as they clash with splash effects in projectile classes that are more specific to the projectile
+// Another problem is a big splash effect was being played for every ejected bullet shell case that hit water, looking totally wrong for such a small, relatively slow object
 simulated function PostBeginPlay()
 {
-    local int i;
     local DHSpawnPoint SP;
+    local WaterVolume  WV;
+    local int          i;
 
     super.PostBeginPlay();
 
@@ -141,6 +145,32 @@ simulated function PostBeginPlay()
         }
 
         SpawnPoints[i++] = SP;
+    }
+
+    foreach AllActors(class'WaterVolume', WV)
+    {
+        if (!WV.IsA('DH_WaterVolume'))
+        {
+            if (WV.PawnEntryActorName == "ROEffects.WaterRingEmitter")
+            {
+                WV.PawnEntryActorName = "";
+            }
+
+            if (WV.EntryActorName == "ROEffects.WaterSplashEmitter")
+            {
+                WV.EntryActorName = "";
+            }
+
+            if (WV.EntrySoundName == "Inf_Player.FootstepWaterDeep")
+            {
+                WV.EntrySoundName = "";
+            }
+
+            if (WV.ExitSoundName == "Inf_Player.FootstepWaterDeep")
+            {
+                WV.ExitSoundName = "";
+            }
+        }
     }
 }
 

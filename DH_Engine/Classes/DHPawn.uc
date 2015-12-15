@@ -785,8 +785,9 @@ simulated function ProcessHitFX()
 // Modified to add extra effects if certain body parts are hit (chest or head), to play a hit sound, & to remove duplicated calls to TakeDamage()
 function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocation, vector Momentum, class<DamageType> DamageType, array<int> PointsHit)
 {
-    local int    OriginalDamage, BodyPartDamage, CumulativeDamage, HighestDamageAmount, HighestDamagePoint, i;
-    local vector HitDirection;
+    local EPawnHitPointType HitPointType;
+    local vector            HitDirection;
+    local int               OriginalDamage, BodyPartDamage, CumulativeDamage, HighestDamageAmount, HighestDamagePoint, i;
 
     // If someone else has killed this player, return
     if (bDeleteMe || Health <= 0 || PointsHit.Length < 1)
@@ -799,13 +800,22 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     // Loop through array of body parts that have been hit
     for (i = 0; i < PointsHit.Length; ++i)
     {
-        // Calculate damage to this body part & cumulative damage
+        // Calculate damage to this body part
         BodyPartDamage = OriginalDamage * Hitpoints[PointsHit[i]].DamageMultiplier;
         BodyPartDamage = Level.Game.ReduceDamage(BodyPartDamage, self, InstigatedBy, HitLocation, Momentum, DamageType);
 
         if (BodyPartDamage < 1)
         {
             continue;
+        }
+
+        // Update the locational damage list & record if damage to this body part is the highest damage yet
+        UpdateDamageList(PointsHit[i] - 1);
+
+        if (BodyPartDamage > HighestDamageAmount)
+        {
+            HighestDamageAmount = BodyPartDamage;
+            HighestDamagePoint = PointsHit[i];
         }
 
         // Update cumulative damage & break out of the for loop if it's enough to kill the player
@@ -816,15 +826,10 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             break;
         }
 
-        // Check if damage to this body part is the highest damage yet
-        if (BodyPartDamage > HighestDamageAmount)
-        {
-            HighestDamageAmount = BodyPartDamage;
-            HighestDamagePoint = PointsHit[i];
-        }
+        HitPointType = Hitpoints[PointsHit[i]].HitPointType;
 
         // If we've been shot in the foot or leg & are sprinting, we fall to the ground & are winded (zero stamina)
-        if (Hitpoints[PointsHit[i]].HitPointType == PHP_Leg || Hitpoints[PointsHit[i]].HitPointType == PHP_Foot)
+        if (HitPointType == PHP_Leg || HitPointType == PHP_Foot)
         {
             if (bIsSprinting && !bIsCrawling && DHPlayer(Controller) != none)
             {
@@ -834,7 +839,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             }
         }
         // If we've been shot in the hand, we have a chance of dropping our weapon
-        else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Hand && FRand() > 0.5)
+        else if (HitPointType == PHP_Hand && FRand() > 0.5)
         {
             if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
@@ -843,7 +848,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             }
         }
         // If we've been shot in the head, our vision is jarred
-        else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Head)
+        else if (HitPointType == PHP_Head)
         {
             if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
@@ -855,7 +860,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             }
         }
         // If we've been shot in the chest, we're winded (lose half stamina) - Basnett
-        else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Torso)
+        else if (HitPointType == PHP_Torso)
         {
             if (IsHumanControlled() && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
@@ -864,9 +869,6 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
                 ClientForceStaminaUpdate(Stamina);
             }
         }
-
-        // Update the locational damage list
-        UpdateDamageList(PointsHit[i] - 1);
     }
 
     // Damage the player & play hit sound (but make sure no one else has killed this player)
@@ -4528,6 +4530,69 @@ function CheckBob(float DeltaTime, vector Y)
     {
         FootStepping(0);
     }
+}
+
+// Modified to check for class 'WaterVolume' (or subclass) as well as bWaterVolume=true (DH_WaterVolume has bWaterVolume=false)
+simulated function FootStepping(int Side)
+{
+    local Actor    A;
+    local vector   HitLocation, HitNormal, Start, End;
+    local material FloorMaterial;
+    local int      SurfaceTypeID, i;
+    local float    FootStepVolumeModifier;
+
+    // Play water effects if touching water
+    for (i = 0; i < Touching.Length; ++i)
+    {
+        if (WaterVolume(Touching[i]) != none || (PhysicsVolume(Touching[i]) != none && PhysicsVolume(Touching[i]).bWaterVolume) || FluidSurfaceInfo(Touching[i]) != none)
+        {
+            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
+
+            // Play a water ring effect as you walk through the water
+            if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+                && !Touching[i].TraceThisActor(HitLocation, HitNormal, Location - (CollisionHeight * vect(0.0, 0.0, 1.1)), Location))
+            {
+                Spawn(class'WaterRingEmitter',,, HitLocation, rot(16384, 0, 0));
+            }
+
+            return;
+        }
+    }
+
+    // No sound if crawling
+    if (bIsCrawling)
+    {
+        return;
+    }
+    // Lets still play the sounds when walking slow, just play them quieter
+    else if (bIsCrouched || bIsWalking)
+    {
+        FootStepVolumeModifier = QuietFootStepVolume;
+    }
+    else
+    {
+        FootStepVolumeModifier = 1.0;
+    }
+
+    // Get surface type we are walking on
+    if (Base != none && !Base.IsA('LevelInfo') && Base.SurfaceType != 0)
+    {
+        SurfaceTypeID = Base.SurfaceType;
+    }
+    else
+    {
+        Start = Location - (vect(0.0, 0.0, 1.0) * CollisionHeight);
+        End = Start - vect(0.0, 0.0, 16.0);
+        A = Trace(HitLocation, HitNormal, End, Start, false,, FloorMaterial);
+
+        if (FloorMaterial != none)
+        {
+            SurfaceTypeID = FloorMaterial.SurfaceType;
+        }
+    }
+
+    // Play footstep sound, based on surface type and volume modifier
+    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * FootStepVolumeModifier,, FootStepSoundRadius * FootStepVolumeModifier);
 }
 
 // Modified to cause some stamina loss for prone diving

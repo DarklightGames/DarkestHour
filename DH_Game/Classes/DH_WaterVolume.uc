@@ -3,120 +3,67 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WaterVolume extends PhysicsVolume;
+class DH_WaterVolume extends WaterVolume;
 
-var string EntrySoundName;
-var string ExitSoundName;
-var string EntryActorName;
-var string PawnEntryActorName;
-
-function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (EntrySound == none && EntrySoundName != "")
-    {
-        EntrySound = Sound(DynamicLoadObject(EntrySoundName, class'Sound'));
-    }
-
-    if (ExitSound == none && ExitSoundName != "")
-    {
-        ExitSound = Sound(DynamicLoadObject(ExitSoundName, class'Sound'));
-    }
-
-    if (EntryActor == none && EntryActorName != "")
-    {
-        EntryActor = class<Actor>(DynamicLoadObject(EntryActorName, class'class'));
-    }
-
-    if (PawnEntryActor == none && PawnEntryActorName != "")
-    {
-        PawnEntryActor = class<Actor>(DynamicLoadObject(PawnEntryActorName, class'class'));
-    }
-}
-
-//Allows the ability to get cleansed of fire and projectile splash effects
+// Modified to douse a player who is on fire
+// TODO Matt Dec 2015: removing charred effect doesn't work, as other players don't see it removed (EndBurnFX function gets triggered, which sets charred effect for them)
+// Suggest remove that part of the functionality & leave the 'charred' effect on, as it arguably just looks like the player is smoke blackened
+// Or remove all douse flames functionality & just let player die a couple of seconds later, as he's been on fire & probably shouldn't survive (& this is usually shallow water anyway)
 simulated event Touch(Actor Other)
 {
-    local int i;
     local DHPawn P;
+    local int    i;
 
     super.Touch(Other);
 
-    if (Other == none)
-    {
-        return;
-    }
-
     P = DHPawn(Other);
 
-    //Handle Pawns on Fire!
     if (P != none && P.bOnFire)
     {
         P.bOnFire = false;
-        P.bBurnFXOn = false;
-        P.bCharred = false;
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            P.EndBurnFX(); //Stop flame effects on the pawn
+            // Stop flame effects on the pawn
+            if (P.FlameFX != none)
+            {
+                P.FlameFX.Kill();
+            }
 
-            //Leaving charred looks dumb and anyone with that much burn degree wouldn't be able to fight
-            //So I remove charred and turn off all overlay materials
-            P.SetOverlayMaterial(none, 0.0, true);
-            P.HeadGear.SetOverlayMaterial(none, 0.0, true);
+            // Leaving charred looks dumb & anyone with that much burn degree wouldn't be able to fight, so remove charred & turn off all overlay materials
+            P.bBurnFXOn = false;
+            P.bCharred = false;
+            P.SetOverlayMaterial(none, 20.0, true);
 
-            //Gotta do it to ammo pouches as well
+            if (P.HeadGear != none)
+            {
+                P.HeadGear.SetOverlayMaterial(none, 0.0, true);
+            }
+
+            // Gotta do it to ammo pouches as well
             for (i = 0; i < P.AmmoPouches.Length; ++i)
             {
                 P.AmmoPouches[i].SetOverlayMaterial(none, 0.0, true);
             }
         }
     }
-
-    //Handle projectile effects & splashes
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (Other.IsA('ROBallisticProjectile') && !Level.bDropDetail && Level.DetailMode != DM_Low)
-        {
-            //DHBulletSplashEffect, DH_50CalSplashEffect, DH_BigExplosiveSplashEffect, and DH_ExplosiveSplashEffect
-
-            if (Other.IsA('ROAntiVehicleProjectile'))
-            {
-                EntryActor = class'DH_ExplosiveSplashEffect';
-                //Testing will have to make new one for sound
-                //EntryActor = class'TankHEHitWaterEffect';
-                //EntryActor = class'TankAPHitWaterEffect';
-                //EntryActor = class'ROArtilleryWaterEmitter';
-            }
-
-            if (Other.IsA('ROBullet'))
-            {
-                //Use this one as final
-                EntryActor = class'DHBulletSplashEffect';
-
-                //Testing
-                //EntryActor = class'DH_ExplosiveSplashEffect';
-                //EntryActor = class'WaterSplashEmitter';
-                //EntryActor = class'ROBulletHitWaterEffect';
-                //BulletSplashEmitter
-            }
-
-            PlayEntrySplash(Other);
-        }
-    }
 }
 
 defaultproperties
 {
+    // Seems strange, but this is generally intended as a shallow water volume, so don't want typical water volume things like swimming, drowning, 'jump out of water', etc
+    bWaterVolume=false
+
+    // For projectile splash effects, when projectile hits a volume it now checks whether volume either has bWaterVolume=true or it's a 'WaterVolume' (or subclass)
+    // We don't want this doing its own splash effects, which would duplicate the projectile's effects, which are more specific to the projectile type
     PawnEntryActorName=""
-    ExitSoundName=""
+    EntryActorName=""
     EntrySoundName=""
-    EntryActor="DHBulletSplashEffect"
-    bDistanceFog=true
-    DistanceFogColor=(R=0,G=0,B=0,A=0)
-    DistanceFogStart=0.0
-    DistanceFogEnd=64.0
-    KExtraLinearDamping=2.5
-    KExtraAngularDamping=0.4
+    ExitSoundName=""
+
+    LocationName=""
+    DistanceFogColor=(R=0,G=0,B=0,A=0) // 32/64/128/64 in WaterVolume
+    DistanceFogStart=0.0 // 8 in WaterVolume
+    DistanceFogEnd=64.0  // 2000 in WaterVolume
+    FluidFriction=0.3    // 2.4 in WaterVolume (don't think has any effect here as bWaterVolume=false)
 }

@@ -50,7 +50,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
+        if (Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
         {
             Velocity *= 0.5;
         }
@@ -645,14 +645,54 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
     local class<Emitter> HitEmitterClass;
     local sound          HitSound;
 
-    GetHitSurfaceType(HitSurfaceType);
-    GetHitSound(HitSound, HitSurfaceType);
-    PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
-
-    if (EffectIsRelevant(Location, false))
+    if (!PhysicsVolume.bWaterVolume && WaterVolume(PhysicsVolume) == none)
     {
-        GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
-        Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
+        GetHitSurfaceType(HitSurfaceType);
+        GetHitSound(HitSound, HitSurfaceType);
+        PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
+
+        if (EffectIsRelevant(Location, false))
+        {
+            GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
+            Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
+        }
+    }
+}
+
+// Modified so if hits water we play a splash effect (same as a cannon shell) & the shell explodes
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
+{
+    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
+    {
+        if (Level.Netmode != NM_DedicatedServer)
+        {
+            CheckForSplash(Location);
+        }
+
+        Explode(Location, vect(0.0, 0.0, 1.0));
+    }
+}
+
+// Added same as cannon shell to play a water splash effect
+simulated function CheckForSplash(vector SplashLocation)
+{
+    local float Adjustment;
+
+    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
+        && !Level.bDropDetail && Level.DetailMode != DM_Low && (HitWaterEmitterClass != none || HitWaterSound != none))
+    {
+        PlaySound(HitWaterSound);
+
+        if (HitWaterEmitterClass != none && EffectIsRelevant(Location, false))
+        {
+            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
+            // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well most of the time
+            // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
+            Adjustment = 10.0 / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+
+            Spawn(HitWaterEmitterClass,,, SplashLocation, rot(16384, 0, 0));
+        }
     }
 }
 
@@ -834,7 +874,7 @@ defaultproperties
     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
-    HitWaterEmitterClass=class'ROEffects.TankAPHitWaterEffect'
+    HitWaterEmitterClass=class'DH_Effects.DHShellSplashEffect'
     HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
     HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
     HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
