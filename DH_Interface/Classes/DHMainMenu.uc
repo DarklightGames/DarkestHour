@@ -8,66 +8,59 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_background;
-var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
-var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back;
+var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit;
+var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
+var automated       DHGUIScrollTextBox      tb_MOTDContent;
+var automated       GUIImage                i_MOTDLoading;
+var automated       ROGUIProportionalContainerNoSkin c_MOTD;
 
 var     HTTPRequest             QuickPlayRequest;
 var     HTTPRequest             MOTDRequest;
 
 var     string                  QuickPlayIp;
-var     string                  WebsiteURL;
+var     string                  MOTDURL;
+var     string                  FacebookURL;
+var     string                  GitHubURL;
+var     string                  SteamCommunityURL;
 
 var     localized string        QuickPlayString;
 var     localized string        ConnectingString;
-var     localized string        ManualURL;
-var     localized string        FixConfigURL;
 var     localized string        SteamMustBeRunningText;
 var     localized string        SinglePlayerDisabledText;
+var     localized string        MOTDErrorString;
 
 var     float                   TimeOutTime;
-var     float                   ReReadyPause;
 
 var     bool                    bAllowClose;
-var     bool                    bAttemptQuickPlay;
-var     bool                    bSendGet;
-var     bool                    bPageWait;
 var     int                     EllipseCount;
+var     bool                    bShouldRequestMOTD;
+var     bool                    bShouldRequestQuickPlayIP;
+var     bool                    bIsRequestingQuickPlayIP;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    local int xl, yl, y;
-
     super.InitComponent(MyController, MyOwner);
-
-    Controller.LCDCls();
-    Controller.LCDDrawTile(Controller.LCDLogo, 0, 0, 50, 43, 0, 0, 50, 43);
-    y = 0;
-    Controller.LCDStrLen("Darkest Hour", Controller.LCDMedFont, xl, yl);
-    Controller.LCDDrawText("Darkest Hour", (100 - (XL / 2)), y, Controller.LCDMedFont);
-    y += 14;
-    Controller.LCDStrLen("Europe", Controller.LCDSmallFont, xl, yl);
-    Controller.LCDDrawText("Europe", (100 - (XL / 2)), y, Controller.LCDSmallFont);
-    y += 14;
-    Controller.LCDStrLen("44-45", Controller.LCDLargeFont, xl, yl);
-    Controller.LCDDrawText("44-45",(100 - (XL / 2)), y, Controller.LCDLargeFont);
-    Controller.LCDRepaint();
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
-    sb_MainMenu.ManageComponent(b_Help);
-    sb_MainMenu.ManageComponent(b_Host);
     sb_MainMenu.ManageComponent(b_Quit);
-    sb_HelpMenu.ManageComponent(b_Credits);
-    sb_HelpMenu.ManageComponent(b_Manual);
-    sb_HelpMenu.ManageComponent(b_Demos);
-    sb_HelpMenu.ManageComponent(b_Website);
-    sb_HelpMenu.ManageComponent(b_Back);
+    sb_MainMenu.ManageComponent(b_Credits);
     sb_ShowVersion.ManageComponent(l_Version);
+
+    sb_Social.ManageComponent(b_Facebook);
+    sb_Social.ManageComponent(b_GitHub);
+    sb_Social.ManageComponent(b_SteamCommunity);
+
+    c_MOTD.ManageComponent(tb_MOTDContent);
+    c_MOTD.ManageComponent(b_MOTDTitle);
+    c_MOTD.ManageComponent(i_MOTDLoading);
+
+    l_Version.Caption = class'DarkestHourGame'.static.GetVersionString();
 }
 
 function InternalOnOpen()
@@ -77,22 +70,6 @@ function InternalOnOpen()
 
 function OnClose(optional bool bCanceled)
 {
-}
-
-function ShowSubMenu(int menu_id)
-{
-    switch (menu_id)
-    {
-        case 0:
-            sb_MainMenu.SetVisibility(true);
-            sb_HelpMenu.SetVisibility(false);
-            break;
-
-        case 1:
-            sb_MainMenu.SetVisibility(false);
-            sb_HelpMenu.SetVisibility(true);
-            break;
-    }
 }
 
 function bool MyKeyEvent(out byte Key, out byte State, float delta)
@@ -199,28 +176,20 @@ function bool ButtonClick(GUIComponent Sender)
             Profile("Quit");
             break;
 
-        case b_Manual:
-            Profile("Manual");
-            PlayerOwner().ConsoleCommand("start " @ ManualURL);
-            Profile("Manual");
+        case b_MOTDTitle:
+            PlayerOwner().ConsoleCommand("START" @ MOTDURL);
             break;
 
-        case b_Website:
-            Profile("Website");
-            PlayerOwner().ConsoleCommand("start " @ WebsiteURL);
-            Profile("Website");
+        case b_Facebook:
+            PlayerOwner().ConsoleCommand("START" @ default.FacebookURL);
             break;
 
-        case b_Demos:
-            Controller.OpenMenu("ROInterface.RODemosMenu");
+        case b_GitHub:
+            PlayerOwner().ConsoleCommand("START" @ default.GitHubURL);
             break;
 
-        case b_Help:
-            ShowSubMenu(1);
-            break;
-
-        case b_Back:
-            ShowSubMenu(0);
+        case b_SteamCommunity:
+            PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             break;
     }
 
@@ -241,9 +210,9 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("CANCEL");
     }
 
-    ShowSubMenu(0);
-
     super.Opened(Sender);
+
+    SetTimer(1.0, true);
 }
 
 event bool NotifyLevelChange()
@@ -258,6 +227,8 @@ event bool NotifyLevelChange()
 
 function OnQuickPlayResponse(int Status, Dictionary Headers, string Content)
 {
+    bShouldRequestQuickPlayIP = false;
+
     if (Status == 200)
     {
         PlayerOwner().ClientTravel(Content, TRAVEL_Absolute, false);
@@ -271,16 +242,38 @@ function OnQuickPlayResponse(int Status, Dictionary Headers, string Content)
     b_QuickPlay.Caption = default.QuickPlayString;
 
     QuickPlayRequest = none;
-
-    KillTimer();
 }
 
 function OnMOTDResponse(int Status, Dictionary Headers, string Content)
 {
+    local string Title;
+
     if (Status == 200)
     {
-        Log(Content);
+        // Remove all \r (carriage return) characters
+        Content = Repl(Content, Chr(13), "");
+
+        // Colin: Once we get JSON parsing, we can make this cleaner.
+        // For the time being, we will say that the first line is the title,
+        // second line is the URL, and everything else is the content.
+        Divide(Content, Chr(10), Title, Content);
+        Divide(Content, Chr(10), MOTDURL, Content);
+
+        // Replace all \n (line feed) characters with engine equivalent.
+        Content = Repl(Content, Chr(10), "|");
+
+        b_MOTDTitle.Caption = Caps(Title);
+        tb_MOTDContent.MyScrollText.SetContent(Content);
     }
+    else
+    {
+        b_MOTDTitle.Caption = "Error";
+        tb_MOTDContent.MyScrollText.SetContent(Repl(default.MOTDErrorString, "{0}", Status));
+    }
+
+    MOTDRequest = none;
+
+    i_MOTDLoading.SetVisibility(false);
 }
 
 // Quick play button functions
@@ -288,8 +281,7 @@ event Timer()
 {
     local int i;
 
-    //TODO: if Request is active, show timeout countdown, otherwise no caption
-    if (QuickPlayRequest != none)
+    if (bIsRequestingQuickPlayIP)
     {
         b_QuickPlay.Caption = ConnectingString;
 
@@ -299,6 +291,13 @@ event Timer()
         }
 
         EllipseCount = ++EllipseCount % 3;
+    }
+
+    if (bShouldRequestMOTD)
+    {
+        GetMOTD();
+
+        bShouldRequestMOTD = false;
     }
 }
 
@@ -314,32 +313,31 @@ function GetMOTD()
     MOTDRequest.Path = "/game/motd.php";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
+
+    b_MOTDTitle.Caption = "";
+    tb_MOTDContent.MyScrollText.SetContent("");
+    i_MOTDLoading.SetVisibility(true);
 }
 
 function GetQuickPlayIp()
 {
-    if (QuickPlayRequest != none)
-    {
-        return;
-    }
-
     QuickPlayRequest = PlayerOwner().Spawn(class'HTTPRequest');
     QuickPlayRequest.Host = "www.darkesthour.darklightgames.com";
     QuickPlayRequest.Path = "/game/quickjoinip.php";
     QuickPlayRequest.OnResponse = OnQuickPlayResponse;
     QuickPlayRequest.Send();
 
+    bIsRequestingQuickPlayIP = true;
+
     Timer();
-    SetTimer(1, true);
 }
 
 defaultproperties
 {
     // IP variables
-    QuickPlayString="Join Public Test Server"
-    ConnectingString="Connecting - Press [ESC] to Cancel"
+    QuickPlayString="Quick Join"
+    ConnectingString="Joining"
     TimeOutTime=30.0
-    bSendGet=true
 
     // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
@@ -355,21 +353,31 @@ defaultproperties
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        WinTop=0.624
-        WinLeft=0.042188
-        WinWidth=0.485
-        WinHeight=0.281354
+        WinTop=0.4
+        WinLeft=0.025
+        WinWidth=0.2
+        WinHeight=0.4
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
 
+    Begin Object Class=ROGUIContainerNoSkinAlt Name=SocialSection
+        WinTop=0.9125
+        WinLeft=0.55
+        WinWidth=0.4
+        WinHeight=0.0875
+        OnPreDraw=sbSection1.InternalPreDraw
+        NumColumns=3
+    End Object
+    sb_Social=SocialSection
+
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
-        Caption="Join Public Test Server"
+        Caption="Quick Join"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
+        StyleName="DHMenuTextButtonWhiteStyle"
         TabOrder=1
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -379,11 +387,11 @@ defaultproperties
 
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
-        Caption="Multiplayer"
+        Caption="Server Browser"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
+        StyleName="DHMenuTextButtonWhiteStyle"
         TabOrder=2
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -397,7 +405,7 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
+        StyleName="DHMenuTextButtonWhiteStyle"
         TabOrder=3
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -411,7 +419,7 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
+        StyleName="DHMenuTextButtonWhiteStyle"
         TabOrder=4
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -419,42 +427,14 @@ defaultproperties
     End Object
     b_Settings=GUIButton'DH_Interface.DHMainMenu.SettingsButton'
 
-    Begin Object Class=GUIButton Name=HelpButton
-        CaptionAlign=TXTA_Left
-        Caption="Help & Game Management"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=5
-        bFocusOnWatch=true
-        OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=HelpButton.InternalOnKeyEvent
-    End Object
-    b_Help=GUIButton'DH_Interface.DHMainMenu.HelpButton'
-
-    Begin Object Class=GUIButton Name=HostButton
-        CaptionAlign=TXTA_Left
-        Caption="Host Game"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=6
-        bFocusOnWatch=true
-        OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=HostButton.InternalOnKeyEvent
-    End Object
-    b_Host=GUIButton'DH_Interface.DHMainMenu.HostButton'
-
     Begin Object Class=GUIButton Name=QuitButton
         CaptionAlign=TXTA_Left
         Caption="Exit"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=7
+        StyleName="DHMenuTextButtonWhiteStyle"
+        TabOrder=6
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=QuitButton.InternalOnKeyEvent
@@ -476,69 +456,77 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=11
+        StyleName="DHMenuTextButtonWhiteStyle"
+        TabOrder=5
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=CreditsButton.InternalOnKeyEvent
     End Object
     b_Credits=GUIButton'DH_Interface.DHMainMenu.CreditsButton'
 
-    Begin Object Class=GUIButton Name=ManualButton
+    Begin Object Class=GUIButton Name=MOTDTitleButton
         CaptionAlign=TXTA_Left
-        Caption="Manual"
+        Caption=""
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=12
+        StyleName="DHMenuTextButtonWhiteStyle"
+        TabOrder=7
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=ManualButton.InternalOnKeyEvent
+        OnKeyEvent=MOTDTitleButton.InternalOnKeyEvent
+        WinWidth=1.0
+        WinHeight=0.1
+        WinLeft=0.0
+        WinTop=0.0
     End Object
-    b_Manual=GUIButton'DH_Interface.DHMainMenu.ManualButton'
+    b_MOTDTitle=MOTDTitleButton
 
-    Begin Object Class=GUIButton Name=DemosButton
-        CaptionAlign=TXTA_Left
-        Caption="Demo Management"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=13
-        bFocusOnWatch=true
+    Begin Object Class=GUIGFXButton Name=FacebookButton
+        WinWidth=0.05
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=DemosButton.InternalOnKeyEvent
+        Graphic=texture'DH_GUI_Tex.MainMenu.facebook'
+        TabOrder=1
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Follow us on Facebook!"
+        bRepeatClick=false
+        StyleName="TextLabel"
     End Object
-    b_Demos=GUIButton'DH_Interface.DHMainMenu.DemosButton'
+    b_Facebook=FacebookButton
 
-    Begin Object Class=GUIButton Name=WebsiteButton
-        CaptionAlign=TXTA_Left
-        Caption="Visit Website"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=14
-        bFocusOnWatch=true
+    Begin Object Class=GUIGFXButton Name=GitHubButton
+        WinWidth=0.05
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=WebsiteButton.InternalOnKeyEvent
+        Graphic=texture'DH_GUI_Tex.MainMenu.github'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Join us on GitHub!"
+        bRepeatClick=false
+        StyleName="TextLabel"
     End Object
-    b_Website=GUIButton'DH_Interface.DHMainMenu.WebsiteButton'
+    b_GitHub=GitHubButton
 
-    Begin Object Class=GUIButton Name=BackButton
-        CaptionAlign=TXTA_Left
-        Caption="Back"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=15
-        bFocusOnWatch=true
+    Begin Object Class=GUIGFXButton Name=SteamCommunityButton
+        WinWidth=0.05
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=BackButton.InternalOnKeyEvent
+        Graphic=texture'DH_GUI_Tex.MainMenu.steam'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Join the Steam Community!"
+        bRepeatClick=false
+        StyleName="TextLabel"
     End Object
-    b_Back=GUIButton'DH_Interface.DHMainMenu.BackButton'
+    b_SteamCommunity=SteamCommunityButton
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
@@ -551,7 +539,6 @@ defaultproperties
 
     Begin Object class=GUILabel Name=VersionNum
         StyleName="DHBlackText"
-        Caption="Version: 6.0"
         TextAlign=TXTA_Right
         WinWidth=1.0
         WinHeight=1.0
@@ -574,9 +561,45 @@ defaultproperties
     End Object
     i_DHTextLogo=LogoImage
 
-    FixConfigURL="http://www.darkesthourgame.com/fixconfig"
-    ManualURL="http://www.darkesthourgame.com"
-    WebsiteURL="http://www.darkesthourgame.com"
+    Begin Object class=GUIImage Name=MOTDLoadingImage
+        Image=TexRotator'DH_GUI_Tex.MainMenu.LoadingRotator'
+        ImageColor=(R=255,G=255,B=255,A=255)
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_BottomRight
+        WinWidth=0.33
+        WinHeight=0.33
+        WinLeft=0.33
+        WinTop=0.33
+    End Object
+    i_MOTDLoading=MOTDLoadingImage
+
+    Begin Object Class=DHGUIScrollTextBox Name=MyMOTDText
+        bNoTeletype=true
+        CharDelay=0.05
+        EOLDelay=0.1
+        bVisibleWhenEmpty=true
+        OnCreateComponent=MyMOTDText.InternalOnCreateComponent
+        StyleName="DHLargeText"
+        WinTop=0.1
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=0.9
+        RenderWeight=0.6
+        TabOrder=1
+        bNeverFocus=true
+    End Object
+    tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
+
+    Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
+        WinTop=0.25
+        WinLeft=0.55
+        WinWidth=0.4
+        WinHeight=0.65
+        OnPreDraw=sbSection4.InternalPreDraw
+    End Object
+    c_MOTD=sbSection4
+
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
     SinglePlayerDisabledText="Practice mode is only available in the full version."
     MenuSong="DH_Menu_Music"
@@ -585,4 +608,10 @@ defaultproperties
     OnOpen=InternalOnOpen
     WinTop=0.0
     WinHeight=1.0
+    MOTDErrorString="Error: Could not download news feed ({0})"
+    bShouldRequestMOTD=true
+    GitHubURL="http://github.com/DarklightGames/DarkestHour/wiki"
+    FacebookURL="http://www.facebook.com/darkesthourgame"
+    SteamCommunityURL="http://steamcommunity.com/app/1280"
 }
+

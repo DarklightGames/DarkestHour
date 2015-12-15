@@ -170,6 +170,7 @@ defaultproperties
     DefaultStyleNames(85)="DH_Interface.DHStyle_SpawnVehicleButton"
     DefaultStyleNames(86)="DH_Interface.DHStyle_DeployContinueButton"
     DefaultStyleNames(87)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
+    DefaultStyleNames(89)="DH_Interface.DHStyle_MenuTextButtonWhite"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

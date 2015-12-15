@@ -36,6 +36,19 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
+var struct VersionInfo
+{
+    var int Major;
+    var int Minor;
+    var int Patch;
+    var int Revision;
+} Version;
+
+static function string GetVersionString()
+{
+    return "" $ default.Version.Major $ "." $ default.Version.Minor $ "." $ default.Version.Patch $ "." $ default.Version.Revision;
+}
+
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
@@ -3433,4 +3446,6 @@ defaultproperties
     ReinforcementMessagePercentages(1)=0.25
     ReinforcementMessagePercentages(2)=0.1
     ReinforcementMessagePercentages(3)=0.0
+
+    Version=(Major=6,Minor=0,Patch=0,Revision=1000)
 }
