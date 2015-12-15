@@ -785,8 +785,9 @@ simulated function ProcessHitFX()
 // Modified to add extra effects if certain body parts are hit (chest or head), to play a hit sound, & to remove duplicated calls to TakeDamage()
 function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocation, vector Momentum, class<DamageType> DamageType, array<int> PointsHit)
 {
-    local int    OriginalDamage, BodyPartDamage, CumulativeDamage, HighestDamageAmount, HighestDamagePoint, i;
-    local vector HitDirection;
+    local EPawnHitPointType HitPointType;
+    local vector            HitDirection;
+    local int               OriginalDamage, BodyPartDamage, CumulativeDamage, HighestDamageAmount, HighestDamagePoint, i;
 
     // If someone else has killed this player, return
     if (bDeleteMe || Health <= 0 || PointsHit.Length < 1)
@@ -799,13 +800,22 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     // Loop through array of body parts that have been hit
     for (i = 0; i < PointsHit.Length; ++i)
     {
-        // Calculate damage to this body part & cumulative damage
+        // Calculate damage to this body part
         BodyPartDamage = OriginalDamage * Hitpoints[PointsHit[i]].DamageMultiplier;
         BodyPartDamage = Level.Game.ReduceDamage(BodyPartDamage, self, InstigatedBy, HitLocation, Momentum, DamageType);
 
         if (BodyPartDamage < 1)
         {
             continue;
+        }
+
+        // Update the locational damage list & record if damage to this body part is the highest damage yet
+        UpdateDamageList(PointsHit[i] - 1);
+
+        if (BodyPartDamage > HighestDamageAmount)
+        {
+            HighestDamageAmount = BodyPartDamage;
+            HighestDamagePoint = PointsHit[i];
         }
 
         // Update cumulative damage & break out of the for loop if it's enough to kill the player
@@ -816,15 +826,10 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             break;
         }
 
-        // Check if damage to this body part is the highest damage yet
-        if (BodyPartDamage > HighestDamageAmount)
-        {
-            HighestDamageAmount = BodyPartDamage;
-            HighestDamagePoint = PointsHit[i];
-        }
+        HitPointType = Hitpoints[PointsHit[i]].HitPointType;
 
         // If we've been shot in the foot or leg & are sprinting, we fall to the ground & are winded (zero stamina)
-        if (Hitpoints[PointsHit[i]].HitPointType == PHP_Leg || Hitpoints[PointsHit[i]].HitPointType == PHP_Foot)
+        if (HitPointType == PHP_Leg || HitPointType == PHP_Foot)
         {
             if (bIsSprinting && !bIsCrawling && DHPlayer(Controller) != none)
             {
@@ -834,7 +839,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             }
         }
         // If we've been shot in the hand, we have a chance of dropping our weapon
-        else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Hand && FRand() > 0.5)
+        else if (HitPointType == PHP_Hand && FRand() > 0.5)
         {
             if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
@@ -843,7 +848,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             }
         }
         // If we've been shot in the head, our vision is jarred
-        else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Head)
+        else if (HitPointType == PHP_Head)
         {
             if (DHPlayer(Controller) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
@@ -855,7 +860,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             }
         }
         // If we've been shot in the chest, we're winded (lose half stamina) - Basnett
-        else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Torso)
+        else if (HitPointType == PHP_Torso)
         {
             if (IsHumanControlled() && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
@@ -864,9 +869,6 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
                 ClientForceStaminaUpdate(Stamina);
             }
         }
-
-        // Update the locational damage list
-        UpdateDamageList(PointsHit[i] - 1);
     }
 
     // Damage the player & play hit sound (but make sure no one else has killed this player)
