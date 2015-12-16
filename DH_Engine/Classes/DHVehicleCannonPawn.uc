@@ -631,7 +631,7 @@ function Fire(optional float F)
     {
         if (Cannon.CannonReloadState == CR_ReadyToFire) // removed check on bClientCanFireCannon
         {
-            if (!Cannon.bClientCanFireCannon) log(Tag @ "Fire: bypassing bClientCanFireCannon being false"); // TEMP DEBUG
+            if (!Cannon.bClientCanFireCannon) log(Tag @ "Fire: bypassing bClientCanFireCannon being false"); // TEMPDEBUG
             super(VehicleWeaponPawn).Fire(F);
         }
         else if (Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex()) && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
@@ -1242,7 +1242,7 @@ simulated function SwitchWeapon(byte F)
                 {
                     return;
                 }
-                else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
+                else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMPDEBUG
                     Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
             }
 

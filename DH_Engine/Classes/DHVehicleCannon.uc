@@ -1030,7 +1030,7 @@ simulated function bool ReadyToFire(bool bAltFire)
         {
             return false;
         }
-        else if (!bClientCanFireCannon) log(Tag @ "ReadyToFire: bypassing bClientCanFireCannon being false"); // TEMP DEBUG
+        else if (!bClientCanFireCannon) log(Tag @ "ReadyToFire: bypassing bClientCanFireCannon being false"); // TEMPDEBUG
 
         if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
         {
@@ -1058,7 +1058,7 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 
     if ((!bIsAltFire && CannonReloadState == CR_ReadyToFire) || (bIsAltFire && FireCountdown <= 0.0)) // removed check on bClientCanFireCannon
     {
-        if (!bIsAltFire && !bClientCanFireCannon) Log(Tag @ "ClientStartFire: bypassing bClientCanFireCannon being false"); // TEMP DEBUG
+        if (!bIsAltFire && !bClientCanFireCannon) Log(Tag @ "ClientStartFire: bypassing bClientCanFireCannon being false"); // TEMPDEBUG
 
         if (bIsRepeatingFF)
         {

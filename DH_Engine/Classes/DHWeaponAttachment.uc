@@ -33,7 +33,7 @@ simulated function PostBeginPlay()
 // Modified to remove setting bayonet & barrel variables (PostNetReceive handles it & bOldBayonetAttached is unused anyway)
 simulated function PostNetBeginPlay()
 {
-    local DHGameReplicationInfo GRI; // TEMP DEBUG
+    local DHGameReplicationInfo GRI; // TEMPDEBUG
     if (Role < ROLE_Authority && Instigator != none && Instigator.IsHumanControlled())
     {
         GRI = DHGameReplicationInfo(PlayerController(Instigator.Controller).GameReplicationInfo);
@@ -292,7 +292,7 @@ simulated function Actor GetVehicleHitInfo()
     return none;
 }
 
-simulated function Hide(bool NewbHidden) // TEMP DEBUG
+simulated function Hide(bool NewbHidden) // TEMPDEBUG
 {
     bHidden = NewbHidden;
     if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).bLogWeaponAttachment) Log(Tag @ "Hide setting bHidden =" @ bHidden);

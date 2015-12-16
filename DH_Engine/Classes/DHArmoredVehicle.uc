@@ -167,7 +167,7 @@ var     bool        bDebugTreadText;
 var     bool        bLogPenetration;
 var     bool        bDebugExitPositions;
 var     bool        bDrawExitPositions;
-var     bool        bBypassClientSwitchWeaponChecks; // TEMP DEBUG
+var     bool        bBypassClientSwitchWeaponChecks; // TEMPDEBUG
 
 replication
 {
@@ -192,10 +192,10 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
         ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine, // these ones only during development
-        ServerLogSwitch; // DEBUG (temp)
+        ServerLogSwitch; // TEMPDEBUG
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 
-    reliable if (Role == ROLE_Authority) // DEBUG (temp)
+    reliable if (Role == ROLE_Authority) // TEMPDEBUG
         ClientLogSwitch;
 }
 
@@ -1382,7 +1382,7 @@ simulated function SwitchWeapon(byte F)
     local bool              bMustBeTankerToSwitch;
     local byte              ChosenWeaponPawnIndex;
 
-    // Matt: TEMP DEBUG added bBypassClientSwitchWeaponChecks
+    // Matt: TEMPDEBUG added bBypassClientSwitchWeaponChecks
     if (Role < ROLE_Authority && !bBypassClientSwitchWeaponChecks) // only do these clientside checks on a net client
     {
         ChosenWeaponPawnIndex = F - 2;
@@ -1410,7 +1410,7 @@ simulated function SwitchWeapon(byte F)
             {
                 return;
             }
-            else if (WeaponPawn == none && class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
+            else if (WeaponPawn == none && class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMPDEBUG
                 Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
         }
 
@@ -4204,7 +4204,7 @@ exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
-exec function LogSwitch(optional int Index) // TEMP DEBUG x 4 (Matt: use if you ever find you can't switch to commander's position when you should be able to)
+exec function LogSwitch(optional int Index) // TEMPDEBUG x 4 (Matt: use if you ever find you can't switch to commander's position when you should be able to)
 {
     local ROVehicleWeaponPawn WeaponPawn;
     WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[Index]);

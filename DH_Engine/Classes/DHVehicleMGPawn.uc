@@ -1010,7 +1010,7 @@ simulated function SwitchWeapon(byte F)
                 {
                     return;
                 }
-                else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMP DEBUG
+                else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMPDEBUG
                     Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
             }
 
@@ -1810,7 +1810,7 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
     }
 }
 
-exec function SetRPS(float NewValue) // TEMP DEBUG
+exec function SetRPS(float NewValue) // TEMPDEBUG
 {
     Gun.RotationsPerSecond = NewValue;
     Log(Tag @ ": RotationsPerSecond =" @ Gun.RotationsPerSecond);

@@ -65,7 +65,7 @@ var     float                   NextChangeTeamTime;         // the time at which
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
-var bool bLogWeaponAttachment; // TEMP DEBUG
+var bool bLogWeaponAttachment; // TEMPDEBUG
 
 replication
 {
@@ -2858,7 +2858,7 @@ exec function SoundPlay(string SoundName, optional float Volume)
     }
 }
 
-exec function ToggleLogWeapon() // TEMP DEBUG
+exec function ToggleLogWeapon() // TEMPDEBUG
 {
     local DHGameReplicationInfo GRI;
     if (Role == ROLE_Authority || (PlayerReplicationInfo!= none && PlayerReplicationInfo.bAdmin))
