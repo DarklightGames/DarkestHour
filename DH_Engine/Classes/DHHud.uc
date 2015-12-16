@@ -1478,7 +1478,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
 function DrawPlayerNames(Canvas C)
 {
-    local vector          HitLocation, HitNormal, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
+    local vector          ViewPos, HitLocation, HitNormal, ScreenPos, NamedPlayerLoc, X, Y, Z, Dir;
     local int             PawnOwnerTeam;
     local float           StrX, StrY;
     local string          ResupplyMessage;
@@ -1492,7 +1492,8 @@ function DrawPlayerNames(Canvas C)
         return;
     }
 
-    HitPawn = Pawn(Trace(HitLocation, HitNormal, PlayerOwner.CalcViewLocation + (1600.0 * vector(PlayerOwner.CalcViewRotation)), PlayerOwner.CalcViewLocation, true));
+    ViewPos = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
+    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + (1600.0 * vector(PlayerOwner.CalcViewRotation)), ViewPos, true));
     PawnOwnerTeam = PawnOwner.GetTeamNum();
     Mortar = DHMortarVehicle(HitPawn);
 
