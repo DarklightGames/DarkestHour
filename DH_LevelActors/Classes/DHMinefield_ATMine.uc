@@ -60,11 +60,14 @@ singular function Touch(Actor Other)
 
 // Modified to avoid re-damaging the vehicle that triggered the mine, & to check whether a vehicle is shielding a hit actor from the blast
 // Matt: also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
+// And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor  Victims, TraceHitActor;
-    local vector Direction, TraceHitLocation, TraceHitNormal;
-    local float  DamageScale, Distance;
+    local Actor         Victim, TraceActor;
+    local ROTreadCraft  TC;
+    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local float         DamageScale, Distance;
 
     // Make sure nothing else runs HurtRadius() while we are in the middle of the function
     if (bHurtEntry)
@@ -75,44 +78,75 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     bHurtEntry = true;
 
     // Find all colliding actors within blast radius, which the blast should damage
-    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
+    // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
+    foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
     {
-        // If hit collision mesh actor, switch to its owner
-        if (Victims.IsA('DHCollisionMeshActor'))
+        if (!Victim.bBlockActors)
         {
-            if (DHCollisionMeshActor(Victims).bWontStopBlastDamage)
+            continue;
+        }
+
+        // If hit a collision mesh actor, switch to its owner
+        if (Victim.IsA('DHCollisionMeshActor'))
+        {
+            if (DHCollisionMeshActor(Victim).bWontStopBlastDamage)
             {
                 continue; // ignore col mesh actor if it is set not to stop blast damage
             }
 
-            Victims = Victims.Owner;
+            Victim = Victim.Owner;
         }
 
         // Don't damage this actor, the vehicle that triggered the mine (already damaged), non-authority actors, or fluids
-        if (Victims != self && HurtVehicle != Victims && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
+        // We skip damage on cannons because the blast will hit the vehicle base so we don't want to double up on damage to the same vehicle
+        if (Victim == none || Victim == self || Victim == HurtVehicle || Victim.IsA('ROTankCannon') || Victim.Role < ROLE_Authority || Victim.IsA('FluidSurfaceInfo'))
         {
-            // Do a trace to the actor & if there's a vehicle between it & the explosion, don't apply damage
-            TraceHitActor = Trace(TraceHitLocation, TraceHitNormal, Victims.Location, HitLocation);
+            continue;
+        }
 
-            if (Vehicle(TraceHitActor) != none && TraceHitActor != Victims)
+        // Now we need to check whether there's something in the way that could shield this actor from the blast
+        // Usually we trace to actor's location, but for a tank (or similar, including AT gun), we adjust Z location to give a more consistent, realistic tracing height
+        // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
+        VictimLocation = Victim.Location;
+        TC = ROTreadCraft(Victim);
+
+        if (TC != none && TC.PassengerWeapons.Length > 0 && TC.PassengerWeapons[0].WeaponBone != '')
+        {
+            VictimLocation.Z = TC.GetBoneCoords(TC.PassengerWeapons[0].WeaponBone).Origin.Z;
+        }
+
+        // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast
+        TraceActor = Trace(TraceHitLocation, TraceHitNormal, VictimLocation, HitLocation);
+
+        if (DHCollisionMeshActor(TraceActor) != none)
+        {
+            if (DHCollisionMeshActor(TraceActor).bWontStopBlastDamage)
             {
                 continue;
             }
 
-            // Calculate damage based on distance from explosion
-            Direction = Victims.Location - HitLocation;
-            Distance = FMax(1.0, VSize(Direction));
-            Direction = Direction / Distance;
-            DamageScale = 1.0 - FMax(0.0, (Distance - Victims.CollisionRadius) / DamageRadius);
+            TraceActor = TraceActor.Owner; // as normal, if hit a collision mesh actor then switch to its owner
+        }
 
-            // Damage the actor hit by the blast - if it's a vehicle, check for damage to any occupants
-            Victims.TakeDamage(DamageScale * DamageAmount, none, Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * Direction,
-                DamageScale * Momentum * Direction, DamageType);
+        // Ignore the actor if the blast is blocked by world geometry, a vehicle, or a turret (but don't let a turret block damage to its own vehicle)
+        if (TraceActor != none && TraceActor != Victim && (TraceActor.bWorldGeometry || TraceActor.IsA('ROVehicle') || (TraceActor.IsA('ROTankCannon') && Victim != TraceActor.Base)))
+        {
+            continue;
+        }
 
-            if (ROVehicle(Victims) != none && ROVehicle(Victims).Health > 0)
-            {
-                CheckVehicleOccupantsRadiusDamage(ROVehicle(Victims), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
-            }
+        // Calculate damage based on distance from explosion
+        Direction = VictimLocation - HitLocation;
+        Distance = FMax(1.0, VSize(Direction));
+        Direction = Direction / Distance;
+        DamageScale = 1.0 - FMax(0.0, (Distance - Victim.CollisionRadius) / DamageRadius);
+
+        // Damage the actor hit by the blast - if it's a vehicle, check for damage to any exposed occupants
+        Victim.TakeDamage(DamageScale * DamageAmount, none, VictimLocation - 0.5 * (Victim.CollisionHeight + Victim.CollisionRadius) * Direction,
+            DamageScale * Momentum * Direction, DamageType);
+
+        if (Victim.IsA('ROVehicle') && ROVehicle(Victim).Health > 0)
+        {
+            CheckVehicleOccupantsRadiusDamage(ROVehicle(Victim), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
         }
     }
 
