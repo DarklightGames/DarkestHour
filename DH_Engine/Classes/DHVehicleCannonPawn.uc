@@ -2116,24 +2116,16 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
     }
 }
 
-exec function LogCannon() // DEBUG x 3 (Matt: use if you ever find you can't fire cannon or do a reload, when you should be able to)
+exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
-    Log("CLIENT:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState) @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon
-        @ " ProjectileClass =" @ Cannon.ProjectileClass);
-    Log("CLIENT: PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex
-        @ " Controller =" @ Controller.Tag);
-    if (Role < ROLE_Authority) ServerLogCannon();
+    Log("LOGCANNON: Gun =" @ Gun.Tag @ " Cannon =" @ Cannon.Tag @ " Gun.Owner =" @ Gun.Owner.Tag @ " Cannon.CannonPawn =" @ Cannon.CannonPawn.Tag);
+    Log(Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState)
+        @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon @ " ProjectileClass =" @ Cannon.ProjectileClass);
+    Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition')
+        @ " DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
 }
-function ServerLogCannon()
-{
-    ClientLogCannon(Cannon.CannonReloadState, Cannon.bClientCanFireCannon, Cannon.ProjectileClass, Cannon.PrimaryAmmoCount(), IsInState('ViewTransition'), DriverPositionIndex, Controller.Tag);
-}
-simulated function ClientLogCannon(int CannonReloadState, bool bClientCanFireCannon, Class ProjectileClass, int PrimaryAmmoCount, bool bIsInViewTrans, int SDriverPositionIndex, name ControllerTag)
-{
-    Log("SERVER:" @ Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', CannonReloadState) @ " bClientCanFireCannon =" @ bClientCanFireCannon @ " ProjectileClass =" @ ProjectileClass);
-    Log("SERVER: PrimaryAmmoCount() =" @ PrimaryAmmoCount @ " ViewTransition =" @ bIsInViewTrans @ " DriverPositionIndex =" @ SDriverPositionIndex @ " Controller =" @ ControllerTag);
-}
-exec function CannonFireBug() // TEMP DEBUG
+
+exec function CannonFireBug() // TEMPDEBUG
 {
    Cannon.bClientCanFireCannon = false;
    Log(Tag @ "CannonFireBug: re-created the occasional bug where cannon could not fire, by setting bClientCanFireCannon to" @ Cannon.bClientCanFireCannon);

@@ -637,11 +637,10 @@ simulated function StopDriving(Vehicle V)
 
     if (WeaponAttachment != none)
     {
-        // TEMPDEBUG
+        // TEMPDEBUG x 3
         if (Role == ROLE_Authority) GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         else if (IsHumanControlled()) GRI = DHGameReplicationInfo(PlayerController(Controller).GameReplicationInfo);
         if (GRI != none && GRI.bLogWeaponAttachment) Log("StopDriving making visible (calling Hide(false))" @ WeaponAttachment.Tag);
-        // END DEBUG
 
         WeaponAttachment.Hide(false);
     }
@@ -4755,6 +4754,12 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
     }
 
     ResetPhysicsBasedAnim();
+}
+
+// DEBUG exec to check whether bInitializedPlayer has been set to true on a net client - run if player spawns with wrong skin
+simulated function DebugInitPlayer()
+{
+    Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
 }
 
 defaultproperties
