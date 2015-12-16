@@ -87,7 +87,6 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerLogCannon, // DEBUG (temp)
         ServerToggleDebugExits; // only during development
 //      ServerChangeDriverPos      // Matt: removed function
 //      ServerToggleExtraRoundType // Matt: removed function as is pointless - normal RO ServerToggleRoundType can be called; it's only the functionality in Gun.ToggleRoundType() that changes
@@ -95,8 +94,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientDamageCannonOverlay,
-        ClientLogCannon; // DEBUG (temp)
+        ClientDamageCannonOverlay;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
