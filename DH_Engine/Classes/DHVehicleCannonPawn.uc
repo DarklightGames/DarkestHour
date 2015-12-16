@@ -57,6 +57,7 @@ var     float       PoweredMinRotateThreshold;
 var     float       PoweredMaxRotateThreshold;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
+var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
 var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the cannon actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
@@ -144,39 +145,6 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: new function to do any extra set up in the cannon classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
-// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-// Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
-// Also to send net client into state 'EnteringVehicle' if client was unable to when ClientKDriverEnter() was called, due to not then having cannon actor (replication timing issues)
-simulated function InitializeCannon()
-{
-    Cannon = DHVehicleCannon(Gun);
-
-    if (Cannon != none)
-    {
-        Cannon.InitializeCannon(self);
-
-        if (bNeedToEnterVehicle)
-        {
-            bNeedToEnterVehicle = false;
-            GotoState('EnteringVehicle');
-        }
-    }
-    else
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleCannon, so lots of things are not going to work!");
-    }
-
-    if (DHArmoredVehicle(VehicleBase) != none)
-    {
-        SetManualTurret(DHArmoredVehicle(VehicleBase).bEngineOff);
-    }
-    else
-    {
-        SetManualTurret(true);
-    }
-}
-
 // Modified to destroy any binoculars attachment
 simulated function Destroyed()
 {
@@ -192,13 +160,11 @@ simulated function Destroyed()
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to call InitializeCannon when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
-// 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
-// 2. To do any extra set up in the cannon classes, which can easily be subclassed for anything that is vehicle specific
+// Matt: modified to call set up functionality that requires either the Vehicle and/or VehicleWeapon actors (just after vehicle spawns via replication)
+// This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
+// Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
 simulated function PostNetReceive()
 {
-    local int i;
-
     // Player has changed position
     // Checking bInitializedVehicleGun means we do nothing on the 1st call to this function, which happens before PostNetBeginPlay() has matched position indexes
     // Meaning we leave SetPlayerPosition() to handle any initial anims & don't call NextViewPoint() initially, which would only interfere with SetPlayerPosition()
@@ -213,42 +179,36 @@ simulated function PostNetReceive()
         }
     }
 
-    // Initialize the cannon (added VehicleBase != none, so we guarantee that VB is available to InitializeCannon)
-    if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
+    // Initialize anything we need to do from the VehicleWeapon actor, or in that actor
+    if (!bInitializedVehicleGun)
     {
-        bInitializedVehicleGun = true;
-        InitializeCannon();
+        if (Gun != none)
+        {
+            bInitializedVehicleGun = true;
+            InitializeVehicleWeapon();
+        }
+    }
+    // Fail-safe so if we somehow lose our Gun reference after initializing, we unset our flags & are then ready to re-initialize when we receive Gun again
+    else if (Gun == none)
+    {
+        bInitializedVehicleGun = false;
+        bInitializedVehicleAndGun = false;
     }
 
-    // Initialize the vehicle base
-    if (!bInitializedVehicleBase && VehicleBase != none)
+    // Initialize anything we need to do from the Vehicle actor, or in that actor
+    if (!bInitializedVehicleBase)
     {
-        bInitializedVehicleBase = true;
-
-        // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
-        if (bNeedToStoreVehicleRotation)
+        if (VehicleBase != none)
         {
-            StoredVehicleRotation = VehicleBase.Rotation;
+            bInitializedVehicleBase = true;
+            InitializeVehicleBase();
         }
-
-        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
-        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
-            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
-        {
-            VehicleBase.WeaponPawns[PositionInArray] = self;
-
-            return;
-        }
-
-        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
-        {
-            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
-            {
-                return;
-            }
-        }
-
-        VehicleBase.WeaponPawns[PositionInArray] = self;
+    }
+    // Fail-safe so if we somehow lose our VehicleBase reference after initializing, we unset our flags & are then ready to re-initialize when we receive VehicleBase again
+    else if (VehicleBase == none)
+    {
+        bInitializedVehicleBase = false;
+        bInitializedVehicleAndGun = false;
     }
 
     // Initialize the 'Driver'
@@ -1480,15 +1440,108 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(default.AltAmmoReloadTexture);
 }
 
-// Modified to call InitializeCannon to do any extra set up in the cannon classes
-// This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
+// Modified to call Initialize-X functions to do set up in the cannon classes that requires actor references to the different vehicle actors
+// This is where we do it servers or single player (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
 function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 {
     super.AttachToVehicle(VehiclePawn, WeaponBone);
 
     if (Role == ROLE_Authority)
     {
-        InitializeCannon();
+        InitializeVehicleWeapon();
+        InitializeVehicleBase();
+
+        if (Cannon != none)
+        {
+            Cannon.InitializeVehicleBase();
+        }
+    }
+}
+
+// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeapon actor
+// Using it to set a convenient Cannon reference & to send net client to state 'EnteringVehicle' if replication timing issues stopped that happening in ClientKDriverEnter()
+simulated function InitializeVehicleWeapon()
+{
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon != none)
+    {
+        Cannon.InitializeWeaponPawn(self);
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleCannon, so lots of things are not going to work!");
+    }
+
+    // We need to go to state 'EnteringVehicle', but were unable to do it from ClientKDriverEnter() because we hadn't then received our Gun reference
+    if (bNeedToEnterVehicle)
+    {
+        bNeedToEnterVehicle = false;
+        GotoState('EnteringVehicle');
+    }
+
+    // If we also have the Vehicle actor, initialize anything we need to do where we need both actors
+    if (VehicleBase != none && !bInitializedVehicleAndGun)
+    {
+        InitializeVehicleAndWeapon();
+    }
+}
+
+// Matt: new function to do set up that requires the 'VehicleBase' reference to the Vehicle actor
+// Using it to set StoredVehicleRotation on net client if replication timing issues stopped that happening in ClientKDriverEnter()
+// And to give the VehicleBase a reference to this actor in its WeaponPawns array, each time we spawn on a net client (previously in PostNetReceive)
+simulated function InitializeVehicleBase()
+{
+    local int i;
+
+    if (Role < ROLE_Authority)
+    {
+        // We need to set StoredVehicleRotation as were unable to do it from ClientKDriverEnter() because we hadn't then received our VehicleBase reference
+        if (bNeedToStoreVehicleRotation)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
+
+        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
+        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
+            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+        {
+            VehicleBase.WeaponPawns[PositionInArray] = self;
+
+            return;
+        }
+
+        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+        {
+            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+            {
+                return;
+            }
+        }
+
+        VehicleBase.WeaponPawns[PositionInArray] = self;
+    }
+
+    // If we also have the VehicleWeapon actor, initialize anything we need to do where we need both actors
+    if (Cannon != none && !bInitializedVehicleAndGun)
+    {
+        InitializeVehicleAndWeapon();
+    }
+}
+
+// Matt: new function to do set up that requires both the 'VehicleBase' & 'Gun' references to the Vehicle & VehicleWeapon actors
+// Using it to reliably initialize the manual/powered turret settings when vehicle spawns
+simulated function InitializeVehicleAndWeapon()
+{
+    bInitializedVehicleAndGun = true;
+
+    if (DHArmoredVehicle(VehicleBase) != none)
+    {
+        SetManualTurret(DHArmoredVehicle(VehicleBase).bEngineOff);
+    }
+    else
+    {
+        SetManualTurret(true);
     }
 }
 

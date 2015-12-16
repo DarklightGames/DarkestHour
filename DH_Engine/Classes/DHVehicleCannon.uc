@@ -50,6 +50,10 @@ var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
+// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
+var     bool                bInitializedVehicleBase;          // done some set up when had received the (vehicle) Base actor
+var     bool                bInitializedVehicleAndWeaponPawn; // done some set up when had received both the (vehicle) Base & CannonPawn actors
+
 // Debugging and calibration
 var     bool                bDrawPenetration;
 var     bool                bDebuggingText;
@@ -100,63 +104,6 @@ simulated function PostBeginPlay()
     }
 }
 
-// Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
-// Crucially, we know that we have CannonPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
-{
-    local DHArmoredVehicle AV;
-    local int              i;
-
-    // Set any optional attachment offset, when attaching cannon/turret to hull (set separately on net client as replication is unreliable & loses fractional precision)
-    if (CannonAttachmentOffset != vect(0.0, 0.0, 0.0))
-    {
-        SetRelativeLocation(CannonAttachmentOffset);
-    }
-
-    if (CannonPwn != none)
-    {
-        CannonPawn = CannonPwn;
-
-        if (Role < ROLE_Authority)
-        {
-            SetOwner(CannonPawn);
-            Instigator = CannonPawn;
-        }
-
-        AV = DHArmoredVehicle(CannonPawn.VehicleBase);
-
-        if (AV != none)
-        {
-            // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-            AV.CannonTurret = self;
-
-            // If vehicle is burning, start the turret hatch fire effect
-            if (AV.bOnFire && Level.NetMode != NM_DedicatedServer)
-            {
-                StartTurretFire();
-            }
-
-            // Option to skin the cannon mesh using CannonSkins specified in vehicle class
-            if (AV.CannonSkins.Length > 0)
-            {
-                for (i = 0; i < AV.CannonSkins.Length; ++i)
-                {
-                    Skins[i] = AV.CannonSkins[i];
-                }
-            }
-        }
-        // Option for cannon to be mounted on a DHWheeledVehicle (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
-        else if (DHWheeledVehicle(CannonPawn.VehicleBase) != none)
-        {
-            DHWheeledVehicle(CannonPawn.VehicleBase).Cannon = self;
-        }
-    }
-    else
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleCannonPawn, so lots of things are not going to work!");
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -166,6 +113,28 @@ simulated function InitializeCannon(DHVehicleCannonPawn CannonPwn)
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
+}
+
+// Matt: modified to call set up functionality that requires the Vehicle actor (just after vehicle spawns via replication)
+// This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
+// Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
+simulated function PostNetReceive()
+{
+    // Initialize anything we need to do from the Vehicle actor, or in that actor
+    if (!bInitializedVehicleBase)
+    {
+        if (Base != none)
+        {
+            bInitializedVehicleBase = true;
+            InitializeVehicleBase();
+        }
+    }
+    // Fail-safe so if we somehow lose our Base reference after initializing, we unset our flags & are then ready to re-initialize when we receive Base again
+    else if (Base == none)
+    {
+        bInitializedVehicleBase = false;
+        bInitializedVehicleAndWeaponPawn = false;
+    }
 }
 
 // Modified to simplify a little, including call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do
@@ -1700,6 +1669,86 @@ simulated function UpdatePrecacheStaticMeshes()
     super.UpdatePrecacheStaticMeshes();
 }
 
+// Matt: new function to do set up that requires the 'CannonPawn' reference to the VehicleWeaponPawn actor
+// Using it to set a convenient CannonPawn reference & our Owner & Instigator variables
+simulated function InitializeWeaponPawn(DHVehicleCannonPawn CannonPwn)
+{
+    if (CannonPwn != none)
+    {
+        CannonPawn = CannonPwn;
+
+        if (Role < ROLE_Authority)
+        {
+            SetOwner(CannonPawn);
+            Instigator = CannonPawn;
+        }
+
+        // If we also have the Vehicle, initialize anything we need to do where we need both actors
+        if (Base != none && !bInitializedVehicleAndWeaponPawn)
+        {
+            InitializeVehicleAndWeaponPawn();
+        }
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleCannonPawn, so lots of things are not going to work!");
+    }
+}
+
+// Matt: new function to do set up that requires the 'Base' reference to the Vehicle actor we are attached to
+simulated function InitializeVehicleBase()
+{
+    local DHArmoredVehicle AV;
+    local int              i;
+
+    // Set any optional attachment offset, when attaching cannon/turret to hull (set separately on net client as replication is unreliable & loses fractional precision)
+    if (CannonAttachmentOffset != vect(0.0, 0.0, 0.0))
+    {
+        SetRelativeLocation(CannonAttachmentOffset);
+    }
+
+    AV = DHArmoredVehicle(Base);
+
+    if (AV != none)
+    {
+        // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
+        AV.CannonTurret = self;
+
+        // If vehicle is burning, start the turret hatch fire effect
+        if (AV.bOnFire && Level.NetMode != NM_DedicatedServer)
+        {
+            StartTurretFire();
+        }
+
+        // Option to skin the cannon mesh using CannonSkins specified in vehicle class
+        if (AV.CannonSkins.Length > 0)
+        {
+            for (i = 0; i < AV.CannonSkins.Length; ++i)
+            {
+                Skins[i] = AV.CannonSkins[i];
+            }
+        }
+    }
+    // Option for cannon to be mounted on a DHWheeledVehicle (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
+    else if (DHWheeledVehicle(Base) != none)
+    {
+        DHWheeledVehicle(Base).Cannon = self;
+    }
+
+    // If we also have the VehicleWeaponPawn actor, initialize anything we need to do where we need both actors
+    if (CannonPawn != none && !bInitializedVehicleAndWeaponPawn)
+    {
+        InitializeVehicleAndWeaponPawn();
+    }
+}
+
+// Matt: new function to do set up that requires both the 'Base' & 'CannonPawn' references to the Vehicle & VehicleWeaponPawn actors
+// Currently unused but putting it in fr consistency & for future usage, including option to easily subclass for any vehicle-specific set up
+simulated function InitializeVehicleAndWeaponPawn()
+{
+    bInitializedVehicleAndWeaponPawn = true;
+}
+
 simulated function CalcWeaponFire(bool bWasAltFire)
 {
     local coords WeaponBoneCoords;
@@ -1924,6 +1973,7 @@ simulated function DestroyEffects()
 defaultproperties
 {
     bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update the cannon mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
+    bNetNotify=true       // Matt: necessary to do set up requiring the 'Base' actor reference to the cannon's vehicle base
     bHasTurret=true
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
