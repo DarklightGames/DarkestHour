@@ -51,8 +51,8 @@ var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
-var     bool                bInitializedVehicleBase;          // done some set up when had received the (vehicle) Base actor
-var     bool                bInitializedVehicleAndWeaponPawn; // done some set up when had received both the (vehicle) Base & CannonPawn actors
+var     bool                bInitializedVehicleBase;          // done set up after receiving the (vehicle) Base actor
+var     bool                bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & CannonPawn actors
 
 // Debugging and calibration
 var     bool                bDrawPenetration;
@@ -1669,8 +1669,8 @@ simulated function UpdatePrecacheStaticMeshes()
     super.UpdatePrecacheStaticMeshes();
 }
 
-// Matt: new function to do set up that requires the 'CannonPawn' reference to the VehicleWeaponPawn actor
-// Using it to set a convenient CannonPawn reference & our Owner & Instigator variables
+// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor
+// Using it to set a convenient CannonPawn reference & our Owner & Instigator variables (they were previously set in PostNetReceive)
 simulated function InitializeWeaponPawn(DHVehicleCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
@@ -1696,6 +1696,8 @@ simulated function InitializeWeaponPawn(DHVehicleCannonPawn CannonPwn)
 }
 
 // Matt: new function to do set up that requires the 'Base' reference to the Vehicle actor we are attached to
+// Using it to add option of cannon mesh attachment offset, to give Vehicle a reference to this actor, to start a hatch fire if vehicle is burning when replicated.
+// & an option for to skin cannon mesh using CannonSkins array in Vehicle class (avoiding need for separate cannon pawn & cannon classes just for camo variants)
 simulated function InitializeVehicleBase()
 {
     local DHArmoredVehicle AV;
@@ -1714,18 +1716,21 @@ simulated function InitializeVehicleBase()
         // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
         AV.CannonTurret = self;
 
-        // If vehicle is burning, start the turret hatch fire effect
-        if (AV.bOnFire && Level.NetMode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            StartTurretFire();
-        }
-
-        // Option to skin the cannon mesh using CannonSkins specified in vehicle class
-        if (AV.CannonSkins.Length > 0)
-        {
-            for (i = 0; i < AV.CannonSkins.Length; ++i)
+            // If vehicle is burning, start the turret hatch fire effect
+            if (AV.bOnFire)
             {
-                Skins[i] = AV.CannonSkins[i];
+                StartTurretFire();
+            }
+
+            // Option to skin the cannon mesh using CannonSkins specified in vehicle class
+            if (AV.CannonSkins.Length > 0)
+            {
+                for (i = 0; i < AV.CannonSkins.Length; ++i)
+                {
+                    Skins[i] = AV.CannonSkins[i];
+                }
             }
         }
     }
@@ -1742,8 +1747,8 @@ simulated function InitializeVehicleBase()
     }
 }
 
-// Matt: new function to do set up that requires both the 'Base' & 'CannonPawn' references to the Vehicle & VehicleWeaponPawn actors
-// Currently unused but putting it in fr consistency & for future usage, including option to easily subclass for any vehicle-specific set up
+// Matt: new function to do any set up that requires both the 'Base' & 'CannonPawn' references to the Vehicle & VehicleWeaponPawn actors
+// Currently unused but putting it in for consistency & for future usage, including option to easily subclass for any vehicle-specific set up
 simulated function InitializeVehicleAndWeaponPawn()
 {
     bInitializedVehicleAndWeaponPawn = true;

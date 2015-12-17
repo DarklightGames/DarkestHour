@@ -160,7 +160,7 @@ simulated function Destroyed()
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to call set up functionality that requires either the Vehicle and/or VehicleWeapon actors (just after vehicle spawns via replication)
+// Matt: modified to call set up functionality that requires the Vehicle, VehicleWeapon and/or player pawn actors (just after vehicle spawns via replication)
 // This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
 // Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
 simulated function PostNetReceive()
@@ -1440,7 +1440,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(default.AltAmmoReloadTexture);
 }
 
-// Modified to call Initialize-X functions to do set up in the cannon classes that requires actor references to the different vehicle actors
+// Modified to call Initialize-X functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
 // This is where we do it servers or single player (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
 function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 {

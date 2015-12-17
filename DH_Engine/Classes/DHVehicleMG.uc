@@ -27,6 +27,10 @@ var     class<VehicleDamagedEffect> FireEffectClass;
 var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 
+// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
+var     bool           bInitializedVehicleBase;          // done set up after receiving the (vehicle) Base actor
+var     bool           bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & MGPawn actors
+
 // Reloading
 struct  ReloadStage
 {
@@ -90,51 +94,6 @@ simulated function PostBeginPlay()
     }
 }
 
-// Matt: new function to do any extra set up in the MG classes (called from MG pawn) - can be subclassed to do any vehicle specific setup
-// Crucially, we know that we have MGPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
-// Includes option to automatically match MG skin(s) to vehicle skin(s), e.g. for gunshield, avoiding need for separate MGPawn & MG classes
-simulated function InitializeMG(DHVehicleMGPawn MGPwn)
-{
-    // Set any optional attachment offset, when attaching MG to hull (set separately on net client as replication is unreliable & loses fractional precision)
-    if (MGAttachmentOffset != vect(0.0, 0.0, 0.0))
-    {
-        SetRelativeLocation(MGAttachmentOffset);
-    }
-
-    if (MGPwn != none)
-    {
-        MGPawn = MGPwn;
-
-        if (Role < ROLE_Authority)
-        {
-            SetOwner(MGPawn);
-            Instigator = MGPawn;
-        }
-
-        if (DHArmoredVehicle(MGPawn.VehicleBase) != none)
-        {
-            // Set the vehicle's HullMG reference - normally unused but can be useful
-            DHArmoredVehicle(MGPawn.VehicleBase).HullMG = self;
-
-            // If vehicle is burning, start the MG hatch fire effect
-            if (DHArmoredVehicle(MGPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
-            {
-                StartMGFire();
-            }
-        }
-
-        // Match MG skin zero to vehicle skin zero, e.g. for gunshield
-        if (bMatchSkinToVehicle)
-        {
-            Skins[0] = MGPawn.VehicleBase.Skins[0];
-        }
-    }
-    else
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleMGPawn, so lots of things are not going to work!");
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +103,28 @@ simulated function InitializeMG(DHVehicleMGPawn MGPwn)
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
+}
+
+// Matt: modified to call set up functionality that requires the Vehicle actor (just after vehicle spawns via replication)
+// This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
+// Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
+simulated function PostNetReceive()
+{
+    // Initialize anything we need to do from the Vehicle actor, or in that actor
+    if (!bInitializedVehicleBase)
+    {
+        if (Base != none)
+        {
+            bInitializedVehicleBase = true;
+            InitializeVehicleBase();
+        }
+    }
+    // Fail-safe so if we somehow lose our Base reference after initializing, we unset our flags & are then ready to re-initialize when we receive Base again
+    else if (Base == none)
+    {
+        bInitializedVehicleBase = false;
+        bInitializedVehicleAndWeaponPawn = false;
+    }
 }
 
 // Multi-stage MG reload similar to a tank cannon, but implemented differently to optimise (runs independently on server & owning net client)
@@ -499,6 +480,74 @@ simulated function UpdatePrecacheMaterials()
     }
 }
 
+// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor
+// Using it to set a convenient MGPawn reference & our Owner & Instigator variables
+simulated function InitializeWeaponPawn(DHVehicleMGPawn MGPwn)
+{
+    if (MGPwn != none)
+    {
+        MGPawn = MGPwn;
+
+        if (Role < ROLE_Authority)
+        {
+            SetOwner(MGPawn);
+            Instigator = MGPawn;
+        }
+
+        // If we also have the Vehicle, initialize anything we need to do where we need both actors
+        if (Base != none && !bInitializedVehicleAndWeaponPawn)
+        {
+            InitializeVehicleAndWeaponPawn();
+        }
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleMGPawn, so lots of things are not going to work!");
+    }
+}
+
+// Matt: new function to do set up that requires the 'Base' reference to the Vehicle actor we are attached to
+// Using it to add option to automatically match MG skin to vehicle skin, e.g. for gunshield, avoiding need for separate MGPawn & MG classes just for camo variants
+simulated function InitializeVehicleBase()
+{
+    // Set any optional attachment offset, when attaching MG to hull (set separately on net client as replication is unreliable & loses fractional precision)
+    if (MGAttachmentOffset != vect(0.0, 0.0, 0.0))
+    {
+        SetRelativeLocation(MGAttachmentOffset);
+    }
+
+    // Match MG skin zero to vehicle skin zero, e.g. for gunshield
+    if (bMatchSkinToVehicle)
+    {
+        Skins[0] = Base.Skins[0];
+    }
+
+    if (DHArmoredVehicle(Base) != none)
+    {
+        // Set the vehicle's HullMG reference - normally unused but can be useful
+        DHArmoredVehicle(Base).HullMG = self;
+
+        // If vehicle is burning, start the MG hatch fire effect
+        if (DHArmoredVehicle(Base).bOnFire)
+        {
+            StartMGFire();
+        }
+    }
+
+    // If we also have the VehicleWeaponPawn actor, initialize anything we need to do where we need both actors
+    if (MGPawn != none && !bInitializedVehicleAndWeaponPawn)
+    {
+        InitializeVehicleAndWeaponPawn();
+    }
+}
+
+// Matt: new function to do any set up that requires both the 'Base' & 'MGPawn' references to the Vehicle & VehicleWeaponPawn actors
+// Currently unused but putting it in for consistency & for future usage, including option to easily subclass for any vehicle-specific set up
+simulated function InitializeVehicleAndWeaponPawn()
+{
+    bInitializedVehicleAndWeaponPawn = true;
+}
+
 // Modified to enforce use of rotation relative to vehicle (bPCRelativeFPRotation), to use yaw limits from DriverPositions in a multi position MG,
 // & so we don't limit view yaw if in behind view
 simulated function int LimitYaw(int yaw)
@@ -604,6 +653,7 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
+    bNetNotify=true // Matt: necessary to do set up requiring the 'Base' actor reference to the MG's vehicle base
     ReloadState=MG_ReadyToFire
     ReloadSounds[0]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105) // default is MG34 reload sounds, as is used by most vehicles, even allies
     ReloadSounds[1]=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413)

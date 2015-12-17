@@ -49,26 +49,6 @@ simulated function PostBeginPlay()
     MainAmmoCharge[1] = 0;
 }
 
-// Matt: new function to do any extra set up in the mortar classes (called from mortar pawn) - can be subclassed to do any weapon specific setup
-// Crucially, we know that we have MortarPawn & its VehicleBase when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeMortar(DHMortarVehicleWeaponPawn MortarPwn)
-{
-    if (MortarPwn != none)
-    {
-        MortarPawn = MortarPwn;
-
-        if (Role < ROLE_Authority)
-        {
-            SetOwner(MortarPawn);
-            Instigator = MortarPawn;
-        }
-    }
-    else
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHMortarVehicleWeaponPawn, so lots of things are not going to work!");
-    }
-}
-
 // New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar
 // Don't need to keep updating these properties between server & owning client, & any exploitation would be completely benign and pointless - Basnett
 simulated function SendFiringSettingsToServer()
@@ -277,6 +257,26 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 
     super.UpdatePrecacheStaticMeshes();
+}
+
+// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor
+// Using it to set a convenient MortarPawn reference & our Owner & Instigator variables (they were previously set in PostNetReceive)
+simulated function InitializeWeaponPawn(DHMortarVehicleWeaponPawn MortarPwn)
+{
+    if (MortarPwn != none)
+    {
+        MortarPawn = MortarPwn;
+
+        if (Role < ROLE_Authority)
+        {
+            SetOwner(MortarPawn);
+            Instigator = MortarPawn;
+        }
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHMortarVehicleWeaponPawn, so lots of things are not going to work!");
+    }
 }
 
 defaultproperties

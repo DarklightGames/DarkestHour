@@ -68,6 +68,7 @@ var     float       BlurEffectScalar;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bNeedToInitializeDriver;   // do some player set up when we receive the Driver actor
+var     bool        bInitializedVehicleAndGun; // done some set up when had received both the VehicleBase & Gun actors
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
 replication
@@ -95,30 +96,12 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: new function to do any extra set up in the mortar classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
-// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeMortar()
-{
-    Mortar = DHMortarVehicleWeapon(Gun);
-
-    if (Mortar != none)
-    {
-        Mortar.InitializeMortar(self);
-    }
-    else
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMortarVehicleWeapon, so lots of things are not going to work!");
-    }
-}
-
-// Modified to play animations on the mortar & the player, when a new value is received by a net client
-// Also to call InitializeMortar when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), same as DH cannon pawn
-// Also to ensure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleWeapon actor, which it may not have yet
-// And to remove stuff not relevant to a mortar, as is not multi-position
+// Modified to play animations on the mortar & player, when a new value is received by net client, & to remove stuff not relevant to a mortar (as not multi-position)
+// Matt: also to call set up functionality that requires the Vehicle, VehicleWeapon and/or player pawn actors (just after vehicle spawns via replication)
+// This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
+// Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
 simulated function PostNetReceive()
 {
-    local int i;
-
     // Play animations
     if (CurrentDriverAnimation != OldDriverAnimation)
     {
@@ -142,17 +125,103 @@ simulated function PostNetReceive()
         OldDriverAnimation = CurrentDriverAnimation;
     }
 
-    // Initialize the mortar
-    if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
+    // Initialize anything we need to do from the VehicleWeapon actor, or in that actor
+    if (!bInitializedVehicleGun)
     {
-        bInitializedVehicleGun = true;
-        InitializeMortar();
+        if (Gun != none)
+        {
+            bInitializedVehicleGun = true;
+            InitializeVehicleWeapon();
+        }
+    }
+    // Fail-safe so if we somehow lose our Gun reference after initializing, we unset our flags & are then ready to re-initialize when we receive Gun again
+    else if (Gun == none)
+    {
+        bInitializedVehicleGun = false;
+        bInitializedVehicleAndGun = false;
     }
 
-    // Initialize the vehicle base
-    if (!bInitializedVehicleBase && VehicleBase != none)
+    // Initialize anything we need to do from the Vehicle actor, or in that actor
+    if (!bInitializedVehicleBase)
     {
-        bInitializedVehicleBase = true;
+        if (VehicleBase != none)
+        {
+            bInitializedVehicleBase = true;
+            InitializeVehicleBase();
+        }
+    }
+    // Fail-safe so if we somehow lose our VehicleBase reference after initializing, we unset our flags & are then ready to re-initialize when we receive VehicleBase again
+    else if (VehicleBase == none)
+    {
+        bInitializedVehicleBase = false;
+        bInitializedVehicleAndGun = false;
+    }
+
+    // Fix 'driver' attachment position - on replication, AttachDriver() only works if client has received MortarVehicleWeapon actor, which it may not have yet
+    // Client then receives Driver attachment & RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
+    // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here
+    if (bNeedToInitializeDriver && Driver != none && Gun != none)
+    {
+        bNeedToInitializeDriver = false;
+
+        if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver)
+        {
+            DetachDriver(Driver);
+            AttachDriver(Driver);
+            DHPawn(Driver).bNeedToAttachDriver = false;
+        }
+    }
+}
+
+// Modified to call Initialize-X functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
+// This is where we do it servers or single player (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
+function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
+{
+    super.AttachToVehicle(VehiclePawn, WeaponBone);
+
+    if (Role == ROLE_Authority)
+    {
+        InitializeVehicleWeapon();
+        InitializeVehicleBase();
+    }
+}
+
+// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeapon actor
+// Using it to set a convenient Mortar reference
+simulated function InitializeVehicleWeapon()
+{
+    Mortar = DHMortarVehicleWeapon(Gun);
+
+    if (Mortar != none)
+    {
+        Mortar.InitializeWeaponPawn(self);
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMortarVehicleWeapon, so lots of things are not going to work!");
+    }
+
+    // If we also have the Vehicle actor, initialize anything we need to do where we need both actors
+    if (VehicleBase != none && !bInitializedVehicleAndGun)
+    {
+        InitializeVehicleAndWeapon();
+    }
+}
+
+// Matt: new function to do set up that requires the 'VehicleBase' reference to the Vehicle actor
+// Using it to set StoredVehicleRotation on net client if replication timing issues stopped that happening in ClientKDriverEnter()
+// And to give the VehicleBase a reference to this actor in its WeaponPawns array, each time we spawn on a net client (previously in PostNetReceive)
+simulated function InitializeVehicleBase()
+{
+    local int i;
+
+    if (Role < ROLE_Authority)
+    {
+        // We need to set StoredVehicleRotation as were unable to do it from ClientKDriverEnter() because we hadn't then received our VehicleBase reference
+        if (bNeedToStoreVehicleRotation)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
 
         // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
         if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
@@ -172,40 +241,20 @@ simulated function PostNetReceive()
         }
 
         VehicleBase.WeaponPawns[PositionInArray] = self;
-
-        // We need to set StoredVehicleRotation as were unable to do it from ClientKDriverEnter() because we hadn't then received our VehicleBase reference
-        if (bNeedToStoreVehicleRotation)
-        {
-            StoredVehicleRotation = VehicleBase.Rotation;
-        }
     }
 
-    // Fix 'driver' attachment position - on replication, AttachDriver() only works if client has received MortarVehicleWeapon actor, which it may not have yet
-    // Client then receives Driver attachment and RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
-    // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here
-    if (bNeedToInitializeDriver && Driver != none && Gun != none)
+    // If we also have the VehicleWeapon actor, initialize anything we need to do where we need both actors
+    if (Mortar != none && !bInitializedVehicleAndGun)
     {
-        bNeedToInitializeDriver = false;
-
-        if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver)
-        {
-            DetachDriver(Driver);
-            AttachDriver(Driver);
-            DHPawn(Driver).bNeedToAttachDriver = false;
-        }
+        InitializeVehicleAndWeapon();
     }
 }
 
-// Modified to call InitializeMortar to do any extra set up in the mortar classes
-// This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
-function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
+// Matt: new function to do set up that requires both the 'VehicleBase' & 'Gun' references to the Vehicle & VehicleWeapon actors
+// Currently unused but putting it in for consistency & for future usage, including option to easily subclass for any mortar-specific set up
+simulated function InitializeVehicleAndWeapon()
 {
-    super.AttachToVehicle(VehiclePawn, WeaponBone);
-
-    if (Role == ROLE_Authority)
-    {
-        InitializeMortar();
-    }
+    bInitializedVehicleAndGun = true;
 }
 
 // New client-to-server function to set CurrentDriverAnimation on server, to be replicated to other net clients

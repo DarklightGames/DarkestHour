@@ -82,37 +82,45 @@ simulated function PostNetReceive()
     local int i;
 
     // Initialize the vehicle base
-    if (!bInitializedVehicleBase && VehicleBase != none)
+    if (!bInitializedVehicleBase)
     {
-        bInitializedVehicleBase = true;
-
-        // Set up our properties from vehicle's PassengerPawns array
-        SetPassengerProperties();
-
-        // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
-        if (bNeedToStoreVehicleRotation)
+        if (VehicleBase != none)
         {
-            StoredVehicleRotation = VehicleBase.Rotation;
-        }
+            bInitializedVehicleBase = true;
 
-        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
-        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
-            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
-        {
-            VehicleBase.WeaponPawns[PositionInArray] = self;
+            // Set up our properties from vehicle's PassengerPawns array
+            SetPassengerProperties();
 
-            return;
-        }
-
-        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
-        {
-            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+            // Set StoredVehicleRotation if it couldn't be set in ClientKDriverEnter() due to not then having the VehicleBase actor (replication timing issues)
+            if (bNeedToStoreVehicleRotation)
             {
+                StoredVehicleRotation = VehicleBase.Rotation;
+            }
+
+            // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
+            if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
+                (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+            {
+                VehicleBase.WeaponPawns[PositionInArray] = self;
+
                 return;
             }
-        }
 
-        VehicleBase.WeaponPawns[PositionInArray] = self;
+            for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+            {
+                if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+                {
+                    return;
+                }
+            }
+
+            VehicleBase.WeaponPawns[PositionInArray] = self;
+        }
+    }
+    // Fail-safe so if we somehow lose our VehicleBase reference after initializing, we unset our flag & are then ready to re-initialize when we receive VehicleBase again
+    else if (VehicleBase == none)
+    {
+        bInitializedVehicleBase = false;
     }
 
     // Make sure player pawn is attached, as on replication, AttachDriver() only works if client has received VehicleBase actor, which it may not have yet
@@ -128,12 +136,6 @@ simulated function PostNetReceive()
             AttachDriver(Driver);
             DHPawn(Driver).bNeedToAttachDriver = false;
         }
-    }
-
-    // If we've initialized the vehicle base & 'driver', we can now switch off PostNetReceive
-    if (bInitializedVehicleBase && !bNeedToInitializeDriver)
-    {
-        bNetNotify = false;
     }
 }
 
