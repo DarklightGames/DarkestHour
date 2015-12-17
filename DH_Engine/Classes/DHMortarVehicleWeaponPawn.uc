@@ -12,10 +12,8 @@ struct DigitSet
     var IntBox      TextureCoords[11];
 };
 
-// General
-var     class<DHMortarWeapon> WeaponClass;
-var     DHMortarVehicleWeapon Mortar;        // just a reference to the mortar VW actor, for convenience & to avoid lots of casts
-var     bool        bNeedToInitializeDriver; // clientside flag that we need to do some player set up, once we receive the Driver actor
+var     DHMortarVehicleWeapon   Mortar;      // just a reference to the mortar VW actor, for convenience & to avoid lots of casts
+var     class<DHMortarWeapon>   WeaponClass;
 
 // Deploying, aim & firing
 var     bool        bPendingFire;
@@ -67,6 +65,10 @@ var     vector      ShakeOffsetMag;   // max view offset vertically
 var     vector      ShakeOffsetRate;  // how fast to offset view vertically
 var     float       ShakeOffsetTime;  // how much time to offset view
 var     float       BlurEffectScalar;
+
+// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
+var     bool        bNeedToInitializeDriver;   // do some player set up when we receive the Driver actor
+var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
 replication
 {
@@ -170,6 +172,12 @@ simulated function PostNetReceive()
         }
 
         VehicleBase.WeaponPawns[PositionInArray] = self;
+
+        // We need to set StoredVehicleRotation as were unable to do it from ClientKDriverEnter() because we hadn't then received our VehicleBase reference
+        if (bNeedToStoreVehicleRotation)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
     }
 
     // Fix 'driver' attachment position - on replication, AttachDriver() only works if client has received MortarVehicleWeapon actor, which it may not have yet
@@ -215,8 +223,8 @@ simulated function ServerFire()
     }
 }
 
-// Modified to add mortar hints & also to avoid an "accessed none" error (need to remove a reference to VehicleBase in the Super in ROVehicleWeaponPawn)
-// Also removes some multi-position stuff that isn't relevant to mortar
+// Modified to add mortar hints
+// Matt: also to work around various net client problems caused by replication timing issues (also removes some multi-position stuff that isn't relevant to mortar)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
@@ -229,6 +237,17 @@ simulated function ClientKDriverEnter(PlayerController PC)
         Controller = PC; // e.g. DrawHUD() can be called before Controller is replicated
         SetOwner(PC);
         Role = ROLE_AutonomousProxy;
+    }
+
+    // StoredVehicleRotation appears redundant as not used anywhere in UScript, but is used by native code (e.g. without it a cannon pawn gets unwanted camera swivelling)
+    // Sometimes I have noticed an unwanted swivel when deploying a mortar, & similar to a spawn vehicle the mortar actors all spawn & replicate in a jumble when you deploy
+    if (VehicleBase != none)
+    {
+        StoredVehicleRotation = VehicleBase.Rotation;
+    }
+    else
+    {
+        bNeedToStoreVehicleRotation = true;
     }
 
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
