@@ -448,54 +448,94 @@ simulated function Tick(float DeltaTime)
     local float           MySpeed;
     local int             i;
 
-    if (Controller != none)
+    // Stop all movement if engine off or both tracks damaged
+    if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        // Damaged treads mean vehicle can only turn one way & speed is limited
-        if (bLeftTrackDamaged)
+        Velocity = vect(0.0, 0.0, 0.0);
+        Throttle = 0.0;
+        ThrottleAmount = 0.0;
+        Steering = 0.0;
+        ForwardVel = 0.0;
+    }
+    else
+    {
+        // If we crushed an object, apply brake & clamp throttle (server only)
+        if (bCrushedAnObject)
         {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
-
-            if (Controller.IsA('ROPlayer'))
+            // If our crush stall time is over, we are no longer crushing
+            if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
             {
-                ROPlayer(Controller).aStrafe = -32768.0;
+                bCrushedAnObject = false;
             }
-            else if (Controller.IsA('ROBot'))
+            else
             {
-                Steering = 1.0;
+                Throttle = FClamp(Throttle, -0.1, 0.1);
+
+                if (IsHumanControlled())
+                {
+                    PlayerController(Controller).bPressedJump = true;
+                }
             }
         }
-        else if (bRightTrackDamaged)
-        {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
 
-            if (Controller.IsA('ROPlayer'))
-            {
-                ROPlayer(Controller).aStrafe = 32768.0;
-            }
-            else if (Controller.IsA('ROBot'))
-            {
-                Steering = -1.0;
-            }
-        }
-        // Heavy damage to engine limits speed
-        else if (EngineHealth <= (default.EngineHealth * 0.5) && EngineHealth > 0)
+        if (Controller != none)
         {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
+            // Damaged treads mean vehicle can only turn one way & speed is limited
+            if (bLeftTrackDamaged)
+            {
+                Throttle = FClamp(Throttle, -0.5, 0.5);
+
+                if (IsHumanControlled())
+                {
+                    PlayerController(Controller).aStrafe = -32768.0;
+                }
+                else
+                {
+                    Steering = 1.0;
+                }
+            }
+            else if (bRightTrackDamaged)
+            {
+                Throttle = FClamp(Throttle, -0.5, 0.5);
+
+                if (IsHumanControlled())
+                {
+                    PlayerController(Controller).aStrafe = 32768.0;
+                }
+                else
+                {
+                    Steering = -1.0;
+                }
+            }
+            // Heavy damage to engine limits speed
+            else if (EngineHealth <= (default.EngineHealth * 0.5) && EngineHealth > 0)
+            {
+                Throttle = FClamp(Throttle, -0.5, 0.5);
+            }
         }
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
+    MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
-        // If vehicle is moving, update sounds, treads & wheels, based on speed
-        if (MySpeed > 0.1)
+    // Vehicle is moving
+    if (MySpeed > 0.1)
+    {
+        // Slow the tank way down when it tries to turn at high speeds
+        WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
+
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            // Update tread & interior rumble sound volumes
+            // Force player to pull back on throttle if over max speed
+            if (MySpeed >= MaxCriticalSpeed && IsHumanControlled())
+            {
+                PlayerController(Controller).aForward = -32768.0;
+            }
+
+            // Update tread & interior rumble sound volumes, based on speed
             MotionSoundVolume = FClamp(MySpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
             UpdateMovementSound();
 
-            // Update tread & wheel movement
+            // Update tread & wheel movement, based on speed
             KGetRigidBodyState(BodyState);
             LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
@@ -520,67 +560,35 @@ simulated function Tick(float DeltaTime)
                     SetBoneRotation(RightWheelBones[i], RightWheelRot);
                 }
             }
-
-            // Force player to pull back on throttle if over max speed
-            if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
-            {
-                ROPlayer(Controller).aForward = -32768.0;
-            }
         }
-        // If vehicle isn't moving, zero the movement sounds & tread movement, but only if we haven't done this already
-        else if (MotionSoundVolume != 0.0)
+    }
+    // If vehicle isn't moving, reset WheelLatFrictionScale & zero the movement sounds & tread movement (but only if we haven't done this already)
+    else if (MotionSoundVolume != 0.0)
+    {
+        WheelLatFrictionScale = default.WheelLatFrictionScale;
+
+        if (Level.NetMode != NM_DedicatedServer)
         {
             MotionSoundVolume = 0.0;
             UpdateMovementSound();
-            LeftTreadPanner.PanRate = 0.0;
-            RightTreadPanner.PanRate = 0.0;
-        }
-    }
 
-    // Slow the tank way down when it tries to turn at high speeds
-    if (ForwardVel > 0.0)
-    {
-        WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
-    }
-    else
-    {
-        WheelLatFrictionScale = default.WheelLatFrictionScale;
+            if (LeftTreadPanner != none)
+            {
+                LeftTreadPanner.PanRate = 0.0;
+            }
+
+            if (RightTreadPanner != none)
+            {
+                RightTreadPanner.PanRate = 0.0;
+            }
+        }
     }
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
-    // Stop all movement if engine off or both tracks damaged
-    if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
-    {
-        Velocity = vect(0.0, 0.0, 0.0);
-        Throttle = 0.0;
-        ThrottleAmount = 0.0;
-        Steering = 0.0;
-        ForwardVel = 0.0;
-    }
-    // If we crushed an object, apply brake & clamp throttle (server only)
-    else if (bCrushedAnObject)
-    {
-        // If our crush stall time is over, we are no longer crushing
-        if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
-        {
-            bCrushedAnObject = false;
-        }
-        else
-        {
-            Throttle = FClamp(Throttle, -0.1, 0.1);
-
-            if (ROPlayer(Controller) != none)
-            {
-                ROPlayer(Controller).bPressedJump = true;
-            }
-        }
-    }
-
     // Disable Tick if vehicle isn't moving & has no driver
     if (!bDriving && ForwardVel ~= 0.0)
     {
-        MinBrakeFriction = LowSpeedBrakeFriction;
         Disable('Tick');
     }
 }
@@ -3621,8 +3629,6 @@ simulated event DestroyAppearance()
     local int i;
 
     super.DestroyAppearance();
-
-    Disable('Tick');
 
     DestroyAttachments();
 

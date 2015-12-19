@@ -43,14 +43,6 @@ exec function DamTrack(string Track);
 // Modified to removed lots of stuff that doesn't apply to a wheeled vehicle
 simulated function Tick(float DeltaTime)
 {
-    // Force player to pull back on throttle if over max speed
-    if (Level.NetMode != NM_DedicatedServer && Abs(ForwardVel) >= MaxCriticalSpeed && ROPlayer(Controller) != none)
-    {
-        ROPlayer(Controller).aForward = -32768;
-    }
-
-    super(ROWheeledVehicle).Tick(DeltaTime);
-
     // Stop all movement if engine off
     if (bEngineOff)
     {
@@ -60,11 +52,45 @@ simulated function Tick(float DeltaTime)
         Steering = 0.0;
         ForwardVel = 0.0;
     }
+    else
+    {
+        // If we crushed an object, apply brake & clamp throttle (server only)
+        if (bCrushedAnObject)
+        {
+            // If our crush stall time is over, we are no longer crushing
+            if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
+            {
+                bCrushedAnObject = false;
+            }
+            else
+            {
+                Throttle = FClamp(Throttle, -0.1, 0.1);
+
+                if (IsHumanControlled())
+                {
+                    PlayerController(Controller).bPressedJump = true;
+                }
+            }
+        }
+
+        // Very heavy damage to engine limits speed
+        if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0 && Controller != none)
+        {
+            Throttle = FClamp(Throttle, -0.5, 0.5);
+        }
+    }
+
+    // Force player to pull back on throttle if over max speed
+    if (Level.NetMode != NM_DedicatedServer && Abs(ForwardVel) >= MaxCriticalSpeed && IsHumanControlled())
+    {
+        PlayerController(Controller).aForward = -32768;
+    }
+
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
     // Disable Tick if vehicle isn't moving & has no driver
     if (!bDriving && ForwardVel ~= 0.0)
     {
-        MinBrakeFriction = LowSpeedBrakeFriction;
         Disable('Tick');
     }
 }

@@ -320,7 +320,42 @@ simulated function Tick(float DeltaTime)
 {
     local float MotionSoundVolume;
 
-    super(ROWheeledVehicle).Tick(DeltaTime);
+    // Stop all movement if engine off
+    if (bEngineOff)
+    {
+        Velocity = vect(0.0, 0.0, 0.0);
+        Throttle = 0.0;
+        ThrottleAmount = 0.0;
+        Steering = 0.0;
+        ForwardVel = 0.0;
+    }
+    else
+    {
+        // If we crushed an object, apply brake & clamp throttle (server only)
+        if (bCrushedAnObject)
+        {
+            // If our crush stall time is over, we are no longer crushing
+            if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
+            {
+                bCrushedAnObject = false;
+            }
+            else
+            {
+                Throttle = FClamp(Throttle, -0.1, 0.1);
+
+                if (IsHumanControlled())
+                {
+                    PlayerController(Controller).bPressedJump = true;
+                }
+            }
+        }
+
+        // Very heavy damage to engine limits speed
+        if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0 && Controller != none)
+        {
+            Throttle = FClamp(Throttle, -0.5, 0.5);
+        }
+    }
 
     // Update engine & interior rumble sounds dependent on speed
     if (Level.NetMode != NM_DedicatedServer)
@@ -333,43 +368,11 @@ simulated function Tick(float DeltaTime)
         UpdateMovementSound(MotionSoundVolume);
     }
 
-    // Stop all movement if engine off
-    if (bEngineOff)
-    {
-        Velocity = vect(0.0, 0.0, 0.0);
-        Throttle = 0.0;
-        ThrottleAmount = 0.0;
-        Steering = 0.0;
-        ForwardVel = 0.0;
-    }
-    // If we crushed an object, apply brake & clamp throttle (server only)
-    else if (bCrushedAnObject)
-    {
-        // If our crush stall time is over, we are no longer crushing
-        if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
-        {
-            bCrushedAnObject = false;
-        }
-        else
-        {
-            Throttle = FClamp(Throttle, -0.1, 0.1);
-
-            if (ROPlayer(Controller) != none)
-            {
-                ROPlayer(Controller).bPressedJump = true;
-            }
-        }
-    }
-    // Very heavy damage to engine limits speed
-    else if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
-    {
-        Throttle = FClamp(Throttle, -0.5, 0.5);
-    }
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
     // Disable Tick if vehicle isn't moving & has no driver
     if (!bDriving && ForwardVel ~= 0.0)
     {
-        MinBrakeFriction = LowSpeedBrakeFriction;
         Disable('Tick');
     }
 }
@@ -1859,8 +1862,6 @@ simulated event DestroyAppearance()
     local int i;
 
     super.DestroyAppearance();
-
-    Disable('Tick');
 
     DestroyAttachments();
 
