@@ -562,8 +562,8 @@ simulated function Tick(float DeltaTime)
             }
         }
     }
-    // If vehicle isn't moving, reset WheelLatFrictionScale & zero the movement sounds & tread movement (but only if we haven't done this already)
-    else if (MotionSoundVolume != 0.0)
+    // If vehicle isn't moving, reset WheelLatFrictionScale & zero the movement sounds & tread movement
+    else
     {
         WheelLatFrictionScale = default.WheelLatFrictionScale;
 
