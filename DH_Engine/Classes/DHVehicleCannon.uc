@@ -419,10 +419,10 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
 
-        if (CannonPawn != none && CannonPawn.VehicleBase != none)
+        if (Base != none)
         {
-            if (!CannonPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
-                WeaponFireLocation + vector(WeaponFireRotation) * (CannonPawn.VehicleBase.CollisionRadius * 1.5), Extent))
+            if (!Base.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
+                WeaponFireLocation + vector(WeaponFireRotation) * (Base.CollisionRadius * 1.5), Extent))
             {
                 StartLocation = HitLocation;
             }
@@ -1619,14 +1619,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
     }
     // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle itself, so we call TD on that
-    else if (CannonPawn != none && CannonPawn.VehicleBase != none)
+    else if (Base != none)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
-            CannonPawn.VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
+            Base.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
         }
 
-        CannonPawn.VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        Base.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 }
 

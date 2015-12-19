@@ -196,7 +196,10 @@ state ProjectileFireMode
                 DHMortarVehicleWeaponPawn(Instigator).ClientShakeView();
 
                 // We fired one off, so we are now eligible for resupply
-                DHMortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = true;
+                if (DHMortarVehicle(Base) != none)
+                {
+                    DHMortarVehicle(Base).bCanBeResupplied = true;
+                }
             }
         }
     }
@@ -223,7 +226,10 @@ function PlayerResupply()
     MainAmmoCharge[0] = Clamp(MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, default.InitialPrimaryAmmo);
     MainAmmoCharge[1] = Clamp(MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, default.InitialSecondaryAmmo);
 
-    DHMortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
+    if (DHMortarVehicle(Base) != none)
+    {
+        DHMortarVehicle(Base).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
+    }
 }
 
 // New function to return the FireMode index, based on whether HE or smoke rounds are selected (similar to GetPendingRoundIndex in ROTankCannon)
