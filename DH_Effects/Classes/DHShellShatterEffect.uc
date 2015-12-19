@@ -3,10 +3,16 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TankAPShellShatter extends Emitter;
+class DHShellShatterEffect extends Emitter;
 
 defaultproperties
 {
+    AutoDestroy=true
+    bLightChanged=true
+    bNoDelete=false
+    LifeSpan=4.0
+    Style=STY_Masked
+
     Begin Object Class=SparkEmitter Name=SparkEmitter0
         LineSegmentsRange=(Min=1.0,Max=3.0)
         TimeBetweenSegmentsRange=(Min=0.1,Max=0.3)
@@ -28,15 +34,5 @@ defaultproperties
         LifetimeRange=(Min=0.2,Max=0.5)
         StartVelocityRange=(X=(Min=-256.0,Max=256.0),Y=(Min=-1024.0,Max=1024.0),Z=(Min=-256.0,Max=256.0))
     End Object
-    Emitters(1)=SparkEmitter'DH_Effects.DH_TankAPShellShatter.SparkEmitter0'
-    AutoDestroy=true
-    bLightChanged=true
-    bNoDelete=false
-    bNetTemporary=true
-    RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=4.0
-    Style=STY_Masked
-    bHardAttach=true
-    bDirectional=true
-    bSelected=true
+    Emitters(1)=SparkEmitter'SparkEmitter0'
 }

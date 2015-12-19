@@ -3,11 +3,14 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarFireEffect extends Emitter;
+class DHMortarFireEffect extends Emitter;
 
 defaultproperties
 {
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter21
+    AutoDestroy=true
+    bNoDelete=false
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseColorScale=true
         RespawnDeadParticles=false
         SpinParticles=true
@@ -28,8 +31,9 @@ defaultproperties
         Texture=texture'Effects_Tex.BulletHits.glowfinal'
         LifetimeRange=(Min=0.25,Max=0.35)
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter21'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter31
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         UseColorScale=true
         FadeOut=true
         FadeIn=true
@@ -53,8 +57,9 @@ defaultproperties
         Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
         LifetimeRange=(Min=0.25,Max=0.25)
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter31'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter37
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         RespawnDeadParticles=false
         SpinParticles=true
@@ -84,7 +89,5 @@ defaultproperties
         VelocityScale(1)=(RelativeTime=0.125,RelativeVelocity=(X=0.2,Y=0.2,Z=0.2))
         VelocityScale(2)=(RelativeTime=1.0)
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter37'
-    AutoDestroy=true
-    bNoDelete=false
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
 }

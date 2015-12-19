@@ -7,7 +7,10 @@ class DHMortarExplosion60mm extends Emitter;
 
 defaultproperties
 {
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter39
+    AutoDestroy=true
+    bNoDelete=false
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         FadeIn=true
         RespawnDeadParticles=false
@@ -39,8 +42,9 @@ defaultproperties
         StartVelocityRange=(X=(Min=-96.0,Max=96.0),Y=(Min=-96.0,Max=96.0),Z=(Min=100.0,Max=100.0))
         VelocityLossRange=(Z=(Min=3.0,Max=3.0))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter39'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter40
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         FadeIn=true
         RespawnDeadParticles=false
@@ -71,8 +75,9 @@ defaultproperties
         StartVelocityRange=(X=(Min=-32.0,Max=32.0),Y=(Min=-32.0,Max=32.0),Z=(Min=1.0,Max=1536.0))
         VelocityLossRange=(Z=(Min=3.0,Max=3.0))
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter40'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter41
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
         RespawnDeadParticles=false
@@ -106,8 +111,9 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=10.0,Max=10.0))
         VelocityLossRange=(Z=(Min=3.0,Max=3.0))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter41'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter42
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         FadeOut=true
         RespawnDeadParticles=false
         SpinParticles=true
@@ -130,8 +136,9 @@ defaultproperties
         LifetimeRange=(Min=0.4,Max=0.5)
         StartVelocityRange=(Z=(Min=300.0,Max=300.0))
     End Object
-    Emitters(3)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter42'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter43
+    Emitters(3)=SpriteEmitter'SpriteEmitter3'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter4
         FadeOut=true
         FadeIn=true
         RespawnDeadParticles=false
@@ -157,8 +164,9 @@ defaultproperties
         LifetimeRange=(Min=0.25,Max=0.25)
         StartVelocityRange=(Z=(Min=10.0,Max=10.0))
     End Object
-    Emitters(4)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter43'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter44
+    Emitters(4)=SpriteEmitter'SpriteEmitter4'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter5
         RespawnDeadParticles=false
         UseRevolution=true
         SpinParticles=true
@@ -179,8 +187,9 @@ defaultproperties
         Texture=texture'Effects_Tex.explosions.shrapnel1'
         StartVelocityRange=(X=(Min=-345.0,Max=450.0),Y=(Min=-345.0,Max=450.0),Z=(Min=350.0,Max=500.0))
     End Object
-    Emitters(5)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter44'
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter45
+    Emitters(5)=SpriteEmitter'SpriteEmitter5'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         UseColorScale=true
         FadeOut=true
         RespawnDeadParticles=false
@@ -205,7 +214,5 @@ defaultproperties
         LifetimeRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=800.0,Max=1000.0))
     End Object
-    Emitters(6)=SpriteEmitter'DH_Effects.DHMortarExplosion60mm.SpriteEmitter45'
-    AutoDestroy=true
-    bNoDelete=false
+    Emitters(6)=SpriteEmitter'SpriteEmitter6'
 }

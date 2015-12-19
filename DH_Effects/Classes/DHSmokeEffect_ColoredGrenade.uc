@@ -82,5 +82,5 @@ defaultproperties
         StartVelocityRange=(X=(Min=-15.0,Max=15.0),Y=(Min=-10.0,Max=10.0),Z=(Min=40.0,Max=70.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.05,Max=0.05),Z=(Min=0.1,Max=0.1))
     End Object
-    Emitters(0)=SpriteEmitter'DHSmokeEffect_ColoredGrenade.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
 }

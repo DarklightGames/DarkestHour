@@ -3,10 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HorizonArtillery extends Emitter;
+class DHHorizonArtillery extends Emitter;
 
 defaultproperties
 {
+    AutoDestroy=true
+    bNoDelete=false
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseColorScale=true
         RespawnDeadParticles=false
@@ -30,7 +33,8 @@ defaultproperties
         Texture=texture'Effects_Tex.BulletHits.glowfinal'
         LifetimeRange=(Min=0.25,Max=0.35)
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         UseColorScale=true
         FadeOut=true
@@ -56,7 +60,8 @@ defaultproperties
         Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
         LifetimeRange=(Min=0.25,Max=0.25)
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         UseColorScale=true
         RespawnDeadParticles=false
@@ -81,7 +86,8 @@ defaultproperties
         LifetimeRange=(Min=0.1,Max=0.2)
         StartVelocityRange=(X=(Min=20.0,Max=25.0))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter2'
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         UseColorScale=true
         RespawnDeadParticles=false
@@ -108,7 +114,8 @@ defaultproperties
         LifetimeRange=(Min=0.2,Max=0.2)
         StartVelocityRange=(X=(Min=60.0,Max=75.0))
     End Object
-    Emitters(3)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter3'
+    Emitters(3)=SpriteEmitter'SpriteEmitter3'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter4
         UseColorScale=true
         RespawnDeadParticles=false
@@ -135,9 +142,5 @@ defaultproperties
         LifetimeRange=(Min=0.1,Max=0.2)
         StartVelocityRange=(X=(Min=20.0,Max=25.0))
     End Object
-    Emitters(4)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter4'
-    AutoDestroy=true
-    bNoDelete=false
-    bNetTemporary=true
-    RemoteRole=ROLE_SimulatedProxy
+    Emitters(4)=SpriteEmitter'SpriteEmitter4'
 }

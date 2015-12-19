@@ -7,6 +7,11 @@ class DHBulletTracer_YellowOrange extends Emitter;
 
 defaultproperties
 {
+    AutoDestroy=true
+    bNoDelete=false
+    Physics=PHYS_Trailer
+    bHardAttach=true
+
     Begin Object Class=TrailEmitter Name=TrailEmitter0
         TrailShadeType=PTTST_PointLife
         TrailLocation=PTTL_FollowEmitter
@@ -30,9 +35,5 @@ defaultproperties
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=1.5,Max=2.5)
     End Object
-    Emitters(0)=TrailEmitter'DH_Effects.DHBulletTracer_YellowOrange.TrailEmitter0'
-    AutoDestroy=true
-    bNoDelete=false
-    Physics=PHYS_Trailer
-    bHardAttach=true
+    Emitters(0)=TrailEmitter'TrailEmitter0'
 }

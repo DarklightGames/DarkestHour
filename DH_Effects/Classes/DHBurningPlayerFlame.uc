@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PlayerFlame extends Emitter;
+class DHBurningPlayerFlame extends Emitter;
 
 simulated function PlayerDied()
 {
@@ -28,6 +28,18 @@ simulated function DouseFlames()
 
 defaultproperties
 {
+    LightType=LT_Flicker
+    LightHue=30
+    LightSaturation=100
+    LightBrightness=200.0
+    LightRadius=2.0
+    bNoDelete=false
+    bDynamicLight=true
+    bOnlyDrawIfAttached=true
+    AmbientSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    bFullVolume=true
+    SoundVolume=255
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         FadeIn=true
@@ -63,7 +75,8 @@ defaultproperties
         LifetimeRange=(Min=0.5,Max=0.75)
         StartVelocityRange=(X=(Min=-3.0,Max=5.0),Y=(Min=-3.0,Max=5.0),Z=(Min=5.0,Max=10.0))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_PlayerFlame.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         FadeIn=true
@@ -100,7 +113,8 @@ defaultproperties
         LifetimeRange=(Min=0.5,Max=0.75)
         StartVelocityRange=(X=(Min=-3.0,Max=5.0),Y=(Min=-3.0,Max=5.0),Z=(Min=5.0,Max=10.0))
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_PlayerFlame.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
@@ -132,17 +146,5 @@ defaultproperties
         StartVelocityRange=(X=(Min=10.0,Max=10.0),Y=(Min=10.0,Max=10.0),Z=(Min=50.0,Max=100.0))
         VelocityLossRange=(X=(Max=0.05),Y=(Max=0.05),Z=(Max=0.05))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_PlayerFlame.SpriteEmitter2'
-    LightType=LT_Flicker
-    LightHue=30
-    LightSaturation=100
-    LightBrightness=200.0
-    LightRadius=2.0
-    bNoDelete=false
-    bDynamicLight=true
-    bOnlyDrawIfAttached=true
-    AmbientSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-    bFullVolume=true
-    SoundVolume=255
-    bNotOnDedServer=false
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
 }

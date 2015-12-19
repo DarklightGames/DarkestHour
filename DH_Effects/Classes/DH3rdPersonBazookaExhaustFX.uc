@@ -3,10 +3,17 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Bazooka3rdPersonExhaustFX extends Emitter;
+class DH3rdPersonBazookaExhaustFX extends Emitter;
 
 defaultproperties
 {
+    AutoDestroy=true
+    bLightChanged=true
+    bNoDelete=false
+    LifeSpan=8.0
+    Style=STY_Masked
+    bHardAttach=true
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseColorScale=true
         FadeOut=true
@@ -33,7 +40,8 @@ defaultproperties
         LifetimeRange=(Min=8.0,Max=12.0)
         StartVelocityRange=(X=(Min=-100.0,Max=-20.0),Y=(Min=-2.0,Max=-5.0),Z=(Min=-2.0,Max=5.0))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         UseColorScale=true
         FadeOut=true
@@ -59,7 +67,8 @@ defaultproperties
         LifetimeRange=(Min=0.5,Max=1.0)
         StartVelocityRange=(X=(Min=-300.0,Max=-200.0),Y=(Min=-2.0,Max=-5.0),Z=(Min=-2.0,Max=5.0))
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         UseColorScale=true
         FadeOut=true
@@ -90,15 +99,5 @@ defaultproperties
         LifetimeRange=(Min=0.2,Max=0.3)
         StartVelocityRange=(X=(Min=-200.0),Y=(Min=-20.0,Max=20.0),Z=(Min=-20.0,Max=20.0))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter2'
-    AutoDestroy=true
-    bLightChanged=true
-    bNoDelete=false
-    bNetTemporary=true
-    RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=8.0
-    Style=STY_Masked
-    bHardAttach=true
-    bDirectional=true
-    bSelected=true
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
 }

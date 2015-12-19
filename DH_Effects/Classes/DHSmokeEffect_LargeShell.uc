@@ -35,6 +35,7 @@ defaultproperties
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         FadeIn=true
@@ -67,6 +68,7 @@ defaultproperties
         VelocityLossRange=(X=(Min=0.5,Max=0.5),Y=(Min=0.5,Max=0.5))
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
@@ -98,6 +100,7 @@ defaultproperties
         VelocityLossRange=(X=(Min=0.5,Max=0.5),Y=(Min=0.5,Max=0.5))
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         FadeOut=true
         FadeIn=true

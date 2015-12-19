@@ -844,7 +844,7 @@ simulated state Whistle
 defaultproperties
 {
     DudChance=0.01
-    FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
+    FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
     DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'

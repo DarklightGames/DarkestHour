@@ -34,7 +34,7 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=15.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DHSmokeEffect_Shell.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
@@ -67,7 +67,7 @@ defaultproperties
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
         VelocityLossRange=(X=(Min=0.5,Max=0.5),Y=(Min=0.5,Max=0.5))
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DHSmokeEffect_Shell.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
@@ -99,7 +99,7 @@ defaultproperties
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
         VelocityLossRange=(X=(Min=0.5,Max=0.5),Y=(Min=0.5,Max=0.5))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DHSmokeEffect_Shell.SpriteEmitter2'
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         FadeOut=true
@@ -131,5 +131,5 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.15,Max=0.15),Y=(Min=0.15,Max=0.15),Z=(Min=0.1,Max=0.1))
     End Object
-    Emitters(3)=SpriteEmitter'DH_Effects.DHSmokeEffect_Shell.SpriteEmitter3'
+    Emitters(3)=SpriteEmitter'SpriteEmitter3'
 }

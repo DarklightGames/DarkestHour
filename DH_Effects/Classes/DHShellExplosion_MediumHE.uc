@@ -3,14 +3,14 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TankMediumHEHitEffect extends Emitter;
-
-//------------------------------------------------------------------------------
-// called client side to add screen shake effect for satchel explosions
-//------------------------------------------------------------------------------
+class DHShellExplosion_MediumHE extends Emitter;
 
 defaultproperties
 {
+    bNoDelete=false
+    LifeSpan=16.0
+    Style=STY_Masked
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         FadeIn=true
@@ -43,7 +43,8 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         VelocityLossRange=(Z=(Min=3.0,Max=3.0))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         FadeIn=true
@@ -78,7 +79,8 @@ defaultproperties
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=250.0,Max=750.0))
         VelocityLossRange=(Z=(Min=1.0,Max=1.0))
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
@@ -109,7 +111,8 @@ defaultproperties
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=500.0,Max=1000.0))
         VelocityLossRange=(Z=(Min=1.0,Max=1.0))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter2'
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         UseColorScale=true
         FadeOut=true
@@ -147,7 +150,8 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=10.0,Max=10.0))
         VelocityLossRange=(Z=(Min=3.0,Max=3.0))
     End Object
-    Emitters(3)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter3'
+    Emitters(3)=SpriteEmitter'SpriteEmitter3'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter4
         FadeOut=true
         RespawnDeadParticles=false
@@ -176,7 +180,8 @@ defaultproperties
         LifetimeRange=(Min=0.5,Max=3.0)
         StartVelocityRange=(X=(Min=-2000.0,Max=2000.0),Y=(Min=-2000.0,Max=2000.0),Z=(Min=750.0,Max=1000.0))
     End Object
-    Emitters(4)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter4'
+    Emitters(4)=SpriteEmitter'SpriteEmitter4'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter5
         FadeOut=true
         RespawnDeadParticles=false
@@ -201,7 +206,8 @@ defaultproperties
         LifetimeRange=(Min=0.2,Max=0.2)
         StartVelocityRange=(Z=(Min=10.0,Max=10.0))
     End Object
-    Emitters(5)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter5'
+    Emitters(5)=SpriteEmitter'SpriteEmitter5'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         FadeOut=true
         FadeIn=true
@@ -226,7 +232,8 @@ defaultproperties
         LifetimeRange=(Min=0.5,Max=0.6)
         StartVelocityRange=(Z=(Min=1000.0,Max=1000.0))
     End Object
-    Emitters(6)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter6'
+    Emitters(6)=SpriteEmitter'SpriteEmitter6'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter7
         FadeOut=true
         FadeIn=true
@@ -256,7 +263,8 @@ defaultproperties
         InitialDelayRange=(Min=0.05,Max=0.05)
         StartVelocityRange=(Z=(Min=10.0,Max=10.0))
     End Object
-    Emitters(7)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter7'
+    Emitters(7)=SpriteEmitter'SpriteEmitter7'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter8
         UseColorScale=true
         FadeOut=true
@@ -285,11 +293,5 @@ defaultproperties
         StartVelocityRange=(X=(Min=-1000.0,Max=1000.0),Y=(Min=-1000.0,Max=1000.0))
         VelocityLossRange=(X=(Min=3.0,Max=3.0),Y=(Min=3.0,Max=3.0))
     End Object
-    Emitters(8)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter8'
-    bNoDelete=false
-    bNetTemporary=true
-    LifeSpan=16.0
-    Style=STY_Masked
-    bHardAttach=true
-    bDirectional=true
+    Emitters(8)=SpriteEmitter'SpriteEmitter8'
 }

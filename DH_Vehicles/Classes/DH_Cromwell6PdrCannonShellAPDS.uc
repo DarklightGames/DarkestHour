@@ -44,7 +44,7 @@ defaultproperties
     DHPenetrationTable(9)=7.3
     DHPenetrationTable(10)=6.4
     ShellDiameter=3.7
-    ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAPDS'
     ImpactDamage=300
     BallisticCoefficient=1.15

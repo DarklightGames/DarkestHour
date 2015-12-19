@@ -7,6 +7,12 @@ class DHBulletPenetrateArmorEffect extends Emitter;
 
 defaultproperties
 {
+    bLightChanged=true
+    AutoDestroy=true
+    Style=STY_Masked
+    bNoDelete=false
+    LifeSpan=4.0
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         RespawnDeadParticles=false
@@ -164,13 +170,4 @@ defaultproperties
         StartVelocityRange=(X=(Min=300.0,Max=445.0),Y=(Min=-300.0,Max=300.0),Z=(Min=-300.0,Max=300.0))
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter4'
-
-    bLightChanged=true
-    AutoDestroy=true
-    Style=STY_Masked
-    bDirectional=true
-    bNoDelete=false
-    bNetTemporary=true
-    bHardAttach=true
-    LifeSpan=4.0
 }

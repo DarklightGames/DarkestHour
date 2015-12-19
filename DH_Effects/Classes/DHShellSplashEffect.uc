@@ -7,6 +7,10 @@ class DHShellSplashEffect extends Emitter; // substantially different was RO equ
 
 defaultproperties
 {
+    AutoDestroy=true
+    bNoDelete=false
+    bHighDetail=true
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         UseDirectionAs=PTDU_Normal
         ProjectionNormal=(X=1.0,Z=0.0)
@@ -214,8 +218,4 @@ defaultproperties
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=500.0,Max=800.0))
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter6'
-
-    AutoDestroy=true
-    bNoDelete=false
-    bHighDetail=true
 }

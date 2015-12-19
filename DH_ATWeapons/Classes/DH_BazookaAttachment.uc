@@ -7,9 +7,9 @@ class DH_BazookaAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
-    mExhFlashClass=class'DH_Effects.DH_Bazooka3rdPersonExhaustFX'
+    mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
     ExhaustBoneName="ejector"
-    mMuzFlashClass=class'DH_Effects.DH_Bazooka3rdPersonMuzzleFX'
+    mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
     MuzzleBoneName="Muzzle"
     PA_AssistedReloadAnim="crouch_reloadA_bazooka"
     PA_MovementAnims(0)="stand_jogF_kar"

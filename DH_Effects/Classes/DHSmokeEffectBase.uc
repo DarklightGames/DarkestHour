@@ -16,10 +16,7 @@ defaultproperties
 {
     AutoDestroy=true
     bNoDelete=false
-    bNetTemporary=true
-    RemoteRole=ROLE_SimulatedProxy
     LifeSpan=65.0
     Style=STY_Masked
     bHardAttach=true
-    bDirectional=true
 }

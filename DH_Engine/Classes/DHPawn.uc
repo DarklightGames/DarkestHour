@@ -1001,9 +1001,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             BurnTimeLeft = 10;
             SetTimer(1.0, false);
 
-            if (DH_PlayerFlame(FlameFX) != none)
+            if (DHBurningPlayerFlame(FlameFX) != none)
             {
-                DH_PlayerFlame(FlameFX).PlayerDied();
+                DHBurningPlayerFlame(FlameFX).PlayerDied();
             }
         }
 
@@ -1508,9 +1508,9 @@ state Dying
                 }
             }
 
-            if (DH_PlayerFlame(FlameFX) != none)
+            if (DHBurningPlayerFlame(FlameFX) != none)
             {
-                DH_PlayerFlame(FlameFX).DouseFlames();
+                DHBurningPlayerFlame(FlameFX).DouseFlames();
             }
 
             BurnTimeLeft--;
@@ -4756,7 +4756,7 @@ defaultproperties
     MantleAnim_84S="mantle_stand_84"
     MantleAnim_88S="mantle_stand_88"
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
-    FlameEffect=class'DH_Effects.DH_PlayerFlame'
+    FlameEffect=class'DH_Effects.DHBurningPlayerFlame'
     BurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay_ALT'
     DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
     CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'

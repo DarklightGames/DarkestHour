@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleDamagedEffect extends VehicleDamagedEffect;
+class DHVehicleDamagedEffect extends VehicleDamagedEffect;
 
 defaultproperties
 {
@@ -39,7 +39,8 @@ defaultproperties
         StartVelocityRange=(Z=(Min=50.0,Max=100.0))
         VelocityLossRange=(X=(Max=0.05),Y=(Max=0.05),Z=(Max=0.05))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_VehicleDamagedEffect.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         RespawnDeadParticles=false
@@ -74,7 +75,8 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=2.0,RelativeVelocity=(X=1.0,Y=1.0,Z=1.0))
         VelocityScale(3)=(RelativeTime=2.25)
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_VehicleDamagedEffect.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
@@ -107,5 +109,5 @@ defaultproperties
         StartVelocityRange=(Z=(Min=50.0,Max=100.0))
         VelocityLossRange=(X=(Max=0.05),Y=(Max=0.05),Z=(Max=0.05))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_VehicleDamagedEffect.SpriteEmitter2'
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
 }
