@@ -348,18 +348,15 @@ simulated function ClientKDriverEnter(PlayerController PC)
 // Modified to match player's rotation to where mortar is aimed, to destroy mortar if player just undeployed, or to record elevation on server if player just exited
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local DHMortarVehicleWeapon MVW;
-    local rotator               NewRotation;
+    local rotator NewRotation;
 
     super.ClientKDriverLeave(PC);
 
-    MVW = DHMortarVehicleWeapon(Gun);
-
     if (PC != none)
     {
-        if (MVW != none && MVW.MuzzleBoneName != '' && PC.Pawn != none)
+        if (Mortar != none && Mortar.MuzzleBoneName != '' && PC.Pawn != none)
         {
-            NewRotation = Gun.GetBoneRotation(MVW.MuzzleBoneName);
+            NewRotation = Gun.GetBoneRotation(Mortar.MuzzleBoneName);
             NewRotation.Pitch = 0;
             NewRotation.Roll = 0;
             PC.Pawn.SetRotation(NewRotation);
@@ -435,17 +432,17 @@ simulated state Idle
 
             return;
         }
-        else if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && DHMortarVehicleWeapon(Gun) != none)
+        else if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && Mortar != none)
         {
             LastElevationTime = Level.TimeSeconds;
 
             if (PitchChange < 0.0)
             {
-                DHMortarVehicleWeapon(Gun).Elevate();
+                Mortar.Elevate();
             }
             else
             {
-                DHMortarVehicleWeapon(Gun).Depress();
+                Mortar.Depress();
             }
         }
         else if (YawChange != 0.0)
@@ -1008,15 +1005,13 @@ function KDriverEnter(Pawn P)
 function DriverEnterTransferAmmunition(Pawn P)
 {
     local DHPawn DHP;
-    local DHMortarVehicleWeapon DHMVW;
 
     DHP = DHPawn(P);
-    DHMVW = DHMortarVehicleWeapon(Gun);
 
-    if (DHP != none && DHMVW != none)
+    if (DHP != none && Mortar != none)
     {
-        DHMVW.MainAmmoCharge[0] = Clamp(DHMVW.MainAmmoCharge[0] + DHP.MortarHEAmmo, 0, GunClass.default.InitialPrimaryAmmo);
-        DHMVW.MainAmmoCharge[1] = Clamp(DHMVW.MainAmmoCharge[1] + DHP.MortarSmokeAmmo, 0, GunClass.default.InitialSecondaryAmmo);
+        Mortar.MainAmmoCharge[0] = Clamp(Mortar.MainAmmoCharge[0] + DHP.MortarHEAmmo, 0, GunClass.default.InitialPrimaryAmmo);
+        Mortar.MainAmmoCharge[1] = Clamp(Mortar.MainAmmoCharge[1] + DHP.MortarSmokeAmmo, 0, GunClass.default.InitialSecondaryAmmo);
 
         DHP.MortarHEAmmo = 0;
         DHP.MortarSmokeAmmo = 0;
@@ -1039,17 +1034,15 @@ function CheckCanBeResupplied()
 function DriverLeaveAmmunitionTransfer(Pawn P)
 {
     local DHPawn DHP;
-    local DHMortarVehicleWeapon G;
 
     DHP = DHPawn(P);
-    G = DHMortarVehicleWeapon(Gun);
 
-    if (DHP != none && G != none)
+    if (DHP != none && Mortar != none)
     {
-        DHP.MortarHEAmmo = G.MainAmmoCharge[0];
-        DHP.MortarSmokeAmmo = G.MainAmmoCharge[1];
-        G.MainAmmoCharge[0] = 0;
-        G.MainAmmoCharge[1] = 0;
+        DHP.MortarHEAmmo = Mortar.MainAmmoCharge[0];
+        DHP.MortarSmokeAmmo = Mortar.MainAmmoCharge[1];
+        Mortar.MainAmmoCharge[0] = 0;
+        Mortar.MainAmmoCharge[1] = 0;
 
         if (DHMortarVehicle(VehicleBase) != none)
         {
@@ -1075,9 +1068,9 @@ exec function SwitchFireMode()
 // From ROTankCannonPawn
 function ServerToggleRoundType()
 {
-    if (DHMortarVehicleWeapon(Gun) != none)
+    if (Mortar != none)
     {
-        DHMortarVehicleWeapon(Gun).ToggleRoundType();
+        Mortar.ToggleRoundType();
     }
 }
 

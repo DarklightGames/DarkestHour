@@ -192,8 +192,11 @@ state ProjectileFireMode
                 SpawnProjectile(ProjectileClass, false);
                 --MainAmmoCharge[GetRoundIndex()];
 
-                //Shake view here, (proper timing and all)
-                DHMortarVehicleWeaponPawn(Instigator).ClientShakeView();
+                // Shake view here, (proper timing and all)
+                if (MortarPawn != none)
+                {
+                    MortarPawn.ClientShakeView();
+                }
 
                 // We fired one off, so we are now eligible for resupply
                 if (DHMortarVehicle(Base) != none)
