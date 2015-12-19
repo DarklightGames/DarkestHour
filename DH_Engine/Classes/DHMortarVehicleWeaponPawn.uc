@@ -270,7 +270,7 @@ simulated function InitializeVehicleBase()
     }
 
     // If we also have the VehicleWeapon actor, initialize anything we need to do where we need both actors
-    if (Mortar != none && !bInitializedVehicleAndGun)
+    if (Gun != none && !bInitializedVehicleAndGun)
     {
         InitializeVehicleAndWeapon();
     }

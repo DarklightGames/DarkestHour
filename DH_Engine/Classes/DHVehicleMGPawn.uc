@@ -173,12 +173,6 @@ simulated function PostNetReceive()
         bNeedToInitializeDriver = false;
         SetPlayerPosition();
     }
-
-    // If this is a single position MG & we've initialized the vehicle weapon & vehicle base, we can now switch off PostNetReceive
-    if (!bMultiPosition && bInitializedVehicleGun && bInitializedVehicleBase && !bNeedToInitializeDriver)
-    {
-        bNetNotify = false;
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1315,7 +1309,7 @@ simulated function InitializeVehicleBase()
     }
 
     // If we also have the VehicleWeapon actor, initialize anything we need to do where we need both actors
-    if (MGun != none && !bInitializedVehicleAndGun)
+    if (Gun != none && !bInitializedVehicleAndGun)
     {
         InitializeVehicleAndWeapon();
     }
