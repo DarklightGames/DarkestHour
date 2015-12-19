@@ -141,8 +141,13 @@ simulated function PostNetReceive()
 // Also to postpone reload if cannon is out of ammo & to sharply reduce frequency of repeat timer if reload can't proceed for now
 simulated function Timer()
 {
+    // If a cannon reload isn't in progress then we exit & stop any repeating timer
+    if (CannonReloadState == CR_ReadyToFire || CannonReloadState == CR_Waiting)
+    {
+        SetTimer(0.0, false);
+    }
     // Do not proceed with reload if no player in cannon position or if cannon has no ammo - set a repeating timer to keep checking (but reduced from 20 times a second !)
-    if (CannonPawn == none || CannonPawn.Controller == none || PrimaryAmmoCount() < 1)
+    else if (CannonPawn == none || CannonPawn.Controller == none || PrimaryAmmoCount() < 1)
     {
         SetTimer(0.5, true);
     }
@@ -476,28 +481,14 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
             if (bAltFire)
             {
-                if (bAmbientAltFireSound)
-                {
-                    AmbientSound = AltFireSoundClass;
-                    SoundVolume = AltFireSoundVolume;
-                    SoundRadius = AltFireSoundRadius;
-                    AmbientSoundScaling = AltFireSoundScaling;
-                }
-                else
-                {
-                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-                }
+                AmbientSound = AltFireSoundClass;
+                SoundVolume = AltFireSoundVolume;
+                SoundRadius = AltFireSoundRadius;
+                AmbientSoundScaling = AltFireSoundScaling;
             }
             else
             {
-                if (bAmbientFireSound)
-                {
-                    AmbientSound = FireSoundClass;
-                }
-                else
-                {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-                }
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
             }
         }
     }
@@ -1146,13 +1137,18 @@ function ServerManualReload()
 }
 
 // Modified so only sets timer if the new reload state needs it, & to only act on net client (avoids duplication for standalone or listen server)
+// Also add fail-safe if net client somehow hasn't got correct value of bClientCanFireCannon in reload state ready to fire (if server passes state RTF, cannon must be ready)
 simulated function ClientSetReloadState(ECannonReloadState NewState)
 {
     if (Role < ROLE_Authority)
     {
         CannonReloadState = NewState;
 
-        if (CannonReloadState != CR_Waiting && CannonReloadState != CR_ReadyToFire)
+        if (CannonReloadState == CR_ReadyToFire)
+        {
+            bClientCanFireCannon = true;
+        }
+        else if (CannonReloadState != CR_Waiting)
         {
             SetTimer(0.01, false);
         }
@@ -2014,6 +2010,7 @@ defaultproperties
     AltFireSpread=0.002
     ManualRotationsPerSecond=0.011111
     CannonReloadState=CR_Waiting
+    bClientCanFireCannon=false
     NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'

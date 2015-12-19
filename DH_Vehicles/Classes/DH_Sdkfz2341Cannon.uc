@@ -455,8 +455,13 @@ function HandleCannonReload(optional bool bIsManualReload)
 // Modified to remove requirement for PrimaryAmmoCount > 0, which for autocannon means has at least 1 magazines, as last mag may just have been used to start this reload
 simulated function Timer()
 {
+    // If a cannon reload isn't in progress then we exit & stop any repeating timer
+    if (CannonReloadState == CR_ReadyToFire || CannonReloadState == CR_Waiting)
+    {
+        SetTimer(0.0, false);
+    }
     // Do not proceed with reload if no player in cannon position - set a repeating timer to keep checking
-    if (CannonPawn == none || CannonPawn.Controller == none)
+    else if (CannonPawn == none || CannonPawn.Controller == none)
     {
         SetTimer(0.5, true);
     }
