@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHSmokeEffect_Red extends DHSmokeEffectBase_Colored;
+class DHSmokeEffect_Red extends DHSmokeEffect_ColoredGrenade;
 
 defaultproperties
 {
