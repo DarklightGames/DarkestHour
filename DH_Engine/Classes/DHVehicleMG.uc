@@ -161,7 +161,7 @@ simulated function Timer()
             }
             else
             {
-                SetTimer(GetSoundDuration(ReloadSounds[ReloadState].Sound), false);
+                SetTimer(FMax(0.1, GetSoundDuration(ReloadSounds[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
             }
 
             // Move to next reload state

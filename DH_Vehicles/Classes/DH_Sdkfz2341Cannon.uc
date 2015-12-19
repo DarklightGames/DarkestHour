@@ -480,25 +480,25 @@ simulated function Timer()
     {
         PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart1;
-        SetTimer(GetSoundDuration(ReloadSoundOne), false);
+        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundOne)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
     }
     else if (CannonReloadState == CR_ReloadedPart1)
     {
         PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart2;
-        SetTimer(GetSoundDuration(ReloadSoundTwo), false);
+        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundTwo)), false);
     }
     else if (CannonReloadState == CR_ReloadedPart2)
     {
         PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart3;
-        SetTimer(GetSoundDuration(ReloadSoundThree), false);
+        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundThree)), false);
     }
     else if (CannonReloadState == CR_ReloadedPart3)
     {
         PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart4;
-        SetTimer(GetSoundDuration(ReloadSoundFour), false);
+        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundFour)), false);
     }
     else if (CannonReloadState == CR_ReloadedPart4)
     {

@@ -868,7 +868,7 @@ simulated state Whistle
 
         SetPhysics(PHYS_None);
         Velocity = vect(0.0, 0.0, 0.0);
-        SetTimer(GetSoundDuration(DescendingSound), false);
+        SetTimer(FMax(0.1, GetSoundDuration(DescendingSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
 
         if (Level.NetMode == NM_Standalone || Level.NetMode == NM_Client)
         {
