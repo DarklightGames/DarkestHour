@@ -258,7 +258,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
         }
 
-        Instigator.MakeNoise(1.0);
+        if (Instigator != none)
+        {
+            Instigator.MakeNoise(1.0);
+        }
 
         // Coaxial MG fire - check we have ammo & fire the MG
         if (bAltFire)
@@ -266,7 +269,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
             // If MG is empty we can't fire - start a reload
             if (!ConsumeAmmo(3))
             {
-                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                if (CannonPawn != none)
+                {
+                    CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                }
+
                 HandleReload();
 
                 return false;
@@ -289,7 +296,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
             // If cannon is empty we can't fire
             if (!ConsumeAmmo(FireMode))
             {
-                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                if (CannonPawn != none)
+                {
+                    CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                }
 
                 return false;
             }
@@ -454,7 +464,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (P != none)
     {
-        if (bInheritVelocity)
+        if (bInheritVelocity && Instigator != none)
         {
             P.Velocity = Instigator.Velocity;
         }
@@ -1604,7 +1614,7 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     // Suicide
-    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
+    if ((DamageType == class'Suicided' || DamageType == class'ROSuicided') && CannonPawn != none)
     {
         CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
     }

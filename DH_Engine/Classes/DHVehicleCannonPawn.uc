@@ -540,7 +540,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             ViewRotation = PC.Rotation;
 
             // Remove any turret yaw from player's rotation, as in 1st person view the turret yaw will be added by SpecialCalcFirstPersonView()
-            if (Cannon.bHasTurret)
+            if (Cannon != none && Cannon.bHasTurret)
             {
                 ViewRotation.Yaw -= Cannon.CurrentAim.Yaw;
             }
@@ -617,7 +617,7 @@ function AltFire(optional float F)
             Gun.ClientStartFire(Controller, true);
         }
     }
-    else if (Gun.FireCountdown <= Gun.AltFireInterval) // means that coaxial MG isn't reloading (or at least has virtually completed its reload)
+    else if (Gun.FireCountdown <= Gun.AltFireInterval && Cannon != none) // means that coaxial MG isn't reloading (or at least has virtually completed its reload)
     {
         PlaySound(Cannon.NoMGAmmoSound, SLOT_None, 1.5,, 25.0,, true);
     }
@@ -949,7 +949,10 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        StoredVehicleRotation = VehicleBase.Rotation;
+        if (VehicleBase != none)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
 
         if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
@@ -1294,7 +1297,10 @@ function DriverLeft()
         LastPositionIndex = InitialPositionIndex;
     }
 
-    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+    if (VehicleBase != none)
+    {
+        VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+    }
 
     DrivingStatusChanged(); // the Super from Vehicle
 }
@@ -2126,7 +2132,7 @@ exec function SetAltFireSpawnOffset(float NewValue)
 // New debug exec to adjust location of turret hatch fire position
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
     {
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {

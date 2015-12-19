@@ -108,16 +108,42 @@ simulated function PostNetReceive()
         switch (CurrentDriverAnimation)
         {
             case IdleAnimIndex:
-                Gun.LoopAnim(Gun.BeginningIdleAnim);
-                Driver.LoopAnim(DriveAnim);
+                if (Gun != none)
+                {
+                    Gun.LoopAnim(Gun.BeginningIdleAnim);
+                }
+
+                if (Driver != none)
+                {
+                    Driver.LoopAnim(DriveAnim);
+                }
+
                 break;
+
             case FiringAnimIndex:
-                Mortar.PlayAnim(Mortar.GunFiringAnim);
-                Driver.PlayAnim(DriverFiringAnim);
+                if (Mortar != none)
+                {
+                    Mortar.PlayAnim(Mortar.GunFiringAnim);
+                }
+
+                if (Driver != none)
+                {
+                    Driver.PlayAnim(DriverFiringAnim);
+                }
+
                 break;
+
             case UnflinchAnimIndex:
-                Gun.LoopAnim(Gun.BeginningIdleAnim);
-                Driver.PlayAnim(DriverUnflinchAnim);
+                if (Gun != none)
+                {
+                    Gun.LoopAnim(Gun.BeginningIdleAnim);
+                }
+
+                if (Driver != none)
+                {
+                    Driver.PlayAnim(DriverUnflinchAnim);
+                }
+
             default:
                 break;
         }
@@ -446,15 +472,22 @@ simulated state FireToIdle extends Busy
 Begin:
     if (Level.NetMode == NM_Standalone) // single-player
     {
-        Gun.LoopAnim(Gun.BeginningIdleAnim);
-        Driver.PlayAnim(DriverUnflinchAnim);
+        if (Gun != none)
+        {
+            Gun.LoopAnim(Gun.BeginningIdleAnim);
+        }
+
+        if (Driver != none)
+        {
+            Driver.PlayAnim(DriverUnflinchAnim);
+        }
     }
     else // multi-player
     {
         SetCurrentAnimation(UnflinchAnimIndex);
     }
 
-    if (Driver.HasAnim(DriverUnflinchAnim))
+    if (Driver != none && Driver.HasAnim(DriverUnflinchAnim))
     {
         Sleep(Driver.GetAnimDuration(DriverUnflinchAnim));
     }
@@ -607,8 +640,15 @@ Begin:
 
     if (Level.NetMode == NM_Standalone) //TODO: Remove, single-player testing?
     {
-        Mortar.PlayAnim(Mortar.GunFiringAnim);
-        Driver.PlayAnim(DriverFiringAnim);
+        if (Mortar != none)
+        {
+            Mortar.PlayAnim(Mortar.GunFiringAnim);
+        }
+
+        if (Driver != none)
+        {
+            Driver.PlayAnim(DriverFiringAnim);
+        }
     }
     else
     {
@@ -665,12 +705,14 @@ function Undeploy()
     {
         PC = PlayerController(Controller);
         W = Spawn(WeaponClass, PC.Pawn);
+
         global.KDriverLeave(true); // normally an empty function in any state derived from state Busy, so call the normal, non-state function instead
+
         W.GiveTo(PC.Pawn);
 
         // Standalone or owning listen server destroys mortar vehicle (& so all associated actors) immediately, as ClientKDriverLeave() will already have executed locally
         // Dedicated server or non-owning listen server instead waits until owning net client executes ClientKDriverLeave() & calls ServerDestroyMortar() on server
-        if (IsLocallyControlled())
+        if (IsLocallyControlled() && DHMortarVehicle(VehicleBase) != none)
         {
             DHMortarVehicle(VehicleBase).ServerDestroyMortar();
         }
@@ -867,7 +909,12 @@ simulated state KnobRaisedToFire extends Busy
 {
 Begin:
     PlayOverlayAnimation(OverlayKnobLoweringAnim);
-    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
+
+    if (HUDOverlay != none)
+    {
+        Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
+    }
+
     GotoState('Firing');
 }
 
@@ -876,7 +923,12 @@ simulated state KnobRaisedToUndeploy extends Busy
 {
 Begin:
     PlayOverlayAnimation(OverlayKnobLoweringAnim);
-    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
+
+    if (HUDOverlay != none)
+    {
+        Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
+    }
+
     GotoState('Undeploying');
 }
 
@@ -885,7 +937,12 @@ simulated state KnobRaisedToIdle extends Busy
 {
 Begin:
     PlayOverlayAnimation(OverlayKnobLoweringAnim);
-    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
+
+    if (HUDOverlay != none)
+    {
+        Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
+    }
+
     GotoState('Idle');
 }
 
@@ -926,7 +983,10 @@ function bool ResupplyAmmo()
 {
     if (super.ResupplyAmmo())
     {
-        DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
+        if (DHMortarVehicle(VehicleBase) != none)
+        {
+            DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
+        }
 
         return true;
     }

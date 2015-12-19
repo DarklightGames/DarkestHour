@@ -55,7 +55,7 @@ function float GetAmmoReloadState()
 // Modified as 234/1 uses FireCountdown for cannon AND coaxial MG, so we need to check it against both FireInterval & AltFireInterval (in super)
 function float GetAltAmmoReloadState()
 {
-    if (Gun.FireCountdown <= Gun.FireInterval)
+    if (Gun != none && Gun.FireCountdown <= Gun.FireInterval)
     {
         return 0.0;
     }

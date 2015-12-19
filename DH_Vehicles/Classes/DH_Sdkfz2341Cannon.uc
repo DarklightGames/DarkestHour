@@ -131,7 +131,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
         }
 
-        Instigator.MakeNoise(1.0);
+        if (Instigator != none)
+        {
+            Instigator.MakeNoise(1.0);
+        }
 
         // Coaxial MG fire - check we have ammo & fire the MG
         if (bAltFire)
@@ -139,7 +142,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
             // If MG is empty we can't fire - start a reload
             if (!ConsumeAmmo(3))
             {
-                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                if (CannonPawn != none)
+                {
+                    CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                }
+
                 HandleReload();
 
                 return false;
@@ -161,7 +168,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
             // If cannon is empty we can't fire
             if (!ConsumeAmmo(FireMode))
             {
-                CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                if (CannonPawn != none)
+                {
+                    CannonPawn.ClientVehicleCeaseFire(bAltFire);
+                }
+
                 HandleCannonReload(); // added to 234/1
 
                 return false;
@@ -638,7 +649,8 @@ function bool ResupplyAmmo()
         bDidResupply = true;
 
         // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
-        if (!HasAmmo(3) && Instigator.Controller != none && Role == ROLE_Authority)
+        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
+        if (!HasAmmo(3) && Instigator != none && Instigator.Controller != none && Role == ROLE_Authority)
         {
             HandleReload();
         }

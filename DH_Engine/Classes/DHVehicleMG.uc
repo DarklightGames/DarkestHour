@@ -253,18 +253,21 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 // Also to enable muzzle flash when hosting a listen server, which the original code misses out
 simulated function OwnerEffects()
 {
-    if (MGPawn != none && MGPawn.CanFire())
+    if (MGPawn != none)
     {
-        super.OwnerEffects();
-
-        if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none) // added so we get muzzle flash when hosting a listen server
+        if (MGPawn.CanFire())
         {
-            AmbientEffectEmitter.SetEmitterStatus(true);
+            super.OwnerEffects();
+
+            if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none) // added so we get muzzle flash when hosting a listen server
+            {
+                AmbientEffectEmitter.SetEmitterStatus(true);
+            }
         }
-    }
-    else
-    {
-        MGPawn.ClientVehicleCeaseFire(bIsAltFire); // stops flash & tracers if player has moved to invalid firing position while holding down fire
+        else
+        {
+            MGPawn.ClientVehicleCeaseFire(bIsAltFire); // stops flash & tracers if player has moved to invalid firing position while holding down fire
+        }
     }
 }
 
@@ -582,7 +585,7 @@ simulated function bool HitDriver(vector HitLocation, vector Momentum)
 // Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
+    if ((DamageType == class'Suicided' || DamageType == class'ROSuicided') && MGPawn != none)
     {
         MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
     }

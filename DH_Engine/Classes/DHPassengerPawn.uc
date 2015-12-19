@@ -492,7 +492,10 @@ function DriverDied()
 // Modified to add common features from KDriverLeave() & DriverDied(), which both call this function
 function DriverLeft()
 {
-    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+    if (VehicleBase != none)
+    {
+        VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+    }
 
     DrivingStatusChanged(); // the Super from Vehicle
 }
@@ -502,9 +505,12 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = VehicleBase.Rotation;
-    NewRot.Pitch = LimitPitch(NewRot.Pitch);
-    SetRotation(NewRot);
+    if (VehicleBase != none)
+    {
+        NewRot = VehicleBase.Rotation;
+        NewRot.Pitch = LimitPitch(NewRot.Pitch);
+        SetRotation(NewRot);
+    }
 
     super.ClientKDriverLeave(PC);
 }

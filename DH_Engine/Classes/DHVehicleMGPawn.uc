@@ -740,7 +740,10 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        StoredVehicleRotation = VehicleBase.Rotation;
+        if (VehicleBase != none)
+        {
+            StoredVehicleRotation = VehicleBase.Rotation;
+        }
 
         if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
@@ -1074,7 +1077,10 @@ function DriverLeft()
         LastPositionIndex = InitialPositionIndex;
     }
 
-    VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+    if (VehicleBase != none)
+    {
+        VehicleBase.MaybeDestroyVehicle(); // set spiked vehicle timer if it's an empty, disabled vehicle
+    }
 
     DrivingStatusChanged(); // the Super from Vehicle
 }
@@ -1850,7 +1856,7 @@ exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bSca
 // New debug exec to adjust location of MG hatch fire position
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && MGun != none)
     {
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {

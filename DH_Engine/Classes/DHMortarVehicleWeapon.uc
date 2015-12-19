@@ -117,7 +117,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     /* After careful consideration, it was determined that universal pitch adjustments did
     not work, because at lower elevations, the differences in pitch angles becomes
-    nearly undetectible, while at high elevations they were overly dramatic.
+    nearly undetectable, while at high elevations they were overly dramatic.
     In the end, I opted to go with a slight velocity adjustment, as this scales
     fairly nicely at all ranges. -Basnett */
 
