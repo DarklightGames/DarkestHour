@@ -312,14 +312,54 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 // Modified to reinstate use of FireCountDown for cannon as well as coaxial MG, & to prevent reload after each individual shot
 simulated function OwnerEffects()
 {
-    // Stop the firing effects it we shouldn't be able to fire
-    // (incorporating extra from DHVehicleCannon to stop 'phantom' coaxial MG firing effects if player has moved to ineligible firing position while holding down fire button)
-    if (Role < ROLE_Authority && (!ReadyToFire(bIsAltFire) || (CannonPawn != none && !CannonPawn.CanFire())))
+    // Stop the firing effects it we shouldn't be able to fire, or if player moves to ineligible firing position while holding down fire button on coaxial MG
+    if (Role < ROLE_Authority)
     {
-        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
+        if (!ReadyToFire(bIsAltFire) || (CannonPawn != none && !CannonPawn.CanFire()))
+        {
+            CannonPawn.ClientVehicleCeaseFire(bIsAltFire);
 
-        return;
+            return;
+        }
+
+        if (bIsAltFire)
+        {
+            FireCountdown = AltFireInterval;
+
+            SoundVolume = AltFireSoundVolume;
+            SoundRadius = AltFireSoundRadius;
+            AmbientSoundScaling = AltFireSoundScaling;
+        }
+        else
+        {
+            FireCountdown = FireInterval; // added back this 'else' (commented out in ROTankCannon), as we use FireCountDown for autocannon fire interval
+
+            PlaySound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+
+            // Wait for player to reload manually // reload block removed as an autocannon doesn't want to reload after each shot
+//          if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
+//          {
+//              CannonReloadState = CR_Waiting;
+//          }
+            // Start an automatic reload
+//          else
+//          {
+//              CannonReloadState = CR_Empty;
+//              SetTimer(0.01, false);
+//          }
+        }
+
+        AimLockReleaseTime = Level.TimeSeconds + (FireCountdown * FireIntervalAimLock);
+
+        FlashMuzzleFlash(bIsAltFire);
     }
+
+    if (Level.NetMode != NM_DedicatedServer && bIsAltFire && AmbientEffectEmitter != none)
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes
+    }
+
+    ShakeView(bIsAltFire);
 
     if (!bIsRepeatingFF)
     {
@@ -330,62 +370,6 @@ simulated function OwnerEffects()
         else
         {
             ClientPlayForceFeedback(FireForce);
-        }
-    }
-
-    ShakeView(bIsAltFire);
-
-    if (Level.NetMode != NM_DedicatedServer && bIsAltFire && AmbientEffectEmitter != none)
-    {
-        AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes
-    }
-
-    if (Role < ROLE_Authority)
-    {
-        if (bIsAltFire)
-        {
-            FireCountdown = AltFireInterval;
-        }
-        else // adds back this 'else' (commented out in Super), as we use FireCountDown for auto fire interval
-        {
-            FireCountdown = FireInterval;
-        }
-
-//      if (!bIsAltFire) // note this 'if' is removed in 234/1
-//      {
-//          if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
-//          {
-//              CannonReloadState = CR_Waiting;
-//          }
-//          else
-//          {
-//              CannonReloadState = CR_Empty;
-//              SetTimer(0.01, false);
-//          }
-//
-//          bClientCanFireCannon = false;
-//      }
-
-        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
-
-        FlashMuzzleFlash(bIsAltFire);
-
-        if (bIsAltFire)
-        {
-            if (!bAmbientAltFireSound)
-            {
-                PlaySound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-            }
-            else
-            {
-                SoundVolume = AltFireSoundVolume;
-                SoundRadius = AltFireSoundRadius;
-                AmbientSoundScaling = AltFireSoundScaling;
-            }
-        }
-        else if (!bAmbientFireSound)
-        {
-            PlaySound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
         }
     }
 }

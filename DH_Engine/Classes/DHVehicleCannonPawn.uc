@@ -580,16 +580,12 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to use CanFire() & to avoid obsolete RO functionality in ROTankCannonPawn & optimise what remains
-// Also to fix occasional bug where for some reason bClientCanFireCannon doesn't get set correctly on a net client (seems to be when exiting cannon almost at same time as firing)
-// To fix that we remove the check on bClientCanFireCannon, so we proceed if client at least has CannonReloadState == CR_ReadyToFire (the Super sends a VehicleFire() call to the server)
-// The server is the authoritative check on whether the cannon can fire, so even if the client side is hacked or goes wrong, the worst we get is phantom firing effects
 function Fire(optional float F)
 {
     if (CanFire() && Cannon != none)
     {
-        if (Cannon.CannonReloadState == CR_ReadyToFire) // removed check on bClientCanFireCannon
+        if (Cannon.CannonReloadState == CR_ReadyToFire && Cannon.bClientCanFireCannon)
         {
-            if (!Cannon.bClientCanFireCannon) log(Tag @ "Fire: bypassing bClientCanFireCannon being false"); // TEMPDEBUG
             super(VehicleWeaponPawn).Fire(F);
         }
         else if (Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex()) && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)

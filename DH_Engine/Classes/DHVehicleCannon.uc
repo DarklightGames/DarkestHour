@@ -617,23 +617,73 @@ simulated function InitEffects()
     }
 }
 
-// Modified to stop 'phantom' coaxial MG firing effects (muzzle flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button
-// Also to enable MG muzzle flash when hosting a listen server, which the original code misses out
+// Modified to fix occasional bug player where cannon would get stuck and be unable to fire or reload, when player exited position immediately after firing
+// On net client this could result in phantom firing effects here, but no shot actually being fired (presume by time fire call reached server there was no player, so no shot fired)
+// Cause was client setting bClientCanFireCannon to false here, in anticipation of server doing that, but server never initiating fire/reload process
+// Also modified to stop 'phantom' coaxial MG firing effects (flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button
+// And to enable MG muzzle flash when hosting a listen server, which the original code misses out
 simulated function OwnerEffects()
 {
-    if (Role < ROLE_Authority && bIsAltFire && CannonPawn != none && !CannonPawn.CanFire())
+    // Stop the firing effects it we shouldn't be able to fire, or if player moves to ineligible firing position while holding down fire button on coaxial MG
+    if (Role < ROLE_Authority)
     {
-        CannonPawn.ClientVehicleCeaseFire(bIsAltFire); // stops MG flash & tracers
+        if (!ReadyToFire(bIsAltFire) || (CannonPawn != none && !CannonPawn.CanFire()))
+        {
+            CannonPawn.ClientVehicleCeaseFire(bIsAltFire);
 
-        return;
+            return;
+        }
+
+        if (bIsAltFire)
+        {
+            FireCountdown = AltFireInterval;
+
+            SoundVolume = AltFireSoundVolume;
+            SoundRadius = AltFireSoundRadius;
+            AmbientSoundScaling = AltFireSoundScaling;
+        }
+        else
+        {
+            PlaySound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+
+            // Wait for player to reload manually
+            if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
+            {
+                CannonReloadState = CR_Waiting;
+            }
+            // Start an automatic reload
+            else
+            {
+                CannonReloadState = CR_Empty;
+                SetTimer(0.01, false);
+            }
+
+//          bClientCanFireCannon = false; // removed to fix occasion fire/reload bug
+        }
+
+        AimLockReleaseTime = Level.TimeSeconds + (FireCountdown * FireIntervalAimLock);
+
+        FlashMuzzleFlash(bIsAltFire);
     }
 
-    super.OwnerEffects();
-
-    if (Level.NetMode == NM_ListenServer && bIsAltFire && AmbientEffectEmitter != none) // to get MG muzzle flash on listen server
+    if (Level.NetMode != NM_DedicatedServer && bIsAltFire && AmbientEffectEmitter != none)
     {
-        AmbientEffectEmitter.SetEmitterStatus(true);
+        AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes
     }
+
+    if (!bIsRepeatingFF)
+    {
+        if (bIsAltFire)
+        {
+            ClientPlayForceFeedback(AltFireForce);
+        }
+        else
+        {
+            ClientPlayForceFeedback(FireForce);
+        }
+    }
+
+    ShakeView(bIsAltFire);
 }
 
 // Modified to remove shake from coaxial MGs
@@ -991,10 +1041,7 @@ simulated function int GetPendingRoundIndex()
     }
 }
 
-// Modified to fix occasional bug where for some reason bClientCanFireCannon doesn't get set correctly on a net client (seems to be when exiting cannon almost at same time as firing)
-// To solve that we remove the check on bClientCanFireCannon, so if client at least has CannonReloadState == CR_ReadyToFire, it sends the call off to the server
-// The server is the authoritative check on whether the cannon can fire, so even if the client side is hacked or goes wrong, the worst we get is phantom firing effects
-// Also to optimise slightly
+// Modified to handle DH's extended ammo system (also slightly optimised)
 simulated function bool ReadyToFire(bool bAltFire)
 {
     local int Mode;
@@ -1005,11 +1052,10 @@ simulated function bool ReadyToFire(bool bAltFire)
     }
     else
     {
-        if (CannonReloadState != CR_ReadyToFire) // removed check on bClientCanFireCannon
+        if (!bClientCanFireCannon || CannonReloadState != CR_ReadyToFire)
         {
             return false;
         }
-        else if (!bClientCanFireCannon) log(Tag @ "ReadyToFire: bypassing bClientCanFireCannon being false"); // TEMPDEBUG
 
         if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
         {
@@ -1026,33 +1072,6 @@ simulated function bool ReadyToFire(bool bAltFire)
     }
 
     return HasAmmo(Mode);
-}
-
-// Modified to fix occasional bug where for some reason bClientCanFireCannon doesn't get set correctly on a net client (seems to be when exiting cannon almost at same time as firing)
-// To fix that we remove the check on bClientCanFireCannon, so we proceed if the client at least has CannonReloadState == CR_ReadyToFire
-// The server is the authoritative check on whether the cannon can fire, so even if the client side is hacked or goes wrong, the worst we get is phantom firing effects
-simulated function ClientStartFire(Controller C, bool bAltFire)
-{
-    bIsAltFire = bAltFire;
-
-    if ((!bIsAltFire && CannonReloadState == CR_ReadyToFire) || (bIsAltFire && FireCountdown <= 0.0)) // removed check on bClientCanFireCannon
-    {
-        if (!bIsAltFire && !bClientCanFireCannon) Log(Tag @ "ClientStartFire: bypassing bClientCanFireCannon being false"); // TEMPDEBUG
-
-        if (bIsRepeatingFF)
-        {
-            if (bIsAltFire)
-            {
-                ClientPlayForceFeedback(AltFireForce);
-            }
-            else
-            {
-                ClientPlayForceFeedback(FireForce);
-            }
-        }
-
-        OwnerEffects();
-    }
 }
 
 // Modified to handle DH's extended ammo system
