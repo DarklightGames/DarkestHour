@@ -974,12 +974,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
 simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
 {
-    local PlayerController    PC;
-    local Vehicle             V;
-    local VehicleWeaponPawn   VWP;
-    local DHVehicleCannonPawn CP;
-    local rotator             PCRelativeRotation;
-    local vector              PCNonRelativeRotationVector;
+    local PlayerController PC;
 
     // Only relevant on a dedicated server if the bForceDedicated option has been passed
     if (Level.NetMode == NM_DedicatedServer)
@@ -1017,52 +1012,15 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
         return false;
     }
 
-    // Check to see whether the effect would spawn off to the side or behind where the player is facing, & if so then only spawn if within quite close distance
+    // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
+    // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
     // (doesn't apply to the player that fired the projectile)
-    if (PC.Pawn != Instigator)
+    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
     {
-        V = Vehicle(PC.Pawn);
-
-        // If player is in a vehicle using relative view rotation (nearly all of them), we need to factor in the vehicle's rotation
-        if (V != none && V.bPCRelativeFPRotation)
-        {
-            VWP = VehicleWeaponPawn(V);
-
-            // For vehicle weapons we must use the Gun or VehicleBase rotation (they match), not the weapon pawn's rotation
-            if (VWP != none)
-            {
-                PCRelativeRotation = PC.Rotation;
-                CP = DHVehicleCannonPawn(VWP);
-
-                // For turrets we also need to factor in the turret's yaw
-                if (CP != none && CP.Cannon != none && CP.Cannon.bHasTurret)
-                {
-                    PCRelativeRotation.Yaw += CP.Cannon.CurrentAim.Yaw;
-                }
-
-                PCNonRelativeRotationVector = vector(PCRelativeRotation) >> VWP.Gun.Rotation; // note Gun's rotation is effectively same as the vehicle base
-            }
-            // For vehicle themselves, we just use the vehicle's rotation
-            else
-            {
-                PCNonRelativeRotationVector = vector(PC.Rotation) >> V.Rotation;
-            }
-        }
-        // For player's that aren't in vehicles or the vehicle doesn't use relative view rotation, we simply use the PC's rotation
-        else
-        {
-            PCNonRelativeRotationVector = vector(PC.Rotation);
-        }
-
-        // Effect would spawn off to the side or behind where the player is facing, so only spawn if within quite close distance
-        if (PCNonRelativeRotationVector dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
-        {
-            return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
-        }
+        return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
     }
 
     // Effect relevance is based on normal distance check
-    // If we got here, it means the effect would spawn broadly in front of where the player is facing, or we are the player responsible for the projectile
     return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
