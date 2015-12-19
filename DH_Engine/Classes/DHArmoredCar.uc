@@ -205,13 +205,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
         if (!bAmmoDetonation)
         {
-            if (WeaponPawns.Length > 0)
+            if (CannonTurret != none)
             {
-                CannonPawn = DHVehicleCannonPawn(WeaponPawns[0]);
+                CannonPawn = DHVehicleCannonPawn(CannonTurret.Owner);
             }
 
             // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
-            if (CannonPawn != none && CannonPawn.Cannon != none && CannonPawn.Cannon.bHasTurret)
+            if (DHVehicleCannon(CannonTurret) != none && DHVehicleCannon(CannonTurret).bHasTurret)
             {
                 if (bTurretPenetration)
                 {

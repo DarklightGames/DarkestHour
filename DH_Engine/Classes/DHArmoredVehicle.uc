@@ -2602,9 +2602,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (!bEngineStoppedProjectile && !bAmmoDetonation) // we can skip lots of checks if either has been flagged true
     {
-        if (WeaponPawns.Length > 0)
+        if (CannonTurret != none)
         {
-            CannonPawn = DHVehicleCannonPawn(WeaponPawns[0]);
+            CannonPawn = DHVehicleCannonPawn(CannonTurret.Owner);
         }
 
         // Check additional DH NewVehHitPoints
@@ -2665,7 +2665,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (bProjectilePenetrated)
         {
             // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
-            if (CannonPawn != none && CannonPawn.Cannon != none && CannonPawn.Cannon.bHasTurret)
+            if (DHVehicleCannon(CannonTurret) != none && DHVehicleCannon(CannonTurret).bHasTurret)
             {
                 if (bTurretPenetration)
                 {

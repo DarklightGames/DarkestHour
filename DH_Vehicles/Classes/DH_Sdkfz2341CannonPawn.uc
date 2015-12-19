@@ -35,9 +35,9 @@ function Fire(optional float F)
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float GetAmmoReloadState()
 {
-    if (ROTankCannon(Gun) != none)
+    if (Cannon != none)
     {
-        switch (ROTankCannon(Gun).CannonReloadState)
+        switch (Cannon.CannonReloadState)
         {
             case CR_ReadyToFire:    return 0.0;
             case CR_Waiting:
