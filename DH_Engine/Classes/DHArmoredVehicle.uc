@@ -431,8 +431,9 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to remove RO disabled throttle stuff & add handling of jammed steering for a damaged track & MaxCriticalSpeed
-// Also to prevent all movement if vehicle can't move (engine off or both tracks disabled), & to disable Tick if vehicle is stationary & has no driver
+// Modified to remove RO disabled throttle stuff & modifying value of WheelLatFrictionScale based on speed (did nothing)
+// Also to add handling of jammed steering for a damaged track & MaxCriticalSpeed
+// And to prevent all movement if vehicle can't move (engine off or both tracks disabled), & to disable Tick if vehicle is stationary & has no driver,
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
@@ -487,15 +488,12 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
-
-    // Vehicle is moving
-    if (MySpeed > 0.1)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        // Slow the tank way down when it tries to turn at high speeds
-        WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
+        MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
-        if (Level.NetMode != NM_DedicatedServer)
+        // Vehicle is moving
+        if (MySpeed > 0.1)
         {
             // Force player to pull back on throttle if over max speed
             if (MySpeed >= MaxCriticalSpeed && IsHumanControlled())
@@ -533,13 +531,8 @@ simulated function Tick(float DeltaTime)
                 }
             }
         }
-    }
-    // If vehicle isn't moving, reset WheelLatFrictionScale & zero the movement sounds & tread movement
-    else
-    {
-        WheelLatFrictionScale = default.WheelLatFrictionScale;
-
-        if (Level.NetMode != NM_DedicatedServer)
+        // If vehicle isn't moving, zero the movement sounds & tread movement (but not if we've already done it, using MotionSoundVolume as the flag)
+        else if (MotionSoundVolume != 0.0)
         {
             MotionSoundVolume = 0.0;
             UpdateMovementSound();
