@@ -96,6 +96,7 @@ defaultproperties
     InitialAltAmmo=200
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellAPDS'
+    CannonAttachmentOffset=(X=4.5,Y=2.0,Z=3.0)
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'

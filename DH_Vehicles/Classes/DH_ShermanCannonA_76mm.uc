@@ -5,6 +5,18 @@
 
 class DH_ShermanCannonA_76mm extends DHVehicleCannon;
 
+// Modified to use different CannonAttachmentOffset if 76mm turret is used with an M4A3 Sherman hull
+// (a little hacky but saves having separate cannon & cannon pawn classes for the M4A3 & variants)
+simulated function InitializeVehicleBase()
+{
+    if (DH_ShermanTank_M4A376W(Base) != none)
+    {
+        CannonAttachmentOffset = vect(1.0, -1.0, 0.0);
+    }
+
+    super.InitializeVehicleBase();
+}
+
 defaultproperties
 {
     InitialTertiaryAmmo=26
@@ -85,6 +97,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
+    CannonAttachmentOffset=(X=-1.0,Y=-1.0,Z=0.0) // this is for M4A1; X=1 works better on M4A3 hull
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_extA'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'

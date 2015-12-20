@@ -7,7 +7,6 @@ class DH_CromwellCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    CannonAttachmentOffset=(X=0.0,Y=0.0,Z=2.5) // to correct positioning of turret, as it was sunk very slightly down into hull
     InitialTertiaryAmmo=5
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
     SecondarySpread=0.00175
@@ -95,6 +94,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
+    CannonAttachmentOffset=(X=1.0,Y=-1.0,Z=2.5)
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
