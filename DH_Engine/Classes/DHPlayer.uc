@@ -2929,9 +2929,17 @@ function ClientSaveROIDHash(string ROID)
     SaveConfig();
 }
 
-exec function TestUCore()
+exec function FOV(float F)
 {
-    class'DictionaryTest'.static.Test();
+    if (PlayerReplicationInfo.bAdmin || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        DefaultFOV = FClamp(F, 1, 170);
+        DesiredFOV = DefaultFOV;
+    }
+    else
+    {
+        super.FOV(F);
+    }
 }
 
 defaultproperties
