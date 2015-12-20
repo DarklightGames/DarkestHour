@@ -312,7 +312,7 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to handle engine & interior rumble sounds & object crushing, to prevent all movement if engine is off, & to disable Tick if vehicle is stationary & has no driver
+// Modified to handle engine & interior rumble sounds, to prevent all movement if engine is off, & to disable Tick if vehicle is stationary & has no driver
 simulated function Tick(float DeltaTime)
 {
     local float MotionSoundVolume;
@@ -2015,19 +2015,6 @@ event CheckReset()
     }
 
     Destroy();
-}
-
-// Modified to add an impact effect for running someone over (will slow vehicle down)
-function bool EncroachingOn(Actor Other)
-{
-    // If its a player pawn, do lots of damage & call ObjectCrushed()
-    if (Pawn(Other) != none && Vehicle(Other) == none && Other != Instigator && Other.Role == ROLE_Authority
-        && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
-    {
-        Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
-    }
-
-    return false;
 }
 
 // Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
