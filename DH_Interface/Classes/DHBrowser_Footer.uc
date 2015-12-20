@@ -20,29 +20,6 @@ function bool InternalOnClick(GUIComponent Sender)
     super.InternalOnClick(Sender);
 }
 
-function UpdateActiveButtons(UT2K4Browser_Page CurrentPanel)
-{
-    if (CurrentPanel == None)
-    {
-        return;
-    }
-
-    UpdateButtonState(b_Join,     CurrentPanel.IsJoinAvailable(b_Join.default.Caption));
-    UpdateButtonState(b_Refresh,  CurrentPanel.IsRefreshAvailable(b_Refresh.default.Caption));
-    UpdateButtonState(b_Spectate, CurrentPanel.IsSpectateAvailable(b_Spectate.default.Caption));
-    UpdateButtonState(b_Filter,   CurrentPanel.IsFilterAvailable(b_Filter.default.Caption));
-
-    if (b_Filter.MenuState == MSAT_Disabled)
-    {
-        ch_Standard.Hide();
-    }
-    else
-    {
-        ch_Standard.Show();
-    }
-}
-
-
 defaultproperties
 {
     Begin Object Class=DHmoCheckBox Name=OnlyStandardCheckBox
@@ -75,7 +52,7 @@ defaultproperties
     t_StatusBar=GUITitleBar'DH_Interface.DHBrowser_Footer.BrowserStatus'
 
     Begin Object Class=GUIButton Name=BrowserJoin
-        Caption="Join"
+        Caption="JOIN"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinLeft=611.0
@@ -90,7 +67,7 @@ defaultproperties
     b_Join=GUIButton'DH_Interface.DHBrowser_Footer.BrowserJoin'
 
     Begin Object Class=GUIButton Name=BrowserSpec
-        Caption="Spectate"
+        Caption="SPECTATE"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinLeft=0.771094
@@ -105,7 +82,7 @@ defaultproperties
     b_Spectate=GUIButton'DH_Interface.DHBrowser_Footer.BrowserSpec'
 
     Begin Object class=GUIButton Name=BrowserMain
-        Caption="Main"
+        Caption="MAIN"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinHeight=0.036482
@@ -118,7 +95,7 @@ defaultproperties
     b_Main=GUIButton'DH_Interface.DHBrowser_Footer.BrowserMain'
 
     Begin Object Class=GUIButton Name=BrowserBack
-        Caption="Back"
+        Caption="BACK"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinHeight=0.036482
@@ -131,7 +108,7 @@ defaultproperties
     b_Back=GUIButton'DH_Interface.DHBrowser_Footer.BrowserBack'
 
     Begin Object class=GUIButton Name=BrowserRefresh
-        Caption="Refresh"
+        Caption="REFRESH"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinLeft=0.885352
@@ -146,7 +123,7 @@ defaultproperties
     b_Refresh=GUIButton'DH_Interface.DHBrowser_Footer.BrowserRefresh'
 
     Begin Object Class=GUIButton Name=BrowserFilter
-        Caption="Filters"
+        Caption="FILTERS"
         bAutoSize=true
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5

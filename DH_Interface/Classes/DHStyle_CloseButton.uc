@@ -8,15 +8,14 @@ class DHStyle_CloseButton extends GUI2Styles;
 defaultproperties
 {
     KeyName="DHCloseButton"
-    Images(0)=texture'InterfaceArt_tex.Menu.checkBoxX_d'
-    Images(1)=texture'InterfaceArt_tex.Menu.checkBoxX_b'
-    Images(2)=texture'InterfaceArt_tex.Menu.checkBoxX_d'
-    Images(3)=texture'InterfaceArt_tex.Menu.checkBoxX_d'
-    Images(4)=texture'InterfaceArt_tex.Menu.checkBoxX_d'
-
-    ImgStyle(0)=ISTY_Justified
-    ImgStyle(1)=ISTY_Justified
-    ImgStyle(2)=ISTY_Justified
-    ImgStyle(3)=ISTY_Justified
-    ImgStyle(4)=ISTY_Justified
+    Images(0)=texture'DH_GUI_Tex.GUI.AlliedStar'
+    Images(1)=texture'DH_GUI_Tex.GUI.GerCross'
+    Images(2)=texture'DH_GUI_Tex.GUI.AlliedStar'
+    Images(3)=texture'DH_GUI_Tex.GUI.AlliedStar'
+    Images(4)=texture'DH_GUI_Tex.GUI.AlliedStar'
+    ImgStyle(0)=ISTY_Scaled
+    ImgStyle(1)=ISTY_Scaled
+    ImgStyle(2)=ISTY_Scaled
+    ImgStyle(3)=ISTY_Scaled
+    ImgStyle(4)=ISTY_Scaled
 }
