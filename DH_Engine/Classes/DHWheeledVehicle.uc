@@ -107,14 +107,11 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bEngineOff, bIsSpawnVehicle;
-//      bEngineDead      // Matt: removed variable (EngineHealth <= 0 does the same thing)
-//      EngineHealthMax  // Matt: removed variable (it never changed anyway & didn't need to be replicated)
-//      bResupplyVehicle // Matt: removed variable (it never changed anyway & didn't need to be replicated)
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
-        ServerToggleDebugExits, ServerKillEngine; // these ones only during development
+        ServerToggleDebugExits, ServerKillEngine; // these ones in debug mode only
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -62,12 +62,6 @@ var     bool        bNeedToInitializeDriver;     // do some player set up when w
 var     bool        bNeedToEnterVehicle;         // go to state 'EnteringVehicle' when we receive the cannon actor
 var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
 
-// NEW DH CODE: Illuminated sights
-//var   texture     NormalCannonScopeOverlay;
-//var   texture     LitCannonScopeOverlay; // a ClientLightOverlay() server-to-client function was planned
-//var   bool        bOpticsLit;
-//var   bool        bHasLightedOptics;
-
 // Debugging help
 var     bool        bDebugSights;        // shows centering cross in tank sight for testing purposes
 var     bool        bDebuggingText;      // on screen messages if damage prevents turret or gun from moving properly
@@ -79,8 +73,6 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bTurretRingDamaged, bGunPivotDamaged;
-//      UnbuttonedPositionIndex;      // Matt: removed as never changes & doesn't need to be replicated
-//      bOpticsDamaged; // bOpticsLit // Matt: removed as not even used clientside
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -88,10 +80,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits; // only during development
-//      ServerChangeDriverPos      // Matt: removed function
-//      ServerToggleExtraRoundType // Matt: removed function as is pointless - normal RO ServerToggleRoundType can be called; it's only the functionality in Gun.ToggleRoundType() that changes
-//      DamageCannonOverlay        // Matt: removed as isn't called by client
+        ServerToggleDebugExits; // in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)

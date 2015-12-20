@@ -170,24 +170,14 @@ replication
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         SchurzenIndex;
 
-    // Variables the server will replicate to the client that owns this actor
-//    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-//        MaxCriticalSpeed; // Matt: removed as it never changes & doesn't need to be replicated
-
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bEngineOff, bOnFire, bEngineOnFire, bIsSpawnVehicle;
-//      bEngineDead                                 // Matt: removed variable (EngineHealth <= 0 does the same thing)
-//      EngineHealthMax                             // Matt: removed variable (it never changed anyway & didn't need to be replicated)
-//      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
-//      bProjectilePenetrated, bFirstPenetratingHit // Matt: removed as not even used clientside
-//      bPeriscopeDamaged                           // Matt: removed variable as is part of functionality never implemented
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
-        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones only during development
-//      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
+        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones in debug mode only
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

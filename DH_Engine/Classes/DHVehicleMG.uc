@@ -60,10 +60,6 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NumMags;
 
-    // Variables the server will replicate to all clients
-//  reliable if (bNetDirty && Role == ROLE_Authority)
-//      bOnFire; // Matt: removed this variable
-
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientSetReloadState;

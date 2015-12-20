@@ -67,10 +67,6 @@ replication
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         MainAmmoChargeExtra;
-
-    // Variables the server will replicate to all clients
-//  reliable if (bNetDirty && Role == ROLE_Authority)
-//      bManualTurret, bOnFire; // Matt: removed these variables
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
