@@ -2166,36 +2166,7 @@ simulated function SetBarrelSteamActive(bool bSteaming)
 // Necessary as attachment may not yet exist when SetBarrelSteamActive() is called in this class (e.g. when picking up a pickup)
 function AttachToPawnHidden(Pawn P)
 {
-//    super.AttachToPawnHidden(P); // TEMPDEBUG replaced by below, to log
-
-    local name BoneName;
-
-    Instigator = P;
-
-    if (ThirdPersonActor == none)
-    {
-        ThirdPersonActor = Spawn(AttachmentClass, Owner);
-        if (DHGameReplicationInfo(Level.GRI) != none && DHGameReplicationInfo(Level.GRI).bLogWeaponAttachment) Log("AttachToPawnHidden hiding" @ ThirdPersonActor.Tag); // TEMPDEBUG
-        ThirdPersonActor.bHidden = true;
-        InventoryAttachment(ThirdPersonActor).InitFor(self);
-    }
-    else
-    {
-        if (DHGameReplicationInfo(Level.GRI) != none && DHGameReplicationInfo(Level.GRI).bLogWeaponAttachment) Log("AttachToPawnHidden hiding" @ ThirdPersonActor.Tag); // TEMPDEBUG
-        ThirdPersonActor.bHidden = true;
-        ThirdPersonActor.NetUpdateTime = Level.TimeSeconds - 1.0;
-    }
-
-    BoneName = P.GetWeaponBoneFor(self);
-
-    if (BoneName == '')
-    {
-        ThirdPersonActor.SetLocation(P.Location);
-        ThirdPersonActor.SetBase(P);
-    }
-    else
-        P.AttachToBone(ThirdPersonActor,BoneName);
-///////////////////////////////////////////////////////////////////////////////////
+    super.AttachToPawnHidden(P);
 
     if (bBarrelSteamActive && DHWeaponAttachment(ThirdPersonActor) != none)
     {

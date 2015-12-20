@@ -65,8 +65,6 @@ var     float                   NextChangeTeamTime;         // the time at which
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
-var bool bLogWeaponAttachment; // TEMPDEBUG
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -2856,19 +2854,6 @@ exec function SoundPlay(string SoundName, optional float Volume)
             Log("Playing sound" @ SoundToPlay @ " Volume =" @ Volume);
         }
     }
-}
-
-exec function ToggleLogWeapon() // TEMPDEBUG
-{
-    local DHGameReplicationInfo GRI;
-    if (Role == ROLE_Authority || (PlayerReplicationInfo!= none && PlayerReplicationInfo.bAdmin))
-    {
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
-        GRI.bLogWeaponAttachment = !GRI.bLogWeaponAttachment;
-        Log("bLogWeaponAttachment =" @ GRI.bLogWeaponAttachment);
-        if (Role < ROLE_Authority) ConsoleCommand("Admin ToggleLogWeapon");
-    }
-    else Log("In multiplayer, you need to log in as admin to use debug exec ToggleLogWeapon");
 }
 
 // Override to have the list of players copied into the clipboard of the player whom typed "ListPlayers"

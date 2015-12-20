@@ -87,13 +87,10 @@ const OBJECTIVES_MAX = 32;
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
-var bool                bLogWeaponAttachment; // TEMPDEBUG
-
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bLogWeaponAttachment, // TEMPDEBUG
         RoundEndTime,
         SpawnsRemaining,
         DHAxisRoles,

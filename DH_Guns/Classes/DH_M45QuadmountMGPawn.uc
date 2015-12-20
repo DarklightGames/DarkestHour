@@ -160,36 +160,6 @@ function bool CanFire()
     return DriverPositionIndex != BinocPositionIndex;
 }
 
-// TEMP debug execs ///////////////////////////////////////////////////////////////
-exec function SetAnim(name NewAnim)
-{
-    Driver.PlayAnim(NewAnim);
-}
-exec function SetPitch(int NewValue)
-{
-    Gun.CustomPitchUpLimit = NewValue;
-    Log("CustomPitchUpLimit =" @ Gun.CustomPitchUpLimit);
-}
-exec function SetCamPos(int NewX, int NewY, int NewZ)
-{
-    Log(Tag @ "new DriverPositions[" $ DriverPositionIndex $ "].ViewLocation =" @ NewX @ NewY @ NewZ @ "(old was" @ DriverPositions[DriverPositionIndex].ViewLocation $ ")");
-    DriverPositions[DriverPositionIndex].ViewLocation.X = NewX;
-    DriverPositions[DriverPositionIndex].ViewLocation.Y = NewY;
-    DriverPositions[DriverPositionIndex].ViewLocation.Z = NewZ;
-    FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-}
-exec function SetViewUp(int NewValue)
-{
-    DriverPositions[DriverPositionIndex].ViewPitchUpLimit = NewValue;
-    Log(Tag @ "new DriverPositions[" $ DriverPositionIndex $ "].ViewPitchUpLimit =" @ DriverPositions[DriverPositionIndex].ViewPitchUpLimit);
-}
-exec function SetViewDown(int NewValue)
-{
-    DriverPositions[DriverPositionIndex].ViewPitchDownLimit = NewValue;
-    Log(Tag @ "new DriverPositions[" $ DriverPositionIndex $ "].ViewPitchDownLimit =" @ DriverPositions[DriverPositionIndex].ViewPitchDownLimit);
-}
-////////////////////////////////////////////////////////////////////////////////
-
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_M45QuadmountMG'

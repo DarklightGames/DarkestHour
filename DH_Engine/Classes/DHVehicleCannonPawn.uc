@@ -1199,8 +1199,6 @@ simulated function SwitchWeapon(byte F)
                 {
                     return;
                 }
-                else if (WeaponPawn == none && class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none) // TEMPDEBUG
-                    Log(Tag @ Caps("SwitchWeapon would have prevented switch to WeaponPawns[" $ ChosenWeaponPawnIndex $ "] as WP doesn't exist on client"));
             }
 
             if (class<ROVehicleWeaponPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
@@ -2176,12 +2174,6 @@ exec function LogCannon() // DEBUG (Matt: please use & report if you ever find y
         @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon @ " ProjectileClass =" @ Cannon.ProjectileClass);
     Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition')
         @ " DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
-}
-
-exec function CannonFireBug() // TEMPDEBUG
-{
-   Cannon.bClientCanFireCannon = false;
-   Log(Tag @ "CannonFireBug: re-created the occasional bug where cannon could not fire, by setting bClientCanFireCannon to" @ Cannon.bClientCanFireCannon);
 }
 
 defaultproperties

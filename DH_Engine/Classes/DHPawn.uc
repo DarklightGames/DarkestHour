@@ -426,7 +426,6 @@ simulated event StartDriving(Vehicle V)
 {
     local VehicleWeaponPawn WP;
     local int               i;
-    local DHGameReplicationInfo GRI; // TEMPDEBUG
 
     DrivenVehicle = V;
     NetUpdateTime = Level.TimeSeconds - 1.0;
@@ -508,10 +507,6 @@ simulated event StartDriving(Vehicle V)
 
     if (WeaponAttachment != none)
     {
-        if (Role == ROLE_Authority) GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo); // TEMPDEBUG
-        else if (IsHumanControlled()) GRI = DHGameReplicationInfo(PlayerController(Controller).GameReplicationInfo);
-        if (GRI != none && GRI.bLogWeaponAttachment) Log("StartDriving hiding (calling Hide)" @ WeaponAttachment.Tag);
-
         WeaponAttachment.Hide(true);
     }
 
@@ -560,8 +555,6 @@ simulated function bool InExposedVehiclePosition(Vehicle V)
 // Modified to avoid restoring collision to players who have exited vehicle because they have been killed (otherwise their collision makes the vehicle jump around)
 simulated function StopDriving(Vehicle V)
 {
-    local DHGameReplicationInfo GRI; // TEMPDEBUG
-
     if (Role == ROLE_Authority && IsHumanControlled() && V != none)
     {
         V.PlayerStartTime = Level.TimeSeconds + 12.0;
@@ -637,11 +630,6 @@ simulated function StopDriving(Vehicle V)
 
     if (WeaponAttachment != none)
     {
-        // TEMPDEBUG x 3
-        if (Role == ROLE_Authority) GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-        else if (IsHumanControlled()) GRI = DHGameReplicationInfo(PlayerController(Controller).GameReplicationInfo);
-        if (GRI != none && GRI.bLogWeaponAttachment) Log("StopDriving making visible (calling Hide(false))" @ WeaponAttachment.Tag);
-
         WeaponAttachment.Hide(false);
     }
 
@@ -2347,7 +2335,6 @@ state PutWeaponAway
     simulated function EndState()
     {
         local name Anim;
-        local DHGameReplicationInfo GRI; // TEMPDEBUG
 
         if (SwapWeapon != none)
         {
@@ -2505,17 +2492,7 @@ state PutWeaponAway
             {
                 if (DrivenVehicle == none) // Matt: added 'if' so we don't make the 3rd person weapon attachment visible again if player just got into a vehicle
                 {
-                    if (Role == ROLE_Authority) GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo); // TEMPDEBUG
-                    else if (IsHumanControlled()) GRI = DHGameReplicationInfo(PlayerController(Controller).GameReplicationInfo);
-                    if (GRI != none && GRI.bLogWeaponAttachment) Log("PutWeaponAway.End making" @ Weapon.ThirdPersonActor.Tag @ "visible");
-
                     Weapon.ThirdPersonActor.bHidden = false;
-                }
-                else // TEMPDEBUG
-                {
-                    if (Role == ROLE_Authority) GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-                    else if (IsHumanControlled()) GRI = DHGameReplicationInfo(PlayerController(Controller).GameReplicationInfo);
-                    if (GRI != none && GRI.bLogWeaponAttachment) Log("PutWeaponAway.End NOT making" @ Weapon.Tag @ "visible, as DrivenVehicle =" @ DrivenVehicle.Tag);
                 }
             }
             else
