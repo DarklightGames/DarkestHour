@@ -20,6 +20,35 @@ function bool InternalOnClick(GUIComponent Sender)
     super.InternalOnClick(Sender);
 }
 
+// Override to fix an epic bug that would allow this footer function to play with other UI elements in other GUI pages
+// Ex- "FILTERS" was showing up in the deploy menu in MP only...
+// This also allows a proper override of the Captions for the footer buttons
+function UpdateActiveButtons(UT2K4Browser_Page CurrentPanel)
+{
+    if (CurrentPanel == None ||
+        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageInternet' ||
+        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageLAN' ||
+        CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageFavorites')
+    {
+        return;
+    }
+
+    UpdateButtonState(b_Join,     CurrentPanel.IsJoinAvailable(b_Join.default.Caption));
+    UpdateButtonState(b_Refresh,  CurrentPanel.IsRefreshAvailable(b_Refresh.default.Caption));
+    UpdateButtonState(b_Spectate, CurrentPanel.IsSpectateAvailable(b_Spectate.default.Caption));
+    UpdateButtonState(b_Filter,   CurrentPanel.IsFilterAvailable(b_Filter.default.Caption));
+
+    if (b_Filter.MenuState == MSAT_Disabled)
+    {
+        ch_Standard.Hide();
+    }
+    else
+    {
+        ch_Standard.Show();
+    }
+}
+
+
 defaultproperties
 {
     Begin Object Class=DHmoCheckBox Name=OnlyStandardCheckBox
@@ -52,7 +81,7 @@ defaultproperties
     t_StatusBar=GUITitleBar'DH_Interface.DHBrowser_Footer.BrowserStatus'
 
     Begin Object Class=GUIButton Name=BrowserJoin
-        Caption="JOIN"
+        Caption="Join"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinLeft=611.0
@@ -67,7 +96,7 @@ defaultproperties
     b_Join=GUIButton'DH_Interface.DHBrowser_Footer.BrowserJoin'
 
     Begin Object Class=GUIButton Name=BrowserSpec
-        Caption="SPECTATE"
+        Caption="Spectate"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinLeft=0.771094
@@ -82,7 +111,7 @@ defaultproperties
     b_Spectate=GUIButton'DH_Interface.DHBrowser_Footer.BrowserSpec'
 
     Begin Object class=GUIButton Name=BrowserMain
-        Caption="MAIN"
+        Caption="Main"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinHeight=0.036482
@@ -95,7 +124,7 @@ defaultproperties
     b_Main=GUIButton'DH_Interface.DHBrowser_Footer.BrowserMain'
 
     Begin Object Class=GUIButton Name=BrowserBack
-        Caption="BACK"
+        Caption="Back"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinHeight=0.036482
@@ -108,7 +137,7 @@ defaultproperties
     b_Back=GUIButton'DH_Interface.DHBrowser_Footer.BrowserBack'
 
     Begin Object class=GUIButton Name=BrowserRefresh
-        Caption="REFRESH"
+        Caption="Refresh"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinLeft=0.885352
@@ -123,7 +152,7 @@ defaultproperties
     b_Refresh=GUIButton'DH_Interface.DHBrowser_Footer.BrowserRefresh'
 
     Begin Object Class=GUIButton Name=BrowserFilter
-        Caption="FILTERS"
+        Caption="Filters"
         bAutoSize=true
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5

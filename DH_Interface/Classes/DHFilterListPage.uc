@@ -5,23 +5,7 @@
 
 class DHFilterListPage extends UT2K4_FilterListPage;
 
-function AddSystemMenu()
-{
-    local eFontScale tFontScale;
-
-    b_ExitButton                = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
-    b_ExitButton.Style          = Controller.GetStyle("DHCloseButton",tFontScale);
-    b_ExitButton.OnClick        = XButtonClicked;
-    b_ExitButton.bNeverFocus    = true;
-    b_ExitButton.FocusInstead   = t_WindowTitle;
-    b_ExitButton.RenderWeight   = 1.0;
-    b_ExitButton.bScaleToParent = false;
-    b_ExitButton.OnPreDraw      = SystemMenuPreDraw;
-    b_ExitButton.bStandardized  = true;
-    b_ExitButton.StandardHeight = 0.03;
-    // Do not want OnClick() called from MousePressed()
-    b_ExitButton.bRepeatClick   = false;
-}
+function AddSystemMenu(){}
 
 function InitFilterList()
 {

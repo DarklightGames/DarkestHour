@@ -86,6 +86,9 @@ defaultproperties
     Begin Object Class=DHButtonFont Name=fntDHButtonFont
     End Object
     FontStack(14)=fntDHButtonFont
+    Begin Object class=DHHugeButtonFont Name=fntDHHugeButtonFont
+    End Object
+    FontStack(15)=fntDHHugeButtonFont
     MouseCursors(0)=texture'DH_GUI_Tex.Menu.DHPointer'
     MouseCursors(1)=texture'InterfaceArt_tex.Cursors.ResizeAll'
     MouseCursors(2)=texture'InterfaceArt_tex.Cursors.ResizeSWNE'
@@ -171,6 +174,7 @@ defaultproperties
     DefaultStyleNames(86)="DH_Interface.DHStyle_DeployContinueButton"
     DefaultStyleNames(87)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
     DefaultStyleNames(89)="DH_Interface.DHStyle_MenuTextButtonWhite"
+    DefaultStyleNames(90)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
