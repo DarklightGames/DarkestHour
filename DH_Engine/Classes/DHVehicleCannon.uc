@@ -236,7 +236,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     }
                     else
                     {
-                        ProjectileSpread = 0.0015; // 40% chance of SecondaryProjectileClass using literal value for spread instead of shell's SecondarySpread // Matt: why? // TEST
+                        ProjectileSpread = 0.0015; // 40% chance of SecondaryProjectileClass using literal value for spread instead of shell's SecondarySpread
+                        // TODO - Matt: probably remove this as it doesn't seem to make sense
                     }
                 }
             }

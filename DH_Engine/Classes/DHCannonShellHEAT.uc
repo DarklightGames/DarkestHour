@@ -91,7 +91,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
 
     Explode(Location + ExploWallOut * HitNormal, HitNormal);
 
-    // From here is all added in HEAT: // Matt: TEST - should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
+    // From here is all added in HEAT: // TODO - Matt: should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
 
     bInHitWall = true; // set flag to prevent recursive calls
 

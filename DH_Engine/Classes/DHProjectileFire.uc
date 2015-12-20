@@ -474,9 +474,13 @@ simulated function HandleRecoil()
 
 defaultproperties
 {
-    ProjPerFire=1
-    bUsePreLaunchTrace=false // TEMP TEST (Matt: to see what difference it makes if we skip the PLT and let DHBullet handle things)
+    // Pre-launch trace disabled as has issues, especially failure to play bullet whiz/snap
+    // Have some ideas on how whiz/snap may be handled in a future release, but will need to balance benefits in network optimisation vs the extra load that would cause
+    // May also be able to achieve network optimisation for bullets by greater use of the SavedDualShot optimisations in the 'DHHighROFWeaponAttachment' class
+    bUsePreLaunchTrace=false
     PreLaunchTraceDistance=2624.0 // 43.5m
+
+    ProjPerFire=1
     CrouchSpreadModifier=0.85
     ProneSpreadModifier=0.7
     BipodDeployedSpreadModifier=0.5

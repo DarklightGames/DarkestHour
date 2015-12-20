@@ -309,6 +309,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // Maximum of 3 traces - but we only ever repeat the trace if we hit an invalid col mesh actor, which is very rare, so nearly always only 1 trace will be done
         for (i = 0; i < 3; ++i)
         {
+            // HitPointTraces don't work well with short traces, so we have to do a long trace first, then check whether any player we hit was within the whip attachment
             A = InstigatorPlayer.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
 
             // We're primarily interested if we hit a player, but also need to check if hit an invalid collision mesh that doesn't stop bullets (as would need to repeat trace)

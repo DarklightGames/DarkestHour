@@ -187,7 +187,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Check RO VehHitpoints, but only for any ammo store (AT gun has no driver or engine)
-    // We will, however, leave the ammo store because we need it to get around a collision issue with the gunner (player) // Matt: TEST what this means
     for (i = 0; i < VehHitpoints.Length; ++i)
     {
         if (VehHitpoints[i].HitPointType == HP_AmmoStore && IsPointShot(HitLocation, Momentum, 1.0, i))
