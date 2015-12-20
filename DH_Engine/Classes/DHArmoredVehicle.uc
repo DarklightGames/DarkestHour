@@ -58,10 +58,6 @@ var     ObjectMap   NotifyParameters;       // an object that can hold reference
 var     bool        bNeedToInitializeDriver;// clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-// Obstacle crushing
-var     bool        bCrushedAnObject;       // vehicle has just crushed something, causing temporary movement stall
-var     float       LastCrushedTime;        // records time object was crushed, so we know when the movement stall should end
-var     float       ObjectCrushStallTime;   // how long the movement stall lasts
 
 // Positions & view
 var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
@@ -459,25 +455,6 @@ simulated function Tick(float DeltaTime)
     }
     else
     {
-        // If we crushed an object, apply brake & clamp throttle (server only)
-        if (bCrushedAnObject)
-        {
-            // If our crush stall time is over, we are no longer crushing
-            if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
-            {
-                bCrushedAnObject = false;
-            }
-            else
-            {
-                Throttle = FClamp(Throttle, -0.1, 0.1);
-
-                if (IsHumanControlled())
-                {
-                    PlayerController(Controller).bPressedJump = true;
-                }
-            }
-        }
-
         if (Controller != none)
         {
             // Damaged treads mean vehicle can only turn one way & speed is limited
@@ -3833,18 +3810,9 @@ function bool EncroachingOn(Actor Other)
         && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
     {
         Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
-        ObjectCrushed(2.0);
     }
 
     return false;
-}
-
-// Informs Tick() that we crushed an object and it should apply brake & affect server throttle
-simulated function ObjectCrushed(float ReductionTime)
-{
-    ObjectCrushStallTime = ReductionTime;
-    LastCrushedTime = Level.TimeSeconds;
-    bCrushedAnObject = true;
 }
 
 // Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
@@ -4303,7 +4271,6 @@ defaultproperties
     DriverTraceDistSquared=20250000.0 // increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
     DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
-    ObjectCrushStallTime=1.0
     MaxCriticalSpeed=700.0
     ChassisTorqueScale=0.9
     ChangeUpPoint=2050.0

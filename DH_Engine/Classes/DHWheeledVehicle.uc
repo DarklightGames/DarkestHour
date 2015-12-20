@@ -81,9 +81,6 @@ var     ROSoundAttachment   InteriorRumbleSoundAttach;
 var     name                RumbleSoundBone;
 
 // Object impacts
-var     bool        bCrushedAnObject;            // vehicle has just crushed something, causing temporary movement stall
-var     float       LastCrushedTime;             // records time object was crushed, so we know when the movement stall should end
-var     float       ObjectCrushStallTime;        // how long the movement stall lasts
 var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
 var     float       LastBottomOutTime;           // last time a bottom out sound was played
 
@@ -331,25 +328,6 @@ simulated function Tick(float DeltaTime)
     }
     else
     {
-        // If we crushed an object, apply brake & clamp throttle (server only)
-        if (bCrushedAnObject)
-        {
-            // If our crush stall time is over, we are no longer crushing
-            if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
-            {
-                bCrushedAnObject = false;
-            }
-            else
-            {
-                Throttle = FClamp(Throttle, -0.1, 0.1);
-
-                if (IsHumanControlled())
-                {
-                    PlayerController(Controller).bPressedJump = true;
-                }
-            }
-        }
-
         // Very heavy damage to engine limits speed
         if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0 && Controller != none)
         {
@@ -2049,18 +2027,9 @@ function bool EncroachingOn(Actor Other)
         && (Other.bCollideActors || Other.bBlockActors) && VSizeSquared(Velocity) >= 100.0)
     {
         Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
-        ObjectCrushed(4.0);
     }
 
     return false;
-}
-
-// Informs Tick() that we crushed an object and it should apply brake & affect server throttle
-simulated function ObjectCrushed(float ReductionTime)
-{
-    ObjectCrushStallTime = ReductionTime;
-    LastCrushedTime = Level.TimeSeconds;
-    bCrushedAnObject = true;
 }
 
 // Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
@@ -2334,7 +2303,6 @@ defaultproperties
     IdleTimeBeforeReset=90.0
     FriendlyResetDistance=4000.0
     DriverTraceDistSquared=20250000.0 // increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
-    ObjectCrushStallTime=1.0
     ObjectCollisionResistance=1.0
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom
     ImpactDamageTicks=2.0

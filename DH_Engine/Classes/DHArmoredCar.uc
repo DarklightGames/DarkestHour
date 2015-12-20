@@ -54,25 +54,6 @@ simulated function Tick(float DeltaTime)
     }
     else
     {
-        // If we crushed an object, apply brake & clamp throttle (server only)
-        if (bCrushedAnObject)
-        {
-            // If our crush stall time is over, we are no longer crushing
-            if (Level.TimeSeconds > (LastCrushedTime + ObjectCrushStallTime))
-            {
-                bCrushedAnObject = false;
-            }
-            else
-            {
-                Throttle = FClamp(Throttle, -0.1, 0.1);
-
-                if (IsHumanControlled())
-                {
-                    PlayerController(Controller).bPressedJump = true;
-                }
-            }
-        }
-
         // Very heavy damage to engine limits speed
         if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0 && Controller != none)
         {
