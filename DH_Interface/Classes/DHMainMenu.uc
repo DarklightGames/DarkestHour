@@ -353,10 +353,10 @@ defaultproperties
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        WinTop=0.4
+        WinTop=0.25
         WinLeft=0.025
         WinWidth=0.2
-        WinHeight=0.4
+        WinHeight=0.75
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
@@ -377,7 +377,7 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyle"
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
         TabOrder=1
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -391,7 +391,7 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyle"
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
         TabOrder=2
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -405,7 +405,7 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyle"
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
         TabOrder=3
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -419,7 +419,7 @@ defaultproperties
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyle"
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
         TabOrder=4
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -427,13 +427,27 @@ defaultproperties
     End Object
     b_Settings=GUIButton'DH_Interface.DHMainMenu.SettingsButton'
 
+    Begin Object class=GUIButton Name=CreditsButton
+        CaptionAlign=TXTA_Left
+        Caption="Credits"
+        bAutoShrink=false
+        bUseCaptionHeight=true
+        FontScale=FNS_Large
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        TabOrder=5
+        bFocusOnWatch=true
+        OnClick=DHMainMenu.ButtonClick
+        OnKeyEvent=CreditsButton.InternalOnKeyEvent
+    End Object
+    b_Credits=GUIButton'DH_Interface.DHMainMenu.CreditsButton'
+
     Begin Object Class=GUIButton Name=QuitButton
         CaptionAlign=TXTA_Left
         Caption="Exit"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyle"
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
         TabOrder=6
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -449,20 +463,6 @@ defaultproperties
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
     sb_HelpMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection2'
-
-    Begin Object Class=GUIButton Name=CreditsButton
-        CaptionAlign=TXTA_Left
-        Caption="Credits"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyle"
-        TabOrder=5
-        bFocusOnWatch=true
-        OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=CreditsButton.InternalOnKeyEvent
-    End Object
-    b_Credits=GUIButton'DH_Interface.DHMainMenu.CreditsButton'
 
     Begin Object Class=GUIButton Name=MOTDTitleButton
         CaptionAlign=TXTA_Left

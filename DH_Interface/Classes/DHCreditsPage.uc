@@ -10,23 +10,7 @@ var automated GUIScrollTextBox lb_Credits;
 
 var localized array<string> CreditLines;
 
-function AddSystemMenu()
-{
-    local eFontScale tFontScale;
-
-    b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
-    b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
-    b_ExitButton.OnClick = XButtonClicked;
-    b_ExitButton.bNeverFocus = true;
-    b_ExitButton.FocusInstead = t_WindowTitle;
-    b_ExitButton.RenderWeight = 1;
-    b_ExitButton.bScaleToParent = false;
-    b_ExitButton.OnPreDraw = SystemMenuPreDraw;
-    b_ExitButton.bStandardized = true;
-    b_ExitButton.StandardHeight = 0.03;
-    // Do not want OnClick() called from MousePressed()
-    b_ExitButton.bRepeatClick = false;
-}
+function AddSystemMenu(){}
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -78,7 +62,7 @@ defaultproperties
         OnKeyEvent=CloseButton.InternalOnKeyEvent
     End Object
     b_Close=GUIButton'DH_Interface.DHCreditsPage.CloseButton'
-    Begin Object Class=DHGUIScrollTextBox Name=CreditText
+    Begin Object class=DHGUIScrollTextBox Name=CreditText
         bNoTeletype=true
         OnCreateComponent=CreditText.InternalOnCreateComponent
         StyleName="DHLargeText"
