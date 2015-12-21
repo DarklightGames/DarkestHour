@@ -33,7 +33,7 @@ function Reset()
         SetActive(bIsInitiallyActive);
     }
 }
-    
+
 // Modified to neutralise any inherited timer - should never get called, but just a safeguard
 // Actually there is a Timer() in GameObjective, but only for a bAccruePoints option, which is irrelevant in this game
 function Timer()
