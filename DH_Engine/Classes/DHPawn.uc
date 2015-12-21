@@ -105,7 +105,6 @@ replication
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
         bWeaponNeedsReload;
-//      bWeaponIsMG, bWeaponIsAT; // Matt: removed as not used anywhere
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)

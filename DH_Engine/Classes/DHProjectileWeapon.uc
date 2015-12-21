@@ -91,7 +91,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerRequestReload, ServerZoomIn, ServerZoomOut, ServerChangeBayoStatus, ServerWorkBolt, ServerSwitchBarrels,
-        ServerLogAmmo; // this one only during development
+        ServerLogAmmo; // this one in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)

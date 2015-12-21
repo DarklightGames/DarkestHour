@@ -54,7 +54,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits; // only during development
+        ServerToggleDebugExits; // in debug mode only
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

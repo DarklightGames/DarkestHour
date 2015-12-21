@@ -1673,11 +1673,11 @@ simulated function DrawCompass(Canvas C)
         // Figure which direction we're facing
         if (PlayerOwner != none)
         {
-            PawnRotation = -PlayerOwner.CalcViewRotation.Yaw; // fix is to always use CalcViewRotation (it's always the last calculated camera rotation)
+            PawnRotation = PlayerOwner.CalcViewRotation.Yaw; // fix is to always use CalcViewRotation (it's always the last calculated camera rotation)
         }
         else
         {
-            PawnRotation = -A.Rotation.Yaw;
+            PawnRotation = A.Rotation.Yaw;
         }
 
         // Compensate for map rotation

@@ -66,6 +66,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
+//  CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_turret_coll' // TODO - make & add collision static mesh for Hellcat turret
     SoundVolume=130
     SoundRadius=300.0
 }
