@@ -2660,6 +2660,7 @@ state Dead
     }
 }
 
+// TODO: Check and confirm we actually need to override this
 event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string Msg1, optional string Msg2)
 {
     if (Player.Console != none)
@@ -2894,11 +2895,18 @@ function ClientCopyToClipboard(string Str)
     CopyToClipBoard(Str);
 }
 
-// Similar to ClientOpenMenu(), but only opens menu if no menu is already open
+// Similar to ClientOpenMenu(), but only opens menu if no menu is already open and the player isn't typing
 event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 {
-    Log("ClientProposeMenu" @ Menu @ Msg1 @ Msg2);
+    Log("ClientProposeMenu has been called, checking if the user is typing or not");
 
+    // if player is typing don't open menu
+    if (Player.Console.bTyping)
+    {
+        return;
+    }
+
+    // if player is in a menu don't open
     if (GUIController(Player.GUIController).ActivePage == none)
     {
         if (!Player.GUIController.OpenMenu(Menu, Msg1, Msg2))
