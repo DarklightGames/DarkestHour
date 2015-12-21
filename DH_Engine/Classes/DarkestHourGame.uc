@@ -3285,6 +3285,21 @@ exec function SwapTeams()
     ResetGame();
 }
 
+// Function to allow for capturing a currently active objective (for the opposite team), useful for debugging
+exec function DebugCapture(int Team)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(DHObjectives); i++)
+    {
+        if (DHObjectives[i].bActive)
+        {
+            DHObjectives[i].ObjectiveCompleted(none, Team);
+            break; // return?
+        }
+    }
+}
+
 // This function is for admins who want to change round time on the fly, can pass a value (in minutes) and a type (default: set)
 exec function SetRoundTime(int Minutes, optional string Type)
 {
