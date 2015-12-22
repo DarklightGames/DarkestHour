@@ -2947,16 +2947,13 @@ function ClientSaveROIDHash(string ROID)
     SaveConfig();
 }
 
+// Modified to work in debug mode, as well as in single player
 exec function FOV(float F)
 {
-    if (PlayerReplicationInfo.bAdmin || class'DH_LevelInfo'.static.DHDebugMode())
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        DefaultFOV = FClamp(F, 1, 170);
+        DefaultFOV = FClamp(F, 1.0, 170.0);
         DesiredFOV = DefaultFOV;
-    }
-    else
-    {
-        super.FOV(F);
     }
 }
 
