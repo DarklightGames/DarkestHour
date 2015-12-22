@@ -4291,38 +4291,47 @@ simulated function float BobFunction(float T, float Amplitude, float Frequency, 
 
 simulated exec function BobAmplitude(optional float F)
 {
-    if (F == 0)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        Level.Game.Broadcast(self, "IronsightBobAmplitude" @ IronsightBobAmplitude);
+        if (F == 0)
+        {
+            Level.Game.Broadcast(self, "IronsightBobAmplitude" @ IronsightBobAmplitude);
 
-        return;
+            return;
+        }
+
+        IronsightBobAmplitude = F;
     }
-
-    IronsightBobAmplitude = F;
 }
 
 simulated exec function BobFrequency(optional float F)
 {
-    if (F == 0)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        Level.Game.Broadcast(self, "IronsightBobFrequency" @ IronsightBobFrequency);
+        if (F == 0)
+        {
+            Level.Game.Broadcast(self, "IronsightBobFrequency" @ IronsightBobFrequency);
 
-        return;
+            return;
+        }
+
+        IronsightBobFrequency = F;
     }
-
-    IronsightBobFrequency = F;
 }
 
 simulated exec function BobDecay(optional float F)
 {
-    if (F == 0)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        Level.Game.Broadcast(self, "IronsightBobDecay" @ IronsightBobDecay);
+        if (F == 0)
+        {
+            Level.Game.Broadcast(self, "IronsightBobDecay" @ IronsightBobDecay);
 
-        return;
+            return;
+        }
+
+        IronsightBobDecay = F;
     }
-
-    IronsightBobDecay = F;
 }
 
 // Overriden to add some inital weapon bobbing when first iron sighting

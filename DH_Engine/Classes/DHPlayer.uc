@@ -1902,28 +1902,34 @@ simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
 {
     local ROTreadCraft V;
 
-    foreach AllActors(class'ROTreadCraft', V)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        if (TreadVelocityScale == -1.0)
+        foreach AllActors(class'ROTreadCraft', V)
         {
-            V.TreadVelocityScale = V.default.TreadVelocityScale;
+            if (TreadVelocityScale == -1.0)
+            {
+                V.TreadVelocityScale = V.default.TreadVelocityScale;
+            }
+            else
+            {
+                V.TreadVelocityScale = TreadVelocityScale;
+            }
         }
-        else
-        {
-            V.TreadVelocityScale = TreadVelocityScale;
-        }
-    }
 
-    Level.Game.Broadcast(self, "DebugTreadVelocityScale = " $ TreadVelocityScale);
+        Level.Game.Broadcast(self, "DebugTreadVelocityScale = " $ TreadVelocityScale);
+    }
 }
 
 simulated exec function DebugTreadVelocityScaleIncrement()
 {
     local ROTreadCraft V;
 
-    foreach AllActors(class'ROTreadCraft', V)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        V.TreadVelocityScale += 1.0;
+        foreach AllActors(class'ROTreadCraft', V)
+        {
+            V.TreadVelocityScale += 1.0;
+        }
     }
 }
 
@@ -1931,9 +1937,12 @@ simulated exec function DebugTreadVelocityScaleDecrement()
 {
     local ROTreadCraft V;
 
-    foreach AllActors(class'ROTreadCraft', V)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        V.TreadVelocityScale -= 1.0;
+        foreach AllActors(class'ROTreadCraft', V)
+        {
+            V.TreadVelocityScale -= 1.0;
+        }
     }
 }
 
@@ -1941,19 +1950,22 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
 {
     local ROTreadCraft V;
 
-    foreach AllActors(class'ROTreadCraft', V)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        if (WheelRotationScale == -1)
+        foreach AllActors(class'ROTreadCraft', V)
         {
-            V.WheelRotationScale = V.default.WheelRotationScale;
+            if (WheelRotationScale == -1)
+            {
+                V.WheelRotationScale = V.default.WheelRotationScale;
+            }
+            else
+            {
+                V.WheelRotationScale = WheelRotationScale;
+            }
         }
-        else
-        {
-            V.WheelRotationScale = WheelRotationScale;
-        }
-    }
 
-    Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
+        Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
+    }
 }
 
 // New exec that respawns the player, but leaves their old pawn body behind, frozen in the game
@@ -2128,14 +2140,17 @@ exec function DebugObstacles(optional int Option)
 {
     local DHObstacleInfo OI;
 
-    foreach AllActors(class'DHObstacleInfo', OI)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        Log("DHObstacleInfo.Obstacles.Length =" @ OI.Obstacles.Length);
+        foreach AllActors(class'DHObstacleInfo', OI)
+        {
+            Log("DHObstacleInfo.Obstacles.Length =" @ OI.Obstacles.Length);
 
-        break;
+            break;
+        }
+
+        ServerDebugObstacles(Option);
     }
-
-    ServerDebugObstacles(Option);
 }
 
 function ServerDebugObstacles(optional int Option)
@@ -2202,7 +2217,7 @@ exec function ExitPosTool()
     local ROVehicle NearbyVeh;
     local vector Offset;
 
-    if (Level.NetMode == NM_Standalone)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
         {
@@ -2218,17 +2233,23 @@ exec function ExitPosTool()
 // Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
 exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
 {
-    if (DarkestHourGame(Level.Game) != none)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+        }
     }
 }
 
 exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
 {
-    if (DarkestHourGame(Level.Game) != none)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
+        }
     }
 }
 
@@ -2663,9 +2684,9 @@ state Dead
 // TODO: Check and confirm we actually need to override this
 event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string Msg1, optional string Msg2)
 {
-    if (Player.Console != none)
+    if (Player.Console != none && Player.Console.bTyping)
     {
-        Player.Console.TypingClose();
+        return;
     }
 
     if (!Player.GUIController.bActive)
@@ -2816,27 +2837,31 @@ function exec DebugHints()
     local DHHintManager.HintInfo Hint;
     local int i;
 
-    if (DHHintManager != none)
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        Log("DHHintManager: CurrentHintIndex =" @ DHHintManager.CurrentHintIndex @ " QueuedHintIndices.Length =" @ DHHintManager.QueuedHintIndices.Length
-            @ " state =" @ DHHintManager.GetStateName());
-
-        for (i = 0; i < DHHintManager.QueuedHintIndices.Length; ++i)
+        if (DHHintManager != none)
         {
-            Hint = DHHintManager.GetHint(DHHintManager.QueuedHintIndices[i]);
-            Log("QueuedHintIndices[" $ i $ "] =" @ DHHintManager.QueuedHintIndices[i] @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
-        }
+            Log("DHHintManager: CurrentHintIndex =" @ DHHintManager.CurrentHintIndex @ " QueuedHintIndices.Length =" @ DHHintManager.QueuedHintIndices.Length
+                @ " state =" @ DHHintManager.GetStateName());
 
-        for (i = 0; i < DHHintManager.HINT_COUNT; ++i)
-        {
-            if (DHHintManager.bUsedUpHints[i] == 1)
+            for (i = 0; i < DHHintManager.QueuedHintIndices.Length; ++i)
             {
-                Hint = DHHintManager.GetHint(i);
-                Log("bUsedUpHints[" $ i $ "] :" @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
+                Hint = DHHintManager.GetHint(DHHintManager.QueuedHintIndices[i]);
+                Log("QueuedHintIndices[" $ i $ "] =" @ DHHintManager.QueuedHintIndices[i] @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
             }
-        }
 
-        Log("=====================================================================================================");
+            for (i = 0; i < DHHintManager.HINT_COUNT; ++i)
+            {
+                if (DHHintManager.bUsedUpHints[i] == 1)
+                {
+                    Hint = DHHintManager.GetHint(i);
+                    Log("bUsedUpHints[" $ i $ "] :" @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
+                }
+            }
+
+            Log("=====================================================================================================");
+        }
     }
 }
 
