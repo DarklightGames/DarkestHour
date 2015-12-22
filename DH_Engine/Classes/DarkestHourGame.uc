@@ -3290,12 +3290,15 @@ exec function DebugCapture(int Team)
 {
     local int i;
 
-    for (i = 0; i < arraycount(DHObjectives); i++)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        if (DHObjectives[i].bActive)
+        for (i = 0; i < arraycount(DHObjectives); i++)
         {
-            DHObjectives[i].ObjectiveCompleted(none, Team);
-            break; // return?
+            if (DHObjectives[i].bActive)
+            {
+                DHObjectives[i].ObjectiveCompleted(none, Team);
+                break; // return?
+            }
         }
     }
 }
