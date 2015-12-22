@@ -193,4 +193,5 @@ defaultproperties
     SightBone="Sight_pivot"
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling_turret_coll'
 }
