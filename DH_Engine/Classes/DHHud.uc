@@ -3225,6 +3225,7 @@ simulated function DrawVoiceIcon(Canvas C)
     local Pawn   P;
     local float  Distance, Scale;
     local vector ScreenPosition, VoiceLocation, VoiceDirection;
+    local bool   bFoundTalkingPawn;
 
     if (PortraitPRI == none || PawnOwner == none || PlayerOwner == none)
     {
@@ -3247,8 +3248,14 @@ simulated function DrawVoiceIcon(Canvas C)
                     LastTalkingPawn = P;
                 }
 
+                bFoundTalkingPawn = true;
                 break;
             }
+        }
+        // No talking pawn was found in the radius, so lets set it to none so we don't show someone else talking
+        if (!bFoundTalkingPawn)
+        {
+            LastTalkingPawn = none;
         }
     }
 
