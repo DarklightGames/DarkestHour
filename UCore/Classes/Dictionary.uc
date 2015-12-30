@@ -195,6 +195,7 @@ private static function DictionaryNode EraseStatic(Dictionary D, DictionaryNode 
             Temp = FindMin(Node.RHS);
 
             Node.Key = Temp.Key;
+            Node.Value = Temp.Value;
             Node.RHS = EraseStatic(D, Node.RHS, Temp.Key);
         }
     }
