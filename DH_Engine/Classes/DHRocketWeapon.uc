@@ -64,15 +64,19 @@ simulated function PlayIdle()
 // Rocket doesn't have a loaded 'mag' or loaded rounds (AmmoCharge) - CurrentMagCount is just total mags & loaded/unloaded status is flagged by setting AmmoCharge[0] to 1 or 0
 function UpdateResupplyStatus(bool bCurrentWeapon)
 {
+    local DHPawn P;
+
+    P = DHPawn(Instigator);
+
     if (bCurrentWeapon)
     {
         CurrentMagCount = PrimaryAmmoArray.Length; // normally Length -1
     }
 
-    if (DHPawn(Instigator) != none)
+    if (P != none)
     {
-        DHPawn(Instigator).bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < MaxNumPrimaryMags;
-        DHPawn(Instigator).bWeaponNeedsReload = bCanHaveAsssistedReload && bCurrentWeapon && !IsLoaded() && CurrentMagCount > 0;
+        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < MaxNumPrimaryMags;
+        P.bWeaponNeedsReload = bCanHaveAsssistedReload && bCurrentWeapon && !IsLoaded() && CurrentMagCount > 0 && !IsInState('Reloading');
     }
 }
 
@@ -243,6 +247,16 @@ simulated function bool AllowReload()
 // Modified to prevent proning while reloading & to make 3rd person WeaponAttachment switch back to normal mesh if was the EmptyMesh
 simulated state Reloading
 {
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        if (Role == ROLE_Authority)
+        {
+            UpdateResupplyStatus(true);
+        }
+    }
+
     simulated function bool WeaponAllowProneChange()
     {
         return false;
@@ -277,9 +291,15 @@ simulated state AssistedReloading extends Reloading
 {
     simulated function BeginState()
     {
-        if (Role == ROLE_Authority && DHPawn(Instigator) != none)
+        if (Role == ROLE_Authority)
         {
-            DHPawn(Instigator).HandleAssistedReload();
+            if (DHPawn(Instigator) != none)
+            {
+                DHPawn(Instigator).HandleAssistedReload();
+            }
+
+            // Let other players know we don't need to be reloaded anymore
+            UpdateResupplyStatus(true);
         }
 
         if (IsLoaded())
