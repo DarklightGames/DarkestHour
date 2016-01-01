@@ -2308,16 +2308,136 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
     return super.ParseChatPercVar(BaseMutator, Who,Cmd);
 }
 
-// Debug function for winning a round (needs admin or local)
-exec function DebugWinGame(optional int TeamToWin)
+//***********************************************************************************
+// exec FUNCTIONS - These functions natively require admin access
+//***********************************************************************************
+
+// Function for changing a team's ReinforcementInterval
+exec function SetReinforcementInterval(int Team, int Amount)
+{
+    if (Amount > 0 && DHGameReplicationInfo(GameReplicationInfo) != none)
+    {
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[Team] = Amount;
+    }
+}
+
+// Function for winning a round
+exec function WinRound(optional int TeamToWin)
 {
     EndRound(TeamToWin);
 }
 
-exec function DebugSetReinforcements(int Team, int Amount)
+exec function SetReinforcements(int Team, int Amount)
 {
     ModifyReinforcements(Team,Amount,true);
 }
+
+// Function to allow for capturing a currently active objective (for the supplied team), useful for debugging
+exec function CaptureObj(int Team)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(DHObjectives); i++)
+    {
+        if (DHObjectives[i].bActive)
+        {
+            DHObjectives[i].ObjectiveCompleted(none, Team);
+            return;
+        }
+    }
+}
+
+// This function is for admins who want to change round time on the fly, can pass a value (in minutes) and a type (default: set)
+exec function ChangeRoundTime(int Minutes, optional string Type)
+{
+    if (Minutes < 0)
+    {
+        return;
+    }
+
+    switch (Type)
+    {
+    case "Add":
+        ModifyRoundTime(Minutes * 60, 0);
+        break;
+    case "Subtract":
+        ModifyRoundTime(Minutes * 60, 1);
+        break;
+    default:
+        ModifyRoundTime(Minutes * 60, 2);
+        break;
+    }
+}
+
+// Override to allow more than 32 bots (but not too many, 128 max)
+exec function AddBots(int num)
+{
+    num = Clamp(num, 0, 128 - (NumPlayers + NumBots));
+
+    while (--num >= 0)
+    {
+        if (Level.NetMode != NM_Standalone)
+        {
+            MinPlayers = Max(MinPlayers + 1, NumPlayers + NumBots + 1);
+        }
+
+        AddBot();
+    }
+}
+
+// Override to actually kill all bots if no num is given
+exec function KillBots(int num)
+{
+    local Controller C, nextC;
+
+    bPlayersVsBots = false;
+
+    if (num == 0)
+    {
+        num = 128;
+    }
+
+    C = Level.ControllerList;
+
+    if (Level.NetMode != NM_Standalone)
+    {
+        MinPlayers = 0;
+    }
+
+    bKillBots = true;
+
+    while (C != None && num > 0)
+    {
+        nextC = C.NextController;
+
+        if (KillBot(C))
+        {
+            --num;
+        }
+
+        if (nextC != none)
+        {
+            C = nextC;
+        }
+        else
+        {
+            C = none;
+        }
+    }
+
+    bKillBots = false;
+}
+
+// This function will initiate a reset game with swap teams
+exec function SwapTeams()
+{
+    bSwapTeams = true;
+    ResetGame();
+}
+
+//***********************************************************************************
+// END exec Functions!!!
+//***********************************************************************************
 
 function RestartPlayer(Controller C)
 {
@@ -3215,112 +3335,6 @@ function ModifyRoundTime(int RoundTime, int Type)
                 break;
         }
         Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', Type);
-    }
-}
-
-// Override to allow more than 32 bots (but not too many, 128 max)
-exec function AddBots(int num)
-{
-    num = Clamp(num, 0, 128 - (NumPlayers + NumBots));
-
-    while (--num >= 0)
-    {
-        if (Level.NetMode != NM_Standalone)
-        {
-            MinPlayers = Max(MinPlayers + 1, NumPlayers + NumBots + 1);
-        }
-
-        AddBot();
-    }
-}
-
-// Override to actually kill all bots if no num is given
-exec function KillBots(int num)
-{
-    local Controller C, nextC;
-
-    bPlayersVsBots = false;
-
-    if (num == 0)
-    {
-        num = 128;
-    }
-
-    C = Level.ControllerList;
-
-    if (Level.NetMode != NM_Standalone)
-    {
-        MinPlayers = 0;
-    }
-
-    bKillBots = true;
-
-    while (C != None && num > 0)
-    {
-        nextC = C.NextController;
-
-        if (KillBot(C))
-        {
-            --num;
-        }
-
-        if (nextC != none)
-        {
-            C = nextC;
-        }
-        else
-        {
-            C = none;
-        }
-    }
-
-    bKillBots = false;
-}
-
-// This function will initiate a reset game with swap teams
-exec function SwapTeams()
-{
-    bSwapTeams = true;
-    ResetGame();
-}
-
-// Function to allow for capturing a currently active objective (for the opposite team), useful for debugging
-exec function DebugCapture(int Team)
-{
-    local int i;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        for (i = 0; i < arraycount(DHObjectives); i++)
-        {
-            if (DHObjectives[i].bActive)
-            {
-                DHObjectives[i].ObjectiveCompleted(none, Team);
-                break; // return?
-            }
-        }
-    }
-}
-
-// This function is for admins who want to change round time on the fly, can pass a value (in minutes) and a type (default: set)
-exec function SetRoundTime(int Minutes, optional string Type)
-{
-    if (Minutes < 0)
-    {
-        return;
-    }
-
-    switch (Type)
-    {
-    case "Add":
-        ModifyRoundTime(Minutes * 60, 0);
-        break;
-    case "Subtract":
-        ModifyRoundTime(Minutes * 60, 1);
-        break;
-    default:
-        ModifyRoundTime(Minutes * 60, 2);
-        break;
     }
 }
 
