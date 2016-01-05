@@ -5,6 +5,13 @@
 
 class DarkestHourGame extends ROTeamGame;
 
+const                               SERVERTICKRATE_UPDATETIME = 5.0;
+
+var()   config float                ServerTickRateDesired;
+var     float                       ServerTickRateConsolidated;
+var     float                       ServerTickRateAverage;
+var     int                         ServerTickFrameCount;
+
 var     DH_LevelInfo                DHLevelInfo;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
@@ -57,6 +64,24 @@ event InitGame(string Options, out string Error)
     {
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
+    }
+}
+
+event Tick(float DeltaTime)
+{
+    ServerTickRateConsolidated += DeltaTime;
+
+    if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
+    {
+        ServerTickRateAverage = (ServerTickFrameCount / ServerTickRateConsolidated);
+        ServerTickFrameCount = 0;
+        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
+
+        Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+    }
+    else
+    {
+        ++ServerTickFrameCount;
     }
 }
 
@@ -2315,6 +2340,20 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // Function for changing a team's ReinforcementInterval
 exec function SetReinforcementInterval(int Team, int Amount)
 {
+    if (Amount == -1)
+    {
+        if (Team == AXIS_TEAM_INDEX)
+        {
+            DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
+        }
+        else if (Team == ALLIES_TEAM_INDEX)
+        {
+            DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
+        }
+
+        return;
+    }
+
     if (Amount > 0 && DHGameReplicationInfo(GameReplicationInfo) != none)
     {
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[Team] = Amount;
@@ -3389,6 +3428,8 @@ event PostLogin(PlayerController NewPlayer)
 
 defaultproperties
 {
+    ServerTickRateDesired=30.0
+
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
