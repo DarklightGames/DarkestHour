@@ -166,6 +166,7 @@ function Reset()
         GRI.VehiclePoolMaxSpawns[i] = VehiclePools[i].MaxSpawns;
         GRI.VehiclePoolNextAvailableTimes[i] = 0.0;
         GRI.VehiclePoolSpawnCounts[i] = 0;
+        GRI.VehiclePoolReservationCount[i] = 0;
 
         for (j = 0; j < VehiclePools[i].Slots.Length; ++j)
         {
@@ -407,9 +408,10 @@ function bool SpawnVehicle(DHPlayer C)
             TriggerEvent(VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
         }
 
-        // Invalidate spawn point, since we don't want our players repeatedly
-        // spawning the same vehicles with no effort involved.
-        C.VehiclePoolIndex = 255;
+
+        // Decrement reservation count
+        GRI.UnreserveVehicle(C);
+
         C.bSpawnPointInvalidated = true;
     }
     // We were unable to enter the vehicle, so destroy it & kill the player, so they aren't stuck in the black room
@@ -1218,3 +1220,4 @@ defaultproperties
     BlockFlags_InObjective=2
     BlockFlags_Full=4
 }
+

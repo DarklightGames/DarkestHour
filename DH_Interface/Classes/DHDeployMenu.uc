@@ -67,6 +67,7 @@ var localized   string                      SelectRoleText;
 var localized   string                      SelectSpawnPointText;
 var localized   string                      DeployInTimeText;
 var localized   string                      DeployNowText;
+var localized   string                      ReservedString;
 
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -522,13 +523,17 @@ function UpdateVehicles()
             continue;
         }
 
+        PC = DHPlayer(PlayerOwner());
+
         //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
         bDisabled = VehicleClass != none &&
                     ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
                     GRI.MaxTeamVehicles[CurrentTeam] <= 0 ||
                     GRI.GetVehiclePoolSpawnsRemaining(j) <= 0 ||
                     !GRI.IsVehiclePoolActive(j) ||
-                    GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j]);
+                    GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||
+                    (PC.Pawn != none && PC.Pawn.Health > 0) ||
+                    (PC.VehiclePoolIndex != j && GRI.IsVehiclePoolReservable(PC, j)));
 
         if (VehicleClass != none)
         {
@@ -546,6 +551,11 @@ function UpdateVehicles()
 
             RespawnTime = GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime;
             RespawnTime = Max(RespawnTime, PC.NextVehicleSpawnTime - GRI.ElapsedTime);
+
+            if (GRI.VehiclePoolReservationCount[j] > 0)
+            {
+                S @= "<" $ GRI.VehiclePoolReservationCount[j] @ default.ReservedString $ ">";
+            }
 
             if (RespawnTime > 0)
             {
@@ -1828,4 +1838,6 @@ defaultproperties
     RedColor=(R=255,G=0,B=0,A=255)
 
     OnPreDraw=InternalOnPreDraw
+
+    ReservedString="Reserved"
 }

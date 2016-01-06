@@ -63,6 +63,10 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
+// Squads
+var     byte                    SquadIndex;
+var     byte                    SquadMemberIndex;
+
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
 replication
@@ -1635,7 +1639,7 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if (bIsInSpawnMenu || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
+    else if ((bIsInSpawnMenu && VehiclePoolIndex == 255) || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
     {
         return false;
     }
@@ -2399,9 +2403,12 @@ exec function ChangeTeam(int N) { }
 // error is thrown.
 function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
 {
+    local bool bDidFail;
     local DarkestHourGame Game;
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Attempt to change teams
     if (newTeam != 255)
@@ -2464,7 +2471,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 CurrentRole = -1;
                 SpawnPointIndex = 255;
                 SpawnVehicleIndex = 255;
-                VehiclePoolIndex = 255;
+                GRI.UnreserveVehicle(self);
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;
@@ -2569,24 +2576,34 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     {
         Game = DarkestHourGame(Level.Game);
 
-        // This map uses the DH deploy system, not an RO spawn room
         if (Game != none &&
             Game.DHLevelInfo != none &&
             Game.DHLevelInfo.SpawnMode == ESM_DarkestHour &&
             Game.SpawnManager != none)
         {
-            // Handle ammo
+            // This map uses the DH deploy system, not an RO spawn room
             if (PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none)
             {
                 RI = DHRoleInfo(Game.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
             }
 
-            GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
             if (GRI != none && GRI.AreSpawnSettingsValid(GetTeamNum(), RI, NewSpawnPointIndex, NewVehiclePoolIndex, NewSpawnVehicleIndex))
             {
+                if (NewVehiclePoolIndex != VehiclePoolIndex)
+                {
+                    // Vehicle pool changing, unreserve existing vehicle pool reservation (if it exists)
+                    GRI.UnreserveVehicle(self);
+
+                    if (!GRI.ReserveVehicle(self, NewVehiclePoolIndex))
+                    {
+                        bDidFail = true;
+                    }
+                }
+            }
+
+            if (!bDidFail)
+            {
                 SpawnPointIndex = NewSpawnPointIndex;
-                VehiclePoolIndex = NewVehiclePoolIndex;
                 SpawnVehicleIndex = NewSpawnVehicleIndex;
                 NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
 
@@ -2633,7 +2650,6 @@ function Reset()
     VehiclePoolIndex = default.VehiclePoolIndex;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
-
     MortarTargetIndex = default.MortarTargetIndex;
 }
 
@@ -2957,6 +2973,27 @@ exec function FOV(float F)
     }
 }
 
+function ClientCreateSquadResult(int Result)
+{
+}
+
+function ClientJoinSquadResult(int Result)
+{
+}
+
+function ClientLeaveSquadResult(int Result)
+{
+}
+
+function ClientChangeSquadLeaderResult(int Result)
+{
+}
+
+exec function TestUCore()
+{
+    class'JSONTest'.static.Test();
+}
+
 defaultproperties
 {
     // Sway values
@@ -2996,3 +3033,4 @@ defaultproperties
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
 }
+

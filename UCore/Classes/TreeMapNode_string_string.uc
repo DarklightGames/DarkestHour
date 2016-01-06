@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DictionaryNode extends Object;
+class TreeMapNode_string_string extends Object;
 
 var string Key;
 var string Value;
-var DictionaryNode LHS;
-var DictionaryNode RHS;
+var TreeMapNode_string_string LHS;
+var TreeMapNode_string_string RHS;
 var int Height;

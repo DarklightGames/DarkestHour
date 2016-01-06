@@ -43,6 +43,9 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
+var     class<DHSquadReplicationInfo>   SquadReplicationInfoClass;
+var     DHSquadReplicationInfo          SquadReplicationInfo;
+
 var struct VersionInfo
 {
     var int Major;
@@ -83,6 +86,13 @@ event Tick(float DeltaTime)
     {
         ++ServerTickFrameCount;
     }
+}
+
+function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    SquadReplicationInfo = Spawn(SquadReplicationInfoClass);
 }
 
 function PostBeginPlay()
@@ -3303,14 +3313,21 @@ function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
 function NotifyLogout(Controller Exiting)
 {
     local DHGameReplicationInfo GRI;
-
-    ClearSavedRequestsAndRallyPoints(ROPlayer(Exiting), false);
+    local DHPlayer PC;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PC = DHPlayer(Exiting);
 
-    if (GRI != none && DHPlayer(Exiting) != none && DHPlayer(Exiting).MortarTargetIndex != 255)
+    ClearSavedRequestsAndRallyPoints(PC, false);
+
+    if (GRI != none && PC != none)
     {
-        GRI.ClearMortarTarget(Exiting.PlayerReplicationInfo.Team.TeamIndex, DHPlayer(Exiting).MortarTargetIndex);
+        if (PC.MortarTargetIndex != 255)
+        {
+            GRI.ClearMortarTarget(Exiting.PlayerReplicationInfo.Team.TeamIndex, PC.MortarTargetIndex);
+        }
+
+        GRI.UnreserveVehicle(PC);
     }
 
     super.Destroyed();
@@ -3518,6 +3535,8 @@ defaultproperties
     ReinforcementMessagePercentages(1)=0.25
     ReinforcementMessagePercentages(2)=0.1
     ReinforcementMessagePercentages(3)=0.0
+
+    SquadReplicationInfoClass=class'DHSquadReplicationInfo'
 
     Version=(Major=6,Minor=0,Patch=1)
 }
