@@ -533,7 +533,7 @@ function UpdateVehicles()
                     !GRI.IsVehiclePoolActive(j) ||
                     GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||
                     (PC.Pawn != none && PC.Pawn.Health > 0) ||
-                    (PC.VehiclePoolIndex != j && GRI.IsVehiclePoolReservable(PC, RI, j)));
+                    (PC.VehiclePoolIndex != j && !GRI.IsVehiclePoolReservable(PC, RI, j)));
 
         if (VehicleClass != none)
         {
@@ -571,7 +571,7 @@ function UpdateVehicles()
         // option.
         if (bDisabled && li_Vehicles.Index == i)
         {
-            li_Vehicles.SetIndex(0);
+            li_Vehicles.SetIndex(-1);
         }
     }
 }
@@ -726,6 +726,11 @@ function Apply()
         return;
     }
 
+    if (li_Vehicles.Index == -1)
+    {
+        return;
+    }
+
     SetButtonsEnabled(false);
 
     PC.ServerSetPlayerInfo(255,
@@ -774,11 +779,11 @@ function UpdateButtons()
         // spawning system. If we're using the new spawning system, we have to check
         // that our pending parameters are valid.
         if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
-            GRI.AreSpawnSettingsValid(CurrentTeam,
-                                  DHRoleInfo(li_Roles.GetObject()),
-                                  SpawnPointIndex,
-                                  GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
-                                  SpawnVehicleIndex))
+            (li_Vehicles.Index >= 0 && GRI.AreSpawnSettingsValid(CurrentTeam,
+                                           DHRoleInfo(li_Roles.GetObject()),
+                                           SpawnPointIndex,
+                                           GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
+                                           SpawnVehicleIndex)))
         {
             bContinueEnabled = true;
         }
