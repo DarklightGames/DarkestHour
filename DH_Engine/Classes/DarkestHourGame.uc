@@ -43,9 +43,6 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
-var     class<DHSquadReplicationInfo>   SquadReplicationInfoClass;
-var     DHSquadReplicationInfo          SquadReplicationInfo;
-
 var struct VersionInfo
 {
     var int Major;
@@ -86,13 +83,6 @@ event Tick(float DeltaTime)
     {
         ++ServerTickFrameCount;
     }
-}
-
-function PreBeginPlay()
-{
-    super.PreBeginPlay();
-
-    SquadReplicationInfo = Spawn(SquadReplicationInfoClass);
 }
 
 function PostBeginPlay()
@@ -3535,8 +3525,6 @@ defaultproperties
     ReinforcementMessagePercentages(1)=0.25
     ReinforcementMessagePercentages(2)=0.1
     ReinforcementMessagePercentages(3)=0.0
-
-    SquadReplicationInfoClass=class'DHSquadReplicationInfo'
 
     Version=(Major=6,Minor=0,Patch=1)
 }

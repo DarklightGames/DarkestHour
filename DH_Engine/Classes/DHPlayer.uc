@@ -2973,27 +2973,6 @@ exec function FOV(float F)
     }
 }
 
-function ClientCreateSquadResult(int Result)
-{
-}
-
-function ClientJoinSquadResult(int Result)
-{
-}
-
-function ClientLeaveSquadResult(int Result)
-{
-}
-
-function ClientChangeSquadLeaderResult(int Result)
-{
-}
-
-exec function TestUCore()
-{
-    class'JSONTest'.static.Test();
-}
-
 defaultproperties
 {
     // Sway values

@@ -533,7 +533,7 @@ function UpdateVehicles()
                     !GRI.IsVehiclePoolActive(j) ||
                     GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||
                     (PC.Pawn != none && PC.Pawn.Health > 0) ||
-                    (PC.VehiclePoolIndex != j && GRI.IsVehiclePoolReservable(PC, j)));
+                    (PC.VehiclePoolIndex != j && GRI.IsVehiclePoolReservable(PC, RI, j)));
 
         if (VehicleClass != none)
         {
