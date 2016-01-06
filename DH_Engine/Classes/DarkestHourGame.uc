@@ -5,8 +5,6 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-const                               SERVERTICKRATE_UPDATETIME = 5.0;
-
 var()   config float                ServerTickRateDesired;
 var     float                       ServerTickRateConsolidated;
 var     float                       ServerTickRateAverage;
@@ -69,6 +67,8 @@ event InitGame(string Options, out string Error)
 
 event Tick(float DeltaTime)
 {
+    const SERVERTICKRATE_UPDATETIME = 5.0;
+
     ServerTickRateConsolidated += DeltaTime;
 
     if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
@@ -83,6 +83,8 @@ event Tick(float DeltaTime)
     {
         ++ServerTickFrameCount;
     }
+
+    super.Tick(DeltaTime);
 }
 
 function PostBeginPlay()
@@ -2634,6 +2636,8 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     Other.StartSpot = none;
 
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
     if (Other.PlayerReplicationInfo.Team != none)
     {
         Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
@@ -2651,7 +2655,8 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             // DARKEST HOUR
             PC.SpawnPointIndex = 255;
             PC.SpawnVehicleIndex = 255;
-            PC.VehiclePoolIndex = 255;
+
+            GRI.UnreserveVehicle(PC);
         }
     }
 
@@ -2674,7 +2679,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     // Since we're changing teams, remove all rally points/help requests/etc
     ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI != none && DHPlayer(Other) != none && DHPlayer(Other).MortarTargetIndex != 255)
     {
