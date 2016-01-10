@@ -51,13 +51,15 @@ const MORTAR_TARGETS_MAX = 2;
 
 // Colin: The maximum distance a mortar strike can be away from a marked target
 // for a hit indicator to show on the map
-var float MortarTargetDistanceThreshold;
+var float               MortarTargetDistanceThreshold;
 
 var MortarTarget        AlliedMortarTargets[MORTAR_TARGETS_MAX];
 var MortarTarget        GermanMortarTargets[MORTAR_TARGETS_MAX];
 
 var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
+
+var float               CurrentTeamBalanceRatio;
 
 // Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
 const VEHICLE_POOLS_MAX = 32;
@@ -115,7 +117,8 @@ replication
         SpawnVehicles,
         MaxTeamVehicles,
         DHObjectives,
-        AttritionRate;
+        AttritionRate,
+        CurrentTeamBalanceRatio;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -749,6 +752,7 @@ simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
 
 defaultproperties
 {
+    CurrentTeamBalanceRatio=0.5
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     MortarTargetDistanceThreshold=15088 //250 meters in UU

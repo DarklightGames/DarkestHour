@@ -40,6 +40,7 @@ var     int                         TeamReinforcementMessageIndices[2];
 var     int                         bTeamOutOfReinforcements[2];
 
 var     float                       TeamAttritionCounter[2];    //When this hits over 1
+var     float                       TeamBalanceRatio; //Allies to Axis
 
 var     bool                        bSwapTeams;
 
@@ -160,6 +161,7 @@ function PostBeginPlay()
     }
 
     RoundDuration = LevelInfo.RoundDuration * 60;
+    TeamBalanceRatio = DHLevelInfo.PlayerRatioAlliesToAxis;
 
     // Setup some GRI stuff
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -2587,6 +2589,74 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
     return true;
 }
 
+// Overridden to allow for custom team balance
+// Theel: TODO this function needs simplified and refactored
+function GetTeamSizes(out int TeamSizes[2])
+{
+    local int i;
+    local int CurrentServerSize;
+    local float AlliesFinalRatio, AxisFinalRatio;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    TeamSizes[0] = 0;
+    TeamSizes[1] = 0;
+
+    // Loop through all the PlayerReplicationInfo for the current players and bots
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        // Only count the players who have selected their Role Info
+        if (GRI.PRIArray[i] != none && DHPlayerReplicationInfo(GRI.PRIArray[i]) != none &&
+            GRI.PRIArray[i].Team != none && DHPlayerReplicationInfo(GRI.PRIArray[i]).RoleInfo != none)
+        {
+            TeamSizes[GRI.PRIArray[i].Team.TeamIndex]++;
+        }
+    }
+
+    // Now lets adjust the team sizes based on the ratio
+    if (TeamBalanceRatio != 0.5)
+    {
+        CurrentServerSize = TeamSizes[0] + TeamSizes[1]; //Add the team sizes together to get current active players
+
+        //if more allies than axis
+        if( TeamBalanceRatio > 0.5 )
+        {
+            //Get AlliesFinalRatio using current players to max players ratio
+            //This will make it so if small amount of players are playing not much change will occur to the ratios
+            AlliesFinalRatio = (float(CurrentServerSize) / float(MaxPlayers)) * (TeamBalanceRatio - 0.5);
+            AlliesFinalRatio = AlliesFinalRatio + 0.5;
+            AxisFinalRatio = 1.0 - AlliesFinalRatio;
+
+            //Modify the teams sizes according to opposites team ratio
+            TeamSizes[0] = Round(TeamSizes[0] * AlliesFinalRatio);
+            TeamSizes[1] = Round(TeamSizes[1] * AxisFinalRatio);
+        }
+
+        //if more axis than allies, set
+        if( TeamBalanceRatio < 0.5 )
+        {
+            //Get AlliesFinalRatio using current players to max players ratio
+            //This will make it so if small amount of players are playing not much change will occur to the ratios
+            AlliesFinalRatio = (float(CurrentServerSize) / float(MaxPlayers)) * (0.5 - TeamBalanceRatio);
+            AlliesFinalRatio = 0.5 - AlliesFinalRatio;
+            AxisFinalRatio = 1.0 - AlliesFinalRatio;
+
+            //Modify the teams sizes according to opposites team ratio
+            TeamSizes[0] = TeamSizes[0] * AlliesFinalRatio;
+            TeamSizes[1] = TeamSizes[1] * AxisFinalRatio;
+        }
+
+        // Now lets set the ratio in the GRI
+        GRI.CurrentTeamBalanceRatio = int(100 * AlliesFinalRatio);
+    }
+}
+
 // Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
 function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 {
@@ -2972,7 +3042,7 @@ function ChooseWinner()
     EndRound(2);
 }
 
-//Theel: Convert to use DHObjectives, though this isn't supposed to be used
+//Theel: Converted to use DHObjectives, though this isn't supposed to be used
 function CheckSpawnAreas()
 {
     local ROSpawnArea Best[2];

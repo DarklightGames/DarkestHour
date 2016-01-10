@@ -203,6 +203,46 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     }
 }
 
+// Used to update team counts
+function Timer()
+{
+    UpdateTeamCounts();
+}
+
+// This function needs to be updated to show if you can join a team or not and indicate the ratio of players!
+function UpdateTeamCounts()
+{
+    l_TeamCount[AXIS_TEAM_INDEX].Caption = ""$getTeamCount(AXIS_TEAM_INDEX) $ UnitsText;
+    l_TeamCount[ALLIES_TEAM_INDEX].Caption = ""$getTeamCount(ALLIES_TEAM_INDEX) $ UnitsText;
+}
+
+function int getTeamCount(int index)
+{
+    return getTeamCountStatic(GRI, PlayerOwner(), index);
+}
+
+function static int getTeamCountStatic(ROGameReplicationInfo GRI, PlayerController controller, int index)
+{
+    local int i, count;
+
+    if (GRI == none)
+        return 0;
+
+    // Find the number of players on each team
+    for (i = 0; i < GRI.PRIArray.Length; i++)
+    {
+        if (ROPlayerReplicationInfo(GRI.PRIArray[i]) != none &&
+            ROPlayerReplicationInfo(GRI.PRIArray[i]).RoleInfo != none &&
+            GRI.PRIArray[i].Team != none &&
+            GRI.PRIArray[i].Team.TeamIndex == index)
+        {
+            count++;
+        }
+    }
+
+    return count;
+}
+
 defaultproperties
 {
     Begin Object Class=BackgroundImage Name=PageBackground2
