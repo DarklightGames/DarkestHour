@@ -9,16 +9,16 @@ var string Method;
 var string Host;
 var string Path;
 var string Protocol;
-var Dictionary Headers;
+var TreeMap_string_string Headers;
 var private int Timeout;
 
-delegate OnResponse(int Status, Dictionary Headers, string Content);
+delegate OnResponse(int Status, TreeMap_string_string Headers, string Content);
 
 function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    Headers = new class'Dictionary';
+    Headers = new class'TreeMap_string_string';
 
     MyLink = Spawn(class'UCoreBufferedTCPLink');
     MyLink.ResetBuffer();
@@ -46,16 +46,16 @@ function static int ParseStatus(string S)
     return -1;
 }
 
-function static Dictionary ParseHeaders(string S)
+function static TreeMap_string_string ParseHeaders(string S)
 {
     local int i;
     local int j;
-    local Dictionary Headers;
+    local TreeMap_string_string Headers;
     local array<string> Lines;
     local string Key;
     local string Value;
 
-    Headers = new class'Dictionary';
+    Headers = new class'TreeMap_string_string';
 
     Split(S, Chr(13) $ Chr(10), Lines);
 
@@ -82,7 +82,7 @@ function Timer()
     local string HeadersString;
     local string Value;
     local int Status;
-    local Dictionary ResponseHeaders;
+    local TreeMap_string_string ResponseHeaders;
     local int i;
     local array<string> HeaderKeys;
     local int ChunkLength;

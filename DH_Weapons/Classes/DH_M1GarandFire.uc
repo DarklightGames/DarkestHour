@@ -109,7 +109,7 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
 
 defaultproperties
 {
-    maxVerticalRecoilAngle=1700
+    maxVerticalRecoilAngle=1600
     maxHorizontalRecoilAngle=200
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'

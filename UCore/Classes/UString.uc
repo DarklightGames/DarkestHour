@@ -33,3 +33,29 @@ static final function string Insert(string Dst, string Src, int Offset)
 {
     return Left(Dst, Offset) $ Src $ Mid(Dst, Offset, Len(Dst));
 }
+
+static final function array<int> ToBytes(string S)
+{
+    local int i;
+    local array<int> Bytes;
+
+    for (i = 0; i < Len(S); ++i)
+    {
+        Bytes[i] = Asc(Mid(S, i, 1));
+    }
+
+    return Bytes;
+}
+
+static final function string FromBytes(array<int> Bytes)
+{
+    local int i;
+    local string S;
+
+    for (i = 0; i < Bytes.Length; ++i)
+    {
+        S $= Chr(Bytes[i]);
+    }
+
+    return S;
+}

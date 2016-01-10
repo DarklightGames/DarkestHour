@@ -4209,6 +4209,7 @@ defaultproperties
     TouchMessageClass=class'DHVehicleTouchMessage'
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Body",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    MinRunOverSpeed=300 // Increased from 0 to rouglhy 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true

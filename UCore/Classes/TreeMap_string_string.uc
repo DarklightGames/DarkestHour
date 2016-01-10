@@ -1,17 +1,15 @@
 //==============================================================================
-// Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class Dictionary extends Object;
+class TreeMap_string_string extends Object;
 
-var private DictionaryNode Head;
-// This is a global string array used by GetKeys and GetValues.
-// Arrays are copied when passed as function arguments, which would be a
-// performance nightmare. Since UnrealScript code runs on a single-thread, this
-// is safe and more efficient.
-var private array<string> Strings;
-var private int           Size;
+var private TreeMapNode_string_string Head;
+var private array<string> Keys;
+var private array<string> Values;
+var private int Size;
+var private string RecursiveKey;
+var private string RecursiveValue;
 
 function int GetSize()
 {
@@ -20,21 +18,21 @@ function int GetSize()
 
 function array<string> GetKeys()
 {
-    Strings.Length = 0;
+    Keys.Length = 0;
 
     GetKeysTraverse(Head);
 
-    return Strings;
+    return Keys;
 }
 
-private function GetKeysTraverse(DictionaryNode Node)
+private function GetKeysTraverse(TreeMapNode_string_string Node)
 {
     if (Node == none)
     {
         return;
     }
 
-    Strings[Strings.Length] = Node.Key;
+    Keys[Keys.Length] = Node.Key;
 
     if (Node.LHS != none)
     {
@@ -49,21 +47,21 @@ private function GetKeysTraverse(DictionaryNode Node)
 
 function array<string> GetValues()
 {
-    Strings.Length = 0;
+    Values.Length = 0;
 
     GetValuesTraverse(Head);
 
-    return Strings;
+    return Values;
 }
 
-private function GetValuesTraverse(DictionaryNode Node)
+private function GetValuesTraverse(TreeMapNode_string_string Node)
 {
     if (Node == none)
     {
         return;
     }
 
-    Strings[Strings.Length] = Node.Value;
+    Values[Values.Length] = Node.Value;
 
     if (Node.LHS != none)
     {
@@ -78,7 +76,7 @@ private function GetValuesTraverse(DictionaryNode Node)
 
 function bool Get(string Key, optional out string Value)
 {
-    local DictionaryNode Node;
+    local TreeMapNode_string_string Node;
 
     Node = Head;
 
@@ -105,10 +103,13 @@ function bool Get(string Key, optional out string Value)
 
 function Put(string Key, string Value)
 {
-    Head = PutStatic(self, Head, Key, Value);
+    RecursiveKey = Key;
+    RecursiveValue = Value;
+
+    Head = PutStatic(self, Head);
 }
 
-private static function int GetBalance(DictionaryNode Node)
+private static function int GetBalance(TreeMapNode_string_string Node)
 {
     if (Node == none)
     {
@@ -118,7 +119,7 @@ private static function int GetBalance(DictionaryNode Node)
     return GetHeight(Node.LHS) - GetHeight(Node.RHS);
 }
 
-private static function int GetHeight(DictionaryNode Node)
+private static function int GetHeight(TreeMapNode_string_string Node)
 {
     if (Node == none)
     {
@@ -128,7 +129,7 @@ private static function int GetHeight(DictionaryNode Node)
     return Node.Height;
 }
 
-private static function DictionaryNode FindMin(DictionaryNode Node)
+private static function TreeMapNode_string_string FindMin(TreeMapNode_string_string Node)
 {
     while (Node.LHS != none)
     {
@@ -140,26 +141,27 @@ private static function DictionaryNode FindMin(DictionaryNode Node)
 
 function Erase(string Key)
 {
-    Head = EraseStatic(self, Head, Key);
+    RecursiveKey = Key;
+    Head = EraseStatic(self, Head);
 }
 
-private static function DictionaryNode EraseStatic(Dictionary D, DictionaryNode Node, string Key)
+private static function TreeMapNode_string_string EraseStatic(TreeMap_string_string D, TreeMapNode_string_string Node)
 {
     local int Balance;
-    local DictionaryNode Temp;
+    local TreeMapNode_string_string Temp;
 
     if (Node == none)
     {
         return Node;
     }
 
-    if (Key < Node.Key)
+    if (D.RecursiveKey < Node.Key)
     {
-        Node.LHS = EraseStatic(D, Node.LHS, Key);
+        Node.LHS = EraseStatic(D, Node.LHS);
     }
-    else if (Key > Node.Key)
+    else if (D.RecursiveKey > Node.Key)
     {
-        Node.RHS = EraseStatic(D, Node.RHS, Key);
+        Node.RHS = EraseStatic(D, Node.RHS);
     }
     else
     {
@@ -195,7 +197,11 @@ private static function DictionaryNode EraseStatic(Dictionary D, DictionaryNode 
             Temp = FindMin(Node.RHS);
 
             Node.Key = Temp.Key;
-            Node.RHS = EraseStatic(D, Node.RHS, Temp.Key);
+            Node.Value = Temp.Value;
+
+            D.RecursiveKey = Temp.Key;
+
+            Node.RHS = EraseStatic(D, Node.RHS);
         }
     }
 
@@ -232,10 +238,10 @@ private static function DictionaryNode EraseStatic(Dictionary D, DictionaryNode 
     return Node;
 }
 
-private static function DictionaryNode RotateRight(DictionaryNode Y)
+private static function TreeMapNode_string_string RotateRight(TreeMapNode_string_string Y)
 {
-    local DictionaryNode X;
-    local DictionaryNode T2;
+    local TreeMapNode_string_string X;
+    local TreeMapNode_string_string T2;
 
     X = Y.LHS;
     T2 = X.RHS;
@@ -249,10 +255,10 @@ private static function DictionaryNode RotateRight(DictionaryNode Y)
     return X;
 }
 
-private static function DictionaryNode RotateLeft(DictionaryNode X)
+private static function TreeMapNode_string_string RotateLeft(TreeMapNode_string_string X)
 {
-    local DictionaryNode Y;
-    local DictionaryNode T2;
+    local TreeMapNode_string_string Y;
+    local TreeMapNode_string_string T2;
 
     Y = X.RHS;
     T2 = Y.LHS;
@@ -266,53 +272,53 @@ private static function DictionaryNode RotateLeft(DictionaryNode X)
     return Y;
 }
 
-private static function DictionaryNode PutStatic(Dictionary D, DictionaryNode Node, string Key, string Value)
+private static function TreeMapNode_string_string PutStatic(TreeMap_string_string D, TreeMapNode_string_string Node)
 {
     local int Balance;
 
     if (Node == none)
     {
-        Node = new class'DictionaryNode';
-        Node.Key = Key;
-        Node.Value = Value; //TODO: not needed??
+        Node = new class'TreeMapNode_string_string';
+        Node.Key = D.RecursiveKey;
+        Node.Value = D.RecursiveValue;
 
         D.Size += 1;
 
         return Node;
     }
 
-    if (Key < Node.Key)
+    if (D.RecursiveKey < Node.Key)
     {
-        Node.LHS = PutStatic(D, Node.LHS, Key, Value);
+        Node.LHS = PutStatic(D, Node.LHS);
     }
-    else if (Key > Node.Key)
+    else if (D.RecursiveKey > Node.Key)
     {
-        Node.RHS = PutStatic(D, Node.RHS, Key, Value);
+        Node.RHS = PutStatic(D, Node.RHS);
     }
     else
     {
-        Node.Value = Value;
+        Node.Value = D.RecursiveValue;
 
         return Node;
     }
 
     Balance = GetBalance(Node);
 
-    if (Balance > 1 && Key < Node.LHS.Key)
+    if (Balance > 1 && D.RecursiveKey < Node.LHS.Key)
     {
         return RotateRight(Node);
     }
-    else if (Balance < -1 && Key > Node.RHS.Key)
+    else if (Balance < -1 && D.RecursiveKey > Node.RHS.Key)
     {
         return RotateLeft(Node);
     }
-    else if (Balance > 1 && Key > Node.LHS.Key)
+    else if (Balance > 1 && D.RecursiveKey > Node.LHS.Key)
     {
         Node.LHS = RotateLeft(Node.LHS);
 
         return RotateRight(Node);
     }
-    else if (Balance  < -1 && Key < Node.RHS.Key)
+    else if (Balance  < -1 && D.RecursiveKey < Node.RHS.Key)
     {
         Node.RHS = RotateRight(Node.RHS);
 

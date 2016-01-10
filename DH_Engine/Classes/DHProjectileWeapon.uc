@@ -343,9 +343,14 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     super.BringUp(PrevWeapon);
 
-    if (bBarrelSteamActive && InstigatorIsLocalHuman())
+    if (InstigatorIsLocalHuman())
     {
-        SetBarrelSteamActive(true);
+        if (bBarrelSteamActive)
+        {
+            SetBarrelSteamActive(true);
+        }
+
+        UpdateBayonet();
     }
 }
 
@@ -366,6 +371,22 @@ state Hidden
     simulated function bool AllowReload()
     {
         return false;
+    }
+}
+
+simulated function UpdateBayonet()
+{
+    // Determines if bayonet capable weapon should come up with bayonet on or off
+    if (bHasBayonet)
+    {
+        if (bBayonetMounted)
+        {
+            ShowBayonet();
+        }
+        else
+        {
+            HideBayonet();
+        }
     }
 }
 
@@ -413,18 +434,7 @@ simulated state RaisingWeapon
 
             if (InstigatorIsLocallyControlled())
             {
-                // Determines if bayonet capable weapon should come up with bayonet on or off
-                if (bHasBayonet)
-                {
-                    if (bBayonetMounted)
-                    {
-                        ShowBayonet();
-                    }
-                    else
-                    {
-                        HideBayonet();
-                    }
-                }
+                UpdateBayonet();
 
                 if (Mesh != none && HasAnim(Anim))
                 {
