@@ -225,7 +225,7 @@ event bool NotifyLevelChange()
     return PlayerOwner().Level.IsPendingConnection();
 }
 
-function OnQuickPlayResponse(int Status, Dictionary Headers, string Content)
+function OnQuickPlayResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     bShouldRequestQuickPlayIP = false;
 
@@ -244,7 +244,7 @@ function OnQuickPlayResponse(int Status, Dictionary Headers, string Content)
     QuickPlayRequest = none;
 }
 
-function OnMOTDResponse(int Status, Dictionary Headers, string Content)
+function OnMOTDResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local string Title;
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DictionaryTest extends Object;
+class TreeMapTest extends Object;
 
 static function Test()
 {
@@ -42,7 +42,7 @@ static function TestPut1()
     local string Author;
     local array<string> Titles;
     local array<string> Authors;
-    local Dictionary Books;
+    local TreeMap_string_string Books;
 
     Titles[Titles.Length] = "The Origin of Species";
     Titles[Titles.Length] = "Radioactive Substances";
@@ -64,7 +64,7 @@ static function TestPut1()
 
     TestBool(true, Titles.Length == Authors.Length);
 
-    Books = new class'Dictionary';
+    Books = new class'TreeMap_string_string';
 
     for (i = 0; i < Titles.Length; ++i)
     {
@@ -79,14 +79,14 @@ static function TestPut1()
         TestString(Authors[i], Author);
     }
 
-    DumpDictionary(Books);
+    DumpTreeMap(Books);
 }
 
 static function TestPut2()
 {
     local int i;
     local string Value;
-    local Dictionary Albums;
+    local TreeMap_string_string Albums;
     local array<string> Titles;
     local array<string> Artists;
 
@@ -110,7 +110,7 @@ static function TestPut2()
 
     TestBool(true, Titles.Length == Artists.Length);
 
-    Albums = new class'Dictionary';
+    Albums = new class'TreeMap_string_string';
 
     for (i = 0; i < Titles.Length; ++i)
     {
@@ -128,14 +128,14 @@ static function TestPut2()
         TestString(Caps(Artists[i]), Value);
     }
 
-    DumpDictionary(Albums);
+    DumpTreeMap(Albums);
 }
 
 static function TestErase()
 {
     local int i, j;
     local string Value;
-    local Dictionary Movies;
+    local TreeMap_string_string Movies;
     local array<string> Titles;
     local array<string> Directors;
 
@@ -159,7 +159,7 @@ static function TestErase()
 
     TestBool(true, Titles.Length == Directors.Length);
 
-    Movies = new class'Dictionary';
+    Movies = new class'TreeMap_string_string';
 
     for (i = 0; i < Titles.Length; ++i)
     {
@@ -183,10 +183,10 @@ static function TestErase()
         }
     }
 
-    DumpDictionary(Movies);
+    DumpTreeMap(Movies);
 }
 
-static function DumpDictionary(Dictionary D)
+static function DumpTreeMap(TreeMap_string_string D)
 {
     local int i;
     local array<string> Keys;

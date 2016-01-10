@@ -73,6 +73,7 @@ var byte                VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolMaxSpawns[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolSpawnCounts[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 
 var byte                MaxTeamVehicles[2];
 
@@ -113,6 +114,7 @@ replication
         VehiclePoolMaxSpawns,
         VehiclePoolSpawnCounts,
         VehiclePoolIsSpawnVehicles,
+        VehiclePoolReservationCount,
         SpawnPointIsActives,
         SpawnVehicles,
         MaxTeamVehicles,
@@ -444,6 +446,68 @@ simulated function class<Vehicle> GetVehiclePoolVehicleClass(byte VehiclePoolInd
     return VehiclePoolVehicleClasses[VehiclePoolIndex];
 }
 
+simulated function byte GetVehiclePoolAvailableReservationCount(int VehiclePoolIndex)
+{
+    local int Active, MaxActive, ReservationCount, VehiclePoolSpawnsRemaning;
+
+    Active = VehiclePoolActiveCounts[VehiclePoolIndex];
+    MaxActive = VehiclePoolMaxActives[VehiclePoolIndex];
+    ReservationCount = VehiclePoolReservationCount[VehiclePoolIndex];
+    VehiclePoolSpawnsRemaning = GetVehiclePoolSpawnsRemaining(VehiclePoolIndex);
+
+    return Min(VehiclePoolSpawnsRemaning, (MaxActive - Active) - ReservationCount);
+}
+
+simulated function bool IsVehiclePoolReservable(DHPlayer PC, DHRoleInfo RI, int VehiclePoolIndex)
+{
+    if (PC == none || (PC.Pawn != none && PC.Pawn.Health > 0))
+    {
+        // Alive players cannot reserve vehicles
+        return false;
+    }
+
+    if(!IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
+    {
+        // Invalid vehicle pool specified
+        return false;
+    }
+
+    if (GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) <= 0)
+    {
+        // All available vehicles have been reserved
+        return false;
+    }
+
+    return true;
+}
+
+function bool ReserveVehicle(DHPlayer PC, byte VehiclePoolIndex)
+{
+    if(VehiclePoolIndex != 255 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
+    {
+        return false;
+    }
+
+    PC.VehiclePoolIndex = VehiclePoolIndex;
+
+    if (VehiclePoolIndex != 255)
+    {
+        ++VehiclePoolReservationCount[VehiclePoolIndex];
+    }
+
+    return true;
+}
+
+function UnreserveVehicle(DHPlayer PC)
+{
+    if (PC.VehiclePoolIndex != 255)
+    {
+        --VehiclePoolReservationCount[PC.VehiclePoolIndex];
+    }
+
+    PC.VehiclePoolIndex = 255;
+}
+
 //------------------------------------------------------------------------------
 // Spawn Vehicle Functions
 //------------------------------------------------------------------------------
@@ -757,3 +821,4 @@ defaultproperties
     AxisVictoryMusicIndex=-1
     MortarTargetDistanceThreshold=15088 //250 meters in UU
 }
+
