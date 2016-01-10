@@ -122,7 +122,6 @@ var(DH_ContestEndActions)   array<VehiclePoolAction>    AxisContestEndVehiclePoo
 var(DH_ContestEndActions)   array<name>                 AlliesContestEndEvents;
 var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
 
-
 function PostBeginPlay()
 {
     local DHGameReplicationInfo DHGRI;

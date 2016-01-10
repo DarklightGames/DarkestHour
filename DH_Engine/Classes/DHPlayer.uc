@@ -2853,7 +2853,6 @@ function exec DebugHints()
     local DHHintManager.HintInfo Hint;
     local int i;
 
-
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         if (DHHintManager != none)

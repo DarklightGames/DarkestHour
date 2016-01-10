@@ -1942,7 +1942,7 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
     C = GetBoneCoords(NewVehHitpoints[Index].PointBone);
 
     HeadLoc = C.Origin + (NewVehHitpoints[Index].PointHeight * NewVehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
-    HeadLoc = HeadLoc + (NewVehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
+    HeadLoc = HeadLoc + (NewVehHitpoints[Index].PointOffset >> rotator(C.XAxis));
 
     // Express snipe trace line in terms of B + tM
     B = Loc;
