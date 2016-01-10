@@ -86,6 +86,7 @@ var     float       GunnerKillChance;          // chance that shrapnel will kill
 var     float       GunDamageChance;           // chance that shrapnel will damage gun pivot mechanism
 var     float       TraverseDamageChance;      // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
 var     float       OpticsDamageChance;        // chance that shrapnel will break gunsight optics
+var     int         GunOpticsHitPointIndex;    // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     texture     DamagedPeriscopeOverlay;   // gunsight overlay to show if optics have been broken
 var     float       TreadDamageThreshold;      // minimum TreadDamageModifier in DamageType to possibly break treads
 var array<Material> DestroyedMeshSkins;        // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
@@ -4209,6 +4210,7 @@ defaultproperties
     TouchMessageClass=class'DHVehicleTouchMessage'
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Body",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    GunOpticsHitPointIndex=-1 // set in subclass if vehicle has exposed gunsight optics
     MinRunOverSpeed=300 // Increased from 0 to rouglhy 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:

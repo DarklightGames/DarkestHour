@@ -344,8 +344,24 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // From DHBullet
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local ROVehicle HitVehicle;
-    local bool      bPenetratedVehicle;
+    local ROVehicle        HitVehicle;
+    local DHArmoredVehicle AV;
+    local bool             bPenetratedVehicle;
+    local vector           HitLoc;
+    local Material         HitMat;
+
+    // This stops tracers from bouncing off thin air where the hidden BSP that network cuts is.
+    // It supports network cutting BSP that is textured with a material surface type of `EST_Custom00`
+    if (Wall.bHiddenEd) // `LevelInfo` which is BSP is set to bHiddenEd = true
+    {
+        Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16.0, Location, true,, HitMat);
+
+        if (HitMat != none && HitMat.SurfaceType == EST_Custom00)
+        {
+            Destroy();
+            return;
+        }
+    }
 
     // Hit SavedHitActor that we've already hit & recorded
     if (SavedHitActor != none && SavedHitActor == Wall)
@@ -381,24 +397,50 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Spawn the bullet hit effect on anything other than a vehicle
     else if (Level.NetMode != NM_DedicatedServer && ImpactEffect != none)
     {
-        Spawn(ImpactEffect,,, Location, rotator(-HitNormal));
+        Spawn(ImpactEffect, self,, Location, rotator(-HitNormal)); // made bullet the owner of the effect, so effect can use bullet to do an EffectIsRelevant() check
     }
 
-    if (!HasDeflected() && (HitVehicle == none || bPenetratedVehicle))
+    if (!HasDeflected())
     {
         // Do any damage
         if (Role == ROLE_Authority)
         {
-            UpdateInstigator();
+            // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics
+            if (HitVehicle != none && !bPenetratedVehicle)
+            {
+                AV = DHArmoredVehicle(HitVehicle);
 
-            // Have to use special damage for vehicles, otherwise it doesn't register for some reason
-            if (ROVehicle(Wall) != none)
-            {
-                Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
+                // Hit exposed gunsight optics
+                if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
+                    && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics 
+                    && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), 1.0, AV.GunOpticsHitPointIndex)
+                    && AV.CannonTurret != none && DHVehicleCannonPawn(AV.CannonTurret.Owner) != none)
+                {
+                    DHVehicleCannonPawn(AV.CannonTurret.Owner).DamageCannonOverlay();
+
+                    if (AV.bLogPenetration)
+                    {
+                        Log("We hit NHP_GunOptics hitpoint");
+                    }
+
+                    if (AV.bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hit gunsight optics");
+                    }
+                }
             }
-            else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+            else
             {
-                Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+                UpdateInstigator();
+
+                if (ROVehicle(Wall) != none) // have to use special damage for vehicles, otherwise it doesn't register for some reason
+                {
+                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
+                }
+                else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+                {
+                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+                }
             }
 
             MakeNoise(1.0);
