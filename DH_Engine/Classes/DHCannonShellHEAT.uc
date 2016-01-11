@@ -19,7 +19,6 @@ var bool  bHitWorldObject;            // flags that shell has hit a world object
 var globalconfig float PenetrationScale; // global penetration depth scale factor
 var globalconfig float DistortionScale;  // global distortion scale factor
 
-
 // Modified to handle world object penetration
 simulated singular function HitWall(vector HitNormal, Actor Wall)
 {

@@ -1411,6 +1411,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
     Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
+
     // Exit if no damage
     if (Damage < 1)
     {

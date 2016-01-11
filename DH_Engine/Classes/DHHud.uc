@@ -1766,7 +1766,7 @@ simulated function DrawDriverPointSphere()
                 {
                     CO = VW.GetBoneCoords(VW.VehHitpoints[i].PointBone);
                     Loc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
-                    Loc = Loc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.Xaxis));
+                    Loc = Loc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.XAxis));
                     VW.DrawDebugSphere(Loc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
                 }
             }
@@ -3252,6 +3252,7 @@ simulated function DrawVoiceIcon(Canvas C)
                 break;
             }
         }
+
         // No talking pawn was found in the radius, so lets set it to none so we don't show someone else talking
         if (!bFoundTalkingPawn)
         {

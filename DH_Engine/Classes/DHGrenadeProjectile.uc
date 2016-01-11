@@ -8,7 +8,6 @@ class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporatin
 
 var bool bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
 
-
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
 {
