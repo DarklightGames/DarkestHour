@@ -23,8 +23,8 @@ defaultproperties
     PointValue=2.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=215.0
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"

@@ -3550,11 +3550,11 @@ simulated function UpdateMovementSound()
     {
         if (bLeftTrackDamaged)
         {
-            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.5;
+            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.25;
         }
         else
         {
-            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
+            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.9;
         }
     }
 
@@ -3562,11 +3562,11 @@ simulated function UpdateMovementSound()
     {
         if (bRightTrackDamaged)
         {
-            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.5;
+            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.25;
         }
         else
         {
-            RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
+            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.9;
         }
     }
 
@@ -4144,7 +4144,7 @@ exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
 defaultproperties
 {
     SoundVolume=255.0
-    SoundRadius=600.0
+    SoundRadius=650.0
     TransientSoundRadius=700.0
     UnbuttonedPositionIndex=2
     bAllowRiders=true
