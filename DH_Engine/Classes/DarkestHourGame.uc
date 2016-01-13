@@ -5,11 +5,6 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-var()   config float                ServerTickRateDesired;
-var     float                       ServerTickRateConsolidated;
-var     float                       ServerTickRateAverage;
-var     int                         ServerTickFrameCount;
-
 var     DH_LevelInfo                DHLevelInfo;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
@@ -63,28 +58,6 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
     }
-}
-
-event Tick(float DeltaTime)
-{
-    const SERVERTICKRATE_UPDATETIME = 5.0;
-
-    ServerTickRateConsolidated += DeltaTime;
-
-    if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
-    {
-        ServerTickRateAverage = (ServerTickFrameCount / ServerTickRateConsolidated);
-        ServerTickFrameCount = 0;
-        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
-
-        Log("Average Server Tick Rate:" @ ServerTickRateAverage);
-    }
-    else
-    {
-        ++ServerTickFrameCount;
-    }
-
-    super.Tick(DeltaTime);
 }
 
 function PostBeginPlay()
@@ -3439,8 +3412,6 @@ event PostLogin(PlayerController NewPlayer)
 
 defaultproperties
 {
-    ServerTickRateDesired=30.0
-
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
