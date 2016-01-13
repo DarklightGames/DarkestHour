@@ -69,6 +69,7 @@ event ModeDoFire()
 
 defaultproperties
 {
+    PreLaunchTraceDistance=6035.2 //100m
     PctRestDeployRecoil=0.65
     bDelayedRecoil=true
     DelayedRecoilTime=0.05

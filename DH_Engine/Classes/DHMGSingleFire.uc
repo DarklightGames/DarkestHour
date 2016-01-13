@@ -274,6 +274,7 @@ simulated function EjectShell()
 
 defaultproperties
 {
+    PreLaunchTraceDistance=6035.2 //100m
     PctHipMGPenalty=2.0
     bWaitForRelease=true
     BlurTime=0.04
