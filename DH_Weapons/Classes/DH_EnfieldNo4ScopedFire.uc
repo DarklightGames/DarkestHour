@@ -7,7 +7,6 @@ class DH_EnfieldNo4ScopedFire extends DHBoltFire;
 
 defaultproperties
 {
-    PreLaunchTraceDistance=3017.6 //50m
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-35.0)
     FireIronAnim="Scope_Shoot"

@@ -7,7 +7,6 @@ class DH_Kar98ScopedFire extends DH_Kar98Fire;
 
 defaultproperties
 {
-    PreLaunchTraceDistance=3017.6 //50m
     FireIronAnim="Scope_Shoot"
     PctRestDeployRecoil=0.25
     AmmoClass=class'DH_Weapons.DH_Kar98ScopedAmmo'

@@ -479,7 +479,7 @@ defaultproperties
     // May also be able to achieve network optimisation for bullets by greater use of the SavedDualShot optimisations in the 'DHHighROFWeaponAttachment' class
     // Theel: Re-enabled so we can begin adjusting/debugging PLT further and see how much CPU it saves and it's impact on hit detection
     bUsePreLaunchTrace=true
-    PreLaunchTraceDistance=3017.6 //50m
+    PreLaunchTraceDistance=2624.0 // 43.5m
 
     ProjPerFire=1
     CrouchSpreadModifier=0.85

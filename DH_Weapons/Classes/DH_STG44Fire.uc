@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
-    PreLaunchTraceDistance=6035.2 //100m
+    PreLaunchTraceDistance=1836.0 // 30.5m (midway between standard trace, including bipod weapons, and the shorter trace of auto weapons like SMGs)
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"

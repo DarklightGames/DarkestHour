@@ -37,6 +37,7 @@ function float MaxRange()
 
 defaultproperties
 {
+    PreLaunchTraceDistance=1312.0 // 21.75m (half the usual)
     bPawnRapidFireAnim=true
 }
 

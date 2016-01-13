@@ -8,7 +8,6 @@ class DHSemiAutoFire extends DHProjectileFire
 
 defaultproperties
 {
-    PreLaunchTraceDistance=6035.2 //100m
     PctRestDeployRecoil=0.75
     bDelayedRecoil=true
     DelayedRecoilTime=0.05
