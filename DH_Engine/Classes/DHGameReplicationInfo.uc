@@ -37,6 +37,8 @@ var int                 AxisVictoryMusicIndex;
 
 var int                 RoundEndTime;  // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
 
+var byte                ServerTickRateAverage;  // Average tick rate the server is running over the last SERVERTICKRATE_UPDATETIME
+
 const ROLES_MAX = 16;
 
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
@@ -117,6 +119,7 @@ replication
         SpawnVehicles,
         MaxTeamVehicles,
         DHObjectives,
+        ServerTickRateAverage,
         AttritionRate;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))

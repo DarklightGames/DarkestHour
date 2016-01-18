@@ -7,7 +7,6 @@ class DarkestHourGame extends ROTeamGame;
 
 var()   config float                ServerTickRateDesired;
 var     float                       ServerTickRateConsolidated;
-var     float                       ServerTickRateAverage;
 var     int                         ServerTickFrameCount;
 
 var     DH_LevelInfo                DHLevelInfo;
@@ -67,17 +66,25 @@ event InitGame(string Options, out string Error)
 
 event Tick(float DeltaTime)
 {
-    const SERVERTICKRATE_UPDATETIME = 5.0;
+    const SERVERTICKRATE_UPDATETIME = 5.0; // should we be doing this every tick? how does this work?
+
+    if (DHGameReplicationInfo(GameReplicationInfo) == none)
+    {
+        return;
+    }
 
     ServerTickRateConsolidated += DeltaTime;
 
+    // This code should only execute every SERVERTICKRATE_UPDATETIME seconds
     if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
     {
-        ServerTickRateAverage = (ServerTickFrameCount / ServerTickRateConsolidated);
+        DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage = byte(ServerTickFrameCount / ServerTickRateConsolidated);
         ServerTickFrameCount = 0;
         ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
 
-        //Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+        HandleReinforceIntervalInflation();
+
+        //Log("Average Server Tick Rate:" @ DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage);
     }
     else
     {
@@ -85,6 +92,29 @@ event Tick(float DeltaTime)
     }
 
     super.Tick(DeltaTime);
+}
+
+function HandleReinforceIntervalInflation()
+{
+    const REINFORCEINTERVAL_MAXINFLATIONTIME = 60.0; // raise this value to get better result from inflation of respawn interval
+    local float TickRatio;
+
+    // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
+    if (DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage < byte(ServerTickRateDesired))
+    {
+        TickRatio = 1.0 - float(DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage) / ServerTickRateDesired;
+
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
+
+        Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
+    }
+    else
+    {
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
+    }
+
 }
 
 function PostBeginPlay()
