@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WaffenSSAutumnPawn extends DHPawn;
+class DH_WaffenSSAutumnPawn extends DH_GermanPawn;
 
 defaultproperties
 {

@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WaffenSSPawn extends DHPawn;
+class DH_WaffenSSPawn extends DH_GermanPawn;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat'
     Skins(0)=texture'DHGermanCharactersTex.WSS.SS_1'
 }

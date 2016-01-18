@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WHRadiomanPawn extends DHPawn;
+class DH_WHRadiomanPawn extends DH_GermanPawn;
 
 defaultproperties
 {

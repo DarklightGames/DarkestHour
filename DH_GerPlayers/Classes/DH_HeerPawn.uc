@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HeerPawn extends DHPawn;
+class DH_HeerPawn extends DH_GermanPawn;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat'
     Skins(0)=texture'DHGermanCharactersTex.Heer.WH_1'
 }
