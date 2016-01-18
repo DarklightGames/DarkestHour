@@ -6,6 +6,7 @@
 class DarkestHourGame extends ROTeamGame;
 
 var()   config float                ServerTickRateDesired;
+var     float                       ServerTickRateAverage;
 var     float                       ServerTickRateConsolidated;
 var     int                         ServerTickFrameCount;
 
@@ -59,8 +60,8 @@ event InitGame(string Options, out string Error)
 
     if (bIgnore32PlayerLimit)
     {
-        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 52);
-        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 52);
+        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
+        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
     }
 }
 
@@ -68,17 +69,12 @@ event Tick(float DeltaTime)
 {
     const SERVERTICKRATE_UPDATETIME = 5.0; // should we be doing this every tick? how does this work?
 
-    if (DHGameReplicationInfo(GameReplicationInfo) == none)
-    {
-        return;
-    }
-
     ServerTickRateConsolidated += DeltaTime;
 
     // This code should only execute every SERVERTICKRATE_UPDATETIME seconds
     if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
     {
-        DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage = byte(ServerTickFrameCount / ServerTickRateConsolidated);
+        ServerTickRateAverage = ServerTickFrameCount / ServerTickRateConsolidated;
         ServerTickFrameCount = 0;
         ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
 
@@ -99,10 +95,15 @@ function HandleReinforceIntervalInflation()
     const REINFORCEINTERVAL_MAXINFLATIONTIME = 60.0; // raise this value to get better result from inflation of respawn interval
     local float TickRatio;
 
-    // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
-    if (DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage < byte(ServerTickRateDesired))
+    if (DHGameReplicationInfo(GameReplicationInfo) == none)
     {
-        TickRatio = 1.0 - float(DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage) / ServerTickRateDesired;
+        return;
+    }
+
+    // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
+    if (ServerTickRateAverage < ServerTickRateDesired)
+    {
+        TickRatio = 1.0 - ServerTickRateAverage / ServerTickRateDesired;
 
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
