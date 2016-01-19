@@ -5,7 +5,7 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-var()   config float                ServerTickRateDesired;
+var()   config float                ServerTickForInflation;
 var     float                       ServerTickRateAverage;
 var     float                       ServerTickRateConsolidated;
 var     int                         ServerTickFrameCount;
@@ -101,9 +101,9 @@ function HandleReinforceIntervalInflation()
     }
 
     // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
-    if (ServerTickRateAverage < ServerTickRateDesired)
+    if (ServerTickRateAverage < ServerTickForInflation)
     {
-        TickRatio = 1.0 - ServerTickRateAverage / ServerTickRateDesired;
+        TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInflation;
 
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
@@ -3470,7 +3470,7 @@ event PostLogin(PlayerController NewPlayer)
 
 defaultproperties
 {
-    ServerTickRateDesired=30.0
+    ServerTickForInflation=20.0
 
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
