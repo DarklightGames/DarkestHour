@@ -40,6 +40,7 @@ defaultproperties
     RoundType=RT_HE
     bExplodesOnArmor=true
     bExplodesOnHittingWater=true
+    bExplodesOnHittingBody=true
     bAlwaysDoShakeEffect=true
     bBotNotifyIneffective=false
     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
