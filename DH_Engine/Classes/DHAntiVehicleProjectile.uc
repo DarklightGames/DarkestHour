@@ -256,13 +256,15 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     {
         UpdateInstigator();
 
-        // We hit a player pawn, but now we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
+        // We hit a player pawn's 'general' collision area, but now we need to run a HitPointTrace to make sure we actually hit part of his body
         if (Other.IsA('ROPawn'))
         {
-            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0);
+            // HitPointTraces don't work well with short traces, so we have to do long trace first, then if we hit player we check whether he was within the whip attachment
+            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0); // WhizType 0 for no whiz
 
             // We hit one of the body's hit points, so register a hit on the player
-            if (Other != none)
+            // Only count hit if traced actor is within extent of bullet whip (we had to do an artificially long HitPointTrace, so may have traced something far away)
+            if (ROPawn(Other) != none && VSizeSquared(TempHitLocation - HitLocation) <= 180000.0) // 180k is square of max distance across whip 'diagonally'
             {
                 if (Role == ROLE_Authority)
                 {
@@ -278,6 +280,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 }
 
                 HurtWall = Other; // added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
+            }
+            // We didn't actually hit the player, so exit & let shell carry on
+            else
+            {
+                return;
             }
         }
         // We hit some other kind of pawn or a destroyable mesh
