@@ -191,7 +191,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local ROVehicle       HitVehicle;
     local ROVehicleWeapon HitVehicleWeapon;
-    local vector          TempHitLocation, HitNormal;
+    local vector          DirectionNormal, TempHitLocation, HitNormal;
     local array<int>      HitPoints;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
@@ -204,13 +204,14 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     SavedTouchActor = Other;
     HitVehicleWeapon = ROVehicleWeapon(Other);
     HitVehicle = ROVehicle(Other.Base);
+    DirectionNormal = Normal(Velocity);
 
     // We hit a VehicleWeapon
     if (HitVehicleWeapon != none && HitVehicle != none)
     {
         SavedHitActor = HitVehicle;
 
-        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal
+        Trace(TempHitLocation, HitNormal, HitLocation + (DirectionNormal * 50.0), HitLocation - (DirectionNormal * 50.0), true); // get a reliable vehicle HitNormal
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -219,12 +220,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (ShouldDrawDebugLines())
         {
-            DrawStayingDebugLine(HitLocation, HitLocation - (Normal(Velocity) * 500.0), 255, 0, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation - (DirectionNormal * 500.0), 255, 0, 0);
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
         if (HitVehicleWeapon.IsA('DHVehicleCannon')
-            && !DHVehicleCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+            && !DHVehicleCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, DirectionNormal, GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -238,7 +239,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 // Removed SetDelayedDamageInstigatorController() as irrelevant to VehWeapon (empty function),
                 // & we'll let VehWeapon call SetDDIC on Vehicle only if it's calling TakeDamage on it
 
-                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * DirectionNormal, ShellImpactDamage);
 
                 if (DamageRadius > 0.0 && HitVehicle.Health > 0) // need this here as vehicle will be ignored by HurtRadius(), as it's the HurtWall actor
                 {
@@ -260,7 +261,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (Other.IsA('ROPawn'))
         {
             // HitPointTraces don't work well with short traces, so we have to do long trace first, then if we hit player we check whether he was within the whip attachment
-            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0); // WhizType 0 for no whiz
+            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (DirectionNormal * 65535.0), HitPoints, HitLocation,, 0); // WhizType 0 for no whiz
 
             // We hit one of the body's hit points, so register a hit on the player
             // Only count hit if traced actor is within extent of bullet whip (we had to do an artificially long HitPointTrace, so may have traced something far away)
@@ -268,7 +269,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (Role == ROLE_Authority)
                 {
-                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
+                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, TempHitLocation, MomentumTransfer * DirectionNormal, ShellImpactDamage, HitPoints);
                 }
 
                 // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on
@@ -292,7 +293,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (Role == ROLE_Authority)
             {
-                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * DirectionNormal, ShellImpactDamage);
             }
 
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
