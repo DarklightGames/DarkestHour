@@ -12,6 +12,7 @@ class DHPawn extends ROPawn
 var     float   TeleSpawnProtEnds;        // is set when a player teleports for "spawn" protection in selectable spawn maps
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
+var     vector  LastWhizLocation;         // last whiz sound location on pawn (basically a non-replicated version of Pawn's mWhizSoundLocation, as we no longer want it to replicate)
 var     bool    bHatShotOff;
 var     bool    bHasBeenPossessed;        // fixes players getting new ammunition when they get out of vehicles
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
@@ -109,6 +110,10 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
+        ClientPawnWhizzed;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -368,50 +373,59 @@ function DeactivateSpawnProtection()
     super.DeactivateSpawnProtection();
 }
 
-// Set the vars so this bullet whiz is replicated to the owning client
-// Overridden to call a customised function to spawn the sound
+// Modified to handle bullet 'snaps' for supersonic rounds, as well as whizzes, & also to add suppression effects - all based on passed WhizType
+// Also to remove setting replicated variables, as is unnecessary as this event gets called on both server & net clients (by native code in HitPointTrace from bullet collision)
 event PawnWhizzed(vector WhizLocation, int WhizType)
 {
-    if ((Level.TimeSeconds - LastWhippedTime) > (0.1 + FRand() * 0.15))
+    // Whiz type 255 is special flag that we don't want to play whiz effects, & is only used by bullet's pre-launch trace to trigger this event so it can grab WhizLocation
+    // WhizLocation has been calculated by native code & we save it as a non-replicated variable (instead of using mWhizSoundLocation, which would pointlessly replicate)
+    if (WhizType == 255)
+    {
+        log("PawnWhizzed event called with special WT 4, so just recording WhizLocation" @ WhizLocation @ " time elapsed =" @ Level.TimeSeconds - LastWhippedTime);
+        LastWhippedTime = Level.TimeSeconds;
+        LastWhizLocation = WhizLocation;
+    }
+    // Don't play whiz effects if player was very recently whizzed, or for bots, or whizzes for other players
+    else if (ShouldBeWhizzed())
     {
         LastWhippedTime = Level.TimeSeconds;
-        mWhizSoundLocation = WhizLocation;
 
-        SpawnWhizCount++;
-
-        // Spawn the whiz sound for local non network players
-        HandleSnapSound(WhizType);
-
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-    }
-}
-
-// Replaces HandleWhizSound, switches "whiz" sounds with "snaps" for supersonic rounds
-// Only plays snaps for bullets that are supersonic (via WhizType set in bullet classes)
-simulated event HandleSnapSound(int WhizType)
-{
-    // Don't play whiz sounds for bots, or from other players
-    if (IsHumanControlled() && IsLocallyControlled())
-    {
         if (WhizType == 1)
         {
-            Spawn(class'DHBulletSnap',,, mWhizSoundLocation); // supersonic rounds
+            Spawn(class'DHBulletSnap',,, WhizLocation); // supersonic round
         }
         else
         {
-            Spawn(class'DHBulletWhiz',,, mWhizSoundLocation); // subsonic rounds
+            Spawn(class'DHBulletWhiz',,, WhizLocation); // subsonic round
         }
 
-        // Anything above WhizType of 2 is a friendly bullet at very close range, so don't suppress
-        if (WhizType == 1 || WhizType == 2)
+        // WhizType 3 means a friendly bullet at very close range, so don't suppress
+        if (WhizType != 3 && DHPlayer(Controller) != none)
         {
-            DHPlayer(Controller).PlayerWhizzed(VSizeSquared(Location - mWhizSoundLocation));
+            DHPlayer(Controller).PlayerWhizzed(VSizeSquared(Location - WhizLocation));
         }
     }
 }
 
-// Overridden to prevent playing old whiz sounds over the top of the new
-// Why this is still called by the engine I truly don't know
+// New helper function, just to improve readability & to avoid repeating time check literal in other classes (e.g. bullet's pre-launch trace)
+// bSkipLocallyControlledCheck option is used by pre-launch trace, as server needs to do special whiz (type 4) to get WhizLocation to make net clients play whiz
+simulated function bool ShouldBeWhizzed(optional bool bSkipLocallyControlledCheck)
+{
+    return (Level.TimeSeconds - LastWhippedTime) > 0.15 && IsHumanControlled() && (bSkipLocallyControlledCheck || IsLocallyControlled());
+}
+
+// New server-to-client replicated function, used by DHProjectileFire's pre-launch trace system for the server to play whiz/snap effects on clients
+simulated function ClientPawnWhizzed(vector WhizLocation, byte WhizType)
+{
+    if (WhizType != 0)
+    {
+        PawnWhizzed(WhizLocation, int(WhizType));
+    }
+}
+
+// Emptied out to prevent playing old whiz sounds over the top of the new
+// Matt: this event is called by native code when net client receives a changed replicated value of SpawnWhizCount,
+// but should no longer be called as I've stopped PawnWhizzed from replicating whiz variables
 simulated event HandleWhizSound()
 {
 }

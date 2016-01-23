@@ -5,6 +5,13 @@
 
 class DHProjectileFire extends ROWeaponFire;
 
+struct WhizInfo
+{
+    var DHPawn  Player;
+    var vector  SoundLocation;
+    var byte    Type;
+};
+
 // Projectile spawning & pre-launch trace
 var     int             ProjPerFire;                 // how many projectiles are spawned each fire (normally 1)
 var     vector          ProjSpawnOffset;             // positional offset to spawn projectile
@@ -204,23 +211,14 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     local ROWeaponAttachment WeapAttach;
     local Actor              Other;
     local vector             HitLocation, HitNormal;
-    local bool               bPreLaunchTraceHitSomething;
 
     // Do any additional pitch changes before launching the projectile
     Dir.Pitch += AddedPitch;
 
     // Perform pre-launch trace (if enabled) & exit without spawning projectile if it hits something valid & handles damage & effects here
-    // Matt: temporarily make Instigator use same bUseCollisionStaticMesh setting as projectile (normally means switching to true), meaning trace uses col meshes on vehicles
-    if (bUsePreLaunchTrace && Instigator != none)
+    if (bUsePreLaunchTrace && Weapon != none && PreLaunchTrace(Start, vector(Dir)))
     {
-        Instigator.bUseCollisionStaticMesh = ProjectileClass.default.bUseCollisionStaticMesh;
-        bPreLaunchTraceHitSomething = PreLaunchTrace(Start, vector(Dir));
-        Instigator.bUseCollisionStaticMesh = Instigator.default.bUseCollisionStaticMesh; // reset Instigator collision properties
-
-        if (bPreLaunchTraceHitSomething)
-        {
-            return none;
-        }
+        return none;
     }
 
     // Spawn a tracer projectile if one is due (but not on a net client if our weapon uses a DHHighROFWeaponAttachment, as that handles tracers independently on clients)
@@ -264,112 +262,174 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 
 // New function to perform a pre-launch trace to see if we hit something fairly close, where ballistics aren't a factor & a simple trace will give an accurate hit result
 // If we do hit something valid, we handle the damage & hit effects here, meaning we can avoid spawning the projectile (& replicating it on a server)
-// We have to use our Instigator pawn to do traces, because we aren't an actor & so can't access trace functions
+// In multiplayer, this only happens on server, so have to record players that would have been whizzed & play whizzes after trace, if we are going to stop bullet spawning[
 function bool PreLaunchTrace(vector Start, vector Direction)
 {
-    local Actor        Other, A;
-    local array<Actor> SavedColMeshes;
-    local ROPawn       HitPlayer;
-    local vector       End, HitLocation, TempHitLocation, HitNormal, TempHitNormal, Momentum;
-    local int          Damage, i;
-    local array<int>   HitPoints;
+    local Actor           Other, A;
+    local DHPawn          HitPlayer, WhizzedPlayer;
+    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal, Momentum;
+    local int             WhizType, Damage, i;
+    local array<int>      HitPoints;
+    local array<WhizInfo> SavedWhizzes;
 
-    // Start with a special HitPointTrace to see if we hit a player pawn, including a vehicle occupant who won't have collision & so won't be caught by a normal Trace
-    // HitPointTraces don't work well with short traces, so we have to do a long trace first, then check whether any player we hit was within PreLaunchTraceDistance
-    End = Start + (65535.0 * Direction);
+    // We have to use an actor to do traces, because we aren't an actor & so can't access trace functions
+    // Using Weapon as it's safe to temporarily change its bUseCollisionStaticMesh, meaning trace detects collision meshes on vehicles
+    // Our Instigator pawn doesn't work, as it has bBlockHitPointTraces=false, meaning it won't detect hits on bullet whip attachments, which we need
+    Weapon.bUseCollisionStaticMesh = ProjectileClass.default.bUseCollisionStaticMesh;
 
-    // Maximum of 3 traces - but we only ever repeat the trace if we hit an invalid col mesh actor, which is very rare, so nearly always only 1 trace will be done
-    for (i = 0; i < 3; ++i)
+    foreach Weapon.TraceActors(class'Actor', A, HitLocation, HitNormal, Start + (PreLaunchTraceDistance * Direction), Start)
     {
-        A = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0); // WhizType 0 to prevent sound triggering, as it's close
-
-        // We're primarily interested if we hit a player, but also need to check if hit an invalid collision mesh that doesn't stop bullets (as would need to repeat trace)
-        if (ROPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet))
+        // Ignore this traced actor, as it's not something that would trigger HitWall or ProcessTouch for a bullet (i.e. a possible hit)
+        if (!A.bWorldGeometry && A.Physics != PHYS_Karma && !((A.bBlockActors || A.bProjTarget) && A.bBlockHitPointTraces))
         {
-            // Make sure hit actor is within trace range
-            if (VSizeSquared(HitLocation - Start) <= (PreLaunchTraceDistance ** 2.0))
+            continue;
+        }
+
+        // If hit collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+        if (A.IsA('DHCollisionMeshActor'))
+        {
+            // But if col mesh doesn't stop bullets, we ignore it & continue the trace iteration
+            if (DHCollisionMeshActor(A).bWontStopBullet)
             {
-                // We hit a player, so record it & limit length of confirmation trace that gets done next, as no point checking beyond the player
-                if (ROPawn(A) != none)
+                continue;
+            }
+
+            A = A.Owner;
+        }
+
+        // Ignore anything anything a bullet's ProcessTouch would normally ignore
+        if (A == Instigator || A.Base == Instigator || A.Owner == Instigator || A.bDeleteMe || (A.IsA('Projectile') && !A.bProjTarget))
+        {
+            continue;
+        }
+
+        // Hit bullet whip attachment around player, which isn't itself a valid hit actor, but now need to Trace to see if bullet actually hits one of player's various body hit points
+        // We also need to handle whiz effects for the player
+        if (A.IsA('ROBulletWhipAttachment'))
+        {
+            WhizzedPlayer = DHPawn(A.Base);
+
+            // If we've already traced a player hit, ignore any further whip attachments, as their players must be further away & aren't going to be hit or whizzed
+            // Also ignore any whip attachment that doesn't have a live DHPawn
+            if (HitPlayer != none || WhizzedPlayer == none || WhizzedPlayer.bDeleteMe)
+            {
+                continue;
+            }
+
+            WhizType = 0; // reset for this player - WhizType 0 means no whiz (native code won't calculate WhizLocation or trigger PawnWhizzed)
+
+            // Player needs to be whizzed, so determine WhizType to use in HitPointTrace
+            // Passing 'true' means skip IsLocallyControlled check, as server also needs to do this so it can get whiz info to replicate to net client
+            if (WhizzedPlayer.ShouldBeWhizzed(true))
+            {
+                // Get default WhizType for our projectile (1 is supersonic 'snap', 2 is subsonic whiz)
+                if (class<DHBullet>(ProjectileClass) != none)
                 {
-                    HitPlayer = ROPawn(A);
-                    End = HitLocation;
+                    WhizType = class<DHBullet>(ProjectileClass).default.WhizType;
                 }
-                // Otherwise, must have hit an invalid collision mesh, so we temporarily disable its collision & re-run the trace
-                // Matt: this is a hack, but I can't think of another solution - the disabled collision is only for a split second & it seems harmless & effective
+                else if (class<DHBullet_ArmorPiercing>(ProjectileClass) != none)
+                {
+                    WhizType = class<DHBullet_ArmorPiercing>(ProjectileClass).default.WhizType;
+                }
+
+                class'DHBullet'.static.GetWhizType(WhizType, WhizzedPlayer, Instigator, Start);
+
+                // Server saves player & whiz info, to replicate to net client later if pre-launch trace is successful & we don't spawn a bullet
+                // Server doesn't actually play whiz locally
+                if (!WhizzedPlayer.IsLocallyControlled()) // doesn't include listen server whizzing the local player, i.e. the listen server operator
+                {
+                    i = SavedWhizzes.Length;
+                    SavedWhizzes.Length = i + 1;
+                    SavedWhizzes[i].Player = WhizzedPlayer;
+                    SavedWhizzes[i].Type = byte(WhizType);
+                    WhizType = 255; // special WhizType 255 makes native code trigger PawnWhizzed event, so we can grab its WhizLocation, but doesn't try to play whiz effects on server
+                }
+            }
+
+            // Trace to see if bullet path will actually hit one of the player pawn's various body hit points
+            // HitPointTraces don't work well with short traces, so we have to do long trace first, then if we hit player we check whether he was within the whip attachment
+            A = Weapon.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Direction), HitPoints, HitLocation,, WhizType);
+
+            // If we've set WhizType 255, server server needs to replicate whiz to owning net client
+            // So as soon as we've done HitPointTracewe, we grab WhizLocation calculated by native code for 'dummy' PawnWhizzed event we triggered
+            if (WhizType == 255)
+            {
+                SavedWhizzes[i].SoundLocation = WhizzedPlayer.LastWhizLocation;
+            }
+
+            // We're primarily interested if we hit a player, but also need to check if hit an awkward collision or destroyable mesh that doesn't stop a bullet
+            if (DHPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet)
+                || (RODestroyableStaticMesh(A) != none && RODestroyableStaticMesh(A).bWontStopBullets))
+            {
+                // Only count hit if traced actor is within extent of bullet whip (we had to do an artificially long HitPointTrace, so may have traced something far away)
+                if (VSizeSquared(TempHitLocation - HitLocation) <= 180000.0) // 180k is square of max distance across whip 'diagonally'
+                {
+                    // We hit a player, so record it - but we'll let the TraceActors iteration continue so we can make sure there's no blocking actor in front of player
+                    if (DHPawn(A) != none)
+                    {
+                        HitPlayer = DHPawn(A);
+                        HitPlayerLocation = TempHitLocation;
+                    }
+                    // Otherwise, must have hit a special collision mesh or destroyable mesh (e.g. glass) that doesn't stop bullets
+                    // This really complicates the trace as it ought to continue (in the case of glass, having broken it)
+                    // These are very rare & cause too many complications to be worth handling in pre-launch trace, so we'll just exit & let bullet spawn & handle things
+                    else
+                    {
+                        Other = A; // makes certain we'll return false & exit
+                        break;
+                    }
+                }
+            }
+        }
+        // We hit a valid actor, so that's what we'll register for our pre-launch trace result
+        else
+        {
+            // Except if we've already recorded a possible player hit, we need to check whether that player is closer than this blocking actor
+            if (HitPlayer != none)
+            {
+                // This actor is closer than previously traced player, so it's in front of player & will block the shot
+                // Ignore false player hit & we'll register a pre-launch trace hit on this actor
+                if (VSizeSquared(HitLocation - Start) < VSizeSquared(HitPlayerLocation - Start))
+                {
+                    HitPlayer = none;
+                }
+                // This actor is behind player, so player his is valid & we'll allow the pre-launch trace hit on player
                 else
                 {
-                    SavedColMeshes[SavedColMeshes.Length] = A; // save reference to col mesh so we can re-enable its collision after tracing
-                    A.SetCollision(false, A.bBlockActors);
-                    continue; // re-run the trace
+                    break;
                 }
             }
-        }
 
-        break; // generally we're going to exit the for loop after the 1st pass, except in the rare event where we hit an invalid collision mesh
-    }
-
-    // Reset any temporarily disabled collision mesh collision as soon as we finish tracing
-    for (i = 0; i < SavedColMeshes.Length; ++i)
-    {
-        SavedColMeshes[i].SetCollision(true, SavedColMeshes[i].bBlockActors);
-    }
-
-    // If didn't hit a player, set a standard length for normal trace that gets done next
-    if (HitPlayer == none)
-    {
-        End = Start + (PreLaunchTraceDistance * Direction);
-    }
-
-    // Now do a normal trace to see if we hit another blocking actor
-    // Have to do this even if we have a HitPlayer, because HitPointTrace is unreliable & often passes through a blocking vehicle, hitting a shielded player
-    foreach Instigator.TraceActors(class'Actor', A, TempHitLocation, TempHitNormal, End, Start)
-    {
-        // We hit a blocking actor, so now check if it's a valid 'stopper'
-        if ((A.bBlockActors || A.bWorldGeometry) && A.bBlockHitPointTraces)
-        {
-            // If we hit a collision mesh actor, switch hit actor to col mesh's owner & proceed as if we'd hit that actor
-            if (A.IsA('DHCollisionMeshActor'))
-            {
-                // But if col mesh doesn't stop bullets, we ignore it & continue the trace iteration
-                if (DHCollisionMeshActor(A).bWontStopBullet)
-                {
-                    continue;
-                }
-
-                A = A.Owner;
-            }
-
-            // Register a hit on the blocking actor, providing it isn't anything ProcessTouch would normally ignore
-            if (A != Instigator && A.Base != Instigator && A.Owner != Instigator && !A.bDeleteMe && (!A.IsA('Projectile') || A.bProjTarget) && A != HitPlayer)
-            {
-                Other = A;
-                HitLocation = TempHitLocation;
-                HitNormal = TempHitNormal;
-                HitPlayer = none; // clear any hit that HitPointTrace registered on a player, as our blocking actor is in the way
-                break;
-            }
+            Other = A;
+            break;
         }
     }
 
-    // Hit nothing close, so return false & spawn projectile as normal
+    Weapon.bUseCollisionStaticMesh = Weapon.default.bUseCollisionStaticMesh; // reset, now we've finished using Weapon to do traces
+
+    // We didn't trace a valid hit on anything within pre-launch trace range, so return false & spawn a projectile as normal
     if (Other == none && HitPlayer == none)
     {
         return false;
     }
-
-    // We hit a destroyable static mesh actor, but it doesn't stop bullets, which complicates the trace as it ought to continue
-    // This is a rare event, so simplest solution is to return false & spawn projectile as normal (it will smash the destro mesh & continue its flight)
-    // (We could return PreLaunchTrace(HitLocation, Direction), to continue tracing from where we hit, but we'd have to build in a trace count to guard against a recursive loop)
-    if (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets)
+    
+    // We hit a special collision mesh or destroyable mesh (e.g. glass) that doesn't stop bullets
+    // These are very rare & cause too many complications to be worth handling in pre-launch trace, so we'll just exit & let bullet spawn & handle things
+    if ((DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) || (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets))
     {
         return false;
     }
 
-    // This is a bit of a hack, but it prevents bots from killing other players in most instances
+    // This is a bit of a hack, but it prevents bots from killing other players in most instances (by preventing the shot from taking place)
     if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
     {
         return true;
+    }
+
+    // We traced a hit on something valid & aren't going to spawn bullet, so now loop through any SavedWhizzes and play the whiz effects for that player
+    for (i = 0; i < SavedWhizzes.Length; ++i)
+    {
+        SavedWhizzes[i].Player.ClientPawnWhizzed(SavedWhizzes[i].SoundLocation, SavedWhizzes[i].Type);
     }
 
     // Update hit effect (not if we hit a player, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
@@ -474,10 +534,6 @@ simulated function HandleRecoil()
 
 defaultproperties
 {
-    // Pre-launch trace disabled as has issues, especially failure to play bullet whiz/snap
-    // Have some ideas on how whiz/snap may be handled in a future release, but will need to balance benefits in network optimisation vs the extra load that would cause
-    // May also be able to achieve network optimisation for bullets by greater use of the SavedDualShot optimisations in the 'DHHighROFWeaponAttachment' class
-    // Theel: Re-enabled so we can begin adjusting/debugging PLT further and see how much CPU it saves and it's impact on hit detection
     bUsePreLaunchTrace=true
     PreLaunchTraceDistance=2624.0 // 43.5m
 
