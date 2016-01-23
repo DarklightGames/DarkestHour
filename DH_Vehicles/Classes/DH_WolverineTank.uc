@@ -95,13 +95,13 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.5
     VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.4
-    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsY(2)=0.74
     VehicleHudOccupantsX(3)=0.45
-    VehicleHudOccupantsY(3)=0.825
+    VehicleHudOccupantsY(3)=0.8
     VehicleHudOccupantsX(4)=0.55
-    VehicleHudOccupantsY(4)=0.825
+    VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.6
-    VehicleHudOccupantsY(5)=0.75
+    VehicleHudOccupantsY(5)=0.74
     VehicleHudEngineX=0.51
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-90.0,Z=-35.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

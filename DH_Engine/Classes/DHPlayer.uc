@@ -1972,6 +1972,33 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
     }
 }
 
+// New debug exec to adjust the occupant positions in the vehicle HUD overlay (the red dots)
+// Pass new X & Y float values scaled by 1000, which allows precision to 3 decimal places
+exec function SetOccPos(int Index, int NewX, int NewY)
+{
+    local ROVehicle V;
+    local float     X, Y;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none)
+        {
+            X = float(NewX) / 1000.0;
+            Y = float(NewY) / 1000.0;
+            Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
+            V.VehicleHudOccupantsX[Index] = X;
+            V.VehicleHudOccupantsY[Index] = Y;
+        }
+    }
+}
+
 // New exec that respawns the player, but leaves their old pawn body behind, frozen in the game
 // Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
 exec function LeaveBody(optional bool bKeepPRI)
