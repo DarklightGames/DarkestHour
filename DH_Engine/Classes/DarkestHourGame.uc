@@ -17,9 +17,6 @@ var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 var     array<DHSpawnArea>          DHMortarSpawnAreas;
 var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
 
-var     DHRoleInfo                  DHAxisRoles[16];
-var     DHRoleInfo                  DHAlliesRoles[16];
-
 const   OBJECTIVES_MAX = 32;
 var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 
@@ -120,7 +117,7 @@ function HandleReinforceIntervalInflation()
 
 function PostBeginPlay()
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
     local DH_LevelInfo          DLI;
     local ROLevelInfo           LI;
     local ROMapBoundsNE         NE;
@@ -195,101 +192,102 @@ function PostBeginPlay()
     RoundDuration = LevelInfo.RoundDuration * 60;
 
     // Setup some GRI stuff
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (DHGRI == none)
+    if (GRI == none)
     {
         return;
     }
 
-    DHGRI.bAllowNetDebug = bAllowNetDebug;
-    DHGRI.PreStartTime = PreStartTime;
-    DHGRI.RoundDuration = RoundDuration;
-    DHGRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
-    DHGRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
-    DHGRI.ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
-    DHGRI.ReinforcementInterval[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
-    DHGRI.UnitName[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitName;
-    DHGRI.UnitName[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitName;
-    DHGRI.NationIndex[AXIS_TEAM_INDEX] = LevelInfo.Axis.Nation;
-    DHGRI.NationIndex[ALLIES_TEAM_INDEX] = LevelInfo.Allies.Nation;
-    DHGRI.UnitInsignia[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitInsignia;
-    DHGRI.UnitInsignia[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitInsignia;
-    DHGRI.MapImage = LevelInfo.MapImage;
-    DHGRI.bPlayerMustReady = bPlayersMustBeReady;
-    DHGRI.RoundLimit = RoundLimit;
-    DHGRI.MaxPlayers = MaxPlayers;
-    DHGRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
-    DHGRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
+    // General game type settings
+    GRI.bAllowNetDebug = bAllowNetDebug;
+    GRI.PreStartTime = PreStartTime;
+    GRI.RoundDuration = RoundDuration;
+    GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+    GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+    GRI.ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
+    GRI.ReinforcementInterval[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
+    GRI.UnitName[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitName;
+    GRI.UnitName[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitName;
+    GRI.NationIndex[AXIS_TEAM_INDEX] = LevelInfo.Axis.Nation;
+    GRI.NationIndex[ALLIES_TEAM_INDEX] = LevelInfo.Allies.Nation;
+    GRI.UnitInsignia[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitInsignia;
+    GRI.UnitInsignia[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitInsignia;
+    GRI.MapImage = LevelInfo.MapImage;
+    GRI.bPlayerMustReady = bPlayersMustBeReady;
+    GRI.RoundLimit = RoundLimit;
+    GRI.MaxPlayers = MaxPlayers;
+    GRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
+    GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
 
     // Artillery
-    DHGRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
-    DHGRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
-    DHGRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
-    DHGRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
-    DHGRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
-    DHGRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
-    DHGRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
-    DHGRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
+    GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
+    GRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
+    GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
+    GRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
+    GRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
+    GRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
+    GRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
+    GRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
 
-    for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); ++k)
+    for (k = 0; k < arraycount(GRI.AxisRallyPoints); ++k)
     {
-        DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
-        DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
-        DHGRI.AxisRallyPoints[k].OfficerPRI = none;
-        DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
+        GRI.AlliedRallyPoints[k].OfficerPRI = none;
+        GRI.AlliedRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
+        GRI.AxisRallyPoints[k].OfficerPRI = none;
+        GRI.AxisRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
     }
 
     // Clear help requests array
-    for (k = 0; k < arraycount(DHGRI.AlliedHelpRequests); ++k)
+    for (k = 0; k < arraycount(GRI.AlliedHelpRequests); ++k)
     {
-        DHGRI.AlliedHelpRequests[k].OfficerPRI = none;
-        DHGRI.AlliedHelpRequests[k].requestType = 255;
-        DHGRI.AxisHelpRequests[k].OfficerPRI = none;
-        DHGRI.AxisHelpRequests[k].requestType = 255;
+        GRI.AlliedHelpRequests[k].OfficerPRI = none;
+        GRI.AlliedHelpRequests[k].requestType = 255;
+        GRI.AxisHelpRequests[k].OfficerPRI = none;
+        GRI.AxisHelpRequests[k].requestType = 255;
     }
 
     ResetMortarTargets();
 
     if (LevelInfo.OverheadOffset == OFFSET_90)
     {
-        DHGRI.OverheadOffset = 90;
+        GRI.OverheadOffset = 90;
     }
     else if (LevelInfo.OverheadOffset == OFFSET_180)
     {
-        DHGRI.OverheadOffset = 180;
+        GRI.OverheadOffset = 180;
     }
     else if (LevelInfo.OverheadOffset == OFFSET_270)
     {
-        DHGRI.OverheadOffset = 270;
+        GRI.OverheadOffset = 270;
     }
     else
     {
-        DHGRI.OverheadOffset = 0;
+        GRI.OverheadOffset = 0;
     }
 
     // Store allied nationality for customising HUD
     if (DHLevelInfo.AlliedNation == NATION_Britain)
     {
-        DHGRI.AlliedNationID = 1;
+        GRI.AlliedNationID = 1;
     }
     else if (DHLevelInfo.AlliedNation == NATION_Canada)
     {
-        DHGRI.AlliedNationID = 2;
+        GRI.AlliedNationID = 2;
     }
     else
     {
-        DHGRI.AlliedNationID = 0;
+        GRI.AlliedNationID = 0;
     }
 
     // Find the location of the map bounds
     foreach AllActors(class'ROMapBoundsNE', NE)
     {
-        DHGRI.NorthEastBounds = NE.Location;
+        GRI.NorthEastBounds = NE.Location;
     }
     foreach AllActors(class'ROMapBoundsSW', SW)
     {
-        DHGRI.SouthWestBounds = SW.Location;
+        GRI.SouthWestBounds = SW.Location;
     }
 
     // Find all the radios
@@ -297,7 +295,7 @@ function PostBeginPlay()
     {
         if (RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
         {
-            DHGRI.AxisRadios[i] = RAT;
+            GRI.AxisRadios[i] = RAT;
             ++i;
         }
     }
@@ -306,7 +304,7 @@ function PostBeginPlay()
     {
         if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
         {
-            DHGRI.AlliedRadios[j] = RAT;
+            GRI.AlliedRadios[j] = RAT;
             ++j;
         }
     }
@@ -314,21 +312,21 @@ function PostBeginPlay()
     foreach AllActors(class'DHAmmoResupplyVolume', ARV)
     {
         DHResupplyAreas[m] = ARV;
-        DHGRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
-        DHGRI.ResupplyAreas[m].Team = ARV.Team;
-        DHGRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
+        GRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
+        GRI.ResupplyAreas[m].Team = ARV.Team;
+        GRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
 
         if (ARV.ResupplyType == RT_Players)
         {
-            DHGRI.ResupplyAreas[m].ResupplyType = 0;
+            GRI.ResupplyAreas[m].ResupplyType = 0;
         }
         else if (ARV.ResupplyType == RT_Vehicles)
         {
-            DHGRI.ResupplyAreas[m].ResupplyType = 1;
+            GRI.ResupplyAreas[m].ResupplyType = 1;
         }
         else if (ARV.ResupplyType == RT_All)
         {
-            DHGRI.ResupplyAreas[m].ResupplyType = 2;
+            GRI.ResupplyAreas[m].ResupplyType = 2;
         }
 
         m++;
@@ -368,22 +366,22 @@ function PostBeginPlay()
     // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
     if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
     {
-        DHGRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length - 1);
+        GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length - 1);
     }
 
     if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
     {
-        DHGRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
+        GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
     }
 }
 
 function CheckResupplyVolumes()
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
     local int i;
 
     // Activate any resupply areas that are activated based on spawn areas
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     for (i = 0; i < arraycount(DHResupplyAreas); ++i)
     {
@@ -399,12 +397,12 @@ function CheckResupplyVolumes()
                 if ((CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                     || CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
-                    DHGRI.ResupplyAreas[i].bActive = true;
+                    GRI.ResupplyAreas[i].bActive = true;
                     DHResupplyAreas[i].bActive = true;
                 }
                 else
                 {
-                    DHGRI.ResupplyAreas[i].bActive = false;
+                    GRI.ResupplyAreas[i].bActive = false;
                     DHResupplyAreas[i].bActive = false;
                 }
             }
@@ -414,19 +412,19 @@ function CheckResupplyVolumes()
                 if ((CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                     || CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
-                    DHGRI.ResupplyAreas[i].bActive = true;
+                    GRI.ResupplyAreas[i].bActive = true;
                     DHResupplyAreas[i].bActive = true;
                 }
                 else
                 {
-                    DHGRI.ResupplyAreas[i].bActive = false;
+                    GRI.ResupplyAreas[i].bActive = false;
                     DHResupplyAreas[i].bActive = false;
                 }
             }
         }
         else
         {
-            DHGRI.ResupplyAreas[i].bActive = true;
+            GRI.ResupplyAreas[i].bActive = true;
             DHResupplyAreas[i].bActive = true;
         }
     }
@@ -760,10 +758,13 @@ function Bot SpawnBot(optional string botName)
 function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 {
     local int MyRole, Count, AltRole;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (ThisBot != none)
     {
-        MyRole = Rand(arraycount(DHAxisRoles));
+        MyRole = Rand(arraycount(GRI.DHAxisRoles));
 
         do
         {
@@ -794,7 +795,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
                 {
                     ++MyRole;
 
-                    if ((BotTeamNum == 0 && MyRole >= arraycount(DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= arraycount(DHAxisRoles)))
+                    if ((BotTeamNum == 0 && MyRole >= arraycount(GRI.DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= arraycount(GRI.DHAxisRoles)))
                     {
                         MyRole = 0;
                     }
@@ -1071,54 +1072,58 @@ function AddDefaultInventory(Pawn aPawn)
 //The following is a clusterfuck of hacky overriding of RO's arbitrarily low limit of roles from 10 to 16
 function AddRole(RORoleInfo NewRole)
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
     local DHRoleInfo            DHRI;
 
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
     DHRI = DHRoleInfo(NewRole);
 
     if (NewRole.Side == SIDE_Allies)
     {
-        if (AlliesRoleIndex >= arraycount(DHAlliesRoles))
+        if (AlliesRoleIndex >= arraycount(GRI.DHAlliesRoles))
         {
             Warn(NewRole @ "ignored when adding Allied roles to the map, exceeded limit");
 
             return;
         }
 
-        DHAlliesRoles[AlliesRoleIndex] = DHRI;
-        DHGRI.DHAlliesRoles[AlliesRoleIndex] = DHRI;
+        GRI.DHAlliesRoles[AlliesRoleIndex] = DHRI;
+        GRI.DHAlliesRoleLimit[AlliesRoleIndex] = NewRole.Limit;
         ++AlliesRoleIndex;
     }
     else
     {
-        if (AxisRoleIndex >= arraycount(DHAxisRoles))
+        if (AxisRoleIndex >= arraycount(GRI.DHAxisRoles))
         {
             Warn(NewRole @ "ignored when adding Axis roles to the map, exceeded limit");
 
             return;
         }
 
-        DHAxisRoles[AxisRoleIndex] = DHRI;
-        DHGRI.DHAxisRoles[AxisRoleIndex] = DHRI;
+        GRI.DHAxisRoles[AxisRoleIndex] = DHRI;
+        GRI.DHAxisRoleLimit[AxisRoleIndex] = NewRole.Limit;
         ++AxisRoleIndex;
     }
 }
 
 function RORoleInfo GetRoleInfo(int Team, int Num)
 {
-    if (Team > 1 || Num < 0 || Num >= arraycount(DHAxisRoles))
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (Team > 1 || Num < 0 || Num >= arraycount(GRI.DHAxisRoles))
     {
         return none;
     }
 
     if (Team == AXIS_TEAM_INDEX)
     {
-        return DHAxisRoles[Num];
+        return GRI.DHAxisRoles[Num];
     }
     else if (Team == ALLIES_TEAM_INDEX)
     {
-        return DHAlliesRoles[Num];
+        return GRI.DHAlliesRoles[Num];
     }
 
     return none;
@@ -1126,21 +1131,21 @@ function RORoleInfo GetRoleInfo(int Team, int Num)
 
 function bool RoleLimitReached(int Team, int Num)
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= arraycount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
     {
         return true;
     }
 
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num].GetLimit(DHGRI.MaxPlayers) != 0 && DHGRI.DHAxisRoleCount[Num] >= DHAxisRoles[Num].GetLimit(DHGRI.MaxPlayers))
+    if (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoleLimit[Num] != 255 && GRI.DHAxisRoleCount[Num] >= GRI.DHAxisRoleLimit[Num])
     {
         return true;
     }
-    else if (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num].GetLimit(DHGRI.MaxPlayers) != 0 && DHGRI.DHAlliesRoleCount[Num] >= DHAlliesRoles[Num].GetLimit(DHGRI.MaxPlayers))
+    else if (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoleLimit[Num] != 255 && GRI.DHAlliesRoleCount[Num] >= GRI.DHAlliesRoleLimit[Num])
     {
         return true;
     }
@@ -1152,10 +1157,10 @@ function bool HumanWantsRole(int Team, int Num)
 {
     local Controller            C;
     local ROBot                 BotHasRole;
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
 
     // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= arraycount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
     {
         return false;
     }
@@ -1173,7 +1178,7 @@ function bool HumanWantsRole(int Team, int Num)
         }
     }
 
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (BotHasRole != none)
     {
@@ -1181,13 +1186,13 @@ function bool HumanWantsRole(int Team, int Num)
 
         if (Team == AXIS_TEAM_INDEX)
         {
-            --DHGRI.DHAxisRoleCount[Num];
-            --DHGRI.DHAxisRoleBotCount[Num];
+            --GRI.DHAxisRoleCount[Num];
+            --GRI.DHAxisRoleBotCount[Num];
         }
         else if (Team == ALLIES_TEAM_INDEX)
         {
-            --DHGRI.DHAlliesRoleCount[Num];
-            --DHGRI.DHAlliesRoleBotCount[Num];
+            --GRI.DHAlliesRoleCount[Num];
+            --GRI.DHAlliesRoleBotCount[Num];
         }
 
         return true;
@@ -1199,15 +1204,18 @@ function bool HumanWantsRole(int Team, int Num)
 function int GetVehicleRole(int Team, int Num)
 {
     local int i;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= arraycount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
     {
         return -1;
     }
 
     // Should probably do this team specific in case the teams have different amounts of roles
-    for (i = 0; i < arraycount(DHAxisRoles); ++i)
+    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
         if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
         {
@@ -1221,10 +1229,13 @@ function int GetVehicleRole(int Team, int Num)
 function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
     local int MyRole, Count, AltRole;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (ThisBot != none)
     {
-        MyRole = Rand(arraycount(DHAxisRoles));
+        MyRole = Rand(arraycount(GRI.DHAxisRoles));
 
         do
         {
@@ -1245,7 +1256,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
             {
                 ++Count;
 
-                if (Count > arraycount(DHAxisRoles))
+                if (Count > arraycount(GRI.DHAxisRoles))
                 {
                     Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
 
@@ -1255,7 +1266,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
                 {
                     ++MyRole;
 
-                    if (MyRole >= arraycount(DHAxisRoles))
+                    if (MyRole >= arraycount(GRI.DHAxisRoles))
                     {
                         MyRole = 0;
                     }
@@ -1277,25 +1288,25 @@ function UpdateRoleCounts()
 {
     local Controller C;
     local int i;
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
 
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    for (i = 0; i < arraycount(DHAxisRoles); ++i)
+    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
-        if (DHAxisRoles[i] != none)
+        if (GRI.DHAxisRoles[i] != none)
         {
-            DHGRI.DHAxisRoleCount[i] = 0;
-            DHGRI.DHAxisRoleBotCount[i] = 0;
+            GRI.DHAxisRoleCount[i] = 0;
+            GRI.DHAxisRoleBotCount[i] = 0;
         }
     }
 
-    for (i = 0; i < arraycount(DHAlliesRoles); ++i)
+    for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
     {
-        if (DHAlliesRoles[i] != none)
+        if (GRI.DHAlliesRoles[i] != none)
         {
-            DHGRI.DHAlliesRoleCount[i] = 0;
-            DHGRI.DHAlliesRoleBotCount[i] = 0;
+            GRI.DHAlliesRoleCount[i] = 0;
+            GRI.DHAlliesRoleBotCount[i] = 0;
         }
     }
 
@@ -1307,24 +1318,24 @@ function UpdateRoleCounts()
             {
                 if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    DHGRI.DHAlliesRoleCount[ROPlayer(C).CurrentRole]++;
+                    GRI.DHAlliesRoleCount[ROPlayer(C).CurrentRole]++;
                 }
                 else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    DHGRI.DHAxisRoleCount[ROPlayer(C).CurrentRole]++;
+                    GRI.DHAxisRoleCount[ROPlayer(C).CurrentRole]++;
                 }
             }
             else if (ROBot(C) != none && ROBot(C).CurrentRole != -1)
             {
                 if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    DHGRI.DHAlliesRoleCount[ROBot(C).CurrentRole]++;
-                    DHGRI.DHAlliesRoleBotCount[ROBot(C).CurrentRole]++;
+                    GRI.DHAlliesRoleCount[ROBot(C).CurrentRole]++;
+                    GRI.DHAlliesRoleBotCount[ROBot(C).CurrentRole]++;
                 }
                 else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    DHGRI.DHAxisRoleCount[ROBot(C).CurrentRole]++;
-                    DHGRI.DHAxisRoleBotCount[ROBot(C).CurrentRole]++;
+                    GRI.DHAxisRoleCount[ROBot(C).CurrentRole]++;
+                    GRI.DHAxisRoleBotCount[ROBot(C).CurrentRole]++;
                 }
             }
         }
@@ -1656,12 +1667,15 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
     local int i;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (TeamID == 0)
     {
-        for (i = 0; i < arraycount(DHAxisRoles); ++i)
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
-            if (DHAxisRoles[i] == RI)
+            if (GRI.DHAxisRoles[i] == RI)
             {
                 return true;
             }
@@ -1669,9 +1683,9 @@ function bool RoleExists(byte TeamID, DHRoleInfo RI)
     }
     else if (TeamID == 1)
     {
-        for (i = 0; i < arraycount(DHAlliesRoles); ++i)
+        for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
-            if (DHAlliesRoles[i] == RI)
+            if (GRI.DHAlliesRoles[i] == RI)
             {
                 return true;
             }
@@ -1702,6 +1716,23 @@ state RoundInPlay
 
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
+
+        // Role limits
+        for (i = 0; i < arraycount(GRI.DHAlliesRoleLimit); ++i)
+        {
+            if (GRI.DHAlliesRoles[i] != none)
+            {
+                GRI.DHAlliesRoleLimit[i] = GRI.DHAlliesRoles[i].Limit;
+            }
+        }
+
+        for (i = 0; i < arraycount(GRI.DHAxisRoleLimit); ++i)
+        {
+            if (GRI.DHAxisRoles[i] != none)
+            {
+                GRI.DHAxisRoleLimit[i] = GRI.DHAxisRoles[i].Limit;
+            }
+        }
 
         // Arty
         GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
@@ -2370,6 +2401,64 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
 
+// Quick test function to change a role's limit (Allied only)
+// function doesn't support bots
+exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
+{
+    local Controller C;
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local int i;
+    local int RoleLimit;
+    local int RoleBotCount;
+    local int RoleCount;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    if (Team == 0)
+    {
+        GRI.DHAxisRoleLimit[Index] = NewLimit;
+        GRI.GetRoleCounts(GRI.DHAxisRoles[Index], RoleCount, RoleBotCount, RoleLimit);
+    }
+    else if (Team == 1)
+    {
+        GRI.DHAlliesRoleLimit[Index] = NewLimit;
+        GRI.GetRoleCounts(GRI.DHAlliesRoles[Index], RoleCount, RoleBotCount, RoleLimit);
+    }
+
+    if (RoleCount - NewLimit > 0)
+    {
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            PC = DHPlayer(C);
+
+            if (PC == none)
+            {
+                continue;
+            }
+
+            if (PC.GetTeamNum() == Team && (PC.GetRoleInfo() == GRI.DHAlliesRoles[Index] ||
+                                            PC.GetRoleInfo() == GRI.DHAxisRoles[Index]))
+            {
+                DHPlayerReplicationInfo(PC.PlayerReplicationInfo).RoleInfo = none;
+                PC.bSpawnPointInvalidated = true;
+
+                if (i >= RoleCount - NewLimit)
+                {
+                    return;
+                }
+
+                ++i;
+            }
+        }
+    }
+}
+
 // Function for changing a team's ReinforcementInterval
 exec function SetReinforcementInterval(int Team, int Amount)
 {
@@ -2828,18 +2917,18 @@ function ChooseWinner()
     local Controller C;
     local int i, Num[2], NumReq[2], AxisScore, AlliedScore;
     local float AxisReinforcementsPercent, AlliedReinforcementsPercent;
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
 
     // Setup some GRI stuff
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (DHGRI == none)
+    if (GRI == none)
     {
         return;
     }
 
-    AxisReinforcementsPercent = (float(DHGRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit) * 100;
-    AlliedReinforcementsPercent = (float(DHGRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
+    AxisReinforcementsPercent = (float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit) * 100;
+    AlliedReinforcementsPercent = (float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
 
     // Attrition check
     // Check to see who has more reinforcements

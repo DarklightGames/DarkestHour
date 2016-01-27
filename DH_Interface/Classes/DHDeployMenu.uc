@@ -85,6 +85,7 @@ var             bool                        bButtonsEnabled;
 var             material                    VehicleNoneMaterial;
 
 var             color                       RedColor;
+var             color                       GreyColor;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -605,13 +606,17 @@ function UpdateRoles()
 
         GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 
-        if (Limit > 0)
+        if (Limit == 0)
         {
-            S @= "[" $ Count $ "/" $ Limit $ "]";
+            S = MakeColorCode(GreyColor) $ S $ " [Locked]";
+        }
+        else if (Limit == 255)
+        {
+            S @= "[" $ Count $ "]";
         }
         else
         {
-            S @= "[" $ Count $ "]";
+            S @= "[" $ Count $ "/" $ Limit $ "]";
         }
 
         if (BotCount > 0)
@@ -894,7 +899,7 @@ function AutoSelectRole()
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
             if (GRI.DHAxisRoles[i] != none &&
-                GRI.DHAxisRoles[i].GetLimit(GRI.MaxPlayers) == 0)
+                GRI.DHAxisRoleLimit[i] == 255)
             {
                 li_Roles.SelectByObject(GRI.DHAxisRoles[i]);
             }
@@ -905,7 +910,7 @@ function AutoSelectRole()
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
             if (GRI.DHAlliesRoles[i] != none &&
-                GRI.DHAlliesRoles[i].GetLimit(GRI.MaxPlayers) == 0)
+                GRI.DHAlliesRoleLimit[i] == 255)
             {
                 li_Roles.SelectByObject(GRI.DHAlliesRoles[i]);
             }
@@ -1841,6 +1846,7 @@ defaultproperties
 
     WhiteColor=(R=255,G=255,B=255,A=255)
     RedColor=(R=255,G=0,B=0,A=255)
+    GreyColor=(R=128,G=128,B=128,A=255)
 
     OnPreDraw=InternalOnPreDraw
 

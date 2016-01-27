@@ -136,6 +136,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
+    Limit=255 //Infinite (0 is now deactivated)
     AddedReinforcementTime=0
     HeadgearProbabilities(0)=1.0
     HeadgearProbabilities(1)=0.0

@@ -42,8 +42,10 @@ const ROLES_MAX = 16;
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
 var DHRoleInfo          DHAlliesRoles[ROLES_MAX];
 
+var byte                DHAlliesRoleLimit[ROLES_MAX];
 var byte                DHAlliesRoleBotCount[ROLES_MAX];
 var byte                DHAlliesRoleCount[ROLES_MAX];
+var byte                DHAxisRoleLimit[ROLES_MAX];
 var byte                DHAxisRoleBotCount[ROLES_MAX];
 var byte                DHAxisRoleCount[ROLES_MAX];
 
@@ -96,7 +98,9 @@ replication
         SpawnsRemaining,
         DHAxisRoles,
         DHAlliesRoles,
+        DHAlliesRoleLimit,
         DHAlliesRoleCount,
+        DHAxisRoleLimit,
         DHAxisRoleCount,
         DHAlliesRoleBotCount,
         DHAxisRoleBotCount,
@@ -674,15 +678,15 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
         return;
     }
 
-    Limit = RI.GetLimit(MaxPlayers);
-
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
+            Limit = DHAxisRoleLimit[Index];
             Count = DHAxisRoleCount[Index];
             BotCount = DHAxisRoleBotCount[Index];
             break;
         case ALLIES_TEAM_INDEX:
+            Limit = DHAlliesRoleLimit[Index];
             Count = DHAlliesRoleCount[Index];
             BotCount = DHAlliesRoleBotCount[Index];
             break;
