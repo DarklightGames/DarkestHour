@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHPlayer extends ROPlayer;
+class DHPlayer extends ROPlayer
+    dependson(DHSquadReplicationInfo);
 
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
@@ -64,8 +65,14 @@ var     bool                    bSpawnPointInvalidated;
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
 // Squads
-var     byte                    SquadIndex;
-var     byte                    SquadMemberIndex;
+
+// Index into the team's squad array (in DHSquadReplicationInfo.*Squads).
+// If value is -1, the player is not in a squad.
+var     int                     SquadIndex;
+
+// Index into the squad's member list (in DHSquadReplicationInfo.Squad.Members).
+// Only applicable when SquadIndex is not -1.
+var     int                     SquadMemberIndex;
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
@@ -76,7 +83,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex;
+        MortarTargetIndex, SquadIndex, SquadMemberIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -86,7 +93,8 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog; // these ones in debug mode only
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
+        ServerSquadCreate, ServerSquadLeave;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -99,7 +107,7 @@ replication
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // No longer used
 
-// Modified to bypass more RO shit design
+// Modified to bypass RO design
 event InitInputSystem()
 {
     super(UnrealPlayer).InitInputSystem();
@@ -2678,6 +2686,9 @@ function Reset()
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
     MortarTargetIndex = default.MortarTargetIndex;
+
+    SquadIndex = default.SquadIndex;
+    SquadMemberIndex = default.SquadMemberIndex;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -2999,30 +3010,52 @@ exec function FOV(float F)
     }
 }
 
-simulated function ClientJoinSquadResult(int Result)
+simulated function ClientJoinSquadResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientJoinSquadResult" @ Error);
 }
 
-simulated function ClientLeaveSquadResult(int Result)
+simulated function ClientLeaveSquadResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientLeaveSquadResult" @ Error);
 }
 
-simulated function ClientChangeSquadLeaderResult(int Result)
+simulated function ClientChangeSquadLeaderResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientChangeSquadLeaderResult" @ Error);
 }
 
-simulated function ClientCreateSquadResult(int Result)
+simulated function ClientCreateSquadResult(DHSquadReplicationInfo.ESquadError Error)
 {
-    Level.Game.Broadcast(self, "ClientCreateSquadResult" @ Result);
+    Level.Game.Broadcast(self, "ClientCreateSquadResult" @ Error);
 }
 
-exec function CreateSquad(string SquadName)
+simulated exec function DebugSquadCreate(optional string SquadName)
+{
+    ServerSquadCreate(SquadName);
+}
+
+function ServerSquadCreate(string SquadName)
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
     G.SquadReplicationInfo.ServerCreateSquad(self, SquadName);
+}
+
+simulated exec function DebugSquadLeave()
+{
+    ServerSquadLeave();
+}
+
+exec function ServerSquadLeave()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.ServerLeaveSquad(self);
 }
 
 defaultproperties
@@ -3063,5 +3096,8 @@ defaultproperties
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
+
+    SquadIndex=-1
+    SquadMemberIndex-1
 }
 

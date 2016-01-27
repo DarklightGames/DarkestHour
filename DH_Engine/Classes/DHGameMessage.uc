@@ -165,6 +165,12 @@ static function string GetString(
             return Repl(default.SquadLeftMessage, "{0}", RelatedPRI_1.PlayerName);
         case 32:
             return default.SquadKickedMessage;
+        case 33:
+            return default.SquadNoLongerLeaderMessage;
+        case 34:
+            return default.SquadYouAreNowLeaderMessage;
+        case 35:
+            return Repl(default.SquadNewLeaderLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
