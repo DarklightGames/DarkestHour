@@ -2999,6 +2999,32 @@ exec function FOV(float F)
     }
 }
 
+simulated function ClientJoinSquadResult(int Result)
+{
+}
+
+simulated function ClientLeaveSquadResult(int Result)
+{
+}
+
+simulated function ClientChangeSquadLeaderResult(int Result)
+{
+}
+
+simulated function ClientCreateSquadResult(int Result)
+{
+    Level.Game.Broadcast(self, "ClientCreateSquadResult" @ Result);
+}
+
+exec function CreateSquad(string SquadName)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.ServerCreateSquad(self, SquadName);
+}
+
 defaultproperties
 {
     // Sway values

@@ -38,6 +38,8 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
+var     DHSquadReplicationInfo      SquadReplicationInfo;
+
 var struct VersionInfo
 {
     var int Major;
@@ -113,6 +115,13 @@ function HandleReinforceIntervalInflation()
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
     }
 
+}
+
+function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()

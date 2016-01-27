@@ -10,6 +10,13 @@ var localized string VehicleDepletedMessage;
 var localized string VehicleArrivedMessage;
 var localized string VehicleCutOffMessage;
 
+var localized string SquadJoinedMessage;
+var localized string SquadLeftMessage;
+var localized string SquadKickedMessage;
+var localized string SquadNoLongerLeaderMessage;
+var localized string SquadYouAreNowLeaderMessage;
+var localized string SquadNewLeaderLeaderMessage;
+
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored
 static function string GetString(
@@ -150,6 +157,14 @@ static function string GetString(
         // You have logged out of admin message(used for AdminLoginSilent)
         case 21:
             return default.YouHaveLoggedOutOfAdminMsg;
+        // {0} has joined the squad.
+        case 30:
+            return Repl(default.SquadJoinedMessage, "{0}", RelatedPRI_1.PlayerName);
+        // {0} has left the squad.
+        case 31:
+            return Repl(default.SquadLeftMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 32:
+            return default.SquadKickedMessage;
         default:
             break;
     }
@@ -193,4 +208,11 @@ defaultproperties
     VehicleDepletedMessage="{0} reinforcements have been depleted."
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
+
+    SquadJoinedMessage="{0} has joined the squad."
+    SquadLeftMessage="{0} has left the squad.""
+    SquadKickedMessage="You have been kicked from your squad."
+    SquadNoLongerLeaderMessage="You are no longer the squad leader."
+    SquadYouAreNowLeaderMessage="You are now the squad leader."
+    SquadNewLeaderLeaderMessage="{0} has become the squad leader."
 }
