@@ -3041,7 +3041,7 @@ function ServerSquadCreate(string SquadName)
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.ServerCreateSquad(self, SquadName);
+    G.SquadReplicationInfo.CreateSquad(self, SquadName);
 }
 
 simulated exec function DebugSquadLeave()
@@ -3055,7 +3055,7 @@ exec function ServerSquadLeave()
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.ServerLeaveSquad(self);
+    G.SquadReplicationInfo.LeaveSquad(self);
 }
 
 defaultproperties

@@ -72,16 +72,12 @@ function bool IsSquadActive(byte TeamIndex, int SquadIndex)
     return false;
 }
 
-function bool IsSquadLeader(DHPlayer PC)
+function bool IsSquadLeader(DHPlayer PC, int TeamIndex, int SquadIndex)
 {
-    local int TeamIndex;
-
-    if (PC == none || PC.SquadIndex == -1)
+    if (PC == none || PC.SquadIndex == -1 || PC.GetTeamNum() != TeamIndex || PC.SquadIndex != SquadIndex)
     {
         return false;
     }
-
-    TeamIndex = PC.GetTeamNum();
 
     switch (TeamIndex)
     {
@@ -140,19 +136,16 @@ function DebugLog(string S)
 }
 
 // Returns the index of the newly created squad, or -1 if there was an error.
-function byte ServerCreateSquad(DHPlayer PC, optional string Name)
+function byte CreateSquad(DHPlayer PC, optional string Name)
 {
     local int i;
     local int TeamIndex;
 
-    Log(PC);
-    Log(PC.PlayerReplicationInfo.PlayerName);
-
     if (PC.SquadIndex != -1)
     {
-        DebugLog(PC.PlayerReplicationInfo.PlayerName @ "is already in a squad (" $ PC.SquadIndex $ ")");
-
         PC.ClientCreateSquadResult(SE_AlreadyInSquad);
+
+        DebugLog(PC.PlayerReplicationInfo.PlayerName @ "is already in a squad (" $ PC.SquadIndex $ ")");
 
         return -1;
     }
@@ -217,6 +210,8 @@ function byte ServerCreateSquad(DHPlayer PC, optional string Name)
                     return i;
                 }
             }
+
+            PC.ClientCreateSquadResult(SE_TooManySquads);
             break;
         default:
             PC.ClientCreateSquadResult(SE_MustBeOnTeam);
@@ -229,14 +224,15 @@ function byte ServerCreateSquad(DHPlayer PC, optional string Name)
     return -1;
 }
 
-function bool ServerChangeSquadLeader(DHPlayer PC, DHPlayer NewSquadLeader)
+// Returns true if the squad leader was successfully changed.
+function bool ChangeSquadLeader(DHPlayer PC, int TeamIndex, int SquadIndex, DHPlayer NewSquadLeader)
 {
     if (PC == none)
     {
         return false;
     }
 
-    if (!IsSquadLeader(PC))
+    if (!IsSquadLeader(PC, TeamIndex, SquadIndex))
     {
         // Player is not a squad leader.
         PC.ClientChangeSquadLeaderResult(SE_NotSquadLeader);
@@ -248,9 +244,13 @@ function bool ServerChangeSquadLeader(DHPlayer PC, DHPlayer NewSquadLeader)
         PC.SquadIndex != NewSquadLeader.SquadIndex)
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
+
         return false;
     }
 
+    // To change the squad leader, instead of changing the LeaderMemberIndex,
+    // we simply swap the new leader with the old one. This preserves the
+    // "leader inheritance" order.
     if (!SwapSquadMembers(PC, NewSquadLeader))
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
@@ -268,9 +268,13 @@ function bool ServerChangeSquadLeader(DHPlayer PC, DHPlayer NewSquadLeader)
     BroadcastSquadLocalizedMessage(PC.GetTeamNum(), PC.SquadIndex, MessageClass, 35, NewSquadLeader.PlayerReplicationInfo);
 
     PC.ClientChangeSquadLeaderResult(SE_None);
+
+    return true;
 }
 
-function bool ServerLeaveSquad(DHPlayer PC)
+// Returns true if player successfully leaves a squad. The player is guaranteed
+// to not be a member of a squad after this call, regardless of the return value.
+function bool LeaveSquad(DHPlayer PC)
 {
     local int i, j;
     local int TeamIndex;
@@ -312,8 +316,6 @@ function bool ServerLeaveSquad(DHPlayer PC)
 
                     if (AxisSquads[PC.SquadIndex].Members[j] != none)
                     {
-                        Log(j);
-
                         NewSquadLeader = AxisSquads[PC.SquadIndex].Members[j];
 
                         // "You are now the squad leader"
@@ -329,42 +331,84 @@ function bool ServerLeaveSquad(DHPlayer PC)
                 }
             }
 
-            PC.SquadIndex = -1;
-            PC.SquadMemberIndex = -1;
-
             break;
         case ALLIES_TEAM_INDEX:
+            if (AlliesSquads[PC.SquadIndex].Members[PC.SquadMemberIndex] != PC)
+            {
+                // Invalid state (should never happen)
+                PC.ClientLeaveSquadResult(SE_InvalidState);
+
+                return false;
+            }
+
+            AlliesSquads[PC.SquadIndex].Members[PC.SquadMemberIndex] = none;
+
+            if (PC.SquadMemberIndex == AlliesSquads[PC.SquadIndex].LeaderMemberIndex)
+            {
+                // Player was squad leader, transfer leadership to next in the list
+                for (i = 1; i < arraycount(AlliesSquads[PC.SquadIndex].Members); ++i)
+                {
+                    j = (AlliesSquads[PC.SquadIndex].LeaderMemberIndex + i) % SQUAD_MEMBER_COUNT;
+
+                    if (AlliesSquads[PC.SquadIndex].Members[j] != none)
+                    {
+                        NewSquadLeader = AlliesSquads[PC.SquadIndex].Members[j];
+
+                        // "You are now the squad leader"
+                        NewSquadLeader.ReceiveLocalizedMessage(MessageClass, 34);
+
+                        // "{0} has become the squad leader"
+                        BroadcastSquadLocalizedMessage(TeamIndex, PC.SquadIndex, MessageClass, 35, NewSquadLeader.PlayerReplicationInfo);
+
+                        AlliesSquads[PC.SquadIndex].LeaderMemberIndex = j;
+
+                        break;
+                    }
+                }
+            }
             break;
         default:
             PC.ClientLeaveSquadResult(SE_InvalidArgument);
             return false;
     }
 
+    PC.SquadIndex = -1;
+    PC.SquadMemberIndex = -1;
+
     PC.ClientLeaveSquadResult(SE_None);
 
     return true;
 }
 
-function ServerJoinSquad(DHPlayer PC, byte TeamIndex, int SquadIndex)
+function bool IsInSquad(DHPlayer PC, byte TeamIndex, int SquadIndex)
+{
+    return PC != none && PC.GetTeamNum() == TeamIndex && PC.SquadIndex == SquadIndex;
+}
+
+// Returns the index of the new SquadMemberIndex of the player or -1 if
+// joining a squad failed.
+function int JoinSquad(DHPlayer PC, byte TeamIndex, int SquadIndex)
 {
     local bool bDidJoinSquad;
     local int i, j;
 
-    // This check is to guard against the rare case where a player could
-    // request to join a squad on Team 1, but actually switch to Team 2 before
-    // this function ever reaches the server.
-    if (PC == none || PC.GetTeamNum() == TeamIndex)
+    if (PC == none)
     {
-        PC.ClientJoinSquadResult(SE_None);
-
-        return;
+        return -1;
     }
 
     if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         PC.ClientJoinSquadResult(SE_BadSquad);
 
-        return;
+        return -1;
+    }
+
+    if (IsInSquad(PC, TeamIndex, SquadIndex))
+    {
+        PC.ClientJoinSquadResult(SE_InvalidState);
+
+        return - 1;
     }
 
     switch (TeamIndex)
@@ -376,6 +420,11 @@ function ServerJoinSquad(DHPlayer PC, byte TeamIndex, int SquadIndex)
 
                 if (AxisSquads[SquadIndex].Members[j] == none)
                 {
+                    // We don't care about the result of ServerLeaveSquad;
+                    // whatever the result, the player is not in a squad and
+                    // can join another one.
+                    LeaveSquad(PC);
+
                     AxisSquads[SquadIndex].Members[j] = PC;
 
                     bDidJoinSquad = true;
@@ -392,6 +441,11 @@ function ServerJoinSquad(DHPlayer PC, byte TeamIndex, int SquadIndex)
 
                 if (AlliesSquads[SquadIndex].Members[j] == none)
                 {
+                    // We don't care about the result of ServerLeaveSquad;
+                    // whatever the result, the player is not in a squad and
+                    // can join another one.
+                    LeaveSquad(PC);
+
                     AlliesSquads[SquadIndex].Members[j] = PC;
 
                     bDidJoinSquad = true;
@@ -410,16 +464,19 @@ function ServerJoinSquad(DHPlayer PC, byte TeamIndex, int SquadIndex)
     }
 }
 
-function ServerKickFromSquad(DHPlayer PC, byte TeamIndex, int SquadIndex, DHPlayer MemberToKick)
+// Returns true if the the player was successfully kicked from a squad.
+function bool KickFromSquad(DHPlayer PC, byte TeamIndex, int SquadIndex, DHPlayer MemberToKick)
 {
     if (PC == none)
     {
-        return;
+        return false;
     }
 
-    if (PC.GetTeamNum() != TeamIndex || PC.SquadIndex != SquadIndex || !IsSquadLeader(PC) || PC == MemberToKick)
+    if (IsSquadLeader(PC, TeamIndex, SquadIndex) || PC == MemberToKick)
     {
         //PC.ClientKickFromSquadResult(SE_InvalidArgument);
+
+        return false;
     }
 
     switch (TeamIndex)
@@ -434,6 +491,30 @@ function ServerKickFromSquad(DHPlayer PC, byte TeamIndex, int SquadIndex, DHPlay
 
     // "You have been kicked from your squad."
     MemberToKick.ReceiveLocalizedMessage(MessageClass, 32);
+
+    return true;
+}
+
+function bool SetSquadLocked(DHPlayer PC, int TeamIndex, int SquadIndex, bool bLocked)
+{
+    if (PC == none || !IsSquadLeader(PC, TeamIndex, SquadIndex))
+    {
+        return false;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisSquads[SquadIndex].bLocked = bLocked;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesSquads[SquadIndex].bLocked = bLocked;
+            break;
+        default:
+            break;
+    }
+
+    return true;
 }
 
 function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
