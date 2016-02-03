@@ -5,11 +5,6 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-var()   config float                ServerTickForInflation;
-var     float                       ServerTickRateAverage;
-var     float                       ServerTickRateConsolidated;
-var     int                         ServerTickFrameCount;
-
 var     DH_LevelInfo                DHLevelInfo;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
@@ -60,59 +55,6 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
     }
-}
-
-event Tick(float DeltaTime)
-{
-    const SERVERTICKRATE_UPDATETIME = 5.0; // should we be doing this every tick? how does this work?
-
-    ServerTickRateConsolidated += DeltaTime;
-
-    // This code should only execute every SERVERTICKRATE_UPDATETIME seconds
-    if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
-    {
-        ServerTickRateAverage = ServerTickFrameCount / ServerTickRateConsolidated;
-        ServerTickFrameCount = 0;
-        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
-
-        HandleReinforceIntervalInflation();
-
-        //Log("Average Server Tick Rate:" @ DHGameReplicationInfo(GameReplicationInfo).ServerTickRateAverage);
-    }
-    else
-    {
-        ++ServerTickFrameCount;
-    }
-
-    super.Tick(DeltaTime);
-}
-
-function HandleReinforceIntervalInflation()
-{
-    const REINFORCEINTERVAL_MAXINFLATIONTIME = 60.0; // raise this value to get better result from inflation of respawn interval
-    local float TickRatio;
-
-    if (DHGameReplicationInfo(GameReplicationInfo) == none)
-    {
-        return;
-    }
-
-    // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
-    if (ServerTickRateAverage < ServerTickForInflation)
-    {
-        TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInflation;
-
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * REINFORCEINTERVAL_MAXINFLATIONTIME);
-
-        Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
-    }
-    else
-    {
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
-    }
-
 }
 
 function PostBeginPlay()
@@ -3559,8 +3501,6 @@ event PostLogin(PlayerController NewPlayer)
 
 defaultproperties
 {
-    ServerTickForInflation=20.0
-
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
