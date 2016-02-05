@@ -13,6 +13,6 @@ defaultproperties
     InitialSecondaryAmmo=13
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellAP'
-    WeaponFireOffset=16.5
+    WeaponFireOffset=10.0
     Mesh=SkeletalMesh'DH_Jackson_anm.jackson_turret_extB'
 }

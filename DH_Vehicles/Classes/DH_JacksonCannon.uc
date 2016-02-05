@@ -39,9 +39,9 @@ defaultproperties
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=33.0
+    WeaponFireAttachmentBone="Barrel"
+    WeaponFireOffset=26.2
     FireInterval=6.0
     FireSoundVolume=512.0
     FireForce="Explosion05"
@@ -61,9 +61,9 @@ defaultproperties
     InitialSecondaryAmmo=6
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHVAP'
+    FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
-    FireEffectOffset=(X=12.0,Y=-25.0,Z=10.0)
-    CannonAttachmentOffset=(X=0.0,Y=-2.0,Z=0.0)
+    FireEffectOffset=(X=-12.0,Y=0.0,Z=41.0)
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
