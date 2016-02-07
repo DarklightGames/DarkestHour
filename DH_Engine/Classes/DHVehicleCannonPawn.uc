@@ -127,6 +127,8 @@ simulated function PostNetBeginPlay()
         {
             bNeedToInitializeDriver = true;
         }
+        else if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver) // TEMPDEBUG (Matt: re occasional bug where commander is not attached correctly)
+            Log(Tag @ "spawning on net client with bDriving=false but with a 'Driver' that has bNeedToAttachDriver=true !!!");
 
         SavedPositionIndex = DriverPositionIndex;
         LastPositionIndex = DriverPositionIndex;
@@ -206,6 +208,8 @@ simulated function PostNetReceive()
         bNeedToInitializeDriver = false;
         SetPlayerPosition();
     }
+    else if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver) // TEMPDEBUG (Matt: re occasional bug where commander is not attached correctly)
+        Log(Tag @ "PostNetReceive on net client with a 'Driver' that has bNeedToAttachDriver=true, but bNeedToInitializeDriver=false !!!");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -2163,6 +2167,33 @@ exec function LogCannon() // DEBUG (Matt: please use & report if you ever find y
         @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon @ " ProjectileClass =" @ Cannon.ProjectileClass);
     Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition')
         @ " DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
+}
+
+// TEMPDEBUG (Matt: re occasional bug where commander is not attached correctly)
+simulated function AttachDriver(Pawn P)
+{
+    local coords GunnerAttachmentBoneCoords;
+
+    if (P == none)
+        Log(Tag @ "AttachDriver called with no Pawn P !!!");
+
+    if (Gun == none)
+    {
+        Log(Tag @ "AttachDriver called with no Gun, so returning !!!");        
+        return;
+    }
+
+    if (P.Base == Gun)
+        Log(Tag @ "AttachDriver called for Pawn already attached to Gun !!!");
+
+    P.bHardAttach = true;
+    GunnerAttachmentBoneCoords = Gun.GetBoneCoords(Gun.GunnerAttachmentBone);
+    P.SetLocation(GunnerAttachmentBoneCoords.Origin);
+    P.SetPhysics(PHYS_None);
+    Gun.AttachToBone(P, Gun.GunnerAttachmentBone);
+    P.SetRelativeLocation(DrivePos + P.default.PrePivot);
+    P.SetRelativeRotation(DriveRot);
+    P.PrePivot = vect(0.0, 0.0, 0.0);
 }
 
 defaultproperties
