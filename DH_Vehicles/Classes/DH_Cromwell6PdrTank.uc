@@ -95,8 +95,8 @@ defaultproperties
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
     VehicleHudOccupantsX(0)=0.56
     VehicleHudOccupantsY(0)=0.38
-    VehicleHudOccupantsX(1)=0.45
-    VehicleHudOccupantsY(1)=0.56
+    VehicleHudOccupantsX(1)=0.50
+    VehicleHudOccupantsY(1)=0.52
     VehicleHudOccupantsX(2)=0.46
     VehicleHudOccupantsY(2)=0.38
     VehicleHudOccupantsX(3)=0.41
