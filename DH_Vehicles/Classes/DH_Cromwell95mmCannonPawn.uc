@@ -9,8 +9,8 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Cromwell95mmCannon'
 //  CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Cromwell95mm_sight_background' // TODO - make gunsight overlay for 95mm howitzer (see notes below)
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman105Shell'                // TODO - make ammo icon for 95mm shell ('Cromwell95mmShell')
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman105Shell_reload'   // TODO - make reload icon for 95mm shell ('Cromwell95mmShell_reload')
+    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'                // TODO - make ammo icon for 95mm shell ('Cromwell95mmShell')
+    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'   // TODO - make reload icon for 95mm shell ('Cromwell95mmShell_reload')
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell95mm_turret_int')
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell95mm_turret_int')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell95mm_turret_int')

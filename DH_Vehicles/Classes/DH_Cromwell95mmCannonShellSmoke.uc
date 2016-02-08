@@ -28,6 +28,6 @@ defaultproperties
     BallisticCoefficient=2.5 // between 75mm (P3N) & 105mm howitzers
     Speed=19916.0            // 330 m/s
     MaxSpeed=19916.0
-    Tag="Mk.I SMK BE"
+    Tag="Mk.IA SMK-BE"
     DrawScale=1.2
 }

@@ -19,12 +19,12 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHEAT'
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=20
+    InitialPrimaryAmmo=23
+    InitialSecondaryAmmo=23
     InitialTertiaryAmmo=5
-    Spread=0.0 // 0.006 // apparently a very inaccurate weapon
-    SecondarySpread=0.0 // 0.006
-    TertiarySpread=0.0 // 0.006
+    Spread=0.0036
+    SecondarySpread=0.0036
+    TertiarySpread=0.0036
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
