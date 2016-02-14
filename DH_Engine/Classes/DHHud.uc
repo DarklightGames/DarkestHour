@@ -4432,7 +4432,7 @@ defaultproperties
     ReinforcementsDepletedText="Reinforcements depleted!"
     NoTimeLimitText="Unlimited"
 
-    TimeElapsedText="Time Elasped: "
+    TimeElapsedText="Time Elapsed: "
     MapNameText="Map: "
 
     LegendAxisObjectiveText="Axis territory"
