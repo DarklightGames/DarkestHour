@@ -15,7 +15,7 @@ defaultproperties
     CameraBone="mg_yaw"
     bDrawDriverInTP=false
     EntryRadius=130.0
-    FPCamPos=(X=-1.0,Z=4.0)
+    FPCamPos=(X=-0.5,Y=0.0,Z=3.5)
     PitchUpLimit=3000
     PitchDownLimit=63500
 }

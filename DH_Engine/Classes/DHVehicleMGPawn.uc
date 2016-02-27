@@ -1772,6 +1772,32 @@ exec function ToggleViewLimit()
     }
 }
 
+// New debug exit to set camera position offset
+exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    local vector OldFPCamPosPos;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        OldFPCamPosPos = FPCamPos;
+
+        if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+        {
+            FPCamPos.X = Float(NewX) / 10.0;
+            FPCamPos.Y = Float(NewY) / 10.0;
+            FPCamPos.Z = Float(NewZ) / 10.0;
+        }
+        else
+        {
+            FPCamPos.X = NewX;
+            FPCamPos.Y = NewY;
+            FPCamPos.Z = NewZ;
+        }
+
+        Log(Tag @ " new FPCamPos =" @ FPCamPos @ "(was" @ OldFPCamPosPos $ ")");
+    }
+}
+
 // New exec function that allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
@@ -1810,6 +1836,21 @@ exec function ShowColMesh()
         {
             MGun.CollisionMeshActor.HideOwner(false);
             MGun.CollisionMeshActor.bHidden = true;
+        }
+    }
+}
+
+// New debug exec to set bullet launch position X offset
+exec function SetWeaponFireOffset(float NewValue)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    {
+        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was " @ Gun.WeaponFireOffset $ ")");
+        Gun.WeaponFireOffset = NewValue;
+
+        if (Gun.AmbientEffectEmitter != none)
+        {
+            Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.WeaponFireOffset * vect(1.0, 0.0, 0.0));
         }
     }
 }
