@@ -8,45 +8,32 @@ class DH_Sdkfz105Transport extends DHApcVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz105_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
 
-var DHCollisionMeshActor    ArmorCollisionMeshActor;
-var StaticMesh              ArmorStaticMesh;
-var name                    ArmorAttachmentBone;
+var DHVehicleDecoAttachment ArmorAttachment;
 
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (ArmorStaticMesh != none)
+    ArmorAttachment = Spawn(class'DHVehicleDecoAttachment');
+
+    if (ArmorAttachment != none)
     {
-        ArmorCollisionMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this vehicle owns the col mesh actor
-
-        if (ArmorCollisionMeshActor != none)
-        {
-            ArmorCollisionMeshActor.bHardAttach = true;
-            ArmorCollisionMeshActor.bStaticLighting = false;
-            ArmorCollisionMeshActor.bShadowCast = false;
-            ArmorCollisionMeshActor.bDramaticLighting = true;
-            ArmorCollisionMeshActor.bHidden = false;
-
-            AttachToBone(ArmorCollisionMeshActor, 'body');
-
-            ArmorCollisionMeshActor.SetDrawScale3D(vect(-1.0, 1.0, 1.0));
-            ArmorCollisionMeshActor.SetRelativeRotation(Rotation - GetBoneRotation(ArmorAttachmentBone)); // because a visor bone may be modelled with rotation in the reference pose
-            ArmorCollisionMeshActor.SetRelativeLocation((Location - GetBoneCoords(ArmorAttachmentBone).Origin) << (Rotation - ArmorCollisionMeshActor.RelativeRotation));
-            ArmorCollisionMeshActor.SetStaticMesh(ArmorStaticMesh);
-        }
+        ArmorAttachment.SetDrawScale3D(vect(-1, 1, 1)); //TODO: until piotr fixes the mesh orientation, this is what's happening
+        ArmorAttachment.SetStaticMesh(StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_unarmor');
+        ArmorAttachment.SetCollision(true, true); // bCollideActors & bBlockActors both true, so ducts block players walking through & stop projectiles
+        ArmorAttachment.bWorldGeometry = true;    // means we get appropriate bullet impact effects, as if we'd hit a normal static mesh actor
+        ArmorAttachment.bHardAttach = true;
+        ArmorAttachment.SetBase(self);
     }
 }
 
 defaultproperties
 {
-    ArmorAttachmentBone='body'
-    ArmorStaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_armor'
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0
-    TreadVelocityScale=80.0
-    WheelRotationScale=500
+    TreadVelocityScale=40.0
+    WheelRotationScale=150
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
