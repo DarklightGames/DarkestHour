@@ -11,14 +11,16 @@ static final function string Join(string Divider, array<string> Strings)
     local string S;
     local int i;
 
-    for (i = 0; i < Strings.Length; ++i)
+    if (Strings.Length == 0)
     {
-        S $= Strings[i];
+        return S;
+    }
 
-        if (i != Strings.Length - 1)
-        {
-            S $= Divider;
-        }
+    S $= Strings[0];
+
+    for (i = 1; i < Strings.Length; ++i)
+    {
+        S $= Divider $ Strings[i];
     }
 
     return S;

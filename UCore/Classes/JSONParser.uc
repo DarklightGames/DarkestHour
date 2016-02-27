@@ -107,7 +107,7 @@ function JSONArray ReadArray()
         return none;
     }
 
-    A = class'JSONArray'.static.Create();
+    A = new class'JSONArray';
 
     while (true)
     {
@@ -129,7 +129,7 @@ function JSONArray ReadArray()
             return none;
         }
 
-        A.Values.Add(Value);
+        A.Add(Value);
 
         SkipWhiteSpace();
 

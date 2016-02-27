@@ -21,20 +21,47 @@ function string Encode()
     local int i;
     local array<string> Strings;
 
-    for (i = 0; i < Values.Size(); ++i)
+    if (Values != none)
     {
-        Strings[Strings.Length] = Values.Get(i).Encode();
+        for (i = 0; i < Values.Size(); ++i)
+        {
+            Log(Values.Get(i).Encode());
+
+            Strings[Strings.Length] = Values.Get(i).Encode();
+        }
     }
 
     return "[" $ class'UString'.static.Join(",", Strings) $ "]";
 }
 
-static function JSONArray Create()
+function Add(JSONValue Item)
+{
+    if (Values == none)
+    {
+        Values = new class'ArrayList_JSONValue';
+    }
+
+    Values.Add(Item);
+}
+
+function AddAtIndex(int Index, JSONValue Item)
+{
+    if (Values == none)
+    {
+        Values = new class'ArrayList_JSONValue';
+    }
+
+    Values.AddAtIndex(Index, Item);
+}
+
+static function JSONArray VCreate(vector V)
 {
     local JSONArray A;
 
     A = new class'JSONArray';
-    A.Values = new class'ArrayList_JSONValue';
+    A.Add(class'JSONNumber'.static.FCreate(V.X));
+    A.Add(class'JSONNumber'.static.FCreate(V.X));
+    A.Add(class'JSONNumber'.static.FCreate(V.X));
 
     return A;
 }
