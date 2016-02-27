@@ -98,9 +98,9 @@ defaultproperties
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=20
-    SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
-    TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
-    ShellCaseEmitterClass=class'DH_Guns.DH_20mmShellCaseEmitter'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
+    ShellCaseEmitterClass=class'DH_Vehicles.DH_20mmShellCaseEmitter'
     BeginningIdleAnim="optic_idle_in"
     TankShootClosedAnim="shoot_optic"
     ShootIntermediateAnim="shoot_opensight"

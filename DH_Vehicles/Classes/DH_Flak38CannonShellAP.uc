@@ -7,5 +7,5 @@ class DH_Flak38CannonShellAP extends DH_Sdkfz2341CannonShell;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Guns.DH_Flak38CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_Flak38CannonShellDamageAP'
 }
