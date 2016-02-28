@@ -8,7 +8,8 @@ class DH_Sdkfz105Transport extends DHApcVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz105_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
 
-var DHVehicleDecoAttachment ArmorAttachment;
+var     DHVehicleDecoAttachment     ArmorAttachment;
+var     StaticMesh                  ArmorAttachmentStaticMesh;
 
 simulated function PostBeginPlay()
 {
@@ -18,8 +19,7 @@ simulated function PostBeginPlay()
 
     if (ArmorAttachment != none)
     {
-        ArmorAttachment.SetDrawScale3D(vect(-1, 1, 1)); //TODO: until piotr fixes the mesh orientation, this is what's happening
-        ArmorAttachment.SetStaticMesh(StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_armor');
+        ArmorAttachment.SetStaticMesh(ArmorAttachmentStaticMesh);
         ArmorAttachment.SetCollision(true, true); // bCollideActors & bBlockActors both true, so ducts block players walking through & stop projectiles
         ArmorAttachment.bWorldGeometry = true;    // means we get appropriate bullet impact effects, as if we'd hit a normal static mesh actor
         ArmorAttachment.bHardAttach = true;
@@ -40,6 +40,7 @@ simulated function DestroyAttachments()
 
 defaultproperties
 {
+    ArmorAttachmentStaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_unarmor'
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0
