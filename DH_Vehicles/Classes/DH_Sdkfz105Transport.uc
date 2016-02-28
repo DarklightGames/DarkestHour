@@ -19,7 +19,7 @@ simulated function PostBeginPlay()
     if (ArmorAttachment != none)
     {
         ArmorAttachment.SetDrawScale3D(vect(-1, 1, 1)); //TODO: until piotr fixes the mesh orientation, this is what's happening
-        ArmorAttachment.SetStaticMesh(StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_unarmor');
+        ArmorAttachment.SetStaticMesh(StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_armor');
         ArmorAttachment.SetCollision(true, true); // bCollideActors & bBlockActors both true, so ducts block players walking through & stop projectiles
         ArmorAttachment.bWorldGeometry = true;    // means we get appropriate bullet impact effects, as if we'd hit a normal static mesh actor
         ArmorAttachment.bHardAttach = true;
@@ -72,7 +72,7 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=10.0),(InVal=1000000000.0,OutVal=15.0)))
+    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=30.0),(InVal=1000000000.0,OutVal=15.0)))
     TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
     GearRatios(0)=-0.25
     GearRatios(1)=0.2
@@ -98,7 +98,7 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=105.0,Y=-70.0,Z=-15.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Flak38CannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105Flak38CannonPawn',WeaponBone="turret_placement")
     PassengerPawns(0)=(AttachBone="driver_player2",DriveAnim="VHalftrack_Rider1_idle")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
@@ -114,13 +114,13 @@ defaultproperties
     DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.0,bExposed=true,bDrawOverlays=true)
     DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz251_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
     VehicleHudOccupantsX(0)=0.45
-    VehicleHudOccupantsY(0)=0.4
+    VehicleHudOccupantsY(0)=0.42
     VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.5
-    VehicleHudOccupantsX(2)=0.45
-    VehicleHudOccupantsY(2)=0.6
+    VehicleHudOccupantsY(1)=0.6
+    VehicleHudOccupantsX(2)=0.55
+    VehicleHudOccupantsY(2)=0.42
     VehicleHudEngineY=0.3
     VehHitpoints(0)=(PointRadius=30.0,PointBone="engine") // engine
     EngineHealth=150
@@ -233,4 +233,7 @@ defaultproperties
     RightTreadIndex=5
 
     PlayerCameraBone="Camera_driver1"
+
+//    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_H.sdkfz105_turret_rot'
+//    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turret_look'
 }
