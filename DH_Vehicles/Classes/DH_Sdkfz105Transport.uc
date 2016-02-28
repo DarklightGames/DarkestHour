@@ -27,6 +27,17 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to include ArmorAttachment
+simulated function DestroyAttachments()
+{
+    super.DestroyAttachments();
+
+    if (ArmorAttachment != none)
+    {
+        ArmorAttachment.Destroy();
+    }
+}
+
 defaultproperties
 {
     FriendlyResetDistance=6000.0
