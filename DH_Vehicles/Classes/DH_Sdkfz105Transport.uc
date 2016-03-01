@@ -5,8 +5,8 @@
 
 class DH_Sdkfz105Transport extends DHApcVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Sdkfz105_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
+#exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
 var     DHVehicleDecoAttachment     ArmorAttachment;
 var     StaticMesh                  ArmorAttachmentStaticMesh;
@@ -109,23 +109,22 @@ defaultproperties
     RevMeterScale=4000.0
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=105.0,Y=-70.0,Z=-15.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=70.0,Y=-65.0,Z=40.0),ExhaustRotation=(Pitch=-7000,Yaw=-16364))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105Flak38CannonPawn',WeaponBone="turret_placement")
-    PassengerPawns(0)=(AttachBone="driver_player2",DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(0)=(AttachBone="driver_player2",DrivePos=(X=4.0,Y=0.0,Z=9.0),DriveAnim="VHalftrack_Rider1_idle") // TODO - sort out crossed-over indexing of gun & passenger pawns
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Halftrack.Halftrack_Destoyed'
+    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Halftrack.Halftrack_Destoyed' // TODO - make destroyed vehicle static mesh
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
+    DamagedEffectOffset=(X=90.0,Y=0.0,Z=60.0)
     SteeringScaleFactor=4.0
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.0,bExposed=true,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    BeginningIdleAnim="Driver_idle_out"
+    DriverPositions(0)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.42
@@ -184,7 +183,7 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.RRight_Drive_Wheel'
     VehicleMass=6.5
-    DrivePos=(X=2.0,Y=2.0,Z=3.5)
+    DrivePos=(X=10.0,Y=0.0,Z=-4.0)
     DriveAnim="Vhalftrack_driver_idle"
 
     ExitPositions(0)=(X=30.00,Y=-110.00,Z=55.00)
@@ -196,24 +195,19 @@ defaultproperties
     DriverDamageMult=1.0
     VehicleNameString="Sd.Kfz. 10/5"
     MaxDesireability=1.2
-    HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'
-    HUDOverlayOffset=(Z=0.8)
-    HUDOverlayFOV=100.0
     GroundSpeed=325.0
-    PitchUpLimit=500
-    PitchDownLimit=49000
+    PitchUpLimit=10000
+    PitchDownLimit=50000
     HealthMax=325.0
     Health=325
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5'
     Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_base'
     Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_track'
-    Skins(2)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabine'
+    Skins(2)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
     Skins(3)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
     Skins(4)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wire'
     Skins(5)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_track'
     Skins(6)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wheels'
-//    VisorColStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll'
-//    VisorColAttachBone="driver_hatch"
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -239,13 +233,13 @@ defaultproperties
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this vehicle
 
     LeftTreadIndex=1
     RightTreadIndex=5
 
     PlayerCameraBone="Camera_driver1"
 
-//    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_H.sdkfz105_turret_rot'
+//    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_H.sdkfz105_turret_rot' // TODO: rename materials in texture file (long name prevents use) & uncomment
 //    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turret_look'
 }
