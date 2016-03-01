@@ -2179,7 +2179,7 @@ simulated function AttachDriver(Pawn P)
 
     if (Gun == none)
     {
-        Log(Tag @ "AttachDriver called with no Gun, so returning !!!");        
+        Log(Tag @ "AttachDriver called with no Gun, so returning !!!");
         return;
     }
 

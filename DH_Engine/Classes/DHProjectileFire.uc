@@ -412,7 +412,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     {
         return false;
     }
-    
+
     // We hit a special collision mesh or destroyable mesh (e.g. glass) that doesn't stop bullets
     // These are very rare & cause too many complications to be worth handling in pre-launch trace, so we'll just exit & let bullet spawn & handle things
     if ((DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet) || (RODestroyableStaticMesh(Other) != none && RODestroyableStaticMesh(Other).bWontStopBullets))
