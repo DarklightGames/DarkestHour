@@ -945,15 +945,23 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-// Stop the game from automatically trimming longer names
 event PlayerController Login(string Portal, string Options, out string Error)
 {
     local string InName;
     local PlayerController NewPlayer;
+    local DHPlayer PC;
 
-    InName = Left(ParseOption (Options, "Name"), 32);
+    // Stop the game from automatically trimming longer names
+    InName = Left(ParseOption(Options, "Name"), 32);
 
     NewPlayer = super.Login(Portal, Options, Error);
+
+    PC = DHPlayer(NewPlayer);
+
+    if (PC != none)
+    {
+        PC.SquadReplicationInfo = SquadReplicationInfo;
+    }
 
     ChangeName(NewPlayer, InName, false);
 
@@ -2785,6 +2793,8 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SpawnVehicleIndex = 255;
 
             GRI.UnreserveVehicle(PC);
+
+            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
         }
     }
 
@@ -3436,6 +3446,7 @@ function NotifyLogout(Controller Exiting)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PC = DHPlayer(Exiting);
@@ -3450,6 +3461,10 @@ function NotifyLogout(Controller Exiting)
         }
 
         GRI.UnreserveVehicle(PC);
+
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        SquadReplicationInfo.LeaveSquad(PRI);
     }
 
     super.Destroyed();

@@ -64,6 +64,8 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
+var     DHSquadReplicationInfo  SquadReplicationInfo;
+
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
 replication
@@ -73,7 +75,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex;
+        MortarTargetIndex, SquadReplicationInfo;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -84,7 +86,7 @@ replication
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
-        ServerSquadCreate, ServerSquadLeave;
+        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -3017,7 +3019,7 @@ simulated function ClientCreateSquadResult(DHSquadReplicationInfo.ESquadError Er
     Level.Game.Broadcast(self, "ClientCreateSquadResult" @ Error);
 }
 
-simulated exec function DebugSquadCreate(optional string SquadName)
+simulated exec function SquadCreate(optional string SquadName)
 {
     ServerSquadCreate(SquadName);
 }
@@ -3031,18 +3033,100 @@ function ServerSquadCreate(string SquadName)
     G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadName);
 }
 
-simulated exec function DebugSquadLeave()
+simulated exec function SquadLeave()
 {
     ServerSquadLeave();
 }
 
-exec function ServerSquadLeave()
+function ServerSquadLeave()
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
     G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+}
+
+simulated exec function SquadJoin(int SquadIndex)
+{
+    ServerSquadJoin(SquadIndex);
+}
+
+function ServerSquadJoin(int SquadIndex)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), GetTeamNum(), SquadIndex);
+}
+
+exec function SquadLog()
+{
+    local int i, j, k;
+    local DHSquadReplicationInfo SRI;
+    local DHPlayerReplicationInfo PRI;
+
+    SRI = SquadReplicationInfo;
+
+    if (SRI == none)
+    {
+        return;
+    }
+
+    Log("+=============+");
+    Log("| Axis Squads |");
+    Log("+=============+");
+
+    for (i = 0; i < 8; ++i)
+    {
+        if (!SRI.IsSquadActive(0, i))
+        {
+            continue;
+        }
+
+        Log("[" $ i $ "]" @ SRI.GetSquadName(0, i));
+        Log("----------------");
+
+        for (j = 0; j < 8; ++j)
+        {
+            k = (SRI.GetLeaderMemberIndex(0, i) + j) % 8;
+
+            PRI = SRI.GetMember(0, i, k);
+
+            if (PRI != none)
+            {
+                Log("  (" $ j $ ")" @ SRI.GetMember(0, i, k).PlayerName);
+            }
+        }
+    }
+
+    Log("+===============+");
+    Log("| Allied Squads |");
+    Log("+===============+");
+
+    for (i = 0; i < 8; ++i)
+    {
+        if (!SRI.IsSquadActive(1, i))
+        {
+            continue;
+        }
+
+        Log("[" $ i $ "]" @ SRI.GetSquadName(1, i));
+        Log("----------------");
+
+        for (j = 0; j < 8; ++j)
+        {
+            k = (SRI.GetLeaderMemberIndex(1, i) + j) % 8;
+
+            PRI = SRI.GetMember(1, i, k);
+
+            if (PRI != none)
+            {
+                Log("  (" $ j $ ")" @ SRI.GetMember(1, i, k).PlayerName);
+            }
+        }
+    }
 }
 
 defaultproperties
