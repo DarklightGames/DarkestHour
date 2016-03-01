@@ -114,7 +114,6 @@ function HandleReinforceIntervalInflation()
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
     }
-
 }
 
 function PreBeginPlay()

@@ -64,16 +64,6 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
-// Squads
-
-// Index into the team's squad array (in DHSquadReplicationInfo.*Squads).
-// If value is -1, the player is not in a squad.
-var     int                     SquadIndex;
-
-// Index into the squad's member list (in DHSquadReplicationInfo.Squad.Members).
-// Only applicable when SquadIndex is not -1.
-var     int                     SquadMemberIndex;
-
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
 replication
@@ -83,7 +73,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex, SquadIndex, SquadMemberIndex;
+        MortarTargetIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2686,9 +2676,6 @@ function Reset()
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
     MortarTargetIndex = default.MortarTargetIndex;
-
-    SquadIndex = default.SquadIndex;
-    SquadMemberIndex = default.SquadMemberIndex;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -3041,7 +3028,7 @@ function ServerSquadCreate(string SquadName)
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.CreateSquad(self, SquadName);
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadName);
 }
 
 simulated exec function DebugSquadLeave()
@@ -3055,7 +3042,7 @@ exec function ServerSquadLeave()
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.LeaveSquad(self);
+    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
 }
 
 defaultproperties
@@ -3096,8 +3083,5 @@ defaultproperties
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
-
-    SquadIndex=-1
-    SquadMemberIndex-1
 }
 

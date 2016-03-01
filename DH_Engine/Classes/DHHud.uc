@@ -65,6 +65,8 @@ var globalconfig bool   bShowDeathMessages; // whether or not to show the death 
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 
+var color               SquadTextColor;
+
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 
@@ -1486,6 +1488,9 @@ function DrawPlayerNames(Canvas C)
     local Pawn            HitPawn;
     local DHPawn          MyDHP, OtherDHP;
     local DHMortarVehicle Mortar;
+    local DHPlayer        PC;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local bool            bIsInSameSquad;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -1628,7 +1633,30 @@ function DrawPlayerNames(Canvas C)
                     C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
                 }
 
-                C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
+
+                // If other player is in your squad, make his name green.
+                PC = DHPlayer(PlayerOwner);
+
+                if (PC != none)
+                {
+                    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+                    OtherPRI = DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo);
+
+                    if (PRI != none && OtherPRI != none && PRI.SquadIndex == OtherPRI.SquadIndex)
+                    {
+                        bIsInSameSquad = true;
+                    }
+                }
+
+                if (bIsInSameSquad)
+                {
+                    C.DrawColor = SquadTextColor;
+                }
+                else
+                {
+                    C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
+                }
+
                 C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
             }
             // Or if we don't have a player name but have resupply text, then just draw that (must be a deployed mortar that can be resupplied)
@@ -4440,6 +4468,8 @@ defaultproperties
 
     SideColors(0)=(R=200,G=72,B=72,A=255)
     SideColors(1)=(R=151,G=154,B=223,A=255)
+
+    SquadTextColor=(R=0,G=204,B=0)
 
     DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
