@@ -2145,6 +2145,23 @@ exec function ToggleViewLimit()
     }
 }
 
+// New debug exec to set 1st person camera position offset
+exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Tag @ "new FPCamPos =" @ NewX @ NewY @ NewZ @ "(old was" @ FPCamPos $ ")");
+        FPCamPos.X = NewX;
+        FPCamPos.Y = NewY;
+        FPCamPos.Z = NewZ;
+
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+        {
+            FPCamPos /= 10.0;
+        }
+    }
+}
+
 // New exec that allows debugging exit positions to be toggled for all DHWheeledVehicles
 exec function ToggleDebugExits()
 {

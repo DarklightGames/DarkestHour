@@ -2027,16 +2027,22 @@ exec function ToggleCameraDebug()
     }
 }
 
-// New debug exec to set 1st person camera position
-exec function SetCamPos(int NewX, int NewY, int NewZ)
+// New debug exec to set 1st person camera position offset
+exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         Log(Tag @ "new DriverPositions[" $ DriverPositionIndex $ "].ViewLocation =" @ NewX @ NewY @ NewZ @ "(old was" @ DriverPositions[DriverPositionIndex].ViewLocation $ ")");
-        DriverPositions[DriverPositionIndex].ViewLocation.X = NewX;
-        DriverPositions[DriverPositionIndex].ViewLocation.Y = NewY;
-        DriverPositions[DriverPositionIndex].ViewLocation.Z = NewZ;
-        FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+        FPCamPos.X = NewX;
+        FPCamPos.Y = NewY;
+        FPCamPos.Z = NewZ;
+
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+        {
+            FPCamPos /= 10.0;
+        }
+
+        DriverPositions[DriverPositionIndex].ViewLocation = FPCamPos;
     }
 }
 

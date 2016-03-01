@@ -1772,29 +1772,25 @@ exec function ToggleViewLimit()
     }
 }
 
-// New debug exit to set camera position offset
+// New debug exec to set 1st person camera position offset
 exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
 {
-    local vector OldFPCamPosPos;
-
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        OldFPCamPosPos = FPCamPos;
+        Log(Tag @ "new FPCamPos =" @ NewX @ NewY @ NewZ @ "(old was" @ FPCamPos $ ")");
+        FPCamPos.X = NewX;
+        FPCamPos.Y = NewY;
+        FPCamPos.Z = NewZ;
 
-        if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            FPCamPos.X = Float(NewX) / 10.0;
-            FPCamPos.Y = Float(NewY) / 10.0;
-            FPCamPos.Z = Float(NewZ) / 10.0;
-        }
-        else
-        {
-            FPCamPos.X = NewX;
-            FPCamPos.Y = NewY;
-            FPCamPos.Z = NewZ;
+            FPCamPos /= 10.0;
         }
 
-        Log(Tag @ " new FPCamPos =" @ FPCamPos @ "(was" @ OldFPCamPosPos $ ")");
+        if (bMultiPosition)
+        {
+            DriverPositions[DriverPositionIndex].ViewLocation = FPCamPos;
+        }
     }
 }
 
