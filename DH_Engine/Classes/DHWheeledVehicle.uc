@@ -2243,19 +2243,37 @@ function ServerKillEngine()
 }
 
 // New debug exec to set exhaust emitter location
-exec function SetExPos(int Index, int NewX, int NewY, int NewZ)
+exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
-    local vector OldExhaustPosition;
-
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        OldExhaustPosition = ExhaustPipes[Index].ExhaustPosition;
+        Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was " @ ExhaustPipes[Index].ExhaustPosition $ ")");
         ExhaustPipes[Index].ExhaustPosition.X = NewX;
         ExhaustPipes[Index].ExhaustPosition.Y = NewY;
         ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
-        ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
-        ExhaustPipes[Index].ExhaustEffect.SetBase(self);
-        Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ ExhaustPipes[Index].ExhaustPosition @ "(was " @ OldExhaustPosition $ ")");
+
+        if (ExhaustPipes[Index].ExhaustEffect != none)
+        {
+            ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
+            ExhaustPipes[Index].ExhaustEffect.SetBase(self);
+        }
+    }
+}
+
+// New debug exec to set exhaust emitter location
+exec function SetExhRot(int Index, int NewX, int NewY, int NewZ)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log(Tag @ "new ExhaustRotation =" @ NewX @ NewY @ NewZ @ "(old was" @ ExhaustPipes[Index].ExhaustRotation $ ")");
+        ExhaustPipes[Index].ExhaustRotation.Pitch = NewX;
+        ExhaustPipes[Index].ExhaustRotation.Yaw = NewY;
+        ExhaustPipes[Index].ExhaustRotation.Roll = NewZ;
+
+        if (bEmittersOn)
+        {
+            StartEmitters();
+        }
     }
 }
 
