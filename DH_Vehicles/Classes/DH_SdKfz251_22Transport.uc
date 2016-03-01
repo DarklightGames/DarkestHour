@@ -34,4 +34,5 @@ defaultproperties
     VehicleNameString="Sd.Kfz.251/22 'pakwagen'"
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
+//  SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this variant
 }
