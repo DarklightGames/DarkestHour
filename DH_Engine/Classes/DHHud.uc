@@ -1642,7 +1642,7 @@ function DrawPlayerNames(Canvas C)
                     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
                     OtherPRI = DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo);
 
-                    if (PRI != none && OtherPRI != none && PRI.SquadIndex == OtherPRI.SquadIndex)
+                    if (PRI != none && OtherPRI != none && PRI.SquadIndex != -1 && PRI.SquadIndex == OtherPRI.SquadIndex)
                     {
                         bIsInSameSquad = true;
                     }
