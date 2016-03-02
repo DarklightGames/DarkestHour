@@ -27,20 +27,19 @@ enum ESquadError
     SE_InvalidState
 };
 
-// This nightmare is necessary because UnrealScript cannot replicate
-// structs.
-var DHPlayerReplicationInfo AxisMembers[64];
-var string                  AxisNames[TEAM_SQUAD_COUNT];
-var byte                    AxisLeaderMemberIndices[TEAM_SQUAD_COUNT];
-var byte                    AxisLocked[TEAM_SQUAD_COUNT];
+// This nightmare is necessary because UnrealScript cannot replicate structs.
+var private DHPlayerReplicationInfo AxisMembers[64];
+var private string                  AxisNames[TEAM_SQUAD_COUNT];
+var private byte                    AxisLeaderMemberIndices[TEAM_SQUAD_COUNT];
+var private byte                    AxisLocked[TEAM_SQUAD_COUNT];
 
-var DHPlayerReplicationInfo AlliesMembers[64];
-var string                  AlliesNames[TEAM_SQUAD_COUNT];
-var byte                    AlliesLeaderMemberIndices[TEAM_SQUAD_COUNT];
-var byte                    AlliesLocked[TEAM_SQUAD_COUNT];
+var private DHPlayerReplicationInfo AlliesMembers[64];
+var private string                  AlliesNames[TEAM_SQUAD_COUNT];
+var private byte                    AlliesLeaderMemberIndices[TEAM_SQUAD_COUNT];
+var private byte                    AlliesLocked[TEAM_SQUAD_COUNT];
 
-var string AlliesDefaultSquadNames[TEAM_SQUAD_COUNT];
-var string AxisDefaultSquadNames[TEAM_SQUAD_COUNT];
+var private string AlliesDefaultSquadNames[TEAM_SQUAD_COUNT];
+var private string AxisDefaultSquadNames[TEAM_SQUAD_COUNT];
 
 var class<LocalMessage> SquadMessageClass;
 
@@ -388,22 +387,14 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
         return false;
     }
 
-    if (IsSquadLeader(PRI, TeamIndex, SquadIndex) || PRI == MemberToKick)
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) || PRI == MemberToKick)
     {
         //PC.ClientKickFromSquadResult(SE_InvalidArgument);
 
         return false;
     }
 
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberToKick.SquadMemberIndex] = none;
-            break;
-        case ALLIES_TEAM_INDEX:
-            AlliesMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberToKick.SquadMemberIndex] = none;
-            break;
-    }
+    LeaveSquad(MemberToKick);
 
     OtherPC = DHPlayer(MemberToKick.Owner);
 
@@ -452,6 +443,12 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
     for (i = 0; i < SQUAD_MEMBER_COUNT; ++i)
     {
         PRI = GetMember(TeamIndex, SquadIndex, i);
+
+        if (PRI == none)
+        {
+            continue;
+        }
+
         PC = DHPlayer(PRI.Owner);
 
         if (PC != none)
@@ -509,7 +506,7 @@ function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int Me
         case AXIS_TEAM_INDEX:
             return AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex];
         case ALLIES_TEAM_INDEX:
-            return AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex];
+            return AlliesMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex];
     }
 
     return none;
@@ -523,7 +520,7 @@ function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerRepli
             AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex] = PRI;
             break;
         case ALLIES_TEAM_INDEX:
-            AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex] = PRI;
+            AlliesMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex] = PRI;
             break;
         default:
             return;
