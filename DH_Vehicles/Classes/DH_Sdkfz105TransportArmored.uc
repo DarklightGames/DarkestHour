@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz105Transport_Armored extends DH_Sdkfz105Transport;
+class DH_Sdkfz105TransportArmored extends DH_Sdkfz105Transport;
 
 defaultproperties
 {

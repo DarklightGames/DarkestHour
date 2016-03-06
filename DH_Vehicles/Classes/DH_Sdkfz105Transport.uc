@@ -10,9 +10,12 @@ class DH_Sdkfz105Transport extends DHApcVehicle;
 
 var     DHVehicleDecoAttachment     ArmorAttachment;
 var     StaticMesh                  ArmorAttachmentStaticMesh;
+var     array<Material>             ArmorAttachmentSkins;
 
 simulated function PostBeginPlay()
 {
+    local int i;
+
     super.PostBeginPlay();
 
     ArmorAttachment = Spawn(class'DHVehicleDecoAttachment');
@@ -24,6 +27,11 @@ simulated function PostBeginPlay()
         ArmorAttachment.bWorldGeometry = true;    // means we get appropriate bullet impact effects, as if we'd hit a normal static mesh actor
         ArmorAttachment.bHardAttach = true;
         ArmorAttachment.SetBase(self);
+
+        for (i = 0; i < ArmorAttachmentSkins.Length; ++i)
+        {
+            ArmorAttachment.Skins[i] = ArmorAttachmentSkins[i];
+        }
     }
 }
 
@@ -115,7 +123,7 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Halftrack.Halftrack_Destoyed' // TODO - make destroyed vehicle static mesh
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.SdKfz10_5.sdkfz10_5_destro'
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
@@ -132,7 +140,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.6
     VehicleHudOccupantsX(2)=0.55
     VehicleHudOccupantsY(2)=0.42
-    VehicleHudEngineY=0.3
+    VehicleHudEngineY=0.2
     VehHitpoints(0)=(PointRadius=30.0,PointBone="engine") // engine
     EngineHealth=150
     DriverAttachmentBone="driver_player1"
@@ -233,13 +241,15 @@ defaultproperties
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this vehicle
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_105'
 
     LeftTreadIndex=1
     RightTreadIndex=5
 
     PlayerCameraBone="Camera_driver1"
 
-//    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_H.sdkfz105_turret_rot' // TODO: rename materials in texture file (long name prevents use) & uncomment
-//    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_H.sdkfz105_turet_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_look'
+
+    ArmorAttachmentSkins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
 }

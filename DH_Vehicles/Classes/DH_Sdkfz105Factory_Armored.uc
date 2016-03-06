@@ -7,5 +7,5 @@ class DH_Sdkfz105Factory_Armored extends DH_Sdkfz105Factory;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_Sdkfz105Transport_Armored'
-}
+    VehicleClass=class'DH_Vehicles.DH_Sdkfz105TransportArmored'
+}DH_Sdkfz105TransportArmored
