@@ -607,8 +607,8 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
-    if (bShowWeaponInfo && PawnOwner.Weapon != none)
     // Weapon info
+    if (bShowWeaponInfo && PawnOwner.Weapon != none)
     {
         if (AmmoIcon.WidgetTexture != none)
         {

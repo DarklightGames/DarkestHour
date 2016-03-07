@@ -1841,7 +1841,7 @@ exec function SetWeaponFireOffset(float NewValue)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
     {
-        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was " @ Gun.WeaponFireOffset $ ")");
+        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
         Gun.WeaponFireOffset = NewValue;
 
         if (Gun.AmbientEffectEmitter != none)

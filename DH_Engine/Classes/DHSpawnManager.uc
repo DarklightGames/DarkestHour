@@ -408,7 +408,6 @@ function bool SpawnVehicle(DHPlayer C)
             TriggerEvent(VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
         }
 
-
         // Decrement reservation count
         GRI.UnreserveVehicle(C);
 
