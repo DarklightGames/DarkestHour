@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz105Factory_Armored extends DH_Sdkfz105Factory;
+class DH_Sdkfz105PassengerPawn extends DHPassengerPawn;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Vehicles.DH_Sdkfz105TransportArmored'
-}DH_Sdkfz105TransportArmored
+    DrivePos=(X=15.0,Y=25.0,Z=16.0)
+    DriveAnim="VHalftrack_Rider1_idle"
+}

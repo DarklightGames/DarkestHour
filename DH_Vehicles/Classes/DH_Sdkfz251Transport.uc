@@ -96,7 +96,7 @@ defaultproperties
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
+    DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)
     SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.0,bExposed=true,bDrawOverlays=true)
@@ -225,7 +225,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-0.7) // default is -0.5 (RO halftrack has 0.0)
+        KCOMOffset=(Z=-0.7) // default is zero (RO halftrack is zero, different to DH version)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
