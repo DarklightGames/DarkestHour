@@ -163,7 +163,6 @@ var     bool        bPenetrationText;
 var     bool        bDebugTreadText;
 var     bool        bLogPenetration;
 var     bool        bDebugExitPositions;
-var     bool        bDrawExitPositions;
 
 replication
 {
@@ -3867,7 +3866,7 @@ simulated function GrowHUD();
 simulated function ShrinkHUD();
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** EXEC FUNCTIONS  ********************************  //
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
@@ -3914,23 +3913,6 @@ exec function ToggleViewLimit()
     }
 }
 
-// New debug exec to set 1st person camera position offset
-exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        Log(Tag @ "new FPCamPos =" @ NewX @ NewY @ NewZ @ "(old was" @ FPCamPos $ ")");
-        FPCamPos.X = NewX;
-        FPCamPos.Y = NewY;
-        FPCamPos.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            FPCamPos /= 10.0;
-        }
-    }
-}
-
 // New exec that allows debugging exit positions to be toggled for all DHArmoredVehicles
 exec function ToggleDebugExits()
 {
@@ -3949,73 +3931,8 @@ function ServerToggleDebugExits()
     }
 }
 
-// New debug exec to draw the location of all exit positions for the vehicle, which are shown as different coloured cylinders
-exec function DrawExits()
-{
-    local vector ExitPosition, ZOffset, X, Y, Z;
-    local color  C;
-    local int    i;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        bDrawExitPositions = !bDrawExitPositions;
-        ClearStayingDebugLines();
-
-        if (bDrawExitPositions)
-        {
-            ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-            GetAxes(Rotation, X, Y, Z);
-
-            for (i = ExitPositions.Length - 1; i >= 0; --i)
-            {
-                if (i == 0)
-                {
-                    C = class'HUD'.default.BlueColor; // driver
-                }
-                else
-                {
-                    if (i - 1 < WeaponPawns.Length)
-                    {
-                        if (ROTankCannonPawn(WeaponPawns[i - 1]) != none)
-                        {
-                            C = class'HUD'.default.RedColor; // commander
-                        }
-                        else if (ROMountedTankMGPawn(WeaponPawns[i - 1]) != none)
-                        {
-                            C = class'HUD'.default.GoldColor; // machine gunner
-                        }
-                        else
-                        {
-                            C = class'HUD'.default.WhiteColor; // rider
-                        }
-                    }
-                    else
-                    {
-                        C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
-                    }
-                }
-
-                ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
-                class'DHLib'.static.DrawStayingDebugCylinder(self, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
-            }
-        }
-    }
-}
-
-// New debug exec to set ExitPositions (use it in single player; it's too much hassle on a server)
-exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
-{
-    if (Role == ROLE_Authority && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Index >= 0 && Index < ExitPositions.Length)
-    {
-        ExitPositions[Index].X = NewX;
-        ExitPositions[Index].Y = NewY;
-        ExitPositions[Index].Z = NewZ;
-        Log(VehicleNameString @ "new ExitPositions[" $ Index $ "] =" @ ExitPositions[Index]);
-    }
-}
-
 // New debug exec for testing engine damage
-function exec KillEngine()
+exec function KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
     {
@@ -4085,34 +4002,6 @@ function ServerEngineFire()
     if (!bEngineOnFire) StartEngineFire(none);
 }
 
-// New debug exec to adjust location of engine smoke/fire position
-exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        if (NewX != 0 || NewY != 0 || NewZ != 0)
-        {
-            DamagedEffectOffset.X = NewX;
-            DamagedEffectOffset.Y = NewY;
-            DamagedEffectOffset.Z = NewZ;
-        }
-
-        EngineHealth = 0;
-        bEngineOnFire = bEngineFire;
-        bOnFire = false;
-        SetFireEffects();
-        Log(VehicleNameString @ "DamagedEffectOffset =" @ DamagedEffectOffset);
-
-        if (DamagedEffect != none)
-        {
-            DamagedEffect.SetBase(none);
-            DamagedEffect.SetLocation(Location + (DamagedEffectOffset >> Rotation));
-            DamagedEffect.SetBase(self);
-            DamagedEffect.SetEffectScale(DamagedEffectScale);
-        }
-    }
-}
-
 // New debug exec to adjust location of driver's hatch fire position
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
@@ -4132,30 +4021,12 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
 
 // Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
 // Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
-function exec DamageTank()
+exec function DamageTank()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         Health /= 2;
         EngineHealth /= 2;
-    }
-}
-
-// New debug exec to set exhaust emitter location
-exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        Log(Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was " @ ExhaustPipes[Index].ExhaustPosition $ ")");
-        ExhaustPipes[Index].ExhaustPosition.X = NewX;
-        ExhaustPipes[Index].ExhaustPosition.Y = NewY;
-        ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
-
-        if (ExhaustPipes[Index].ExhaustEffect != none)
-        {
-            ExhaustPipes[Index].ExhaustEffect.SetLocation(Location + (ExhaustPipes[Index].ExhaustPosition >> Rotation));
-            ExhaustPipes[Index].ExhaustEffect.SetBase(self);
-        }
     }
 }
 

@@ -43,10 +43,6 @@ var     int                     MantleLoopCount;
 // Mortars
 var     byte                    MortarTargetIndex;
 
-// Debug:
-var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
-var     SkyZoneInfo             SavedSkyZone;               // saves the original SkyZone for the player's current ZoneInfo, so it can be restored when the sky is turned back on
-
 // Spawning
 var     byte                    SpawnPointIndex;
 var     byte                    SpawnVehicleIndex;
@@ -1801,360 +1797,6 @@ function ServerToggleBehindView()
     }
 }
 
-// Matt: DH version, including to hide the sky, which is necessary to allow the crucial debug spheres to get drawn
-simulated exec function PlayerCollisionDebug()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
-    {
-        ROHud(myHUD).bDebugPlayerCollision = !ROHud(myHUD).bDebugPlayerCollision;
-        SetSkyOff(ROHud(myHUD).bDebugPlayerCollision);
-    }
-}
-
-simulated exec function VehicleCamDistance(int NewDistance)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
-    {
-        //Get the current vehicle the player is in
-        if (Pawn.IsA('Vehicle'))
-        {
-            //Change the instance's TPCamDistance
-            Vehicle(Pawn).TPCamDistance = NewDistance;
-            Vehicle(Pawn).TPCamDistRange.Min = NewDistance;
-            Vehicle(Pawn).TPCamDistRange.Max = NewDistance;
-        }
-    }
-}
-
-// DH version, but only showing the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
-simulated exec function DriverCollisionDebug()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
-    {
-        ROHud(myHUD).bDebugDriverCollision = !ROHud(myHUD).bDebugDriverCollision;
-        SetSkyOff(ROHud(myHUD).bDebugDriverCollision);
-    }
-}
-
-// New exec showing all vehicle's special hit points for engine (blue) & ammo stores (red), plus DHArmoredVehicle's extra hit points (gold for gun traverse/pivot, pink for periscopes)
-simulated exec function VehicleHitPointDebug()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHUD) != none)
-    {
-        DHHud(myHUD).bDebugVehicleHitPoints = !DHHud(myHUD).bDebugVehicleHitPoints;
-        SetSkyOff(DHHud(myHUD).bDebugVehicleHitPoints);
-    }
-}
-
-// New exec showing all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
-simulated exec function VehicleWheelDebug()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHUD) != none)
-    {
-        DHHud(myHUD).bDebugVehicleWheels = !DHHud(myHUD).bDebugVehicleWheels;
-        SetSkyOff(DHHud(myHUD).bDebugVehicleWheels);
-    }
-}
-
-// New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
-// Console command "show sky" toggles the sky on/off, but it only works in single player, so this allows these debug options to work in multiplayer
-simulated function SetSkyOff(bool bHideSky)
-{
-    // Hide the sky
-    if (bHideSky)
-    {
-        if (!bSkyOff)
-        {
-            bSkyOff = true;
-            SavedSkyZone = PlayerReplicationInfo.PlayerZone.SkyZone;
-            PlayerReplicationInfo.PlayerZone.SkyZone = none;
-        }
-    }
-    // Restore the sky, but only if we have no other similar debug functionality enabled
-    else if (bSkyOff && !(ROHud(myHUD) != none && (ROHud(myHUD).bDebugDriverCollision || ROHud(myHUD).bDebugPlayerCollision
-        || (DHHud(myHUD) != none && (DHHud(myHUD).bDebugVehicleHitPoints || DHHud(myHUD).bDebugVehicleWheels)))))
-    {
-        bSkyOff = false;
-        PlayerReplicationInfo.PlayerZone.SkyZone = SavedSkyZone;
-    }
-}
-
-// Matt: DH version
-exec function ClearLines()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ClearStayingDebugLines();
-    }
-}
-
-// Matt: new exec
-exec function ClearArrows()
-{
-    local RODebugTracer Tracer;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach DynamicActors(class'RODebugTracer', Tracer)
-        {
-            Tracer.Destroy();
-        }
-    }
-}
-
-simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
-{
-    local ROTreadCraft V;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'ROTreadCraft', V)
-        {
-            if (TreadVelocityScale == -1.0)
-            {
-                V.TreadVelocityScale = V.default.TreadVelocityScale;
-            }
-            else
-            {
-                V.TreadVelocityScale = TreadVelocityScale;
-            }
-        }
-
-        Level.Game.Broadcast(self, "DebugTreadVelocityScale = " $ TreadVelocityScale);
-    }
-}
-
-simulated exec function DebugTreadVelocityScaleIncrement()
-{
-    local ROTreadCraft V;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'ROTreadCraft', V)
-        {
-            V.TreadVelocityScale += 1.0;
-        }
-    }
-}
-
-simulated exec function DebugTreadVelocityScaleDecrement()
-{
-    local ROTreadCraft V;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'ROTreadCraft', V)
-        {
-            V.TreadVelocityScale -= 1.0;
-        }
-    }
-}
-
-simulated exec function DebugWheelRotationScale(int WheelRotationScale)
-{
-    local ROTreadCraft V;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'ROTreadCraft', V)
-        {
-            if (WheelRotationScale == -1)
-            {
-                V.WheelRotationScale = V.default.WheelRotationScale;
-            }
-            else
-            {
-                V.WheelRotationScale = WheelRotationScale;
-            }
-        }
-
-        Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
-    }
-}
-
-// New debug exec to adjust the occupant positions in the vehicle HUD overlay (the red dots)
-// Pass new X & Y float values scaled by 1000, which allows precision to 3 decimal places
-exec function SetOccPos(int Index, int NewX, int NewY)
-{
-    local ROVehicle V;
-    local float     X, Y;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-        }
-
-        if (V != none)
-        {
-            X = float(NewX) / 1000.0;
-            Y = float(NewY) / 1000.0;
-            Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
-            V.VehicleHudOccupantsX[Index] = X;
-            V.VehicleHudOccupantsY[Index] = Y;
-        }
-    }
-}
-
-// New exec that respawns the player, but leaves their old pawn body behind, frozen in the game
-// Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
-exec function LeaveBody(optional bool bKeepPRI)
-{
-    local ROVehicleWeaponPawn WP;
-    local ROVehicle           V;
-    local Pawn                OldPawn;
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
-    {
-        // If player is in vehicle with an interior mesh, switch to default exterior mesh & play the appropriate animations to put vehicle & player in correct position
-        V = ROVehicle(Pawn);
-
-        if (V != none)
-        {
-            if (V.Mesh != V.default.Mesh)
-            {
-                V.LinkMesh(V.default.Mesh);
-
-                if (DHWheeledVehicle(V) != none)
-                {
-                    DHWheeledVehicle(V).SetPlayerPosition();
-                }
-                else if (DHArmoredVehicle(V) != none)
-                {
-                    DHArmoredVehicle(V).SetPlayerPosition();
-                }
-            }
-        }
-        else
-        {
-            WP = ROVehicleWeaponPawn(Pawn);
-
-            if (WP != none && WP.Gun != none && WP.Gun.Mesh != WP.Gun.default.Mesh)
-            {
-                WP.Gun.LinkMesh(WP.Gun.default.Mesh);
-
-                if (DHVehicleCannonPawn(WP) != none)
-                {
-                    DHVehicleCannonPawn(WP).SetPlayerPosition();
-                }
-                else if (DHVehicleMGPawn(WP) != none)
-                {
-                    DHVehicleMGPawn(WP).SetPlayerPosition();
-                }
-            }
-        }
-
-        OldPawn = Pawn;
-        ServerLeaveBody(bKeepPRI);
-
-        // Attempt to fix 'pin head', where pawn's head is shrunk to 10% by state Dead.BeginState() - but generally ineffective as happens before state Dead (ViewTarget is key)
-        if (DHPawn(OldPawn) != none)
-        {
-            OldPawn.SetHeadScale(OldPawn.default.HeadScale);
-        }
-    }
-}
-
-function ServerLeaveBody(optional bool bKeepPRI)
-{
-    local Vehicle           V;
-    local VehicleWeaponPawn WP;
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
-    {
-        Pawn.UnPossessed();
-
-        if (bKeepPRI)
-        {
-            Pawn.PlayerReplicationInfo = PlayerReplicationInfo;
-        }
-
-        V = Vehicle(Pawn);
-
-        if (V != none)
-        {
-            V.Throttle = 0.0;
-            V.Steering = 0.0;
-            V.Rise = 0.0;
-
-            WP = VehicleWeaponPawn(V);
-
-            // If player was in a VehicleWeapon, reset properties (similar to KdriverLeave & now DriverDied as well)
-            // Resetting bActive is critical, otherwise weapon swings around when vehicle is driven
-            if (WP != none && WP.Gun != none)
-            {
-                WP.Gun.bActive = false;
-                WP.Gun.FlashCount = 0;
-                WP.Gun.NetUpdateFrequency = WP.Gun.default.NetUpdateFrequency;
-                WP.Gun.NetPriority = WP.Gun.default.NetPriority;
-            }
-        }
-        else
-        {
-            Pawn.Velocity = vect(0.0, 0.0, 0.0);
-            Pawn.SetPhysics(PHYS_None);
-        }
-
-        Pawn = none;
-    }
-}
-
-// New exec, used with LeaveBody(), as a clientside fix for annoying bug where old pawn's head shrinks to 10% size! - can be used when head location accuracy is important
-exec function FixPinHead()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHud) != none && DHHud(myHud).NamedPlayer != none)
-    {
-        DHHud(myHud).NamedPlayer.SetHeadScale(DHHud(myHud).NamedPlayer.default.HeadScale);
-    }
-}
-
-// New exec that reverses LeaveBody(), allowing the player 'reclaim' their old pawn body (& killing off their current pawn)
-exec function PossessBody()
-{
-    local Pawn   TargetPawn;
-    local vector HitLocation, HitNormal, ViewPos;
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
-    {
-        ViewPos = Pawn.Location + Pawn.BaseEyeHeight * vect(0.0, 0.0, 1.0);
-        TargetPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(Rotation), ViewPos, true));
-
-        // Only proceed if body's PRI matches the player (so must have been their old body, left using bKeepPRI option), or if body belongs to no one
-        if (TargetPawn != none && (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo || TargetPawn.PlayerReplicationInfo == none))
-        {
-            ServerPossessBody(TargetPawn);
-
-            if (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo)
-            {
-                TargetPawn.bOwnerNoSee = TargetPawn.default.bOwnerNoSee; // have to set this clientside to stop it drawing the player's body in 1st person
-            }
-        }
-    }
-}
-
-function ServerPossessBody(Pawn NewPawn)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && NewPawn != none)
-    {
-        // If the pawn body is already associated with the player (shares PRI) then possess it & kill off current pawn
-        if (NewPawn.PlayerReplicationInfo == PlayerReplicationInfo)
-        {
-            Pawn.Died(none, class'DamageType', vect(0.0, 0.0, 0.0));
-            Unpossess();
-            Possess(NewPawn);
-        }
-        // Otherwise, if pawn body 'belongs' to no one (no PRI) then associate it with the player, so his name & resupply status appears on the HUD
-        // Then a repeat of PossessBody() will allow him to possess the 2nd time
-        else if (NewPawn.PlayerReplicationInfo == none)
-        {
-            NewPawn.PlayerReplicationInfo = PlayerReplicationInfo;
-        }
-    }
-}
-
 function ServerClearObstacle(int Index)
 {
     local DarkestHourGame G;
@@ -2164,50 +1806,6 @@ function ServerClearObstacle(int Index)
     if (G != none && G.ObstacleManager != none)
     {
         G.ObstacleManager.ClearObstacle(Index);
-    }
-}
-
-exec function DebugObstacles(optional int Option)
-{
-    local DHObstacleInfo OI;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'DHObstacleInfo', OI)
-        {
-            Log("DHObstacleInfo.Obstacles.Length =" @ OI.Obstacles.Length);
-
-            break;
-        }
-
-        ServerDebugObstacles(Option);
-    }
-}
-
-function ServerDebugObstacles(optional int Option)
-{
-    DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
-}
-
-// Matt: added for easy way to write to log in-game, during testing or development
-exec function DoLog(string LogMessage)
-{
-    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
-    {
-        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
-
-        if (Role < ROLE_Authority)
-        {
-            ServerDoLog(LogMessage);
-        }
-    }
-}
-
-function ServerDoLog(string LogMessage)
-{
-    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
-    {
-        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
     }
 }
 
@@ -2240,48 +1838,6 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
     }
 
     return T;
-}
-
-// Function to get offset coordinates from nearby vehicle(s) to create/adjust vehicle exit positions (Only works in singleplayer)
-exec function ExitPosTool()
-{
-    local ROVehicle NearbyVeh;
-    local vector Offset;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
-        {
-            Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
-
-            Log("Vehicle:" @ NearbyVeh.GetHumanReadableName() @ "(X=" $ Round(Offset.X) $ ",Y=" $ Round(Offset.Y) $ ",Z=" $ Round(Offset.Z) $ ")");
-        }
-    }
-}
-
-// New debug exec to make bots spawn
-// Team is 0 for axis, 1 for allies, 2 for both
-// Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
-exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        if (DarkestHourGame(Level.Game) != none)
-        {
-            DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
-        }
-    }
-}
-
-exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        if (DarkestHourGame(Level.Game) != none)
-        {
-            DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
-        }
-    }
 }
 
 // Modified to actually restart the sway process, not just stop it. This is only called when the player changes stances (crouch prone stand).
@@ -2840,90 +2396,6 @@ function RORoleInfo GetRoleInfo()
     }
 }
 
-// New debug exec to adjust DrivePos (vehicle occupant positional offset from attachment bone)
-exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
-{
-    local Vehicle V;
-    local vector  OldDrivePos;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        V = Vehicle(Pawn);
-
-        if (V != none && V.Driver != none)
-        {
-            OldDrivePos = V.DrivePos;
-
-            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                V.DrivePos.X = Float(NewX) / 10.0;
-                V.DrivePos.Y = Float(NewY) / 10.0;
-                V.DrivePos.Z = Float(NewZ) / 10.0;
-            }
-            else
-            {
-                V.DrivePos.X = NewX;
-                V.DrivePos.Y = NewY;
-                V.DrivePos.Z = NewZ;
-            }
-
-            V.DetachDriver(V.Driver);
-            V.AttachDriver(V.Driver);
-            Log(V.Tag @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
-        }
-    }
-}
-
-// Debug exec for queued hints
-function exec DebugHints()
-{
-    local DHHintManager.HintInfo Hint;
-    local int i;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        if (DHHintManager != none)
-        {
-            Log("DHHintManager: CurrentHintIndex =" @ DHHintManager.CurrentHintIndex @ " QueuedHintIndices.Length =" @ DHHintManager.QueuedHintIndices.Length
-                @ " state =" @ DHHintManager.GetStateName());
-
-            for (i = 0; i < DHHintManager.QueuedHintIndices.Length; ++i)
-            {
-                Hint = DHHintManager.GetHint(DHHintManager.QueuedHintIndices[i]);
-                Log("QueuedHintIndices[" $ i $ "] =" @ DHHintManager.QueuedHintIndices[i] @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
-            }
-
-            for (i = 0; i < DHHintManager.HINT_COUNT; ++i)
-            {
-                if (DHHintManager.bUsedUpHints[i] == 1)
-                {
-                    Hint = DHHintManager.GetHint(i);
-                    Log("bUsedUpHints[" $ i $ "] :" @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
-                }
-            }
-
-            Log("=====================================================================================================");
-        }
-    }
-}
-
-// Debug exec to play a sound (playing sounds in RO editor often doesn't work, so this is just a way of trying out sounds)
-exec function SoundPlay(string SoundName, optional float Volume)
-{
-    local sound SoundToPlay;
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && SoundName != "")
-    {
-        SoundToPlay = sound(DynamicLoadObject(SoundName, class'Sound'));
-
-        if (SoundToPlay != none)
-        {
-            ClientPlaySound(SoundToPlay, Volume > 0.0, Volume);
-            Log("Playing sound" @ SoundToPlay @ " Volume =" @ Volume);
-        }
-    }
-}
-
 // Override to have the list of players copied into the clipboard of the player whom typed "ListPlayers"
 // The player can then use a regular expression find/replace to split the single line string into multiple lines, with ease of access to the ROIDs
 function ServerListPlayers()
@@ -2989,6 +2461,10 @@ function ClientSaveROIDHash(string ROID)
     SaveConfig();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Modified to work in debug mode, as well as in single player
 exec function FOV(float F)
 {
@@ -2996,6 +2472,1007 @@ exec function FOV(float F)
     {
         DefaultFOV = FClamp(F, 1.0, 170.0);
         DesiredFOV = DefaultFOV;
+    }
+}
+
+// New debug exec for an easy way to write to log in-game, on both server & client in multi-player
+exec function DoLog(string LogMessage)
+{
+    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    {
+        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+
+        if (Role < ROLE_Authority)
+        {
+            ServerDoLog(LogMessage);
+        }
+    }
+}
+
+function ServerDoLog(string LogMessage)
+{
+    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    {
+        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+    }
+}
+
+exec function DebugObstacles(optional int Option)
+{
+    local DHObstacleInfo OI;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach AllActors(class'DHObstacleInfo', OI)
+        {
+            Log("DHObstacleInfo.Obstacles.Length =" @ OI.Obstacles.Length);
+
+            break;
+        }
+
+        ServerDebugObstacles(Option);
+    }
+}
+
+function ServerDebugObstacles(optional int Option)
+{
+    DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
+}
+
+// New debug exec to make bots spawn
+// Team is 0 for axis, 1 for allies, 2 for both
+// Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
+exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+        }
+    }
+}
+
+// Debug exec for queued hints
+exec function DebugHints()
+{
+    local DHHintManager.HintInfo Hint;
+    local int i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (DHHintManager != none)
+        {
+            Log("DHHintManager: CurrentHintIndex =" @ DHHintManager.CurrentHintIndex @ " QueuedHintIndices.Length =" @ DHHintManager.QueuedHintIndices.Length
+                @ " state =" @ DHHintManager.GetStateName());
+
+            for (i = 0; i < DHHintManager.QueuedHintIndices.Length; ++i)
+            {
+                Hint = DHHintManager.GetHint(DHHintManager.QueuedHintIndices[i]);
+                Log("QueuedHintIndices[" $ i $ "] =" @ DHHintManager.QueuedHintIndices[i] @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
+            }
+
+            for (i = 0; i < DHHintManager.HINT_COUNT; ++i)
+            {
+                if (DHHintManager.bUsedUpHints[i] == 1)
+                {
+                    Hint = DHHintManager.GetHint(i);
+                    Log("bUsedUpHints[" $ i $ "] :" @ Left(Hint.Title, 40) @ Left(Hint.Text, 80));
+                }
+            }
+
+            Log("=====================================================================================================");
+        }
+    }
+}
+
+// New debug exec to play a sound (playing sounds in RO editor often doesn't work, so this is just a way of trying out sounds)
+exec function SoundPlay(string SoundName, optional float Volume)
+{
+    local sound SoundToPlay;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && SoundName != "")
+    {
+        SoundToPlay = sound(DynamicLoadObject(SoundName, class'Sound'));
+
+        if (SoundToPlay != none)
+        {
+            ClientPlaySound(SoundToPlay, Volume > 0.0, Volume);
+            Log("Playing sound" @ SoundToPlay @ " Volume =" @ Volume);
+        }
+    }
+}
+// Modified to shift this functionality into DHHud, where it's directly relevant & where some necessary stuff is added to make this RO function work as designed
+exec function PlayerCollisionDebug()
+{
+    if (DHHud(MyHud) != none)
+    {
+        DHHud(MyHud).PlayerCollisionDebug();
+    }
+}
+
+// Modified to use DH version of debug mode
+exec function ClearLines()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ClearStayingDebugLines();
+    }
+}
+
+// New debug exec to clear debug tracer arrows
+exec function ClearArrows()
+{
+    local RODebugTracer Tracer;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach DynamicActors(class'RODebugTracer', Tracer)
+        {
+            Tracer.Destroy();
+        }
+    }
+}
+
+// New exec that respawns the player, but leaves their old pawn body behind, frozen in the game
+// Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
+exec function LeaveBody(optional bool bKeepPRI)
+{
+    local ROVehicleWeaponPawn WP;
+    local ROVehicle           V;
+    local Pawn                OldPawn;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    {
+        // If player is in vehicle with an interior mesh, switch to default exterior mesh & play the appropriate animations to put vehicle & player in correct position
+        V = ROVehicle(Pawn);
+
+        if (V != none)
+        {
+            if (V.Mesh != V.default.Mesh)
+            {
+                V.LinkMesh(V.default.Mesh);
+
+                if (DHWheeledVehicle(V) != none)
+                {
+                    DHWheeledVehicle(V).SetPlayerPosition();
+                }
+                else if (DHArmoredVehicle(V) != none)
+                {
+                    DHArmoredVehicle(V).SetPlayerPosition();
+                }
+            }
+        }
+        else
+        {
+            WP = ROVehicleWeaponPawn(Pawn);
+
+            if (WP != none && WP.Gun != none && WP.Gun.Mesh != WP.Gun.default.Mesh)
+            {
+                WP.Gun.LinkMesh(WP.Gun.default.Mesh);
+
+                if (DHVehicleCannonPawn(WP) != none)
+                {
+                    DHVehicleCannonPawn(WP).SetPlayerPosition();
+                }
+                else if (DHVehicleMGPawn(WP) != none)
+                {
+                    DHVehicleMGPawn(WP).SetPlayerPosition();
+                }
+            }
+        }
+
+        OldPawn = Pawn;
+        ServerLeaveBody(bKeepPRI);
+
+        // Attempt to fix 'pin head', where pawn's head is shrunk to 10% by state Dead.BeginState() - but generally ineffective as happens before state Dead (ViewTarget is key)
+        if (DHPawn(OldPawn) != none)
+        {
+            OldPawn.SetHeadScale(OldPawn.default.HeadScale);
+        }
+    }
+}
+
+function ServerLeaveBody(optional bool bKeepPRI)
+{
+    local Vehicle           V;
+    local VehicleWeaponPawn WP;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    {
+        Pawn.UnPossessed();
+
+        if (bKeepPRI)
+        {
+            Pawn.PlayerReplicationInfo = PlayerReplicationInfo;
+        }
+
+        V = Vehicle(Pawn);
+
+        if (V != none)
+        {
+            V.Throttle = 0.0;
+            V.Steering = 0.0;
+            V.Rise = 0.0;
+
+            WP = VehicleWeaponPawn(V);
+
+            // If player was in a VehicleWeapon, reset properties (similar to KdriverLeave & now DriverDied as well)
+            // Resetting bActive is critical, otherwise weapon swings around when vehicle is driven
+            if (WP != none && WP.Gun != none)
+            {
+                WP.Gun.bActive = false;
+                WP.Gun.FlashCount = 0;
+                WP.Gun.NetUpdateFrequency = WP.Gun.default.NetUpdateFrequency;
+                WP.Gun.NetPriority = WP.Gun.default.NetPriority;
+            }
+        }
+        else
+        {
+            Pawn.Velocity = vect(0.0, 0.0, 0.0);
+            Pawn.SetPhysics(PHYS_None);
+        }
+
+        Pawn = none;
+    }
+}
+
+// New exec, used with LeaveBody(), as a clientside fix for annoying bug where old pawn's head shrinks to 10% size! - can be used when head location accuracy is important
+exec function FixPinHead()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHud) != none && DHHud(myHud).NamedPlayer != none)
+    {
+        DHHud(myHud).NamedPlayer.SetHeadScale(DHHud(myHud).NamedPlayer.default.HeadScale);
+    }
+}
+
+// New exec that reverses LeaveBody(), allowing the player 'reclaim' their old pawn body (& killing off their current pawn)
+exec function PossessBody()
+{
+    local Pawn   TargetPawn;
+    local vector HitLocation, HitNormal, ViewPos;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    {
+        ViewPos = Pawn.Location + Pawn.BaseEyeHeight * vect(0.0, 0.0, 1.0);
+        TargetPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(Rotation), ViewPos, true));
+
+        // Only proceed if body's PRI matches the player (so must have been their old body, left using bKeepPRI option), or if body belongs to no one
+        if (TargetPawn != none && (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo || TargetPawn.PlayerReplicationInfo == none))
+        {
+            ServerPossessBody(TargetPawn);
+
+            if (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo)
+            {
+                TargetPawn.bOwnerNoSee = TargetPawn.default.bOwnerNoSee; // have to set this clientside to stop it drawing the player's body in 1st person
+            }
+        }
+    }
+}
+
+function ServerPossessBody(Pawn NewPawn)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && NewPawn != none)
+    {
+        // If the pawn body is already associated with the player (shares PRI) then possess it & kill off current pawn
+        if (NewPawn.PlayerReplicationInfo == PlayerReplicationInfo)
+        {
+            Pawn.Died(none, class'DamageType', vect(0.0, 0.0, 0.0));
+            Unpossess();
+            Possess(NewPawn);
+        }
+        // Otherwise, if pawn body 'belongs' to no one (no PRI) then associate it with the player, so his name & resupply status appears on the HUD
+        // Then a repeat of PossessBody() will allow him to possess the 2nd time
+        else if (NewPawn.PlayerReplicationInfo == none)
+        {
+            NewPawn.PlayerReplicationInfo = PlayerReplicationInfo;
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DarkestHourGame(Level.Game) != none)
+    {
+        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
+    }
+}
+
+// New debug exec to adjust the gear ratio settings, which largely govern the vehicle's speed (mainly GearRatios(4))
+exec function SetGearRatio(byte Index, float NewValue)
+{
+    local ROWheeledVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        V = ROWheeledVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        }
+
+        if (V != none && Index < arraycount(V.GearRatios))
+        {
+            Log(V.Tag @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
+            V.GearRatios[Index] = NewValue;
+        }
+    }
+}
+
+// New debug exec to set a vehicle's ExitPositions (use it in single player; it's too much hassle on a server)
+exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
+{
+    local ROVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none && Index < V.ExitPositions.Length)
+        {
+            Log(V.Tag @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
+            V.ExitPositions[Index].X = NewX;
+            V.ExitPositions[Index].Y = NewY;
+            V.ExitPositions[Index].Z = NewZ;
+        }
+    }
+}
+
+// New debug exec to get offset coordinates from nearby vehicle(s) to create/adjust vehicle exit positions (only works in singleplayer)
+exec function ExitPosTool()
+{
+    local ROVehicle NearbyVeh;
+    local vector    Offset;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
+        {
+            Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
+            Log("Vehicle:" @ NearbyVeh.GetHumanReadableName() @ "(X=" $ Round(Offset.X) $ ",Y=" $ Round(Offset.Y) $ ",Z=" $ Round(Offset.Z) $ ")");
+        }
+    }
+}
+
+// New debug exec to draw the location of a vehicle's exit positions, which are shown as different coloured cylinders
+exec function DrawExits(optional bool bClearScreen)
+{
+    local ROVehicle V;
+    local vector    ExitPosition, ZOffset, X, Y, Z;
+    local color     C;
+    local int       i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ClearStayingDebugLines();
+
+        if (!bClearScreen)
+        {
+            V = ROVehicle(Pawn);
+
+            if (V == none && VehicleWeaponPawn(Pawn) != none)
+            {
+                V = VehicleWeaponPawn(Pawn).VehicleBase;
+            }
+
+            if (V != none)
+            {
+                ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+                GetAxes(V.Rotation, X, Y, Z);
+
+                for (i = V.ExitPositions.Length - 1; i >= 0; --i)
+                {
+                    if (i == 0)
+                    {
+                        C = class'HUD'.default.BlueColor; // driver
+                    }
+                    else
+                    {
+                        if (i - 1 < V.WeaponPawns.Length)
+                        {
+                            if (ROTankCannonPawn(V.WeaponPawns[i - 1]) != none)
+                            {
+                                C = class'HUD'.default.RedColor; // commander
+                            }
+                            else if (ROMountedTankMGPawn(V.WeaponPawns[i - 1]) != none)
+                            {
+                                C = class'HUD'.default.GoldColor; // machine gunner
+                            }
+                            else
+                            {
+                                C = class'HUD'.default.WhiteColor; // rider
+                            }
+                        }
+                        else
+                        {
+                            C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                        }
+                    }
+
+                    ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
+                    class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
+                }
+            }
+        }
+    }
+}
+
+// New debug exec to adjust a vehicle's DrivePos (vehicle occupant positional offset from attachment bone)
+exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    local Vehicle V;
+    local vector  OldDrivePos;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none && V.Driver != none)
+        {
+            OldDrivePos = V.DrivePos;
+            V.DrivePos.X = NewX;
+            V.DrivePos.Y = NewY;
+            V.DrivePos.Z = NewZ;
+
+            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+            {
+                V.DrivePos /= 10.0;
+            }
+
+            V.DetachDriver(V.Driver);
+            V.AttachDriver(V.Driver);
+            Log(V.Tag @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
+        }
+    }
+}
+
+// New debug exec to set a vehicle position's 1st person camera position offset
+exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+{
+    local Vehicle             V;
+    local ROVehicleWeaponPawn WP;
+    local vector              OldCamPos;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none)
+        {
+            OldCamPos = V.FPCamPos;
+            V.FPCamPos.X = NewX;
+            V.FPCamPos.Y = NewY;
+            V.FPCamPos.Z = NewZ;
+
+            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+            {
+                V.FPCamPos /= 10.0;
+            }
+
+            WP = ROVehicleWeaponPawn(V);
+
+            if (WP != none && WP.bMultiPosition)
+            {
+                WP.DriverPositions[WP.DriverPositionIndex].ViewLocation = V.FPCamPos;
+                Log(WP.Tag @ "DriverPositions[" $ WP.DriverPositionIndex $ "].ViewLocation =" @ WP.DriverPositions[WP.DriverPositionIndex].ViewLocation @ "(old was" @ OldCamPos $ ")");
+            }
+            else
+            {
+                Log(V.Tag @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
+            }
+        }
+    }
+}
+
+exec function VehicleCamDistance(int NewDistance)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Vehicle(Pawn) != none && ROHud(myHUD) != none)
+    {
+        Vehicle(Pawn).TPCamDistance = NewDistance;
+        Vehicle(Pawn).TPCamDistRange.Min = NewDistance;
+        Vehicle(Pawn).TPCamDistRange.Max = NewDistance;
+    }
+}
+// Modified to shift this functionality into DHHud, where it's directly relevant & where some necessary stuff is added to make this RO function work as designed
+exec function DriverCollisionDebug()
+{
+    if (DHHud(MyHud) != none)
+    {
+        DHHud(MyHud).DriverCollisionDebug();
+    }
+}
+
+exec function DebugTreadVelocityScale(float TreadVelocityScale)
+{
+    local ROTreadCraft V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach AllActors(class'ROTreadCraft', V)
+        {
+            if (TreadVelocityScale == -1.0)
+            {
+                V.TreadVelocityScale = V.default.TreadVelocityScale;
+            }
+            else
+            {
+                V.TreadVelocityScale = TreadVelocityScale;
+            }
+        }
+
+        Level.Game.Broadcast(self, "DebugTreadVelocityScale = " $ TreadVelocityScale);
+    }
+}
+
+exec function DebugTreadVelocityScaleIncrement()
+{
+    local ROTreadCraft V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach AllActors(class'ROTreadCraft', V)
+        {
+            V.TreadVelocityScale += 1.0;
+        }
+    }
+}
+
+exec function DebugTreadVelocityScaleDecrement()
+{
+    local ROTreadCraft V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach AllActors(class'ROTreadCraft', V)
+        {
+            V.TreadVelocityScale -= 1.0;
+        }
+    }
+}
+
+exec function DebugWheelRotationScale(int WheelRotationScale)
+{
+    local ROTreadCraft V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach AllActors(class'ROTreadCraft', V)
+        {
+            if (WheelRotationScale == -1)
+            {
+                V.WheelRotationScale = V.default.WheelRotationScale;
+            }
+            else
+            {
+                V.WheelRotationScale = WheelRotationScale;
+            }
+        }
+
+        Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
+    }
+}
+
+// New debug exec to adjust the occupant positions in a vehicle's HUD overlay (the red dots)
+// Pass new X & Y float values scaled by 1000, which allows precision to 3 decimal places
+exec function SetOccPos(byte Index, int NewX, int NewY)
+{
+    local ROVehicle V;
+    local float     X, Y;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none && Index < V.VehicleHudOccupantsX.Length)
+        {
+            X = float(NewX) / 1000.0;
+            Y = float(NewY) / 1000.0;
+            Log(V.Tag @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
+            V.VehicleHudOccupantsX[Index] = X;
+            V.VehicleHudOccupantsY[Index] = Y;
+        }
+    }
+}
+
+// New debug exec to set a vehicle's exhaust emitter location
+exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
+{
+    local ROWheeledVehicle V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROWheeledVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        }
+
+        if (V != none && Index < V.ExhaustPipes.Length)
+        {
+            Log(V.Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
+            V.ExhaustPipes[Index].ExhaustPosition.X = NewX;
+            V.ExhaustPipes[Index].ExhaustPosition.Y = NewY;
+            V.ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
+
+            if (V.ExhaustPipes[Index].ExhaustEffect != none)
+            {
+                V.ExhaustPipes[Index].ExhaustEffect.SetLocation(V.Location + (V.ExhaustPipes[Index].ExhaustPosition >> V.Rotation));
+                V.ExhaustPipes[Index].ExhaustEffect.SetBase(V);
+            }
+        }
+    }
+}
+
+// New debug exec to adjust the radius of a vehicle's physics wheels
+// Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
+exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+{
+    local ROVehicle V;
+    local float     NewRadius;
+    local int       i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        {
+            NewRadius = float(NewValue);
+
+            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+            {
+                NewRadius /= 10.0;
+            }
+
+            if (LastWheelIndex == 0)
+            {
+                LastWheelIndex = V.Wheels.Length - 1;
+            }
+
+            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+            {
+                Log(V.Tag @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
+                V.Wheels[i].WheelRadius = NewRadius;
+            }
+        }
+    }
+}
+
+// New debug exec to adjust the attachment bone offset of a vehicle's physics wheels
+// Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
+exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+{
+    local ROVehicle V;
+    local vector    NewBoneOffset;
+    local int       i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        {
+            NewBoneOffset.X = NewX;
+            NewBoneOffset.Y = NewY;
+            NewBoneOffset.Z = NewZ;
+
+            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+            {
+                NewBoneOffset /= 10.0;
+            }
+
+            if (LastWheelIndex == 0)
+            {
+                LastWheelIndex = V.Wheels.Length - 1;
+            }
+
+            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+            {
+                Log(V.Tag @ "Wheels[" $ i $ "].BoneOffset =" @ NewBoneOffset @ "(was" @ V.Wheels[i].BoneOffset $ ")");
+                V.Wheels[i].WheelPosition += (NewBoneOffset - V.Wheels[i].BoneOffset); // this updates a native code setting (experimentation showed it's a relative offset)
+                V.Wheels[i].BoneOffset = NewBoneOffset;
+            }
+        }
+    }
+}
+
+// New debug exec to adjust maximum travel distance of the suspension of a vehicle's physics wheels
+// Allows adjustment of individual wheels, but note that on entering a vehicle, native code calls SVehicleUpdateParams(), which will undo individual settings
+// Settings for all wheels get matched to values of WheelSuspensionTravel & WheelSuspensionMaxRenderTravel, so if individual settings are required, SVehicleUpdateParams must be overridden
+exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex, optional bool bDontSetSuspensionTravel, optional bool bDontSetMaxRenderTravel)
+{
+    local ROWheeledVehicle V;
+    local float            OldTravel, OldRenderTravel;
+    local int              i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROWheeledVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        }
+
+        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        {
+            if (!bDontSetSuspensionTravel)
+            {
+                V.WheelSuspensionTravel = NewValue; // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
+            }
+
+            if (!bDontSetMaxRenderTravel)
+            {
+                V.WheelSuspensionMaxRenderTravel = NewValue;
+            }
+
+            if (LastWheelIndex == 0)
+            {
+                LastWheelIndex = V.Wheels.Length - 1;
+            }
+
+            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+            {
+                OldTravel = V.Wheels[i].SuspensionTravel;
+                OldRenderTravel = V.Wheels[i].SuspensionMaxRenderTravel;
+
+                if (!bDontSetSuspensionTravel)
+                {
+                    V.Wheels[i].SuspensionTravel = NewValue;
+                }
+
+                if (bDontSetMaxRenderTravel)
+                {
+                    V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
+                }
+
+                Log(Tag @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
+                    ") MaxRenderTravel =" @ V.Wheels[i].SuspensionMaxRenderTravel @ "(was" @ OldRenderTravel $ ")");
+            }
+        }
+    }
+}
+
+// New debug exec to adjust the positioning of a vehicle's suspension bones that support its physics wheels
+// Allows adjustment of individual wheels, but note that on entering a vehicle, native code calls SVehicleUpdateParams(), which will undo individual settings
+// Settings for all wheels get matched to values of WheelSuspensionOffset, so if individual settings are required, SVehicleUpdateParams must be overridden
+exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+{
+    local ROWheeledVehicle V;
+    local float            NewOffset;
+    local int              i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROWheeledVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        }
+
+        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        {
+            NewOffset = float(NewValue);
+
+            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
+            {
+                NewOffset /= 10.0;
+            }
+
+            V.WheelSuspensionOffset = NewValue; // on re-entering the vehicle, all physics wheels will have this value set, undoing any individual settings
+
+            if (LastWheelIndex == 0)
+            {
+                LastWheelIndex = V.Wheels.Length - 1;
+            }
+
+            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+            {
+                Log(Tag @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
+                V.Wheels[i].SuspensionOffset = NewOffset;
+            }
+        }
+    }
+}
+
+// New debug exec to show a vehicle's karma centre of mass offset
+exec function DrawCOM(optional bool bClearScreen)
+{
+    local ROVehicle V;
+    local vector    COM, X, Y, Z;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ClearStayingDebugLines();
+
+        if (!bClearScreen)
+        {
+            V = ROVehicle(Pawn);
+
+            if (V == none && VehicleWeaponPawn(Pawn) != none)
+            {
+                V = VehicleWeaponPawn(Pawn).VehicleBase;
+            }
+
+            if (V != none)
+            {
+                GetAxes(V.Rotation, X, Y, Z);
+                V.KGetCOMPosition(COM);
+                DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
+                DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
+                DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
+            }
+        }
+    }
+}
+
+// New debug exec to adjust a vehicle's karma centre of mass (enter X, Y & Z offset values as one tenths)
+exec function SetCOM(int NewX, int NewY, int NewZ)
+{
+    local ROVehicle V;
+    local vector    COM, OldCOM;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none)
+        {
+            V.KGetCOMOffset(OldCOM);
+            COM.X = float(NewX) / 10.0;
+            COM.Y = float(NewY) / 10.0;
+            COM.Z = float(NewZ) / 10.0;
+            V.KSetCOMOffset(COM);
+            V.SetPhysics(PHYS_None);
+            V.SetPhysics(PHYS_Karma);
+            DrawCOM();
+            Log(V.Tag @ "KCOMOffset =" @ COM @ "(old was" @ OldCOM $ ")");
+        }
+    }
+}
+
+// New debug exec to adjust a vehicle's karma max angular speed (higher values make the vehicle slow when turning & make it feel "heavier")
+exec function SetMaxAngSpeed(float NewValue)
+{
+    local ROVehicle V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none && KarmaParams(V.KParams) != none)
+        {
+            Log(V.Tag @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
+            KarmaParams(V.KParams).KMaxAngularSpeed = NewValue;
+            V.SetPhysics(PHYS_None);
+            V.SetPhysics(PHYS_Karma);
+        }
+    }
+}
+
+// New debug exec to adjust a vehicle's karma angular damping
+exec function SetAngDamp(float NewValue)
+{
+    local ROVehicle V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none && KarmaParams(V.KParams) != none)
+        {
+            Log(V.Tag @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
+            KarmaParams(V.KParams).KAngularDamping = NewValue;
+            V.SetPhysics(PHYS_None);
+            V.SetPhysics(PHYS_Karma);
+        }
+    }
+}
+
+// New debug exec to adjust location of engine smoke/fire position
+exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
+{
+    local ROVehicle V;
+
+    if (Level.NetMode == NM_Standalone || (class'DH_LevelInfo'.static.DHDebugMode() && Level.NetMode != NM_DedicatedServer))
+    {
+        V = ROVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = VehicleWeaponPawn(Pawn).VehicleBase;
+        }
+
+        if (V != none)
+        {
+            // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke/fire at current position)
+            if (NewX != 0 || NewY != 0 || NewZ != 0)
+            {
+                V.DamagedEffectOffset.X = NewX;
+                V.DamagedEffectOffset.Y = NewY;
+                V.DamagedEffectOffset.Z = NewZ;
+            }
+
+            Log(V.Tag @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
+
+            // Appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
+            if (V.DamagedEffect == none)
+            {
+                V.DamagedEffectHealthSmokeFactor = 1.0;
+
+                if (V.Health == V.HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
+                {
+                    V.Health--;
+                }
+            }
+
+            // Engine fire effect
+            if (bEngineFire)
+            {
+                V.DamagedEffectHealthFireFactor = 1.0;
+            }
+            // Or if we don't want a fire effect but it's already burning, reset to smoking
+            else if (V.DamagedEffectHealthFireFactor == 1.0)
+            {
+                V.DamagedEffectHealthFireFactor = V.default.DamagedEffectHealthFireFactor;
+
+                if (V.DamagedEffect != none)
+                {
+                    V.DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // light smoke
+                }
+            }
+
+            // Reposition any existing effect
+            if (V.DamagedEffect != none)
+            {
+                V.DamagedEffect.SetBase(none);
+                V.DamagedEffect.SetLocation(V.Location + (V.DamagedEffectOffset >> V.Rotation));
+                V.DamagedEffect.SetBase(V);
+                V.DamagedEffect.SetEffectScale(V.DamagedEffectScale);
+            }
+        }
     }
 }
 

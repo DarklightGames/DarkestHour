@@ -65,8 +65,11 @@ var globalconfig bool   bShowDeathMessages; // whether or not to show the death 
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 
+// Debug
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
+var bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
+var SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
@@ -499,6 +502,9 @@ simulated function DrawHudPassC(Canvas C)
     local ROWeapon           MyWeapon;
     local bool               bIsSpawnVehicle;
     local byte               BlockFlags;
+    local vector             CameraLocation;
+    local rotator            CameraRotation;
+    local Actor              ViewActor;
 
     if (PawnOwner == none)
     {
@@ -850,6 +856,12 @@ simulated function DrawHudPassC(Canvas C)
     // Debug options - slow !
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
+        // Draw all player's body part hit points & bullet whip attachment
+        if (bDebugPlayerCollision)
+        {
+            DrawPointSphere();
+        }
+
         // Draw all vehicle occupant ('Driver') hit points
         if (bDebugDriverCollision)
         {
@@ -862,16 +874,19 @@ simulated function DrawHudPassC(Canvas C)
             DrawVehiclePointSphere();
         }
 
-        // Draw all player's body part hit points & bullet whip attachment
-        if (bDebugPlayerCollision)
-        {
-            DrawPointSphere();
-        }
-
         // Draw all vehicle's physics wheels
         if (bDebugVehicleWheels)
         {
             DrawVehiclePhysiscsWheels();
+        }
+
+        // Show camera location & rotation in behind view (needs "show sky" in console)
+        if (bDebugCamera && PlayerOwner != none && PlayerOwner.bBehindView && Vehicle(PawnOwner) != none)
+        {
+            Vehicle(PawnOwner).SpecialCalcFirstPersonView(PlayerOwner, ViewActor, CameraLocation, CameraRotation);
+            DrawDebugSphere(CameraLocation, 1.0, 4, 255, 0, 0);       // camera location shown as very small red sphere, like a large dot
+            DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
+            DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0); // red line to show camera rotation
         }
     }
 }
@@ -4327,11 +4342,91 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
     GC.LCDRepaint();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to use DHDebugMode
 exec function ShowDebug()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         bShowDebugInfo = !bShowDebugInfo;
+    }
+}
+
+// A debug exec transferred from ROHud class & modified to include hiding the sky, which is necessary to allow the crucial debug spheres to get drawn
+simulated function PlayerCollisionDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDebugPlayerCollision = !bDebugPlayerCollision;
+        SetSkyOff(bDebugPlayerCollision);
+    }
+}
+
+// A debug exec transferred from ROHud class & modified to include hiding the sky, which is necessary to allow the crucial debug spheres to get drawn
+// Note this is effectively redundant now as from DH 6.0 the system of using coded hit points for vehicle occupants has been abandoned
+simulated function DriverCollisionDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDebugDriverCollision = !bDebugDriverCollision;
+        SetSkyOff(bDebugDriverCollision);
+    }
+}
+
+// New debug exec showing all vehicles' special hit points for engine (blue), ammo stores (red), & DHArmoredVehicle's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+exec function VehicleHitPointDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDebugVehicleHitPoints = !bDebugVehicleHitPoints;
+        SetSkyOff(bDebugVehicleHitPoints);
+    }
+}
+
+// New debug exec showing all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
+exec function VehicleWheelDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDebugVehicleWheels = !bDebugVehicleWheels;
+        SetSkyOff(bDebugVehicleWheels);
+    }
+}
+
+// New debug exec to toggle camera debug (location & rotation) for any vehicle position
+exec function CameraDebug()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bDebugCamera = !bDebugCamera;
+        SetSkyOff(bDebugCamera);
+    }
+}
+
+// New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
+// Console command "show sky" toggles the sky on/off, but it only works in single player, so this allows these debug options to work in multiplayer
+simulated function SetSkyOff(bool bHideSky)
+{
+    if (PlayerOwner != none && PlayerOwner.PlayerReplicationInfo != none && PlayerOwner.PlayerReplicationInfo.PlayerZone != none)
+    {
+        // Hide the sky
+        if (bHideSky)
+        {
+            if (PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone != none)
+            {
+                SavedSkyZone = PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone;
+                PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone = none;
+            }
+        }
+        // Restore the sky, but only if we have no other similar debug functionality enabled
+        else if (PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone == none && SavedSkyZone != none
+            && !bDebugDriverCollision && !bDebugPlayerCollision && !bDebugVehicleHitPoints && !bDebugVehicleWheels && !bDebugCamera)
+        {
+            PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone = SavedSkyZone;
+        }
     }
 }
 

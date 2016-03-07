@@ -1691,7 +1691,7 @@ simulated function GrowHUD();
 simulated function ShrinkHUD();
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** EXEC FUNCTIONS  ********************************  //
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
@@ -1772,28 +1772,6 @@ exec function ToggleViewLimit()
     }
 }
 
-// New debug exec to set 1st person camera position offset
-exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        Log(Tag @ "new FPCamPos =" @ NewX @ NewY @ NewZ @ "(old was" @ FPCamPos $ ")");
-        FPCamPos.X = NewX;
-        FPCamPos.Y = NewY;
-        FPCamPos.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            FPCamPos /= 10.0;
-        }
-
-        if (bMultiPosition)
-        {
-            DriverPositions[DriverPositionIndex].ViewLocation = FPCamPos;
-        }
-    }
-}
-
 // New exec function that allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
@@ -1859,18 +1837,13 @@ exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bSca
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         OldBinocsDrivePos = BinocsDrivePos;
+        BinocsDrivePos.X = NewX;
+        BinocsDrivePos.Y = NewY;
+        BinocsDrivePos.Z = NewZ;
 
         if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            BinocsDrivePos.X = Float(NewX) / 10.0;
-            BinocsDrivePos.Y = Float(NewY) / 10.0;
-            BinocsDrivePos.Z = Float(NewZ) / 10.0;
-        }
-        else
-        {
-            BinocsDrivePos.X = NewX;
-            BinocsDrivePos.Y = NewY;
-            BinocsDrivePos.Z = NewZ;
+            BinocsDrivePos /= 10.0;
         }
 
         if (DriverPositionIndex == BinocPositionIndex && Driver != none)

@@ -66,7 +66,6 @@ var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation wh
 var     bool        bDebugSights;        // shows centering cross in tank sight for testing purposes
 var     bool        bDebuggingText;      // on screen messages if damage prevents turret or gun from moving properly
 var     bool        bDebugExitPositions; // spawns a debug tracer at each player exit position
-var     bool        bDebugCamera;        // in behind view, draws a red dot at current camera location with a line showing camera rotation
 
 replication
 {
@@ -450,19 +449,6 @@ simulated function DrawHUD(Canvas C)
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
-        }
-    }
-
-    // Debug option to show camera location & rotation in behind view (needs "show sky" in console)
-    if (bDebugCamera && PC != none && PC.bBehindView && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
-    {
-        SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-        DrawDebugSphere(CameraLocation, 1.0, 4, 255, 0, 0);       // camera location shown as very small red sphere, like a large dot
-        DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
-
-        if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='') // only draw camera rotation if on gunsight
-        {
-            DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0);
         }
     }
 }
@@ -1900,7 +1886,7 @@ simulated function GrowHUD();
 simulated function ShrinkHUD();
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** EXEC FUNCTIONS  ********************************  //
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
@@ -1999,53 +1985,6 @@ function ServerToggleDebugExits()
     }
 }
 
-// New function to debug location of exit positions for the vehicle, which are drawn as different coloured cylinders
-exec function DrawExits()
-{
-    if (DHArmoredVehicle(VehicleBase) != none)
-    {
-        DHArmoredVehicle(VehicleBase).DrawExits();
-    }
-}
-
-// New debugging exec function to set ExitPositions (use it in single player; it's too much hassle on a server)
-exec function SetExitPos(int Index, int NewX, int NewY, int NewZ)
-{
-    if (DHArmoredVehicle(VehicleBase) != none)
-    {
-        DHArmoredVehicle(VehicleBase).SetExitPos(Index, NewX, NewY, NewZ);
-    }
-}
-
-// New exec to toggle camera debug (location & rotation) for this cannon
-exec function ToggleCameraDebug()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        bDebugCamera = !bDebugCamera;
-        Log(Tag @ "bDebugCamera =" @ bDebugCamera);
-    }
-}
-
-// New debug exec to set 1st person camera position offset
-exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        Log(Tag @ "new DriverPositions[" $ DriverPositionIndex $ "].ViewLocation =" @ NewX @ NewY @ NewZ @ "(old was" @ DriverPositions[DriverPositionIndex].ViewLocation $ ")");
-        FPCamPos.X = NewX;
-        FPCamPos.Y = NewY;
-        FPCamPos.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            FPCamPos /= 10.0;
-        }
-
-        DriverPositions[DriverPositionIndex].ViewLocation = FPCamPos;
-    }
-}
-
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
@@ -2075,7 +2014,7 @@ exec function SetWeaponFireOffset(float NewValue)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
     {
-        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was " @ Gun.WeaponFireOffset $ ")");
+        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
         Gun.WeaponFireOffset = NewValue;
 
         if (Gun.FlashEmitter != none)
@@ -2093,22 +2032,17 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
     {
         OldAltFireOffset = Gun.AltFireOffset;
+        Gun.AltFireOffset.X = NewX;
+        Gun.AltFireOffset.Y = NewY;
+        Gun.AltFireOffset.Z = NewZ;
 
-        if (bScaleOneTenth)
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            Gun.AltFireOffset.X = float(NewX) / 10.0;
-            Gun.AltFireOffset.Y = float(NewY) / 10.0;
-            Gun.AltFireOffset.Z = float(NewZ) / 10.0;
-        }
-        else
-        {
-            Gun.AltFireOffset.X = NewX;
-            Gun.AltFireOffset.Y = NewY;
-            Gun.AltFireOffset.Z = NewZ;
+            Gun.AltFireOffset /= 10.0;
         }
 
         Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.AltFireOffset);
-        Log(Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was " @ OldAltFireOffset $ ")");
+        Log(Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was" @ OldAltFireOffset $ ")");
     }
 }
 
@@ -2117,7 +2051,7 @@ exec function SetAltFireSpawnOffset(float NewValue)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
     {
-        Log(Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was " @ Cannon.AltFireSpawnOffsetX $ ")");
+        Log(Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was" @ Cannon.AltFireSpawnOffsetX $ ")");
         Cannon.AltFireSpawnOffsetX = NewValue;
     }
 }
@@ -2147,22 +2081,17 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
     {
         OldOffset = Cannon.CannonAttachmentOffset;
+        Cannon.CannonAttachmentOffset.X = NewX;
+        Cannon.CannonAttachmentOffset.Y = NewY;
+        Cannon.CannonAttachmentOffset.Z = NewZ;
 
-        if (bScaleOneTenth)
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            Cannon.CannonAttachmentOffset.X = float(NewX) / 10.0;
-            Cannon.CannonAttachmentOffset.Y = float(NewY) / 10.0;
-            Cannon.CannonAttachmentOffset.Z = float(NewZ) / 10.0;
-        }
-        else
-        {
-            Cannon.CannonAttachmentOffset.X = NewX;
-            Cannon.CannonAttachmentOffset.Y = NewY;
-            Cannon.CannonAttachmentOffset.Z = NewZ;
+            Cannon.CannonAttachmentOffset /= 10.0;
         }
 
         Cannon.SetRelativeLocation(Cannon.CannonAttachmentOffset);
-        Log(Tag @ "CannonAttachmentOffset =" @ Cannon.CannonAttachmentOffset @ "(was " @ OldOffset $ ")");
+        Log(Tag @ "CannonAttachmentOffset =" @ Cannon.CannonAttachmentOffset @ "(was" @ OldOffset $ ")");
     }
 }
 
