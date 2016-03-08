@@ -770,9 +770,7 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLo
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local Actor            ViewActor;
-    local vector           CameraLocation, Loc;
-    local rotator          CameraRotation;
+    local vector           Loc;
     local float            HUDScale, Elevation, Traverse;
     local int              SizeX, SizeY, RoundIndex;
     local byte             Quotient, Remainder;
@@ -784,13 +782,9 @@ simulated function DrawHUD(Canvas C)
     {
         if (HUDOverlay != none && !Level.IsSoftwareRendering() && Mortar != none)
         {
-            // Get camera rotation & location
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-
             // Draw HUDOverlay
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
+            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+            HUDOverlay.SetRotation(PC.CalcViewRotation);
             C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
 
             if (PC.myHUD == none || PC.myHUD.bHideHUD)

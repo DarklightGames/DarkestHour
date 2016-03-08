@@ -252,7 +252,6 @@ simulated function DrawHUD(Canvas C)
     local PlayerController PC;
     local vector           CameraLocation, GunOffset, x, y, z;
     local rotator          CameraRotation;
-    local Actor            ViewActor;
     local float            SavedOpacity, ScreenRatio;
 
     PC = PlayerController(Controller);
@@ -272,9 +271,8 @@ simulated function DrawHUD(Canvas C)
             {
                 if (!Level.IsSoftwareRendering())
                 {
-                    CameraRotation = PC.Rotation;
-                    SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-                    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+                    CameraLocation = PC.CalcViewLocation;
+                    CameraRotation = Normalize(PC.CalcViewRotation + PC.ShakeRot);
 
                     // Make the first person gun appear lower when your sticking your head up
                     if (FirstPersonGunRefBone != '')
@@ -287,7 +285,7 @@ simulated function DrawHUD(Canvas C)
                     }
                     else
                     {
-                        CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+                        CameraLocation = CameraLocation + (PC.ShakeOffset.X * x) + (PC.ShakeOffset.Y * y) + (PC.ShakeOffset.Z * z);
                         HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                         HUDOverlay.SetRotation(CameraRotation);
                         C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);

@@ -411,9 +411,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector           CameraLocation;
-    local rotator          CameraRotation;
-    local Actor            ViewActor;
 
     PC = PlayerController(Controller);
 
@@ -423,11 +420,8 @@ simulated function DrawHUD(Canvas C)
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[PreviousPositionIndex].bDrawOverlays)
             && HUDOverlay != none && !Level.IsSoftwareRendering())
         {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
-
+            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+            HUDOverlay.SetRotation(PC.CalcViewRotation);
             C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
         }
 
