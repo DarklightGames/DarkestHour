@@ -221,7 +221,7 @@ defaultproperties
         KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.5 // default is 1
+        KMaxAngularSpeed=0.5 // default is 10
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
