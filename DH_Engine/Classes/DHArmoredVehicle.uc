@@ -69,6 +69,7 @@ var     name        PlayerCameraBone;             // just to avoid using literal
 var     bool        bLockCameraDuringTransition;  // lock the camera's rotation to the camera bone during view transitions
 var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
 var     texture     PeriscopeOverlay;             // driver's periscope overlay texture
+var     vector      OverlayFPCamPos;              // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 
 // Armor penetration
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
@@ -735,7 +736,7 @@ simulated function DrawHUD(Canvas C)
             if (HUDOverlay == none)
             {
                 // Draw periscope overlay
-                if (DriverPositionIndex == 0 && PeriscopeOverlay != none)
+                if (PeriscopeOverlay != none)
                 {
                     // Save current HUD opacity & then set up for drawing overlays
                     SavedOpacity = C.ColorModulate.W;
@@ -1101,7 +1102,7 @@ function KDriverEnter(Pawn P)
     Driver.bSetPCRotOnPossess = false; // so when player gets out he'll be facing the same direction as he was inside the vehicle
 }
 
-// Modified to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
+// Modified to add an engine start/stop hint, to enforce bDesiredBehindView=false (avoids a view rotation bug), & to handle optional camera offset for initial overlay position
 // Matt: also to work around various net client problems caused by replication timing issues
 simulated function ClientKDriverEnter(PlayerController PC)
 {
@@ -1124,8 +1125,10 @@ simulated function ClientKDriverEnter(PlayerController PC)
         }
     }
 
-    bDesiredBehindView = false; // true values can exist in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
+    // bDesiredBehindView may be true in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
+    bDesiredBehindView = false;
 
+    // Engine start/stop hint
     P = DHPlayer(PC);
 
     if (P != none)
@@ -1140,6 +1143,12 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 
     super.ClientKDriverEnter(PC);
+
+    // If initial position is an overlay position (e.g. driver's periscope), apply any optional 1st person camera offset for the overlay
+    if (DriverPositions[InitialPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
+    {
+        FPCamPos = OverlayFPCamPos;
+    }
 }
 
 // Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
@@ -1237,7 +1246,8 @@ simulated function NextViewPoint()
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
-// to add handling of FOV changes & better handling of locked camera, to avoid switching mesh & FOV if in behind view, & to avoid unnecessary stuff on a server
+// to add handling of FOV changes & better handling of locked camera, to avoid switching mesh & FOV if in behind view,
+// to handle optional camera offset for initial overlay position, & to avoid unnecessary stuff on a server
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -1251,6 +1261,12 @@ simulated state ViewTransition
             if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
             {
                 PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+
+            // If driver is moving away from an overlay position (e.g. driver's periscope), remove any 1st person camera offset for the overlay
+            if (DriverPositions[PreviousPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
+            {
+                FPCamPos = default.FPCamPos;
             }
         }
 
@@ -1306,6 +1322,12 @@ simulated state ViewTransition
             if (DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV)
             {
                 PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+
+            // If driver is moving away from an overlay position (e.g. driver's periscope), remove any 1st person camera offset for the overlay
+            if (DriverPositions[DriverPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
+            {
+                FPCamPos = OverlayFPCamPos;
             }
 
             // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
