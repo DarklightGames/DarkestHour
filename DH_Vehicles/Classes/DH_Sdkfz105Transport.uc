@@ -127,10 +127,10 @@ defaultproperties
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.42
-    VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.6
-    VehicleHudOccupantsX(2)=0.55
-    VehicleHudOccupantsY(2)=0.42
+    VehicleHudOccupantsX(1)=0.55
+    VehicleHudOccupantsY(1)=0.42
+    VehicleHudOccupantsX(2)=0.5
+    VehicleHudOccupantsY(2)=0.6
     VehicleHudEngineY=0.2
     VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
     EngineHealth=150
