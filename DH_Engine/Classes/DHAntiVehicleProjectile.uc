@@ -158,6 +158,21 @@ simulated singular function Touch(Actor Other)
                 return; // exit, doing nothing, if col mesh actor is set not to stop a shell
             }
 
+            // If col mesh represents a vehicle, which would normally get a HitWall event instead of Touch, we call HitWall on the vehicle & exit
+            if (Other.Owner.IsA('ROVehicle'))
+            {
+                // Trace the col mesh to get an accurate HitLocation, as the projectile has often travelled further by the time this event gets called
+                // A false return means we successfully traced the col mesh, so we change the projectile's location (as we can't pass HitLocation to HitWall)
+                if (!Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
+                {
+                    SetLocation(HitLocation);
+                }
+
+                HitWall(HitNormal, Other.Owner);
+
+                return;
+            }
+
             Other = Other.Owner;
         }
 
@@ -315,7 +330,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 }
 
 // Matt: re-worked a little, but not as much as ProcessTouch, with which is shares some features
-simulated singular function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     // Exit without doing anything if we hit something we don't want to count a hit on
     if ((Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe)

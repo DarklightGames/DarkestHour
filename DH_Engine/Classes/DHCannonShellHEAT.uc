@@ -20,7 +20,7 @@ var globalconfig float PenetrationScale; // global penetration depth scale facto
 var globalconfig float DistortionScale;  // global distortion scale factor
 
 // Modified to handle world object penetration
-simulated singular function HitWall(vector HitNormal, Actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local vector X, Y, Z, TempHitLocation, TempHitNormal;
     local float  xH, TempMaxWall;
