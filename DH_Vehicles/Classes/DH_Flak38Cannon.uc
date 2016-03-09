@@ -101,7 +101,7 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
     ShellCaseEmitterClass=class'DH_Vehicles.DH_20mmShellCaseEmitter'
-    BeginningIdleAnim="optic_idle_in"
+    BeginningIdleAnim="optic_idle"
     TankShootClosedAnim="shoot_optic"
     ShootIntermediateAnim="shoot_opensight"
     TankShootOpenAnim="shoot_lookover"

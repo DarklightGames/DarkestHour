@@ -15,5 +15,4 @@ simulated function InitializeVehicleBase()
 
 defaultproperties
 {
-    CannonAttachmentOffset=(X=0.0,Y=0.0,Z=1.841251) // TODO: delete this when hull's Turret_placement bone is aligned with modified FlaK 38 turret mesh
 }

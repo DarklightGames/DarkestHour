@@ -13,8 +13,6 @@ var     DHVehicleDecoAttachment     WindscreenAttachment;
 // Modified to spawn an attachment for the windscreen, which allows this to be omitted in the 'armored' subclass that has armour shielding to the front
 simulated function PostBeginPlay()
 {
-    local int i;
-
     super.PostBeginPlay();
 
     WindscreenAttachment = Spawn(class'DHVehicleDecoAttachment');
@@ -221,7 +219,7 @@ defaultproperties
         KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.5 // default is 10
+        KMaxAngularSpeed=0.5 // default is 10 (this change makes the vehicle turn more slowly & feel more like a halftrack should)
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
