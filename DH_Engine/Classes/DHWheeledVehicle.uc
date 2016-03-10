@@ -60,6 +60,7 @@ var     bool        bNeedToInitializeDriver;     // clientside flag that we need
 
 // Damage
 var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
+var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
 var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
 var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
@@ -322,13 +323,10 @@ simulated function Tick(float DeltaTime)
         Steering = 0.0;
         ForwardVel = 0.0;
     }
-    else
+    // Heavy damage to engine limits speed
+    else if (EngineHealth <= (default.EngineHealth * HeavyEngineDamageThreshold) && Controller != none)
     {
-        // Very heavy damage to engine limits speed
-        if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0 && Controller != none)
-        {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
-        }
+        Throttle = FClamp(Throttle, -0.5, 0.5);
     }
 
     // Update engine & interior rumble sounds dependent on speed
@@ -2195,6 +2193,7 @@ defaultproperties
     bSavedEngineOff=true
     IgnitionSwitchInterval=4.0
     EngineHealth=30
+    HeavyEngineDamageThreshold=0.25
     HealthMax=175.0
     Health=175
     DamagedEffectHealthSmokeFactor=0.75

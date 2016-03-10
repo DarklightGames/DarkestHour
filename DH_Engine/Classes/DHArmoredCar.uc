@@ -52,13 +52,10 @@ simulated function Tick(float DeltaTime)
         Steering = 0.0;
         ForwardVel = 0.0;
     }
-    else
+    // Heavy damage to engine limits speed
+    else if (EngineHealth <= (default.EngineHealth * HeavyEngineDamageThreshold) && Controller != none)
     {
-        // Very heavy damage to engine limits speed
-        if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0 && Controller != none)
-        {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
-        }
+        Throttle = FClamp(Throttle, -0.5, 0.5);
     }
 
     // Force player to pull back on throttle if over max speed
@@ -332,6 +329,7 @@ defaultproperties
 {
     bSpecialTankTurning=false
     PointValue=2.0
+    HeavyEngineDamageThreshold=0.25
     DriverKillChance=900.0
     GunnerKillChance=900.0
     CommanderKillChance=600.0

@@ -74,31 +74,32 @@ var     vector      OverlayFPCamPos;              // optional camera offset for 
 // Armor penetration
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
 var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
-var     bool        bProjectilePenetrated;     // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
-var     bool        bTurretPenetration;        // shell has penetrated the turret (used in TakeDamage)
-var     bool        bRearHullPenetration;      // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
+var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
+var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
+var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage (allows for adjustment for indivudual vehicles in subclasses)
-var     float       AmmoIgnitionProbability;   // chance that direct hit on ammo store will ignite it
-var     float       TurretDetonationThreshold; // chance that shrapnel will detonate turret ammo
-var     float       DriverKillChance;          // chance that shrapnel will kill driver
-var     float       CommanderKillChance;       // chance that shrapnel will kill commander
-var     float       GunnerKillChance;          // chance that shrapnel will kill bow gunner
-var     float       GunDamageChance;           // chance that shrapnel will damage gun pivot mechanism
-var     float       TraverseDamageChance;      // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
-var     float       OpticsDamageChance;        // chance that shrapnel will break gunsight optics
-var     int         GunOpticsHitPointIndex;    // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
-var     texture     DamagedPeriscopeOverlay;   // gunsight overlay to show if optics have been broken
-var     float       TreadDamageThreshold;      // minimum TreadDamageModifier in DamageType to possibly break treads
-var array<Material> DestroyedMeshSkins;        // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+var     float       HeavyEngineDamageThreshold; // proportion of remaining engine health below which the engine is so badly damaged it limits speed
+var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
+var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
+var     float       DriverKillChance;           // chance that shrapnel will kill driver
+var     float       CommanderKillChance;        // chance that shrapnel will kill commander
+var     float       GunnerKillChance;           // chance that shrapnel will kill bow gunner
+var     float       GunDamageChance;            // chance that shrapnel will damage gun pivot mechanism
+var     float       TraverseDamageChance;       // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
+var     float       OpticsDamageChance;         // chance that shrapnel will break gunsight optics
+var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
+var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
+var     float       TreadDamageThreshold;       // minimum TreadDamageModifier in DamageType to possibly break treads
+var array<Material> DestroyedMeshSkins;         // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 
 // Engine
-var     bool        bEngineOff;                // tank engine is simply switched off
-var     bool        bSavedEngineOff;           // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchInterval;    // interval in seconds before engine can be switched on/off again, used to stop players spamming the ignition
-var     float       IgnitionSwitchTime;        // records last engine on/off time, so we can check IgnitionSwitchInterval
-var     sound       DamagedStartUpSound;       // sound played when trying to start a damaged engine
-var     sound       DamagedShutDownSound;      // sound played when damaged engine shuts down
+var     bool        bEngineOff;                 // tank engine is simply switched off
+var     bool        bSavedEngineOff;            // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
+var     float       IgnitionSwitchInterval;     // interval in seconds before engine can be switched on/off again, used to stop players spamming the ignition
+var     float       IgnitionSwitchTime;         // records last engine on/off time, so we can check IgnitionSwitchInterval
+var     sound       DamagedStartUpSound;        // sound played when trying to start a damaged engine
+var     sound       DamagedShutDownSound;       // sound played when damaged engine shuts down
 
 // Treads
 var     float       TreadHitMaxHeight; // height (in Unreal units) of the top of the treads above hull mesh origin, used to detect tread hits (see notes in TakeDamage)
@@ -440,42 +441,39 @@ simulated function Tick(float DeltaTime)
         Steering = 0.0;
         ForwardVel = 0.0;
     }
-    else
+    else if (Controller != none)
     {
-        if (Controller != none)
+        // Damaged treads mean vehicle can only turn one way & speed is limited
+        if (bLeftTrackDamaged)
         {
-            // Damaged treads mean vehicle can only turn one way & speed is limited
-            if (bLeftTrackDamaged)
-            {
-                Throttle = FClamp(Throttle, -0.5, 0.5);
+            Throttle = FClamp(Throttle, -0.5, 0.5);
 
-                if (IsHumanControlled())
-                {
-                    PlayerController(Controller).aStrafe = -32768.0;
-                }
-                else
-                {
-                    Steering = 1.0;
-                }
-            }
-            else if (bRightTrackDamaged)
+            if (IsHumanControlled())
             {
-                Throttle = FClamp(Throttle, -0.5, 0.5);
+                PlayerController(Controller).aStrafe = -32768.0;
+            }
+            else
+            {
+                Steering = 1.0;
+            }
+        }
+        else if (bRightTrackDamaged)
+        {
+            Throttle = FClamp(Throttle, -0.5, 0.5);
 
-                if (IsHumanControlled())
-                {
-                    PlayerController(Controller).aStrafe = 32768.0;
-                }
-                else
-                {
-                    Steering = -1.0;
-                }
-            }
-            // Heavy damage to engine limits speed
-            else if (EngineHealth <= (default.EngineHealth * 0.5) && EngineHealth > 0)
+            if (IsHumanControlled())
             {
-                Throttle = FClamp(Throttle, -0.5, 0.5);
+                PlayerController(Controller).aStrafe = 32768.0;
             }
+            else
+            {
+                Steering = -1.0;
+            }
+        }
+        // Heavy damage to engine limits speed
+        else if (EngineHealth <= (default.EngineHealth * HeavyEngineDamageThreshold))
+        {
+            Throttle = FClamp(Throttle, -0.5, 0.5);
         }
     }
 
@@ -4083,6 +4081,7 @@ defaultproperties
     bSavedEngineOff=true
     IgnitionSwitchInterval=4.0
     EngineHealth=300
+    HeavyEngineDamageThreshold=0.5
     DamagedEffectHealthSmokeFactor=0.85
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35

@@ -895,9 +895,9 @@ simulated function DrawHudPassC(Canvas C)
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
-    local ROTreadCraft          AV;
     local ROWheeledVehicle      WheeledVehicle;
     local DHWheeledVehicle      DHWV;
+    local DHArmoredVehicle      AV;
     local ROVehicleWeaponPawn   WeaponPawn;
     local ROVehicleWeapon       VehWeapon;
     local ROTankCannon          Cannon;
@@ -910,6 +910,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     local int                   i, Current, Pending;
     local float                 f, XL, YL, Y_one, MyScale, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset; // offsets text vertically when drawing coaxial ammo info
     local array<string>         Lines;
+    local bool                  bEngineBadlyDamaged;
 
     if (bHideHud)
     {
@@ -971,26 +972,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Widget.WidgetTexture = Vehicle.VehicleHudImage;
     DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
 
-    // Draw engine (if needed)
-    f = Vehicle.EngineHealth / Vehicle.default.EngineHealth;
-
-    if (f < 0.95)
-    {
-        if (f < 0.35)
-        {
-            VehicleEngine.WidgetTexture = VehicleEngineCriticalTexture;
-        }
-        else
-        {
-            VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture;
-        }
-
-        VehicleEngine.PosX = Vehicle.VehicleHudEngineX;
-        VehicleEngine.PosY = Vehicle.VehicleHudEngineY;
-        DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
-    }
-
-    AV = ROTreadCraft(Vehicle);
+    AV = DHArmoredVehicle(Vehicle);
 
     // Setup/draw armored fighting vehicle specific stuff
     if (AV != none)
@@ -1021,18 +1003,46 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleThreads[1].PosY = AV.VehicleHudThreadsPosY;
             DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
         }
+
+        bEngineBadlyDamaged = AV.EngineHealth <= (AV.default.EngineHealth * AV.HeavyEngineDamageThreshold);
+
+        // New function to check if engine is damaged enough to limit the speed of the vehicle
+
     }
-    // Added option for a non-armoured fighting vehicle to have a mounted cannon (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
     else
     {
         DHWV = DHWheeledVehicle(Vehicle);
 
-        if (DHWV != none && DHWV.Cannon != none)
+        // Setup for other vehicles (i.e. not armoured fighting vehicles)
+        if (DHWV != none)
         {
-            Cannon = DHWV.Cannon;
-            VehicleHudTurret = DHWV.VehicleHudTurret;
-            VehicleHudTurretLook = DHWV.VehicleHudTurretLook;
+            // Added option for non-AFV to have a mounted cannon (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
+            if (DHWV.Cannon != none)
+            {
+                Cannon = DHWV.Cannon;
+                VehicleHudTurret = DHWV.VehicleHudTurret;
+                VehicleHudTurretLook = DHWV.VehicleHudTurretLook;
+            }
+
+            bEngineBadlyDamaged = DHWV.EngineHealth <= (DHWV.default.EngineHealth * DHWV.HeavyEngineDamageThreshold);
         }
+    }
+
+    // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
+    if (bEngineBadlyDamaged)
+    {
+        if (Vehicle.EngineHealth <= 0)
+        {
+            VehicleEngine.WidgetTexture = VehicleEngineCriticalTexture; // flashing red icon
+        }
+        else
+        {
+            VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture; // red icon (not flashing)
+        }
+
+        VehicleEngine.PosX = Vehicle.VehicleHudEngineX;
+        VehicleEngine.PosY = Vehicle.VehicleHudEngineY;
+        DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
     }
 
     // Update & draw turret (if needed)
