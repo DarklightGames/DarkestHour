@@ -2774,6 +2774,20 @@ function ServerPossessBody(Pawn NewPawn)
 //  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function just to avoid code repetition & nesting in lots of vehicle-related debug execs
+simulated function bool GetVehicleBase(ROWheeledVehicle V)
+{
+    V = ROWheeledVehicle(Pawn);
+
+    if (V == none && VehicleWeaponPawn(Pawn) != none)
+    {
+        V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+    }
+
+    return V != none;
+}
+
+// New debug exec to spawn any vehicle
 exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DarkestHourGame(Level.Game) != none)
@@ -2787,44 +2801,24 @@ exec function SetGearRatio(byte Index, float NewValue)
 {
     local ROWheeledVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < arraycount(V.GearRatios))
     {
-        V = ROWheeledVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
-        }
-
-        if (V != none && Index < arraycount(V.GearRatios))
-        {
-            Log(V.Tag @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
-            V.GearRatios[Index] = NewValue;
-        }
+        Log(V.Tag @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
+        V.GearRatios[Index] = NewValue;
     }
 }
 
 // New debug exec to set a vehicle's ExitPositions (use it in single player; it's too much hassle on a server)
 exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 {
-    local ROVehicle V;
+    local ROWheeledVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExitPositions.Length)
     {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-        }
-
-        if (V != none && Index < V.ExitPositions.Length)
-        {
-            Log(V.Tag @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
-            V.ExitPositions[Index].X = NewX;
-            V.ExitPositions[Index].Y = NewY;
-            V.ExitPositions[Index].Z = NewZ;
-        }
+        Log(V.Tag @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
+        V.ExitPositions[Index].X = NewX;
+        V.ExitPositions[Index].Y = NewY;
+        V.ExitPositions[Index].Z = NewZ;
     }
 }
 
@@ -2847,61 +2841,51 @@ exec function ExitPosTool()
 // New debug exec to draw the location of a vehicle's exit positions, which are shown as different coloured cylinders
 exec function DrawExits(optional bool bClearScreen)
 {
-    local ROVehicle V;
-    local vector    ExitPosition, ZOffset, X, Y, Z;
-    local color     C;
-    local int       i;
+    local ROWheeledVehicle V;
+    local vector           ExitPosition, ZOffset, X, Y, Z;
+    local color            C;
+    local int              i;
 
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ClearStayingDebugLines();
 
-        if (!bClearScreen)
+        if (!bClearScreen && GetVehicleBase(V))
         {
-            V = ROVehicle(Pawn);
+            ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+            GetAxes(V.Rotation, X, Y, Z);
 
-            if (V == none && VehicleWeaponPawn(Pawn) != none)
+            for (i = V.ExitPositions.Length - 1; i >= 0; --i)
             {
-                V = VehicleWeaponPawn(Pawn).VehicleBase;
-            }
-
-            if (V != none)
-            {
-                ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-                GetAxes(V.Rotation, X, Y, Z);
-
-                for (i = V.ExitPositions.Length - 1; i >= 0; --i)
+                if (i == 0)
                 {
-                    if (i == 0)
+                    C = class'HUD'.default.BlueColor; // driver
+                }
+                else
+                {
+                    if (i - 1 < V.WeaponPawns.Length)
                     {
-                        C = class'HUD'.default.BlueColor; // driver
-                    }
-                    else
-                    {
-                        if (i - 1 < V.WeaponPawns.Length)
+                        if (ROTankCannonPawn(V.WeaponPawns[i - 1]) != none)
                         {
-                            if (ROTankCannonPawn(V.WeaponPawns[i - 1]) != none)
-                            {
-                                C = class'HUD'.default.RedColor; // commander
-                            }
-                            else if (ROMountedTankMGPawn(V.WeaponPawns[i - 1]) != none)
-                            {
-                                C = class'HUD'.default.GoldColor; // machine gunner
-                            }
-                            else
-                            {
-                                C = class'HUD'.default.WhiteColor; // rider
-                            }
+                            C = class'HUD'.default.RedColor; // commander
+                        }
+                        else if (ROMountedTankMGPawn(V.WeaponPawns[i - 1]) != none)
+                        {
+                            C = class'HUD'.default.GoldColor; // machine gunner
                         }
                         else
                         {
-                            C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                            C = class'HUD'.default.WhiteColor; // rider
                         }
                     }
-
-                    ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
-                    class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
+                    else
+                    {
+                        C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                    }
                 }
+
+                ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
+                class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
             }
         }
     }
@@ -2974,6 +2958,7 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
     }
 }
 
+// New debug exec to set a vehicle's 3rd person camera distance
 exec function VehicleCamDistance(int NewDistance)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Vehicle(Pawn) != none && ROHud(myHUD) != none)
@@ -2992,73 +2977,97 @@ exec function DriverCollisionDebug()
     }
 }
 
-exec function DebugTreadVelocityScale(float TreadVelocityScale)
+// New debug exec to adjust rotation speed of treads
+exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
-    local ROTreadCraft V;
+    local ROWheeledVehicle    V;
+    local ROTreadCraft        TC;
+    local DHApcVehicle        APC;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        foreach AllActors(class'ROTreadCraft', V)
+        TC = ROTreadCraft(Pawn);
+
+        if (TC != none)
         {
-            if (TreadVelocityScale == -1.0)
+            if (NewValue == 0) // entering zero resets tread speed to vehicle's default value
             {
-                V.TreadVelocityScale = V.default.TreadVelocityScale;
+                NewValue = TC.default.TreadVelocityScale;
             }
-            else
+            else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing tread speed, instead of as new setting, e.g. to increment or decrement speed gradually
             {
-                V.TreadVelocityScale = TreadVelocityScale;
+                NewValue += TC.TreadVelocityScale;
+            }
+
+            Log(TC.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ TC.TreadVelocityScale $ ")");
+            TC.TreadVelocityScale = NewValue;
+        }
+        else
+        {
+            APC = DHApcVehicle(Pawn);
+
+            if (APC != none)
+            {
+                if (NewValue == 0)
+                {
+                    NewValue = APC.default.TreadVelocityScale;
+                }
+                else if (bAddToCurrentSpeed)
+                {
+                    NewValue += APC.TreadVelocityScale;
+                }
+
+                Log(APC.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ APC.TreadVelocityScale $ ")");
+                APC.TreadVelocityScale = NewValue;
             }
         }
-
-        Level.Game.Broadcast(self, "DebugTreadVelocityScale = " $ TreadVelocityScale);
     }
 }
 
-exec function DebugTreadVelocityScaleIncrement()
+// New debug exec to adjust rotation speed of track wheels
+exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
-    local ROTreadCraft V;
+    local ROWheeledVehicle    V;
+    local ROTreadCraft        TC;
+    local DHApcVehicle        APC;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        foreach AllActors(class'ROTreadCraft', V)
+        TC = ROTreadCraft(Pawn);
+
+        if (TC != none)
         {
-            V.TreadVelocityScale += 1.0;
-        }
-    }
-}
-
-exec function DebugTreadVelocityScaleDecrement()
-{
-    local ROTreadCraft V;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'ROTreadCraft', V)
-        {
-            V.TreadVelocityScale -= 1.0;
-        }
-    }
-}
-
-exec function DebugWheelRotationScale(int WheelRotationScale)
-{
-    local ROTreadCraft V;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        foreach AllActors(class'ROTreadCraft', V)
-        {
-            if (WheelRotationScale == -1)
+            if (NewValue == 0) // entering zero resets wheel speed to vehicle's default value
             {
-                V.WheelRotationScale = V.default.WheelRotationScale;
+                NewValue = TC.default.WheelRotationScale;
             }
-            else
+            else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing wheel speed, instead of as new setting, e.g. to increment or decrement speed gradually
             {
-                V.WheelRotationScale = WheelRotationScale;
+                NewValue += TC.WheelRotationScale;
+            }
+
+            Log(TC.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ TC.WheelRotationScale $ ")");
+            TC.WheelRotationScale = NewValue;
+        }
+        else
+        {
+            APC = DHApcVehicle(Pawn);
+
+            if (APC != none)
+            {
+                if (NewValue == 0)
+                {
+                    NewValue = APC.default.WheelRotationScale;
+                }
+                else if (bAddToCurrentSpeed)
+                {
+                    NewValue += APC.WheelRotationScale;
+                }
+
+                Log(APC.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ APC.WheelRotationScale $ ")");
+                APC.WheelRotationScale = NewValue;
             }
         }
-
-        Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
     }
 }
 
@@ -3066,26 +3075,16 @@ exec function DebugWheelRotationScale(int WheelRotationScale)
 // Pass new X & Y float values scaled by 1000, which allows precision to 3 decimal places
 exec function SetOccPos(byte Index, int NewX, int NewY)
 {
-    local ROVehicle V;
-    local float     X, Y;
+    local ROWheeledVehicle V;
+    local float            X, Y;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.VehicleHudOccupantsX.Length)
     {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-        }
-
-        if (V != none && Index < V.VehicleHudOccupantsX.Length)
-        {
-            X = float(NewX) / 1000.0;
-            Y = float(NewY) / 1000.0;
-            Log(V.Tag @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
-            V.VehicleHudOccupantsX[Index] = X;
-            V.VehicleHudOccupantsY[Index] = Y;
-        }
+        X = float(NewX) / 1000.0;
+        Y = float(NewY) / 1000.0;
+        Log(V.Tag @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
+        V.VehicleHudOccupantsX[Index] = X;
+        V.VehicleHudOccupantsY[Index] = Y;
     }
 }
 
@@ -3094,27 +3093,17 @@ exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
     local ROWheeledVehicle V;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
     {
-        V = ROWheeledVehicle(Pawn);
+        Log(V.Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
+        V.ExhaustPipes[Index].ExhaustPosition.X = NewX;
+        V.ExhaustPipes[Index].ExhaustPosition.Y = NewY;
+        V.ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
 
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        if (V.ExhaustPipes[Index].ExhaustEffect != none)
         {
-            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
-        }
-
-        if (V != none && Index < V.ExhaustPipes.Length)
-        {
-            Log(V.Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
-            V.ExhaustPipes[Index].ExhaustPosition.X = NewX;
-            V.ExhaustPipes[Index].ExhaustPosition.Y = NewY;
-            V.ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
-
-            if (V.ExhaustPipes[Index].ExhaustEffect != none)
-            {
-                V.ExhaustPipes[Index].ExhaustEffect.SetLocation(V.Location + (V.ExhaustPipes[Index].ExhaustPosition >> V.Rotation));
-                V.ExhaustPipes[Index].ExhaustEffect.SetBase(V);
-            }
+            V.ExhaustPipes[Index].ExhaustEffect.SetLocation(V.Location + (V.ExhaustPipes[Index].ExhaustPosition >> V.Rotation));
+            V.ExhaustPipes[Index].ExhaustEffect.SetBase(V);
         }
     }
 }
@@ -3123,38 +3112,28 @@ exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
 exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
-    local ROVehicle V;
-    local float     NewRadius;
-    local int       i;
+    local ROWheeledVehicle V;
+    local float            NewRadius;
+    local int              i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        V = ROVehicle(Pawn);
+        NewRadius = float(NewValue);
 
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
+            NewRadius /= 10.0;
         }
 
-        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        if (LastWheelIndex == 0)
         {
-            NewRadius = float(NewValue);
+            LastWheelIndex = V.Wheels.Length - 1;
+        }
 
-            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                NewRadius /= 10.0;
-            }
-
-            if (LastWheelIndex == 0)
-            {
-                LastWheelIndex = V.Wheels.Length - 1;
-            }
-
-            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
-            {
-                Log(V.Tag @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
-                V.Wheels[i].WheelRadius = NewRadius;
-            }
+        for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+        {
+            Log(V.Tag @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
+            V.Wheels[i].WheelRadius = NewRadius;
         }
     }
 }
@@ -3163,41 +3142,31 @@ exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional b
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
 exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
-    local ROVehicle V;
-    local vector    NewBoneOffset;
-    local int       i;
+    local ROWheeledVehicle V;
+    local vector           NewBoneOffset;
+    local int              i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        V = ROVehicle(Pawn);
+        NewBoneOffset.X = NewX;
+        NewBoneOffset.Y = NewY;
+        NewBoneOffset.Z = NewZ;
 
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
+            NewBoneOffset /= 10.0;
         }
 
-        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        if (LastWheelIndex == 0)
         {
-            NewBoneOffset.X = NewX;
-            NewBoneOffset.Y = NewY;
-            NewBoneOffset.Z = NewZ;
+            LastWheelIndex = V.Wheels.Length - 1;
+        }
 
-            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                NewBoneOffset /= 10.0;
-            }
-
-            if (LastWheelIndex == 0)
-            {
-                LastWheelIndex = V.Wheels.Length - 1;
-            }
-
-            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
-            {
-                Log(V.Tag @ "Wheels[" $ i $ "].BoneOffset =" @ NewBoneOffset @ "(was" @ V.Wheels[i].BoneOffset $ ")");
-                V.Wheels[i].WheelPosition += (NewBoneOffset - V.Wheels[i].BoneOffset); // this updates a native code setting (experimentation showed it's a relative offset)
-                V.Wheels[i].BoneOffset = NewBoneOffset;
-            }
+        for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+        {
+            Log(V.Tag @ "Wheels[" $ i $ "].BoneOffset =" @ NewBoneOffset @ "(was" @ V.Wheels[i].BoneOffset $ ")");
+            V.Wheels[i].WheelPosition += (NewBoneOffset - V.Wheels[i].BoneOffset); // this updates a native code setting (experimentation showed it's a relative offset)
+            V.Wheels[i].BoneOffset = NewBoneOffset;
         }
     }
 }
@@ -3211,50 +3180,40 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
     local float            OldTravel, OldRenderTravel;
     local int              i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        V = ROWheeledVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        if (!bDontSetSuspensionTravel)
         {
-            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+            V.WheelSuspensionTravel = NewValue; // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
         }
 
-        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        if (!bDontSetMaxRenderTravel)
         {
+            V.WheelSuspensionMaxRenderTravel = NewValue;
+        }
+
+        if (LastWheelIndex == 0)
+        {
+            LastWheelIndex = V.Wheels.Length - 1;
+        }
+
+        for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+        {
+            OldTravel = V.Wheels[i].SuspensionTravel;
+            OldRenderTravel = V.Wheels[i].SuspensionMaxRenderTravel;
+
             if (!bDontSetSuspensionTravel)
             {
-                V.WheelSuspensionTravel = NewValue; // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
+                V.Wheels[i].SuspensionTravel = NewValue;
             }
 
-            if (!bDontSetMaxRenderTravel)
+            if (bDontSetMaxRenderTravel)
             {
-                V.WheelSuspensionMaxRenderTravel = NewValue;
+                V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
             }
 
-            if (LastWheelIndex == 0)
-            {
-                LastWheelIndex = V.Wheels.Length - 1;
-            }
-
-            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
-            {
-                OldTravel = V.Wheels[i].SuspensionTravel;
-                OldRenderTravel = V.Wheels[i].SuspensionMaxRenderTravel;
-
-                if (!bDontSetSuspensionTravel)
-                {
-                    V.Wheels[i].SuspensionTravel = NewValue;
-                }
-
-                if (bDontSetMaxRenderTravel)
-                {
-                    V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
-                }
-
-                Log(Tag @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
-                    ") MaxRenderTravel =" @ V.Wheels[i].SuspensionMaxRenderTravel @ "(was" @ OldRenderTravel $ ")");
-            }
+            Log(Tag @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
+                ") MaxRenderTravel =" @ V.Wheels[i].SuspensionMaxRenderTravel @ "(was" @ OldRenderTravel $ ")");
         }
     }
 }
@@ -3268,36 +3227,26 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
     local float            NewOffset;
     local int              i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        V = ROWheeledVehicle(Pawn);
+        NewOffset = float(NewValue);
 
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+            NewOffset /= 10.0;
         }
 
-        if (V != none && FirstWheelIndex < V.Wheels.Length)
+        V.WheelSuspensionOffset = NewValue; // on re-entering the vehicle, all physics wheels will have this value set, undoing any individual settings
+
+        if (LastWheelIndex == 0)
         {
-            NewOffset = float(NewValue);
+            LastWheelIndex = V.Wheels.Length - 1;
+        }
 
-            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                NewOffset /= 10.0;
-            }
-
-            V.WheelSuspensionOffset = NewValue; // on re-entering the vehicle, all physics wheels will have this value set, undoing any individual settings
-
-            if (LastWheelIndex == 0)
-            {
-                LastWheelIndex = V.Wheels.Length - 1;
-            }
-
-            for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
-            {
-                Log(Tag @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
-                V.Wheels[i].SuspensionOffset = NewOffset;
-            }
+        for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
+        {
+            Log(Tag @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
+            V.Wheels[i].SuspensionOffset = NewOffset;
         }
     }
 }
@@ -3305,30 +3254,20 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
 // New debug exec to show a vehicle's karma centre of mass offset
 exec function DrawCOM(optional bool bClearScreen)
 {
-    local ROVehicle V;
-    local vector    COM, X, Y, Z;
+    local ROWheeledVehicle V;
+    local vector           COM, X, Y, Z;
 
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
         ClearStayingDebugLines();
 
-        if (!bClearScreen)
+        if (!bClearScreen && GetVehicleBase(V))
         {
-            V = ROVehicle(Pawn);
-
-            if (V == none && VehicleWeaponPawn(Pawn) != none)
-            {
-                V = VehicleWeaponPawn(Pawn).VehicleBase;
-            }
-
-            if (V != none)
-            {
-                GetAxes(V.Rotation, X, Y, Z);
-                V.KGetCOMPosition(COM);
-                DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
-                DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
-                DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
-            }
+            GetAxes(V.Rotation, X, Y, Z);
+            V.KGetCOMPosition(COM);
+            DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
+            DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
+            DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
         }
     }
 }
@@ -3336,142 +3275,102 @@ exec function DrawCOM(optional bool bClearScreen)
 // New debug exec to adjust a vehicle's karma centre of mass (enter X, Y & Z offset values as one tenths)
 exec function SetCOM(int NewX, int NewY, int NewZ)
 {
-    local ROVehicle V;
-    local vector    COM, OldCOM;
+    local ROWheeledVehicle V;
+    local vector           COM, OldCOM;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-        }
-
-        if (V != none)
-        {
-            V.KGetCOMOffset(OldCOM);
-            COM.X = float(NewX) / 10.0;
-            COM.Y = float(NewY) / 10.0;
-            COM.Z = float(NewZ) / 10.0;
-            V.KSetCOMOffset(COM);
-            V.SetPhysics(PHYS_None);
-            V.SetPhysics(PHYS_Karma);
-            DrawCOM();
-            Log(V.Tag @ "KCOMOffset =" @ COM @ "(old was" @ OldCOM $ ")");
-        }
+        V.KGetCOMOffset(OldCOM);
+        COM.X = float(NewX) / 10.0;
+        COM.Y = float(NewY) / 10.0;
+        COM.Z = float(NewZ) / 10.0;
+        V.KSetCOMOffset(COM);
+        V.SetPhysics(PHYS_None);
+        V.SetPhysics(PHYS_Karma);
+        DrawCOM();
+        Log(V.Tag @ "KCOMOffset =" @ COM @ "(old was" @ OldCOM $ ")");
     }
 }
 
 // New debug exec to adjust a vehicle's karma max angular speed (higher values make the vehicle slow when turning & make it feel "heavier")
 exec function SetMaxAngSpeed(float NewValue)
 {
-    local ROVehicle V;
+    local ROWheeledVehicle V;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
     {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-        }
-
-        if (V != none && KarmaParams(V.KParams) != none)
-        {
-            Log(V.Tag @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
-            KarmaParams(V.KParams).KMaxAngularSpeed = NewValue;
-            V.SetPhysics(PHYS_None);
-            V.SetPhysics(PHYS_Karma);
-        }
+        Log(V.Tag @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
+        KarmaParams(V.KParams).KMaxAngularSpeed = NewValue;
+        V.SetPhysics(PHYS_None);
+        V.SetPhysics(PHYS_Karma);
     }
 }
 
 // New debug exec to adjust a vehicle's karma angular damping
 exec function SetAngDamp(float NewValue)
 {
-    local ROVehicle V;
+    local ROWheeledVehicle V;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
     {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
-        {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-        }
-
-        if (V != none && KarmaParams(V.KParams) != none)
-        {
-            Log(V.Tag @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
-            KarmaParams(V.KParams).KAngularDamping = NewValue;
-            V.SetPhysics(PHYS_None);
-            V.SetPhysics(PHYS_Karma);
-        }
+        Log(V.Tag @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
+        KarmaParams(V.KParams).KAngularDamping = NewValue;
+        V.SetPhysics(PHYS_None);
+        V.SetPhysics(PHYS_Karma);
     }
 }
 
 // New debug exec to adjust location of engine smoke/fire position
 exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
 {
-    local ROVehicle V;
+    local ROWheeledVehicle V;
 
-    if (Level.NetMode == NM_Standalone || (class'DH_LevelInfo'.static.DHDebugMode() && Level.NetMode != NM_DedicatedServer))
+    if ((Level.NetMode == NM_Standalone || (class'DH_LevelInfo'.static.DHDebugMode() && Level.NetMode != NM_DedicatedServer)) && GetVehicleBase(V))
     {
-        V = ROVehicle(Pawn);
-
-        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke/fire at current position)
+        if (NewX != 0 || NewY != 0 || NewZ != 0)
         {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
+            V.DamagedEffectOffset.X = NewX;
+            V.DamagedEffectOffset.Y = NewY;
+            V.DamagedEffectOffset.Z = NewZ;
         }
 
-        if (V != none)
+        Log(V.Tag @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
+
+        // Appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
+        if (V.DamagedEffect == none)
         {
-            // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke/fire at current position)
-            if (NewX != 0 || NewY != 0 || NewZ != 0)
+            V.DamagedEffectHealthSmokeFactor = 1.0;
+
+            if (V.Health == V.HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
             {
-                V.DamagedEffectOffset.X = NewX;
-                V.DamagedEffectOffset.Y = NewY;
-                V.DamagedEffectOffset.Z = NewZ;
+                V.Health--;
             }
+        }
 
-            Log(V.Tag @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
+        // Engine fire effect
+        if (bEngineFire)
+        {
+            V.DamagedEffectHealthFireFactor = 1.0;
+        }
+        // Or if we don't want a fire effect but it's already burning, reset to smoking
+        else if (V.DamagedEffectHealthFireFactor == 1.0)
+        {
+            V.DamagedEffectHealthFireFactor = V.default.DamagedEffectHealthFireFactor;
 
-            // Appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
-            if (V.DamagedEffect == none)
-            {
-                V.DamagedEffectHealthSmokeFactor = 1.0;
-
-                if (V.Health == V.HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
-                {
-                    V.Health--;
-                }
-            }
-
-            // Engine fire effect
-            if (bEngineFire)
-            {
-                V.DamagedEffectHealthFireFactor = 1.0;
-            }
-            // Or if we don't want a fire effect but it's already burning, reset to smoking
-            else if (V.DamagedEffectHealthFireFactor == 1.0)
-            {
-                V.DamagedEffectHealthFireFactor = V.default.DamagedEffectHealthFireFactor;
-
-                if (V.DamagedEffect != none)
-                {
-                    V.DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // light smoke
-                }
-            }
-
-            // Reposition any existing effect
             if (V.DamagedEffect != none)
             {
-                V.DamagedEffect.SetBase(none);
-                V.DamagedEffect.SetLocation(V.Location + (V.DamagedEffectOffset >> V.Rotation));
-                V.DamagedEffect.SetBase(V);
-                V.DamagedEffect.SetEffectScale(V.DamagedEffectScale);
+                V.DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // light smoke
             }
+        }
+
+        // Reposition any existing effect
+        if (V.DamagedEffect != none)
+        {
+            V.DamagedEffect.SetBase(none);
+            V.DamagedEffect.SetLocation(V.Location + (V.DamagedEffectOffset >> V.Rotation));
+            V.DamagedEffect.SetBase(V);
+            V.DamagedEffect.SetEffectScale(V.DamagedEffectScale);
         }
     }
 }
