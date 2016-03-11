@@ -117,13 +117,24 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to set PPI to match DPI instead of usual InitialPositionIndex, because we enter in the position the boat has been left, i.e. ramp up or down
-// Also to add Higgins boat hint
+// Also to add Higgins boat hint instead of usual vehicle hints
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Fixes potential problem on net clients when deploying into a spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
-    if (Role < ROLE_Authority && PC != none && PC.IsInState('Spectating'))
+    // Fix possible replication timing problems on a net client
+    if (Role < ROLE_Authority && PC != none)
     {
-        PC.GotoState('PlayerWalking');
+        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
+        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
+        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
+        Controller = PC;
+        SetOwner(PC);
+        Role = ROLE_AutonomousProxy;
+
+        // Fix for possible camera problem when deploying into spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+        if (PC.IsInState('Spectating'))
+        {
+            PC.GotoState('PlayerWalking');
+        }
     }
 
     bDesiredBehindView = false;
@@ -219,18 +230,26 @@ simulated function DestroyAttachments()
     }
 }
 
-// New debugging exec function to toggle showing the collision mesh for the boat & bow ramp
+// Modified to handle collision meshes for the boat & bow ramp
 exec function ShowColMesh()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && RampColMeshActor != none)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        BoatColMeshActor.bHidden = !BoatColMeshActor.bHidden;
-        RampColMeshActor.bHidden = !RampColMeshActor.bHidden;
+        if (BoatColMeshActor != none)
+        {
+            BoatColMeshActor.bHidden = !BoatColMeshActor.bHidden;
+        }
+
+        if (RampColMeshActor != none)
+        {
+            RampColMeshActor.bHidden = !RampColMeshActor.bHidden;
+        }
     }
 }
 
 defaultproperties
 {
+    bIsApc=true
     InitialPositionIndex=1
     BinocPositionIndex=2
     bEngineOff=false
@@ -323,7 +342,6 @@ defaultproperties
     VehicleHudOccupantsY(7)=0.5
     VehicleHudEngineY=0.0
     VehHitpoints(0)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0)) // engine
-    bIsApc=true
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=LFWheel
         bPoweredWheel=true
