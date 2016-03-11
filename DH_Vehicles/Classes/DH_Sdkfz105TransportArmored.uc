@@ -8,7 +8,7 @@ class DH_Sdkfz105TransportArmored extends DH_Sdkfz105Transport;
 // Modified to unhide the collision mesh attachment used for the armoured shielding on the front
 simulated function PostBeginPlay()
 {
-    super(DHApcVehicle).PostBeginPlay(); // skip over the Super in DH_Sdkfz105Transport, so we don't spawn a windscreen attachment
+    super(DHWheeledVehicle).PostBeginPlay(); // skip over the Super in DH_Sdkfz105Transport, so we don't spawn a windscreen attachment
 
     if (Level.NetMode != NM_DedicatedServer && VisorColMeshActor != none)
     {

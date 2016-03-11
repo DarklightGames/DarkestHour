@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz105Transport extends DHApcVehicle;
+class DH_Sdkfz105Transport extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
@@ -40,8 +40,7 @@ simulated function DestroyAttachments()
 
 defaultproperties
 {
-    FriendlyResetDistance=6000.0
-    IdleTimeBeforeReset=300.0
+    bHasTreads=true
     MaxPitchSpeed=350.0
     TreadVelocityScale=40.0
     WheelRotationScale=150
@@ -51,7 +50,7 @@ defaultproperties
     LeftTrackSoundBone="Tread_drive_wheel_F_L"
     RightTrackSoundBone="Tread_drive_wheel_F_R"
     RumbleSoundBone="Body"
-    MaxCriticalSpeed=674.0
+    MaxCriticalSpeed=674.0 // 40 kph
     LeftWheelBones(0)="Wheel_T_L_1"
     LeftWheelBones(1)="Wheel_T_L_2"
     LeftWheelBones(2)="Wheel_T_L_3"

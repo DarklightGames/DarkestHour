@@ -3,15 +3,19 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Transport extends DHApcVehicle;
+class DH_Sdkfz251Transport extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
 
 defaultproperties
 {
+    bIsApc=true
+    bHasTreads=true
+    PointValue=2.0
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
+    VehicleSpikeTime=60.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=80.0
     WheelRotationScale=500
@@ -21,7 +25,9 @@ defaultproperties
     LeftTrackSoundBone="steer_wheel_LF"
     RightTrackSoundBone="steer_wheel_RF"
     RumbleSoundBone="body"
-    MaxCriticalSpeed=674.0
+    MaxCriticalSpeed=674.0 // 40 kph
+    LeftTreadIndex=1
+    RightTreadIndex=2
     LeftWheelBones(0)="Wheel_T_L_1"
     LeftWheelBones(1)="Wheel_T_L_2"
     LeftWheelBones(2)="Wheel_T_L_3"
@@ -92,6 +98,7 @@ defaultproperties
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Halftrack.Halftrack_Destoyed'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
@@ -202,6 +209,7 @@ defaultproperties
     EntryRadius=375.0
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
+    ImpactDamageMult=0.001
     VehicleNameString="Sd.Kfz.251 Halftrack"
     MaxDesireability=1.2
     HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'

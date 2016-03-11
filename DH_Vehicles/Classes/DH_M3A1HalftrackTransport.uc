@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackTransport extends DHApcVehicle;
+class DH_M3A1HalftrackTransport extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M3A1Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
@@ -11,8 +11,12 @@ class DH_M3A1HalftrackTransport extends DHApcVehicle;
 
 defaultproperties
 {
+    bIsApc=true
+    bHasTreads=true
+    PointValue=2.0
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
+    VehicleSpikeTime=60.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=400
     WheelRotationScale=3000
@@ -24,7 +28,7 @@ defaultproperties
     RumbleSoundBone="body"
     LeftTreadIndex=6
     RightTreadIndex=5
-    MaxCriticalSpeed=680.0
+    MaxCriticalSpeed=674.0 // 40 kph
     LeftWheelBones(0)="SRWL02"
     LeftWheelBones(1)="SRWL2"
     LeftWheelBones(2)="SRWL3"
@@ -93,6 +97,7 @@ defaultproperties
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_dest'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.75
@@ -191,6 +196,7 @@ defaultproperties
     ExitPositions(10)=(X=-107.0,Y=-33.0,Z=116.0)// Top Extra
     EntryRadius=375.0
     CenterSpringForce="SpringONSSRV"
+    ImpactDamageMult=0.001
     DriverDamageMult=1.0
     VehicleNameString="M3A1 Halftrack"
     MaxDesireability=1.5

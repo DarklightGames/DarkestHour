@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenCarrierTransport extends DHApcVehicle;
+class DH_BrenCarrierTransport extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_BrenCarrier_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex2.utx
@@ -12,6 +12,10 @@ class DH_BrenCarrierTransport extends DHApcVehicle;
 
 defaultproperties
 {
+    bIsApc=true
+    bHasTreads=true
+    PointValue=2.0
+    VehicleSpikeTime=60.0
     MaxPitchSpeed=125.0
     TreadVelocityScale=80.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
@@ -20,7 +24,9 @@ defaultproperties
     LeftTrackSoundBone="Wheel_T_L_3"
     RightTrackSoundBone="Wheel_T_R_3"
     RumbleSoundBone="body"
-    MaxCriticalSpeed=875.0
+    MaxCriticalSpeed=875.0 // 52 kph
+    LeftTreadIndex=1
+    RightTreadIndex=2
     LeftWheelBones(0)="Wheel_T_L_1"
     LeftWheelBones(1)="Wheel_T_L_2"
     LeftWheelBones(2)="Wheel_T_L_3"
@@ -84,6 +90,7 @@ defaultproperties
     StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
     ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationHealth=-1000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
@@ -178,6 +185,7 @@ defaultproperties
     ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
     ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
     EntryRadius=375.0
+    ImpactDamageMult=0.001
     DriverDamageMult=1.0
     VehicleNameString="Bren Carrier Mk.I"
     MaxDesireability=0.1

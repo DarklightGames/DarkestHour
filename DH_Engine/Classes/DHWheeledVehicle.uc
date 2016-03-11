@@ -52,11 +52,12 @@ var     float       DriverTraceDistSquared;      // used in CheckReset() as rang
 var     ObjectMap   NotifyParameters;            // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-// Driver
+// Driver & driving
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
+var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
 
 // Damage
 var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
@@ -71,6 +72,19 @@ var     bool        bEngineOff;                  // vehicle engine is simply swi
 var     bool        bSavedEngineOff;             // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;          // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
 var     float       IgnitionSwitchInterval;      // how frequently the engine can be manually switched on/off
+
+// Treads & track wheels
+var     bool                bHasTreads;
+var     int                 LeftTreadIndex, RightTreadIndex;
+var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
+var     float               TreadVelocityScale;
+var     rotator             LeftTreadPanDirection, RightTreadPanDirection;
+var     sound               LeftTreadSound, RightTreadSound;
+var     ROSoundAttachment   LeftTreadSoundAttach, RightTreadSoundAttach;
+var     name                LeftTrackSoundBone, RightTrackSoundBone;
+var     array<name>         LeftWheelBones, RightWheelBones; // for animation only - the bone names for the track wheels on each side
+var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
+var     int                 WheelRotationScale;              // allows adjustment of wheel rotation speed for each vehicle
 
 // Driving sounds
 var     float               MaxPitchSpeed;
@@ -92,6 +106,11 @@ var     name                        ResupplyAttachBone;
 var     class<RODummyAttachment>    ResupplyDecoAttachmentClass;
 var     RODummyAttachment           ResupplyDecoAttachment;
 var     name                        ResupplyDecoAttachBone;
+
+// Optional collision static mesh for driver's armoured visor
+var     DHCollisionMeshActor    VisorColMeshActor;
+var     StaticMesh              VisorColStaticMesh;
+var     name                    VisorColAttachBone;
 
 // Option to have mounted cannon - variables used by HUD (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
 var     ROTankCannon    Cannon;                  // reference to cannon actor
@@ -119,7 +138,7 @@ replication
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to create passenger pawn classes from PassengerWeapons array, to skip lots of pointless stuff on net client if an already destroyed vehicle gets replicated,
-// to make net clients show unoccupied rider positions on the HUD vehicle icon, to spawn any sound or resuppply attachments,
+// to make net clients show empty rider positions on HUD vehicle icon, to spawn any tread, sound or resuppply attachments, to add optional coll mesh for a driver's armoured visor,
 // to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
@@ -185,9 +204,29 @@ simulated function PostBeginPlay()
         }
     }
 
+    // Optional for collision static mesh actor to represent a driver's armoured visor, which will raise or lower with driver view changes
+    if (VisorColStaticMesh != none)
+    {
+        VisorColMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this vehicle owns the col mesh actor
+
+        if (VisorColMeshActor != none)
+        {
+            VisorColMeshActor.bHardAttach = true;
+            AttachToBone(VisorColMeshActor, VisorColAttachBone);
+            VisorColMeshActor.SetRelativeRotation(Rotation - GetBoneRotation(VisorColAttachBone)); // because a visor bone may be modelled with rotation in the reference pose
+            VisorColMeshActor.SetRelativeLocation((Location - GetBoneCoords(VisorColAttachBone).Origin) << (Rotation - VisorColMeshActor.RelativeRotation));
+            VisorColMeshActor.SetStaticMesh(VisorColStaticMesh);
+        }
+    }
+
+    // Clientside sound & visual attachments
     if (Level.NetMode != NM_DedicatedServer)
     {
-        // Clientside sound & decorative attachments
+        if (bHasTreads)
+        {
+            SetupTreads();
+        }
+
         if (EngineSound != none && EngineSoundBone != '' && EngineSoundAttach == none)
         {
             EngineSoundAttach = Spawn(class'ROSoundAttachment');
@@ -309,10 +348,12 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to handle engine & interior rumble sounds, to prevent all movement if engine is off, & to disable Tick if vehicle is stationary & has no driver
+// Modified to handle treads, engine & interior rumble sounds, to prevent all movement if engine is off, & to disable Tick if vehicle is stationary & has no driver
 simulated function Tick(float DeltaTime)
 {
-    local float MotionSoundVolume;
+    local KRigidBodyState BodyState;
+    local float           VehicleSpeed, MotionSoundVolume, LinTurnSpeed;
+    local int             i;
 
     // Stop all movement if engine off
     if (bEngineOff)
@@ -329,15 +370,67 @@ simulated function Tick(float DeltaTime)
         Throttle = FClamp(Throttle, -0.5, 0.5);
     }
 
-    // Update engine & interior rumble sounds dependent on speed
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (Abs(ForwardVel) > 0.1)
-        {
-            MotionSoundVolume = FClamp(Abs(ForwardVel) / MaxPitchSpeed * 255.0, 0.0, 255.0);
-        }
+        VehicleSpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
-        UpdateMovementSound(MotionSoundVolume);
+        // Vehicle is moving
+        if (VehicleSpeed > 0.1)
+        {
+            // Force player to pull back on throttle if over max speed
+            if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
+            {
+                PlayerController(Controller).aForward = -32768.0;
+            }
+
+            // Update tread, interior rumble & engine sound volumes, based on speed
+            MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
+            UpdateMovementSound(MotionSoundVolume);
+
+            // Update tread & wheel movement, based on speed
+            if (bHasTreads)
+            {
+                KGetRigidBodyState(BodyState);
+                LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+
+                if (LeftTreadPanner != none)
+                {
+                    LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
+                    LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+
+                    for (i = 0; i < LeftWheelBones.Length; ++i)
+                    {
+                        SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+                    }
+                }
+
+                if (RightTreadPanner != none)
+                {
+                    RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
+                    RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
+
+                    for (i = 0; i < RightWheelBones.Length; ++i)
+                    {
+                        SetBoneRotation(RightWheelBones[i], RightWheelRot);
+                    }
+                }
+            }
+        }
+        // If vehicle isn't moving, zero the movement sounds & tread movement
+        else
+        {
+            UpdateMovementSound(0.0);
+
+            if (LeftTreadPanner != none)
+            {
+                LeftTreadPanner.PanRate = 0.0;
+            }
+
+            if (RightTreadPanner != none)
+            {
+                RightTreadPanner.PanRate = 0.0;
+            }
+        }
     }
 
     super(ROWheeledVehicle).Tick(DeltaTime);
@@ -788,7 +881,7 @@ simulated state EnteringVehicle
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
+// And so when player exits, we stop any tread movement & play idle animation for other net clients (not just owning client), to reset visuals like hatches
 // We no longer disable Tick when driver exits, as vehicle may still be moving & dust effects need updating as vehicle slows
 // Instead we disable Tick at the end of Tick itself, if vehicle isn't moving & has no driver
 simulated event DrivingStatusChanged()
@@ -798,10 +891,24 @@ simulated event DrivingStatusChanged()
     {
         Enable('Tick');
     }
-    // Play neutral idle animation if player has exited, but not on a server
-    else if (Level.NetMode != NM_DedicatedServer && HasAnim(BeginningIdleAnim))
+    else if (Level.NetMode != NM_DedicatedServer)
     {
-        PlayAnim(BeginningIdleAnim);
+        // Play neutral idle animation if player has exited (but not on a server)
+        if (HasAnim(BeginningIdleAnim))
+        {
+            PlayAnim(BeginningIdleAnim);
+        }
+
+        // Stop tread movement if player has exited
+        if (LeftTreadPanner != none)
+        {
+            LeftTreadPanner.PanRate = 0.0;
+        }
+
+        if (RightTreadPanner != none)
+        {
+            RightTreadPanner.PanRate = 0.0;
+        }
     }
 }
 
@@ -1441,6 +1548,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+
+    // If an APC's health is very low, kill the engine (which will start an engine fire)
+    if (bIsApc && Health <= (HealthMax / 3) && Health > 0)
+    {
+        EngineHealth = 0;
+        bEngineOff = true;
+        SetEngine();
+    }
 }
 
 // Modified so if we hit a vehicle we use its velocity to calculate damage, & also to factor in an ObjectCollisionResistance for this vehicle
@@ -1672,6 +1787,11 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
     }
 
+    if (default.VisorColStaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.VisorColStaticMesh);
+    }
+
     if (default.ResupplyDecoAttachmentClass != none && default.ResupplyDecoAttachmentClass.default.StaticMesh != none)
     {
         L.AddPrecacheStaticMesh(default.ResupplyDecoAttachmentClass.default.StaticMesh);
@@ -1705,6 +1825,11 @@ simulated function UpdatePrecacheMaterials()
     if (DestroyedVehicleMesh != none)
     {
         Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
+    }
+
+    if (VisorColStaticMesh != none)
+    {
+        Level.AddPrecacheStaticMesh(VisorColStaticMesh);
     }
 
     if (ResupplyDecoAttachmentClass != none && ResupplyDecoAttachmentClass.default.StaticMesh != none)
@@ -1806,8 +1931,46 @@ function SetTeamNum(byte NewTeam)
     }
 }
 
-// New function to update movement sound volumes, similar to a tracked vehicle updating its tread sounds
-// Although here we optimise by incorporating MotionSoundVolume as a passed function argument instead of a separate instance variable
+// From DHArmoredVehicle & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
+simulated function SetupTreads()
+{
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = RightTreadPanDirection;
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
+
+    if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
+    {
+        LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+        AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
+    }
+
+    if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
+    {
+        RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        RightTreadSoundAttach.AmbientSound = RightTreadSound;
+        AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
+    }
+}
+
+// New function to update movement sound volumes, including any treads
+// From ROTreadCraft, although here we optimise by incorporating MotionSoundVolume as a passed function argument instead of a separate instance variable
 simulated function UpdateMovementSound(float MotionSoundVolume)
 {
     if (EngineSoundAttach != none)
@@ -1818,6 +1981,16 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
     if (InteriorRumbleSoundAttach != none)
     {
         InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume * 2.5;
+    }
+
+    if (LeftTreadSoundAttach != none)
+    {
+       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
+    }
+
+    if (RightTreadSoundAttach != none)
+    {
+       RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
     }
 }
 
@@ -1850,6 +2023,11 @@ simulated function DestroyAttachments()
         ResupplyAttachment.Destroy();
     }
 
+    if (VisorColMeshActor != none)
+    {
+        VisorColMeshActor.Destroy();
+    }
+
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (EngineSoundAttach != none)
@@ -1865,6 +2043,31 @@ simulated function DestroyAttachments()
         if (ResupplyDecoAttachment != none)
         {
             ResupplyDecoAttachment.Destroy();
+        }
+
+        if (bHasTreads)
+        {
+            if (LeftTreadPanner != none)
+            {
+                Level.ObjectPool.FreeObject(LeftTreadPanner);
+                LeftTreadPanner = none;
+            }
+
+            if (RightTreadPanner != none)
+            {
+                Level.ObjectPool.FreeObject(RightTreadPanner);
+                RightTreadPanner = none;
+            }
+
+            if (LeftTreadSoundAttach != none)
+            {
+                LeftTreadSoundAttach.Destroy();
+            }
+
+            if (RightTreadSoundAttach != none)
+            {
+                RightTreadSoundAttach.Destroy();
+            }
         }
 
         StopEmitters();
@@ -2035,6 +2238,13 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
+// Modified to disabled an APC if it takes major damage, as well as if engine is dead
+// This should give time for troops to bail out & escape before vehicle blows
+simulated function bool IsDisabled()
+{
+    return EngineHealth <= 0 || (bIsApc && Health <= (HealthMax / 3));
+}
+
 // Modified to eliminate "Waiting for additional crew members" message (Matt: now only used by bots)
 function bool CheckForCrew()
 {
@@ -2182,6 +2392,15 @@ exec function SetExhRot(int Index, int NewX, int NewY, int NewZ)
         {
             StartEmitters();
         }
+    }
+}
+
+// New debug exec to toggle showing the optional collision mesh representing a driver's armoured visor
+exec function ShowColMesh()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && VisorColMeshActor != none)
+    {
+        VisorColMeshActor.bHidden = !VisorColMeshActor.bHidden;
     }
 }
 

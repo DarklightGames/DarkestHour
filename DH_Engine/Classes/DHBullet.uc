@@ -570,7 +570,7 @@ simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 // New function to check whether we penetrated a vehicle that we hit (default bullet will only penetrate soft skin vehicle, not an armored vehicle or APC)
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return !bHasDeflected && !V.IsA('DHArmoredVehicle') && !V.IsA('DHApcVehicle');
+    return !bHasDeflected && V != none && !V.IsA('DHArmoredVehicle') && !V.bIsApc;
 }
 
 // New function to handle hit effects for bullet hitting vehicle or vehicle weapon, depending on whether it penetrated (saves code repetition elsewhere)

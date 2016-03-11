@@ -2980,13 +2980,13 @@ exec function DriverCollisionDebug()
 // New debug exec to adjust rotation speed of treads
 exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
-    local ROWheeledVehicle    V;
-    local ROTreadCraft        TC;
-    local DHApcVehicle        APC;
+    local ROWheeledVehicle V;
+    local ROTreadCraft     TC;
+    local DHWheeledVehicle WV;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        TC = ROTreadCraft(Pawn);
+        TC = ROTreadCraft(V);
 
         if (TC != none)
         {
@@ -3004,21 +3004,21 @@ exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
         }
         else
         {
-            APC = DHApcVehicle(Pawn);
+            WV = DHWheeledVehicle(V);
 
-            if (APC != none)
+            if (WV != none && WV.bHasTreads)
             {
                 if (NewValue == 0)
                 {
-                    NewValue = APC.default.TreadVelocityScale;
+                    NewValue = WV.default.TreadVelocityScale;
                 }
                 else if (bAddToCurrentSpeed)
                 {
-                    NewValue += APC.TreadVelocityScale;
+                    NewValue += WV.TreadVelocityScale;
                 }
 
-                Log(APC.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ APC.TreadVelocityScale $ ")");
-                APC.TreadVelocityScale = NewValue;
+                Log(WV.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ WV.TreadVelocityScale $ ")");
+                WV.TreadVelocityScale = NewValue;
             }
         }
     }
@@ -3027,13 +3027,13 @@ exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 // New debug exec to adjust rotation speed of track wheels
 exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
-    local ROWheeledVehicle    V;
-    local ROTreadCraft        TC;
-    local DHApcVehicle        APC;
+    local ROWheeledVehicle V;
+    local ROTreadCraft     TC;
+    local DHWheeledVehicle WV;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        TC = ROTreadCraft(Pawn);
+        TC = ROTreadCraft(V);
 
         if (TC != none)
         {
@@ -3051,21 +3051,21 @@ exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
         }
         else
         {
-            APC = DHApcVehicle(Pawn);
+            WV = DHWheeledVehicle(V);
 
-            if (APC != none)
+            if (WV != none && WV.bHasTreads)
             {
                 if (NewValue == 0)
                 {
-                    NewValue = APC.default.WheelRotationScale;
+                    NewValue = WV.default.WheelRotationScale;
                 }
                 else if (bAddToCurrentSpeed)
                 {
-                    NewValue += APC.WheelRotationScale;
+                    NewValue += WV.WheelRotationScale;
                 }
 
-                Log(APC.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ APC.WheelRotationScale $ ")");
-                APC.WheelRotationScale = NewValue;
+                Log(WV.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ WV.WheelRotationScale $ ")");
+                WV.WheelRotationScale = NewValue;
             }
         }
     }
