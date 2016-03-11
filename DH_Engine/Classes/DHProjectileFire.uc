@@ -19,6 +19,7 @@ var     vector          FAProjSpawnOffset;           // positional offset to spa
 var     int             AddedPitch;                  // additional pitch to add to firing calculations (primarily used for rocket launchers)
 var     bool            bUsePreLaunchTrace;          // use pre-projectile spawn trace to see if we hit anything close before launching projectile (saves CPU and net usage)
 var     float           PreLaunchTraceDistance;      // how long of a pre launch trace to use (shorter for SMGs and pistols, longer for rifles and MGs)
+var     bool            bTraceHitBulletProofColMesh; // bullet has hit a collision mesh actor that is bullet proof, so we can handle vehicle hits accordingly
 
 // Weapon spread/inaccuracy
 var     float           AppliedSpread;               // spread applied to the projectile
@@ -272,6 +273,8 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     local array<int>      HitPoints;
     local array<WhizInfo> SavedWhizzes;
 
+    bTraceHitBulletProofColMesh = false; // reset
+
     // We have to use an actor to do traces, because we aren't an actor & so can't access trace functions
     // Using Weapon as it's safe to temporarily change its bUseCollisionStaticMesh, meaning trace detects collision meshes on vehicles
     // Our Instigator pawn doesn't work, as it has bBlockHitPointTraces=false, meaning it won't detect hits on bullet whip attachments, which we need
@@ -294,12 +297,19 @@ function bool PreLaunchTrace(vector Start, vector Direction)
                 continue;
             }
 
+            // If col mesh is bullet proof then set a flag, so we can handle vehicle hits accordingly
+            if (DHCollisionMeshActor(A).bIsBulletProof)
+            {
+                bTraceHitBulletProofColMesh = true;
+            }
+
             A = A.Owner;
         }
 
         // Ignore anything anything a bullet's ProcessTouch would normally ignore
         if (A == Instigator || A.Base == Instigator || A.Owner == Instigator || A.bDeleteMe || (A.IsA('Projectile') && !A.bProjTarget))
         {
+            bTraceHitBulletProofColMesh = false; // reset
             continue;
         }
 
@@ -446,13 +456,16 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     {
         HitPlayer.ProcessLocationalDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType, HitPoints);
     }
-    else if (Other.IsA('ROVehicle') && class<ROBullet>(ProjectileClass) != none)
+    else if (!bTraceHitBulletProofColMesh)
     {
-        Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<ROBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
-    }
-    else if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
-    {
-        Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType);
+        if (Other.IsA('ROVehicle') && class<ROBullet>(ProjectileClass) != none)
+        {
+            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<ROBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
+        }
+        else if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
+        {
+            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType);
+        }
     }
 
     return true;

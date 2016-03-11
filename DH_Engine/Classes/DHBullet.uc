@@ -8,9 +8,10 @@ class DHBullet extends ROBullet
     abstract;
 
 // General
-var     int             WhizType;        // sent in HitPointTrace to only do snaps for supersonic rounds (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
-var     Actor           SavedTouchActor; // added (same as shell) to prevent recurring ProcessTouch on same actor (e.g. was screwing up tracer ricochets from VehicleWeapons like turrets)
-var     sound           WaterHitSound;   // sound of this bullet hitting water
+var     int             WhizType;               // sent in HitPointTrace to indicate whiz or snap sound to play (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
+var     Actor           SavedTouchActor;        // added (same as shell) to prevent recurring ProcessTouch on same actor (e.g. was screwing up tracer ricochets from turrets)
+var     sound           WaterHitSound;          // sound of this bullet hitting water
+var     bool            bHitBulletProofColMesh; // bullet has hit a collision mesh actor that is bullet proof, so we can handle vehicle hits accordingly
 
 // Tracers
 var     bool            bIsTracerBullet; // just set to true in a tracer bullet subclass of a normal bullet & then the inheritance from this class will handle everything
@@ -142,6 +143,12 @@ simulated singular function Touch(Actor Other)
                 return;
             }
 
+            // If col mesh is bullet proof then set a flag, so we can handle vehicle hits accordingly
+            if (DHCollisionMeshActor(Other).bIsBulletProof)
+            {
+                bHitBulletProofColMesh = true;
+            }
+
             // If col mesh represents a vehicle, which would normally get a HitWall event instead of Touch, we call HitWall on the vehicle & exit
             if (Other.Owner.IsA('ROVehicle'))
             {
@@ -153,6 +160,7 @@ simulated singular function Touch(Actor Other)
                 }
 
                 HitWall(HitNormal, Other.Owner);
+                bHitBulletProofColMesh = false; // guarantees reset
 
                 return;
             }
@@ -183,6 +191,8 @@ simulated singular function Touch(Actor Other)
                 ClientSideTouch(Other, HitLocation);
             }
         }
+
+        bHitBulletProofColMesh = false; // guarantees reset
     }
 }
 
@@ -570,7 +580,7 @@ simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 // New function to check whether we penetrated a vehicle that we hit (default bullet will only penetrate soft skin vehicle, not an armored vehicle or APC)
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return !bHasDeflected && V != none && !V.IsA('DHArmoredVehicle') && !V.bIsApc;
+    return !bHasDeflected && V != none && !V.IsA('DHArmoredVehicle') && !V.bIsApc && !bHitBulletProofColMesh;
 }
 
 // New function to handle hit effects for bullet hitting vehicle or vehicle weapon, depending on whether it penetrated (saves code repetition elsewhere)

@@ -5,7 +5,7 @@
 
 class DH_Sdkfz105TransportArmored extends DH_Sdkfz105Transport;
 
-// Modified to unhide the collision mesh attachment used for the armoured shielding on the front
+// Modified to unhide collision mesh attachment used for armoured shielding on the front, to match its camo to the vehicle, & to set it to resist bullets
 simulated function PostBeginPlay()
 {
     super(DHWheeledVehicle).PostBeginPlay(); // skip over the Super in DH_Sdkfz105Transport, so we don't spawn a windscreen attachment
@@ -15,6 +15,7 @@ simulated function PostBeginPlay()
         VisorColMeshActor.SetRelativeLocation(VisorColMeshActor.RelativeLocation + (vect(0.0, 0.0, -45.0) >> Rotation)); // TEMP // TODO: Peter to adjust static meshes to lower by 45 units in Z axis
         VisorColMeshActor.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
         VisorColMeshActor.bHidden = false;
+        VisorColMeshActor.bIsBulletProof = true;
     }
 }
 

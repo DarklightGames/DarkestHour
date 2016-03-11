@@ -51,6 +51,8 @@ var     bool    bWontStopShell;            // won't stop a DHAntiVehicleProjecti
 var     bool    bWontStopBlastDamage;      // won't stop blast damage caused by HurtRadius function
 var     bool    bWontStopThrownProjectile; // won't stop a DHThrowableExplosiveProjectile, e.g. grenade or satchel (hard to see utility, but included for completeness)
 
+var     bool    bIsBulletProof;            // col mesh is bullet proof, i.e. resistant to small arms fire - used to attach armour attachments to a soft skin vehicle
+
 // Modified to copy the owning actor's collision properties
 simulated function PostBeginPlay()
 {
