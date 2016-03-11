@@ -11,8 +11,7 @@ class DH_GreyhoundArmoredCar extends DHArmoredCar;
 
 defaultproperties
 {
-    bMustBeTankCommander=true
-    bAllowRiders=true
+    bIsApc=true
     MaxCriticalSpeed=1077.0
     UFrontArmorFactor=1.6
     URightArmorFactor=0.9
@@ -75,7 +74,6 @@ defaultproperties
     VehicleHudEngineX=0.51
     VehHitpoints(0)=(PointBone="Engine",PointOffset=(Z=-10.0)) // engine
     EngineHealth=100
-    bIsApc=true
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered

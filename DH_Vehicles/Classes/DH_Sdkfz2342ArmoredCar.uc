@@ -11,8 +11,8 @@ class DH_Sdkfz2342ArmoredCar extends DHArmoredCar;
 
 defaultproperties
 {
+    bIsApc=true
     UnbuttonedPositionIndex=3
-    bAllowRiders=true
     MaxCriticalSpeed=1039.0
     UFrontArmorFactor=3.0
     URightArmorFactor=0.8
@@ -81,7 +81,6 @@ defaultproperties
     VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     EngineHealth=100
-    bIsApc=true
     DriverAttachmentBone="driver_attachment"
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RFWheel'
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.LFWheel'
