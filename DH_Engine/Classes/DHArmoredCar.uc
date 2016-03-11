@@ -59,7 +59,7 @@ simulated function Tick(float DeltaTime)
     }
 
     // Force player to pull back on throttle if over max speed
-    if (Level.NetMode != NM_DedicatedServer && Abs(ForwardVel) >= MaxCriticalSpeed && IsHumanControlled())
+    if (Level.NetMode != NM_DedicatedServer && Abs(ForwardVel) >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
     {
         PlayerController(Controller).aForward = -32768;
     }

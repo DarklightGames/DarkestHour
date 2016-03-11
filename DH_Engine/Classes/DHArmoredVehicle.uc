@@ -429,7 +429,7 @@ simulated function PostNetReceive()
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
-    local float           MySpeed;
+    local float           VehicleSpeed;
     local int             i;
 
     // Stop all movement if engine off or both tracks damaged
@@ -479,19 +479,19 @@ simulated function Tick(float DeltaTime)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        MySpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
+        VehicleSpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
         // Vehicle is moving
-        if (MySpeed > 0.1)
+        if (VehicleSpeed > 0.1)
         {
             // Force player to pull back on throttle if over max speed
-            if (MySpeed >= MaxCriticalSpeed && IsHumanControlled())
+            if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
             {
                 PlayerController(Controller).aForward = -32768.0;
             }
 
             // Update tread & interior rumble sound volumes, based on speed
-            MotionSoundVolume = FClamp(MySpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
+            MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
             UpdateMovementSound();
 
             // Update tread & wheel movement, based on speed

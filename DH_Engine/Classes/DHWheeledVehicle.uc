@@ -42,9 +42,9 @@ struct PassengerPawn
 };
 
 // General
+var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       PointValue;                  // used for scoring
-var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     int         FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array (note more limited use than in DHArmoredVehicle)
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of those classes
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning vehicle
@@ -58,10 +58,12 @@ var     bool        bLockCameraDuringTransition; // lock the camera's rotation t
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
+var     float       LastBottomOutTime;           // last time a bottom out sound was played
 
 // Damage
 var     array<CarHitpoint>  CarVehHitpoints;     // an array of possible small points that can be hit (index zero is always the driver)
 var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
+var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
 var array<Material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
 var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
@@ -94,10 +96,6 @@ var     name                EngineSoundBone;
 var     sound               RumbleSound;         // interior rumble sound
 var     ROSoundAttachment   InteriorRumbleSoundAttach;
 var     name                RumbleSoundBone;
-
-// Object impacts
-var     float       ObjectCollisionResistance;   // vehicle's resistance to colliding with other actors - a higher value reduces damage more
-var     float       LastBottomOutTime;           // last time a bottom out sound was played
 
 // Resupply attachments
 var     class<RODummyAttachment>    ResupplyAttachmentClass;
@@ -442,7 +440,7 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// Matt: drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
+// Modified to remove RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as DH doesn't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
 function Timer()
 {
     // Check to see if we need to destroy a spiked, abandoned vehicle
