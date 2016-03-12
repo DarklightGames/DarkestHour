@@ -196,8 +196,8 @@ simulated function PostBeginPlay()
 
     super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
-    // Play neutral idle animation, unless vehicle is not using a skeletal mesh, e.g. is already destroyed & has switched to destroyed static mesh
-    if (DrawType == DT_Mesh && HasAnim(BeginningIdleAnim))
+    // Play neutral idle animation
+    if (HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
     }
@@ -221,21 +221,7 @@ simulated function PostBeginPlay()
         }
     }
 
-    // Net client
-    if (Role < ROLE_Authority)
-    {
-        // If an already destroyed vehicle gets replicated, there's nothing more we want to do here; it will only spawn pointless effects
-        if (Health <= 0)
-        {
-            return;
-        }
-
-        // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
-        // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
-        WeaponPawns.Length = PassengerWeapons.Length;
-    }
-    // Authority role
-    else
+    if (Role == ROLE_Authority)
     {
         // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
         if (InitialPositionIndex > 0)
@@ -270,6 +256,12 @@ simulated function PostBeginPlay()
                 }
             }
         }
+    }
+    // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
+    // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
+    else
+    {
+        WeaponPawns.Length = PassengerWeapons.Length;
     }
 
     if (Level.NetMode != NM_DedicatedServer)
