@@ -69,7 +69,6 @@ simulated function PostBeginPlay()
         bBlockHitPointTraces = Owner.default.bBlockHitPointTraces;
         bProjTarget = Owner.default.bProjTarget;
         bUseCollisionStaticMesh = Owner.default.bUseCollisionStaticMesh;
-        bWorldGeometry = Owner.default.bWorldGeometry;
         bIgnoreEncroachers = Owner.default.bIgnoreEncroachers;
     }
     else
