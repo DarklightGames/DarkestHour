@@ -225,8 +225,8 @@ defaultproperties
     Skins(1)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(2)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(3)=texture'axis_vehicles_tex.int_vehicles.halftrack_int'
-    VisorColStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll'
-    VisorColAttachBone="driver_hatch"
+    ColMeshStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll' // collision mesh attachment representing the driver's armoured visors
+    ColMeshAttachBone="driver_hatch"
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

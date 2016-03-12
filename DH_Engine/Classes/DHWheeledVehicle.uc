@@ -105,10 +105,10 @@ var     class<RODummyAttachment>    ResupplyDecoAttachmentClass;
 var     RODummyAttachment           ResupplyDecoAttachment;
 var     name                        ResupplyDecoAttachBone;
 
-// Optional collision static mesh for driver's armoured visor
-var     DHCollisionMeshActor    VisorColMeshActor;
-var     StaticMesh              VisorColStaticMesh;
-var     name                    VisorColAttachBone;
+// Option to spawn a collision mesh attachment for a moving part of the vehicle that should have collision, e.g. a driver's armoured visor(s) or a ramp
+var     DHCollisionMeshActor    CollisionMeshActor;
+var     StaticMesh              ColMeshStaticMesh;
+var     name                    ColMeshAttachBone;
 
 // Option to have mounted cannon - variables used by HUD (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
 var     ROTankCannon    Cannon;                  // reference to cannon actor
@@ -136,7 +136,7 @@ replication
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to create passenger pawn classes from PassengerWeapons array, to skip lots of pointless stuff on net client if an already destroyed vehicle gets replicated,
-// to make net clients show empty rider positions on HUD vehicle icon, to spawn any tread, sound or resuppply attachments, to add optional coll mesh for a driver's armoured visor,
+// to make net clients show empty rider positions on HUD vehicle icon, to spawn any tread, sound or resuppply attachments, to add optional collision mesh attachment,
 // to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
@@ -202,24 +202,24 @@ simulated function PostBeginPlay()
         }
     }
 
-    // Optional for collision static mesh actor to represent a driver's armoured visor, which will raise or lower with driver view changes
-    if (VisorColStaticMesh != none)
+    // Option to spawn a collision mesh attachment for a moving part of the vehicle that should have collision, e.g. a driver's armoured visor(s) or a ramp
+    if (ColMeshStaticMesh != none && ColMeshAttachBone != '')
     {
-        VisorColMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this vehicle owns the col mesh actor
+        CollisionMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this vehicle owns the col mesh actor
 
-        if (VisorColMeshActor != none)
+        if (CollisionMeshActor != none)
         {
-            VisorColMeshActor.bHardAttach = true;
-            AttachToBone(VisorColMeshActor, VisorColAttachBone);
-            VisorColMeshActor.SetRelativeRotation(Rotation - GetBoneRotation(VisorColAttachBone)); // because a visor bone may be modelled with rotation in the reference pose
-            VisorColMeshActor.SetRelativeLocation((Location - GetBoneCoords(VisorColAttachBone).Origin) << (Rotation - VisorColMeshActor.RelativeRotation));
-            VisorColMeshActor.SetStaticMesh(VisorColStaticMesh);
+            CollisionMeshActor.bHardAttach = true;
+            AttachToBone(CollisionMeshActor, ColMeshAttachBone);
+            CollisionMeshActor.SetRelativeRotation(Rotation - GetBoneRotation(ColMeshAttachBone)); // because attachment bone may be modelled with rotation in the reference pose
+            CollisionMeshActor.SetRelativeLocation((Location - GetBoneCoords(ColMeshAttachBone).Origin) << (Rotation - CollisionMeshActor.RelativeRotation));
+            CollisionMeshActor.SetStaticMesh(ColMeshStaticMesh);
         }
     }
 
-    // Clientside sound & visual attachments
     if (Level.NetMode != NM_DedicatedServer)
     {
+        // Clientside sound & visual attachments
         if (bHasTreads)
         {
             SetupTreads();
@@ -1785,9 +1785,9 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
     }
 
-    if (default.VisorColStaticMesh != none)
+    if (default.ColMeshStaticMesh != none)
     {
-        L.AddPrecacheStaticMesh(default.VisorColStaticMesh);
+        L.AddPrecacheStaticMesh(default.ColMeshStaticMesh);
     }
 
     if (default.ResupplyDecoAttachmentClass != none && default.ResupplyDecoAttachmentClass.default.StaticMesh != none)
@@ -1825,9 +1825,9 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
     }
 
-    if (VisorColStaticMesh != none)
+    if (ColMeshStaticMesh != none)
     {
-        Level.AddPrecacheStaticMesh(VisorColStaticMesh);
+        Level.AddPrecacheStaticMesh(ColMeshStaticMesh);
     }
 
     if (ResupplyDecoAttachmentClass != none && ResupplyDecoAttachmentClass.default.StaticMesh != none)
@@ -2021,9 +2021,9 @@ simulated function DestroyAttachments()
         ResupplyAttachment.Destroy();
     }
 
-    if (VisorColMeshActor != none)
+    if (CollisionMeshActor != none)
     {
-        VisorColMeshActor.Destroy();
+        CollisionMeshActor.Destroy();
     }
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -2236,7 +2236,7 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// Modified to disabled an APC if it takes major damage, as well as if engine is dead
+// Modified to disable an APC if it takes major damage, as well as if engine is dead
 // This should give time for troops to bail out & escape before vehicle blows
 simulated function bool IsDisabled()
 {
@@ -2393,12 +2393,12 @@ exec function SetExhRot(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
-// New debug exec to toggle showing the optional collision mesh representing a driver's armoured visor
+// New debug exec to toggle showing any optional collision mesh attachment
 exec function ShowColMesh()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && VisorColMeshActor != none)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && CollisionMeshActor != none)
     {
-        VisorColMeshActor.bHidden = !VisorColMeshActor.bHidden;
+        CollisionMeshActor.bHidden = !CollisionMeshActor.bHidden;
     }
 }
 

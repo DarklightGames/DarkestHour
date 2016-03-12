@@ -213,8 +213,8 @@ defaultproperties
     Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int'
     Skins(5)=texture'DH_VehiclesUS_tex.Treads.M3A1Halftrack_treads'
     Skins(6)=texture'DH_VehiclesUS_tex.Treads.M3A1Halftrack_treads'
-    VisorColStaticMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_visor_coll'
-    VisorColAttachBone="Drivers_Hatch"
+    ColMeshStaticMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_visor_coll' // collision mesh attachment representing the driver's armoured visor
+    ColMeshAttachBone="Drivers_Hatch"
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

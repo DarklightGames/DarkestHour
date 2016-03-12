@@ -17,9 +17,10 @@ var     float       RampSoundVolume;
 var     name        RampUpIdleAnim; // effectively a replacement for BeginningIdleAnim, which is set to null (just easier that overriding functions to stop unwanted BeginningIdleAnim)
 var     name        RampDownIdleAnim;
 
-var     DHCollisionMeshActor    BoatColMeshActor, RampColMeshActor;
+var     DHCollisionMeshActor    BoatColMeshActor; // extra collision static mesh used for the whole boat, as workaround because it's modelled with wrong rotation & Z location,
+                                                  // which screws up usual collision static mesh used in animation mesh, because engine doesn't apply rotation & translation to col mesh
 
-// Modified to loop either the ramp up or down idle animation on a net client (also set a matching destroyed vehicle animation)
+// Modified to loop either the ramp up or down idle animation on a net client // TEST rem (also set a matching destroyed vehicle animation)
 // No benefit on a server as visuals aren't a factor, & in terms of collision the server & clients are going to out of synch whatever we do, so there's no point trying to match
 // Also to workaround the way the boat has been modelled, which screws up the normal use of a collision static mesh in the animation mesh
 simulated function PostNetBeginPlay()
@@ -44,18 +45,22 @@ simulated function PostNetBeginPlay()
     // Also, a col mesh doesn't move with the boat animation, as it pitches & rolls
     // As a workaround, I've taken the col mesh out of the anim mesh, & instead added it as a col mesh actor, attached to the relevant bone
     // With a separate col mesh actor for the bow ramp, attached to ramp hinge bone so it lowers & raises with ramp, providing protection to players inside when raised
+    // TODO - adjust Higgins animation mesh to remove unwanted rotation & translation (incl re-make/adjust its animations), then delete all this workaround stuff below
     BoatColMeshActor = Spawn(class'DHCollisionMeshActor', self);
-    BoatColMeshActor.bHardAttach = true;
-    AttachToBone(BoatColMeshActor, 'Master1z00');
-    BoatColMeshActor.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll');
 
-    // Instead of complex calcs for the ramp rotation & offset, I've simply set it correctly using literals (from trial & error)
-    RampColMeshActor = Spawn(class'DHCollisionMeshActor', self);
-    RampColMeshActor.bHardAttach = true;
-    AttachToBone(RampColMeshActor, 'Master2z00');
-    RampColMeshActor.SetRelativeRotation(rot(0, 0, 650));
-    RampColMeshActor.SetRelativeLocation(vect(0.0, -252.0, -36.0));
-    RampColMeshActor.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll');
+    if (BoatColMeshActor != none)
+    {
+        BoatColMeshActor.bHardAttach = true;
+        AttachToBone(BoatColMeshActor, 'Master1z00');
+        BoatColMeshActor.SetStaticMesh(StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll');
+    }
+
+    // The ramp rotation & offset gets screwed up, so simply set it correctly using literals (from trial & error!)
+    if (CollisionMeshActor != none)
+    {
+        CollisionMeshActor.SetRelativeRotation(rot(0, 0, 650));
+        CollisionMeshActor.SetRelativeLocation(vect(0.0, -252.0, -36.0));
+    }
 
     // Remove enough collision from the boat so it doesn't sink into the ground & it bumps into objects, but its crude collision boxes are ignored by projectiles
     // NB- can't just set in default props, as col meshes need to copy boat's intended collision settings when they spawn, so have to change these afterwards
@@ -214,7 +219,7 @@ function bool EncroachingOn(Actor Other)
     return false;
 }
 
-// Modified to destroy collision mesh attachments
+// Modified to destroy extra boat collision mesh
 simulated function DestroyAttachments()
 {
     super.DestroyAttachments();
@@ -224,25 +229,18 @@ simulated function DestroyAttachments()
         BoatColMeshActor.Destroy();
     }
 
-    if (RampColMeshActor != none)
-    {
-        RampColMeshActor.Destroy();
-    }
 }
 
-// Modified to handle collision meshes for the boat & bow ramp
+// Modified to add extra boat collision mesh
 exec function ShowColMesh()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
+        super.ShowColMesh();
+
         if (BoatColMeshActor != none)
         {
             BoatColMeshActor.bHidden = !BoatColMeshActor.bHidden;
-        }
-
-        if (RampColMeshActor != none)
-        {
-            RampColMeshActor.bHidden = !RampColMeshActor.bHidden;
         }
     }
 }
@@ -400,6 +398,8 @@ defaultproperties
     Health=800
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
+    ColMeshStaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll' // attached collision mesh representing the bow ramp, so it lowers/raises with ramp animation
+    ColMeshAttachBone="Master2z00"
     CollisionRadius=100.0
     CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
