@@ -10,12 +10,16 @@ simulated function PostBeginPlay()
 {
     super(DHWheeledVehicle).PostBeginPlay(); // skip over the Super in DH_Sdkfz105Transport, so we don't spawn a windscreen attachment
 
-    if (Level.NetMode != NM_DedicatedServer && VisorColMeshActor != none)
+    if (VisorColMeshActor != none)
     {
         VisorColMeshActor.SetRelativeLocation(VisorColMeshActor.RelativeLocation + (vect(0.0, 0.0, -45.0) >> Rotation)); // TEMP // TODO: Peter to adjust static meshes to lower by 45 units in Z axis
-        VisorColMeshActor.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
-        VisorColMeshActor.bHidden = false;
         VisorColMeshActor.bIsBulletProof = true;
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            VisorColMeshActor.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
+            VisorColMeshActor.bHidden = false;
+        }
     }
 }
 
