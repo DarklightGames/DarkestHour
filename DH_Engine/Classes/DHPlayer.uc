@@ -2775,7 +2775,7 @@ function ServerPossessBody(Pawn NewPawn)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New helper function just to avoid code repetition & nesting in lots of vehicle-related debug execs
-simulated function bool GetVehicleBase(ROWheeledVehicle V)
+simulated function bool GetVehicleBase(out ROWheeledVehicle V)
 {
     V = ROWheeledVehicle(Pawn);
 
