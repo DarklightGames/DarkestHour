@@ -79,7 +79,44 @@ simulated function PostBeginPlay()
     }
 }
 
-// Hides or shows the owning actor - a debug tool
+// New function to spawn, attach & align a collision static mesh actor (used by the classes that spawn a col mesh)
+simulated static function DHCollisionMeshActor AttachCollisionMesh(StaticMesh ColStaticMesh, name AttachBone, Actor ColMeshOwner, optional class<DHCollisionMeshActor> ColMeshActorClass)
+{
+    local DHCollisionMeshActor ColMeshActor;
+
+    if (AttachBone == '' || ColMeshOwner == none)
+    {
+        return none;
+    }
+
+    if (ColMeshActorClass == none)
+    {
+        ColMeshActorClass = class'DHCollisionMeshActor'; // default is base col mesh class, but a specialised subclass can be specified if desired
+    }
+
+    ColMeshActor = ColMeshOwner.Spawn(ColMeshActorClass, ColMeshOwner); // vital that the actor that spawns the col mesh is its owner
+
+    if (ColMeshActor != none)
+    {
+        // Attach col mesh actor to specified attachment bone, so the col mesh will move with the relevant part of the owning actor
+        ColMeshActor.bHardAttach = true;
+        ColMeshOwner.AttachToBone(ColMeshActor, AttachBone);
+
+        // The col mesh will have been modelled on the owning actor's mesh origin, but is now centred on the attachment bone, so reposition it to align with owning mesh
+        ColMeshActor.SetRelativeRotation(ColMeshOwner.Rotation - ColMeshOwner.GetBoneRotation(AttachBone)); // as attachment bone may be modelled with rotation in reference pose
+        ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << (ColMeshOwner.Rotation - ColMeshActor.RelativeRotation));
+
+        // Finally set the static mesh for the col mesh actor (may be none, if using a subclass of DHCollisionMeshActor & that already specifies a static mesh)
+        if (ColStaticMesh != none)
+        {
+            ColMeshActor.SetStaticMesh(ColStaticMesh);
+        }
+    }
+
+    return ColMeshActor;
+}
+
+// Hides or shows the owning actor - a debug tool used by classes that spawn a col mesh
 simulated function HideOwner(bool bHide)
 {
     local int i;

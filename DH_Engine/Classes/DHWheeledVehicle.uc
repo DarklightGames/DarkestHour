@@ -205,16 +205,7 @@ simulated function PostBeginPlay()
     // Option to spawn a collision mesh attachment for a moving part of the vehicle that should have collision, e.g. a driver's armoured visor(s) or a ramp
     if (ColMeshStaticMesh != none && ColMeshAttachBone != '')
     {
-        CollisionMeshActor = Spawn(class'DHCollisionMeshActor', self); // vital that this vehicle owns the col mesh actor
-
-        if (CollisionMeshActor != none)
-        {
-            CollisionMeshActor.bHardAttach = true;
-            AttachToBone(CollisionMeshActor, ColMeshAttachBone);
-            CollisionMeshActor.SetRelativeRotation(Rotation - GetBoneRotation(ColMeshAttachBone)); // because attachment bone may be modelled with rotation in the reference pose
-            CollisionMeshActor.SetRelativeLocation((Location - GetBoneCoords(ColMeshAttachBone).Origin) << (Rotation - CollisionMeshActor.RelativeRotation));
-            CollisionMeshActor.SetStaticMesh(ColMeshStaticMesh);
-        }
+        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(ColMeshStaticMesh, ColMeshAttachBone, self);
     }
 
     if (Level.NetMode != NM_DedicatedServer)

@@ -81,7 +81,7 @@ simulated function PostBeginPlay()
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = AttachCollisionMesh(CollisionStaticMesh, YawBone); // attach to cannon's yaw bone, so col mesh turns with turret/cannon
+        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(CollisionStaticMesh, YawBone, self); // attach to yaw bone, so col mesh turns with turret/cannon
 
         if (CollisionMeshActor != none)
         {
@@ -1851,37 +1851,6 @@ simulated function StartTurretFire()
             TurretHatchFireEffect.SetEffectScale(FireEffectScale);
         }
     }
-}
-
-// New function to spawn, attach & align a collision static mesh actor
-simulated function DHCollisionMeshActor AttachCollisionMesh(StaticMesh ColStaticMesh, name AttachBone, optional class<DHCollisionMeshActor> ColMeshActorClass)
-{
-    local DHCollisionMeshActor ColMeshActor;
-
-    if (ColMeshActorClass == none)
-    {
-        ColMeshActorClass = class'DHCollisionMeshActor';
-    }
-
-    ColMeshActor = Spawn(ColMeshActorClass, self); // vital that this VehicleWeapon owns the col mesh actor
-
-    if (ColMeshActor != none)
-    {
-        // Attach col mesh actor to specified attachment bone, so the col mesh will move with the relevant part of the cannon mesh
-        ColMeshActor.bHardAttach = true;
-        AttachToBone(ColMeshActor, AttachBone);
-
-        // The Col mesh will have been modelled on the cannon mesh's origin, but is now centred on the attachment bone, so reposition it to align with cannon mesh
-        ColMeshActor.SetRelativeLocation((Location - GetBoneCoords(AttachBone).Origin) << Rotation);
-
-        // Finally set the static mesh for the col mesh actor (may be none, if using a subclass of DHCollisionMeshActor & that already specifies a static mesh)
-        if (ColStaticMesh != none)
-        {
-            ColMeshActor.SetStaticMesh(ColStaticMesh);
-        }
-    }
-
-    return ColMeshActor;
 }
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing cannon firing effects to be skipped

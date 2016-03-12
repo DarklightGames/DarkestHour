@@ -20,7 +20,7 @@ var     name        RampDownIdleAnim;
 var     DHCollisionMeshActor    BoatColMeshActor; // extra collision static mesh used for the whole boat, as workaround because it's modelled with wrong rotation & Z location,
                                                   // which screws up usual collision static mesh used in animation mesh, because engine doesn't apply rotation & translation to col mesh
 
-// Modified to loop either the ramp up or down idle animation on a net client // TEST rem (also set a matching destroyed vehicle animation)
+// Modified to loop either the ramp up or down idle animation on a net client (also set a matching destroyed vehicle animation)
 // No benefit on a server as visuals aren't a factor, & in terms of collision the server & clients are going to out of synch whatever we do, so there's no point trying to match
 // Also to workaround the way the boat has been modelled, which screws up the normal use of a collision static mesh in the animation mesh
 simulated function PostNetBeginPlay()
