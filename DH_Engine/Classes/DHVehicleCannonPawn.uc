@@ -1462,7 +1462,8 @@ simulated function InitializeVehicleWeapon()
 // And to give the VehicleBase a reference to this actor in its WeaponPawns array, each time we spawn on a net client (previously in PostNetReceive)
 simulated function InitializeVehicleBase()
 {
-    local int i;
+    local bool bAddSelfToWeaponPawns;
+    local int  i;
 
     if (Role < ROLE_Authority)
     {
@@ -1473,23 +1474,26 @@ simulated function InitializeVehicleBase()
         }
 
         // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
-        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
-            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+        // First check if our WeaponPawns slot doesn't exist, is empty or has an invalid member
+        if (PositionInArray >= VehicleBase.WeaponPawns.Length || VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none)
         {
-            VehicleBase.WeaponPawns[PositionInArray] = self;
+            bAddSelfToWeaponPawns = true;
 
-            return;
-        }
-
-        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
-        {
-            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+            // Then make sure that somehow another WeaponPawns slot isn't already occupied by this actor or an actor of the same class
+            for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
             {
-                return;
+                if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+                {
+                    bAddSelfToWeaponPawns = false;
+                    break;
+                }
             }
         }
 
-        VehicleBase.WeaponPawns[PositionInArray] = self;
+        if (bAddSelfToWeaponPawns)
+        {
+            VehicleBase.WeaponPawns[PositionInArray] = self;
+        }
     }
 
     // If we also have the VehicleWeapon actor, initialize anything we need to do where we need both actors

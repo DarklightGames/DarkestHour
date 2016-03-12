@@ -79,7 +79,8 @@ function Timer()
 // Also to call SetPassengerProperties when net client receives VehicleBase, & to remove stuff not relevant to a passenger pawn as it has no VehicleWeapon
 simulated function PostNetReceive()
 {
-    local int i;
+    local bool bAddSelfToWeaponPawns;
+    local int  i;
 
     // Initialize the vehicle base
     if (!bInitializedVehicleBase)
@@ -98,23 +99,26 @@ simulated function PostNetReceive()
             }
 
             // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
-            if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
-                (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+            // First check if our WeaponPawns slot doesn't exist, is empty or has an invalid member
+            if (PositionInArray >= VehicleBase.WeaponPawns.Length || VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none)
             {
-                VehicleBase.WeaponPawns[PositionInArray] = self;
+                bAddSelfToWeaponPawns = true;
 
-                return;
-            }
-
-            for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
-            {
-                if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+                // Then make sure that somehow another WeaponPawns slot isn't already occupied by this actor or an actor of the same class
+                for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
                 {
-                    return;
+                    if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+                    {
+                        bAddSelfToWeaponPawns = false;
+                        break;
+                    }
                 }
             }
 
-            VehicleBase.WeaponPawns[PositionInArray] = self;
+            if (bAddSelfToWeaponPawns)
+            {
+                VehicleBase.WeaponPawns[PositionInArray] = self;
+            }
         }
     }
     // Fail-safe so if we somehow lose our VehicleBase reference after initializing, we unset our flag & are then ready to re-initialize when we receive VehicleBase again
