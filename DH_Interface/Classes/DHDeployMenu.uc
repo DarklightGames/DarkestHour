@@ -529,7 +529,7 @@ function UpdateVehicles()
         //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
         bDisabled = VehicleClass != none &&
                     ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
-                    GRI.MaxTeamVehicles[CurrentTeam] <= 0 ||
+                    (!GRI.IgnoresMaxTeamVehiclesFlags(VehicleClass) && GRI.MaxTeamVehicles[CurrentTeam] <= 0) ||
                     GRI.GetVehiclePoolSpawnsRemaining(j) <= 0 ||
                     !GRI.IsVehiclePoolActive(j) ||
                     GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||

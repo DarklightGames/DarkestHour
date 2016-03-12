@@ -74,6 +74,7 @@ var byte                VehiclePoolMaxSpawns[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolSpawnCounts[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
+var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
 var byte                MaxTeamVehicles[2];
 
@@ -117,6 +118,7 @@ replication
         VehiclePoolSpawnCounts,
         VehiclePoolIsSpawnVehicles,
         VehiclePoolReservationCount,
+        VehiclePoolIgnoreMaxTeamVehiclesFlags,
         SpawnPointIsActives,
         SpawnVehicles,
         MaxTeamVehicles,
@@ -631,6 +633,20 @@ simulated function byte GetVehiclePoolIndex(class<Vehicle> VehicleClass)
     }
 
     return 255;
+}
+
+simulated function bool IgnoresMaxTeamVehiclesFlags(class<Vehicle> VehicleClass)
+{
+    local byte i;
+
+    i = GetVehiclePoolIndex(VehicleClass);
+
+    if (i != 255)
+    {
+        return (VehiclePoolIgnoreMaxTeamVehiclesFlags | (1 << i)) != 0;
+    }
+
+    return false;
 }
 
 //------------------------------------------------------------------------------

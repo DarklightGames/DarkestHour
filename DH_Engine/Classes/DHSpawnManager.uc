@@ -33,6 +33,7 @@ struct VehiclePool
     var() float             RespawnTime;             // respawn interval in seconds
     var() byte              MaxSpawns;               // how many vehicles can be spawned from this pool
     var() byte              MaxActive;               // how many vehicles from this pool can be active at once
+    var() bool              bIgnoreMaxTeamVehicles;  // if true, this vehicle will not add to the team's active vehicle count when spawned
 
     var() name              OnActivatedEvent;        // event to trigger when pool is activated (also gets triggered when initially activated)
     var() name              OnDeactivatedEvent;      // event to trigger when pool is deactivated (does NOT get triggered when initially deactivated)
@@ -125,7 +126,8 @@ function PostBeginPlay()
 
         // VP is valid so copy to GRI, set length of its Slots array, & pre-cache the vehicle class
         GRI.VehiclePoolVehicleClasses[i] = VehiclePools[i].VehicleClass;
-        GRi.VehiclePoolIsSpawnVehicles[i] = byte(VehiclePools[i].bIsSpawnVehicle);
+        GRI.VehiclePoolIsSpawnVehicles[i] = byte(VehiclePools[i].bIsSpawnVehicle);
+        GRI.VehiclePoolIgnoreMaxTeamVehiclesFlags = GRI.VehiclePoolIgnoreMaxTeamVehiclesFlags | (1 << i);
 
         if (VehiclePools[i].MaxActive != 255)
         {
@@ -386,7 +388,12 @@ function bool SpawnVehicle(DHPlayer C)
 
         // Increment vehicle counts
         ++TeamVehicleCounts[V.default.VehicleTeam];
-        --GRI.MaxTeamVehicles[V.default.VehicleTeam];
+
+        if (!VehiclePools[C.VehiclePoolIndex].bIgnoreMaxTeamVehicles)
+        {
+            --GRI.MaxTeamVehicles[V.default.VehicleTeam];
+        }
+
         ++GRI.VehiclePoolActiveCounts[C.VehiclePoolIndex];
         ++GRI.VehiclePoolSpawnCounts[C.VehiclePoolIndex];
 
@@ -682,7 +689,8 @@ function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return false;
     }
 
-    if (TeamVehicleCounts[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam])
+    if (!GRI.IgnoresMaxTeamVehiclesFlags(VehiclePools[C.VehiclePoolIndex].VehicleClass) &&
+        TeamVehicleCounts[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam])
     {
         return false;
     }
@@ -778,7 +786,7 @@ event VehicleDestroyed(Vehicle V)
         if (V == Vehicles[i])
         {
             --TeamVehicleCounts[Vehicles[i].VehicleTeam];
-            ++GRI.MaxTeamVehicles[Vehicles[i].VehicleTeam];
+
             Vehicles.Remove(i, 1);
 
             break;
@@ -792,6 +800,11 @@ event VehicleDestroyed(Vehicle V)
         {
             // Updates due to vehicle being destroyed
             GRI.VehiclePoolActiveCounts[i] -= 1;
+
+            if (!VehiclePools[i].bIgnoreMaxTeamVehicles)
+            {
+                ++GRI.MaxTeamVehicles[VehiclePools[i].VehicleClass.default.VehicleTeam];
+            }
 
             if (!GRI.IsVehiclePoolInfinite(i))
             {
