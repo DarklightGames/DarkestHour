@@ -102,6 +102,7 @@ var     sound       DamagedStartUpSound;        // sound played when trying to s
 var     sound       DamagedShutDownSound;       // sound played when damaged engine shuts down
 
 // Treads
+var     bool        bHasTreads;
 var     float       TreadHitMaxHeight; // height (in Unreal units) of the top of the treads above hull mesh origin, used to detect tread hits (see notes in TakeDamage)
 var     int         LeftTreadIndex, RightTreadIndex;
 var     rotator     LeftTreadPanDirection, RightTreadPanDirection;
@@ -274,7 +275,10 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Clientside treads & sound attachments
-        SetupTreads();
+        if (bHasTreads)
+        {
+            SetupTreads();
+        }
 
         if (RumbleSound != none && RumbleSoundBone != '' && InteriorRumbleSoundAttach == none)
         {
@@ -481,59 +485,62 @@ simulated function Tick(float DeltaTime)
     {
         VehicleSpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
 
-        // Vehicle is moving
-        if (VehicleSpeed > 0.1)
+        // Force player to pull back on throttle if over max speed
+        if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
         {
-            // Force player to pull back on throttle if over max speed
-            if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
-            {
-                PlayerController(Controller).aForward = -32768.0;
-            }
-
-            // Update tread & interior rumble sound volumes, based on speed
-            MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
-            UpdateMovementSound();
-
-            // Update tread & wheel movement, based on speed
-            KGetRigidBodyState(BodyState);
-            LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
-
-            if (LeftTreadPanner != none)
-            {
-                LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
-                LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-
-                for (i = 0; i < LeftWheelBones.Length; ++i)
-                {
-                    SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
-                }
-            }
-
-            if (RightTreadPanner != none)
-            {
-                RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
-                RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
-
-                for (i = 0; i < RightWheelBones.Length; ++i)
-                {
-                    SetBoneRotation(RightWheelBones[i], RightWheelRot);
-                }
-            }
+            PlayerController(Controller).aForward = -32768.0;
         }
-        // If vehicle isn't moving, zero the movement sounds & tread movement (but not if we've already done it, using MotionSoundVolume as the flag)
-        else if (MotionSoundVolume != 0.0)
+
+        if (bHasTreads)
         {
-            MotionSoundVolume = 0.0;
-            UpdateMovementSound();
-
-            if (LeftTreadPanner != none)
+            // Vehicle is moving
+            if (VehicleSpeed > 0.1)
             {
-                LeftTreadPanner.PanRate = 0.0;
+                // Update tread & interior rumble sound volumes, based on speed
+                MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
+                UpdateMovementSound();
+
+                // Update tread & wheel movement, based on speed
+                KGetRigidBodyState(BodyState);
+                LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+
+                if (LeftTreadPanner != none)
+                {
+                    LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
+                    LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+
+                    for (i = 0; i < LeftWheelBones.Length; ++i)
+                    {
+                        SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+                    }
+                }
+
+                if (RightTreadPanner != none)
+                {
+                    RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
+                    RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
+
+                    for (i = 0; i < RightWheelBones.Length; ++i)
+                    {
+                        SetBoneRotation(RightWheelBones[i], RightWheelRot);
+                    }
+                }
             }
-
-            if (RightTreadPanner != none)
+            // If vehicle isn't moving, zero the movement sounds & tread movement (but not if we've already done it, using MotionSoundVolume as the flag)
+            else if (MotionSoundVolume != 0.0)
             {
-                RightTreadPanner.PanRate = 0.0;
+                MotionSoundVolume = 0.0;
+                UpdateMovementSound();
+
+                if (LeftTreadPanner != none)
+                {
+                    LeftTreadPanner.PanRate = 0.0;
+                }
+
+                if (RightTreadPanner != none)
+                {
+                    RightTreadPanner.PanRate = 0.0;
+                }
             }
         }
     }
@@ -2485,13 +2492,35 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Set damage modifiers from the DamageType
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
-        TreadDamageMod = class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier;
+        if (bIsApc)
+        {
+            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+        }
+        else
+        {
+            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
+        }
+
+        if (bHasTreads)
+        {
+            TreadDamageMod = class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier;
+        }
     }
     else if (class<ROVehicleDamageType>(DamageType) != none)
     {
-        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
-        TreadDamageMod = class<ROVehicleDamageType>(DamageType).default.TreadDamageModifier;
+        if (bIsApc)
+        {
+            VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
+        }
+        else
+        {
+            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
+        }
+
+        if (bHasTreads)
+        {
+            TreadDamageMod = class<ROVehicleDamageType>(DamageType).default.TreadDamageModifier;
+        }
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
@@ -2752,7 +2781,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Both methods are functional - just add a TreadHitMaxHeight that isn't zero to use the new method
 
         // Check if we hit & damaged either track
-        if (TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
+        if (bHasTreads && TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
         {
             // Work out the height of the HitLocation, in relation to the hull mesh origin
             if (TreadHitMaxHeight != 0.0)
@@ -2894,20 +2923,31 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // Vehicle is still alive, so check for possibility of a penetration causing hull fire to break out
-    if (bProjectilePenetrated && !bOnFire && Health > 0)
+    // Vehicle is still alive, so check for possibility of a fire breaking out
+    if (Health > 0)
     {
-        // Random chance of hull fire breaking out
-        if (!bEngineStoppedProjectile && ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance)))
+        if (bProjectilePenetrated && !bEngineStoppedProjectile && !bOnFire)
         {
-            StartHullFire(InstigatedBy);
+            // Random chance of penetration causing a hull fire // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
+            if ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance))
+            {
+                StartHullFire(InstigatedBy);
+            }
+            // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations
+            else if (bFirstPenetratingHit)
+            {
+                bFirstPenetratingHit = false;
+                HullFireChance = FMax(0.75, HullFireChance);
+                HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+            }
         }
-        // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations
-        else if (bFirstPenetratingHit)
+
+        // If an APC's health is very low, kill the engine & start a fire
+        if (bIsApc && Health <= (HealthMax / 3) && EngineHealth > 0)
         {
-            bFirstPenetratingHit = false;
-            HullFireChance = FMax(0.75, HullFireChance);
-            HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+            EngineHealth = 0;
+            bEngineOff = true;
+            StartEngineFire(InstigatedBy);
         }
     }
 
@@ -2953,7 +2993,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
 
         SetEngine();
     }
-    // Or if engine still alive, a random chance of engine fire breaking out
+    // Or if engine still alive, a random chance of engine fire breaking out // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
     else if (DamageType != VehicleBurningDamType && !bEngineOnFire && Damage > 0 && Health > 0)
     {
         if ((bHEATPenetration && FRand() < EngineFireHEATChance) || (!bHEATPenetration && FRand() < EngineFireChance))
@@ -3513,7 +3553,7 @@ simulated function SetupTreads()
 // New function to set up damaged tracks
 simulated function SetDamagedTracks()
 {
-    if (Level.NetMode == NM_DedicatedServer)
+    if (Level.NetMode == NM_DedicatedServer || !bHasTreads)
     {
         return;
     }
@@ -3615,7 +3655,10 @@ simulated function DestroyAttachments()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        DestroyTreads();
+        if (bHasTreads)
+        {
+            DestroyTreads();
+        }
 
         if (LeftTreadSoundAttach != none)
         {
@@ -3820,10 +3863,11 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// Modified to require both tracks to be damaged to class as disabled, not just one
+// Modified to require both tracks to be damaged for vehicle to be disabled, not just one
+// Also to disable an APC if it takes major damage, as well as if engine is dead - this should give time for troops to bail out & escape before vehicle blows
 simulated function bool IsDisabled()
 {
-    return (EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged));
+    return EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged) || (bIsApc && Health <= (HealthMax / 3));
 }
 
 // Modified to eliminate "Waiting for additional crew members" message (Matt: now only used by bots)
@@ -3962,7 +4006,7 @@ function ServerKillEngine()
 // New debug exec for testing track damage
 exec function DamTrack(string Track)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
     {
         ServerDamTrack(Track);
     }
@@ -3970,7 +4014,7 @@ exec function DamTrack(string Track)
 
 function ServerDamTrack(string Track)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
     {
         if (Track ~= "L" || Track ~= "Left")
         {
@@ -4033,7 +4077,7 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
     }
 }
 
-// Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
+// Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use 'DamTrack' debug exec for testing
 // Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
 exec function DamageTank()
 {
@@ -4070,6 +4114,7 @@ defaultproperties
     bAllowRiders=true
     FirstRiderPositionIndex=-1 // unless overridden in subclass, -1 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     bMustUnbuttonToSwitchToRider=true
+    bHasTreads=true
     LeftTreadIndex=1
     RightTreadIndex=2
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)

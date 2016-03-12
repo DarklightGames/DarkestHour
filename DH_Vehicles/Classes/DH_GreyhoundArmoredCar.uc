@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundArmoredCar extends DHArmoredCar;
+class DH_GreyhoundArmoredCar extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Greyhound_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx
@@ -11,8 +11,19 @@ class DH_GreyhoundArmoredCar extends DHArmoredCar;
 
 defaultproperties
 {
+    // Properties from the old DHArmoredCar class
+    bSpecialTankTurning=false
+    PointValue=2.0
+    HeavyEngineDamageThreshold=0.25
+    DriverKillChance=900.0
+    GunnerKillChance=900.0
+    CommanderKillChance=600.0
+    GunDamageChance=1000.0
+    TraverseDamageChance=1250.0
+
+    bHasTreads=false
     bIsApc=true
-    MaxCriticalSpeed=1077.0
+    MaxCriticalSpeed=1077.0 // 64 kph
     UFrontArmorFactor=1.6
     URightArmorFactor=0.9
     ULeftArmorFactor=0.9

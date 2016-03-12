@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2341ArmoredCar extends DHArmoredCar;
+class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz234ArmoredCar_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex6.utx
@@ -11,9 +11,20 @@ class DH_Sdkfz2341ArmoredCar extends DHArmoredCar;
 
 defaultproperties
 {
+    // Properties from the old DHArmoredCar class
+    bSpecialTankTurning=false
+    PointValue=2.0
+    HeavyEngineDamageThreshold=0.25
+    DriverKillChance=900.0
+    GunnerKillChance=900.0
+    CommanderKillChance=600.0
+    GunDamageChance=1000.0
+    TraverseDamageChance=1250.0
+
+    bHasTreads=false
     bIsApc=true
     UnbuttonedPositionIndex=3
-    MaxCriticalSpeed=1039.0
+    MaxCriticalSpeed=1039.0 // 62 kph
     UFrontArmorFactor=3.0
     URightArmorFactor=0.8
     ULeftArmorFactor=0.8
