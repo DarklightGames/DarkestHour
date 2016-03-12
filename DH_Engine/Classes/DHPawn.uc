@@ -440,9 +440,6 @@ simulated event StartDriving(Vehicle V)
     local VehicleWeaponPawn WP;
     local int               i;
 
-    if (V == none) // TEMPDEBUG (Matt: re occasional bug where commander is not attached correctly)
-        Log(Tag @ "StopDriving somehow called with no Vehicle !!!");
-
     DrivenVehicle = V;
     NetUpdateTime = Level.TimeSeconds - 1.0;
     AmbientSound = none;
@@ -606,9 +603,6 @@ simulated function StopDriving(Vehicle V)
     {
         V.DetachDriver(self);
     }
-
-    if (bNeedToAttachDriver) // TEMPDEBUG (Matt: re occasional bug where commander is not attached correctly)
-        Log(Tag @ "StopDriving but still with bNeedToAttachDriver=true !!!");
 
     bPhysicsAnimUpdate = default.bPhysicsAnimUpdate;
 
