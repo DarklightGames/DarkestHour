@@ -21,7 +21,6 @@ simulated function PostBeginPlay()
     {
         WindscreenAttachment.bHardAttach = true;
         AttachToBone(WindscreenAttachment, 'Body');
-        WindscreenAttachment.SetRelativeLocation(vect(0.0, 0.0, -45.0) >> Rotation); // TEMP // TODO: Peter to adjust static meshes to lower by 45 units in Z axis, then remove this line
         WindscreenAttachment.SetStaticMesh(StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen');
         WindscreenAttachment.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
     }

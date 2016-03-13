@@ -12,7 +12,6 @@ simulated function PostBeginPlay()
 
     if (CollisionMeshActor != none)
     {
-        CollisionMeshActor.SetRelativeLocation(CollisionMeshActor.RelativeLocation + (vect(0.0, 0.0, -45.0) >> Rotation)); // TEMP // TODO: Peter to adjust static meshes to lower by 45 units in Z axis
         CollisionMeshActor.bIsBulletProof = true;
 
         if (Level.NetMode != NM_DedicatedServer)
