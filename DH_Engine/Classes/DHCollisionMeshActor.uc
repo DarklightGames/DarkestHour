@@ -143,5 +143,6 @@ defaultproperties
 {
     RemoteRole=ROLE_None
     bHidden=true
+    bWorldGeometry=false
     bStatic=false
 }
