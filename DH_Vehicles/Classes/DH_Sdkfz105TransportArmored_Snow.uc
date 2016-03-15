@@ -12,4 +12,5 @@ defaultproperties
     Skins(2)=Texture'DH_Artillery_tex.Flak38.Flak38_gun_snow'
     DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex7.Destroyed.SdKfz10_5_body_snow_dest'
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex7.Destroyed.SdKfz10_5_cabin_snow_dest'
+    DestroyedMeshSkins(2)=Combiner'DH_Artillery_tex.Flak38.Flak38_gun_dest_snow'
 }

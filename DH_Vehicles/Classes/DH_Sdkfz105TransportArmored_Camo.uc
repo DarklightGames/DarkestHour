@@ -12,4 +12,5 @@ defaultproperties
     Skins(2)=Texture'DH_Artillery_tex.Flak38.Flak38_gun_camo'
     DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex7.Destroyed.SdKfz10_5_body_camo_dest'
     DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex7.Destroyed.SdKfz10_5_cabin_camo_dest'
+    DestroyedMeshSkins(2)=Combiner'DH_Artillery_tex.Flak38.Flak38_gun_dest_camo'
 }
