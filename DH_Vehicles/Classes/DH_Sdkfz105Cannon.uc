@@ -13,6 +13,18 @@ simulated function InitializeVehicleBase()
     super.InitializeVehicleBase();
 }
 
+// Matt: temporary hack fix to stop small arms fire hitting the mounted FlaK 38 from passed damage on to the small arms vulnerable vehicle base
+// Problem is in DHProjectileFire's pre-launch trace functionality, which requires some more work to make it match a spawned bullet's richer functionality
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    if (DamageType != none && (ClassIsChildOf(DamageType, class'DHWeaponProjectileDamageType') || ClassIsChildOf(DamageType, class'DHVehicleDamageType')))
+    {
+        return;
+    }
+
+    super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
+}
+
 defaultproperties
 {
 }
