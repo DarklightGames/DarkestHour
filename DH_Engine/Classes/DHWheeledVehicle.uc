@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHWheeledVehicle extends ROWheeledVehicle
+class DHWheeledVehicle extends DHVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx

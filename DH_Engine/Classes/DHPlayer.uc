@@ -1356,21 +1356,184 @@ state Mantling
     }
 }
 
-// Matt: modified to ignore bDisableThrottle & bWantsToThrottle, which relate to waiting for crew & are now effectively deprecated
 state PlayerDriving
 {
-    // Set the throttle, steering etc for the vehicle based on the input provided
+    // Modified to ignore bDisableThrottle & bWantsToThrottle, which relate to waiting for crew & are now effectively deprecated
     function ProcessDrive(float InForward, float InStrafe, float InUp, bool InJump)
     {
         local Vehicle CurrentVehicle;
 
         CurrentVehicle = Vehicle(Pawn);
 
+        // Set the throttle, steering etc for the vehicle based on the input provided
         if (CurrentVehicle != none)
         {
             CurrentVehicle.Throttle = FClamp(InForward / 5000.0, -1.0, 1.0);
             CurrentVehicle.Steering = FClamp(-InStrafe / 5000.0, -1.0, 1.0);
             CurrentVehicle.Rise = FClamp(InUp / 5000.0, -1.0, 1.0);
+        }
+    }
+
+    // Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft
+    function PlayerMove(float DeltaTime)
+    {
+        local Vehicle          CurrentVehicle;
+        local DHArmoredVehicle AV;
+        local float            NewPing, AppliedThrottle;
+
+        CurrentVehicle = Vehicle(Pawn);
+        AV = DHArmoredVehicle(Pawn);
+
+        if (bHudCapturesMouseInputs)
+        {
+            HandleMousePlayerMove(DeltaTime);
+        }
+
+        // Update 'looking' rotation
+        UpdateRotation(DeltaTime, 2.0);
+
+        // TODO: Don't send things like aForward and aStrafe for gunners who don't need it - only servers can actually do the driving logic
+        if (Role < ROLE_Authority )
+        {
+            if ((Level.TimeSeconds - LastPingUpdate) > 4.0 && PlayerReplicationInfo != none && !bDemoOwner)
+            {
+                LastPingUpdate = Level.TimeSeconds;
+                NewPing = float(ConsoleCommand("GETPING"));
+
+                if (ExactPing < 0.006)
+                {
+                    ExactPing = FMin(0.1, 0.001 * NewPing);
+                }
+                else
+                {
+                    ExactPing = (0.99 * ExactPing) + (0.0001 * NewPing);
+                }
+
+                PlayerReplicationInfo.Ping = Min(250.0 * ExactPing, 255);
+                PlayerReplicationInfo.bReceivedPing = true;
+                OldPing = ExactPing;
+                ServerUpdatePing(1000 * ExactPing);
+            }
+
+            if (!bSkippedLastUpdate &&                              // in order to skip this update we must not have skipped the last one
+                Player.CurrentNetSpeed < 10000 &&                   // and netspeed must be low
+                (Level.TimeSeconds - ClientUpdateTime) < 0.0222 &&  // and time since last update must be short
+                bPressedJump == bLastPressedJump &&                 // and update must not contain major changes
+                (aUp - aLastUp) < 0.01 &&                           // "
+                (aForward - aLastForward) < 0.01 &&                 // "
+                (aStrafe - aLastStrafe) < 0.01                      // "
+                )
+            {
+                bSkippedLastUpdate = true;
+
+                return;
+            }
+            else
+            {
+                bSkippedLastUpdate = false;
+                ClientUpdateTime = Level.TimeSeconds;
+
+                // Save Move
+                bLastPressedJump = bPressedJump;
+                aLastUp = aUp;
+                aLastForward = aForward;
+                aLastStrafe = aStrafe;
+
+                if (CurrentVehicle != none && (bInterpolatedVehicleThrottle || (AV != none && bInterpolatedTankThrottle)))
+                {
+                    if (aForward > 0.0)
+                    {
+                        CurrentVehicle.ThrottleAmount += DeltaTime * ThrottleChangeRate;
+                    }
+                    else if (aForward < 0.0)
+                    {
+                        CurrentVehicle.ThrottleAmount -= DeltaTime * ThrottleChangeRate;
+                    }
+
+                    CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0);
+                    AppliedThrottle = CurrentVehicle.ThrottleAmount;
+
+                    // Stop if the throttle is below this amount
+                    if (Abs(AppliedThrottle) < 500.0)
+                    {
+                        AppliedThrottle = 0.0;
+                    }
+
+                    // Brakes are on, so zero the throttle
+                    if (aUp > 0.0)
+                    {
+                        AppliedThrottle = 0.0;
+                        CurrentVehicle.ThrottleAmount = 0.0;
+                    }
+
+                    CurrentVehicle.Throttle = FClamp(AppliedThrottle / 5000.0, -1.0, 1.0 );
+                    CurrentVehicle.Steering = FClamp(-aStrafe / 5000.0, -1.0, 1.0 );
+                    CurrentVehicle.Rise = FClamp(aUp / 5000.0, -1.0, 1.0 );
+
+                    ServerDrive(AppliedThrottle, aStrafe, aUp, bPressedJump, (32767 & (Rotation.Pitch / 2)) * 32768 + (32767 & (Rotation.Yaw / 2)));
+                }
+                else
+                {
+                    if (CurrentVehicle != none)
+                    {
+                        CurrentVehicle.Throttle = FClamp(aForward / 5000.0, -1.0, 1.0);
+                        CurrentVehicle.Steering = FClamp(-aStrafe / 5000.0, -1.0, 1.0);
+                        CurrentVehicle.Rise = FClamp(aUp / 5000.0, -1.0, 1.0);
+                    }
+
+                    ServerDrive(aForward, aStrafe, aUp, bPressedJump, (32767 & (Rotation.Pitch / 2)) * 32768 + (32767 & (Rotation.Yaw / 2)));
+                }
+            }
+        }
+        else
+        {
+            if (CurrentVehicle != none && (bInterpolatedVehicleThrottle || (AV != none && bInterpolatedTankThrottle)))
+            {
+                if (aForward > 0.0)
+                {
+                    CurrentVehicle.ThrottleAmount += DeltaTime * ThrottleChangeRate;
+                }
+                else if (aForward < 0.0)
+                {
+                    CurrentVehicle.ThrottleAmount -= DeltaTime * ThrottleChangeRate;
+                }
+
+                CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0 );
+                AppliedThrottle = CurrentVehicle.ThrottleAmount;
+
+                // Stop if the throttle is below this amount
+                if (Abs(AppliedThrottle) < 500.0)
+                {
+                    AppliedThrottle = 0.0;
+                }
+
+                // Brakes are on, so zero the throttle
+                if (aUp > 0.0)
+                {
+                    AppliedThrottle = 0.0;
+                    CurrentVehicle.ThrottleAmount = 0.0;
+                }
+
+                ProcessDrive(AppliedThrottle, aStrafe, aUp, bPressedJump);
+            }
+            else
+            {
+                ProcessDrive(aForward, aStrafe, aUp, bPressedJump);
+            }
+        }
+
+        // If the vehicle is being controlled here, set replicated variables
+        if (CurrentVehicle != none)
+        {
+            if (bFire == 0 && CurrentVehicle.bWeaponIsFiring)
+            {
+                CurrentVehicle.ClientVehicleCeaseFire(false);
+            }
+
+            if (bAltFire == 0 && CurrentVehicle.bWeaponIsAltFiring)
+            {
+                CurrentVehicle.ClientVehicleCeaseFire(true);
+            }
         }
     }
 }
@@ -2983,26 +3146,26 @@ exec function DriverCollisionDebug()
 exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
     local ROWheeledVehicle V;
-    local ROTreadCraft     TC;
+    local DHArmoredVehicle AV;
     local DHWheeledVehicle WV;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        TC = ROTreadCraft(V);
+        AV = DHArmoredVehicle(V);
 
-        if (TC != none)
+        if (AV != none)
         {
             if (NewValue == 0) // entering zero resets tread speed to vehicle's default value
             {
-                NewValue = TC.default.TreadVelocityScale;
+                NewValue = AV.default.TreadVelocityScale;
             }
             else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing tread speed, instead of as new setting, e.g. to increment or decrement speed gradually
             {
-                NewValue += TC.TreadVelocityScale;
+                NewValue += AV.TreadVelocityScale;
             }
 
-            Log(TC.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ TC.TreadVelocityScale $ ")");
-            TC.TreadVelocityScale = NewValue;
+            Log(AV.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ AV.TreadVelocityScale $ ")");
+            AV.TreadVelocityScale = NewValue;
         }
         else
         {
@@ -3030,26 +3193,26 @@ exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
     local ROWheeledVehicle V;
-    local ROTreadCraft     TC;
+    local DHArmoredVehicle AV;
     local DHWheeledVehicle WV;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        TC = ROTreadCraft(V);
+        AV = DHArmoredVehicle(V);
 
-        if (TC != none)
+        if (AV != none)
         {
             if (NewValue == 0) // entering zero resets wheel speed to vehicle's default value
             {
-                NewValue = TC.default.WheelRotationScale;
+                NewValue = AV.default.WheelRotationScale;
             }
             else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing wheel speed, instead of as new setting, e.g. to increment or decrement speed gradually
             {
-                NewValue += TC.WheelRotationScale;
+                NewValue += AV.WheelRotationScale;
             }
 
-            Log(TC.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ TC.WheelRotationScale $ ")");
-            TC.WheelRotationScale = NewValue;
+            Log(AV.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ AV.WheelRotationScale $ ")");
+            AV.WheelRotationScale = NewValue;
         }
         else
         {

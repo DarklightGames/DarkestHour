@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHArmoredVehicle extends ROTreadCraft
+class DHArmoredVehicle extends DHVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
@@ -47,7 +47,7 @@ struct PassengerPawn
 };
 
 // General
-var     array<Material> CannonSkins;        // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
+var     array<material> CannonSkins;        // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     bool        bIsSpawnVehicle;        // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
@@ -91,7 +91,7 @@ var     float       OpticsDamageChance;         // chance that shrapnel will bre
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
 var     float       TreadDamageThreshold;       // minimum TreadDamageModifier in DamageType to possibly break treads
-var array<Material> DestroyedMeshSkins;         // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
+var array<material> DestroyedMeshSkins;         // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 
 // Engine
 var     bool        bEngineOff;                 // tank engine is simply switched off
@@ -167,6 +167,93 @@ var     bool        bDebugTreadText;
 var     bool        bLogPenetration;
 var     bool        bDebugExitPositions;
 
+//=============================================================================
+// ROTREADCRAFT variables
+//=============================================================================
+
+var()   float                   MaxPitchSpeed;
+var     VariableTexPanner       LeftTreadPanner, RightTreadPanner;
+var()   float                   TreadVelocityScale;
+
+// Sound attachment actor variables
+var()       sound               LeftTreadSound;    // sound for the left tread squeaking
+var()       sound               RightTreadSound;   // sound for the right tread squeaking
+var()       sound               RumbleSound;       // interior rumble sound
+var         bool                bPlayTreadSound;   // unused
+var         float               TreadSoundVolume;  // unused
+var         ROSoundAttachment   LeftTreadSoundAttach;
+var         ROSoundAttachment   RightTreadSoundAttach;
+var         ROSoundAttachment   InteriorRumbleSoundAttach;
+var         float               MotionSoundVolume;  // replace with function parameter in UpdateMovementSound(), same as DHWheeledVehicle
+var()       name                LeftTrackSoundBone;
+var()       name                RightTrackSoundBone;
+var()       name                RumbleSoundBone;
+var()       sound               TrackDamagedSound; // sound to play when the track is damaged
+
+// Tank hud vars
+var     ROTankCannon        CannonTurret; // a pointer to this tank's turret weapon  // update to DH version
+var     VehicleWeapon       HullMG;       // a pointer to this tank's hull mg weapon // update to DH version
+var     TexRotator          TurretRot;    // unused
+
+// Tank hud icons
+var     TexRotator          VehicleHudTurret;
+var     TexRotator          VehicleHudTurretLook;
+var     float               VehicleHudThreadsPosX[2]; // 0 = left thread, 1 = right thread
+var     float               VehicleHudThreadsPosY;    // both threads always draw at same Y pos
+var     float               VehicleHudThreadsScale;   // both threads always draw with same scale
+
+var     material            TankIcon; // all these are unused
+var     material            RedDot;
+var     material            GrayDot;
+var     material            TreadIcon;
+var()   float               DriverDotX;
+var()   float               DriverDotY;
+var()   float               CannonDotX;
+var()   float               CannonDotY;
+var()   float               HullMGDotX;
+var()   float               HullMGDotY;
+var()   float               LeftTreadX;
+var()   float               LeftTreadY;
+var()   float               RightTreadX;
+var()   float               RightTreadY;
+
+// Vehicle animation variables // all unused
+var     name                IdleHatchOpenAnim;
+var     name                IdleHatchClosedAnim;
+var     name                HatchOpenAnim;
+var     name                HatchCloseAnim;
+
+var()   InterpCurve         AddedLatFriction; // deprecated in DHAV
+
+// Wheel animation
+var()   array<name>         LeftWheelBones;     // for animation only - the bone names for the wheels on the left side
+var()   array<name>         RightWheelBones;    // for animation only - the bone names for the wheels on the right side
+
+var     rotator             LeftWheelRot;       // keep track of the left wheels rotational speed for animation
+var     rotator             RightWheelRot;      // keep track of the right wheels rotational speed for animation
+var()   int                 WheelRotationScale;
+
+// Armor values
+var     int                 FrontArmorFactor; // deprecated in DHAV
+var     int                 RearArmorFactor;  // deprecated in DHAV
+var     int                 SideArmorFactor;  // deprecated in DHAV
+var     bool                bHasAddedSideArmor; // this tank has special added side armor skirts (schurzen)
+
+var     float               TreadHitMinAngle;   // any hits bigger than this angle are considered tread hits
+var     bool                bLeftTrackDamaged;  // the left track has been damaged
+var     bool                bRightTrackDamaged; // the left track has been damaged
+var     float               IntendedThrottle;   // revving the engine up when you can't move // deprecated in DHAV
+var     bool                bWantsToThrottle;   // trying to throttle, but can't move        // deprecated in DHAV
+
+var     float               LinTurnSpeed; // really only a local variable in Tick()
+
+var     bool                bDebugPenetration;  // display penetration debugging info // deprecated in DHAV
+var()   float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side the tank was hit on
+
+//=============================================================================
+// END ROTREADCRAFT variables
+//=============================================================================
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -181,14 +268,24 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
         ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones in debug mode only
+
+//=============================================================================
+// ROTREADCRAFT replication
+//=============================================================================
+
+    reliable if (bNetDirty && Role==ROLE_Authority && bDisableThrottle) // deprecated in DHAV
+            bWantsToThrottle;
+
+    reliable if (bNetDirty && Role==ROLE_Authority)
+            bRightTrackDamaged, bLeftTrackDamaged;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to create passenger pawn classes from PassengerWeapons array, to skip lots of pointless stuff on net client if an already destroyed vehicle gets replicated,
-// to make net clients show unoccupied rider positions on the HUD vehicle icon, to set fire damage properties, to select any random schurzen model,
+// Modified to create passenger pawn classes from PassengerWeapons array, to make net clients show unoccupied rider positions on the HUD vehicle icon,
+// to set fire damage properties, to select any random schurzen model,
 // to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
 simulated function PostBeginPlay()
 {
@@ -290,7 +387,7 @@ simulated function PostBeginPlay()
 // And to skip lots of pointless stuff on a net client if an already destroyed vehicle gets replicated
 simulated function PostNetBeginPlay()
 {
-    super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
+    super.PostNetBeginPlay();
 
     // Net client initialisation, based on replicated info about driving status/position
     if (Role < ROLE_Authority)
@@ -537,7 +634,7 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    super(ROWheeledVehicle).Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
     // Disable Tick if vehicle isn't moving & has no driver
     if (!bDriving && ForwardVel ~= 0.0)
@@ -1992,7 +2089,7 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber) // TEMP - no longer a ShouldPenetrate function, so can rename this
 {
     local float  HitAngleDegrees, Side, InAngle;
     local vector LocDir, HitDir, X, Y, Z;
@@ -4071,7 +4168,7 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
 
 // Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use 'DamTrack' debug exec for testing
 // Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
-exec function DamageTank()
+exec function DamageTank() // TEMP - no longer modified
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
@@ -4096,6 +4193,934 @@ exec function SetExhRot(int Index, int NewX, int NewY, int NewZ)
         }
     }
 }
+
+//=============================================================================
+// ROTREADCRAFT functions
+//=============================================================================
+
+/*
+// Temp code to get the bots using tanks better
+function Vehicle FindEntryVehicle(Pawn P) // overridden in DHAV
+{
+    local Bot B;
+    local int i;
+
+    B = Bot(P.Controller);
+
+    if (B == none || WeaponPawns.length == 0 || !IsVehicleEmpty())
+    {
+        return super.FindEntryVehicle(P);
+    }
+
+    for (i = WeaponPawns.length - 1; i >= 0; --i)
+    {
+        if (WeaponPawns[i].Driver == none)
+        {
+            return WeaponPawns[i];
+        }
+    }
+
+    return super.FindEntryVehicle(P);
+}
+*/
+
+simulated function bool HitPenetrationPoint(vector HitLocation, vector HitRay) // deprecated in DHAV (only used by deprecated function 'ShouldPenetrate')
+{
+    local bool bHitAPoint;
+    local int  i;
+
+    for (i = 0; i < VehHitpoints.Length; ++i)
+    {
+        if (VehHitpoints[i].bPenetrationPoint && IsPointShot(Hitlocation, 300.0 * HitRay, 1.0, i))
+        {
+            if (VehHitpoints[i].HitPointType == HP_Driver)
+            {
+                if (Driver != none && !DriverPositions[DriverPositionIndex].bExposed)
+                {
+                    continue;
+                }
+            }
+
+            bHitAPoint = true;
+            break;
+        }
+    }
+
+    if (bHitAPoint)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/*
+// Returns true if this tank is disabled
+simulated function bool IsDisabled() // overridden in DHAV
+{
+    return ((EngineHealth <= 0) || bLeftTrackDamaged || bRightTrackDamaged);
+}
+
+simulated function PostBeginPlay() // overridden in DHAV
+{
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupTreads();
+
+        if (LeftTreadSoundAttach == none)
+        {
+            LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
+            LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+            AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
+        }
+
+        if (RightTreadSoundAttach == none)
+        {
+            RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
+            RightTreadSoundAttach.AmbientSound = RightTreadSound;
+            AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
+        }
+
+        if (InteriorRumbleSoundAttach == none)
+        {
+            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
+            InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
+            AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
+        }
+    }
+}
+
+simulated function PostNetBeginPlay() // overridden in DHAV
+{
+    local int x;
+
+    super.PostNetBeginPlay();
+
+    for (x = 0; x < Weapons.length; x++)
+    {
+        if (ROTankCannon(Weapons[x]) != none)
+        {
+           CannonTurret= ROTankCannon(Weapons[x]);
+           break;
+        }
+    }
+}
+
+simulated function UpdatePrecacheMaterials() // overridden in DHAV
+{
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.sparkfinal2');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.radialexplosion_1frame');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.Weapons.muzzle_4frame3rd');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.shrapnel1');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.concrete_chunks');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.snowfinal2');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.snowchunksfinal');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.waterring_2frame');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.watersplashcloud');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.watersplatter2');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.watersmoke');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.woodchunksfinal');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.dirtchunks');
+
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    Level.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+
+    super.UpdatePrecacheMaterials();
+}
+
+static function StaticPrecache(LevelInfo L) // overridden in DHAV
+{
+    super.StaticPrecache(L);
+
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.sparkfinal2');
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.radialexplosion_1frame');
+    L.AddPrecacheMaterial(Material'Effects_Tex.Weapons.muzzle_4frame3rd');
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.shrapnel1');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.concrete_chunks');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.snowfinal2');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.snowchunksfinal');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.waterring_2frame');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.watersplashcloud');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.watersplatter2');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.watersmoke');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.woodchunksfinal');
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
+    L.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.dirtchunks');
+
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    L.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+}
+
+function DriverLeft() // overridden in DHAV
+{
+    // Not moving, so no motion sound
+    MotionSoundVolume = 0.0;
+    UpdateMovementSound();
+
+    super.DriverLeft();
+}
+
+simulated event DrivingStatusChanged() // overridden in DHAV
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving)
+    {
+        if (LeftTreadPanner != none)
+            LeftTreadPanner.PanRate = 0.0;
+
+        if (RightTreadPanner != none)
+            RightTreadPanner.PanRate = 0.0;
+
+        // Not moving, so no motion sound
+        MotionSoundVolume = 0.0;
+        UpdateMovementSound();
+    }
+}
+
+simulated function UpdateMovementSound() // overridden in DHAV
+{
+    if (LeftTreadSoundAttach != none && !bLeftTrackDamaged)
+    {
+       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
+    }
+
+    if (RightTreadSoundAttach != none && !bRightTrackDamaged)
+    {
+       RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
+    }
+
+    if (InteriorRumbleSoundAttach != none)
+    {
+       InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume;
+    }
+}
+
+simulated function Destroyed() // overridden in DHAV
+{
+    DestroyTreads();
+
+    if (LeftTreadSoundAttach != none)
+        LeftTreadSoundAttach.Destroy();
+
+    if (RightTreadSoundAttach != none)
+        RightTreadSoundAttach.Destroy();
+
+    if (InteriorRumbleSoundAttach != none)
+        InteriorRumbleSoundAttach.Destroy();
+
+    super.Destroyed();
+}
+
+simulated function SetupTreads()
+{
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner')); // overridden in DHAV
+
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[2];
+        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[2] = LeftTreadPanner;
+    }
+
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[3];
+        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[3] = RightTreadPanner;
+    }
+}
+*/
+
+simulated function DestroyTreads()
+{
+    if (LeftTreadPanner != none)
+    {
+        Level.ObjectPool.FreeObject(LeftTreadPanner);
+        LeftTreadPanner = none;
+    }
+    if (RightTreadPanner != none)
+    {
+        Level.ObjectPool.FreeObject(RightTreadPanner);
+        RightTreadPanner = none;
+    }
+}
+
+/*
+simulated function Tick(float DeltaTime) // overridden in DHAV
+{
+    local float MotionSoundTemp;
+    local KRigidBodyState BodyState;
+    local float MySpeed;
+    local int i;
+
+    KGetRigidBodyState(BodyState);
+    LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+
+    // Only need these effects client side
+    if (Level.Netmode != NM_DedicatedServer)
+    {
+        if (bDisableThrottle)
+        {
+            if (bWantsToThrottle)
+            {
+                IntendedThrottle=1.0;
+            }
+            else if (IntendedThrottle > 0)
+            {
+                IntendedThrottle -= (DeltaTime * 0.5);
+            }
+            else
+            {
+                IntendedThrottle=0;
+            }
+
+            if (bLeftTrackDamaged)
+            {
+                if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                    LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
+
+                LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
+            }
+
+            if (bRightTrackDamaged)
+            {
+                if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                    RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
+
+                RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
+            }
+
+            SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
+        }
+        else
+        {
+            if (SoundVolume != default.SoundVolume)
+            {
+                SoundVolume = default.SoundVolume;
+            }
+        }
+
+        MySpeed = VSize(Velocity);
+
+        // Setup sounds that are dependent on velocity
+        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+
+        if (MySpeed > 0.1)
+        {
+            MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
+        }
+        else
+        {
+            MotionSoundVolume=0;
+        }
+
+        UpdateMovementSound();
+
+        if (LeftTreadPanner != none)
+        {
+            LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
+
+            if (Velocity dot Vector(Rotation) < 0)
+                LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
+
+            LeftTreadPanner.PanRate += LinTurnSpeed;
+        }
+
+        if (RightTreadPanner != none)
+        {
+            RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
+
+            if (Velocity Dot Vector(Rotation) < 0)
+                RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
+
+            RightTreadPanner.PanRate -= LinTurnSpeed;
+        }
+
+        // Animate the tank wheels
+        LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+        RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
+
+        for (i=0; i<LeftWheelBones.Length; i++)
+        {
+            SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+        }
+
+        for (i=0; i<RightWheelBones.Length; i++)
+        {
+            SetBoneRotation(RightWheelBones[i], RightWheelRot);
+        }
+    }
+
+    // This will slow the tank way down when it tries to turn at high speeds
+    if (ForwardVel > 0.0)
+        WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
+    else
+        WheelLatFrictionScale = default.WheelLatFrictionScale;
+
+    super.Tick(DeltaTime);
+}
+*/
+
+function ClientVehicleCeaseFire(bool bWasAltFire)
+{
+    local PlayerController PC;
+
+    if (!bWasAltFire)
+    {
+        super.ClientVehicleCeaseFire(bWasAltFire);
+
+        return;
+    }
+
+    PC = PlayerController(Controller);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    bWeaponIsAltFiring = false;
+    PC.StopZoom();
+}
+
+function bool RecommendLongRangedAttack()
+{
+    return true;
+}
+/*
+function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation) // overridden in DHAV
+{
+    local int i;
+    local float damageScale, dist;
+    local vector dir;
+
+    //if driver has collision, whatever is causing the radius damage will hit the driver by itself
+    if (EventInstigator == none || Driver == none || Driver.bCollideActors || bRemoteControlled)
+        return;
+
+    dir = Driver.Location - HitLocation;
+    dist = FMax(1, VSize(dir));
+    dir = dir/dist;
+    damageScale = 1 - FMax(0,(dist - Driver.CollisionRadius)/DamageRadius);
+
+    if (damageScale <= 0)
+        return;
+
+    if (Driver != none && DriverPositions[DriverPositionIndex].bExposed)
+    {
+        Driver.SetDelayedDamageInstigatorController(EventInstigator);
+        Driver.TakeDamage(damageScale * DamageAmount, EventInstigator.Pawn, Driver.Location - 0.5 * (Driver.CollisionHeight + Driver.CollisionRadius) * dir,
+            damageScale * Momentum * dir, DamageType);
+    }
+
+    for (i = 0; i < WeaponPawns.length; i++)
+        if (!WeaponPawns[i].bCollideActors)
+            WeaponPawns[i].DriverRadiusDamage(DamageAmount, DamageRadius, EventInstigator, DamageType, Momentum, HitLocation);
+}
+
+function DamageTrack(bool bLeftTrack) // overridden in DHAV
+{
+    if (bLeftTrack)
+    {
+        bDisableThrottle=true;
+        bLeftTrackDamaged=true;
+    }
+    else
+    {
+        bDisableThrottle=true;
+        bRightTrackDamaged=true;
+    }
+}
+*/
+
+function bool StronglyRecommended(Actor S, int TeamIndex, Actor Objective)
+{
+    return true;
+}
+
+/*
+function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex) // overridden in DHAV
+{
+    local vector LocDir, HitDir;
+    local float HitAngle,Side, InAngle;
+    local vector X,Y,Z;
+    local int i;
+    local float VehicleDamageMod;
+    local int HitPointDamage;
+    local int InstigatorTeam;
+    local controller InstigatorController;
+
+    // Fix for suicide death messages
+    if (DamageType == class'Suicided')
+    {
+        DamageType = Class'ROSuicided';
+        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    }
+    else if (DamageType == class'ROSuicided')
+    {
+        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    }
+
+
+    // Quick fix for the thing giving itself impact damage
+    if (instigatedBy == self)
+        return;
+
+    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
+    if (!bDriverAlreadyEntered)
+    {
+        if (InstigatedBy != none)
+            InstigatorController = instigatedBy.Controller;
+
+        if (InstigatorController == none)
+        {
+            if (DamageType.default.bDelayedDamage)
+                InstigatorController = DelayedDamageInstigatorController;
+        }
+
+        if (InstigatorController != none)
+        {
+            InstigatorTeam = InstigatorController.GetTeamNum();
+
+            if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
+            {
+                if (GetTeamNum() == InstigatorTeam)
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    // Modify the damage based on what it should do to the vehicle
+    if (DamageType != none)
+    {
+        if (class<ROWeaponDamageType>(DamageType) != none)
+            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
+        else if (class<ROVehicleDamageType>(DamageType) != none)
+            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
+    }
+
+    for (i=0; i<VehHitpoints.Length; i++)
+    {
+        HitPointDamage=Damage;
+
+        if (VehHitpoints[i].HitPointType == HP_Driver)
+        {
+            // Damage for large weapons
+            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            {
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
+                {
+                    Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+                }
+            }
+            // Damage for small (non penetrating) arms
+            else
+            {
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
+                {
+                    Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+                }
+            }
+        }
+        else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
+        {
+            HitPointDamage *= VehHitpoints[i].DamageMultiplier;
+            HitPointDamage *= VehicleDamageMod;
+
+            if (VehHitpoints[i].HitPointType == HP_Engine)
+            {
+                DamageEngine(HitPointDamage, instigatedBy, Hitlocation, Momentum, damageType);
+            }
+            else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
+            {
+                Damage *= VehHitpoints[i].DamageMultiplier;
+                break;
+            }
+        }
+    }
+
+    LocDir = vector(Rotation);
+
+    LocDir.Z = 0;
+    HitDir =  Hitlocation - Location;
+    HitDir.Z = 0;
+    HitAngle = Acos(Normal(LocDir) dot Normal(HitDir));
+
+    // Convert the angle into degrees from radians
+    HitAngle *= 57.2957795131;
+
+    GetAxes(Rotation,X,Y,Z);
+    Side = Y dot HitDir;
+
+    if (side >= 0)
+    {
+       HitAngle = 360 + (HitAngle* -1);
+    }
+
+    if (HitAngle >= FrontRightAngle && Hitangle < RearRightAngle)
+    {
+        HitDir = Hitlocation - Location;
+
+        InAngle= Acos(Normal(HitDir) dot Normal(Z));
+
+        if (InAngle > TreadHitMinAngle)
+        {
+            if (DamageType != none && class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= 1.0)
+            {
+                if (!bLeftTrackDamaged && !bRightTrackDamaged && instigatedBy != none && instigatedBy.PlayerReplicationInfo != none &&
+                    ROSteamStatsAndAchievements(instigatedBy.PlayerReplicationInfo.SteamStatsAndAchievements) != none)
+                {
+                    ROSteamStatsAndAchievements(instigatedBy.PlayerReplicationInfo.SteamStatsAndAchievements).AddKnockedOutTracks();
+                }
+
+                DamageTrack(true);
+                return;
+            }
+        }
+    }
+    else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)
+    {
+        HitDir = Hitlocation - Location;
+
+        InAngle= Acos(Normal(HitDir) dot Normal(Z));
+
+        if (InAngle > TreadHitMinAngle)
+        {
+            if (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
+                class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= 1.0)
+            {
+                if (!bLeftTrackDamaged && !bRightTrackDamaged && instigatedBy != none && instigatedBy.PlayerReplicationInfo != none &&
+                     ROSteamStatsAndAchievements(instigatedBy.PlayerReplicationInfo.SteamStatsAndAchievements) != none)
+                {
+                    ROSteamStatsAndAchievements(instigatedBy.PlayerReplicationInfo.SteamStatsAndAchievements).AddKnockedOutTracks();
+                }
+
+                DamageTrack(false);
+                return;
+            }
+        }
+    }
+
+    // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
+    Damage *= VehicleDamageMod;
+
+    super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+}
+*/
+
+simulated function float GetPenetrationProbability(float AOI) // deprecated in DHAV (only used by deprecated function 'ShouldPenetrate')
+{
+    local float Index;
+
+    Index = (AOI / 90.0) * 12.0;
+
+    if (Index <= 1.0)       return 0.0;
+    else if (Index <= 2.0)  return 0.01;
+    else if (Index <= 3.0)  return 0.03;
+    else if (Index <= 4.0)  return 0.08;
+    else if (Index <= 5.0)  return 0.17;
+    else if (Index <= 6.0)  return 0.28;
+    else if (Index <= 7.0)  return 0.42;
+    else if (Index <= 8.0)  return 0.58;
+    else if (Index <= 9.0)  return 0.72;
+    else if (Index <= 10.0) return 0.83;
+    else if (Index <= 11.0) return 0.92;
+    else                    return 1.0;
+}
+
+simulated function bool ShouldPenetrate(vector HitLocation, vector HitRotation, int PenetrationNumber, optional class<DamageType> DamageType) // deprecated in DHAV
+{
+    local vector LocDir, HitDir;
+    local float HitAngle,Side,InAngle;
+    local vector X,Y,Z;
+    local float InAngleDegrees;
+    local rotator AimRot;
+
+    if (HitPenetrationPoint(HitLocation, HitRotation))
+    {
+        return true;
+    }
+
+    // Figure out which side we hit
+    LocDir = vector(Rotation);
+    LocDir.Z = 0;
+    HitDir =  Hitlocation - Location;
+    HitDir.Z = 0;
+    HitAngle = Acos(Normal(LocDir) dot Normal(HitDir));
+
+    //  Penetration Debugging
+    if (bDebugPenetration)
+    {
+        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+    }
+
+    // Convert the angle into degrees from radians
+    HitAngle*=57.2957795131;
+    GetAxes(Rotation,X,Y,Z);
+    Side = Y dot HitDir;
+
+    //  Penetration Debugging
+    if (bDebugPenetration)
+    {
+        ClearStayingDebugLines();
+        AimRot = Rotation;
+        AimRot.Yaw += (FrontLeftAngle/360.0)*65536;
+        DrawStayingDebugLine(Location, Location + 2000*vector(AimRot),0, 255, 0);
+        AimRot = Rotation;
+        AimRot.Yaw += (FrontRightAngle/360.0)*65536;
+        DrawStayingDebugLine(Location, Location + 2000*vector(AimRot),255, 255, 0);
+        AimRot = Rotation;
+        AimRot.Yaw += (RearRightAngle/360.0)*65536;
+        DrawStayingDebugLine(Location, Location + 2000*vector(AimRot),0, 0, 255);
+        AimRot = Rotation;
+        AimRot.Yaw += (RearLeftAngle/360.0)*65536;
+        DrawStayingDebugLine(Location, Location + 2000*vector(AimRot),0, 0, 0);
+    }
+
+    if (side >= 0)
+    {
+       HitAngle = 360 + (HitAngle* -1);
+    }
+
+    if (HitAngle >= FrontLeftAngle || Hitangle < FrontRightAngle)
+    {
+       InAngle= Acos(Normal(-HitRotation) dot Normal(X));
+       InAngleDegrees = 90-(InAngle * 57.2957795131);
+
+        //  Penetration Debugging
+        if (bDebugPenetration)
+        {
+            //ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+               log ("We hit the front of the vehicle!!!!");
+               log("InAngle = "$InAngle$" degrees "$InAngleDegrees);
+            log("PenetrationNumber = "$PenetrationNumber);
+            log("FrontArmorFactor = "$FrontArmorFactor);
+            log("Probability % = "$GetPenetrationProbability(InAngleDegrees));
+            log("Total Power = "$(PenetrationNumber * GetPenetrationProbability(InAngleDegrees)));
+            log("Final Calc = "$(FrontArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees)))$" Penetrated = "$!((FrontArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01));
+        }
+
+        if ((FrontArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01)
+            return false;
+        else
+            return true;
+    }
+    else if (HitAngle >= FrontRightAngle && Hitangle < RearRightAngle)
+    {
+        // Don't penetrate with fausts if there is added side armor
+        if (bHasAddedSideArmor && DamageType != none && DamageType.default.bArmorStops)
+        {
+            return false;
+        }
+
+        HitDir = Hitlocation - Location;
+
+        InAngle= Acos(Normal(HitDir) dot Normal(Z));
+
+        if (InAngle > TreadHitMinAngle)
+        {
+            return true;
+        }
+
+           InAngle= Acos(Normal(-HitRotation) dot Normal(-Y));
+        InAngleDegrees = 90-(InAngle * 57.2957795131);
+
+        //  Penetration Debugging
+        if (bDebugPenetration)
+        {
+            //ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+               log ("We hit the left side of the vehicle!!!!");
+               log("InAngle = "$InAngle$" degrees "$InAngleDegrees);
+            log("PenetrationNumber = "$PenetrationNumber);
+            log("SideArmorFactor = "$SideArmorFactor);
+            log("Probability % = "$GetPenetrationProbability(InAngleDegrees));
+            log("Total Power = "$(PenetrationNumber * GetPenetrationProbability(InAngleDegrees)));
+            log("Final Calc = "$(SideArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees)))$" Penetrated = "$!((FrontArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01));
+        }
+
+        if ((SideArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01)
+            return false;
+        else
+            return true;
+    }
+    else if (HitAngle >= RearRightAngle && Hitangle < RearLeftAngle)
+    {
+        InAngle= Acos(Normal(-HitRotation) dot Normal(-X));
+        InAngleDegrees = 90-(InAngle * 57.2957795131);
+
+        //  Penetration Debugging
+        if (bDebugPenetration)
+        {
+            //ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            log ("We hit the back of the vehicle!!!!");
+               log("InAngle = "$InAngle$" degrees "$InAngleDegrees);
+            log("PenetrationNumber = "$PenetrationNumber);
+            log("RearArmorFactor = "$RearArmorFactor);
+            log("Probability % = "$GetPenetrationProbability(InAngleDegrees));
+            log("Total Power = "$(PenetrationNumber * GetPenetrationProbability(InAngleDegrees)));
+            log("Final Calc = "$(RearArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees)))$" Penetrated = "$!((FrontArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01));
+        }
+
+        if ((RearArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01)
+            return false;
+        else
+            return true;
+    }
+    else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)
+    {
+        // Don't penetrate with fausts if there is added side armor
+        if (bHasAddedSideArmor && DamageType != none && DamageType.default.bArmorStops)
+        {
+            return false;
+        }
+
+        HitDir = Hitlocation - Location;
+
+        InAngle= Acos(Normal(HitDir) dot Normal(Z));
+
+        if (InAngle > TreadHitMinAngle)
+        {
+            return true;
+        }
+
+           InAngle= Acos(Normal(-HitRotation) dot Normal(Y));
+        InAngleDegrees = 90-(InAngle * 57.2957795131);
+
+        //  Penetration Debugging
+        if (bDebugPenetration)
+        {
+            //ClearStayingDebugLines();
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+               log ("We hit the right side of the vehicle!!!!");
+               log("InAngle = "$InAngle$" degrees "$InAngleDegrees);
+            log("PenetrationNumber = "$PenetrationNumber);
+            log("SideArmorFactor = "$SideArmorFactor);
+            log("Probability % = "$GetPenetrationProbability(InAngleDegrees));
+            log("Total Power = "$(PenetrationNumber * GetPenetrationProbability(InAngleDegrees)));
+            log("Final Calc = "$(SideArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees)))$" Penetrated = "$!((FrontArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01));
+        }
+
+        if ((SideArmorFactor - (PenetrationNumber * GetPenetrationProbability(InAngleDegrees))) >= 0.01)
+            return false;
+        else
+            return true;
+    }
+    else
+    {
+       log ("We shoulda hit something!!!!");
+       return false;
+    }
+}
+
+function float ModifyThreat(float Current, Pawn Threat)
+{
+    local vector to, t;
+    local float  r;
+
+    if (Vehicle(Threat) != none)
+    {
+        Current += 0.2;
+
+        if (DHArmoredVehicle(Threat) != none)
+        {
+            Current += 0.2;
+
+            // Big bonus points for perpendicular tank targets
+            to = Normal(Threat.Location - Location);
+            to.z = 0.0;
+            t = Normal(vector(Threat.Rotation));
+            t.z = 0.0;
+            r = to dot t;
+
+            if ((r >= 0.90630 && r < -0.73135) || (r >= -0.73135 && r < 0.90630))
+            {
+                Current += 0.3;
+            }
+        }
+        else if (ROWheeledVehicle(Threat) != none && ROWheeledVehicle(Threat).bIsAPC)
+        {
+            Current += 0.1;
+        }
+    }
+    else
+    {
+        Current += 0.25;
+    }
+
+    return Current;
+}
+
+/*
+simulated function UpdateTurretReferences() // overridden in DHAV
+{
+    local int i;
+
+    if (CannonTurret == none)
+    {
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
+            {
+                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
+                break;
+            }
+        }
+    }
+
+    if (HullMG == none)
+    {
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Gun.IsA('ROMountedTankMG'))
+            {
+                HullMG = WeaponPawns[i].Gun;
+                break;
+            }
+        }
+    }
+}
+
+function exec DamageTank() // overridden in DHAV
+{
+    Health /= 2;
+    EngineHealth /= 2;
+    bLeftTrackDamaged = true;
+    bRightTrackDamaged = true;
+}
+*/
+
+//=============================================================================
+// END ROTREADCRAFT functions
+//=============================================================================
 
 defaultproperties
 {
@@ -4163,7 +5188,7 @@ defaultproperties
     ChangeUpPoint=2050.0
     ChangeDownPoint=1100.0
     ViewShakeRadius=50.0
-    ViewShakeOffsetMag=(X=0.0,Z=0.0)
+    ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0)
     ViewShakeOffsetFreq=0.0
     TouchMessageClass=class'DHVehicleTouchMessage'
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Body",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
@@ -4178,4 +5203,152 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+
+//=============================================================================
+// ROTREADCRAFT default properties
+//=============================================================================
+
+    AddedLatFriction=(Points=((InVal=0.0,OutVal=1.0),(InVal=250.0,OutVal=1.0),(InVal=300.0,OutVal=3.0),(InVal=10000000000.0,OutVal=3.0))) // deprecated in DHAV
+
+    StartUpForce="TankStartUp"
+    ShutDownForce="TankShutDown"
+    bEnableProximityViewShake=false
+    bOnlyViewShakeIfDriven=true
+//  ViewShakeRadius=600.0 // overridden in DHAV
+//  ViewShakeOffsetMag=(X=0.5,Y=0.0,Z=2.0) // overridden in DHAV
+//  ViewShakeOffsetFreq=7.0 // overridden in DHAV
+
+//  EngineHealth=325 // overridden in DHAV
+
+    // Physics and movement
+    VehicleMass=12.5
+    bHasHandbrake=true
+    WheelSoftness=0.025
+    WheelPenScale=2.0
+    WheelPenOffset=0.01
+    WheelRestitution=0.1
+    WheelInertia=0.1
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongSlip=0.001
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=10000000000.0,OutVal=0.00)))
+    WheelLongFrictionScale=1.5
+    WheelLatFrictionScale=3.0
+    WheelHandbrakeSlip=0.01
+    WheelHandbrakeFriction=0.1
+    WheelSuspensionTravel=15.0
+    WheelSuspensionMaxRenderTravel=15.0
+    FTScale=0.03
+//  ChassisTorqueScale=0.25 // overridden in DHAV
+    MinBrakeFriction=4.0
+    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    TorqueCurve=(Points=((InVal=0,OutVal=12.0),(InVal=200,OutVal=3.0),(InVal=1500,OutVal=4.0),(InVal=2200,OutVal=0.0)))
+    GearRatios(0)=-0.2
+    GearRatios(1)=0.2
+    GearRatios(2)=0.35
+    GearRatios(3)=0.55
+    GearRatios(4)=0.6
+    TransRatio=0.12
+//  ChangeUpPoint=2000.0 // overridden in DHAV
+//  ChangeDownPoint=1000.0 // overridden in DHAV
+    LSDFactor=1.0
+    EngineBrakeFactor=0.0001
+    EngineBrakeRPMScale=0.1
+    MaxBrakeTorque=20.0
+    SteerSpeed=160.0
+    TurnDamping=50
+    StopThreshold=100.0
+    HandbrakeThresh=200.0
+    EngineInertia=0.1
+    IdleRPM=500.0
+    EngineRPMSoundRange=5000
+    SteerBoneAxis=AXIS_X
+    RevMeterScale=4000.0
+    bMakeBrakeLights=false
+
+    // Effects
+    TrackDamagedSound=sound'Vehicle_Engines.track_broken'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
+    DestructionLinearMomentum=(Min=100.0,Max=350.0)
+    DestructionAngularMomentum=(Min=50.0,Max=150.0)
+    DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
+    ImpactDamageMult=0.001
+
+    // Positioning
+    VehiclePositionString="in a Tank"
+    VehicleNameString="Tank"
+    DrivePos=(X=30.0,Y=-20.00,Z=55.0)
+    ExitPositions(0)=(Y=-165.0,Z=40.0)
+    ExitPositions(1)=(Y=165.0,Z=40.0)
+    ExitPositions(2)=(Y=-165.0,Z=-40.0)
+    ExitPositions(3)=(Y=165.0,Z=-40.0)
+    EntryRadius=160.0
+
+    // Camera parameters
+//  FPCamPos=(X=29.0,Y=-25.0,Z=46.0) // overridden in DHAV
+    TPCamDistance=375.0
+    CenterSpringForce="SpringONSSRV"
+    TPCamLookat=(X=0.0,Z=0.0)
+    TPCamWorldOffset=(Z=100.0)
+
+    MaxDesireability=1.4
+    ObjectiveGetOutDist=1500.0
+    GroundSpeed=325.0
+    HealthMax=300.0
+    Health=300
+
+    CollisionRadius=100.0
+    CollisionHeight=400.0
+
+    // Karma params
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(X=-0.,Z=-0.5)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.5
+        KImpactThreshold=700.0
+        KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
+    End Object
+    KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
+
+    TreadVelocityScale=450.0
+
+    // Make the vehicle hud be drawn
+    bSpecialHUD=true
+
+    // Hud stuff
+    VehicleHudThreadsPosX(0)=0.35
+    VehicleHudThreadsPosX(1)=0.65
+    VehicleHudThreadsPosY=0.5
+    VehicleHudThreadsScale=0.65
+
+    bMustBeTankCommander=true
+
+    FrontArmorFactor=6 // deprecated in DHAV
+    SideArmorFactor=3  // deprecated in DHAV
+    RearArmorFactor=2  // deprecated in DHAV
+
+    TreadHitMinAngle=2.0
+    bSpecialTankTurning=true
+    WheelRotationScale=500
+    bDebugPenetration=false // deprecated in DHAV
+
+    FrontLeftAngle=333.0
+    FrontRightAngle=28.0
+    RearRightAngle=152.0
+    RearLeftAngle=207.0
 }
+

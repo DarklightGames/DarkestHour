@@ -2099,6 +2099,45 @@ exec function LogCannon() // DEBUG (Matt: please use & report if you ever find y
         @ " DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
 }
 
+// Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft
+function float ModifyThreat(float Current, Pawn Threat)
+{
+    local vector to, t;
+    local float  r;
+
+    if (Vehicle(Threat) != none)
+    {
+        Current += 0.2;
+
+        if (DHArmoredVehicle(Threat) != none)
+        {
+            Current += 0.2;
+
+            // Big bonus points for perpendicular tank targets
+            to = Normal(Threat.Location - Location);
+            to.z = 0.0;
+            t = Normal(vector(Threat.Rotation));
+            t.z = 0.0;
+            r = to dot t;
+
+            if ((r >= 0.90630 && r < -0.73135) || (r >= -0.73135 && r < 0.90630))
+            {
+                Current += 0.3;
+            }
+        }
+        else if (ROWheeledVehicle(Threat) != none && ROWheeledVehicle(Threat).bIsAPC)
+        {
+            Current += 0.1;
+        }
+    }
+    else
+    {
+        Current += 0.25;
+    }
+
+    return Current;
+}
+
 defaultproperties
 {
     UnbuttonedPositionIndex=2

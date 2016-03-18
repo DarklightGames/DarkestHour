@@ -93,7 +93,7 @@ simulated function DrawHUD(Canvas C)
     local HudBase.SpriteWidget     Widget;
     local PlayerController PC;
     local ROHud            HUD;
-    local ROTreadCraft     AV;
+    local DHArmoredVehicle AV;
     local color            VehicleColor;
     local float            VehicleHealthScale;
     local rotator          MyRot;
@@ -105,7 +105,7 @@ simulated function DrawHUD(Canvas C)
     if (PC != none && !PC.bBehindView && VehicleBase != none && Gun != none)
     {
         HUD = ROHud(PC.myHUD);
-        AV = ROTreadCraft(VehicleBase);
+        AV = DHArmoredVehicle(VehicleBase);
 
         if (HUD != none && AV != none && AV.VehicleHudTurretLook != none && AV.VehicleHudTurret != none)
         {

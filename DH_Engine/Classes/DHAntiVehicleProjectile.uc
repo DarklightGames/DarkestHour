@@ -432,14 +432,14 @@ simulated function BlowUp(vector HitLocation)
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor         Victim, TraceActor;
-    local ROTreadCraft  TC;
-    local ROPawn        P;
-    local array<ROPawn> CheckedROPawns;
-    local bool          bAlreadyChecked;
-    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
-    local float         DamageScale, Distance, DamageExposure;
-    local int           i;
+    local Actor            Victim, TraceActor;
+    local DHArmoredVehicle AV;
+    local ROPawn           P;
+    local array<ROPawn>    CheckedROPawns;
+    local bool             bAlreadyChecked;
+    local vector           VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local float            DamageScale, Distance, DamageExposure;
+    local int              i;
 
     // Make sure nothing else runs HurtRadius() while we are in the middle of the function
     if (bHurtEntry)
@@ -482,11 +482,11 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // Usually we trace to actor's location, but for a tank (or similar, including AT gun), we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
         VictimLocation = Victim.Location;
-        TC = ROTreadCraft(Victim);
+        AV = DHArmoredVehicle(Victim);
 
-        if (TC != none && TC.PassengerWeapons.Length > 0 && TC.PassengerWeapons[0].WeaponBone != '')
+        if (AV != none && AV.PassengerWeapons.Length > 0 && AV.PassengerWeapons[0].WeaponBone != '')
         {
-            VictimLocation.Z = TC.GetBoneCoords(TC.PassengerWeapons[0].WeaponBone).Origin.Z;
+            VictimLocation.Z = AV.GetBoneCoords(AV.PassengerWeapons[0].WeaponBone).Origin.Z;
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast
