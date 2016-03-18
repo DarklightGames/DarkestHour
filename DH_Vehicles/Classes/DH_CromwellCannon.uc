@@ -7,12 +7,15 @@ class DH_CromwellCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=5
-    TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
-    SecondarySpread=0.00175
-    TertiarySpread=0.0036
-    ManualRotationsPerSecond=0.029
-    PoweredRotationsPerSecond=0.0625
+    // Turret mesh
+    Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
+    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
+    BeginningIdleAnim="com_idle_close"
+    GunnerAttachmentBone="Com_attachment"
+
+    // Turret armor
     FrontArmorFactor=7.6
     RightArmorFactor=6.3
     LeftArmorFactor=6.3
@@ -21,15 +24,64 @@ defaultproperties
     FrontRightAngle=42.0
     RearRightAngle=138.0
     RearLeftAngle=222.0
+
+    // Turret movement
+    ManualRotationsPerSecond=0.029
+    PoweredRotationsPerSecond=0.0625
+    YawBone="Turret"
+    PitchBone="Gun"
+    CustomPitchUpLimit=3641
+    CustomPitchDownLimit=64500
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
+    ProjectileDescriptions(0)="APCBC"
+    ProjectileDescriptions(2)="Smoke"
+    InitialPrimaryAmmo=33
+    InitialSecondaryAmmo=26
+    InitialTertiaryAmmo=5
+    SecondarySpread=0.00175
+    TertiarySpread=0.0036
+    FireInterval=4.0
+
+    // Coaxial MG ammo
+    AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
+    InitialAltAmmo=225
+    NumAltMags=6
+    AltFireInterval=0.092
+    bUsesTracers=true
+    AltTracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
+    bAltFireTracersOnly=true
+    AltFireTracerFrequency=5
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
+
+    // Weapon fire
+    WeaponFireAttachmentBone="Barrel"
+    AltFireOffset=(X=-109.5,Y=-11.5,Z=1.0)
+    AltFireSpawnOffsetX=23.0
+    FireForce="Explosion05"
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
+    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
+    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
+    bAmbientAltFireSound=true
+    AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
+    AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
+    AltFireSoundScaling=3.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
     ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
-    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    ProjectileDescriptions(0)="APCBC"
-    ProjectileDescriptions(2)="Smoke"
+    ReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
+    SoundVolume=130
+    SoundRadius=300.0
+    FireSoundVolume=512.0
+
+    // Cannon range settings
     RangeSettings(1)=200
     RangeSettings(2)=400
     RangeSettings(3)=600
@@ -46,31 +98,8 @@ defaultproperties
     RangeSettings(14)=2800
     RangeSettings(15)=3000
     RangeSettings(16)=3200
-    ReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
-    NumAltMags=6
-    AltTracerProjectileClass=class'DH_BesaVehicleTracerBullet'
-    AltFireTracerFrequency=5
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=3.0
-    AltFireOffset=(X=-106.0,Y=-12.5,Z=1.0)
-    bAmbientAltFireSound=true
-    FireInterval=4.0
-    AltFireInterval=0.092
-    FireSoundVolume=512.0
-    AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
-    AltFireSoundScaling=3.0
-    AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
-    FireForce="Explosion05"
-    ProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
-    AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
+
+    // Screen shake
     ShakeRotMag=(Z=50.0)
     ShakeRotRate=(Z=1000.0)
     ShakeRotTime=4.0
@@ -83,22 +112,10 @@ defaultproperties
     AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     AltShakeOffsetTime=2.0
+
+    // Miscellaneous
+    FireAttachBone="Turret"
+    FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
-    CustomPitchUpLimit=3641
-    CustomPitchDownLimit=64500
-    BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=33
-    InitialSecondaryAmmo=26
-    InitialAltAmmo=225
-    PrimaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
-    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    CannonAttachmentOffset=(X=1.0,Y=-1.0,Z=2.5)
-    Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
-    SoundVolume=130
-    SoundRadius=300.0
 }
