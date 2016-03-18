@@ -2961,13 +2961,15 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
 // New debug exec to set a vehicle's 3rd person camera distance
 exec function VehicleCamDistance(int NewDistance)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Vehicle(Pawn) != none && ROHud(myHUD) != none)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Vehicle(Pawn) != none)
     {
         Vehicle(Pawn).TPCamDistance = NewDistance;
         Vehicle(Pawn).TPCamDistRange.Min = NewDistance;
         Vehicle(Pawn).TPCamDistRange.Max = NewDistance;
+        Vehicle(Pawn).DesiredTPCamDistance = NewDistance;
     }
 }
+
 // Modified to shift this functionality into DHHud, where it's directly relevant & where some necessary stuff is added to make this RO function work as designed
 exec function DriverCollisionDebug()
 {
