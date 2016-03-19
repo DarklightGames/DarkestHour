@@ -161,7 +161,6 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIVHTank.Right_Drive_Wheel'
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     ExitPositions(0)=(X=105.0,Y=-37.0,Z=115.0)
     ExitPositions(1)=(X=-128.0,Y=0.0,Z=160.0)
     ExitPositions(2)=(X=105.0,Y=44.0,Z=115.0)

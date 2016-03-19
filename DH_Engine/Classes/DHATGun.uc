@@ -16,7 +16,7 @@ function ServerStartEngine();
 simulated function SetEngine();
 simulated function StopEmitters();
 simulated function StartEmitters();
-simulated function UpdateMovementSound();
+simulated function UpdateMovementSound(float MotionSoundVolume);
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
 simulated function SetupTreads();
 simulated function DestroyTreads();

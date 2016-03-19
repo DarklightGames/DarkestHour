@@ -148,7 +148,6 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_TigerTank.Right_Drive_Wheel'
     VehicleMass=16.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VTiger_driver_idle_close"
     ExitPositions(0)=(X=122.0,Y=-56.0,Z=115.0)
     ExitPositions(1)=(X=-81.0,Y=-36.0,Z=165.0)

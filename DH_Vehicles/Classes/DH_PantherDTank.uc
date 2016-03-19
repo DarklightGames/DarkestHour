@@ -166,7 +166,6 @@ defaultproperties
     VehicleMass=14.0
     bTurnInPlace=true
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VPanther_driver_idle_close"
     ExitPositions(0)=(X=123.0,Y=-28.0,Z=105.0)
     ExitPositions(1)=(X=-91.0,Y=20.0,Z=110.0)

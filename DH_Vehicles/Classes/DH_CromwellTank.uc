@@ -55,7 +55,6 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,ViewFOV=90.0)
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true,ViewFOV=90.0)
     DriverAttachmentBone="Driver_attachment"
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VUC_driver_idle_close"
     OverlayFPCamPos=(X=9.0,Y=0.0,Z=0.0)
 

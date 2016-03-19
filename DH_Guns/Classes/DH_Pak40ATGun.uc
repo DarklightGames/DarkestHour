@@ -35,7 +35,6 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.0
     VehicleMass=11.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim=
     ExitPositions(1)=(X=-84.00,Y=-27.00,Z=43.00)
     EntryRadius=475.0
