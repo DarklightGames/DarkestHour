@@ -171,6 +171,8 @@ static function string GetString(
             return default.SquadYouAreNowLeaderMessage;
         case 35:
             return Repl(default.SquadNewLeaderLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 36:
+            return Repl(default.SquadInviteAlreadyInSquad, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -216,9 +218,10 @@ defaultproperties
     VehicleCutOffMessage="{0} reinforcements have been cut off."
 
     SquadJoinedMessage="{0} has joined the squad."
-    SquadLeftMessage="{0} has left the squad.""
+    SquadLeftMessage="{0} has left the squad."
     SquadKickedMessage="You have been kicked from your squad."
     SquadNoLongerLeaderMessage="You are no longer the squad leader."
     SquadYouAreNowLeaderMessage="You are now the squad leader."
     SquadNewLeaderLeaderMessage="{0} has become the squad leader."
+    SquadInviteAlreadyInSquad="{0} is already in a squad."
 }

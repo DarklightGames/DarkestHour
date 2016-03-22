@@ -38,8 +38,8 @@ var private string                  AlliesNames[TEAM_SQUAD_COUNT];
 var private byte                    AlliesLeaderMemberIndices[TEAM_SQUAD_COUNT];
 var private byte                    AlliesLocked[TEAM_SQUAD_COUNT];
 
-var private string AlliesDefaultSquadNames[TEAM_SQUAD_COUNT];
-var private string AxisDefaultSquadNames[TEAM_SQUAD_COUNT];
+var private array<string> AlliesDefaultSquadNames;
+var private array<string> AxisDefaultSquadNames;
 
 var class<LocalMessage> SquadMessageClass;
 
@@ -65,14 +65,20 @@ function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int Squa
     return GetLeaderMemberIndex(TeamIndex, PRI.SquadIndex) == PRI.SquadMemberIndex;
 }
 
+// Will return true if passed two different players that are in the same squad.
+function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
+{
+    return A != none && B != none && A != B ||
+          (A.Team.TeamIndex == AXIS_TEAM_INDEX || A.Team.TeamIndex == ALLIES_TEAM_INDEX) &&
+           A.Team.TeamIndex == B.Team.TeamIndex &&
+           A.SquadIndex == B.SquadIndex;
+}
+
 function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
     local int T;
 
-    if (A == none || B == none || A == B ||
-        (A.Team.TeamIndex != AXIS_TEAM_INDEX && A.Team.TeamIndex != ALLIES_TEAM_INDEX) ||   //On a team
-        A.Team.TeamIndex != B.Team.TeamIndex ||                                             //On the same team
-        A.SquadIndex != B.SquadIndex)                                                       //In the same squad
+    if (!IsInSameSquad(A, B))
     {
         return false;
     }
@@ -93,6 +99,33 @@ function DebugLog(string S)
     if (DEBUG)
     {
         Log(S);
+    }
+}
+
+function bool IsDefaultSquadName(string SquadName, int TeamIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return class'UArray'.static.SIndexOf(AxisDefaultSquadNames, SquadName) >= 0;
+        default:
+            return class'UArray'.static.SIndexOf(AlliesDefaultSquadNames, SquadName) >= 0;
+    }
+}
+
+function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
+{
+    if (SquadIndex < 0 || SquadIndex > TEAM_SQUAD_COUNT)
+    {
+        return "";
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return default.AxisDefaultSquadNames[SquadIndex];
+        default:
+            return default.AlliesDefaultSquadNames[SquadIndex];
     }
 }
 
@@ -126,7 +159,7 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
     TeamIndex = PC.GetTeamNum();
 
-    if (Name != "" && (Len(Name) < SQUAD_NAME_LENGTH_MIN || Len(Name) > SQUAD_NAME_LENGTH_MAX))
+    if (Name != "" && (Len(Name) < SQUAD_NAME_LENGTH_MIN || Len(Name) > SQUAD_NAME_LENGTH_MAX || IsDefaultSquadName(Name, TeamIndex)))
     {
         PC.ClientCreateSquadResult(SE_InvalidName);
 
@@ -135,13 +168,13 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
         return -1;
     }
 
-    for (i = 0; i < SQUAD_MEMBER_COUNT; ++i)
+    for (i = 0; i < TEAM_SQUAD_COUNT; ++i)
     {
         if (!IsSquadActive(TeamIndex, i))
         {
             if (Name == "")
             {
-                Name = default.AxisDefaultSquadNames[i];
+                Name = GetDefaultSquadName(TeamIndex, i);
             }
 
             SetMember(TeamIndex, i, GetLeaderMemberIndex(TeamIndex, i), PRI);
@@ -188,9 +221,7 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
-    if (NewSquadLeader == none || PRI == NewSquadLeader ||
-        PRI.Team.TeamIndex != NewSquadLeader.Team.TeamIndex ||
-        PRI.SquadIndex != NewSquadLeader.SquadIndex)
+    if (!IsInSameSquad(PRI, NewSquadLeader))
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
 
@@ -303,6 +334,11 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     return true;
 }
 
+function bool IsInSquad(DHPlayerReplicationInfo PRI)
+{
+    return PRI != none && (PRI.Team.TeamIndex == AXIS_TEAM_INDEX || PRI.Team.TeamIndex == ALLIES_TEAM_INDEX) && PRI.SquadIndex != -1;
+}
+
 function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
 {
     return PRI != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
@@ -407,9 +443,34 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     return true;
 }
 
+function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo Recipient)
+{
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
+    {
+        return false;
+    }
+
+    if (IsInSquad(Recipient))
+    {
+        // "{0} is already in a squad.";
+        PRI.ReceiveLocalizedMessage(MessageClass, 36, Recipient);
+
+        return false;
+    }
+
+    // TODO: Check that they're on the same team
+    // TODO: Send invitation to recipient
+
+    // There should be no need to store the invitation in SRI.
+    // If the recipient tries to join a squad that has
+    // since become invalid, the join command will fail gracefully.
+
+    return true;
+}
+
 function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int SquadIndex, bool bLocked)
 {
-    if (PC == none || !IsSquadLeader(PC, TeamIndex, SquadIndex))
+    if (!IsSquadLeader(PC, TeamIndex, SquadIndex))
     {
         return false;
     }
@@ -435,7 +496,7 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
     local DHPlayerReplicationInfo PRI;
     local DHPlayer PC;
 
-    if (IsSquadActive(TeamIndex, SquadIndex))
+    if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         return;
     }
@@ -458,7 +519,7 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
     }
 }
 
-function string GetSquadName(int TeamIndex, int SquadIndex)
+simulated function string GetSquadName(int TeamIndex, int SquadIndex)
 {
     switch (TeamIndex)
     {
@@ -471,7 +532,7 @@ function string GetSquadName(int TeamIndex, int SquadIndex)
     return "";
 }
 
-function int GetLeaderMemberIndex(int TeamIndex, int SquadIndex)
+simulated function int GetLeaderMemberIndex(int TeamIndex, int SquadIndex)
 {
     switch (TeamIndex)
     {
@@ -499,7 +560,7 @@ function SetLeaderMemberIndex(int TeamIndex, int SquadIndex, int LeaderMemberInd
     }
 }
 
-function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int MemberIndex)
+simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int MemberIndex)
 {
     switch (TeamIndex)
     {
@@ -550,21 +611,21 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 
 defaultproperties
 {
-    AlliesDefaultSquadNames(0)="Able"
-    AlliesDefaultSquadNames(1)="Baker"
-    AlliesDefaultSquadNames(2)="Charlie"
-    AlliesDefaultSquadNames(3)="Dog"
-    AlliesDefaultSquadNames(4)="Easy"
-    AlliesDefaultSquadNames(5)="Fox"
-    AlliesDefaultSquadNames(6)="George"
-    AlliesDefaultSquadNames(7)="How"
-    AxisDefaultSquadNames(0)="Anton"
-    AxisDefaultSquadNames(1)="Berta"
-    AxisDefaultSquadNames(2)="Caeser"
-    AxisDefaultSquadNames(3)="Dora"
-    AxisDefaultSquadNames(4)="Emil"
-    AxisDefaultSquadNames(5)="Fritz"
-    AxisDefaultSquadNames(6)="Gustav"
-    AxisDefaultSquadNames(7)="Heinrich"
+    AlliesDefaultSquadNames(0)="ABLE"
+    AlliesDefaultSquadNames(1)="BAKER"
+    AlliesDefaultSquadNames(2)="CHARLIE"
+    AlliesDefaultSquadNames(3)="DOG"
+    AlliesDefaultSquadNames(4)="EASY"
+    AlliesDefaultSquadNames(5)="FOX"
+    AlliesDefaultSquadNames(6)="GEORGE"
+    AlliesDefaultSquadNames(7)="HOW"
+    AxisDefaultSquadNames(0)="ANTON"
+    AxisDefaultSquadNames(1)="BERTA"
+    AxisDefaultSquadNames(2)="CAESAR"
+    AxisDefaultSquadNames(3)="DORA"
+    AxisDefaultSquadNames(4)="EMIL"
+    AxisDefaultSquadNames(5)="FRITZ"
+    AxisDefaultSquadNames(6)="GUSTAV"
+    AxisDefaultSquadNames(7)="HEINRICH"
     SquadMessageClass=class'DHGameMessage'
 }
