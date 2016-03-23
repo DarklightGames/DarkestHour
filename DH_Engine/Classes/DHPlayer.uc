@@ -65,6 +65,7 @@ var     bool                    bSpawnPointInvalidated;
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
 var     DHSquadReplicationInfo  SquadReplicationInfo;
+var     bool                    bIgnoreSquadInvites;
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
@@ -90,7 +91,9 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash, ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack, ClientAddHudDeathMessage;
+        ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
+        ClientProne, ClientToggleDuck, ClientConsoleCommand,
+        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -2831,6 +2834,19 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
     }
 }
 
+simulated function ClientSquadInvite(string PlayerName, string SquadName, int TeamIndex, int SquadIndex)
+{
+    if (bIgnoreSquadInvites)
+    {
+        // TODO: need to store or pass the invitation parameters
+        //class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+        //class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+
+        // TODO: don't allow the
+        Player.InteractionMaster.AddInteraction("DHSquadInviteInteraction", Player);
+    }
+}
+
 // Modified to avoid possible spamming of "accessed none" errors
 function RORoleInfo GetRoleInfo()
 {
@@ -3126,6 +3142,73 @@ exec function SquadLog()
                 Log("  (" $ j $ ")" @ SRI.GetMember(1, i, k).PlayerName);
             }
         }
+    }
+}
+
+exec function Speak(string ChannelTitle)
+{
+    local int TeamIndex;
+    local VoiceChatRoom VCR;
+    local string ChanPwd;
+    local DHVoiceReplicationInfo VRI;
+    local DHPlayerReplicationInfo PRI;
+
+    if (VoiceReplicationInfo == none || !VoiceReplicationInfo.bEnableVoiceChat  || !bVoiceChatEnabled)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none && PRI.Team != none)
+    {
+        TeamIndex = PlayerReplicationInfo.Team.TeamIndex;
+    }
+
+    // Colin: Hard-coding this, unfortunately, because we need to have the
+    // player be able to join just by executing "Speak Squad". We can't
+    // depend on the name of the squad because it's not unique and is subject
+    // to change, and we don't want to go passing around UUIDs when we can just
+    // put in a sneaky little hack.
+    if (ChannelTitle ~= "Squad")
+    {
+        VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
+
+        if (VRI != none)
+        {
+            VCR = VRI.GetSquadChannel(TeamIndex, PRI.SquadIndex);
+
+            if (VCR != none)
+            {
+                Log("VCR:" @ VCR);
+                Log("VCR.ChannelIndex:" @ VCR.ChannelIndex);
+            }
+            else
+            {
+                Log("Could not find squad channel (" $ TeamIndex $ "," @ PRI.SquadIndex $ ")");
+            }
+        }
+    }
+    else
+    {
+        // Check that we are a member of this room
+        VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, TeamIndex);
+    }
+
+    if (VCR == none && ChatRoomMessageClass != none)
+    {
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        return;
+    }
+
+    if (VCR.ChannelIndex >= 0)
+    {
+        ChanPwd = FindChannelPassword(ChannelTitle);
+        ServerSpeak(VCR.ChannelIndex, ChanPwd);
+    }
+    else if (ChatRoomMessageClass != none)
+    {
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0,ChannelTitle));
     }
 }
 

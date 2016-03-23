@@ -50,12 +50,12 @@ replication
         AlliesMembers, AlliesNames, AlliesLeaderMemberIndices, AlliesLocked;
 }
 
-function bool IsSquadActive(byte TeamIndex, int SquadIndex)
+simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
 {
     return GetMember(TeamIndex, SquadIndex, GetLeaderMemberIndex(TeamIndex, SquadIndex)) != none;
 }
 
-function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
     if (PRI == none || PRI.SquadIndex == -1 || PRI.Team.TeamIndex != TeamIndex || PRI.SquadIndex != SquadIndex)
     {
@@ -66,7 +66,7 @@ function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int Squa
 }
 
 // Will return true if passed two different players that are in the same squad.
-function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
+simulated function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
     return A != none && B != none && A != B ||
           (A.Team.TeamIndex == AXIS_TEAM_INDEX || A.Team.TeamIndex == ALLIES_TEAM_INDEX) &&
@@ -102,7 +102,7 @@ function DebugLog(string S)
     }
 }
 
-function bool IsDefaultSquadName(string SquadName, int TeamIndex)
+simulated function bool IsDefaultSquadName(string SquadName, int TeamIndex)
 {
     switch (TeamIndex)
     {
@@ -113,7 +113,7 @@ function bool IsDefaultSquadName(string SquadName, int TeamIndex)
     }
 }
 
-function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
+simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
     if (SquadIndex < 0 || SquadIndex > TEAM_SQUAD_COUNT)
     {
@@ -135,6 +135,7 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
     local int i;
     local int TeamIndex;
     local DHPlayer PC;
+    local DHVoiceReplicationInfo VRI;
 
     if (PRI == none)
     {
@@ -184,6 +185,13 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             PRI.SquadMemberIndex = GetLeaderMemberIndex(TeamIndex, i);
 
             PC.ClientCreateSquadResult(SE_None);
+
+            VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
+
+            if (VRI != none)
+            {
+                VRI.JoinSquadChannel(PRI, TeamIndex, i);
+            }
 
             DebugLog("Squad '" $ Name $ "' created successfully at index " $ i);
 
@@ -266,6 +274,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     local DHPlayer PC;
     local DHPlayerReplicationInfo NewSquadLeader;
     local DHPlayer NewSquadLeaderPC;
+    local DHVoiceReplicationInfo VRI;
 
     if (PRI == none)
     {
@@ -326,6 +335,14 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         }
     }
 
+    // voice replication info stuff
+    VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
+
+    if (VRI != none)
+    {
+        VRI.LeaveSquadChannel(PRI, PRI.SquadIndex, PRI.SquadMemberIndex);
+    }
+
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
 
@@ -334,12 +351,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     return true;
 }
 
-function bool IsInSquad(DHPlayerReplicationInfo PRI)
-{
-    return PRI != none && (PRI.Team.TeamIndex == AXIS_TEAM_INDEX || PRI.Team.TeamIndex == ALLIES_TEAM_INDEX) && PRI.SquadIndex != -1;
-}
-
-function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
+simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
 {
     return PRI != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
 }
@@ -351,6 +363,7 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
     local bool bDidJoinSquad;
     local int i, j;
     local DHPlayer PC;
+    local DHVoiceReplicationInfo VRI;
 
     if (PRI == none)
     {
@@ -399,6 +412,13 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 
     if (bDidJoinSquad)
     {
+        VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
+
+        if (VRI != none)
+        {
+            VRI.JoinSquadChannel(PRI, TeamIndex, SquadIndex);
+        }
+
         // "{0} has joined the squad"
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, MessageClass, 30, PRI);
 
@@ -445,15 +465,22 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
 
 function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo Recipient)
 {
+    local DHPlayer PC;
+
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return false;
     }
 
-    if (IsInSquad(Recipient))
+    PC = DHPlayer(PRI.Owner);
+
+    if (PRI.IsInSquad())
     {
-        // "{0} is already in a squad.";
-        PRI.ReceiveLocalizedMessage(MessageClass, 36, Recipient);
+        if (PC != none)
+        {
+            // "{0} is already in a squad.";
+            PC.ReceiveLocalizedMessage(MessageClass, 36, Recipient);
+        }
 
         return false;
     }
@@ -464,6 +491,13 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     // There should be no need to store the invitation in SRI.
     // If the recipient tries to join a squad that has
     // since become invalid, the join command will fail gracefully.
+
+    PC = DHPlayer(Recipient.Owner);
+
+    if (PC != none)
+    {
+        PC.ClientSquadInvite(GetSquadName(TeamIndex, SquadIndex), PRI.PlayerName, TeamIndex, SquadIndex);
+    }
 
     return true;
 }

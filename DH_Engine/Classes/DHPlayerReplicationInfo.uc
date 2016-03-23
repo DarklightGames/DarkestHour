@@ -14,6 +14,11 @@ replication
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
 
+function bool IsInSquad()
+{
+    return (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+}
+
 defaultproperties
 {
     SquadIndex=-1

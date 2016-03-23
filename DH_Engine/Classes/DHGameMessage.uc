@@ -16,6 +16,7 @@ var localized string SquadKickedMessage;
 var localized string SquadNoLongerLeaderMessage;
 var localized string SquadYouAreNowLeaderMessage;
 var localized string SquadNewLeaderLeaderMessage;
+var localized string SquadInviteAlreadyInSquad;
 
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored

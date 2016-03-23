@@ -27,7 +27,7 @@ static final function FisherYatesShuffle(out array<int> _Array)
     {
         j = Rand(i);
 
-        ISwap(_Array[i], _Array[j]);
+        class'UCore'.static.ISwap(_Array[i], _Array[j]);
     }
 }
 
