@@ -34,6 +34,7 @@ var TextWidget          MapScaleText;
 var SpriteWidget        DeployOkayIcon;
 var SpriteWidget        DeployEnemiesNearbyIcon;
 var SpriteWidget        DeployInObjectiveIcon;
+var SpriteWidget        SquadNameIcon;
 
 var SpriteWidget        MapAxisFlagIcon;
 var SpriteWidget        MapAlliesFlagIcons[3];
@@ -1491,6 +1492,7 @@ function DrawPlayerNames(Canvas C)
     local DHPlayer        PC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local bool            bIsInSameSquad;
+    local Material        SquadNameIconMaterial;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -1524,8 +1526,8 @@ function DrawPlayerNames(Canvas C)
 
         if (Dir dot X > 0.0)
         {
-            NamedPlayerLoc = NamedPlayer.Location;
-            NamedPlayerLoc.Z += NamedPlayer.CollisionHeight + 8.0;
+            NamedPlayerLoc = NamedPlayer.GetBoneCoords(NamedPlayer.HeadBone).Origin;
+            NamedPlayerLoc.Z += 16.0;
 
             MyDHP = DHPawn(PawnOwner);
 
@@ -1624,7 +1626,13 @@ function DrawPlayerNames(Canvas C)
             if (NamedPlayer.PlayerReplicationInfo != none)
             {
                 C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
-                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
+                C.SetPos(ScreenPos.X - 8, ScreenPos.Y - (StrY * 0.5));
+
+                SquadNameIconMaterial = FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon';
+
+                C.DrawTile(SquadNameIconMaterial, 16, 16, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
+
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - 24.0);
 
                 if (ResupplyMessage != "")
                 {
@@ -1632,7 +1640,6 @@ function DrawPlayerNames(Canvas C)
                     C.DrawTextClipped(ResupplyMessage);
                     C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
                 }
-
 
                 // If other player is in your squad, make his name green.
                 PC = DHPlayer(PlayerOwner);
@@ -1647,6 +1654,15 @@ function DrawPlayerNames(Canvas C)
                         bIsInSameSquad = true;
                     }
                 }
+
+                C.DrawColor.R = 0;
+                C.DrawColor.G = 0;
+                C.DrawColor.B = 0;
+
+                C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
+
+                C.CurX -= 1;
+                C.CurY -= 1;
 
                 if (bIsInSameSquad)
                 {
@@ -4400,7 +4416,7 @@ defaultproperties
     NeedReloadText="Needs reloading"
     AndMoreText="and more..."
     CanReloadText="Press %THROWMGAMMO% to assist reload"
-    PlayerNameFontSize=4
+    PlayerNameFontSize=1
     bShowDeathMessages=true
     bShowVoiceIcon=true
     ObituaryFadeInTime=0.5
@@ -4474,4 +4490,8 @@ defaultproperties
     DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployInObjectiveIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=0,Y1=64,X2=63,Y2=127),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+
+    SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+
+    OverrideConsoleFontName="DHFonts.DHFont12"
 }
