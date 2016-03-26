@@ -1501,7 +1501,7 @@ simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, floa
         }
         else
         {
-            RoundedDownAngleDegrees = Float(Int(CompoundAngleDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
+            RoundedDownAngleDegrees = float(int(CompoundAngleDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
             ExtraAngleDegrees = CompoundAngleDegrees - RoundedDownAngleDegrees;
             BaseSlopeMultiplier = ArmorSlopeTable(P, RoundedDownAngleDegrees, OverMatchFactor);
             NextSlopeMultiplier = ArmorSlopeTable(P, RoundedDownAngleDegrees + 5.0, OverMatchFactor);

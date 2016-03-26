@@ -78,8 +78,8 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer && MGOverlay != none)
     {
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(MGOverlay.USize) / 2.0;
-        OverlayCenterTexSize = Float(MGOverlay.USize) * OverlayCenterScale;
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(MGOverlay.USize) / 2.0;
+        OverlayCenterTexSize = float(MGOverlay.USize) * OverlayCenterScale;
     }
 }
 
@@ -301,7 +301,7 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+                ScreenRatio = float(C.SizeY) / float(C.SizeX);
                 C.SetPos(0.0, 0.0);
 
                 C.DrawTile(MGOverlay, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
@@ -324,9 +324,9 @@ simulated function DrawBinocsOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
-    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view
@@ -558,7 +558,7 @@ function KDriverEnter(Pawn P)
 // Matt: also to workaround various net client problems caused by replication timing issues, including common problems when deploying into a spawn vehicle (see notes below)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-/*  SPAWN VEHICLE PROBLEMS:
+/** SPAWN VEHICLE PROBLEMS:
     The process of deploying into a spawn vehicle involves spawning a player pawn, possessing it, then entering the vehicle
     Entering results in unpossessing the player pawn, possessing vehicle, moving (effectively teleporting) player pawn to vehicle's location & attaching it as the 'Driver' pawn
     Because vehicle can be on other side of the map & not currently net relevant to the client, the vehicle actors may not exist on the client & have to be spawned locally

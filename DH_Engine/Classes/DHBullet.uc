@@ -498,7 +498,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // Do any damage
         if (Role == ROLE_Authority)
         {
-            // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics // TODO: resolve this more tidily
+            // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics // TODO: resolve this more tidily (also AP bullet)
             if (HitVehicle != none && !bPenetratedVehicle)
             {
                 AV = DHArmoredVehicle(HitVehicle);

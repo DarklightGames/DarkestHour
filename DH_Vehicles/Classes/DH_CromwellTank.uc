@@ -9,14 +9,13 @@ class DH_CromwellTank extends DHArmoredVehicle;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 
 // Modified to adjust size/proportions of texture overlay to match driver's glass vision block
-simulated function DrawPeriscopeOverlay(Canvas Canvas)
+simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.6,
-        PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
+    C.SetPos(0.0, 0.0);
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.6, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
 }
 
 defaultproperties

@@ -803,7 +803,7 @@ function Timer()
     {
         if (Num[i] >= PlayersNeededToCapture)
         {
-            Rate[i] = FMin(Num[i] * BaseCaptureRate * LeaderBonus[i] * (Float(Num[i]) / NumTotal[i]), MaxCaptureRate);
+            Rate[i] = FMin(Num[i] * BaseCaptureRate * LeaderBonus[i] * (float(Num[i]) / NumTotal[i]), MaxCaptureRate);
         }
         else
         {
@@ -812,8 +812,8 @@ function Timer()
     }
 
     // Figure what the replicated # of cappers should be (to take into account the leader bonus)
-    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX]; // * Int(4.0 * LeaderBonus[AXIS_TEAM_INDEX]);
-    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX]; // * Int(4.0 * LeaderBonus[ALLIES_TEAM_INDEX]);
+    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX]; // * int(4.0 * LeaderBonus[AXIS_TEAM_INDEX]);
+    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX]; // * int(4.0 * LeaderBonus[ALLIES_TEAM_INDEX]);
 
     // Note: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
     if (ObjState != OBJ_Axis && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])

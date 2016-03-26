@@ -6,7 +6,7 @@
 class DHPassengerPawn extends ROPassengerPawn
     abstract;
 
-/*
+/**
 Matt UK, November 2014 - added new system to avoid rider pawns needing to exist on net clients unless rider position is occupied
 Each rider pawn that exists on a client is a net channel that has to be maintained & updated by the server.
 The new system can substantially cut down the number of net channels & associated replication, especially in maps with lots of vehicles.

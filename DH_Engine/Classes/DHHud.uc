@@ -687,7 +687,7 @@ simulated function DrawHudPassC(Canvas C)
         MyColor.R = 255;
         MyColor.G = 255;
         MyColor.B = 255;
-        MyColor.A = Byte(Alpha * 255.0);
+        MyColor.A = byte(Alpha * 255.0);
 
         if (MyColor.A != 0)
         {
@@ -811,7 +811,7 @@ simulated function DrawHudPassC(Canvas C)
             }
 
             // PortraitX goes from 0 to 1 -- we'll use that as alpha
-            PortraitIcon.Tints[TeamIndex].A = Byte(255 * (1.0 - PortraitX));
+            PortraitIcon.Tints[TeamIndex].A = byte(255 * (1.0 - PortraitX));
             PortraitText[0].Tints[TeamIndex].A = PortraitIcon.Tints[TeamIndex].A;
 
             XL = 0.0;
@@ -2691,7 +2691,7 @@ simulated function DrawObjectives(Canvas C)
     // Draw coordinates text on sides of the map
     for (i = 0; i < 9; ++i)
     {
-        MapCoordTextXWidget.PosX = (Float(i) + 0.5) / 9.0;
+        MapCoordTextXWidget.PosX = (float(i) + 0.5) / 9.0;
         MapCoordTextXWidget.Text = MapCoordTextX[i];
         DrawTextWidgetClipped(C, MapCoordTextXWidget, SubCoords);
 
@@ -2708,13 +2708,13 @@ simulated function DrawObjectives(Canvas C)
 
     // Calculate seconds & minutes
     Time = CurrentTime;
-    MapTimerTexts[3].Text = string(Int(Time % 10.0));
+    MapTimerTexts[3].Text = string(int(Time % 10.0));
     Time /= 10.0;
-    MapTimerTexts[2].Text = string(Int(Time % 6.0));
+    MapTimerTexts[2].Text = string(int(Time % 6.0));
     Time /= 6.0;
-    MapTimerTexts[1].Text = string(Int(Time % 10.0));
+    MapTimerTexts[1].Text = string(int(Time % 10.0));
     Time /= 10.0;
-    MapTimerTexts[0].Text = string(Int(Time));
+    MapTimerTexts[0].Text = string(int(Time));
 
     C.Font = GetFontSizeIndex(C, -2);
 
@@ -3593,7 +3593,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         }
         else
         {
-            AttackersRatio = Float(CurrentCapAxisCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
+            AttackersRatio = float(CurrentCapAxisCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
         }
 
         DefendersRatio = 1.0 - AttackersRatio;
@@ -3622,7 +3622,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         }
         else
         {
-            AttackersRatio = Float(CurrentCapAlliesCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
+            AttackersRatio = float(CurrentCapAlliesCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
         }
 
         DefendersRatio = 1.0 - AttackersRatio;

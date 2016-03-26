@@ -110,8 +110,8 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer && CannonScopeOverlay != none)
     {
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(CannonScopeOverlay.USize) / 2.0;
-        OverlayCenterTexSize = Float(CannonScopeOverlay.USize) * OverlayCenterScale;
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2.0;
+        OverlayCenterTexSize = float(CannonScopeOverlay.USize) * OverlayCenterScale;
     }
 }
 
@@ -461,9 +461,9 @@ simulated function DrawBinocsOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
-    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of relative/non-relative turret rotation
