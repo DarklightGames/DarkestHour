@@ -2782,28 +2782,20 @@ exec function ClearArrows()
 exec function LeaveBody(optional bool bKeepPRI)
 {
     local ROVehicleWeaponPawn WP;
-    local ROVehicle           V;
+    local DHVehicle           V;
     local Pawn                OldPawn;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
     {
         // If player is in vehicle with an interior mesh, switch to default exterior mesh & play the appropriate animations to put vehicle & player in correct position
-        V = ROVehicle(Pawn);
+        V = DHVehicle(Pawn);
 
         if (V != none)
         {
             if (V.Mesh != V.default.Mesh)
             {
                 V.LinkMesh(V.default.Mesh);
-
-                if (DHWheeledVehicle(V) != none)
-                {
-                    DHWheeledVehicle(V).SetPlayerPosition();
-                }
-                else if (DHArmoredVehicle(V) != none)
-                {
-                    DHArmoredVehicle(V).SetPlayerPosition();
-                }
+                V.SetPlayerPosition();
             }
         }
         else
@@ -2938,13 +2930,13 @@ function ServerPossessBody(Pawn NewPawn)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New helper function just to avoid code repetition & nesting in lots of vehicle-related debug execs
-simulated function bool GetVehicleBase(out ROWheeledVehicle V)
+simulated function bool GetVehicleBase(out DHVehicle V)
 {
-    V = ROWheeledVehicle(Pawn);
+    V = DHVehicle(Pawn);
 
     if (V == none && VehicleWeaponPawn(Pawn) != none)
     {
-        V = ROWheeledVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        V = DHVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
     }
 
     return V != none;
@@ -2962,7 +2954,7 @@ exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int 
 // New debug exec to adjust the gear ratio settings, which largely govern the vehicle's speed (mainly GearRatios(4))
 exec function SetGearRatio(byte Index, float NewValue)
 {
-    local ROWheeledVehicle V;
+    local DHVehicle V;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < arraycount(V.GearRatios))
     {
@@ -2974,7 +2966,7 @@ exec function SetGearRatio(byte Index, float NewValue)
 // New debug exec to set a vehicle's ExitPositions (use it in single player; it's too much hassle on a server)
 exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 {
-    local ROWheeledVehicle V;
+    local DHVehicle V;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExitPositions.Length)
     {
@@ -3004,10 +2996,10 @@ exec function ExitPosTool()
 // New debug exec to draw the location of a vehicle's exit positions, which are shown as different coloured cylinders
 exec function DrawExits(optional bool bClearScreen)
 {
-    local ROWheeledVehicle V;
-    local vector           ExitPosition, ZOffset, X, Y, Z;
-    local color            C;
-    local int              i;
+    local DHVehicle V;
+    local vector    ExitPosition, ZOffset, X, Y, Z;
+    local color     C;
+    local int       i;
 
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
@@ -3122,14 +3114,21 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
 }
 
 // New debug exec to set a vehicle's 3rd person camera distance
-exec function VehicleCamDistance(int NewDistance)
+exec function VehCamDist(int NewDistance)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Vehicle(Pawn) != none)
+    local Vehicle V;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        Vehicle(Pawn).TPCamDistance = NewDistance;
-        Vehicle(Pawn).TPCamDistRange.Min = NewDistance;
-        Vehicle(Pawn).TPCamDistRange.Max = NewDistance;
-        Vehicle(Pawn).DesiredTPCamDistance = NewDistance;
+        V = Vehicle(Pawn);
+
+        if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && V != none)
+        {
+            V.TPCamDistance = NewDistance;
+            V.TPCamDistRange.Min = NewDistance;
+            V.TPCamDistRange.Max = NewDistance;
+            V.DesiredTPCamDistance = NewDistance;
+        }
     }
 }
 
@@ -3145,103 +3144,51 @@ exec function DriverCollisionDebug()
 // New debug exec to adjust rotation speed of treads
 exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
-    local ROWheeledVehicle V;
-    local DHArmoredVehicle AV;
-    local DHWheeledVehicle WV;
+    local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
     {
-        AV = DHArmoredVehicle(V);
-
-        if (AV != none)
+        if (NewValue == 0) // entering zero resets tread speed to vehicle's default value
         {
-            if (NewValue == 0) // entering zero resets tread speed to vehicle's default value
-            {
-                NewValue = AV.default.TreadVelocityScale;
-            }
-            else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing tread speed, instead of as new setting, e.g. to increment or decrement speed gradually
-            {
-                NewValue += AV.TreadVelocityScale;
-            }
-
-            Log(AV.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ AV.TreadVelocityScale $ ")");
-            AV.TreadVelocityScale = NewValue;
+            NewValue = V.default.TreadVelocityScale;
         }
-        else
+        else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing tread speed, instead of as new setting, e.g. to increment or decrement speed gradually
         {
-            WV = DHWheeledVehicle(V);
-
-            if (WV != none && WV.bHasTreads)
-            {
-                if (NewValue == 0)
-                {
-                    NewValue = WV.default.TreadVelocityScale;
-                }
-                else if (bAddToCurrentSpeed)
-                {
-                    NewValue += WV.TreadVelocityScale;
-                }
-
-                Log(WV.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ WV.TreadVelocityScale $ ")");
-                WV.TreadVelocityScale = NewValue;
-            }
+            NewValue += V.TreadVelocityScale;
         }
+
+        Log(V.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ V.TreadVelocityScale $ ")");
+        V.TreadVelocityScale = NewValue;
     }
 }
 
 // New debug exec to adjust rotation speed of track wheels
 exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
-    local ROWheeledVehicle V;
-    local DHArmoredVehicle AV;
-    local DHWheeledVehicle WV;
+    local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
     {
-        AV = DHArmoredVehicle(V);
-
-        if (AV != none)
+        if (NewValue == 0) // entering zero resets wheel speed to vehicle's default value
         {
-            if (NewValue == 0) // entering zero resets wheel speed to vehicle's default value
-            {
-                NewValue = AV.default.WheelRotationScale;
-            }
-            else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing wheel speed, instead of as new setting, e.g. to increment or decrement speed gradually
-            {
-                NewValue += AV.WheelRotationScale;
-            }
-
-            Log(AV.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ AV.WheelRotationScale $ ")");
-            AV.WheelRotationScale = NewValue;
+            NewValue = V.default.WheelRotationScale;
         }
-        else
+        else if (bAddToCurrentSpeed) // option to apply entered value as adjustment to existing wheel speed, instead of as new setting, e.g. to increment or decrement speed gradually
         {
-            WV = DHWheeledVehicle(V);
-
-            if (WV != none && WV.bHasTreads)
-            {
-                if (NewValue == 0)
-                {
-                    NewValue = WV.default.WheelRotationScale;
-                }
-                else if (bAddToCurrentSpeed)
-                {
-                    NewValue += WV.WheelRotationScale;
-                }
-
-                Log(WV.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ WV.WheelRotationScale $ ")");
-                WV.WheelRotationScale = NewValue;
-            }
+            NewValue += V.WheelRotationScale;
         }
+
+        Log(V.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ V.WheelRotationScale $ ")");
+        V.WheelRotationScale = NewValue;
     }
 }
 
 // New debug exec to adjust the occupant positions in a vehicle's HUD overlay (the red dots)
-// Pass new X & Y float values scaled by 1000, which allows precision to 3 decimal places
+// Pass new X & Y values scaled by 1000, which allows precision to 3 decimal places
 exec function SetOccPos(byte Index, int NewX, int NewY)
 {
-    local ROWheeledVehicle V;
-    local float            X, Y;
+    local DHVehicle V;
+    local float     X, Y;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.VehicleHudOccupantsX.Length)
     {
@@ -3256,7 +3203,7 @@ exec function SetOccPos(byte Index, int NewX, int NewY)
 // New debug exec to set a vehicle's exhaust emitter location
 exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
-    local ROWheeledVehicle V;
+    local DHVehicle V;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
     {
@@ -3273,13 +3220,32 @@ exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
     }
 }
 
+// New debug exec to set exhaust emitter rotation
+exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
+{
+    local DHVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
+    {
+        Log(V.Tag @ "ExhaustPipes[" $ Index $ "].ExhaustRotation =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.ExhaustPipes[Index].ExhaustRotation $ ")");
+        V.ExhaustPipes[Index].ExhaustRotation.Pitch = NewPitch;
+        V.ExhaustPipes[Index].ExhaustRotation.Yaw = NewYaw;
+        V.ExhaustPipes[Index].ExhaustRotation.Roll = NewRoll;
+
+        if (V.bEmittersOn)
+        {
+            V.StartEmitters();
+        }
+    }
+}
+
 // New debug exec to adjust the radius of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
 exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
-    local ROWheeledVehicle V;
-    local float            NewRadius;
-    local int              i;
+    local DHVehicle V;
+    local float     NewRadius;
+    local int       i;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
@@ -3307,9 +3273,9 @@ exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional b
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
 exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
-    local ROWheeledVehicle V;
-    local vector           NewBoneOffset;
-    local int              i;
+    local DHVehicle V;
+    local vector    NewBoneOffset;
+    local int       i;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
@@ -3341,9 +3307,9 @@ exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleO
 // Settings for all wheels get matched to values of WheelSuspensionTravel & WheelSuspensionMaxRenderTravel, so if individual settings are required, SVehicleUpdateParams must be overridden
 exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex, optional bool bDontSetSuspensionTravel, optional bool bDontSetMaxRenderTravel)
 {
-    local ROWheeledVehicle V;
-    local float            OldTravel, OldRenderTravel;
-    local int              i;
+    local DHVehicle V;
+    local float     OldTravel, OldRenderTravel;
+    local int       i;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
@@ -3388,9 +3354,9 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
 // Settings for all wheels get matched to values of WheelSuspensionOffset, so if individual settings are required, SVehicleUpdateParams must be overridden
 exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
-    local ROWheeledVehicle V;
-    local float            NewOffset;
-    local int              i;
+    local DHVehicle V;
+    local float     NewOffset;
+    local int       i;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
     {
@@ -3419,8 +3385,8 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
 // New debug exec to show a vehicle's karma centre of mass offset
 exec function DrawCOM(optional bool bClearScreen)
 {
-    local ROWheeledVehicle V;
-    local vector           COM, X, Y, Z;
+    local DHVehicle V;
+    local vector    COM, X, Y, Z;
 
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
@@ -3440,8 +3406,8 @@ exec function DrawCOM(optional bool bClearScreen)
 // New debug exec to adjust a vehicle's karma centre of mass (enter X, Y & Z offset values as one tenths)
 exec function SetCOM(int NewX, int NewY, int NewZ)
 {
-    local ROWheeledVehicle V;
-    local vector           COM, OldCOM;
+    local DHVehicle V;
+    local vector    COM, OldCOM;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
@@ -3460,7 +3426,7 @@ exec function SetCOM(int NewX, int NewY, int NewZ)
 // New debug exec to adjust a vehicle's karma max angular speed (higher values make the vehicle slow when turning & make it feel "heavier")
 exec function SetMaxAngSpeed(float NewValue)
 {
-    local ROWheeledVehicle V;
+    local DHVehicle V;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
     {
@@ -3474,7 +3440,7 @@ exec function SetMaxAngSpeed(float NewValue)
 // New debug exec to adjust a vehicle's karma angular damping
 exec function SetAngDamp(float NewValue)
 {
-    local ROWheeledVehicle V;
+    local DHVehicle V;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
     {
@@ -3488,7 +3454,7 @@ exec function SetAngDamp(float NewValue)
 // New debug exec to adjust location of engine smoke/fire position
 exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
 {
-    local ROWheeledVehicle V;
+    local DHVehicle V;
 
     if ((Level.NetMode == NM_Standalone || (class'DH_LevelInfo'.static.DHDebugMode() && Level.NetMode != NM_DedicatedServer)) && GetVehicleBase(V))
     {

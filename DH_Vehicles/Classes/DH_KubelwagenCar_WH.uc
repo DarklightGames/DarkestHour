@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_KubelwagenCar_WH extends DHWheeledVehicle;
+class DH_KubelwagenCar_WH extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Kubelwagen_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
@@ -13,10 +13,8 @@ class DH_KubelwagenCar_WH extends DHWheeledVehicle;
 defaultproperties
 {
     MaxPitchSpeed=250.0
-    EngineSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
-    EngineSoundBone="Engine"
     WheelSoftness=0.025
     WheelPenScale=0.85
     WheelPenOffset=0.01
@@ -42,8 +40,6 @@ defaultproperties
     GearRatios(3)=0.55
     GearRatios(4)=0.8
     TransRatio=0.17
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1

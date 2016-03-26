@@ -16,7 +16,6 @@ defaultproperties
     NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_GunPitch)
     GunOpticsHitPointIndex=0
-    bAllowRiders=true
     LeftTreadIndex=4
     RightTreadIndex=3
     MaxCriticalSpeed=730.0
@@ -30,7 +29,6 @@ defaultproperties
     URightArmorSlope=30.0
     ULeftArmorSlope=30.0
     URearArmorSlope=9.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=100.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
@@ -41,10 +39,10 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL48_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL48_turret_look'
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosX(1)=0.64
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.66
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosX(1)=0.64
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.66
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

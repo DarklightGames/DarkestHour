@@ -3,42 +3,28 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHBoatVehicle extends DHWheeledVehicle
+class DHBoatVehicle extends DHVehicle
     abstract;
 
-var     sound               WashSound;
-var     name                WashSoundBoneL;
-var     ROSoundAttachment   WashSoundAttachL;
-var     name                WashSoundBoneR;
-var     ROSoundAttachment   WashSoundAttachR;
+var     sound   WashSound;
 
-var     name                DestroyedAnimName;
-var     float               DestroyedAnimRate;
+var     name    DestroyedAnimName;
 
-// Modified to spawn wash sound attachments
-simulated function PostBeginPlay()
+// Modified to add wash sound attachment
+simulated function SpawnVehicleAttachments()
 {
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
+    if (WashSound == none)
     {
-        if (WashSoundAttachL == none)
-        {
-            WashSoundAttachL = Spawn(class'ROSoundAttachment');
-            WashSoundAttachL.AmbientSound = WashSound;
-            WashSoundAttachL.SoundVolume = 75;
-            WashSoundAttachL.SoundRadius = 300.0;
-            AttachToBone(WashSoundAttachL, WashSoundBoneL);
-        }
+        VehicleAttachments.Remove(0, 1); // if boat doesn't have a specified WashSound, remove the default attachment from array as it isn't valid
+    }
 
-        if (WashSoundAttachR == none)
-        {
-            WashSoundAttachR = Spawn(class'ROSoundAttachment');
-            WashSoundAttachR.AmbientSound = WashSound;
-            WashSoundAttachR.SoundVolume = 75;
-            WashSoundAttachR.SoundRadius = 300.0;
-            AttachToBone(WashSoundAttachR, WashSoundBoneR);
-        }
+    super.SpawnVehicleAttachments();
+
+    if (VehicleAttachments[0].Actor != none)
+    {
+        VehicleAttachments[0].Actor.AmbientSound = WashSound;
+        VehicleAttachments[0].Actor.SoundVolume = 255;
+        VehicleAttachments[0].Actor.SoundRadius = 300.0;
     }
 }
 
@@ -93,62 +79,34 @@ simulated event DestroyAppearance()
     // Loop any destroyed vehicle animation
     if (DestroyedAnimName != '')
     {
-        LoopAnim(DestroyedAnimName, DestroyedAnimRate);
+        LoopAnim(DestroyedAnimName);
     }
-}
-
-// Modified to include wash sound attachments
-simulated function DestroyAttachments()
-{
-    if (WashSoundAttachL != none)
-    {
-        WashSoundAttachL.Destroy();
-    }
-
-    if (WashSoundAttachR != none)
-    {
-        WashSoundAttachR.Destroy();
-    }
-
-    super.DestroyAttachments();
 }
 
 defaultproperties
 {
-    EngineHealth=100 // reinstate default from ROWheeledVehicle
-    ChangeUpPoint=1990.0
-    ChangeDownPoint=1000.0
-    SteerBoneName="steeringwheel"
+    VehicleAttachments(0)=(AttachClass=class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
+    bCanSwim=true
+    GroundSpeed=200.0
+    WaterSpeed=200.0
     DustSlipRate=0.0
     DustSlipThresh=100000.0
-    ViewShakeRadius=600.0
-    ViewShakeOffsetMag=(X=0.5,Z=2.0)
-    ViewShakeOffsetFreq=7.0
-    DestroyedAnimRate=1.0
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // reinstate defaults x 3 from ROWheeledVehicle
+    WaterDamage=0.0
+    EngineHealth=100
+    ImpactDamageThreshold=5000.0
+    ImpactDamageMult=0.001
+    MaxDesireability=0.1
+    CollisionRadius=300.0
+    CollisionHeight=45.0
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
-    DestructionAngularMomentum=(Max=150.0)
-    ExplosionSoundRadius=800.0
-    ExplosionDamage=300.0
-    ExplosionRadius=600.0
-    ImpactDamageThreshold=5000.0 // reinstate default from ROWheeledVehicle
-    ImpactDamageMult=0.001
-    DriverTraceDistSquared=4000000.0 // default 2000 from ROWheeledVehicle, but squared for new DistSquared variable
-    InitialPositionIndex=0
-    VehicleMass=12.0
-    bKeyVehicle=true
-    bFPNoZFromCameraPitch=true
+    DestructionAngularMomentum=(Min=50.0,Max=150.0)
+    ViewShakeRadius=600.0
+    ViewShakeOffsetMag=(X=0.5,Y=0.0,Z=2.0)
+    ViewShakeOffsetFreq=7.0
     CenterSpringForce="SpringONSSRV"
-    MaxDesireability=0.1
-    WaterDamage=0.0
-    bCanSwim=true
-    GroundSpeed=200.0
-    WaterSpeed=200.0
-    PitchUpLimit=500
-    PitchDownLimit=58000
-    CollisionRadius=300.0
-    CollisionHeight=45.0
 }

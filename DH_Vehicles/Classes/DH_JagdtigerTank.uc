@@ -13,7 +13,6 @@ class DH_JagdtigerTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    bAllowRiders=true
     NewVehHitpoints(0)=(PointRadius=6.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-37.0,Z=98.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Z=55.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Z=55.0),NewHitPointType=NHP_GunPitch)
@@ -39,9 +38,9 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JT_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JT_turret_look'
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosY=0.52
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosY=0.52
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

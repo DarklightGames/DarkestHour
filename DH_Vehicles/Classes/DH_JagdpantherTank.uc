@@ -9,15 +9,25 @@ class DH_JagdpantherTank extends DHArmoredVehicle;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
+// Hack to stop jagdpanther camo variants without a matching schurzen texture from spawning schurzen
+simulated function SpawnVehicleAttachments()
+{
+    if (RandomAttachment.Skin == none)
+    {
+        RandomAttachOptions.Length = 0;
+    }
+
+    super.SpawnVehicleAttachments();
+}
+
 defaultproperties
 {
-    SchurzenTexture=texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2' // ideally get better matching texture made, but for now this is passable match
-    SchurzenTypes(0)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    SchurzenTypes(1)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    SchurzenTypes(2)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    SchurzenTypes(3)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
-    SchurzenOffset=(X=-18.0,Y=-1.65,Z=-14.0)
-    SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
+    // TODO: ideally get better matching schurzen texture made for this camo variant, but for now this is passable match:
+    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skin=texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')
+    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
+    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
+    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
+    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
     NewVehHitpoints(0)=(PointRadius=8.0,PointScale=1.0,PointBone="body",PointOffset=(X=55.0,Y=-40.0,Z=77.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_GunPitch)
@@ -46,10 +56,10 @@ defaultproperties
     RumbleSoundBone="body"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_turret_look'
-    VehicleHudThreadsPosX(0)=0.38
-    VehicleHudThreadsPosX(1)=0.63
-    VehicleHudThreadsPosY=0.54
-    VehicleHudThreadsScale=0.61
+    VehicleHudTreadsPosX(0)=0.38
+    VehicleHudTreadsPosX(1)=0.63
+    VehicleHudTreadsPosY=0.54
+    VehicleHudTreadsScale=0.61
     bVehicleHudUsesLargeTexture=true
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"

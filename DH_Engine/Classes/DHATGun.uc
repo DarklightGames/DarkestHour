@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHATGun extends DHArmoredVehicle
+class DHATGun extends DHVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
-// The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), resupply or self-destruct if empty:
+// The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), or self-destruct if empty:
 simulated function PostNetReceive();
 function Fire(optional float F);
 function ServerStartEngine();
@@ -20,6 +20,7 @@ simulated function UpdateMovementSound(float MotionSoundVolume);
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
 simulated function SetupTreads();
 simulated function DestroyTreads();
+function CheckTreadDamage(vector HitLocation, vector Momentum);
 function DamageTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
 function MaybeDestroyVehicle();
@@ -32,33 +33,6 @@ function StartEngineFire(Pawn InstigatedBy);
 simulated function StartDriverHatchFire();
 function Timer();
 simulated function SetNextTimer(optional float Now);
-//function bool ResupplyAmmo();
-//function EnteredResupply();
-//function LeftResupply();
-
-// Modified as nearly everything in DHArmoredVehicle is irrelevant to AT gun
-simulated function PostBeginPlay()
-{
-    super(Vehicle).PostBeginPlay();
-
-    if (HasAnim(BeginningIdleAnim))
-    {
-        PlayAnim(BeginningIdleAnim);
-    }
-
-    // Set up new NotifyParameters object
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        NotifyParameters = new class'ObjectMap';
-        NotifyParameters.Insert("VehicleClass", Class);
-    }
-}
-
-// Modified as everything in DHArmoredVehicle & ROWheeledVehicle is irrelevant to AT gun
-simulated function PostNetBeginPlay()
-{
-    super(ROVehicle).PostNetBeginPlay();
-}
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
@@ -74,6 +48,11 @@ function bool TryToDrive(Pawn P)
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
         return false;
+    }
+
+    if (bDebuggingText)
+    {
+        P.ClientMessage("Gun Health:" @ Health);
     }
 
     // Trying to enter a gun that isn't on our team
@@ -207,19 +186,31 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-    bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
+    bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
+    bHasTreads=false
+    bMustBeTankCommander=false
+    bMultiPosition=false
+    bSpecialHUD=false
+
+    TouchMessage="Use the "
+    VehicleNameString="AT gun"
+    VehicleMass=5.0
     PointValue=2.0
-    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    MaxDesireability=1.9
+    CollisionRadius=75.0
+    CollisionHeight=100.0
+    MinBrakeFriction=40.0
+
+    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
+    VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
+    DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
+    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // def from DHV
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple' // def from DHV
     DisintegrationHealth=-1000000000.0
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
-    DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
-    bMustBeTankCommander=false
-    bMultiPosition=false
-    TouchMessage="Use the "
-    VehicleMass=5.0
+
     ExitPositions(0)=(X=0.0,Y=0.0,Z=100.0)  // last resort (because we start at index 1 for a cannon pawn)
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0) // index 1 is gunner's 1st choice exit position
     ExitPositions(2)=(X=-150.0,Y=0.0,Z=0.0) // all the rest are generic fallbacks to try different positions to try & get the player off the gun
@@ -236,14 +227,7 @@ defaultproperties
     ExitPositions(13)=(X=-100.0,Y=0.0,Z=75.0)
     ExitPositions(14)=(X=-100.0,Y=75.0,Z=75.0)
     ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
-    VehicleNameString="AT gun"
-    MaxDesireability=1.9
-    bSpecialHUD=false
-    CollisionRadius=75.0
-    CollisionHeight=100.0
-    MinBrakeFriction=40.0
-    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
-    VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
+
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

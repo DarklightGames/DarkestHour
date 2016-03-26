@@ -22,7 +22,6 @@ defaultproperties
     URearArmorFactor=2.0
     UFrontArmorSlope=14.0
     URearArmorSlope=9.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=103.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
@@ -33,9 +32,9 @@ defaultproperties
     RumbleSoundBone="body"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer4j_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer4j_turret_look'
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.71
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.71
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

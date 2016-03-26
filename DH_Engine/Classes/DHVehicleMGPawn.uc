@@ -21,7 +21,7 @@ var     int         BinocPositionIndex;          // the position index for when 
 var     bool        bPlayerHasBinocs;            // on entering, records whether player has binoculars
 var     texture     BinocsOverlay;               // 1st person texture overlay to draw when in binocs position
 var     vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
-var     RODummyAttachment   BinocsAttachment;    // decorative actor spawned locally when commander is using binoculars
+var     DHDecoAttachment    BinocsAttachment;    // decorative actor spawned locally when commander is using binoculars
 
 // Gunsight
 var     float       OverlayCenterSize;           // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
@@ -1139,8 +1139,7 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 
     AV = DHArmoredVehicle(VehicleBase);
 
-    return AV != none && AV.bMustUnbuttonToSwitchToRider && AV.bAllowRiders &&
-        ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && !CanExit();
+    return AV != none && ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && AV.bMustUnbuttonToSwitchToRider && !CanExit();
 }
 
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
@@ -1457,7 +1456,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
         {
             if (BinocsAttachment == none)
             {
-                BinocsAttachment = Spawn(class'DHVehicleDecoAttachment');
+                BinocsAttachment = Spawn(class'DHDecoAttachment');
                 BinocsAttachment.SetDrawType(DT_Mesh);
                 BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger');
             }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackTransport extends DHWheeledVehicle;
+class DH_M3A1HalftrackTransport extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M3A1Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
@@ -13,6 +13,15 @@ defaultproperties
 {
     bIsApc=true
     bHasTreads=true
+    TreadHitMaxHeight=2.5
+    VehicleHudTreadsPosX(0)=0.39
+    VehicleHudTreadsPosX(1)=0.61
+    VehicleHudTreadsPosY=0.68
+    VehicleHudTreadsScale=0.34
+    FrontRightAngle=108.0 // angles set specifically for tread hits
+    RearRightAngle=168.0
+    RearLeftAngle=191.5
+    FrontLeftAngle=251.5
     PointValue=2.0
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
@@ -68,8 +77,6 @@ defaultproperties
     GearRatios(3)=0.5
     GearRatios(4)=0.69
     TransRatio=0.12
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
@@ -213,8 +220,7 @@ defaultproperties
     Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int'
     Skins(5)=texture'DH_VehiclesUS_tex.Treads.M3A1Halftrack_treads'
     Skins(6)=texture'DH_VehiclesUS_tex.Treads.M3A1Halftrack_treads'
-    ColMeshStaticMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_visor_coll' // collision mesh attachment representing the driver's armoured visor
-    ColMeshAttachBone="Drivers_Hatch"
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_visor_coll',AttachBone="Drivers_Hatch") // collision attachment for driver's armoured visor
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

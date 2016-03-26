@@ -23,7 +23,6 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Cromwell Mk.IV"
     VehicleTeam=1
-    PointValue=3.0
     MaxDesireability=1.9
     CollisionRadius=175.0
     CollisionHeight=60.0
@@ -131,9 +130,9 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Look'
     VehicleHudEngineX=0.505
     VehicleHudEngineY=0.76
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosY=0.57
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosY=0.57
+    VehicleHudTreadsScale=0.72
     VehicleHudOccupantsX(0)=0.56
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(1)=0.50

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OpelBlitz extends DHWheeledVehicle
+class DH_OpelBlitz extends DHVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Animations\DH_OpelBlitz_anm.ukx
@@ -36,8 +36,6 @@ defaultproperties
     GearRatios(3)=0.65
     GearRatios(4)=0.95
     TransRatio=0.22
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1

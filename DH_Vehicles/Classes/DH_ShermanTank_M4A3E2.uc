@@ -17,6 +17,7 @@ defaultproperties
     TreadHitMaxHeight=65.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_right'
+    DamagedTrackAttachBone="body"
     MaxCriticalSpeed=638.0
     AmmoIgnitionProbability=0.5
     TreadDamageThreshold=0.75
@@ -38,8 +39,8 @@ defaultproperties
     RumbleSoundBone="Turret_placement"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.ShermanJumbo75_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.ShermanJumbo75_turret_look'
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

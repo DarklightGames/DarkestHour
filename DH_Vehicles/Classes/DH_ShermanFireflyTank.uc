@@ -23,7 +23,6 @@ defaultproperties
     URearArmorFactor=3.8
     UFrontArmorSlope=55.0
     URearArmorSlope=10.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=250.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
@@ -34,10 +33,10 @@ defaultproperties
     RumbleSoundBone="Turret_placement"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_look'
-    VehicleHudThreadsPosX(0)=0.34
-    VehicleHudThreadsPosX(1)=0.64
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosX(0)=0.34
+    VehicleHudTreadsPosX(1)=0.64
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_R_1" // the left & right wheel bones are muddled up in the skeletal mesh !
     LeftWheelBones(1)="Wheel_R_2"
     LeftWheelBones(2)="Wheel_R_3"

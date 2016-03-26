@@ -93,7 +93,7 @@ simulated function DrawHUD(Canvas C)
     local HudBase.SpriteWidget     Widget;
     local PlayerController PC;
     local ROHud            HUD;
-    local DHArmoredVehicle AV;
+    local DHVehicle        V;
     local color            VehicleColor;
     local float            VehicleHealthScale;
     local rotator          MyRot;
@@ -105,9 +105,9 @@ simulated function DrawHUD(Canvas C)
     if (PC != none && !PC.bBehindView && VehicleBase != none && Gun != none)
     {
         HUD = ROHud(PC.myHUD);
-        AV = DHArmoredVehicle(VehicleBase);
+        V = DHArmoredVehicle(VehicleBase);
 
-        if (HUD != none && AV != none && AV.VehicleHudTurretLook != none && AV.VehicleHudTurret != none)
+        if (HUD != none && V != none && V.VehicleHudTurretLook != none && V.VehicleHudTurret != none)
         {
             // Figure where to draw
             Coords.PosX = C.ClipX * HUD.VehicleIconCoords.X;
@@ -136,8 +136,8 @@ simulated function DrawHUD(Canvas C)
             Widget.Tints[1] = VehicleColor;
 
             // Draw the turret
-            AV.VehicleHudTurretLook.Rotation.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
-            Widget.WidgetTexture = AV.VehicleHudTurretLook;
+            V.VehicleHudTurretLook.Rotation.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+            Widget.WidgetTexture = V.VehicleHudTurretLook;
             Widget.Tints[0].A /= 2;
             Widget.Tints[1].A /= 2;
             HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
@@ -145,8 +145,8 @@ simulated function DrawHUD(Canvas C)
             Widget.Tints[1] = VehicleColor;
 
             MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-            AV.VehicleHudTurret.Rotation.Yaw = VehicleBase.Rotation.Yaw - MyRot.Yaw;
-            Widget.WidgetTexture = AV.VehicleHudTurret;
+            V.VehicleHudTurret.Rotation.Yaw = VehicleBase.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = V.VehicleHudTurret;
             HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
         }
     }

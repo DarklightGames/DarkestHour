@@ -240,7 +240,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
         if (HitVehicleWeapon.IsA('DHVehicleCannon')
-            && !DHVehicleCannon(HitVehicleWeapon).DHShouldPenetrate(self, HitLocation, DirectionNormal, GetPenetration(LaunchLocation - HitLocation)))
+            && !DHVehicleCannon(HitVehicleWeapon).ShouldPenetrate(self, HitLocation, DirectionNormal, GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -346,7 +346,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -432,14 +432,14 @@ simulated function BlowUp(vector HitLocation)
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor            Victim, TraceActor;
-    local DHArmoredVehicle AV;
-    local ROPawn           P;
-    local array<ROPawn>    CheckedROPawns;
-    local bool             bAlreadyChecked;
-    local vector           VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
-    local float            DamageScale, Distance, DamageExposure;
-    local int              i;
+    local Actor         Victim, TraceActor;
+    local DHVehicle     V;
+    local ROPawn        P;
+    local array<ROPawn> CheckedROPawns;
+    local bool          bAlreadyChecked;
+    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local float         DamageScale, Distance, DamageExposure;
+    local int           i;
 
     // Make sure nothing else runs HurtRadius() while we are in the middle of the function
     if (bHurtEntry)
@@ -479,14 +479,14 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         }
 
         // Now we need to check whether there's something in the way that could shield this actor from the blast
-        // Usually we trace to actor's location, but for a tank (or similar, including AT gun), we adjust Z location to give a more consistent, realistic tracing height
+        // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
         VictimLocation = Victim.Location;
-        AV = DHArmoredVehicle(Victim);
+        V = DHVehicle(Victim);
 
-        if (AV != none && AV.PassengerWeapons.Length > 0 && AV.PassengerWeapons[0].WeaponBone != '')
+        if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
         {
-            VictimLocation.Z = AV.GetBoneCoords(AV.PassengerWeapons[0].WeaponBone).Origin.Z;
+            VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast

@@ -20,7 +20,6 @@ defaultproperties
     UFrontArmorSlope=30.0
     URightArmorSlope=15.0
     ULeftArmorSlope=15.0
-    PointValue=3.0
     MaxPitchSpeed=450.0
     TreadVelocityScale=300.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
@@ -31,10 +30,10 @@ defaultproperties
     RumbleSoundBone="body"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_look'
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosX(1)=0.64
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosX(1)=0.64
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

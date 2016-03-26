@@ -12,7 +12,6 @@ class DH_Tiger2BTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    bAllowRiders=true
     MaxCriticalSpeed=693.0
     TreadDamageThreshold=1.0
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
@@ -35,9 +34,9 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger2B_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger2B_turret_look'
-    VehicleHudThreadsPosX(1)=0.67
-    VehicleHudThreadsPosY=0.54
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosX(1)=0.67
+    VehicleHudTreadsPosY=0.54
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

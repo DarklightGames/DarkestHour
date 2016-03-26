@@ -81,7 +81,7 @@ simulated function PostBeginPlay()
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(CollisionStaticMesh, YawBone, self); // attach to yaw bone, so col mesh turns with turret/cannon
+        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, YawBone); // attach to yaw bone, so col mesh turns with turret/cannon
 
         if (CollisionMeshActor != none)
         {
@@ -1167,9 +1167,8 @@ simulated function bool HitDriver(vector HitLocation, vector Momentum)
     return false;
 }
 
-// Matt: new generic function to handle 'should penetrate' calcs for any shell type
-// Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+// New generic function to handle penetration calcs for any shell type
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
     local float  WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
     local vector LocDir, HitDir, X, Y, Z;
@@ -1445,7 +1444,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
     return Acos(Cos(class'DHLib'.static.DegreesToRadians(Abs(ArmorSlopeDegrees))) * Cos(AOI));
 }
 
-// Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
+// New generic function to work with generic ShouldPenetrate & CheckPenetration functions
 simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
@@ -1722,8 +1721,8 @@ simulated function InitializeWeaponPawn(DHVehicleCannonPawn CannonPwn)
 // & an option for to skin cannon mesh using CannonSkins array in Vehicle class (avoiding need for separate cannon pawn & cannon classes just for camo variants)
 simulated function InitializeVehicleBase()
 {
-    local DHArmoredVehicle AV;
-    local int              i;
+    local DHVehicle V;
+    local int       i;
 
     // Set any optional attachment offset, when attaching cannon/turret to hull (set separately on net client as replication is unreliable & loses fractional precision)
     if (CannonAttachmentOffset != vect(0.0, 0.0, 0.0))
@@ -1731,35 +1730,30 @@ simulated function InitializeVehicleBase()
         SetRelativeLocation(CannonAttachmentOffset);
     }
 
-    AV = DHArmoredVehicle(Base);
+    V = DHVehicle(Base);
 
-    if (AV != none)
+    if (V != none)
     {
-        // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-        AV.CannonTurret = self;
+        // Set the vehicle's Cannon reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
+        V.Cannon = self;
 
         if (Level.NetMode != NM_DedicatedServer)
         {
+            // Option to skin the cannon mesh using CannonSkins specified in vehicle class
+            for (i = 0; i < V.CannonSkins.Length; ++i)
+            {
+                if (V.CannonSkins[i] != none)
+                {
+                    Skins[i] = V.CannonSkins[i];
+                }
+            }
+
             // If vehicle is burning, start the turret hatch fire effect
-            if (AV.bOnFire)
+            if (V.IsA('DHArmoredVehicle') && DHArmoredVehicle(V).bOnFire)
             {
                 StartTurretFire();
             }
-
-            // Option to skin the cannon mesh using CannonSkins specified in vehicle class
-            if (AV.CannonSkins.Length > 0)
-            {
-                for (i = 0; i < AV.CannonSkins.Length; ++i)
-                {
-                    Skins[i] = AV.CannonSkins[i];
-                }
-            }
         }
-    }
-    // Option for cannon to be mounted on a DHWheeledVehicle (e.g. Sd.Kfz.251/22 - German half-track with mounted pak 40 AT gun)
-    else if (DHWheeledVehicle(Base) != none)
-    {
-        DHWheeledVehicle(Base).Cannon = self;
     }
 
     // If we also have the VehicleWeaponPawn actor, initialize anything we need to do where we need both actors

@@ -35,8 +35,8 @@ simulated function PostBeginPlay()
 
     // Matt: I would use SM literals here, as it's a one-off, but for some strange reason it won't compile ("Missing StaticMesh name")
     // The #exec OBJ LOAD FILE directive should fix that, but it seems to have no effect, so I've had to add variables for the SMs
-    TurretCoverColMeshLeft = class'DHCollisionMeshActor'.static.AttachCollisionMesh(TurretCoverColStaticMeshLeft, 'com_hatch_L', self);
-    TurretCoverColMeshRight = class'DHCollisionMeshActor'.static.AttachCollisionMesh(TurretCoverColStaticMeshRight, 'com_hatch_R', self);
+    TurretCoverColMeshLeft = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, TurretCoverColStaticMeshLeft, 'com_hatch_L');
+    TurretCoverColMeshRight = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, TurretCoverColStaticMeshRight, 'com_hatch_R');
 
     if (TurretCoverColMeshLeft != none)
     {

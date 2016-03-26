@@ -30,7 +30,7 @@ singular function Touch(Actor Other)
         // Hurt the vehicle itself
         Other.TakeDamage(Damage, none, Location, Location, MyDamageType);
 
-        if (DHArmoredVehicle(Other) != none)
+        if (DHVehicle(Other) != none && DHVehicle(Other).bHasTreads)
         {
             // Lets possibly de-track the vehicle (80% chance)
             RandomNum = Rand(100);
@@ -39,11 +39,11 @@ singular function Touch(Actor Other)
             {
                 if (vector(Other.Rotation) dot Normal(Location - Other.Location) > 0.0)
                 {
-                    DHArmoredVehicle(Other).DamageTrack(true);
+                    DHVehicle(Other).DamageTrack(true);
                 }
                 else
                 {
-                    DHArmoredVehicle(Other).DamageTrack(false);
+                    DHVehicle(Other).DamageTrack(false);
                 }
             }
         }
@@ -64,10 +64,10 @@ singular function Touch(Actor Other)
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor            Victim, TraceActor;
-    local DHArmoredVehicle AV;
-    local vector           VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
-    local float            DamageScale, Distance;
+    local Actor     Victim, TraceActor;
+    local DHVehicle V;
+    local vector    VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local float     DamageScale, Distance;
 
     // Make sure nothing else runs HurtRadius() while we are in the middle of the function
     if (bHurtEntry)
@@ -108,11 +108,11 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // Usually we trace to actor's location, but for a tank (or similar, including AT gun), we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
         VictimLocation = Victim.Location;
-        AV = DHArmoredVehicle(Victim);
+        V = DHVehicle(Victim);
 
-        if (AV != none && AV.PassengerWeapons.Length > 0 && AV.PassengerWeapons[0].WeaponBone != '')
+        if (V != none && V.Cannon != none && V.Cannon.AttachmentBone != '')
         {
-            VictimLocation.Z = AV.GetBoneCoords(AV.PassengerWeapons[0].WeaponBone).Origin.Z;
+            VictimLocation.Z = V.GetBoneCoords(V.Cannon.AttachmentBone).Origin.Z;
         }
 
         // Trace from explosion point to the actor to check whether anything is in the way that could shield it from the blast

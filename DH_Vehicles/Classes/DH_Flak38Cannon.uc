@@ -67,7 +67,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 }
 
 // From DHATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DHVehicleCannon (AT gun will always be penetrated by a shell)
-simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }

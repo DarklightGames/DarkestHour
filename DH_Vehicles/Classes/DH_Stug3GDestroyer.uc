@@ -22,7 +22,6 @@ defaultproperties
     URearArmorFactor=5.0
     UFrontArmorSlope=20.0
     URearArmorSlope=10.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=146.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
@@ -34,9 +33,9 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_look'
     bVehicleHudUsesLargeTexture=true
-    VehicleHudThreadsPosX(0)=0.37
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.66
+    VehicleHudTreadsPosX(0)=0.37
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.66
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

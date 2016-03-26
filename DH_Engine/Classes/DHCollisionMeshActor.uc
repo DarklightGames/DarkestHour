@@ -79,7 +79,8 @@ simulated function PostBeginPlay()
 }
 
 // New function to spawn, attach & align a collision static mesh actor (used by the classes that spawn a col mesh)
-simulated static function DHCollisionMeshActor AttachCollisionMesh(StaticMesh ColStaticMesh, name AttachBone, Actor ColMeshOwner, optional class<DHCollisionMeshActor> ColMeshActorClass)
+simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMeshOwner, StaticMesh ColStaticMesh,
+    name AttachBone, optional vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass)
 {
     local DHCollisionMeshActor ColMeshActor;
 
@@ -98,12 +99,19 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(StaticMesh Co
     if (ColMeshActor != none)
     {
         // Attach col mesh actor to specified attachment bone, so the col mesh will move with the relevant part of the owning actor
-        ColMeshActor.bHardAttach = true;
         ColMeshOwner.AttachToBone(ColMeshActor, AttachBone);
 
-        // The col mesh will have been modelled on the owning actor's mesh origin, but is now centred on the attachment bone, so reposition it to align with owning mesh
-        ColMeshActor.SetRelativeRotation(ColMeshOwner.Rotation - ColMeshOwner.GetBoneRotation(AttachBone)); // as attachment bone may be modelled with rotation in reference pose
-        ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << (ColMeshOwner.Rotation - ColMeshActor.RelativeRotation));
+        // Apply a positional offset if one has been specified
+        if (AttachOffset != vect(0.0, 0.0, 0.0))
+        {
+            ColMeshActor.SetRelativeLocation(AttachOffset);
+        }
+        // But usually the col mesh has been modelled on the owning actor's mesh origin, but is now centred on the attachment bone, so reposition it to align with owning mesh
+        else
+        {
+            ColMeshActor.SetRelativeRotation(ColMeshOwner.Rotation - ColMeshOwner.GetBoneRotation(AttachBone)); // as attachment bone may be modelled with rotation in reference pose
+            ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << (ColMeshOwner.Rotation - ColMeshActor.RelativeRotation));
+        }
 
         // Finally set the static mesh for the col mesh actor (may be none, if using a subclass of DHCollisionMeshActor & that already specifies a static mesh)
         if (ColStaticMesh != none)
@@ -145,4 +153,5 @@ defaultproperties
     bHidden=true
     bWorldGeometry=false
     bStatic=false
+    bHardAttach=true
 }

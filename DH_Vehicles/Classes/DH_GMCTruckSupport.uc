@@ -9,8 +9,7 @@ defaultproperties
 {
     ResupplyAttachmentClass=class'DH_GMCTruckResupplyAttachment'
     ResupplyAttachBone="supply"
-    ResupplyDecoAttachmentClass=class'DH_GMCTruckDecoAttachment'
-    ResupplyDecoAttachBone="Deco"
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark',AttachBone="Deco") // decorative only representation of resupply crates
     PassengerPawns(1)=(AttachBone="passenger_l_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider1_idle")
     VehicleHudOccupantsX(2)=0.45

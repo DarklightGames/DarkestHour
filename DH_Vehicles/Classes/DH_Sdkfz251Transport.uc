@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Transport extends DHWheeledVehicle;
+class DH_Sdkfz251Transport extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc.usx
@@ -12,6 +12,15 @@ defaultproperties
 {
     bIsApc=true
     bHasTreads=true
+    TreadHitMaxHeight=-5.0
+    VehicleHudTreadsPosX(0)=0.4
+    VehicleHudTreadsPosX(1)=0.6
+    VehicleHudTreadsPosY=0.55
+    VehicleHudTreadsScale=0.48
+    FrontRightAngle=30.0 // angles set specifically for tread hits
+    RearRightAngle=160.5
+    RearLeftAngle=199.5
+    FrontLeftAngle=330.0
     PointValue=2.0
     FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
@@ -69,8 +78,6 @@ defaultproperties
     GearRatios(3)=0.5
     GearRatios(4)=0.72
     TransRatio=0.12
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
@@ -225,8 +232,7 @@ defaultproperties
     Skins(1)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(2)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
     Skins(3)=texture'axis_vehicles_tex.int_vehicles.halftrack_int'
-    ColMeshStaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll' // collision mesh attachment representing the driver's armoured visors
-    ColMeshAttachBone="driver_hatch"
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack_visor_Coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     CollisionRadius=175.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0

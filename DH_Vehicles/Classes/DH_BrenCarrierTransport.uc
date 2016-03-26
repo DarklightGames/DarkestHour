@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenCarrierTransport extends DHWheeledVehicle;
+class DH_BrenCarrierTransport extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_BrenCarrier_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex2.utx
@@ -14,6 +14,16 @@ defaultproperties
 {
     bIsApc=true
     bHasTreads=true
+//  bSpecialTankTurning=true // TODO: think BC should have this as is fully tracked (RO version had this)
+    TreadHitMaxHeight=7.0
+    VehicleHudTreadsPosX(0)=0.37
+    VehicleHudTreadsPosX(1)=0.66
+    VehicleHudTreadsPosY=0.47
+    VehicleHudTreadsScale=0.65
+    FrontRightAngle=20.0 // angles set specifically for tread hits
+    RearRightAngle=157.0
+    RearLeftAngle=203.5
+    FrontLeftAngle=339.5
     PointValue=2.0
     VehicleSpikeTime=60.0
     MaxPitchSpeed=125.0
@@ -62,8 +72,6 @@ defaultproperties
     GearRatios(3)=0.55
     GearRatios(4)=0.6
     TransRatio=0.12
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1

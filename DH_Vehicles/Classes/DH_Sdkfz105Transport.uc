@@ -3,43 +3,35 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz105Transport extends DHWheeledVehicle;
+class DH_Sdkfz105Transport extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
-var     DHVehicleDecoAttachment     WindscreenAttachment;
-
-// Modified to spawn an attachment for the windscreen, which allows this to be omitted in the 'armored' subclass that has armour shielding to the front
-simulated function PostBeginPlay()
+// Modified to match the windscreen camo to vehicle's 'cabin' texture
+simulated function SpawnVehicleAttachments()
 {
-    super.PostBeginPlay();
+    super.SpawnVehicleAttachments();
 
-    WindscreenAttachment = Spawn(class'DHVehicleDecoAttachment');
-
-    if (WindscreenAttachment != none)
+    if (VehicleAttachments.Length > 0 && VehicleAttachments[0].Actor != none)
     {
-        WindscreenAttachment.bHardAttach = true;
-        AttachToBone(WindscreenAttachment, 'Body');
-        WindscreenAttachment.SetStaticMesh(StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen');
-        WindscreenAttachment.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
-    }
-}
-
-// Modified to include WindscreenAttachment
-simulated function DestroyAttachments()
-{
-    super.DestroyAttachments();
-
-    if (WindscreenAttachment != none)
-    {
-        WindscreenAttachment.Destroy();
+        VehicleAttachments[0].Actor.Skins[0] = Skins[1];
     }
 }
 
 defaultproperties
 {
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
     bHasTreads=true
+    TreadHitMaxHeight=-5.0
+    VehicleHudTreadsPosX(0)=0.38
+    VehicleHudTreadsPosX(1)=0.62
+    VehicleHudTreadsPosY=0.57
+    VehicleHudTreadsScale=0.51
+    FrontRightAngle=39.0 // angles set specifically for tread hits
+    RearRightAngle=161.0
+    RearLeftAngle=199.0
+    FrontLeftAngle=321.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=40.0
     WheelRotationScale=150
@@ -89,8 +81,6 @@ defaultproperties
     GearRatios(3)=0.5
     GearRatios(4)=0.72
     TransRatio=0.12
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1

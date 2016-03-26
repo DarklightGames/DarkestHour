@@ -6,7 +6,6 @@
 class DHArmoredVehicle extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
 #exec OBJ LOAD FILE=..\sounds\DH_AlliedVehicleSounds2.uax
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
@@ -22,78 +21,38 @@ enum ENewHitPointType
     NHP_Hull,
 };
 
-var     ENewHitPointType    NewHitPointType;   // array of new DH special vehicle hit points that may be hit & damaged
+var     ENewHitPointType    NewHitPointType;    // array of new DH special vehicle hit points that may be hit & damaged
 
 struct NewHitpoint
 {
-    var   float             PointRadius;       // squared radius of the head of the pawn that is vulnerable to headshots
-    var   float             PointHeight;       // distance from base of neck to center of head - used for headshot calculation
-    var   float             PointScale;        // scale factor for radius & height
-    var   name              PointBone;         // bone to reference in offset
-    var   vector            PointOffset;       // amount to offset the hitpoint from the bone
-    var   bool              bPenetrationPoint; // this is a penetration point, open hatch, etc
-    var   float             DamageMultiplier;  // amount to scale damage to the vehicle if this point is hit
-    var   ENewHitPointType  NewHitPointType;   // what type of hit point this is
-};
-var     array<NewHitpoint>  NewVehHitpoints;   // an array of possible small points that can be hit. Index zero is always the driver
-
-struct PassengerPawn
-{
-    var name    AttachBone;
-    var vector  DrivePos;
-    var rotator DriveRot;
-    var name    DriveAnim;
-    var vector  FPCamPos;
+    var   float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
+    var   float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
+    var   float             PointScale;         // scale factor for radius & height
+    var   name              PointBone;          // bone to reference in offset
+    var   vector            PointOffset;        // amount to offset the hitpoint from the bone
+    var   bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
+    var   float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
+    var   ENewHitPointType  NewHitPointType;    // what type of hit point this is
 };
 
 // General
-var     bool        bIsSpawnVehicle;        // set by DHSpawnManager & used here for engine on/off hints
-var     float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
-var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
-var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
-var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
-var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
-var     ObjectMap   NotifyParameters;       // an object that can hold references to several other objects, which can be used by messages to build a tailored message
-var     bool        bNeedToInitializeDriver;// clientside flag that we need to do some driver set up, once we receive the Driver actor
-var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
-                                            // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
-// Positions & view
-var     int         UnbuttonedPositionIndex;      // lowest DriverPositions index where driver is unbuttoned & exposed
-var     int         FirstRiderPositionIndex;      // lowest DriverPositions index that is a vehicle rider position, i.e. riding on the outside of the vehicle
-var     bool        bAllowRiders;                 // players, including non-tankers, can ride on the back or top of the vehicle
-var     array<PassengerPawn> PassengerPawns;      // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of those classes
-var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
-var     name        PlayerCameraBone;             // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
-var     bool        bLockCameraDuringTransition;  // lock the camera's rotation to the camera bone during view transitions
-var     float       ViewTransitionDuration;       // used to control the time we stay in state ViewTransition
-var     vector      OverlayFPCamPos;              // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
-
-// Display
-var     array<material> CannonSkins;             // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
-var     texture         PeriscopeOverlay;        // driver's periscope overlay texture
-var     texture         DamagedPeriscopeOverlay; // gunsight overlay to show if optics have been broken
-var     array<material> DestroyedMeshSkins;      // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
-
-// Vehicle HUD icon
-var     ROTankCannon    CannonTurret;             // reference to the vehicle's cannon weapon  // update to DH version
-var     VehicleWeapon   HullMG;                   // a reference to the vehicle's mounted MG weapon // update to DH version
-var     TexRotator      VehicleHudTurret;         // rotating icon representing the vehicle's cannon
-var     TexRotator      VehicleHudTurretLook;
-var     float           VehicleHudThreadsPosX[2]; // 0.0 to 1.0 X positioning of tread damage indicators (index 0 = left, 1 = right)
-var     float           VehicleHudThreadsPosY;    // 0.0 to 1.0 Y positioning of tread damage indicators
-var     float           VehicleHudThreadsScale;   // drawing scale of tread damage indicators
+var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
+var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position if buttoned up
+var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
+var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
+var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
 
 // Armor penetration
 var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
 var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
-var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle tank was hit
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
 var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage
-var     float       HeavyEngineDamageThreshold; // proportion of remaining engine health below which the engine is so badly damaged it limits speed
+var     array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
 var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
 var     float       DriverKillChance;           // chance that shrapnel will kill driver
@@ -102,61 +61,6 @@ var     float       GunnerKillChance;           // chance that shrapnel will kil
 var     float       GunDamageChance;            // chance that shrapnel will damage gun pivot mechanism
 var     float       TraverseDamageChance;       // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
 var     float       OpticsDamageChance;         // chance that shrapnel will break gunsight optics
-var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
-
-// Engine
-var     bool        bEngineOff;                 // tank engine is simply switched off
-var     bool        bSavedEngineOff;            // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchInterval;     // interval in seconds before engine can be switched on/off again, used to stop players spamming the ignition
-var     float       IgnitionSwitchTime;         // records last engine on/off time, so we can check IgnitionSwitchInterval
-var     sound       DamagedStartUpSound;        // sound played when trying to start a damaged engine
-var     sound       DamagedShutDownSound;       // sound played when damaged engine shuts down
-
-// Sound attachments
-var         sound               LeftTreadSound;       // sound for the left tread squeaking
-var         sound               RightTreadSound;      // sound for the right tread squeaking
-var         sound               RumbleSound;          // interior rumble sound
-var         sound               TrackDamagedSound;    // alternative tread sound to play when a track is damaged
-var         ROSoundAttachment   LeftTreadSoundAttach; // actor references for the sound attachments
-var         ROSoundAttachment   RightTreadSoundAttach;
-var         ROSoundAttachment   InteriorRumbleSoundAttach;
-var         name                LeftTrackSoundBone;   // bone names for attaching sound attachment actors
-var         name                RightTrackSoundBone;
-var         name                RumbleSoundBone;
-
-// Treads & track wheels
-var     bool                bHasTreads;
-var     int                 LeftTreadIndex, RightTreadIndex;   // Skins array index positions of the treads
-var     VariableTexPanner   LeftTreadPanner, RightTreadPanner; // texture panners used to make it look like treads are rotating
-var     rotator             LeftTreadPanDirection, RightTreadPanDirection; // make sure the treads move the right way!
-var     float               TreadVelocityScale;              // uused to set ovement ((rotational) peed ffor he treads
-var     array<name>         LeftWheelBones, RightWheelBones; // bone names for the wheels on each side
-var     rotator             LeftWheelRot, RightWheelRot;     // keeps track of wheel rotational speed for animation
-var     int                 WheelRotationScale;              // used to set the rotation speed of the wheels, to move correctly with treads
-var     float               MaxPitchSpeed;                   // used to set the motion sound volume relative to vehicle speed
-
-// Damaged treads
-var     float               TreadHitMaxHeight;    // height (in Unreal units) of the top of the treads above hull mesh origin, used to detect tread hits (see notes in TakeDamage)
-var     float               TreadHitMinAngle;     // old, buggy system before TreadHitMaxHeight, where hit angle (radians) determined tread hits - to be deprecated in time
-var     float               TreadDamageThreshold; // minimum TreadDamageModifier in DamageType to possibly break treads
-var     bool                bLeftTrackDamaged;    // the left track has been damaged
-var     bool                bRightTrackDamaged;   // the left track has been damaged
-var     material            DamagedTreadPanner;   // replacement skin used for a damaged tread
-var     RODummyAttachment   DamagedTrackLeft, DamagedTrackRight;                     // static mesh attachment to show damaged track, e.g. broken track links (clientside only)
-var     StaticMesh          DamagedTrackStaticMeshLeft, DamagedTrackStaticMeshRight; // the static mesh to use for damaged left & right tracks
-
-// Schurzen
-struct SchurzenType
-{
-    var StaticMesh  SchurzenStaticMesh;       // a possible schurzen decorative attachment mesh, with different degrees of damage
-    var byte        PercentChance;            // the % chance of this deco attachment being the one spawned
-};
-
-var     SchurzenType        SchurzenTypes[4]; // an array of possible schurzen attachments
-var     byte                SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
-var     RODummyAttachment   Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
-var     vector              SchurzenOffset;   // optional positional offset from the attachment bone
-var     material            SchurzenTexture;  // the camo skin for the schurzen attachment
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
@@ -182,8 +86,8 @@ var     bool        bTurretFireNeeded;
 var     float       TurretHatchFireSpawnTime;
 var     bool        bHullMGFireNeeded;
 var     float       HullMGHatchFireSpawnTime;
-var     float       FireDetonationChance;   // chance of a fire blowing a tank up, runs each time the fire does damage
-var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the tank, runs each time engine takes fire damage
+var     float       FireDetonationChance;   // chance of a fire blowing a vehicle up, runs each time the fire does damage
+var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle, runs each time engine takes fire damage
 var     bool        bFirstPenetratingHit;
 var     bool        bHEATPenetration;       // a penetrating round is a HEAT round
 var     Controller  WhoSetOnFire;
@@ -191,200 +95,37 @@ var     int         HullFireStarterTeam;
 var     Controller  WhoSetEngineOnFire;
 var     int         EngineFireStarterTeam;
 var     sound       SmokingEngineSound;
-var     sound       VehicleBurningSound;
-var     sound       DestroyedBurningSound;
 
-// Debugging help & customizable stuff
-var     bool        bDrawPenetration;
-var     bool        bDebuggingText;
-var     bool        bPenetrationText;
-var     bool        bDebugTreadText;
-var     bool        bLogPenetration;
-var     bool        bDebugExitPositions;
+// Debugging
+var     bool        bDrawPenetration; // debug lines on screen
+var     bool        bPenetrationText; // text on screen
+var     bool        bLogPenetration;  // log entries
 
 replication
 {
-    // Variables the server will replicate to clients when this actor is 1st replicated
-    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        SchurzenIndex;
-
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bOnFire, bEngineOnFire, bIsSpawnVehicle, bRightTrackDamaged, bLeftTrackDamaged;
+        bOnFire, bEngineOnFire;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine,
-        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones in debug mode only
+        ServerHullFire, ServerEngineFire; // these ones in debug mode only
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to create passenger pawn classes from PassengerWeapons array, to make net clients show unoccupied rider positions on the HUD vehicle icon,
-// to set fire damage properties, to select any random schurzen model,
-// to set up new NotifyParameters object (including this vehicle class, which gets passed to screen messages & allows them to display vehicle name
+// Modified to set fire damage properties
 simulated function PostBeginPlay()
 {
-    local byte StartIndex, Index, RandomNumber, CumulativeChance, i;
-
-    super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
-
-    // Play neutral idle animation
-    if (HasAnim(BeginningIdleAnim))
-    {
-        PlayAnim(BeginningIdleAnim);
-    }
-
-    // Create passenger pawn classes from the PassengerWeapons array
-    if (PassengerPawns.Length > 0)
-    {
-        if (FirstRiderPositionIndex == -1)
-        {
-            FirstRiderPositionIndex = PassengerWeapons.Length; // set automatically, unless has been set specifically
-        }
-
-        StartIndex = PassengerWeapons.Length;
-        PassengerWeapons.Length = PassengerWeapons.Length + PassengerPawns.Length;
-
-        for (i = 0; i < PassengerPawns.Length; ++i)
-        {
-            Index = StartIndex + i;
-            PassengerWeapons[Index].WeaponPawnClass = class'DHPassengerPawn'.default.PassengerClasses[Index];
-            PassengerWeapons[Index].WeaponBone = PassengerPawns[i].AttachBone;
-        }
-    }
+    super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
-        // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
-        if (InitialPositionIndex > 0)
-        {
-            DriverPositionIndex = InitialPositionIndex;
-            PreviousPositionIndex = InitialPositionIndex;
-        }
-
         // Set fire damage rates
         HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
         EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
-
-        // For single player mode, we may as well set this here, as it's only intended to stop idiot net players blowing up friendly vehicles in spawn
-        if (Level.NetMode == NM_Standalone)
-        {
-            bDriverAlreadyEntered = true;
-        }
-
-        // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
-        if (SchurzenTexture != none)
-        {
-            RandomNumber = RAND(100);
-
-            for (i = 0; i < arraycount(SchurzenTypes); ++i)
-            {
-                CumulativeChance += SchurzenTypes[i].PercentChance;
-
-                if (RandomNumber < CumulativeChance)
-                {
-                    SchurzenIndex = i; // set replicated variable so clients know which schurzen to spawn
-                    break;
-                }
-            }
-        }
-    }
-    // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
-    // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
-    else
-    {
-        WeaponPawns.Length = PassengerWeapons.Length;
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // Clientside treads & sound attachments
-        if (bHasTreads)
-        {
-            SetupTreads();
-        }
-
-        if (RumbleSound != none && RumbleSoundBone != '' && InteriorRumbleSoundAttach == none)
-        {
-            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
-            InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
-            AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
-        }
-
-        // Set up new NotifyParameters object
-        NotifyParameters = new class'ObjectMap';
-        NotifyParameters.Insert("VehicleClass", Class);
-    }
-}
-
-// Modified to initialize engine-related properties, & to spawn any decorative schurzen attachment
-// Also on net client to flag if bNeedToInitializeDriver, to match clientside position indexes to replicated DriverPositionIndex, & to flag bClientInitialized
-// And to skip lots of pointless stuff on a net client if an already destroyed vehicle gets replicated
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
-
-    // Net client initialisation, based on replicated info about driving status/position
-    if (Role < ROLE_Authority)
-    {
-        bSavedEngineOff = bEngineOff;
-        bClientInitialized = true;
-
-        // If an already destroyed vehicle gets replicated, there's nothing more we want to do here; it will only turn the engine on & set irrelevant variables
-        if (Health <= 0)
-        {
-            return;
-        }
-
-        if (bDriving)
-        {
-            bNeedToInitializeDriver = true;
-        }
-
-        SavedPositionIndex = DriverPositionIndex;
-        PreviousPositionIndex = DriverPositionIndex;
-        PendingPositionIndex = DriverPositionIndex;
-    }
-
-    SetEngine();
-
-    // Only spawn schurzen if a valid attachment class has been selected
-    if (Level.NetMode != NM_DedicatedServer && SchurzenTexture != none && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenStaticMesh != none)
-    {
-        Schurzen = Spawn(class'DHVehicleDecoAttachment');
-        Schurzen.SetStaticMesh(SchurzenTypes[SchurzenIndex].SchurzenStaticMesh);
-        Schurzen.Skins[0] = SchurzenTexture;
-        AttachToBone(Schurzen, 'body');
-        Schurzen.SetRelativeLocation(SchurzenOffset);
-    }
-}
-
-// Modified to destroy extra attachments & effects - including the DestructionEffect emitter
-// That's because if an already exploded vehicle replicates to a net client, the vehicle gets Destroyed() before the natural LifeSpan of the emitter
-// That left the DestructionEffect burning away in mid air after the vehicle has disappeared (the Super calls Kill() on the emitter, but it doesn't seem to work)
-simulated function Destroyed()
-{
-    if (Role < ROLE_Authority && DestructionEffect != none)
-    {
-        DestructionEffect.Destroy(); // has to go before the Super, as that fails to destroy it, but does clear the actor reference
-    }
-
-    super(ROVehicle).Destroyed();
-
-    DestroyAttachments();
-}
-
-// Modified to score the vehicle kill
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
-{
-    super.Died(Killer, DamageType, HitLocation);
-
-    if (Killer != none)
-    {
-        DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
     }
 }
 
@@ -392,37 +133,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters), damaged tracks & fire effects, instead of constantly checking in Tick
-// Also to initialize driver-related stuff when we receive the Driver actor
+// Modified to handle fire effects
 simulated function PostNetReceive()
 {
-    // Driver has changed position
-    // Checking bClientInitialized means we do nothing until PostNetBeginPlay() has matched position indexes, meaning we leave SetPlayerPosition() to handle any initial anims
-    if (DriverPositionIndex != SavedPositionIndex && bClientInitialized)
-    {
-        PreviousPositionIndex = SavedPositionIndex;
-        SavedPositionIndex = DriverPositionIndex;
-
-        if (Driver != none) // no point playing transition anim if there's no driver (if he's just left, the BeginningIdleAnim will play)
-        {
-            NextViewPoint();
-        }
-    }
-
-    // Engine has been switched on or off (but if not bClientInitialized, then actor has just replicated & SetEngine() will get called in PostBeginPlay)
-    if (bEngineOff != bSavedEngineOff && bClientInitialized)
-    {
-        bSavedEngineOff = bEngineOff;
-        IgnitionSwitchTime = Level.TimeSeconds; // so next time we can run a clientside time check to make sure engine toggle is valid, before sending call to ServerStartEngine()
-        SetEngine();
-    }
-
-    // One of the tracks has been damaged (uses DamagedTreadPanner as an effective flag that net client hasn't already done this)
-    if (((bLeftTrackDamaged && Skins.Length > LeftTreadIndex && Skins[LeftTreadIndex] != DamagedTreadPanner) ||
-        (bRightTrackDamaged && Skins.Length > LeftTreadIndex && Skins[RightTreadIndex] != DamagedTreadPanner)) && Health > 0)
-    {
-        SetDamagedTracks();
-    }
+    super.PostNetReceive();
 
     if (bOnFire)
     {
@@ -445,143 +159,9 @@ simulated function PostNetReceive()
     {
         SetFireEffects();
     }
-
-    // Initialize the driver
-    if (bNeedToInitializeDriver && Driver != none)
-    {
-        bNeedToInitializeDriver = false;
-        SetPlayerPosition();
-    }
 }
 
-// Modified to remove RO disabled throttle stuff & modifying value of WheelLatFrictionScale based on speed (did nothing)
-// Also to add handling of jammed steering for a damaged track & MaxCriticalSpeed
-// And to prevent all movement if vehicle can't move (engine off or both tracks disabled), & to disable Tick if vehicle is stationary & has no driver,
-simulated function Tick(float DeltaTime)
-{
-    local KRigidBodyState BodyState;
-    local float           VehicleSpeed, MotionSoundVolume, LinTurnSpeed;
-    local int             i;
-
-    // Stop all movement if engine off or both tracks damaged
-    if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
-    {
-        Velocity = vect(0.0, 0.0, 0.0);
-        Throttle = 0.0;
-        ThrottleAmount = 0.0;
-        Steering = 0.0;
-        ForwardVel = 0.0;
-    }
-    else if (Controller != none)
-    {
-        // Damaged treads mean vehicle can only turn one way & speed is limited
-        if (bLeftTrackDamaged)
-        {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
-
-            if (IsHumanControlled())
-            {
-                PlayerController(Controller).aStrafe = -32768.0;
-            }
-            else
-            {
-                Steering = 1.0;
-            }
-        }
-        else if (bRightTrackDamaged)
-        {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
-
-            if (IsHumanControlled())
-            {
-                PlayerController(Controller).aStrafe = 32768.0;
-            }
-            else
-            {
-                Steering = -1.0;
-            }
-        }
-        // Heavy damage to engine limits speed
-        else if (EngineHealth <= (default.EngineHealth * HeavyEngineDamageThreshold))
-        {
-            Throttle = FClamp(Throttle, -0.5, 0.5);
-        }
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        VehicleSpeed = Abs(ForwardVel); // don't need VSize(Velocity), as already have ForwardVel
-
-        // Force player to pull back on throttle if over max speed
-        if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
-        {
-            PlayerController(Controller).aForward = -32768.0;
-        }
-
-        if (bHasTreads)
-        {
-            // Vehicle is moving
-            if (VehicleSpeed > 0.1)
-            {
-                // Update tread & interior rumble sound volumes, based on speed
-                MotionSoundVolume = FClamp(VehicleSpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
-                UpdateMovementSound(MotionSoundVolume);
-
-                // Update tread & wheel movement, based on speed
-                KGetRigidBodyState(BodyState);
-                LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
-
-                if (LeftTreadPanner != none)
-                {
-                    LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
-                    LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-
-                    for (i = 0; i < LeftWheelBones.Length; ++i)
-                    {
-                        SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
-                    }
-                }
-
-                if (RightTreadPanner != none)
-                {
-                    RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
-                    RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
-
-                    for (i = 0; i < RightWheelBones.Length; ++i)
-                    {
-                        SetBoneRotation(RightWheelBones[i], RightWheelRot);
-                    }
-                }
-            }
-            // If vehicle isn't moving, zero the movement sounds & tread movement
-            else if (MotionSoundVolume != 0.0)
-            {
-                UpdateMovementSound(0.0);
-
-                if (LeftTreadPanner != none)
-                {
-                    LeftTreadPanner.PanRate = 0.0;
-                }
-
-                if (RightTreadPanner != none)
-                {
-                    RightTreadPanner.PanRate = 0.0;
-                }
-            }
-        }
-    }
-
-    super.Tick(DeltaTime);
-
-    // Disable Tick if vehicle isn't moving & has no driver
-    if (!bDriving && ForwardVel ~= 0.0)
-    {
-        Disable('Tick');
-    }
-}
-
-// Matt: modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer
-// Drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
+// Modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer
 simulated function Timer()
 {
     local float Now;
@@ -633,9 +213,9 @@ simulated function Timer()
         {
             bTurretFireNeeded = false;
 
-            if (DHVehicleCannon(CannonTurret) != none)
+            if (Cannon != none)
             {
-                DHVehicleCannon(CannonTurret).StartTurretFire();
+                Cannon.StartTurretFire();
             }
         }
 
@@ -643,9 +223,9 @@ simulated function Timer()
         {
             bHullMGFireNeeded = false;
 
-            if (DHVehicleMG(HullMG) != none)
+            if (MGun != none)
             {
-                DHVehicleMG(HullMG).StartMGFire();
+                MGun.StartMGFire();
             }
         }
     }
@@ -716,42 +296,7 @@ simulated function SetNextTimer(optional float Now)
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to make locking of view during ViewTransition optional, to handle FPCamPos, & to optimise & simplify generally
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
-{
-    local quat RelativeQuat, VehicleQuat, NonRelativeQuat;
-
-    ViewActor = self;
-
-    // Set CameraRotation
-    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
-    {
-        CameraRotation = GetBoneRotation(PlayerCameraBone); // if camera is locked during a current transition, lock rotation to PlayerCameraBone
-    }
-    else if (PC != none)
-    {
-        // Factor in the vehicle's rotation, as PC's rotation is relative to vehicle
-        RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
-        VehicleQuat = QuatFromRotator(Rotation);
-        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
-    }
-
-    // Get camera location & adjust for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
-    CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
-    CameraLocation = CameraLocation + (FPCamPos >> Rotation);
-
-    // Finalise the camera with any shake
-    if (PC != none)
-    {
-        CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-        CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
-    }
-}
-
-// Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
-// Also to add support for periscope overlay & to remove irrelevant stuff about driver weapon crosshair
-// Also to optimise a little, including to omit calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
+// Modified to add support for periscope texture overlay
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
@@ -802,231 +347,37 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = Float(C.SizeY) / Float(C.SizeX);
+    ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
-    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
-}
-
-// Modified so we don't limit view yaw if in behind view
-simulated function int LimitYaw(int yaw)
-{
-    local int NewYaw;
-
-    if (!bLimitYaw || (IsHumanControlled() && PlayerController(Controller).bBehindView))
-    {
-        return yaw;
-    }
-
-    NewYaw = yaw;
-
-    if (yaw > DriverPositions[DriverPositionIndex].ViewPositiveYawLimit)
-    {
-        NewYaw = DriverPositions[DriverPositionIndex].ViewPositiveYawLimit;
-    }
-    else if (yaw < DriverPositions[DriverPositionIndex].ViewNegativeYawLimit)
-    {
-        NewYaw = DriverPositions[DriverPositionIndex].ViewNegativeYawLimit;
-    }
-
-    return NewYaw;
-}
-
-// Modified to revert to Super in Pawn, skipping unnecessary stuff in ROWheeledVehicle & ROVehicle, as this is a many-times-a-second function & so should be optimised
-function int LimitPitch(int pitch, optional float DeltaTime)
-{
-    return super(Pawn).LimitPitch(pitch, DeltaTime);
-}
-
-// Modified so we don't limit view pitch if in behind view
-// Also to correct apparent error in ROVehicle, where PitchDownLimit was being used instead of DriverPositions[x].ViewPitchDownLimit in multi position weapon
-function int LimitPawnPitch(int pitch)
-{
-    pitch = pitch & 65535;
-
-    if (bLimitPitch && !(IsHumanControlled() && PlayerController(Controller).bBehindView) && DriverPositions.Length > 0)
-    {
-        if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
-        {
-            if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < DriverPositions[DriverPositionIndex].ViewPitchDownLimit - pitch)
-            {
-                pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
-            }
-            else
-            {
-                pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
-            }
-        }
-    }
-
-    return pitch;
-}
-
-// Modified to switch to external mesh & unzoomed FOV for behind view
-simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
-{
-    if (PC.bBehindView)
-    {
-        if (bBehindViewChanged)
-        {
-            FixPCRotation(PC); // switching to behind view, so make rotation non-relative to vehicle
-
-            // Switch to external vehicle mesh & unzoomed view
-            SwitchMesh(-1, true); // -1 signifies switch to default external mesh
-            PC.SetFOV(PC.DefaultFOV);
-        }
-
-        bOwnerNoSee = false;
-
-        if (Driver != none)
-        {
-            Driver.bOwnerNoSee = !bDrawDriverInTP;
-        }
-
-        if (PC == Controller) // no overlays for spectators
-        {
-            ActivateOverlay(false);
-        }
-    }
-    else
-    {
-        PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // switching back from behind view, so make rotation relative to vehicle again
-
-        // Switch back to position's normal vehicle mesh & view FOV
-        if (bBehindViewChanged && DriverPositions.Length > 0)
-        {
-            SwitchMesh(DriverPositionIndex, true);
-            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-        }
-
-        bOwnerNoSee = !bDrawMeshInFP;
-
-        if (Driver != none)
-        {
-            Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
-        }
-
-        if (bDriving && PC == Controller)
-        {
-            ActivateOverlay(true);
-        }
-    }
+    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************************** VEHICLE ENTRY  ******************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to fix RO bug where players can't get into a rider position on a driven tank if 1st rider position is already occupied
-// Original often returned MG as ClosestWeaponPawn, which infantry cannot use, so we now check player can use weapon pawn & it's available
-// Have simplified by removing the ClosestWeaponPawn stuff - it really doesn't matter which is closest
-// We only check player distance vs EntryRadius for the vehicle itself & if it has a driver, we just loop through the weapon pawns in turn
+// Modified to add an extra section from deprecated ROTreadCraft class that was commented "code to get the bots using tanks better"
 function Vehicle FindEntryVehicle(Pawn P)
 {
-    local VehicleWeaponPawn WP;
-    local Vehicle           VehicleGoal;
-    local Bot               B;
-    local bool              bPlayerIsTankCrew;
-    local float             Distance;
-    local int               i;
+    local int i;
 
-    B = Bot(P.Controller);
-
-    // Bots know what they want
-    if (B != none)
+    if (P != none && Bot(P.Controller) != none && WeaponPawns.Length > 0 && IsVehicleEmpty())
     {
-        // Added in ROTreadCraft ("code to get the bots using tanks better")
-        if (WeaponPawns.Length > 0 && IsVehicleEmpty())
+        for (i = WeaponPawns.Length -1; i >= 0; --i)
         {
-            for (i = WeaponPawns.Length -1; i >= 0; --i)
+            if (WeaponPawns[i] != none && WeaponPawns[i].Driver == none)
             {
-                WP = WeaponPawns[i];
-
-                if (WP != none && WP.Driver == none)
-                {
-                    return WP;
-                }
+                return WeaponPawns[i];
             }
         }
-
-        VehicleGoal = Vehicle(B.RouteGoal);
-
-        if (VehicleGoal == none)
-        {
-            return none;
-        }
-
-        if (VehicleGoal == self)
-        {
-            if (Driver == none)
-            {
-                return self;
-            }
-
-            return none;
-        }
-
-        for (i = 0; i < WeaponPawns.Length; ++i)
-        {
-            WP = WeaponPawns[i];
-
-            if (VehicleGoal == WP && WP != none)
-            {
-                if (WP.Driver == none)
-                {
-                    return WP;
-                }
-
-                if (Driver == none)
-                {
-                    return self;
-                }
-
-                return none;
-            }
-        }
-
-        return none;
     }
 
-    // Check whether we are in entry range of the vehicle
-    Distance = VSize(P.Location - (Location + (EntryPosition >> Rotation)));
-
-    if (Distance > EntryRadius)
-    {
-        return none; // not in range to enter
-    }
-
-    // Record whether player is allowed to use tanks
-    bPlayerIsTankCrew = P != none && P.Controller != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none &&
-        ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
-
-    // Enter driver position if it's empty & player isn't barred by tank crew restriction
-    if (Driver == none && (bPlayerIsTankCrew || !bMustBeTankCommander))
-    {
-        return self;
-    }
-
-    // Otherwise loop through the weapon pawns to check if we can enter one
-    for (i = 0; i < WeaponPawns.Length; ++i)
-    {
-        WP = WeaponPawns[i];
-
-        // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
-        if (WP != none && WP.Driver == none && (bPlayerIsTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
-        {
-            return WP;
-        }
-    }
-
-    return none; // there are no empty, usable vehicle positions
+    return super.FindEntryVehicle(P);
 }
 
-// Modified to check for available rider positions if player can't crew a tank, & also to prevent entry if either vehicle or player is on fire
+// Modified to prevent entry if either vehicle is on fire
 function bool TryToDrive(Pawn P)
 {
-    local bool bCantEnterEnemyVehicle;
-    local int  i;
-
     // Don't allow entry to burning vehicle (with message)
     if (bOnFire || bEngineOnFire)
     {
@@ -1035,144 +386,12 @@ function bool TryToDrive(Pawn P)
         return false;
     }
 
-    // Deny entry if vehicle has driver or is dead, or if player is crouching or on fire or reloading a weapon (plus several very obscure other reasons)
-    if (Driver != none || Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
-        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
-    {
-        return false;
-    }
-
-    // Trying to enter a vehicle that isn't on our team
-    if (P.GetTeamNum() != VehicleTeam)
-    {
-        if (bTeamLocked)
-        {
-            bCantEnterEnemyVehicle = true;
-        }
-        // If not team locked, check if already has an enemy occupant
-        else if (Driver != none && P.GetTeamNum() != Driver.GetTeamNum())
-        {
-            bCantEnterEnemyVehicle = true;
-        }
-        else
-        {
-            for (i = 0; i < WeaponPawns.Length; ++i)
-            {
-                if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
-                {
-                    bCantEnterEnemyVehicle = true;
-                    break;
-                }
-            }
-        }
-
-        if (bCantEnterEnemyVehicle)
-        {
-            DisplayVehicleMessage(1, P); // can't use enemy vehicle
-
-            return false;
-        }
-    }
-
-    // If vehicle can only be used by tank crew & player is not a tanker role, check if there are any available rider positions before denying entry
-    if (bMustBeTankCommander && !(ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none
-        && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew) && P.IsHumanControlled())
-    {
-        // Check first to ensure riders are allowed
-        if (!bAllowRiders)
-        {
-            DisplayVehicleMessage(3, P); // can't ride on this vehicle
-
-            return false;
-        }
-
-        // Cycle through the available passenger positions
-        for (i = FirstRiderPositionIndex; i < WeaponPawns.Length; ++i)
-        {
-            // If it's a passenger pawn & the position is free, then climb aboard
-            if (ROPassengerPawn(WeaponPawns[i]) != none && WeaponPawns[i].Driver == none)
-            {
-                WeaponPawns[i].KDriverEnter(P);
-
-                return true;
-            }
-        }
-
-        DisplayVehicleMessage(8, P); // all rider positions full
-
-        return false;
-    }
-
-    // Passed all checks, so allow player to enter the vehicle
-    if (bEnterringUnlocks && bTeamLocked)
-    {
-        bTeamLocked = false;
-    }
-
-    KDriverEnter(P);
-
-    return true;
+    return super.TryToDrive(P);
 }
 
-// Modified to avoid playing engine start sound when entering vehicle
-function KDriverEnter(Pawn P)
-{
-    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROTreadCraft
-    DriverPositionIndex = InitialPositionIndex;
-    PreviousPositionIndex = InitialPositionIndex;
-    Instigator = self;
-    ResetTime = Level.TimeSeconds - 1.0;
-
-    if (bEngineOff && !P.IsHumanControlled()) // lets bots start vehicle
-    {
-        ServerStartEngine();
-    }
-
-    super(Vehicle).KDriverEnter(P); // need to skip over Super from ROVehicle
-
-    Driver.bSetPCRotOnPossess = false; // so when player gets out he'll be facing the same direction as he was inside the vehicle
-}
-
-// Modified to add an engine start/stop hint, to enforce bDesiredBehindView=false (avoids a view rotation bug), & to handle optional camera offset for initial overlay position
-// Matt: also to work around various net client problems caused by replication timing issues
+// Modified to handle optional camera offset for initial overlay position
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    local DHPlayer P;
-
-    // Fix possible replication timing problems on a net client
-    if (Role < ROLE_Authority && PC != none)
-    {
-        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
-        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
-        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
-        Controller = PC;
-        SetOwner(PC);
-        Role = ROLE_AutonomousProxy;
-
-        // Fix for possible camera problem when deploying into spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
-        if (PC.IsInState('Spectating'))
-        {
-            PC.GotoState('PlayerWalking');
-        }
-    }
-
-    // bDesiredBehindView may be true in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
-    bDesiredBehindView = false;
-
-    // Engine start/stop hint
-    P = DHPlayer(PC);
-
-    if (P != none)
-    {
-        P.QueueHint(40, true);
-
-        if (bIsSpawnVehicle)
-        {
-            P.QueueHint(14, true);
-            P.QueueHint(16, true);
-        }
-    }
-
     super.ClientKDriverEnter(PC);
 
     // If initial position is an overlay position (e.g. driver's periscope), apply any optional 1st person camera offset for the overlay
@@ -1182,261 +401,49 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-// Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
-simulated state EnteringVehicle
-{
-    simulated function HandleEnter()
-    {
-        SwitchMesh(InitialPositionIndex);
-
-        if (HasAnim(BeginningIdleAnim))
-        {
-            PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
-        }
-
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
-        }
-    }
-}
-
-// Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
-// We no longer disable Tick when driver exits, as vehicle may still be moving & dust effects need updating as vehicle slows
-// Instead we disable Tick at the end of Tick itself, if vehicle isn't moving & has no driver
-simulated event DrivingStatusChanged()
-{
-    // Enable Tick if we have a driver (necessary even if engine is off, to prevent vehicle from being driven)
-    if (bDriving)
-    {
-        Enable('Tick');
-    }
-    // Play neutral idle animation if player has exited, but not on a server
-    else if (Level.NetMode != NM_DedicatedServer && HasAnim(BeginningIdleAnim))
-    {
-        PlayAnim(BeginningIdleAnim);
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ***************************** DRIVER VIEW POINTS  ****************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
-simulated function NextWeapon()
-{
-    if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
-    {
-        PendingPositionIndex = DriverPositionIndex + 1;
-        ServerChangeViewPoint(true);
-    }
-}
-
-simulated function PrevWeapon()
-{
-    if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
-    {
-        PendingPositionIndex = DriverPositionIndex -1;
-        ServerChangeViewPoint(false);
-    }
-}
-
-// Modified to call NextViewPoint() for all modes, including dedicated server
-// New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
-// Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            PreviousPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-            NextViewPoint();
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            PreviousPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-            NextViewPoint();
-        }
-    }
-}
-
-// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
-simulated function NextViewPoint()
-{
-    if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[PreviousPositionIndex].bExposed)
-    {
-        GotoState('ViewTransition');
-    }
-}
-
-// Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
-// to add handling of FOV changes & better handling of locked camera, to avoid switching mesh & FOV if in behind view,
-// to handle optional camera offset for initial overlay position, & to avoid unnecessary stuff on a server
+// Modified to handle optional camera offset for initial overlay position
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        super.HandleTransition();
+
+        if (Level.NetMode != NM_DedicatedServer && OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[PreviousPositionIndex].bDrawOverlays
+            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
-            // Switch to mesh for new position as may be different
-            SwitchMesh(DriverPositionIndex);
-
-            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
-            {
-                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            }
-
-            // If driver is moving away from an overlay position (e.g. driver's periscope), remove any 1st person camera offset for the overlay
-            if (DriverPositions[PreviousPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
-            {
-                FPCamPos = default.FPCamPos;
-            }
+            FPCamPos = default.FPCamPos; // if moving away from overlay, remove offset immediately
         }
-
-        if (Driver != none)
-        {
-            // If moving to an exposed position, enable the driver's hit detection
-            if (DriverPositions[DriverPositionIndex].bExposed && !DriverPositions[PreviousPositionIndex].bExposed && ROPawn(Driver) != none)
-            {
-                ROPawn(Driver).ToggleAuxCollision(true);
-            }
-
-            // Play any transition animation for the driver
-            if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[PreviousPositionIndex].DriverTransitionAnim))
-            {
-                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-            }
-        }
-
-        // Play any transition animation for the vehicle itself & set a duration to control when we exit this state
-        ViewTransitionDuration = 0.0; // start with zero in case we don't have a transition animation
-
-        if (PreviousPositionIndex < DriverPositionIndex)
-        {
-            if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
-            {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-                ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-            }
-        }
-        else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
-        {
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-            ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-        }
-    }
-
-    // Emptied out so that Sleep is the sole timing for exiting this state
-    simulated function AnimEnd(int channel)
-    {
-    }
-
-    // Reverted to global Timer as Sleep is now the sole means of exiting this state
-    simulated function Timer()
-    {
-        global.Timer();
     }
 
     simulated function EndState()
     {
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        super.EndState();
+
+        if (Level.NetMode != NM_DedicatedServer && OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[DriverPositionIndex].bDrawOverlays
+            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
-            // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
-            if (DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV)
-            {
-                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            }
-
-            // If driver is moving away from an overlay position (e.g. driver's periscope), remove any 1st person camera offset for the overlay
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays && OverlayFPCamPos != vect(0.0, 0.0, 0.0))
-            {
-                FPCamPos = OverlayFPCamPos;
-            }
-
-            // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
-            if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0)
-            {
-                Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation));
-            }
-        }
-
-        // If moving to an unexposed position, disable the driver's hit detection
-        if (!DriverPositions[DriverPositionIndex].bExposed && DriverPositions[PreviousPositionIndex].bExposed && ROPawn(Driver) != none)
-        {
-            ROPawn(Driver).ToggleAuxCollision(false);
+            FPCamPos = OverlayFPCamPos; // if moving into overlay, apply offset at end of transition
         }
     }
-
-Begin:
-    HandleTransition();
-    Sleep(ViewTransitionDuration);
-    GotoState('');
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************************** VEHICLE EXIT  ********************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to add clientside checks before sending the function call to the server
+// Modified to add clientside check to stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
 simulated function SwitchWeapon(byte F)
 {
-    local VehicleWeaponPawn WeaponPawn;
-    local bool              bMustBeTankerToSwitch;
-    local byte              ChosenWeaponPawnIndex;
-
-    if (Role < ROLE_Authority) // only do these clientside checks on a net client
+    if (Role < ROLE_Authority && StopExitToRiderPosition(F - 2))
     {
-        ChosenWeaponPawnIndex = F - 2;
-
-        // Stop call to server if player has selected an invalid weapon position
-        // Note that if player presses 0 or 1, which are invalid choices, the byte index will end up as 254 or 255 & so will still fail this test (which is what we want)
-        if (ChosenWeaponPawnIndex >= PassengerWeapons.Length)
-        {
-            return;
-        }
-
-        // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-        if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
-        {
-            return;
-        }
-
-        // Stop call to server if weapon position already has a human player
-        // Note we don't try to stop call to server if weapon pawn doesn't exist, as it may not on net client, but will get replicated if player enters position on server
-        if (ChosenWeaponPawnIndex < WeaponPawns.Length)
-        {
-            WeaponPawn = WeaponPawns[ChosenWeaponPawnIndex];
-
-            if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
-            {
-                return;
-            }
-        }
-
-        if (class<ROVehicleWeaponPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
-        {
-            bMustBeTankerToSwitch = true;
-        }
-
-        // Stop call to server if player has selected a tank crew role but isn't a tanker
-        if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
-            && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
-        {
-            DisplayVehicleMessage(0); // not qualified to operate vehicle
-
-            return;
-        }
+        return;
     }
 
-    ServerChangeDriverPosition(F);
+    super.SwitchWeapon(F);
 }
 
 // Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
@@ -1448,78 +455,28 @@ function ServerChangeDriverPosition(byte F)
     }
 }
 
-// Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
-// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
-function bool KDriverLeave(bool bForceLeave)
+// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
+simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local vector ExitVelocity;
-
-    if (!bForceLeave)
-    {
-        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
-        {
-            return false;
-        }
-
-        ExitVelocity = Velocity;
-        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
-    }
-
-    if (super(ROVehicle).KDriverLeave(bForceLeave))
-    {
-        if (!bForceLeave)
-        {
-            Instigator.Velocity = ExitVelocity;
-        }
-
-        return true;
-    }
-
-    return false;
+    return ChosenWeaponPawnIndex >= FirstRiderPositionIndex && ChosenWeaponPawnIndex < PassengerWeapons.Length && bMustUnbuttonToSwitchToRider && !CanExit();
 }
 
-// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
-function DriverDied()
-{
-    super(ROVehicle).DriverDied();
-}
-
-// Modified to avoid playing engine shut down sound when leaving vehicle & also to use IdleTimeBeforeReset
-// Also to add common features from KDriverLeave() & DriverLeft(), which both call this function
-function DriverLeft()
-{
-    DriverPositionIndex = InitialPositionIndex;
-    PreviousPositionIndex = InitialPositionIndex;
-    MaybeDestroyVehicle();
-    DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
-}
-
-// New function to check if player can exit, displaying an "unbutton the hatch" message if he can't (just saves repeating code in different functions)
+// Implemented to prevent exit if player is buttoned up, displaying an appropriate "unbutton the hatch" message if he can't
 simulated function bool CanExit()
 {
-    local DHVehicleMGPawn MGPawn;
-
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
             DisplayVehicleMessage(4,, true); // must unbutton the hatch
         }
+        else if (MGun != none && MGun.MGPawn != none && MGun.MGPawn.DriverPositions.Length > MGun.MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
+        {
+            DisplayVehicleMessage(11); // must exit through commander's or MG hatch
+        }
         else
         {
-            if (HullMG != none)
-            {
-                MGPawn = DHVehicleMGPawn(HullMG.Owner);
-            }
-
-            if (MGPawn != none && MGPawn.DriverPositions.Length > MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
-            {
-                DisplayVehicleMessage(11); // must exit through commander's or MG hatch
-            }
-            else
-            {
-                DisplayVehicleMessage(5); // must exit through commander's hatch
-            }
+            DisplayVehicleMessage(5); // must exit through commander's hatch
         }
 
         return false;
@@ -1528,110 +485,11 @@ simulated function bool CanExit()
     return true;
 }
 
-// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
-simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
-{
-    return bMustUnbuttonToSwitchToRider && bAllowRiders && ChosenWeaponPawnIndex >= FirstRiderPositionIndex && ChosenWeaponPawnIndex < PassengerWeapons.Length && !CanExit();
-}
-
-// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
-// Also to trace from player's actual world location, with a smaller trace extent so player is less likely to snag on objects that wouldn't really block his exit
-function bool PlaceExitingDriver()
-{
-    local vector Extent, ZOffset, ExitPosition, HitLocation, HitNormal;
-    local int    i;
-
-    if (Driver == none)
-    {
-        return false;
-    }
-
-    // Set extent & ZOffset, using a smaller extent than original
-    Extent.X = Driver.default.DrivingRadius;
-    Extent.Y = Driver.default.DrivingRadius ;
-    Extent.Z = Driver.default.DrivingHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    // Debug exits - uses DHArmoredVehicle class default, allowing bDebugExitPositions to be toggled for all DHArmoredVehicles
-    if (class'DHArmoredVehicle'.default.bDebugExitPositions)
-    {
-        for (i = 0; i < ExitPositions.Length; ++i)
-        {
-            ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
-
-            Spawn(class'DHDebugTracer',,, ExitPosition);
-        }
-    }
-
-    // Check whether player can be moved to each exit position & use the 1st valid one we find
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
-
-        if (Trace(HitLocation, HitNormal, ExitPosition, Driver.Location + ZOffset - Driver.default.PrePivot, false, Extent) == none
-            && Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none
-            && Driver.SetLocation(ExitPosition))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************* ENGINE START/STOP & EFFECTS ************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to use fire button to start or stop engine
-simulated function Fire(optional float F)
-{
-    // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Role == ROLE_Authority || (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval))
-    {
-        ServerStartEngine();
-    }
-}
-
-// Emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
-function AltFire(optional float F)
-{
-}
-
-// Server side function called to switch engine on/off
-function ServerStartEngine()
-{
-    // Throttle must be zeroed & also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval)
-    {
-        IgnitionSwitchTime = Level.TimeSeconds;
-
-        if (EngineHealth > 0)
-        {
-            bEngineOff = !bEngineOff;
-
-            SetEngine();
-
-            if (bEngineOff)
-            {
-                if (ShutDownSound != none)
-                {
-                    PlaySound(ShutDownSound, SLOT_None, 1.0);
-                }
-            }
-            else if (StartUpSound != none)
-            {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
-            }
-        }
-        else
-        {
-            PlaySound(DamagedStartUpSound, SLOT_None, 2.0);
-        }
-    }
-}
-
-// New function to set up the engine properties, including manual/powered turret
+// Modified to handle extended vehicle fire system, plus setting manual/powered turret
 simulated function SetEngine()
 {
     if (bEngineOff || Health <= 0 || EngineHealth <= 0)
@@ -1675,122 +533,10 @@ simulated function SetEngine()
         }
     }
 
-    if (CannonTurret != none && DHVehicleCannonPawn(CannonTurret.Owner) != none)
+    if (Cannon != none && Cannon.CannonPawn != none)
     {
-        DHVehicleCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
+        Cannon.CannonPawn.SetManualTurret(bEngineOff);
     }
-}
-
-// New function to spawn exhaust & wheel dust emitters
-simulated function StartEmitters()
-{
-    local PlayerController PC;
-    local coords           WheelCoords;
-    local bool             bLowDetail;
-    local int              i;
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // Update bDropDetail, which if true will avoid dust & exhaust emitters as unnecessary detail
-        // Note - won't drop detail if player's ViewTarget is the vehicle or anything joined to it, including a VehicleWeaponPawn (will be the case for player in a vehicle position)
-        if (Level.bDropDetail || Level.DetailMode == DM_Low)
-        {
-            PC = Level.GetLocalPlayerController();
-
-            if (PC != none && (PC.ViewTarget == none || !PC.ViewTarget.IsJoinedTo(self)))
-            {
-                bDropDetail = true;
-
-                return;
-            }
-
-            bLowDetail = true; // we may not be dropping detail, but we've established that we're on low detail settings, so we'll use this later to avoid checking again
-        }
-
-        bDropDetail = false;
-
-        // Create wheel dust emitters
-        Dust.Length = Wheels.Length;
-
-        for (i = 0; i < Wheels.Length; ++i)
-        {
-            if (Dust[i] != none)
-            {
-                Dust[i].Destroy();
-            }
-
-            WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-            Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
-
-            if (bLowDetail)
-            {
-                Dust[i].MaxSpritePPS = 3;
-                Dust[i].MaxMeshPPS = 3;
-            }
-
-            Dust[i].SetBase(self);
-            Dust[i].SetDirtColor(Level.DustColor);
-        }
-
-        // Create exhaust emitters
-        for (i = 0; i < ExhaustPipes.Length; ++i)
-        {
-            if (ExhaustPipes[i].ExhaustEffect != none)
-            {
-                ExhaustPipes[i].ExhaustEffect.Destroy();
-            }
-
-            if (bLowDetail)
-            {
-                ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
-            }
-            else
-            {
-                ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
-            }
-
-            ExhaustPipes[i].ExhaustEffect.SetBase(self);
-
-            // If we don't have a driver, we do a nil update that just sets the lowest exhaust setting for an idling engine
-            // Note - don't need to do anything if we do have a driver, as Tick will be enabled & exhaust will get updated anyway, based on vehicle speed
-            if (!bDriving)
-            {
-                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0);
-            }
-        }
-
-        bEmittersOn = true;
-    }
-}
-
-// New function to kill exhaust & wheel dust emitters
-simulated function StopEmitters()
-{
-    local int i;
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        for (i = 0; i < Dust.Length; ++i)
-        {
-            if (Dust[i] != none)
-            {
-                Dust[i].Kill();
-            }
-        }
-
-        Dust.Length = 0;
-
-        for (i = 0; i < ExhaustPipes.Length; ++i)
-        {
-            if (ExhaustPipes[i].ExhaustEffect != none)
-            {
-                ExhaustPipes[i].ExhaustEffect.Kill();
-            }
-        }
-    }
-
-    bEmittersOn = false;
-    bDropDetail = true; // an optimisation as makes the Super in Tick skip over updating dust & exhaust emitters
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1896,7 +642,7 @@ simulated function SetFireEffects()
                 // Randomise the fire effect start times (spreading from the engine forwards) & set a timer
                 if (bClientInitialized || Role == ROLE_Authority)
                 {
-                    if (CannonTurret != none)
+                    if (Cannon != none)
                     {
                         bTurretFireNeeded = true;
                         TurretHatchFireSpawnTime = Level.TimeSeconds + 2.0 + (FRand() * 3.0); // turret hatch fire starts 2-5 secs after fire starts in engine
@@ -1905,7 +651,7 @@ simulated function SetFireEffects()
                     bDriverHatchFireNeeded = true;
                     DriverHatchFireSpawnTime = FMax(TurretHatchFireSpawnTime, Level.TimeSeconds) + 2.0 + (FRand() * 3.0); // driver hatch fire starts 2-5 secs after turret fire
 
-                    if (HullMG != none)
+                    if (MGun != none)
                     {
                         bHullMGFireNeeded = true;
                         HullMGHatchFireSpawnTime = DriverHatchFireSpawnTime + 1.0 + (FRand() * 2.0); // MG hatch fire starts 1-3 secs after turret fire
@@ -2024,9 +770,8 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
     return (Distance < (NewVehHitpoints[Index].PointRadius * NewVehHitpoints[Index].PointScale * AdditionalScale));
 }
 
-// Matt: new generic function to handle 'should penetrate' calcs for any shell type
-// Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber) // TEMP - no longer a ShouldPenetrate function, so can rename this
+// Heavily modified from deprecated ROTreadCraft class for DH's armour penetration system, handling penetration calcs for any shell type
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
     local float  HitAngleDegrees, Side, InAngle;
     local vector LocDir, HitDir, X, Y, Z;
@@ -2236,8 +981,8 @@ simulated function bool DHShouldPenetrate(DHAntiVehicleProjectile P, vector HitL
     }
 }
 
-// Matt: new generic function to handle penetration calcs for any shell type
-// Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
+// New generic function to handle penetration calcs for any shell type
+// Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT from DH 5.1 (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
 simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
     local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
@@ -2283,7 +1028,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
     return Acos(Cos(class'DHLib'.static.DegreesToRadians(Abs(ArmorSlopeDegrees))) * Cos(AOI));
 }
 
-// Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
+// New generic function to work with generic ShouldPenetrate & CheckPenetration functions
 simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
@@ -2339,7 +1084,7 @@ simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, floa
         }
         else
         {
-            RoundedDownAngleDegrees = Float(Int(CompoundAngleDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
+            RoundedDownAngleDegrees = float(int(CompoundAngleDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
             ExtraAngleDegrees = CompoundAngleDegrees - RoundedDownAngleDegrees;
             BaseSlopeMultiplier = ArmorSlopeTable(P, RoundedDownAngleDegrees, OverMatchFactor);
             NextSlopeMultiplier = ArmorSlopeTable(P, RoundedDownAngleDegrees + 5.0, OverMatchFactor);
@@ -2352,7 +1097,7 @@ simulated function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, floa
     return 1.0; // fail-safe neutral return value
 }
 
-// Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
+// New generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
 simulated function float ArmorSlopeTable(DHAntiVehicleProjectile P, float CompoundAngleDegrees, float OverMatchFactor)
 {
     // after Bird & Livingston:
@@ -2417,7 +1162,7 @@ simulated function float ArmorSlopeTable(DHAntiVehicleProjectile P, float Compou
     return 1.0; // fail-safe neutral return value
 }
 
-// Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
+// New generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
 simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float PenetrationRatio, optional float OverMatchFactor)
 {
     if (P.RoundType == RT_HVAP)
@@ -2465,17 +1210,16 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 // Modified to add all the DH vehicle damage stuff
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
-    local vector     HitDir, LocDir, X, Y, Z;
-    local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier, HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
+    local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
     local int        InstigatorTeam, i;
-    local bool       bEngineStoppedProjectile, bAmmoDetonation, bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
+    local bool       bEngineStoppedProjectile, bAmmoDetonation;
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
         super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
+
         ResetTakeDamageVariables();
 
         return;
@@ -2515,7 +1259,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // Set damage modifiers from the DamageType
+    // Set damage modifiers from the DamageType, based on type of vehicle
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
         if (bIsApc)
@@ -2631,11 +1375,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (!bEngineStoppedProjectile && !bAmmoDetonation) // we can skip lots of checks if either has been flagged true
     {
-        if (CannonTurret != none)
-        {
-            CannonPawn = DHVehicleCannonPawn(CannonTurret.Owner);
-        }
-
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
         {
@@ -2651,7 +1390,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     // does nothing at present - possibly add in future
                 }
-                else if (CannonPawn != none)
+                else if (Cannon != none && Cannon.CannonPawn != none)
                 {
                     // Hit exposed gunsight optics
                     if (NewVehHitpoints[i].NewHitPointType == NHP_GunOptics)
@@ -2661,7 +1400,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Level.Game.Broadcast(self, "Hit gunsight optics");
                         }
 
-                        CannonPawn.DamageCannonOverlay();
+                        Cannon.CannonPawn.DamageCannonOverlay();
                     }
                     else if (bProjectilePenetrated)
                     {
@@ -2673,7 +1412,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                                 Level.Game.Broadcast(self, "Hit gun/turret traverse");
                             }
 
-                            CannonPawn.bTurretRingDamaged = true;
+                            Cannon.CannonPawn.bTurretRingDamaged = true;
                         }
                         // Hit gun pivot mechanism
                         else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
@@ -2683,7 +1422,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                                 Level.Game.Broadcast(self, "Hit gun pivot");
                             }
 
-                            CannonPawn.bGunPivotDamaged = true;
+                            Cannon.CannonPawn.bGunPivotDamaged = true;
                         }
                     }
                 }
@@ -2693,75 +1432,78 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
         if (bProjectilePenetrated)
         {
-            // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
-            if (DHVehicleCannon(CannonTurret) != none && DHVehicleCannon(CannonTurret).bHasTurret)
+            if (Cannon != none)
             {
-                if (bTurretPenetration)
+                // Although shrapnel etc can get everywhere, modify chance of random damage based on whether penetration was to hull or turret
+                if (Cannon.bHasTurret)
                 {
-                    HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
-                    TurretChanceModifier = 1.0;
+                    if (bTurretPenetration)
+                    {
+                        HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
+                        TurretChanceModifier = 1.0;
+                    }
+                    else
+                    {
+                        HullChanceModifier = 1.0;
+                        TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret
+                    }
                 }
-                else
+                else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
                 {
                     HullChanceModifier = 1.0;
-                    TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret
-                }
-            }
-            else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
-            {
-                HullChanceModifier = 1.0;
-                TurretChanceModifier = 1.0;
-            }
-
-            if (CannonPawn != none)
-            {
-                // Random chance of shrapnel killing commander
-                if (CannonPawn.Driver != none && FRand() < (Float(Damage) / CommanderKillChance * TurretChanceModifier))
-                {
-                    if (bDebuggingText)
-                    {
-                        Level.Game.Broadcast(self, "Commander killed by shrapnel");
-                    }
-
-                    CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                    TurretChanceModifier = 1.0;
                 }
 
-                // Random chance of shrapnel damaging gunsight optics
-                if (FRand() < (Float(Damage) / OpticsDamageChance * TurretChanceModifier))
+                if (Cannon.CannonPawn != none)
                 {
-                    if (bDebuggingText)
+                    // Random chance of shrapnel killing commander
+                    if (Cannon.CannonPawn.Driver != none && FRand() < (float(Damage) / CommanderKillChance * TurretChanceModifier))
                     {
-                        Level.Game.Broadcast(self, "Gunsight optics destroyed by shrapnel");
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Commander killed by shrapnel");
+                        }
+
+                        Cannon.CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                     }
 
-                    CannonPawn.DamageCannonOverlay();
-                }
-
-                // Random chance of shrapnel damaging gun pivot mechanism
-                if (FRand() < (Float(Damage) / GunDamageChance * TurretChanceModifier))
-                {
-                    if (bDebuggingText)
+                    // Random chance of shrapnel damaging gunsight optics
+                    if (FRand() < (float(Damage) / OpticsDamageChance * TurretChanceModifier))
                     {
-                        Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Gunsight optics destroyed by shrapnel");
+                        }
+
+                        Cannon.CannonPawn.DamageCannonOverlay();
                     }
 
-                    CannonPawn.bGunPivotDamaged = true;
-                }
-
-                // Random chance of shrapnel damaging gun traverse mechanism
-                if (FRand() < (Float(Damage) / TraverseDamageChance * TurretChanceModifier))
-                {
-                    if (bDebuggingText)
+                    // Random chance of shrapnel damaging gun pivot mechanism
+                    if (FRand() < (float(Damage) / GunDamageChance * TurretChanceModifier))
                     {
-                        Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                        }
+
+                        Cannon.CannonPawn.bGunPivotDamaged = true;
                     }
 
-                    CannonPawn.bTurretRingDamaged = true;
+                    // Random chance of shrapnel damaging gun traverse mechanism
+                    if (FRand() < (float(Damage) / TraverseDamageChance * TurretChanceModifier))
+                    {
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                        }
+
+                        Cannon.CannonPawn.bTurretRingDamaged = true;
+                    }
                 }
             }
 
             // Random chance of shrapnel detonating turret ammo & destroying the vehicle
-            if (FRand() < (Float(Damage) / TurretDetonationThreshold * TurretChanceModifier))
+            if (FRand() < (float(Damage) / TurretDetonationThreshold * TurretChanceModifier))
             {
                 if (bDebuggingText)
                 {
@@ -2777,7 +1519,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
 
             // Random chance of shrapnel killing driver
-            if (Driver != none && FRand() < (Float(Damage) / DriverKillChance * HullChanceModifier))
+            if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
             {
                 if (bDebuggingText)
                 {
@@ -2788,161 +1530,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
 
             // Random chance of shrapnel killing hull machine gunner
-            if (HullMG != none && Vehicle(HullMG.Owner) != none && Vehicle(HullMG.Owner).Driver != none && FRand() < (Float(Damage) / GunnerKillChance * HullChanceModifier))
+            if (MGun != none && MGun.MGPawn != none && MGun.MGPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
             {
                 if (bDebuggingText)
                 {
                     Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
                 }
 
-                Vehicle(HullMG.Owner).Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                MGun.MGPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
         }
-
-        // Matt UK July 2015: added a modified alternative method for track hit detection that works properly
-        // Problem with original RO method above is the InAngle calculation is distorted by the position of the hit along the vehicle mesh's X axis
-        // New method is simpler & works, producing consistent results along the length of the hull
-        // To implement, it needs each tracked vehicle to have TreadHitMaxHeight set, being the height (in Unreal units) of the top of the tracks above the hull mesh origin
-        // I don't have time to do this for the 6.0 release, so will add later
-        // Both methods are functional - just add a TreadHitMaxHeight that isn't zero to use the new method
 
         // Check if we hit & damaged either track
         if (bHasTreads && TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
         {
-            // Work out the height of the HitLocation, in relation to the hull mesh origin
-            if (TreadHitMaxHeight != 0.0)
-            {
-                // New, better method - straightforward height in units (difference in Z axis, having factored in hull's rotation)
-                bUsingTreadHitMaxHeight = true;
-                HitDir = HitLocation - Location;
-                HitHeight = (HitDir << Rotation).Z;
-
-                if (HitHeight <= TreadHitMaxHeight)
-                {
-                    bHitLowEnoughToHitTrack = true;
-                }
-            }
-            else
-            {
-                // Old, flawed method - height expressed as an angle in radians
-                HitDir = HitLocation - Location;
-                GetAxes(Rotation, X, Y, Z);
-                InAngle = Acos(Normal(HitDir) dot Normal(Z));
-
-                if (InAngle > TreadHitMinAngle)
-                {
-                    bHitLowEnoughToHitTrack = true;
-                }
-            }
-
-            // We hit low enough to possibly hit one of the tracks
-            if (bHitLowEnoughToHitTrack)
-            {
-                // Now figure out which side of the vehicle we hit
-                if (bUsingTreadHitMaxHeight)
-                {
-                    GetAxes(Rotation, X, Y, Z);
-                }
-
-                LocDir = vector(Rotation);
-                LocDir.Z = 0.0;
-                HitDir.Z = 0.0;
-                HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
-                Side = Y dot HitDir;
-
-                if (Side < 0.0)
-                {
-                    HitAngleDegrees = 360.0 - HitAngleDegrees;
-                }
-
-                // Right track hit
-                if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
-                {
-                    // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
-                    InAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(Y)));
-
-                    // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to left side (same as in DHShouldPenetrate)
-                    if (InAngleDegrees > 90.0)
-                    {
-                        if (!bLeftTrackDamaged)
-                        {
-                            DamageTrack(true);
-
-                            if (bDebugTreadText && Role == ROLE_Authority)
-                            {
-                                if (bUsingTreadHitMaxHeight)
-                                {
-                                    Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged (HitHeight =" @ HitHeight $ ")");
-                                }
-                                else
-                                {
-                                    Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged");
-                                }
-                            }
-                        }
-                    }
-                    // Otherwise it's a valid hit on the right track
-                    else if (!bRightTrackDamaged)
-                    {
-                        DamageTrack(false);
-
-                        if (bDebugTreadText && Role == ROLE_Authority)
-                        {
-                            if (bUsingTreadHitMaxHeight)
-                            {
-                                Level.Game.Broadcast(self, "Right track damaged (HitHeight =" @ HitHeight $ ")");
-                            }
-                            else
-                            {
-                                Level.Game.Broadcast(self, "Right track damaged");
-                            }
-                        }
-                    }
-                }
-                // Left track hit
-                else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
-                {
-                    InAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(-Y)));
-
-                    // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to right side
-                    if (InAngleDegrees > 90.0)
-                    {
-                        if (!bRightTrackDamaged)
-                        {
-                            DamageTrack(false);
-
-                            if (bDebugTreadText && Role == ROLE_Authority)
-                            {
-                                if (bUsingTreadHitMaxHeight)
-                                {
-                                    Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged (HitHeight =" @ HitHeight $ ")");
-                                }
-                                else
-                                {
-                                    Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged");
-                                }
-                            }
-                        }
-                    }
-                    // Otherwise it's a valid hit on the left track
-                    else if (!bLeftTrackDamaged)
-                    {
-                        DamageTrack(true);
-
-                        if (bDebugTreadText && Role == ROLE_Authority)
-                        {
-                            if (bUsingTreadHitMaxHeight)
-                            {
-                                Level.Game.Broadcast(self, "Left track damaged (HitHeight =" @ HitHeight $ ")");
-                            }
-                            else
-                            {
-                                Level.Game.Broadcast(self, "Left track damaged");
-                            }
-                        }
-                    }
-                }
-            }
+            CheckTreadDamage(HitLocation, Momentum);
         }
     }
 
@@ -2989,7 +1591,7 @@ function ResetTakeDamageVariables()
     bHEATPenetration = false;
 }
 
-// Modified to to kill engine if zero health & to add random chance of engine fire breaking out
+// Modified to add random chance of engine fire breaking out
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
     // Apply new damage
@@ -3044,7 +1646,7 @@ function TakeFireDamage()
     {
         if (WhoSetOnFire != none)
         {
-            // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
+            // If the instigator gets teamswapped before a burning vehicle dies, make sure they don't get friendly kills for it
             if (WhoSetOnFire.GetTeamNum() != HullFireStarterTeam)
             {
                 WhoSetOnFire = none;
@@ -3107,7 +1709,7 @@ function TakeEngineFireDamage()
         {
             if (WhoSetEngineOnFire != none)
             {
-                // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
+                // If the instigator gets teamswapped before a burning vehicle dies, make sure they don't get friendly kills for it
                 if (WhoSetEngineOnFire.GetTeamNum() != EngineFireStarterTeam)
                 {
                     WhoSetEngineOnFire = none;
@@ -3121,7 +1723,7 @@ function TakeEngineFireDamage()
 
             DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
 
-            // Small chance each time of engine fire spreading & setting whole tank on fire
+            // Small chance each time of engine fire spreading & setting whole vehicle on fire
             if (!bOnFire && FRand() < EngineToHullFireChance)
             {
                 StartHullFire(PawnWhoSetOnFire);
@@ -3146,599 +1748,36 @@ function TakeEngineFireDamage()
     }
 }
 
-// Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
-function DamageTrack(bool bLeftTrack)
-{
-    if (bLeftTrack)
-    {
-        bLeftTrackDamaged = true;
-    }
-    else
-    {
-        bRightTrackDamaged = true;
-    }
-
-    SetDamagedTracks();
-}
-
-// Emptied out as blast damage to exposed vehicle occupants is now handled from HurtRadius() in the projectile class
-function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
-{
-    return;
-}
-
-// Modified to randomise explosion damage & radius and to add a DestroyedBurningSound
-function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
-{
-    local vector LinearImpulse, AngularImpulse;
-    local float  RandomExplModifier;
-
-    RandomExplModifier = FRand();
-    HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
-
-    AmbientSound = DestroyedBurningSound;
-    SoundVolume = 255;
-    SoundRadius = 600.0;
-
-    if (!bDisintegrateVehicle)
-    {
-        ExplosionCount++;
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            ClientVehicleExplosion(false);
-        }
-
-        LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
-        AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
-
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-        KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
-        KAddAngularImpulse(AngularImpulse);
-    }
-}
-
-// Modified to prevent an already blown up vehicle from triggering an explosion on a net client, if the vehicle becomes net relevant & replicates to that client
-// If vehicle has previously exploded, ExplosionCount will be 1, & when that replicates in the initial batch of variables, it triggers native code to call this function
-// In that situation we just want to spawn the DestructionEffect, skipping the explosion sound & view shake
-simulated event ClientVehicleExplosion(bool bFinal)
-{
-    local PlayerController PC;
-    local float            Dist, Scale;
-
-    // On net client, only do these things if bClientInitialized, meaning we haven't just received this actor through replication, so it must have just blown up
-    if (bClientInitialized || Role == ROLE_Authority)
-    {
-        // View shake
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            PC = Level.GetLocalPlayerController();
-
-            if (PC != none && PC.ViewTarget != none)
-            {
-                Dist = VSize(Location - PC.ViewTarget.Location);
-
-                if (Dist < (ExplosionRadius * 2.5))
-                {
-                    if (Dist < ExplosionRadius)
-                    {
-                        Scale = 1.0;
-                    }
-                    else
-                    {
-                        Scale = ((ExplosionRadius * 2.5) - Dist) / ExplosionRadius;
-                    }
-
-                    PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
-                }
-            }
-        }
-
-        // Explosion sound
-        if (ExplosionSounds.Length > 0)
-        {
-            PlaySound(ExplosionSounds[Rand(ExplosionSounds.Length)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume,, ExplosionSoundRadius);
-        }
-    }
-
-    // Spawn destroyed vehicle effect
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // If vehicle disintegrates (falls below DisintegrationHealth), this function gets called twice & two effects get spawned
-        // The 1st call spawns a normal effect, but this is followed by a 2nd disintegration call (with bFinal), which spawns a disintegration effect
-        // This is handled by native code so we can't change what happens - a fix is to destroy the 1st effect if a 2nd is going to be spawned
-        if (DestructionEffect != none)
-        {
-            DestructionEffect.Destroy();
-        }
-
-        // Low detail effect
-        if (Level.bDropDetail || Level.DetailMode == DM_Low)
-        {
-            if (bFinal)
-            {
-                DestructionEffect = Spawn(DisintegrationEffectLowClass,,, Location, Rotation);
-            }
-            else
-            {
-                DestructionEffect = Spawn(DestructionEffectLowClass, self);
-            }
-        }
-        // Standard detail effect
-        else
-        {
-            if (bFinal)
-            {
-                DestructionEffect = Spawn(DisintegrationEffectClass,,, Location, Rotation);
-            }
-            else
-            {
-                DestructionEffect = Spawn(DestructionEffectClass, self);
-            }
-        }
-
-        DestructionEffect.LifeSpan = TimeTilDissapear;
-        DestructionEffect.SetBase(self);
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties & remove obsolete stuff
-// Also removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
+// Modified to add periscope materials
 static function StaticPrecache(LevelInfo L)
 {
-    local int i;
+    super.StaticPrecache(L);
 
-    for (i = 0; i < default.PassengerWeapons.Length; ++i)
-    {
-        if (default.PassengerWeapons[i].WeaponPawnClass != none)
-        {
-            default.PassengerWeapons[i].WeaponPawnClass.static.StaticPrecache(L);
-        }
-    }
-
-    for (i = 0; i < default.Skins.Length; ++i)
-    {
-        if (default.Skins[i] != none)
-        {
-            L.AddPrecacheMaterial(default.Skins[i]);
-        }
-    }
-
-    for (i = 0; i < default.CannonSkins.Length; ++i)
-    {
-        if (default.CannonSkins[i] != none)
-        {
-            L.AddPrecacheMaterial(default.CannonSkins[i]);
-        }
-    }
-
-    for (i = 0; i < default.DestroyedMeshSkins.Length; ++i)
-    {
-        if (default.DestroyedMeshSkins[i] != none)
-        {
-            L.AddPrecacheMaterial(default.DestroyedMeshSkins[i]);
-        }
-    }
-
-    L.AddPrecacheMaterial(default.VehicleHudImage);
-    L.AddPrecacheMaterial(default.MPHMeterMaterial);
-    L.AddPrecacheMaterial(default.DamagedTreadPanner);
     L.AddPrecacheMaterial(default.PeriscopeOverlay);
     L.AddPrecacheMaterial(default.DamagedPeriscopeOverlay);
-
-    if (default.HighDetailOverlay != none)
-    {
-        L.AddPrecacheMaterial(default.HighDetailOverlay);
-    }
-
-    if (default.SchurzenTexture != none)
-    {
-        L.AddPrecacheMaterial(default.SchurzenTexture);
-
-        for (i = 0; i < arraycount(default.SchurzenTypes); ++i)
-        {
-            L.AddPrecacheStaticMesh(default.SchurzenTypes[i].SchurzenStaticMesh);
-        }
-    }
-
-    if (default.DestroyedVehicleMesh != none)
-    {
-        L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
-    }
-
-    if (default.DamagedTrackStaticMeshLeft != none)
-    {
-        L.AddPrecacheStaticMesh(default.DamagedTrackStaticMeshLeft);
-    }
-
-    if (default.DamagedTrackStaticMeshRight != none)
-    {
-        L.AddPrecacheStaticMesh(default.DamagedTrackStaticMeshRight);
-    }
 }
 
-// Modified to removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
-// Also to add extra material properties & remove obsolete stuff
+// Modified to add periscope materials
 simulated function UpdatePrecacheMaterials()
 {
-    local int i;
+    super.UpdatePrecacheMaterials();
 
-    super(Actor).UpdatePrecacheMaterials(); // pre-caches the Skins array
-
-    for (i = 0; i < DestroyedMeshSkins.Length; ++i)
-    {
-        if (DestroyedMeshSkins[i] != none)
-        {
-            Level.AddPrecacheMaterial(DestroyedMeshSkins[i]);
-        }
-    }
-
-    Level.AddPrecacheMaterial(VehicleHudImage);
-    Level.AddPrecacheMaterial(MPHMeterMaterial);
-    Level.AddPrecacheMaterial(DamagedTreadPanner);
     Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(DamagedPeriscopeOverlay);
-
-    if (HighDetailOverlay != none)
-    {
-        Level.AddPrecacheMaterial(HighDetailOverlay);
-    }
-
-    if (SchurzenTexture != none)
-    {
-        Level.AddPrecacheMaterial(SchurzenTexture);
-
-        for (i = 0; i < arraycount(SchurzenTypes); ++i)
-        {
-            Level.AddPrecacheStaticMesh(SchurzenTypes[i].SchurzenStaticMesh);
-        }
-    }
-
-    if (DestroyedVehicleMesh != none)
-    {
-        Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
-    }
-
-    if (DamagedTrackStaticMeshLeft != none)
-    {
-        Level.AddPrecacheStaticMesh(DamagedTrackStaticMeshLeft);
-    }
-
-    if (DamagedTrackStaticMeshRight != none)
-    {
-        Level.AddPrecacheStaticMesh(DamagedTrackStaticMeshRight);
-    }
 }
 
-// New function to set correct initial position of player & vehicle on a net client, when this actor is replicated
-simulated function SetPlayerPosition()
-{
-    local name VehicleAnim, PlayerAnim;
-    local int  i;
-
-    // Put vehicle & player in correct animation pose - if player not in initial position, we need to recreate the up/down anims that will have played to get there
-    if (DriverPositionIndex != InitialPositionIndex)
-    {
-        if (DriverPositionIndex > InitialPositionIndex)
-        {
-            // Step down through each position until we find the 'most recent' transition up anim & player transition anim (or have reached the initial position)
-            for (i = DriverPositionIndex; i > InitialPositionIndex && (VehicleAnim == ''|| PlayerAnim == ''); --i)
-            {
-                if (VehicleAnim == '' && DriverPositions[i - 1].TransitionUpAnim != '')
-                {
-                    VehicleAnim = DriverPositions[i - 1].TransitionUpAnim;
-                }
-
-                // DriverTransitionAnim only relevant if there is also one in the position below
-                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i - 1].DriverTransitionAnim != '')
-                {
-                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
-                }
-            }
-        }
-        else
-        {
-            // Step up through each position until we find the 'most recent' transition down anim & player transition anim (or have reached the initial position)
-            for (i = DriverPositionIndex; i < InitialPositionIndex && (VehicleAnim == ''|| PlayerAnim == ''); ++i)
-            {
-                if (VehicleAnim == '' && DriverPositions[i + 1].TransitionDownAnim != '')
-                {
-                    VehicleAnim = DriverPositions[i + 1].TransitionDownAnim;
-                }
-
-                // DriverTransitionAnim only relevant if there is also one in the position above
-                if (PlayerAnim == '' && DriverPositions[i].DriverTransitionAnim != '' && DriverPositions[i + 1].DriverTransitionAnim != '')
-                {
-                    PlayerAnim = DriverPositions[i].DriverTransitionAnim;
-                }
-            }
-        }
-
-        // Play the animations but freeze them at the end of the anim, so they effectively become an idle anim
-        // These transitions already happened - we're playing catch up after actor replication, to recreate the position the player & cannon are already in
-        if (VehicleAnim != '' && HasAnim(VehicleAnim))
-        {
-            PlayAnim(VehicleAnim);
-            SetAnimFrame(1.0);
-        }
-
-        if (PlayerAnim != '' && Driver != none && !bHideRemoteDriver && bDrawDriverinTP && Driver.HasAnim(PlayerAnim))
-        {
-            // When vehicle replicates to net client, StartDriving() event gets called on player pawn if vehicle has a driver
-            // StartDriving() plays DriveAnim on the driver, which is for the usual initial driver position, but that would override our correct PlayerAnim here
-            // So if player pawn hasn't already played DriveAnim, set a flag to stop it playing DriveAnim in StartDriving(), although only this 1st time
-            if (DHPawn(Driver) != none && !DHPawn(Driver).bClientPlayedDriveAnim)
-            {
-                DHPawn(Driver).bClientSkipDriveAnim = true;
-            }
-
-            Driver.StopAnimating(true); // stops the player's looping DriveAnim, otherwise it can blend with the new anim
-            Driver.PlayAnim(PlayerAnim);
-            Driver.SetAnimFrame(1.0);
-        }
-    }
-}
-
-// Modified to optimise & to avoid accessed none errors
-// Also, for HullMG it looks for any VehicleWeapon that is flagged bIsMountedTankMG, instead of specifically a ROMountedTankMG, so more generic
-simulated function UpdateTurretReferences()
-{
-    local int i;
-
-    for (i = 0; i < WeaponPawns.Length; ++i)
-    {
-        if (WeaponPawns[i] != none && WeaponPawns[i].Gun != none)
-        {
-            if (CannonTurret == none && WeaponPawns[i].Gun.IsA('ROTankCannon'))
-            {
-                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
-            }
-            else if (HullMG == none && ROVehicleWeapon(WeaponPawns[i].Gun) != none && ROVehicleWeapon(WeaponPawns[i].Gun).bIsMountedTankMG)
-            {
-                HullMG = WeaponPawns[i].Gun;
-            }
-
-            if (CannonTurret != none && HullMG != none)
-            {
-                break;
-            }
-        }
-    }
-}
-
-// Modified to avoid "accessed none" errors on rider pawns that don't always exist on net clients
-function SetTeamNum(byte NewTeam)
-{
-    local byte OriginalTeam;
-    local int  i;
-
-    OriginalTeam = Team;
-    PrevTeam = NewTeam;
-    Team = NewTeam;
-
-    if (NewTeam != OriginalTeam)
-    {
-        TeamChanged();
-    }
-
-    for (i = 0; i < WeaponPawns.length; ++i)
-    {
-        if (WeaponPawns[i] != none)
-        {
-            WeaponPawns[i].SetTeamNum(NewTeam);
-        }
-    }
-}
-
-// Modified to replace literal for pan direction, so can be easily subclassed, & to incorporate extra tread sounds that were spawned in PostBeginPlay()
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = RightTreadPanDirection;
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-
-    if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
-    {
-        LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
-        LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
-        LeftTreadSoundAttach.SoundRadius = SoundRadius;
-        LeftTreadSoundAttach.TransientSoundRadius = TransientSoundRadius;
-        AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
-    }
-
-    if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
-    {
-        RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
-        RightTreadSoundAttach.AmbientSound = RightTreadSound;
-        RightTreadSoundAttach.SoundRadius = SoundRadius;
-        RightTreadSoundAttach.TransientSoundRadius = TransientSoundRadius;
-        AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
-    }
-}
-
-// From deprecated ROTreadCraft class
-simulated function DestroyTreads()
-{
-    if (LeftTreadPanner != none)
-    {
-        Level.ObjectPool.FreeObject(LeftTreadPanner);
-        LeftTreadPanner = none;
-    }
-
-    if (RightTreadPanner != none)
-    {
-        Level.ObjectPool.FreeObject(RightTreadPanner);
-        RightTreadPanner = none;
-    }
-}
-
-// New function to set up damaged tracks
-simulated function SetDamagedTracks()
-{
-    if (Level.NetMode == NM_DedicatedServer || !bHasTreads)
-    {
-        return;
-    }
-
-    if (bLeftTrackDamaged)
-    {
-        Skins[LeftTreadIndex] = DamagedTreadPanner;
-
-        if (LeftTreadSoundAttach != none)
-        {
-            LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
-        }
-
-        // Matt: added support for spawning damaged track model as decorative static mesh
-        if (DamagedTrackStaticMeshLeft != none && DamagedTrackLeft == none)
-        {
-            DamagedTrackLeft = Spawn(class'DHVehicleDecoAttachment');
-            DamagedTrackLeft.SetStaticMesh(DamagedTrackStaticMeshLeft);
-            DamagedTrackLeft.Skins[0] = default.Skins[LeftTreadIndex]; // sets damaged tread skin to match treads for this tank (i.e. whether normal or snowy)
-            AttachToBone(DamagedTrackLeft, 'Body');
-        }
-    }
-
-    if (bRightTrackDamaged)
-    {
-        Skins[RightTreadIndex] = DamagedTreadPanner;
-
-        if (RightTreadSoundAttach != none)
-        {
-            RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
-        }
-
-        if (DamagedTrackStaticMeshRight != none && DamagedTrackRight == none)
-        {
-            DamagedTrackRight = Spawn(class'DHVehicleDecoAttachment');
-            DamagedTrackRight.SetStaticMesh(DamagedTrackStaticMeshRight);
-            DamagedTrackRight.Skins[0] = default.Skins[RightTreadIndex];
-            AttachToBone(DamagedTrackRight, 'Body');
-        }
-    }
-}
-
-// Modified to include damaged tracks in the MotionSoundVolume update - and with damaged tracks not as loud
-// Also optimised by incorporating MotionSoundVolume as a passed function argument instead of a separate instance variable
-simulated function UpdateMovementSound(float MotionSoundVolume)
-{
-    if (LeftTreadSoundAttach != none)
-    {
-        if (bLeftTrackDamaged)
-        {
-            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.25;
-        }
-        else
-        {
-            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.9;
-        }
-    }
-
-    if (RightTreadSoundAttach != none)
-    {
-        if (bRightTrackDamaged)
-        {
-            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.25;
-        }
-        else
-        {
-            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.9;
-        }
-    }
-
-    if (InteriorRumbleSoundAttach != none)
-    {
-        InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume;
-    }
-}
-
-// Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
-simulated event DestroyAppearance()
-{
-    local int i;
-
-    super.DestroyAppearance();
-
-    DestroyAttachments();
-
-    if (Level.NetMode != NM_DedicatedServer && DestroyedMeshSkins.Length > 0)
-    {
-        for (i = 0; i < DestroyedMeshSkins.Length; ++i)
-        {
-            if (DestroyedMeshSkins[i] != none)
-            {
-                Skins[i] = DestroyedMeshSkins[i];
-            }
-        }
-    }
-}
-
-// New function to destroy effects & attachments when the vehicle gets destroyed
+// Modified to include extra attachment
 simulated function DestroyAttachments()
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    super. DestroyAttachments();
+
+    if (DriverHatchFireEffect != none)
     {
-        if (bHasTreads)
-        {
-            DestroyTreads();
-        }
-
-        if (LeftTreadSoundAttach != none)
-        {
-            LeftTreadSoundAttach.Destroy();
-        }
-
-        if (RightTreadSoundAttach != none)
-        {
-            RightTreadSoundAttach.Destroy();
-        }
-
-        if (DamagedTrackLeft != none)
-        {
-            DamagedTrackLeft.Destroy();
-        }
-
-        if (DamagedTrackRight != none)
-        {
-            DamagedTrackRight.Destroy();
-        }
-
-        if (InteriorRumbleSoundAttach != none)
-        {
-            InteriorRumbleSoundAttach.Destroy();
-        }
-
-        if (DriverHatchFireEffect != none)
-        {
-            DriverHatchFireEffect.Kill();
-        }
-
-        if (Schurzen != none)
-        {
-            Schurzen.Destroy();
-        }
-
-        StopEmitters();
+        DriverHatchFireEffect.Kill();
     }
 }
 
@@ -3746,250 +1785,14 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// From deprecated ROTreadCraft class // TEST - don't think will ever be called or has any relevance, as DriverWeapons are not used in this game
-function ClientVehicleCeaseFire(bool bWasAltFire)
-{
-    local PlayerController PC;
-
-    Log(Tag @ "ClientVehicleCeaseFire called - DON'T THINK THIS SHOULD EVER HAPPEN !!!!"); // TEMPDEBUG
-
-    if (!bWasAltFire)
-    {
-        super.ClientVehicleCeaseFire(bWasAltFire);
-
-        return;
-    }
-
-    PC = PlayerController(Controller);
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    bWeaponIsAltFiring = false;
-    PC.StopZoom();
-}
-
-// New function to handle switching between external & internal mesh (just saves code repetition)
-simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
-{
-    local mesh NewMesh;
-
-    if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-    {
-        // If switching to a valid driver position, get its PositionMesh
-        if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length)
-        {
-            NewMesh = DriverPositions[PositionIndex].PositionMesh;
-        }
-        // Else switch to default external mesh (pass PositionIndex of -1 to signify this, as it's an invalid position)
-        else
-        {
-            NewMesh = default.Mesh;
-        }
-
-        // Only switch mesh if we actually have a different new mesh
-        if (NewMesh != Mesh && NewMesh != none)
-        {
-            LinkMesh(NewMesh);
-
-            // Option to play any necessary animations to get the new mesh in the correct position, e.g. with switching to/from behind view
-            if (bUpdateAnimations)
-            {
-                SetPlayerPosition();
-            }
-        }
-    }
-}
-
-// Modified to stop vehicle from prematurely destroying itself when on fire & to include setting ResetTime for an empty vehicle away from its spawn (moved from DriverLeft)
+// Modified to stop vehicle from prematurely destroying itself when on fire
 function MaybeDestroyVehicle()
 {
-    if (!bNeverReset && IsVehicleEmpty())
+    if (!bOnFire && !bEngineOnFire)
     {
-        if (IsDisabled() && !bOnFire && !bEngineOnFire)
-        {
-            bSpikedVehicle = true;
-            SetTimer(VehicleSpikeTime, false);
-
-            if (bDebuggingText)
-            {
-                Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
-            }
-        }
-
-        // If vehicle is now empty & some way from its spawn point (> 83m or out of sight), set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
-        // Changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
-        {
-            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-        }
+        super.MaybeDestroyVehicle();
     }
 }
-
-// Modified so spawn vehicles never respawn when left empty,  to use DriverTraceDistSquared instead of literal values, & to add debug
-event CheckReset()
-{
-    local Pawn P;
-
-    if (bIsSpawnVehicle)
-    {
-        return;
-    }
-
-    // Vehicle occupied, so reset ResetTime
-    if (!IsVehicleEmpty())
-    {
-        ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-
-        return;
-    }
-    // Vehicle empty & is a bKeyVehicle, so destroy it now to make it respawn
-    else if (bKeyVehicle)
-    {
-        Died(none, class'DamageType', Location);
-
-        return;
-    }
-
-    // Check for friendlies nearby
-    foreach CollidingActors(class'Pawn', P, 4000.0)
-    {
-        // Found a friendly pawn within range, but now make further checks
-        if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum())
-        {
-            // Don't reset if it's a friendly player pawn within DriverTraceDistSquared, without line of sight check (using squared values as VSizeSquared is more efficient)
-            if (ROPawn(P) != none && (VSizeSquared(P.Location - Location) < DriverTraceDistSquared))
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly player pawn nearby");
-                }
-
-                ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-
-                return;
-            }
-            // Don't reset if it's a friendly player pawn (including occupied vehicle) that's within line of sight
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0)))
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly pawn nearby & in line of sight");
-                }
-
-                ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-
-                return;
-            }
-        }
-    }
-
-    // If factory is active, we want it to spawn new vehicle NOW
-    if (ParentFactory != none)
-    {
-        if (bDebuggingText)
-        {
-            Level.Game.Broadcast(self, Tag @ "is empty vehicle & re-spawned as no friendly player nearby");
-        }
-
-        ParentFactory.VehicleDestroyed(self);
-        ParentFactory.Timer();
-        ParentFactory = none; // so doesn't call ParentFactory.VehicleDestroyed() again in Destroyed()
-    }
-
-    Destroy();
-}
-
-// Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
-simulated event NotifySelected(Pawn User)
-{
-    if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
-    {
-        NotifyParameters.Insert("Controller", User.Controller);
-        User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
-        LastNotifyTime = Level.TimeSeconds;
-    }
-}
-
-// New function, replacing RO's DenyEntry() function so we use the DH message class (also re-factored slightly to makes passed Pawn optional)
-function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
-{
-    if (P == none)
-    {
-        P = self;
-    }
-
-    if (bPassController) // option to pass pawn's controller as the OptionalObject, so it can be used in building the message
-    {
-        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber,,, Controller);
-    }
-    else
-    {
-        P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
-    }
-}
-
-// Modified to require both tracks to be damaged for vehicle to be disabled, not just one
-// Also to disable an APC if it takes major damage, as well as if engine is dead - this should give time for troops to bail out & escape before vehicle blows
-simulated function bool IsDisabled()
-{
-    return EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged) || (bIsApc && Health <= (HealthMax / 3));
-}
-
-// Modified to eliminate "Waiting for additional crew members" message (Matt: now only used by bots)
-function bool CheckForCrew()
-{
-    return true;
-}
-
-// Modified to avoid "accessed none" errors
-function bool IsVehicleEmpty()
-{
-    local int i;
-
-    if (Driver != none)
-    {
-        return false;
-    }
-
-    for (i = 0; i < WeaponPawns.Length; ++i)
-    {
-        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-// Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
-simulated function int NumPassengers()
-{
-    local int i, Num;
-
-    if (Driver != none)
-    {
-        Num = 1;
-    }
-
-    for (i = 0; i < WeaponPawns.Length; ++i)
-    {
-        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
-        {
-            ++Num;
-        }
-    }
-
-    return Num;
-}
-
-// Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
-// When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
-simulated function GrowHUD();
-simulated function ShrinkHUD();
 
 // Bot functions from deprecated ROTreadCraft class
 function bool RecommendLongRangedAttack()
@@ -4044,111 +1847,6 @@ function float ModifyThreat(float Current, Pawn Threat)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
-exec function ToggleMesh()
-{
-    local int i;
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DriverPositions.Length > 0)
-    {
-        if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
-        {
-            for (i = 0; i < DriverPositions.Length; ++i)
-            {
-                DriverPositions[i].PositionMesh = default.Mesh;
-            }
-        }
-        else
-        {
-            for (i = 0; i < DriverPositions.Length; ++i)
-            {
-                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
-            }
-        }
-
-        SwitchMesh(DriverPositionIndex, true);
-    }
-}
-
-// Modified to work with DHDebugMode & restricted to changing view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
-exec function ToggleViewLimit()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
-    {
-        if (bLimitYaw == default.bLimitYaw && bLimitPitch == default.bLimitPitch)
-        {
-            bLimitYaw = false;
-            bLimitPitch = false;
-        }
-        else
-        {
-            bLimitYaw = default.bLimitYaw;
-            bLimitPitch = default.bLimitPitch;
-        }
-    }
-}
-
-// New exec that allows debugging exit positions to be toggled for all DHArmoredVehicles
-exec function ToggleDebugExits()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ServerToggleDebugExits();
-    }
-}
-
-function ServerToggleDebugExits()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        class'DHArmoredVehicle'.default.bDebugExitPositions = !class'DHArmoredVehicle'.default.bDebugExitPositions;
-        Log("DHArmoredVehicle.bDebugExitPositions =" @ class'DHArmoredVehicle'.default.bDebugExitPositions);
-    }
-}
-
-// New debug exec for testing engine damage
-exec function KillEngine()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
-    {
-        ServerKillEngine();
-    }
-}
-
-function ServerKillEngine()
-{
-    DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
-}
-
-// New debug exec for testing track damage
-exec function DamTrack(string Track)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
-    {
-        ServerDamTrack(Track);
-    }
-}
-
-function ServerDamTrack(string Track)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
-    {
-        if (Track ~= "L" || Track ~= "Left")
-        {
-            DamageTrack(true);
-        }
-        else if (Track ~= "R" || Track ~= "Right")
-        {
-            DamageTrack(false);
-        }
-        else if (Track ~= "B" || Track ~= "Both")
-        {
-            DamageTrack(true);
-            DamageTrack(false);
-        }
-    }
-}
-
 // New debug exec for testing hull fire damage & effects
 exec function HullFire()
 {
@@ -4194,54 +1892,15 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
     }
 }
 
-// Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use 'DamTrack' debug exec for testing
-// Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
-exec function DamageTank() // TEMP - no longer modified
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        Health /= 2;
-        EngineHealth /= 2;
-    }
-}
-
-// New debug exec to set exhaust emitter location
-exec function SetExhRot(int Index, int NewX, int NewY, int NewZ)
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        Log(Tag @ "new ExhaustRotation =" @ NewX @ NewY @ NewZ @ "(old was" @ ExhaustPipes[Index].ExhaustRotation $ ")");
-        ExhaustPipes[Index].ExhaustRotation.Pitch = NewX;
-        ExhaustPipes[Index].ExhaustRotation.Yaw = NewY;
-        ExhaustPipes[Index].ExhaustRotation.Roll = NewZ;
-
-        if (bEmittersOn)
-        {
-            StartEmitters();
-        }
-    }
-}
-
 defaultproperties
 {
     // Driver & positions
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
-    bAllowRiders=true
-    FirstRiderPositionIndex=-1 // unless overridden in subclass, -1 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
+    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     bMustUnbuttonToSwitchToRider=true
-
-    // Display
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
     DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
-    SteerBoneAxis=AXIS_X
-    TouchMessageClass=class'DHVehicleTouchMessage'
-
-    // Hull armor
-    FrontLeftAngle=333.0
-    FrontRightAngle=28.0
-    RearRightAngle=152.0
-    RearLeftAngle=207.0
 
     // Treads & track wheels
     bHasTreads=true
@@ -4252,19 +1911,12 @@ defaultproperties
     TreadVelocityScale=450.0
     WheelRotationScale=500
     TreadHitMinAngle=2.0
-    DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-
-    // Engine
-    bEngineOff=true
-    bSavedEngineOff=true
-    IgnitionSwitchInterval=4.0
-    EngineHealth=300
 
     // Damage
     Health=300
     HealthMax=300.0
-    VehHitpoints(0)=(PointRadius=25.0,PointBone="Body",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
-    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    EngineHealth=300
+    VehHitpoints(0)=(PointBone="Body") // default engine hit point bone
     GunOpticsHitPointIndex=-1 // set in subclass if vehicle has exposed gunsight optics
     TreadDamageThreshold=0.5
     DriverKillChance=1150.0
@@ -4284,6 +1936,7 @@ defaultproperties
     FireDetonationChance=0.07
     bFirstPenetratingHit=true
     ImpactDamageMult=0.001
+    ImpactDamageThreshold=5000.0
 
     // Vehicle fires
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0) // position of engine smoke or fire
@@ -4313,30 +1966,20 @@ defaultproperties
     SoundVolume=255.0
     SoundRadius=650.0
     TransientSoundRadius=700.0
-    VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-    DamagedStartUpSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
-    DamagedShutDownSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     TrackDamagedSound=sound'Vehicle_Engines.track_broken'
+    RumbleSoundVolumeModifier=1.0
 
     // Vehicle reset/respawn
     VehicleSpikeTime=60.0     // if disabled
     TimeTilDissapear=90.0     // after destroyed
     IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
-    DriverTraceDistSquared=20250000.0 // increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
 
     // Camera
     PlayerCameraBone="Camera_driver"
     TPCamDistance=375.0
     TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
-
-    // HUD
-    VehicleHudThreadsPosX(0)=0.35
-    VehicleHudThreadsPosX(1)=0.65
-    VehicleHudThreadsPosY=0.5
-    VehicleHudThreadsScale=0.65
 
     // Entry & exit
     EntryRadius=160.0
@@ -4425,17 +2068,9 @@ defaultproperties
     ShutDownForce="TankShutDown"
     CenterSpringForce="SpringONSSRV"
 
-    // Miscellaneous stuff
-    VehicleNameString="Tank"
+    // Miscellaneous
+    PointValue=3.0
     MaxDesireability=1.4
-    MinRunOverSpeed=300.0 // increased from 0 to roughly 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
-    ObjectiveGetOutDist=1500.0
-
-    // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=false
-    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
-    bDesiredBehindView=false
-    bDisableThrottle=false
-    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    SteerBoneAxis=AXIS_X
+    SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
 }

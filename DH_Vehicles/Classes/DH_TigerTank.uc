@@ -11,7 +11,6 @@ class DH_TigerTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    bAllowRiders=true
     MaxCriticalSpeed=693.0
     TreadDamageThreshold=1.0
     UFrontArmorFactor=10.8
@@ -31,10 +30,10 @@ defaultproperties
     RumbleSoundBone="body"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger1_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger1_turret_look'
-    VehicleHudThreadsPosX(0)=0.34
-    VehicleHudThreadsPosX(1)=0.66
-    VehicleHudThreadsPosY=0.52
-    VehicleHudThreadsScale=0.68
+    VehicleHudTreadsPosX(0)=0.34
+    VehicleHudTreadsPosX(1)=0.66
+    VehicleHudTreadsPosY=0.52
+    VehicleHudTreadsScale=0.68
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

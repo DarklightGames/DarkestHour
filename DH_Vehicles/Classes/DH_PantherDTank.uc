@@ -7,14 +7,24 @@ class DH_PantherDTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Panther_anm.ukx
 
+// Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
+simulated function SpawnVehicleAttachments()
+{
+    if (RandomAttachment.Skin == none)
+    {
+        RandomAttachOptions.Length = 0;
+    }
+
+    super.SpawnVehicleAttachments();
+}
+
 defaultproperties
 {
-    SchurzenTexture=none // we don't have a schurzen skin for this camo variant, so add here if one gets made
-    SchurzenTypes(0)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    SchurzenTypes(1)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    SchurzenTypes(2)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    SchurzenTypes(3)=(SchurzenStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
-    SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
+    RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
+    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
+    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
+    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
+    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
     UnbuttonedPositionIndex=1
     MaxCriticalSpeed=932.0
     TreadDamageThreshold=0.85
@@ -38,10 +48,10 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
-    VehicleHudThreadsPosX(0)=0.38
-    VehicleHudThreadsPosX(1)=0.63
-    VehicleHudThreadsPosY=0.49
-    VehicleHudThreadsScale=0.61
+    VehicleHudTreadsPosX(0)=0.38
+    VehicleHudTreadsPosX(1)=0.63
+    VehicleHudTreadsPosY=0.49
+    VehicleHudTreadsScale=0.61
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

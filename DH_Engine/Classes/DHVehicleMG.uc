@@ -76,7 +76,7 @@ simulated function PostBeginPlay()
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(CollisionStaticMesh, YawBone, self); // attach to yaw bone, so col mesh turns with MG
+        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, YawBone); // attach to yaw bone, so col mesh turns with MG
 
         if (CollisionMeshActor != none)
         {
@@ -521,13 +521,13 @@ simulated function InitializeVehicleBase()
         Skins[0] = Base.Skins[0];
     }
 
-    if (DHArmoredVehicle(Base) != none)
+    if (DHVehicle(Base) != none)
     {
-        // Set the vehicle's HullMG reference - normally unused but can be useful
-        DHArmoredVehicle(Base).HullMG = self;
+        // Set the vehicle's MGun reference
+        DHVehicle(Base).MGun = self;
 
         // If vehicle is burning, start the MG hatch fire effect
-        if (DHArmoredVehicle(Base).bOnFire)
+        if (DHArmoredVehicle(Base) != none && DHArmoredVehicle(Base).bOnFire)
         {
             StartMGFire();
         }

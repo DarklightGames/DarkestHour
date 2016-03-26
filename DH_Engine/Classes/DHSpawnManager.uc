@@ -369,15 +369,10 @@ function bool SpawnVehicle(DHPlayer C)
         Vehicles[Vehicles.Length] = V;
 
         // Start engine
-        if (V.IsA('DHWheeledVehicle'))
+        if (V.IsA('DHVehicle') && DHVehicle(V).bEngineOff)
         {
-            DHWheeledVehicle(V).bIsSpawnVehicle = VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle;
-            DHWheeledVehicle(V).ServerStartEngine();
-        }
-        else if (V.IsA('DHArmoredVehicle'))
-        {
-            DHArmoredVehicle(V).bIsSpawnVehicle = VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle;
-            DHArmoredVehicle(V).ServerStartEngine();
+            DHVehicle(V).bIsSpawnVehicle = VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle;
+            DHVehicle(V).ServerStartEngine();
         }
 
         // If it's a spawn vehicle that doesn't require the engine to be off, add to GRI's SpawnVehicles array
@@ -434,12 +429,11 @@ function bool SpawnVehicle(DHPlayer C)
 
 function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
 {
-    local Pawn          P;
-    local Vehicle       V, EntryVehicle;
-    local vector        Offset;
-    local array<int>    ExitPositionIndices;
-    local int           VehiclePoolIndex, i;
-    local bool          bEngineOff;
+    local Pawn       P;
+    local Vehicle    V, EntryVehicle;
+    local vector     Offset;
+    local array<int> ExitPositionIndices;
+    local int        VehiclePoolIndex, i;
 
     if (C == none || GRI == none || DarkestHourGame(Level.Game) == none)
     {
@@ -477,16 +471,7 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
         VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
 
         // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
-        if (V.IsA('DHArmoredVehicle'))
-        {
-            bEngineOff = DHArmoredVehicle(V).bEngineOff;
-        }
-        else if (V.IsA('DHWheeledVehicle'))
-        {
-            bEngineOff = DHWheeledVehicle(V).bEngineOff;
-        }
-
-        if (bEngineOff)
+        if (V.IsA('DHVehicle') && DHVehicle(V).bEngineOff)
         {
             // Attempt to deploy at an exit position
             for (i = 0; i < ExitPositionIndices.Length; ++i)

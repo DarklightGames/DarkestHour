@@ -21,7 +21,6 @@ defaultproperties
     ULeftArmorFactor=3.8
     URearArmorFactor=3.8
     UFrontArmorSlope=55.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=110.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
@@ -32,8 +31,8 @@ defaultproperties
     RumbleSoundBone="Camera_driver"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_look'
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

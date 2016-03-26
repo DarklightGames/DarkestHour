@@ -22,7 +22,6 @@ defaultproperties
     URearArmorFactor=5.0
     UFrontArmorSlope=9.0
     URearArmorSlope=9.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=98.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'

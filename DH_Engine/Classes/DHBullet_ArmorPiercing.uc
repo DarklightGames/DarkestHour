@@ -424,9 +424,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                 if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
                     && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics
                     && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), 1.0, AV.GunOpticsHitPointIndex)
-                    && AV.CannonTurret != none && DHVehicleCannonPawn(AV.CannonTurret.Owner) != none)
+                    && AV.Cannon != none && AV.Cannon.CannonPawn != none)
                 {
-                    DHVehicleCannonPawn(AV.CannonTurret.Owner).DamageCannonOverlay();
+                    AV.Cannon.CannonPawn.DamageCannonOverlay();
 
                     if (AV.bLogPenetration)
                     {
@@ -488,13 +488,13 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 // Modified to run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
 simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 {
-    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // Modified to run penetration calculations on an armored vehicle, but damage any other vehicle automatically
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).DHShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // From DHBullet

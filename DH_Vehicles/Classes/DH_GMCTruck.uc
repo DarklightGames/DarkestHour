@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GMCTruck extends DHWheeledVehicle
+class DH_GMCTruck extends DHVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Animations\DH_GMCTruck_anm.ukx

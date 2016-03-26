@@ -11,7 +11,6 @@ class DH_AchillesTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    bAllowRiders=true
     LeftTreadIndex=3
     MaxCriticalSpeed=820.0
     TreadDamageThreshold=0.75
@@ -22,7 +21,6 @@ defaultproperties
     UFrontArmorSlope=55.0
     URightArmorSlope=38.0
     ULeftArmorSlope=38.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=228.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
@@ -33,10 +31,10 @@ defaultproperties
     RumbleSoundBone="placeholder_int"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_look'
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosX(1)=0.64
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.72
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosX(1)=0.64
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

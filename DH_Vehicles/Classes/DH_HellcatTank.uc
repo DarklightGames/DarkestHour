@@ -11,7 +11,6 @@ class DH_HellcatTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    bAllowRiders=true
     LeftTreadIndex=4
     RightTreadIndex=3
     MaxCriticalSpeed=1193.0
@@ -24,7 +23,6 @@ defaultproperties
     URightArmorSlope=23.0
     ULeftArmorSlope=23.0
     URearArmorSlope=13.0
-    PointValue=3.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=110.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
@@ -35,9 +33,9 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M18_turret_look'
-    VehicleHudThreadsPosX(0)=0.36
-    VehicleHudThreadsPosY=0.51
-    VehicleHudThreadsScale=0.7
+    VehicleHudTreadsPosX(0)=0.36
+    VehicleHudTreadsPosY=0.51
+    VehicleHudTreadsScale=0.7
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

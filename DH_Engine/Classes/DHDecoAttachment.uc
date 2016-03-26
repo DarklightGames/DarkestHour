@@ -3,11 +3,16 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GMCTruckDecoAttachment extends DHVehicleDecoAttachment;
+class DHDecoAttachment extends RODummyAttachment;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Military_stc
+// Emptied out to remove auto-attachment to bone
+simulated function PostBeginPlay()
+{
+}
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark'
+    DrawType=DT_StaticMesh
+    CullDistance=80000.0
+    bDramaticLighting=true
 }

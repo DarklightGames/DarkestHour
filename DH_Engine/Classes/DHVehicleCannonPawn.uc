@@ -8,7 +8,7 @@ class DHVehicleCannonPawn extends ROTankCannonPawn
 
 // General
 var     DHVehicleCannon     Cannon;            // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
-var     RODummyAttachment   BinocsAttachment;  // decorative actor spawned locally when commander is using binoculars
+var     DHDecoAttachment    BinocsAttachment;  // decorative actor spawned locally when commander is using binoculars
 var     bool        bPlayerHasBinocs;          // on entering, records whether player has binoculars
 var     name        PlayerCameraBone;          // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
 var     texture     AltAmmoReloadTexture;      // used to show coaxial MG reload progress on the HUD, like the cannon reload
@@ -1319,8 +1319,7 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 
     AV = DHArmoredVehicle(VehicleBase);
 
-    return AV != none && AV.bMustUnbuttonToSwitchToRider && AV.bAllowRiders &&
-        ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && !CanExit();
+    return AV != none && ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && AV.bMustUnbuttonToSwitchToRider && !CanExit();
 }
 
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
@@ -1608,7 +1607,7 @@ simulated function AttachBinoculars()
 {
     if (BinocsAttachment == none)
     {
-        BinocsAttachment = Spawn(class'DHVehicleDecoAttachment');
+        BinocsAttachment = Spawn(class'DHDecoAttachment');
         BinocsAttachment.SetDrawType(DT_Mesh);
         BinocsAttachment.LinkMesh(SkeletalMesh'Weapons3rd_anm.Binocs_ger');
     }

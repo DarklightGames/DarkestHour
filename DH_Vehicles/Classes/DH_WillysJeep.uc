@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WillysJeep extends DHWheeledVehicle;
+class DH_WillysJeep extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_WillysJeep_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
@@ -40,8 +40,6 @@ defaultproperties
     GearRatios(3)=0.55
     GearRatios(4)=0.8
     TransRatio=0.17
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1

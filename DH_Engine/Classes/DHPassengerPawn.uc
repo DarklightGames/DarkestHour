@@ -157,39 +157,21 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Note this will do nothing if specific passenger classes have been used with the vehicle, instead of the PassengerPawns array (because PassengerPawns.Length will be 0)
 simulated function SetPassengerProperties()
 {
-    local DHArmoredVehicle AV;
-    local DHWheeledVehicle WV;
-    local int              Index;
+    local DHVehicle V;
+    local int       Index;
 
-    AV = DHArmoredVehicle(VehicleBase);
+    V = DHVehicle(VehicleBase);
 
-    if (AV != none)
+    if (V != none)
     {
-        Index = PositionInArray - AV.FirstRiderPositionIndex;
+        Index = PositionInArray - V.FirstRiderPositionIndex;
 
-        if (Index >= 0 && Index < AV.PassengerPawns.Length)
+        if (Index >= 0 && Index < V.PassengerPawns.Length)
         {
-            DrivePos = AV.PassengerPawns[Index].DrivePos;
-            DriveRot = AV.PassengerPawns[Index].DriveRot;
-            DriveAnim = AV.PassengerPawns[Index].DriveAnim;
-            FPCamPos = AV.PassengerPawns[Index].FPCamPos;
-        }
-    }
-    else
-    {
-        WV = DHWheeledVehicle(VehicleBase);
-
-        if (WV != none)
-        {
-            Index = PositionInArray - WV.FirstRiderPositionIndex;
-
-            if (Index >= 0 && Index < WV.PassengerPawns.Length)
-            {
-                DrivePos = WV.PassengerPawns[Index].DrivePos;
-                DriveRot = WV.PassengerPawns[Index].DriveRot;
-                DriveAnim = WV.PassengerPawns[Index].DriveAnim;
-                FPCamPos = WV.PassengerPawns[Index].FPCamPos;
-            }
+            DrivePos = V.PassengerPawns[Index].DrivePos;
+            DriveRot = V.PassengerPawns[Index].DriveRot;
+            DriveAnim = V.PassengerPawns[Index].DriveAnim;
+            FPCamPos = V.PassengerPawns[Index].FPCamPos;
         }
     }
 }
