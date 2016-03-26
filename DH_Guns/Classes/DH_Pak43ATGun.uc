@@ -11,10 +11,6 @@ defaultproperties
 {
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
-    VehicleHudThreadsPosX(0)=0.16
-    VehicleHudThreadsPosX(1)=0.96
-    VehicleHudThreadsScale=0.6
-    TreadHitMinAngle=1.9
     TransRatio=0.0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak43CannonPawn',WeaponBone="Turret_placement")
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_dest'
