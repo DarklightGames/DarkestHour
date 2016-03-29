@@ -55,9 +55,23 @@ simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
     return GetMember(TeamIndex, SquadIndex, GetLeaderMemberIndex(TeamIndex, SquadIndex)) != none;
 }
 
+simulated function bool IsASquadLeader(DHPlayerReplicationInfo PRI)
+{
+    return PRI != none && PRI.Team != none && PRI == GetSquadLeader(PRI.Team.TeamIndex, PRI.SquadIndex);
+}
+
+simulated function DHPlayerReplicationInfo GetSquadLeader(int TeamIndex, int SquadIndex)
+{
+    local int LeaderMemberIndex;
+
+    LeaderMemberIndex = GetLeaderMemberIndex(TeamIndex, SquadIndex);
+
+    return GetMember(TeamIndex, SquadIndex, LeaderMemberIndex);
+}
+
 simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
-    if (PRI == none || PRI.SquadIndex == -1 || PRI.Team.TeamIndex != TeamIndex || PRI.SquadIndex != SquadIndex)
+    if (PRI == none || PRI.SquadIndex == -1 || PRI.Team == none || PRI.Team.TeamIndex != TeamIndex || PRI.SquadIndex != SquadIndex)
     {
         return false;
     }

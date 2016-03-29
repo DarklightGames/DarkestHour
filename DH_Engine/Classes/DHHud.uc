@@ -242,8 +242,11 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
 simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
 {
+    local DHPlayer PC;
     local Class<LocalMessage>   MessageClassType;
     local Class<DHLocalMessage> DHMessageClassType;
+
+    PC = DHPlayer(PlayerOwner);
 
     switch (MsgType)
     {
@@ -268,11 +271,25 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'SquadSay':
-            DHMessageClassType = class'DHSquadSayMessage';
+            if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
+            {
+                DHMessageClassType = class'DHSquadLeaderSayMessage';
+            }
+            else
+            {
+                DHMessageClassType = class'DHSquadSayMessage';
+            }
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'SquadSayDead':
-            DHMessageClassType = class'DHSquadSayDeadMessage';
+            if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
+            {
+                DHMessageClassType = class'DHSquadLeaderSayDeadMessage';
+            }
+            else
+            {
+                DHMessageClassType = class'DHSquadSayDeadMessage';
+            }
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'VehicleSay':

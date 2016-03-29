@@ -127,8 +127,6 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
     local int i;
     local array<DHPlayerReplicationInfo> SquadMembers;
 
-    Log("BroadcastSquad 2" @ Sender @ Msg @ Type);
-
     if (!AllowsBroadcast(Sender, Len(Msg)))
     {
         return;
