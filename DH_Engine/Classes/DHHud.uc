@@ -67,6 +67,7 @@ var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 
 var color               SquadTextColor;
+var color               ShadowTextColor;
 
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
@@ -264,6 +265,14 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
             break;
         case 'TeamSayDead':
             DHMessageClassType = class'DHTeamSayDeadMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
+        case 'SquadSay':
+            DHMessageClassType = class'DHSquadSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
+        case 'SquadSayDead':
+            DHMessageClassType = class'DHSquadSayDeadMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'VehicleSay':
@@ -1490,21 +1499,21 @@ function DrawPlayerNames(Canvas C)
     local DHPawn          MyDHP, OtherDHP;
     local DHMortarVehicle Mortar;
     local DHPlayer        PC;
-    local DHPlayerReplicationInfo PRI, OtherPRI;
-    local bool            bIsInSameSquad;
-    local Material        SquadNameIconMaterial;
+    local Material        SquadNameIconMaterial;    //TODO: rename
 
     if (PawnOwner == none || PlayerOwner == none)
     {
         return;
     }
 
+    PC = DHPlayer(PlayerOwner);
+
     ViewPos = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
     HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + (1600.0 * vector(PlayerOwner.CalcViewRotation)), ViewPos, true));
     PawnOwnerTeam = PawnOwner.GetTeamNum();
     Mortar = DHMortarVehicle(HitPawn);
 
-    // Record NamedPlayer & possibly NameTime, if we're looking at a player or a mortar on the same team
+    /*// Record NamedPlayer & possibly NameTime, if we're looking at a player or a mortar on the same team
     if (HitPawn != none && HitPawn != PawnOwner && (HitPawn.GetTeamNum() == PawnOwnerTeam || (Mortar != none && Mortar.VehicleTeam == PawnOwnerTeam)))
     {
         if (NamedPlayer != HitPawn || Level.TimeSeconds - NameTime > 0.5)
@@ -1516,11 +1525,15 @@ function DrawPlayerNames(Canvas C)
     else
     {
         NamedPlayer = none;
-    }
+    }*/
 
-    // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
-    if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
+    foreach RadiusActors(class'Pawn', NamedPlayer, class'DHLib'.static.MetersToUnreal(10), ViewPos)
     {
+        if (PlayerOwner.GetTeamNum() != NamedPlayer.GetTeamNum())
+        {
+            continue;
+        }
+
         Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
         GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
 
@@ -1528,6 +1541,11 @@ function DrawPlayerNames(Canvas C)
         {
             NamedPlayerLoc = NamedPlayer.GetBoneCoords(NamedPlayer.HeadBone).Origin;
             NamedPlayerLoc.Z += 16.0;
+
+            if (!FastTrace(NamedPlayerLoc, ViewPos))
+            {
+                continue;
+            }
 
             MyDHP = DHPawn(PawnOwner);
 
@@ -1628,43 +1646,8 @@ function DrawPlayerNames(Canvas C)
                 C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
                 C.SetPos(ScreenPos.X - 8, ScreenPos.Y - (StrY * 0.5));
 
-                SquadNameIconMaterial = FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon';
-
-                C.DrawTile(SquadNameIconMaterial, 16, 16, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
-
-                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - 24.0);
-
-                if (ResupplyMessage != "")
-                {
-                    C.DrawColor = WhiteColor;
-                    C.DrawTextClipped(ResupplyMessage);
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
-                }
-
                 // If other player is in your squad, make his name green.
-                PC = DHPlayer(PlayerOwner);
-
-                if (PC != none)
-                {
-                    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-                    OtherPRI = DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo);
-
-                    if (PRI != none && OtherPRI != none && PRI.SquadIndex != -1 && PRI.SquadIndex == OtherPRI.SquadIndex)
-                    {
-                        bIsInSameSquad = true;
-                    }
-                }
-
-                C.DrawColor.R = 0;
-                C.DrawColor.G = 0;
-                C.DrawColor.B = 0;
-
-                C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
-
-                C.CurX -= 1;
-                C.CurY -= 1;
-
-                if (bIsInSameSquad)
+                if (PC.SquadReplicationInfo.IsInSameSquad(DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo), DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo)))
                 {
                     C.DrawColor = SquadTextColor;
                 }
@@ -1673,7 +1656,19 @@ function DrawPlayerNames(Canvas C)
                     C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
                 }
 
-                C.DrawTextClipped(NamedPlayer.PlayerReplicationInfo.PlayerName);
+                SquadNameIconMaterial = Material'DH_InterfaceArt_tex.HUD.player_indicator';
+
+                C.DrawTile(SquadNameIconMaterial, 16, 16, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - 32.0);
+
+                if (ResupplyMessage != "")
+                {
+                    C.DrawColor = WhiteColor;
+                    DrawShadowedTextClipped(C, ResupplyMessage);
+                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.5); // if resupply/reload message drawn, now raise drawing position so player's name is above message
+                }
+
+                DrawShadowedTextClipped(C, NamedPlayer.PlayerReplicationInfo.PlayerName);
             }
             // Or if we don't have a player name but have resupply text, then just draw that (must be a deployed mortar that can be resupplied)
             else if (ResupplyMessage != "")
@@ -1681,9 +1676,35 @@ function DrawPlayerNames(Canvas C)
                 C.DrawColor = WhiteColor;
                 C.TextSize(ResupplyMessage, StrX, StrY);
                 C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
-                C.DrawTextClipped(ResupplyMessage);
+                DrawShadowedTextClipped(C, ResupplyMessage);
             }
         }
+    }
+
+    // Draw viewed player name & maybe resupply/reload text (the time check keeps name on screen for 1 second after we look away)
+    /*if (NamedPlayer != none && Level.TimeSeconds - NameTime < 1.0)
+    {*/
+}
+
+simulated function DrawShadowedTextClipped(Canvas C, string Text)
+{
+    local color SavedDrawColor;
+
+    if (C != none)
+    {
+        SavedDrawColor = C.DrawColor;
+
+        C.DrawColor = ShadowTextColor;
+        C.CurX += 1;
+        C.CurY += 1;
+
+        C.DrawTextClipped(Text);
+
+        C.DrawColor = SavedDrawColor;
+        C.CurX -= 1;
+        C.CurY -= 1;
+
+        C.DrawTextClipped(Text);
     }
 }
 
@@ -4493,5 +4514,6 @@ defaultproperties
 
     SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
 
-    OverrideConsoleFontName="DHFonts.DHFont12"
+    OverrideConsoleFontName="DHFonts.DHFont14"
+    ShadowTextColor=(R=0,G=0,B=0,A=255)
 }

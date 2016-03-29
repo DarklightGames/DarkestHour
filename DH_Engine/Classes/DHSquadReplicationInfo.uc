@@ -607,6 +607,24 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     return none;
 }
 
+// Gets a list of all the members in a squad. The list is not guaranteed to be
+// in any particular order. The list will not contain null entries.
+simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Members)
+{
+    local int i;
+    local DHPlayerReplicationInfo PRI;
+
+    for (i = 0; i < SQUAD_MEMBER_COUNT; ++i)
+    {
+        PRI = GetMember(TeamIndex, SquadIndex, i);
+
+        if (PRI != none)
+        {
+            Members[Members.Length] = PRI;
+        }
+    }
+}
+
 function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerReplicationInfo PRI)
 {
     switch (TeamIndex)

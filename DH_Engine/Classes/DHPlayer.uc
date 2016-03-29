@@ -87,7 +87,7 @@ replication
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
-        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin;
+        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -3209,6 +3209,44 @@ exec function Speak(string ChannelTitle)
     else if (ChatRoomMessageClass != none)
     {
         ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0,ChannelTitle));
+    }
+}
+
+exec function SquadSay(string Msg)
+{
+    Msg = Left(Msg, 128);
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerSquadSay(Msg);
+    }
+}
+
+function ServerSquadSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    // Colin: We'll preserve this teamkill forgiveness logic because people will
+    // probably be confused if typing "np" only works in Say or TeamSay.
+    if (ROTeamGame(Level.Game) != none &&
+        ROTeamGame(Level.Game).bForgiveFFKillsEnabled &&
+        LastFFKiller != none &&
+        (Msg ~= "np" || Msg ~= "forgive" || Msg ~= "no prob" || Msg ~= "no problem"))
+    {
+        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
+        LastFFKiller.FFKills -= LastFFKillAmount;
+        LastFFKiller = none;
+    }
+
+    LastActiveTime = Level.TimeSeconds;
+
+    G = DarkestHourGame(Level.Game);
+
+    Log("ServerSquadSay" @ Msg);
+
+    if (G != none)
+    {
+        G.BroadcastSquad(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'SquadSay');
     }
 }
 

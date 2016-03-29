@@ -3580,6 +3580,20 @@ event PostLogin(PlayerController NewPlayer)
     }
 }
 
+function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DHBroadcastHandler BH;
+
+    Log("BroadcastSquad" @ Sender @ Msg @ Type);
+
+    BH = DHBroadcastHandler(BroadcastHandler);
+
+    if (BH != none)
+    {
+        BH.BroadcastSquad(Sender, Msg, Type);
+    }
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
