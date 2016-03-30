@@ -1963,7 +1963,6 @@ defaultproperties
     ExplosionSoundRadius=1000.0
 
     // Sounds
-    SoundVolume=255.0
     SoundRadius=650.0
     TransientSoundRadius=700.0
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
