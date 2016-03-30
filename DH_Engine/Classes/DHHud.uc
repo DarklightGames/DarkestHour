@@ -1088,7 +1088,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 if (V.Cannon.AltFireProjectileClass != none)
                 {
                     // Draw coaxial gun ammo icon
-                    VehicleAltAmmoIcon.WidgetTexture = V.Cannon.hudAltAmmoIcon;
+                    VehicleAltAmmoIcon.WidgetTexture = V.Cannon.HudAltAmmoIcon;
                     DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
                     // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
@@ -1135,7 +1135,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
 
         // Draw ammo icon
-        VehicleMGAmmoIcon.WidgetTexture = DHVehicleMGPawn(Passenger).MGun.hudAltAmmoIcon;
+        VehicleMGAmmoIcon.WidgetTexture = DHVehicleMGPawn(Passenger).MGun.HudAltAmmoIcon;
         DrawSpriteWidget(Canvas, VehicleMGAmmoIcon);
 
         // Draw reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload

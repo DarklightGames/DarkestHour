@@ -1657,7 +1657,7 @@ static function StaticPrecache(LevelInfo L)
 
     super.StaticPrecache(L);
 
-    L.AddPrecacheMaterial(default.hudAltAmmoIcon);
+    L.AddPrecacheMaterial(default.HudAltAmmoIcon);
 
     if (default.HighDetailOverlay != none)
     {
@@ -1671,7 +1671,7 @@ simulated function UpdatePrecacheMaterials()
 {
     super.UpdatePrecacheMaterials();
 
-    Level.AddPrecacheMaterial(hudAltAmmoIcon);
+    Level.AddPrecacheMaterial(HudAltAmmoIcon);
 
     if (HighDetailOverlay != none)
     {
