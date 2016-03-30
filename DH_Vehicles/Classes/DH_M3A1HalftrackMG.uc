@@ -7,45 +7,50 @@ class DH_M3A1HalftrackMG extends DHVehicleMG;
 
 defaultproperties
 {
+    // MG mesh
+    Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
+    Skins(0)=texture'DH_Weapon_tex.AlliedSmallArms.30calMain'
+    Skins(1)=texture'DH_Weapon_tex.AlliedSmallArms.30calGrip'
+    Skins(2)=texture'DH_Weapon_tex.AmmoPouches.30CalAmmoTin'
+    Skins(3)=texture'DH_VehiclesUS_tex.ext_vehicles.Green'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
+    GunnerAttachmentBone="com_attachment"
+
+    // Movement
+    RotationsPerSecond=0.5
+    YawBone="Gun_protection"
+    MaxPositiveYaw=12000
+    MaxNegativeYaw=-12000
+    PitchBone="Gun_protection"
+    CustomPitchUpLimit=5000
+    CustomPitchDownLimit=63000
+
+    // Ammo
+    ProjectileClass=class'DH_Weapons.DH_30CalBullet'
+    InitialPrimaryAmmo=200
     NumMags=8
+    FireInterval=0.12
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerFrequency=5
+    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
+
+    // Weapon fire
+    WeaponFireAttachmentBone="tip"
+    WeaponFireOffset=0.0
+    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
+    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
+    AmbientSoundScaling=5.0
+    ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
+    ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
+    ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
+    ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
+    AIInfo(0)=(RefireRate=0.12)
+
+    // Reload
     HUDOverlayReloadAnim="Reloads"
     ReloadSounds[0]=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
     ReloadSounds[1]=(Sound=none,Duration=1.52)
     ReloadSounds[2]=(Sound=none,Duration=2.40)
     ReloadSounds[3]=(Sound=none,Duration=1.34)
-    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    TracerFrequency=5
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Gun_protection"
-    PitchBone="Gun_protection"
-    PitchUpLimit=10000
-    PitchDownLimit=50000
-    WeaponFireAttachmentBone="tip"
-    GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=0.0
-    RotationsPerSecond=0.5
-    bInstantFire=false
-    Spread=0.002
-    FireInterval=0.12
-    AltFireInterval=0.12
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
-    AmbientSoundScaling=5.0
-    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
-    DamageMin=100
-    DamageMax=100
-    ProjectileClass=class'DH_Weapons.DH_30CalBullet'
-    ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
-    ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
-    ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
-    ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
-    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.0,RefireRate=0.07058)
-    CustomPitchUpLimit=5000
-    CustomPitchDownLimit=63000
-    MaxPositiveYaw=12000
-    MaxNegativeYaw=-12000
-    bLimitYaw=true
-    InitialPrimaryAmmo=200
-    Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
 }

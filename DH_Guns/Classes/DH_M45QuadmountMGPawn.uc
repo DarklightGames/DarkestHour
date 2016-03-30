@@ -105,7 +105,7 @@ simulated function DrawHUD(Canvas C)
     if (PC != none && !PC.bBehindView && VehicleBase != none && Gun != none)
     {
         HUD = ROHud(PC.myHUD);
-        V = DHArmoredVehicle(VehicleBase);
+        V = DHVehicle(VehicleBase);
 
         if (HUD != none && V != none && V.VehicleHudTurretLook != none && V.VehicleHudTurret != none)
         {
@@ -177,22 +177,22 @@ defaultproperties
 {
     GunClass=class'DH_Guns.DH_M45QuadmountMG'
     PositionInArray=0
-    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMustBeTankCrew=false
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    UnbuttonedPositionIndex=0
-    BinocPositionIndex=2
-    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionUpAnim="sights_out",bExposed=true)
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionDownAnim="sights_in",ViewPitchUpLimit=6000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',ViewPitchUpLimit=6000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    UnbuttonedPositionIndex=0
+    BinocPositionIndex=2
+    bDrawDriverInTP=true
     DrivePos=(X=-10.0,Y=0.0,Z=-37.0)
     DriveAnim="VSU76_driver_idle_close"
     CameraBone="Camera_com"
+    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    VehicleMGReloadTexture=texture'DH_Artillery_tex.ATGun_Hud.m45_ammo_reload'
     bSpecialRotateSounds=true
     RotateSound=sound'Vehicle_Weapons.Turret.electric_turret_traverse'
     PitchSound=sound'Vehicle_Weapons.Turret.electric_turret_traverse'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.electric_turret_traverse'
-    VehicleMGReloadTexture=texture'DH_Artillery_tex.ATGun_Hud.m45_ammo_reload'
-    EntryRadius=130.0
 }

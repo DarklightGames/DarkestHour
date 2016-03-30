@@ -625,15 +625,22 @@ simulated function DestroyEffects()
 defaultproperties
 {
     bNetNotify=true // Matt: necessary to do set up requiring the 'Base' actor reference to the MG's vehicle base
+    RotationsPerSecond=0.25
+    bLimitYaw=true
+    YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
+    YawEndConstraint=65535
+    PitchUpLimit=15000
+    PitchDownLimit=45000
+    bInstantFire=false
+    Spread=0.002
+    WeaponFireAttachmentBone="mg_yaw"
     ReloadState=MG_ReadyToFire
     ReloadSounds(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105) // default is MG34 reload sounds, as is used by most vehicles, even allies
     ReloadSounds(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413)
     ReloadSounds(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843)
     ReloadSounds(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314)
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
-    FireAttachBone="mg_pitch"
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    RotationsPerSecond=0.25
-    YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
-    YawEndConstraint=65535
+    FireAttachBone="mg_pitch"
+    AIInfo(0)=(bInstantHit=false,bLeadTarget=true,bFireOnRelease=true,WarnTargetPct=0.75,RefireRate=0.1)
 }

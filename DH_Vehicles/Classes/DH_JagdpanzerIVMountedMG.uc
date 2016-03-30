@@ -3,37 +3,33 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpanzerIVMountedMG extends DHVehicleMG;
+class DH_JagdpanzerIVMountedMG extends DH_PanzerIVMountedMG;
 
 defaultproperties
 {
-    NumMags=8
-    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
-    TracerFrequency=7
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="mg_yaw"
-    PitchBone="mg_yaw"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    CustomPitchUpLimit=2730
-    CustomPitchDownLimit=64000
-    WeaponFireAttachmentBone="mg_yaw"
-    WeaponFireOffset=11.0
-    bInstantFire=false
-    Spread=0.002
-    FireInterval=0.05
-    FireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AmbientSoundScaling=1.3
-    FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    ProjectileClass=class'DH_Weapons.DH_MG42Bullet'
-    ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
-    ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    MaxPositiveYaw=4000
-    MaxNegativeYaw=-4000
-    bLimitYaw=true
-    BeginningIdleAnim="Idle"
-    InitialPrimaryAmmo=150
+    // MG mesh
+    Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'
+    Skins(0)=texture'Weapons3rd_tex.German.Mg42_world'
     FireAttachBone="mg_yaw"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
-    Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'
+
+    // Movement
+    MaxPositiveYaw=4000
+    MaxNegativeYaw=-4000
+    PitchBone="mg_yaw"
+    CustomPitchUpLimit=2730
+    CustomPitchDownLimit=64000
+
+    // Ammo
+    ProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    NumMags=8
+    FireInterval=0.05
+    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+
+    // Weapon fire
+    WeaponFireOffset=2.5
+    FireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
+    AmbientSoundScaling=1.3
+    AIInfo(0)=(RefireRate=0.05)
 }
