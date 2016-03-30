@@ -2951,6 +2951,82 @@ exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int 
     }
 }
 
+// New debug exec to show vehicle damage status
+exec function LogVehDamage()
+{
+    local DHVehicle V;
+    local string    DamageText;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        DamageText = V.Tag @ "Health =" @ V.Health @ " EngineHealth =" @ V.EngineHealth
+            @ " bLeftTrackDamaged =" @ V.bLeftTrackDamaged @ " bRightTrackDamaged =" @ V.bRightTrackDamaged @ " IsDisabled =" @ V.IsDisabled();
+
+        Pawn.ClientMessage(DamageText);
+        Log(DamageText);
+    }
+}
+
+// New debug exec to log all vehicle base attachments
+exec function LogVehAttach(optional bool bIncludeAttachedArray)
+{
+    local DHVehicle V;
+    local int       i;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        Log("-----------------------------------------------------------");
+        Log(Caps(V.Tag) @ "ATTACHMENTS:");
+
+        if (V.VehicleAttachments.Length > 0)
+        {
+            for (i = 0; i < V.VehicleAttachments.Length; ++i)
+            {
+                LogAttachment("VehicleAttachments[" $ i $ "] =", V.VehicleAttachments[i].Actor);
+            }
+
+            Log("-----------------------------------------------------------");
+        }
+
+        if (V.CollisionAttachments.Length > 0)
+        {
+            for (i = 0; i < V.CollisionAttachments.Length; ++i)
+            {
+                LogAttachment("CollisionAttachments[" $ i $ "] =", V.CollisionAttachments[i].Actor);
+            }
+
+            Log("-----------------------------------------------------------");
+        }
+
+        if (bIncludeAttachedArray && V.Attached.Length > 0)
+        {
+            for (i = 0; i < V.Attached.Length; ++i)
+            {
+                LogAttachment("Attached[" $ i $ "] =", V.Attached[i]);
+            }
+
+            Log("-----------------------------------------------------------");
+        }
+    }
+}
+
+// New helper function for 'LogAttached' debug exec
+simulated function LogAttachment(string LogPrefix, Actor A)
+{
+    if (A == none)
+    {
+        Log(LogPrefix @ "None");
+    }
+    else if (A.DrawType == DT_StaticMesh)
+    {
+        Log(LogPrefix @ A.Tag @ " StaticMesh =" @ A.StaticMesh);
+    }
+    else
+    {
+        Log(LogPrefix @ A.Tag);
+    }
+}
+
 // New debug exec to adjust the gear ratio settings, which largely govern the vehicle's speed (mainly GearRatios(4))
 exec function SetGearRatio(byte Index, float NewValue)
 {
@@ -3200,6 +3276,24 @@ exec function SetOccPos(byte Index, int NewX, int NewY)
     }
 }
 
+// New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
+// Pass new values scaled by 1000, which allows precision to 3 decimal places
+exec function SetHUDTreads(int NewPosX0, int NewPosX1, int NewPosY, int NewScale)
+{
+    local DHVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        Log(V.Tag @ "VehicleHudTreadsPosX[0] =" @ string(float(NewPosX0) / 1000.0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1) / 1000.0 @ "VehicleHudTreadsPosY =" @ float(NewPosY) / 1000.0
+            @ "VehicleHudTreadsScale =" @ float(NewScale) / 1000.0 @ "(was" @ V.VehicleHudTreadsPosX[0] @ V.VehicleHudTreadsPosX[1] @ V.VehicleHudTreadsPosY @ V.VehicleHudTreadsScale $ ")");
+
+        V.VehicleHudTreadsPosX[0] = float(NewPosX0) / 1000.0;
+        V.VehicleHudTreadsPosX[1] = float(NewPosX1) / 1000.0;
+        V.VehicleHudTreadsPosY = float(NewPosY) / 1000.0;
+        V.VehicleHudTreadsScale = float(NewScale) / 1000.0;
+    }
+}
+
 // New debug exec to set a vehicle's exhaust emitter location
 exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
@@ -3382,6 +3476,19 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
     }
 }
 
+// New debug exec to adjust a vehicle's mass
+exec function SetMass(float NewValue)
+{
+    local DHVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        Log(V.Tag @ "VehicleMass =" @ NewValue @ "(old was" @ V.VehicleMass $ ")");
+        V.VehicleMass = NewValue;
+        V.KSetMass(NewValue);
+    }
+}
+
 // New debug exec to show a vehicle's karma centre of mass offset
 exec function DrawCOM(optional bool bClearScreen)
 {
@@ -3502,6 +3609,204 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             V.DamagedEffect.SetLocation(V.Location + (V.DamagedEffectOffset >> V.Rotation));
             V.DamagedEffect.SetBase(V);
             V.DamagedEffect.SetEffectScale(V.DamagedEffectScale);
+        }
+    }
+}
+
+// New debug exec to show & adjust a vehicle's TreadHitMaxHeight, which is the highest point (above the origin) where a side hit may damage treads
+// Spawns an angle plane attachment representing the setting (repeat same setting, i.e. no change, to remove this)
+exec function SetTreadHeight(float NewValue)
+{
+    local DHVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        Log(V.Tag @ "TreadHitMaxHeight =" @ NewValue @ "(was" @ V.TreadHitMaxHeight $ ")");
+        DestroyPlaneAttachments(V); // remove any existing angle plane attachments
+
+        if (NewValue != V.TreadHitMaxHeight)
+        {
+            V.TreadHitMaxHeight = NewValue;
+            SpawnPlaneAttachment(V, rot(0, 0, 16384), V.TreadHitMaxHeight * vect(0.0, 0.0, 1.0));
+            SpawnPlaneAttachment(V, rot(32768, 0, 16384), V.TreadHitMaxHeight * vect(0.0, 0.0, 1.0));
+        }
+    }
+}
+
+// New debug exec to show and/or adjust the angle settings for the 4 corners of the hull or turret, used to calculate which side has been hit, in penetration & damage functions
+// Angle plane attachments are spawned to represent the 4 angles, and they are listed on screen & in the log
+// "DebugAngles FR 33" would set FrontRightAngle to 33 degrees, "DebugAngles off" clears any angle attachments, "DebugAngles" just lists the current angles
+exec function DebugAngles(optional string Option, optional float NewAngle)
+{
+    local DHVehicle       V;
+    local DHVehicleCannon Cannon;
+    local Actor           BaseActor;
+    local rotator         NewRotation;
+    local string          AnglesList;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        DestroyPlaneAttachments(V); // remove any existing angle plane attachments
+
+        if (DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none)
+        {
+            Cannon = DHVehicleCannonPawn(Pawn).Cannon;
+            BaseActor = Cannon;
+        }
+        else
+        {
+            BaseActor = V;
+        }
+
+        // Exit if selected the option to turn off angle plane attachments (various accepted keywords)
+        if (Option ~= "Off" || Option ~= "False" || Option ~= "Disable" || Option ~= "0")
+        {
+            return;
+        }
+
+        // Set a new angle (accepts either "RL" or "BL" for rear/back left)
+        if (NewAngle > 0.0 && NewAngle <= 360.0)
+        {
+            if (Option ~= "FR")
+            {
+                if (BaseActor == Cannon)
+                {
+                    Cannon.FrontRightAngle = NewAngle;
+                }
+                else
+                {
+                    V.FrontRightAngle = NewAngle;
+                }
+            }
+            else if (Option ~= "RR" || Option ~= "BR")
+            {
+                if (BaseActor == Cannon)
+                {
+                    Cannon.RearRightAngle = NewAngle;
+                }
+                else
+                {
+                    V.RearRightAngle = NewAngle;
+                }
+            }
+            else if (Option ~= "RL" || Option ~= "BL")
+            {
+                if (BaseActor == Cannon)
+                {
+                    Cannon.RearLeftAngle = NewAngle;
+                }
+                else
+                {
+                    V.RearLeftAngle = NewAngle;
+                }
+            }
+            else if (Option ~= "FL")
+            {
+                if (BaseActor == Cannon)
+                {
+                    Cannon.FrontLeftAngle = NewAngle;
+                }
+                else
+                {
+                    V.FrontLeftAngle = NewAngle;
+                }
+            }
+        }
+
+        // Spawn new angle plane attachments
+        if (BaseActor == Cannon)
+        {
+            NewRotation.Yaw = int(Cannon.FrontRightAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation,, Cannon);
+            NewRotation.Yaw = int(Cannon.RearRightAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation,, Cannon);
+            NewRotation.Yaw = int(Cannon.RearLeftAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation,, Cannon);
+            NewRotation.Yaw = int(Cannon.FrontLeftAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation,, Cannon);
+        }
+        else
+        {
+            NewRotation.Yaw = int(V.FrontRightAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation);
+            NewRotation.Yaw = int(V.RearRightAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation);
+            NewRotation.Yaw = int(V.RearLeftAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation);
+            NewRotation.Yaw = int(V.FrontLeftAngle * 65536.0 / 360.0);
+            SpawnPlaneAttachment(V, NewRotation);
+        }
+
+        // List the angles on screen & in the log
+        if (BaseActor == Cannon)
+        {
+            AnglesList = "Cannon angles: FrontRightAngle =" @ Cannon.FrontRightAngle @ " RearRightAngle =" @ Cannon.RearRightAngle
+                @ " RearLeftAngle =" @ Cannon.RearLeftAngle @ " FrontLeftAngle =" @ Cannon.FrontLeftAngle;
+        }
+        else
+        {
+            AnglesList = "Hull angles: FrontRightAngle =" @ V.FrontRightAngle @ " RearRightAngle =" @ V.RearRightAngle
+                @ " RearLeftAngle =" @ V.RearLeftAngle @ " FrontLeftAngle =" @ V.FrontLeftAngle;
+        }
+
+        Pawn.ClientMessage(AnglesList);
+        Log(AnglesList);
+    }
+}
+
+// Helper function to spawn debug plane attachments
+simulated function SpawnPlaneAttachment(DHVehicle V, rotator RelRotation, optional vector RelLocation, optional Actor BaseActor)
+{
+    local Actor Plane;
+
+    if (V != none && Level.NetMode != NM_DedicatedServer)
+    {
+        if (BaseActor == none)
+        {
+            BaseActor = V;
+        }
+
+        Plane = Spawn(class'DH_Engine.DHDecoAttachment',,, BaseActor.Location);
+
+        if (Plane != none)
+        {
+            if (VehicleWeapon(BaseActor) != none)
+            {
+                BaseActor.AttachToBone(Plane, VehicleWeapon(BaseActor).YawBone);
+            }
+            else
+            {
+                Plane.SetBase(BaseActor);
+            }
+
+            // Using DynamicLoadObject so we don't have DH_DebugTools static mesh file loaded all the time; just dynamically load on demand
+            Plane.SetStaticMesh(StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh')));
+            Plane.SetRelativeRotation(RelRotation);
+            Plane.SetRelativeLocation(RelLocation);
+            V.VehicleAttachments.Length = V.VehicleAttachments.Length + 1;
+            V.VehicleAttachments[V.VehicleAttachments.Length - 1].Actor = Plane;
+        }
+    }
+}
+
+// Helper function to destroy any debug plane attachments
+simulated function DestroyPlaneAttachments(DHVehicle V)
+{
+    local StaticMesh PlaneStaticMesh;
+    local int        i;
+
+    if (V != none)
+    {
+        // Using DynamicLoadObject so we don't have DH_DebugTools static mesh file loaded all the time; just dynamically load on demand
+        PlaneStaticMesh = StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh'));
+
+        for (i = V.VehicleAttachments.Length -1; i >= 0; --i)
+        {
+            if (V.VehicleAttachments[i].Actor != none && V.VehicleAttachments[i].Actor.StaticMesh == PlaneStaticMesh)
+            {
+                V.VehicleAttachments[i].Actor.Destroy();
+                V.VehicleAttachments.Remove(i, 1);
+            }
         }
     }
 }
