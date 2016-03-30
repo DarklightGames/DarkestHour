@@ -194,7 +194,6 @@ defaultproperties
     ExitPositions(4)=(X=-159.0,Y=-170.0,Z=60.0)
     ExitPositions(5)=(X=-159.0,Y=170.0,Z=60.0)
     ExitPositions(6)=(X=-109.0,Y=170.0,Z=60.0)
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="Jagdpanzer V 'Jagdpanther'"
     MaxDesireability=1.9

@@ -24,5 +24,4 @@ defaultproperties
     GunClass=class'DH_Guns.DH_SdKfz251_22Cannon'
     DriverPositions(1)=(DriverTransitionAnim="stand_idlehold_bayo",ViewPositiveYawLimit=2400,ViewNegativeYawLimit=-5100) // anim better positions the standing gunner in a vehicle
     DrivePos=(X=-11.0,Y=-1.0,Z=-57.0)
-    EntryRadius=130.0
 }

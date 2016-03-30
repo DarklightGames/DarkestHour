@@ -88,7 +88,6 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
 
     // Entry & exit
-    EntryRadius=375.0
     ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)   // driver
     ExitPositions(1)=(X=25.0,Y=-35.0,Z=250.0)   // commander
     ExitPositions(2)=(X=125.0,Y=35.0,Z=175.0)   // hull MG

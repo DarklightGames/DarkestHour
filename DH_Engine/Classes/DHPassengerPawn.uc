@@ -597,7 +597,6 @@ defaultproperties
     FPCamPos=(X=0.0,Y=0.0,Z=0.0)
     WeaponFOV=90.0
     TPCamDistance=200.0
-    EntryRadius=375.0
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
     PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'

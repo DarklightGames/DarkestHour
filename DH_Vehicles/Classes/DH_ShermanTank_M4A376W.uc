@@ -176,7 +176,6 @@ defaultproperties
     ExitPositions(5)=(X=-250.0,Y=35.0,Z=75.0)     //passenger (rr)
     ExitPositions(6)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
     ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="M4A3(76)W Sherman"
     MaxDesireability=1.9

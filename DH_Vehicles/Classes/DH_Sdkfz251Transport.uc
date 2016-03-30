@@ -213,7 +213,6 @@ defaultproperties
     ExitPositions(9)=(X=-35.0,Y=117.0,Z=5.0)    // Right Side Extra
     ExitPositions(10)=(X=-111.0,Y=36.0,Z=112.0) // Top Extra
 
-    EntryRadius=375.0
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
     ImpactDamageMult=0.001

@@ -167,7 +167,6 @@ defaultproperties
     ExitPositions(4)=(X=-251.0,Y=-35.0,Z=5.0)
     ExitPositions(5)=(X=-251.0,Y=35.0,Z=5.0)
     ExitPositions(6)=(X=-121.0,Y=163.0,Z=5.0)
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="Panzer IV Ausf.G"
     MaxDesireability=1.8

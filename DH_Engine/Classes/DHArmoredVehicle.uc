@@ -1982,7 +1982,6 @@ defaultproperties
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
 
     // Entry & exit
-    EntryRadius=160.0
     ExitPositions(0)=(X=0.0,Y=-165.0,Z=40.0)
     ExitPositions(1)=(X=0.0,Y=165.0,Z=40.0)
     ExitPositions(2)=(X=0.0,Y=-165.0,Z=-40.0)

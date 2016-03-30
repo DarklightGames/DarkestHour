@@ -124,7 +124,6 @@ defaultproperties
     DriveAnim="VUC_driver_idle_close"
     ExitPositions(0)=(X=70.0,Y=-130.0,Z=60.0)
     ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)
-    EntryRadius=375.0
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
     VehicleNameString="Opel Blitz"

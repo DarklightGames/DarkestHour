@@ -155,7 +155,6 @@ defaultproperties
     ExitPositions(4)=(X=-155.0,Y=-160.0,Z=5.0)
     ExitPositions(5)=(X=-155.0,Y=160.0,Z=5.0)
     ExitPositions(6)=(X=-90.0,Y=160.0,Z=5.0)
-    EntryRadius=375.0
     VehicleNameString="Panzer VI 'Tiger' Ausf.E"
     MaxDesireability=1.9
     FlagBone="Mg_placement"

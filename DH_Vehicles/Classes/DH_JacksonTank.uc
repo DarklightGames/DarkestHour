@@ -163,7 +163,6 @@ defaultproperties
     ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  //passenger (rl)
     ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   //passenger (rr)
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  //passenger (r)
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="M36 Jackson"
     MaxDesireability=1.9

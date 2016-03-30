@@ -171,7 +171,6 @@ defaultproperties
     ExitPositions(3)=(X=-244.0,Y=-37.0,Z=5.0)  //passenger (rl)
     ExitPositions(4)=(X=-241.0,Y=34.0,Z=5.0)   //passenger (rr)
     ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)  //passenger (r)
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="M18 Hellcat"
     MaxDesireability=1.9

@@ -44,5 +44,4 @@ defaultproperties
     BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     HudName="Gunner"
     FireImpulse=(X=-1000.0)
-    EntryRadius=130.0
 }

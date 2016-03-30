@@ -192,7 +192,6 @@ defaultproperties
     ExitPositions(3)=(X=-45.0,Y=-118.0,Z=15.0)
     ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
     ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
-    EntryRadius=375.0
     ImpactDamageMult=0.001
     DriverDamageMult=1.0
     VehicleNameString="Bren Carrier Mk.I"

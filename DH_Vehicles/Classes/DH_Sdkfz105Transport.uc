@@ -178,7 +178,6 @@ defaultproperties
     ExitPositions(3)=(X=-100.00,Y=-125.0,Z=20.00) // alternative exit on left side of rear flat bed
     ExitPositions(4)=(X=-100.00,Y=125.0,Z=20.00)  // alternative exit on right side
 
-    EntryRadius=375.0
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
     VehicleNameString="Sd.Kfz. 10/5"

@@ -142,7 +142,6 @@ defaultproperties
     ExitPositions(1)=(X=-3.0,Y=107.0,Z=30.0)
     ExitPositions(2)=(X=-64.0,Y=-109.0,Z=30.0)
     ExitPositions(3)=(X=-71.0,Y=109.0,Z=30.0)
-    EntryRadius=225.0
     CenterSpringForce="SpringONSSRV"
     DriverDamageMult=1.0
     VehicleNameString="Willys Jeep MB"

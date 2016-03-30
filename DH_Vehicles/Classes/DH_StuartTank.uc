@@ -163,7 +163,6 @@ defaultproperties
     ExitPositions(4)=(X=-200.0,Y=2.24,Z=75.0)  // rear
     ExitPositions(5)=(X=-75.0,Y=125.0,Z=75.0)  // right
     ExitPositions(6)=(X=200.0,Y=0,Z=75.0)      // front
-    EntryRadius=350.0
     DriverDamageMult=1.0
     VehicleNameString="M5 Stuart"
     MaxDesireability=1.9

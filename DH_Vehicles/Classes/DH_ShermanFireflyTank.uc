@@ -174,7 +174,6 @@ defaultproperties
     ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)     //passenger (rr)
     ExitPositions(5)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
     ExitPositions(6)=(X=250.0,Y=0.0,Z=75.0)         //front
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="Sherman Mk.VC"
     MaxDesireability=1.9

@@ -179,7 +179,6 @@ defaultproperties
     ExitPositions(4)=(X=-202.0,Y=-175.0,Z=-40.0)
     ExitPositions(5)=(X=-142.0,Y=175.0,Z=-40.0)
     ExitPositions(6)=(X=-202.0,Y=175.0,Z=-40.0)
-    EntryRadius=375.0
     DriverDamageMult=1.0
     VehicleNameString="Jagdpanzer VI 'Jagdtiger' Ausf.B"
     MaxDesireability=1.9
