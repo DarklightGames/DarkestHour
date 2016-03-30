@@ -455,7 +455,10 @@ static function StaticPrecache(LevelInfo L)
 
     for (i = 0; i < default.Skins.Length; ++i)
     {
-        L.AddPrecacheMaterial(default.Skins[i]);
+        if (default.Skins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.Skins[i]);
+        }
     }
 
     L.AddPrecacheMaterial(default.HudAltAmmoIcon);
