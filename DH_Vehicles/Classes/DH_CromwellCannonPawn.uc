@@ -14,8 +14,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     PeriscopePositionIndex=1
     DriveAnim="stand_idlehip_binoc"
-    CameraBone="Gun"
-    WeaponFOV=24.0
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Cromwell_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
@@ -24,6 +22,4 @@ defaultproperties
     PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    EntryRadius=130.0
-    SoundVolume=130
 }

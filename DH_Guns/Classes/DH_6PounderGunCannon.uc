@@ -3,27 +3,26 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_6PounderGunCannon extends DHATGunCannon;
-
-#exec OBJ LOAD FILE=..\Sounds\DH_ArtillerySounds.uax
+class DH_6PounderGunCannon extends DH_AT57Cannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=20
+    Skins(1)=texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
+    ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
+    PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
+    SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'
-    SecondarySpread=0.0048
-    TertiarySpread=0.00125
-    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
-    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
-    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
-    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
-    RangeSettings(1)=100
+    InitialPrimaryAmmo=66
+    InitialSecondaryAmmo=10
+    InitialTertiaryAmmo=20
+    SecondarySpread=0.0048 // become APDS instead of HE
+    TertiarySpread=0.00125
+    WeaponFireOffset=19.0 // different from US 57mm AT gun due to 6 pdr's muzzle brake
+    AddedPitch=50
+
+    RangeSettings(1)=100 // 6 pdr has mechanical range adjustment on gunsight
     RangeSettings(2)=200
     RangeSettings(3)=300
     RangeSettings(4)=400
@@ -43,43 +42,4 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    AddedPitch=50
-    YawBone="Turret"
-    YawStartConstraint=-7000.0
-    YawEndConstraint=7000.0
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_player"
-    WeaponFireOffset=19.0
-    RotationsPerSecond=0.025
-    FireInterval=3.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
-    ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
-    ShakeRotMag=(Z=110.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=2.0
-    ShakeOffsetMag=(Z=5.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
-    CustomPitchUpLimit=2731
-    CustomPitchDownLimit=64626
-    MaxPositiveYaw=6000
-    MaxNegativeYaw=-6000
-    bLimitYaw=true
-    BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=66
-    InitialSecondaryAmmo=10
-    PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
-    Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret'
-    Skins(0)=texture'DH_Artillery_Tex.6pounder.6pounder'
-    Skins(1)=texture'DH_Artillery_Tex.6pounder.6pounder' // muzzle brake
-    Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
-    SoundVolume=130
-    SoundRadius=200.0
 }

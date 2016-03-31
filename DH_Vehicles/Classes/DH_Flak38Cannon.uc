@@ -16,11 +16,13 @@ var     Emitter     ShellCaseEmitter;
 
 // Modified to skip over the Super in DH_Sdkfz2341Cannon, which attaches extra collision static meshes specifically for that vehicle's turret mesh covers
 // Also to remove the RangeSettings array, as FlaK 38 has no range settings on the gunsight
+// TODO: change inheritance by creating generic DHVehicleAutoCannon class, moving functionality from DH_Sdkfz2341Cannon, so FlaK 38 doesn't have to extend that (Matt)
 simulated function PostBeginPlay()
 {
     super(DHVehicleCannon).PostBeginPlay();
 
     RangeSettings.Length = 0;
+    default.RangeSettings.Length = 0;
 }
 
 // New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
@@ -85,31 +87,43 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
+    // Cannon mesh
+    Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
+    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    Skins(1)=none
+    Skins(2)=none
+    Skins(3)=none
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'
+    GunnerAttachmentBone="Turret" // this gunner doesn't move (i.e. animation pose), so we don't need a dedicated attachment bone
+
+    // Turret movement
+    RotationsPerSecond=0.05
+    bLimitYaw=false
+    CustomPitchUpLimit=15474
+    CustomPitchDownLimit=64990
+
+    // Cannon ammo
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
+    AltFireProjectileClass=none
     NumMags=12
     NumSecMags=4
     NumTertMags=4
-    AddedPitch=50
-    WeaponFireOffset=5.0
-    RotationsPerSecond=0.05
-    FireInterval=0.15
-    AltFireProjectileClass=none
-    CustomPitchUpLimit=15474
-    CustomPitchDownLimit=64990
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=20
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
+
+    // Weapon fire
+    WeaponFireOffset=5.0
+    AddedPitch=50
     ShellCaseEmitterClass=class'DH_Vehicles.DH_20mmShellCaseEmitter'
+
+    // Animations
     BeginningIdleAnim="optic_idle"
     TankShootClosedAnim="shoot_optic"
     ShootIntermediateAnim="shoot_opensight"
     TankShootOpenAnim="shoot_lookover"
-    GunnerAttachmentBone="Turret" // this gunner doesn't move (i.e. animation pose), so we don't need a dedicated attachment bone
     SightBone="Sight_arm"
     TraverseWheelBone="Traverse_wheel"
     ElevationWheelBone="Elevation_wheel"
-    Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
-    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'
 }

@@ -31,7 +31,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
     RangeSettings(1)=100
@@ -54,49 +53,20 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=8
     AltTracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     AltFireTracerFrequency=7
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=9.0
     AltFireOffset=(X=-137.0,Y=21.5,Z=4.5)
     AltFireSpawnOffsetX=61.0
-    bAmbientAltFireSound=true
-    FireInterval=4.0
-    AltFireInterval=0.07058
-    FireSoundVolume=512.0
+    AltFireInterval=0.07059
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShell'
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
-    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    AltShakeRotTime=2.0
     AltShakeOffsetMag=(X=0.1,Y=0.1,Z=0.1)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63715
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=55
     InitialSecondaryAmmo=10
     InitialAltAmmo=150
@@ -107,8 +77,6 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     Skins(2)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_turret_coll'
-    SoundVolume=130
-    SoundRadius=200.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2

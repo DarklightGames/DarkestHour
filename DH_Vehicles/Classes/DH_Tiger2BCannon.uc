@@ -29,7 +29,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ProjectileDescriptions(0)="APCBC"
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -61,48 +60,18 @@ defaultproperties
     RangeSettings(29)=3800
     RangeSettings(30)=4000
     AddedPitch=15
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=10
     AltTracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     AltFireTracerFrequency=7
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=0.0
     AltFireOffset=(X=-325.0,Y=19.5,Z=4.5)
-    bAmbientAltFireSound=true
-    FireInterval=9.0
-    AltFireInterval=0.07058
-    FireSoundVolume=512.0
+    AltFireInterval=0.07059
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
-    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    AltShakeRotTime=2.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2731
     CustomPitchDownLimit=64189
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=45
     InitialSecondaryAmmo=35
     InitialAltAmmo=150
@@ -113,6 +82,5 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
-    SoundVolume=130
     SoundRadius=300.0
 }

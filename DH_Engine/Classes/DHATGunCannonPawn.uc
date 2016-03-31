@@ -31,13 +31,11 @@ simulated function SwitchWeapon(byte F)
 
 defaultproperties
 {
+    bMustBeTankCrew=false
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=1
     BinocPositionIndex=2
-    bMustBeTankCrew=false
     bHasAltFire=false
-    PitchUpLimit=6000
-    PitchDownLimit=64000
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'

@@ -17,7 +17,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ProjectileDescriptions(0)="APCBC"
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -43,33 +42,15 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    YawBone="Turret"
     YawStartConstraint=-4000.0
     YawEndConstraint=4000.0
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=0.0
-    FireInterval=4.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2367
     CustomPitchDownLimit=64625
     MaxPositiveYaw=3822
     MaxNegativeYaw=-3822
     bLimitYaw=true
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=7
     PrimaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
@@ -78,6 +59,4 @@ defaultproperties
     FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
-    SoundVolume=130
-    SoundRadius=200.0
 }

@@ -33,50 +33,22 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
     AddedPitch=340
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=5
     AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     AltFireTracerFrequency=5
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=8.5
     AltFireOffset=(X=-91.0,Y=-17.0,Z=8.5)
     AltFireSpawnOffsetX=56.0
-    bAmbientAltFireSound=true
     Spread=0.003
-    FireInterval=10.0
     AltFireInterval=0.12
-    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
     AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
     AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeRotTime=2.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=6372
     CustomPitchDownLimit=64625 // 5 degrees - probably should be 10, but any more & barrel clips hull (a howitzer, so depression isn't really an issue anyway)
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=45
     InitialSecondaryAmmo=6
     InitialAltAmmo=200
@@ -87,5 +59,5 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'
     SoundVolume=200
-    SoundRadius=50.0
+    SoundRadius=50.0 // TODO: maybe increase as is far lower than default 200, but it's a powerful gun?
 }

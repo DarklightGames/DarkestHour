@@ -44,53 +44,25 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
     AddedPitch=52
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=6
     AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     AltFireTracerFrequency=5
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
     WeaponFireAttachmentBone="barrelA"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=1.5
     AltFireOffset=(X=-178.0,Y=-21.0,Z=2.0)
     AltFireSpawnOffsetX=17.0
-    bAmbientAltFireSound=true
-    FireInterval=5.0
     AltFireInterval=0.12
-    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
     AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
     AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeRotTime=2.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=5461
     CustomPitchDownLimit=63715
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=43
     InitialSecondaryAmmo=2
     InitialAltAmmo=200
@@ -102,6 +74,4 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_76mm_Coll'
-    SoundVolume=130
-    SoundRadius=200.0
 }

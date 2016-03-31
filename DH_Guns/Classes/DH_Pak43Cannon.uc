@@ -7,15 +7,44 @@ class DH_Pak43Cannon extends DHATGunCannon;
 
 defaultproperties
 {
+    // Cannon mesh
+    Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret'
+    Skins(0)=texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
+//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak43.Pak43_turret_coll' // TODO - make 'turret' col mesh
+    BeginningIdleAnim="com_idle_close"
+    GunnerAttachmentBone="com_player"
+
+    // Turret movement
+    RotationsPerSecond=0.017
+    MaxPositiveYaw=5097
+    MaxNegativeYaw=-5097
+    YawStartConstraint=-6000.0
+    YawEndConstraint=6000.0
+    CustomPitchUpLimit=6918
+    CustomPitchDownLimit=64626
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
+    PrimaryProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
+    SecondaryProjectileClass=class'DH_Guns.DH_Pak43CannonShellHE'
+    InitialPrimaryAmmo=50
+    InitialSecondaryAmmo=42
     SecondarySpread=0.00135
+
+    // Weapon fire
+    WeaponFireOffset=-3.0
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
     ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ProjectileDescriptions(0)="APCBC"
+//  SoundRadius=300.0 // TODO: maybe change to 300 as this uses default 200, but is a powerful gun & this does not match king tiger's 300
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -41,40 +70,8 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    YawBone="Turret"
-    YawStartConstraint=-6000.0
-    YawEndConstraint=6000.0
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_player"
-    WeaponFireOffset=-3.0
-    RotationsPerSecond=0.017
-    FireInterval=6.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
-    ProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
-    ShakeRotMag=(Z=110.0)
-    ShakeRotRate=(Z=1100.0)
-    ShakeRotTime=2.0
-    ShakeOffsetMag=(Z=5.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=2.0
+
+    // Miscellaneous
     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
-    CustomPitchUpLimit=6918
-    CustomPitchDownLimit=64626
-    MaxPositiveYaw=5097
-    MaxNegativeYaw=-5097
-    bLimitYaw=true
-    BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=50
-    InitialSecondaryAmmo=42
-    PrimaryProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_Pak43CannonShellHE'
-    Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret'
-    Skins(0)=texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
-    SoundVolume=130
-    SoundRadius=200.0
 }

@@ -31,32 +31,13 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
     AddedPitch=145
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    GunnerAttachmentBone="com_attachment"
-    WeaponFireAttachmentBone="Barrel"
     WeaponFireOffset=26.2
-    FireInterval=6.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63715
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=32
     InitialSecondaryAmmo=6
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
@@ -69,6 +50,5 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
     Skins(2)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_turret_col'
-    SoundVolume=130
     SoundRadius=300.0
 }

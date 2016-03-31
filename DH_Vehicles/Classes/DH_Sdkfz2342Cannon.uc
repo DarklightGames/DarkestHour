@@ -28,7 +28,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
-    ProjectileDescriptions(0)="APCBC"
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -49,48 +48,19 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=10
     AltTracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
     AltFireTracerFrequency=7
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=-2.0
     AltFireOffset=(X=-155.0,Y=17.0,Z=2.0)
-    bAmbientAltFireSound=true
-    FireInterval=4.0
     AltFireInterval=0.05
-    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
-    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    AltShakeRotTime=2.0
     AltShakeOffsetMag=(X=0.1,Y=0.1,Z=0.1)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3640
     CustomPitchDownLimit=63715
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=35
     InitialSecondaryAmmo=20
     InitialAltAmmo=150
@@ -100,6 +70,4 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll'
-    SoundVolume=130
-    SoundRadius=200.0
 }

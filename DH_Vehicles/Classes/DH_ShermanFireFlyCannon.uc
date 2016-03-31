@@ -30,7 +30,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
     RangeSettings(1)=200
@@ -48,49 +47,21 @@ defaultproperties
     RangeSettings(13)=3200
     RangeSettings(14)=3600
     RangeSettings(15)=4000
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=10
     AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     AltFireTracerFrequency=5
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=6.0
     AltFireOffset=(X=-181.0,Y=-23.0,Z=0.0)
     AltFireSpawnOffsetX=48.0
-    bAmbientAltFireSound=true
-    FireInterval=7.0
     AltFireInterval=0.12
-    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
     AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
     AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeRotTime=2.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=4551
     CustomPitchDownLimit=64625
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=48
     InitialSecondaryAmmo=4
     InitialAltAmmo=200
@@ -102,6 +73,4 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_turret_Col'
-    SoundVolume=130
-    SoundRadius=200.0
 }

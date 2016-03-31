@@ -1923,20 +1923,72 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
+    // Key properties
     bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update the cannon mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     bNetNotify=true       // Matt: necessary to do set up requiring the 'Base' actor reference to the cannon's vehicle base
     bHasTurret=true
+
+    // Animations
+    BeginningIdleAnim="com_idle_close"
+    GunnerAttachmentBone="com_attachment"
+
+    // Turret movement
+    ManualRotationsPerSecond=0.011111
+    YawBone="Turret"
+    PitchBone="Gun"
+    PitchUpLimit=15000
+    PitchDownLimit=45000
+
+    // Cannon ammo
+    ProjectileDescriptions(0)="APCBC"
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
+
+    // Coaxial MG ammo
+    AltFireInterval=0.092
     AltFireSpread=0.002
-    ManualRotationsPerSecond=0.011111
-    CannonReloadState=CR_Waiting
+    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
+    bUsesTracers=true
+    bAltFireTracersOnly=true
+
+    // Weapon fire
     bClientCanFireCannon=false
-    NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    CannonReloadState=CR_Waiting
+    WeaponFireAttachmentBone="Barrel"
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    FireForce="Explosion05"
     bAmbientEmitterAltFireOnly=true
+    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+
+    // Sounds
+    bAmbientAltFireSound=true
+    AltFireSoundScaling=3.0
+    NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden' 
+    SoundVolume=130
+    FireSoundVolume=512.0
+    SoundRadius=200.0
+
+    // Screen shake
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
+    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+
+    // Turret hatch fire
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireAttachBone="com_player"
     FireEffectScale=1.0
-    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+
+    // Miscellaneous
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,bFireOnRelease=true,WarnTargetPct=0.75,RefireRate=0.1)
 }

@@ -687,23 +687,12 @@ defaultproperties
     RangeSettings(10)=1000
     RangeSettings(11)=1100
     RangeSettings(12)=1200
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=12
     AltTracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
     AltFireTracerFrequency=7
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=8.5
     AltFireOffset=(X=-65.0,Y=-24.0,Z=-3.0)
     ManualRotationsPerSecond=0.04
-    bAmbientAltFireSound=true
     Spread=0.003
     bUsesSecondarySpread=false
     bUsesTertiarySpread=false
@@ -712,11 +701,8 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
     EffectEmitterClass=none
     CannonDustEmitterClass=none // avoids having to override FlashMuzzleFlash function
-    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    FireForce="Explosion05"
     bIsRepeatingFF=true // added, as strongly suspect this should be true, like a tank mounted MG
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet''
@@ -728,15 +714,8 @@ defaultproperties
     ShakeOffsetTime=2.0
     AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
     AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeRotTime=2.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=12743
     CustomPitchDownLimit=64443
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=10
     InitialTertiaryAmmo=10
@@ -755,5 +734,5 @@ defaultproperties
     TurretCoverColStaticMeshLeft=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverLeft_coll'
     TurretCoverColStaticMeshRight=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll'
     SoundVolume=100
-    SoundRadius=256.0
+    SoundRadius=256.0 // TODO: maybe remove so inherits default 200, as this is a weak gun
 }

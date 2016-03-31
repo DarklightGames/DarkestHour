@@ -16,7 +16,6 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell95mm_turret_ext'
-    CustomPitchDownLimit=64900 // slightly reduced so bigger barrel & counterweight clear hull fixtures
     ProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellSmoke'
@@ -31,6 +30,7 @@ defaultproperties
     SecondarySpread=0.0036
     TertiarySpread=0.0036
     WeaponFireOffset=-39.8
+    CustomPitchDownLimit=64900 // slightly reduced so bigger barrel & counterweight clear hull fixtures
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01' // same as 105mm howitzers
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
@@ -38,4 +38,5 @@ defaultproperties
     ReloadSoundTwo=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02'
     ReloadSoundThree=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03'
     ReloadSoundFour=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04'
+//  SoundVolume=170 // TODO - maybe should be say 170, as Sherman 105 is 200 instead of default 130? (but all 95/105mm howitzers use tiger's firing sound, which currently has SV of only 120)
 }

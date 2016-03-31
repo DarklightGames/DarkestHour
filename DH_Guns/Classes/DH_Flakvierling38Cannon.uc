@@ -175,7 +175,10 @@ simulated function InitEffects()
 
 defaultproperties
 {
-    InitialPrimaryAmmo=40 // actually represents 80 round (4 magazines of 20 rounds each), but every time we fire we use 2 rounds (so think of it as 40 double shots)
+    Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
+    Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling_turret_coll'
+    InitialPrimaryAmmo=40 // actually represents 80 rounds (4 magazines of 20 rounds each), but every time we fire we use 2 rounds (so think of it as 40 double shots)
     InitialSecondaryAmmo=40
     InitialTertiaryAmmo=40
     BarrelBones(0)="Barrel_TR"
@@ -191,7 +194,4 @@ defaultproperties
     FireAnimations(4)="shoot_lookoverA"  // raised head, 1st gun pair
     FireAnimations(5)="shoot_lookoverB"  // raised head, 2nd gun pair
     SightBone="Sight_pivot"
-    Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
-    Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling_turret_coll'
 }

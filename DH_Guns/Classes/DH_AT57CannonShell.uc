@@ -24,7 +24,7 @@ defaultproperties
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
     ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
     ImpactDamage=350
-    BallisticCoefficient=1.62
+    BallisticCoefficient=1.19
     Speed=50152.0
     MaxSpeed=50152.0
     Tag="M86 APC"

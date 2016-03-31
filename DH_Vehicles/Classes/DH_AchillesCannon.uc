@@ -7,11 +7,14 @@ class DH_AchillesCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=15
-    TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
-    SecondarySpread=0.006
-    TertiarySpread=0.00156
-    ManualRotationsPerSecond=0.011111
+    // Turret mesh
+    Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
+    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
+    Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
+
+    // Turret armor
     FrontArmorFactor=5.0
     RightArmorFactor=2.5
     LeftArmorFactor=2.5
@@ -23,16 +26,39 @@ defaultproperties
     FrontRightAngle=28.0
     RearRightAngle=152.0
     RearLeftAngle=208.0
+
+    // Turret movement
+    ManualRotationsPerSecond=0.011111
+    CustomPitchUpLimit=3641
+    CustomPitchDownLimit=64653
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
+    ProjectileDescriptions(1)="APDS"
+    ProjectileDescriptions(2)="HE"
+    InitialPrimaryAmmo=32
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=15
+    SecondarySpread=0.006
+    TertiarySpread=0.00156
+
+    // Weapon fire
+    WeaponFireOffset=5.5
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
+    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
+    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
     ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
     ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
     ReloadSoundFour=sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
-    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ProjectileDescriptions(0)="APCBC"
-    ProjectileDescriptions(1)="APDS"
-    ProjectileDescriptions(2)="HE"
+    SoundRadius=300.0
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -53,39 +79,8 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=5.5
-    FireInterval=6.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
-    ProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
-    CustomPitchUpLimit=3641
-    CustomPitchDownLimit=64653
-    BeginningIdleAnim="com_idle_close"
-    InitialPrimaryAmmo=32
-    InitialSecondaryAmmo=4
-    PrimaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
+
+    // Miscellaneous
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=0.0,Y=20.0,Z=10.0)
-    Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
-    SoundVolume=130
-    SoundRadius=300.0
 }

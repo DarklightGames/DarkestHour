@@ -7,12 +7,12 @@ class DH_JacksonCannon_Early extends DH_JacksonCannon;
 
 defaultproperties
 {
-    ProjectileDescriptions(1)="AP"
+    Mesh=SkeletalMesh'DH_Jackson_anm.jackson_turret_extB'
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
-    InitialPrimaryAmmo=25
-    InitialSecondaryAmmo=13
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellAP'
+    ProjectileDescriptions(1)="AP"
+    InitialPrimaryAmmo=25
+    InitialSecondaryAmmo=13
     WeaponFireOffset=10.0
-    Mesh=SkeletalMesh'DH_Jackson_anm.jackson_turret_extB'
 }

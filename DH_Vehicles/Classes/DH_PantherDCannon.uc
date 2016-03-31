@@ -32,7 +32,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
     RangeSettings(1)=100
@@ -60,48 +59,18 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=9
     AltTracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     AltFireTracerFrequency=7
-    bUsesTracers=true
-    bAltFireTracersOnly=true
-    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=222.0
     AltFireOffset=(X=-32.0,Y=27.0,Z=7.0)
-    bAmbientAltFireSound=true
-    FireInterval=7.0
-    AltFireInterval=0.07058
-    FireSoundVolume=512.0
+    AltFireInterval=0.07059
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
     AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
-    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    AltShakeRotTime=2.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    AltShakeOffsetTime=2.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3276
     CustomPitchDownLimit=64080
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=44
     InitialSecondaryAmmo=5
     InitialAltAmmo=150
@@ -111,7 +80,7 @@ defaultproperties
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll'
-    SoundVolume=120
+    SoundVolume=120 // TODO: maybe remove so inherits default 130, as don't see clear reason for this
     SoundRadius=300.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true

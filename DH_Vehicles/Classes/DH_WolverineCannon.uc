@@ -30,32 +30,13 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
     AddedPitch=52
-    YawBone="Turret"
-    PitchBone="Gun"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=15.0
-    FireInterval=5.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=5461
     CustomPitchDownLimit=63715
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=5
     PrimaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
@@ -68,5 +49,5 @@ defaultproperties
     Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.M10_turret_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
     SoundVolume=80
-    SoundRadius=300.0
+    SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as not an especially powerful gun & this does not match the Sherman 76? (also, SoundVolume is lower than default 130)
 }

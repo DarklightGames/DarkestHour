@@ -22,7 +22,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(2)="Smoke"
     RangeSettings(1)=100
     RangeSettings(2)=200
@@ -49,33 +48,18 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    YawBone="Turret"
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0
     PitchBone="Turret"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
     WeaponFireAttachmentBone="barrel001"
     GunnerAttachmentBone="Commander_attachment"
     WeaponFireOffset=9.0
-    FireInterval=4.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2731
     CustomPitchDownLimit=64653
     MaxPositiveYaw=1820
     MaxNegativeYaw=-1820
     bLimitYaw=true
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=54
     InitialSecondaryAmmo=20
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
@@ -85,6 +69,4 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
     Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-    SoundVolume=130
-    SoundRadius=200.0
 }

@@ -2139,25 +2139,32 @@ exec function LogCannon() // DEBUG (Matt: please use & report if you ever find y
 
 defaultproperties
 {
+    // Positions & entry
+    GunsightPositions=1
     UnbuttonedPositionIndex=2
     PeriscopePositionIndex=-1    // -1 signifies no periscope by default
-    GunsightPositions=1
-    RaisedPositionIndex=-1       // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
     IntermediatePositionIndex=-1 // -1 signifies no intermediate position by default
-    OverlayCenterSize=0.9
+    RaisedPositionIndex=-1       // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
+
+    // Camera & display
+    CameraBone="Gun"
     PlayerCameraBone="Camera_com"
-    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-    ManualMinRotateThreshold=0.25
-    ManualMaxRotateThreshold=2.5
-    PoweredMinRotateThreshold=0.15
-    PoweredMaxRotateThreshold=1.75
-    MaxRotateThreshold=1.5
+    OverlayCenterSize=0.9
     AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
+
+    // Turret/cannon movement & sounds
+    MaxRotateThreshold=1.5
+    ManualMinRotateThreshold=0.25
+    ManualMaxRotateThreshold=2.5
+    PoweredMinRotateThreshold=0.15
+    PoweredMaxRotateThreshold=1.75
+    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    SoundVolume=130
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     bPCRelativeFPRotation=true

@@ -11,22 +11,16 @@ class DH_Flakvierling38Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_look'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling38_dest'
-    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DamagedEffectClass=none
-    DamagedEffectHealthSmokeFactor=0.0
-    DamagedEffectHealthMediumSmokeFactor=0.0
-    DamagedEffectHealthHeavySmokeFactor=0.0
-    VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flakv38_base'
-    VehicleHudOccupantsX(0)=0.0
-    VehicleHudOccupantsX(1)=0.0
-    ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
-    ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
     VehicleNameString="2cm Flakvierling 38 gun"
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_base'
     Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling38_dest'
+    VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flakv38_base'
+    VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_look'
+    VehicleHudOccupantsX(0)=0.5 // should be slightly to the right & back, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong
+    VehicleHudOccupantsX(1)=0.5
+    ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
+    ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
 }

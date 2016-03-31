@@ -76,7 +76,6 @@ defaultproperties
     bManualTraverseOnly=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
     BinocPositionIndex=3
-    WeaponFOV=30.0
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
     DriverPositions(0)=(ViewLocation=(X=40.0,Y=12.0,Z=3.0),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true,bExposed=true)
@@ -87,11 +86,6 @@ defaultproperties
     FireImpulse=(X=-15000.0)
     GunClass=class'DH_Vehicles.DH_Sdkfz2341Cannon'
     bHasFireImpulse=false
-    CameraBone="Gun"
     DrivePos=(X=9.0,Y=1.0,Z=-6.0)
     DriveAnim="stand_idlehip_binoc"
-    EntryRadius=130.0
-    PitchUpLimit=6000
-    PitchDownLimit=64000
-    SoundVolume=130
 }

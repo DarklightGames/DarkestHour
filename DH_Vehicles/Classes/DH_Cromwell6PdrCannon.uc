@@ -17,10 +17,11 @@ defaultproperties
     InitialSecondaryAmmo=30
     InitialTertiaryAmmo=0
     WeaponFireOffset=-4.4
+    AddedPitch=50
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
-    AddedPitch=50
+
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300

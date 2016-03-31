@@ -19,7 +19,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ProjectileDescriptions(0)="APCBC"
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -55,29 +54,13 @@ defaultproperties
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0
     PitchBone="gun_pitch"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=8.5
-    FireInterval=8.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2548
     CustomPitchDownLimit=64079
     MaxPositiveYaw=2367
     MaxNegativeYaw=-2367
     bLimitYaw=true
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=42
     InitialSecondaryAmmo=15
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
@@ -87,6 +70,5 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
     Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
-    SoundVolume=130
     SoundRadius=300.0
 }

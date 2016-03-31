@@ -19,7 +19,6 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ProjectileDescriptions(0)="APCBC"
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -49,35 +48,18 @@ defaultproperties
     YawStartConstraint=-2000.0
     YawEndConstraint=2000.0
     PitchBone="Turret"
-    PitchUpLimit=15000
-    PitchDownLimit=45000
-    WeaponFireAttachmentBone="Barrel"
-    GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=10.0
-    FireInterval=15.0
-    FireSoundVolume=512.0
-    FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
-    ShakeRotMag=(Z=50.0)
-    ShakeRotRate=(Z=1000.0)
-    ShakeRotTime=4.0
-    ShakeOffsetMag=(Z=1.0)
-    ShakeOffsetRate=(Z=100.0)
-    ShakeOffsetTime=10.0
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2731
     CustomPitchDownLimit=64171
     MaxPositiveYaw=1820
     MaxNegativeYaw=-1820
     bLimitYaw=true
-    BeginningIdleAnim="com_idle_close"
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShellHE'
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
-    SoundVolume=130
     SoundRadius=300.0
 }

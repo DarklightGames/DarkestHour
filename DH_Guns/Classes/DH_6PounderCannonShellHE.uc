@@ -3,10 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_6PounderCannonShellHE extends DHCannonShellHE;
+class DH_6PounderCannonShellHE extends DH_AT57CannonShell;
 
 defaultproperties
 {
+    Tag="Mk.X HE-T"
+    bMechanicalAiming=true
+
     MechanicalRanges(1)=(Range=100,RangeValue=1.0)
     MechanicalRanges(2)=(Range=200,RangeValue=2.0)
     MechanicalRanges(3)=(Range=300,RangeValue=3.0)
@@ -27,33 +30,4 @@ defaultproperties
     MechanicalRanges(18)=(Range=1800,RangeValue=172.0)
     MechanicalRanges(19)=(Range=1900,RangeValue=186.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=210.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=2.9
-    DHPenetrationTable(1)=2.7
-    DHPenetrationTable(2)=2.4
-    DHPenetrationTable(3)=2.1
-    DHPenetrationTable(4)=1.9
-    DHPenetrationTable(5)=1.6
-    DHPenetrationTable(6)=1.3
-    DHPenetrationTable(7)=1.2
-    DHPenetrationTable(8)=1.0
-    DHPenetrationTable(9)=0.9
-    DHPenetrationTable(10)=0.7
-    ShellDiameter=5.7
-    bHasTracer=true
-    PenetrationMag=630.0
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
-    ImpactDamage=295
-    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
-    BallisticCoefficient=1.19
-    Speed=50152.0
-    MaxSpeed=50152.0
-    Damage=250.0
-    DamageRadius=600.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
-    Tag="Mk.X HE-T"
 }
