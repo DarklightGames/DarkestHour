@@ -186,6 +186,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
+    // Key properties
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
     bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
     bHasTreads=false
@@ -193,24 +194,32 @@ defaultproperties
     bMultiPosition=false
     bSpecialHUD=false
 
-    TouchMessage="Use the "
-    VehicleNameString="AT gun"
-    VehicleMass=5.0
-    PointValue=2.0
-    MaxDesireability=1.9
-    CollisionRadius=75.0
-    CollisionHeight=100.0
-    MinBrakeFriction=40.0
-
+    // Damage
+    HealthMax=101.0
+    Health=101
     VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
     VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
-    DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // def from DHV
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple' // def from DHV
+    DamagedEffectClass=none
+    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationHealth=-1000000000.0
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
 
+    // Miscellaneous
+    TouchMessage="Use the "
+    VehicleNameString="AT gun"
+    VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
+    PointValue=2.0
+    MaxDesireability=1.9
+    CollisionRadius=75.0
+    CollisionHeight=100.0
+    BeginningIdleAnim=""
+    MinBrakeFriction=40.0
+    VehicleHudOccupantsX(0)=0.0 // neutralise driver & hull gunner positions
+    VehicleHudOccupantsX(2)=0.0
+
+    // Exit positions
     ExitPositions(0)=(X=0.0,Y=0.0,Z=100.0)  // last resort (because we start at index 1 for a cannon pawn)
     ExitPositions(1)=(X=-100.0,Y=0.0,Z=0.0) // index 1 is gunner's 1st choice exit position
     ExitPositions(2)=(X=-150.0,Y=0.0,Z=0.0) // all the rest are generic fallbacks to try different positions to try & get the player off the gun
@@ -228,6 +237,7 @@ defaultproperties
     ExitPositions(14)=(X=-100.0,Y=75.0,Z=75.0)
     ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
 
+    // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

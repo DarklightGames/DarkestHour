@@ -11,23 +11,17 @@ class DH_Flak38Gun extends DHATGun;
 
 defaultproperties
 {
-    VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Flak38CannonPawn',WeaponBone="turret_placement")
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_static_dest'
-    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DamagedEffectClass=none
-    DamagedEffectHealthSmokeFactor=0.0
-    DamagedEffectHealthMediumSmokeFactor=0.0
-    DamagedEffectHealthHeavySmokeFactor=0.0
-    VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flak38_body_static'
-    VehicleHudOccupantsX(0)=0.0
-    VehicleHudOccupantsX(1)=0.0
-    ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
     VehicleNameString="2cm FlaK 38 gun"
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Flak38CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_static'
     Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_static_dest'
+    VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flak38_body_static'
+    VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
+    VehicleHudOccupantsX(0)=0.5 // should be slightly to the right, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong
+    VehicleHudOccupantsX(1)=0.5
+    ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
