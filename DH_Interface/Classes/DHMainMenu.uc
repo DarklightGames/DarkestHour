@@ -7,10 +7,10 @@ class DHMainMenu extends UT2K4GUIPage;
 
 var()   config string           MenuSong;
 
-var automated       FloatingImage           i_background;
+var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
 var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
@@ -25,6 +25,7 @@ var     string                  MOTDURL;
 var     string                  FacebookURL;
 var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
+var     string                  PatreonURL;
 
 var     localized string        QuickPlayString;
 var     localized string        ConnectingString;
@@ -39,6 +40,8 @@ var     int                     EllipseCount;
 var     bool                    bShouldRequestMOTD;
 var     bool                    bShouldRequestQuickPlayIP;
 var     bool                    bIsRequestingQuickPlayIP;
+
+var     /*config */bool             bHasSeenPatreon;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -55,6 +58,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_Facebook);
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
+    sb_Social.ManageComponent(b_Patreon);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
@@ -66,6 +70,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function InternalOnOpen()
 {
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
+
+    if (!bHasSeenPatreon)
+    {
+        ShowAnnouncement();
+    }
 }
 
 function OnClose(optional bool bCanceled)
@@ -191,9 +200,38 @@ function bool ButtonClick(GUIComponent Sender)
         case b_SteamCommunity:
             PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             break;
+
+        case b_Patreon:
+            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+            break;
+
+        case i_Overlay:
+            HideAnnouncement();
+            break;
+
+        case i_Announcement:
+            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+            HideAnnouncement();
+            break;
     }
 
     return true;
+}
+
+function ShowAnnouncement()
+{
+    i_Overlay.Show();
+    i_Announcement.Show();
+
+    bHasSeenPatreon = true;
+
+    SaveConfig();
+}
+
+function HideAnnouncement()
+{
+    i_Overlay.Hide();
+    i_Announcement.Hide();
 }
 
 event Opened(GUIComponent Sender)
@@ -352,6 +390,39 @@ defaultproperties
     End Object
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
 
+    Begin Object Class=FloatingImage Name=OverlayBackground
+        Image=texture'Engine.BlackTexture'
+        DropShadow=none
+        ImageStyle=ISTY_Scaled
+        WinTop=0.0
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=1.0
+        RenderWeight=1.0
+        ImageColor=(R=0,G=0,B=0,A=192)
+        bCaptureMouse=true
+        bAcceptsInput=true
+        OnClick=DHMainMenu.ButtonClick
+        bVisible=false
+    End Object
+    i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
+
+    Begin Object Class=FloatingImage Name=AnnouncementImage
+        Image=texture'DH_GUI_Tex.MainMenu.patreon'
+        DropShadow=none
+        ImageStyle=ISTY_Justified
+        WinTop=0.1
+        WinLeft=0.25
+        WinWidth=0.5
+        WinHeight=0.8
+        RenderWeight=1.0
+        bCaptureMouse=true
+        bAcceptsInput=true
+        OnClick=DHMainMenu.ButtonClick
+        bVisible=false
+    End Object
+    i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
         WinTop=0.25
         WinLeft=0.025
@@ -367,7 +438,7 @@ defaultproperties
         WinWidth=0.4
         WinHeight=0.0875
         OnPreDraw=sbSection1.InternalPreDraw
-        NumColumns=3
+        NumColumns=4
     End Object
     sb_Social=SocialSection
 
@@ -528,6 +599,21 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
+    Begin Object Class=GUIGFXButton Name=PatreonButton
+        WinWidth=0.05
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
+        OnClick=DHMainMenu.ButtonClick
+        Graphic=texture'DH_GUI_Tex.MainMenu.patreon'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Support us on Patreon!"
+        bRepeatClick=false
+        StyleName="TextLabel"
+    End Object
+    b_Patreon=PatreonButton
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
         WinHeight=0.026563
@@ -613,5 +699,8 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/wiki"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
+    PatreonURL="http://www.patreon.com" //TODO: placeholder
+
+    bHasSeenPatreon=false
 }
 
