@@ -33,7 +33,6 @@ defaultproperties
 
     // Weapon fire
     WeaponFireAttachmentBone="Tip"
-    WeaponFireOffset=0.0
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
     FireSoundClass=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
     FireEndSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_end'

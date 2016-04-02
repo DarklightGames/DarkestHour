@@ -41,7 +41,6 @@ defaultproperties
     AIInfo(0)=(RefireRate=0.07059)
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Barrel"

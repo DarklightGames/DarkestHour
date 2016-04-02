@@ -2835,6 +2835,13 @@ static function PrecacheGameTextures(LevelInfo myLevel)
 
     // From DHArmoredVehicle:
     myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+
+    // From ROTankCannon:
+    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_122mm');
+    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_76mm');
+    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_85mm');
+    myLevel.AddPrecacheMaterial(material'Effects_Tex.fire_quad');
+    myLevel.AddPrecacheMaterial(material'ROEffects.SmokeAlphab_t');
 }
 
 // Overridden so we can grab the primary and secondary weapons to feed to replication

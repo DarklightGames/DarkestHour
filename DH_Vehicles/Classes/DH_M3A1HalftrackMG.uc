@@ -32,11 +32,9 @@ defaultproperties
     FireInterval=0.12
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    WeaponFireOffset=0.0
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
     FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
     FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'

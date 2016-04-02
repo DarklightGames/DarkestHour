@@ -10,11 +10,10 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman_MG'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
-    FireAttachBone="mg_yaw"
+    FireAttachBone="mg_placement"
     FireEffectOffset=(X=-40.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
 
     // Movement
-    YawBone="mg_yaw"
     MaxPositiveYaw=4000
     MaxNegativeYaw=-8000
     PitchBone="mg_yaw"
@@ -28,10 +27,8 @@ defaultproperties
     FireInterval=0.12
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
-    WeaponFireAttachmentBone="mg_yaw"
     WeaponFireOffset=5.0
     FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
     FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'

@@ -10,13 +10,12 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4_mg_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
-    FireEffectOffset=(X=-30.0,Y=0.0,Z=25.0) // positions fire on co-driver's hatch
+    FireAttachBone="Mg_placement1"
+    FireEffectOffset=(X=-30.0,Y=10.0,Z=25.0) // positions fire on co-driver's hatch
 
     // Movement
-    YawBone="mg_yaw"
     MaxPositiveYaw=2730
     MaxNegativeYaw=-2730
-    PitchBone="mg_pitch"
     CustomPitchUpLimit=3640
     CustomPitchDownLimit=63715
 
@@ -27,10 +26,8 @@ defaultproperties
     FireInterval=0.07059
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
-    WeaponFireAttachmentBone="mg_yaw"
     WeaponFireOffset=27.0
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'

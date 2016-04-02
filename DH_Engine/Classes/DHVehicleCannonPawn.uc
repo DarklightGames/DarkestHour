@@ -301,7 +301,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 }
 
 // Modified to fix bug where any HUDOverlay would be destroyed if function called before net client received Controller reference through replication
-// Also to remove irrelevant stuff about driver weapon crosshair & to optimise
+// Also to remove irrelevant stuff about crosshair & to optimise
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;

@@ -10,10 +10,10 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_MG'
     bMatchSkinToVehicle=true
+    FireAttachBone="Mg_placement1"
     FireEffectOffset=(X=-30.0,Y=0.0,Z=15.0) // positions fire on co-driver's hatch
 
     // Movement
-    YawBone="mg_yaw"
     MaxPositiveYaw=7000
     MaxNegativeYaw=-6000
     PitchBone="mg_yaw"
@@ -27,10 +27,8 @@ defaultproperties
     FireInterval=0.092
     TracerProjectileClass=class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
-    WeaponFireAttachmentBone="mg_yaw"
     WeaponFireOffset=25.0
     FireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
     FireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'

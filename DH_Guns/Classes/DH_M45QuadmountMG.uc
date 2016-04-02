@@ -154,7 +154,6 @@ defaultproperties
     Skins(1)=material'DH_Artillery_tex.m45.m45_sight_s'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.m45.m45_turret_coll'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
-    CullDistance=0.0 // override unwanted 8k from DHVehicleMG
     BeginningIdleAnim="idle_sights_in"
     GunnerAttachmentBone="Gun"
     FireEffectClass=none // no hatch fire effect

@@ -20,7 +20,6 @@ defaultproperties
     YawBone="mg_pitch"
     MaxPositiveYaw=5500
     MaxNegativeYaw=-5500
-    PitchBone="mg_pitch"
     CustomPitchUpLimit=4500
     CustomPitchDownLimit=63500
 
@@ -32,11 +31,9 @@ defaultproperties
     AIInfo(0)=(RefireRate=0.07059)
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    WeaponFireOffset=0.0
     AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'

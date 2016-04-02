@@ -10,7 +10,7 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'
     Skins(0)=texture'Weapons3rd_tex.German.Mg42_world'
-    FireAttachBone="mg_yaw"
+    FireAttachBone="Mg_placement1"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
 
     // Movement
