@@ -82,7 +82,7 @@ simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex
 // Will return true if passed two different players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
-    return A != none && B != none && A != B ||
+    return A != none && B != none && A != B &&
           (A.Team.TeamIndex == AXIS_TEAM_INDEX || A.Team.TeamIndex == ALLIES_TEAM_INDEX) &&
            A.Team.TeamIndex == B.Team.TeamIndex &&
            A.SquadIndex == B.SquadIndex;
