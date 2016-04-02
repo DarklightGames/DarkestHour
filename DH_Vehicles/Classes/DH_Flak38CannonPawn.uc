@@ -46,9 +46,9 @@ function Fire(optional float F)
 // From Sd.Kfz.234/1 cannon pawn
 function float GetAmmoReloadState()
 {
-    if (ROTankCannon(Gun) != none)
+    if (DHVehicleCannon(Gun) != none)
     {
-        switch (ROTankCannon(Gun).CannonReloadState)
+        switch (DHVehicleCannon(Gun).CannonReloadState)
         {
             case CR_ReadyToFire:    return 0.0;
             case CR_Waiting:

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleMG extends ROMountedTankMG
+class DHVehicleMG extends DHVehicleWeapon
     abstract;
 
 // General
@@ -469,6 +469,17 @@ static function StaticPrecache(LevelInfo L)
     }
 }
 
+/*
+static function StaticPrecache(LevelInfo L) // from ROMountedTankMG - overridden in DH
+{
+}
+
+simulated function UpdatePrecacheMaterials() // from ROMountedTankMG - does nothing; pointless
+{
+    super.UpdatePrecacheMaterials();
+}
+*/
+
 // Modified to add extra material properties (note the Super in Actor already pre-caches the Skins array)
 simulated function UpdatePrecacheMaterials()
 {
@@ -566,6 +577,33 @@ simulated function int LimitYaw(int yaw)
 
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
+/*
+simulated function int LimitYaw(int yaw) // from ROMountedTankMG - overridden in DH
+{
+    local int NewYaw;
+    local int VehYaw;
+
+    if ( !bLimitYaw )
+    {
+        return yaw;
+    }
+
+    VehYaw = VehicleWeaponPawn(Owner).GetVehicleBase().Rotation.Yaw;
+
+    NewYaw = yaw;
+
+    if(yaw > VehYaw + MaxPositiveYaw )
+    {
+        NewYaw = VehYaw + MaxPositiveYaw;
+    }
+    else if( yaw < VehYaw + MaxNegativeYaw )
+    {
+        NewYaw = VehYaw + MaxNegativeYaw;
+    }
+
+    return NewYaw;
+}
+*/
 
 // Matt: deprecated functions - return false just in case they get called
 simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
@@ -622,12 +660,19 @@ simulated function DestroyEffects()
     }
 }
 
+/*
+function byte BestMode() // from ROMountedTankMG - pointless, just re-states the super
+{
+    return 0;
+}
+*/
+
 defaultproperties
 {
     bNetNotify=true // Matt: necessary to do set up requiring the 'Base' actor reference to the MG's vehicle base
     RotationsPerSecond=0.25
     bLimitYaw=true
-    YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
+    YawStartConstraint=0 // revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG // TEMP - no longer needed when ROMountedTankMG removed
     YawEndConstraint=65535
     PitchUpLimit=15000
     PitchDownLimit=45000
@@ -642,5 +687,43 @@ defaultproperties
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireAttachBone="mg_pitch"
-    AIInfo(0)=(bInstantHit=false,bLeadTarget=true,bFireOnRelease=true,WarnTargetPct=0.75,RefireRate=0.1)
+    AIInfo(0)=(bInstantHit=false,bLeadTarget=true,bFireOnRelease=true,WarnTargetPct=0.75,AimError=750.0,RefireRate=0.1)
+
+    // From ROMountedTankMG:
+    YawBone="Object01"
+//  YawStartConstraint=65535 // overridden in DH
+//  YawEndConstraint=-65535
+    PitchBone="Object02"
+//  PitchUpLimit=12500 // overridden in DH
+//  PitchDownLimit=59500
+//  bInstantFire=true // overridden in DH
+    AmbientEffectEmitterClass=class'TankMGEmitter'
+    FireInterval=0.1
+    SoundVolume=255
+    AmbientSoundScaling=3.0
+    ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=2.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=2.0
+    FireForce="minifireb"
+    bIsRepeatingFF=true
+    bAmbientFireSound=true
+//  WeaponFireAttachmentBone="Object02" // overridden in DH
+    WeaponFireOffset=85.0
+    bAimable=true
+    DamageType=class'ROVehMountedMGDamType'
+    DamageMin=25
+    DamageMax=25
+//  Spread=0.01 // overridden in DH
+//  RotationsPerSecond=2.0 // overridden in DH
+    bInstantRotation=true
+    bDoOffsetTrace=true
+    TraceRange=15000
+//  AIInfo(0)=(bInstantHit=true,AimError=750.0) // overridden in DH
+    CullDistance=8000.0
+    bUsesTracers=true
+    bIsMountedTankMG=true
+    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.dp27_ammo'
 }

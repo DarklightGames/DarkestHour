@@ -2624,6 +2624,18 @@ function ClientSaveROIDHash(string ROID)
     SaveConfig();
 }
 
+// Modified to use DH cannon classes instead of deprecated ROTankCannon
+function ServerSetManualTankShellReloading(bool bUseManualReloading)
+{
+    // If the cannon is waiting to reload, force a reload on the client
+    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none && DHVehicleCannonPawn(Pawn).Cannon.CannonReloadState == CR_Waiting)
+    {
+        DHVehicleCannonPawn(Pawn).Cannon.ServerManualReload();
+    }
+
+    bManualTankShellReloading = bUseManualReloading;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

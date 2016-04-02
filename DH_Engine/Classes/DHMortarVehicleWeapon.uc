@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMortarVehicleWeapon extends ROVehicleWeapon
+class DHMortarVehicleWeapon extends DHVehicleWeapon
     abstract;
 
 const RAD2DEG = 57.29577951;

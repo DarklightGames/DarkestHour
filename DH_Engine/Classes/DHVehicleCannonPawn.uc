@@ -595,11 +595,6 @@ function bool CanFire()
     return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
 }
 
-// simulated exec function SwitchFireMode()
-// Matt: TODO - add some kind of clientside eligibility check to stop player spamming server with invalid ServerToggleRoundType() calls
-// Maybe just change PendingProjClass clientside & only update to server when it needs it, i.e. after firing or starting a reload (similar to what I've done with RangeIndex in DHRocketWeapon)
-// Server only needs PendingProjectileClass in ServerManualReload, AttemptFire & SpawnProjectile & clientside it's only used by/replicated to an owning net client
-
 // Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
 simulated function IncrementRange()
 {
@@ -617,10 +612,37 @@ simulated function DecrementRange()
     }
 }
 
-// Modified to prevent attempting reload if don't have ammo
+// Modified to use reference to DHVehicleCannon instead of deprecated ROTankCannon
+// Matt: TODO - add some kind of clientside eligibility check to stop player spamming server with invalid ServerToggleRoundType() calls
+// Maybe just change PendingProjClass clientside & only update to server when it needs it, i.e. after firing or starting a reload (similar to what I've done with RangeIndex in DHRocketWeapon)
+// Server only needs PendingProjectileClass in ServerManualReload, AttemptFire & SpawnProjectile & clientside it's only used by/replicated to an owning net client
+simulated exec function SwitchFireMode()
+{
+    if (Cannon != none && Cannon.bMultipleRoundTypes)
+    {
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+        }
+
+        ServerToggleRoundType();
+    }
+}
+
+// Modified to use reference to DHVehicleCannon instead of deprecated ROTankCannon
+function ServerToggleRoundType()
+{
+    if (Cannon != none)
+    {
+        Cannon.ToggleRoundType();
+    }
+}
+
+// Modified to prevent attempting reload if don't have ammo & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 simulated exec function ROManualReload()
 {
-    if (Cannon != none && Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex()) && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+    if (Cannon != none && Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex())
+        && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
     {
         Cannon.ServerManualReload();
     }
@@ -630,6 +652,26 @@ simulated exec function ROManualReload()
 function bool ResupplyAmmo()
 {
     return Cannon != none && Cannon.ResupplyAmmo();
+}
+
+// Modified to use reference to DHVehicleCannon instead of deprecated ROTankCannon
+function float GetAmmoReloadState()
+{
+    if (Cannon != none)
+    {
+        switch (cannon.CannonReloadState)
+        {
+            case CR_ReadyToFire:    return 0.00;
+            case CR_Waiting:
+            case CR_Empty:
+            case CR_ReloadedPart1:  return 1.00;
+            case CR_ReloadedPart2:  return 0.75;
+            case CR_ReloadedPart3:  return 0.50;
+            case CR_ReloadedPart4:  return 0.25;
+        }
+    }
+
+    return 0.0;
 }
 
 // New function, used by HUD to show coaxial MG reload progress, like the cannon reload
@@ -730,19 +772,34 @@ function bool TryToDrive(Pawn P)
 }
 
 // Modified to try to start an MG reload if coaxial MG is out of ammo, to show any damaged gunsight, & to use InitialPositionIndex instead of assuming start in position zero
+// Also to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 function KDriverEnter(Pawn P)
 {
     super.KDriverEnter(P);
 
+    if (Cannon != none)
+    {
+        // If the cannon is waiting to reload & this player does not have manual reloading on, force a reload
+        if (Cannon.CannonReloadState == CR_Waiting && (ROPlayer(Controller) == none || !ROPlayer(Controller).bManualTankShellReloading))
+        {
+            Cannon.ServerManualReload();
+        }
+        // Otherwise, replicate the cannon's current reload state
+        else
+        {
+            Cannon.ClientSetReloadState(Cannon.CannonReloadState);
+        }
+
+        // If coaxial MG is out of ammo, start an MG reload
+        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
+        if (bHasAltFire && !Cannon.HasAmmo(3) && Role == ROLE_Authority)
+        {
+            Cannon.HandleReload();
+        }
+    }
+
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
-
-    // If coaxial MG is out of ammo, start an MG reload
-    // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-    if (bHasAltFire && Cannon != none && !Cannon.HasAmmo(3) && Role == ROLE_Authority)
-    {
-        Cannon.HandleReload();
-    }
 
     if (bOpticsDamaged)
     {

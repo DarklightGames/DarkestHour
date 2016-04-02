@@ -473,7 +473,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
         // Don't damage this projectile, an actor already damaged by projectile impact (HurtWall), cannon actors, non-authority actors, or fluids
         // We skip damage on cannons because the blast will hit the vehicle base so we don't want to double up on damage to the same vehicle
-        if (Victim == none || Victim == self || Victim == HurtWall || Victim.IsA('ROTankCannon') || Victim.Role < ROLE_Authority || Victim.IsA('FluidSurfaceInfo'))
+        if (Victim == none || Victim == self || Victim == HurtWall || Victim.IsA('DHVehicleCannon') || Victim.Role < ROLE_Authority || Victim.IsA('FluidSurfaceInfo'))
         {
             continue;
         }
@@ -503,7 +503,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         }
 
         // Ignore the actor if the blast is blocked by world geometry, a vehicle, or a turret (but don't let a turret block damage to its own vehicle)
-        if (TraceActor != none && TraceActor != Victim && (TraceActor.bWorldGeometry || TraceActor.IsA('ROVehicle') || (TraceActor.IsA('ROTankCannon') && Victim != TraceActor.Base)))
+        if (TraceActor != none && TraceActor != Victim && (TraceActor.bWorldGeometry || TraceActor.IsA('ROVehicle') || (TraceActor.IsA('DHVehicleCannon') && Victim != TraceActor.Base)))
         {
             continue;
         }
