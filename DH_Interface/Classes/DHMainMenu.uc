@@ -408,7 +408,7 @@ defaultproperties
     i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
 
     Begin Object Class=FloatingImage Name=AnnouncementImage
-//        Image=texture'DH_GUI_Tex.MainMenu.patreon' // TEMP removed to compile (needs updated DH_GUI_Tex file)
+        Image=texture'DH_GUI_Tex.MainMenu.patreon'
         DropShadow=none
         ImageStyle=ISTY_Justified
         WinTop=0.1
@@ -605,7 +605,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-//        Graphic=texture'DH_GUI_Tex.MainMenu.patreon' // TEMP removed to compile (needs updated DH_GUI_Tex file)
+        Graphic=texture'DH_GUI_Tex.MainMenu.patreon'
         bTabStop=true
         Position=ICP_Center
         Hint="Support us on Patreon!"
