@@ -375,10 +375,10 @@ function KillPlayer(string PlayerName)
 
 function SwitchPlayer(string PlayerName, string TeamName, string RoleName, string RoleIndexString)
 {
-    local DarkestHourGame DHG;
-    local int             TeamIndex, RoleIndex;
-    local ROPlayer        PlayerToSwitch;
-    local bool            bFoundRole, bOriginalPlayersBalanceTeams;
+    local DHGameReplicationInfo DHGRI;
+    local ROPlayer              PlayerToSwitch;
+    local int                   TeamIndex, RoleIndex;
+    local bool                  bFoundRole, bOriginalPlayersBalanceTeams;
 
     if (!IsLoggedInAsAdmin())
     {
@@ -394,17 +394,17 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
         if (RoleIndex >= 0)
         {
             // Check that role index finds a valid RoleInfo
-            DHG = DarkestHourGame(ROTG);
+            DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-            if (DHG != none) // means we're playing Darkest Hour & need to use a DH roles array
+            if (DHGRI != none) // means we're playing Darkest Hour & need to use a DH roles array
             {
                 if (TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    bFoundRole = RoleIndex < arraycount(DHG.DHAlliesRoles) && DHG.DHAlliesRoles[RoleIndex] != none;
+                    bFoundRole = RoleIndex < arraycount(DHGRI.DHAlliesRoles) && DHGRI.DHAlliesRoles[RoleIndex] != none;
                 }
                 else
                 {
-                    bFoundRole = RoleIndex < arraycount(DHG.DHAxisRoles) && DHG.DHAxisRoles[RoleIndex] != none;
+                    bFoundRole = RoleIndex < arraycount(DHGRI.DHAxisRoles) && DHGRI.DHAxisRoles[RoleIndex] != none;
                 }
             }
             else // this makes it work with Red Orchestra or any game class/mod that uses RO's AlliesRoles/AxisRoles
