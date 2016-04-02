@@ -223,11 +223,11 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     if (PRI.Team != none)
     {
-        C.DrawColor = default.SideColors[PRI.Team.TeamIndex];
+        C.DrawColor = class'DHColor'.default.TeamColors[PRI.Team.TeamIndex];
     }
     else
     {
-        C.DrawColor = default.SideColors[0];
+        C.DrawColor = class'DHColor'.default.TeamColors[0];
     }
 
     C.Font = GetPlayerNameFont(C);
@@ -353,7 +353,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     if (Killer != none && Killer != Victim)
     {
         O.KillerName = Killer.PlayerName;
-        O.KillerColor = SideColors[Killer.Team.TeamIndex];
+        O.KillerColor = class'DHColor'.default.TeamColors[Killer.Team.TeamIndex];
     }
 
     O.VictimName = Victim.PlayerName;
@@ -816,17 +816,22 @@ simulated function DrawHudPassC(Canvas C)
                 if (PortraitPRI.Team.TeamIndex == 0)
                 {
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
-                    PortraitText[0].Tints[TeamIndex] = SideColors[0];
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
                 }
                 else if (PortraitPRI.Team.TeamIndex == 1)
                 {
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[1];
-                    PortraitText[0].Tints[TeamIndex] = SideColors[1];
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
                 }
                 else
                 {
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
+                }
+
+                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+                {
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.SquadColor;
                 }
             }
 
@@ -1541,7 +1546,7 @@ function DrawPlayerNames(Canvas C)
         NamedPlayer = none;
     }*/
 
-    foreach RadiusActors(class'Pawn', NamedPlayer, class'DHMeasure'.static.MetersToUnreal(20), ViewPos)
+    foreach RadiusActors(class'Pawn', NamedPlayer, class'DHUnits'.static.MetersToUnreal(20), ViewPos)
     {
         if (PlayerOwner.GetTeamNum() != NamedPlayer.GetTeamNum())
         {
@@ -1661,13 +1666,13 @@ function DrawPlayerNames(Canvas C)
                 C.SetPos(ScreenPos.X - 8, ScreenPos.Y - (StrY * 0.5));
 
                 // If other player is in your squad, make his name green.
-                if (PC.SquadReplicationInfo.IsInSameSquad(DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo), DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo)))
+                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo), DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo)))
                 {
-                    C.DrawColor = class'UColor'.default.LawnGreen;
+                    C.DrawColor = class'DHColor'.default.SquadColor;
                 }
                 else
                 {
-                    C.DrawColor = SideColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
+                    C.DrawColor = class'DHColor'.default.TeamColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
                 }
 
                 SquadNameIconMaterial = Material'DH_InterfaceArt_tex.HUD.player_indicator';
@@ -2378,8 +2383,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
                             // Colin: Mortar targets have an arrow that points in the
                             // direction of player's mortar hit.
                             Temp = Normal(DHGRI.GermanMortarTargets[i].Location - DHGRI.GermanMortarTargets[i].HitLocation);
-                            ArrowRotation = class'DHLib'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
-                            ArrowRotation -= class'DHLib'.static.DegreesToUnreal(DHGRI.OverheadOffset);
+                            ArrowRotation = class'UUnits'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
+                            ArrowRotation -= class'UUnits'.static.DegreesToUnreal(DHGRI.OverheadOffset);
                             TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
 
                             DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
@@ -2387,7 +2392,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
 
                         if (RI.bCanUseMortars && PlayerOwner.Pawn != none)
                         {
-                            Distance = int(class'DHLib'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.GermanMortarTargets[i].Location)));
+                            Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.GermanMortarTargets[i].Location)));
                             Distance = (Distance / 5) * 5;  // round to the nearest 5 meters
                             DistanceString = string(Distance) @ "m";
                         }
@@ -2460,8 +2465,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
                             // Colin: Mortar targets have an arrow that points in the
                             // direction of player's mortar hit.
                             Temp = Normal(DHGRI.AlliedMortarTargets[i].Location - DHGRI.AlliedMortarTargets[i].HitLocation);
-                            ArrowRotation = class'DHLib'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
-                            ArrowRotation -= class'DHLib'.static.DegreesToUnreal(DHGRI.OverheadOffset);
+                            ArrowRotation = class'UUnits'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
+                            ArrowRotation -= class'UUnits'.static.DegreesToUnreal(DHGRI.OverheadOffset);
                             TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
 
                             DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
@@ -2469,7 +2474,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
 
                         if (RI.bCanUseMortars && PlayerOwner.Pawn != none)
                         {
-                            Distance = int(class'DHLib'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.AlliedMortarTargets[i].Location)));
+                            Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.AlliedMortarTargets[i].Location)));
                             Distance = (Distance / 5) * 5;  // round to the nearest 5 meters
                             DistanceString = string(Distance) @ "m";
                         }
@@ -2627,7 +2632,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     }
 
     // Draw the map scale indicator
-    //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
+    //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHUnits'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
     //DrawTextWidgetClipped(C, MapScaleText, subCoords);
 
     // Overhead map debugging
@@ -4516,9 +4521,6 @@ defaultproperties
 
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"
-
-    SideColors(0)=(R=200,G=72,B=72,A=255)
-    SideColors(1)=(R=151,G=154,B=223,A=255)
 
     DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))

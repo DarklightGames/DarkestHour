@@ -3372,7 +3372,7 @@ function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional
     if (DHP != none && DHP.Pawn != none)
     {
         Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHLib'.static.MetersToUnreal(Max(Distance,5)));
+        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance,5)));
 
         VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
         CreatedVehicle = spawn(VehicleClass,,, TargetLocation, Direction);
@@ -3403,7 +3403,7 @@ function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
         if (Distance > 0)
         {
             Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-            TargetLocation = TargetLocation + (vector(Direction) * class'DHLib'.static.MetersToUnreal(Distance));
+            TargetLocation = TargetLocation + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
         }
 
         for (C = Level.ControllerList; C != none; C = C.NextController)

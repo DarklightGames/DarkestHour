@@ -7,9 +7,29 @@
 class UArray extends Object
     abstract;
 
+static final function Reverse(out array<Object> A)
+{
+    local int i;
+
+    for (i = 0; i < (A.Length - 1) / 2; ++i)
+    {
+        class'UCore'.static.Swap(A[i], A[A.Length - 1 - i]);
+    }
+}
+
+static final function IReverse(out array<int> A)
+{
+    local int i;
+
+    for (i = 0; i < (A.Length - 1) / 2; ++i)
+    {
+        class'UCore'.static.ISwap(A[i], A[A.Length - 1 - i]);
+    }
+}
+
 static final function FisherYatesShuffle(out array<Object> _Array)
 {
-    local Object i, j;
+    local int i, j;
 
     for (i = _Array.Length - 1; i >= 0; --i)
     {

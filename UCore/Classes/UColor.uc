@@ -136,7 +136,7 @@ var color SlateGray;
 var color Snow;
 var color SpringGreen;
 var color SteelBlue;
-var color Tan;
+var color Tan_;
 var color Teal;
 var color Thistle;
 var color Tomato;
@@ -279,7 +279,7 @@ defaultproperties
     Snow=(R=255,G=250,B=250,A=255)
     SpringGreen=(R=0,G=255,B=127,A=255)
     SteelBlue=(R=70,G=130,B=180,A=255)
-    Tan=(R=210,G=180,B=140,A=255)
+    Tan_=(R=210,G=180,B=140,A=255)
     Teal=(R=0,G=128,B=128,A=255)
     Thistle=(R=216,G=191,B=216,A=255)
     Tomato=(R=253,G=99,B=71,A=255)

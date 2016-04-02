@@ -617,7 +617,7 @@ simulated static function GetWhizType(out int WhizType, DHPawn WhizzedPlayer, Pa
             LaunchLocation = Instigator.Location;
         }
 
-        BulletDistance = class'DHLib'.static.UnrealToMeters(VSize(WhizzedPlayer.Location - LaunchLocation)); // in metres
+        BulletDistance = class'DHUnits'.static.UnrealToMeters(VSize(WhizzedPlayer.Location - LaunchLocation)); // in metres
 
         // If it's friendly fire at close range, we won't suppress, so send a different WhizType in the HitPointTrace
         if (bFriendlyFire && BulletDistance < 10.0)
@@ -756,7 +756,7 @@ simulated function CheckForSplash(vector SplashLocation)
             // So we'll raise its location - a little hacky, but works pretty well much of the time
             // The adjustment backs up along the projectile's path & is calculated from its pitch angle
             // to give an adjustment of at least 10 units vertically, or more for higher speed projectiles
-            Adjustment = FMax(12.0, VSize(Velocity) / 1400.0) / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            Adjustment = FMax(12.0, VSize(Velocity) / 1400.0) / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
             SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
 
             Spawn(SplashEffect,,, SplashLocation, rot(16384, 0, 0));

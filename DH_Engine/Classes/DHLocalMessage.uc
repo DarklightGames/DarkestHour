@@ -19,9 +19,9 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
     if (RelatedPRI_1 != none &&
         RelatedPRI_1.Team != none &&
         RelatedPRI_1.Team.TeamIndex >= 0 &&
-        RelatedPRI_1.Team.TeamIndex < arraycount(class'DHHud'.default.SideColors))
+        RelatedPRI_1.Team.TeamIndex < arraycount(class'DHColor'.default.TeamColors))
     {
-        return class'DHHud'.default.SideColors[RelatedPRI_1.Team.TeamIndex];
+        return class'DHColor'.default.TeamColors[RelatedPRI_1.Team.TeamIndex];
     }
 
     return default.DrawColor;

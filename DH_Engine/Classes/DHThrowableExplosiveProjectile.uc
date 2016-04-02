@@ -292,7 +292,7 @@ simulated function Landed(vector HitNormal)
     if (Bounces <= 0)
     {
         SetPhysics(PHYS_None);
-        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'DHLib'.static.UnrealToRadians(Rotation.Yaw)))));
+        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
 
         if (Role == ROLE_Authority)
         {
@@ -658,7 +658,7 @@ simulated function CheckForSplash(vector SplashLocation)
             // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
             // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well
             // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
-            Adjustment = 10.0 / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            Adjustment = 10.0 / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
             SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
 
             Spawn(SplashEffect,,, SplashLocation, rot(16384, 0, 0));

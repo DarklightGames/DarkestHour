@@ -268,7 +268,7 @@ function UpdateRoundStatus()
         }
         else
         {
-            l_Reinforcements.TextColor = class'UColor'.default.Red;
+            l_Reinforcements.TextColor = class'UColor'.default.White;
             i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
 
