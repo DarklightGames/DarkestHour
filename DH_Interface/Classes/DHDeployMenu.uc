@@ -84,9 +84,6 @@ var             bool                        bButtonsEnabled;
 
 var             material                    VehicleNoneMaterial;
 
-var             color                       RedColor;
-var             color                       GreyColor;
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -266,13 +263,13 @@ function UpdateRoundStatus()
     {
         if (GRI.AttritionRate[CurrentTeam] > 0.0)
         {
-            l_Reinforcements.TextColor = default.RedColor;
-            i_Reinforcements.ImageColor = default.RedColor;
+            l_Reinforcements.TextColor = class'UColor'.default.Red;
+            i_Reinforcements.ImageColor = class'UColor'.default.Red;
         }
         else
         {
-            l_Reinforcements.TextColor = default.WhiteColor;
-            i_Reinforcements.ImageColor = default.WhiteColor;
+            l_Reinforcements.TextColor = class'UColor'.default.Red;
+            i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
 
         l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
@@ -608,7 +605,7 @@ function UpdateRoles()
 
         if (Limit == 0)
         {
-            S = MakeColorCode(GreyColor) $ S $ " [Locked]";
+            S @= "[Locked]";
         }
         else if (Limit == 255)
         {
@@ -1843,10 +1840,6 @@ defaultproperties
 
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
     NextChangeTeamTime=0.0
-
-    WhiteColor=(R=255,G=255,B=255,A=255)
-    RedColor=(R=255,G=0,B=0,A=255)
-    GreyColor=(R=128,G=128,B=128,A=255)
 
     OnPreDraw=InternalOnPreDraw
 

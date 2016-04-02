@@ -66,9 +66,6 @@ var globalconfig bool   bShowDeathMessages; // whether or not to show the death 
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
 
-var color               SquadTextColor;
-var color               ShadowTextColor;
-
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 
@@ -1526,7 +1523,7 @@ function DrawPlayerNames(Canvas C)
     PC = DHPlayer(PlayerOwner);
 
     ViewPos = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + (1600.0 * vector(PlayerOwner.CalcViewRotation)), ViewPos, true));
+    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + (class'DHUnits'.static.MetersToUnreal(20) * vector(PlayerOwner.CalcViewRotation)), ViewPos, true));
     PawnOwnerTeam = PawnOwner.GetTeamNum();
     Mortar = DHMortarVehicle(HitPawn);
 
@@ -1544,7 +1541,7 @@ function DrawPlayerNames(Canvas C)
         NamedPlayer = none;
     }*/
 
-    foreach RadiusActors(class'Pawn', NamedPlayer, class'DHLib'.static.MetersToUnreal(10), ViewPos)
+    foreach RadiusActors(class'Pawn', NamedPlayer, class'DHMeasure'.static.MetersToUnreal(20), ViewPos)
     {
         if (PlayerOwner.GetTeamNum() != NamedPlayer.GetTeamNum())
         {
@@ -1666,7 +1663,7 @@ function DrawPlayerNames(Canvas C)
                 // If other player is in your squad, make his name green.
                 if (PC.SquadReplicationInfo.IsInSameSquad(DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo), DHPlayerReplicationInfo(NamedPlayer.PlayerReplicationInfo)))
                 {
-                    C.DrawColor = SquadTextColor;
+                    C.DrawColor = class'UColor'.default.LawnGreen;
                 }
                 else
                 {
@@ -1711,7 +1708,7 @@ simulated function DrawShadowedTextClipped(Canvas C, string Text)
     {
         SavedDrawColor = C.DrawColor;
 
-        C.DrawColor = ShadowTextColor;
+        C.DrawColor = class'UColor'.default.Black;
         C.CurX += 1;
         C.CurY += 1;
 
@@ -4523,8 +4520,6 @@ defaultproperties
     SideColors(0)=(R=200,G=72,B=72,A=255)
     SideColors(1)=(R=151,G=154,B=223,A=255)
 
-    SquadTextColor=(R=0,G=204,B=0,A=255)
-
     DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployInObjectiveIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=0,Y1=64,X2=63,Y2=127),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
@@ -4532,5 +4527,4 @@ defaultproperties
     SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
 
     OverrideConsoleFontName="DHFonts.DHFont14"
-    ShadowTextColor=(R=0,G=0,B=0,A=255)
 }

@@ -7,6 +7,30 @@
 class UArray extends Object
     abstract;
 
+static final function FisherYatesShuffle(out array<Object> _Array)
+{
+    local Object i, j;
+
+    for (i = _Array.Length - 1; i >= 0; --i)
+    {
+        j = Rand(i);
+
+        class'UCore'.static.Swap(_Array[i], _Array[j]);
+    }
+}
+
+static final function IFisherYatesShuffle(out array<int> _Array)
+{
+    local int i, j;
+
+    for (i = _Array.Length - 1; i >= 0; --i)
+    {
+        j = Rand(i);
+
+        class'UCore'.static.ISwap(_Array[i], _Array[j]);
+    }
+}
+
 static final function int IndexOf(array<Object> _Array, Object O)
 {
     local int i;
