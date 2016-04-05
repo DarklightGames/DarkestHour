@@ -64,8 +64,10 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
+// Squads
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvites;
+var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
@@ -76,7 +78,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex, SquadReplicationInfo;
+        MortarTargetIndex, SquadReplicationInfo, SquadMemberPositions;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)

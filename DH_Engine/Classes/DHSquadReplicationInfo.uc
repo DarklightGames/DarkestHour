@@ -51,7 +51,7 @@ var class<LocalMessage> SquadMessageClass;
 replication
 {
     reliable if (bNetInitial && Role == ROLE_Authority)
-        TeamSquadSizes;
+        AxisSquadSize, AlliesSquadSize;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
         AxisMembers, AxisNames, AxisLeaderMemberIndices, AxisLocked,
@@ -60,7 +60,7 @@ replication
 
 function PostBeginPlay()
 {
-    super.PostBeginPlay()
+    super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
@@ -75,13 +75,56 @@ function PostNetBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        SetTimer(1.0, true);
+        SetTimer(2.0, true);
     }
 }
 
 function Timer()
 {
+    local DHPlayer PC;
+    local DHPlayer OtherPC;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local Controller C;
     local int i;
+
+    // In order to save bandwidth, we
+    for (C = Level.ControllerList; C != none; C = C.nextController)
+    {
+        PC = DHPlayer(C);
+
+        if (PC == none)
+        {
+            continue;
+        }
+
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        if (PRI == none || !PRI.IsInSquad())
+        {
+            continue;
+        }
+
+        for (i = 0; i < GetTeamSquadSize(C.GetTeamNum()); ++i)
+        {
+            OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
+
+            if (OtherPRI != none)
+            {
+                OtherPC = DHPlayer(OtherPRI.Owner);
+
+                if (OtherPC != none && OtherPC.Pawn != none)
+                {
+                    PC.SquadMemberPositions[i].X = OtherPC.Pawn.Location.X;
+                    PC.SquadMemberPositions[i].Y = OtherPC.Pawn.Location.Y;
+                    PC.SquadMemberPositions[i].Z = OtherPC.Pawn.Rotation.Yaw;
+
+                    continue;
+                }
+            }
+
+            PC.SquadMemberPositions[i] = vect(0, 0, 0);
+        }
+    }
 }
 
 simulated function int GetTeamSquadSize(int TeamIndex)
@@ -583,9 +626,9 @@ simulated function bool IsSquadLocked(int TeamIndex, int SquadIndex)
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return AxisLocked[SquadIndex];
+            return AxisLocked[SquadIndex] != 0;
         case ALLIES_TEAM_INDEX:
-            return AlliesLocked[SquadIndex];
+            return AlliesLocked[SquadIndex] != 0;
         default:
             return false;
     }
@@ -697,7 +740,7 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
 }
 
 // TODO: Sort of inefficient. Rewrite if you're bored.
-simulated function GetMemberCount(int TeamIndex, int SquadIndex)
+simulated function int GetMemberCount(int TeamIndex, int SquadIndex)
 {
     local array<DHPlayerReplicationInfo> Members;
 

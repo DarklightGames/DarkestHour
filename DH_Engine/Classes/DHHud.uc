@@ -39,6 +39,8 @@ var SpriteWidget        SquadNameIcon;
 var SpriteWidget        MapAxisFlagIcon;
 var SpriteWidget        MapAlliesFlagIcons[3];
 
+var SpriteWidget        MapPlayerNumberIcon;
+
 var localized string    LegendCarriedArtilleryRadioText;
 
 var localized string    NoTimeLimitText;
@@ -2629,6 +2631,9 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
 
         // Draw the player icon
         DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, A.Location, MapCenter);
+
+        // Draw the player's number icon, if they are in a squad
+        DrawIconOnMap(C, SubCoords, MapPlayerNumberIcon, MyMapScale, A.Location, MapCenter);
     }
 
     // Draw the map scale indicator
@@ -4477,7 +4482,8 @@ defaultproperties
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'
     MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_fast_flash'
     MapBackground=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_background')
-    MapPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final',Tints[0]=(G=110))
+    MapPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final',Tints[0]=(G=110),TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),)
+    MapPlayerNumberIcon=MapPlayerIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.1',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,PosX=0,PosY=0,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
     MapIconTeam(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     MapIconTeam(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     MapIconRally(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')

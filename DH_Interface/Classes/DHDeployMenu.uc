@@ -64,6 +64,7 @@ var automated   array<GUIButton>            b_MenuOptions;
 
 
 var DHGameReplicationInfo                   GRI;
+var DHSquadReplicationInfo                  SRI;
 var DHPlayer                                PC;
 
 var localized   string                      NoneText;
@@ -248,6 +249,11 @@ function Timer()
         }
     }
 
+    if (SRI == none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
     if (GRI != none)
     {
         UpdateRoles();
@@ -256,6 +262,11 @@ function Timer()
         UpdateStatus();
         UpdateButtons();
         UpdateSpawnPoints();
+    }
+
+    if (SRI != none)
+    {
+        UpdateSquads();
     }
 }
 
@@ -1279,14 +1290,12 @@ function UpdateSquads()
     local DHSquadReplicationInfo SRI;
     local array<DHPlayerReplicationInfo> Members;
 
-    if (GRI == none || GRI.SquadReplicationInfo == none)
+    if (SRI == none)
     {
         return;
     }
 
-    SRI = GRI.SquadReplicationInfo;
-
-    for (i = 0; i < 8; ++i)
+    for (i = 0; i < SRI.GetTeamSquadLimit(CurrentTeam) ; ++i)
     {
         if (!SRI.IsSquadActive(CurrentTeam, i))
         {
@@ -1294,7 +1303,7 @@ function UpdateSquads()
             continue;
         }
 
-        bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i)
+        bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i);
         bIsSquadFull = SRI.IsSquadFull(CurrentTeam, i);
         MemberCount = SRI.GetMemberCount(CurrentTeam, i);
 
