@@ -57,7 +57,11 @@ var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
 var automated   GUIImage                    i_Arrows;
 
+//TODO: put "Kit" and "Squad" buttons in somewhere
+var automated   ROGUIProportionalContainer  c_Squads;
+
 var automated   array<GUIButton>            b_MenuOptions;
+
 
 var DHGameReplicationInfo                   GRI;
 var DHPlayer                                PC;
@@ -1266,6 +1270,52 @@ function bool InternalOnPreDraw(Canvas C)
     }
 
     return super.OnPreDraw(C);
+}
+
+function UpdateSquads()
+{
+    local int i, j, MemberCount;
+    local bool bIsInSquad, bIsSquadLocked, bIsSquadFull;
+    local DHSquadReplicationInfo SRI;
+    local array<DHPlayerReplicationInfo> Members;
+
+    if (GRI == none || GRI.SquadReplicationInfo == none)
+    {
+        return;
+    }
+
+    SRI = GRI.SquadReplicationInfo;
+
+    for (i = 0; i < 8; ++i)
+    {
+        if (!SRI.IsSquadActive(CurrentTeam, i))
+        {
+            // TODO: hide squad tab
+            continue;
+        }
+
+        bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i)
+        bIsSquadFull = SRI.IsSquadFull(CurrentTeam, i);
+        MemberCount = SRI.GetMemberCount(CurrentTeam, i);
+
+        if (bIsSquadLocked)
+        {
+            // TODO: set up lock button
+        }
+
+        if (bIsSquadFull || bIsSquadLocked)
+        {
+            // TODO: disable join button
+        }
+
+        // TODO: display member count (eg. (2/8))
+        SRI.GetMembers(CurrentTeam, i, Members);
+
+        for (j = 0; j < Members.Length; ++j)
+        {
+            // TODO: add member to list
+        }
+    }
 }
 
 defaultproperties

@@ -5,8 +5,10 @@
 
 class DHSquadReplicationInfo extends ReplicationInfo;
 
-const SQUAD_MEMBER_COUNT = 8;
-const TEAM_SQUAD_COUNT = 8;
+const SQUAD_SIZE_MIN = 8;
+const SQUAD_SIZE_MAX = 12;
+const TEAM_SQUAD_MEMBERS_MAX = 64;
+const TEAM_SQUADS_MAX = 8;  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
 const SQUAD_NAME_LENGTH_MIN = 3;
 const SQUAD_NAME_LENGTH_MAX = 16;
@@ -28,26 +30,76 @@ enum ESquadError
 };
 
 // This nightmare is necessary because UnrealScript cannot replicate structs.
-var private DHPlayerReplicationInfo AxisMembers[64];
-var private string                  AxisNames[TEAM_SQUAD_COUNT];
-var private byte                    AxisLeaderMemberIndices[TEAM_SQUAD_COUNT];
-var private byte                    AxisLocked[TEAM_SQUAD_COUNT];
+var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
+var private string                  AxisNames[TEAM_SQUADS_MAX];
+var private byte                    AxisLeaderMemberIndices[TEAM_SQUADS_MAX];
+var private byte                    AxisLocked[TEAM_SQUADS_MAX];
 
-var private DHPlayerReplicationInfo AlliesMembers[64];
-var private string                  AlliesNames[TEAM_SQUAD_COUNT];
-var private byte                    AlliesLeaderMemberIndices[TEAM_SQUAD_COUNT];
-var private byte                    AlliesLocked[TEAM_SQUAD_COUNT];
+var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
+var private string                  AlliesNames[TEAM_SQUADS_MAX];
+var private byte                    AlliesLeaderMemberIndices[TEAM_SQUADS_MAX];
+var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
 
 var private array<string> AlliesDefaultSquadNames;
 var private array<string> AxisDefaultSquadNames;
+
+var globalconfig private int        AxisSquadSize;
+var globalconfig private int        AlliesSquadSize;
 
 var class<LocalMessage> SquadMessageClass;
 
 replication
 {
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        TeamSquadSizes;
+
     reliable if (bNetDirty && Role == ROLE_Authority)
         AxisMembers, AxisNames, AxisLeaderMemberIndices, AxisLocked,
         AlliesMembers, AlliesNames, AlliesLeaderMemberIndices, AlliesLocked;
+}
+
+function PostBeginPlay()
+{
+    super.PostBeginPlay()
+
+    if (Role == ROLE_Authority)
+    {
+        AxisSquadSize = Clamp(AxisSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
+        AlliesSquadSize = Clamp(AlliesSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
+    }
+}
+
+function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Role == ROLE_Authority)
+    {
+        SetTimer(1.0, true);
+    }
+}
+
+function Timer()
+{
+    local int i;
+}
+
+simulated function int GetTeamSquadSize(int TeamIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return AxisSquadSize;
+        case ALLIES_TEAM_INDEX:
+            return AlliesSquadSize;
+        default:
+            return 0;
+    }
+}
+
+simulated function int GetTeamSquadLimit(int TeamIndex)
+{
+    return GetTeamSquadSize(TeamIndex) / TEAM_SQUAD_MEMBERS_MAX;
 }
 
 simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
@@ -129,7 +181,7 @@ simulated function bool IsDefaultSquadName(string SquadName, int TeamIndex)
 
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
-    if (SquadIndex < 0 || SquadIndex > TEAM_SQUAD_COUNT)
+    if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex))
     {
         return "";
     }
@@ -183,7 +235,7 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
         return -1;
     }
 
-    for (i = 0; i < TEAM_SQUAD_COUNT; ++i)
+    for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
     {
         if (!IsSquadActive(TeamIndex, i))
         {
@@ -324,9 +376,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     if (PRI.SquadMemberIndex == GetLeaderMemberIndex(TeamIndex, PRI.SquadMemberIndex))
     {
         // Player was squad leader, transfer leadership to next in the list
-        for (i = 1; i < SQUAD_MEMBER_COUNT; ++i)
+        for (i = 1; i < GetTeamSquadSize(TeamIndex); ++i)
         {
-            j = (GetLeaderMemberIndex(TeamIndex, PRI.SquadIndex) + i) % SQUAD_MEMBER_COUNT;
+            j = (GetLeaderMemberIndex(TeamIndex, PRI.SquadIndex) + i) % GetTeamSquadSize(TeamIndex);
 
             if (GetMember(TeamIndex, PRI.SquadIndex, j) != none)
             {
@@ -405,9 +457,9 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
         return -1;
     }
 
-    for (i = 0; i < SQUAD_MEMBER_COUNT; ++i)
+    for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
     {
-        j = (GetLeaderMemberIndex(TeamIndex, SquadIndex) + i) % SQUAD_MEMBER_COUNT;
+        j = (GetLeaderMemberIndex(TeamIndex, SquadIndex) + i) % GetTeamSquadSize(TeamIndex);
 
         if (GetMember(TeamIndex, SquadIndex, j) == none)
         {
@@ -516,6 +568,29 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     return true;
 }
 
+simulated function bool IsSquadFull(int TeamIndex, int SquadIndex)
+{
+    return GetMemberCount(TeamIndex, SquadIndex) == GetTeamSquadSize(TeamIndex);
+}
+
+simulated function bool IsSquadLocked(int TeamIndex, int SquadIndex)
+{
+    if (!IsSquadActive(TeamIndex, SquadIndex))
+    {
+        return false;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return AxisLocked[SquadIndex];
+        case ALLIES_TEAM_INDEX:
+            return AlliesLocked[SquadIndex];
+        default:
+            return false;
+    }
+}
+
 function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int SquadIndex, bool bLocked)
 {
     if (!IsSquadLeader(PC, TeamIndex, SquadIndex))
@@ -549,7 +624,7 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
         return;
     }
 
-    for (i = 0; i < SQUAD_MEMBER_COUNT; ++i)
+    for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
     {
         PRI = GetMember(TeamIndex, SquadIndex, i);
 
@@ -613,24 +688,35 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex];
+            return AxisMembers[SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex];
         case ALLIES_TEAM_INDEX:
-            return AlliesMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex];
+            return AlliesMembers[SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex];
     }
 
     return none;
 }
 
-// Gets a list of all the members in a squad. The list is not guaranteed to be
-// in any particular order. The list will not contain null entries.
+// TODO: Sort of inefficient. Rewrite if you're bored.
+simulated function GetMemberCount(int TeamIndex, int SquadIndex)
+{
+    local array<DHPlayerReplicationInfo> Members;
+
+    GetMembers(TeamIndex, SquadIndex, Members);
+
+    return Members.Length;
+}
+
+// Gets a list of all the members in a squad. The first entry in the array will always be the squad leader.
 simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Members)
 {
-    local int i;
+    local int i, j;
     local DHPlayerReplicationInfo PRI;
 
-    for (i = 0; i < SQUAD_MEMBER_COUNT; ++i)
+    j = GetLeaderMemberIndex(TeamIndex, SquadIndex);
+
+    for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
     {
-        PRI = GetMember(TeamIndex, SquadIndex, i);
+        PRI = GetMember(TeamIndex, SquadIndex, (j + i) % GetTeamSquadSize(TeamIndex));
 
         if (PRI != none)
         {
@@ -644,10 +730,10 @@ function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerRepli
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            AxisMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex] = PRI;
+            AxisMembers[SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex] = PRI;
             break;
         case ALLIES_TEAM_INDEX:
-            AlliesMembers[SquadIndex * SQUAD_MEMBER_COUNT + MemberIndex] = PRI;
+            AlliesMembers[SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex] = PRI;
             break;
         default:
             return;
@@ -677,6 +763,8 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 
 defaultproperties
 {
+    AlliesSquadSize=12
+    AxisSquadSize=8
     AlliesDefaultSquadNames(0)="ABLE"
     AlliesDefaultSquadNames(1)="BAKER"
     AlliesDefaultSquadNames(2)="CHARLIE"
