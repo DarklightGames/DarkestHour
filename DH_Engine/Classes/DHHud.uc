@@ -35,7 +35,8 @@ var SpriteWidget        DeployOkayIcon;
 var SpriteWidget        DeployEnemiesNearbyIcon;
 var SpriteWidget        DeployInObjectiveIcon;
 var SpriteWidget        SquadNameIcon;
-var array<Texture>      MapPlayerNumberIcons;
+var SpriteWidget        MapPlayerNumberIcon;
+var array<Texture>      PlayerNumberIconTextures;
 
 var SpriteWidget        MapAxisFlagIcon;
 var SpriteWidget        MapAlliesFlagIcons[3];
@@ -62,10 +63,14 @@ var float               ObituaryDelayTime;
 var array<Obituary>     DHObituaries;         // replaced RO's Obituaries static array, so we can have more than 4 death messages
 var array<string>       ConsoleDeathMessages; // paired with DHObituaries array & holds accompanying console death messages
 
+// TODO: remove bShowVoiceIcon
 var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
 var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
 var globalconfig int    PlayerNameFontSize; // the size of the name you see when you mouseover a player
+
+var globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
+var globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 
 var bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
@@ -1676,9 +1681,10 @@ function DrawPlayerNames(Canvas C)
                     C.DrawColor = class'DHColor'.default.TeamColors[NamedPlayer.PlayerReplicationInfo.Team.TeamIndex];
                 }
 
-                SquadNameIconMaterial = Material'DH_InterfaceArt_tex.HUD.player_indicator';
+                SquadNameIconMaterial = Material'DH_InterfaceArt_tex.HUD.player_icon_world';
 
-                C.DrawTile(SquadNameIconMaterial, 16, 16, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
+                C.DrawTile(SquadNameIconMaterial, 32, 32, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
+
                 C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - 32.0);
 
                 if (ResupplyMessage != "")
@@ -2000,9 +2006,8 @@ simulated function DrawVehiclePhysiscsWheels()
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
     local int                       i, Pos, OwnerTeam, Distance;
-    local Actor                     A;
     local Controller                P;
-    local float                     MyMapScale, PawnRotation, ArrowRotation;
+    local float                     MyMapScale, ArrowRotation;
     local vector                    Temp, MapCenter;
     local Vehicle                   V;
     local Actor                     NetActor;
@@ -2579,7 +2584,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
-    DrawPlayerIconsOnMap(C);
+    DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
 
     // Overhead map debugging
     if (Level.NetMode == NM_Standalone && ROTeamGame(Level.Game).LevelInfo.bDebugOverhead)
@@ -2589,59 +2594,22 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     }
 }
 
-simulated function DrawPlayerIconsOnMap(Canvas C)
+simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
 {
+    local int i;
     local Actor A;
-    local DHPlayer PC, OtherPC:
+    local DHPlayer PC, OtherPC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local DHSquadReplicationInfo SRI;
-    local array<DHPlayerReplicationInfo> SquadMembers;
     local vector PlayerLocation;
     local int PlayerYaw;
 
-    // TODO: draw myself on the map
-    // Get player actor, for drawing player icon
-    if (PawnOwner != none)
-    {
-        A = PawnOwner;
-    }
-    else if (PlayerOwner != none)
-    {
-        if (PlayerOwner.IsInState('Spectating'))
-        {
-            A = PlayerOwner;
-        }
-        else if (PlayerOwner.Pawn != none)
-        {
-            A = PlayerOwner.Pawn;
-        }
-    }
-
-    PC = DHPlayer(Player.Controller);
+    PC = DHPlayer(PlayerOwner);
 
     if (PC != none)
     {
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
         SRI = PC.SquadReplicationInfo;
-    }
-
-    if (A != none)
-    {
-        // Set icon rotation
-        if (Player != none)
-        {
-            PlayerYaw = Player.CalcViewRotation.Yaw;
-        }
-        else
-        {
-            PlayerYaw = A.Rotation.Yaw;
-        }
-
-        if (PRI != none)
-        {
-            // TODO: draw own icon as orange and a bit large than others
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex);
-        }
     }
 
     // Draw squad members on map
@@ -2678,24 +2646,66 @@ simulated function DrawPlayerIconsOnMap(Canvas C)
                 continue;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i, class'DHColor'.default.SquadColor, 0.03);
+        }
+    }
+
+    // Draw the local player on the map
+    // Get player actor, for drawing player icon
+    if (PawnOwner != none)
+    {
+        A = PawnOwner;
+    }
+    else if (PlayerOwner != none)
+    {
+        if (PlayerOwner.IsInState('Spectating'))
+        {
+            A = PlayerOwner;
+        }
+        else if (PlayerOwner.Pawn != none)
+        {
+            A = PlayerOwner.Pawn;
+        }
+    }
+
+    if (A != none)
+    {
+        // Set icon rotation
+        if (PlayerOwner != none)
+        {
+            PlayerYaw = PlayerOwner.CalcViewRotation.Yaw;
+        }
+        else
+        {
+            PlayerYaw = A.Rotation.Yaw;
+        }
+
+        if (PRI != none)
+        {
+            // TODO: make a bit larger than the regular ones?
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, class'UColor'.default.OrangeRed, 0.05);
         }
     }
 }
 
-simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color)
+simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale)
 {
+    MapPlayerIcon.TextureScale = TextureScale;
+
     TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(PlayerYaw);
 
-    MapPlayerIcon.WidgetTexture.Tints[0] = Color;
+    MapPlayerIcon.Tints[0] = Color;
 
     // Draw the player icon
     DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter);
 
     if (Number >= 0)
     {
+        MapPlayerNumberIcon.TextureScale = TextureScale;
+        MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[Number];
+
         //TODO: draw the number indicator
-        MapIconNumberMaterials[Number]
+        DrawIconOnMap(C, SubCoords, MapPlayerNumberIcon, MyMapScale, Location, MapCenter);
     }
 }
 
@@ -4562,8 +4572,8 @@ defaultproperties
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'
     MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_fast_flash'
     MapBackground=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_background')
-    MapPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final',Tints[0]=(G=110),TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),)
-    MapPlayerNumberIcon=MapPlayerIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.1',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,PosX=0,PosY=0,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
+    MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
+    MapPlayerNumberIcon=(TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,PosX=0,PosY=0,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
     MapIconTeam(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     MapIconTeam(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     MapIconRally(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
@@ -4585,6 +4595,20 @@ defaultproperties
     locationHitAlliesImages(12)=texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
     locationHitAlliesImages(13)=texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
     locationHitAlliesImages(14)=texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
+
+    PlayerNumberIconTextures(0)=texture'DH_InterfaceArt_tex.HUD.player_number_1'
+    PlayerNumberIconTextures(1)=texture'DH_InterfaceArt_tex.HUD.player_number_2'
+    PlayerNumberIconTextures(2)=texture'DH_InterfaceArt_tex.HUD.player_number_3'
+    PlayerNumberIconTextures(3)=texture'DH_InterfaceArt_tex.HUD.player_number_4'
+    PlayerNumberIconTextures(4)=texture'DH_InterfaceArt_tex.HUD.player_number_5'
+    PlayerNumberIconTextures(5)=texture'DH_InterfaceArt_tex.HUD.player_number_6'
+    PlayerNumberIconTextures(6)=texture'DH_InterfaceArt_tex.HUD.player_number_7'
+    PlayerNumberIconTextures(7)=texture'DH_InterfaceArt_tex.HUD.player_number_8'
+    PlayerNumberIconTextures(8)=texture'DH_InterfaceArt_tex.HUD.player_number_9'
+    PlayerNumberIconTextures(9)=texture'DH_InterfaceArt_tex.HUD.player_number_10'
+    PlayerNumberIconTextures(10)=texture'DH_InterfaceArt_tex.HUD.player_number_11'
+    PlayerNumberIconTextures(11)=texture'DH_InterfaceArt_tex.HUD.player_number_12'
+
     MouseInterfaceIcon=(WidgetTexture=texture'DH_GUI_Tex.Menu.DHPointer')
     CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
     CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'

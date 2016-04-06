@@ -87,7 +87,10 @@ function Timer()
     local Controller C;
     local int i;
 
-    // In order to save bandwidth, we
+    // We want our player to know where his squadmates are at all times by
+    // looking at the situation map. However, since the player may not have
+    // all squadmates replicated on his machine, he needs another way to know
+    // his squadmates' locations and rotations.
     for (C = Level.ControllerList; C != none; C = C.nextController)
     {
         PC = DHPlayer(C);
@@ -142,7 +145,7 @@ simulated function int GetTeamSquadSize(int TeamIndex)
 
 simulated function int GetTeamSquadLimit(int TeamIndex)
 {
-    return GetTeamSquadSize(TeamIndex) / TEAM_SQUAD_MEMBERS_MAX;
+    return TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex);
 }
 
 simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
@@ -666,7 +669,7 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
 
     for (i = 0; i < SquadMembers.Length; ++i)
     {
-        if (PRI == none)
+        if (SquadMembers[i] == none)
         {
             continue;
         }

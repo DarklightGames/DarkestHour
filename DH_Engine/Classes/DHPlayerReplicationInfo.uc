@@ -16,7 +16,7 @@ var     int                     SquadMemberIndex;
 
 function bool IsInSquad()
 {
-    return (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+    return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
 }
 
 // Will return true if passed two different players that are in the same squad.
