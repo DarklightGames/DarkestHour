@@ -32,12 +32,10 @@ enum ESquadError
 // This nightmare is necessary because UnrealScript cannot replicate structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AxisNames[TEAM_SQUADS_MAX];
-var private byte                    AxisLeaderMemberIndices[TEAM_SQUADS_MAX];
 var private byte                    AxisLocked[TEAM_SQUADS_MAX];
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
-var private byte                    AlliesLeaderMemberIndices[TEAM_SQUADS_MAX];
 var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
 
 var private array<string>           AlliesDefaultSquadNames;
@@ -54,8 +52,8 @@ replication
         AxisSquadSize, AlliesSquadSize;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
-        AxisMembers, AxisNames, AxisLeaderMemberIndices, AxisLocked,
-        AlliesMembers, AlliesNames, AlliesLeaderMemberIndices, AlliesLocked;
+        AxisMembers, AxisNames, AxisLocked,
+        AlliesMembers, AlliesNames, AlliesLocked;
 }
 
 function PostBeginPlay()
@@ -150,7 +148,7 @@ simulated function int GetTeamSquadLimit(int TeamIndex)
 
 simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
 {
-    return GetMember(TeamIndex, SquadIndex, GetLeaderMemberIndex(TeamIndex, SquadIndex)) != none;
+    return GetMember(TeamIndex, SquadIndex, 0) != none;
 }
 
 simulated function bool IsASquadLeader(DHPlayerReplicationInfo PRI)
@@ -160,11 +158,7 @@ simulated function bool IsASquadLeader(DHPlayerReplicationInfo PRI)
 
 simulated function DHPlayerReplicationInfo GetSquadLeader(int TeamIndex, int SquadIndex)
 {
-    local int LeaderMemberIndex;
-
-    LeaderMemberIndex = GetLeaderMemberIndex(TeamIndex, SquadIndex);
-
-    return GetMember(TeamIndex, SquadIndex, LeaderMemberIndex);
+    return GetMember(TeamIndex, SquadIndex, 0);
 }
 
 simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
@@ -174,7 +168,7 @@ simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex
         return false;
     }
 
-    return GetLeaderMemberIndex(TeamIndex, PRI.SquadIndex) == PRI.SquadMemberIndex;
+    return PRI.SquadMemberIndex == 0;
 }
 
 // Will return true if passed two different players that are in the same squad.
@@ -290,11 +284,11 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
                 Name = GetDefaultSquadName(TeamIndex, i);
             }
 
-            SetMember(TeamIndex, i, GetLeaderMemberIndex(TeamIndex, i), PRI);
+            SetMember(TeamIndex, i, 0, PRI);
             SetName(TeamIndex, i, Name);
 
             PRI.SquadIndex = i;
-            PRI.SquadMemberIndex = GetLeaderMemberIndex(TeamIndex, i);
+            PRI.SquadMemberIndex = 0;
 
             PC.ClientCreateSquadResult(SE_None);
 
@@ -348,9 +342,6 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
-    // To change the squad leader, instead of changing the LeaderMemberIndex,
-    // we simply swap the new leader with the old one. This preserves the
-    // "leader inheritance" order.
     if (!SwapSquadMembers(PRI, NewSquadLeader))
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
@@ -417,18 +408,14 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         return false;
     }
 
-    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
-
-    if (PRI.SquadMemberIndex == GetLeaderMemberIndex(TeamIndex, PRI.SquadMemberIndex))
+    if (PRI.SquadMemberIndex == 0)
     {
         // Player was squad leader, transfer leadership to next in the list
         for (i = 1; i < GetTeamSquadSize(TeamIndex); ++i)
         {
-            j = (GetLeaderMemberIndex(TeamIndex, PRI.SquadIndex) + i) % GetTeamSquadSize(TeamIndex);
-
-            if (GetMember(TeamIndex, PRI.SquadIndex, j) != none)
+            if (GetMember(TeamIndex, PRI.SquadIndex, i) != none)
             {
-                NewSquadLeader = GetMember(TeamIndex, PRI.SquadIndex, j);
+                NewSquadLeader = GetMember(TeamIndex, PRI.SquadIndex, i);
                 NewSquadLeaderPC = DHPlayer(NewSquadLeader.Owner);
 
                 if (NewSquadLeaderPC != none)
@@ -440,12 +427,14 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
                 // "{0} has become the squad leader"
                 BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, NewSquadLeader);
 
-                SetLeaderMemberIndex(TeamIndex, PRI.SquadIndex, j);
+                SwapSquadMembers(PRI, NewSquadLeader);
 
                 break;
             }
         }
     }
+
+    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
 
     // voice replication info stuff
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
@@ -505,16 +494,14 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 
     for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
     {
-        j = (GetLeaderMemberIndex(TeamIndex, SquadIndex) + i) % GetTeamSquadSize(TeamIndex);
-
-        if (GetMember(TeamIndex, SquadIndex, j) == none)
+        if (GetMember(TeamIndex, SquadIndex, i) == none)
         {
             // We don't care about the result of ServerLeaveSquad;
             // whatever the result, the player is not in a squad and
             // can join another one.
             LeaveSquad(PRI);
 
-            SetMember(TeamIndex, SquadIndex, j, PRI);
+            SetMember(TeamIndex, SquadIndex, i, PRI);
 
             bDidJoinSquad = true;
 
@@ -696,34 +683,6 @@ simulated function string GetSquadName(int TeamIndex, int SquadIndex)
     return "";
 }
 
-simulated function int GetLeaderMemberIndex(int TeamIndex, int SquadIndex)
-{
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return AxisLeaderMemberIndices[SquadIndex];
-        case ALLIES_TEAM_INDEX:
-            return AlliesLeaderMemberIndices[SquadIndex];
-    }
-
-    return 0;
-}
-
-function SetLeaderMemberIndex(int TeamIndex, int SquadIndex, int LeaderMemberIndex)
-{
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            AxisLeaderMemberIndices[SquadIndex] = LeaderMemberIndex;
-            break;
-        case ALLIES_TEAM_INDEX:
-            AlliesLeaderMemberIndices[SquadIndex] = LeaderMemberIndex;
-            break;
-        default:
-            break;
-    }
-}
-
 simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int MemberIndex)
 {
     switch (TeamIndex)
@@ -750,7 +709,7 @@ simulated function int GetMemberCount(int TeamIndex, int SquadIndex)
 // Gets a list of all the members in a squad. The first entry in the array will always be the squad leader.
 simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Members)
 {
-    local int i, j;
+    local int i;
     local DHPlayerReplicationInfo PRI;
 
     if (!IsSquadActive(TeamIndex, SquadIndex))
@@ -758,11 +717,9 @@ simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerR
         return;
     }
 
-    j = GetLeaderMemberIndex(TeamIndex, SquadIndex);
-
     for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
     {
-        PRI = GetMember(TeamIndex, SquadIndex, (j + i) % GetTeamSquadSize(TeamIndex));
+        PRI = GetMember(TeamIndex, SquadIndex, i);
 
         if (PRI != none)
         {
