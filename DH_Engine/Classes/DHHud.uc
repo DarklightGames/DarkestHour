@@ -35,11 +35,10 @@ var SpriteWidget        DeployOkayIcon;
 var SpriteWidget        DeployEnemiesNearbyIcon;
 var SpriteWidget        DeployInObjectiveIcon;
 var SpriteWidget        SquadNameIcon;
+var array<Texture>      MapPlayerNumberIcons;
 
 var SpriteWidget        MapAxisFlagIcon;
 var SpriteWidget        MapAlliesFlagIcons[3];
-
-var SpriteWidget        MapPlayerNumberIcon;
 
 var localized string    LegendCarriedArtilleryRadioText;
 
@@ -2580,6 +2579,27 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
+    DrawPlayerIconsOnMap(C);
+
+    // Overhead map debugging
+    if (Level.NetMode == NM_Standalone && ROTeamGame(Level.Game).LevelInfo.bDebugOverhead)
+    {
+        DrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter);
+        DrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter);
+    }
+}
+
+simulated function DrawPlayerIconsOnMap(Canvas C)
+{
+    local Actor A;
+    local DHPlayer PC, OtherPC:
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local DHSquadReplicationInfo SRI;
+    local array<DHPlayerReplicationInfo> SquadMembers;
+    local vector PlayerLocation;
+    local int PlayerYaw;
+
+    // TODO: draw myself on the map
     // Get player actor, for drawing player icon
     if (PawnOwner != none)
     {
@@ -2597,55 +2617,115 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
-    // Draw player icon
+    PC = DHPlayer(Player.Controller);
+
+    if (PC != none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+        SRI = PC.SquadReplicationInfo;
+    }
+
     if (A != none)
     {
         // Set icon rotation
         if (Player != none)
         {
-            PawnRotation = -Player.CalcViewRotation.Yaw;
+            PlayerYaw = Player.CalcViewRotation.Yaw;
         }
         else
         {
-            PawnRotation = -A.Rotation.Yaw;
+            PlayerYaw = A.Rotation.Yaw;
         }
 
+        if (PRI != none)
+        {
+            // TODO: draw own icon as orange and a bit large than others
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex);
+        }
+    }
+
+    // Draw squad members on map
+    if (PRI != none && PRI.IsInSquad() && SRI != none)
+    {
+        for (i = 0; i < SRI.GetTeamSquadSize(PC.GetTeamNum()); ++i)
+        {
+            OtherPRI = SRI.GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
+
+            if (OtherPRI == none || OtherPRI == PRI)
+            {
+                continue;
+            }
+
+            OtherPC = DHPlayer(OtherPRI.Owner);
+
+            // If our client has a replicated instance of the squad member's pawn
+            // available, use that pawn's location and rotation.
+            // Otherwise, we will use the cached values that are sent to the
+            // client from the server.
+            if (OtherPC != none && OtherPC.Pawn != none)
+            {
+                PlayerLocation = OtherPC.Pawn.Location;
+                PlayerYaw = OtherPC.Pawn.Rotation.Yaw;
+            }
+            else if (PC.SquadMemberPositions[i] != vect(0, 0, 0))
+            {
+                PlayerLocation.X = PC.SquadMemberPositions[i].X;
+                PlayerLocation.Y = PC.SquadMemberPositions[i].Y;
+                PlayerYaw = PC.SquadMemberPositions[i].Z;
+            }
+            else
+            {
+                continue;
+            }
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i);
+        }
+    }
+}
+
+simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color)
+{
+    TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(PlayerYaw);
+
+    MapPlayerIcon.WidgetTexture.Tints[0] = Color;
+
+    // Draw the player icon
+    DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter);
+
+    if (Number >= 0)
+    {
+        //TODO: draw the number indicator
+        MapIconNumberMaterials[Number]
+    }
+}
+
+simulated function float GetMapIconYaw(float WorldYaw)
+{
+    local float MapIconYaw;
+
+    MapIconYaw = -WorldYaw;
+
+    if (DHGRI != none)
+    {
         switch (DHGRI.OverheadOffset)
         {
             case 90:
-                PawnRotation -= 32768;
+                MapIconYaw -= 32768;
                 break;
 
             case 180:
-                PawnRotation -= 49152;
+                MapIconYaw -= 49152;
                 break;
 
             case 270:
                 break;
 
             default:
-                PawnRotation -= 16384;
+                MapIconYaw -= 16384;
         }
-
-        TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = PawnRotation;
-
-        // Draw the player icon
-        DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, A.Location, MapCenter);
-
-        // Draw the player's number icon, if they are in a squad
-        DrawIconOnMap(C, SubCoords, MapPlayerNumberIcon, MyMapScale, A.Location, MapCenter);
     }
 
-    // Draw the map scale indicator
-    //MapScaleText.text = "Grid Square: ~" $ string(int(class'DHUnits'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
-    //DrawTextWidgetClipped(C, MapScaleText, subCoords);
-
-    // Overhead map debugging
-    if (Level.NetMode == NM_Standalone && ROTeamGame(Level.Game).LevelInfo.bDebugOverhead)
-    {
-        DrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter);
-        DrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter);
-    }
+    return MapIconYaw;
 }
 
 // Renders the objectives on the HUD similar to the scoreboard
