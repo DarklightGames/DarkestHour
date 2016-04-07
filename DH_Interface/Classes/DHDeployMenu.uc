@@ -1272,6 +1272,8 @@ function bool InternalOnPreDraw(Canvas C)
 
         if (AttritionRate > 0.0)
         {
+            // TODO: convert to a material so we don't have to
+            // make the alpha calculations ourself in script.
             i_Reinforcements.ImageColor.A = byte((Cos(2.0 * Pi * AttritionRate * PC.Level.TimeSeconds) * 128.0) + 128.0);
         }
         else
@@ -1299,7 +1301,6 @@ function UpdateSquads()
     {
         if (!SRI.IsSquadActive(CurrentTeam, i))
         {
-            // TODO: hide squad tab
             continue;
         }
 
