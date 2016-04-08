@@ -2838,15 +2838,13 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
 
 simulated function ClientSquadInvite(string PlayerName, string SquadName, int TeamIndex, int SquadIndex)
 {
-    if (bIgnoreSquadInvites)
-    {
-        // TODO: need to store or pass the invitation parameters
-        //class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
-        //class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+    // Store the invitation parameters in the interaction
+    class'DHSquadInviteInteraction'.default.PlayerName = PlayerName;
+    class'DHSquadInviteInteraction'.default.SquadName = SquadName;
+    class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+    class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
 
-        // TODO: don't allow the
-        Player.InteractionMaster.AddInteraction("DHSquadInviteInteraction", Player);
-    }
+    Player.InteractionMaster.AddInteraction("DHSquadInviteInteraction", Player);
 }
 
 // Modified to avoid possible spamming of "accessed none" errors

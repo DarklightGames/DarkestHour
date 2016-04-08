@@ -6,6 +6,8 @@
 class DHSquadInviteInteraction extends Interaction
     abstract;
 
+// TODO: remove interaction after 15 seconds
+
 defaultproperties
 {
 }

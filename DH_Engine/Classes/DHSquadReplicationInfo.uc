@@ -30,12 +30,6 @@ enum ESquadError
     SE_InvalidState
 };
 
-struct Invitation
-{
-    var DHPlayerReplicationInfo Recipient;
-    var float ExpirationTimeSeconds;
-};
-
 // This nightmare is necessary because UnrealScript cannot replicate structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AxisNames[TEAM_SQUADS_MAX];
@@ -53,7 +47,7 @@ var globalconfig private int        AlliesSquadSize;
 
 var class<LocalMessage>             SquadMessageClass;
 
-var array<Invitation>               Invitations;     
+var TreeMap_Object_float            InvitationExpirations;
 
 replication
 {
@@ -295,9 +289,6 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
             SetMember(TeamIndex, i, 0, PRI);
             SetName(TeamIndex, i, Name);
-
-            PRI.SquadIndex = i;
-            PRI.SquadMemberIndex = 0;
 
             PC.ClientCreateSquadResult(SE_None);
 
@@ -571,13 +562,20 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     return true;
 }
 
+simulated function IsOnTeam(DHPlayerReplicationInfo PRI, int TeamIndex)
+{
+    return PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex;
+}
+
 function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo Recipient)
 {
     local int i;
+    local float ExpirationTimeSeconds;
     local DHPlayer PC;
-    local Invitation I;
 
-    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
+    if (!IsOnTeam(PRI, TeamIndex) ||
+        !IsOnTeam(PRI, Recipient) ||
+        !IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return false;
     }
@@ -588,10 +586,15 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     {
         if (PC != none)
         {
-            // "Your squad is full and cannot "
-            PC.ReceiveLocalizedMessage(SquadMessageClass, ?);
+            // "Invitations cannot be sent because your squad is full.";
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 37);
         }
 
+        return false;
+    }
+
+    if (Recipient == none)
+    {
         return false;
     }
 
@@ -599,52 +602,31 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     {
         if (PC != none)
         {
-            // "{0} is already in a squad.";
+            // "Invitation could not be sent because {0} is already in a squad.";
             PC.ReceiveLocalizedMessage(SquadMessageClass, 36, Recipient);
         }
 
         return false;
     }
 
-    // Make sure the recipient does not have any pending invitations
-    for (i = 0; i < Invitations.Length; ++i)
+    if (InvitationExpirations.Get(Recipient, ExpirationTimeSeconds) &&
+        ExpirationTimeSeconds < Level.TimeSeconds)
     {
-        if (Invitations[i].Recipient == Recipient &&
-            Invitations[i].ExpirationTimeSeconds > Level.TimeSeconds)
-        {
-            // "{0} already has a pending invitation."
-            // TODO: send message to PC
-            if (PC != none)
-            {
-                PC.RecieveLocalizedMessage(SquadMessageClass, ?, Recipient);
+        // "{0} has already been invited to join a squad. Please try again later."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 38, Recipient);
 
-                return false;
-            }
-        }
+        return false;
     }
 
-    // Add invitation to the list.
-    I.Sender = PRI;
-    I.Recipient = Recipient;
-    I.ExpirationTimeSeconds = Level.TimeSeconds + 10.0; // TODO: make constant
-    I.TeamIndex = TeamIndex;
-    I.SquadIndex = SquadIndex;
-    Invitations[Invitations.Length] = I;
+    InvitationExpirations.Put(Recipient, Level.TimeSeconds + 10.0);
 
-    // TODO: Check that they're on the same team
-    // TODO: Send invitation to recipient
-
-    // There should be no need to store the invitation in SRI.
-    // If the recipient tries to join a squad that has
-    // since become invalid, the join command will fail gracefully.
     PC = DHPlayer(Recipient.Owner);
 
     if (PC != none)
     {
+        // "{0} has invited you to join {1} squad."
         PC.ClientSquadInvite(GetSquadName(TeamIndex, SquadIndex), PRI.PlayerName, TeamIndex, SquadIndex);
     }
-
-    In
 
     return true;
 }
@@ -797,8 +779,64 @@ function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerRepli
     }
 }
 
+simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
+{
+    local int i;
+
+    for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+    {
+        if (IsSquadActive(TeamIndex, i) && GetSquadName(TeamIndex, Name) ~= Name)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function SetName(int TeamIndex, int SquadIndex, string Name)
 {
+    local int i;
+
+    if (Name != "")
+    {
+        if (Len(Name) > SQUAD_NAME_LENGTH_MAX)
+        {
+            // Name is too long, truncate the name.
+            Left(Name, 0, SQUAD_NAME_LENGTH_MAX);
+        }
+        
+        if (Len(Name) >= SQUAD_NAME_LENGTH_MIN)
+        {
+            for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+            {
+                if (IsSquadNameTaken(Name, i))
+                {
+                    // Squad name is taken, defer to defaults names.
+                    Name = "";
+                }
+            }
+        }
+        else
+        {
+            // Name is too short, defer to default names.
+            Name = "";
+        }
+    }
+
+    if (Name == "")
+    {
+        // Go through default names and choose a default squad name that hasn't yet been used.
+        for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+        {
+            if (!IsSquadNameTaken(GetDefaultSquadName(TeamIndex, i), Name))
+            {
+                Name = GetDefaultSquadName(TeamIndex, i);
+                break;
+            }
+        }
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
