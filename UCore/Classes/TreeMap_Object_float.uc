@@ -9,6 +9,7 @@ var private array<Object> Keys;
 var private array<float> Values;
 var private int Size;
 var private Object RecursiveKey;
+var private string RecursiveKeyString;
 var private float RecursiveValue;
 
 function int GetSize()
@@ -77,16 +78,18 @@ private function GetValuesTraverse(TreeMapNode_Object_float Node)
 function bool Get(Object Key, optional out float Value)
 {
     local TreeMapNode_Object_float Node;
+    local string KeyString;
 
     Node = Head;
+    KeyString = string(Key.Name);
 
     while (Node != none)
     {
-        if (Key < Node.Key)
+        if (KeyString < Node.KeyString)
         {
             Node = Node.LHS;
         }
-        else if (Key > Node.Key)
+        else if (KeyString > Node.KeyString)
         {
             Node = Node.RHS;
         }
@@ -104,6 +107,7 @@ function bool Get(Object Key, optional out float Value)
 function Put(Object Key, float Value)
 {
     RecursiveKey = Key;
+    RecursiveKeyString = string(Key.Name);
     RecursiveValue = Value;
 
     Head = PutStatic(self, Head);
@@ -142,6 +146,7 @@ private static function TreeMapNode_Object_float FindMin(TreeMapNode_Object_floa
 function Erase(Object Key)
 {
     RecursiveKey = Key;
+    RecursiveKeyString = string(Key.Name);
     Head = EraseStatic(self, Head);
 }
 
@@ -155,11 +160,11 @@ private static function TreeMapNode_Object_float EraseStatic(TreeMap_Object_floa
         return Node;
     }
 
-    if (D.RecursiveKey < Node.Key)
+    if (D.RecursiveKeyString < Node.KeyString)
     {
         Node.LHS = EraseStatic(D, Node.LHS);
     }
-    else if (D.RecursiveKey > Node.Key)
+    else if (D.RecursiveKeyString > Node.KeyString)
     {
         Node.RHS = EraseStatic(D, Node.RHS);
     }
@@ -200,6 +205,7 @@ private static function TreeMapNode_Object_float EraseStatic(TreeMap_Object_floa
             Node.Value = Temp.Value;
 
             D.RecursiveKey = Temp.Key;
+            D.RecursiveKeyString = Temp.KeyString;
 
             Node.RHS = EraseStatic(D, Node.RHS);
         }
@@ -280,6 +286,7 @@ private static function TreeMapNode_Object_float PutStatic(TreeMap_Object_float 
     {
         Node = new class'TreeMapNode_Object_float';
         Node.Key = D.RecursiveKey;
+        Node.KeyString = D.RecursiveKeyString;
         Node.Value = D.RecursiveValue;
 
         D.Size += 1;
@@ -287,11 +294,11 @@ private static function TreeMapNode_Object_float PutStatic(TreeMap_Object_float 
         return Node;
     }
 
-    if (D.RecursiveKey < Node.Key)
+    if (D.RecursiveKeyString < Node.KeyString)
     {
         Node.LHS = PutStatic(D, Node.LHS);
     }
-    else if (D.RecursiveKey > Node.Key)
+    else if (D.RecursiveKeyString > Node.KeyString)
     {
         Node.RHS = PutStatic(D, Node.RHS);
     }
@@ -304,21 +311,21 @@ private static function TreeMapNode_Object_float PutStatic(TreeMap_Object_float 
 
     Balance = GetBalance(Node);
 
-    if (Balance > 1 && D.RecursiveKey < Node.LHS.Key)
+    if (Balance > 1 && D.RecursiveKeyString < Node.LHS.KeyString)
     {
         return RotateRight(Node);
     }
-    else if (Balance < -1 && D.RecursiveKey > Node.RHS.Key)
+    else if (Balance < -1 && D.RecursiveKeyString > Node.RHS.KeyString)
     {
         return RotateLeft(Node);
     }
-    else if (Balance > 1 && D.RecursiveKey > Node.LHS.Key)
+    else if (Balance > 1 && D.RecursiveKeyString > Node.LHS.KeyString)
     {
         Node.LHS = RotateLeft(Node.LHS);
 
         return RotateRight(Node);
     }
-    else if (Balance  < -1 && D.RecursiveKey < Node.RHS.Key)
+    else if (Balance  < -1 && D.RecursiveKeyString < Node.RHS.KeyString)
     {
         Node.RHS = RotateRight(Node.RHS);
 

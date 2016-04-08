@@ -65,6 +65,8 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        InvitationExpirations = new class'TreeMap_Object_float';
+
         AxisSquadSize = Clamp(AxisSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
         AlliesSquadSize = Clamp(AlliesSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
     }
@@ -146,6 +148,16 @@ simulated function int GetTeamSquadSize(int TeamIndex)
 
 simulated function int GetTeamSquadLimit(int TeamIndex)
 {
+    local int TeamSquadSize;
+
+    TeamSquadSize = GetTeamSquadSize(TeamIndex);
+
+    // Avoid a divide-by-zero error.
+    if (TeamSquadSize <= 0)
+    {
+        return 0;
+    }
+
     return TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex);
 }
 
@@ -174,31 +186,20 @@ simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex
     return PRI.SquadMemberIndex == 0;
 }
 
-// Will return true if passed two different players that are in the same squad.
-simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
-{
-    return A != none && B != none && A != B &&
-          (A.Team.TeamIndex == AXIS_TEAM_INDEX || A.Team.TeamIndex == ALLIES_TEAM_INDEX) &&
-           A.Team.TeamIndex == B.Team.TeamIndex &&
-           A.SquadIndex == B.SquadIndex;
-}
-
 function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
-    local int T;
+    local int T, U;
 
-    if (!IsInSameSquad(A, B))
+    if (!class'DHPlayerReplicationInfo'.static.IsInSameSquad(A, B))
     {
         return false;
     }
 
-    T = B.SquadMemberIndex;
+    T = A.SquadMemberIndex;
+    U = B.SquadMemberIndex;
 
-    SetMember(A.Team.TeamIndex, A.SquadIndex, T, A);
-    SetMember(A.Team.TeamIndex, A.SquadIndex, A.SquadMemberIndex, B);
-
-    B.SquadMemberIndex = A.SquadMemberIndex;
-    A.SquadMemberIndex = T;
+    SetMember(A.Team.TeamIndex, A.SquadIndex, T, B);
+    SetMember(A.Team.TeamIndex, A.SquadIndex, U, A);
 
     return true;
 }
@@ -335,7 +336,7 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
-    if (!IsInSameSquad(PRI, NewSquadLeader))
+    if (!class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
 
@@ -372,7 +373,7 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 // to not be a member of a squad after this call, regardless of the return value.
 function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 {
-    local int i, j;
+    local int i;
     local int TeamIndex;
     local DHPlayer PC;
     local DHPlayerReplicationInfo NewSquadLeader;
@@ -436,6 +437,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
     SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
 
+    PRI.SquadIndex = -1;
+    PRI.SquadMemberIndex = -1;
+
     // voice replication info stuff
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
 
@@ -443,9 +447,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     {
         VRI.LeaveSquadChannel(PRI, PRI.SquadIndex, PRI.SquadMemberIndex);
     }
-
-    PRI.SquadIndex = -1;
-    PRI.SquadMemberIndex = -1;
 
     PC.ClientLeaveSquadResult(SE_None);
 
@@ -457,16 +458,52 @@ simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, i
     return PRI != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
 }
 
-// Returns the index of the new SquadMemberIndex of the PRI or -1 if
+// Will attempt to join the most populous open squad.
+function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
+{
+    local int i, SquadIndex, MaxMemberCount, MemberCount;
+
+    // TODO: make sure player is not already in a squad
+    if (PRI == none || PRI.Team == none || PRI.IsInSquad())
+    {
+        return -1;
+    }
+
+    SquadIndex = -1;
+
+    for (i = 0; i < GetTeamSquadLimit(PRI.Team.TeamIndex); ++i)
+    {
+        MemberCount = GetMemberCount(PRI.Team.TeamIndex, i);
+
+        if (MemberCount > MaxMemberCount)
+        {
+            SquadIndex = i;
+            MaxMemberCount = MemberCount;
+        }
+    }
+
+    if (SquadIndex >= 0)
+    {
+        return JoinSquad(PRI, PRI.Team.TeamIndex, SquadIndex);
+    }
+
+    return -1;
+}
+
+simulated function CanJoinSquad(DHPlayerReplicationInfo PRI)
+{
+}
+
+// Returns the index of the new SquadMemberIndex of the player or -1 if
 // joining a squad failed.
 function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
 {
     local bool bDidJoinSquad;
-    local int i, j;
+    local int i;
     local DHPlayer PC;
     local DHVoiceReplicationInfo VRI;
 
-    if (PRI == none)
+    if (PRI == none || PRI.Team == none || PRI.Team.TeamIndex != TeamIndex)
     {
         return -1;
     }
@@ -562,19 +599,18 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     return true;
 }
 
-simulated function IsOnTeam(DHPlayerReplicationInfo PRI, int TeamIndex)
+simulated function bool IsOnTeam(DHPlayerReplicationInfo PRI, int TeamIndex)
 {
     return PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex;
 }
 
 function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo Recipient)
 {
-    local int i;
-    local float ExpirationTimeSeconds;
-    local DHPlayer PC;
+    local DHPlayer PC, OtherPC;
 
-    if (!IsOnTeam(PRI, TeamIndex) ||
-        !IsOnTeam(PRI, Recipient) ||
+    if (Recipient == none ||
+        !IsOnTeam(PRI, TeamIndex) ||
+        !IsOnTeam(Recipient, TeamIndex) ||
         !IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return false;
@@ -593,12 +629,7 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
         return false;
     }
 
-    if (Recipient == none)
-    {
-        return false;
-    }
-
-    if (PRI.IsInSquad())
+    if (Recipient.IsInSquad())
     {
         if (PC != none)
         {
@@ -609,23 +640,18 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
         return false;
     }
 
-    if (InvitationExpirations.Get(Recipient, ExpirationTimeSeconds) &&
-        ExpirationTimeSeconds < Level.TimeSeconds)
+    // TODO: make sure invitations are not sent super frequently
+    OtherPC = DHPlayer(Recipient.Owner);
+
+    if (OtherPC != none)
     {
-        // "{0} has already been invited to join a squad. Please try again later."
-        PC.ReceiveLocalizedMessage(SquadMessageClass, 38, Recipient);
+        // "{0} has been invited to your squad."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 39, Recipient);
 
-        return false;
-    }
-
-    InvitationExpirations.Put(Recipient, Level.TimeSeconds + 10.0);
-
-    PC = DHPlayer(Recipient.Owner);
-
-    if (PC != none)
-    {
         // "{0} has invited you to join {1} squad."
-        PC.ClientSquadInvite(GetSquadName(TeamIndex, SquadIndex), PRI.PlayerName, TeamIndex, SquadIndex);
+        OtherPC.ClientSquadInvite(PRI.PlayerName, GetSquadName(TeamIndex, SquadIndex), TeamIndex, SquadIndex);
+
+        Level.Game.Broadcast(self, "OtherPC.ClientSquadInvite(GetSquadName("$TeamIndex$", "$SquadIndex$"), "$PRI.PlayerName$", "$TeamIndex$", "$SquadIndex$");");
     }
 
     return true;
@@ -785,7 +811,7 @@ simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
 
     for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
     {
-        if (IsSquadActive(TeamIndex, i) && GetSquadName(TeamIndex, Name) ~= Name)
+        if (IsSquadActive(TeamIndex, i) && GetSquadName(TeamIndex, i) ~= Name)
         {
             return true;
         }
@@ -803,17 +829,18 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
         if (Len(Name) > SQUAD_NAME_LENGTH_MAX)
         {
             // Name is too long, truncate the name.
-            Left(Name, 0, SQUAD_NAME_LENGTH_MAX);
+            Name = Left(Name, SQUAD_NAME_LENGTH_MAX);
         }
-        
+
         if (Len(Name) >= SQUAD_NAME_LENGTH_MIN)
         {
             for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
             {
-                if (IsSquadNameTaken(Name, i))
+                if (IsSquadNameTaken(TeamIndex, Name))
                 {
                     // Squad name is taken, defer to defaults names.
                     Name = "";
+                    break;
                 }
             }
         }
@@ -829,7 +856,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
         // Go through default names and choose a default squad name that hasn't yet been used.
         for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
         {
-            if (!IsSquadNameTaken(GetDefaultSquadName(TeamIndex, i), Name))
+            if (!IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, i)))
             {
                 Name = GetDefaultSquadName(TeamIndex, i);
                 break;

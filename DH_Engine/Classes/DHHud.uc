@@ -1683,7 +1683,7 @@ function DrawPlayerNames(Canvas C)
 
                 SquadNameIconMaterial = Material'DH_InterfaceArt_tex.HUD.player_icon_world';
 
-                C.DrawTile(SquadNameIconMaterial, 32, 32, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
+                C.DrawTile(SquadNameIconMaterial, 16, 16, 0, 0, SquadNameIconMaterial.MaterialUSize(), SquadNameIconMaterial.MaterialVSize());
 
                 C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - 32.0);
 
@@ -2598,11 +2598,12 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
 {
     local int i;
     local Actor A;
-    local DHPlayer PC, OtherPC;
+    local DHPlayer PC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local DHSquadReplicationInfo SRI;
     local vector PlayerLocation;
     local int PlayerYaw;
+    local Pawn P, OtherPawn;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -2624,16 +2625,26 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
                 continue;
             }
 
-            OtherPC = DHPlayer(OtherPRI.Owner);
+            // PERFORMANCE: this is totally inefficient, but will be run on
+            // the client so we can get away with it...for now.
+            // TODO: only run this once.
+            foreach DynamicActors(class'Pawn', P)
+            {
+                if (P.PlayerReplicationInfo == OtherPRI)
+                {
+                    OtherPawn = P;
+                    break;
+                }
+            }
 
             // If our client has a replicated instance of the squad member's pawn
             // available, use that pawn's location and rotation.
             // Otherwise, we will use the cached values that are sent to the
             // client from the server.
-            if (OtherPC != none && OtherPC.Pawn != none)
+            if (OtherPawn != none)
             {
-                PlayerLocation = OtherPC.Pawn.Location;
-                PlayerYaw = OtherPC.Pawn.Rotation.Yaw;
+                PlayerLocation = OtherPawn.Location;
+                PlayerYaw = OtherPawn.Rotation.Yaw;
             }
             else if (PC.SquadMemberPositions[i] != vect(0, 0, 0))
             {

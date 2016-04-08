@@ -19,6 +19,7 @@ var localized string SquadNewLeaderLeaderMessage;
 var localized string SquadInviteAlreadyInSquadMessage;
 var localized string SquadFullMessage;
 var localized string SquadInvitePendingMessage;
+var localized string SquadInviteSentMessage;
 
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored.
@@ -179,7 +180,9 @@ static function string GetString(
         case 37:
             return default.SquadFullMessage;
         case 38:
-            return Repl(default.SquadInvitePending, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.SquadInvitePendingMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 39:
+            return Repl(default.SquadInviteSentMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -233,4 +236,5 @@ defaultproperties
     SquadInviteAlreadyInSquadMessage="{0} is already in a squad."
     SquadFullMessage="You cannot be send invitations because your squad is full."
     SquadInvitePendingMessage="{0} has already been invited to join a squad. Please try again later."
+    SquadInviteSentMessage="{0} has been invited to your squad."
 }

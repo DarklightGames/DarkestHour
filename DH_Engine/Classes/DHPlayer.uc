@@ -89,7 +89,8 @@ replication
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
-        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay;
+        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
+        SeverSquadJoinAuto, ServerSquadInvite;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -2836,15 +2837,23 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
     }
 }
 
-simulated function ClientSquadInvite(string PlayerName, string SquadName, int TeamIndex, int SquadIndex)
+simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
 {
     // Store the invitation parameters in the interaction
-    class'DHSquadInviteInteraction'.default.PlayerName = PlayerName;
+    class'DHSquadInviteInteraction'.default.SenderName = SenderName;
     class'DHSquadInviteInteraction'.default.SquadName = SquadName;
     class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
     class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
 
-    Player.InteractionMaster.AddInteraction("DHSquadInviteInteraction", Player);
+    Log("class'DHSquadInviteInteraction'.default.bIgnoreAll" @ class'DHSquadInviteInteraction'.default.bIgnoreAll);
+
+    if (!class'DHSquadInviteInteraction'.default.bIgnoreAll)
+    {
+        Log("adding interaction");
+        Log("player" @ player);
+
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
+    }
 }
 
 // Modified to avoid possible spamming of "accessed none" errors
@@ -3035,116 +3044,6 @@ simulated function ClientCreateSquadResult(DHSquadReplicationInfo.ESquadError Er
     Level.Game.Broadcast(self, "ClientCreateSquadResult" @ Error);
 }
 
-simulated exec function SquadCreate(optional string SquadName)
-{
-    ServerSquadCreate(SquadName);
-}
-
-function ServerSquadCreate(string SquadName)
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadName);
-}
-
-simulated exec function SquadLeave()
-{
-    ServerSquadLeave();
-}
-
-function ServerSquadLeave()
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
-}
-
-simulated exec function SquadJoin(int SquadIndex)
-{
-    ServerSquadJoin(SquadIndex);
-}
-
-function ServerSquadJoin(int SquadIndex)
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), GetTeamNum(), SquadIndex);
-}
-
-exec function SquadLog()
-{
-    local int i, j, k;
-    local DHSquadReplicationInfo SRI;
-    local DHPlayerReplicationInfo PRI;
-
-    SRI = SquadReplicationInfo;
-
-    if (SRI == none)
-    {
-        return;
-    }
-
-    Log("+=============+");
-    Log("| Axis Squads |");
-    Log("+=============+");
-
-    for (i = 0; i < 8; ++i)
-    {
-        if (!SRI.IsSquadActive(0, i))
-        {
-            continue;
-        }
-
-        Log("[" $ i $ "]" @ SRI.GetSquadName(0, i));
-        Log("----------------");
-
-        for (j = 0; j < 8; ++j)
-        {
-            k = (SRI.GetLeaderMemberIndex(0, i) + j) % 8;
-
-            PRI = SRI.GetMember(0, i, k);
-
-            if (PRI != none)
-            {
-                Log("  (" $ j $ ")" @ SRI.GetMember(0, i, k).PlayerName);
-            }
-        }
-    }
-
-    Log("+===============+");
-    Log("| Allied Squads |");
-    Log("+===============+");
-
-    for (i = 0; i < 8; ++i)
-    {
-        if (!SRI.IsSquadActive(1, i))
-        {
-            continue;
-        }
-
-        Log("[" $ i $ "]" @ SRI.GetSquadName(1, i));
-        Log("----------------");
-
-        for (j = 0; j < 8; ++j)
-        {
-            k = (SRI.GetLeaderMemberIndex(1, i) + j) % 8;
-
-            PRI = SRI.GetMember(1, i, k);
-
-            if (PRI != none)
-            {
-                Log("  (" $ j $ ")" @ SRI.GetMember(1, i, k).PlayerName);
-            }
-        }
-    }
-}
-
 exec function Speak(string ChannelTitle)
 {
     local int TeamIndex;
@@ -3212,6 +3111,170 @@ exec function Speak(string ChannelTitle)
     }
 }
 
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// START SQUAD DEBUG FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+simulated exec function SquadCreate(optional string SquadName)
+{
+    ServerSquadCreate(SquadName);
+}
+
+function ServerSquadCreate(string SquadName)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadName);
+}
+
+simulated exec function SquadLeave()
+{
+    ServerSquadLeave();
+}
+
+function ServerSquadLeave()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+}
+
+simulated exec function SquadJoin(int SquadIndex)
+{
+    ServerSquadJoin(GetTeamNum(), SquadIndex);
+}
+
+function ServerSquadJoin(int TeamIndex, int SquadIndex)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex);
+}
+
+simulated exec function SquadLog()
+{
+    local int i, j;
+    local DHSquadReplicationInfo SRI;
+    local array<DHPlayerReplicationInfo> SquadMembers;
+
+    SRI = SquadReplicationInfo;
+
+    if (SRI == none)
+    {
+        return;
+    }
+
+    Log("+=============+");
+    Log("| Axis Squads |");
+    Log("+=============+");
+
+    for (i = 0; i < SRI.GetTeamSquadLimit(AXIS_TEAM_INDEX); ++i)
+    {
+        if (!SRI.IsSquadActive(AXIS_TEAM_INDEX, i))
+        {
+            continue;
+        }
+
+        Log("[" $ i $ "]" @ SRI.GetSquadName(AXIS_TEAM_INDEX, i));
+        Log("----------------");
+
+        SquadMembers.Length = 0;
+        SRI.GetMembers(AXIS_TEAM_INDEX, i, SquadMembers);
+
+        for (j = 0; j < SquadMembers.Length; ++j)
+        {
+            if (SquadMembers[j] != none)
+            {
+                Log("  (" $ j $ ")" @ SquadMembers[j].PlayerName);
+            }
+        }
+    }
+
+
+    Log("+===============+");
+    Log("| Allied Squads |");
+    Log("+===============+");
+
+    for (i = 0; i < SRI.GetTeamSquadLimit(ALLIES_TEAM_INDEX); ++i)
+    {
+        if (!SRI.IsSquadActive(ALLIES_TEAM_INDEX, i))
+        {
+            continue;
+        }
+
+        Log("[" $ i $ "]" @ SRI.GetSquadName(ALLIES_TEAM_INDEX, i));
+        Log("----------------");
+
+        SquadMembers.Length = 0;
+        SRI.GetMembers(ALLIES_TEAM_INDEX, i, SquadMembers);
+
+        for (j = 0; j < SquadMembers.Length; ++j)
+        {
+            if (SquadMembers[j] != none)
+            {
+                Log("  (" $ j $ ")" @ SquadMembers[j].PlayerName);
+            }
+        }
+    }
+}
+
+simulated exec function SquadJoinAuto()
+{
+    SeverSquadJoinAuto();
+}
+
+function SeverSquadJoinAuto()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.JoinSquadAuto(DHPlayerReplicationInfo(PlayerReplicationInfo));
+    }
+}
+
+simulated exec function SquadInvite(string PlayerName)
+{
+    ServerSquadInvite(PlayerName);
+}
+
+function ServerSquadInvite(string PlayerName)
+{
+    local int i;
+    local DHPlayerReplicationInfo PRI, Recipient;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
+    {
+        if (PlayerName ~= GameReplicationInfo.PRIArray[i].PlayerName)
+        {
+            Recipient = DHPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]);
+            break;
+        }
+    }
+
+    if (Recipient == none)
+    {
+        Level.Game.Broadcast(self, "No player named" @ PlayerName);
+    }
+
+    if (SquadReplicationInfo != none && PRI != none && PRI.IsInSquad())
+    {
+        SquadReplicationInfo.InviteToSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), GetTeamNum(), PRI.SquadIndex, Recipient);
+    }
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// END SQUAD DEBUG FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 exec function SquadSay(string Msg)
 {
     Msg = Left(Msg, 128);
@@ -3241,8 +3304,6 @@ function ServerSquadSay(string Msg)
     LastActiveTime = Level.TimeSeconds;
 
     G = DarkestHourGame(Level.Game);
-
-    Log("ServerSquadSay" @ Msg);
 
     if (G != none)
     {

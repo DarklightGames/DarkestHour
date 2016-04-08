@@ -14,7 +14,29 @@ replication
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
 
-function bool IsInSquad()
+simulated function DHPlayer FindPlayerController()
+{
+    local Controller C;
+
+    Log("self" @ self);
+
+    for (C = Level.ControllerList; C != none; C = C.nextController)
+    {
+        Log("C" @ C);
+        Log("C.PlayerReplicationInfo" @ C.PlayerReplicationInfo);
+
+        if (C.PlayerReplicationInfo == self)
+        {
+            Log("FOUND IT" @ DHPlayer(C));
+
+            return DHPlayer(C);
+        }
+    }
+
+    return none;
+}
+
+simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
 }
@@ -22,10 +44,10 @@ function bool IsInSquad()
 // Will return true if passed two different players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
-    return A != none && B != none && A != B ||
+    return A != none && B != none && A != B &&
           (A.Team.TeamIndex == AXIS_TEAM_INDEX || A.Team.TeamIndex == ALLIES_TEAM_INDEX) &&
            A.Team.TeamIndex == B.Team.TeamIndex &&
-           A.SquadIndex == B.SquadIndex;
+           A.SquadIndex >= 0 && A.SquadIndex == B.SquadIndex;
 }
 
 defaultproperties

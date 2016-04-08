@@ -290,7 +290,7 @@ simulated function UpdateScoreBoard (Canvas C)
             bHighlight = false;
         }
 
-        if ((bHighlight && myPRI.IsInSquad()) || class'DHSquadReplicationInfo'.static.IsInSameSquad(myPRI, GermanPRI[i]))
+        if ((bHighlight && myPRI.IsInSquad()) || class'DHPlayerReplicationInfo'.static.IsInSameSquad(myPRI, GermanPRI[i]))
         {
             PlayerColor = class'DHColor'.default.SquadColor;
         }
@@ -486,7 +486,7 @@ simulated function UpdateScoreBoard (Canvas C)
             bHighlight = false;
         }
 
-        if ((bHighlight && myPRI.IsInSquad()) || class'DHSquadReplicationInfo'.static.IsInSameSquad(myPRI, RussianPRI[i]))
+        if ((bHighlight && myPRI.IsInSquad()) || class'DHPlayerReplicationInfo'.static.IsInSameSquad(myPRI, RussianPRI[i]))
         {
             PlayerColor = class'DHColor'.default.SquadColor;
         }
