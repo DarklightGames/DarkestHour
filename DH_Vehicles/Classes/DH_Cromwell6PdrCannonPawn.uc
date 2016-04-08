@@ -7,6 +7,7 @@ class DH_Cromwell6PdrCannonPawn extends DHBritishCannonPawn;
 
 defaultproperties
 {
+/*
     PeriscopePositionIndex=1
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
     PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
@@ -28,5 +29,5 @@ defaultproperties
     EntryRadius=130.0
     PitchUpLimit=6000
     PitchDownLimit=64000
-    SoundVolume=130
+    SoundVolume=130*/
 }
