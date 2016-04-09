@@ -66,7 +66,7 @@ var     float                   NextChangeTeamTime;         // the time at which
 
 // Squads
 var     DHSquadReplicationInfo  SquadReplicationInfo;
-var     bool                    bIgnoreSquadInvites;
+var     bool                    bIgnoreSquadInvitations;
 var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
@@ -2839,20 +2839,19 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
 
 simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
 {
-    // Store the invitation parameters in the interaction
-    class'DHSquadInviteInteraction'.default.SenderName = SenderName;
-    class'DHSquadInviteInteraction'.default.SquadName = SquadName;
-    class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
-    class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+    local DHSquadInviteInteraction I;
 
-    Log("class'DHSquadInviteInteraction'.default.bIgnoreAll" @ class'DHSquadInviteInteraction'.default.bIgnoreAll);
-
-    if (!class'DHSquadInviteInteraction'.default.bIgnoreAll)
+    if (!bIgnoreSquadInvitations)
     {
-        Log("adding interaction");
-        Log("player" @ player);
+        I = DHSquadInviteInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player));
 
-        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
+        if (I != none)
+        {
+            I.SenderName = SenderName;
+            I.SquadName = SquadName;
+            I.TeamIndex = TeamIndex;
+            I.SquadIndex = SquadIndex;
+        }
     }
 }
 
@@ -3115,20 +3114,18 @@ exec function Speak(string ChannelTitle)
 // START SQUAD DEBUG FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
-
-simulated exec function SquadCreate(optional string SquadName)
+simulated exec function SquadCreate()
 {
-    ServerSquadCreate(SquadName);
+    ServerSquadCreate();
 }
 
-function ServerSquadCreate(string SquadName)
+function ServerSquadCreate()
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), SquadName);
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
 }
 
 simulated exec function SquadLeave()
@@ -3197,7 +3194,6 @@ simulated exec function SquadLog()
             }
         }
     }
-
 
     Log("+===============+");
     Log("| Allied Squads |");

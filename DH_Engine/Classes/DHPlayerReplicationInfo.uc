@@ -14,28 +14,6 @@ replication
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
 
-simulated function DHPlayer FindPlayerController()
-{
-    local Controller C;
-
-    Log("self" @ self);
-
-    for (C = Level.ControllerList; C != none; C = C.nextController)
-    {
-        Log("C" @ C);
-        Log("C.PlayerReplicationInfo" @ C.PlayerReplicationInfo);
-
-        if (C.PlayerReplicationInfo == self)
-        {
-            Log("FOUND IT" @ DHPlayer(C));
-
-            return DHPlayer(C);
-        }
-    }
-
-    return none;
-}
-
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;

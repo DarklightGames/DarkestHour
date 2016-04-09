@@ -30,6 +30,14 @@ enum ESquadError
     SE_InvalidState
 };
 
+enum ESquadOrder
+{
+    SO_Attack,
+    SO_Defend,
+    SO_Move,
+    SO_Fire
+};
+
 // This nightmare is necessary because UnrealScript cannot replicate structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AxisNames[TEAM_SQUADS_MAX];
@@ -270,24 +278,10 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
     TeamIndex = PC.GetTeamNum();
 
-    if (Name != "" && (Len(Name) < SQUAD_NAME_LENGTH_MIN || Len(Name) > SQUAD_NAME_LENGTH_MAX || IsDefaultSquadName(Name, TeamIndex)))
-    {
-        PC.ClientCreateSquadResult(SE_InvalidName);
-
-        DebugLog("Squad name is invalid (" $ Name $ ")");
-
-        return -1;
-    }
-
     for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
     {
         if (!IsSquadActive(TeamIndex, i))
         {
-            if (Name == "")
-            {
-                Name = GetDefaultSquadName(TeamIndex, i);
-            }
-
             SetMember(TeamIndex, i, 0, PRI);
             SetName(TeamIndex, i, Name);
 

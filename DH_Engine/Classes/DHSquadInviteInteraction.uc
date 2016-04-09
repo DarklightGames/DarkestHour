@@ -8,8 +8,6 @@ class DHSquadInviteInteraction extends Interaction;
 var localized string InvitationText;
 var localized string PromptText;
 
-var bool bIgnoreAll;
-
 var string SenderName;
 var string SquadName;
 var int TeamIndex;
@@ -19,6 +17,7 @@ function Initialized()
 {
     super.Initialized();
 
+    // TODO: make sure this gets called at the right time
     InvitationText = Repl(InvitationText, "{0}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ SenderName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
     InvitationText = Repl(InvitationText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ SquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
 
@@ -55,7 +54,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
         }
         else if (Key == IK_F3)  // Ignore All
         {
-            default.bIgnoreAll = true;
+            PC.bIgnoreAll = true;
 
             Master.RemoveInteraction(self);
 
@@ -105,11 +104,6 @@ defaultproperties
 {
     InvitationText="{0} has invited you to join {1} squad.";
     PromptText="[F1] Accept [F2] Decline [F3] Ignore All";
-
-    // DEBUG
     bActive=true
     bVisible=true
-
-    bIgnoreAll=false
 }
-
