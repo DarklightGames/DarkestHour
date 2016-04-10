@@ -92,6 +92,9 @@ defaultproperties
     ControlProfiles(2)="Contemporary"
     ControlProfiles(3)="Recommended"
 
+    bindings_comm(9)="SquadTalk"
+    captions_comm(9)="Squad Say"
+
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
         Caption="Bindings"

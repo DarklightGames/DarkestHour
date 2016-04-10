@@ -4234,6 +4234,18 @@ simulated function DrawSpectatingHud(Canvas C)
 
     // Update & draw screen messages
     DisplayLocalMessages(C);
+
+    DrawSquadMembers(C);
+}
+
+function DrawSquadMembers(Canvas C)
+{
+    if (C == none)
+    {
+        return;
+    }
+
+
 }
 
 // Modified to make objective title's smaller on the overview

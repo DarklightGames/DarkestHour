@@ -15,11 +15,12 @@ var localized string SquadLeftMessage;
 var localized string SquadKickedMessage;
 var localized string SquadNoLongerLeaderMessage;
 var localized string SquadYouAreNowLeaderMessage;
-var localized string SquadNewLeaderLeaderMessage;
+var localized string SquadNewLeaderMessage;
 var localized string SquadInviteAlreadyInSquadMessage;
 var localized string SquadFullMessage;
 var localized string SquadInvitePendingMessage;
 var localized string SquadInviteSentMessage;
+var localized string SquadNoLeaderMessage;
 
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored.
@@ -174,7 +175,7 @@ static function string GetString(
         case 34:
             return default.SquadYouAreNowLeaderMessage;
         case 35:
-            return Repl(default.SquadNewLeaderLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.SquadNewLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
         case 36:
             return Repl(default.SquadInviteAlreadyInSquadMessage, "{0}", RelatedPRI_1.PlayerName);
         case 37:
@@ -183,6 +184,8 @@ static function string GetString(
             return Repl(default.SquadInvitePendingMessage, "{0}", RelatedPRI_1.PlayerName);
         case 39:
             return Repl(default.SquadInviteSentMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 40:
+            return default.SquadNoLeaderMessage;
         default:
             break;
     }
@@ -232,9 +235,10 @@ defaultproperties
     SquadKickedMessage="You have been kicked from your squad."
     SquadNoLongerLeaderMessage="You are no longer the squad leader."
     SquadYouAreNowLeaderMessage="You are now the squad leader."
-    SquadNewLeaderLeaderMessage="{0} has become the squad leader."
+    SquadNewLeaderMessage="{0} has become the squad leader."
     SquadInviteAlreadyInSquadMessage="{0} is already in a squad."
     SquadFullMessage="You cannot be send invitations because your squad is full."
     SquadInvitePendingMessage="{0} has already been invited to join a squad. Please try again later."
     SquadInviteSentMessage="{0} has been invited to your squad."
+    SquadNoLeaderMessage="Your squad has no squad leader."
 }

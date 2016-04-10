@@ -169,9 +169,20 @@ simulated function int GetTeamSquadLimit(int TeamIndex)
     return TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex);
 }
 
+// Gets whether or not there are any members in the squad.
 simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
 {
-    return GetMember(TeamIndex, SquadIndex, 0) != none;
+    local int i;
+
+    for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
+    {
+        if (GetMember(TeamIndex, SquadIndex, i) != none)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 simulated function bool IsASquadLeader(DHPlayerReplicationInfo PRI)
@@ -367,11 +378,8 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 // to not be a member of a squad after this call, regardless of the return value.
 function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 {
-    local int i;
     local int TeamIndex;
     local DHPlayer PC;
-    local DHPlayerReplicationInfo NewSquadLeader;
-    local DHPlayer NewSquadLeaderPC;
     local DHVoiceReplicationInfo VRI;
 
     if (PRI == none)
@@ -403,33 +411,16 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         return false;
     }
 
+    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
+
+    // "{0} has left the squad."
+    BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadMemberIndex, SquadMessageClass, 31, PRI);
+
     if (PRI.SquadMemberIndex == 0)
     {
-        // Player was squad leader, transfer leadership to next in the list
-        for (i = 1; i < GetTeamSquadSize(TeamIndex); ++i)
-        {
-            if (GetMember(TeamIndex, PRI.SquadIndex, i) != none)
-            {
-                NewSquadLeader = GetMember(TeamIndex, PRI.SquadIndex, i);
-                NewSquadLeaderPC = DHPlayer(NewSquadLeader.Owner);
-
-                if (NewSquadLeaderPC != none)
-                {
-                    // "You are now the squad leader"
-                    NewSquadLeaderPC.ReceiveLocalizedMessage(SquadMessageClass, 34);
-                }
-
-                // "{0} has become the squad leader"
-                BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, NewSquadLeader);
-
-                SwapSquadMembers(PRI, NewSquadLeader);
-
-                break;
-            }
-        }
+        // "The leader has left the squad."
+        BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadMemberIndex, SquadMessageClass, 40);
     }
-
-    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
 
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
@@ -559,24 +550,15 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 // Returns true if the the player was successfully kicked from a squad.
 function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo MemberToKick)
 {
-    local DHPlayer PC, OtherPC;
+    local DHPlayer OtherPC;
 
-    if (PRI == none)
+    if (PRI == none || MemberToKick == none || PRI == MemberToKick)
     {
         return false;
     }
 
-    PC = DHPlayer(PRI.Owner);
-
-    if (PC != none)
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) || !IsInSquad(MemberToKick, TeamIndex, SquadIndex))
     {
-        return false;
-    }
-
-    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex) || PRI == MemberToKick)
-    {
-        //PC.ClientKickFromSquadResult(SE_InvalidArgument);
-
         return false;
     }
 

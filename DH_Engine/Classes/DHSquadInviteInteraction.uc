@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHSquadInviteInteraction extends Interaction;
+class DHSquadInviteInteraction extends DHInteraction;
 
 var localized string InvitationText;
 var localized string PromptText;
@@ -54,7 +54,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
         }
         else if (Key == IK_F3)  // Ignore All
         {
-            PC.bIgnoreAll = true;
+            PC.bIgnoreSquadInvitations = true;
 
             Master.RemoveInteraction(self);
 
