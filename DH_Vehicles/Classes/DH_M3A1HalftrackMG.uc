@@ -30,9 +30,9 @@ defaultproperties
     FireInterval=0.12
     AltFireInterval=0.12
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AmbientSoundScaling=5.0
-    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     DamageMin=100
     DamageMax=100
     ProjectileClass=class'DH_Weapons.DH_30CalBullet'

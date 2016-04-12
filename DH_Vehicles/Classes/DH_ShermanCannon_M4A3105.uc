@@ -54,9 +54,9 @@ defaultproperties
     FireInterval=10.0
     AltFireInterval=0.12
     FireSoundVolume=512.0
-    AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireSoundScaling=3.0
-    AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
