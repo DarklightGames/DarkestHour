@@ -82,6 +82,11 @@ function RemoveRange(int FromIndex, int ToIndex)
     Items.Remove(FromIndex, Count);
 }
 
+function Resize(int Length)
+{
+    Items.Length = Length;
+}
+
 function Set(int Index, string Item)
 {
     Items[Index] = Item;
@@ -96,4 +101,3 @@ function array<string> ToArray()
 {
     return Items;
 }
-

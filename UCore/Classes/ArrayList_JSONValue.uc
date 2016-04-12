@@ -82,6 +82,11 @@ function RemoveRange(int FromIndex, int ToIndex)
     Items.Remove(FromIndex, Count);
 }
 
+function Resize(int Length)
+{
+    Items.Length = Length;
+}
+
 function Set(int Index, JSONValue Item)
 {
     Items[Index] = Item;
