@@ -90,7 +90,8 @@ replication
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
-        SeverSquadJoinAuto, ServerSquadInvite;
+        SeverSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
+        ServerSquadCommandeer, SquadLock;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -2839,19 +2840,14 @@ simulated function ClientAddHudDeathMessage(PlayerReplicationInfo Killer, Player
 
 simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
 {
-    local DHSquadInviteInteraction I;
-
     if (!bIgnoreSquadInvitations)
     {
-        I = DHSquadInviteInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player));
+        class'DHSquadInviteInteraction'.default.SenderName = SenderName;
+        class'DHSquadInviteInteraction'.default.SquadName = SquadName;
+        class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
 
-        if (I != none)
-        {
-            I.SenderName = SenderName;
-            I.SquadName = SquadName;
-            I.TeamIndex = TeamIndex;
-            I.SquadIndex = SquadIndex;
-        }
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
     }
 }
 
@@ -3093,6 +3089,8 @@ exec function Speak(string ChannelTitle)
         VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, TeamIndex);
     }
 
+    Log("ChannelTitle" @ ChannelTitle);
+
     if (VCR == none && ChatRoomMessageClass != none)
     {
         ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
@@ -3147,13 +3145,13 @@ simulated exec function SquadJoin(int SquadIndex)
     ServerSquadJoin(GetTeamNum(), SquadIndex);
 }
 
-function ServerSquadJoin(int TeamIndex, int SquadIndex)
+function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvited)
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex);
+    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
 }
 
 simulated exec function SquadLog()
@@ -3256,14 +3254,97 @@ function ServerSquadInvite(string PlayerName)
         }
     }
 
-    if (Recipient == none)
-    {
-        Level.Game.Broadcast(self, "No player named" @ PlayerName);
-    }
-
     if (SquadReplicationInfo != none && PRI != none && PRI.IsInSquad())
     {
         SquadReplicationInfo.InviteToSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), GetTeamNum(), PRI.SquadIndex, Recipient);
+    }
+}
+
+simulated exec function SquadKick(string PlayerName)
+{
+    ServerSquadKick(PlayerName);
+}
+
+function ServerSquadKick(string PlayerName)
+{
+    local int i;
+    local DHPlayerReplicationInfo PRI, MemberToKick;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
+    {
+        if (PlayerName ~= GameReplicationInfo.PRIArray[i].PlayerName)
+        {
+            MemberToKick = DHPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]);
+            break;
+        }
+    }
+
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.KickFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, MemberToKick);
+    }
+}
+
+simulated exec function SquadLock(bool bIsLocked)
+{
+    ServerSquadLock(bIsLocked);
+}
+
+function ServerSquadLock(bool bIsLocked)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetSquadLocked(PRI, GetTeamNum(), PRI.SquadIndex, bIsLocked);
+    }
+}
+
+simulated exec function SquadCommandeer()
+{
+    ServerSquadCommandeer();
+}
+
+function ServerSquadCommandeer()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.CommandeerSquad(PRI, GetTeamNum(), PRI.SquadIndex);
+    }
+}
+
+simulated exec function SquadPromote(string PlayerName)
+{
+    ServerSquadPromote(PlayerName);
+}
+
+function ServerSquadPromote(string PlayerName)
+{
+    local int i;
+    local DHPlayerReplicationInfo PRI, NewSquadLeader;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
+    {
+        if (PlayerName ~= GameReplicationInfo.PRIArray[i].PlayerName)
+        {
+            NewSquadLeader = DHPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]);
+            break;
+        }
+    }
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
     }
 }
 

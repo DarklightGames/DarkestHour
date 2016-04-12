@@ -18,8 +18,8 @@ function Initialized()
     super.Initialized();
 
     // TODO: make sure this gets called at the right time
-    InvitationText = Repl(InvitationText, "{0}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ SenderName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
-    InvitationText = Repl(InvitationText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ SquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
+    InvitationText = Repl(InvitationText, "{0}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SenderName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
+    InvitationText = Repl(InvitationText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
 
     PromptText = Repl(PromptText, "[", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.InputPromptColor) $ "[");
     PromptText = Repl(PromptText, "]", "]" $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
@@ -40,7 +40,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     {
         if (Key == IK_F1)       // Accept
         {
-            PC.ServerSquadJoin(TeamIndex, SquadIndex);
+            PC.ServerSquadJoin(default.TeamIndex, default.SquadIndex, true);
 
             Master.RemoveInteraction(self);
 
@@ -84,7 +84,7 @@ simulated function PostRender(Canvas C)
     C.SetPos(X, Y);
     C.DrawText(InvitationText, true);
 
-    // "[PageUp] Accept [PageDown] Decline [End] Ignore All"
+    // "[F1] Accept [F2] Decline [F3] Ignore All"
     C.TextSize(PromptText, XL, YL);
 
     Y = (C.ClipY * (2.0 / 3.0)) - (YL / 2) + YL;

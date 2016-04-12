@@ -21,6 +21,8 @@ var localized string SquadFullMessage;
 var localized string SquadInvitePendingMessage;
 var localized string SquadInviteSentMessage;
 var localized string SquadNoLeaderMessage;
+var localized string SquadLockedMessage;
+var localized string SquadUnlockedMessage;
 
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored.
@@ -186,6 +188,10 @@ static function string GetString(
             return Repl(default.SquadInviteSentMessage, "{0}", RelatedPRI_1.PlayerName);
         case 40:
             return default.SquadNoLeaderMessage;
+        case 41:
+            return default.SquadLockedMessage;
+        case 42:
+            return default.SquadUnlockedMessage;
         default:
             break;
     }
@@ -232,13 +238,15 @@ defaultproperties
 
     SquadJoinedMessage="{0} has joined the squad."
     SquadLeftMessage="{0} has left the squad."
-    SquadKickedMessage="You have been kicked from your squad."
+    SquadKickedMessage="You have been kicked from the squad."
     SquadNoLongerLeaderMessage="You are no longer the squad leader."
     SquadYouAreNowLeaderMessage="You are now the squad leader."
     SquadNewLeaderMessage="{0} has become the squad leader."
     SquadInviteAlreadyInSquadMessage="{0} is already in a squad."
-    SquadFullMessage="You cannot be send invitations because your squad is full."
+    SquadFullMessage="You cannot be send invitations because the squad is full."
     SquadInvitePendingMessage="{0} has already been invited to join a squad. Please try again later."
-    SquadInviteSentMessage="{0} has been invited to your squad."
-    SquadNoLeaderMessage="Your squad has no squad leader."
+    SquadInviteSentMessage="{0} has been invited to join the squad."
+    SquadNoLeaderMessage="The squad leader has left the squad."
+    SquadLockedMessage="The squad has been locked."
+    SquadUnlockedMessage="The squad has been unlocked."
 }

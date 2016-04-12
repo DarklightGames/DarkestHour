@@ -13,6 +13,8 @@ const TEAM_SQUADS_MAX = 8;  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 const SQUAD_NAME_LENGTH_MIN = 3;
 const SQUAD_NAME_LENGTH_MAX = 16;
 
+const SQUAD_LEADER_INDEX = 0;
+
 const DEBUG = true;
 
 // TODO: remove once we have sufficiently debugged the system.
@@ -27,6 +29,7 @@ enum ESquadError
     SE_NotInSquad,
     SE_InvalidArgument,
     SE_BadSquad,
+    SE_Locked,
     SE_InvalidState
 };
 
@@ -192,7 +195,12 @@ simulated function bool IsASquadLeader(DHPlayerReplicationInfo PRI)
 
 simulated function DHPlayerReplicationInfo GetSquadLeader(int TeamIndex, int SquadIndex)
 {
-    return GetMember(TeamIndex, SquadIndex, 0);
+    return GetMember(TeamIndex, SquadIndex, SQUAD_LEADER_INDEX);
+}
+
+simulated function bool HasSquadLeader(int TeamIndex, int SquadIndex)
+{
+    return GetSquadLeader(TeamIndex, SquadIndex) != none;
 }
 
 simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
@@ -202,7 +210,27 @@ simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex
         return false;
     }
 
-    return PRI.SquadMemberIndex == 0;
+    return PRI.SquadMemberIndex == SQUAD_LEADER_INDEX;
+}
+
+private function bool SwapSquadMembersByIndex(int TeamIndex, int SquadIndex, int MemberIndex1, int MemberIndex2)
+{
+    local DHPlayerReplicationInfo PRI1, PRI2;
+
+    if (!IsSquadActive(TeamIndex, SquadIndex) ||
+        MemberIndex1 >= GetTeamSquadSize(TeamIndex) ||
+        MemberIndex2 >= GetTeamSquadSize(TeamIndex))
+    {
+        return false;
+    }
+
+    PRI1 = GetMember(TeamIndex, SquadIndex, MemberIndex1);
+    PRI2 = GetMember(TeamIndex, SquadIndex, MemberIndex2);
+
+    SetMember(TeamIndex, SquadIndex, MemberIndex1, PRI2);
+    SetMember(TeamIndex, SquadIndex, MemberIndex2, PRI1);
+
+    return true;
 }
 
 function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
@@ -221,25 +249,6 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
     SetMember(A.Team.TeamIndex, A.SquadIndex, U, A);
 
     return true;
-}
-
-function DebugLog(string S)
-{
-    if (DEBUG)
-    {
-        Log(S);
-    }
-}
-
-simulated function bool IsDefaultSquadName(string SquadName, int TeamIndex)
-{
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return class'UArray'.static.SIndexOf(AxisDefaultSquadNames, SquadName) >= 0;
-        default:
-            return class'UArray'.static.SIndexOf(AlliesDefaultSquadNames, SquadName) >= 0;
-    }
 }
 
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
@@ -282,8 +291,6 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
     {
         PC.ClientCreateSquadResult(SE_AlreadyInSquad);
 
-        DebugLog(PRI.PlayerName @ "is already in a squad (" $ PRI.SquadIndex $ ")");
-
         return -1;
     }
 
@@ -293,7 +300,7 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
     {
         if (!IsSquadActive(TeamIndex, i))
         {
-            SetMember(TeamIndex, i, 0, PRI);
+            SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
             SetName(TeamIndex, i, Name);
 
             PC.ClientCreateSquadResult(SE_None);
@@ -304,8 +311,6 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             {
                 VRI.JoinSquadChannel(PRI, TeamIndex, i);
             }
-
-            DebugLog("Squad '" $ Name $ "' created successfully at index " $ i);
 
             return i;
         }
@@ -344,14 +349,12 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
     if (!class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
-
         return false;
     }
 
     if (!SwapSquadMembers(PRI, NewSquadLeader))
     {
         PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
-
         return false;
     }
 
@@ -411,21 +414,21 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         return false;
     }
 
-    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
-
     // "{0} has left the squad."
     BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadMemberIndex, SquadMessageClass, 31, PRI);
 
-    if (PRI.SquadMemberIndex == 0)
+    if (PRI.SquadMemberIndex == SQUAD_LEADER_INDEX)
     {
         // "The leader has left the squad."
         BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadMemberIndex, SquadMessageClass, 40);
     }
 
+    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
+
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
 
-    // voice replication info stuff
+    // Leave the squad voice channel
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
 
     if (VRI != none)
@@ -436,6 +439,37 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     PC.ClientLeaveSquadResult(SE_None);
 
     return true;
+}
+
+function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+{
+    local DHPlayer PC;
+    local bool bResult;
+
+    if (!IsInSquad(PRI, TeamIndex, SquadIndex) ||
+        IsSquadLeader(PRI, TeamIndex, SquadIndex) ||
+        HasSquadLeader(TeamIndex, SquadIndex))
+    {
+        return false;
+    }
+
+    bResult = SwapSquadMembersByIndex(TeamIndex, SquadIndex, PRI.SquadMemberIndex, SQUAD_LEADER_INDEX);
+
+    if (bResult)
+    {
+        PC = DHPlayer(PRI.Owner);
+
+        if (PC != none)
+        {
+            // "You are now the squad leader"
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 34);
+        }
+
+        // "{0} has become the squad leader"
+        BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, PRI);
+    }
+
+    return bResult;
 }
 
 simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
@@ -458,6 +492,11 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 
     for (i = 0; i < GetTeamSquadLimit(PRI.Team.TeamIndex); ++i)
     {
+        if (IsSquadLocked(PRI.Team.TeamIndex, i))
+        {
+            continue;
+        }
+
         MemberCount = GetMemberCount(PRI.Team.TeamIndex, i);
 
         if (MemberCount > MaxMemberCount)
@@ -475,13 +514,9 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
     return -1;
 }
 
-simulated function CanJoinSquad(DHPlayerReplicationInfo PRI)
-{
-}
-
 // Returns the index of the new SquadMemberIndex of the player or -1 if
 // joining a squad failed.
-function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
+function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited)
 {
     local bool bDidJoinSquad;
     local int i;
@@ -500,16 +535,16 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
         return -1;
     }
 
-    if (!IsSquadActive(TeamIndex, SquadIndex))
+    if (!IsSquadActive(TeamIndex, SquadIndex) || IsInSquad(PRI, TeamIndex, SquadIndex))
     {
         PC.ClientJoinSquadResult(SE_BadSquad);
 
         return -1;
     }
 
-    if (IsInSquad(PRI, TeamIndex, SquadIndex))
+    if (!bWasInvited && IsSquadLocked(TeamIndex, SquadIndex))
     {
-        PC.ClientJoinSquadResult(SE_BadSquad);
+        PC.ClientJoinSquadResult(SE_Locked);
 
         return -1;
     }
@@ -518,9 +553,6 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
     {
         if (GetMember(TeamIndex, SquadIndex, i) == none)
         {
-            // We don't care about the result of ServerLeaveSquad;
-            // whatever the result, the player is not in a squad and
-            // can join another one.
             LeaveSquad(PRI);
 
             SetMember(TeamIndex, SquadIndex, i, PRI);
@@ -616,7 +648,10 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
         return false;
     }
 
-    // TODO: make sure invitations are not sent super frequently
+    //==========================================================================
+    // TODO: make sure invitations are not sent too frequently
+    //==========================================================================
+
     OtherPC = DHPlayer(Recipient.Owner);
 
     if (OtherPC != none)
@@ -626,8 +661,6 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
 
         // "{0} has invited you to join {1} squad."
         OtherPC.ClientSquadInvite(PRI.PlayerName, GetSquadName(TeamIndex, SquadIndex), TeamIndex, SquadIndex);
-
-        Level.Game.Broadcast(self, "OtherPC.ClientSquadInvite(GetSquadName("$TeamIndex$", "$SquadIndex$"), "$PRI.PlayerName$", "$TeamIndex$", "$SquadIndex$");");
     }
 
     return true;
@@ -673,6 +706,15 @@ function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int Squa
             break;
         default:
             break;
+    }
+
+    if (bLocked)
+    {
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 41);
+    }
+    else
+    {
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 42);
     }
 
     return true;
@@ -738,7 +780,7 @@ simulated function int GetMemberCount(int TeamIndex, int SquadIndex)
     return Members.Length;
 }
 
-// Gets a list of all the members in a squad. The first entry in the array will always be the squad leader.
+// Gets a list of all the members in a squad.
 simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Members)
 {
     local int i;
@@ -857,21 +899,21 @@ defaultproperties
 {
     AlliesSquadSize=12
     AxisSquadSize=9
-    AlliesDefaultSquadNames(0)="ABLE"
-    AlliesDefaultSquadNames(1)="BAKER"
-    AlliesDefaultSquadNames(2)="CHARLIE"
-    AlliesDefaultSquadNames(3)="DOG"
-    AlliesDefaultSquadNames(4)="EASY"
-    AlliesDefaultSquadNames(5)="FOX"
-    AlliesDefaultSquadNames(6)="GEORGE"
-    AlliesDefaultSquadNames(7)="HOW"
-    AxisDefaultSquadNames(0)="ANTON"
-    AxisDefaultSquadNames(1)="BERTA"
-    AxisDefaultSquadNames(2)="CAESAR"
-    AxisDefaultSquadNames(3)="DORA"
-    AxisDefaultSquadNames(4)="EMIL"
-    AxisDefaultSquadNames(5)="FRITZ"
-    AxisDefaultSquadNames(6)="GUSTAV"
-    AxisDefaultSquadNames(7)="HEINRICH"
+    AlliesDefaultSquadNames(0)="Able"
+    AlliesDefaultSquadNames(1)="Baker"
+    AlliesDefaultSquadNames(2)="Charlie"
+    AlliesDefaultSquadNames(3)="Dog"
+    AlliesDefaultSquadNames(4)="Easy"
+    AlliesDefaultSquadNames(5)="Fox"
+    AlliesDefaultSquadNames(6)="George"
+    AlliesDefaultSquadNames(7)="How"
+    AxisDefaultSquadNames(0)="Anton"
+    AxisDefaultSquadNames(1)="Berta"
+    AxisDefaultSquadNames(2)="Caesar"
+    AxisDefaultSquadNames(3)="Dora"
+    AxisDefaultSquadNames(4)="Emil"
+    AxisDefaultSquadNames(5)="Fritz"
+    AxisDefaultSquadNames(6)="Gustav"
+    AxisDefaultSquadNames(7)="Heinrich"
     SquadMessageClass=class'DHGameMessage'
 }

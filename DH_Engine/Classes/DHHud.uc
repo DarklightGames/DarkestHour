@@ -37,6 +37,7 @@ var SpriteWidget        DeployInObjectiveIcon;
 var SpriteWidget        SquadNameIcon;
 var SpriteWidget        MapPlayerNumberIcon;
 var array<Texture>      PlayerNumberIconTextures;
+var TextWidget          SquadMemberTextWidget;
 
 var SpriteWidget        MapAxisFlagIcon;
 var SpriteWidget        MapAlliesFlagIcons[3];
@@ -4240,12 +4241,41 @@ simulated function DrawSpectatingHud(Canvas C)
 
 function DrawSquadMembers(Canvas C)
 {
+/*
+    local int i;
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+
     if (C == none)
     {
         return;
     }
 
+    PC = DHPlayer(PlayerOwner);
 
+    if (PC == none)
+    {
+        return;
+    }
+
+    SRI = PC.SquadReplicationInfo;
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (SRI == none || PRI == none || !PRI.IsInSquad())
+    {
+        return;
+    }
+
+    for (i = 0; i < SRI.GetTeamSquadSize(); ++i)
+    {
+        OtherPRI = SRI.GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
+
+        if (OtherPRI != none)
+        {
+            C.DrawText(OtherPRI.PlayerName);
+        }
+    }*/
 }
 
 // Modified to make objective title's smaller on the overview
@@ -4541,6 +4571,7 @@ defaultproperties
 {
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
+    SquadMemberTextWidget=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=0.85,PosY=0.95,WrapHeight=1,WrapWidth=0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.3,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     MapIconCarriedRadio=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
