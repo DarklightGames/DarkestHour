@@ -52,16 +52,21 @@ simulated event InitChannels()
     }
 }
 
+simulated function bool ValidRoom( VoiceChatRoom Room )
+{
+    return bEnableVoiceChat && Room != none && Room.ChannelIndex < 20 && Room.Owner == Self;
+}
+
 simulated function VoiceChatRoom AddSquadChannel(int TeamIndex, int SquadIndex)
 {
-    local VoiceChatRoom VCR;
+    local DHVoiceChatRoom VCR;
 
     if (GetSquadChannel(TeamIndex, SquadIndex) != none)
     {
         return none;
     }
 
-    VCR = AddVoiceChannel();
+    VCR = DHVoiceChatRoom(AddVoiceChannel());
 
     switch (TeamIndex)
     {
@@ -72,6 +77,11 @@ simulated function VoiceChatRoom AddSquadChannel(int TeamIndex, int SquadIndex)
             AlliesSquadChannels[SquadIndex] = VCR;
             break;
     }
+
+    VCR.SetTeam(TeamIndex);
+    VCR.SquadIndex = SquadIndex;
+
+    Log(VCR.ChannelIndex);
 
     return VCR;
 }
@@ -142,10 +152,48 @@ function VerifyTeamChatters()
             }
         }
     }
+
+    DebugVoiceChannels();
 }
+
+function DebugVoiceChannels()
+{
+    local array<VoiceChatRoom> Rooms;
+    local int i;
+
+    Rooms = GetChannels();
+
+    for (i = 0; i < Rooms.Length; i++)
+    {
+        if ( Rooms[i] != None )
+        {
+            Log("Channel Title:" @ Rooms[i].GetTitle());
+            Log("Channel Index:" @ Rooms[i].ChannelIndex);
+            Log("Channel Team :" @ Rooms[i].GetTeam());
+        }
+    }
+}
+
 
 defaultproperties
 {
     ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
+    PublicChannelNames(3)="Team"
+    PublicChannelNames(4)="Squad1"
+    PublicChannelNames(5)="Squad2"
+    PublicChannelNames(6)="Squad3"
+    PublicChannelNames(7)="Squad4"
+    PublicChannelNames(8)="Squad5"
+    PublicChannelNames(9)="Squad6"
+    PublicChannelNames(10)="Squad7"
+    PublicChannelNames(11)="Squad8"
+    PublicChannelNames(12)="Squad9"
+    PublicChannelNames(13)="Squad10"
+    PublicChannelNames(14)="Squad11"
+    PublicChannelNames(15)="Squad12"
+    PublicChannelNames(16)="Squad13"
+    PublicChannelNames(17)="Squad14"
+    PublicChannelNames(18)="Squad15"
+    PublicChannelNames(19)="Squad16"
 }
 
