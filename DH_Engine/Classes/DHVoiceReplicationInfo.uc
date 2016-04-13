@@ -5,8 +5,10 @@
 
 class DHVoiceReplicationInfo extends TeamVoiceReplicationInfo;
 
-var VoiceChatRoom AxisSquadChannels[8];
-var VoiceChatRoom AlliesSquadChannels[8];
+const SQUAD_CHANNELS_MAX = 8;
+
+var VoiceChatRoom AxisSquadChannels[SQUAD_CHANNELS_MAX];
+var VoiceChatRoom AlliesSquadChannels[SQUAD_CHANNELS_MAX];
 
 replication
 {
@@ -16,6 +18,11 @@ replication
 
 simulated function VoiceChatRoom GetSquadChannel(int TeamIndex, int SquadIndex)
 {
+    if (SquadIndex < 0 || SquadIndex >= SQUAD_CHANNELS_MAX)
+    {
+        return none;
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -35,20 +42,12 @@ simulated event InitChannels()
 
     for (i = 0; i < arraycount(AxisSquadChannels); ++i)
     {
-        Log("Adding German squad" @ i);
-
         AddSquadChannel(AXIS_TEAM_INDEX, i);
-
-        Log("VCR=" @ GetSquadChannel(AXIS_TEAM_INDEX, i));
     }
 
     for (i = 0; i < arraycount(AlliesSquadChannels); ++i)
     {
-        Log("Adding Allied squad" @ i);
-
         AddSquadChannel(ALLIES_TEAM_INDEX, i);
-
-        Log("VCR=" @ GetSquadChannel(ALLIES_TEAM_INDEX, i));
     }
 }
 
@@ -152,48 +151,27 @@ function VerifyTeamChatters()
             }
         }
     }
-
-    DebugVoiceChannels();
 }
-
-function DebugVoiceChannels()
-{
-    local array<VoiceChatRoom> Rooms;
-    local int i;
-
-    Rooms = GetChannels();
-
-    for (i = 0; i < Rooms.Length; i++)
-    {
-        if ( Rooms[i] != None )
-        {
-            Log("Channel Title:" @ Rooms[i].GetTitle());
-            Log("Channel Index:" @ Rooms[i].ChannelIndex);
-            Log("Channel Team :" @ Rooms[i].GetTeam());
-        }
-    }
-}
-
 
 defaultproperties
 {
     ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
     PublicChannelNames(3)="Team"
-    PublicChannelNames(4)="Squad1"
-    PublicChannelNames(5)="Squad2"
-    PublicChannelNames(6)="Squad3"
-    PublicChannelNames(7)="Squad4"
-    PublicChannelNames(8)="Squad5"
-    PublicChannelNames(9)="Squad6"
-    PublicChannelNames(10)="Squad7"
-    PublicChannelNames(11)="Squad8"
-    PublicChannelNames(12)="Squad9"
-    PublicChannelNames(13)="Squad10"
-    PublicChannelNames(14)="Squad11"
-    PublicChannelNames(15)="Squad12"
-    PublicChannelNames(16)="Squad13"
-    PublicChannelNames(17)="Squad14"
-    PublicChannelNames(18)="Squad15"
-    PublicChannelNames(19)="Squad16"
+    PublicChannelNames(4)="Squad"
+    PublicChannelNames(5)="Squad"
+    PublicChannelNames(6)="Squad"
+    PublicChannelNames(7)="Squad"
+    PublicChannelNames(8)="Squad"
+    PublicChannelNames(9)="Squad"
+    PublicChannelNames(10)="Squad"
+    PublicChannelNames(11)="Squad"
+    PublicChannelNames(12)="Squad"
+    PublicChannelNames(13)="Squad"
+    PublicChannelNames(14)="Squad"
+    PublicChannelNames(15)="Squad"
+    PublicChannelNames(16)="Squad"
+    PublicChannelNames(17)="Squad"
+    PublicChannelNames(18)="Squad"
+    PublicChannelNames(19)="Squad"
 }
 
