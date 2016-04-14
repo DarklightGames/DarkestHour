@@ -23,6 +23,7 @@ var localized string SquadInviteSentMessage;
 var localized string SquadNoLeaderMessage;
 var localized string SquadLockedMessage;
 var localized string SquadUnlockedMessage;
+var localized string SquadCreatedMessage;
 
 // This is overriden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored.
@@ -192,6 +193,8 @@ static function string GetString(
             return default.SquadLockedMessage;
         case 42:
             return default.SquadUnlockedMessage;
+        case 43:
+            return default.SquadCreatedMessage;
         default:
             break;
     }
@@ -249,4 +252,5 @@ defaultproperties
     SquadNoLeaderMessage="The squad leader has left the squad."
     SquadLockedMessage="The squad has been locked."
     SquadUnlockedMessage="The squad has been unlocked."
+    SquadCreatedMessage="You have created a squad."
 }
