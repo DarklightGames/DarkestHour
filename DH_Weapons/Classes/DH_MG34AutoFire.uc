@@ -7,7 +7,7 @@ class DH_MG34AutoFire extends DHMGAutomaticFire;
 
 defaultproperties
 {
-    PctHipMGPenalty=1.5
+    PctHipMGPenalty=0.66
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     AmbientFireSoundRadius=750.0
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
