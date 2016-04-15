@@ -60,6 +60,7 @@ defaultproperties
     ZoomOutTime=0.2
     Handtex=texture'Weapons1st_tex.Arms.hands_gergloves'
     FireModeClass(0)=class'DH_Weapons.DH_MG34AutoFire'
+    FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire'
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
     PutDownAnim="Put_away"
@@ -73,5 +74,5 @@ defaultproperties
     BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_MG34Attachment'
     ItemName="Maschinengewehr 34"
-    mesh=SkeletalMesh'DH_Mg34_1st.MG_34_Mesh'
+    Mesh=SkeletalMesh'Axis_Mg34_1st.MG_34_Mesh'
 }

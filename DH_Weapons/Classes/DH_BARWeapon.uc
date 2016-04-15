@@ -40,8 +40,8 @@ defaultproperties
     bSlowFireRate=true
     bCanBeResupplied=true
     NumMagsToResupply=2
-    MaxNumPrimaryMags=12
-    InitialNumPrimaryMags=7
+    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=6
     IronSightDisplayFOV=25.0
     FreeAimRotationSpeed=2.0
     bHasSelectFire=true
