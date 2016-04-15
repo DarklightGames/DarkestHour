@@ -4723,6 +4723,7 @@ defaultproperties
 {
     StanceChangeStaminaDrain=1.5
     Stamina=40.0
+    WalkingPct=0.45
     MinHurtSpeed=475.0
     Species=class'DH_Engine.DHSPECIES_Human'
     DHSoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
