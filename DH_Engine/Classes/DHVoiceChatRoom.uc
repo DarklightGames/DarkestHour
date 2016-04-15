@@ -32,25 +32,35 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
     {
         if (PRI.Team != none && PRI.Team.TeamIndex == GetTeam())
         {
+            //Log("We are getting in the IsMember Team checking stuff");
+
             if (IsSquadChannel())
             {
+                Log("Squad index:" @ SquadIndex);
+
+                Log("Returning:" @ (MyPRI != none && MyPRI.SquadIndex == SquadIndex) @ "In squad check");
+
                 return MyPRI != none && MyPRI.SquadIndex == SquadIndex;
             }
 
+            Log("Returning true in team check");
             return true;
         }
     }
 
     if (super(VoiceChatRoom).IsMember(PRI, bNoCascade))
     {
+        Log("Returning true in super");
         return true;
     }
 
     if (!ValidMask() || PRI == None || PRI.VoiceID == 255)
     {
+        Log("Returning false in mask check");
         return false;
     }
 
+    Log("Returning:" @ bool(GetMask() & (1 << PRI.VoiceID)) @ "PlayerName:" @ PRI.GetHumanReadableName());
     return bool(GetMask() & (1 << PRI.VoiceID));
 }
 

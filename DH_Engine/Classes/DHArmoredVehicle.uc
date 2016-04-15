@@ -54,7 +54,7 @@ var     float       MaxCriticalSpeed;       // if vehicle goes over max speed, i
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
-var     TreeMap_string_Object   NotifyParameters;       // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     ObjectMap   NotifyParameters;       // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     bool        bNeedToInitializeDriver;// clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
@@ -283,8 +283,8 @@ simulated function PostBeginPlay()
         }
 
         // Set up new NotifyParameters object
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("VehicleClass", Class);
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("VehicleClass", Class);
     }
 }
 
@@ -3783,7 +3783,7 @@ simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
-        NotifyParameters.Put("Controller", User.Controller);
+        NotifyParameters.Insert("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
     }

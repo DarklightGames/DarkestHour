@@ -9,7 +9,7 @@ class DHMortarVehicle extends ROVehicle
 var     DHPawn      OwningPawn;
 var     bool        bEnteredOnce;
 var     bool        bCanBeResupplied;
-var     TreeMap_string_Object   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     ObjectMap   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 replication
 {
@@ -44,8 +44,8 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("VehicleClass", Class);
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("VehicleClass", Class);
     }
 }
 
@@ -136,7 +136,7 @@ simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
     {
-        NotifyParameters.Put("Controller", User.Controller);
+        NotifyParameters.Insert("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
     }

@@ -3021,22 +3021,27 @@ exec function FOV(float F)
 
 simulated function ClientJoinSquadResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientJoinSquadResult" @ Error);
 }
 
 simulated function ClientLeaveSquadResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientLeaveSquadResult" @ Error);
 }
 
 simulated function ClientChangeSquadLeaderResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientChangeSquadLeaderResult" @ Error);
 }
 
 simulated function ClientCreateSquadResult(DHSquadReplicationInfo.ESquadError Error)
 {
+    Level.Game.Broadcast(self, "ClientCreateSquadResult" @ Error);
 }
 
 exec function Speak(string ChannelTitle)
 {
+    local int TeamIndex;
     local VoiceChatRoom VCR;
     local string ChanPwd;
     local DHVoiceReplicationInfo VRI;
@@ -3049,47 +3054,57 @@ exec function Speak(string ChannelTitle)
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
+    if (PRI != none && PRI.Team != none)
+    {
+        TeamIndex = PlayerReplicationInfo.Team.TeamIndex;
+    }
+
     // Colin: Hard-coding this, unfortunately, because we need to have the
     // player be able to join just by executing "Speak Squad". We can't
     // depend on the name of the squad because it's not unique and is subject
     // to change, and we don't want to go passing around UUIDs when we can just
     // put in a sneaky little hack.
-    if (ChannelTitle ~= "SQUAD")
+    if (ChannelTitle ~= "Squad")
     {
         VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
 
         if (VRI != none)
         {
-            VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
+            VCR = VRI.GetSquadChannel(TeamIndex, PRI.SquadIndex);
 
-            if (VCR == none)
+            if (VCR != none)
             {
-                return;
+                Log("VCR:" @ VCR);
+                Log("VCR.ChannelIndex:" @ VCR.ChannelIndex);
+            }
+            else
+            {
+                Log("Could not find squad channel (" $ TeamIndex $ "," @ PRI.SquadIndex $ ")");
             }
         }
     }
     else
     {
-        // Check that we are a member of this room.
-        VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, GetTeamNum());
+        // Check that we are a member of this room
+        VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, TeamIndex);
     }
+
+    Log("ChannelTitle" @ ChannelTitle);
 
     if (VCR == none && ChatRoomMessageClass != none)
     {
         ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
-
         return;
     }
 
     if (VCR.ChannelIndex >= 0)
     {
         ChanPwd = FindChannelPassword(ChannelTitle);
-
         ServerSpeak(VCR.ChannelIndex, ChanPwd);
     }
     else if (ChatRoomMessageClass != none)
     {
-        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0,ChannelTitle));
     }
 }
 

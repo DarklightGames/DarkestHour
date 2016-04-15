@@ -6,7 +6,7 @@
 class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
-var     TreeMap_string_Object               NotifyParameters;         // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     ObjectMap               NotifyParameters;         // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 // Ammo
 var     array<int>  AmmoMags;
@@ -36,8 +36,8 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        NotifyParameters = new class'TreeMap_string_Object';
-        NotifyParameters.Put("InventoryClass", InventoryType);
+        NotifyParameters = new class'ObjectMap';
+        NotifyParameters.Insert("InventoryClass", InventoryType);
 
         if (Role < ROLE_Authority && class<DHProjectileWeapon>(InventoryType) != none)
         {
@@ -167,7 +167,7 @@ simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
     {
-        NotifyParameters.Put("Controller", User.Controller);
+        NotifyParameters.Insert("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 1,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
     }

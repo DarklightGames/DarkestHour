@@ -9,20 +9,16 @@ class DHWeaponPickupTouchMessage extends ROTouchMessagePlus;
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;
-    local Object O;
-    local TreeMap_string_Object OM;
+    local ObjectMap OM;
     local class<Inventory> InventoryClass;
     local PlayerController PC;
 
-    OM = TreeMap_string_Object(OptionalObject);
+    OM = ObjectMap(OptionalObject);
 
     if (OM != none)
     {
-        OM.Get("InventoryClass", O);
-        InventoryClass = class<Inventory>(O);
-
-        OM.Get("Controller", O);
-        PC = PlayerController(O);
+        InventoryClass = class<Inventory>(OM.Get("InventoryClass"));
+        PC = PlayerController(OM.Get("Controller"));
     }
 
     S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(class'DHWeaponPickup'.default.TouchMessage, PC);

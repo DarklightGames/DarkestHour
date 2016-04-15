@@ -524,7 +524,7 @@ simulated event PostRender(canvas Canvas)
 // Modified to add mantling icon - PsYcH0_Ch!cKeN
 simulated function DrawHudPassC(Canvas C)
 {
-    local DHVoiceChatRoom    VCR;
+    local VoiceChatRoom      VCR;
     local float              Y, XL, YL, Alpha;
     local string             s;
     local color              MyColor;
@@ -818,8 +818,6 @@ simulated function DrawHudPassC(Canvas C)
         // Draw portrait if needed
         if (PortraitPRI != none)
         {
-            VCR = DHVoiceChatRoom(PlayerOwner.VoiceReplicationInfo.GetChannelAt(PortraitPRI.ActiveChannel));
-
             if (PortraitPRI.Team != none)
             {
                 if (PortraitPRI.Team.TeamIndex == 0)
@@ -838,7 +836,7 @@ simulated function DrawHudPassC(Canvas C)
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
                 }
 
-                if (VCR.IsSquadChannel() && class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
                 {
                     PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.SquadColor;
                 }
@@ -858,6 +856,8 @@ simulated function DrawHudPassC(Canvas C)
             DrawTextWidgetClipped(C, PortraitText[0], Coords);
 
             // Draw second line of text
+            VCR = PlayerOwner.VoiceReplicationInfo.GetChannelAt(PortraitPRI.ActiveChannel);
+
             if (VCR != none)
             {
                 PortraitText[1].Text = "(" @ VCR.GetTitle() @ ")";
@@ -4557,103 +4557,6 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
     }
 
     GC.LCDRepaint();
-}
-
-// Colin: Overriden to have the color be green if you are talking in a squad channel.
-function DisplayVoiceGain(Canvas C)
-{
-    local float VoiceGain;
-    local float PosY, PosX, XL, YL;
-    local string ActiveName;
-    local float IconSize, Scale, YOffset;
-    local color SavedColor;
-    local DHVoiceChatRoom VCR;
-
-    Scale = C.SizeY / 1200.0 * HudScale;
-
-    SavedColor = C.DrawColor;
-
-    C.DrawColor = WhiteColor;
-    C.Style = ERenderStyle.STY_Alpha;
-
-    VoiceGain = (1 - 3 * Min(Level.TimeSeconds - LastVoiceGainTime, 0.3333)) * LastVoiceGain;
-    YOffset = 12 * scale;
-    IconSize = VoiceMeterSize * Scale;
-    PosY = VoiceMeterY * C.ClipY - IconSize - YOffset;
-    PosX = VoiceMeterX * C.ClipX;
-
-    C.SetPos(PosX, PosY);
-    C.DrawTile(VoiceMeterBackground, IconSize, IconSize, 0, 0, VoiceMeterBackground.USize, VoiceMeterBackground.VSize);
-
-    NeedleRotator.Rotation.Yaw = -1 * ((20000 * VoiceGain) + 55000);
-
-    C.SetPos(PosX, PosY);
-    C.DrawTileScaled(NeedleRotator, scale * VoiceMeterSize / 128.0, scale * VoiceMeterSize / 128.0);
-
-    if (PlayerOwner != none)
-    {
-        VCR = DHVoiceChatRoom(PlayerOwner.ActiveRoom);
-
-        if (VCR != none)
-        {
-            ActiveName = VCR.GetTitle();
-        }
-    }
-
-    // Display name of currently active channel
-    if (PlayerOwner != none && PlayerOwner.ActiveRoom != none)
-    {
-        ActiveName = PlayerOwner.ActiveRoom.GetTitle();
-    }
-
-    // Remove for release
-    if (ActiveName == "")
-    {
-        ActiveName = "No Channel Selected!";
-    }
-
-    if (ActiveName != "")
-    {
-        C.SetPos(0, 0);
-
-        ActiveName = "(" @ ActiveName @ ")";
-
-        C.Font = GetFontSizeIndex(C, -2);
-
-        C.StrLen(ActiveName, XL, YL);
-
-        if (XL > 0.125 * C.ClipY)
-        {
-            C.Font = GetFontSizeIndex(C,-4);
-            C.StrLen(ActiveName,XL,YL);
-        }
-
-        C.SetPos(PosX + ((IconSize / 2) - (XL / 2)), PosY - YL);
-        C.DrawColor = C.MakeColor(160, 160, 160);
-
-        if (VCR != none && VCR.IsSquadChannel())
-        {
-            C.DrawColor = class'DHColor'.default.SquadColor;
-        }
-        else if (PlayerOwner != none && PlayerOwner.PlayerReplicationInfo != none)
-        {
-            if (PlayerOwner.PlayerReplicationInfo.Team != none)
-            {
-                if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == 0)
-                {
-                    C.DrawColor = class'DHColor'.default.TeamColors[0];
-                }
-                else
-                {
-                    C.DrawColor = class'DHColor'.default.TeamColors[1];
-                }
-            }
-        }
-
-        C.DrawText(ActiveName);
-    }
-
-    C.DrawColor = SavedColor;
 }
 
 exec function ShowDebug()
