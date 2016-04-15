@@ -11,16 +11,20 @@ var const string TouchMessage;
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;
-    local ObjectMap OM;
+    local TreeMap_string_Object OM;
     local class<Vehicle> VehicleClass;
     local PlayerController PC;
+    local Object O;
 
-    OM = ObjectMap(OptionalObject);
+    OM = TreeMap_string_Object(OptionalObject);
 
     if (OM != none)
     {
-        VehicleClass = class<Vehicle>(OM.Get("VehicleClass"));
-        PC = PlayerController(OM.Get("Controller"));
+        OM.Get("VehicleClass", O);
+        VehicleClass = class<Vehicle>(O);
+
+        OM.Get("Controller", O);
+        PC = PlayerController(O);
     }
 
     S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.TouchMessage, PC);

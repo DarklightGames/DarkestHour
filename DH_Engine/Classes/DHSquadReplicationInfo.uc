@@ -105,6 +105,9 @@ function Timer()
     // looking at the situation map. However, since the player may not have
     // all squadmates replicated on his machine, he needs another way to know
     // his squadmates' locations and rotations.
+    //
+    // The method below sends the position (X, Y) and rotation (Z) of each
+    // member in the players' squad every two seconds.
     for (C = Level.ControllerList; C != none; C = C.nextController)
     {
         PC = DHPlayer(C);
@@ -312,6 +315,8 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
                 VRI.JoinSquadChannel(PRI, TeamIndex, i);
             }
 
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 43);
+
             return i;
         }
     }
@@ -384,6 +389,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     local int TeamIndex;
     local DHPlayer PC;
     local DHVoiceReplicationInfo VRI;
+    local VoiceChatRoom SquadVCR, TeamVCR;
 
     if (PRI == none)
     {
@@ -425,16 +431,30 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
     SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
 
-    PRI.SquadIndex = -1;
-    PRI.SquadMemberIndex = -1;
-
     // Leave the squad voice channel
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
 
     if (VRI != none)
     {
-        VRI.LeaveSquadChannel(PRI, PRI.SquadIndex, PRI.SquadMemberIndex);
+        SquadVCR = VRI.GetSquadChannel(TeamIndex, PRI.SquadIndex);
+
+        if (SquadVCR != none)
+        {
+            TeamVCR = VRI.GetChannel("Team", TeamIndex);
+
+            Level.Game.ChangeVoiceChannel(PRI, TeamVCR.ChannelIndex, SquadVCR.ChannelIndex);
+
+            if (TeamVCR != none && TeamVCR.IsMember(PRI))
+            {
+                PC.ClientSetActiveRoom(TeamVCR.ChannelIndex);
+            }
+
+            PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
+        }
     }
+
+    PRI.SquadIndex = -1;
+    PRI.SquadMemberIndex = -1;
 
     PC.ClientLeaveSquadResult(SE_None);
 

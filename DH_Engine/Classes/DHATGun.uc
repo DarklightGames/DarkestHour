@@ -49,8 +49,8 @@ simulated function PostBeginPlay()
     // Set up new NotifyParameters object
     if (Level.NetMode != NM_DedicatedServer)
     {
-        NotifyParameters = new class'ObjectMap';
-        NotifyParameters.Insert("VehicleClass", Class);
+        NotifyParameters = new class'TreeMap_string_Object';
+        NotifyParameters.Put("VehicleClass", Class);
     }
 }
 
