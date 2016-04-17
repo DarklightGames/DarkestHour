@@ -1533,6 +1533,8 @@ function DrawPlayerNames(Canvas C)
     local float             FadeInTime, FadeOutTime;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
     local bool              bCanDrawName, bIsInMySquad;
+    local string            PlayerName;
+    local Vehicle           V;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -1680,13 +1682,21 @@ function DrawPlayerNames(Canvas C)
             C.DrawColor.A = byte(FMin(FadeInTime, FadeOutTime) * 255);
 
             ScreenLocation = C.WorldToScreen(PawnLocation);
+            PlayerName = P.PlayerReplicationInfo.PlayerName;
 
-            C.TextSize(P.PlayerReplicationInfo.PlayerName, TextSize.X, TextSize.Y);
+            V = Vehicle(P);
+
+            if (V != none && V.NumPassengers() > 1)
+            {
+                PlayerName @= "(+" $ V.NumPassengers() $ ")";
+            }
+
+            C.TextSize(PlayerName, TextSize.X, TextSize.Y);
             C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - (TextSize.Y * 0.5));
             C.DrawTile(PlayerNameIconMaterial, 16, 16, 0, 0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
             C.SetPos(ScreenLocation.X - TextSize.X * 0.5, ScreenLocation.Y - 32.0);
 
-            DrawShadowedTextClipped(C, P.PlayerReplicationInfo.PlayerName);
+            DrawShadowedTextClipped(C, PlayerName);
         }
     }
 }
