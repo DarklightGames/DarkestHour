@@ -14,6 +14,9 @@ replication
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
 
+var     float                   NameDrawStartTime;
+var     float                   LastNameDrawTime;
+
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
