@@ -97,6 +97,10 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+// Touch messages
+var     class<LocalMessage> TouchMessageClass;
+var     float               LastNotifyTime;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -4719,6 +4723,33 @@ simulated function DebugInitPlayer()
     Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
 }
 
+simulated function NotifySelected(Pawn User)
+{
+    local DHPawn P;
+
+    P = DHPawn(User);
+
+    if (P == none ||
+        Level.NetMode == NM_DedicatedServer ||
+        !User.IsHumanControlled() ||
+        ((Level.TimeSeconds - LastNotifyTime) < TouchMessageClass.default.LifeTime) ||
+        Health <= 0)
+    {
+        return;
+    }
+
+//    if (bWeaponNeedsReload)
+//    {
+        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        LastNotifyTime = Level.TimeSeconds;
+//    }
+//    else if (bWeaponNeedsResupply)
+//    {
+//        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+//        LastNotifyTime = Level.TimeSeconds;
+//    }
+}
+
 defaultproperties
 {
     StanceChangeStaminaDrain=1.5
@@ -4792,4 +4823,8 @@ defaultproperties
     // So unless Mesh is overridden in subclass, pawn spawn with inherited 'Characters_anm.ger_rifleman_tunic' mesh (many German roles do this)
     // That can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat'
+
+    bAutoTraceNotify=true
+    bCanAutoTraceSelect=true
+    TouchMessageClass=class'DHPawnTouchMessage'
 }

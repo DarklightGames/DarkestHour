@@ -13,8 +13,6 @@ const MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the
 
 const VOICE_ICON_DIST_MAX = 2624.672119;    // maximum distance from a talking player at which we will show a voice icon
 
-var Pawn                LastTalkingPawn;    // records last pawn for which we showed a voice icon, so we don't need to keep finding it
-
 var DHGameReplicationInfo   DHGRI;
 
 var int                 AlliedNationID;     // US = 0, Britain = 1, Canada = 2
@@ -24,7 +22,6 @@ var SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehi
 var SpriteWidget        MapIconCarriedRadio;
 var SpriteWidget        CanMantleIcon;
 var SpriteWidget        CanCutWireIcon;
-var SpriteWidget        VoiceIcon;
 var SpriteWidget        MapIconMortarHETarget;
 var SpriteWidget        MapIconMortarSmokeTarget;
 var SpriteWidget        MapIconMortarArrow;
@@ -63,8 +60,6 @@ var float               ObituaryDelayTime;
 var array<Obituary>     DHObituaries;         // replaced RO's Obituaries static array, so we can have more than 4 death messages
 var array<string>       ConsoleDeathMessages; // paired with DHObituaries array & holds accompanying console death messages
 
-// TODO: remove bShowVoiceIcon
-var globalconfig bool   bShowVoiceIcon;     // whether or not to show the voice icon above player's heads
 var globalconfig bool   bShowDeathMessages; // whether or not to show the death messages
 var globalconfig bool   bShowSquadMembers;  // whether or not to show the squad members list
 var globalconfig bool   bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -77,6 +72,7 @@ var bool                bDebugVehicleHitPoints; // show all vehicle's special hi
 var bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 
 var Material            PlayerNameIconMaterial;
+var Material            VoiceIconMaterial;
 var ArrayList_Object    NamedPawns;
 
 function PostBeginPlay()
@@ -834,12 +830,6 @@ simulated function DrawHudPassC(Canvas C)
             PortraitText[1].OffsetX = PortraitText[0].OffsetX;
             PortraitText[1].Tints[TeamIndex] = PortraitText[0].Tints[TeamIndex];
             DrawTextWidgetClipped(C, PortraitText[1], Coords);
-
-            // Draw the voice icon
-            if (bShowVoiceIcon)
-            {
-                DrawVoiceIcon(C);
-            }
         }
     }
 
@@ -1532,7 +1522,7 @@ function DrawPlayerNames(Canvas C)
     local int               i;
     local float             FadeInTime, FadeOutTime;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
-    local bool              bCanDrawName, bIsInMySquad;
+    local bool              bCanDrawName, bIsInMySquad, bIsTalking, bIsInMySquadOrTalking;
     local string            PlayerName;
     local Vehicle           V;
 
@@ -1561,7 +1551,8 @@ function DrawPlayerNames(Canvas C)
         {
             OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI))
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI) ||
+                OtherPRI == PortraitPRI)
             {
                 Pawns[Pawns.Length] = P;
             }
@@ -1620,12 +1611,15 @@ function DrawPlayerNames(Canvas C)
 
         if (OtherPRI == none)
         {
-            // Not sure how this would be possible, but put in for good measure.
+            // Not sure how this would be possible, but in for good measure.
             NamedPawns.Remove(i--);
             continue;
         }
 
+
         bIsInMySquad = class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI);
+        bIsTalking = (OtherPRI == PortraitPRI);
+        bIsInMySquadOrTalking = (bIsInMySquad || bIsTalking);
         bCanDrawName = false;
 
         // NOTE: There's no actual loop here, it's just a shortcut so we don't
@@ -1641,7 +1635,7 @@ function DrawPlayerNames(Canvas C)
             }
 
             // TODO: convert this to use VSizeSquared to make this faster.
-            if (P != HitPawn && ((bIsInMySquad && VSize(PawnLocation - ViewLocation) > class'DHUnits'.static.MetersToUnreal(25)) || !bIsInMySquad))
+            if (P != HitPawn && ((bIsInMySquadOrTalking && VSize(PawnLocation - ViewLocation) > class'DHUnits'.static.MetersToUnreal(25)) || !bIsInMySquadOrTalking))
             {
                 // We aren't directly looking at the player and they are outside
                 // of the specified radius.
@@ -1688,7 +1682,7 @@ function DrawPlayerNames(Canvas C)
 
             if (V != none && V.NumPassengers() > 1)
             {
-                PlayerName @= "(+" $ V.NumPassengers() $ ")";
+                PlayerName @= "(+" $ (V.NumPassengers() - 1) $ ")";
             }
 
             C.TextSize(PlayerName, TextSize.X, TextSize.Y);
@@ -1697,6 +1691,14 @@ function DrawPlayerNames(Canvas C)
             C.SetPos(ScreenLocation.X - TextSize.X * 0.5, ScreenLocation.Y - 32.0);
 
             DrawShadowedTextClipped(C, PlayerName);
+
+            if (bIsTalking)
+            {
+                // Set icon screen position & draw the voice icon
+                C.DrawColor = class'UColor'.default.White;
+                C.SetPos(ScreenLocation.X - 16, ScreenLocation.Y - 64.0);
+                C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
+            }
         }
     }
 }
@@ -3400,88 +3402,6 @@ simulated function UpdateHud()
     }
 }
 
-simulated function DrawVoiceIcon(Canvas C)
-{
-    local Pawn   P;
-    local float  Distance, Scale;
-    local vector ScreenPosition, VoiceLocation, VoiceDirection;
-    local bool   bFoundTalkingPawn;
-
-    if (PortraitPRI == none || PawnOwner == none || PlayerOwner == none)
-    {
-        return;
-    }
-
-    // Find the talking pawn, if we don't have one previously recorded or it's now a different player
-    if (LastTalkingPawn == none || LastTalkingPawn.PlayerReplicationInfo != PortraitPRI)
-    {
-        foreach RadiusActors(class'Pawn', P, VOICE_ICON_DIST_MAX, PawnOwner.Location)
-        {
-            if (P.PlayerReplicationInfo == PortraitPRI)
-            {
-                if (Vehicle(P) != none)
-                {
-                    LastTalkingPawn = Vehicle(P).Driver;
-                }
-                else
-                {
-                    LastTalkingPawn = P;
-                }
-
-                bFoundTalkingPawn = true;
-                break;
-            }
-        }
-
-        // No talking pawn was found in the radius, so lets set it to none so we don't show someone else talking
-        if (!bFoundTalkingPawn)
-        {
-            LastTalkingPawn = none;
-        }
-    }
-
-    if (LastTalkingPawn != none)
-    {
-        // Get location, direction & distance of the talking player
-        VoiceLocation = LastTalkingPawn.GetBoneCoords(LastTalkingPawn.HeadBone).Origin + vect(0.0, 0.0, 32.0);
-        VoiceDirection = VoiceLocation - PlayerOwner.CalcViewLocation;
-        Distance = VSize(VoiceDirection);
-
-        // Don't draw if player is too far away
-        if (Distance > VOICE_ICON_DIST_MAX)
-        {
-            return;
-        }
-
-        // Don't draw if player is behind us
-        if (Acos(Normal(VoiceDirection) dot vector(PlayerOwner.CalcViewRotation)) > 1.5705)
-        {
-            return;
-        }
-
-        // Scale down the voice icon's size & opacity, based on distance, so it is smaller & fainter the further away it is
-        // (apply a minimum, otherwise icon becomes very hard to see)
-        Scale = FMax(0.3, 1.0 - (Distance / VOICE_ICON_DIST_MAX));
-
-        VoiceIcon.TextureScale = Scale * default.VoiceIcon.TextureScale; // set size
-
-        // If the icon is behind world geometry, make it look faint (reduce scale to minimum before setting opacity)
-        if (Scale > 0.3 && !FastTrace(VoiceLocation, PlayerOwner.CalcViewLocation))
-        {
-            Scale = 0.3;
-        }
-
-        VoiceIcon.Tints[0].A = byte(Scale * 255.0); // set opacity
-
-        // Set icon screen position & draw the voice icon
-        ScreenPosition = C.WorldToScreen(VoiceLocation);
-        VoiceIcon.PosX = ScreenPosition.X / C.ClipX;
-        VoiceIcon.PosY = ScreenPosition.Y / C.ClipY;
-
-        DrawSpriteWidget(C, VoiceIcon);
-    }
-}
-
 // Modified to handle delay before displaying death messages, with fade in & out - Basnett, 2011
 function DisplayMessages(Canvas C)
 {
@@ -4621,7 +4541,7 @@ defaultproperties
     MapIconCarriedRadio=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     CanMantleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     CanCutWireIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    VoiceIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Communication.Voice',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=63),TextureScale=0.5,DrawPivot=DP_MiddleMiddle,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    VoiceIconMaterial=texture'DH_InterfaceArt_tex.Communication.Voice'
     MapIconMortarHETarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=127,Y1=0,X2=192,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarSmokeTarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
@@ -4651,7 +4571,6 @@ defaultproperties
     CanReloadText="Press %THROWMGAMMO% to assist reload"
     PlayerNameFontSize=1
     bShowDeathMessages=true
-    bShowVoiceIcon=true
     ObituaryFadeInTime=0.5
     ObituaryDelayTime=5.0
     LegendArtilleryRadioText="Artillery Radio"
