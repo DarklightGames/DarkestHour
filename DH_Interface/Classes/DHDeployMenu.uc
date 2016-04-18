@@ -1289,7 +1289,6 @@ function UpdateSquads()
 {
     local int i, j, MemberCount;
     local bool bIsInSquad, bIsSquadLocked, bIsSquadFull;
-    local DHSquadReplicationInfo SRI;
     local array<DHPlayerReplicationInfo> Members;
 
     if (SRI == none)

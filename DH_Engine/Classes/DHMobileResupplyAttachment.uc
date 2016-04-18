@@ -146,16 +146,9 @@ function Timer()
 
                     if (DHRI != none)
                     {
-                        if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
+                        if (!P.bUsedCarriedMGAmmo && DHRI.bCarriesMGAmmo)
                         {
-                            P.bHasMGAmmo = true;
-                            bResupplied = true;
-                        }
-
-                        if (!P.bHasATAmmo && DHRI.bCarriesATAmmo)
-                        {
-                            P.bHasATAmmo = true;
-
+                            P.bUsedCarriedMGAmmo = false;
                             bResupplied = true;
                         }
                     }
@@ -179,12 +172,6 @@ function Timer()
                         {
                             bResupplied = true;
                         }
-                    }
-
-                    if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
-                    {
-                        P.bHasMortarAmmo = true;
-                        bResupplied = true;
                     }
                 }
 

@@ -86,7 +86,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
+        ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
@@ -866,57 +866,85 @@ function ServerSaveMortarTarget(bool bIsSmoke)
 // Overridden to handle separate MG and AT resupply as well as assisted AT loading
 exec function ThrowMGAmmo()
 {
-    if (DHPawn(Pawn) == none)
+    local Actor HitActor;
+    local DHPawn MyPawn, OtherPawn;
+    local DHMortarVehicle M;
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local float TraceDistance;
+
+    MyPawn = DHPawn(Pawn);
+
+    if (MyPawn == none || MyPawn.bUsedCarriedMGAmmo)
     {
         return;
     }
 
-    if (DHHud(myHud).NamedPlayer != none)
+    // TODO: set trace start, trace end
+    MyPawn.EyePosition();
+
+    TraceDistance = class'DHUnits'.static.MetersToUnreal(2);
+    TraceStart = MyPawn.Location + MyPawn.EyePosition();
+    TraceEnd = TraceStart + (vector(Rotation) * TraceDistance);
+
+    // throw a trace out into the world and find who our potential reload/resupply target is
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+    if (HitActor == none)
     {
-        if (DHPawn(Pawn).bCanATReload)
-        {
-            ServerLoadATAmmo(DHHud(myHud).NamedPlayer);
-        }
-        else if (DHPawn(Pawn).bCanATResupply && DHPawn(Pawn).bHasATAmmo)
-        {
-            ServerThrowATAmmo(DHHud(myHud).NamedPlayer);
-        }
-        else if (DHPawn(Pawn).bCanMGResupply && (DHPawn(Pawn).bHasMGAmmo))
-        {
-            ServerThrowMGAmmo(DHHud(myHud).NamedPlayer);
-        }
-        else if (DHPawn(Pawn).bCanMortarResupply && (DHPawn(Pawn).bHasMortarAmmo))
-        {
-            ServerThrowMortarAmmo(DHHud(myHud).NamedPlayer);
-        }
+        return;
+    }
+
+    OtherPawn = DHPawn(HitActor);
+    M = DHMortarVehicle(HitActor);
+
+    if (OtherPawn != none)
+    {
+        ServerThrowMGAmmo(OtherPawn);
+    }
+    else if (M != none)
+    {
+        ServerThrowMortarAmmo(M);
     }
 }
 
 function ServerThrowMGAmmo(Pawn Gunner)
 {
-    DHPawn(Pawn).TossAmmo(Gunner);
-}
+    local DHPawn P;
 
-function ServerThrowATAmmo(Pawn Gunner)
-{
-    DHPawn(Pawn).TossAmmo(Gunner, true);
+    P = DHPawn(Pawn);
+
+    if (P != none && Gunner != none)
+    {
+        P.TossAmmo(Gunner);
+    }
 }
 
 function ServerThrowMortarAmmo(Pawn Gunner)
 {
-    if (DHMortarVehicle(Gunner) != none)
+    local DHPawn P;
+    local DHMortarVehicle M;
+
+    P = DHPawn(Pawn);
+    M = DHMortarVehicle(Gunner);
+
+    if (P == none || M == none)
     {
-        DHPawn(Pawn).TossMortarVehicleAmmo(DHMortarVehicle(Gunner));
+        return;
     }
-    else if (DHPawn(Gunner) != none)
-    {
-        DHPawn(Pawn).TossMortarAmmo(DHPawn(Gunner));
-    }
+
+    P.TossMortarVehicleAmmo(M);
 }
 
 function ServerLoadATAmmo(Pawn Gunner)
 {
-    DHPawn(Pawn).LoadWeapon(Gunner);
+    local DHPawn P;
+
+    P = DHPawn(Pawn);
+
+    if (P != none && Gunner != none)
+    {
+        P.LoadWeapon(Gunner);
+    }
 }
 
 // Matt: modified to avoid unnecessary Pawn.SaveConfig(), which saved block of pointless vehicle config variables to user.ini file every time player used behind view in a vehicle

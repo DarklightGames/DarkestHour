@@ -14,8 +14,6 @@ var     bool    bIsMortarObserver;
 var     bool    bIsArtilleryOfficer;
 
 var()   int     AddedReinforcementTime;
-var()   bool    bCarriesATAmmo;      // enable player to carry rocket anti-tank ammunition.
-var()   bool    bCarriesMortarAmmo;  // enable player to carry mortar ammunition.
 
 var array<float> HeadgearProbabilities;
 
@@ -147,7 +145,4 @@ defaultproperties
     HeadgearProbabilities(6)=0.0
     HeadgearProbabilities(7)=0.0
     HeadgearProbabilities(8)=0.0
-    bCarriesATAmmo=true
-    bCarriesMortarAmmo=true
-    bCarriesMGAmmo=true
 }
