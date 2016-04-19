@@ -1537,7 +1537,7 @@ function DrawPlayerNames(Canvas C)
     // or we are directly looking at.
     HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50) * vector(PlayerOwner.CalcViewRotation)), ViewLocation, true));
 
-    if (HitPawn != none)
+    if (HitPawn != none && HitPawn != PawnOwner)
     {
         Pawns[Pawns.Length] = HitPawn;
     }
@@ -1615,7 +1615,6 @@ function DrawPlayerNames(Canvas C)
             NamedPawns.Remove(i--);
             continue;
         }
-
 
         bIsInMySquad = class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI);
         bIsTalking = (OtherPRI == PortraitPRI);

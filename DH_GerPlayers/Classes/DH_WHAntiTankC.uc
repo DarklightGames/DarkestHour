@@ -8,7 +8,6 @@ class DH_WHAntiTankC extends DH_HeerCamo;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

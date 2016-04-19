@@ -8,7 +8,6 @@ class DH_WHAntiTank_Snow extends DH_HeerSnow;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

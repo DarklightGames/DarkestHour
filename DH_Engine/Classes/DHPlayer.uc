@@ -874,19 +874,15 @@ exec function ThrowMGAmmo()
 
     MyPawn = DHPawn(Pawn);
 
-    if (MyPawn == none || MyPawn.bUsedCarriedMGAmmo)
+    if (MyPawn == none)
     {
         return;
     }
-
-    // TODO: set trace start, trace end
-    MyPawn.EyePosition();
 
     TraceDistance = class'DHUnits'.static.MetersToUnreal(2);
     TraceStart = MyPawn.Location + MyPawn.EyePosition();
     TraceEnd = TraceStart + (vector(Rotation) * TraceDistance);
 
-    // throw a trace out into the world and find who our potential reload/resupply target is
     HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
     if (HitActor == none)
@@ -899,7 +895,19 @@ exec function ThrowMGAmmo()
 
     if (OtherPawn != none)
     {
-        ServerThrowMGAmmo(OtherPawn);
+        Log("MyPawn.bUsedCarriedMGAmmo" @ MyPawn.bUsedCarriedMGAmmo);
+        Log("OtherPawn.bWeaponNeedsResupply" @ OtherPawn.bWeaponNeedsResupply);
+        Log("OtherPawn.bWeaponNeedsReload" @ OtherPawn.bWeaponNeedsReload);
+
+        if (!MyPawn.bUsedCarriedMGAmmo && OtherPawn.bWeaponNeedsResupply)
+        {
+            ServerThrowMGAmmo(OtherPawn);
+        }
+
+        if (OtherPawn.bWeaponNeedsReload)
+        {
+            ServerLoadATAmmo(OtherPawn);
+        }
     }
     else if (M != none)
     {
@@ -3398,6 +3406,18 @@ function ServerSquadSay(string Msg)
     if (G != none)
     {
         G.BroadcastSquad(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'SquadSay');
+    }
+}
+
+exec function OrderMenu()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none && PRI.IsSquadLeader())
+    {
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadOrderInteraction", Player);
     }
 }
 

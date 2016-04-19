@@ -33,22 +33,34 @@ enum ESquadError
     SE_InvalidState
 };
 
-enum ESquadOrder
+enum ESquadOrderType
 {
-    SO_Attack,
-    SO_Defend,
-    SO_Move,
-    SO_Fire
+    ORDER_None,
+    ORDER_Attack,
+    ORDER_Defend,
+    ORDER_Count
+};
+
+enum ESquadSignalType
+{
+    SIGNAL_None,
+    SIGNAL_Fire,
+    SIGNAL_Move,
+    SIGNAL_Count
 };
 
 // This nightmare is necessary because UnrealScript cannot replicate structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AxisNames[TEAM_SQUADS_MAX];
 var private byte                    AxisLocked[TEAM_SQUADS_MAX];
+var private ESquadOrderType         AxisOrderTypes[TEAM_SQUADS_MAX];
+var private vector                  AxisOrderLocations[TEAM_SQUADS_MAX];
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
 var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
+var private ESquadOrderType         AlliesOrderTypes[TEAM_SQUADS_MAX];
+var private vector                  AlliesOrderLocations[TEAM_SQUADS_MAX];
 
 var private array<string>           AlliesDefaultSquadNames;
 var private array<string>           AxisDefaultSquadNames;
@@ -76,6 +88,7 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // TODO: make sure invitations can't be sent so damned frequently!
         InvitationExpirations = new class'TreeMap_Object_float';
 
         AxisSquadSize = Clamp(AxisSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
@@ -451,6 +464,13 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
             PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
         }
+    }
+
+    if (!IsSquadActive(TeamIndex, PRI.SquadIndex))
+    {
+        // Squad is now empty, so clear the orders so that if the squad becomes
+        // active again, there aren't leftover orders sitting around.
+        InternalSetSquadOrder(TeamIndex, PRI.SquadIndex, ORDER_None, vect(0, 0, 0));
     }
 
     PRI.SquadIndex = -1;
@@ -909,6 +929,107 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
             break;
         case ALLIES_TEAM_INDEX:
             AlliesNames[SquadIndex] = Name;
+            break;
+        default:
+            break;
+    }
+}
+
+//==============================================================================
+// SQUAD ORDERS
+//==============================================================================
+
+simulated function bool GetSquadOrder(int TeamIndex, int SquadIndex, out ESquadOrderType Type, out vector Location)
+{
+    if (!IsSquadActive(TeamIndex, SquadIndex))
+    {
+        return false;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            Type = AxisOrderTypes[SquadIndex];
+            Location = AxisOrderLocations[SquadIndex];
+            break;
+        case ALLIES_TEAM_INDEX:
+            Type = AlliesOrderTypes[SquadIndex];
+            Location = AlliesOrderLocations[SquadIndex];
+            break;
+        default:
+            return false;
+    }
+
+    return true;
+}
+
+function ClearSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+{
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
+    {
+        return;
+    }
+
+    InternalSetSquadOrder(TeamIndex, SquadIndex, ORDER_None);
+}
+
+function SetSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadOrderType Type, vector Location)
+{
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
+    {
+        return;
+    }
+
+    InternalSetSquadOrder(TeamIndex, SquadIndex, Type, Location);
+}
+
+private function InternalSetSquadOrder(int TeamIndex, int SquadIndex, ESquadOrderType Type, optional vector Location)
+{
+    local ESquadOrderType CurrentType;
+    local vector CurrentLocation;
+
+    if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
+    {
+        return;
+    }
+
+    GetSquadOrder(TeamIndex, SquadIndex, CurrentType, CurrentLocation);
+
+    if (CurrentType == ORDER_None && Type == ORDER_None)
+    {
+        // If an order is already cleared, don't bother continuing.
+        return;
+    }
+
+    if (CurrentType == Type && CurrentLocation == Location)
+    {
+        // The type and location are the same, so don't bother continuing.
+        return;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisOrderTypes[SquadIndex] = Type;
+            AxisOrderLocations[SquadIndex] = Location;
+            AxisOrderLocations[SquadIndex].Z = Level.TimeSeconds;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesOrderTypes[SquadIndex] = Type;
+            AlliesOrderLocations[SquadIndex] = Location;
+            AlliesOrderLocations[SquadIndex].Z = Level.TimeSeconds;
+            break;
+        default:
+            return;
+    }
+
+    switch (Type)
+    {
+        case ORDER_Attack:
+            //BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadOrderMessage', 1);
+            break;
+        case ORDER_Defend:
+            //BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadOrderMessage', 2);
             break;
         default:
             break;

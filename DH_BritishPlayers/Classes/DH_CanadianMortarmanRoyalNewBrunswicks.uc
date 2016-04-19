@@ -8,7 +8,6 @@ class DH_CanadianMortarmanRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Mortar Operator"
     Article="a "

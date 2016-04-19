@@ -8,7 +8,6 @@ class DH_USAntiTank3rd extends DH_US_3rd_Infantry;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

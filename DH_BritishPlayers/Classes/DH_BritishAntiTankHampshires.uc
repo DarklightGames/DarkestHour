@@ -8,7 +8,6 @@ class DH_BritishAntiTankHampshires extends DH_Hampshires;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Tank Hunter"
     Article="a "

@@ -8,7 +8,6 @@ class DH_WSSMortarman_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "

@@ -8,7 +8,6 @@ class DH_WHAntiTank extends DH_Heer;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

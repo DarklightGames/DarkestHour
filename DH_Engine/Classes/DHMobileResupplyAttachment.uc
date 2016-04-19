@@ -87,7 +87,7 @@ function Timer()
 //  local bool bEnemyGrenadeFound, bEnemySmokeFound; // not used
     local DHPawn P;
     local Vehicle V;
-    local DHRoleInfo DHRI;
+    local DHRoleInfo RI;
 
     ProcessActorLeave();
 
@@ -124,7 +124,9 @@ function Timer()
             if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
             {
                 if (P != none)
-                    DHRI = P.GetRoleInfo();
+                {
+                    RI = P.GetRoleInfo();
+                }
 
                 if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
                 {
@@ -144,13 +146,13 @@ function Timer()
                         }
                     }
 
-                    if (DHRI != none)
+                    Log("RI != none" @ RI != none);
+                    Log("P.bUsedCarriedMGAmmo" @ P.bUsedCarriedMGAmmo);
+
+                    if (RI != none && P.bUsedCarriedMGAmmo)
                     {
-                        if (!P.bUsedCarriedMGAmmo && DHRI.bCarriesMGAmmo)
-                        {
-                            P.bUsedCarriedMGAmmo = false;
-                            bResupplied = true;
-                        }
+                        P.bUsedCarriedMGAmmo = false;
+                        bResupplied = true;
                     }
                 }
 
@@ -164,9 +166,9 @@ function Timer()
                 }
 
                 //Mortar specific resupplying.
-                if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none)
+                if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && RI != none)
                 {
-                    if (DHRI.bCanUseMortars)
+                    if (RI.bCanUseMortars)
                     {
                         if (P.ResupplyMortarAmmunition())
                         {

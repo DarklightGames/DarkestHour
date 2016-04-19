@@ -25,7 +25,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetSnow'
-    bCarriesMGAmmo=false
     PrimaryWeaponType=WT_LMG
     Limit=2
 }

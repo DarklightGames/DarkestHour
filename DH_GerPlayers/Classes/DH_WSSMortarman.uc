@@ -8,7 +8,6 @@ class DH_WSSMortarman extends DH_WaffenSS;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "

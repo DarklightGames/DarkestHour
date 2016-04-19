@@ -271,11 +271,7 @@ function PossessedBy(Controller C)
 
             // We've now been possessed
             bHasBeenPossessed = true;
-
-            if (DHRI.bCarriesMGAmmo)
-            {
-                bUsedCarriedMGAmmo = false;
-            }
+            bUsedCarriedMGAmmo = false;
 
             // Give default mortar ammunition. (TODO: this is horrible!)
             if (DHRI.bCanUseMortars)
@@ -4737,14 +4733,14 @@ simulated function NotifySelected(Pawn User)
         return;
     }
 
-    if (bWeaponNeedsReload)
+    if (!P.bUsedCarriedMGAmmo && bWeaponNeedsResupply)
     {
         P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
         LastNotifyTime = Level.TimeSeconds;
     }
-    else if (bWeaponNeedsResupply)
+    else if (bWeaponNeedsReload)
     {
-        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        P.ReceiveLocalizedMessage(TouchMessageClass, 1, self.PlayerReplicationInfo,, User.Controller);
         LastNotifyTime = Level.TimeSeconds;
     }
 }
@@ -4826,4 +4822,10 @@ defaultproperties
     bAutoTraceNotify=true
     bCanAutoTraceSelect=true
     TouchMessageClass=class'DHPawnTouchMessage'
+
+    StaminaRecoveryRate=1.15
+    CrouchStaminaRecoveryRate=1.3
+    ProneStaminaRecoveryRate=1.5
+    SlowStaminaRecoveryRate=0.5
 }
+

@@ -232,4 +232,16 @@ defaultproperties
     b_SpawnVehicles(5)=SpawnVehicleButton
     b_SpawnVehicles(6)=SpawnVehicleButton
     b_SpawnVehicles(7)=SpawnVehicleButton
+
+    Begin Object Class=GUIContextMenu Name=RCMenu
+        ContextItems(0)="Attack"
+        ContextItems(1)="Defend"
+        ContextItems(2)="-"
+        ContextItems(3)="Clear"
+        //OnOpen=DHGUIMapComponent.InternalOnOpen
+        //OnClose=DHGUIMapComponent.InternalOnClose
+        //OnSelect=DHGUIMapComponent.InternalOnClick
+    End Object
+    ContextMenu=GUIContextMenu'DH_Interface.DHGUIMapComponent.RCMenu'
 }
+

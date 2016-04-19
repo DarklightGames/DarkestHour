@@ -8,7 +8,6 @@ class DH_USAntiTank506101st extends DH_US_506PIR;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

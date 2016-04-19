@@ -8,7 +8,6 @@ class DH_WHMortarman_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "
