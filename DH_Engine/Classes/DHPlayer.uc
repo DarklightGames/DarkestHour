@@ -2134,7 +2134,7 @@ function ClientFadeFromBlack(float time, optional bool bInvertFadeDirection)
 // This might be a temporary function then that will need removed for non dev work
 exec function Suicide()
 {
-    if (Pawn != none && Level.TimeSeconds - Pawn.LastStartTime > 1)
+    if (Pawn != none && Level.TimeSeconds - Pawn.LastStartTime > 1.0)
     {
         Pawn.Suicide();
     }

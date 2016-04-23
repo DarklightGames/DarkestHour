@@ -480,7 +480,7 @@ static function font GetPlayerNameFont(Canvas C)
 }
 
 // Modified to set a reference to the DHGRI, as soon as we can (can't do it in a BeginPlay event as net client won't yet have received GRI)
-simulated event PostRender(canvas Canvas)
+simulated event PostRender(Canvas Canvas)
 {
     if (DHGRI == none && PlayerOwner != none)
     {
@@ -911,7 +911,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Coords2.PosX = 0.0;
     Coords2.PosY = 0.0;
     Coords2.Width = Canvas.ClipX;
-    Coords2.Height = canvas.ClipY;
+    Coords2.Height = Canvas.ClipY;
 
     // Set initial passenger PosX (shifted if we're drawing ammo info, else it's draw closer to the tank icon)
     VehicleOccupantsText.PosX = default.VehicleOccupantsText.PosX;

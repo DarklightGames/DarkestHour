@@ -381,7 +381,6 @@ event PawnWhizzed(vector WhizLocation, int WhizType)
     // WhizLocation has been calculated by native code & we save it as a non-replicated variable (instead of using mWhizSoundLocation, which would pointlessly replicate)
     if (WhizType == 255)
     {
-        log("PawnWhizzed event called with special WT 4, so just recording WhizLocation" @ WhizLocation @ " time elapsed =" @ Level.TimeSeconds - LastWhippedTime);
         LastWhippedTime = Level.TimeSeconds;
         LastWhizLocation = WhizLocation;
     }

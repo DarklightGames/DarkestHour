@@ -838,7 +838,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     // bDesiredBehindView may be true in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
     bDesiredBehindView = false;
 
-    // Engine start/stop hint
+    // Hints re engine start/stop & use of deploy vehicles
     P = DHPlayer(PC);
 
     if (P != none)

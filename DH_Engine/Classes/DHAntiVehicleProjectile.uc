@@ -1094,7 +1094,7 @@ function DebugShotDistanceAndSpeed()
     }
 }
 
-// Matt: based on HandleShellDebug from cannon class, but may as well do it here as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
+// Matt: based on HandleShellDebug from cannon class, but may as well do it here as we have saved TraceHitLoc in PostNetBeginPlay if bDebugBallistics is true
 // Modified to avoid confusing "bullet drop" text and to add shell drop in both cm and inches (accurately converted)
 simulated function HandleShellDebug(vector RealHitLocation)
 {

@@ -266,7 +266,7 @@ function FightEnemy(bool bCanCharge, float EnemyStrength)
 
     if (Squad == none || Enemy == none || Pawn == none)
     {
-        log("HERE 3 Squad" @ Squad @ "Enemy" @ Enemy @ "Pawn" @ Pawn);
+        Log("HERE 3 Squad" @ Squad @ "Enemy" @ Enemy @ "Pawn" @ Pawn);
     }
 
     if (Vehicle(Pawn) != none)

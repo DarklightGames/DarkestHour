@@ -83,7 +83,7 @@ function SpawnVehicle()
         }
         else
         {
-            log("Spawned vehicle failed for" @ self);
+            Log("Spawned vehicle failed for" @ self);
         }
     }
 }
