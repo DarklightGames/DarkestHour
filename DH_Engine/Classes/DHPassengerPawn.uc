@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHPassengerPawn extends ROPassengerPawn
+class DHPassengerPawn extends DHVehicleWeaponPawn
     abstract;
 
 /**
@@ -31,7 +31,7 @@ var     array<class<DHPassengerPawn> >  PassengerClasses;
 
 var     bool    bNeedToInitializeDriver;     // clientside flag that we need to do some player set up, once we receive the Driver actor
 var     bool    bNeedToStoreVehicleRotation; // clientside flag that we need to set StoredVehicleRotation, once we receive the VehicleBase actor
-
+var     bool    bUseDriverHeadBoneCam;       // use the driver's head bone for the camera location
 var     bool    bDebugExitPositions;
 
 replication
@@ -40,6 +40,10 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerToggleDebugExits; // in debug mode only
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************** ACTOR INITIALISATION & DESTRUCTION  ********************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
 simulated function PostBeginPlay()
@@ -62,6 +66,10 @@ simulated function PostNetBeginPlay()
         bNeedToInitializeDriver = true;
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***************************** KEY ENGINE EVENTS  ******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Sets bTearOff to true on a server when player exits, purely so server decides the actor is no longer net relevant, kills off the clientside actor & closes the net channel
 // But we don't want the clientside actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
@@ -175,6 +183,11 @@ simulated function SetPassengerProperties()
         }
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *******************************  VIEW/DISPLAY  ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Modified to avoid "accessed none" errors on VehicleBase & to generally optimise & match other DH vehicle classes
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
@@ -216,15 +229,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
-// Emptied out to prevent unnecessary replicated function calls to server
-function Fire(optional float F)
-{
-}
-
-function AltFire(optional float F)
-{
-}
-
 // Modified to remove everything except drawing basic vehicle HUD info
 simulated function DrawHUD(Canvas C)
 {
@@ -238,6 +242,21 @@ simulated function DrawHUD(Canvas C)
         ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
     }
 }
+
+// From ROPassengerPawn
+simulated function vector GetCameraLocationStart()
+{
+    if (VehicleBase != none)
+    {
+        return VehicleBase.GetBoneCoords(CameraBone).Origin;
+    }
+
+    return Location;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************** VEHICLE ENTRY  ******************************** //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to fix bug where you couldn't switch between rider positions if a tanker hadn't yet entered the tank, & to remove obsolete stuff & duplication from the Supers
 function bool TryToDrive(Pawn P)
@@ -282,10 +301,12 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
-// Also to set rotation to match the way the rider is facing, so his view starts facing the same way
+// Modified (in deprecated ROPassengerPawn) to remove any 'Gun' references
+// Further modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
+// Also to set rotation to match the way the rider is facing, so his view starts facing the same way, & to remove redundancy & optimise the ordering of the function
 function KDriverEnter(Pawn P)
 {
+    local Controller C;
     local rotator NewRotation;
 
     // On a server, disable bTearOff so this actor replicates to relevant net clients
@@ -295,10 +316,32 @@ function KDriverEnter(Pawn P)
         bTearOff = false;     // don't need to do quick net update as normal entering sequence already does it
     }
 
-    super.KDriverEnter(P);
+    bDriving = true;
+    StuckCount = 0;
 
+    // Set player's current controller to control this vehicle pawn instead & make the player our 'Driver'
+    C = P.Controller;
+    Driver = P;
+    Driver.StartDriving(self);
+
+    // Make the player unpossess its DHPawn body & possess this vehicle pawn
+    C.bVehicleTransition = true; // to keep Bots from doing Restart()
+    C.Unpossess();
+    Driver.SetOwner(self); // this keeps the driver relevant
+    C.Possess(self);
+    C.bVehicleTransition = false;
+    DrivingStatusChanged();
+    Level.Game.DriverEnteredVehicle(self, P);
+
+    // Match player's rotation to match the way the rider is facing, so his view starts facing the same way
     NewRotation.Yaw = DriveRot.Yaw;
     SetRotation(NewRotation);
+    Driver.bSetPCRotOnPossess = false; // so when player gets out, he'll be facing the same direction as he was in the vehicle
+
+    if (PlayerController(C) != none)
+    {
+        VehicleLostTime = 0.0;
+    }
 }
 
 // Matt: modified to work around common problems on net clients when deploying into a spawn vehicle, caused by replication timing issues (see notes in DHVehicleMGPawn.ClientKDriverEnter)
@@ -357,16 +400,9 @@ simulated function AttachDriver(Pawn P)
     }
 }
 
-// Modified to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
-simulated function DetachDriver(Pawn P)
-{
-    P.PrePivot = P.default.PrePivot;
-
-    if (VehicleBase != none)
-    {
-        VehicleBase.DetachFromBone(P);
-    }
-}
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************** VEHICLE EXIT  ********************************* //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to add clientside checks before sending the function call to the server
 // Optimises network performance generally & specifically avoids a rider camera bug when unsuccessfully trying to switch to another vehicle position
@@ -570,6 +606,56 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+// Modified to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
+simulated function DetachDriver(Pawn P)
+{
+    P.PrePivot = P.default.PrePivot;
+
+    if (VehicleBase != none)
+    {
+        VehicleBase.DetachFromBone(P);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *******************************  MISCELLANEOUS ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Emptied out as we don't have a GunClass to cache (from ROPassengerPawn)
+static function StaticPrecache(LevelInfo L)
+{
+}
+
+// From ROPassengerPawn
+simulated function bool PointOfView()
+{
+    return false;
+}
+
+// Emptied out to prevent unnecessary replicated function calls to server
+function Fire(optional float F)
+{
+}
+
+function AltFire(optional float F)
+{
+}
+
+// From ROPassengerPawn
+function float ModifyThreat(float Current, Pawn Threat)
+{
+    if (Vehicle(Threat) != none)
+    {
+        return Current - 1.5;
+    }
+
+    return Current + 1.0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
 // Allows debugging exit positions to be toggled for all rider pawns
 exec function ToggleDebugExits()
 {
@@ -590,13 +676,16 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
+    bPassengerOnly=true
     bSinglePositionExposed=true
     bKeepDriverAuxCollision=true
-    DriverDamageMult=1.0
-    DrivePos=(X=0.0,Y=0.0,Z=0.0)
-    FPCamPos=(X=0.0,Y=0.0,Z=0.0)
+    bUseDriverHeadBoneCam=true
     WeaponFOV=90.0
-    TPCamDistance=200.0
+    bHasAltFire=false
+    HudName="Rider"
+    TPCamDistance=200.0 // TEST - others are 300?
+    TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
+    TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
     PassengerClasses(1)=class'DH_Engine.DHPassengerPawnOne'
@@ -613,6 +702,7 @@ defaultproperties
     bPCRelativeFPRotation=true
     bZeroPCRotOnEntry=false
     bSetPCRotOnPossess=false
+    bFPNoZFromCameraPitch=false
     bAllowViewChange=false
     bDesiredBehindView=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset (but shouldn't need to, as we use player's head bone for camera location)

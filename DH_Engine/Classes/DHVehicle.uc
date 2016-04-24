@@ -769,7 +769,7 @@ function bool TryToDrive(Pawn P)
         for (i = FirstRiderPositionIndex; i < WeaponPawns.Length; ++i)
         {
             // If it's a passenger pawn & the position is free, then climb aboard
-            if (ROPassengerPawn(WeaponPawns[i]) != none && WeaponPawns[i].Driver == none)
+            if (DHPassengerPawn(WeaponPawns[i]) != none && WeaponPawns[i].Driver == none)
             {
                 WeaponPawns[i].KDriverEnter(P);
 
