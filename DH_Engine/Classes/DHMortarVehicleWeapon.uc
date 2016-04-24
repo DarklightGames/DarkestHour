@@ -94,7 +94,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     Y = Normal(Y);
 
     SpawnLocation = GetBoneCoords(WeaponFireAttachmentBone).Origin;
-    SpawnRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, class'DHLib'.static.DegreesToRadians(-Elevation)), X));
+    SpawnRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
 
     if (!bDebugNoSpread)
     {
