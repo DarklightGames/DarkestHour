@@ -5,10 +5,11 @@
 
 class DH_Stug3GMountedMGPawn extends DHVehicleMGPawn;
 
-// Can't fire unless unbuttoned & controlling the external MG
+// Can't fire unless unbuttoned & controlling the external MG (not on binocs)
 function bool CanFire()
 {
-    return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex);
+    return (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > DriverPositionIndex))
+        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex);
 }
 
 // Modified to show a hint that player must be buttoned to fire, but unbuttoned to reload the remote controlled external MG
