@@ -373,7 +373,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 {
                     if (FireMode == GetPendingRoundIndex()) // don't toggle if we already have a different pending ammo type selected
                     {
-                        ToggleRoundType();
+                        ToggleRoundType(true);// true signifies forced switch, not manual choice, making it try to switch to primary ammo, rather than strictly cycle ammo choice
                     }
 
                     ProjectileClass = PendingProjectileClass;
@@ -1151,7 +1151,7 @@ simulated function bool ReadyToFire(bool bAltFire)
 }
 
 // Modified to handle DH's extended ammo system
-function ToggleRoundType()
+function ToggleRoundType(optional bool bForcedSwitch)
 {
     if (PendingProjectileClass == PrimaryProjectileClass)
     {
@@ -1166,13 +1166,14 @@ function ToggleRoundType()
     }
     else if (PendingProjectileClass == SecondaryProjectileClass)
     {
-        if (HasAmmo(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-        else if (HasAmmo(0))
+        // bForcedSwitch option is passed if we have run out of ammo, meaning if it was secondary ammo then we try to switch back to primary instead of tertiary
+        if ((bForcedSwitch || !HasAmmo(2)) && HasAmmo(0))
         {
             PendingProjectileClass = PrimaryProjectileClass;
+        }
+        else if (HasAmmo(2))
+        {
+            PendingProjectileClass = TertiaryProjectileClass;
         }
     }
     else if (PendingProjectileClass == TertiaryProjectileClass)

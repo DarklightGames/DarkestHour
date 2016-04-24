@@ -407,7 +407,7 @@ function HandleCannonReload(optional bool bIsManualReload)
         {
             if (!bIsManualReload)
             {
-                ToggleRoundType();
+                ToggleRoundType(true);// true signifies forced switch, not manual choice, making it try to switch to primary ammo, rather than strictly cycle ammo choice
             }
 
             // Abort reload if we still don't have a spare mag (so must be completely out of cannon ammo) or if player reloads/switches manually
@@ -502,7 +502,7 @@ simulated function Timer()
 }
 
 // Modified as this cannon uses magazines
-function ToggleRoundType()
+function ToggleRoundType(optional bool bForcedSwitch)
 {
     if (PendingProjectileClass == PrimaryProjectileClass)
     {
@@ -517,13 +517,14 @@ function ToggleRoundType()
     }
     else if (PendingProjectileClass == SecondaryProjectileClass)
     {
-        if (HasMagazines(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-        else if (HasMagazines(0))
+        // bForcedSwitch option is passed if we have run out of ammo, meaning if it was secondary ammo then we try to switch back to primary instead of tertiary
+        if ((bForcedSwitch || !HasMagazines(2)) && HasMagazines(0))
         {
             PendingProjectileClass = PrimaryProjectileClass;
+        }
+        else if (HasMagazines(2))
+        {
+            PendingProjectileClass = TertiaryProjectileClass;
         }
     }
     else if (PendingProjectileClass == TertiaryProjectileClass)
