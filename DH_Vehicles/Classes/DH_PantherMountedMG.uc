@@ -11,6 +11,6 @@ defaultproperties
     MaxNegativeYaw=-4500
     CustomPitchUpLimit=2730
     CustomPitchDownLimit=64000
-    NumMags=9
+    NumMGMags=9
     FireEffectOffset=(X=-50.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
 }

@@ -628,7 +628,7 @@ function Vehicle FindEntryVehicle(bool bCanBeTankCrew, ROVehicle V)
         if (WP != none)
         {
             // If weapon pawn is not a passenger slot (i.e. it's an MG or cannon), skip it on this 1st pass, but record it to check later if we don't find a valid passenger slot
-            if (!WP.IsA('ROPassengerPawn'))
+            if (!WP.IsA('DHPassengerPawn'))
             {
                 RealWeaponPawns[RealWeaponPawns.Length] = WP;
                 continue;

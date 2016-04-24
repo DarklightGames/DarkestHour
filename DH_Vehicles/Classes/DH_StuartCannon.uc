@@ -22,18 +22,18 @@ defaultproperties
     FrontRightAngle=37.0
     RearRightAngle=143.0
     RearLeftAngle=217.0
-    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
     CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     ProjectileDescriptions(2)="Canister"
     AddedPitch=18
-    NumAltMags=6
-    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    AltFireTracerFrequency=5
+    NumMGMags=6
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerFrequency=5
     WeaponFireOffset=12.5
     AltFireOffset=(X=-59.0,Y=7.0,Z=0.5)
     AltFireInterval=0.12

@@ -7,6 +7,6 @@ class DH_PanzerIIIMountedMG extends DH_PanzerIVMountedMG;
 
 defaultproperties
 {
-    NumMags=8
+    NumMGMags=8
     FireEffectOffset=(X=20.0,Y=-10.0,Z=5.0)
 }

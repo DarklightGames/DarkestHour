@@ -5,13 +5,13 @@
 
 class DH_ShermanCannonA_76mm extends DHVehicleCannon;
 
-// Modified to use different CannonAttachmentOffset if 76mm turret is used with an M4A3 Sherman hull
+// Modified to use different WeaponAttachOffset if 76mm turret is used with an M4A3 Sherman hull
 // (a little hacky but saves having separate cannon & cannon pawn classes for the M4A3 & variants)
 simulated function InitializeVehicleBase()
 {
     if (DH_ShermanTank_M4A376W(Base) != none)
     {
-        CannonAttachmentOffset = vect(1.0, -1.0, 0.0);
+        WeaponAttachOffset = vect(1.0, -1.0, 0.0);
     }
 
     super.InitializeVehicleBase();
@@ -37,19 +37,19 @@ defaultproperties
     FrontRightAngle=38.0
     RearRightAngle=142.0
     RearLeftAngle=218.0
-    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
-    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
     AddedPitch=52
-    NumAltMags=6
-    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    AltFireTracerFrequency=5
+    NumMGMags=6
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerFrequency=5
     WeaponFireAttachmentBone="barrelA"
     WeaponFireOffset=1.5
     AltFireOffset=(X=-178.0,Y=-21.0,Z=2.0)
@@ -69,7 +69,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    CannonAttachmentOffset=(X=-1.0,Y=-1.0,Z=0.0) // this is for M4A1; X=1 works better on M4A3 hull
+    WeaponAttachOffset=(X=-1.0,Y=-1.0,Z=0.0) // this is for M4A1; X=1 works better on M4A3 hull
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_extA'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'

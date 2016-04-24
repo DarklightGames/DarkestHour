@@ -36,7 +36,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialPrimaryAmmo=50
-    NumMags=12
+    NumMGMags=12
     FireInterval=0.07059
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
@@ -54,8 +54,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Bipod_Reload_s"
-    ReloadSounds[0]=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
-    ReloadSounds[1]=(Sound=none,Duration=1.94)
-    ReloadSounds[2]=(Sound=none,Duration=2.12)
-    ReloadSounds[3]=(Sound=none,Duration=1.32)
+    ReloadStages(0)=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
+    ReloadStages(1)=(Sound=none,Duration=1.94)
+    ReloadStages(2)=(Sound=none,Duration=2.12)
+    ReloadStages(3)=(Sound=none,Duration=1.32)
 }

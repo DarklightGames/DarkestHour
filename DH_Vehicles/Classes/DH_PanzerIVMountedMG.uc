@@ -22,7 +22,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialPrimaryAmmo=150
-    NumMags=5
+    NumMGMags=5
     FireInterval=0.07059
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7

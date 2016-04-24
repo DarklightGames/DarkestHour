@@ -105,9 +105,9 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
     AltFireProjectileClass=none
-    NumMags=12
-    NumSecMags=4
-    NumTertMags=4
+    NumPrimaryMags=12
+    NumSecondaryMags=4
+    NumTertiaryMags=4
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=20
@@ -119,9 +119,9 @@ defaultproperties
 
     // Animations
     BeginningIdleAnim="optic_idle"
-    TankShootClosedAnim="shoot_optic"
+    ShootLoweredAnim="shoot_optic"
     ShootIntermediateAnim="shoot_opensight"
-    TankShootOpenAnim="shoot_lookover"
+    ShootRaisedAnim="shoot_lookover"
     SightBone="Sight_arm"
     TraverseWheelBone="Traverse_wheel"
     ElevationWheelBone="Elevation_wheel"

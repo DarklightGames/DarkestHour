@@ -17,46 +17,19 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 }
 
 // From Sd.Kfz.234/1 cannon pawn
-simulated exec function ROManualReload()
-{
-    if (DH_Sdkfz2341Cannon(Cannon) != none && Cannon.CannonReloadState == CR_Waiting && DH_Sdkfz2341Cannon(Cannon).HasMagazines(Cannon.GetPendingRoundIndex())
-        && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
-    {
-        Cannon.ServerManualReload();
-    }
-}
-
-// From Sd.Kfz.234/1 cannon pawn
-function Fire(optional float F)
-{
-    if (CanFire() && Cannon != none)
-    {
-        if (Cannon.CannonReloadState == CR_ReadyToFire && Cannon.bClientCanFireCannon)
-        {
-            super(VehicleWeaponPawn).Fire(F);
-        }
-        else if (Cannon.CannonReloadState == CR_Waiting && DH_Sdkfz2341Cannon(Cannon) != none && DH_Sdkfz2341Cannon(Cannon).HasMagazines(Cannon.GetPendingRoundIndex())
-            && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
-        {
-            Cannon.ServerManualReload();
-        }
-    }
-}
-
-// From Sd.Kfz.234/1 cannon pawn
 function float GetAmmoReloadState()
 {
-    if (DHVehicleCannon(Gun) != none)
+    if (Cannon != none)
     {
-        switch (DHVehicleCannon(Gun).CannonReloadState)
+        switch (Cannon.ReloadState)
         {
-            case CR_ReadyToFire:    return 0.0;
-            case CR_Waiting:
-            case CR_Empty:
-            case CR_ReloadedPart1:  return 1.0;
-            case CR_ReloadedPart2:  return 0.6;
-            case CR_ReloadedPart3:  return 0.5;
-            case CR_ReloadedPart4:  return 0.4;
+            case RL_ReadyToFire:    return 0.0;
+            case RL_Waiting:
+            case RL_Empty:
+            case RL_ReloadedPart1:  return 1.0;
+            case RL_ReloadedPart2:  return 0.6;
+            case RL_ReloadedPart3:  return 0.5;
+            case RL_ReloadedPart4:  return 0.4;
         }
     }
 

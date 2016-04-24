@@ -2673,9 +2673,9 @@ function ClientSaveROIDHash(string ROID)
 function ServerSetManualTankShellReloading(bool bUseManualReloading)
 {
     // If the cannon is waiting to reload, force a reload on the client
-    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none && DHVehicleCannonPawn(Pawn).Cannon.CannonReloadState == CR_Waiting)
+    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none && DHVehicleCannonPawn(Pawn).Cannon.ReloadState == RL_Waiting)
     {
-        DHVehicleCannonPawn(Pawn).Cannon.ServerManualReload();
+        DHVehicleCannonPawn(Pawn).Cannon.AttemptReload();
     }
 
     bManualTankShellReloading = bUseManualReloading;

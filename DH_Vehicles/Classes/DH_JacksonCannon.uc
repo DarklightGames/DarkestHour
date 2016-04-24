@@ -24,10 +24,10 @@ defaultproperties
     FrontRightAngle=35.0
     RearRightAngle=145.0
     RearLeftAngle=215.0
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'

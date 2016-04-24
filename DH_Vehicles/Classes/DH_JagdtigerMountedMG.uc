@@ -9,6 +9,6 @@ defaultproperties
 {
     MaxPositiveYaw=4000 // TODO: check why/if yaw & pitch should differ from KT
     MaxNegativeYaw=-4000
-    NumMags=8
+    NumMGMags=8
     FireEffectOffset=(X=-60.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
 }

@@ -17,12 +17,12 @@ replication
         bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
 }
 
-// Modified to remove handling of mixed mag (instead is handled in SpawnProjectile, which now fires two projectiles)
+// Modified to skip over Super in DH_Flak38Cannon, as handling of mixed mag is instead handled in SpawnProjectile, which now fires two projectiles
 state ProjectileFireMode
 {
     function Fire(Controller C)
     {
-        SpawnProjectile(ProjectileClass, false);
+        super(ROVehicleWeapon).Fire(C);
     }
 }
 

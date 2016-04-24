@@ -22,10 +22,10 @@ defaultproperties
     FrontRightAngle=34.0
     RearRightAngle=146.0
     RearLeftAngle=214.0
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_04')
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
@@ -60,9 +60,9 @@ defaultproperties
     RangeSettings(29)=3800
     RangeSettings(30)=4000
     AddedPitch=15
-    NumAltMags=10
-    AltTracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    AltFireTracerFrequency=7
+    NumMGMags=10
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerFrequency=7
     WeaponFireOffset=0.0
     AltFireOffset=(X=-325.0,Y=19.5,Z=4.5)
     AltFireInterval=0.07059

@@ -414,16 +414,29 @@ function Fire(optional float F)
             Gun.ClientStartFire(Controller, false);
         }
     }
-    else if (MGun != none && (MGun.ReloadState == MG_Waiting || MGun.bReloadPaused)) // no dry-fire effect if actively reloading
+    else if (MGun != none && (MGun.ReloadState == RL_Waiting || MGun.bReloadPaused)) // no dry-fire effect if actively reloading
     {
         Gun.ShakeView(false);
-        PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5,, 25.0,, true);
+        PlaySound(MGun.NoMGAmmoSound, SLOT_None, 1.5,, 25.0,, true);
     }
 }
 
 // Emptied out as MG has no alt fire mode, so just ensures nothing happens
 function AltFire(optional float F)
 {
+}
+
+// New function to do what ClientVehicleCeaseFire() does, except skipping the replicated VehicleCeaseFire() function call to a server
+// A network optimisation, avoiding replication when it's unnecessary
+// Used where we need to cease fire on net client, but no point telling server to do same as it will do it's own cease fire, e.g. when running out of ammo or starting a reload
+function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
+{
+    bWeaponIsFiring = false;
+
+    if (Gun != None)
+    {
+        Gun.ClientStopFire(Controller, false);
+    }
 }
 
 // New function, checked by Fire() to see if we are in an eligible firing position (subclass as required)
@@ -435,7 +448,7 @@ function bool CanFire()
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
 simulated exec function ROManualReload()
 {
-    if (!CanReload() && MGun != none && MGun.ReloadState != MG_ReadyToFire)
+    if (!CanReload() && MGun != none && MGun.ReloadState != RL_ReadyToFire)
     {
         DisplayVehicleMessage(12,, true);
     }
@@ -454,14 +467,14 @@ function float GetAmmoReloadState()
     {
         switch (MGun.ReloadState)
         {
-            case MG_ReadyToFire:    return 0.00;
+            case RL_ReadyToFire:    return 0.00;
 
-            case MG_Waiting:
-            case MG_Empty:
-            case MG_ReloadedPart1:  return 1.00;
-            case MG_ReloadedPart2:  return 0.75;
-            case MG_ReloadedPart3:  return 0.50;
-            case MG_ReloadedPart4:  return 0.25;
+            case RL_Waiting:
+            case RL_Empty:
+            case RL_ReloadedPart1:  return 1.00;
+            case RL_ReloadedPart2:  return 0.75;
+            case RL_ReloadedPart3:  return 0.50;
+            case RL_ReloadedPart4:  return 0.25;
         }
     }
 }
@@ -522,11 +535,11 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified so if MG is not loaded, to try to start a reload or resume any previously paused reload
+// Modified to pass MG reload state to client as player enters, & to try to start a reload or resume any previously paused reload if MG isn't loaded
 // Also to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
 function KDriverEnter(Pawn P)
 {
-    local bool bNotLocallyControlled;
+    local byte OldReloadState;
 
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
@@ -535,14 +548,16 @@ function KDriverEnter(Pawn P)
 
     if (MGun != none)
     {
-        bNotLocallyControlled = !IsLocallyControlled(); // means a dedicated server, or a listen server with another net player controlling this MG
+        OldReloadState = MGun.ReloadState;
 
-        if (MGun.ReloadState != MG_ReadyToFire)
+        // If the MG isn't loaded, try to start/resume a reload
+        if (MGun.ReloadState != RL_ReadyToFire)
         {
-            MGun.TryToReload(false, bNotLocallyControlled); // if not locally controlled, TryToReload avoids calling ClientSetReloadState if starting new reload, as gets called next anyway
+            MGun.AttemptReload();
         }
 
-        if (bNotLocallyControlled) // a server passes reload state to net client & tells it to start a reload timer
+        // Replicate the MG's current reload state, unless AttemptReload() changed the state, in which case it will have already done this
+        if (MGun.ReloadState == OldReloadState)
         {
             MGun.ClientSetReloadState(MGun.ReloadState);
         }
@@ -725,8 +740,8 @@ function ServerChangeViewPoint(bool bForward)
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position, to use Sleep to control exit from state,
-// to improve timing of FOV & camera position changes, to avoid switching mesh, FOV & camera position if in behind view, to start/resume reload due to position change,
-// to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong,
+// to improve timing of FOV & camera position changes, to avoid switching mesh, FOV & camera position if in behind view,
+// to add generic support for workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights as it sometimes looks wrong,
 // & to handle any binoculars, including to spawn/destroy a binocs attachment & add workaround for RO bug where player may play wrong animation when moving off binocs
 simulated state ViewTransition
 {
@@ -752,7 +767,7 @@ simulated state ViewTransition
             }
 
             // If the option is flagged, turn off muzzle flash if player has raised head above sights
-            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0)
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0 && Gun != none && Gun.AmbientEffectEmitter != none)
             {
                 Gun.AmbientEffectEmitter.bHidden = true;
             }
@@ -799,7 +814,7 @@ simulated state ViewTransition
         }
 
         // If MG is reloading but player is no longer in a valid reloading position, show a hint that they must unbutton to resume the reload
-        if (MGun != none && MGun.ReloadState < MG_ReadyToFire && !CanReload() && !MGun.bReloadPaused && DHPlayer(Controller) != none)
+        if (MGun != none && MGun.ReloadState < RL_ReadyToFire && !CanReload() && !MGun.bReloadPaused && DHPlayer(Controller) != none)
         {
             DHPlayer(Controller).QueueHint(49, true);
         }
@@ -828,8 +843,7 @@ simulated state ViewTransition
             }
 
             // Re-enable muzzle flash if it has previously been turned off when player raised head above sights
-            if (bHideMuzzleFlashAboveSights && DriverPositionIndex == 0 && Gun != none &&
-                (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer))
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex == 0 && Gun != none && Gun.AmbientEffectEmitter != none && Gun.AmbientEffectEmitter.bHidden)
             {
                 Gun.AmbientEffectEmitter.bHidden = false;
             }
@@ -846,18 +860,27 @@ simulated state ViewTransition
         {
             ROPawn(Driver).ToggleAuxCollision(false);
         }
-
-        // If MG is not loaded, try to start reloading or resume any previously paused reload
-        if (MGun != none && (MGun.ReloadState == MG_Waiting || MGun.bReloadPaused))
-        {
-            MGun.TryToReload(true);
-        }
     }
 
 Begin:
     HandleTransition();
     Sleep(ViewTransitionDuration);
-    GotoState('');
+    GotoState('LeavingViewTransition');
+}
+
+// New state that is very briefly entered whenever player leaves state ViewTransition, just to allow CanReload() functionality to work correctly
+// If MG is not loaded, try to start reloading or resume any previously paused reload (on a net client a resumed reload happens independently to server)
+simulated state LeavingViewTransition
+{
+    simulated function BeginState()
+    {
+        if (MGun != none && (MGun.ReloadState == RL_Waiting || MGun.bReloadPaused))
+        {
+            MGun.AttemptReload();
+        }
+
+        GotoState('');
+    }
 }
 
 // Modified to enable or disable player's hit detection when moving to or from an exposed position
@@ -1679,11 +1702,13 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// New function to check whether player is in a position where he can reload the MG (always true if MG is not bExternallyLoadedMG)
-simulated function bool CanReload(optional bool bIgnoreViewTransition)
+// New function to check whether player is in a position where he can reload the MG
+// Always true if MG is not bExternallyLoadedMG, otherwise player must be unbuttoned & not in the process of buttoning up (i.e. transitioning down)
+simulated function bool CanReload()
 {
-    return !bExternallyLoadedMG || DriverPositionIndex > UnbuttonedPositionIndex
-        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || bIgnoreViewTransition));
+    return !bExternallyLoadedMG
+        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)) // unbuttoned position & not just unbuttoning
+        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex); // above the lowest unbuttoned position, but not on binocs
 }
 
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
@@ -1868,7 +1893,7 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
             MGun.FireEffectOffset.Z = NewZ;
         }
 
-        MGun.StartMGFire();
+        MGun.StartHatchFire();
         Log(Tag @ "FireEffectOffset =" @ MGun.FireEffectOffset);
     }
 }

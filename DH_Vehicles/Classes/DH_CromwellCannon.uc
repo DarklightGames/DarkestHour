@@ -44,10 +44,10 @@ defaultproperties
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
     InitialAltAmmo=225
-    NumAltMags=6
+    NumMGMags=6
     AltFireInterval=0.092
-    AltTracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
-    AltFireTracerFrequency=5
+    TracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
+    TracerFrequency=5
 
     // Weapon fire
     AltFireOffset=(X=-109.5,Y=-11.5,Z=1.0)
@@ -59,11 +59,11 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
     AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
-    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
-    ReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
+    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    AltReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
     SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as not a powerful gun
 
     // Cannon range settings

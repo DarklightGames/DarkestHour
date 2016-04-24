@@ -12,10 +12,10 @@ defaultproperties
     bHasTurret=false
     GunMantletArmorFactor=10.0
     GunMantletSlope=40.0
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.Tiger_reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.Tiger_reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.Tiger_reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.Tiger_reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Tiger_reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Tiger_reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Tiger_reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Tiger_reload_04')
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'

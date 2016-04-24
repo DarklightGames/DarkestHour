@@ -549,18 +549,19 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to use CanFire() & to avoid obsolete RO functionality in ROTankCannonPawn & optimise what remains
+// Modified to use CanFire(), to avoid obsolete RO functionality in ROTankCannonPawn,
+// to include clientside check that we are loaded (avoids wasted replicated function call to server), & to optimise what remains
 function Fire(optional float F)
 {
     if (CanFire() && Cannon != none)
     {
-        if (Cannon.CannonReloadState == CR_ReadyToFire && Cannon.bClientCanFireCannon)
+        if (Cannon.ReloadState == RL_ReadyToFire)
         {
             super(VehicleWeaponPawn).Fire(F);
         }
-        else if (Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex()) && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+        else
         {
-            Cannon.ServerManualReload();
+            ROManualReload(); // only actually tries a manual reload if player uses that option (just that ROML function contains exactly the same checks we'd otherwise duplicate here)
         }
     }
 }
@@ -589,10 +590,37 @@ function AltFire(optional float F)
     }
 }
 
-// New function, checked by Fire() so we prevent firing while moving between view points or when on periscope or binoculars
+// New function to do what ClientVehicleCeaseFire() does, except skipping the replicated VehicleCeaseFire() function call to a server
+// A network optimisation, avoiding replication when it's unnecessary
+// Used where we need to cease fire on net client, but no point telling server to do same as it will do it's own cease fire, e.g. when running out of ammo or starting a reload
+function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
+{
+    if (bWasAltFire)
+    {
+        bWeaponIsAltFiring = false;
+    }
+    else
+    {
+        bWeaponIsFiring = false;
+    }
+
+    if (Gun != None)
+    {
+        Gun.ClientStopFire(Controller, bWasAltFire);
+
+        if (!bWasAltFire && bWeaponIsAltFiring)
+        {
+            Gun.ClientStartFire(Controller, true);
+        }
+    }
+}
+
+// New function, checked by Fire() so we prevent firing while on, or transitioning away from, periscope or binoculars
 function bool CanFire()
 {
-    return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
+    return (DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex
+        && !(IsInState('ViewTransition') && (LastPositionIndex == PeriscopePositionIndex || LastPositionIndex == BinocPositionIndex)))
+        || ROPlayer(Controller) == none;
 }
 
 // Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
@@ -638,11 +666,10 @@ function ServerToggleRoundType()
     }
 }
 
-// Modified to prevent attempting reload if don't have ammo & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
+// Modified to prevent attempting reload if don't have ammo (saves replicated function call to server) & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 simulated exec function ROManualReload()
 {
-    if (Cannon != none && Cannon.CannonReloadState == CR_Waiting && Cannon.HasAmmo(Cannon.GetPendingRoundIndex())
-        && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+    if (Cannon != none && Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading() && Cannon.HasAmmoToReload(Cannon.GetFireMode(false, Cannon.PendingProjectileClass)))
     {
         Cannon.ServerManualReload();
     }
@@ -659,15 +686,15 @@ function float GetAmmoReloadState()
 {
     if (Cannon != none)
     {
-        switch (cannon.CannonReloadState)
+        switch (Cannon.ReloadState)
         {
-            case CR_ReadyToFire:    return 0.00;
-            case CR_Waiting:
-            case CR_Empty:
-            case CR_ReloadedPart1:  return 1.00;
-            case CR_ReloadedPart2:  return 0.75;
-            case CR_ReloadedPart3:  return 0.50;
-            case CR_ReloadedPart4:  return 0.25;
+            case RL_ReadyToFire:    return 0.00;
+            case RL_Waiting:
+            case RL_Empty:
+            case RL_ReloadedPart1:  return 1.00;
+            case RL_ReloadedPart2:  return 0.75;
+            case RL_ReloadedPart3:  return 0.50;
+            case RL_ReloadedPart4:  return 0.25;
         }
     }
 
@@ -679,22 +706,24 @@ function float GetAltAmmoReloadState()
 {
     local float ProportionOfReloadRemaining;
 
-    if (Gun == none)
+    if (Gun != none && Gun.FireCountdown <= Gun.AltFireInterval)
     {
-        return 1.0;
-    }
-    else if (Gun.FireCountdown <= Gun.AltFireInterval)
-    {
-        return 0.0;
-    }
-    else
-    {
-        if (Cannon == none)
+        if (Gun.AltAmmoCharge > 0)
         {
-            return 1.0;
+            return 0.0; // loaded & ready to fire
         }
 
-        ProportionOfReloadRemaining = Gun.FireCountdown / GetSoundDuration(Cannon.ReloadSound);
+        return 1.0; // if FireCountdown is about zero, but MG has no ammo, it must be completely out of ammo, with no reload happening
+    }
+    else if (Cannon != none)
+    {
+        if (Cannon.bUsesMags && Gun.FireCountdown <= Gun.FireInterval)
+        {
+            return 0.0; // MG is paired with an autocannon that also uses FireCountdown, so this means cannon is firing, not that MG is reloading (or if it is, it's virtually done anyway)
+        }
+
+        // MG must be reloading, so calculate progress
+        ProportionOfReloadRemaining = Gun.FireCountdown / GetSoundDuration(Cannon.AltReloadSound);
 
         if (ProportionOfReloadRemaining >= 0.75)
         {
@@ -713,6 +742,8 @@ function float GetAltAmmoReloadState()
             return 0.25;
         }
     }
+
+    return 1.0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -771,42 +802,49 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified to try to start an MG reload if coaxial MG is out of ammo, to show any damaged gunsight, & to use InitialPositionIndex instead of assuming start in position zero
+// Modified to pass MG reload state to client as player enters, & to try to start a reload or resume any previously paused reload if MG isn't loaded
+// Also to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
+
+// Modified to try to start a reload or resume any previously paused reload if cannon isn't loaded, to try to start a coaxial MG reload if it's out of ammo,
+// to show any damaged gunsight, & to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
 // Also to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 function KDriverEnter(Pawn P)
 {
-    super.KDriverEnter(P);
-
-    if (Cannon != none)
-    {
-        // If the cannon is waiting to reload & this player does not have manual reloading on, force a reload
-        if (Cannon.CannonReloadState == CR_Waiting && (ROPlayer(Controller) == none || !ROPlayer(Controller).bManualTankShellReloading))
-        {
-            Cannon.ServerManualReload();
-        }
-        // Otherwise, replicate the cannon's current reload state
-        else
-        {
-            Cannon.ClientSetReloadState(Cannon.CannonReloadState);
-        }
-
-        // If coaxial MG is out of ammo, start an MG reload
-        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-        if (bHasAltFire && !Cannon.HasAmmo(3) && Role == ROLE_Authority)
-        {
-            Cannon.HandleReload();
-        }
-    }
+    local byte OldReloadState;
 
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
+
+    super(VehicleWeaponPawn).KDriverEnter(P); // skip over the Super in ROTankCannonPawn as our reload system is a little different
+
+    if (Cannon != none)
+    {
+        OldReloadState = Cannon.ReloadState;
+
+        // If the cannon isn't loaded & this player does not have manual reloading on, try to start/resume a reload
+        if (Cannon.ReloadState != RL_ReadyToFire && !Cannon.PlayerUsesManualReloading())
+        {
+            Cannon.AttemptReload();
+        }
+
+        // Replicate the cannon's current reload state, unless AttemptReload() changed the state, in which case it will have already done this
+        if (Cannon.ReloadState == OldReloadState)
+        {
+            Cannon.ClientSetReloadState(Cannon.ReloadState);
+        }
+
+        // If coaxial MG is out of ammo, try to start an MG reload
+        if (bHasAltFire && !Cannon.HasAmmo(Cannon.ALT_FIREMODE_INDEX))
+        {
+            Cannon.AttemptAltReload();
+        }
+    }
 
     if (bOpticsDamaged)
     {
         ClientDamageCannonOverlay();
     }
 
-    // Records whether player has binoculars
     if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
     {
         bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
@@ -2131,7 +2169,11 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
             Gun.AltFireOffset /= 10.0;
         }
 
-        Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.AltFireOffset);
+        if (Gun.AmbientEffectEmitter != none)
+        {
+            Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.AltFireOffset);
+        }
+
         Log(Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was" @ OldAltFireOffset $ ")");
     }
 }
@@ -2158,40 +2200,38 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
             Cannon.FireEffectOffset.Z = NewZ;
         }
 
-        Cannon.StartTurretFire();
+        Cannon.StartHatchFire();
         Log(Tag @ "FireEffectOffset =" @ Cannon.FireEffectOffset);
     }
 }
 
-// New debug exec to adjust CannonAttachmentOffset, to reposition turret
+// New debug exec to adjust WeaponAttachOffset, to reposition turret
 exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
 {
     local vector OldOffset;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
     {
-        OldOffset = Cannon.CannonAttachmentOffset;
-        Cannon.CannonAttachmentOffset.X = NewX;
-        Cannon.CannonAttachmentOffset.Y = NewY;
-        Cannon.CannonAttachmentOffset.Z = NewZ;
+        OldOffset = Cannon.WeaponAttachOffset;
+        Cannon.WeaponAttachOffset.X = NewX;
+        Cannon.WeaponAttachOffset.Y = NewY;
+        Cannon.WeaponAttachOffset.Z = NewZ;
 
         if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
         {
-            Cannon.CannonAttachmentOffset /= 10.0;
+            Cannon.WeaponAttachOffset /= 10.0;
         }
 
-        Cannon.SetRelativeLocation(Cannon.CannonAttachmentOffset);
-        Log(Tag @ "CannonAttachmentOffset =" @ Cannon.CannonAttachmentOffset @ "(was" @ OldOffset $ ")");
+        Cannon.SetRelativeLocation(Cannon.WeaponAttachOffset);
+        Log(Tag @ "WeaponAttachOffset =" @ Cannon.WeaponAttachOffset @ "(was" @ OldOffset $ ")");
     }
 }
 
 exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " Cannon =" @ Cannon.Tag @ " Gun.Owner =" @ Gun.Owner.Tag @ " Cannon.CannonPawn =" @ Cannon.CannonPawn.Tag);
-    Log(Tag @ " CannonReloadState =" @ GetEnum(enum'ECannonReloadState', Cannon.CannonReloadState)
-        @ " bClientCanFireCannon =" @ Cannon.bClientCanFireCannon @ " ProjectileClass =" @ Cannon.ProjectileClass);
-    Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition')
-        @ " DriverPositionIndex =" @ DriverPositionIndex @ " Controller =" @ Controller.Tag);
+    Log("ReloadState =" @ GetEnum(enum'EReloadState', Cannon.ReloadState) @ " ProjectileClass =" @ Cannon.ProjectileClass @ " Controller =" @ Controller.Tag);
+    Log("PrimaryAmmoCount() =" @ Cannon.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
 }
 
 defaultproperties

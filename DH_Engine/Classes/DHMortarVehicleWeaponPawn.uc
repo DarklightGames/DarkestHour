@@ -358,9 +358,9 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
     if (PC != none)
     {
-        if (Mortar != none && Mortar.MuzzleBoneName != '' && PC.Pawn != none)
+        if (Gun != none && Gun.WeaponFireAttachmentBone != '' && PC.Pawn != none)
         {
-            NewRotation = Gun.GetBoneRotation(Mortar.MuzzleBoneName);
+            NewRotation = Gun.GetBoneRotation(Gun.WeaponFireAttachmentBone);
             NewRotation.Pitch = 0;
             NewRotation.Roll = 0;
             PC.Pawn.SetRotation(NewRotation);
@@ -414,7 +414,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (Mortar != none && Mortar.HasAmmo(Mortar.GetRoundIndex()))
+        if (Mortar != none && Mortar.HasAmmo(Mortar.GetFireMode()))
         {
             GotoState('Firing');
         }
@@ -497,7 +497,7 @@ Begin:
         ClientMessage("Missing animation: DriverUnflinchAnim" @ DriverUnflinchAnim);
     }
 
-    if (bPendingFire && Mortar != none && Mortar.HasAmmo(Mortar.GetRoundIndex()))
+    if (bPendingFire && Mortar != none && Mortar.HasAmmo(Mortar.GetFireMode()))
     {
         GotoState('Firing');
     }
@@ -536,7 +536,7 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (Mortar != none && Mortar.HasAmmo(Mortar.GetRoundIndex()))
+        if (Mortar != none && Mortar.HasAmmo(Mortar.GetFireMode()))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -821,7 +821,7 @@ simulated function DrawHUD(Canvas C)
             TraverseString $= String(Traverse);
 
             // Draw current round type icon
-            RoundIndex = Mortar.GetRoundIndex();
+            RoundIndex = Mortar.GetFireMode();
 
             if (Mortar.HasAmmo(RoundIndex))
             {
