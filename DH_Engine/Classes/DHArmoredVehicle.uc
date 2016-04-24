@@ -215,7 +215,7 @@ simulated function Timer()
 
             if (Cannon != none)
             {
-                Cannon.StartTurretFire();
+                Cannon.StartHatchFire();
             }
         }
 
@@ -225,7 +225,7 @@ simulated function Timer()
 
             if (MGun != none)
             {
-                MGun.StartMGFire();
+                MGun.StartHatchFire();
             }
         }
     }

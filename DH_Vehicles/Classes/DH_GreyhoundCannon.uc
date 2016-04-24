@@ -43,10 +43,10 @@ defaultproperties
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
     InitialAltAmmo=250
-    NumAltMags=6
+    NumMGMags=6
     AltFireInterval=0.12
-    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    AltFireTracerFrequency=5
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerFrequency=5
 
     // Weapon fire
     WeaponFireOffset=10.0
@@ -59,10 +59,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
-    ReloadSoundOne=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01'
-    ReloadSoundTwo=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02'
-    ReloadSoundThree=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03'
-    ReloadSoundFour=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04'
+    ReloadStages(0)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
+    ReloadStages(1)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
+    ReloadStages(2)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
+    ReloadStages(3)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
     SoundVolume=100
     SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as a pretty weak gun & this does not match Stuart?
 

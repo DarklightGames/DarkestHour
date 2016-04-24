@@ -34,10 +34,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
-    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 //  SoundRadius=300.0 // TODO: maybe change to 300 as this uses default 200, but is a powerful gun & this does not match tiger's 300
 
     // Cannon range settings

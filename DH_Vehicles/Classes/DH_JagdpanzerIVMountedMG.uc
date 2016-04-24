@@ -22,7 +22,7 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG42Bullet'
-    NumMags=8
+    NumMGMags=8
     FireInterval=0.05
     TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
 

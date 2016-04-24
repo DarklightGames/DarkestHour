@@ -7,10 +7,6 @@ class DH_Sdkfz2341Cannon extends DHVehicleCannon;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
-var     byte    NumMags;         // using bytes for more efficient replication
-var     byte    NumSecMags;
-var     byte    NumTertMags;
-
 var     bool    bMixedMagFireAP; // flags that a mixed AP/HE mag is due to fire an AP round
 
 // Extra collision static mesh actors for the mesh covers over turret, which open & close like a hatch:
@@ -18,13 +14,6 @@ var     DHCollisionMeshActor  TurretCoverColMeshLeft;
 var     DHCollisionMeshActor  TurretCoverColMeshRight;
 var     StaticMesh            TurretCoverColStaticMeshLeft;
 var     StaticMesh            TurretCoverColStaticMeshRight;
-
-replication
-{
-    // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NumMags, NumSecMags, NumTertMags;
-}
 
 // Modified to attach 2 extra collision static mesh actors, to represent the mesh covers over the turret, which open & close like a hatch as the player unbuttons/buttons
 // These collision actors are set so they won't stop bullets or blast damage, as they are only mesh, but will stop grenades, as they were designed for
@@ -67,137 +56,6 @@ simulated function DestroyEffects()
     }
 }
 
-// Modified as this is an auto-cannon firing from a magazine
-event bool AttemptFire(Controller C, bool bAltFire)
-{
-    local int   FireMode;
-    local float ProjectileSpread;
-
-    // Check that cannon/coaxial MG is ready to fire & that we're an authority role (234/1 adds FireCountdown check on cannon fire, not just alt fire)
-    if (FireCountdown <= 0.0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bAltFire) && Role == ROLE_Authority)
-    {
-        // Calculate the starting WeaponFireRotation
-        CalcWeaponFire(bAltFire);
-
-        if (bCorrectAim)
-        {
-            WeaponFireRotation = AdjustAim(bAltFire);
-        }
-
-        // Calculate any random spread & record the FireMode to simplify things later
-        if (bAltFire)
-        {
-            ProjectileSpread = AltFireSpread;
-        }
-        else
-        {
-            if (Spread > 0.0)
-            {
-                ProjectileSpread = Spread; // a starting point for spread, using any primary round spread
-            }
-
-            if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-            {
-                FireMode = 0;
-            }
-            else if (ProjectileClass == SecondaryProjectileClass)
-            {
-                FireMode = 1;
-
-                if (bUsesSecondarySpread && SecondarySpread > 0.0)
-                {
-                    ProjectileSpread = SecondarySpread;
-                }
-            }
-            else if (ProjectileClass == TertiaryProjectileClass)
-            {
-                FireMode = 2;
-
-                if (bUsesTertiarySpread && TertiarySpread > 0.0)
-                {
-                    ProjectileSpread = TertiarySpread;
-                }
-            }
-        }
-
-        // Now apply any random spread
-        if (ProjectileSpread > 0.0)
-        {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
-
-            if (!bAltFire)
-            {
-                WeaponFireRotation += rot(1, 6, 0);
-            }
-        }
-
-        if (Instigator != none)
-        {
-            Instigator.MakeNoise(1.0);
-        }
-
-        // Coaxial MG fire - check we have ammo & fire the MG
-        if (bAltFire)
-        {
-            // If MG is empty we can't fire - start a reload
-            if (!ConsumeAmmo(3))
-            {
-                if (CannonPawn != none)
-                {
-                    CannonPawn.ClientVehicleCeaseFire(bAltFire);
-                }
-
-                HandleReload();
-
-                return false;
-            }
-
-            // Fire
-            AltFire(C);
-            FireCountdown = AltFireInterval;
-
-            // If we just fired our last MG round, start an MG reload
-            if (!HasAmmo(3))
-            {
-                HandleReload();
-            }
-        }
-        // Cannon fire - check we have ammo & fire the current round
-        else
-        {
-            // If cannon is empty we can't fire
-            if (!ConsumeAmmo(FireMode))
-            {
-                if (CannonPawn != none)
-                {
-                    CannonPawn.ClientVehicleCeaseFire(bAltFire);
-                }
-
-                HandleCannonReload(); // added to 234/1
-
-                return false;
-            }
-
-            // Fire
-            Fire(C);
-//          bClientCanFireCannon = false; // removed from 234/1
-            FireCountdown = FireInterval; // added to 234/1
-
-            // If cannon is now empty, after firing our last round, start a magazine reload (this replaces setting reload state & timer & possible round type switch)
-            if (!HasAmmo(FireMode))
-            {
-                HandleCannonReload();
-            }
-        }
-
-        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock; // moved back down here in 234/1, as potentially relevant to cannon & MG as both use FireCountdown
-
-        return true;
-    }
-
-    return false;
-}
-
 // Modified to alternate between AP & HE rounds if firing a mixed mag (the tertiary ammo type)
 state ProjectileFireMode
 {
@@ -223,430 +81,15 @@ state ProjectileFireMode
     }
 }
 
-// Modified to remove switch to PendingProjectileClass after firing, as this cannon uses a magazine (& remove all redundancy for this weapon)
-function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+// Modified so if we're loading a new mixed mag, we reset the 1st shot to be the default AP or HE round
+function AttemptReload()
 {
-    local Projectile P;
-    local vector     StartLocation, HitNormal;
-    local rotator    FireRot;
+    super.AttemptReload();
 
-    // Calculate projectile's starting rotation
-    FireRot = WeaponFireRotation;
-
-    if (Instigator != none && Instigator.IsHumanControlled())
+    if (ReloadState == RL_Empty && ProjectileClass == PrimaryProjectileClass && Role == ROLE_Authority)
     {
-        FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
-    }
-
-    if (!bAltFire && RangeSettings.Length > 0)
-    {
-        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-
-        if (bCannonShellDebugging)
-        {
-            Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
-        }
-    }
-
-    // Projectile's starting location
-    StartLocation = WeaponFireLocation;
-
-    if (bCannonShellDebugging)
-    {
-        Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
-    }
-
-    // Now spawn the projectile
-    P = Spawn(ProjClass, none,, StartLocation, FireRot);
-
-    // If pending round type is different, switch round type // removed in 234/1
-//  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
-//  {
-//      ProjectileClass = PendingProjectileClass;
-//  }
-
-    // Play firing effects
-    if (P != none)
-    {
-        FlashMuzzleFlash(bAltFire);
-
-        if (bAltFire)
-        {
-            AmbientSound = AltFireSoundClass;
-            SoundVolume = AltFireSoundVolume;
-            SoundRadius = AltFireSoundRadius;
-            AmbientSoundScaling = AltFireSoundScaling;
-        }
-        else
-        {
-            PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-        }
-    }
-
-    return P;
-}
-
-// Modified to add FireCountDown check to cannon fire mode, not just alt fire
-simulated function ClientStartFire(Controller C, bool bAltFire)
-{
-    bIsAltFire = bAltFire;
-
-    if (FireCountDown <= 0.0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bIsAltFire))
-    {
-        if (bIsRepeatingFF)
-        {
-            if (bIsAltFire)
-            {
-                ClientPlayForceFeedback(AltFireForce);
-            }
-            else
-            {
-                ClientPlayForceFeedback(FireForce);
-            }
-        }
-
-        OwnerEffects();
-    }
-}
-
-// Modified to reinstate use of FireCountDown for cannon as well as coaxial MG, & to prevent reload after each individual shot
-simulated function OwnerEffects()
-{
-    // Stop the firing effects it we shouldn't be able to fire, or if player moves to ineligible firing position while holding down fire button on coaxial MG
-    if (Role < ROLE_Authority)
-    {
-        if (!ReadyToFire(bIsAltFire) || (CannonPawn != none && !CannonPawn.CanFire()))
-        {
-            CannonPawn.ClientVehicleCeaseFire(bIsAltFire);
-
-            return;
-        }
-
-        if (bIsAltFire)
-        {
-            FireCountdown = AltFireInterval;
-
-            SoundVolume = AltFireSoundVolume;
-            SoundRadius = AltFireSoundRadius;
-            AmbientSoundScaling = AltFireSoundScaling;
-        }
-        else
-        {
-            FireCountdown = FireInterval; // added back this 'else' (commented out in ROTankCannon), as we use FireCountDown for autocannon fire interval
-
-            PlaySound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-
-            // Wait for player to reload manually // reload block removed as an autocannon doesn't want to reload after each shot
-//          if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
-//          {
-//              CannonReloadState = CR_Waiting;
-//          }
-            // Start an automatic reload
-//          else
-//          {
-//              CannonReloadState = CR_Empty;
-//              SetTimer(0.01, false);
-//          }
-        }
-
-        AimLockReleaseTime = Level.TimeSeconds + (FireCountdown * FireIntervalAimLock);
-
-        FlashMuzzleFlash(bIsAltFire);
-    }
-
-    if (Level.NetMode != NM_DedicatedServer && bIsAltFire && AmbientEffectEmitter != none)
-    {
-        AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes
-    }
-
-    ShakeView(bIsAltFire);
-
-    if (!bIsRepeatingFF)
-    {
-        if (bIsAltFire)
-        {
-            ClientPlayForceFeedback(AltFireForce);
-        }
-        else
-        {
-            ClientPlayForceFeedback(FireForce);
-        }
-    }
-}
-
-// Modified to handle our modified reload process for players who manually reload
-function ServerManualReload()
-{
-    if (CannonReloadState == CR_Waiting)
-    {
-        HandleCannonReload(true); // true flags that this is a manually-triggered reload
-    }
-}
-
-// New function that handles all 3 round types, trying all the alternatives if we're out of some types of ammo
-function HandleCannonReload(optional bool bIsManualReload)
-{
-    if (Role != ROLE_Authority)
-    {
-        return;
-    }
-
-    bClientCanFireCannon = false;
-
-    // If player uses manual reloading & this isn't a manually-triggered reload, then just go to reload state waiting
-    if (!bIsManualReload && Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
-    {
-        CannonReloadState = CR_Waiting;
-        ClientSetReloadState(CannonReloadState); // primarily so client's HUD can display ammo icon in red to show it needs a reload
-    }
-    // Otherwise check ammo & proceed with reload if we have some
-    else if (CannonReloadState == CR_ReadyToFire || CannonReloadState == CR_Waiting)
-    {
-        // If we don't have a spare mag for the pending round type, try to switch to another round type (unless player reloads & switches manually)
-        if (!HasMagazines(GetPendingRoundIndex()))
-        {
-            if (!bIsManualReload)
-            {
-                ToggleRoundType(true);// true signifies forced switch, not manual choice, making it try to switch to primary ammo, rather than strictly cycle ammo choice
-            }
-
-            // Abort reload if we still don't have a spare mag (so must be completely out of cannon ammo) or if player reloads/switches manually
-            if (bIsManualReload || !HasMagazines(GetPendingRoundIndex()))
-            {
-                CannonReloadState = CR_Waiting;
-                ClientSetReloadState(CannonReloadState);
-
-                return;
-            }
-        }
-
-        // Switch round type if pending round is different
-        if (ProjectileClass != PendingProjectileClass && PendingProjectileClass != none)
-        {
-            ProjectileClass = PendingProjectileClass;
-        }
-
-        // Remove 1 spare mag & also 're-charge' the cannon (seems premature but it's easier to do it here & cannon won't be able to fire until reload completes)
-        if (ProjectileClass == PrimaryProjectileClass)
-        {
-            NumMags--;
-            MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-            bMixedMagFireAP = default.bMixedMagFireAP;
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            NumSecMags--;
-            MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-        }
-        else if (ProjectileClass == TertiaryProjectileClass)
-        {
-            NumTertMags--;
-            MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-        }
-
-        // Start reload on both client & server
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-        CannonReloadState = CR_Empty;
-        ClientSetReloadState(CannonReloadState);
-        SetTimer(0.01, false);
-    }
-}
-
-// Modified to remove requirement for PrimaryAmmoCount > 0, which for autocannon means has at least 1 magazines, as last mag may just have been used to start this reload
-simulated function Timer()
-{
-    // If a cannon reload isn't in progress then we exit & stop any repeating timer
-    if (CannonReloadState == CR_ReadyToFire || CannonReloadState == CR_Waiting)
-    {
-        SetTimer(0.0, false);
-    }
-    // Do not proceed with reload if no player in cannon position - set a repeating timer to keep checking
-    else if (CannonPawn == none || CannonPawn.Controller == none)
-    {
-        SetTimer(0.5, true);
-    }
-    else if (CannonReloadState == CR_Empty)
-    {
-        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart1;
-        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundOne)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
-    }
-    else if (CannonReloadState == CR_ReloadedPart1)
-    {
-        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart2;
-        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundTwo)), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart2)
-    {
-        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart3;
-        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundThree)), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart3)
-    {
-        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        CannonReloadState = CR_ReloadedPart4;
-        SetTimer(FMax(0.1, GetSoundDuration(ReloadSoundFour)), false);
-    }
-    else if (CannonReloadState == CR_ReloadedPart4)
-    {
-        if (Role == ROLE_Authority)
-        {
-            bClientCanFireCannon = true;
-        }
-
-        CannonReloadState = CR_ReadyToFire;
-        SetTimer(0.0, false);
-    }
-}
-
-// Modified as this cannon uses magazines
-function ToggleRoundType(optional bool bForcedSwitch)
-{
-    if (PendingProjectileClass == PrimaryProjectileClass)
-    {
-        if (HasMagazines(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-        else if (HasMagazines(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-    else if (PendingProjectileClass == SecondaryProjectileClass)
-    {
-        // bForcedSwitch option is passed if we have run out of ammo, meaning if it was secondary ammo then we try to switch back to primary instead of tertiary
-        if ((bForcedSwitch || !HasMagazines(2)) && HasMagazines(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasMagazines(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-    else if (PendingProjectileClass == TertiaryProjectileClass)
-    {
-        if (HasMagazines(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasMagazines(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-    }
-    else
-    {
-        if (HasMagazines(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasMagazines(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-        else if (HasMagazines(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-}
-
-// New function to return whether we have any magazines for the given firing mode
-simulated function bool HasMagazines(int Mode)
-{
-    switch (Mode)
-    {
-        case 0:
-            return NumMags > 0;
-        case 1:
-            return NumSecMags > 0;
-        case 2:
-            return NumTertMags > 0;
-        default:
-            return false;
-    }
-}
-
-// Modified as this cannon uses magazines
-simulated function int PrimaryAmmoCount()
-{
-    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-    {
-        return NumMags;
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        return NumSecMags;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass)
-    {
-        return NumTertMags;
-    }
-}
-
-// Modified as this cannon uses magazines
-function bool GiveInitialAmmo()
-{
-    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo ||
-        AltAmmoCharge != InitialAltAmmo || NumMags != default.NumMags || NumSecMags != default.NumSecMags || NumTertMags != default.NumTertMags || NumAltMags != default.NumAltMags)
-    {
-        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
         bMixedMagFireAP = default.bMixedMagFireAP;
-        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-        AltAmmoCharge = InitialAltAmmo;
-        NumMags = default.NumMags;
-        NumSecMags = default.NumSecMags;
-        NumTertMags = default.NumTertMags;
-        NumAltMags = default.NumAltMags;
-
-        return true;
     }
-
-    return false;
-}
-
-// Modified to work all 3 mag types into new ammo resupply system
-function bool ResupplyAmmo()
-{
-    local bool bDidResupply;
-
-    if (NumMags < default.NumMags)
-    {
-        ++NumMags;
-        bDidResupply = true;
-    }
-
-    if (NumSecMags < default.NumSecMags)
-    {
-        ++NumSecMags;
-        bDidResupply = true;
-    }
-
-    if (NumTertMags < default.NumTertMags)
-    {
-        ++NumTertMags;
-        bDidResupply = true;
-    }
-
-    if (NumAltMags < default.NumAltMags)
-    {
-        ++NumAltMags;
-        bDidResupply = true;
-
-        // If coaxial MG is out of ammo, start an MG reload, but only if there is a player in the cannon position
-        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-        if (!HasAmmo(3) && Instigator != none && Instigator.Controller != none && Role == ROLE_Authority)
-        {
-            HandleReload();
-        }
-    }
-
-    return bDidResupply;
 }
 
 defaultproperties
@@ -663,13 +106,14 @@ defaultproperties
     FrontRightAngle=54.0
     RearRightAngle=130.0
     RearLeftAngle=230.0
-    NumMags=15
-    NumSecMags=15
-    NumTertMags=15
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.T60_reload_01'
-    ReloadSoundTwo=sound'DH_GerVehicleSounds2.Reloads.234_reload_02'
-    ReloadSoundThree=sound'DH_GerVehicleSounds2.Reloads.234_reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.T60_reload_04'
+    bUsesMags=true
+    NumPrimaryMags=15
+    NumSecondaryMags=15
+    NumTertiaryMags=15
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_01')
+    ReloadStages(1)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_02')
+    ReloadStages(2)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_04')
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
@@ -688,15 +132,13 @@ defaultproperties
     RangeSettings(10)=1000
     RangeSettings(11)=1100
     RangeSettings(12)=1200
-    NumAltMags=12
-    AltTracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
-    AltFireTracerFrequency=7
+    NumMGMags=12
+    TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
+    TracerFrequency=7
     WeaponFireOffset=8.5
     AltFireOffset=(X=-65.0,Y=-24.0,Z=-3.0)
     ManualRotationsPerSecond=0.04
     Spread=0.003
-    bUsesSecondarySpread=false
-    bUsesTertiarySpread=false
     FireInterval=0.2
     AltFireInterval=0.05
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'

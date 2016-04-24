@@ -25,7 +25,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_BrenBullet'
     InitialPrimaryAmmo=30
-    NumMags=20
+    NumMGMags=20
     FireInterval=0.125
     TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
     TracerFrequency=5
@@ -44,8 +44,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="reload_empty"
-    ReloadSounds[0]=(Sound=none,Duration=1.83) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
-    ReloadSounds[1]=(Sound=none,Duration=1.83)
-    ReloadSounds[2]=(Sound=none,Duration=2.00)
-    ReloadSounds[3]=(Sound=none,Duration=1.34)
+    ReloadStages(0)=(Sound=none,Duration=1.83) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
+    ReloadStages(1)=(Sound=none,Duration=1.83)
+    ReloadStages(2)=(Sound=none,Duration=2.00)
+    ReloadStages(3)=(Sound=none,Duration=1.34)
 }

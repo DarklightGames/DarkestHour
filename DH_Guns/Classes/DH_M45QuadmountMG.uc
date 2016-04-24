@@ -9,16 +9,15 @@ var     name                        BarrelBones[4];           // bone names for 
 var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
 var     WeaponAmbientEmitter        BarrelEffectEmitter[4];   // separate emitter for each barrel, for muzzle flash & ejected shell cases
 
-// Modified to ignore the Super in DHVehicleMG, which calculates whether to fire a tracer
+// Modified to skip over the Super in DHVehicleMG, which calculates whether to fire a tracer
 // Because we have multiple barrels, we let SpawnProjectile handle tracers
 state ProjectileFireMode
 {
     function Fire(Controller C)
     {
-        SpawnProjectile(ProjectileClass, false);
+        super(ROVehicleWeapon).Fire(C);
     }
 }
-
 // Modified to handle multiple barrel fire
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
@@ -33,7 +32,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     // Work out which barrel is due to fire a tracer
     // With 4 barrels & 1 in 5 tracer loading, it effectively rotates through each barrel & skips a tracer every 5th volley
-    VolleysFired = InitialPrimaryAmmo - MainAmmoCharge[0] - 1;
+    VolleysFired = InitialPrimaryAmmo - PrimaryAmmoCount() - 1;
     TracerIndex = VolleysFired % TracerFrequency;
 
     // Spawn a projectile from each barrel
@@ -68,23 +67,19 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return LastProjectile;
 }
 
-// Modified so passed damage on to vehicle base, same as a vehicle cannon
+// Modified to pass damage on to vehicle base, same as a vehicle cannon
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    // Suicide
-    if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
-    {
-        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
-    }
-    // Shell's ProcessTouch now calls TD here, but we count this as hit on vehicle itself, so we call TD on that
-    else if (MGPawn.VehicleBase != none)
+    super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
+
+    if (Base != none)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
-            MGPawn.VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
+            Base.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
         }
 
-        MGPawn.VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        Base.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 }
 
@@ -179,7 +174,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
     InitialPrimaryAmmo=200 // 200 rounds in each ammo chest, so 800 rounds loaded in total - each trigger pull fires 4 rounds, 1 from each ammo cheat
-    NumMags=2 // means we can reload 4 times & each reload is 4 ammo chests, so really the weapon starts with 20 ammo chests, including the 4 that are loaded
+    NumMGMags=2 // means we can reload 4 times & each reload is 4 ammo chests, so really the weapon starts with 20 ammo chests, including the 4 that are loaded
     FireInterval=0.133333 // 450 RPM
     TracerFrequency=5
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'

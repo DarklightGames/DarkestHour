@@ -5,64 +5,24 @@
 
 class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
 
-// Modified as need to check if has spare magazines (the normal HasAmmo check returns AmmoCharge, not mags)
-simulated exec function ROManualReload()
-{
-    if (DH_Sdkfz2341Cannon(Cannon) != none && Cannon.CannonReloadState == CR_Waiting && DH_Sdkfz2341Cannon(Cannon).HasMagazines(Cannon.GetPendingRoundIndex())
-        && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
-    {
-        Cannon.ServerManualReload();
-    }
-}
-
-// Modified as need to check if has spare magazines if a manual reload is required (the normal HasAmmo check returns AmmoCharge, not mags)
-function Fire(optional float F)
-{
-    if (CanFire() && Cannon != none)
-    {
-        if (Cannon.CannonReloadState == CR_ReadyToFire && Cannon.bClientCanFireCannon)
-        {
-            super(VehicleWeaponPawn).Fire(F);
-        }
-        else if (Cannon.CannonReloadState == CR_Waiting && DH_Sdkfz2341Cannon(Cannon) != none && DH_Sdkfz2341Cannon(Cannon).HasMagazines(Cannon.GetPendingRoundIndex())
-            && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
-        {
-            Cannon.ServerManualReload();
-        }
-    }
-}
-
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float GetAmmoReloadState()
 {
     if (Cannon != none)
     {
-        switch (Cannon.CannonReloadState)
+        switch (Cannon.ReloadState)
         {
-            case CR_ReadyToFire:    return 0.0;
-            case CR_Waiting:
-            case CR_Empty:
-            case CR_ReloadedPart1:  return 1.0;
-            case CR_ReloadedPart2:  return 0.6;
-            case CR_ReloadedPart3:  return 0.5;
-            case CR_ReloadedPart4:  return 0.4;
+            case RL_ReadyToFire:    return 0.0;
+            case RL_Waiting:
+            case RL_Empty:
+            case RL_ReloadedPart1:  return 1.0;
+            case RL_ReloadedPart2:  return 0.6;
+            case RL_ReloadedPart3:  return 0.5;
+            case RL_ReloadedPart4:  return 0.4;
         }
     }
 
     return 0.0;
-}
-
-// Modified as 234/1 uses FireCountdown for cannon AND coaxial MG, so we need to check it against both FireInterval & AltFireInterval (in super)
-function float GetAltAmmoReloadState()
-{
-    if (Gun != none && Gun.FireCountdown <= Gun.FireInterval)
-    {
-        return 0.0;
-    }
-    else
-    {
-        return super.GetAltAmmoReloadState();
-    }
 }
 
 defaultproperties

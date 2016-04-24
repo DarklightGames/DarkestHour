@@ -52,10 +52,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
     SoundRadius=300.0
 
     // Cannon range settings

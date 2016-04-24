@@ -12,14 +12,14 @@ function float GetAmmoReloadState()
     {
         switch (MGun.ReloadState)
         {
-            case MG_ReadyToFire:    return 0.00;
+            case RL_ReadyToFire:    return 0.00;
 
-            case MG_Waiting:
-            case MG_Empty:
-            case MG_ReloadedPart1:  return 1.00;
-            case MG_ReloadedPart2:  return 0.67;
-            case MG_ReloadedPart3:  return 0.50;
-            case MG_ReloadedPart4:  return 0.35;
+            case RL_Waiting:
+            case RL_Empty:
+            case RL_ReloadedPart1:  return 1.00;
+            case RL_ReloadedPart2:  return 0.67;
+            case RL_ReloadedPart3:  return 0.50;
+            case RL_ReloadedPart4:  return 0.35;
         }
     }
 }

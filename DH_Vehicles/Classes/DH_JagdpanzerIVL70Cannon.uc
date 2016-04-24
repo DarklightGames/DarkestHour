@@ -15,10 +15,10 @@ defaultproperties
     bHasTurret=false
     GunMantletArmorFactor=8.0
     GunMantletSlope=40.0
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.STUG_III_reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.STUG_III_reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.STUG_III_reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.STUG_III_reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'

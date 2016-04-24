@@ -34,9 +34,9 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01' // same as 105mm howitzers
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01' // as Sherman 105mm
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01') // as Sherman 105mm
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
 //  SoundVolume=170 // TODO - maybe should be say 170, as Sherman 105 is 200 instead of default 130? (but all 95/105mm howitzers use tiger's firing sound, which currently has SV of only 120)
 }

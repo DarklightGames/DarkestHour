@@ -1036,8 +1036,14 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 if (V.Cannon.bMultipleRoundTypes)
                 {
                     // Get ammo types text, font & position
-                    Current = V.Cannon.GetRoundsDescription(Lines);
-                    Pending = V.Cannon.GetPendingRoundIndex();
+                    // Use of GetFireMode() replaces deprecated GetRoundsDescription(Lines) & GetPendingRoundIndex(), with Lines array constructed directly by for loop below
+                    Current = V.Cannon.GetFireMode();
+                    Pending = V.Cannon.GetFireMode(false, V.Cannon.PendingProjectileClass);
+
+                    for (i = 0; i < V.Cannon.ProjectileDescriptions.Length; ++i)
+                    {
+                        Lines[i] = V.Cannon.ProjectileDescriptions[i];
+                    }
 
                     VehicleAmmoTypeText.OffsetY = default.VehicleAmmoTypeText.OffsetY * MyScale;
 

@@ -15,7 +15,7 @@ defaultproperties
     InitialSecondaryAmmo=4
     PlayerResupplyAmounts(0)=6
     PlayerResupplyAmounts(1)=1
-    FireSound=SoundGroup'DH_WeaponSounds.Mortars.6cmFireSG'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Mortars.6cmFireSG'
     RotationsPerSecond=0.015625
     MaxPositiveYaw=1274
     MaxNegativeYaw=-1274

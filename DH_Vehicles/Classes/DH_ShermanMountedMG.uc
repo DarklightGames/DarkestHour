@@ -23,7 +23,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_30CalBullet'
     InitialPrimaryAmmo=200
-    NumMags=6
+    NumMGMags=6
     FireInterval=0.12
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5

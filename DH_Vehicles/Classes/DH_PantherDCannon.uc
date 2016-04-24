@@ -25,10 +25,10 @@ defaultproperties
     FrontRightAngle=38.0
     RearRightAngle=142.0
     RearLeftAngle=218.0
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.STUG_III_reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.STUG_III_reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.STUG_III_reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.STUG_III_reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
@@ -59,9 +59,9 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    NumAltMags=9
-    AltTracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    AltFireTracerFrequency=7
+    NumMGMags=9
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerFrequency=7
     WeaponFireOffset=222.0
     AltFireOffset=(X=-32.0,Y=27.0,Z=7.0)
     AltFireInterval=0.07059

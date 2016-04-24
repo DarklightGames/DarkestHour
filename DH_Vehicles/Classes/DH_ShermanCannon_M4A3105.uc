@@ -22,10 +22,10 @@ defaultproperties
     FrontRightAngle=44.0
     RearRightAngle=136.0
     RearLeftAngle=224.0
-    ReloadSoundOne=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01'
-    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02'
-    ReloadSoundThree=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03'
-    ReloadSoundFour=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04'
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
@@ -33,9 +33,9 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
     AddedPitch=340
-    NumAltMags=5
-    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    AltFireTracerFrequency=5
+    NumMGMags=5
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerFrequency=5
     WeaponFireOffset=8.5
     AltFireOffset=(X=-91.0,Y=-17.0,Z=8.5)
     AltFireSpawnOffsetX=56.0
@@ -54,7 +54,7 @@ defaultproperties
     InitialAltAmmo=200
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
-    CannonAttachmentOffset=(X=8.0,Y=0.0,Z=4.5)
+    WeaponAttachOffset=(X=8.0,Y=0.0,Z=4.5)
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3105_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3_105_turret_coll'

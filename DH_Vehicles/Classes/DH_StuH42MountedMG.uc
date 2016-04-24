@@ -36,7 +36,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     InitialPrimaryAmmo=50
-    NumMags=12
+    NumMGMags=12
     FireInterval=0.07059
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
@@ -56,8 +56,8 @@ defaultproperties
     ShakeOffsetTime=2.0
 
     // Reload
-    ReloadSounds[0]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // differs from defaults because uses ammo drums & not belts
-    ReloadSounds[1]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
-    ReloadSounds[2]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
-    ReloadSounds[3]=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload04_170',Duration=1.34)
+    ReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // differs from defaults because uses ammo drums & not belts
+    ReloadStages(1)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
+    ReloadStages(2)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
+    ReloadStages(3)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload04_170',Duration=1.34)
 }

@@ -21,18 +21,18 @@ defaultproperties
     FrontRightAngle=40.0
     RearRightAngle=140.0
     RearLeftAngle=220.0
-    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     ProjectileDescriptions(2)="Smoke"
     AddedPitch=68
-    NumAltMags=5
-    AltTracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
-    AltFireTracerFrequency=5
+    NumMGMags=5
+    TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
+    TracerFrequency=5
     WeaponFireAttachmentBone="Gun" // can't use 'Barrel' bone as it's rolled in the mesh, which screws up offsets
     WeaponFireOffset=106.0
     AltFireOffset=(X=8.0,Y=-23.5,Z=3.5)
@@ -52,7 +52,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellHE'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    CannonAttachmentOffset=(X=6.0,Y=0.0,Z=0.0)
+    WeaponAttachOffset=(X=6.0,Y=0.0,Z=0.0)
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_turret'
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.shermancupolat'
