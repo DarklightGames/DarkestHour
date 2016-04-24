@@ -704,7 +704,6 @@ defaultproperties
     CannonDustEmitterClass=none // avoids having to override FlashMuzzleFlash function
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    bIsRepeatingFF=true // added, as strongly suspect this should be true, like a tank mounted MG
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet''
     ShakeRotMag=(Z=5.0)
@@ -736,4 +735,5 @@ defaultproperties
     TurretCoverColStaticMeshRight=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll'
     SoundVolume=100
     SoundRadius=256.0 // TODO: maybe remove so inherits default 200, as this is a weak gun
+    AIInfo(0)=(RefireRate=0.99)
 }
