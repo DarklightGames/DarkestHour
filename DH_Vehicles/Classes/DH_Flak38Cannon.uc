@@ -98,7 +98,6 @@ defaultproperties
 
     // Turret movement
     RotationsPerSecond=0.05
-    bLimitYaw=false
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
 
