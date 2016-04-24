@@ -46,8 +46,4 @@ defaultproperties
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
     ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
-
-    // Miscellaneous
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
 }

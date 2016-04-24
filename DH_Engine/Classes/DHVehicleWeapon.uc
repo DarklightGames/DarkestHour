@@ -8,4 +8,5 @@ class DHVehicleWeapon extends ROVehicleWeapon
 
 defaultproperties
 {
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.9)
 }

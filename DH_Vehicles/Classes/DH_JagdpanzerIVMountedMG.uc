@@ -31,5 +31,4 @@ defaultproperties
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     AmbientSoundScaling=1.3
-    AIInfo(0)=(RefireRate=0.05)
 }

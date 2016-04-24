@@ -34,5 +34,4 @@ defaultproperties
     FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     ShakeRotMag=(X=20.0,Y=20.0,Z=20.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
-    AIInfo(0)=(RefireRate=0.12)
 }

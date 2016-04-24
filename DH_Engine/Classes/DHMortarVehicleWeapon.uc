@@ -293,7 +293,6 @@ defaultproperties
     // From ROTankCannon:
     bUseTankTurretRotation=true
     bMultipleRoundTypes=true
-    AIInfo(0)=(bInstantHit=false,AimError=0.0,RefireRate=5.0)
 
     bForceSkelUpdate=true // necessary for player hit detection, as makes server update the mortar mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     bOwnerNoSee=true
@@ -311,4 +310,5 @@ defaultproperties
     ElevationStride=0.5
     SpreadYawMin=728.0
     SpreadYawMax=364.0
+    AIInfo(0)=(AimError=0.0,WarnTargetPct=0.0)
 }

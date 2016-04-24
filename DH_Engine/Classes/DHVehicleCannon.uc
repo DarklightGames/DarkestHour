@@ -2113,8 +2113,8 @@ defaultproperties
     bAmbientEmitterAltFireOnly=true
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bShowAimCrosshair=false
-    AIInfo(0)=(bLeadTarget=true,bInstantHit=false,WarnTargetPct=0.75,AimError=0.0,RefireRate=0.5)
-    AIInfo(1)=(bLeadTarget=true,bFireOnRelease=true,WarnTargetPct=0.75,RefireRate=0.1)
+    AIInfo(0)=(AimError=0.0,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)
 
     // Sounds
     bAmbientAltFireSound=true

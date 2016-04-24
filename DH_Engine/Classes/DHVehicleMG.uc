@@ -644,7 +644,7 @@ defaultproperties
     bUsesTracers=true
     WeaponFireAttachmentBone="mg_yaw"
     bDoOffsetTrace=true
-    AIInfo(0)=(bInstantHit=false,bLeadTarget=true,bFireOnRelease=true,WarnTargetPct=0.75,AimError=750.0,RefireRate=0.1)
+    AIInfo(0)=(bFireOnRelease=true,AimError=750.0,RefireRate=0.99)
 
     // Firing effects
     AmbientEffectEmitterClass=class'TankMGEmitter'

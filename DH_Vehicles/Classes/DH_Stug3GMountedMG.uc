@@ -38,7 +38,6 @@ defaultproperties
     InitialPrimaryAmmo=50
     NumMags=12
     FireInterval=0.07059
-    AIInfo(0)=(RefireRate=0.07059)
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 

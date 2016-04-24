@@ -193,7 +193,6 @@ defaultproperties
     BarrelBones(3)="Barrel_BR"
     WeaponFireOffset=0.0
     bDoOffsetTrace=false
-    AIInfo(0)=(RefireRate=0.133333)
 
     // Firing effects
     AmbientEffectEmitterClass=class'DH_Guns.DH_M45QuadmountEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters

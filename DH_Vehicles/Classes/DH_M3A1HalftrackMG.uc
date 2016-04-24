@@ -43,7 +43,6 @@ defaultproperties
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
-    AIInfo(0)=(RefireRate=0.12)
 
     // Reload
     HUDOverlayReloadAnim="Reloads"
