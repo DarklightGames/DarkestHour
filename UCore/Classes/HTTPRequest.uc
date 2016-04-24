@@ -108,7 +108,7 @@ function Timer()
                     i = InStr(Response, MyLink.CRLF);
 
                     // Parse chunk length
-                    ChunkLength = class'UCore'.static.Hex2Int(Mid(Response, 0, i));
+                    ChunkLength = class'UString'.static.Hex2Int(Mid(Response, 0, i));
 
                     if (ChunkLength <= 0)
                     {

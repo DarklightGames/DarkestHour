@@ -8,7 +8,6 @@ class DH_USMortarman502101st extends DH_US_502PIR;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Mortar Operator"
     Article="a "

@@ -8,7 +8,6 @@ class DH_USAntiTank82nd extends DH_US_82nd_Airborne;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

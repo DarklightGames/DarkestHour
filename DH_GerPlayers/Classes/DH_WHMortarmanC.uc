@@ -8,7 +8,6 @@ class DH_WHMortarmanC extends DH_HeerCamo;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "

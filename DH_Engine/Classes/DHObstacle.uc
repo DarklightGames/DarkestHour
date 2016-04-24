@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 // This is the placeable obstacle class.
-// This acts simply as an informational actor. The client and server will spawn.
+// This acts simply as an informational actor. The client and server will spawn
+// their own DHObstacleInstance actors.
 //==============================================================================
 
 class DHObstacle extends Actor

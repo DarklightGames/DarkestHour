@@ -214,7 +214,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
         }
 
-        Log(class'DHLib'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ class'DHLib'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
+        Log(class'DHUnits'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ class'DHUnits'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
     }
 }
 
@@ -702,7 +702,7 @@ simulated function CheckForSplash(vector SplashLocation)
             // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
             // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well most of the time
             // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
-            Adjustment = 10.0 / Sin(class'DHLib'.static.UnrealToRadians(-Rotation.Pitch));
+            Adjustment = 10.0 / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
             SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
 
             Spawn(HitWaterEmitterClass,,, SplashLocation, rot(16384, 0, 0));

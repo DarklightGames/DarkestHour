@@ -57,9 +57,14 @@ var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
 var automated   GUIImage                    i_Arrows;
 
+//TODO: put "Kit" and "Squad" buttons in somewhere
+var automated   ROGUIProportionalContainer  c_Squads;
+
 var automated   array<GUIButton>            b_MenuOptions;
 
+
 var DHGameReplicationInfo                   GRI;
+var DHSquadReplicationInfo                  SRI;
 var DHPlayer                                PC;
 
 var localized   string                      NoneText;
@@ -83,9 +88,6 @@ var             byte                        SpawnVehicleIndex;
 var             bool                        bButtonsEnabled;
 
 var             material                    VehicleNoneMaterial;
-
-var             color                       RedColor;
-var             color                       GreyColor;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -247,6 +249,11 @@ function Timer()
         }
     }
 
+    if (SRI == none)
+    {
+        SRI = PC.SquadReplicationInfo;
+    }
+
     if (GRI != none)
     {
         UpdateRoles();
@@ -255,6 +262,11 @@ function Timer()
         UpdateStatus();
         UpdateButtons();
         UpdateSpawnPoints();
+    }
+
+    if (SRI != none)
+    {
+        UpdateSquads();
     }
 }
 
@@ -266,13 +278,13 @@ function UpdateRoundStatus()
     {
         if (GRI.AttritionRate[CurrentTeam] > 0.0)
         {
-            l_Reinforcements.TextColor = default.RedColor;
-            i_Reinforcements.ImageColor = default.RedColor;
+            l_Reinforcements.TextColor = class'UColor'.default.Red;
+            i_Reinforcements.ImageColor = class'UColor'.default.Red;
         }
         else
         {
-            l_Reinforcements.TextColor = default.WhiteColor;
-            i_Reinforcements.ImageColor = default.WhiteColor;
+            l_Reinforcements.TextColor = class'UColor'.default.White;
+            i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
 
         l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
@@ -608,7 +620,7 @@ function UpdateRoles()
 
         if (Limit == 0)
         {
-            S = MakeColorCode(GreyColor) $ S $ " [Locked]";
+            S @= "[Locked]";
         }
         else if (Limit == 255)
         {
@@ -1260,6 +1272,8 @@ function bool InternalOnPreDraw(Canvas C)
 
         if (AttritionRate > 0.0)
         {
+            // TODO: convert to a material so we don't have to
+            // make the alpha calculations ourself in script.
             i_Reinforcements.ImageColor.A = byte((Cos(2.0 * Pi * AttritionRate * PC.Level.TimeSeconds) * 128.0) + 128.0);
         }
         else
@@ -1269,6 +1283,48 @@ function bool InternalOnPreDraw(Canvas C)
     }
 
     return super.OnPreDraw(C);
+}
+
+function UpdateSquads()
+{
+    local int i, j, MemberCount;
+    local bool bIsSquadLocked, bIsSquadFull;
+    local array<DHPlayerReplicationInfo> Members;
+
+    if (SRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < SRI.GetTeamSquadLimit(CurrentTeam) ; ++i)
+    {
+        if (!SRI.IsSquadActive(CurrentTeam, i))
+        {
+            continue;
+        }
+
+        bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i);
+        bIsSquadFull = SRI.IsSquadFull(CurrentTeam, i);
+        MemberCount = SRI.GetMemberCount(CurrentTeam, i);
+
+        if (bIsSquadLocked)
+        {
+            // TODO: set up lock button
+        }
+
+        if (bIsSquadFull || bIsSquadLocked)
+        {
+            // TODO: disable join button
+        }
+
+        // TODO: display member count (eg. (2/8))
+        SRI.GetMembers(CurrentTeam, i, Members);
+
+        for (j = 0; j < Members.Length; ++j)
+        {
+            // TODO: add member to list
+        }
+    }
 }
 
 defaultproperties
@@ -1843,10 +1899,6 @@ defaultproperties
 
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
     NextChangeTeamTime=0.0
-
-    WhiteColor=(R=255,G=255,B=255,A=255)
-    RedColor=(R=255,G=0,B=0,A=255)
-    GreyColor=(R=128,G=128,B=128,A=255)
 
     OnPreDraw=InternalOnPreDraw
 

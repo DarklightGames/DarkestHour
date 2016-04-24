@@ -4,35 +4,69 @@
 
 class UCore extends Object;
 
-static function int Hex2Int(string S)
+static final function Swap(out Object A, out Object B)
 {
-    local int i, j, R;
-    local int Factor;
+    local Object T;
 
-    Factor = 1;
+    T = A;
+    A = B;
+    B = T;
+}
 
-    S = Caps(S);
+static final function ISwap(out int A, out int B)
+{
+    local int T;
 
-    for (i = Len(S) - 1; i >= 0; --i)
-    {
-        j = Asc(Mid(S, i, 1));
+    T = A;
+    A = B;
+    B = T;
+}
 
-        if (j >= 0x30 && j <= 0x39)
-        {
-            R += int(Mid(S, i, 1)) * Factor;
-        }
-        else if (j >= 0x41 && j <= 0x46)
-        {
-            R += (10 + (j - 0x41)) * Factor;
-        }
-        else if (j == 0x58)
-        {
-            break;
-        }
+static final function FSwap(out float A, out float B)
+{
+    local float T;
 
-        Factor *= 16;
-    }
+    T = A;
+    A = B;
+    B = T;
+}
+
+static final function VSwap(out vector A, out vector B)
+{
+    FSwap(A.X, B.X);
+    FSwap(A.Y, B.Y);
+    FSwap(A.Z, B.Z);
+}
+
+static final function vector VReflect(vector V, vector N)
+{
+    return V - (N * 2.0 * (V dot N));
+}
+
+static final function vector VHalf(vector A, vector B)
+{
+    return (A + B) / VSize(A + B);
+}
+
+static final function vector VClamp(vector V, vector A, vector B)
+{
+    local vector R;
+
+    R.X = FClamp(V.X, A.X, B.X);
+    R.Y = FClamp(V.Y, A.Y, B.Y);
+    R.Z = FClamp(V.Z, A.Z, B.Z);
 
     return R;
+}
+
+static final function vector VClampSize(vector V, float Min, float Max)
+{
+    // Avoid divide-by-zero error.
+    if (V == vect(0, 0, 0))
+    {
+        return V;
+    }
+
+    return Normal(V) * FClamp(VSize(V), Min, Max);
 }
 

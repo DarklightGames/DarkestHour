@@ -8,7 +8,6 @@ class DH_USMortarman3rd extends DH_US_3rd_Infantry;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Mortar Operator"
     Article="a "

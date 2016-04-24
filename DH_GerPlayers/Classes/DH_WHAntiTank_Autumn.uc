@@ -8,7 +8,6 @@ class DH_WHAntiTank_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

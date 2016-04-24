@@ -33,6 +33,8 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
+var     DHSquadReplicationInfo      SquadReplicationInfo;
+
 var struct VersionInfo
 {
     var int Major;
@@ -55,6 +57,13 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
     }
+}
+
+function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()
@@ -879,15 +888,23 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-// Stop the game from automatically trimming longer names
 event PlayerController Login(string Portal, string Options, out string Error)
 {
     local string InName;
     local PlayerController NewPlayer;
+    local DHPlayer PC;
 
-    InName = Left(ParseOption (Options, "Name"), 32);
+    // Stop the game from automatically trimming longer names
+    InName = Left(ParseOption(Options, "Name"), 32);
 
     NewPlayer = super.Login(Portal, Options, Error);
+
+    PC = DHPlayer(NewPlayer);
+
+    if (PC != none)
+    {
+        PC.SquadReplicationInfo = SquadReplicationInfo;
+    }
 
     ChangeName(NewPlayer, InName, false);
 
@@ -2719,6 +2736,8 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SpawnVehicleIndex = 255;
 
             GRI.UnreserveVehicle(PC);
+
+            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
         }
     }
 
@@ -3303,7 +3322,7 @@ function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional
     if (DHP != none && DHP.Pawn != none)
     {
         Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHLib'.static.MetersToUnreal(Max(Distance,5)));
+        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance,5)));
 
         VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
         CreatedVehicle = spawn(VehicleClass,,, TargetLocation, Direction);
@@ -3334,7 +3353,7 @@ function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
         if (Distance > 0)
         {
             Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-            TargetLocation = TargetLocation + (vector(Direction) * class'DHLib'.static.MetersToUnreal(Distance));
+            TargetLocation = TargetLocation + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
         }
 
         for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -3377,6 +3396,7 @@ function NotifyLogout(Controller Exiting)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PC = DHPlayer(Exiting);
@@ -3391,6 +3411,10 @@ function NotifyLogout(Controller Exiting)
         }
 
         GRI.UnreserveVehicle(PC);
+
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        SquadReplicationInfo.LeaveSquad(PRI);
     }
 
     super.Destroyed();
@@ -3414,14 +3438,7 @@ function SendReinforcementMessage(int Team, int Num)
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
-    if (DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] <= 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] <= 0;
 }
 
 function int GetRoundTime()
@@ -3503,6 +3520,20 @@ event PostLogin(PlayerController NewPlayer)
     if (DHPlayer(NewPlayer) != none && Level.NetMode == NM_DedicatedServer)
     {
         DHPlayer(NewPlayer).ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
+    }
+}
+
+function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DHBroadcastHandler BH;
+
+    Log("BroadcastSquad" @ Sender @ Msg @ Type);
+
+    BH = DHBroadcastHandler(BroadcastHandler);
+
+    if (BH != none)
+    {
+        BH.BroadcastSquad(Sender, Msg, Type);
     }
 }
 

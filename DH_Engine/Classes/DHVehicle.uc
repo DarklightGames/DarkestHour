@@ -46,7 +46,7 @@ var     float       PointValue;                  // used for scoring
 var     float       SpikeTime;                   // time (seconds) before an empty, disabled vehicle will be automatically blown up
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning vehicle
 var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly player pawn found (ignoring line of sight check)
-var     ObjectMap   NotifyParameters;            // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     TreeMap_string_Object   NotifyParameters;            // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Driver & driving
@@ -209,8 +209,8 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Set up new NotifyParameters object
-        NotifyParameters = new class'ObjectMap';
-        NotifyParameters.Insert("VehicleClass", Class);
+        NotifyParameters = new class'TreeMap_string_Object';
+        NotifyParameters.Put("VehicleClass", Class);
     }
 }
 
@@ -1607,7 +1607,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
         LocDir = vector(Rotation);
         LocDir.Z = 0.0;
         HitDir.Z = 0.0;
-        HitAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
+        HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
         Side = Y dot HitDir;
 
         if (Side < 0.0)
@@ -1619,7 +1619,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
         if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
         {
             // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
-            InAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(Y)));
+            InAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(Y)));
 
             // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to left side (same as in DHShouldPenetrate)
             if (InAngleDegrees > 90.0)
@@ -1662,7 +1662,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
         // Left track hit
         else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
         {
-            InAngleDegrees = class'DHLib'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(-Y)));
+            InAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(-Y)));
 
             // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to right side
             if (InAngleDegrees > 90.0)
@@ -2659,7 +2659,7 @@ simulated event NotifySelected(Pawn User)
 {
     if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
-        NotifyParameters.Insert("Controller", User.Controller);
+        NotifyParameters.Put("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
         LastNotifyTime = Level.TimeSeconds;
     }

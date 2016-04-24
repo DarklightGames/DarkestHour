@@ -135,6 +135,21 @@ function bool OnDblClick(GUIComponent Sender)
     return false;
 }
 
+function bool MyContextOpen(GUIContextMenu Menu)
+{
+    //return HandleContextMenuOpen(List, Menu, Menu.MenuOwner);
+}
+
+function bool MyContextClose(GUIContextMenu Sender)
+{
+    //return HandleContextMenuClose(Sender);
+}
+
+function MyContextSelect(GUIContextMenu Sender, int Index)
+{
+    //NotifyContextSelect(Sender, Index);
+}
+
 defaultproperties
 {
     OnDraw=InternalOnDraw
@@ -232,4 +247,16 @@ defaultproperties
     b_SpawnVehicles(5)=SpawnVehicleButton
     b_SpawnVehicles(6)=SpawnVehicleButton
     b_SpawnVehicles(7)=SpawnVehicleButton
+
+    Begin Object Class=GUIContextMenu Name=RCMenu
+        ContextItems(0)="Attack"
+        ContextItems(1)="Defend"
+        ContextItems(2)="-"
+        ContextItems(3)="Clear"
+        OnOpen=MyContextOpen
+        OnClose=MyContextClose
+        OnSelect=MyContextSelect
+    End Object
+    ContextMenu=GUIContextMenu'DH_Interface.DHGUIMapComponent.RCMenu'
 }
+

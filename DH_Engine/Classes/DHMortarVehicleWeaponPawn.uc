@@ -802,7 +802,7 @@ simulated function DrawHUD(Canvas C)
 
             // Get elevation & traverse
             Elevation = Mortar.Elevation;
-            Traverse = class'DHLib'.static.UnrealToDegrees(Mortar.CurrentAim.Yaw);
+            Traverse = class'UUnits'.static.UnrealToDegrees(Mortar.CurrentAim.Yaw);
 
             if (Traverse > 180.0) // convert to +/-
             {
@@ -881,9 +881,9 @@ simulated function DrawHUD(Canvas C)
             C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
             C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
 
-            HUDArrowTexture.Rotation.Yaw = class'DHLib'.static.DegreesToUnreal(Elevation + 180.0);
-            Loc.X = Cos(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
-            Loc.Y = Sin(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
+            HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
+            Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
+            Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
             C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
             C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
 

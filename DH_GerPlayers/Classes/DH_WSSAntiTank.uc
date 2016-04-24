@@ -8,7 +8,6 @@ class DH_WSSAntiTank extends DH_WaffenSS;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

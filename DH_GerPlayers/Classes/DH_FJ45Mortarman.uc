@@ -8,7 +8,6 @@ class DH_FJ45Mortarman extends DH_FJ_1945;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "

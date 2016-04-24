@@ -7,9 +7,9 @@ class DH_30calFire extends DHMGAutomaticFire;
 
 defaultproperties
 {
-    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     AmbientFireSoundRadius=750.0
-    AmbientFireSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AmbientFireVolume=255
     PackingThresholdTime=0.12
     ProjSpawnOffset=(X=25.0)

@@ -21,13 +21,6 @@ var     bool    bClientPlayedDriveAnim;   // flags that net client already playe
 
 // Resupply
 var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
-var     bool    bHasMGAmmo;
-var     bool    bHasATAmmo;
-var     bool    bHasMortarAmmo;
-var     bool    bCanMGResupply;
-var     bool    bCanATResupply;
-var     bool    bCanATReload;
-var     bool    bCanMortarResupply;
 var     int     MortarHEAmmo;
 var     int     MortarSmokeAmmo;
 
@@ -97,19 +90,19 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+// Touch messages
+var     class<LocalMessage> TouchMessageClass;
+var     float               LastNotifyTime;
+
 replication
 {
-    // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bHasATAmmo, bHasMGAmmo, bHasMortarAmmo;
-
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
         bWeaponNeedsReload;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
+        bOnFire, bCrouchMantle, MantleHeight;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -278,22 +271,9 @@ function PossessedBy(Controller C)
 
             // We've now been possessed
             bHasBeenPossessed = true;
+            bUsedCarriedMGAmmo = false;
 
-            // Give resupply ammunition.
-            if (DHRI.bCarriesATAmmo)
-            {
-                bHasATAmmo = true;
-            }
-            if (DHRI.bCarriesMGAmmo)
-            {
-                bHasMGAmmo = true;
-            }
-            if (DHRI.bCarriesMortarAmmo)
-            {
-                bHasMortarAmmo = true;
-            }
-
-            // Give default mortar ammunition.
+            // Give default mortar ammunition. (TODO: this is horrible!)
             if (DHRI.bCanUseMortars)
             {
                 if (C.GetTeamNum() == 0) // axis
@@ -308,10 +288,6 @@ function PossessedBy(Controller C)
                 }
             }
         }
-    }
-    else
-    {
-
     }
 
     // Send the info to the client now to make sure RoleInfo is replicated quickly
@@ -1056,120 +1032,129 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 }
 
 // Handle ammo resupply
-function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
+function TossAmmo(Pawn Gunner)
 {
-    local bool bResupplySuccessful;
+    local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
+    local DHWeapon W;
 
-    bResupplySuccessful = false;
-
-    if ((!bHasATAmmo && bIsATWeapon) || (!bHasMGAmmo && !bIsATWeapon))
+    if (bUsedCarriedMGAmmo || Gunner == none)
     {
         return;
     }
 
-    if (DHWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).ResupplyAmmo())
+    G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    W = DHWeapon(Gunner.Weapon);
+
+    if (W == none || !W.ResupplyAmmo())
     {
-        if (bHasATAmmo && bIsATWeapon)
+        return;
+    }
+
+    bUsedCarriedMGAmmo = true;
+
+    if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
+    {
+        Gunner.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
+        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to supplier
+
+        if (GRI != none &&
+            Gunner.Controller != none &&
+            Gunner.Controller.PlayerReplicationInfo != none)
         {
-            bResupplySuccessful = true;
-            bHasATAmmo = false;
+            GRI.RemoveMGResupplyRequestFor(Gunner.Controller.PlayerReplicationInfo);
         }
-        else if (bHasMGAmmo && !bIsATWeapon)
+
+        if (G != none)
         {
-            bResupplySuccessful = true;
-            bHasMGAmmo = false;
+            G.ScoreMGResupply(Controller, Gunner.Controller);
         }
     }
 
-    if (bResupplySuccessful)
-    {
-        if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
-        {
-            Gunner.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
-            ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to supplier
-
-            if (Gunner.Controller.PlayerReplicationInfo != none && ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none) // remove any resupply request
-            {
-                ROGameReplicationInfo(Level.Game.GameReplicationInfo).RemoveMGResupplyRequestFor(Gunner.Controller.PlayerReplicationInfo);
-            }
-
-            if (bIsATWeapon)
-            {
-                DarkestHourGame(Level.Game).ScoreATResupply(Controller, Gunner.Controller);
-            }
-            else
-            {
-                DarkestHourGame(Level.Game).ScoreMGResupply(Controller, Gunner.Controller);
-            }
-        }
-
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
-    }
+    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function TossMortarAmmo(DHPawn P)
 {
-    if (bHasMortarAmmo && P != none && P.ResupplyMortarAmmunition())
+    local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
+
+    if (bUsedCarriedMGAmmo || P == none || !P.ResupplyMortarAmmunition())
     {
-        bHasMortarAmmo = false;
+        return;
+    }
 
-        if (DarkestHourGame(Level.Game) != none && Controller != none && P.Controller != none)
+    bUsedCarriedMGAmmo = true;
+
+    G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (Controller != none && P.Controller != none)
+    {
+        // notification message to gunner
+        P.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
+
+        // notification message to supplier
+        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
+
+        if (GRI != none) // remove any resupply request
         {
-            P.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to gunner
-            ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo); // notification message to supplier
-
-            if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none) // remove any resupply request
-            {
-                ROGameReplicationInfo(Level.Game.GameReplicationInfo).RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
-            }
-
-            DarkestHourGame(Level.Game).ScoreMortarResupply(Controller, P.Controller);
+            GRI.RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+        G.ScoreMortarResupply(Controller, P.Controller);
     }
+
+    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
+
 
 function TossMortarVehicleAmmo(DHMortarVehicle V)
 {
     local DarkestHourGame  G;
+    local DHGameReplicationInfo GRI;
     local PlayerController Recipient;
 
-    if (V == none || Controller == none || !bHasMortarAmmo || !ResupplyMortarVehicleWeapon(V))
+    if (V == none || Controller == none || bUsedCarriedMGAmmo || !ResupplyMortarVehicleWeapon(V))
     {
         return;
     }
 
-    bHasMortarAmmo = false;
+    bUsedCarriedMGAmmo = true;
 
     G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (G == none)
-    {
-        return;
-    }
-
-    if (V.WeaponPawns.Length > 0 && V.WeaponPawns[0] != none && V.WeaponPawns[0].Controller != none)
+    if (V.WeaponPawns.Length > 0 && V.WeaponPawns[0] != none)
     {
         Recipient = PlayerController(V.WeaponPawns[0].Controller);
     }
 
     if (Recipient != none)
     {
-        Recipient.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo); // notification message to recipient
-        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);            // notification message to supplier
+        // "You have resupplied {0}"
+        ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
 
-        if (DHGameReplicationInfo(G.GameReplicationInfo) != none) // remove any resupply request
+        // "You have been resupplied by {0}"
+        Recipient.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
+
+        if (GRI != none)
         {
-            DHGameReplicationInfo(G.GameReplicationInfo).RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
+            // Remove any resupply request
+            GRI.RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
         }
     }
     else
     {
-        ReceiveLocalizedMessage(class'DHResupplyMessage', 2); // notification message to supplier
+        // "You have resupplied a friendly mortar"
+        ReceiveLocalizedMessage(class'DHResupplyMessage', 2);
     }
 
-    G.ScoreMortarResupply(Controller, Recipient);
+    if (G != none)
+    {
+        G.ScoreMortarResupply(Controller, Recipient);
+    }
 
     PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
@@ -1196,15 +1181,29 @@ function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
 // Handle assisted reload
 function LoadWeapon(Pawn Gunner)
 {
-    // Can reload the other player (AssistedReload returns true if was successful)
-    if (ROWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).AssistedReload())
+    local DHWeapon W;
+    local DarkestHourGame G;
+
+    if (Gunner == none)
     {
-        if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
+        return;
+    }
+
+    W = DHWeapon(Gunner.Weapon);
+    G = DarkestHourGame(Level.Game);
+
+    // Can reload the other player (AssistedReload returns true if was successful)
+    if (W != none && W.AssistedReload())
+    {
+        if (Controller != none && Gunner.Controller != none)
         {
             Gunner.ReceiveLocalizedMessage(class'DHATLoadMessage', 1, Controller.PlayerReplicationInfo); // notification message to recipient (been reloaded by [player])
             ReceiveLocalizedMessage(class'DHATLoadMessage', 0, Gunner.Controller.PlayerReplicationInfo); // notification message to loader (you loaded [player])
 
-            DarkestHourGame(Level.Game).ScoreATReload(Controller, Gunner.Controller);
+            if (G != none)
+            {
+                G.ScoreATReload(Controller, Gunner.Controller);
+            }
         }
 
         PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
@@ -4718,6 +4717,33 @@ simulated function DebugInitPlayer()
     Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
 }
 
+simulated function NotifySelected(Pawn User)
+{
+    local DHPawn P;
+
+    P = DHPawn(User);
+
+    if (P == none ||
+        Level.NetMode == NM_DedicatedServer ||
+        !User.IsHumanControlled() ||
+        (Level.TimeSeconds - LastNotifyTime) < TouchMessageClass.default.LifeTime ||
+        Health <= 0)
+    {
+        return;
+    }
+
+    if (!P.bUsedCarriedMGAmmo && bWeaponNeedsResupply)
+    {
+        P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
+        LastNotifyTime = Level.TimeSeconds;
+    }
+    else if (bWeaponNeedsReload)
+    {
+        P.ReceiveLocalizedMessage(TouchMessageClass, 1, self.PlayerReplicationInfo,, User.Controller);
+        LastNotifyTime = Level.TimeSeconds;
+    }
+}
+
 defaultproperties
 {
     StanceChangeStaminaDrain=1.5
@@ -4792,4 +4818,14 @@ defaultproperties
     // So unless Mesh is overridden in subclass, pawn spawn with inherited 'Characters_anm.ger_rifleman_tunic' mesh (many German roles do this)
     // That can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat'
+
+    bAutoTraceNotify=true
+    bCanAutoTraceSelect=true
+    TouchMessageClass=class'DHPawnTouchMessage'
+
+    StaminaRecoveryRate=1.15
+    CrouchStaminaRecoveryRate=1.3
+    ProneStaminaRecoveryRate=1.5
+    SlowStaminaRecoveryRate=0.5
 }
+

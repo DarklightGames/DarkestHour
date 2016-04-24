@@ -8,7 +8,6 @@ class DH_12thSSMortarman extends DH_12thSS;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Werferschütze"
     Article="a "

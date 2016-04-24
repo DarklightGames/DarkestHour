@@ -7,10 +7,8 @@ class DHTab_Hud extends ROTab_Hud;
 
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowDeathMessages;
-var automated moCheckBox    ch_ShowVoiceIcon;
 var bool bSimpleColours;
 var bool bShowDeathMessages;
-var bool bShowVoiceIcon;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -18,7 +16,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
-    i_BG1.ManageComponent(ch_ShowVoiceIcon);
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -51,10 +48,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
              bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
              ch_ShowDeathMessages.SetComponentValue(bShowDeathMessages, true);
              break;
-        case ch_ShowVoiceIcon:
-            bShowVoiceIcon = class'DHHud'.default.bShowVoiceIcon;
-            ch_ShowVoiceIcon.SetComponentValue(bShowVoiceIcon, true);
-            break;
         case ch_UseNativeRoleNames:
             if (DHP != none)
             {
@@ -247,13 +240,6 @@ function SaveSettings()
             bSave = true;
         }
 
-        if (H.bShowVoiceIcon != bShowVoiceIcon)
-        {
-            H.bShowVoiceIcon = bShowVoiceIcon;
-            PC.ConsoleCommand("set DH_Engine.DHHud bShowVoiceIcon" @ string(bShowVoiceIcon));
-            bSave = true;
-        }
-
         if (bSave)
         {
             H.SaveConfig();
@@ -265,7 +251,6 @@ function SaveSettings()
         class'DHHud'.default.bShowMapUpdatedText = bShowMapUpdatedText;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-        class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
         class'DHHud'.static.StaticSaveConfig();
     }
 }
@@ -279,9 +264,6 @@ function InternalOnChange(GUIComponent Sender)
             break;
         case ch_ShowDeathMessages:
             bShowDeathMessages = ch_ShowDeathMessages.IsChecked();
-            break;
-        case ch_ShowVoiceIcon:
-            bShowVoiceIcon = ch_ShowVoiceIcon.IsChecked();
             break;
         default:
             super.InternalOnChange(Sender);
@@ -320,21 +302,6 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowDeathMessages=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowDeathMessages'
-    Begin Object Class=DHmoCheckBox Name=GameHudShowVoiceIcon
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.9
-        Caption="Show Voice Icon"
-        OnCreateComponent=GameHudShowVoiceIcon.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.822959
-        WinLeft=0.555313
-        WinWidth=0.373749
-        WinHeight=0.034156
-        TabOrder=27
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    ch_ShowVoiceIcon=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowVoiceIcon'
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9

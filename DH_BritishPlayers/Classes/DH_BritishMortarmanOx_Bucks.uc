@@ -8,7 +8,6 @@ class DH_BritishMortarmanOx_Bucks extends DH_Ox_Bucks;
 defaultproperties
 {
     bCanUseMortars=true
-    bCarriesMortarAmmo=false
     MyName="Mortar Operator"
     AltName="Mortar Operator"
     Article="a "

@@ -8,7 +8,6 @@ class DH_BritishAntiTankWorcesters extends DH_Worcesters;
 defaultproperties
 {
     bIsATGunner=true
-    bCarriesATAmmo=false
     MyName="Tank Hunter"
     AltName="Tank Hunter"
     Article="a "

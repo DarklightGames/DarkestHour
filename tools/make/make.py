@@ -18,7 +18,6 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(OrderedDict, self).__setitem__(key, value)
 
-
 def main():
     # red orchestra directory
     ro_dir = os.environ.get('RODIR')

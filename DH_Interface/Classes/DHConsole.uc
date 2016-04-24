@@ -292,7 +292,34 @@ exec function VehicleTalk()
         ViewportOwner.Actor.Pawn.IsA('Vehicle'))
     {
         TypedStr = "VehicleSay ";
-        TypedStrPos = 11;
+        TypedStrPos = Len(TypedStr);
+        TypingOpen();
+    }
+}
+
+exec function SquadTalk()
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    if (ViewportOwner == none || ViewportOwner.Actor == none)
+    {
+        return;
+    }
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI != none && PRI.IsInSquad())
+    {
+        TypedStr = "SquadSay ";
+        TypedStrPos = Len(TypedStr);
         TypingOpen();
     }
 }

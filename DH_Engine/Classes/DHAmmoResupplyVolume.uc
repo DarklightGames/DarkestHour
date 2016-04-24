@@ -94,21 +94,11 @@ function Timer()
                 }
             }
 
-            if (RI != none)
+            if (RI != none && DHP.bUsedCarriedMGAmmo)
             {
-                if (!DHP.bHasMGAmmo && RI.bCarriesMGAmmo)
-                {
-                    DHP.bHasMGAmmo = true;
+                DHP.bUsedCarriedMGAmmo = false;
 
-                    bResupplied = true;
-                }
-
-                if (!DHP.bHasATAmmo && RI.bCarriesATAmmo)
-                {
-                    DHP.bHasATAmmo = true;
-
-                    bResupplied = true;
-                }
+                bResupplied = true;
             }
         }
 
@@ -134,9 +124,9 @@ function Timer()
                 }
             }
 
-            if (!DHP.bHasMortarAmmo && RI.bCarriesMortarAmmo)
+            if (DHP.bUsedCarriedMGAmmo)
             {
-                DHP.bHasMortarAmmo = true;
+                DHP.bUsedCarriedMGAmmo = false;
 
                 bResupplied = true;
             }
