@@ -890,7 +890,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     local color                 VehicleColor;
     local rotator               MyRot;
     local int                   i, Current, Pending;
-    local float                 f, XL, YL, Y_one, MyScale, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset; // offsets text vertically when drawing coaxial ammo info
+    local float                 f, XL, YL, Y_one, MyScale, StrX, StrY, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset;
     local array<string>         Lines;
 
     if (bHideHud)
@@ -1030,12 +1030,12 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
 
-            // Draw ammo type
             if (V.Cannon != none)
             {
+                // Draw different ammo types
                 if (V.Cannon.bMultipleRoundTypes)
                 {
-                    // Get ammo types
+                    // Get ammo types text, font & position
                     Current = V.Cannon.GetRoundsDescription(Lines);
                     Pending = V.Cannon.GetPendingRoundIndex();
 
@@ -1050,36 +1050,39 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         Canvas.Font = GetSmallMenuFont(Canvas);
                     }
 
-                    i = (Current + 1) % Lines.Length;
-
-                    while (true)
+                    // Draw ammo types (from last, upwards on the screen)
+                    for (i = Lines.Length - 1; i >= 0; --i)
                     {
-                        if (i == Pending)
+                        if (Lines[i] == "")
                         {
-                            VehicleAmmoTypeText.Text = Lines[i] $ "<-";
-                        }
-                        else
-                        {
-                            VehicleAmmoTypeText.Text = Lines[i];
+                            continue;
                         }
 
                         if (i == Current)
                         {
-                            VehicleAmmoTypeText.Tints[TeamIndex].A = 255;
+                            Lines[i] = ">" $ Lines[i]; // add indicator prefix for currently ammo type (adjust drawing position to suit)
+                            Canvas.TextSize(">", StrX, StrY);
+                            VehicleAmmoTypeText.OffsetX -= StrX;
+                            VehicleAmmoTypeText.Tints[TeamIndex].A = 255; // bold text for current ammo type
                         }
                         else
                         {
-                            VehicleAmmoTypeText.Tints[TeamIndex].A = 128;
+                            VehicleAmmoTypeText.Tints[TeamIndex].A = 128; // pale text for other available ammo types
                         }
 
+                        if (i == Pending)
+                        {
+                            Lines[i] = Lines[i] $ "<-"; // add indicator suffix to pending ammo type
+                        }
+
+                        // Draw this ammo type & adjust drawing position for next type
+                        VehicleAmmoTypeText.Text = Lines[i];
                         DrawTextWidgetClipped(Canvas, VehicleAmmoTypeText, Coords2, XL, YL, Y_one);
                         VehicleAmmoTypeText.OffsetY -= YL;
 
-                        i = (i + 1) % Lines.Length;
-
-                        if (i == (Current + 1) % Lines.Length)
+                        if (i == Current)
                         {
-                            break;
+                            VehicleAmmoTypeText.OffsetX += StrX; // reset after adjusting for current ammo indicator
                         }
                     }
                 }
