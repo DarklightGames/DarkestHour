@@ -59,35 +59,16 @@ static final function vector VClamp(vector V, vector A, vector B)
     return R;
 }
 
-static final function int Hex2Int(string S)
+static final function vector VClampSize(vector V, float Min, float Max)
 {
-    local int i, j, R;
-    local int Factor;
+    local float Size;
 
-    Factor = 1;
-
-    S = Caps(S);
-
-    for (i = Len(S) - 1; i >= 0; --i)
+    // Avoid divide-by-zero error.
+    if (V == vect(0, 0, 0))
     {
-        j = Asc(Mid(S, i, 1));
-
-        if (j >= 0x30 && j <= 0x39)
-        {
-            R += int(Mid(S, i, 1)) * Factor;
-        }
-        else if (j >= 0x41 && j <= 0x46)
-        {
-            R += (10 + (j - 0x41)) * Factor;
-        }
-        else if (j == 0x58)
-        {
-            break;
-        }
-
-        Factor *= 16;
+        return V;
     }
 
-    return R;
+    return Normal(V) * FClamp(VSize(V), Min, Max);
 }
 

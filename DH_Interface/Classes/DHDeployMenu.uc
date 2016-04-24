@@ -1288,7 +1288,7 @@ function bool InternalOnPreDraw(Canvas C)
 function UpdateSquads()
 {
     local int i, j, MemberCount;
-    local bool bIsInSquad, bIsSquadLocked, bIsSquadFull;
+    local bool bIsSquadLocked, bIsSquadFull;
     local array<DHPlayerReplicationInfo> Members;
 
     if (SRI == none)

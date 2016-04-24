@@ -963,16 +963,6 @@ simulated function bool GetSquadOrder(int TeamIndex, int SquadIndex, out ESquadO
     return true;
 }
 
-function ClearSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
-{
-    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
-    {
-        return;
-    }
-
-    InternalSetSquadOrder(TeamIndex, SquadIndex, ORDER_None);
-}
-
 function SetSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadOrderType Type, vector Location)
 {
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))

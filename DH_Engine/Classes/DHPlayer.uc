@@ -69,6 +69,8 @@ var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
 
+var     DHCommandInteraction SquadOrderInteraction;
+
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 
 replication
@@ -91,7 +93,7 @@ replication
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         SeverSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadCommandeer, SquadLock;
+        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -3369,6 +3371,20 @@ function ServerSquadPromote(string PlayerName)
     }
 }
 
+function ServerSquadOrder(DHSquadReplicationInfo.ESquadOrderType Type, optional vector Location)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo == none || PRI == none)
+    {
+        return;
+    }
+
+    SquadReplicationInfo.SetSquadOrder(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // END SQUAD DEBUG FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -3409,7 +3425,7 @@ function ServerSquadSay(string Msg)
     }
 }
 
-exec function OrderMenu()
+exec function ShowOrderMenu()
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -3417,7 +3433,17 @@ exec function OrderMenu()
 
     if (PRI != none && PRI.IsSquadLeader())
     {
-        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadOrderInteraction", Player);
+        SquadOrderInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
+        SquadOrderInteraction.PushMenu("DH_Engine.DHCommandMenu_SquadLeader");
+    }
+}
+
+exec function HideOrderMenu()
+{
+    // TODO: on death, hide order menu
+    if (SquadOrderInteraction != none)
+    {
+        SquadOrderInteraction.Hide();
     }
 }
 

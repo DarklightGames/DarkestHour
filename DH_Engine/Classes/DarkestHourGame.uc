@@ -3488,14 +3488,7 @@ function SendReinforcementMessage(int Team, int Num)
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
-    if (DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] <= 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] <= 0;
 }
 
 function int GetRoundTime()

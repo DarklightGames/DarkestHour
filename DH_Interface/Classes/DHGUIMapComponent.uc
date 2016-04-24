@@ -135,6 +135,21 @@ function bool OnDblClick(GUIComponent Sender)
     return false;
 }
 
+function bool MyContextOpen(GUIContextMenu Menu)
+{
+    //return HandleContextMenuOpen(List, Menu, Menu.MenuOwner);
+}
+
+function bool MyContextClose(GUIContextMenu Sender)
+{
+    //return HandleContextMenuClose(Sender);
+}
+
+function MyContextSelect(GUIContextMenu Sender, int Index)
+{
+    //NotifyContextSelect(Sender, Index);
+}
+
 defaultproperties
 {
     OnDraw=InternalOnDraw
@@ -238,9 +253,9 @@ defaultproperties
         ContextItems(1)="Defend"
         ContextItems(2)="-"
         ContextItems(3)="Clear"
-        //OnOpen=DHGUIMapComponent.InternalOnOpen
-        //OnClose=DHGUIMapComponent.InternalOnClose
-        //OnSelect=DHGUIMapComponent.InternalOnClick
+        OnOpen=MyContextOpen
+        OnClose=MyContextClose
+        OnSelect=MyContextSelect
     End Object
     ContextMenu=GUIContextMenu'DH_Interface.DHGUIMapComponent.RCMenu'
 }
