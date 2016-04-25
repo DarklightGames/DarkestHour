@@ -101,7 +101,7 @@ replication
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         SeverSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder;
+        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)

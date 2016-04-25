@@ -122,6 +122,7 @@ function Tick(float DeltaTime)
         // Calculated the selected index
         ArcLength = Tau / Menu.Options.Length;
         Theta = Atan(Cursor.Y, Cursor.X) + (ArcLength / 2);
+        Theta += class'UUnits'.static.DegreesToRadians(90);
 
         if (Theta < 0)
         {
@@ -172,6 +173,8 @@ function PostRender(Canvas C)
 
     Menu = DHCommandMenu(Menus.Peek());
 
+    Theta -= class'UUnits'.static.DegreesToRadians(90);
+
     if (Menu != none)
     {
         ArcLength = Tau / Menu.Options.Length;
@@ -217,6 +220,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Actor A, HitActor;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -255,10 +259,26 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // guessing that %99.9 of players use left mouse as the fire
                 // key, so this will do for now.
                 case IK_LeftMouse:
-                    TraceStart = PC.Pawn.Location + PC.Pawn.EyePosition();
-                    TraceEnd = TraceStart + (vector(PC.Rotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
+                    TraceStart = PC.CalcViewLocation;
+                    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
 
-                    if (PC.Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
+                    foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
+                    {
+                        if (A == PC.Pawn ||
+                            A.IsA('ROBulletWhipAttachment') ||
+                            A.IsA('Volume'))
+                        {
+                            continue;
+                        }
+
+                        HitActor = A;
+
+                        break;
+                    }
+
+                    Log(HitActor);
+
+                    if (HitActor == none)
                     {
                         HitLocation = TraceEnd;
                     }
