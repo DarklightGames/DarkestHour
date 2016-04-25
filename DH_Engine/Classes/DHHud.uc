@@ -879,12 +879,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 {
     local DHVehicle             V;
     local ROVehicleWeaponPawn   WeaponPawn;
-    local ROVehicleWeapon       VehWeapon;
-    local ROTankCannon          Cannon;
     local DHPlayerReplicationInfo PRI;
     local AbsoluteCoordsInfo    Coords, Coords2;
     local SpriteWidget          Widget;
-    local TexRotator            VehicleHudTurret, VehicleHudTurretLook;
     local color                 VehicleColor, SavedDrawColor;
     local rotator               MyRot;
     local int                   i, Current, Pending;
@@ -1490,7 +1487,7 @@ function DrawSignals(Canvas C)
 {
     local int i;
     local DHPlayer PC;
-    local vector    ViewLocation, Direction;
+    local vector    Direction;
     local vector    TraceStart, TraceEnd;
     local vector    ScreenLocation;
     local Material  SignalMaterial;
@@ -4451,6 +4448,210 @@ simulated function DrawLCDObjectives(Canvas C, GUIController GC)
     GC.LCDRepaint();
 }
 
+// Modified to use DHVehicleCannon instead of deprecated ROTankCannon, & remove some obsolete RO weapon/ammo references
+simulated function DrawLCDPlayerStatus(Canvas C, GUIController GC)
+{
+    local ROGameReplicationInfo GRI;
+    local ROPawn                ROP;
+    local ROVehicle             ROV;
+    local ROVehicleWeaponPawn   ROVWP;
+    local Weapon                W;
+    local float                 RoundTime, RespawnTime;
+    local int                   PawnHealth, Enginehealth, Amount, Row, x, xl, yl;
+    local string                WName, s;
+
+    GC.LCDCls();
+
+    if (PawnOwner == none)
+    {
+        GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            if (PlayerOwner.IsInState('Dead') || PlayerOwner.IsInState('DeadSpectating'))
+            {
+                GC.LCDDrawText("Dead", 0, 10 * Row, GC.LCDMedFont);
+            }
+            else
+            {
+                GC.LCDDrawText("Waiting To Spawn", 0, 10 * Row, GC.LCDMedFont);
+            }
+
+            Row++;
+            GC.LCDDrawTile(texture'engine.WhiteSquareTexture', 0, 16 * Row, 160, 1, 0, 0, 1, 1);
+
+            // Update round timer
+            if (!GRI.bMatchHasBegun)
+            {
+                RoundTime = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+            }
+            else
+            {
+                RoundTime = GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime;
+            }
+
+            s = default.TimeRemainingText $ GetTimeString(RoundTime);
+            GC.LCDDrawText(s, 0, 20 * Row, GC.LCDTinyFont);
+            Row++;
+
+            if (GRI.bMatchHasBegun && ROPlayer(PlayerOwner) != none && ROPlayer(PlayerOwner).CanRestartPlayer() && PlayerOwner.PlayerReplicationInfo.Team != none
+                && GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
+            {
+                RespawnTime = GRI.LastReinforcementTime[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex]
+                    + GRI.ReinforcementInterval[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] - GRI.ElapsedTime;
+
+                s = default.ReinforcementText $ GetTimeString(RespawnTime);
+                GC.LCDDrawText(s, 0, 15 * Row, GC.LCDTinyFont);
+                Row++;
+            }
+        }
+    }
+    else
+    {
+        ROP = ROPawn(PawnOwner);
+        ROV = ROVehicle(PawnOwner);
+        ROVWP = ROVehicleWeaponPawn(PawnOwner);
+        W = PawnOwner.Weapon;
+
+        if (W != none)
+        {
+            Amount = W.GetHudAmmoCount();
+            WName = W.ItemName;
+        }
+
+        // Draw health info
+        if (ROP != none)
+        {
+            PawnHealth = int((float(PawnOwner.Health) / float(PawnOwner.Default.Health)) * 100.0);
+
+            if (PawnHealth == 100)
+            {
+                s = "No injuries";
+            }
+            else if (PawnHealth < 25)
+            {
+                s = "Near death";
+            }
+            else if (PawnHealth < 50)
+            {
+                s = "Seriously injured";
+            }
+            else if (PawnHealth < 100)
+            {
+                s = "Injured";
+            }
+
+            GC.LCDDrawText("Health:"@ s, 0, 10 * Row, GC.LCDTinyFont);
+            Row++;
+        }
+        else if (Vehicle(PawnOwner) != none)
+        {
+            if (ROVWP != none)
+            {
+                PawnHealth = int((float(ROVWP.VehicleBase.Health) / float(ROVWP.VehicleBase.Default.Health)) * 100.0);
+                Enginehealth = int((float(ROVWP.VehicleBase.EngineHealth) / float(ROVWP.VehicleBase.Default.EngineHealth)) * 100.0);
+            }
+            else
+            {
+                PawnHealth = int((float(PawnOwner.Health) / float(PawnOwner.Default.Health)) * 100.0);
+                Enginehealth = int((float(ROVehicle(PawnOwner).EngineHealth) / float(ROVehicle(PawnOwner).Default.EngineHealth)) * 100.0);
+            }
+
+            if (PawnHealth == 100)
+            {
+                s = "No damage";
+            }
+            else if (PawnHealth < 25)
+            {
+                s = "Failure imminent";
+            }
+            else if (PawnHealth < 50)
+            {
+                s = "Heavy damage";
+            }
+            else if (PawnHealth < 100)
+            {
+                s = "Damaged";
+            }
+
+            GC.LCDDrawText("Vehicle:" @ s, 0, 10 * Row, GC.LCDTinyFont);
+            Row++;
+
+            if (Enginehealth == 100)
+            {
+                s = "No damage";
+            }
+            else if (Enginehealth < 25)
+            {
+                s = "Failure imminent";
+            }
+            else if (Enginehealth < 50)
+            {
+                s = "Heavy damage";
+            }
+            else if (Enginehealth < 100)
+            {
+                s = "Damaged";
+            }
+
+            GC.LCDDrawText("Engine :" @ s, 0, 10 * Row, GC.LCDTinyFont);
+            Row++;
+
+            if (ROVWP != none)
+            {
+                if (ROVWP.Gun.ProjectileClass != none)
+                {
+                    if (DHVehicleCannon(ROVWP.Gun) != none)
+                    {
+                        GC.LCDDrawText("Primary ammo count :" @ ROVWP.Gun.PrimaryAmmoCount(), 0, 10 * Row, GC.LCDTinyFont);
+                    }
+                    else
+                    {
+                        GC.LCDDrawText("Primary ammo count :" @ ROVehicleWeapon(ROVWP.Gun).GetNumMags(), 0, 10 * Row, GC.LCDTinyFont);
+                    }
+
+                    Row++;
+                }
+
+                if (ROVWP.Gun.AltFireProjectileClass != none)
+                {
+                    GC.LCDDrawText("Secondary ammo count :" @ ROVehicleWeapon(ROVWP.Gun).GetNumMags(), 0, 10 * Row, GC.LCDTinyFont);
+                    Row++;
+                }
+            }
+        }
+
+        if (ROP != none)
+        {
+            // Stamina
+            GC.LCDDrawText("Stamina: ", X, 10 * Row, GC.LCDTinyFont);
+            s = int((ROP.Stamina/ROP.default.Stamina) * 100.0) @ "%";
+            GC.LCDStrLen(s, GC.LCDTinyFont, xl, yl);
+            GC.LCDDrawText(s, 100 - 5 - xl, 10 * Row,GC.LCDTinyFont);
+            Row++;
+
+            // Weapon info
+            if (W != none)
+            {
+                if (WName != "")
+                {
+                    GC.LCDDrawText(WName, 0, 10 * Row, GC.LCDTinyFont);
+                    Row++;
+
+                    if (!W.IsA('DHBinocularsItem'))
+                    {
+                        s = "Mags : " @ Amount;
+                        GC.LCDDrawText(s, 0, 10 * Row, GC.LCDTinyFont);
+                        Row++;
+                    }
+                }
+            }
+        }
+    }
+
+    GC.LCDRepaint();
+}
+
 // Colin: Overriden to have the color be green if you are talking in a squad channel.
 function DisplayVoiceGain(Canvas C)
 {
@@ -4548,6 +4749,11 @@ function DisplayVoiceGain(Canvas C)
     C.DrawColor = SavedColor;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to use DHDebugMode
 exec function ShowDebug()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())

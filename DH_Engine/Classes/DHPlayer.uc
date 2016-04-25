@@ -2815,6 +2815,7 @@ exec function SoundPlay(string SoundName, optional float Volume)
         }
     }
 }
+
 // Modified to shift this functionality into DHHud, where it's directly relevant & where some necessary stuff is added to make this RO function work as designed
 exec function PlayerCollisionDebug()
 {
@@ -3614,19 +3615,6 @@ exec function SetMaxAngSpeed(float NewValue)
     }
 }
 
-simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
-{
-    if (!bIgnoreSquadInvitations)
-    {
-        class'DHSquadInviteInteraction'.default.SenderName = SenderName;
-        class'DHSquadInviteInteraction'.default.SquadName = SquadName;
-        class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
-        class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
-
-        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
-    }
-}
-
 // New debug exec to adjust a vehicle's karma angular damping
 exec function SetAngDamp(float NewValue)
 {
@@ -3891,6 +3879,23 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
                 V.VehicleAttachments.Remove(i, 1);
             }
         }
+    }
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// START SQUAD FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
+{
+    if (!bIgnoreSquadInvitations)
+    {
+        class'DHSquadInviteInteraction'.default.SenderName = SenderName;
+        class'DHSquadInviteInteraction'.default.SquadName = SquadName;
+        class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
     }
 }
 
