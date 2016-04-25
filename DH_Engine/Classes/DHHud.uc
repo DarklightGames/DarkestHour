@@ -1433,9 +1433,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && WeaponPawn.PlayerReplicationInfo != PRI) // don't draw our own name!
         {
             Lines[Lines.Length] = "" $ (i + 2) $ "." @ WeaponPawn.PlayerReplicationInfo.PlayerName;
+            Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WeaponPawn.PlayerReplicationInfo));
         }
-
-        Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WeaponPawn.PlayerReplicationInfo));
     }
 
     // Draw the lines
