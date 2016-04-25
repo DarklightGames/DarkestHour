@@ -6,6 +6,10 @@
 class DHPlayer extends ROPlayer
     dependson(DHSquadReplicationInfo);
 
+const MORTAR_TARGET_TIME_INTERVAL = 5;
+const SQUAD_SIGNALS_MAX = 3;
+const SQUAD_SIGNAL_DURATION = 15.0;
+
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
@@ -67,7 +71,15 @@ var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
 
 var     DHCommandInteraction SquadOrderInteraction;
 
-const MORTAR_TARGET_TIME_INTERVAL = 5;
+struct SquadSignal
+{
+    var DHSquadReplicationInfo.ESquadSignalType Type;
+    var vector Location;
+    var float TimeSeconds;
+};
+
+var     int                     SquadSignalIndex;           // the last squad signal index to be used
+var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
 
 replication
 {
@@ -95,7 +107,8 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite;
+        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite,
+        ClientSquadSignal;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -4207,6 +4220,36 @@ function ServerSquadOrder(DHSquadReplicationInfo.ESquadOrderType Type, optional 
     }
 
     SquadReplicationInfo.SetSquadOrder(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
+}
+
+function ServerSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector Location)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo == none || PRI == none)
+    {
+        return;
+    }
+
+    SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
+}
+
+simulated function ClientSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector L)
+{
+    local int i;
+
+    i = SquadSignalIndex;
+
+    SquadSignals[i].Type = Type;
+    SquadSignals[i].Location = L;
+    SquadSignals[i].TimeSeconds = Level.TimeSeconds;
+
+    SquadSignalIndex = (i + 1) % arraycount(SquadSignals);
+
+    Log("recieved squad signal" @ Type @ Location);
+    // TODO: post this in DHPlayer somewhere and display it on the hud
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

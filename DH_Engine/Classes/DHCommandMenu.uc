@@ -17,4 +17,4 @@ var array<Option> Options;
 var DHCommandMenu NextMenu;
 var DHCommandMenu PreviousMenu;
 
-function bool OnSelect(int Index);
+function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location);

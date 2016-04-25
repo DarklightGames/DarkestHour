@@ -220,7 +220,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 
     PC = DHPlayer(ViewportOwner.Actor);
 
-    if (PC == none || PC.Pawn == none)
+    if (PC == none || PC.Pawn == none && PC.Pawn.Region.Zone != none)
     {
         return false;
     }
@@ -255,7 +255,15 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                 // guessing that %99.9 of players use left mouse as the fire
                 // key, so this will do for now.
                 case IK_LeftMouse:
-                    OnSelect(SelectedIndex);
+                    TraceStart = PC.Pawn.Location + PC.Pawn.EyePosition();
+                    TraceEnd = TraceStart + (vector(PC.Rotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
+
+                    if (PC.Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
+                    {
+                        HitLocation = TraceEnd;
+                    }
+
+                    OnSelect(SelectedIndex, HitLocation);
                     return true;
                 case IK_RightMouse:
                     if (Menus.Size() > 1)
@@ -274,7 +282,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     return false;
 }
 
-function bool OnSelect(int Index)
+function bool OnSelect(int Index, optional vector Location)
 {
     local DHCommandMenu Menu;
 
@@ -285,7 +293,7 @@ function bool OnSelect(int Index)
         return false;
     }
 
-    Menu.OnSelect(Index);
+    Menu.OnSelect(self, Index, Location);
 }
 
 defaultproperties

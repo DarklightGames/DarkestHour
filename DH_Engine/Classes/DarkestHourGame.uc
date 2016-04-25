@@ -3470,6 +3470,7 @@ function ModifyRoundTime(int RoundTime, int Type)
                 GRI.RoundEndTime = GRI.ElapsedTime + RoundTime;
                 break;
         }
+
         Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', Type);
     }
 }

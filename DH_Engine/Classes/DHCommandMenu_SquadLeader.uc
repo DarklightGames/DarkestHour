@@ -5,25 +5,42 @@
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
-function bool OnSelect(int Index)
+function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location)
 {
+    local DHPlayer PC;
+
+    if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+
     switch (Index)
     {
-        case 0:
+        case 0: // Fire
+            PC.ConsoleCommand("SPEECH ALERT 6");
+            PC.ServerSquadSignal(SIGNAL_Fire, Location);
             break;
-        case 1:
+        case 1: // Attack
+            PC.ServerSquadOrder(ORDER_Attack, Location);
             break;
-        case 2:
+        case 2: // Defend
+            PC.ServerSquadOrder(ORDER_Defend, Location);
             break;
-        case 3:
+        case 3: // Move
+            PC.ServerSquadSignal(SIGNAL_Move, Location);
             break;
-        case 4:
+        case 4: // Smoke
+            PC.ServerSquadSignal(SIGNAL_Smoke, Location);
             break;
         default:
             break;
     }
 
-    return false;
+    Interaction.Hide();
+
+    return true;
 }
 
 defaultproperties

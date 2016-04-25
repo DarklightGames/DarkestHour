@@ -723,6 +723,9 @@ simulated function DrawHudPassC(Canvas C)
     // Player names
     DrawPlayerNames(C);
 
+    // Signals
+    DrawSignals(C);
+
     // Portrait
     if (bShowPortrait || (bShowPortraitVC && Level.TimeSeconds - LastPlayerIDTalkingTime < 2.0))
     {
@@ -1481,6 +1484,65 @@ function color GetPlayerColor(DHPlayerReplicationInfo PRI)
     }
 
     return class'UColor'.default.White;
+}
+
+function DrawSignals(Canvas C)
+{
+    local int i;
+    local DHPlayer PC;
+    local vector    ViewLocation, Direction;
+    local vector    TraceStart, TraceEnd;
+    local vector    ScreenLocation;
+    local Material  SignalMaterial;
+    local vector    X, Y, Z;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PawnOwner == none || PC == none)
+    {
+        return;
+    }
+
+    TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
+
+    for (i = 0; i < arraycount(PC.SquadSignals); ++i)
+    {
+        if (PC.SquadSignals[i].Type == SIGNAL_None || Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds >= 15.0)
+        {
+            continue;
+        }
+
+        TraceEnd = PC.SquadSignals[i].Location;
+
+        Direction = Normal(TraceEnd - TraceStart);
+        GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
+
+        if (Direction dot X < 0.0)
+        {
+            continue;
+        }
+
+        // TODO: check fog distance as well, probably not an issue overall, though
+        FastTrace(TraceEnd, TraceStart);
+
+        switch (PC.SquadSignals[i].Type)
+        {
+            case SIGNAL_Fire:
+                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire';
+                break;
+            case SIGNAL_Move:
+                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move';
+                break;
+            default:
+                break;
+        }
+
+        ScreenLocation = C.WorldToScreen(TraceEnd);
+
+        // TODO: convert to spritewidget
+        C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - 8);
+        C.DrawTile(SignalMaterial, 16, 16, 0, 0, 31, 31);
+    }
 }
 
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons

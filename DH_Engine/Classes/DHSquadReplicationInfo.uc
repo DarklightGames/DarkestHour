@@ -46,6 +46,7 @@ enum ESquadSignalType
     SIGNAL_None,
     SIGNAL_Fire,
     SIGNAL_Move,
+    SIGNAL_Smoke,
     SIGNAL_Count
 };
 
@@ -965,12 +966,56 @@ simulated function bool GetSquadOrder(int TeamIndex, int SquadIndex, out ESquadO
 
 function SetSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadOrderType Type, vector Location)
 {
+    local ESquadOrderType CurrentType;
+    local vector CurrentLocation;
+
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return;
     }
 
+    if (Level.TimeSeconds - GetSquadOrderTime(TeamIndex, SquadIndex) < 5)   // TODO: magic number
+    {
+        // "Please wait before making a new order"
+        PRI.BroadcastLocalizedMessage(class'DHSquadOrderMessage', 0);
+        return;
+    }
+
     InternalSetSquadOrder(TeamIndex, SquadIndex, Type, Location);
+}
+
+function float GetSquadOrderTime(int TeamIndex, int SquadIndex)
+{
+    local ESquadOrderType Type;
+    local vector L;
+
+    GetSquadOrder(TeamIndex, SquadIndex, Type, L);
+
+    return L.Z;
+}
+
+function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadSignalType Type, vector Location)
+{
+    local int i;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHPlayer OtherPC;
+
+    if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
+    {
+        return;
+    }
+
+    GetMembers(TeamIndex, SquadIndex, Members);
+
+    for (i = 0; i < Members.Length; ++i)
+    {
+        OtherPC = DHPlayer(Members[i].Owner);
+
+        if (OtherPC != none)
+        {
+            OtherPC.ClientSquadSignal(Type, Location);
+        }
+    }
 }
 
 private function InternalSetSquadOrder(int TeamIndex, int SquadIndex, ESquadOrderType Type, optional vector Location)
@@ -978,7 +1023,7 @@ private function InternalSetSquadOrder(int TeamIndex, int SquadIndex, ESquadOrde
     local ESquadOrderType CurrentType;
     local vector CurrentLocation;
 
-    if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
+    if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         return;
     }
@@ -1016,10 +1061,10 @@ private function InternalSetSquadOrder(int TeamIndex, int SquadIndex, ESquadOrde
     switch (Type)
     {
         case ORDER_Attack:
-            //BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadOrderMessage', 1);
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadOrderMessage', 1);
             break;
         case ORDER_Defend:
-            //BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadOrderMessage', 2);
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadOrderMessage', 2);
             break;
         default:
             break;
