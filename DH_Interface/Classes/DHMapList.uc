@@ -6,7 +6,7 @@
 class DHMapList extends MapList
     config;
 
-var protected string OfficialMaps[27]; // Make sure size matches correctly
+var protected string OfficialMaps[30]; // Make sure size matches correctly
 var protected string LegacyMaps[5];
 
 static function bool IsMapOfficial(string S)
@@ -56,18 +56,21 @@ defaultproperties
     OfficialMaps(12)="DH-Hurtgenwald"
     OfficialMaps(13)="DH-Juno_Beach"
     OfficialMaps(14)="DH-Kommerscheidt"
-    OfficialMaps(15)="DH-La_Chapelle"
-    OfficialMaps(16)="DH-La_Gleize"
-    OfficialMaps(17)="DH-La_Monderie"
-    OfficialMaps(18)="DH-Lutremange"
-    OfficialMaps(19)="DH-Noville"
-    OfficialMaps(20)="DH-Poteau_Ambush"
-    OfficialMaps(21)="DH-Raids"
-    OfficialMaps(22)="DH-Simonskall"
-    OfficialMaps(23)="DH-Stavelot"
-    OfficialMaps(24)="DH-Stoumont"
-    OfficialMaps(25)="DH-Targnon"
-    OfficialMaps(26)="DH-Vieux"
+    OfficialMaps(15)="DH-La_Campbe"
+    OfficialMaps(16)="DH-La_Chapelle"
+    OfficialMaps(17)="DH-La_Gleize"
+    OfficialMaps(18)="DH-La_Monderie"
+    OfficialMaps(19)="DH-Lutremange"
+    OfficialMaps(20)="DH-Noville"
+    OfficialMaps(21)="DH-Poteau_Ambush"
+    OfficialMaps(22)="DH-Raids"
+    OfficialMaps(23)="DH-Simonskall"
+    OfficialMaps(24)="DH-St-Clement"
+    OfficialMaps(25)="DH-Stavelot"
+    OfficialMaps(26)="DH-Stoumont"
+    OfficialMaps(27)="DH-Targnon"
+    OfficialMaps(28)="DH-Vierville"
+    OfficialMaps(29)="DH-Vieux"
     LegacyMaps(0)="DH-Vieux_Recon"
     LegacyMaps(1)="DH-Ginkel_Heath"
     LegacyMaps(2)="DH-Wacht_am_Rhein"
