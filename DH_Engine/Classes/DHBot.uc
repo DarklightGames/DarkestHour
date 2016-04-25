@@ -111,7 +111,7 @@ function ChooseAttackMode()
     FightEnemy(true, EnemyStrength);
 }
 
-// Added code to get bots using ironsights in a rudimentary fashion
+// Added code to get bots using ironsights in a rudimentary fashion (& uses DHVehicleCannonPawn instead of deprecated ROTankCannonPawn)
 state RangedAttack
 {
     ignores HearNoise, Bump;
@@ -186,7 +186,7 @@ state RangedAttack
 
                 if (ROVehicleWeaponPawn(V.WeaponPawns[i]).Driver == none)
                 {
-                    if (V.WeaponPawns[i].IsA('ROTankCannonPawn'))
+                    if (V.WeaponPawns[i].IsA('DHVehicleCannonPawn'))
                     {
                         V.KDriverLeave(true);
                         V.WeaponPawns[i].KDriverEnter(P);
@@ -435,6 +435,37 @@ function FightEnemy(bool bCanCharge, float EnemyStrength)
     }
 
     DoTacticalMove();
+}
+
+// Modified to use DHVehicleCannonPawn instead of deprecated ROTankCannonPawn
+function SetAttractionState()
+{
+    local ROVehicle V;
+    local int       i;
+
+    if (Enemy != none)
+    {
+        V = ROVehicle(Pawn);
+
+        if (V != none)
+        {
+            for (i = 0; i < V.WeaponPawns.Length; ++i)
+            {
+                if (DHVehicleCannonPawn(V.WeaponPawns[i]) != none && V.WeaponPawns[i].Driver == none)
+                {
+                    ChooseAttackMode();
+
+                    return;
+                }
+            }
+        }
+
+        GotoState('FallBack');
+    }
+    else
+    {
+        GotoState('Roaming');
+    }
 }
 
 defaultproperties

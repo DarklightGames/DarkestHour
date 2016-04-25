@@ -3167,11 +3167,11 @@ exec function DrawExits(optional bool bClearScreen)
                 {
                     if (i - 1 < V.WeaponPawns.Length)
                     {
-                        if (ROTankCannonPawn(V.WeaponPawns[i - 1]) != none)
+                        if (DHVehicleCannonPawn(V.WeaponPawns[i - 1]) != none)
                         {
                             C = class'HUD'.default.RedColor; // commander
                         }
-                        else if (ROMountedTankMGPawn(V.WeaponPawns[i - 1]) != none)
+                        else if (DHVehicleMGPawn(V.WeaponPawns[i - 1]) != none)
                         {
                             C = class'HUD'.default.GoldColor; // machine gunner
                         }

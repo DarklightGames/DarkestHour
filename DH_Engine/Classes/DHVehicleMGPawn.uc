@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleMGPawn extends ROMountedTankMGPawn
+class DHVehicleMGPawn extends DHVehicleWeaponPawn
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
@@ -24,6 +24,7 @@ var     vector      BinocsDrivePos;              // optional additional player p
 var     DHDecoAttachment    BinocsAttachment;    // decorative actor spawned locally when commander is using binoculars
 
 // Gunsight
+var     texture     MGOverlay;                   // texture overlay for gun sight
 var     float       OverlayCenterSize;           // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var     float       OverlayCenterTexStart;
 var     float       OverlayCenterTexSize;
@@ -34,6 +35,7 @@ var     float       OverlayCorrectionY;
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
 var     name        FirstPersonGunRefBone;       // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
 var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
+var     float       FirstPersonGunShakeScale;    // scales up view shake on 1st person HUDOverlay view
 var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
 var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 
@@ -392,6 +394,12 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
 }
 
+// From deprecated ROMountedTankMGPawn
+simulated function bool PointOfView()
+{
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -544,7 +552,7 @@ function KDriverEnter(Pawn P)
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
 
-    super(VehicleWeaponPawn).KDriverEnter(P); // skip over Super in ROMountedTankMGPawn as it sets rotation we now want to avoid
+    super.KDriverEnter(P);
 
     if (MGun != none)
     {
@@ -569,7 +577,7 @@ function KDriverEnter(Pawn P)
     }
 }
 
-// Modified to use InitialPositionIndex instead of assuming position zero, to match rotation to MG's aim, to resume any paused MG reload, & to consolidate & optimise the Supers
+// Modified to use InitialPositionIndex instead of assuming position zero, to match rotation to MG's aim, & to consolidate & optimise the Supers
 // Matt: also to workaround various net client problems caused by replication timing issues, including common problems when deploying into a spawn vehicle (see notes below)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
@@ -1716,6 +1724,17 @@ simulated function bool CanReload()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
+// From deprecated ROMountedTankMGPawn
+function float ModifyThreat(float Current, Pawn Threat)
+{
+    if (Vehicle(Threat) != none)
+    {
+        return Current - 2.0;
+    }
+
+    return Current + 0.4;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1900,14 +1919,18 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
 
 defaultproperties
 {
+    bIsMountedTankMG=true
+    bMustBeTankCrew=true
+    PositionInArray=1
     UnbuttonedPositionIndex=1
     BinocPositionIndex=-1 // none by default, so set an invalid position
     bHasAltFire=false
     bDrawDriverInTP=false
     CameraBone="mg_yaw"
     OverlayCenterSize=1.0
-    MGOverlay=none // to remove default from ROMountedTankMGPawn - set this in subclass if texture sight overlay used
+    FirstPersonGunShakeScale=1.0
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    HudName="MG"
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
@@ -1916,6 +1939,7 @@ defaultproperties
     bPCRelativeFPRotation=true
     bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset, including for single position MGs
+    bAllowViewChange=false
     bDesiredBehindView=false
     bCustomAiming=true // several things just don't work quite right without custom aiming
 }

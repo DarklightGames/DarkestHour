@@ -254,6 +254,12 @@ simulated function vector GetCameraLocationStart()
     return Location;
 }
 
+// From ROPassengerPawn
+simulated function bool PointOfView()
+{
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************************** VEHICLE ENTRY  ******************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -626,12 +632,6 @@ static function StaticPrecache(LevelInfo L)
 {
 }
 
-// From ROPassengerPawn
-simulated function bool PointOfView()
-{
-    return false;
-}
-
 // Emptied out to prevent unnecessary replicated function calls to server
 function Fire(optional float F)
 {
@@ -683,7 +683,7 @@ defaultproperties
     WeaponFOV=90.0
     bHasAltFire=false
     HudName="Rider"
-    TPCamDistance=200.0 // TEST - others are 300?
+    TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
 

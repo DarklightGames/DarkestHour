@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMortarVehicleWeaponPawn extends ROVehicleWeaponPawn
+class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
     abstract;
 
 struct DigitSet

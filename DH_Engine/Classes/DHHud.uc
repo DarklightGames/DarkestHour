@@ -877,17 +877,17 @@ simulated function DrawHudPassC(Canvas C)
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
-    local DHVehicle             V;
-    local ROVehicleWeaponPawn   WeaponPawn;
     local DHPlayerReplicationInfo PRI;
-    local AbsoluteCoordsInfo    Coords, Coords2;
-    local SpriteWidget          Widget;
-    local color                 VehicleColor, SavedDrawColor;
-    local rotator               MyRot;
-    local int                   i, Current, Pending;
-    local float                 f, XL, YL, Y_one, MyScale, StrX, StrY, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset;
-    local array<string>         Lines;
-    local array<color>          Colors;
+    local DHVehicle               V;
+    local ROVehicleWeaponPawn     WeaponPawn;
+    local AbsoluteCoordsInfo      Coords, Coords2;
+    local SpriteWidget            Widget;
+    local color                   VehicleColor, SavedDrawColor;
+    local rotator                 MyRot;
+    local int                     Current, Pending, i;
+    local float                   f, XL, YL, Y_one, MyScale, StrX, StrY, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset;
+    local array<string>           Lines;
+    local array<color>            Colors;
 
     if (bHideHud)
     {
@@ -989,7 +989,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Update & draw turret (if needed)
-    if (ROTankCannonPawn(Passenger) != none)
+    if (DHVehicleCannonPawn(Passenger) != none)
     {
         // Update & draw look turret
         if (V != none && V.VehicleHudTurretLook != none)
@@ -1097,16 +1097,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
                     // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
-                    if (DHVehicleCannonPawn(Passenger) != none)
-                    {
-                        ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
+                    ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
 
-                        if (ProportionOfReloadRemaining > 0.0)
-                        {
-                            VehicleAltAmmoReloadIcon.WidgetTexture = DHVehicleCannonPawn(Passenger).AltAmmoReloadTexture;
-                            VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
-                            DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
-                        }
+                    if (ProportionOfReloadRemaining > 0.0)
+                    {
+                        VehicleAltAmmoReloadIcon.WidgetTexture = DHVehicleCannonPawn(Passenger).AltAmmoReloadTexture;
+                        VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
+                        DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                     }
 
                     // Draw coaxial gun ammo amount

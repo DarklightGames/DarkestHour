@@ -23,10 +23,10 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 {
     UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
 
-    if (ROPlayer(Controller) != none)
+    if (IsHumanControlled())
     {
-        ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-        ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 }
 

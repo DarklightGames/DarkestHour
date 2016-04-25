@@ -3,45 +3,52 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleCannonPawn extends ROTankCannonPawn
+class DHVehicleCannonPawn extends DHVehicleWeaponPawn
     abstract;
 
-// General
-var     DHVehicleCannon     Cannon;            // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
-var     DHDecoAttachment    BinocsAttachment;  // decorative actor spawned locally when commander is using binoculars
-var     bool        bPlayerHasBinocs;          // on entering, records whether player has binoculars
-var     name        PlayerCameraBone;          // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
-var     texture     AltAmmoReloadTexture;      // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     DHVehicleCannon     Cannon;              // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
 
-// Position stuff
-var     int         InitialPositionIndex;      // initial player position on entering
-var     int         UnbuttonedPositionIndex;   // lowest position number where player is unbuttoned
-var     int         PeriscopePositionIndex;    // index position of commander's periscope
-var     int         GunsightPositions;         // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
-var     int         IntermediatePositionIndex; // optional 'intermediate' animation position, i.e. between closed & open/raised positions (used to play special firing anim)
-var     int         RaisedPositionIndex;       // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
-var     float       ViewTransitionDuration;    // used to control the time we stay in state ViewTransition
-var     bool        bCamOffsetRelToGunPitch;   // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
+// Positions
+var     int         InitialPositionIndex;        // initial player position on entering
+var     int         GunsightPositions;           // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+var     int         UnbuttonedPositionIndex;     // lowest position number where player is unbuttoned
+var     int         PeriscopePositionIndex;      // index position of commander's periscope
+var     int         BinocPositionIndex;          // index position when commander is using binoculars
+var     bool        bPlayerHasBinocs;            // on entering, records whether player has binoculars (necessary to move to binocs position)
+var     int         IntermediatePositionIndex;   // optional 'intermediate' animation position, i.e. between closed & open/raised positions (used to play special firing anim)
+var     int         RaisedPositionIndex;         // lowest position where commander is raised up (unbuttoned in enclosed turret, or standing in open turret or on AT gun)
+var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 
-// Gunsight or periscope overlay
-var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
-var     bool        bShowRangeText;       // show current range setting text
-var     TexRotator  ScopeCenterRotator;
-var     float       ScopeCenterScale;
-var     int         CenterRotationFactor;
-var     float       OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var     float       OverlayCenterScale;
-var     float       OverlayCenterTexStart;
-var     float       OverlayCenterTexSize;
-var     float       OverlayCorrectionX;   // scope center correction in pixels, in case an overlay is off-center by pixel or two
+// View & display
+var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_com' bone & allow extra flexibility
+var     bool        bCamOffsetRelToGunPitch;     // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
+var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
+var     texture     PeriscopeOverlay;            // overlay for commander's periscope
+var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     texture     BinocsOverlay;               // overlay for binoculars
+var     DHDecoAttachment    BinocsAttachment;    // decorative actor spawned locally when commander is using binoculars
+
+// Gunsight overlay
+var     texture     CannonScopeOverlay;          // gunsight general overlay
+var     texture     CannonScopeCenter;           // reticle overlay
+var     float       ScopePositionX;              // reticle positioning
+var     float       ScopePositionY;
+var     float       OverlayCenterSize;           // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+var     float       OverlayCenterScale;          // scale for the gunsight overlay (calculated from OverlayCenterSize)
+var     float       OverlayCenterTexStart;       // calculated for use in positioning gunsight overlay
+var     float       OverlayCenterTexSize;        // calculated for use in positioning gunsight overlay
+var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;
-var     texture     PeriscopeOverlay;
 
-// Damage modelling stuff
-var     bool        bTurretRingDamaged;
-var     bool        bGunPivotDamaged;
-var     bool        bOpticsDamaged;
-var     texture     DestroyedScopeOverlay;
+// Gunsight range info
+var     bool            bShowRangeText;          // show current range setting text
+var localized string    RangeText;               // metres or yards (can be localised for other languages)
+var     float           RangePositionX;          // adjusts positioning of range text
+var     float           RangePositionY;
+var     bool            bShowRangeRing;          // show range ring (used in German tank sights)
+var     TexRotator      ScopeCenterRotator;      // overlay for range ring
+var     int             CenterRotationFactor;    // scales the rotation of the range ring, so it correctly aligns the range markings
+var     float           ScopeCenterScale;        // scale of the range ring
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
@@ -55,6 +62,12 @@ var     float       ManualMinRotateThreshold;
 var     float       ManualMaxRotateThreshold;
 var     float       PoweredMinRotateThreshold;
 var     float       PoweredMaxRotateThreshold;
+
+// Damage
+var     bool        bTurretRingDamaged;
+var     bool        bGunPivotDamaged;
+var     bool        bOpticsDamaged;
+var     texture     DestroyedScopeOverlay;
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
 var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
@@ -79,7 +92,8 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits; // in debug mode only
+        ServerToggleRoundType,
+        ServerToggleDebugExits; // this one in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -545,6 +559,12 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
 }
 
+// From deprecated ROTankCannonPawn
+simulated function bool PointOfView()
+{
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -557,7 +577,7 @@ function Fire(optional float F)
     {
         if (Cannon.ReloadState == RL_ReadyToFire)
         {
-            super(VehicleWeaponPawn).Fire(F);
+            super.Fire(F);
         }
         else
         {
@@ -802,9 +822,6 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified to pass MG reload state to client as player enters, & to try to start a reload or resume any previously paused reload if MG isn't loaded
-// Also to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
-
 // Modified to try to start a reload or resume any previously paused reload if cannon isn't loaded, to try to start a coaxial MG reload if it's out of ammo,
 // to show any damaged gunsight, & to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
 // Also to use reference to DHVehicleCannon instead of deprecated ROTankCannon
@@ -815,7 +832,7 @@ function KDriverEnter(Pawn P)
     DriverPositionIndex = InitialPositionIndex;
     LastPositionIndex = InitialPositionIndex;
 
-    super(VehicleWeaponPawn).KDriverEnter(P); // skip over the Super in ROTankCannonPawn as our reload system is a little different
+    super.KDriverEnter(P);
 
     if (Cannon != none)
     {
@@ -1520,6 +1537,11 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
             Cannon.InitializeVehicleBase();
         }
     }
+
+    if (VehiclePawn != none && VehiclePawn.bDefensive) // from deprecated ROTankCannonPawn
+    {
+        bDefensive = true;
+    }
 }
 
 // Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeapon actor
@@ -1741,42 +1763,48 @@ simulated function SetManualTurret(bool bManual)
     }
 }
 
-// Modified to allow turret traverse or elevation seizure if turret ring or pivot are damaged
+// Modified (from deprecated ROTankCannonPawn) to allow turret traverse or elevation seizure if turret ring or pivot are damaged
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    if (bTurretRingDamaged)
+    if (Gun != none && Gun.bUseTankTurretRotation)
     {
+        if (bTurretRingDamaged)
+        {
+            YawChange = 0.0;
+        }
+
         if (bGunPivotDamaged)
         {
-            if (bDebuggingText && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Gun & turret disabled");
-            }
-
-            super.HandleTurretRotation(DeltaTime, 0.0, 0.0);
+            PitchChange = 0.0;
         }
-        else
-        {
-            if (bDebuggingText && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Turret disabled");
-            }
 
-            super.HandleTurretRotation(DeltaTime, 0.0, PitchChange);
-        }
-    }
-    else if (bGunPivotDamaged)
-    {
+        // Debug
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Gun pivot disabled");
+            if (bTurretRingDamaged)
+            {
+                if (bGunPivotDamaged)
+                {
+                    Level.Game.Broadcast(self, "Turret traverse & gun pivot disabled");
+                }
+                else
+                {
+                    Level.Game.Broadcast(self, "Turret traverse disabled");
+                }
+            }
+            else if (bGunPivotDamaged)
+            {
+                Level.Game.Broadcast(self, "Gun pivot disabled");
+            }
         }
 
-        super.HandleTurretRotation(DeltaTime, YawChange, 0.0);
-    }
-    else // no damage
-    {
-        super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+        UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
+
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+            PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        }
     }
 }
 
@@ -2227,6 +2255,16 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
     }
 }
 
+// Debug exec from deprecated ROTankCannonPawn
+exec function SetRange(byte NewRange)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    {
+        Log("Switching range from" @ Gun.CurrentRangeIndex @ "to" @ NewRange);
+        Gun.CurrentRangeIndex = NewRange;
+    }
+}
+
 exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " Cannon =" @ Cannon.Tag @ " Gun.Owner =" @ Gun.Owner.Tag @ " Cannon.CannonPawn =" @ Cannon.CannonPawn.Tag);
@@ -2237,36 +2275,55 @@ exec function LogCannon() // DEBUG (Matt: please use & report if you ever find y
 defaultproperties
 {
     // Positions & entry
+    PositionInArray=0
+    bMustBeTankCrew=true
+    bMultiPosition=true
     GunsightPositions=1
     UnbuttonedPositionIndex=2
     PeriscopePositionIndex=-1    // -1 signifies no periscope by default
+    BinocPositionIndex=3
     IntermediatePositionIndex=-1 // -1 signifies no intermediate position by default
     RaisedPositionIndex=-1       // -1 signifies to match the RPI to the UnbuttonedPositionIndex by default
 
-    // Camera & display
+    // Camera
     CameraBone="Gun"
     PlayerCameraBone="Camera_com"
-    OverlayCenterSize=0.9
-    AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=120.0)
 
-    // Turret/cannon movement & sounds
+    // Gunsight overlay & HUD
+    OverlayCenterSize=0.9
+    RangeText="Meters"
+    RangePositionX=0.8
+    RangePositionY=0.8
+    AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    HudName="Cmdr"
+
+    // Turret/cannon movement
     MaxRotateThreshold=1.5
     ManualMinRotateThreshold=0.25
     ManualMaxRotateThreshold=2.5
     PoweredMinRotateThreshold=0.15
     PoweredMaxRotateThreshold=1.75
+
+    // Movement sounds
+    bSpecialRotateSounds=true
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     SoundVolume=130
 
+    // Aiming & firing
+    bCustomAiming=true
+    bHasFireImpulse=true
+    FireImpulse=(X=-90000.0,Y=0.0,Z=0.0)
+
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     bPCRelativeFPRotation=true
     bFPNoZFromCameraPitch=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
+    bAllowViewChange=false
     bDesiredBehindView=false
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 }
