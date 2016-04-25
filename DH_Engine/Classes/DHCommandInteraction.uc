@@ -103,7 +103,6 @@ state FadeOut
 
 function Tick(float DeltaTime)
 {
-    local int i;
     local float ArcLength, Theta;
     local DHCommandMenu Menu;
 

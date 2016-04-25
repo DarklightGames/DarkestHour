@@ -138,11 +138,13 @@ function bool OnDblClick(GUIComponent Sender)
 function bool MyContextOpen(GUIContextMenu Menu)
 {
     //return HandleContextMenuOpen(List, Menu, Menu.MenuOwner);
+    return false;
 }
 
 function bool MyContextClose(GUIContextMenu Sender)
 {
     //return HandleContextMenuClose(Sender);
+    return false;
 }
 
 function MyContextSelect(GUIContextMenu Sender, int Index)

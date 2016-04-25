@@ -966,9 +966,6 @@ simulated function bool GetSquadOrder(int TeamIndex, int SquadIndex, out ESquadO
 
 function SetSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadOrderType Type, vector Location)
 {
-    local ESquadOrderType CurrentType;
-    local vector CurrentLocation;
-
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return;
