@@ -219,12 +219,12 @@ defaultproperties
     BehindDamageFactor=3.0
     RearAngleArc=16000.0
 
-    DamageMin=20
-    DamageMax=33
-    BayonetDamageMin=30
-    BayonetDamageMax=45
+    DamageMin=30
+    DamageMax=40
+    BayonetDamageMin=35
+    BayonetDamageMax=50
     MinHoldtime=0.1
-    FullHeldTime=0.2
+    FullHeldTime=0.3
     MeleeAttackSpread=8.0
     MomentumTransfer=0
 
