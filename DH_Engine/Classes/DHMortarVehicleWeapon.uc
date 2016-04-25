@@ -6,29 +6,34 @@
 class DHMortarVehicleWeapon extends DHVehicleWeapon
     abstract;
 
-// Trajectory
-var     float           NewElevation;
-var     float           Elevation;
-var     float           ElevationMaximum;
-var     float           ElevationMinimum;
-var     float           ElevationStride;
+// Firing, effects & ammo
+var     name        GunFiringAnim;    // firing animation for the mortar
+var     float       SpreadYawMin;     // minimum & maximum lateral random firing spread
+var     float       SpreadYawMax;
+var     float       BlurTime;         // how long screen blur effect should last when firing
+var     float       BlurEffectScalar; // scale for the screen blur when firing
+var     int         PlayerResupplyAmounts[2]; // the amount of each round type supplied by another player
 
-// Firing & effects
-var     name            GunFiringAnim;
-var     float           SpreadYawMin;
-var     float           SpreadYawMax;
-var     int             PlayerResupplyAmounts[2];
+// Mortar elevation
+var     float       Elevation;        // current elevation setting, in degrees
+var     float       ElevationMaximum; // maximum & minimum elevation angles
+var     float       ElevationMinimum;
+var     float       ElevationStride;  // elevation adjustment per key press, in degrees
 
 // Debugging
-var     bool            bDebug;
-var     bool            bDebugNoSpread;
-var     bool            bDebugCalibrate;
+var     bool        bDebug;
+var     bool        bDebugNoSpread;
+var     bool        bDebugCalibrate;
 
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetFiringSettings;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
+        ClientShakeView;
 }
 
 // Modified to initialize ammo
@@ -138,9 +143,9 @@ simulated function Elevate()
     {
         Elevation += ElevationStride;
 
-        if (Instigator != none && DHPlayer(Instigator.Controller) != none)
+        if (Instigator != none && Instigator.IsHumanControlled())
         {
-            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+            PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
         }
     }
 }
@@ -151,9 +156,9 @@ simulated function Depress()
     {
         Elevation -= ElevationStride;
 
-        if (Instigator != none && DHPlayer(Instigator.Controller) != none)
+        if (Instigator != none && Instigator.IsHumanControlled())
         {
-            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+            PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
         }
     }
 }
@@ -175,12 +180,7 @@ state ProjectileFireMode
             {
                 SpawnProjectile(ProjectileClass, false);
                 --MainAmmoCharge[GetFireMode()];
-
-                // Shake view here, (proper timing and all)
-                if (DHMortarVehicleWeaponPawn(WeaponPawn) != none)
-                {
-                    DHMortarVehicleWeaponPawn(WeaponPawn).ClientShakeView();
-                }
+                ClientShakeView(); // shake view here, (proper timing & all)
 
                 // We fired one off, so we are now eligible for resupply
                 if (DHMortarVehicle(Base) != none)
@@ -189,6 +189,16 @@ state ProjectileFireMode
                 }
             }
         }
+    }
+}
+
+// New function to shake player's view when firing
+simulated function ClientShakeView()
+{
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
+    {
+        DHPlayer(Instigator.Controller).AddBlur(BlurTime, BlurEffectScalar);
+        Instigator.Controller.ShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
     }
 }
 
@@ -241,5 +251,7 @@ defaultproperties
     // Ammo & firing
     bMultipleRoundTypes=true
     bMultiStageReload=false
+    BlurTime=0.5
+    BlurEffectScalar=1.35
     AIInfo(0)=(AimError=0.0,WarnTargetPct=0.0)
 }
