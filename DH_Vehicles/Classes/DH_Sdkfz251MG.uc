@@ -53,8 +53,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Bipod_Reload_s"
-    ReloadStages(0)=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them (durations matched to anim notifies)
-    ReloadStages(1)=(Sound=none,Duration=1.94)
-    ReloadStages(2)=(Sound=none,Duration=2.12)
-    ReloadStages(3)=(Sound=none,Duration=1.32)
+    ReloadStages(0)=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them
+    ReloadStages(1)=(Sound=none,Duration=1.92)
+    ReloadStages(2)=(Sound=none,Duration=1.92)
+    ReloadStages(3)=(Sound=none,Duration=1.54)
 }
