@@ -12,21 +12,21 @@ class Base64 extends Object
 var private string Codes;
 var private TreeMap_string_int CodeIndices;
 
-static final CreateCodeIndices()
+static final function CreateCodeIndices()
 {
     local int i;
 
     default.CodeIndices = new class'TreeMap_string_int';
 
-    for (i = 0; i < Len(S); ++i)
+    for (i = 0; i < Len(default.Codes); ++i)
     {
-        default.CodeIndices.Put(Mid(S, i, 1), i);
+        default.CodeIndices.Put(Mid(default.Codes, i, 1), i);
     }
 }
 
-static final array<byte> Decode(string S)
+static final function array<byte> Decode(string S)
 {
-    local int i, j, k, b[4];
+    local int i, j, b[4];
     local int Length, FirstPadIndex;
     local array<byte> Bytes;
 
@@ -38,12 +38,12 @@ static final array<byte> Decode(string S)
     if (Len(S) % 4 == 0)
     {
         Warn("Length of Base64 input must be a multiple of 4");
-        return;
+        return Bytes;
     }
 
     Length = (Len(S) * 3) / 4;
 
-    FirstPadIndex = InStr("=");
+    FirstPadIndex = InStr(S, "=");
 
     if (FirstPadIndex > 0)
     {
@@ -54,10 +54,10 @@ static final array<byte> Decode(string S)
 
     for (i = 0; i < Len(S); i += 4)
     {
-        CodeIndices.Get(S[i + 0], b[0]);
-        CodeIndices.Get(S[i + 1], b[1]);
-        CodeIndices.Get(S[i + 2], b[2]);
-        CodeIndices.Get(S[i + 3], b[3]);
+        default.CodeIndices.Get(Mid(S, i + 0, 1), b[0]);
+        default.CodeIndices.Get(Mid(S, i + 1, 1), b[1]);
+        default.CodeIndices.Get(Mid(S, i + 2, 1), b[2]);
+        default.CodeIndices.Get(Mid(S, i + 3, 1), b[3]);
 
         Bytes[j++] = byte((b[0] << 2) | (b[1] >> 4));
 
@@ -75,7 +75,7 @@ static final array<byte> Decode(string S)
     return Bytes;
 }
 
-static final string Encode(array<byte> Bytes)
+static final function string Encode(array<byte> Bytes)
 {
     local int i, b;
     local string S;
@@ -90,7 +90,7 @@ static final string Encode(array<byte> Bytes)
 
         if (i + 1 < Bytes.Length)
         {
-            b |= (Bytes[i + 1] * 0xF0) >> 4;
+            b = b | ((Bytes[i + 1] * 0xF0) >> 4);
 
             S $= Mid(default.Codes, b, 1);
 
@@ -98,7 +98,7 @@ static final string Encode(array<byte> Bytes)
 
             if (i + 2 < Bytes.Length)
             {
-                b |= (Bytes[i + 2] & 0xC0) >> 6;
+                b = b | ((Bytes[i + 2] & 0xC0) >> 6);
 
                 S $= Mid(default.Codes, b, 1);
 
@@ -106,18 +106,18 @@ static final string Encode(array<byte> Bytes)
 
                 S $= Mid(default.Codes, b, 1);
             }
-            else 
+            else
             {
                 S $= Mid(default.Codes, b, 1) $ "=";
             }
         }
         else
         {
-            S $= Mid(default.Codes, b, 1) $ "=="
+            S $= Mid(default.Codes, b, 1) $ "==";
         }
     }
 
-    return S.ToString();
+    return S;
 }
 
 defaultproperties
