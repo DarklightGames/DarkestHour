@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 class DH_USEngineerWinter extends DH_US_Winter_Infantry;

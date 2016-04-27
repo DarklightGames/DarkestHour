@@ -1,6 +1,6 @@
 //===================================================================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //
 // Matt: if ResetGame option is used, this removes temporary client-only actors such as smoke effects
 // Spawned by server & replicates to all net clients, then calling Reset on any client-only actors

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 // The top menu, which lists all the players on the server, allowing a selection to be made

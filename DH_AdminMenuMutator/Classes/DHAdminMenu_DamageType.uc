@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 // Gives a specific death message ("PlayerName was re-spawned by an admin")

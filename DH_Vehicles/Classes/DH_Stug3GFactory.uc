@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 class DH_Stug3gFactory extends DH_GermanVehicles; // earlier version without remote-controlled MG & with boxy mantlet

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 // Matt: originally extended DHAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that

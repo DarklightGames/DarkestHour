@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 class DH_ShermanTankA_M4A176W extends DHArmoredVehicle; // later version with HVAP instead of smoke rounds (but still without muzzle brake or sandbags)

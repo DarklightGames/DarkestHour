@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 // Since array types are copied when passed to these functions using these
 // functions is not recommended on large datasets.

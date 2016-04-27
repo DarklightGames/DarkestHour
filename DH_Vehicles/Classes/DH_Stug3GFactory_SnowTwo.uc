@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 class DH_Stug3GFactory_SnowTwo extends DH_Stug3GFactory_Late_Snow // TODO: delete this class in the release after 6.0

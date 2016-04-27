@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2015
+// Darklight Games (c) 2008-2016
 //==============================================================================
 
 class DH_JacksonTank extends DHArmoredVehicle; // later version with HVAP instead of AP shot & with muzzle brake
