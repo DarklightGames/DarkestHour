@@ -5,6 +5,8 @@
 
 class DHMapVotingPage extends MapVotingPage;
 
+var localized string                lmsgMapQAFailed;
+
 function bool AlignBK(Canvas C)
 {
     i_MapCountListBackground.WinWidth  = lb_VoteCountListbox.MyList.ActualWidth();
@@ -15,8 +17,57 @@ function bool AlignBK(Canvas C)
     return false;
 }
 
+function SendVote(GUIComponent Sender)
+{
+    local int MapIndex, GameConfigIndex;
+
+    if (Sender == lb_VoteCountListBox.List)
+    {
+        MapIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedMapIndex();
+
+        if (MapIndex > -1)
+        {
+            GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
+
+            if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
+            {
+                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+            }
+            else
+            {
+                PlayerOwner().ClientMessage(lmsgMapDisabled);
+            }
+        }
+    }
+    else
+    {
+        MapIndex = MapVoteMultiColumnList(lb_MapListBox.List).GetSelectedMapIndex();
+
+        if (MapIndex > -1)
+        {
+            GameConfigIndex = int(co_GameType.GetExtra());
+
+            if(MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
+            {
+                MVRI.SendMapVote(MapIndex,GameConfigIndex);
+
+                // Theel:
+                //if (level has failed QA)
+                    // vote succedes, but lets send a client message to let them know their vote is silent
+                    // PlayerOwner().ClientMessage(lmsgMapQAFailed);
+            }
+            else
+            {
+                PlayerOwner().ClientMessage(lmsgMapDisabled);
+            }
+        }
+    }
+}
+
 defaultproperties
 {
+    lmsgMapQAFailed="Because this map has failed quality assurance, this vote is silent."
+
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
         WinHeight=0.293104
@@ -27,9 +78,12 @@ defaultproperties
         bScaleToParent=True
         bBoundToParent=True
         FontScale=FNS_Small
-        HeaderColumnPerc(0)=0.60
-        HeaderColumnPerc(1)=0.20
-        HeaderColumnPerc(2)=0.20
+        HeaderColumnPerc(0)=0.2
+        HeaderColumnPerc(1)=0.15
+        HeaderColumnPerc(2)=0.15
+        HeaderColumnPerc(3)=0.15
+        HeaderColumnPerc(4)=0.2
+        HeaderColumnPerc(5)=0.15
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
     Begin Object class=MapVoteCountMultiColumnListBox Name=VoteCountListBox

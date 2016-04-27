@@ -16,6 +16,8 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         return;
     }
 
+    // Theel: Stop levels from being drawn that failed quality assurance
+
     // Draw the selection border
     if (bSelected)
     {
@@ -35,6 +37,10 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     GetCellLeftWidth(1, CellLeft, CellWidth);
     DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
+
+    // Theel: Make this text red if the map's recommended players do not encompass the current # of players
+    GetCellLeftWidth(2, CellLeft, CellWidth);
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, "Test", FontScale);
 }
 
 function string GetSortString(int i)
@@ -51,12 +57,12 @@ defaultproperties
 {
     ColumnHeadings(0)="MapName"
     ColumnHeadings(1)="Votes"
-    ColumnHeadings(2)="none"
-    InitColumnPerc(0)=0.7
-    InitColumnPerc(1)=0.3
-    InitColumnPerc(2)=0.0
-    ColumnHeadingHints(0)="Map Name"
+    ColumnHeadings(2)="Player Range"
+    InitColumnPerc(0)=0.3
+    InitColumnPerc(1)=0.5
+    InitColumnPerc(2)=0.2
+    ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="Number of votes registered for this map."
-    ColumnHeadingHints(2)="none"
+    ColumnHeadingHints(2)="Recommended players for the map."
     SortColumn=1
 }
