@@ -30,89 +30,94 @@ static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadL
     C.SendVoiceMessage(C.PlayerReplicationInfo, SquadLeader, Type, Index, 'GLOBAL', C.Pawn, MyLocation);
 }
 
-function SetClientDefendMessage(int messageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientDefendMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
 {
-    local DHGameReplicationInfo DHGRI;
-    local DHPlayer DHP;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
-    DHP = DHPlayer(Owner);
+    PC = DHPlayer(Owner);
 
-    if(DHP != none)
-       DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (PC != none)
+    {
+       GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    }
 
     MessageSound = OrderSound[1];
-    MessageString = OrderString[1]@DHGRI.DHObjectives[messageIndex].ObjName;
+    MessageString = OrderString[1] @ GRI.DHObjectives[MessageIndex].ObjName;
     MessageAnim = DefendAnim;
 }
 
-function SetClientHelpAtMessage(int messageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientHelpAtMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
 {
-    local DHGameReplicationInfo DHGRI;
-    local DHPlayer DHP;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
-    DHP = DHPlayer(Owner);
+    PC = DHPlayer(Owner);
 
-    if(DHP != none)
-       DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (PC != none)
+    {
+       GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    }
 
     MessageSound = SupportSound[1];
-    MessageString = SupportString[1]@DHGRI.DHObjectives[messageIndex].ObjName;
+    MessageString = SupportString[1] @ GRI.DHObjectives[MessageIndex].ObjName;
     MessageAnim = DefendAnim;
 }
 
-function SetClientUnderAttackAtMessage(int messageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientUnderAttackAtMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
 {
-    local DHGameReplicationInfo DHGRI;
-    local DHPlayer DHP;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
-    DHP = DHPlayer(Owner);
+    PC = DHPlayer(Owner);
 
-    if(DHP != none)
-       DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (PC != none)
+    {
+       GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    }
 
     MessageSound = AlertSound[8];
-    MessageString = AlertString[8]@DHGRI.DHObjectives[messageIndex].ObjName;
+    MessageString = AlertString[8] @ GRI.DHObjectives[MessageIndex].ObjName;
     MessageAnim = DefendAnim;
 }
 
-function SetClientGotoMessage(int messageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientGotoMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
 {
-    local DHGameReplicationInfo DHGRI;
-    local DHPlayer DHP;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
-    DHP = DHPlayer(Owner);
+    PC = DHPlayer(Owner);
 
-    if(DHP != none)
-       DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (PC != none)
+    {
+       GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    }
 
     MessageSound = VehicleDirectionSound[0];
-    MessageString = vehicleDirectionString[0]@DHGRI.DHObjectives[messageIndex].ObjName;
+    MessageString = VehicleDirectionString[0] @ GRI.DHObjectives[MessageIndex].ObjName;
     MessageAnim = '';
 }
 
-function SetClientAttackMessage(int messageIndex,
-                                 PlayerReplicationInfo Recipient,
-                                 out Sound MessageSound)
+function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
 {
-    local DHGameReplicationInfo DHGRI;
-    local DHPlayer DHP;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
-    DHP = DHPlayer(Owner);
+    PC = DHPlayer(Owner);
 
-    if(DHP != none)
-       DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (PC != none)
+    {
+       GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    }
 
     MessageSound = OrderSound[0];
-    MessageString = OrderString[0]@DHGRI.DHObjectives[messageIndex].ObjName;
-
+    MessageString = OrderString[0] @ GRI.DHObjectives[MessageIndex].ObjName;
     MessageAnim = AttackAnim;
-
 }
 
 defaultproperties
 {
-    ShoutRadius=1024.0
-    WhisperRadius=128.0
     bUseLocationalVoice=true
     EnemyAbbrevAxis(3)="Pioneer"
 }
+
