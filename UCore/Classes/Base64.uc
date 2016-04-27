@@ -35,9 +35,8 @@ static final function array<byte> Decode(string S)
         CreateCodeIndices();
     }
 
-    if (Len(S) % 4 == 0)
+    if (Len(S) % 4 != 0)
     {
-        Warn("Length of Base64 input must be a multiple of 4");
         return Bytes;
     }
 
@@ -77,20 +76,20 @@ static final function array<byte> Decode(string S)
 
 static final function string Encode(array<byte> Bytes)
 {
-    local int i, b;
+    local int b, i;
     local string S;
 
-    for (i = 0; i < Bytes.Length; i += 3)
+    for (i = 0; i < Bytes.length; i += 3)
     {
         b = (Bytes[i] & 0xFC) >> 2;
 
         S $= Mid(default.Codes, b, 1);
 
-        b = (Bytes[i] * 0x03) << 4;
+        b = (Bytes[i] & 0x03) << 4;
 
         if (i + 1 < Bytes.Length)
         {
-            b = b | ((Bytes[i + 1] * 0xF0) >> 4);
+            b = b | ((Bytes[i + 1] & 0xF0) >> 4);
 
             S $= Mid(default.Codes, b, 1);
 
