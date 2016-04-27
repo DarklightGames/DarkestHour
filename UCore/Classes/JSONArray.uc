@@ -6,6 +6,11 @@ class JSONArray extends JSONValue;
 
 var ArrayList_JSONValue Values;
 
+function int Size()
+{
+    return Values.Size();
+}
+
 function bool IsArray()
 {
     return true;
@@ -36,22 +41,17 @@ function string Encode()
 
 function Add(JSONValue Item)
 {
-    if (Values == none)
-    {
-        Values = new class'ArrayList_JSONValue';
-    }
-
     Values.Add(Item);
 }
 
 function AddAtIndex(int Index, JSONValue Item)
 {
-    if (Values == none)
-    {
-        Values = new class'ArrayList_JSONValue';
-    }
-
     Values.AddAtIndex(Index, Item);
+}
+
+function JSONValue Get(int Index)
+{
+    return Values.Get(Index);
 }
 
 static function JSONArray VCreate(vector V)
@@ -59,6 +59,7 @@ static function JSONArray VCreate(vector V)
     local JSONArray A;
 
     A = new class'JSONArray';
+    A.Values = new class'ArrayList_JSONValue';
     A.Add(class'JSONNumber'.static.FCreate(V.X));
     A.Add(class'JSONNumber'.static.FCreate(V.X));
     A.Add(class'JSONNumber'.static.FCreate(V.X));

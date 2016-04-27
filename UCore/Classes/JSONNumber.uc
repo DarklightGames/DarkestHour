@@ -6,6 +6,11 @@ class JSONNumber extends JSONValue;
 
 var private string Value;
 
+function string AsString()
+{
+    return Value;
+}
+
 function bool IsNumber()
 {
     return true;
@@ -60,3 +65,4 @@ static function JSONNumber FCreate(float F)
 
     return N;
 }
+

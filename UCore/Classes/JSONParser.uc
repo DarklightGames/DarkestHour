@@ -108,6 +108,7 @@ function JSONArray ReadArray()
     }
 
     A = new class'JSONArray';
+    A.Values = new class'ArrayList_JSONValue';
 
     while (true)
     {

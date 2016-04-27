@@ -72,7 +72,7 @@ static final function int SIndexOf(array<string> _Array, string O)
 
     for (i = 0; i < _Array.Length; ++i)
     {
-        if (_Array[i] == O)
+        if (_Array[i] ~= O)
         {
             return i;
         }
