@@ -11,6 +11,97 @@ var localized string SwapAndRestartText;
 var config float MapVoteIntervalDuration;
 var config bool bUseSwapVote;
 
+var array<string> Blacklist;
+
+function OnMapListResponse(int Status, TreeMap_string_string Headers, string Content)
+{
+    local int i, j;
+    local JSONParser P;
+    local JSONValue V;
+    local JSONObject O, M, Root;
+    local JSONArray Array;
+    local array<string> Keys, Values;
+
+    if (Status != 200)
+    {
+        return;
+    }
+
+    P = new class'JSONParser';
+    V = P.Parse(Content);
+
+    if (V == none || !V.IsObject())
+    {
+        return;
+    }
+
+    Root = V.AsObject();
+
+    V = Root.Get("blacklist");
+
+    if (V != none && V.IsArray())
+    {
+        Array = V.AsArray();
+
+        for (i = 0; i < Array.Size(); ++i)
+        {
+            V = Array.Get(i);
+
+            if (V != none && V.IsString())
+            {
+                Blacklist[Blacklist.Length] = V.AsString();
+            }
+        }
+    }
+
+    V = Root.Get("maps");
+
+    if (V != none && V.IsObject())
+    {
+        O = V.AsObject();
+        Keys = O.GetKeys();
+
+        for (i = 0; i < Keys.Length; ++i)
+        {
+            V = O.Get(Keys[i]);
+
+            if (V != none && V.IsObject())
+            {
+                M = V.AsObject();
+
+                for (j = 0; j < MapList.Length; ++j)
+                {
+                    if (MapList[j].MapName ~= Keys[i])
+                    {
+                        Values[0] = MapList[j].MapName;
+                        Values[1] = M.Get("type").AsString();
+                        Values[2] = M.Get("min_players").AsString();
+                        Values[3] = M.Get("max_players").AsString();
+                        Values[4] = M.Get("quality").AsString();
+
+                        MapList[j].MapName = class'UString'.static.Join(";", Values);
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+function PostBeginPlay()
+{
+    local HTTPRequest R;
+
+    super.PostBeginPlay();
+
+    R = Spawn(class'HTTPRequest');
+    R.Host = "www.darkesthour.darklightgames.com";
+    R.Path = "/game/maplist.php";
+    R.OnResponse = OnMapListResponse;
+    R.Send();
+}
+
 // NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
@@ -651,6 +742,50 @@ function LoadMapList()
     }
 
     Loader.Destroy();
+}
+
+function AddMap(string MapName, string Mutators, string GameOptions) // called from the MapListLoader
+{
+    local MapHistoryInfo MapInfo;
+    local bool bUpdate;
+    local int i;
+
+    for(i=0; i < MapList.Length; i++)  // dont add duplicate map names
+        if (MapName ~= MapList[i].MapName)
+            return;
+
+    MapInfo = History.GetMapHistory(MapName);
+
+    MapList.Length = MapCount + 1;
+    MapList[MapCount].MapName = MapName;
+    MapList[MapCount].PlayCount = MapInfo.P;
+    MapList[MapCount].Sequence = MapInfo.S;
+    if (MapInfo.S <= RepeatLimit && MapInfo.S != 0)
+        MapList[MapCount].bEnabled = false; // dont allow players to vote for this one
+    else
+        MapList[MapCount].bEnabled = true;
+    MapCount++;
+
+    if (Mutators != "" && Mutators != MapInfo.U)
+    {
+        MapInfo.U = Mutators;
+        bUpdate = true;
+    }
+
+    if (GameOptions != "" && GameOptions != MapInfo.G)
+    {
+        MapInfo.G = GameOptions;
+        bUpdate = true;
+    }
+
+    if (MapInfo.M == "") // if map not found in MapVoteHistory then add it
+    {
+        MapInfo.M = MapName;
+        bUpdate = true;
+    }
+
+    if (bUpdate)
+        History.AddMap(MapInfo);
 }
 
 defaultproperties
