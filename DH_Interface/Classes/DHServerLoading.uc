@@ -130,18 +130,17 @@ simulated function SetImage()
     if (class'DHMapList'.static.IsMapOfficial(LoadingMapRecord.MapName))
     {
         DrawOpImage(Operations[5]).Image = OfficialMapIcon;
-        DrawOpText(Operations[6]).Text = OfficialMapText;
     }
     else if (class'DHMapList'.static.IsMapLegacy(LoadingMapRecord.MapName))
     {
         DrawOpImage(Operations[5]).Image = OfficialMapIcon;
-        DrawOpText(Operations[6]).Text = LegacyMapText;
     }
     else
     {
         DrawOpImage(Operations[5]).Image = CommunityMapIcon;
-        DrawOpText(Operations[6]).Text = CommunityMapText;
     }
+
+    DrawOpText(Operations[6]).Text = class'DHMapList'.static.GetMapSource(LoadingMapRecord.MapName $ ".rom");
 
     DrawOpImage(Operations[0]).Image = M;
 }

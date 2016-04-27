@@ -51,23 +51,41 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     Split(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, ";", Parts);
 
+    // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[0], FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(Parts[0]), FontScale);
 
+    // Source
     GetCellLeftWidth(1, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[1], FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetMapSource(Parts[0]), FontScale);
 
-    GetCellLeftWidth(2, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[2], FontScale);
+    // Type
+    if (Parts.Length >= 3)
+    {
+        GetCellLeftWidth(2, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[1], FontScale);
+    }
 
-    GetCellLeftWidth(3, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[3], FontScale);
+    // Player Range
+    if (Parts.Length >= 4)
+    {
+        GetCellLeftWidth(3, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[2] $ "-" $ Parts[3], FontScale);
+    }
 
-    GetCellLeftWidth(4, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+    // Quality Control
+    if (Parts.Length >= 5)
+    {
+        GetCellLeftWidth(4, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+    }
 
-    GetCellLeftWidth(5, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
+    // Author
+    if (Parts.Length >= 6)
+    {
+        GetCellLeftWidth(5, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
+    }
 }
 
 //will need a way to sort stuff

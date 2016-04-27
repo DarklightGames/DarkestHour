@@ -13,6 +13,10 @@ var config bool bUseSwapVote;
 
 var array<string> Blacklist;
 
+// Colin: We store the original map name here, so we don't need to parse out
+// the things constantly.
+var array<string> MapListNames;
+
 function OnMapListResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local int i, j;
@@ -69,20 +73,17 @@ function OnMapListResponse(int Status, TreeMap_string_string Headers, string Con
             {
                 M = V.AsObject();
 
-                for (j = 0; j < MapList.Length; ++j)
+                j = class'UArray'.static.SIndexOf(MapListNames, Keys[i]);
+
+                if (j >= 0)
                 {
-                    if (MapList[j].MapName ~= Keys[i])
-                    {
-                        Values[0] = MapList[j].MapName;
-                        Values[1] = M.Get("type").AsString();
-                        Values[2] = M.Get("min_players").AsString();
-                        Values[3] = M.Get("max_players").AsString();
-                        Values[4] = M.Get("quality").AsString();
+                    Values[0] = MapList[j].MapName;
+                    Values[1] = M.Get("type").AsString();
+                    Values[2] = M.Get("min_players").AsString();
+                    Values[3] = M.Get("max_players").AsString();
+                    Values[4] = M.Get("quality").AsString();
 
-                        MapList[j].MapName = class'UString'.static.Join(";", Values);
-
-                        break;
-                    }
+                    MapList[j].MapName = class'UString'.static.Join(";", Values);
                 }
             }
         }
@@ -178,16 +179,6 @@ function PlayerExit(Controller Exiting)
     }
 }
 
-// function to strip prefix
-function string PrepMapStr(string MapName)
-{
-    MapName = Repl(MapName, "DH-", ""); // Remove DH- prefix
-    MapName = Repl(MapName, ".rom", ""); // Remove .rom if it exists
-    MapName = Repl(MapName, "_", " "); // Remove _ for space
-
-    return MapName;
-}
-
 // overidden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
 function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
@@ -223,7 +214,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     if (PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin)  // Administrator Vote
     {
         TextMessage = lmsgAdminMapChange;
-        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
+        TextMessage = Repl(TextMessage, "%mapname%", class'DHMapList'.static.GetPrettyName(MapListNames[MapIndex]));
 
         Level.Game.Broadcast(self, TextMessage);
 
@@ -239,8 +230,8 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 
         bLevelSwitchPending = true;
 
+        MapList[MapIndex].MapName = MapListNames[MapIndex];
         MapInfo = History.PlayMap(MapList[MapIndex].MapName);
-
         ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
 
         log("ServerTravelString = " $ ServerTravelString ,'MapVoteDebug');
@@ -313,8 +304,9 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     {
         TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
         TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
-        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
-        Level.Game.Broadcast(self,TextMessage);
+        TextMessage = Repl(TextMessage, "%mapname%", class'DHMapList'.static.GetPrettyName(MapListNames[MapIndex]));
+
+        Level.Game.Broadcast(self, TextMessage);
     }
 
     UpdateVoteCount(MapIndex, GameIndex, VoteCount);
@@ -593,14 +585,14 @@ function TallyVotes(bool bForceMapSwitch)
             return;
         }
 
-        TextMessage = lmsgMapWon;
-        TextMessage = repl(TextMessage,"%mapname%",MapList[topmap - topmap/MapCount * MapCount].MapName $ "(" $ GameConfig[topmap/MapCount].Acronym $ ")");
-        Level.Game.Broadcast(self,TextMessage);
+        TextMessage = Repl(lmsgMapWon, "%mapname%", class'DHMapList'.static.GetPrettyName(MapListNames[topmap - topmap/MapCount * MapCount]));
+
+        Level.Game.Broadcast(self, TextMessage);
 
         CloseAllVoteWindows();
 
+        MapList[topmap - topmap/MapCount * MapCount].MapName = MapListNames[topmap - topmap/MapCount * MapCount];
         MapInfo = History.PlayMap(MapList[topmap - topmap/MapCount * MapCount].MapName);
-
         ServerTravelString = SetupGameMap(MapList[topmap - topmap/MapCount * MapCount], topmap/MapCount, MapInfo);
 
         log("ServerTravelString = " $ ServerTravelString ,'MapVoteDebug');
@@ -758,6 +750,7 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
 
     MapList.Length = MapCount + 1;
     MapList[MapCount].MapName = MapName;
+    MapListNames[MapCount] = MapName;
     MapList[MapCount].PlayCount = MapInfo.P;
     MapList[MapCount].Sequence = MapInfo.S;
     if (MapInfo.S <= RepeatLimit && MapInfo.S != 0)

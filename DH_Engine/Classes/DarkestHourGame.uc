@@ -3609,7 +3609,7 @@ defaultproperties
     DefaultPlayerClassName="DH_Engine.DHPawn"
     ScoreBoardType="DH_Interface.DHScoreBoard"
     HUDType="DH_Engine.DHHud"
-    MapListType="DH_Interface.DHMapList"
+    MapListType="DH_Engine.DHMapList"
     BroadcastHandlerClass="DH_Engine.DHBroadcastHandler"
     PlayerControllerClassName="DH_Engine.DHPlayer"
     GameReplicationInfoClass=class'DH_Engine.DHGameReplicationInfo'
