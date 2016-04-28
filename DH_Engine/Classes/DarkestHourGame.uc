@@ -29,6 +29,14 @@ var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         bTeamOutOfReinforcements[2];
 
+const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
+const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
+
+var()   config float                ServerTickForInflation; // Value that determines when inflation will start if ServerTickRateAverage is less than
+var     float                       ServerTickRateAverage; // The average tick rate over the past SERVERTICKRATE_UPDATETIME
+var     float                       ServerTickRateConsolidated; // Keeps track of tick rates over time, used to calculate average
+var     int                         ServerTickFrameCount; // Keeps track of how many frames are between ServerTickRateConsolidated
+
 var     float                       TeamAttritionCounter[2];    //When this hits over 1
 
 var     bool                        bSwapTeams;
@@ -323,6 +331,56 @@ function PostBeginPlay()
     if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
     {
         GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
+    }
+}
+
+event Tick(float DeltaTime)
+{
+    ServerTickRateConsolidated += DeltaTime;
+
+    // This code should only execute every SERVERTICKRATE_UPDATETIME seconds
+    if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
+    {
+        ServerTickRateAverage = ServerTickFrameCount / ServerTickRateConsolidated;
+        ServerTickFrameCount = 0;
+        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
+
+        HandleReinforceIntervalInflation();
+
+        Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+    }
+    else
+    {
+        ++ServerTickFrameCount;
+    }
+
+    super.Tick(DeltaTime);
+}
+
+// Raises the reinforcement interval used in the level if the server is performing poorly, otherwise it sets it to default
+function HandleReinforceIntervalInflation()
+{
+    local float TickRatio;
+
+    if (DHGameReplicationInfo(GameReplicationInfo) == none)
+    {
+        return;
+    }
+
+    // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
+    if (ServerTickRateAverage < ServerTickForInflation)
+    {
+        TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInflation;
+
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
+
+        Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
+    }
+    else
+    {
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
+        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
     }
 }
 
@@ -3540,6 +3598,8 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
 
 defaultproperties
 {
+    ServerTickForInflation=20.0
+
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
