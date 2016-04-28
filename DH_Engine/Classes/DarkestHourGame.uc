@@ -347,7 +347,7 @@ event Tick(float DeltaTime)
 
         HandleReinforceIntervalInflation();
 
-        Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+        //Log("Average Server Tick Rate:" @ ServerTickRateAverage);
     }
     else
     {
@@ -375,7 +375,7 @@ function HandleReinforceIntervalInflation()
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
 
-        Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
+        //Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
     }
     else
     {
