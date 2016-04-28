@@ -53,10 +53,7 @@ simulated function Tick(float DeltaTime)
     {
         if (Instigator.Physics == PHYS_Falling)
         {
-            if (Role == ROLE_Authority)
-            {
-                Instigator.Velocity.Z = -400.0;
-            }
+            Instigator.Velocity.Z = -400.0;
         }
         else
         {
