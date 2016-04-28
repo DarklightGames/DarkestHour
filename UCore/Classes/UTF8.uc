@@ -14,7 +14,7 @@ var private byte FirstByteMarks[7];
 
 static final function array<byte> ToBytes(string S)
 {
-    local int i, j, Chr, BytesToWrite;
+    local int i, j, c, BytesToWrite;
     local array<int> UTF32Bytes;
     local array<byte> UTF8Bytes;
 
@@ -22,28 +22,28 @@ static final function array<byte> ToBytes(string S)
 
     for (i = 0; i < UTF32Bytes.Length; ++i)
     {
-        Chr = UTF32Bytes[i];
+        c = UTF32Bytes[i];
 
-        if (Chr < 0x80)
+        if (c < 0x80)
         {
             BytesToWrite = 1;
         }
-        else if (Chr < 0x800)
+        else if (c < 0x800)
         {
             BytesToWrite = 2;
         }
-        else if (Chr < 0x10000)
+        else if (c < 0x10000)
         {
             BytesToWrite = 3;
         }
-        else if (Chr <= 0x10FFFF)
+        else if (c <= 0x10FFFF)
         {
             BytesToWrite = 4;
         }
         else
         {
             BytesToWrite = 3;
-            Chr = 0xFFFD;
+            c = 0xFFFD;
         }
 
         j += BytesToWrite;
@@ -63,7 +63,7 @@ static final function array<byte> ToBytes(string S)
                 UTF8Bytes[--j] = byte(c | default.FirstByteMarks[BytesToWrite]);
         }
 
-        Target += BytesToWrite;
+        j += BytesToWrite;
     }
 
     return UTF8Bytes;
@@ -72,16 +72,11 @@ static final function array<byte> ToBytes(string S)
 static final function string FromBytes(array<byte> Bytes)
 {
     local string S;
-    local int i, Chr, ExtraBytesToRead;
-    local ArrayList_byte ByteArray;
-
-    ByteArray = new class'ArrayList_byte';
-    ByteArray.AddRange(Bytes);
-    // TODO: use byte array so that we don't need to pass array huge arrays in legality checks
+    local int i, c, ExtraBytesToRead;
 
     while (i < Bytes.Length)
     {
-        Chr = 0;
+        c = 0;
         ExtraBytesToRead = GetTrailingBytesForUTF8(Bytes[i]);
 
         if (ExtraBytesToRead >= (Bytes.Length - i))
@@ -93,25 +88,25 @@ static final function string FromBytes(array<byte> Bytes)
         switch (ExtraBytesToRead)
         {
             case 5:
-                Chr += Bytes[i++];
-                Chr = Chr << 6;
+                c += Bytes[i++];
+                c = c << 6;
             case 4:
-                Chr += Bytes[i++];
-                Chr = Chr << 6;
+                c += Bytes[i++];
+                c = c << 6;
             case 3:
-                Chr += Bytes[i++];
-                Chr = Chr << 6;
+                c += Bytes[i++];
+                c = c << 6;
             case 2:
-                Chr += Bytes[i++];
-                Chr = Chr << 6;
+                c += Bytes[i++];
+                c = c << 6;
             case 1:
-                Chr += Bytes[i++];
-                Chr = Chr << 6;
+                c += Bytes[i++];
+                c = c << 6;
             case 0:
-                Chr += Bytes[i++];
+                c += Bytes[i++];
         }
 
-        S $= Chr(Chr);
+        S $= Chr(c);
     }
 
     return S;
