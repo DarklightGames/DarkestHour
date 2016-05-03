@@ -33,8 +33,6 @@ var     localized string        SteamMustBeRunningText;
 var     localized string        SinglePlayerDisabledText;
 var     localized string        MOTDErrorString;
 
-var     float                   TimeOutTime;
-
 var     bool                    bAllowClose;
 var     int                     EllipseCount;
 var     bool                    bShouldRequestMOTD;
@@ -375,7 +373,6 @@ defaultproperties
     // IP variables
     QuickPlayString="Quick Join"
     ConnectingString="Joining"
-    TimeOutTime=30.0
 
     // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
