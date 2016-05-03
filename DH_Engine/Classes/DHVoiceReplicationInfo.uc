@@ -80,8 +80,6 @@ simulated function VoiceChatRoom AddSquadChannel(int TeamIndex, int SquadIndex)
     VCR.SetTeam(TeamIndex);
     VCR.SquadIndex = SquadIndex;
 
-    Log(VCR.ChannelIndex);
-
     return VCR;
 }
 
