@@ -1038,7 +1038,7 @@ function TossAmmo(Pawn Gunner)
     local DHGameReplicationInfo GRI;
     local DHWeapon W;
 
-    if (bUsedCarriedMGAmmo || Gunner == none)
+    if (bUsedCarriedMGAmmo || Gunner == none || GetTeamNum() != Gunner.GetTeamNum())
     {
         return;
     }
@@ -4724,6 +4724,7 @@ simulated function NotifySelected(Pawn User)
     P = DHPawn(User);
 
     if (P == none ||
+        P.GetTeamNum() != GetTeamNum() ||
         Level.NetMode == NM_DedicatedServer ||
         !User.IsHumanControlled() ||
         (Level.TimeSeconds - LastNotifyTime) < TouchMessageClass.default.LifeTime ||
