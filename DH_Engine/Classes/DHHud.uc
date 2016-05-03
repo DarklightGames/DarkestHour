@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHHud extends ROHud;
+class DHHud extends ROHud
+    dependson(DHSquadReplicationInfo);
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
@@ -76,7 +77,9 @@ var SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for pl
 
 var Material            PlayerNameIconMaterial;
 var Material            VoiceIconMaterial;
-var ArrayList_Object    NamedPawns;
+
+var ArrayList_Object    NamedPawns;             // A list of all pawns whose names are currently being rendered
+var array<int>          DrawnSignalIndices;
 
 function PostBeginPlay()
 {
@@ -882,7 +885,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     local ROVehicleWeaponPawn     WeaponPawn;
     local AbsoluteCoordsInfo      Coords, Coords2;
     local SpriteWidget            Widget;
-    local color                   VehicleColor, SavedDrawColor;
+    local color                   VehicleColor;
     local rotator                 MyRot;
     local int                     Current, Pending, i;
     local float                   f, XL, YL, Y_one, MyScale, StrX, StrY, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset;
@@ -1430,7 +1433,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     {
         WeaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
 
-        if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && WeaponPawn.PlayerReplicationInfo != PRI) // don't draw our own name!
+        if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none) // don't draw our own name!
         {
             Lines[Lines.Length] = "" $ (i + 2) $ "." @ WeaponPawn.PlayerReplicationInfo.PlayerName;
             Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WeaponPawn.PlayerReplicationInfo));
@@ -1438,7 +1441,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Draw the lines
-    SavedDrawColor = Canvas.DrawColor;
 
     if (Lines.Length > 0)
     {
@@ -1448,14 +1450,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
         for (i = Lines.Length - 1; i >= 0; --i)
         {
-            Canvas.DrawColor = Colors[i];
             VehicleOccupantsText.Text = Lines[i];
+            VehicleOccupantsText.Tints[0] = Colors[i];
+            VehicleOccupantsText.Tints[1] = Colors[i];
             DrawTextWidgetClipped(Canvas, VehicleOccupantsText, Coords2, XL, YL, Y_one);
             VehicleOccupantsText.OffsetY -= YL;
         }
     }
-
-    Canvas.DrawColor = SavedDrawColor;
 }
 
 function color GetPlayerColor(DHPlayerReplicationInfo PRI)
@@ -1469,7 +1470,14 @@ function color GetPlayerColor(DHPlayerReplicationInfo PRI)
 
     if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, PRI))
     {
-        return class'DHColor'.default.SquadColor;
+        if (PRI.IsSquadLeader())
+        {
+            return class'DHColor'.default.SquadLeaderColor;
+        }
+        else
+        {
+            return class'DHColor'.default.SquadColor;
+        }
     }
     else if (PRI != none && PRI.Team != none)
     {
@@ -1488,6 +1496,8 @@ function DrawSignals(Canvas C)
     local vector    ScreenLocation;
     local Material  SignalMaterial;
     local vector    X, Y, Z;
+    local float     Angle;
+    local bool      bHasLOS;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -1500,7 +1510,7 @@ function DrawSignals(Canvas C)
 
     for (i = 0; i < arraycount(PC.SquadSignals); ++i)
     {
-        if (PC.SquadSignals[i].Type == SIGNAL_None || Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds >= 15.0)
+        if (PC.SquadSignals[i].Location == vect(0, 0, 0) || Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds >= 15.0)
         {
             continue;
         }
@@ -1509,21 +1519,26 @@ function DrawSignals(Canvas C)
 
         Direction = Normal(TraceEnd - TraceStart);
         GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
+        Angle = Direction dot X;
 
-        if (Direction dot X < 0.0)
+        if (Angle < 0.0)
         {
             continue;
         }
 
-        // TODO: check fog distance as well, probably not an issue overall, though
-        FastTrace(TraceEnd, TraceStart);
-
-        switch (PC.SquadSignals[i].Type)
+        if (Angle >= 0.99)
         {
-            case SIGNAL_Fire:
+            C.DrawColor.A = 128;
+        }
+
+        bHasLOS = !FastTrace(TraceEnd, TraceStart);
+
+        switch (i)
+        {
+            case 0: // SIGNAL_Fire
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire';
                 break;
-            case SIGNAL_Move:
+            case 1: // SIGNAL_Move
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move';
                 break;
             default:
@@ -4829,6 +4844,170 @@ simulated function SetSkyOff(bool bHideSky)
             && !bDebugDriverCollision && !bDebugPlayerCollision && !bDebugVehicleHitPoints && !bDebugVehicleWheels && !bDebugCamera)
         {
             PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone = SavedSkyZone;
+        }
+    }
+}
+
+simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float rotationCompensation, actor viewer, AbsoluteCoordsInfo GlobalCoords)
+{
+    local vector Target, Current;
+    local int i, team, id, count, temp_team;
+    local ROGameReplicationInfo GRI;
+    local float angle, XL, YL;
+    local rotator rotAngle;
+
+    // Decrement opacity if needed, increment if needed
+    if (bShowObjectives)
+    {
+        compassIconsOpacity = fmin(1.0, compassIconsOpacity + compassIconsRefreshSpeed * (Level.TimeSeconds - hudLastRenderTime));
+    }
+    else
+    {
+        compassIconsOpacity -= compassIconsFadeSpeed * (Level.TimeSeconds - hudLastRenderTime);
+    }
+
+    // Get user's team & position
+    if (Pawn(viewer) != none)
+    {
+        if (Pawn(viewer).Controller != none)
+        {
+            team = Pawn(viewer).Controller.PlayerReplicationInfo.Team.TeamIndex;
+        }
+        else
+        {
+            team = 255;
+        }
+    }
+    else
+    {
+        if (Controller(viewer) != none)
+        {
+            team = Controller(viewer).PlayerReplicationInfo.Team.TeamIndex;
+        }
+        else
+        {
+            team = 255;
+        }
+    }
+
+    current = viewer.location;
+
+    // Get GRI
+    GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Update waypoints array if needed
+    if (bShowObjectives)
+    {
+        temp_team = Clamp(Team, 0, 1);
+
+        count = 0;
+
+        for (i = 0; i < arraycount(compassIconsTargetsActive); ++i)
+        {
+            compassIconsTargetsActive[i] = 0;
+        }
+
+        if (team == AXIS_TEAM_INDEX || team == ALLIES_TEAM_INDEX)
+        {
+            // Add all rally points
+            for (i = 0; i < arraycount(GRI.AxisRallyPoints); i++)
+            {
+                // if array is full, stop adding waypoints
+                if (count >= arraycount(compassIconsTargetsActive))
+                {
+                    break;
+                }
+
+                if (team == AXIS_TEAM_INDEX)
+                {
+                    target = GRI.AxisRallyPoints[i].RallyPointLocation;
+                }
+                else
+                {
+                    target = GRI.AlliedRallyPoints[i].RallyPointLocation;
+                }
+
+                compassIconsTargetsWidgetCoords[count] = MapIconRally[temp_team].TextureCoords;
+
+                if (target != vect(0, 0, 0))
+                {
+                    compassIconsTargets[count] =  target;
+                    compassIconsTargetsActive[count] = 1;
+                    count++;
+                }
+            }
+
+            // Add all help requests
+            for (i = 0; i < arraycount(GRI.AxisHelpRequests); i++)
+            {
+                // if array is full, stop adding waypoints
+                if (count >= arraycount(compassIconsTargetsActive))
+                {
+                    break;
+                }
+
+                if (team == AXIS_TEAM_INDEX)
+                {
+                    target = GRI.AxisHelpRequestsLocs[i];
+                    id = GRI.AxisHelpRequests[i].requestType;
+                }
+                else
+                {
+                    target = GRI.AlliedHelpRequestsLocs[i];
+                    id = GRI.AlliedHelpRequests[i].requestType;
+                }
+
+                if (id != 255)
+                {
+                    if (id == 3) // MG resupply
+                    {
+                        compassIconsTargetsWidgetCoords[count] = MapIconMGResupplyRequest[temp_team].TextureCoords;
+                    }
+                    else if (id == 0 || id == 4) // Help request at coords or at obj
+                    {
+                        compassIconsTargetsWidgetCoords[count] = MapIconHelpRequest.TextureCoords;
+                    }
+                    else if (id == 1 || id == 2) // Attack/defend obj
+                    {
+                        compassIconsTargetsWidgetCoords[count] = MapIconAttackDefendRequest.TextureCoords;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    compassIconsTargets[count] =  target;
+                    compassIconsTargetsActive[count] = 1;
+
+                    ++count;
+                }
+            }
+        }
+    }
+
+    // Go through waypoint array and draw the icons
+    for (i = 0; i < arraycount(compassIconsTargetsActive); i++)
+    {
+        if (compassIconsTargetsActive[i] == 1)
+        {
+            CompassIcons.TextureCoords = compassIconsTargetsWidgetCoords[i];
+            CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * compassIconsOpacity;
+
+            // Calculate rotation
+            rotAngle = rotator(compassIconsTargets[i] - current);
+            angle = (rotAngle.Yaw + rotationCompensation) * Pi / 32768;
+
+            // Update widget offset
+            CompassIcons.OffsetX = CenterX + Radius * cos(angle);
+            CompassIcons.OffsetY = CenterY + Radius * sin(angle);
+
+            // Draw waypoint image
+            DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
         }
     }
 }

@@ -43,10 +43,8 @@ enum ESquadOrderType
 
 enum ESquadSignalType
 {
-    SIGNAL_None,
     SIGNAL_Fire,
     SIGNAL_Move,
-    SIGNAL_Smoke,
     SIGNAL_Count
 };
 
@@ -995,12 +993,22 @@ function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIn
 {
     local int i;
     local array<DHPlayerReplicationInfo> Members;
-    local DHPlayer OtherPC;
+    local DHPlayer MyPC, OtherPC;
+    local DHPawn MyPawn, OtherPawn;
 
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return;
     }
+
+    MyPC = DHPlayer(PRI.Owner);
+
+    if (MyPC == none || MyPC.Pawn == none)
+    {
+        return;
+    }
+
+    // TODO: make sure there's no spam
 
     GetMembers(TeamIndex, SquadIndex, Members);
 
@@ -1008,7 +1016,9 @@ function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIn
     {
         OtherPC = DHPlayer(Members[i].Owner);
 
-        if (OtherPC != none)
+        if (OtherPC != none &&
+            OtherPC.Pawn != none &&
+            VSize(OtherPC.Pawn.Location - MyPC.Pawn.Location) < class'DHUnits'.static.MetersToUnreal(50))
         {
             OtherPC.ClientSquadSignal(Type, Location);
         }

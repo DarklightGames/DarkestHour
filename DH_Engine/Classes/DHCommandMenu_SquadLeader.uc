@@ -16,23 +16,34 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
 
     PC = DHPlayer(Interaction.ViewportOwner.Actor);
 
+    // TODO: possibly move speech commands out of the menu, since it's not
+    // really it's responsbility.
+
     switch (Index)
     {
         case 0: // Fire
-            PC.ConsoleCommand("SPEECH ALERT 6");
+            if (Rand(2) == 0)
+            {
+                PC.ConsoleCommand("SPEECH ORDER 6");
+            }
+            else
+            {
+                PC.ConsoleCommand("SPEECH ALERT 6");
+            }
+
             PC.ServerSquadSignal(SIGNAL_Fire, Location);
             break;
         case 1: // Attack
+            PC.ConsoleCommand("SPEECH ORDER 0");
             PC.ServerSquadOrder(ORDER_Attack, Location);
             break;
         case 2: // Defend
+            PC.ConsoleCommand("SPEECH ORDER 1");
             PC.ServerSquadOrder(ORDER_Defend, Location);
             break;
         case 3: // Move
+            PC.ConsoleCommand("SPEECH ALERT 1");
             PC.ServerSquadSignal(SIGNAL_Move, Location);
-            break;
-        case 4: // Smoke
-            PC.ServerSquadSignal(SIGNAL_Smoke, Location);
             break;
         default:
             break;
@@ -45,11 +56,10 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
 
 defaultproperties
 {
-    Options(0)=(Text="Fire")
-    Options(1)=(Text="Attack")
-    Options(2)=(Text="Defend")
-    Options(3)=(Text="Move")
-    Options(4)=(Text="Smoke")
+    Options(0)=(Text="Fire",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(1)=(Text="Attack",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_attack')
+    Options(2)=(Text="Defend",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend')
+    Options(3)=(Text="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
 }
 
 

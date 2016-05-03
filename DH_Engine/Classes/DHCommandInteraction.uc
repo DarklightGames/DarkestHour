@@ -6,8 +6,8 @@
 class DHCommandInteraction extends DHInteraction;
 
 const FADE_DURATION = 0.25;
-const INNER_RADIUS = 96.0;
-const OUTER_RADIUS = 128.0;
+const INNER_RADIUS = 16.0;
+const OUTER_RADIUS = 32.0;
 const Tau = 6.28318530718;
 
 var Stack_Object        Menus;
@@ -15,6 +15,11 @@ var Stack_Object        Menus;
 var float               MenuAlpha;
 var vector              Cursor;
 var int                 SelectedIndex;
+
+// Colin: This is necessary because trying to DrawTile on idential TexRotators
+// and other procedural materials in the same frame ends up only drawing one
+// of them.
+var TexRotator          MaterialQuarters[4];
 
 event Initialized()
 {
@@ -105,6 +110,15 @@ function Tick(float DeltaTime)
 {
     local float ArcLength, Theta;
     local DHCommandMenu Menu;
+    local DHPlayer PC;
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC == none || PC.Pawn == none || PC.IsDead())
+    {
+        Hide();
+        return;
+    }
 
     Menu = DHCommandMenu(Menus.Peek());
 
@@ -148,7 +162,7 @@ function PostRender(Canvas C)
 {
     local int i;
     local float Theta, ArcLength;
-    local float CenterX, CenterY, X, Y, Xl, YL;
+    local float CenterX, CenterY, X, Y, XL, YL, U, V;
     local DHCommandMenu Menu;
 
     if (C == none)
@@ -159,16 +173,12 @@ function PostRender(Canvas C)
     CenterX = (C.ClipX / 2);
     CenterY = (C.ClipY / 2);
 
-    if (SelectedIndex == -1)
-    {
-        C.DrawColor = class'UColor'.default.Green;
-    }
-
-    C.DrawColor.A = MenuAlpha * 255;
-
     // TODO: get rid of magic numbers
-    C.SetPos(CenterX - 64, CenterY - 64);
-    C.DrawTile(material'DH_InterfaceArt_tex.Communication.command_menu_ring', 128, 128, 0, 0, 128, 128);
+    C.SetPos(CenterX - 8, CenterY - 8);
+
+    // TODO: draw tiny crosshair
+    C.DrawColor = class'UColor'.default.White;
+    C.DrawTile(material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
     Menu = DHCommandMenu(Menus.Peek());
 
@@ -181,37 +191,48 @@ function PostRender(Canvas C)
         // Draw all the options.
         for (i = 0; i < Menu.Options.Length; ++i)
         {
-            X = Cos(Theta) * 128;
-            Y = Sin(Theta) * 128;   //MAGIC
 
             if (SelectedIndex == i)
             {
-                C.DrawColor = class'UColor'.default.Green;
+                C.DrawColor = class'UColor'.default.Yellow;
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
             }
             else
             {
                 C.DrawColor = class'UColor'.default.White;
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
 
-            C.DrawColor.A = MenuAlpha * 255;
-            C.SetPos(CenterX + X - 64, CenterY + Y - 64);
-            C.DrawTile(material'DH_InterfaceArt_tex.Communication.command_menu_ring', 128, 128, 0, 0, 128, 128);
+            C.SetPos(CenterX - 256, CenterY - 256);
+            C.DrawTileClipped(MaterialQuarters[i], 512, 512, 0, 0, 512, 512);
+
+            U = Menu.Options[i].Material.MaterialUSize();
+            V = Menu.Options[i].Material.MaterialVSize();
+
+            X = CenterX  + (Cos(Theta) * 144) - (U / 2);
+            Y = CenterY + (Sin(Theta) * 144) - (V / 2);
+
+            C.DrawColor = class'UColor'.default.White;
+            C.DrawColor.A = byte(255 * MenuAlpha);
+            C.SetPos(X, Y);
+            C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);
 
             Theta += ArcLength;
         }
     }
 
+    // Display text of selection
     if (SelectedIndex >= 0)
     {
         C.TextSize(Menu.Options[SelectedIndex].Text, XL, YL);
-        C.SetPos(CenterX - (XL / 2), CenterY);
+        C.SetPos(CenterX - (XL / 2), CenterY + 32);
         C.DrawText(Menu.Options[SelectedIndex].Text);
     }
 
-    // debug rendering for cursor
-    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
-    C.DrawColor = class'UColor'.default.Red;
-    C.DrawBox(C, 4, 4);
+//    // debug rendering for cursor
+//    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
+//    C.DrawColor = class'UColor'.default.Red;
+//    C.DrawBox(C, 4, 4);
 }
 
 function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
@@ -320,4 +341,9 @@ defaultproperties
     bActive=true
     bVisible=true
     bRequiresTick=true
+
+    MaterialQuarters(0)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_1'
+    MaterialQuarters(1)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_2'
+    MaterialQuarters(2)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_3'
+    MaterialQuarters(3)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_4'
 }

@@ -73,13 +73,13 @@ var     DHCommandInteraction SquadOrderInteraction;
 
 struct SquadSignal
 {
-    var DHSquadReplicationInfo.ESquadSignalType Type;
     var vector Location;
     var float TimeSeconds;
+    var float FirstDrawTime;
+    var float LastDrawTime;
 };
 
-var     int                     SquadSignalIndex;           // the last squad signal index to be used
-var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+var     SquadSignal             SquadSignals[2];
 
 replication
 {
@@ -4245,16 +4245,10 @@ simulated function ClientSquadSignal(DHSquadReplicationInfo.ESquadSignalType Typ
 {
     local int i;
 
-    i = SquadSignalIndex;
+    i = int(Type);
 
-    SquadSignals[i].Type = Type;
     SquadSignals[i].Location = L;
     SquadSignals[i].TimeSeconds = Level.TimeSeconds;
-
-    SquadSignalIndex = (i + 1) % arraycount(SquadSignals);
-
-    Log("recieved squad signal" @ Type @ Location);
-    // TODO: post this in DHPlayer somewhere and display it on the hud
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -4303,9 +4297,15 @@ exec function ShowOrderMenu()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (PRI != none && PRI.IsSquadLeader())
+    if (SquadOrderInteraction == none &&
+        Pawn != none &&
+        !IsDead() &&
+        PRI != none &&
+        PRI.IsSquadLeader())
     {
         SquadOrderInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
+
+        // TODO: invitation!
         SquadOrderInteraction.PushMenu("DH_Engine.DHCommandMenu_SquadLeader");
     }
 }
@@ -4316,6 +4316,8 @@ exec function HideOrderMenu()
     if (SquadOrderInteraction != none)
     {
         SquadOrderInteraction.Hide();
+
+        SquadOrderInteraction = none;
     }
 }
 
