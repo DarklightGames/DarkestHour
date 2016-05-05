@@ -318,8 +318,6 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
             SetName(TeamIndex, i, Name);
 
-            PC.ClientCreateSquadResult(SE_None);
-
             VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
 
             if (VRI != none)
@@ -328,6 +326,7 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             }
 
             PC.ReceiveLocalizedMessage(SquadMessageClass, 43);
+            PC.ClientCreateSquadResult(SE_None);
 
             return i;
         }
@@ -866,10 +865,17 @@ simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
 {
     local int i;
 
+    Log("checking if squad name is taken" @ TeamIndex @ Name);
+
     for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
     {
+        Log("IsSquadActive(" $ TeamIndex $ "," @ i $ ")" @ IsSquadActive(TeamIndex, i));
+        Log("GetSquadName(" $ TeamIndex $ "," @ i $ ")" @ GetSquadName(TeamIndex, i));
+
         if (IsSquadActive(TeamIndex, i) && GetSquadName(TeamIndex, i) ~= Name)
         {
+            Log("IsSquadNameTaken" @ TeamIndex @ Name);
+
             return true;
         }
     }
@@ -915,9 +921,13 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
         {
             if (!IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, i)))
             {
+                Log("this name not taken:" @ i);
+
                 Name = GetDefaultSquadName(TeamIndex, i);
                 break;
             }
+
+            Log("this name taken:" @ i);
         }
     }
 

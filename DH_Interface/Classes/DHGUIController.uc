@@ -175,6 +175,7 @@ defaultproperties
     DefaultStyleNames(87)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
     DefaultStyleNames(89)="DH_Interface.DHStyle_MenuTextButtonWhite"
     DefaultStyleNames(90)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
+    DefaultStyleNames(91)="DH_Interface.DHStyle_LargeEditBox"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

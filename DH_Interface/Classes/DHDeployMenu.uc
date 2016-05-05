@@ -41,6 +41,8 @@ var automated   ROGUIProportionalContainer  c_MapRoot;
 var automated   ROGUIProportionalContainer      c_Map;
 var automated   GUIImage                            i_MapBorder;
 var automated   DHGUIMapComponent                   p_Map;
+var automated   ROGUIProportionalContainer      c_Squads;
+var automated   DHGUISquadsComponent                p_Squads;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
@@ -56,9 +58,6 @@ var             DHGUIList                   li_Vehicles;
 var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
 var automated   GUIImage                    i_Arrows;
-
-//TODO: put "Kit" and "Squad" buttons in somewhere
-var automated   ROGUIProportionalContainer  c_Squads;
 
 var automated   array<GUIButton>            b_MenuOptions;
 
@@ -133,6 +132,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     c_Map.ManageComponent(i_MapBorder);
     c_Map.ManageComponent(p_Map);
+
+    c_MapRoot.ManageComponent(c_Squads);
+
+    c_Squads.ManageComponent(p_Squads);
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
     c_Equipment.ManageComponent(i_SecondaryWeapon);
@@ -1043,6 +1046,12 @@ function bool MapContainerPreDraw(Canvas C)
                       c_MapRoot.ActualHeight(),
                       true);
 
+    c_Squads.SetPosition(c_MapRoot.WinLeft + Offset,
+                      c_MapRoot.WinTop,
+                      c_MapRoot.ActualHeight(),
+                      c_MapRoot.ActualHeight(),
+                      true);
+
     return true;
 }
 
@@ -1287,8 +1296,8 @@ function bool InternalOnPreDraw(Canvas C)
 
 function UpdateSquads()
 {
-    local int i, j, MemberCount;
-    local bool bIsSquadLocked, bIsSquadFull;
+    local int i, j, k, MemberCount;
+    local bool bIsSquadActive, bIsSquadLocked, bIsSquadFull;
     local array<DHPlayerReplicationInfo> Members;
 
     if (SRI == none)
@@ -1298,10 +1307,18 @@ function UpdateSquads()
 
     for (i = 0; i < SRI.GetTeamSquadLimit(CurrentTeam) ; ++i)
     {
-        if (!SRI.IsSquadActive(CurrentTeam, i))
+        bIsSquadActive = SRI.IsSquadActive(CurrentTeam, i);
+
+        p_Squads.SquadComponents[i].b_CreateSquad.bVisible = !bIsSquadActive;
+        p_Squads.SquadComponents[i].lb_Members.bVisible = bIsSquadActive;
+        p_Squads.SquadComponents[i].l_SquadName.bVisible = bIsSquadActive;
+
+        if (!bIsSquadActive)
         {
             continue;
         }
+
+        p_Squads.SquadComponents[i].l_SquadName.Caption = SRI.GetSquadName(CurrentTeam, i);
 
         bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i);
         bIsSquadFull = SRI.IsSquadFull(CurrentTeam, i);
@@ -1320,9 +1337,11 @@ function UpdateSquads()
         // TODO: display member count (eg. (2/8))
         SRI.GetMembers(CurrentTeam, i, Members);
 
-        for (j = 0; j < Members.Length; ++j)
+        p_Squads.SquadComponents[i].li_Members.Clear();
+
+        for (k = 0; k < Members.Length; ++k)
         {
-            // TODO: add member to list
+            p_Squads.SquadComponents[i].li_Members.Add(Members[k].SquadMemberIndex $ "." @ Members[k].PlayerName, Members[i]);
         }
     }
 }
@@ -1888,6 +1907,24 @@ defaultproperties
         TextFont="DHMenuFont"
     End Object
     l_Status=StatusLabelObject
+
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SquadsContainerObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        bNeverFocus=true
+    End Object
+    c_Squads=SquadsContainerObject
+
+    Begin Object Class=DHGUISquadsComponent Name=SquadsComponentObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        bNeverFocus=true
+    End Object
+    p_Squads=SquadsComponentObject
 
     NoneText="None"
     SelectRoleText="Select a role"
