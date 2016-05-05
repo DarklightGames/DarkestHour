@@ -142,13 +142,11 @@ def main():
         print 'no packages to compile'
         sys.exit(0)
 
-    # TODO: make these moved to a temporary folder; if the build fails, re-instate the files as though nothing has changed
-    # this is necessary so that the automated build process doesn't commit deletions of files if the build fails!
     dtemp = tempfile.mkdtemp()
-
     package_paths = dict()
 
     # move packages marked for compiling to a temporary directory
+    # that way, if the build fails, we can reinstate the files
     for package in packages_to_compile:
         package_dirs = [ro_sys_dir, mod_sys_dir]
 
@@ -156,14 +154,22 @@ def main():
             package_path = os.path.join(package_dir, package)
 
             if os.path.isfile(package_path):
-                package_paths[package] = package_path
                 try:
                     os.rename(package_path, os.path.join(dtemp, package))
                     break
                 except:
-                    #TODO: other files can be left stranded
-                    print 'error: failed to move file ' + package + ' (do you have the game or editor running?)'
+                    print 'error: failed to move file {} (do you have the client, server or editor running?)'.format(package)
+
+                    # go through all packages that have already been moved and
+                    # restore them to their original location
+                    for package, path in package_paths.iteritems():
+                        try:
+                            os.rename(os.path.join(dtemp, package), path)
+                        except:
+                            print r'error: could not restore file {} to the original path!'.format(package)
                     sys.exit(1)
+
+                package_paths[package] = package_path
 
     os.chdir(ro_sys_dir)
 
@@ -181,8 +187,8 @@ def main():
 
     if did_build_fail:
         # build failed, move old packages back to original directory
-        for package in package_paths.keys():
-            os.rename(os.path.join(dtemp, package), os.path.join(package_paths[package]))
+        for package, path in package_paths.iteritems()
+            os.rename(os.path.join(dtemp, package), path)
         shutil.rmtree(dtemp)
         sys.exit(1)
     else:
