@@ -1294,7 +1294,7 @@ function bool InternalOnPreDraw(Canvas C)
     return super.OnPreDraw(C);
 }
 
-function UpdateSquads()
+function UpdateSquads() // Matt: TEMP commented out as something seems to be wrong - squad stuff is stopping player selecting spawn point & deploying
 {
     local int i, j, k, MemberCount;
     local bool bIsSquadActive, bIsSquadLocked, bIsSquadFull;
@@ -1308,18 +1308,18 @@ function UpdateSquads()
     for (i = 0; i < SRI.GetTeamSquadLimit(CurrentTeam) ; ++i)
     {
         bIsSquadActive = SRI.IsSquadActive(CurrentTeam, i);
-
+/*
         p_Squads.SquadComponents[i].b_CreateSquad.bVisible = !bIsSquadActive;
         p_Squads.SquadComponents[i].lb_Members.bVisible = bIsSquadActive;
         p_Squads.SquadComponents[i].l_SquadName.bVisible = bIsSquadActive;
-
+*/
         if (!bIsSquadActive)
         {
             continue;
         }
-
+/*
         p_Squads.SquadComponents[i].l_SquadName.Caption = SRI.GetSquadName(CurrentTeam, i);
-
+*/
         bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i);
         bIsSquadFull = SRI.IsSquadFull(CurrentTeam, i);
         MemberCount = SRI.GetMemberCount(CurrentTeam, i);
@@ -1336,13 +1336,13 @@ function UpdateSquads()
 
         // TODO: display member count (eg. (2/8))
         SRI.GetMembers(CurrentTeam, i, Members);
-
+/*
         p_Squads.SquadComponents[i].li_Members.Clear();
 
         for (k = 0; k < Members.Length; ++k)
         {
             p_Squads.SquadComponents[i].li_Members.Add(Members[k].SquadMemberIndex $ "." @ Members[k].PlayerName, Members[i]);
-        }
+        }*/
     }
 }
 
@@ -1916,8 +1916,8 @@ defaultproperties
         bNeverFocus=true
     End Object
     c_Squads=SquadsContainerObject
-
-    Begin Object Class=DHGUISquadsComponent Name=SquadsComponentObject
+/*
+    Begin Object Class=DHGUISquadsComponent Name=SquadsComponentObject // Matt: TEMP commented out as something seems to be wrong - squad stuff is stopping player selecting spawn point & deploying
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
@@ -1925,7 +1925,7 @@ defaultproperties
         bNeverFocus=true
     End Object
     p_Squads=SquadsComponentObject
-
+*/
     NoneText="None"
     SelectRoleText="Select a role"
     SelectSpawnPointText="Select a spawn point"
