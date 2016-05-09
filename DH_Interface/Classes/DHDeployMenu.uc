@@ -1296,7 +1296,7 @@ function bool InternalOnPreDraw(Canvas C)
 
 function UpdateSquads() // Matt: TEMP commented out as something seems to be wrong - squad stuff is stopping player selecting spawn point & deploying
 {
-    local int i, j, k, MemberCount;
+    local int i, j, MemberCount;
     local bool bIsSquadActive, bIsSquadLocked, bIsSquadFull;
     local array<DHPlayerReplicationInfo> Members;
 
@@ -1336,12 +1336,12 @@ function UpdateSquads() // Matt: TEMP commented out as something seems to be wro
 
         // TODO: display member count (eg. (2/8))
         SRI.GetMembers(CurrentTeam, i, Members);
-/*
-        p_Squads.SquadComponents[i].li_Members.Clear();
 
-        for (k = 0; k < Members.Length; ++k)
+        p_Squads.SquadComponents[i].li_Members.Clear();
+/*
+        for (j = 0; j < Members.Length; ++j)
         {
-            p_Squads.SquadComponents[i].li_Members.Add(Members[k].SquadMemberIndex $ "." @ Members[k].PlayerName, Members[i]);
+            p_Squads.SquadComponents[i].li_Members.Add(Members[j].SquadMemberIndex $ "." @ Members[j].PlayerName, Members[i]);
         }*/
     }
 }

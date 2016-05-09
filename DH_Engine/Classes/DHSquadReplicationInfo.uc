@@ -1004,7 +1004,6 @@ function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIn
     local int i;
     local array<DHPlayerReplicationInfo> Members;
     local DHPlayer MyPC, OtherPC;
-    local DHPawn MyPawn, OtherPawn;
 
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
