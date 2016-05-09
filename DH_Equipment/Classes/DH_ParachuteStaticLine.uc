@@ -269,4 +269,6 @@ defaultproperties
     InventoryGroup=11
     AttachmentClass=class'DH_Equipment.DH_ParachuteAttachment'
     ItemName="Staticline"
+    FireModeClass(0)=class'ROInventory.ROEmptyFireclass' // prevents "accessed none" log errors
+    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
 }
