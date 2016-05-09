@@ -7,18 +7,20 @@ class DHMortarVehicleWeapon extends DHVehicleWeapon
     abstract;
 
 // Firing, effects & ammo
-var     name        GunFiringAnim;    // firing animation for the mortar
-var     float       SpreadYawMin;     // minimum & maximum lateral random firing spread
+var     name        GunFiringAnim;            // firing animation for the mortar
+var     float       SpreadYawMin;             // minimum & maximum lateral random firing spread
 var     float       SpreadYawMax;
-var     float       BlurTime;         // how long screen blur effect should last when firing
-var     float       BlurEffectScalar; // scale for the screen blur when firing
+var     float       BlurTime;                 // how long screen blur effect should last when firing
+var     float       BlurEffectScalar;         // scale for the screen blur when firing
 var     int         PlayerResupplyAmounts[2]; // the amount of each round type supplied by another player
+var     bool        bLastUpdatedPrimaryAmmo;  // net client records last ammo type passed to server, so can decide if needs to update server
 
 // Mortar elevation
-var     float       Elevation;        // current elevation setting, in degrees
-var     float       ElevationMaximum; // maximum & minimum elevation angles
+var     float       Elevation;                // current elevation setting, in degrees
+var     float       ElevationMaximum;         // maximum & minimum elevation angles
 var     float       ElevationMinimum;
-var     float       ElevationStride;  // elevation adjustment per key press, in degrees
+var     float       ElevationStride;          // elevation adjustment per key press, in degrees
+var     float       LastUpdatedElevation;     // net client records last elevation setting passed to server, so can decide if needs to update server
 
 // Debugging
 var     bool        bDebug;
@@ -32,36 +34,52 @@ replication
         ServerSetFiringSettings;
 }
 
-// New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar
-// Don't need to keep updating these properties between server & owning client, & any exploitation would be completely benign and pointless - Basnett
-simulated function SendFiringSettingsToServer()
+// New function for net client to pass any changed values of elevation & ammo type to server at specific times when it needs them, i.e. firing or player leaving mortar
+// Don't need to keep updating these properties between server & owning client, & any exploitation would be completely benign & pointless - Basnett
+// For efficient replication, we pack settings into a single byte, with elevation recorded as increments above minimum & 100 added if it's secondary ammo
+simulated function CheckUpdateFiringSettings()
 {
-    if (ProjectileClass == default.SecondaryProjectileClass)
+    local byte NumElevationIncrements;
+
+    if (Elevation != LastUpdatedElevation || (bLastUpdatedPrimaryAmmo && ProjectileClass != PrimaryProjectileClass))
     {
-        ServerSetFiringSettings(1, Elevation);
-    }
-    else
-    {
-        ServerSetFiringSettings(0, Elevation);
+        LastUpdatedElevation = Elevation;
+        bLastUpdatedPrimaryAmmo = ProjectileClass == PrimaryProjectileClass;
+        NumElevationIncrements = byte((Elevation - ElevationMinimum) / ElevationStride);
+
+        if (bLastUpdatedPrimaryAmmo)
+        {
+            ServerSetFiringSettings(NumElevationIncrements);
+        }
+        else
+        {
+            ServerSetFiringSettings(NumElevationIncrements + 100);
+        }
     }
 }
 
-function ServerSetFiringSettings(byte FireMode, float NewElevation)
+// New replicated client-to-server function for server to receive updated values of elevation & ammo type
+// For efficient replication, settings have been packed into a single byte, so we unpack that now
+function ServerSetFiringSettings(byte PackedSettings)
 {
-    if (FireMode == 0)
+    local float NumElevationIncrements;
+
+    if (PackedSettings >= 100)
     {
-        ProjectileClass = PrimaryProjectileClass;
+        ProjectileClass = SecondaryProjectileClass;
+        PackedSettings -= 100;
     }
     else
     {
-        ProjectileClass = SecondaryProjectileClass;
+        ProjectileClass = PrimaryProjectileClass;
     }
 
-    Elevation = NewElevation;
+    NumElevationIncrements = float(PackedSettings);
+    Elevation = ElevationMinimum + (NumElevationIncrements * ElevationStride);
 
-    if (bDebug && Role == ROLE_Authority)
+    if (bDebug)
     {
-        Level.Game.Broadcast(self, "ServerSetFiringSettings: Role =" @ GetEnum(enum'ENetRole', Role) @ " Elevation =" @ NewElevation @ " ProjectileClass =" @ ProjectileClass);
+        Level.Game.Broadcast(self, "ServerSetFiringSettings: Role =" @ GetEnum(enum'ENetRole', Role) @ " Elevation =" @ Elevation @ " ProjectileClass =" @ ProjectileClass);
     }
 }
 
@@ -179,8 +197,9 @@ simulated function ShakeView(bool bWasAltFire)
     super.ShakeView(bWasAltFire);
 }
 
-// New function, similar to a cannon, but allowing toggle even if don't have new round type
-function ToggleRoundType()
+// New function to toggle current ammo type, with click sound
+// This only happens locally on a net client & any changed ammo type is only passed to the server on firing or the player exiting the mortar
+simulated function ToggleRoundType()
 {
     if (ProjectileClass == PrimaryProjectileClass)
     {

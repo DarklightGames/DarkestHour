@@ -65,7 +65,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerFire, ServerToggleRoundType, ServerSetCurrentAnimationIndex, ServerUndeploying;
+        ServerFire, ServerSetCurrentAnimationIndex, ServerUndeploying;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -443,7 +443,7 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to match player's rotation to where mortar is aimed, to destroy mortar if player just undeployed, or to record elevation on server if player just exited
+// Modified to match player's rotation to where mortar is aimed, & to destroy mortar if player just undeployed
 simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRotation;
@@ -463,26 +463,16 @@ simulated function ClientKDriverLeave(PlayerController PC)
         PC.FixFOV();
     }
 
-    if (Role < ROLE_Authority)
+    // If undeploying, owning net client now tells server to destroy mortar vehicle (& so all associated actors), as we've completed vehicle exit/unpossess process
+    if (Role < ROLE_Authority && IsInState('Undeploying') && DHMortarVehicle(VehicleBase) != none)
     {
-        // If undeploying, owning net client now tells server to destroy mortar vehicle (& so all associated actors), as we've completed vehicle exit/unpossess process
-        if (IsInState('Undeploying'))
-        {
-            if (DHMortarVehicle(VehicleBase) != none)
-            {
-                DHMortarVehicle(VehicleBase).ServerDestroyMortar();
-
-                return;
-            }
-        }
-        // Or if player has exited mortar, leaving it deployed on the ground, client sends current projectile class & elevation setting to be recorded on server
-        else if (Mortar != none)
-        {
-            Mortar.SendFiringSettingsToServer();
-        }
+        DHMortarVehicle(VehicleBase).ServerDestroyMortar();
     }
-
-    GotoState('');
+    // Otherwise we exit state
+    else
+    {
+        GotoState('');
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -498,24 +488,10 @@ function ServerFire()
     }
 }
 
-// From ROTankCannonPawn
+// New keybound function to toggle the selected ammo type
 exec function SwitchFireMode()
 {
-    if (Gun != none && Gun.bMultipleRoundTypes)
-    {
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-        }
-
-        ServerToggleRoundType();
-    }
-}
-
-// New replicated client-to-server function to toggle the selected round type (from ROTankCannonPawn)
-function ServerToggleRoundType()
-{
-    if (Mortar != none)
+    if (Mortar != none && Mortar.bMultipleRoundTypes)
     {
         Mortar.ToggleRoundType();
     }
@@ -797,6 +773,11 @@ Begin:
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
     {
         Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
+    }
+
+    if (Role < ROLE_Authority && Mortar != none)
+    {
+        Mortar.CheckUpdateFiringSettings();
     }
 
     ServerFire();
