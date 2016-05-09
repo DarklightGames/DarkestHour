@@ -91,7 +91,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 //will need a way to sort stuff
 function string GetSortString( int i )
 {
-    local string ColumnData[5];
+    local string ColumnData[6];
 
     ColumnData[0] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
     ColumnData[1] = right("000000" $ VRI.MapList[MapVoteData[i]].PlayCount,6);
