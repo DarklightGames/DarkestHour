@@ -6,11 +6,11 @@
 class DHWeaponPickup extends ROWeaponPickup
     abstract;
 
-var     TreeMap_string_Object               NotifyParameters;         // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     TreeMap_string_Object   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 // Ammo
-var     array<int>  AmmoMags;
-var     int         LoadedMagazineIndex;
+var     array<int>              AmmoMags;
+var     int                     LoadedMagazineIndex;
 
 // Barrels
 var     array<DHWeaponBarrel>   Barrels;                  // array of any carried barrels for this weapon
