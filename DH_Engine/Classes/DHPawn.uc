@@ -302,6 +302,194 @@ function PossessedBy(Controller C)
     }
 }
 
+// Modified to remove trying to loop non-existent 'Vehicle_Driving' animation if vehicle doesn't have a DriveAnim (e.g. where driver is hidden)
+simulated function AssignInitialPose()
+{
+    if (DrivenVehicle == none)
+    {
+        TweenAnim(MovementAnims[0],0.0);
+    }
+    else if (HasAnim(DrivenVehicle.DriveAnim))
+    {
+        LoopAnim(DrivenVehicle.DriveAnim,, 0.1);
+    }
+
+    AnimBlendParams(1, 1.0, 0.2, 0.2, 'Bip01_Spine1');
+    BoneRefresh();
+}
+
+// Modified to stop "accessed none" log errors on trying to play invalid vehicle DriveAnim
+simulated event AnimEnd(int Channel)
+{
+    local name  WeapAnim, PlayerAnim, Anim;
+    local float Frame, Rate;
+    local bool  bIsMoving;
+
+    bIsMoving = VSizeSquared(Velocity) > 625.0; // equivalent to speed of 25 (VSSquared is more efficient)
+
+    if (DrivenVehicle != none)
+    {
+        if (HasAnim(DrivenVehicle.DriveAnim))
+        {
+            PlayAnim(DrivenVehicle.DriveAnim, 1.0,, 1);
+        }
+    }
+    else if (Channel == 1 && WeaponState != GS_IgnoreAnimend)
+    {
+        if (WeaponState == GS_Ready)
+        {
+            AnimBlendToAlpha(1, 0.0, 0.12);
+            WeaponState = GS_None;
+        }
+        else if (WeaponState == GS_FireSingle || WeaponState == GS_ReloadSingle)
+        {
+            AnimStopLooping(1); // stop the rapid fire anim from looping
+            AnimBlendToAlpha(1, 0.0, 0.12);
+            WeaponState = GS_None;
+
+            if (!bIsMoving)
+            {
+                IdleTime = Level.TimeSeconds;
+            }
+
+            if (WeaponAttachment != none)
+            {
+                WeaponAttachment.GetAnimParams(0, Anim, Frame, Rate);
+
+                if (WeaponAttachment.bBayonetAttached)
+                {
+                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetIdleEmpty != '' && Anim != WeaponAttachment.WA_BayonetReloadEmpty)
+                    {
+                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetIdleEmpty);
+                    }
+                    else if (WeaponAttachment.WA_BayonetIdle != '')
+                    {
+                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetIdle);
+                    }
+                }
+                else
+                {
+                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_IdleEmpty != '' && Anim != WeaponAttachment.WA_ReloadEmpty)
+                    {
+                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_IdleEmpty);
+                    }
+                    else
+                    {
+                        WeaponAttachment.LoopAnim(WeaponAttachment.WA_Idle);
+                    }
+                }
+            }
+        }
+        else if (WeaponState == GS_GrenadePullBack)
+        {
+            if (bIsCrawling)
+            {
+                LoopAnim('prone_hold_nade',, 0.0, 1);
+            }
+            else
+            {
+                LoopAnim('stand_hold_nade',, 0.0, 1);
+            }
+
+            WeaponState = GS_GrenadeHoldBack;
+            IdleTime = Level.TimeSeconds;
+        }
+        else if (WeaponState == GS_PreReload && WeaponAttachment != none)
+        {
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
+
+            if (WeaponAttachment.bOutOfAmmo)
+            {
+                if (bIsCrawling)
+                {
+                    PlayerAnim = WeaponAttachment.PA_ProneReloadEmptyAnim;
+                }
+                else
+                {
+                    PlayerAnim = WeaponAttachment.PA_ReloadEmptyAnim;
+                }
+            }
+            else
+            {
+                if (bIsCrawling)
+                {
+                    PlayerAnim = WeaponAttachment.PA_ProneReloadAnim;
+                }
+                else
+                {
+                    PlayerAnim = WeaponAttachment.PA_ReloadAnim;
+                }
+            }
+
+            LoopAnim(PlayerAnim,, 0.0, 1);
+            WeaponState = GS_ReloadLooped;
+            IdleTime = Level.TimeSeconds;
+
+            if (WeaponAttachment.bBayonetAttached)
+            {
+                if (bIsCrawling)
+                {
+                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetProneReloadEmpty != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_BayonetProneReloadEmpty;
+                    }
+                    else if (WeaponAttachment.WA_BayonetProneReload != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_BayonetProneReload;
+                    }
+                }
+                else
+                {
+                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_BayonetReloadEmpty != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_BayonetReloadEmpty;
+                    }
+                    else if (WeaponAttachment.WA_BayonetReload != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_BayonetReload;
+                    }
+                }
+            }
+            else
+            {
+                if (bIsCrawling)
+                {
+                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_ProneReloadEmpty != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_ProneReloadEmpty;
+                    }
+                    else if (WeaponAttachment.WA_ProneReload != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_ProneReload;
+                    }
+                }
+                else
+                {
+                    if (WeaponAttachment.bOutOfAmmo && WeaponAttachment.WA_ReloadEmpty != '')
+                    {
+                        WeapAnim = WeaponAttachment.WA_ReloadEmpty;
+                    }
+                    else
+                    {
+                        WeapAnim = WeaponAttachment.WA_Reload;
+                    }
+                }
+            }
+
+            WeaponAttachment.LoopAnim(WeapAnim);
+        }
+        else if (WeaponState != GS_ReloadLooped && WeaponState != GS_GrenadeHoldBack && WeaponState != GS_FireLooped)
+        {
+            AnimBlendToAlpha(1, 0.0, 0.12);
+        }
+    }
+    else if (bKeepTaunting && Channel == 0)
+    {
+        PlayVictoryAnimation();
+    }
+}
+
 simulated function HelmetShotOff(rotator Rotation)
 {
     local DroppedHeadGear Hat;
