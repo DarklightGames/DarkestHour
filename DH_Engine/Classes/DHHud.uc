@@ -1441,7 +1441,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Draw the lines
-
     if (Lines.Length > 0)
     {
         VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * MyScale;

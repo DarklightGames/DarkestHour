@@ -37,7 +37,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         l_TeamBriefing[1].SetContent(GRI.UnitName[ALLIES_TEAM_INDEX] $ "||" $ Briefing[ALLIES_TEAM_INDEX]);
     }
 
-
     for (i = 0; i < 2; ++i)
     {
         b_TeamSelect[i].Caption = TeamJoinText[i];
@@ -354,7 +353,6 @@ defaultproperties
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
     End Object
     b_Settings=SettingsButtonObject
-
 
     // Background
     Begin Object Class=BackgroundImage Name=PageBackground

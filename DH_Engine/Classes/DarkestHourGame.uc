@@ -2293,7 +2293,7 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
                 }
                 else
                 {
-                    ModifyRoundTime(Min(GetRoundTime(), 90), 2); //Set time remainging to 90 seconds
+                    ModifyRoundTime(Min(GetRoundTime(), 90), 2); //Set time remaining to 90 seconds
                 }
             }
         }

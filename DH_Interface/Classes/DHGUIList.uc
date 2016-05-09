@@ -99,7 +99,6 @@ function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, floa
     }
 }
 
-
 // Modified to avoid "out of bounds" errors on Elements array
 function bool InternalOnClick(GUIComponent Sender)
 {

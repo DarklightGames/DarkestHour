@@ -48,7 +48,6 @@ function UpdateActiveButtons(UT2K4Browser_Page CurrentPanel)
     }
 }
 
-
 defaultproperties
 {
     Begin Object Class=DHmoCheckBox Name=OnlyStandardCheckBox

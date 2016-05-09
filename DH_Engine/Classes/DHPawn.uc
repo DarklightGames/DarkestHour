@@ -1109,7 +1109,6 @@ function TossMortarAmmo(DHPawn P)
     PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
-
 function TossMortarVehicleAmmo(DHMortarVehicle V)
 {
     local DarkestHourGame  G;
@@ -4829,4 +4828,3 @@ defaultproperties
     ProneStaminaRecoveryRate=1.5
     SlowStaminaRecoveryRate=0.5
 }
-

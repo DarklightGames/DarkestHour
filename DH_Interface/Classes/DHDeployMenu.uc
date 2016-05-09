@@ -61,7 +61,6 @@ var automated   GUIImage                    i_Arrows;
 
 var automated   array<GUIButton>            b_MenuOptions;
 
-
 var DHGameReplicationInfo                   GRI;
 var DHSquadReplicationInfo                  SRI;
 var DHPlayer                                PC;
@@ -164,8 +163,8 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
     LoadoutMode = Mode;
 
-    // Colin: GUIComponent visiblity is not properly hierarchical, so we
-    // need to hide and show elements indidivually.
+    // Colin: GUIComponent visibility is not properly hierarchical, so we
+    // need to hide and show elements individually.
     i_Vehicle.SetVisibility(Mode == LM_Vehicle);
     lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
 
@@ -901,7 +900,7 @@ function AutoSelectRole()
     // Colin: PC.GetRoleInfo() can be invalid by the time it gets here. For
     // example, when switching teams, the client can (and likely will) get here
     // before PC.GetRoleInfo() is updated. Luckily, we can check the result of
-    // SelectByObject and run the default behavior (select an infinite role)
+    // SelectByObject and run the default behaviour (select an infinite role)
     // if it fails.
     if (PC.GetRoleInfo() != none &&
         li_Roles.SelectByObject(PC.GetRoleInfo()) != -1)
