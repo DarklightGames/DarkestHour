@@ -36,7 +36,8 @@ function bool OnClick(GUIComponent Sender)
             return true;
         case eb_SquadName:
             l_SquadName.bVisible = false;
-            eb_SquadName.Caption = l_SquadName.bVisible;
+          //eb_SquadName.Caption = l_SquadName.bVisible;
+            eb_SquadName.Caption = l_SquadName.Caption; // Matt: TEMP fix for compile error - took an educated guess at what this ought to be - Basnett to check & fix
         default:
             break;
     }
