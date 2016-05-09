@@ -93,7 +93,7 @@ simulated function PostNetReceive()
     if (CurrentAnimationIndex != OldAnimationIndex)
     {
         OldAnimationIndex = CurrentAnimationIndex;
-        PlayGunAndDriverAnim();
+        PlayThirdPersonAnimations();
     }
 
     // Initialize anything we need to do from the VehicleWeapon actor, or in that actor
@@ -596,7 +596,7 @@ simulated state Idle
 {
     simulated function BeginState()
     {
-        PlayOverlayAnimation(OverlayIdleAnim, true);
+        PlayFirstPersonAnimation(OverlayIdleAnim, true);
     }
 
     simulated function Fire(optional float F)
@@ -657,7 +657,7 @@ simulated state Busy
 simulated state KnobRaising extends Busy
 {
 Begin:
-    PlayOverlayAnimation(OverlayKnobRaisingAnim, false, OverlayKnobRaisingAnimRate);
+    PlayFirstPersonAnimation(OverlayKnobRaisingAnim, false, OverlayKnobRaisingAnimRate);
     Sleep(HUDOverlay.GetAnimDuration(OverlayKnobRaisingAnim, OverlayKnobRaisingAnimRate));
     GotoState('KnobRaised');
 }
@@ -667,7 +667,7 @@ simulated state KnobRaised
 {
     simulated function BeginState()
     {
-        PlayOverlayAnimation(OverlayKnobIdleAnim, true);
+        PlayFirstPersonAnimation(OverlayKnobIdleAnim, true);
     }
 
     simulated function Fire(optional float F)
@@ -731,11 +731,11 @@ simulated state KnobRaised
 
             if (YawChange > 0.0)
             {
-                PlayOverlayAnimation(OverlayKnobTurnRightAnim, true, OverlayKnobTurnAnimRate, 0.125);
+                PlayFirstPersonAnimation(OverlayKnobTurnRightAnim, true, OverlayKnobTurnAnimRate, 0.125);
             }
             else
             {
-                PlayOverlayAnimation(OverlayKnobTurnLeftAnim, true, OverlayKnobTurnAnimRate, 0.125);
+                PlayFirstPersonAnimation(OverlayKnobTurnLeftAnim, true, OverlayKnobTurnAnimRate, 0.125);
             }
 
             global.HandleTurretRotation(DeltaTime, -YawChange, 0);
@@ -791,7 +791,7 @@ Begin:
 simulated state Firing extends Busy
 {
 Begin:
-    PlayOverlayAnimation(OverlayFiringAnim);
+    PlayFirstPersonAnimation(OverlayFiringAnim);
     SetCurrentAnimationIndex(FiringAnimIndex);
 
     if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
@@ -809,7 +809,7 @@ simulated state KnobRaisedToFire extends Busy
 Begin:
     if (HUDOverlay != none)
     {
-        PlayOverlayAnimation(OverlayKnobLoweringAnim, false, OverlayKnobLoweringAnimRate);
+        PlayFirstPersonAnimation(OverlayKnobLoweringAnim, false, OverlayKnobLoweringAnimRate);
         Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
     }
 
@@ -822,7 +822,7 @@ simulated state KnobRaisedToUndeploy extends Busy
 Begin:
     if (HUDOverlay != none)
     {
-        PlayOverlayAnimation(OverlayKnobLoweringAnim);
+        PlayFirstPersonAnimation(OverlayKnobLoweringAnim);
         Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
     }
 
@@ -835,7 +835,7 @@ simulated state KnobRaisedToIdle extends Busy
 Begin:
     if (HUDOverlay != none)
     {
-        PlayOverlayAnimation(OverlayKnobLoweringAnim);
+        PlayFirstPersonAnimation(OverlayKnobLoweringAnim);
         Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim));
     }
 
@@ -848,7 +848,7 @@ simulated state Undeploying extends Busy
 Begin:
     if (IsLocallyControlled()) // single player, or owning net client or listen server
     {
-        PlayOverlayAnimation(OverlayUndeployingAnim);
+        PlayFirstPersonAnimation(OverlayUndeployingAnim);
         ServerUndeploying();
     }
 
@@ -972,7 +972,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 simulated function SetCurrentAnimationIndex(byte AnimIndex)
 {
     CurrentAnimationIndex = AnimIndex;
-    PlayGunAndDriverAnim();
+    PlayThirdPersonAnimations();
 
     if (Role < ROLE_Authority)
     {
@@ -986,8 +986,8 @@ simulated function ServerSetCurrentAnimationIndex(byte AnimIndex)
     CurrentAnimationIndex = AnimIndex;
 }
 
-// New function to play current animations for the mortar & the operator ('Driver')
-simulated function PlayGunAndDriverAnim()
+// New function to play current 1st person animations for the mortar & the operator ('Driver')
+simulated function PlayThirdPersonAnimations()
 {
     switch (CurrentAnimationIndex)
     {
@@ -1031,9 +1031,9 @@ simulated function PlayGunAndDriverAnim()
 }
 
 // New function to play a 1st person animation on the HUDOverlay
-simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLoop, optional float Rate, optional float TweenTime)
+simulated function PlayFirstPersonAnimation(name Anim, optional bool bLoop, optional float Rate, optional float TweenTime)
 {
-    if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayAnimation))
+    if (HUDOverlay != none && HUDOverlay.HasAnim(Anim))
     {
         if (Rate == 0.0) // default to 1.0 if no rate was passed
         {
@@ -1042,11 +1042,11 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, optional bool bLo
 
         if (bLoop)
         {
-            HUDOverlay.LoopAnim(OverlayAnimation, Rate, TweenTime);
+            HUDOverlay.LoopAnim(Anim, Rate, TweenTime);
         }
         else
         {
-            HUDOverlay.PlayAnim(OverlayAnimation, Rate, TweenTime);
+            HUDOverlay.PlayAnim(Anim, Rate, TweenTime);
         }
     }
 }
