@@ -775,6 +775,15 @@ simulated function DestroyEffects()
     }
 }
 
+// New helper function just to avoid code repetition elsewhere
+simulated function PlayClickSound()
+{
+    if (Instigator != none && Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
+    {
+        PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+    }
+}
+
 defaultproperties
 {
     bNetNotify=true // necessary to do set up requiring the 'Base' actor reference to the vehicle base

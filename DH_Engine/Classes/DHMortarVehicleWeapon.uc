@@ -131,11 +131,7 @@ simulated function Elevate()
     if (Elevation < ElevationMaximum)
     {
         Elevation += ElevationStride;
-
-        if (Instigator != none && Instigator.IsHumanControlled())
-        {
-            PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-        }
+        PlayClickSound();
     }
 }
 
@@ -144,11 +140,7 @@ simulated function Depress()
     if (Elevation > ElevationMinimum)
     {
         Elevation -= ElevationStride;
-
-        if (Instigator != none && Instigator.IsHumanControlled())
-        {
-            PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-        }
+        PlayClickSound();
     }
 }
 

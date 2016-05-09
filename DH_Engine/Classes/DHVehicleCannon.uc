@@ -348,10 +348,7 @@ simulated function IncrementRange()
                 ROPlayer(Instigator.Controller).ServerLeanRight(true);
             }
 
-            if (Instigator.IsLocallyControlled()) // play click sound only locally
-            {
-                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-            }
+            PlayClickSound();
         }
     }
 }
@@ -384,10 +381,7 @@ simulated function DecrementRange()
                 ROPlayer(Instigator.Controller).ServerLeanLeft(true);
             }
 
-            if (Instigator.IsLocallyControlled())
-            {
-                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-            }
+            PlayClickSound();
         }
     }
 }
