@@ -800,6 +800,12 @@ Begin:
     }
 
     ServerFire();
+
+    if (Gun != none)
+    {
+        Gun.ShakeView(false);
+    }
+
     GotoState('FireToIdle');
 }
 

@@ -30,10 +30,6 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetFiringSettings;
-
-    // Functions the server can call on the client that owns this actor
-    reliable if (Role == ROLE_Authority)
-        ClientShakeView;
 }
 
 // New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar
@@ -161,7 +157,6 @@ state ProjectileFireMode
             {
                 SpawnProjectile(ProjectileClass, false);
                 --MainAmmoCharge[GetFireMode()];
-                ClientShakeView(); // shake view here, (proper timing & all)
 
                 // We fired one off, so we are now eligible for resupply
                 if (DHMortarVehicle(Base) != none)
@@ -173,14 +168,15 @@ state ProjectileFireMode
     }
 }
 
-// New function to shake player's view when firing
-simulated function ClientShakeView()
+// Modified to add blur when firing
+simulated function ShakeView(bool bWasAltFire)
 {
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
+    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
     {
-        DHPlayer(Instigator.Controller).AddBlur(BlurTime, BlurEffectScalar);
-        Instigator.Controller.ShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
+        ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurEffectScalar);
     }
+
+    super.ShakeView(bWasAltFire);
 }
 
 // New function, similar to a cannon, but allowing toggle even if don't have new round type
