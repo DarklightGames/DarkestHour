@@ -65,8 +65,8 @@ defaultproperties
     ErrorMessage(17)="Minefields are already enabled"
 
     ErrorMessage(18)="ERROR: no valid team name specified"
-    ErrorMessage(19)="ERROR: cannot find that player role (role index no.%insert_name%)"
-    ErrorMessage(20)="ERROR: can't find that objective (objective index no.%insert_name%)"
+    ErrorMessage(19)="ERROR: cannot find player role %insert_name%"
+    ErrorMessage(20)="ERROR: can't find objective %insert_name%"
 
     ErrorMessage(21)="ERROR: no valid type of drop location specified (i.e. AtObjective, AtGrid or AtCurrentLocation"
     ErrorMessage(22)="ERROR: invalid map grid co-ordinates"

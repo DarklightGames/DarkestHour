@@ -376,113 +376,96 @@ function KillPlayer(string PlayerName)
 function SwitchPlayer(string PlayerName, string TeamName, string RoleName, string RoleIndexString)
 {
     local DHGameReplicationInfo DHGRI;
-    local ROPlayer              PlayerToSwitch;
-    local int                   TeamIndex, RoleIndex;
-    local bool                  bFoundRole, bOriginalPlayersBalanceTeams;
+    local DHPlayer              PlayerToSwitch;
+    local DHRoleInfo            RoleInfo;
+    local int                   TeamIndex, RoleIndex, i;
+    local bool                  bOriginalPlayersBalanceTeams;
 
     if (!IsLoggedInAsAdmin())
     {
         return;
     }
 
+    // Get player (Controller) & new team & role index
+    PlayerToSwitch = DHPlayer(FindControllerFromName(PlayerName));
     TeamIndex = GetTeamIndexFromName(TeamName);
+    RoleIndex = RemoveBracketsFromIndex(RoleIndexString);
 
-    if (TeamIndex == ALLIES_TEAM_INDEX || TeamIndex == AXIS_TEAM_INDEX)
+    if (PlayerToSwitch == none || (TeamIndex != ALLIES_TEAM_INDEX && TeamIndex != AXIS_TEAM_INDEX) || RoleIndex < 0)
     {
-        RoleIndex = RemoveBracketsFromIndex(RoleIndexString);
+        return; // invalid player, team or role selection
+    }
 
-        if (RoleIndex >= 0)
+    DHGRI = DHGameReplicationInfo(PlayerToSwitch.GameReplicationInfo);
+
+    // Get role info
+    if (DHGRI != none)
+    {
+        if (TeamIndex == ALLIES_TEAM_INDEX)
         {
-            // Check that role index finds a valid RoleInfo
-            DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-            if (DHGRI != none) // means we're playing Darkest Hour & need to use a DH roles array
+            if (RoleIndex < arraycount(DHGRI.DHAlliesRoles) && DHGRI.DHAlliesRoles[RoleIndex] != none)
             {
-                if (TeamIndex == ALLIES_TEAM_INDEX)
-                {
-                    bFoundRole = RoleIndex < arraycount(DHGRI.DHAlliesRoles) && DHGRI.DHAlliesRoles[RoleIndex] != none;
-                }
-                else
-                {
-                    bFoundRole = RoleIndex < arraycount(DHGRI.DHAxisRoles) && DHGRI.DHAxisRoles[RoleIndex] != none;
-                }
-            }
-            else // this makes it work with Red Orchestra or any game class/mod that uses RO's AlliesRoles/AxisRoles
-            {
-                if (TeamIndex == ALLIES_TEAM_INDEX)
-                {
-                    bFoundRole = RoleIndex < arraycount(ROTG.AlliesRoles) && ROTG.AlliesRoles[RoleIndex] != none;
-                }
-                else
-                {
-                    bFoundRole = RoleIndex < arraycount(ROTG.AxisRoles) && ROTG.AxisRoles[RoleIndex] != none;
-                }
+                RoleInfo = DHGRI.DHAlliesRoles[RoleIndex];
             }
         }
-
-        // If we have a valid role then attempt to switch the player
-        if (bFoundRole)
+        else if (RoleIndex < arraycount(DHGRI.DHAxisRoles) && DHGRI.DHAxisRoles[RoleIndex] != none)
         {
-            PlayerToSwitch = ROPlayer(FindControllerFromName(PlayerName));
-
-            if (PlayerToSwitch != none)
-            {
-                if (PlayerToSwitch.CurrentRole != RoleIndex || PlayerToSwitch.GetTeamNum() != TeamIndex) // only switch role if chosen role and/or team are different
-                {
-                    KillThisPlayer(PlayerToSwitch);
-                    bOriginalPlayersBalanceTeams = ROTG.bPlayersBalanceTeams;          // save the current team balance setting
-                    ROTG.bPlayersBalanceTeams = false;                                 // turn off team balance
-
-                    // TODO (Matt): original line no longer works, as ServerChangePlayerInfo() has been emptied out in DHPlayer in 6.0
-                    // I put a quick fix in just before release, using modified ServerChangePlayerInfo() function added to this mutator
-                    // Seems to work ok, but probably a bit hacky, so for future release try to find suitable existing functionality to work with new deploy menu system
-                    ServerChangePlayerInfo(PlayerToSwitch, TeamIndex, RoleIndex);
-//                  PlayerToSwitch.ServerChangePlayerInfo(TeamIndex, RoleIndex, 0, 0); // for bots this can cause all kinds of problems - so we avoid switching bots
-
-                    ROTG.bPlayersBalanceTeams = bOriginalPlayersBalanceTeams;          // now restore original team balance setting
-
-                    if (Admin != none)
-                    {
-                        NotifyPlayer(2, PlayerToSwitch); // admin switched your role/team
-                        Log("DHAdminMenu: admin" @ GetAdminName() @ "switched player '" $ PlayerName $ "' to" @ Locs(TeamName) @ Locs(RoleName));
-                    }
-                }
-                else
-                {
-                    ErrorMessageToSelf(10, PlayerName); // player is already in that role
-                }
-            }
-        }
-        else
-        {
-            ErrorMessageToSelf(19, RoleName); // can't find that role
+            RoleInfo = DHGRI.DHAxisRoles[RoleIndex];
         }
     }
-}
 
-// Replacement for ServerChangePlayerInfo() from PlayerController class, as has been emptied out in DHPlayer in 6.0
-// This is a quick fix put in just before release, which seems to work ok, but probably a bit hacky
-// Aim to replace in a future release by trying to find some suitable existing functionality to work with new deploy menu system
-function ServerChangePlayerInfo(ROPlayer P, int TeamIndex, int RoleIndex)
-{
-    if (P != none)
+    if (RoleInfo == none)
     {
-        if (P.PlayerReplicationInfo == none || P.PlayerReplicationInfo.bOnlySpectator)
+        ErrorMessageToSelf(19, RoleName @ "(" $ TeamName @ "role index no." $ RoleIndex $ ")"); // can't find that role
+
+        return;
+    }
+
+    // If we aren't switching teams, set team index to 'passive' 255 & make sure player is actually being switched to a different role
+    if (PlayerToSwitch.GetTeamNum() == TeamIndex)
+    {
+        TeamIndex = 255; // if we leave this as a real team index, it makes ServerSetPlayerInfo() reset the spawn position index & stops player spawning
+
+        if (PlayerToSwitch.CurrentRole == RoleIndex)
         {
-            P.BecomeActivePlayer();
+            ErrorMessageToSelf(10, PlayerName); // player is already in that role
+
+            return;
         }
+    }
 
-        P.ServerChangeTeam(TeamIndex);
+    // Passed all checks, so kill the player & then handle the switch
+    KillThisPlayer(PlayerToSwitch);
 
-        if (P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex == TeamIndex)
+    // If switching teams, save current team balance setting & then disable team balance so it can't block us from switching the player
+    if (TeamIndex != 255 && ROTG != none)
+    {
+        bOriginalPlayersBalanceTeams = ROTG.bPlayersBalanceTeams;
+        ROTG.bPlayersBalanceTeams = false;
+    }
+
+    // Now change team and/or role
+    PlayerToSwitch.ServerSetPlayerInfo(TeamIndex, RoleIndex, 0, 0, PlayerToSwitch.SpawnPointIndex, 255, 255);
+
+    // If switched teams, now restore restore original team balance setting & find an active spawn point for the new team (just find 1st active spawn for team)
+    if (TeamIndex != 255 && ROTG != none)
+    {
+        ROTG.bPlayersBalanceTeams = bOriginalPlayersBalanceTeams;
+
+        for (i = 0; i < arraycount(DHGRI.SpawnPoints); ++i)
         {
-            P.ChangeRole(RoleIndex);
-
-            if (P.DesiredRole == RoleIndex)
+            if (DHGRI.IsSpawnPointIndexValid(i, TeamIndex, RoleInfo, none))
             {
-                P.ChangeWeapons(0, 0, 0);
+                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i , 255, 255);
+                break;
             }
         }
+    }
+
+    if (Admin != none)
+    {
+        NotifyPlayer(2, PlayerToSwitch); // admin switched your role/team
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "switched player '" $ PlayerName $ "' to" @ Locs(TeamName) @ Locs(RoleName));
     }
 }
 
@@ -1017,7 +1000,7 @@ function string PutMessageTogether(array<string> Words, byte StartIndex)
 // Finds the Controller for a given player name - includes a check for more than one player with the specified name & also an optional check for bots
 function Controller FindControllerFromName(string PlayerName, optional bool bAllowActionOnBot)
 {
-    local Controller C, FoundPlayer;
+    local Controller FoundPlayer, C;
     local string     CheckedPlayerName;
 
     if (PlayerName == "")
@@ -1298,7 +1281,7 @@ function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveI
 
     if (DropLocation == NULL_VECTOR)
     {
-        ErrorMessageToSelf(20, ObjectiveName); // can't find objective
+        ErrorMessageToSelf(20, ObjectiveName @ "(role index no." $ ObjectiveIndex $ ")"); // can't find objective
     }
 
     return DropLocation;
