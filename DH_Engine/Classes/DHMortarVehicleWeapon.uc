@@ -83,6 +83,7 @@ function ServerSetFiringSettings(byte PackedSettings)
     }
 }
 
+// Modified for unique handling of mortar elevation/range
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
@@ -113,11 +114,11 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         SpawnRotation.Yaw += SpreadYaw;
     }
 
-    P = Spawn(ProjClass, Owner,, SpawnLocation, SpawnRotation);
+    P = Spawn(ProjClass, Instigator,, SpawnLocation, SpawnRotation);
 
-    /* After careful consideration, it was determined that universal pitch adjustments did not work,
-    because at lower elevations the differences in pitch angles becomes nearly undetectable, while at high elevations they were overly dramatic.
-    In the end, I opted to go with a slight velocity adjustment, as this scales fairly nicely at all ranges. -Basnett */
+    // After careful consideration, it was determined that universal pitch adjustments did not work,
+    // because at lower elevations the differences in pitch angles becomes nearly undetectable, while at high elevations they were overly dramatic.
+    // In the end, I opted to go with a slight velocity adjustment, as this scales fairly nicely at all ranges. -Basnett
 
     if (!bDebugNoSpread)
     {
@@ -233,7 +234,7 @@ defaultproperties
     WeaponFireAttachmentBone="Muzzle"
     GunFiringAnim="deploy_fire"
 
-    // Movement
+    // Aiming
     bUseTankTurretRotation=true
     YawBone="Vehicle_attachment01"
     bLimitYaw=true
