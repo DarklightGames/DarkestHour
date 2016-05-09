@@ -249,11 +249,13 @@ state WaitForCrew
 
 Begin:
     Sleep(0.2);
-    if (ROWheeledVehicle(Pawn).CheckForCrew() || !ROSquadAI(Squad).ShouldWaitForCrew(self))
+
+    if ((ROWheeledVehicle(Pawn) != none && ROWheeledVehicle(Pawn).CheckForCrew()) || (ROSquadAI(Squad) != none && !ROSquadAI(Squad).ShouldWaitForCrew(self)))
     {
         MoveTimer = CachedMoveTimer;
         WhatToDoNext(53); // go back to the function that got us here
     }
+
     GoTo('Begin');
 }
 

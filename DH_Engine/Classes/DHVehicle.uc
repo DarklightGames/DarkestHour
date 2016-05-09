@@ -1940,7 +1940,11 @@ static function StaticPrecache(LevelInfo L)
         }
     }
 
-    L.AddPrecacheMaterial(default.VehicleHudImage);
+    if (default.VehicleHudImage != none)
+    {
+        L.AddPrecacheMaterial(default.VehicleHudImage);
+    }
+
     L.AddPrecacheMaterial(default.MPHMeterMaterial);
     L.AddPrecacheMaterial(default.DamagedTreadPanner);
 
@@ -2015,6 +2019,7 @@ simulated function UpdatePrecacheMaterials()
 
     Level.AddPrecacheMaterial(VehicleHudImage);
     Level.AddPrecacheMaterial(MPHMeterMaterial);
+    Level.AddPrecacheMaterial(DamagedTreadPanner);
 
     if (HighDetailOverlay != none)
     {

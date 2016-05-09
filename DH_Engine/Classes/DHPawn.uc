@@ -532,7 +532,7 @@ simulated function bool InExposedVehiclePosition(Vehicle V)
 
     if (VWP != none)
     {
-        return VWP.bSinglePositionExposed || VWP.DriverPositions[VWP.DriverPositionIndex].bExposed;
+        return VWP.bSinglePositionExposed || (VWP.bMultiPosition && VWP.DriverPositions[VWP.DriverPositionIndex].bExposed);
     }
 
     Veh = ROVehicle(V);
