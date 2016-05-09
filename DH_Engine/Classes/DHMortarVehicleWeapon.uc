@@ -36,17 +36,6 @@ replication
         ClientShakeView;
 }
 
-// Modified to initialize ammo
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    ProjectileClass = PrimaryProjectileClass;
-
-    MainAmmoCharge[0] = 0;
-    MainAmmoCharge[1] = 0;
-}
-
 // New functions for client to pass Elevation & ProjectileClass to server at specific times, such as firing or leaving the mortar
 // Don't need to keep updating these properties between server & owning client, & any exploitation would be completely benign and pointless - Basnett
 simulated function SendFiringSettingsToServer()

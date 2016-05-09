@@ -9,6 +9,7 @@ class DH_Kz8cmGrW42VehicleWeapon extends DHMortarVehicleWeapon;
 
 defaultproperties
 {
+    ProjectileClass=class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
     PrimaryProjectileClass=class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
     SecondaryProjectileClass=class'DH_Mortars.DH_Kz8cmGrW42ProjectileSmoke'
     InitialPrimaryAmmo=16
