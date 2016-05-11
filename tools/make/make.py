@@ -187,7 +187,7 @@ def main():
 
     if did_build_fail:
         # build failed, move old packages back to original directory
-        for package, path in package_paths.iteritems()
+        for package, path in package_paths.iteritems():
             os.rename(os.path.join(dtemp, package), path)
         shutil.rmtree(dtemp)
         sys.exit(1)
