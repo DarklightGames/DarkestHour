@@ -2682,16 +2682,34 @@ function ClientSaveROIDHash(string ROID)
     SaveConfig();
 }
 
+// Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
+simulated function SetManualTankShellReloading(bool bUseManualReloading)
+{
+    local DHVehicleCannon Cannon;
+
+    if (Role < ROLE_Authority && !bUseManualReloading && DHVehicleCannonPawn(Pawn) != none)
+    {
+        Cannon = DHVehicleCannon(DHVehicleCannonPawn(Pawn).Gun);
+
+        if (Cannon != none && Cannon.ReloadState == RL_Waiting)
+        {
+            Cannon.CheckUpdatePendingAmmo();
+        }
+    }
+
+    super.SetManualTankShellReloading(bUseManualReloading);
+}
+
 // Modified to use DH cannon classes instead of deprecated ROTankCannon
 function ServerSetManualTankShellReloading(bool bUseManualReloading)
 {
+    bManualTankShellReloading = bUseManualReloading;
+
     // If the cannon is waiting to reload, force a reload on the client
     if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none && DHVehicleCannonPawn(Pawn).Cannon.ReloadState == RL_Waiting)
     {
         DHVehicleCannonPawn(Pawn).Cannon.AttemptReload();
     }
-
-    bManualTankShellReloading = bUseManualReloading;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

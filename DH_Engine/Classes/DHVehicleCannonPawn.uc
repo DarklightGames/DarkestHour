@@ -92,8 +92,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleRoundType,
-        ServerToggleDebugExits; // this one in debug mode only
+        ServerToggleDebugExits; // in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -569,15 +568,26 @@ simulated function bool PointOfView()
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to use CanFire(), to avoid obsolete RO functionality in ROTankCannonPawn,
-// to include clientside check that we are loaded (avoids wasted replicated function call to server), & to optimise what remains
+// Modified to check player is in a valid firing position, to add clientside check that we are loaded (avoids wasted replicated function call to server),
+// to removed obsolete RO functionality from ROTankCannonPawn & optimise what remains
+// Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
 function Fire(optional float F)
 {
     if (CanFire() && Cannon != none)
     {
-        if (Cannon.ReloadState == RL_ReadyToFire)
+        if (Cannon.ReadyToFire(false))
         {
-            super.Fire(F);
+            if (Role < ROLE_Authority && !Cannon.PlayerUsesManualReloading()) // no update if player uses manual reloading (update on manual reload instead)
+            {
+                Cannon.CheckUpdatePendingAmmo();
+            }
+
+            super(Vehicle).Fire(F);
+
+            if (IsHumanControlled())
+            {
+                Cannon.ClientStartFire(Controller, false);
+            }
         }
         else
         {
@@ -660,37 +670,26 @@ simulated function DecrementRange()
     }
 }
 
-// Modified to use reference to DHVehicleCannon instead of deprecated ROTankCannon
-// Matt: TODO - add some kind of clientside eligibility check to stop player spamming server with invalid ServerToggleRoundType() calls
-// Maybe just change PendingProjClass clientside & only update to server when it needs it, i.e. after firing or starting a reload (similar to what I've done with RangeIndex in DHRocketWeapon)
-// Server only needs PendingProjectileClass in ServerManualReload, AttemptFire & SpawnProjectile & clientside it's only used by/replicated to an owning net client
-simulated exec function SwitchFireMode()
+// Modified (from deprecated ROTankCannonPawn) to keep ammo changes clientside as a network optimisation (only pass to server when it needs the change, not every key press)
+exec function SwitchFireMode()
 {
     if (Cannon != none && Cannon.bMultipleRoundTypes)
-    {
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-        }
-
-        ServerToggleRoundType();
-    }
-}
-
-// Modified to use reference to DHVehicleCannon instead of deprecated ROTankCannon
-function ServerToggleRoundType()
-{
-    if (Cannon != none)
     {
         Cannon.ToggleRoundType();
     }
 }
 
 // Modified to prevent attempting reload if don't have ammo (saves replicated function call to server) & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
+// Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
 simulated exec function ROManualReload()
 {
-    if (Cannon != none && Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading() && Cannon.HasAmmoToReload(Cannon.GetFireMode(false, Cannon.PendingProjectileClass)))
+    if (Cannon != none && Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading() && Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
     {
+        if (Role < ROLE_Authority)
+        {
+            Cannon.CheckUpdatePendingAmmo();
+        }
+
         Cannon.ServerManualReload();
     }
 }
@@ -871,6 +870,8 @@ function KDriverEnter(Pawn P)
 // Modified to handle InitialPositionIndex instead of assuming start in position zero, to start facing same way as cannon, & to consolidate & optimise the Supers
 // Matt: also to work around various net client problems caused by replication timing issues,
 // including common problems when deploying into a spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+// Also so listen server re-sets pending ammo if another player has changed loaded ammo type since host player was last in this cannon,
+// and so autocannon always goes to state 'EnteringVehicle' even for a single position cannon, which makes certain pending ammo settings are correct
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     // Fix possible replication timing problems on a net client
@@ -923,12 +924,31 @@ simulated function ClientKDriverEnter(PlayerController PC)
     super(Vehicle).ClientKDriverEnter(PC);
 
     MatchRotationToGunAim(PC);
+
+    // Listen server host player re-sets pending ammo settings if another player has changed the loaded ammo type since he was last in this cannon
+    // If current ammo has changed, any previous choice of pending ammo to load probably no longer makes sense & needs to be discarded (similar to net client in PostNetReceive)
+    if (Level.NetMode == NM_ListenServer && Cannon != none && Cannon.ProjectileClass != Cannon.SavedProjectileClass)
+    {
+        Cannon.LocalPendingAmmoIndex = Cannon.GetFireMode();
+        Cannon.ServerPendingAmmoIndex = Cannon.LocalPendingAmmoIndex;
+    }
+
+    // A single position autocannon goes to state 'EnteringVehicle' - very obscure but avoids potential problem if another player has changed pending ammo - see notes in 'EnteringVehicle'
+    if (!bMultiPosition && Role < ROLE_Authority && Cannon != none && Cannon.bUsesMags)
+    {
+        Gotostate('EnteringVehicle');
+    }
 }
 
-// Modified to handle InitialPositionIndex instead of assuming start in position zero
-// Also so cannon retains its aimed direction when player enters & may switch to internal mesh
+// Modified to handle InitialPositionIndex instead of assuming start in position zero, & so cannon retains its aimed direction when player enters & may switch to internal mesh
+// Also so an autocannon net client always replicates its LocalPendingAmmoIndex to server when player enters
+// Necessary as it's possible another player changed pending ammo & updated that to server, as autocannon updates any change in pending after each shot, not just when starting a reload
+// We do it here to take advantage of brief Sleep in state code, meaning server has had time to replicate ProjectileClass to new owning client (a little hacky, but necessary & works)
+// ClientKDriverEnter would be the obvious choice, but client is only just becoming owner of this cannon, triggering replication of proj class, & that doesn't happen in time for CKDE
 simulated state EnteringVehicle
 {
+ignores SwitchFireMode; // added so no possibility of switching while entering
+
     simulated function HandleEnter()
     {
         SwitchMesh(InitialPositionIndex);
@@ -946,6 +966,21 @@ simulated state EnteringVehicle
             PlayerController(Controller).SetFOV(WeaponFOV);
         }
     }
+
+Begin:
+    if (bMultiPosition) // added 'if' because it's now possible a single position autocannon has been sent to this state (very obscure, but being thorough!)
+    {
+        HandleEnter();
+    }
+
+    Sleep(0.2);
+
+    if (Role < ROLE_Authority && Cannon != none && Cannon.bUsesMags) // added for autocannon to always replicate its LocalPendingAmmoIndex to server
+    {
+        Cannon.CheckUpdatePendingAmmo(true);
+    }
+
+    GotoState('');
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1379,6 +1414,18 @@ function DriverLeft()
     }
 
     DrivingStatusChanged(); // the Super from Vehicle
+}
+
+// Modified so listen server host player records currently loaded ammo type on exiting, so if he re-enters this cannon he will know if another player has since loaded different ammo
+// If loaded ammo changes, any previous choice of pending ammo to load will probably no longer make sense & have to be discarded
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    super.ClientKDriverLeave(PC);
+
+    if (Level.NetMode == NM_ListenServer && Cannon != none)
+    {
+        Cannon.SavedProjectileClass = Cannon.ProjectileClass;
+    }
 }
 
 // Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()

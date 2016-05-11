@@ -21,7 +21,6 @@ var     bool                bHasAddedSideArmor;     // has side skirts that will
 // Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];  // current quantity of each round type (using byte for more efficient replication)
 var     class<Projectile>   TertiaryProjectileClass; // new option for a 3rd type of cannon ammo
-var     class<Projectile>   PendingProjectileClass;  // the round type we will switch to after firing currently loaded round
 var localized array<string> ProjectileDescriptions;  // text for each round type to display on HUD
 var     int                 InitialTertiaryAmmo;     // starting load of tertiary round type
 var     float               SecondarySpread;         // spread for secondary ammo type
@@ -29,6 +28,9 @@ var     float               TertiarySpread;
 var     byte                NumPrimaryMags;          // number of mags for an autocannon's primary ammo type // TODO: move autocannon functionality into a subclass
 var     byte                NumSecondaryMags;
 var     byte                NumTertiaryMags;
+var     byte                LocalPendingAmmoIndex;   // next ammo type we want to load - a local version on net client or listen server, updated to ServerPendingAmmoIndex when needed
+var     byte                ServerPendingAmmoIndex;  // on authority role this is authoritative setting for next ammo type to load; on client it records last setting updated to server
+var     class<Projectile>   SavedProjectileClass;    // client & listen server record last ammo when in cannon, so if another player changes ammo, any local pending choice becomes invalid
 
 // Firing & reloading
 var     array<int>          RangeSettings;           // for cannons with range adjustment
@@ -60,11 +62,11 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        MainAmmoChargeExtra, PendingProjectileClass, NumPrimaryMags, NumSecondaryMags, NumTertiaryMags;
+        MainAmmoChargeExtra, NumPrimaryMags, NumSecondaryMags, NumTertiaryMags;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerManualReload;
+        ServerManualReload, ServerSetPendingAmmo;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -75,14 +77,18 @@ replication
 //  *********** ACTOR INITIALISATION & DESTRUCTION & KEY ENGINE EVENTS  ***********  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to fix minor bug where 1st key press to switch round type key didn't do anything
-simulated function PostBeginPlay()
+// Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client
+// An ammo change means either a reload has started (so now ammo type is same as pending), or this actor just replicated to us & we're simply matching our initial values to current ammo,
+// or another player has changed ammo since we were last in cannon (in which case any previous pending ammo we set is now redundant)
+simulated function PostNetReceive()
 {
-    super.PostBeginPlay();
+    super.PostNetReceive();
 
-    if (Role == ROLE_Authority && bMultipleRoundTypes)
+    if (ProjectileClass != SavedProjectileClass && ProjectileClass != none)
     {
-        PendingProjectileClass = PrimaryProjectileClass;
+        SavedProjectileClass = ProjectileClass;
+        LocalPendingAmmoIndex = GetFireMode();
+        ServerPendingAmmoIndex = LocalPendingAmmoIndex; // this is a record of last setting updated to server, so match it up
     }
 }
 
@@ -165,7 +171,7 @@ state ProjectileFireMode
     }
 }
 
-// Modified (from ROTankCannon) to handle autocannons & canister shot, & to remove switching to pending ammo (now always handled in AttemptReload)
+// Modified (from ROTankCannon) to handle autocannons & canister shot, & to remove switching to pending ammo type (now always handled in AttemptReload)
 // Stripped down a little by removing all the unused/deprecated bDoOffsetTrace, bInheritVelocity, bCannonShellDebugging & some firing sound stuff
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
@@ -466,6 +472,45 @@ function bool GiveInitialAmmo()
     return false;
 }
 
+// New function to toggle pending ammo type (very different system from deprecated ROTankCannon)
+// Only happens locally on net client & a changed ammo type is only passed to server on firing or manually reloading, & also plays a click sound (originally in SwitchFireMode)
+simulated function ToggleRoundType()
+{
+    local int i;
+
+    do
+    {
+        ++i;
+        LocalPendingAmmoIndex = ++LocalPendingAmmoIndex % arraycount(MainAmmoChargeExtra); // cycles through ammo types 0/1/2 (loops back to 0 when reaches 3)
+
+        // We have some of this pending ammo type, so lock that in & play a click
+        // Note that if this is the 3rd loop it means we're back at the original ammo, so no switch was possible & no click is played
+        if (i < arraycount(MainAmmoChargeExtra) && HasAmmoToReload(LocalPendingAmmoIndex))
+        {
+            PlayClickSound();
+            break;
+        }
+
+    } until (i >= arraycount(MainAmmoChargeExtra))
+}
+
+// New function for net client to check whether it needs to update pending ammo type to server
+// On a client, ServerPendingAmmoIndex is used to record the last setting updated to the server, so we know whether we need to update again
+simulated function CheckUpdatePendingAmmo(optional bool bForceUpdate)
+{
+    if ((LocalPendingAmmoIndex != GetFireMode() && LocalPendingAmmoIndex != ServerPendingAmmoIndex) || bForceUpdate)
+    {
+        ServerPendingAmmoIndex = LocalPendingAmmoIndex; // record latest setting sent to server
+        ServerSetPendingAmmo(LocalPendingAmmoIndex);
+    }
+}
+
+// New replicated client-to-server function to update server's pending ammo type, only passed when server needs it, i.e. to reload (usually after firing)
+function ServerSetPendingAmmo(byte NewPendingAmmoIndex)
+{
+    ServerPendingAmmoIndex = NewPendingAmmoIndex;
+}
+
 // New function (in VehicleWeapon class) to use DH's new incremental resupply system (only resupplies rounds; doesn't reload the cannon)
 function bool ResupplyAmmo()
 {
@@ -629,60 +674,6 @@ simulated function byte GetFireMode(optional bool bAltFire, optional class<Proje
     return FireMode;
 }
 
-// Modified (from ROTankCannon) to use extended ammo types
-function ToggleRoundType(optional bool bForcedSwitch)
-{
-    if (PendingProjectileClass == PrimaryProjectileClass)
-    {
-        if (HasAmmoToReload(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-        else if (HasAmmoToReload(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-    else if (PendingProjectileClass == SecondaryProjectileClass)
-    {
-        // bForcedSwitch option is passed if we have run out of ammo, meaning if it was secondary ammo then we try to switch back to primary instead of tertiary
-        if ((bForcedSwitch || !HasAmmoToReload(2)) && HasAmmoToReload(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasAmmoToReload(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-    else if (PendingProjectileClass == TertiaryProjectileClass)
-    {
-        if (HasAmmoToReload(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasAmmoToReload(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-    }
-    else
-    {
-        if (HasAmmoToReload(0))
-        {
-            PendingProjectileClass = PrimaryProjectileClass;
-        }
-        else if (HasAmmoToReload(1))
-        {
-            PendingProjectileClass = SecondaryProjectileClass;
-        }
-        else if (HasAmmoToReload(2))
-        {
-            PendingProjectileClass = TertiaryProjectileClass;
-        }
-    }
-}
-
 // Modified to use extended ammo types
 function float GetSpread(bool bAltFire)
 {
@@ -731,6 +722,7 @@ simulated function AttemptReload()
 {
     local EReloadState OldReloadState;
     local bool         bNoAmmoToReload;
+    local int          i;
 
     // Need to start a new reload (authority role only)
     if (ReloadState >= RL_ReadyToFire)
@@ -739,17 +731,47 @@ simulated function AttemptReload()
         {
             OldReloadState = ReloadState;
 
-            // If we don't have any ammo of the pending type, try to switch to another ammo type (unless player reloads & switches manually)
-            // The 'true' for ToggleRoundType signifies forced switch, not manual choice, making it try to switch to primary ammo, rather than strictly cycle ammo choice
-            if (!HasAmmoToReload(GetFireMode(false, PendingProjectileClass)) && !PlayerUsesManualReloading())
+            // Single player or owning listen server set the authoritative ServerPendingAmmoIndex from their local value before starting a reload
+            if (Instigator != none && Instigator.IsLocallyControlled())
             {
-                ToggleRoundType(true);
+                ServerPendingAmmoIndex = LocalPendingAmmoIndex;
+            }
+
+            // If we don't have any ammo of the pending type, try to switch to another ammo type (unless player reloads & switches manually)
+            // Note if server changes ammo, client's pending ammo type gets matched in PostNetReceive() on receiving new ProjectileClass, so no need to replicate pending ammo directly
+            if (!HasAmmoToReload(ServerPendingAmmoIndex) && !PlayerUsesManualReloading())
+            {
+                for (i = 0; i < 3; ++i)
+                {
+                    if (HasAmmoToReload(i))
+                    {
+                        ServerPendingAmmoIndex = i;
+
+                        if (Instigator != none && Instigator.IsLocallyControlled())
+                        {
+                            LocalPendingAmmoIndex = i; // single player or owning listen server also match their local setting
+                        }
+
+                        break;
+                    }
+                }
             }
 
             // Switch to pending ammo type, if it's different
-            if (ProjectileClass != PendingProjectileClass && PendingProjectileClass != none)
+            if (ServerPendingAmmoIndex != GetFireMode())
             {
-                ProjectileClass = PendingProjectileClass;
+                switch (ServerPendingAmmoIndex)
+                {
+                    case 0:
+                        ProjectileClass = PrimaryProjectileClass;
+                        break;
+                    case 1:
+                        ProjectileClass = SecondaryProjectileClass;
+                        break;
+                    case 2:
+                        ProjectileClass = TertiaryProjectileClass;
+                        break;
+                }
             }
 
             // If we still don't have any ammo, we must be completely out of all cannon ammo, so wait for reload
@@ -761,20 +783,20 @@ simulated function AttemptReload()
             // Charging it seems premature, but it's easier to do it here & cannon won't be able to fire anyway until reload completes
             else if (bUsesMags)
             {
-                if (ProjectileClass == PrimaryProjectileClass)
+                switch (ProjectileClass)
                 {
-                    NumPrimaryMags--;
-                    MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-                }
-                else if (ProjectileClass == SecondaryProjectileClass)
-                {
-                    NumSecondaryMags--;
-                    MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-                }
-                else if (ProjectileClass == TertiaryProjectileClass)
-                {
-                    NumTertiaryMags--;
-                    MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+                    case PrimaryProjectileClass:
+                        NumPrimaryMags--;
+                        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
+                        break;
+                    case SecondaryProjectileClass:
+                        NumSecondaryMags--;
+                        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
+                        break;
+                    case TertiaryProjectileClass:
+                        NumTertiaryMags--;
+                        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+                        break;
                 }
             }
         }
