@@ -10,6 +10,7 @@ defaultproperties
 {
     bShowRangeText=true
     RangeText="meters"
+    RangePositionX=0.02
     bShowRangeRing=true
     ScopeCenterScale=0.75 // these 3 are range ring properties
     ScopePositionX=0.237

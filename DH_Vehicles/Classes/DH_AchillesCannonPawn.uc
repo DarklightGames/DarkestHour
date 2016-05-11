@@ -21,6 +21,7 @@ defaultproperties
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
     OverlayCenterSize=0.542
+    RangePositionX=0.16
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.17pdr_sight_destroyed'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'

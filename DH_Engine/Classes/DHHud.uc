@@ -880,29 +880,26 @@ simulated function DrawHudPassC(Canvas C)
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHVehicle               V;
-    local ROVehicleWeaponPawn     WeaponPawn;
-    local AbsoluteCoordsInfo      Coords, Coords2;
-    local SpriteWidget            Widget;
-    local color                   VehicleColor;
-    local rotator                 MyRot;
-    local int                     Current, Pending, i;
-    local float                   f, XL, YL, Y_one, MyScale, StrX, StrY, ProportionOfReloadRemaining, ModifiedVehicleOccupantsTextYOffset;
-    local array<string>           Lines;
-    local array<color>            Colors;
+    local DHVehicle          V;
+    local DHVehicleCannon    Cannon;
+    local VehicleWeaponPawn  WP;
+    local AbsoluteCoordsInfo Coords, Coords2;
+    local SpriteWidget       Widget;
+    local rotator            MyRot;
+    local float              XL, YL, Y_one, StrX, StrY, Team, MaxChange, ProportionOfReloadRemaining, f;
+    local int                Current, Pending, i;
+    local color              VehicleColor;
+    local array<color>       Colors;
+    local array<string>      Lines;
 
     if (bHideHud)
     {
         return;
     }
 
-    // Figure what the scale is
-    MyScale = HudScale; // * ResScaleY;
-
     // Figure where to draw
     Coords.PosX = Canvas.ClipX * VehicleIconCoords.X;
-    Coords.Height = Canvas.ClipY * VehicleIconCoords.YL * MyScale;
+    Coords.Height = Canvas.ClipY * VehicleIconCoords.YL * HudScale;
     Coords.PosY = Canvas.ClipY * VehicleIconCoords.Y - Coords.Height;
     Coords.Width = Coords.Height;
 
@@ -912,8 +909,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Coords2.Width = Canvas.ClipX;
     Coords2.Height = Canvas.ClipY;
 
-    // Set initial passenger PosX (shifted if we're drawing ammo info, else it's draw closer to the tank icon)
-    VehicleOccupantsText.PosX = default.VehicleOccupantsText.PosX;
+    /////////////////////////////////////////////////////////////////
+    // Draw vehicle icon, with passenger dots & any damage indicators
+    /////////////////////////////////////////////////////////////////
 
     // Large vehicles may use a larger icon texture
     if (Vehicle.bVehicleHudUsesLargeTexture)
@@ -925,7 +923,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         Widget = VehicleIcon;
     }
 
-    // Figure what color to draw in
+    // Set vehicle color based on any damage
     f = Vehicle.Health / Vehicle.HealthMax;
 
     if (f > 0.75)
@@ -944,18 +942,35 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Widget.Tints[0] = VehicleColor;
     Widget.Tints[1] = VehicleColor;
 
-    // Draw clock face (without numbers)
-    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
-    DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
-
-    // Draw vehicle icon
+    // Draw vehicle icon, with clockface around it
     Widget.WidgetTexture = Vehicle.VehicleHudImage;
     DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
+    DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
+    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
+    DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
     V = DHVehicle(Vehicle);
 
     if (V != none)
     {
+        // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
+        if (V.EngineHealth <= (V.default.EngineHealth * V.HeavyEngineDamageThreshold))
+        {
+            if (V.EngineHealth <= 0)
+            {
+                VehicleEngine.WidgetTexture = VehicleEngineCriticalTexture; // flashing red icon
+            }
+            else
+            {
+                VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture; // red icon (not flashing)
+            }
+
+            VehicleEngine.PosX = V.VehicleHudEngineX;
+            VehicleEngine.PosY = V.VehicleHudEngineY;
+            DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
+        }
+
         // Draw any damaged treads
         if (V.bLeftTrackDamaged)
         {
@@ -973,80 +988,288 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
         }
 
-        // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
-        if (V.EngineHealth <= (V.default.EngineHealth * V.HeavyEngineDamageThreshold))
+        // Draw any turret icon, with current turret rotation
+        if (V.Cannon != none && V.VehicleHudTurret != none)
         {
-            if (Vehicle.EngineHealth <= 0)
-            {
-                VehicleEngine.WidgetTexture = VehicleEngineCriticalTexture; // flashing red icon
-            }
-            else
-            {
-                VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture; // red icon (not flashing)
-            }
-
-            VehicleEngine.PosX = Vehicle.VehicleHudEngineX;
-            VehicleEngine.PosY = Vehicle.VehicleHudEngineY;
-            DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
+            MyRot = rotator(vector(V.Cannon.CurrentAim) >> V.Cannon.Rotation);
+            V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = V.VehicleHudTurret;
+            DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
     }
 
-    // Update & draw turret (if needed)
-    if (DHVehicleCannonPawn(Passenger) != none)
+    // Draw vehicle occupant dots
+    for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; ++i)
     {
-        // Update & draw look turret
+        if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
+        {
+            continue;
+        }
+
+        if (i == 0)
+        {
+            // Draw driver
+            if (Passenger == none) // we're the driver
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
+            }
+            else if (Vehicle.Driver != none)
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
+            }
+            else
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
+            }
+
+            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
+            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
+
+            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
+
+            MapPlayerNumberIcon.TextureScale = 0.15;
+            MapPlayerNumberIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
+            MapPlayerNumberIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
+            MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[i];
+
+            DrawSpriteWidgetClipped(Canvas, MapPlayerNumberIcon, Coords, true);
+        }
+        else
+        {
+            if (i - 1 >= Vehicle.WeaponPawns.Length)
+            {
+                break;
+            }
+
+            WP = Vehicle.WeaponPawns[i - 1];
+
+            if (WP == none) // added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
+            }
+            else if (WP == Passenger)
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
+            }
+            else if (WP.PlayerReplicationInfo != none)
+            {
+                if (Passenger != none && Passenger.PlayerReplicationInfo != none && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+                {
+                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
+                }
+                else
+                {
+                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
+                }
+            }
+            else
+            {
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
+            }
+
+            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
+            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
+
+            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
+
+            MapPlayerNumberIcon.TextureScale = 0.15;
+            MapPlayerNumberIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
+            MapPlayerNumberIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
+            MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[Min(i, PlayerNumberIconTextures.Length - 1)];
+            DrawSpriteWidgetClipped(Canvas, MapPlayerNumberIcon, Coords, true);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////
+    // If player is vehicle driver - draw speed, rpm & throttle gauges
+    //////////////////////////////////////////////////////////////////
+
+    if (Passenger == none)
+    {
+        // Get team index
+        if (Vehicle.Controller != none && Vehicle.Controller.PlayerReplicationInfo != none && Vehicle.Controller.PlayerReplicationInfo.Team != none)
+        {
+            if (Vehicle.Controller.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+            {
+                Team = AXIS_TEAM_INDEX;
+            }
+            else
+            {
+                Team = ALLIES_TEAM_INDEX;
+            }
+        }
+        else
+        {
+            Team = AXIS_TEAM_INDEX;
+        }
+
+        // If more than half a second since we drew the gauges, reset the saved values as they are obsolete
+        if (Level.TimeSeconds - VehicleNeedlesLastRenderTime >= 0.5)
+        {
+            VehicleLastSpeedRotation = 0.0;
+            VehicleLastRPMRotation = 0.0;
+        }
+
+        // Set a maximum needle rotation change, to smooth movement, & record last render time
+        MaxChange = (Level.TimeSeconds - VehicleNeedlesLastRenderTime) * VehicleNeedlesRotationSpeed;
+        VehicleNeedlesLastRenderTime = Level.TimeSeconds;
+
+        // Update speed needle value
+        f = VSize(Vehicle.Velocity) * 0.05965; // convert from UU to kph // was " * 3600.0 / 60.352 / 1000.0" but optimised calculation as done many times per sec
+        f *= VehicleSpeedScale[Team];
+        f += VehicleSpeedZeroPosition[Team];
+
+        if (f < VehicleLastSpeedRotation)
+        {
+            VehicleLastSpeedRotation = Max(f, VehicleLastSpeedRotation - MaxChange);
+        }
+        else
+        {
+            VehicleLastSpeedRotation = Min(f, VehicleLastSpeedRotation + MaxChange);
+        }
+
+        // Draw the speed guage
+        VehicleSpeedIndicator.WidgetTexture = VehicleSpeedTextures[Team];
+        DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true); // background
+
+        TexRotator(VehicleSpeedNeedlesTextures[Team]).Rotation.Yaw = VehicleLastSpeedRotation; // update needle rotation
+        VehicleSpeedIndicator.WidgetTexture = VehicleSpeedNeedlesTextures[Team];
+        DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true); // needle
+
+        // Update RPM needle value
+        if (ROWheeledVehicle(Vehicle) != none)
+        {
+            f = ROWheeledVehicle(Vehicle).EngineRPM / 100.0;
+            f *= VehicleRPMScale[Team];
+            f += VehicleRPMZeroPosition[Team];
+
+            if (f < VehicleLastRPMRotation)
+            {
+                VehicleLastRPMRotation = Max(f, VehicleLastRPMRotation - MaxChange);
+            }
+            else
+            {
+                VehicleLastRPMRotation = Min(f, VehicleLastRPMRotation + MaxChange);
+            }
+        }
+
+        // Draw the RPM guage
+        VehicleRPMIndicator.WidgetTexture = VehicleRPMTextures[Team];
+        DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
+
+        TexRotator(VehicleRPMNeedlesTextures[Team]).Rotation.Yaw = VehicleLastRPMRotation;
+        VehicleRPMIndicator.WidgetTexture = VehicleRPMNeedlesTextures[Team];
+        DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
+
+        // Check if we should draw a throttle gauge
+        if (ROPlayer(Vehicle.Controller) != none && ((ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle && Vehicle.IsA('DHArmoredVehicle'))
+            || (ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle && !Vehicle.IsA('DHArmoredVehicle'))))
+        {
+            Y_one = YL; // save YL for use later
+
+            // Check which throttle variable we should use
+            if (PlayerOwner != Vehicle.Controller && ROWheeledVehicle(Vehicle) != none)
+            {
+                // Unpack replicated ThrottleRep
+                f = ROWheeledVehicle(Vehicle).ThrottleRep;
+
+                if (f <= 100.0) // negative throttle
+                {
+                    f = -f / 100.0;
+                }
+                else
+                {
+                    f = (f - 101.0) / 100.0;
+                }
+            }
+            else
+            {
+                f = Vehicle.Throttle;
+            }
+
+            // Draw throttle shaded bar in top or bottom (depending if throttle is positive or negative) & set the throttle lever position
+            if (f ~= 0.0) // throttle zeroed - no shaded bar
+            {
+                VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - (Y_one * VehicleThrottleTopZeroPosition);
+            }
+            else if (f > 0.0) // throttle is forwards
+            {
+                VehicleThrottleIndicatorTop.Scale = VehicleThrottleTopZeroPosition + (f * (VehicleThrottleTopMaxPosition - VehicleThrottleTopZeroPosition));
+                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorTop, Coords, true, XL, YL, false, true);
+
+                VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - (Y_one * VehicleThrottleIndicatorTop.Scale);
+            }
+            else // throttle is pulled back
+            {
+                VehicleThrottleIndicatorBottom.Scale = VehicleThrottleBottomZeroPosition - (f * (VehicleThrottleBottomMaxPosition - VehicleThrottleBottomZeroPosition));
+                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBottom, Coords, true, XL, YL, false, true);
+
+                VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - (Y_one * (1.0 - VehicleThrottleIndicatorBottom.Scale));
+            }
+
+            // Draw the throttle gauge
+            DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBackground, Coords, true, XL, YL, false, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorForeground, Coords, true, XL, YL, false, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorLever, Coords, true, XL, YL, true, true);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////
+    // Draw turret & ammo if player is in a turret/cannon
+    ////////////////////////////////////////////////////////////////
+
+    else if (DHVehicleCannonPawn(Passenger) != none)
+    {
+        // Update & draw look turret, with current turret rotation
         if (V != none && V.VehicleHudTurretLook != none)
         {
-            V.VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
+            V.VehicleHudTurretLook.Rotation.Yaw = V.Rotation.Yaw - Passenger.CustomAim.Yaw;
             Widget.WidgetTexture = V.VehicleHudTurretLook;
             Widget.Tints[0].A /= 2;
             Widget.Tints[1].A /= 2;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
-            Widget.Tints[0] = VehicleColor;
-            Widget.Tints[1] = VehicleColor;
         }
 
-        // Draw ammo count since we're a gunner
         if (bShowWeaponInfo)
         {
-            // Shift passengers list farther to the right
-            VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
-
-            // Draw icon
+            // Draw cannon ammo icon
             VehicleAmmoIcon.WidgetTexture = Passenger.AmmoShellTexture;
             DrawSpriteWidget(Canvas, VehicleAmmoIcon);
 
-            // Draw reload state icon (if needed)
-            VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
-            VehicleAmmoReloadIcon.Scale = Passenger.GetAmmoReloadState();
-            DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
+            // Draw reload progress (if needed)
+            ProportionOfReloadRemaining = Passenger.GetAmmoReloadState();
 
-            // Draw ammo count
-            if (Passenger != none && Passenger.Gun != none)
+            if (ProportionOfReloadRemaining > 0.0)
             {
-                VehicleAmmoAmount.Value = Passenger.Gun.PrimaryAmmoCount();
+                VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
+                VehicleAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
+                DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
             }
 
-            DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
+            Cannon = DHVehicleCannon(Passenger.Gun);
 
-            if (V.Cannon != none)
+            if (Cannon != none)
             {
-                // Draw different ammo types
-                if (V.Cannon.bMultipleRoundTypes)
+                // Draw cannon ammo count
+                VehicleAmmoAmount.Value = Cannon.PrimaryAmmoCount();
+                DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
+
+                // Draw different cannon ammo types
+                if (Cannon.bMultipleRoundTypes)
                 {
                     // Get ammo types text, font & position
                     // Use of GetFireMode() replaces deprecated GetRoundsDescription(Lines) & GetPendingRoundIndex(), with Lines array constructed directly by for loop below
-                    Current = V.Cannon.GetFireMode();
-                    Pending = V.Cannon.GetFireMode(false, V.Cannon.PendingProjectileClass);
+                    Current = Cannon.GetFireMode();
+                    Pending = Cannon.GetFireMode(false, Cannon.PendingProjectileClass);
 
-                    for (i = 0; i < V.Cannon.ProjectileDescriptions.Length; ++i)
+                    for (i = 0; i < Cannon.ProjectileDescriptions.Length; ++i)
                     {
-                        Lines[i] = V.Cannon.ProjectileDescriptions[i];
+                        Lines[i] = Cannon.ProjectileDescriptions[i];
                     }
 
-                    VehicleAmmoTypeText.OffsetY = default.VehicleAmmoTypeText.OffsetY * MyScale;
+                    VehicleAmmoTypeText.OffsetY = default.VehicleAmmoTypeText.OffsetY * HudScale;
 
-                    if (MyScale < 0.85)
+                    if (HudScale < 0.85)
                     {
                         Canvas.Font = GetConsoleFont(Canvas);
                     }
@@ -1092,14 +1315,14 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     }
                 }
 
-                // Draw coaxial gun ammo info if needed
-                if (V.Cannon.AltFireProjectileClass != none)
+                // Draw coaxial MG ammo info (if present)
+                if (Passenger.bHasAltFire && Cannon.AltFireProjectileClass != none)
                 {
-                    // Draw coaxial gun ammo icon
-                    VehicleAltAmmoIcon.WidgetTexture = V.Cannon.HudAltAmmoIcon;
+                    // Draw coaxial MG ammo icon
+                    VehicleAltAmmoIcon.WidgetTexture = Cannon.HudAltAmmoIcon;
                     DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
-                    // Draw coaxial gun reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
+                    // Draw coaxial MG reload progress (if needed) // added to show reload progress in red, like a tank cannon reload
                     ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
 
                     if (ProportionOfReloadRemaining > 0.0)
@@ -1109,41 +1332,25 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                     }
 
-                    // Draw coaxial gun ammo amount
-                    VehicleAltAmmoAmount.Value = V.Cannon.GetNumMags();
+                    // Draw coaxial MG ammo amount
+                    VehicleAltAmmoAmount.Value = Cannon.GetNumMags();
                     DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
-
-                    // Shift occupants list position to accommodate coaxial gun ammo info
-                    ModifiedVehicleOccupantsTextYOffset = VehicleAltAmmoOccupantsTextOffset * MyScale;
                 }
             }
         }
     }
 
-    // Draw clock numbers
-    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
-    DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
+    ///////////////////////////////////////////////
+    // If player is in a hull-mounted MG, draw ammo
+    ///////////////////////////////////////////////
 
-    // Update & draw any turret
-    if (V.Cannon != none && V.VehicleHudTurret != none)
+    else if (DHVehicleMGPawn(Passenger) != none && bShowWeaponInfo && ROVehicleWeapon(Passenger.Gun) != none)
     {
-        MyRot = rotator(vector(V.Cannon.CurrentAim) >> V.Cannon.Rotation);
-        V.VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
-        Widget.WidgetTexture = V.VehicleHudTurret;
-        DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
-    }
-
-    // Draw MG ammo info (if needed)
-    if (bShowWeaponInfo && DHVehicleMGPawn(Passenger) != none && DHVehicleMGPawn(Passenger).MGun != none)
-    {
-        // Offset vehicle passenger names
-        VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
-
-        // Draw ammo icon
-        VehicleMGAmmoIcon.WidgetTexture = DHVehicleMGPawn(Passenger).MGun.HudAltAmmoIcon;
+        // Draw MG ammo icon
+        VehicleMGAmmoIcon.WidgetTexture = ROVehicleWeapon(Passenger.Gun).HudAltAmmoIcon;
         DrawSpriteWidget(Canvas, VehicleMGAmmoIcon);
 
-        // Draw reload state icon (if needed) // added to show reload progress in red, like a tank cannon reload
+        // Draw MG reload progress (if needed) // added to show reload progress in red, like a tank cannon reload
         ProportionOfReloadRemaining = Passenger.GetAmmoReloadState();
 
         if (ProportionOfReloadRemaining > 0.0)
@@ -1154,298 +1361,41 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
 
         // Draw ammo count
-        VehicleMGAmmoAmount.Value = DHVehicleMGPawn(Passenger).MGun.GetNumMags();
+        VehicleMGAmmoAmount.Value = ROVehicleWeapon(Passenger.Gun).GetNumMags();
         DrawNumericWidget(Canvas, VehicleMGAmmoAmount, Digits);
     }
 
-    // Draw rpm/speed/throttle gauges if we're the driver
-    if (Passenger == none && V != none)
+    ///////////////////////////////////////////////////////////
+    // Draw vehicle occupant names (now including our own name)
+    ///////////////////////////////////////////////////////////
+
+    Lines.Length = 0; // clear array
+
+    // Get driver name & color
+    if (Vehicle.PlayerReplicationInfo != none)
     {
-        // Get team index
-        if (Vehicle.Controller != none && Vehicle.Controller.PlayerReplicationInfo != none && Vehicle.Controller.PlayerReplicationInfo.Team != none)
-        {
-            if (Vehicle.Controller.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-            {
-                i = AXIS_TEAM_INDEX;
-            }
-            else
-            {
-                i = ALLIES_TEAM_INDEX;
-            }
-        }
-        else
-        {
-            i = AXIS_TEAM_INDEX;
-        }
-
-        // Update textures for backgrounds
-        VehicleSpeedIndicator.WidgetTexture = VehicleSpeedTextures[i];
-        VehicleRPMIndicator.WidgetTexture = VehicleRPMTextures[i];
-
-        // Draw backgrounds
-        DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true);
-        DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
-
-        // Get speed value & update rotator
-        f = VSize(V.Velocity) * 0.05965; // convert from UU to kph // was " * 3600.0 / 60.352 / 1000.0" but optimised calculation as done many times per sec
-        f *= VehicleSpeedScale[i];
-        f += VehicleSpeedZeroPosition[i];
-
-        // Check if we should reset needles rotation
-        if (VehicleNeedlesLastRenderTime < Level.TimeSeconds - 0.5)
-        {
-            f = VehicleLastSpeedRotation;
-        }
-
-        // Calculate modified rotation (to limit rotation speed)
-        if (f < VehicleLastSpeedRotation)
-        {
-            VehicleLastSpeedRotation = max(f, VehicleLastSpeedRotation - (Level.TimeSeconds - VehicleNeedlesLastRenderTime) * VehicleNeedlesRotationSpeed);
-        }
-        else
-        {
-            VehicleLastSpeedRotation = min(f, VehicleLastSpeedRotation + (Level.TimeSeconds - VehicleNeedlesLastRenderTime) * VehicleNeedlesRotationSpeed);
-        }
-
-        TexRotator(VehicleSpeedNeedlesTextures[i]).Rotation.Yaw = VehicleLastSpeedRotation;
-
-        // Get RPM value & update rotator
-        f = V.EngineRPM / 100.0;
-        f *= VehicleRPMScale[i];
-        f += VehicleRPMZeroPosition[i];
-
-        // Check if we should reset needles rotation
-        if (VehicleNeedlesLastRenderTime < Level.TimeSeconds - 0.5)
-        {
-            f = VehicleLastSpeedRotation;
-        }
-
-        // Calculate modified rotation (to limit rotation speed)
-        if (f < VehicleLastRPMRotation)
-        {
-            VehicleLastRPMRotation = max(f, VehicleLastRPMRotation - (Level.TimeSeconds - VehicleNeedlesLastRenderTime) * VehicleNeedlesRotationSpeed);
-        }
-        else
-        {
-            VehicleLastRPMRotation = min(f, VehicleLastRPMRotation + (Level.TimeSeconds - VehicleNeedlesLastRenderTime) * VehicleNeedlesRotationSpeed);
-        }
-
-        TexRotator(VehicleRPMNeedlesTextures[i]).Rotation.Yaw = VehicleLastRPMRotation;
-
-        // Save last updated time
-        VehicleNeedlesLastRenderTime = Level.TimeSeconds;
-
-        // Update textures for needles
-        VehicleSpeedIndicator.WidgetTexture = VehicleSpeedNeedlesTextures[i];
-        VehicleRPMIndicator.WidgetTexture = VehicleRPMNeedlesTextures[i];
-
-        // Draw needles
-        DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true);
-        DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
-
-        // Check if we should draw throttle
-        if (ROPlayer(Vehicle.Controller) != none && ((ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle && DHArmoredVehicle(V) != none)
-            || (ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle && DHArmoredVehicle(V) == none)))
-        {
-            // Draw throttle background
-            DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBackground, Coords, true, XL, YL, false, true);
-
-            // Save YL for use later
-            Y_one = YL;
-
-            // Check which throttle variable we should use
-            if (PlayerOwner != Vehicle.Controller)
-            {
-                // Is spectator
-                if (V.ThrottleRep <= 100)
-                {
-                    f = (V.ThrottleRep * -1.0) / 100.0;
-                }
-                else
-                {
-                    f = float(V.ThrottleRep - 101) / 100.0;
-                }
-            }
-            else
-            {
-                f = V.Throttle;
-            }
-
-            // Figure which part to draw (top or bottom) depending if throttle is positive or negative, update the scale value and draw the widget
-            if (f ~= 0.0)
-            {
-            }
-            else if (f > 0.0)
-            {
-                VehicleThrottleIndicatorTop.Scale = VehicleThrottleTopZeroPosition + f * (VehicleThrottleTopMaxPosition - VehicleThrottleTopZeroPosition);
-                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorTop, Coords, true, XL, YL, false, true);
-            }
-            else
-            {
-                VehicleThrottleIndicatorBottom.Scale = VehicleThrottleBottomZeroPosition - f * (VehicleThrottleBottomMaxPosition - VehicleThrottleBottomZeroPosition);
-                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBottom, Coords, true, XL, YL, false, true);
-            }
-
-            // Draw throttle foreground
-            DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorForeground, Coords, true, XL, YL, false, true);
-
-            // Draw the lever thingy
-            if (f ~= 0.0)
-            {
-                VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * VehicleThrottleTopZeroPosition;
-            }
-            else if (f > 0.0)
-            {
-                VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * VehicleThrottleIndicatorTop.Scale;
-            }
-            else
-            {
-                VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * (1.0 - VehicleThrottleIndicatorBottom.Scale);
-            }
-
-            DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorLever, Coords, true, XL, YL, true, true);
-
-            // Shift passengers list farther to the right
-            VehicleOccupantsText.PosX = VehicleGaugesOccupantsTextOffset;
-        }
-        else
-        {
-            // Shift passengers list farther to the right
-            VehicleOccupantsText.PosX = VehicleGaugesNoThrottleOccupantsTextOffset;
-        }
-
-        // hax to get proper x offset on non-4:3 screens
-        VehicleOccupantsText.PosX *= Canvas.ClipY / Canvas.ClipX * 4.0 / 3.0;
+        Lines[0] = "1." @ Vehicle.PlayerReplicationInfo.PlayerName;
+        Colors[0] = GetPlayerColor(DHPlayerReplicationInfo(Vehicle.PlayerReplicationInfo));
     }
 
-    // Draw vehicle occupant dots
-    for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; ++i)
-    {
-        if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
-        {
-            continue;
-        }
-
-        if (i == 0)
-        {
-            // Draw driver
-            if (Passenger == none) // we're the driver
-            {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
-            }
-            else if (Vehicle.Driver != none)
-            {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
-            }
-            else
-            {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
-            }
-
-            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
-            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
-
-            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
-
-            MapPlayerNumberIcon.TextureScale = 0.15;
-            MapPlayerNumberIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
-            MapPlayerNumberIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
-            MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[i];
-
-            DrawSpriteWidgetClipped(Canvas, MapPlayerNumberIcon, Coords, true);
-        }
-        else
-        {
-            if (i - 1 >= Vehicle.WeaponPawns.Length) // if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
-            {
-                break;
-            }
-            else if (Vehicle.WeaponPawns[i - 1] == none) // added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
-            {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
-            }
-            else if (Vehicle.WeaponPawns[i - 1] == Passenger && Passenger != none)
-            {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
-            }
-            else if (Vehicle.WeaponPawns[i - 1].PlayerReplicationInfo != none)
-            {
-                if (Passenger != none && Passenger.PlayerReplicationInfo != none && Vehicle.WeaponPawns[i - 1].PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
-                }
-                else
-                {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
-                }
-            }
-            else
-            {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
-            }
-
-            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
-            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
-
-            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
-
-            MapPlayerNumberIcon.TextureScale = 0.15;
-            MapPlayerNumberIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
-            MapPlayerNumberIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
-            MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[Min(i, PlayerNumberIconTextures.Length - 1)];
-            DrawSpriteWidgetClipped(Canvas, MapPlayerNumberIcon, Coords, true);
-        }
-    }
-
-    //////////////////////////////////////
-    // Draw passenger names
-    //////////////////////////////////////
-
-    // Get self's PRI
-    if (Passenger != none)
-    {
-        PRI = DHPlayerReplicationInfo(Passenger.PlayerReplicationInfo);
-    }
-    else
-    {
-        PRI = DHPlayerReplicationInfo(Vehicle.PlayerReplicationInfo);
-    }
-
-    // Clear lines array
-    Lines.Length = 0;
-    Colors.Length = 0;
-
-    // Shift text up some more if we're the driver and we're displaying capture bar
-    if (bDrawingCaptureBar && Vehicle.PlayerReplicationInfo == PRI)
-    {
-        ModifiedVehicleOccupantsTextYOffset -= 0.12 * Canvas.SizeY * MyScale;
-    }
-
-    // Driver's name
-    if (Vehicle.PlayerReplicationInfo != none && Vehicle.PlayerReplicationInfo != PRI) // don't draw our own name!
-    {
-        Lines[Lines.Length] = "1." @ Vehicle.PlayerReplicationInfo.PlayerName;
-        Colors[Lines.Length] = GetPlayerColor(DHPlayerReplicationInfo(Vehicle.PlayerReplicationInfo));
-    }
-
-    // Passengers' names
+    // Get passenger names & colors
     for (i = 0; i < Vehicle.WeaponPawns.Length; ++i)
     {
-        WeaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
+        WP = Vehicle.WeaponPawns[i];
 
-        if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none) // don't draw our own name!
+        if (WP != none && WP.PlayerReplicationInfo != none)
         {
-            Lines[Lines.Length] = "" $ (i + 2) $ "." @ WeaponPawn.PlayerReplicationInfo.PlayerName;
-            Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WeaponPawn.PlayerReplicationInfo));
+            //Lines[Lines.Length] = "" $ (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
+            Lines[Lines.Length] = (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
+            Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WP.PlayerReplicationInfo));
         }
     }
 
-    // Draw the lines
+    // Draw the names
     if (Lines.Length > 0)
     {
-        VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * MyScale;
-        VehicleOccupantsText.OffsetY += ModifiedVehicleOccupantsTextYOffset;
         Canvas.Font = GetPlayerNameFont(Canvas);
+        VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * HudScale;
 
         for (i = Lines.Length - 1; i >= 0; --i)
         {
@@ -5042,8 +4992,6 @@ defaultproperties
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
-    VehicleAltAmmoOccupantsTextOffset=-35
-    VehicleOccupantsTextOffset=0.40
     LegendCarriedArtilleryRadioText="Artillery Radioman"
     NeedReloadText="Needs reloading"
     AndMoreText="and more..."
@@ -5138,4 +5086,5 @@ defaultproperties
     bShowSquadMembers=true
 
     PlayerNameIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world';
+    VehicleOccupantsText=(PosX=0.78,OffsetX=0)
 }

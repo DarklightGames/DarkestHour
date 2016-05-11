@@ -2295,8 +2295,8 @@ defaultproperties
     // Gunsight overlay & HUD
     OverlayCenterSize=0.9
     RangeText="Meters"
-    RangePositionX=0.8
-    RangePositionY=0.8
+    RangePositionX=0.16
+    RangePositionY=0.2
     AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
     HudName="Cmdr"
 

@@ -19,6 +19,7 @@ defaultproperties
     bHasAltFire=false
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     OverlayCenterSize=0.83333
+    RangePositionX=0.02
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
     FireImpulse=(X=-110000.0)
