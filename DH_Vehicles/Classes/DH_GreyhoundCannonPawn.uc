@@ -18,9 +18,9 @@ defaultproperties
     DrivePos=(X=8.0,Y=3.0,Z=-4.5)
     DriveAnim="VSU76_com_idle_close"
     bManualTraverseOnly=true
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
     OverlayCenterSize=0.542
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell_reload'
     FireImpulse=(X=-30000.0)

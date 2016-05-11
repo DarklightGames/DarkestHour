@@ -13,7 +13,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Pak40_anm.Pak40_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DrivePos=(X=-50.0,Y=1.0,Z=-37.0)
     DriveAnim="crouch_idlehold_bayo"
-    CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     OverlayCenterSize=0.57
     bShowRangeText=true
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'

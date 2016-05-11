@@ -8,8 +8,6 @@ class DHVehicleCannon extends DHVehicleWeapon
 
 #exec OBJ LOAD FILE=..\Sounds\DH_Vehicle_Reloads.uax
 
-var     DHVehicleCannonPawn CannonPawn; // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
-
 // Armor penetration
 var     float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
 var     float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
@@ -48,7 +46,6 @@ var     class<Emitter>      CannonDustEmitterClass;  // emitter class for dust k
 var     Emitter             CannonDustEmitter;
 
 // Turret & movement
-var     bool                bHasTurret;                // this cannon is in a fully rotating turret
 var     float               ManualRotationsPerSecond;  // turret/cannon rotation speed when turned by hand
 var     float               PoweredRotationsPerSecond; // faster rotation speed with powered assistance (engine must be running)
 
@@ -87,7 +84,7 @@ simulated function PostNetReceive()
     if (ProjectileClass != SavedProjectileClass && ProjectileClass != none)
     {
         SavedProjectileClass = ProjectileClass;
-        LocalPendingAmmoIndex = GetFireMode();
+        LocalPendingAmmoIndex = GetAmmoIndex();
         ServerPendingAmmoIndex = LocalPendingAmmoIndex; // this is a record of last setting updated to server, so match it up
     }
 }
@@ -104,7 +101,7 @@ simulated function Timer()
     else if (ReloadState < ReloadStages.Length)
     {
         // For earlier reload stages, we only proceed if we have a player in a position where he can reload
-        if (!bReloadPaused && CannonPawn != none && CannonPawn.Occupied())
+        if (!bReloadPaused && WeaponPawn != none && WeaponPawn.Occupied())
         {
             // Play reloading sound for this stage (don't broadcast to owning client as it will play locally anyway)
             if (ReloadStages[ReloadState].Sound != none)
@@ -181,7 +178,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     // Calculate projectile's direction & then spawn the projectile
     FireRot = WeaponFireRotation;
 
-    if (CannonPawn != none && CannonPawn.IsHumanControlled())
+    if (Instigator != none && Instigator.IsHumanControlled())
     {
         FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
     }
@@ -220,6 +217,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 // And we avoid playing shoot animations altogether on a server, as they serve no purpose there
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
+    local DHVehicleCannonPawn CannonPawn;
+
     if (Role == ROLE_Authority)
     {
         FiringMode = byte(bWasAltFire);
@@ -250,6 +249,8 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
                 CannonDustEmitter = Spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
             }
         }
+
+        CannonPawn = DHVehicleCannonPawn(Instigator);
 
         if (CannonPawn != none && CannonPawn.DriverPositionIndex >= CannonPawn.RaisedPositionIndex) // check against RaisedPositionIndex instead of whether position is bExposed
         {
@@ -346,16 +347,12 @@ simulated function IncrementRange()
         {
             CurrentRangeIndex++;
         }
-
-        if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none) // net client calls the server function
         {
-            if (Role < ROLE_Authority) // net client calls the server function
-            {
-                ROPlayer(Instigator.Controller).ServerLeanRight(true);
-            }
-
-            PlayClickSound();
+            ROPlayer(Instigator.Controller).ServerLeanRight(true);
         }
+
+        PlayClickSound();
     }
 }
 
@@ -379,16 +376,12 @@ simulated function DecrementRange()
         {
             CurrentRangeIndex--;
         }
-
-        if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
         {
-            if (Role < ROLE_Authority)
-            {
-                ROPlayer(Instigator.Controller).ServerLeanLeft(true);
-            }
-
-            PlayClickSound();
+            ROPlayer(Instigator.Controller).ServerLeanLeft(true);
         }
+
+        PlayClickSound();
     }
 }
 
@@ -443,7 +436,7 @@ simulated function int GetRange()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** AMMO & RELOADING *******************************  //
+//  ************************************* AMMO ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to use extended ammo types
@@ -498,7 +491,7 @@ simulated function ToggleRoundType()
 // On a client, ServerPendingAmmoIndex is used to record the last setting updated to the server, so we know whether we need to update again
 simulated function CheckUpdatePendingAmmo(optional bool bForceUpdate)
 {
-    if ((LocalPendingAmmoIndex != GetFireMode() && LocalPendingAmmoIndex != ServerPendingAmmoIndex) || bForceUpdate)
+    if ((LocalPendingAmmoIndex != GetAmmoIndex() && LocalPendingAmmoIndex != ServerPendingAmmoIndex) || bForceUpdate)
     {
         ServerPendingAmmoIndex = LocalPendingAmmoIndex; // record latest setting sent to server
         ServerSetPendingAmmo(LocalPendingAmmoIndex);
@@ -511,7 +504,7 @@ function ServerSetPendingAmmo(byte NewPendingAmmoIndex)
     ServerPendingAmmoIndex = NewPendingAmmoIndex;
 }
 
-// New function (in VehicleWeapon class) to use DH's new incremental resupply system (only resupplies rounds; doesn't reload the cannon)
+// Modified to incrementally resupply all cannon & coaxial MG ammo (only resupplies spare rounds & mags; doesn't reload the cannon or MG)
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
@@ -558,7 +551,7 @@ function bool ResupplyAmmo()
     }
 
     // If cannon is waiting to reload, but doesn't use manual reloading (so must be out of ammo), & we just resupplied & have a player, try to start a reload
-    if (ReloadState == RL_Waiting && !PlayerUsesManualReloading() && bDidResupply && CannonPawn != none && CannonPawn.Occupied())
+    if (ReloadState == RL_Waiting && !PlayerUsesManualReloading() && bDidResupply && WeaponPawn != none && WeaponPawn.Occupied())
     {
         AttemptReload();
     }
@@ -570,7 +563,7 @@ function bool ResupplyAmmo()
 
         // If coaxial MG is out of ammo, start an MG reload if we have a player
         // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-        if (!HasAmmo(ALT_FIREMODE_INDEX) && CannonPawn != none && CannonPawn.Occupied())
+        if (!HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
         {
             AttemptAltReload();
         }
@@ -580,67 +573,48 @@ function bool ResupplyAmmo()
 }
 
 // Modified to use extended ammo types
-simulated function bool ConsumeAmmo(int FireMode)
+simulated function bool ConsumeAmmo(int AmmoIndex)
 {
-    if (FireMode < 0 || FireMode > ALT_FIREMODE_INDEX || !HasAmmo(FireMode))
+    if (AmmoIndex < 0 || AmmoIndex > ALTFIRE_AMMO_INDEX || !HasAmmo(AmmoIndex))
     {
         return false;
     }
 
-    if (FireMode == ALT_FIREMODE_INDEX)
+    if (AmmoIndex == ALTFIRE_AMMO_INDEX)
     {
          AltAmmoCharge--;
     }
     else
     {
-        MainAmmoChargeExtra[FireMode]--;
+        MainAmmoChargeExtra[AmmoIndex]--;
     }
 
     return true;
 }
 
 // Modified to use extended ammo types
-simulated function bool HasAmmo(int FireMode)
+simulated function bool HasAmmo(int AmmoIndex)
 {
-    if (FireMode == ALT_FIREMODE_INDEX)
+    if (AmmoIndex == ALTFIRE_AMMO_INDEX)
     {
          return AltAmmoCharge > 0;
     }
 
-    return FireMode >= 0 && FireMode < arraycount(MainAmmoChargeExtra) && MainAmmoChargeExtra[FireMode] > 0;
-}
-
-// New function to check whether we can start a reload for a specified ammo type, accommodating either normal cannon shells or mags
-simulated function bool HasAmmoToReload(byte FireMode)
-{
-    if (bUsesMags) // autocannon
-    {
-        switch (FireMode)
-        {
-            case 0:
-                return NumPrimaryMags > 0;
-            case 1:
-                return NumSecondaryMags > 0;
-            case 2:
-                return NumTertiaryMags > 0;
-        }
-    }
-
-    return HasAmmo(FireMode); // normal cannon
+    return AmmoIndex >= 0 && AmmoIndex < arraycount(MainAmmoChargeExtra) && MainAmmoChargeExtra[AmmoIndex] > 0;
 }
 
 // Modified to use extended ammo types
 simulated function int PrimaryAmmoCount()
 {
-    local byte FireMode;
+    local byte AmmoIndex;
 
-    FireMode = GetFireMode();
+    AmmoIndex = GetAmmoIndex();
 
-    if (FireMode < arraycount(MainAmmoChargeExtra))
+    if (AmmoIndex < arraycount(MainAmmoChargeExtra))
     {
         if (bUsesMags)
         {
-            switch (FireMode)
+            switch (AmmoIndex)
             {
                 case 0:
                     return NumPrimaryMags;
@@ -652,26 +626,22 @@ simulated function int PrimaryAmmoCount()
         }
         else
         {
-            return MainAmmoChargeExtra[FireMode];
+            return MainAmmoChargeExtra[AmmoIndex];
         }
     }
 
     return 0;
 }
 
-// Modified to use extended ammo types (if Super returns an error, we check against the additional tertiary ammo)
-simulated function byte GetFireMode(optional bool bAltFire, optional class<Projectile> ProjClass)
+// Modified to handle extended tertiary ammo type
+simulated function byte GetAmmoIndex(optional bool bAltFire)
 {
-    local byte FireMode;
-
-    FireMode = super.GetFireMode(bAltFire, ProjClass);
-
-    if (FireMode == 255 && (ProjectileClass == TertiaryProjectileClass || (ProjClass == TertiaryProjectileClass && ProjClass != none)))
+    if (ProjectileClass == TertiaryProjectileClass && !bAltFire)
     {
-        FireMode = 2;
+        return 2;
     }
 
-    return FireMode;
+    return super.GetAmmoIndex(bAltFire);
 }
 
 // Modified to use extended ammo types
@@ -705,6 +675,29 @@ function byte BestMode()
     }
 
     return 2;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************************** RELOADING **********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// New function to check whether we can start a reload for a specified ammo type, accommodating either normal cannon shells or mags
+simulated function bool HasAmmoToReload(byte AmmoIndex)
+{
+    if (bUsesMags) // autocannon
+    {
+        switch (AmmoIndex)
+        {
+            case 0:
+                return NumPrimaryMags > 0;
+            case 1:
+                return NumSecondaryMags > 0;
+            case 2:
+                return NumTertiaryMags > 0;
+        }
+    }
+
+    return HasAmmo(AmmoIndex); // normal cannon
 }
 
 // New client-to-server replicated function allowing player to trigger a manual cannon reload
@@ -758,7 +751,7 @@ simulated function AttemptReload()
             }
 
             // Switch to pending ammo type, if it's different
-            if (ServerPendingAmmoIndex != GetFireMode())
+            if (ServerPendingAmmoIndex != GetAmmoIndex())
             {
                 switch (ServerPendingAmmoIndex)
                 {
@@ -852,7 +845,7 @@ simulated function ClientAltReload()
         // Necessary because using FireCountdown to stop fire during coax reload stops OwnerEffects() from being called, which would normally handle the cease fire
         if (WeaponPawn != none)
         {
-            ClientOnlyVehicleCeaseFire(true);
+            WeaponPawn.ClientOnlyVehicleCeaseFire(true);
         }
     }
 }
@@ -1347,19 +1340,6 @@ simulated function UpdatePrecacheStaticMeshes()
     {
         Level.AddPrecacheStaticMesh(TertiaryProjectileClass.default.StaticMesh);
     }
-}
-
-// Modified to set a convenient CannonPawn reference
-simulated function InitializeWeaponPawn(ROVehicleWeaponPawn WeaponPwn)
-{
-    CannonPawn = DHVehicleCannonPawn(WeaponPwn);
-
-    if (CannonPawn == none)
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleCannonPawn, so lots of things are not going to work!");
-    }
-
-    super.InitializeWeaponPawn(WeaponPwn);
 }
 
 // Modified to add option to skin cannon mesh using CannonSkins array in Vehicle class (avoiding need for separate cannon pawn & cannon classes just for camo variants)

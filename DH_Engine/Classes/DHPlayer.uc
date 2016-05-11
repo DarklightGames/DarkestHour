@@ -2700,15 +2700,15 @@ simulated function SetManualTankShellReloading(bool bUseManualReloading)
     super.SetManualTankShellReloading(bUseManualReloading);
 }
 
-// Modified to use DH cannon classes instead of deprecated ROTankCannon
+// Modified to use DH cannon class & AttemptReload() function, instead of deprecated ROTankCannon & ServerManualReload()
 function ServerSetManualTankShellReloading(bool bUseManualReloading)
 {
     bManualTankShellReloading = bUseManualReloading;
 
-    // If the cannon is waiting to reload, force a reload on the client
-    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none && DHVehicleCannonPawn(Pawn).Cannon.ReloadState == RL_Waiting)
+    // If we just switched off manual reloading & player is in a cannon that is waiting to reload, try to start a reload
+    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).VehWep != none && DHVehicleCannonPawn(Pawn).VehWep.ReloadState == RL_Waiting)
     {
-        DHVehicleCannonPawn(Pawn).Cannon.AttemptReload();
+        DHVehicleCannonPawn(Pawn).VehWep.AttemptReload();
     }
 }
 
@@ -2870,7 +2870,7 @@ exec function ClearArrows()
 // Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
 exec function LeaveBody(optional bool bKeepPRI)
 {
-    local ROVehicleWeaponPawn WP;
+    local DHVehicleWeaponPawn WP;
     local DHVehicle           V;
     local Pawn                OldPawn;
 
@@ -2889,20 +2889,12 @@ exec function LeaveBody(optional bool bKeepPRI)
         }
         else
         {
-            WP = ROVehicleWeaponPawn(Pawn);
+            WP = DHVehicleWeaponPawn(Pawn);
 
             if (WP != none && WP.Gun != none && WP.Gun.Mesh != WP.Gun.default.Mesh)
             {
                 WP.Gun.LinkMesh(WP.Gun.default.Mesh);
-
-                if (DHVehicleCannonPawn(WP) != none)
-                {
-                    DHVehicleCannonPawn(WP).SetPlayerPosition();
-                }
-                else if (DHVehicleMGPawn(WP) != none)
-                {
-                    DHVehicleMGPawn(WP).SetPlayerPosition();
-                }
+                WP.SetPlayerPosition();
             }
         }
 
@@ -3737,9 +3729,9 @@ exec function DebugAngles(optional string Option, optional float NewAngle)
     {
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
 
-        if (DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none)
+        if (VehicleWeaponPawn(Pawn) != none &&  DHVehicleCannon(VehicleWeaponPawn(Pawn).Gun) != none)
         {
-            Cannon = DHVehicleCannonPawn(Pawn).Cannon;
+            Cannon = DHVehicleCannon(VehicleWeaponPawn(Pawn).Gun);
             BaseActor = Cannon;
         }
         else
@@ -4378,4 +4370,3 @@ defaultproperties
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
 }
-

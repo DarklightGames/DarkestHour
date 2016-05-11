@@ -19,9 +19,9 @@ defaultproperties
     DriveAnim="VSU76_com_idle_close"
     bManualTraverseOnly=true
     bHasAltFire=false
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Wolverine_sight_background'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Wolverine_sight_background'
     OverlayCenterSize=0.972
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
     FireImpulse=(X=-100000.0)

@@ -8,9 +8,9 @@ class DH_BrenCarrierMGPawn extends DHVehicleMGPawn;
 // Modified to better suit the curved magazine of the bren gun
 function float GetAmmoReloadState()
 {
-    if (MGun != none)
+    if (VehWep != none)
     {
-        switch (MGun.ReloadState)
+        switch (VehWep.ReloadState)
         {
             case RL_ReadyToFire:    return 0.00;
 
@@ -22,6 +22,8 @@ function float GetAmmoReloadState()
             case RL_ReloadedPart4:  return 0.35;
         }
     }
+
+    return 0.0;
 }
 
 defaultproperties

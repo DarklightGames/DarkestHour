@@ -17,10 +17,10 @@ defaultproperties
     DriveAnim="VPanzer3_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
     OverlayCenterSize=0.83
-    ScopeCenterScale=0.635
-    ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
-    CenterRotationFactor=985
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
+    RangeRingScale=0.635
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
+    RangeRingRotationFactor=985
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     FireImpulse=(X=-80000.0)

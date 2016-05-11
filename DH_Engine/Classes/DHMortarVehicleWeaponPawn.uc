@@ -12,8 +12,6 @@ struct DigitSet
     var IntBox      TextureCoords[11];
 };
 
-var     DHMortarVehicleWeapon   Mortar;       // just a reference to the mortar VW actor, for convenience & to avoid lots of casts
-
 // Deploying, aiming & firing
 var     class<DHMortarWeapon>   WeaponClass;  // the weapon class for the carried mortar inventory item
 var     float       UndeployingDuration;      // needs literal as server doesn't have HUDOverlay actor & so can't use GetAnimDuration on it
@@ -52,11 +50,6 @@ var     texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
 var     texture     HUDSmokeTexture;         // ammo icon for smoke rounds
 var     DigitSet    Digits;                  // numerals for showing ammo count
 
-// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
-var     bool        bNeedToInitializeDriver;     // do some player set up when we receive the Driver actor
-var     bool        bInitializedVehicleAndGun;   // done some set up when had received both the VehicleBase & Gun actors
-var     bool        bNeedToStoreVehicleRotation; // set StoredVehicleRotation when we receive the VehicleBase actor
-
 replication
 {
     // Variables the server will replicate to all clients except the one that owns this actor
@@ -69,78 +62,19 @@ replication
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS  *****************  //
+//  *****************************  KEY ENGINE EVENTS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified for net client to flag if bNeedToInitializeDriver
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
-
-    if (Role < ROLE_Authority && bDriving)
-    {
-        bNeedToInitializeDriver = true;
-    }
-}
-
-// Modified to play animations on the mortar & operator, when a new value is received by net client, & to remove stuff not relevant to a mortar (as not multi-position)
-// Matt: also to call set up functionality that requires the Vehicle, VehicleWeapon and/or player pawn actors (just after vehicle spawns via replication)
-// This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
-// Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
+// Modified to play animations on the mortar & operator, when a new value of CurrentAnimationIndex is received by net client
 simulated function PostNetReceive()
 {
+    super.PostNetReceive();
+
     // Need to play animations on the mortar & operator
     if (CurrentAnimationIndex != OldAnimationIndex)
     {
         OldAnimationIndex = CurrentAnimationIndex;
         PlayThirdPersonAnimations();
-    }
-
-    // Initialize anything we need to do from the VehicleWeapon actor, or in that actor
-    if (!bInitializedVehicleGun)
-    {
-        if (Gun != none)
-        {
-            bInitializedVehicleGun = true;
-            InitializeVehicleWeapon();
-        }
-    }
-    // Fail-safe so if we somehow lose our Gun reference after initializing, we unset our flags & are then ready to re-initialize when we receive Gun again
-    else if (Gun == none)
-    {
-        bInitializedVehicleGun = false;
-        bInitializedVehicleAndGun = false;
-    }
-
-    // Initialize anything we need to do from the Vehicle actor, or in that actor
-    if (!bInitializedVehicleBase)
-    {
-        if (VehicleBase != none)
-        {
-            bInitializedVehicleBase = true;
-            InitializeVehicleBase();
-        }
-    }
-    // Fail-safe so if we somehow lose our VehicleBase reference after initializing, we unset our flags & are then ready to re-initialize when we receive VehicleBase again
-    else if (VehicleBase == none)
-    {
-        bInitializedVehicleBase = false;
-        bInitializedVehicleAndGun = false;
-    }
-
-    // Fix 'driver' attachment position - on replication, AttachDriver() only works if client has received MortarVehicleWeapon actor, which it may not have yet
-    // Client then receives Driver attachment & RelativeLocation through replication, but this is unreliable & sometimes gives incorrect positioning
-    // As a fix, if player pawn has flagged bNeedToAttachDriver (meaning attach failed), we call AttachDriver() here
-    if (bNeedToInitializeDriver && Driver != none && Gun != none)
-    {
-        bNeedToInitializeDriver = false;
-
-        if (DHPawn(Driver) != none && DHPawn(Driver).bNeedToAttachDriver)
-        {
-            DetachDriver(Driver);
-            AttachDriver(Driver);
-            DHPawn(Driver).bNeedToAttachDriver = false;
-        }
     }
 }
 
@@ -195,7 +129,7 @@ simulated function DrawHUD(Canvas C)
 
     if (PC != none && !PC.bBehindView)
     {
-        if (HUDOverlay != none && !Level.IsSoftwareRendering() && Mortar != none)
+        if (HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
         {
             // Draw HUDOverlay
             HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
@@ -212,8 +146,8 @@ simulated function DrawHUD(Canvas C)
             HUDScale = C.SizeY / 1280.0;
 
             // Get elevation & traverse
-            Elevation = Mortar.Elevation;
-            Traverse = class'UUnits'.static.UnrealToDegrees(Mortar.CurrentAim.Yaw);
+            Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
+            Traverse = class'UUnits'.static.UnrealToDegrees(VehWep.CurrentAim.Yaw);
 
             if (Traverse > 180.0) // convert to +/-
             {
@@ -232,9 +166,9 @@ simulated function DrawHUD(Canvas C)
             TraverseString $= String(Traverse);
 
             // Draw current round type icon
-            RoundIndex = Mortar.GetFireMode();
+            RoundIndex = VehWep.GetAmmoIndex();
 
-            if (Mortar.HasAmmo(RoundIndex))
+            if (VehWep.HasAmmo(RoundIndex))
             {
                 C.SetDrawColor(255, 255, 255, 255);
             }
@@ -257,20 +191,20 @@ simulated function DrawHUD(Canvas C)
             // Draw current round type quantity
             C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
 
-            if (Mortar.MainAmmoCharge[RoundIndex] < 10)
+            if (VehWep.MainAmmoCharge[RoundIndex] < 10)
             {
-                Quotient = Mortar.MainAmmoCharge[RoundIndex];
+                Quotient = VehWep.MainAmmoCharge[RoundIndex];
 
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
 
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Mortar.MainAmmoCharge[RoundIndex]].X1,
-                    Digits.TextureCoords[Mortar.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
+                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
+                    Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
             }
             else
             {
-                Quotient = Mortar.MainAmmoCharge[RoundIndex] / 10;
-                Remainder = Mortar.MainAmmoCharge[RoundIndex] % 10;
+                Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
+                Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
 
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
@@ -286,7 +220,7 @@ simulated function DrawHUD(Canvas C)
             // Draw current round type name
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-            C.DrawText(Mortar.ProjectileClass.default.Tag);
+            C.DrawText(VehWep.ProjectileClass.default.Tag);
 
             // Draw the elevation indicator icon
             C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
@@ -310,14 +244,8 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// From ROTankCannonPawn
-simulated function bool PointOfView()
-{
-    return false;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** MORTAR DEPLOY/ENTRY ***************************** //
+//  ************************ MORTAR ENTRY, UNDEPLYING & EXIT *********************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to transfer player's mortar ammo to the mortar when player enters
@@ -330,34 +258,12 @@ function KDriverEnter(Pawn P)
     GotoState('Idle');
 }
 
-// Modified to add mortar hints
-// Matt: also to work around various net client problems caused by replication timing issues (also removes some multi-position stuff that isn't relevant to mortar)
+// Modified to start in idle state, & to add mortar hints
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
 
-    // Fix possible replication timing problems on a net client
-    // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
-    // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
-    if (Role < ROLE_Authority && PC != none)
-    {
-        Controller = PC; // e.g. DrawHUD() can be called before Controller is replicated
-        SetOwner(PC);
-        Role = ROLE_AutonomousProxy;
-    }
-
-    // StoredVehicleRotation appears redundant as not used anywhere in UScript, but is used by native code (e.g. without it a cannon pawn gets unwanted camera swivelling)
-    // Sometimes I have noticed an unwanted swivel when deploying a mortar, & similar to a spawn vehicle the mortar actors all spawn & replicate in a jumble when you deploy
-    if (VehicleBase != none)
-    {
-        StoredVehicleRotation = VehicleBase.Rotation;
-    }
-    else
-    {
-        bNeedToStoreVehicleRotation = true;
-    }
-
-    super(VehicleWeaponPawn).ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
     GotoState('Idle');
 
@@ -377,10 +283,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
         }
     }
 }
-
-///////////////////////////////////////////////////////////////////////////////////////
-//  *************************** MORTAR UNDEPLOYING & EXIT ************************** //
-///////////////////////////////////////////////////////////////////////////////////////
 
 // New replicated client-to-server function called when player undeploys mortar, to send server to state Undeploying
 function ServerUndeploying()
@@ -415,6 +317,12 @@ function Undeploy()
     }
 }
 
+// Emptied out as can't switch positions
+simulated function SwitchWeapon(byte F)
+{
+}
+
+// Modified to transfer ammo from mortar to player, to update player's mortar ammo resupply status, to force player to exit in crouched stance, & to reset to idle state
 function bool KDriverLeave(bool bForceLeave)
 {
     local Pawn P;
@@ -491,9 +399,9 @@ function ServerFire()
 // New keybound function to toggle the selected ammo type
 exec function SwitchFireMode()
 {
-    if (Mortar != none && Mortar.bMultipleRoundTypes)
+    if (DHMortarVehicleWeapon(Gun) != none && Gun.bMultipleRoundTypes)
     {
-        Mortar.ToggleRoundType();
+        DHMortarVehicleWeapon(Gun).ToggleRoundType();
     }
 }
 
@@ -520,10 +428,10 @@ function DriverEnterTransferAmmunition(Pawn P)
 
     DHP = DHPawn(P);
 
-    if (DHP != none && Mortar != none)
+    if (DHP != none && Gun != none)
     {
-        Mortar.MainAmmoCharge[0] = Clamp(Mortar.MainAmmoCharge[0] + DHP.MortarHEAmmo, 0, GunClass.default.InitialPrimaryAmmo);
-        Mortar.MainAmmoCharge[1] = Clamp(Mortar.MainAmmoCharge[1] + DHP.MortarSmokeAmmo, 0, GunClass.default.InitialSecondaryAmmo);
+        Gun.MainAmmoCharge[0] = Clamp(Gun.MainAmmoCharge[0] + DHP.MortarHEAmmo, 0, GunClass.default.InitialPrimaryAmmo);
+        Gun.MainAmmoCharge[1] = Clamp(Gun.MainAmmoCharge[1] + DHP.MortarSmokeAmmo, 0, GunClass.default.InitialSecondaryAmmo);
 
         DHP.MortarHEAmmo = 0;
         DHP.MortarSmokeAmmo = 0;
@@ -539,12 +447,12 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
 
     DHP = DHPawn(P);
 
-    if (DHP != none && Mortar != none)
+    if (DHP != none && Gun != none)
     {
-        DHP.MortarHEAmmo = Mortar.MainAmmoCharge[0];
-        DHP.MortarSmokeAmmo = Mortar.MainAmmoCharge[1];
-        Mortar.MainAmmoCharge[0] = 0;
-        Mortar.MainAmmoCharge[1] = 0;
+        DHP.MortarHEAmmo = Gun.MainAmmoCharge[0];
+        DHP.MortarSmokeAmmo = Gun.MainAmmoCharge[1];
+        Gun.MainAmmoCharge[0] = 0;
+        Gun.MainAmmoCharge[1] = 0;
 
         if (DHMortarVehicle(VehicleBase) != none)
         {
@@ -577,7 +485,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (Mortar != none && Mortar.HasAmmo(Mortar.GetFireMode()))
+        if (VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('Firing');
         }
@@ -596,17 +504,19 @@ simulated state Idle
 
             return;
         }
-        else if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && Mortar != none)
+        else
+
+        if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && DHMortarVehicleWeapon(Gun) != none)
         {
             LastElevationTime = Level.TimeSeconds;
 
             if (PitchChange < 0.0)
             {
-                Mortar.Elevate();
+                DHMortarVehicleWeapon(Gun).Elevate();
             }
             else
             {
-                Mortar.Depress();
+                DHMortarVehicleWeapon(Gun).Depress();
             }
         }
         else if (YawChange != 0.0)
@@ -620,10 +530,7 @@ simulated state Idle
 simulated state Busy
 {
     function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
-    function IncrementRange() { }
-    function DecrementRange() { }
-    function Fire(optional float F) { }
-    function AltFire(optional float F) { }
+    simulated function Fire(optional float F) { }
     simulated exec function SwitchFireMode() { }
     exec function Deploy() { }
     function bool KDriverLeave(bool bForceLeave) {return false;}
@@ -648,7 +555,7 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (Mortar != none && Mortar.HasAmmo(Mortar.GetFireMode()))
+        if (VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -753,7 +660,7 @@ Begin:
         ClientMessage("Missing animation: DriverUnflinchAnim" @ DriverUnflinchAnim);
     }
 
-    if (bPendingFire && Mortar != none && Mortar.HasAmmo(Mortar.GetFireMode()))
+    if (bPendingFire && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
     {
         GotoState('Firing');
     }
@@ -775,9 +682,9 @@ Begin:
         Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
     }
 
-    if (Role < ROLE_Authority && Mortar != none)
+    if (Role < ROLE_Authority && DHMortarVehicleWeapon(Gun) != none)
     {
-        Mortar.CheckUpdateFiringSettings();
+        DHMortarVehicleWeapon(Gun).CheckUpdateFiringSettings();
     }
 
     ServerFire();
@@ -846,114 +753,25 @@ Begin:
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-//  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
-///////////////////////////////////////////////////////////////////////////////////////
-
-// Modified to call Initialize-X functions to do set up in the related vehicle classes that requires actor references to different vehicle actors
-// This is where we do it servers or single player (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
-function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
-{
-    super.AttachToVehicle(VehiclePawn, WeaponBone);
-
-    if (Role == ROLE_Authority)
-    {
-        InitializeVehicleWeapon();
-        InitializeVehicleBase();
-    }
-}
-
-// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeapon actor
-// Using it to set a convenient Mortar reference
-simulated function InitializeVehicleWeapon()
-{
-    Mortar = DHMortarVehicleWeapon(Gun);
-
-    if (Mortar != none)
-    {
-        Mortar.InitializeWeaponPawn(self);
-    }
-    else
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMortarVehicleWeapon, so lots of things are not going to work!");
-    }
-
-    // If we also have the Vehicle actor, initialize anything we need to do where we need both actors
-    if (VehicleBase != none && !bInitializedVehicleAndGun)
-    {
-        InitializeVehicleAndWeapon();
-    }
-}
-
-// Matt: new function to do set up that requires the 'VehicleBase' reference to the Vehicle actor
-// Using it to set StoredVehicleRotation on net client if replication timing issues stopped that happening in ClientKDriverEnter()
-// And to give the VehicleBase a reference to this actor in its WeaponPawns array, each time we spawn on a net client (previously in PostNetReceive)
-simulated function InitializeVehicleBase()
-{
-    local bool bAddSelfToWeaponPawns;
-    local int  i;
-
-    if (Role < ROLE_Authority)
-    {
-        // We need to set StoredVehicleRotation as were unable to do it from ClientKDriverEnter() because we hadn't then received our VehicleBase reference
-        if (bNeedToStoreVehicleRotation)
-        {
-            StoredVehicleRotation = VehicleBase.Rotation;
-        }
-
-        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
-        // First check if our WeaponPawns slot doesn't exist, is empty or has an invalid member
-        if (PositionInArray >= VehicleBase.WeaponPawns.Length || VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none)
-        {
-            bAddSelfToWeaponPawns = true;
-
-            // Then make sure that somehow another WeaponPawns slot isn't already occupied by this actor or an actor of the same class
-            for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
-            {
-                if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
-                {
-                    bAddSelfToWeaponPawns = false;
-                    break;
-                }
-            }
-        }
-
-        if (bAddSelfToWeaponPawns)
-        {
-            VehicleBase.WeaponPawns[PositionInArray] = self;
-        }
-    }
-
-    // If we also have the VehicleWeapon actor, initialize anything we need to do where we need both actors
-    if (Gun != none && !bInitializedVehicleAndGun)
-    {
-        InitializeVehicleAndWeapon();
-    }
-}
-
-// Matt: new function to do set up that requires both the 'VehicleBase' & 'Gun' references to the Vehicle & VehicleWeapon actors
-// Currently unused but putting it in for consistency & for future usage, including option to easily subclass for any mortar-specific set up
-simulated function InitializeVehicleAndWeapon()
-{
-    bInitializedVehicleAndGun = true;
-}
-
-// From ROTankCannonPawn
+// From ROTankCannonPawn (re-factored slightly)
+// The global function - is overridden in various activity states
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    if (Gun == none || !Gun.bUseTankTurretRotation)
+    if (Gun != none && Gun.bUseTankTurretRotation)
     {
-        return;
-    }
+        UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
 
-    UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
-
-    if (ROPlayer(Controller) != none)
-    {
-        ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-        ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        if (IsHumanControlled())
+        {
+            PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+            PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        }
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  *********************************  ANIMATIONS  ********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to set a new CurrentAnimationIndex & play the relevant animations, & for a net client to replicate the CurrentAnimationIndex to the server
 simulated function SetCurrentAnimationIndex(byte AnimIndex)
@@ -992,9 +810,9 @@ simulated function PlayThirdPersonAnimations()
             break;
 
         case FiringAnimIndex:
-            if (Mortar != none)
+            if (DHMortarVehicleWeapon(Gun) != none)
             {
-                Mortar.PlayAnim(Mortar.GunFiringAnim);
+                Gun.PlayAnim(DHMortarVehicleWeapon(Gun).GunFiringAnim);
             }
 
             if (Driver != none)
@@ -1041,9 +859,7 @@ simulated function PlayFirstPersonAnimation(name Anim, optional bool bLoop, opti
 defaultproperties
 {
     // Mortar operator, aiming & undeploying
-    bKeepDriverAuxCollision=true
     bSinglePositionExposed=true
-    bCustomAiming=true
     ElevationAdjustmentDelay=0.125
     UndeployingDuration=2.0 // just a fallback, in case we forget to set one for the specific mortar
 
@@ -1054,11 +870,10 @@ defaultproperties
     HUDOverlayFOV=90.0
     HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
     Digits=(DigitTexture=texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))
-    bPCRelativeFPRotation=true
-    bAllowViewChange=false
     TPCamDistance=128.0
-    TPCamLookat=(Z=16.0)
     TPCamDistRange=(Min=128.0,Max=128.0)
+    TPCamLookat=(X=0.0,Y=0.0,Z=16.0)
+    TPCamWorldOffset=(X=0.0,Y=0.0,Z=0.0)
 
     // Animations
     OverlayIdleAnim="deploy_idle"

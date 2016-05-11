@@ -20,7 +20,7 @@ defaultproperties
     DrivePos=(X=0.0,Y=0.0,Z=-7.0)
     DriveAnim="stand_idlehip_binoc"
     CameraBone="Turret"
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     OverlayCenterSize=0.555
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'

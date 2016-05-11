@@ -128,7 +128,6 @@ var     Actor                     ResupplyAttachment;      // reference to any r
 
 // Debugging
 var     bool        bDebuggingText;
-var     bool        bDebugExitPositions;
 var     bool        bDebugTreadText;
 
 replication
@@ -144,7 +143,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine,
-        ServerToggleDebugExits, ServerDamTrack, ServerKillEngine; // these ones in debug mode only
+        ServerDamTrack, ServerKillEngine; // these ones in debug mode only
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1170,16 +1169,6 @@ function bool PlaceExitingDriver()
     Extent.Y = Driver.default.DrivingRadius ;
     Extent.Z = Driver.default.DrivingHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    // Debug exits - uses DHVehicle class default, allowing bDebugExitPositions to be toggled for all DHVehicles
-    if (class'DHVehicle'.default.bDebugExitPositions)
-    {
-        for (i = 0; i < ExitPositions.Length; ++i)
-        {
-            ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
-            Spawn(class'DHDebugTracer',,, ExitPosition);
-        }
-    }
 
     // Check whether player can be moved to each exit position & use the 1st valid one we find
     for (i = 0; i < ExitPositions.Length; ++i)
@@ -2794,24 +2783,6 @@ exec function ToggleViewLimit()
             bLimitYaw = default.bLimitYaw;
             bLimitPitch = default.bLimitPitch;
         }
-    }
-}
-
-// New exec that allows debugging exit positions to be toggled for all DHVehicles
-exec function ToggleDebugExits()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ServerToggleDebugExits();
-    }
-}
-
-function ServerToggleDebugExits()
-{
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        class'DHVehicle'.default.bDebugExitPositions = !class'DHVehicle'.default.bDebugExitPositions;
-        Log("DHVehicle.bDebugExitPositions =" @ class'DHVehicle'.default.bDebugExitPositions);
     }
 }
 

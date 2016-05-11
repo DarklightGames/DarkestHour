@@ -470,7 +470,7 @@ simulated function bool CanExit()
         {
             DisplayVehicleMessage(4,, true); // must unbutton the hatch
         }
-        else if (MGun != none && MGun.MGPawn != none && MGun.MGPawn.DriverPositions.Length > MGun.MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
+        else if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.DriverPositions.Length > MGun.WeaponPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
         {
             DisplayVehicleMessage(11); // must exit through commander's or MG hatch
         }
@@ -533,9 +533,9 @@ simulated function SetEngine()
         }
     }
 
-    if (Cannon != none && Cannon.CannonPawn != none)
+    if (Cannon != none && DHVehicleCannonPawn(Cannon.WeaponPawn) != none)
     {
-        Cannon.CannonPawn.SetManualTurret(bEngineOff);
+        DHVehicleCannonPawn(Cannon.WeaponPawn).SetManualTurret(bEngineOff);
     }
 }
 
@@ -1210,6 +1210,7 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 // Modified to add all the DH vehicle damage stuff
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
+    local DHVehicleCannonPawn CannonPawn;
     local Controller InstigatorController;
     local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
     local int        InstigatorTeam, i;
@@ -1375,6 +1376,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (!bEngineStoppedProjectile && !bAmmoDetonation) // we can skip lots of checks if either has been flagged true
     {
+        if (bProjectilePenetrated || NewVehHitpoints.Length > 0 && Cannon != none)
+        {
+            CannonPawn = DHVehicleCannonPawn(Cannon.WeaponPawn);
+        }
+
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
         {
@@ -1390,7 +1396,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     // does nothing at present - possibly add in future
                 }
-                else if (Cannon != none && Cannon.CannonPawn != none)
+                else if (CannonPawn != none)
                 {
                     // Hit exposed gunsight optics
                     if (NewVehHitpoints[i].NewHitPointType == NHP_GunOptics)
@@ -1400,7 +1406,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Level.Game.Broadcast(self, "Hit gunsight optics");
                         }
 
-                        Cannon.CannonPawn.DamageCannonOverlay();
+                        CannonPawn.DamageCannonOverlay();
                     }
                     else if (bProjectilePenetrated)
                     {
@@ -1412,7 +1418,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                                 Level.Game.Broadcast(self, "Hit gun/turret traverse");
                             }
 
-                            Cannon.CannonPawn.bTurretRingDamaged = true;
+                            CannonPawn.bTurretRingDamaged = true;
                         }
                         // Hit gun pivot mechanism
                         else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
@@ -1422,7 +1428,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                                 Level.Game.Broadcast(self, "Hit gun pivot");
                             }
 
-                            Cannon.CannonPawn.bGunPivotDamaged = true;
+                            CannonPawn.bGunPivotDamaged = true;
                         }
                     }
                 }
@@ -1454,17 +1460,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     TurretChanceModifier = 1.0;
                 }
 
-                if (Cannon.CannonPawn != none)
+                if (CannonPawn != none)
                 {
                     // Random chance of shrapnel killing commander
-                    if (Cannon.CannonPawn.Driver != none && FRand() < (float(Damage) / CommanderKillChance * TurretChanceModifier))
+                    if (CannonPawn != none && CannonPawn.Driver != none && FRand() < (float(Damage) / CommanderKillChance * TurretChanceModifier))
                     {
                         if (bDebuggingText)
                         {
                             Level.Game.Broadcast(self, "Commander killed by shrapnel");
                         }
 
-                        Cannon.CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                        CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                     }
 
                     // Random chance of shrapnel damaging gunsight optics
@@ -1475,7 +1481,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Level.Game.Broadcast(self, "Gunsight optics destroyed by shrapnel");
                         }
 
-                        Cannon.CannonPawn.DamageCannonOverlay();
+                        CannonPawn.DamageCannonOverlay();
                     }
 
                     // Random chance of shrapnel damaging gun pivot mechanism
@@ -1486,7 +1492,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
                         }
 
-                        Cannon.CannonPawn.bGunPivotDamaged = true;
+                        CannonPawn.bGunPivotDamaged = true;
                     }
 
                     // Random chance of shrapnel damaging gun traverse mechanism
@@ -1497,7 +1503,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
                         }
 
-                        Cannon.CannonPawn.bTurretRingDamaged = true;
+                        CannonPawn.bTurretRingDamaged = true;
                     }
                 }
             }
@@ -1530,14 +1536,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
 
             // Random chance of shrapnel killing hull machine gunner
-            if (MGun != none && MGun.MGPawn != none && MGun.MGPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
+            if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
             {
                 if (bDebuggingText)
                 {
                     Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
                 }
 
-                MGun.MGPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
         }
 

@@ -8,11 +8,12 @@ class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float GetAmmoReloadState()
 {
-    if (Cannon != none)
+    if (VehWep != none)
     {
-        switch (Cannon.ReloadState)
+        switch (VehWep.ReloadState)
         {
             case RL_ReadyToFire:    return 0.0;
+
             case RL_Waiting:
             case RL_Empty:
             case RL_ReloadedPart1:  return 1.0;
@@ -27,12 +28,12 @@ function float GetAmmoReloadState()
 
 defaultproperties
 {
-    ScopeCenterScale=0.635
-    ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
-    CenterRotationFactor=2048
+    RangeRingScale=0.635
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
+    RangeRingRotationFactor=2048
     OverlayCenterSize=0.73333
     UnbuttonedPositionIndex=2
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
     bManualTraverseOnly=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
     BinocPositionIndex=3

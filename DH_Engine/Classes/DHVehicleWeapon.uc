@@ -7,8 +7,9 @@ class DHVehicleWeapon extends ROVehicleWeapon
     abstract;
 
 // General
-var     ROVehicleWeaponPawn WeaponPawn;         // convenient reference to VehicleWeaponPawn actor // TODO: change type to DHVehicleWeaponPawn when that becomes the parent class
+var     DHVehicleWeaponPawn WeaponPawn;         // convenient reference to VehicleWeaponPawn actor
 var     vector              WeaponAttachOffset; // optional positional offset when attaching VehicleWeapon to the hull
+var     bool                bHasTurret;         // this weapon is in a fully rotating turret
 var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
 
 // Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
@@ -39,7 +40,7 @@ var     array<ReloadStage>  ReloadStages;         // stages for multi-part reloa
 var     bool                bReloadPaused;        // a reload has started but was paused, as no longer had a player in a valid reloading position
 
 // MG weapon (hull mounted or coaxial)
-const   ALT_FIREMODE_INDEX = 3;                    // FireMode index for alt fire
+const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
 var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
 var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
@@ -73,7 +74,7 @@ replication
 //  ******************* ACTOR INITIALISATION & KEY ENGINE EVENTS ******************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to attach new collision static mesh actor, if one has been specified
+// Modified to attach any collision static mesh actor
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -130,7 +131,7 @@ simulated function PostNetReceive()
 // Modified to handle DH's extended ammo system & re-factored to reduce lots of code repetition & make some functionality improvement
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-    local byte  FireMode;
+    local byte  AmmoIndex;
     local float ProjectileSpread;
 
     if (Role < ROLE_Authority)
@@ -145,10 +146,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     }
 
     // Stop firing if weapon not ready to fire , or if player has moved to ineligible firing position while holding down fire button
-//  if (!ReadyToFire(bAltFire) || (WeaponPawn != none && !WeaponPawn.CanFire())) // TODO: revert to this 'if' when DHVehicleWeaponPawn implemented, replacing messy 'if' below
-    if (!ReadyToFire(bAltFire)
-        || (DHVehicleCannonPawn(WeaponPawn) != none && !DHVehicleCannonPawn(WeaponPawn).CanFire())
-        || (DHVehicleMGPawn(WeaponPawn) != none && !DHVehicleMGPawn(WeaponPawn).CanFire()))
+    if (!ReadyToFire(bAltFire) || (WeaponPawn != none && !WeaponPawn.CanFire()))
     {
          if (WeaponPawn != none)
          {
@@ -177,8 +175,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
     }
 
     // Decrement our round count (note we've already done a 'have ammo' check in the earlier ReadyToFire() test, so we don't need to check that ConsumeAmmo() returns true)
-    FireMode = GetFireMode(bAltFire);
-    ConsumeAmmo(FireMode);
+    AmmoIndex = GetAmmoIndex(bAltFire);
+    ConsumeAmmo(AmmoIndex);
 
     // Coaxial MG fire
     if (bAltFire)
@@ -203,7 +201,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     }
 
     // Cease fire & try to start a reload, if weapon doesn't use mags or just fired the last round in a mag
-    if ((!bAltFire && !bUsesMags) || !HasAmmo(FireMode))
+    if ((!bAltFire && !bUsesMags) || !HasAmmo(AmmoIndex))
     {
         if (WeaponPawn != none)
         {
@@ -257,15 +255,15 @@ state ProjectileFireMode
     }
 }
 
-// Modified to prevent single shot cannon from firing unless loaded, instead of using generic FireCountdown check (adapted from ROTankCannon)
+// Modified to prevent firing if weapon uses a multi-stage reload & is not loaded, & to only apply FireCountdown check to automatic weapons
 simulated function ClientStartFire(Controller C, bool bAltFire)
 {
-    if (bMultiStageReload && ReloadState != RL_ReadyToFire && !bAltFire) // cannon or hull MG can't fire unless loaded
+    if (bMultiStageReload && ReloadState != RL_ReadyToFire && !bAltFire) // multi-stage reload weapon can't fire unless loaded
     {
         return;
     }
 
-    if (FireCountdown > 0.0 && (bUsesMags || bAltFire)) // coaxial MG or autocannon can't fire unless fire interval has elapsed between shots
+    if (FireCountdown > 0.0 && (bUsesMags || bAltFire)) // automatic weapon can't fire unless fire interval has elapsed between shots
     {
         return;
     }
@@ -295,14 +293,11 @@ simulated function OwnerEffects()
     if (Role < ROLE_Authority)
     {
         // Stop the firing effects if shouldn't be able to fire, or if player moves to ineligible firing position while holding down fire button
-//      if (!ReadyToFire(bIsAltFire) || (WeaponPawn != none && !WeaponPawn.CanFire())) // TODO: revert to this 'if' when DHVehicleWeaponPawn implemented, replacing messy 'if' below
-        if (!ReadyToFire(bIsAltFire)
-            || (DHVehicleCannonPawn(WeaponPawn) != none && !DHVehicleCannonPawn(WeaponPawn).CanFire())
-            || (DHVehicleMGPawn(WeaponPawn) != none && !DHVehicleMGPawn(WeaponPawn).CanFire()))
+        if (!ReadyToFire(bIsAltFire) || (WeaponPawn != none && !WeaponPawn.CanFire()))
         {
             if (WeaponPawn != none)
             {
-                ClientOnlyVehicleCeaseFire(bIsAltFire);
+                WeaponPawn.ClientOnlyVehicleCeaseFire(bIsAltFire);
             }
 
             return;
@@ -329,20 +324,11 @@ simulated function OwnerEffects()
             {
                 FireCountdown = FireInterval;
             }
-            // Cease fire after firing a non-automatic weapon, i.e. a normal cannon, not an autocannon or MG
-            else
+            // After firing a non-automatic weapon, i.e. a normal cannon, server will begin a reload & replicate that to net client (providing we have some ammo)
+            // But there's a slight replication delay, so we'll set client to state waiting, otherwise player can press fire again very quickly & get repeat phantom firing effects
+            else if (ReloadState == RL_ReadyToFire && bMultiStageReload)
             {
-                if (WeaponPawn != none)
-                {
-                    ClientOnlyVehicleCeaseFire(bIsAltFire);
-                }
-
-                // Server will begin a reload & replicate that to net client (providing we have some ammo), but there's a slight replication delay
-                // So we'll set client to state waiting, otherwise player can press fire again very quickly & get repeat phantom firing effects
-                if (ReloadState == RL_ReadyToFire && bMultiStageReload)
-                {
-                    ReloadState = RL_Waiting;
-                }
+                ReloadState = RL_Waiting;
             }
         }
 
@@ -384,22 +370,11 @@ simulated function sound GetFireSound()
     return FireSoundClass;
 }
 
-// TEMP function to handle ClientOnlyVehicleCeaseFire() being in different classes, until DHVehicleWeaponPawn is implemented
-// TODO: change all calls to this function in VehicleWeapon classes to WeaponPawn.ClientOnlyVehicleCeaseFire
-simulated function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
+// New function to play dry-fire effects if trying to fire weapon when empty
+simulated function DryFireEffects(optional bool bAltFire)
 {
-    if (DHVehicleCannonPawn(WeaponPawn) != none)
-    {
-        DHVehicleCannonPawn(WeaponPawn).ClientOnlyVehicleCeaseFire(bWasAltFire);
-    }
-    else if (DHVehicleMGPawn(WeaponPawn) != none)
-    {
-        DHVehicleMGPawn(WeaponPawn).ClientOnlyVehicleCeaseFire(bWasAltFire);
-    }
-    else if (WeaponPawn != none)
-    {
-        WeaponPawn.ClientVehicleCeaseFire(bWasAltFire);
-    }
+    ShakeView(bAltFire);
+    PlaySound(sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -422,15 +397,21 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// Modified to prevent main weapon fire if not loaded
+// New function (in VehicleWeapon class) to use DH's new incremental resupply system - implement in subclasses
+function bool ResupplyAmmo()
+{
+    return false;
+}
+
+// Modified to prevent firing if weapon uses a multi-stage reload & is not loaded
 simulated function bool ReadyToFire(bool bAltFire)
 {
-    if (!bAltFire && bMultiStageReload && ReloadState != RL_ReadyToFire) // cannon or hull MG can't fire unless loaded
+    if (!bAltFire && bMultiStageReload && ReloadState != RL_ReadyToFire)
     {
         return false;
     }
 
-    return HasAmmo(GetFireMode(bAltFire));
+    return HasAmmo(GetAmmoIndex(bAltFire));
 }
 
 // New functions to start a reload process - implement functionality in subclasses
@@ -464,24 +445,19 @@ simulated function bool PlayerUsesManualReloading()
     return false;
 }
 
-// New function to get numeric fire mode from currently selected projectile class
-simulated function byte GetFireMode(optional bool bAltFire, optional class<Projectile> ProjClass)
+// New function to get numeric fire mode from current projectile class
+simulated function byte GetAmmoIndex(optional bool bAltFire)
 {
     if (bAltFire)
     {
-        return ALT_FIREMODE_INDEX;
+        return ALTFIRE_AMMO_INDEX;
     }
 
-    if (ProjClass == none)
-    {
-        ProjClass = ProjectileClass;
-    }
-
-    if (ProjClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
     {
         return 0;
     }
-    else if (ProjClass == SecondaryProjectileClass)
+    else if (ProjectileClass == SecondaryProjectileClass)
     {
         return 1;
     }
@@ -591,7 +567,7 @@ simulated function UpdatePrecacheStaticMeshes()
 
 // Matt: New function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor (called from VehicleWeaponPawn when it receives a reference to this actor)
 // Using it to set a convenient WeaponPawn reference & our Owner & Instigator variables
-simulated function InitializeWeaponPawn(ROVehicleWeaponPawn WeaponPwn) // TODO: change type to DHVehicleWeaponPawn when that is implemented (also change in subclasses)
+simulated function InitializeWeaponPawn(DHVehicleWeaponPawn WeaponPwn)
 {
     if (WeaponPwn != none)
     {

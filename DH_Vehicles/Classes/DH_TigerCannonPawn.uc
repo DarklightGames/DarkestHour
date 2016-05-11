@@ -15,10 +15,10 @@ defaultproperties
     DriveAnim="VTiger_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
     OverlayCenterSize=0.87
-    ScopeCenterScale=0.68
-    ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.tiger_sight_center'
-    CenterRotationFactor=820
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'
+    RangeRingScale=0.68
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.tiger_sight_center'
+    RangeRingRotationFactor=820
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
     PoweredRotateSound=sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'

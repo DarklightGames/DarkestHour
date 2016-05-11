@@ -17,7 +17,7 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bHasAltFire=false
     CameraBone="Turret"
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     OverlayCenterSize=0.555
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'

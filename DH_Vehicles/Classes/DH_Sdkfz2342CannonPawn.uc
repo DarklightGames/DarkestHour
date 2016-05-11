@@ -19,10 +19,10 @@ defaultproperties
     bLockCameraDuringTransition=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
     OverlayCenterSize=0.83
-    ScopeCenterScale=0.635
-    ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
-    CenterRotationFactor=985
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
+    RangeRingScale=0.635
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
+    RangeRingRotationFactor=985
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'

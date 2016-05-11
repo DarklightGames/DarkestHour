@@ -13,7 +13,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)
     DrivePos=(X=18.0,Y=-4.0,Z=-11.0)
     DriveAnim="VHalftrack_Rider6_idle"
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
     OverlayCenterSize=0.961
     OverlayCorrectionX=-3
     RangePositionX=0.02

@@ -43,7 +43,7 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
         PitchChange *= TurnSpeedFactor;
     }
 
-    super(VehicleWeaponPawn).UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
+    super(DHVehicleWeaponPawn).UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
 }
 
 // Modified so camera rotation & offset positioning is always based on the weapon's aim, so player's view always moves with turret

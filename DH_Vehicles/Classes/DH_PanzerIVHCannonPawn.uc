@@ -16,10 +16,10 @@ defaultproperties
     DriveAnim="VKV1_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
     OverlayCenterSize=0.87
-    ScopeCenterScale=0.635
-    ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.PZ4_sight_Center'
-    CenterRotationFactor=985
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    RangeRingScale=0.635
+    RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ4_sight_Center'
+    RangeRingRotationFactor=985
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.electric_turret_traverse'

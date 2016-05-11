@@ -6,8 +6,7 @@
 class DHVehicleMG extends DHVehicleWeapon
     abstract;
 
-var     DHVehicleMGPawn MGPawn;              // just a reference to the MG pawn actor, for convenience & to avoid lots of casts
-var     bool            bMatchSkinToVehicle; // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MGPawn & MG classes
+var     bool    bMatchSkinToVehicle; // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
@@ -31,13 +30,13 @@ simulated function Timer()
     else if (ReloadState < ReloadStages.Length)
     {
         // For earlier reload stages, we only proceed if we have a player in a position where he can reload
-        if (!bReloadPaused && MGPawn != none && MGPawn.Occupied() && MGPawn.CanReload())
+        if (!bReloadPaused && PlayerCanReload() && WeaponPawn.Occupied())
         {
             // Play reloading sound for this stage, if there is one (if MG uses a HUD reload animation, it will usually play its own sound through animation notifies)
             // Only played locally & not broadcast by server to other players, as is not worth the network load just for a reload sound
-            if (ReloadStages[ReloadState].Sound != none && MGPawn.IsLocallyControlled())
+            if (ReloadStages[ReloadState].Sound != none && WeaponPawn.IsLocallyControlled())
             {
-                PlaySound(ReloadStages[ReloadState].Sound, SLOT_Misc, 2.0, , 150.0,, false);
+                PlaySound(ReloadStages[ReloadState].Sound, SLOT_Misc, 2.0);
             }
 
             // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
@@ -58,9 +57,9 @@ simulated function Timer()
         {
             bReloadPaused = true;
 
-            if (MGPawn != none && MGPawn.HUDOverlay != none)
+            if (WeaponPawn != none && WeaponPawn.HUDOverlay != none)
             {
-                MGPawn.HUDOverlay.StopAnimating();
+                WeaponPawn.HUDOverlay.StopAnimating();
             }
         }
     }
@@ -70,7 +69,7 @@ simulated function Timer()
 //  ***************************** FIRING & RELOADING ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New function (in VehicleWeapon class) to use DH's new incremental resupply system
+// Modified to incrementally resupply MG mags (only resupplies spare mags; doesn't reload the MG)
 function bool ResupplyAmmo()
 {
     if (NumMGMags < default.NumMGMags)
@@ -102,7 +101,7 @@ simulated function AttemptReload()
             OldState = ReloadState;
 
             // Start a reload if we have a spare mag & a player in a position where he can reload
-            if (NumMGMags > 0 && MGPawn != none && MGPawn.CanReload())
+            if (NumMGMags > 0 && PlayerCanReload())
             {
                 NumMGMags--;
                 ReloadState = RL_Empty;
@@ -113,9 +112,9 @@ simulated function AttemptReload()
             {
                 ReloadState = RL_Waiting;
 
-                if (MGPawn != none && !MGPawn.CanReload() && MGPawn.IsLocallyControlled() && DHPlayer(MGPawn.Controller) != none) // for SP or owning listen server
+                if (!PlayerCanReload() && Instigator != none && Instigator.IsLocallyControlled() && DHPlayer(Instigator.Controller) != none)
                 {
-                    DHPlayer(MGPawn.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG
+                    DHPlayer(Instigator.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG (for single player or owning listen server)
                 }
             }
 
@@ -127,7 +126,7 @@ simulated function AttemptReload()
         }
     }
     // Resume a paused reload (note owning net client gets this independently from server)
-    else if (bReloadPaused && MGPawn != none && MGPawn.CanReload())
+    else if (bReloadPaused && PlayerCanReload())
     {
         StartReloading();
     }
@@ -145,8 +144,8 @@ simulated function ClientSetReloadState(EReloadState NewState)
         {
             // Start/resume reloading, as we have a player in a position to reload
             // If server starts new reload on unbuttoning, may be possible that net client is still in state ViewTransition when it receives this replicated function call
-            // If so, CanReload would return false & reload would be paused on client, but a split second later client would leave ViewTransition & reload would be resumed
-            if (MGPawn != none && MGPawn.CanReload())
+            // If so, PlayerCanReload() would return false & reload would pause on client, but a split second later client would leave ViewTransition & reload would be resumed
+            if (PlayerCanReload())
             {
                 StartReloading();
             }
@@ -158,9 +157,9 @@ simulated function ClientSetReloadState(EReloadState NewState)
         }
         // If MG is waiting to start a reload, but player isn't in a position where he can reload, show a hint that he needs to unbutton
         // Player will get this if he is firing the MG, runs out of ammo, but isn't in a valid reload position, e.g. buttoned up on remote controlled MG
-        else if (ReloadState == RL_Waiting && MGPawn != none && !MGPawn.CanReload() && DHPlayer(MGPawn.Controller) != none)
+        else if (ReloadState == RL_Waiting && !PlayerCanReload() && Instigator != none && DHPlayer(Instigator.Controller) != none)
         {
-            DHPlayer(MGPawn.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG
+            DHPlayer(Instigator.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG
         }
     }
 }
@@ -176,9 +175,9 @@ simulated function StartReloading()
     SetTimer(0.01, false);
 
     // If MG uses a HUD reload animation, play it
-    if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
+    if (WeaponPawn != none && WeaponPawn.HUDOverlay != none && WeaponPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
     {
-        MGPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
+        WeaponPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
 
         // If we're resuming a paused reload, move the animation to where it left off (add up the previous stage durations)
         if (ReloadState > RL_Empty)
@@ -195,30 +194,23 @@ simulated function StartReloading()
 
             if (ReloadSecondsElapsed > 0.0)
             {
-                MGPawn.HUDOverlay.SetAnimFrame(ReloadSecondsElapsed / TotalReloadDuration);
+                WeaponPawn.HUDOverlay.SetAnimFrame(ReloadSecondsElapsed / TotalReloadDuration);
             }
         }
     }
+}
+
+// New helper function to determine whether player is in a position where he can reload (just to shorten other functions & improve readability)
+simulated function bool PlayerCanReload()
+{
+    return DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).CanReload();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ******************  SETUP, UPDATE, CLEAN UP, MISCELLANEOUS  *******************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to set a convenient MGPawn reference
-simulated function InitializeWeaponPawn(ROVehicleWeaponPawn WeaponPwn)
-{
-    MGPawn = DHVehicleMGPawn(WeaponPwn);
-
-    if (MGPawn == none)
-    {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHVehicleMGPawn, so lots of things are not going to work!");
-    }
-
-    super.InitializeWeaponPawn(WeaponPwn);
-}
-
-// Modified to add option to automatically match MG skin to vehicle skin, e.g. for gunshield, avoiding need for separate MGPawn & MG classes just for camo variants
+// Modified to add option to automatically match MG skin to vehicle skin, e.g. for gunshield, avoiding need for separate MG pawn & MG classes just for camo variants
 // Also to give Vehicle an 'MGun' reference to this actor
 simulated function InitializeVehicleBase()
 {
@@ -237,8 +229,6 @@ simulated function InitializeVehicleBase()
 
 defaultproperties
 {
-    bIsMountedTankMG=true // TODO: deprecate use of this; it serves no purpose as a simple class check achieves the same
-
     // Movement
     bInstantRotation=true
     RotationsPerSecond=0.25

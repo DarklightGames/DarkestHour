@@ -19,11 +19,12 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 // From Sd.Kfz.234/1 cannon pawn
 function float GetAmmoReloadState()
 {
-    if (Cannon != none)
+    if (VehWep != none)
     {
-        switch (Cannon.ReloadState)
+        switch (VehWep.ReloadState)
         {
             case RL_ReadyToFire:    return 0.0;
+
             case RL_Waiting:
             case RL_Empty:
             case RL_ReloadedPart1:  return 1.0;
@@ -49,7 +50,7 @@ defaultproperties
     DriveAnim="VIS2_driver_idle_close"
     DrivePos=(X=-35.0,Y=26.0,Z=13.0)
     CameraBone="Camera_com"
-    CannonScopeOverlay=texture'DH_Artillery_tex.ATGun_Hud.Flakvierling38_sight'
+    GunsightOverlay=texture'DH_Artillery_tex.ATGun_Hud.Flakvierling38_sight'
     OverlayCenterSize=1.0
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'

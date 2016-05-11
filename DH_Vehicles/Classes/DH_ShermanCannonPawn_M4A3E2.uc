@@ -18,9 +18,9 @@ defaultproperties
     BinocPositionIndex=4
     DrivePos=(X=6.0,Y=3.0,Z=0.0)
     DriveAnim="stand_idlehip_binoc"
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman_sight_background'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman_sight_background'
     OverlayCenterSize=0.542
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'

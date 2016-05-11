@@ -12,9 +12,7 @@ defaultproperties
     RangeText="meters"
     RangePositionX=0.02
     bShowRangeRing=true
-    ScopeCenterScale=0.75 // these 3 are range ring properties
-    ScopePositionX=0.237
-    ScopePositionY=0.15
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.German_sight_background'
+    RangeRingScale=0.75
+    GunsightOverlay=texture'DH_VehicleOptics_tex.German.German_sight_background'
     BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
 }

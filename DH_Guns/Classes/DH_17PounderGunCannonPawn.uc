@@ -14,7 +14,7 @@ defaultproperties
     DrivePos=(X=-40.0,Y=-4.0,Z=-42.0)
     DriveAnim="crouch_idlehold_bayo"
     CameraBone="gun01"
-    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
     OverlayCenterSize=0.542
     bShowRangeText=true

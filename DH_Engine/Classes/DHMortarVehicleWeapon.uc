@@ -172,10 +172,10 @@ state ProjectileFireMode
         }
         else
         {
-            if (HasAmmo(GetFireMode()))
+            if (HasAmmo(GetAmmoIndex()))
             {
                 SpawnProjectile(ProjectileClass, false);
-                --MainAmmoCharge[GetFireMode()];
+                --MainAmmoCharge[GetAmmoIndex()];
 
                 // We fired one off, so we are now eligible for resupply
                 if (DHMortarVehicle(Base) != none)
@@ -210,6 +210,8 @@ simulated function ToggleRoundType()
     {
         ProjectileClass = PrimaryProjectileClass;
     }
+
+    PlayClickSound();
 }
 
 // New function to handle resupply of mortar ammo by another player
@@ -226,6 +228,8 @@ function PlayerResupply()
 
 defaultproperties
 {
+    bDebug=true // TEMP
+
     // Mesh & animation
     bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update mortar mesh skeleton (wouldn't otherwise as server doesn't draw mesh)
     bOwnerNoSee=true

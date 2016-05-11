@@ -1257,8 +1257,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 if (Cannon.bMultipleRoundTypes)
                 {
                     // Get ammo types text, font & position
-                    // GetFireMode() & LocalPendingAmmoIndex replace deprecated GetRoundsDescription(Lines) & GetPendingRoundIndex(), with Lines array constructed directly by for loop below
-                    Current = Cannon.GetFireMode();
+                    // GetAmmoIndex() & LocalPendingAmmoIndex replace deprecated GetRoundsDescription(Lines) & GetPendingRoundIndex(), with Lines array constructed directly by for loop below
+                    Current = Cannon.GetAmmoIndex();
                     Pending = Cannon.LocalPendingAmmoIndex;
 
                     for (i = 0; i < Cannon.ProjectileDescriptions.Length; ++i)
@@ -3844,13 +3844,9 @@ exec function GrowHUD()
         {
             DHVehicle(PawnOwner).GrowHUD();
         }
-        else if (PawnOwner.IsA('DHVehicleCannonPawn'))
+        else if (PawnOwner.IsA('DHVehicleWeaponPawn'))
         {
-            DHVehicleCannonPawn(PawnOwner).GrowHUD();
-        }
-        else if (PawnOwner.IsA('DHVehicleMGPawn'))
-        {
-            DHVehicleMGPawn(PawnOwner).GrowHUD();
+            DHVehicleWeaponPawn(PawnOwner).GrowHUD();
         }
     }
     else
@@ -3867,13 +3863,9 @@ exec function ShrinkHUD()
         {
             DHVehicle(PawnOwner).ShrinkHUD();
         }
-        else if (PawnOwner.IsA('DHVehicleCannonPawn'))
+        else if (PawnOwner.IsA('DHVehicleWeaponPawn'))
         {
-            DHVehicleCannonPawn(PawnOwner).ShrinkHUD();
-        }
-        else if (PawnOwner.IsA('DHVehicleMGPawn'))
-        {
-            DHVehicleMGPawn(PawnOwner).ShrinkHUD();
+            DHVehicleWeaponPawn(PawnOwner).ShrinkHUD();
         }
     }
     else

@@ -17,12 +17,12 @@ replication
         bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
 }
 
-// Modified to skip over Super in DH_Flak38Cannon, as handling of mixed mag is instead handled in SpawnProjectile, which now fires two projectiles
+// Modified to skip over Super in DH_Sdkfz2341Cannon, as handling of mixed mag is instead handled in SpawnProjectile, which now fires two projectiles
 state ProjectileFireMode
 {
     function Fire(Controller C)
     {
-        super(ROVehicleWeapon).Fire(C);
+        super(DHVehicleCannon).Fire(C);
     }
 }
 
@@ -92,6 +92,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 // Modified to handle fire effects & animations from alternating pairs of barrels
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
+    local DHVehicleCannonPawn CannonPawn;
     local int FirstBarrelIndex, FireAnimationIndex, i;
 
     if (Role == ROLE_Authority)
@@ -121,6 +122,8 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
                 FlashEmitters[i].Trigger(self, Instigator);
             }
         }
+
+        CannonPawn = DHVehicleCannonPawn(WeaponPawn);
 
         // Work out which cannon firing animation we need & play it (no. 0/1 if on optics, 2/3 if on open sight, 4/5 if head raised)
         if (CannonPawn != none)
