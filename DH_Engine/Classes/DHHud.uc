@@ -1484,9 +1484,11 @@ function DrawSignals(Canvas C)
         switch (i)
         {
             case 0: // SIGNAL_Fire
+                C.DrawColor = class'UColor'.default.OrangeRed;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire';
                 break;
             case 1: // SIGNAL_Move
+                C.DrawColor = class'UColor'.default.MediumOrchid;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move';
                 break;
             default:
