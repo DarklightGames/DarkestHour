@@ -34,6 +34,7 @@ var     float                   FlinchRotTime;
 var     vector                  FlinchOffsetMag;
 var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
+var     float                   FlinchMaxOffset;
 
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
 var     float                   MantleFailTimer;            // makes sure we don't get stuck floating in an object unable to end a mantle
@@ -367,9 +368,10 @@ simulated function PlayerWhizzed(float DistSquared)
 {
     local float Intensity;
 
-    Intensity = 1.0 - ((FMin(DistSquared, 160000.0)) / 160000.0); // this is not the full size of the cylinder, we don't want a flinch on the more distant shots
+    // The magic number below is 75% of the radius of DHBulletWhipAttachment squared!
+    Intensity = 1.0 - ((FMin(DistSquared, 16875.0)) / 16875.0);
 
-    AddBlur(0.75, Intensity);
+    AddBlur(0.85, Intensity);
     PlayerFlinched(Intensity);
 }
 
@@ -377,16 +379,13 @@ simulated function PlayerFlinched(float Intensity)
 {
     local rotator AfterFlinchRotation;
     local float   FlinchRate, FlinchIntensity;
-    local int     MaxFlinch;
 
     if (!Pawn.bBipodDeployed)
     {
-        MaxFlinch = 150.0; // max distance that flinch can ever move
+        FlinchIntensity = Intensity * FlinchMaxOffset;
 
-        FlinchIntensity = Intensity * MaxFlinch;
-
-        AfterFlinchRotation.Pitch = RandRange(FlinchIntensity, MaxFlinch);
-        AfterFlinchRotation.Yaw = RandRange(FlinchIntensity, MaxFlinch);
+        AfterFlinchRotation.Pitch = RandRange(FlinchIntensity, FlinchMaxOffset);
+        AfterFlinchRotation.Yaw = RandRange(FlinchIntensity, FlinchMaxOffset);
 
         if (Rand(2) == 1)
         {
@@ -397,7 +396,7 @@ simulated function PlayerFlinched(float Intensity)
             AfterFlinchRotation.Yaw *= -1;
         }
 
-        FlinchRate = 0.075;
+        FlinchRate = 0.125;
 
         SetRecoil(AfterFlinchRotation,FlinchRate);
     }
@@ -4347,14 +4346,19 @@ defaultproperties
     DHISTurnSpeedFactor=0.5
     DHScopeTurnSpeedFactor=0.2
 
-    // Other values
-    NextSpawnTime=15
+    // Max flinch offset for close snaps
+    FlinchMaxOffset=512.0
+
+    // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchRotTime=1.0
     FlinchOffsetMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchOffsetRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchOffsetTime=1.0
+
+    // Other values
+    NextSpawnTime=15
     MortarTargetIndex=255
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
