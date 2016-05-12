@@ -11,98 +11,6 @@ var localized string SwapAndRestartText;
 var config float MapVoteIntervalDuration;
 var config bool bUseSwapVote;
 
-var array<string> Blacklist;
-
-// Colin: We store the original map name here, so we don't need to parse out
-// the things constantly.
-var array<string> MapListNames;
-
-function OnMapListResponse(int Status, TreeMap_string_string Headers, string Content)
-{
-    local int i, j;
-    local JSONParser P;
-    local JSONValue V;
-    local JSONObject O, M, Root;
-    local JSONArray Array;
-    local array<string> Keys, Values;
-
-    if (Status != 200)
-    {
-        return;
-    }
-
-    P = new class'JSONParser';
-    V = P.Parse(Content);
-
-    if (V == none || !V.IsObject())
-    {
-        return;
-    }
-
-    Root = V.AsObject();
-
-    V = Root.Get("blacklist");
-
-    if (V != none && V.IsArray())
-    {
-        Array = V.AsArray();
-
-        for (i = 0; i < Array.Size(); ++i)
-        {
-            V = Array.Get(i);
-
-            if (V != none && V.IsString())
-            {
-                Blacklist[Blacklist.Length] = V.AsString();
-            }
-        }
-    }
-
-    V = Root.Get("maps");
-
-    if (V != none && V.IsObject())
-    {
-        O = V.AsObject();
-        Keys = O.GetKeys();
-
-        for (i = 0; i < Keys.Length; ++i)
-        {
-            V = O.Get(Keys[i]);
-
-            if (V != none && V.IsObject())
-            {
-                M = V.AsObject();
-
-                j = class'UArray'.static.SIndexOf(MapListNames, Keys[i]);
-
-                if (j >= 0)
-                {
-                    Values[0] = MapList[j].MapName;
-                    Values[1] = M.Get("type").AsString();
-                    Values[2] = M.Get("min_players").AsString();
-                    Values[3] = M.Get("max_players").AsString();
-                    Values[4] = M.Get("quality").AsString();
-
-                    MapList[j].MapName = class'UString'.static.Join(";", Values);
-                }
-            }
-        }
-    }
-}
-
-function PostBeginPlay()
-{
-    local HTTPRequest R;
-
-    super.PostBeginPlay();
-
-    R = Spawn(class'HTTPRequest');
-    R.Host = "www.darkesthour.darklightgames.com";
-    R.Path = "/game/maplist.php";
-    R.OnResponse = OnMapListResponse;
-    R.Send();
-}
-
 // NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
@@ -179,6 +87,16 @@ function PlayerExit(Controller Exiting)
     }
 }
 
+// function to strip prefix
+function string PrepMapStr(string MapName)
+{
+    MapName = Repl(MapName, "DH-", ""); // Remove DH- prefix
+    MapName = Repl(MapName, ".rom", ""); // Remove .rom if it exists
+    MapName = Repl(MapName, "_", " "); // Remove _ for space
+
+    return MapName;
+}
+
 // overidden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
 function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
@@ -214,7 +132,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     if (PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin)  // Administrator Vote
     {
         TextMessage = lmsgAdminMapChange;
-        TextMessage = Repl(TextMessage, "%mapname%", class'DHMapList'.static.GetPrettyName(MapListNames[MapIndex]));
+        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
 
         Level.Game.Broadcast(self, TextMessage);
 
@@ -230,8 +148,8 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 
         bLevelSwitchPending = true;
 
-        MapList[MapIndex].MapName = MapListNames[MapIndex];
         MapInfo = History.PlayMap(MapList[MapIndex].MapName);
+
         ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
 
         log("ServerTravelString = " $ ServerTravelString ,'MapVoteDebug');
@@ -304,9 +222,8 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     {
         TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
         TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
-        TextMessage = Repl(TextMessage, "%mapname%", class'DHMapList'.static.GetPrettyName(MapListNames[MapIndex]));
-
-        Level.Game.Broadcast(self, TextMessage);
+        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
+        Level.Game.Broadcast(self,TextMessage);
     }
 
     UpdateVoteCount(MapIndex, GameIndex, VoteCount);
@@ -585,14 +502,14 @@ function TallyVotes(bool bForceMapSwitch)
             return;
         }
 
-        TextMessage = Repl(lmsgMapWon, "%mapname%", class'DHMapList'.static.GetPrettyName(MapListNames[topmap - topmap/MapCount * MapCount]));
-
-        Level.Game.Broadcast(self, TextMessage);
+        TextMessage = lmsgMapWon;
+        TextMessage = repl(TextMessage,"%mapname%",MapList[topmap - topmap/MapCount * MapCount].MapName $ "(" $ GameConfig[topmap/MapCount].Acronym $ ")");
+        Level.Game.Broadcast(self,TextMessage);
 
         CloseAllVoteWindows();
 
-        MapList[topmap - topmap/MapCount * MapCount].MapName = MapListNames[topmap - topmap/MapCount * MapCount];
         MapInfo = History.PlayMap(MapList[topmap - topmap/MapCount * MapCount].MapName);
+
         ServerTravelString = SetupGameMap(MapList[topmap - topmap/MapCount * MapCount], topmap/MapCount, MapInfo);
 
         log("ServerTravelString = " $ ServerTravelString ,'MapVoteDebug');
@@ -734,51 +651,6 @@ function LoadMapList()
     }
 
     Loader.Destroy();
-}
-
-function AddMap(string MapName, string Mutators, string GameOptions) // called from the MapListLoader
-{
-    local MapHistoryInfo MapInfo;
-    local bool bUpdate;
-    local int i;
-
-    for(i=0; i < MapList.Length; i++)  // dont add duplicate map names
-        if (MapName ~= MapList[i].MapName)
-            return;
-
-    MapInfo = History.GetMapHistory(MapName);
-
-    MapList.Length = MapCount + 1;
-    MapList[MapCount].MapName = MapName;
-    MapListNames[MapCount] = MapName;
-    MapList[MapCount].PlayCount = MapInfo.P;
-    MapList[MapCount].Sequence = MapInfo.S;
-    if (MapInfo.S <= RepeatLimit && MapInfo.S != 0)
-        MapList[MapCount].bEnabled = false; // dont allow players to vote for this one
-    else
-        MapList[MapCount].bEnabled = true;
-    MapCount++;
-
-    if (Mutators != "" && Mutators != MapInfo.U)
-    {
-        MapInfo.U = Mutators;
-        bUpdate = true;
-    }
-
-    if (GameOptions != "" && GameOptions != MapInfo.G)
-    {
-        MapInfo.G = GameOptions;
-        bUpdate = true;
-    }
-
-    if (MapInfo.M == "") // if map not found in MapVoteHistory then add it
-    {
-        MapInfo.M = MapName;
-        bUpdate = true;
-    }
-
-    if (bUpdate)
-        History.AddMap(MapInfo);
 }
 
 defaultproperties
