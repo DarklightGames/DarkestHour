@@ -11,6 +11,12 @@ enum ELoadoutMode
     LM_Vehicle
 };
 
+enum EMapMode
+{
+    MODE_Map,
+    MODE_Squads
+};
+
 var automated   FloatingImage               i_Background;
 var automated   ROGUIProportionalContainer  c_Teams;
 var automated   GUIButton                       b_Axis;
@@ -53,7 +59,6 @@ var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
 var automated   DHGUIListBox                lb_Vehicles;
-var automated   GUISlider                   s_Ammunition;
 var             DHGUIList                   li_Vehicles;
 var automated   DHGUIListBox                lb_PrimaryWeapons;
 var             DHGUIList                   li_PrimaryWeapons;
@@ -63,6 +68,7 @@ var automated   array<GUIButton>            b_MenuOptions;
 
 var DHGameReplicationInfo                   GRI;
 var DHSquadReplicationInfo                  SRI;
+var DHPlayerReplicationInfo                 PRI;
 var DHPlayer                                PC;
 
 var localized   string                      NoneText;
@@ -86,6 +92,8 @@ var             byte                        SpawnVehicleIndex;
 var             bool                        bButtonsEnabled;
 
 var             material                    VehicleNoneMaterial;
+
+var             EMapMode                    MapMode;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -132,8 +140,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Map.ManageComponent(i_MapBorder);
     c_Map.ManageComponent(p_Map);
 
-    c_MapRoot.ManageComponent(c_Squads);
-
     c_Squads.ManageComponent(p_Squads);
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
@@ -155,6 +161,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Vehicle.ManageComponent(lb_Vehicles);
 
     c_Roles.ManageComponent(lb_Roles);
+
+    SetMapMode(MODE_Map);
 }
 
 function SetLoadoutMode(ELoadoutMode Mode)
@@ -254,6 +262,11 @@ function Timer()
     if (SRI == none)
     {
         SRI = PC.SquadReplicationInfo;
+    }
+
+    if (PRI == none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     }
 
     if (GRI != none)
@@ -1293,55 +1306,194 @@ function bool InternalOnPreDraw(Canvas C)
     return super.OnPreDraw(C);
 }
 
-function UpdateSquads() // Matt: TEMP commented out as something seems to be wrong - squad stuff is stopping player selecting spawn point & deploying
+function ToggleMapMode()
 {
-    local int i, j, MemberCount;
-    local bool bIsSquadActive, bIsSquadLocked, bIsSquadFull;
-    local array<DHPlayerReplicationInfo> Members;
+    if (MapMode == MODE_Map)
+    {
+        SetMapMode(MODE_Squads);
+    }
+    else if (MapMode == MODE_Squads)
+    {
+        SetMapMode(MODE_Map);
+    }
+}
 
-    if (SRI == none)
+function SetMapMode(EMapMode Mode)
+{
+    local int i;
+
+    MapMode = Mode;
+
+    switch (MapMode)
+    {
+        case MODE_Map:
+            c_Map.SetVisibility(true);
+            c_Squads.SetVisibility(false);
+            p_Squads.DisableMe();
+            break;
+        case MODE_Squads:
+            c_Map.SetVisibility(false);
+            c_Squads.SetVisibility(true);
+            p_Squads.EnableMe();
+            break;
+        default:
+            Warn("Unhandled map mode");
+            break;
+    }
+
+    UpdateSquads();
+}
+
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
+{
+    local Interactions.EInputKey K;
+    local Interactions.EInputAction A;
+
+    K = EInputKey(Key);
+    A = EInputAction(State);
+
+    Log(K @ State @ Delta);
+
+    if (K == IK_Tab && A == IST_Release)
+    {
+        ToggleMapMode();
+        return true;
+    }
+
+    return super.OnKeyEvent(Key, State, Delta);
+}
+
+function UpdateSquads()
+{
+    local int i, j, k;
+    local int TeamIndex;
+    local bool bIsInSquad;
+    local bool bIsInASquad;
+    local bool bIsSquadLeader;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHGUISquadComponent C;
+
+    super.Timer();
+
+    // HACK: this GUI system is madness and requires me to do stupid things
+    // like this in order for it to work.
+    if (MapMode != MODE_Squads)
+    {
+        for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+        {
+            C = p_Squads.SquadComponents[i];
+            SetVisible(C.lb_Members, false);
+            SetVisible(C.li_Members, false);
+            SetVisible(C.eb_SquadName, false);
+            SetVisible(C.b_CreateSquad, false);
+            SetVisible(C.b_JoinSquad, false);
+            SetVisible(C.b_LeaveSquad, false);
+            //SetVisible(C.b_LockSquad, false);
+        }
+
+        return;
+    }
+
+    if (PC == none || PRI == none || SRI == none)
     {
         return;
     }
 
-    for (i = 0; i < SRI.GetTeamSquadLimit(CurrentTeam) ; ++i)
+    TeamIndex = PC.GetTeamNum();
+
+    if (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX)
     {
-        bIsSquadActive = SRI.IsSquadActive(CurrentTeam, i);
-/*
-        p_Squads.SquadComponents[i].b_CreateSquad.bVisible = !bIsSquadActive;
-        p_Squads.SquadComponents[i].lb_Members.bVisible = bIsSquadActive;
-        p_Squads.SquadComponents[i].l_SquadName.bVisible = bIsSquadActive;
-*/
-        if (!bIsSquadActive)
+        return;
+    }
+
+    if (PRI == none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        if (PRI == none)
+        {
+            return;
+        }
+    }
+
+    bIsInASquad = PRI.IsInSquad();
+
+    // Go through the active squads
+    for (i = 0; i < SRI.GetTeamSquadLimit(TeamIndex); ++i)
+    {
+        if (!SRI.IsSquadActive(TeamIndex, i))
         {
             continue;
         }
-/*
-        p_Squads.SquadComponents[i].l_SquadName.Caption = SRI.GetSquadName(CurrentTeam, i);
-*/
-        bIsSquadLocked = SRI.IsSquadLocked(CurrentTeam, i);
-        bIsSquadFull = SRI.IsSquadFull(CurrentTeam, i);
-        MemberCount = SRI.GetMemberCount(CurrentTeam, i);
 
-        if (bIsSquadLocked)
+        C = p_Squads.SquadComponents[j];
+
+        SetVisible(C, true);
+
+        bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
+        bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
+
+        SetVisible(C.lb_Members, true);
+        SetVisible(C.li_Members, true);
+        SetVisible(C.l_SquadName, true);
+        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_JoinSquad, !bIsInSquad);
+        SetVisible(C.b_LeaveSquad, bIsInSquad);
+        //C.b_LockSquad.SetVisibility(bIsSquadLeader);
+        SetVisible(C.eb_SquadName, bIsSquadLeader);
+
+        C.l_SquadName.Caption = SRI.GetSquadName(TeamIndex, i);
+
+        SRI.GetMembers(TeamIndex, i, Members);
+
+        // TODO: we'll need to do something about this because I'm pretty sure
+        // this is going to fuck up our selection
+        C.li_Members.Clear();
+
+        for (k = 0; k < Members.Length; ++k)
         {
-            // TODO: set up lock button
+            C.li_Members.Add(Members[k].SquadMemberIndex + 1 $ "." @ Members[i].PlayerName);
         }
 
-        if (bIsSquadFull || bIsSquadLocked)
+        ++j;
+    }
+
+    if (!bIsInASquad && j < p_Squads.SquadComponents.Length)
+    {
+        C = p_Squads.SquadComponents[j++];
+
+        SetVisible(C.lb_Members, false);
+        SetVisible(C.li_Members, false);
+        SetVisible(C.l_SquadName, false);
+        SetVisible(C.b_CreateSquad, true);
+        SetVisible(C.b_JoinSquad, false);
+        SetVisible(C.b_LeaveSquad, false);
+        //SetVisible(C.b_LockSquad, false);
+        SetVisible(C.eb_SquadName, false);
+    }
+
+    while(j < p_Squads.SquadComponents.Length)
+    {
+        SetVisible(p_Squads.SquadComponents[j], false);
+
+        ++j;
+    }
+}
+
+function static SetVisible(GUIComponent C, bool bVisible)
+{
+    if (C != none)
+    {
+        C.SetVisibility(bVisible);
+
+        if (bVisible)
         {
-            // TODO: disable join button
+            C.EnableMe();
         }
-
-        // TODO: display member count (eg. (2/8))
-        SRI.GetMembers(CurrentTeam, i, Members);
-
-        p_Squads.SquadComponents[i].li_Members.Clear();
-/*
-        for (j = 0; j < Members.Length; ++j)
+        else
         {
-            p_Squads.SquadComponents[i].li_Members.Add(Members[j].SquadMemberIndex $ "." @ Members[j].PlayerName, Members[i]);
-        }*/
+            C.DisableMe();
+        }
     }
 }
 
@@ -1915,8 +2067,8 @@ defaultproperties
         bNeverFocus=true
     End Object
     c_Squads=SquadsContainerObject
-/*
-    Begin Object Class=DHGUISquadsComponent Name=SquadsComponentObject // Matt: TEMP commented out as something seems to be wrong - squad stuff is stopping player selecting spawn point & deploying
+
+    Begin Object Class=DHGUISquadsComponent Name=SquadsComponentObject
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
@@ -1924,19 +2076,17 @@ defaultproperties
         bNeverFocus=true
     End Object
     p_Squads=SquadsComponentObject
-*/
+
     NoneText="None"
     SelectRoleText="Select a role"
     SelectSpawnPointText="Select a spawn point"
     DeployInTimeText="Press Continue to deploy ({0})"
     DeployNowText="Press Continue to deploy now!"
-
     bButtonsEnabled=true
-
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
     NextChangeTeamTime=0.0
-
     OnPreDraw=InternalOnPreDraw
-
     ReservedString="Reserved"
+    OnKeyEvent=InternalOnKeyEvent
+    MapMode=MODE_Map
 }

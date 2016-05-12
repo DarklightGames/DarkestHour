@@ -47,6 +47,11 @@ function bool InternalOnDraw(Canvas C)
 {
     local ROHud.AbsoluteCoordsInfo SubCoords;
 
+    if (!bVisible)
+    {
+        return false;
+    }
+
     SubCoords.PosX = ActualLeft();
     SubCoords.PosY = ActualTop();
     SubCoords.Width = ActualWidth();

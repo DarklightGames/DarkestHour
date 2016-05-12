@@ -7,6 +7,38 @@ class DHGUISquadsComponent extends GUIPanel;
 
 var automated array<DHGUISquadComponent> SquadComponents;
 
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    local int i;
+
+    super.InitComponent(MyController, MyOwner);
+
+    for (i = 0; i < SquadComponents.Length; ++i)
+    {
+        SquadComponents[i].SquadIndex = i;
+    }
+}
+
+function InternalOnShow()
+{
+    local int i;
+
+    for (i = 0; i < SquadComponents.Length; ++i)
+    {
+        SquadComponents[i].SetVisibility(true);
+    }
+}
+
+function InternalOnHide()
+{
+    local int i;
+
+    for (i = 0; i < SquadComponents.Length; ++i)
+    {
+        SquadComponents[i].SetVisibility(false);
+    }
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUISquadComponent Name=SquadComponent0
@@ -72,5 +104,8 @@ defaultproperties
         WinTop=0.5
     End Object
     SquadComponents(7)=SquadComponent7
+
+    //OnHide=InternalOnHide
+    //OnShow=InternalOnShow
 }
 

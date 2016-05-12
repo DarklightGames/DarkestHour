@@ -192,6 +192,11 @@ simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
 {
     local int i;
 
+    if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
+    {
+        return false;
+    }
+
     for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
     {
         if (GetMember(TeamIndex, SquadIndex, i) != none)
@@ -315,8 +320,8 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
     {
         if (!IsSquadActive(TeamIndex, i))
         {
-            SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
             SetName(TeamIndex, i, Name);
+            SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
 
             VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
 
