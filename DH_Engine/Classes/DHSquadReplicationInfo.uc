@@ -829,6 +829,8 @@ simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerR
     local int i;
     local DHPlayerReplicationInfo PRI;
 
+    Members.Length = 0;
+
     if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         return;
