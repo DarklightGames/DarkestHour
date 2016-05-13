@@ -112,6 +112,12 @@ defaultproperties
     PurgeCacheDaysText(2)="Yearly"
     IDText="ID:"
     HashReqText="Must join multiplayer first"
+
+    NetSpeedText(0)="Modem (2600)"
+    NetSpeedText(1)="ISDN (5000)"
+    NetSpeedText(2)="Cable/ADSL (10000)"
+    NetSpeedText(3)="LAN/T1 (15000)"
+
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Gameplay"
         WinTop=0.05
