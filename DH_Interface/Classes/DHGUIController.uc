@@ -176,6 +176,7 @@ defaultproperties
     DefaultStyleNames(89)="DH_Interface.DHStyle_MenuTextButtonWhite"
     DefaultStyleNames(90)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
     DefaultStyleNames(91)="DH_Interface.DHStyle_LargeEditBox"
+    DefaultStyleNames(92)="DH_Interface.DHStyle_ServerBrowserGridRed"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
