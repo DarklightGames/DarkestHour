@@ -3,9 +3,41 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHMapVotingPage extends MapVotingPage;
+class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
 
-var localized string                lmsgMapQAFailed;
+var localized string                            lmsgMapQAFailed,
+                                                lmsgMapOutOfBounds;
+
+var(DHMapVotingInfo) config array<string>       MapVoteInfo;
+
+function InternalOnOpen()
+{
+    local int i, m;
+
+    super.InternalOnOpen();
+
+    // Loops the Vote Replication Map List, foreach map, it loops the client's MapList config and if matches, changes the string
+    if (MVRI != none || !MVRI.bMapVote)
+    {
+        for (m = 0; m < MVRI.MapList.Length; m++)
+        {
+            for (i = 0; i < MapVoteInfo.Length; ++i)
+            {
+                if (MVRI.MapList[m].MapName ~= Left(MapVoteInfo[i], Len(MVRI.MapList[m].MapName)))
+                {
+                    MVRI.MapList[m].MapName = MapVoteInfo[i];
+
+                    // Disable the level completely if it has been blacklisted!
+                    if (InStr(MapVoteInfo[i], "BLACKLISTED") != -1)
+                    {
+                        MVRI.MapList[m].bEnabled = false;
+                    }
+                }
+            }
+        }
+    }
+
+}
 
 function bool AlignBK(Canvas C)
 {
@@ -20,6 +52,7 @@ function bool AlignBK(Canvas C)
 function SendVote(GUIComponent Sender)
 {
     local int MapIndex, GameConfigIndex;
+    local array<string> Parts;
 
     if (Sender == lb_VoteCountListBox.List)
     {
@@ -29,7 +62,26 @@ function SendVote(GUIComponent Sender)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
 
-            if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
+            // Split the mapname string, which may be consolitated with other variables
+            Split(MVRI.MapList[MapIndex].MapName, ";", Parts);
+
+            // Do a check if the current player count is in bounds of recommended range or if level has failed QA
+            if (Parts.Length >= 5)
+            {
+                if (Parts[4] ~= "Failed")
+                {
+                    PlayerOwner().ClientMessage(lmsgMapQAFailed);
+                    return;
+                }
+
+                if (DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length < int(Parts[2]) ||
+                    DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length > int(Parts[3]))
+                {
+                    PlayerOwner().ClientMessage(lmsgMapOutOfBounds);
+                    return;
+                }
+            }
+            else if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
                 MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
@@ -50,11 +102,6 @@ function SendVote(GUIComponent Sender)
             if(MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
                 MVRI.SendMapVote(MapIndex,GameConfigIndex);
-
-                // Theel:
-                //if (level has failed QA)
-                    // vote succedes, but lets send a client message to let them know their vote is silent
-                    // PlayerOwner().ClientMessage(lmsgMapQAFailed);
             }
             else
             {
@@ -66,7 +113,10 @@ function SendVote(GUIComponent Sender)
 
 defaultproperties
 {
-    lmsgMapQAFailed="Because this map has failed quality assurance, this vote is silent."
+    lmsgMapQAFailed="Maps that fail quality assurance cannot be voted for in the nomination area."
+    lmsgMapOutOfBounds="Maps with player range not suitable for current players cannot be voted for in the nomination area."
+
+    lmsgMode(0)="Majority Wins"
 
     Begin Object class=DHMapVoteMultiColumnListBox Name=MapListBox
         WinWidth=0.96
@@ -87,8 +137,10 @@ defaultproperties
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
     Begin Object class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
-        HeaderColumnPerc(0)=0.4
+        HeaderColumnPerc(0)=0.3
         HeaderColumnPerc(1)=0.2
+        HeaderColumnPerc(2)=0.2
+        HeaderColumnPerc(3)=0.3
         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
         bVisibleWhenEmpty=true
         OnCreateComponent=VoteCountListBox.InternalOnCreateComponent

@@ -5,12 +5,23 @@
 
 class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
 
-// Override to remove any prefix from lists
+var(Style) string                RedListStyleName; // Name of the style to use for when current player is out of recommended player range
+var(Style) noexport GUIStyles    RedListStyle;
+
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    Super.InitComponent(MyController,MyOwner);
+
+    if (RedListStyleName != "" && RedListStyle == None)
+        RedListStyle = MyController.GetStyle(RedListStyleName,FontScale);
+}
+
+// Override to remove any prefix from lists and handle new features
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)
 {
     local float CellLeft, CellWidth;
     local eMenuState MState;
-    local GUIStyles DrawStyle;
+    local GUIStyles DrawStyle, OldDrawTyle;
     local array<string> Parts;
 
     if (VRI == none)
@@ -40,6 +51,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         DrawStyle = Style;
     }
 
+    // Draw disabled state
     if (!VRI.MapList[MapVoteData[SortData[i].SortItem]].bEnabled)
     {
         MState = MSAT_Disabled;
@@ -49,8 +61,10 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         MState = MenuState;
     }
 
+    // Split the mapname string, which may be consolitated with other variables
     Split(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, ";", Parts);
 
+    // Begin Drawing!
     // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
     DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(Parts[0]), FontScale);
@@ -60,7 +74,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetMapSource(Parts[0]), FontScale);
 
     // Type
-    if (Parts.Length >= 3)
+    if (Parts.Length >= 2)
     {
         GetCellLeftWidth(2, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[1], FontScale);
@@ -70,14 +84,48 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     if (Parts.Length >= 4)
     {
         GetCellLeftWidth(3, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[2] $ "-" $ Parts[3], FontScale);
+
+        // Do a check if the current player count is in bounds of recommended range
+        if ((DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length < int(Parts[2]) ||
+            DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length > int(Parts[3])) &&
+            MState != MSAT_Disabled)
+        {
+            OldDrawTyle = DrawStyle;
+            DrawStyle = RedListStyle;
+
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[2] $ "-" $ Parts[3], FontScale);
+
+            DrawStyle = OldDrawTyle;
+        }
+        else
+        {
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[2] $ "-" $ Parts[3], FontScale);
+        }
     }
 
     // Quality Control
     if (Parts.Length >= 5)
     {
         GetCellLeftWidth(4, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+
+        if (Parts[4] ~= "Failed" && MState != MSAT_Disabled)
+        {
+            OldDrawTyle = DrawStyle;
+            DrawStyle = RedListStyle;
+
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+
+            DrawStyle = OldDrawTyle;
+        }
+        else
+        {
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+        }
+    }
+    else
+    {
+        GetCellLeftWidth(4, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, "Pending", FontScale);
     }
 
     // Author
@@ -88,7 +136,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     }
 }
 
-//will need a way to sort stuff
+// Theel: will need a way to sort stuff
 function string GetSortString( int i )
 {
     local string ColumnData[6];
@@ -126,4 +174,6 @@ defaultproperties
     ColumnHeadingHints(3)="Recommended players for the map."
     ColumnHeadingHints(4)="Whether or not the level has passed official quality control."
     ColumnHeadingHints(5)="The map's creator(s)."
+
+    RedListStyleName="DHListRed"
 }
