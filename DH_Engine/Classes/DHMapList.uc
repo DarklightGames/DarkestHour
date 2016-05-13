@@ -86,7 +86,7 @@ defaultproperties
     OfficialMaps(14)="DH-Hurtgenwald.rom"
     OfficialMaps(15)="DH-Juno_Beach.rom"
     OfficialMaps(16)="DH-Kommerscheidt.rom"
-    OfficialMaps(17)="DH-La_Campbe.rom"
+    OfficialMaps(17)="DH-La_Cambe.rom"
     OfficialMaps(18)="DH-La_Chapelle.rom"
     OfficialMaps(19)="DH-La_Gleize.rom"
     OfficialMaps(20)="DH-La_Monderie.rom"
