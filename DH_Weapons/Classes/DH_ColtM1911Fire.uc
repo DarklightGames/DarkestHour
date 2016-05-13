@@ -23,7 +23,7 @@ defaultproperties
     bWaitForRelease=true
     FireAnim="shoot"
     TweenTime=0.0
-    FireRate=0.2
+    FireRate=0.25
     AmmoClass=class'DH_Weapons.DH_ColtM1911Ammo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)

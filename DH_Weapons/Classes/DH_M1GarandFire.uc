@@ -129,7 +129,7 @@ defaultproperties
     FireAnim="shoot"
     TweenTime=0.0
     FireForce="RocketLauncherFire"
-    FireRate=0.2
+    FireRate=0.27
     AmmoClass=class'DH_Weapons.DH_M1GarandAmmo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
