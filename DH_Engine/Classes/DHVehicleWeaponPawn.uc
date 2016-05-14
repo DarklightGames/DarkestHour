@@ -321,22 +321,21 @@ function bool ResupplyAmmo()
     return VehWep != none && VehWep.ResupplyAmmo();
 }
 
-// Modified to use generic reference to VehicleWeapon instead of specifically cannon
+// Modified to make generic, for any vehicle weapon (not just cannon) & returning part reloaded values based on ReloadStages array
 function float GetAmmoReloadState()
 {
     if (VehWep != none)
     {
-        switch (VehWep.ReloadState)
+        if (VehWep.ReloadState == RL_ReadyToFire)
         {
-            case RL_ReadyToFire:    return 0.00;
-
-            case RL_Waiting:
-            case RL_Empty:
-            case RL_ReloadedPart1:  return 1.00;
-            case RL_ReloadedPart2:  return 0.75;
-            case RL_ReloadedPart3:  return 0.50;
-            case RL_ReloadedPart4:  return 0.25;
+            return 0.0;
         }
+        else if (VehWep.ReloadState == RL_Waiting || VehWep.ReloadState == RL_Empty)
+        {
+            return 1.0;
+        }
+
+        return VehWep.ReloadStages[VehWep.ReloadState - 1].HUDProportion;
     }
 
     return 0.0;

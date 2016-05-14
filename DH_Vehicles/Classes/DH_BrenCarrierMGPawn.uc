@@ -5,27 +5,6 @@
 
 class DH_BrenCarrierMGPawn extends DHVehicleMGPawn;
 
-// Modified to better suit the curved magazine of the bren gun
-function float GetAmmoReloadState()
-{
-    if (VehWep != none)
-    {
-        switch (VehWep.ReloadState)
-        {
-            case RL_ReadyToFire:    return 0.00;
-
-            case RL_Waiting:
-            case RL_Empty:
-            case RL_ReloadedPart1:  return 1.00;
-            case RL_ReloadedPart2:  return 0.67;
-            case RL_ReloadedPart3:  return 0.50;
-            case RL_ReloadedPart4:  return 0.35;
-        }
-    }
-
-    return 0.0;
-}
-
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_BrenCarrierMG'

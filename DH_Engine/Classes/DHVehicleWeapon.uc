@@ -19,8 +19,9 @@ var     bool           bInitializedVehicleAndWeaponPawn; // done set up after re
 // Reloading
 struct  ReloadStage
 {
-var     sound   Sound;
-var     float   Duration;
+var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
+var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
+var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
 };
 
 enum    EReloadState
@@ -36,7 +37,7 @@ enum    EReloadState
 
 var     bool                bMultiStageReload;    // this weapon uses a multi-stage reload process, that can be paused & resumed
 var     EReloadState        ReloadState;          // the stage of weapon reload or readiness
-var     array<ReloadStage>  ReloadStages;         // stages for multi-part reload, with sounds and/ or durations (servers often use stripped sound files without actual sounds, breaking reload)
+var     array<ReloadStage>  ReloadStages;         // stages for multi-part reload, including sounds, durations & HUD reload icon proportions
 var     bool                bReloadPaused;        // a reload has started but was paused, as no longer had a player in a valid reloading position
 
 // MG weapon (hull mounted or coaxial)

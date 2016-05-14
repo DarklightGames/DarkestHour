@@ -1438,7 +1438,6 @@ defaultproperties
     HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
 
     // Weapon fire
-    ReloadState=RL_Waiting
     bPrimaryIgnoreFireCountdown=true
     WeaponFireAttachmentBone="Barrel"
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
@@ -1449,6 +1448,12 @@ defaultproperties
     AIInfo(0)=(AimError=0.0,RefireRate=0.5)
     AIInfo(1)=(bLeadTarget=true,AimError=750.0,RefireRate=0.99,WarnTargetPct=0.9)
 
+    // Reload
+    ReloadState=RL_Waiting
+    ReloadStages(0)=(HUDProportion=1.0)
+    ReloadStages(1)=(HUDProportion=0.75)
+    ReloadStages(2)=(HUDProportion=0.5)
+    ReloadStages(3)=(HUDProportion=0.25)
     // Sounds
     AltFireSoundScaling=3.0
     AltReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'

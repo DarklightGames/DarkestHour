@@ -42,10 +42,10 @@ defaultproperties
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=50.0,Y=50.0,Z=50.0)
 
-    // Reload
+    // Reload (HUDProportion overrides to better suit the curved magazine of the bren gun)
     HUDOverlayReloadAnim="reload_empty"
     ReloadStages(0)=(Sound=none,Duration=1.83) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.83)
+    ReloadStages(1)=(Sound=none,Duration=1.83,HUDProportion=0.67)
     ReloadStages(2)=(Sound=none,Duration=1.67)
-    ReloadStages(3)=(Sound=none,Duration=1.67)
+    ReloadStages(3)=(Sound=none,Duration=1.67,HUDProportion=0.35)
 }

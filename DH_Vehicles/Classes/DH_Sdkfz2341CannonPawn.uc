@@ -5,27 +5,6 @@
 
 class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
 
-// 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
-function float GetAmmoReloadState()
-{
-    if (VehWep != none)
-    {
-        switch (VehWep.ReloadState)
-        {
-            case RL_ReadyToFire:    return 0.0;
-
-            case RL_Waiting:
-            case RL_Empty:
-            case RL_ReloadedPart1:  return 1.0;
-            case RL_ReloadedPart2:  return 0.6;
-            case RL_ReloadedPart3:  return 0.5;
-            case RL_ReloadedPart4:  return 0.4;
-        }
-    }
-
-    return 0.0;
-}
-
 defaultproperties
 {
     RangeRingScale=0.635

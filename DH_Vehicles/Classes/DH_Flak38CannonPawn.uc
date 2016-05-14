@@ -16,27 +16,6 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-// From Sd.Kfz.234/1 cannon pawn
-function float GetAmmoReloadState()
-{
-    if (VehWep != none)
-    {
-        switch (VehWep.ReloadState)
-        {
-            case RL_ReadyToFire:    return 0.0;
-
-            case RL_Waiting:
-            case RL_Empty:
-            case RL_ReloadedPart1:  return 1.0;
-            case RL_ReloadedPart2:  return 0.6;
-            case RL_ReloadedPart3:  return 0.5;
-            case RL_ReloadedPart4:  return 0.4;
-        }
-    }
-
-    return 0.0;
-}
-
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Flak38Cannon'

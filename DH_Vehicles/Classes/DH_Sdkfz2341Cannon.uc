@@ -169,16 +169,16 @@ defaultproperties
     AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
     AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
-    // Sounds
+    // Sounds (HUDProportion overrides to better suit the magazine reload)
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_01')
-    ReloadStages(1)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_02')
+    ReloadStages(1)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_02',HUDProportion=0.6)
     ReloadStages(2)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_04')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_04',HUDProportion=0.4)
     SoundVolume=100
     SoundRadius=256.0 // TODO: maybe remove so inherits default 200, as this is a weak gun
 
