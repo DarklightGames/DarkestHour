@@ -57,7 +57,7 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 }
 
-// For tank cannon aiming - returns the proper pitch adjustment to hit a target at a particular range
+// Pitch aim adjustment for cannons with mechanically linked gunsight range setting - returns the proper pitch adjustment to hit a target at a particular range
 simulated static function int GetPitchForRange(int Range)
 {
     local int i;
@@ -78,7 +78,7 @@ simulated static function int GetPitchForRange(int Range)
     return 0;
 }
 
-// For tank cannon aiming - returns the proper Y adjustment of the scope to hit a target at a particular range
+// Vertical position adjustment of gunsight reticle for cannons with optical range setting - returns the proper Y adjustment of reticle to hit a target at a particular range
 simulated static function float GetYAdjustForRange(int Range)
 {
     local int i;

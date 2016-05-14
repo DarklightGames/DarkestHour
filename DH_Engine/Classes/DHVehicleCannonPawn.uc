@@ -20,7 +20,7 @@ var     texture     PeriscopeOverlay;            // overlay for commander's peri
 var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Gunsight overlay
-var     texture     CannonScopeCenter;           // reticle overlay
+var     texture     CannonScopeCenter;           // gunsight reticle overlay (really only for sights with moving range indicator, but some DH sights use as pretty pointless 2nd sight overlay)
 var     bool        bShowRangeText;              // show current range setting text
 var localized string    RangeText;               // metres or yards (can be localised for other languages)
 var     float       RangePositionX;              // adjusts positioning of range text

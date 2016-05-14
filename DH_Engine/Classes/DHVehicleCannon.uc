@@ -185,7 +185,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (!bAltFire && RangeSettings.Length > 0)
     {
-        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]); // pitch adjustment for cannons with mechanically linked gunsight range setting
     }
 
     P = Spawn(ProjClass, none,, WeaponFireLocation, FireRot);
