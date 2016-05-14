@@ -767,7 +767,7 @@ simulated function AttemptReload()
                 }
             }
 
-            // If we still don't have any ammo, we must be completely out of all cannon ammo, so wait for reload
+            // If we still don't have any ammo, we must be completely out of all cannon ammo, so wait for a resupply
             if (PrimaryAmmoCount() < 1)
             {
                 bNoAmmoToReload = true;
@@ -807,7 +807,7 @@ simulated function AttemptReload()
             SetTimer(0.01, false);
         }
 
-        // If flagged replicate reload state to net client
+        // Replicate any changed reload state to net client
         if (Role == ROLE_Authority && ReloadState != OldReloadState)
         {
             ClientSetReloadState(ReloadState);

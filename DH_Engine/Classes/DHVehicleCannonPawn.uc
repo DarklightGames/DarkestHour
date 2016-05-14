@@ -233,13 +233,12 @@ simulated function DrawHUD(Canvas C)
                         // Draw the gunsight aiming reticle
                         if (CannonScopeCenter != none && Gun.ProjectileClass != none)
                         {
+                            // Vertical adjustment of reticle position for cannons with optical (not mechanically linked) range setting, e.g. some Soviet cannons
                             C.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * C.ClipY);
 
                             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                                 OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
                         }
-
-                        C.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * C.ClipY);
 
                         // Draw any range ring
                         if (bShowRangeRing)
@@ -555,7 +554,7 @@ simulated state ViewTransition
     {
         super.HandleTransition();
 
-        if (Level.NetMode != NM_DedicatedServer && LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions 
+        if (Level.NetMode != NM_DedicatedServer && LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions
             && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
             PlayerFaceForwards();
@@ -759,6 +758,7 @@ function DamageCannonOverlay()
     bOpticsDamaged = true;
 }
 
+// New replicated server-to-client function to damage gunsight optics
 simulated function ClientDamageCannonOverlay()
 {
     GunsightOverlay = DestroyedGunsightOverlay;
