@@ -7,12 +7,16 @@ class DH_HellcatCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=10
-    TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'
-    SecondarySpread=0.001
-    TertiarySpread=0.00135
-    ManualRotationsPerSecond=0.033
-    PoweredRotationsPerSecond=0.067
+    // Turret mesh
+    Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
+    Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_turret_coll'
+    FireAttachBone="Turret"
+    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=15.0,Y=30.0,Z=0.0)
+
+    // Turret armor
     FrontArmorFactor=1.9
     RightArmorFactor=1.3
     LeftArmorFactor=1.3
@@ -24,29 +28,37 @@ defaultproperties
     FrontRightAngle=36.0
     RearRightAngle=144.0
     RearLeftAngle=216.0
+
+    // Turret movement
+    ManualRotationsPerSecond=0.033
+    PoweredRotationsPerSecond=0.067
+    CustomPitchUpLimit=3641
+    CustomPitchDownLimit=63715
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'
+    ProjectileDescriptions(1)="HVAP"
+    ProjectileDescriptions(2)="HE"
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=5
+    InitialTertiaryAmmo=10
+    SecondarySpread=0.001
+    TertiarySpread=0.00135
+
+    // Weapon fire
+    WeaponFireOffset=-4.0
+    AddedPitch=52
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
     ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
-    ProjectileDescriptions(1)="HVAP"
-    ProjectileDescriptions(2)="HE"
-    AddedPitch=52
-    WeaponFireOffset=-4.0
-    ProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
-    CustomPitchUpLimit=3641
-    CustomPitchDownLimit=63715
-    InitialPrimaryAmmo=30
-    InitialSecondaryAmmo=5
-    PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
-    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
-    FireEffectOffset=(X=15.0,Y=30.0,Z=0.0)
-    Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_turret_coll'
     SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as not an especially powerful gun & this does not match the Sherman 76?
 }

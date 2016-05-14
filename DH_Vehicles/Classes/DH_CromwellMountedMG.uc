@@ -23,7 +23,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
     InitialPrimaryAmmo=225
-    NumMGMags=6
+    NumMGMags=10
     FireInterval=0.092
     TracerProjectileClass=class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5

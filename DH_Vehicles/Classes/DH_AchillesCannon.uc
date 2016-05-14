@@ -13,6 +13,8 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
     Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
+    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=0.0,Y=20.0,Z=10.0)
 
     // Turret armor
     FrontArmorFactor=5.0
@@ -79,8 +81,4 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-
-    // Miscellaneous
-    FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
-    FireEffectOffset=(X=0.0,Y=20.0,Z=10.0)
 }

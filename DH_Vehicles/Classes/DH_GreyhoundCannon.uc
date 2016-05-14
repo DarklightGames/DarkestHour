@@ -12,6 +12,8 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll'
+    FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
 
     // Turret armor
     FrontArmorFactor=1.9
@@ -43,7 +45,7 @@ defaultproperties
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_30CalBullet'
     InitialAltAmmo=250
-    NumMGMags=6
+    NumMGMags=5
     AltFireInterval=0.12
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
@@ -52,6 +54,11 @@ defaultproperties
     WeaponFireOffset=10.0
     AddedPitch=26
     AltFireOffset=(X=-82.0,Y=11.0,Z=0.0)
+    ShakeRotRate=(Z=600.0)
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetTime=6.0
+    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
@@ -65,15 +72,4 @@ defaultproperties
     ReloadStages(3)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
     SoundVolume=100
     SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as a pretty weak gun & this does not match Stuart?
-
-    // Screen shake
-    ShakeRotRate=(Z=600.0)
-    ShakeOffsetMag=(Z=5.0)
-    ShakeOffsetTime=6.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
-
-    // Miscellaneous
-    FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
-    FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
 }

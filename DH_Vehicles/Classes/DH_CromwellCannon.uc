@@ -12,6 +12,8 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
+    FireAttachBone="Turret"
+    FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
 
     // Turret armor
     FrontArmorFactor=7.6
@@ -44,7 +46,7 @@ defaultproperties
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
     InitialAltAmmo=225
-    NumMGMags=6
+    NumMGMags=10
     AltFireInterval=0.092
     TracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
     TracerFrequency=5
@@ -52,6 +54,7 @@ defaultproperties
     // Weapon fire
     AltFireOffset=(X=-109.5,Y=-11.5,Z=1.0)
     AltFireSpawnOffsetX=23.0
+    AltShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
@@ -83,11 +86,4 @@ defaultproperties
     RangeSettings(14)=2800
     RangeSettings(15)=3000
     RangeSettings(16)=3200
-
-    // Screen shake
-    AltShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
-
-    // Miscellaneous
-    FireAttachBone="Turret"
-    FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
 }
