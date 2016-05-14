@@ -228,8 +228,6 @@ function PlayerResupply()
 
 defaultproperties
 {
-    bDebug=true // TEMP
-
     // Mesh & animation
     bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update mortar mesh skeleton (wouldn't otherwise as server doesn't draw mesh)
     bOwnerNoSee=true
