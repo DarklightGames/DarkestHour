@@ -2182,7 +2182,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
 
 // The two functions below overridden to include specific fire kill commands
 // Without these, premature Pawn DeRes can cause emitter to not destroy and results in a GPF crash
-simulated function SpawnGibs(Rotator HitRotation, float ChunkPerterbation)
+simulated function SpawnGibs(rotator HitRotation, float ChunkPerterbation)
 {
     if (FlameFX != none)
     {
@@ -3274,7 +3274,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
     {
-        //Spawn(class'DHDebugTracer', self,, HitLoc, Rotator(HitNorm));
+        //Spawn(class'DHDebugTracer', self,, HitLoc, rotator(HitNorm));
         //ClientMessage("Object is too high to mantle");
         return false;
     }
@@ -4535,7 +4535,7 @@ simulated exec function BobDecay(optional float F)
     }
 }
 
-// Overriden to add some inital weapon bobbing when first iron sighting
+// Overridden to add some inital weapon bobbing when first iron sighting
 function CheckBob(float DeltaTime, vector Y)
 {
     local float OldBobTime, BobModifier, Speed2D, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
@@ -4842,17 +4842,14 @@ simulated function vector CalcZoomedDrawOffset(Inventory Inv)
 }
 
 // Modified to have radius on ragdoll sounds
-event KImpact(actor other, vector pos, vector impactVel, vector impactNorm)
+event KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
 {
-    local float VelocitySquared;
-    local float RagHitVolume;
+    local float VelocitySquared, RagHitVolume;
 
-    if (Level.TimeSeconds > RagLastSoundTime + RagImpactSoundInterval)
+    if (Level.TimeSeconds > (RagLastSoundTime + RagImpactSoundInterval))
     {
-        VelocitySquared = VSizeSquared(impactVel);
-
+        VelocitySquared = VSizeSquared(ImpactVel);
         RagHitVolume = FMin(4.0, (VelocitySquared / 40000.0));
-
         PlaySound(RagImpactSound, SLOT_None, RagHitVolume,, 10.0,, true);
         RagLastSoundTime = Level.TimeSeconds;
     }

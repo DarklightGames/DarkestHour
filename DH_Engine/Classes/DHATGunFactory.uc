@@ -39,10 +39,10 @@ simulated event PostBeginPlay()
 //===========================================================================================================================================================
 function EvaluateRandom()
 {
+    local DHATGunFactory        GunFactory;
     local array<DHATGunFactory> GunFactories;
-    local DHATGunFactory GunFactory;
-    local int MaxToSpawn, TotalActive, i;
-    local float RandFactor;
+    local float                 RandFactor;
+    local int                   MaxToSpawn, TotalActive, i;
 
     if (bRandomEvaluated || !bUseRandomizer)
     {
@@ -50,7 +50,6 @@ function EvaluateRandom()
     }
 
     bMasterFactory = true;
-
     ActivatedIndexes.Length = 0;
 
     if (MaxRandomFactoriesActive > 0)
@@ -89,7 +88,7 @@ function EvaluateRandom()
     // Calculate the random activation percentage based on how many cannons the mapper wants to spawn & how many total cannons there are in the array
     if (MaxToSpawn > 0)
     {
-       RandFactor = Min(MaxToSpawn,GunFactories.Length)/Float(GunFactories.Length);
+       RandFactor = Min(MaxToSpawn, GunFactories.Length) / float(GunFactories.Length);
     }
 
     // Loop through all the the factories found for this group tag & calculate whether or not they should be activated
@@ -135,9 +134,9 @@ function EvaluateRandom()
 // Activates the stored randomly chosen AT Guns - had to separate this out due to needed to delay activation if bUsesSpawnAreas was true
 function ProcessRandomActivation()
 {
+    local DHATGunFactory        GunFactory;
     local array<DHATGunFactory> GunFactories;
-    local DHATGunFactory GunFactory;
-    local int TempTeam, i, j;
+    local int                   TempTeam, i, j;
 
     if (!bMasterFactory)
     {

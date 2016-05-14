@@ -32,8 +32,9 @@ function AddSystemMenu(){}
 
 function InitComponent(GUIController MyC, GUIComponent MyO)
 {
-    local int i;
     local moComboBox CB;
+    local int i;
+
     super.InitComponent(MyC, MyO);
 
     FLP = DHFilterListPage(ParentPage);
@@ -64,6 +65,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
     sb_Mutators.ManageComponent(lb_Mutators);
 
     class'CacheManager'.static.GetMutatorList(MutRecords);
+
     for (i = 0; i < MutRecords.Length; ++i)
     {
         cb = moComboBox(li_Mutators.AddItem("DH_Interface.DHmoCombobox",,MutREcords[i].FriendlyName));
@@ -80,9 +82,9 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
 
 event HandleParameters(string Param1, string Param2)
 {
-    local int i;
     local array<CustomFilter.AFilterRule> Rules;
     local MasterServerClient.QueryData  FilterItem;
+    local int i;
 
     FilterIndex = int(Param1);
     eb_Name.SetComponentValue(Param2);
@@ -93,8 +95,8 @@ event HandleParameters(string Param1, string Param2)
         eb_Name.EnableMe();
 
     //Get the custom filter
-
     Rules = FLP.FM.GetFilterRules(FilterIndex);
+
     for (i = 0; i < Rules.Length; ++i)
     {
         FilterItem = Rules[i].FilterItem;
@@ -145,6 +147,7 @@ event HandleParameters(string Param1, string Param2)
         if (FilterItem.Key~="mutator")
         {
             cb_Mutators.MyComboBox.SetIndex(2);
+
             if (FilterITem.QueryType==QT_Equals)
                 SetMutator(FilterItem.Value, 1);
             else if (FilterItem.QueryType==QT_NotEquals)
@@ -158,6 +161,7 @@ function SetMutator(string ClassName, int index)
     local int i,j;
     local string s;
     local moComboBox box;
+
     for (i = 0; i < MutRecords.Length; ++i)
     {
         j = Instr(MutRecords[i].ClassName,".");
@@ -165,12 +169,14 @@ function SetMutator(string ClassName, int index)
 
         if (s ~= ClassName)
         {
-            for (j = 0;j<li_Mutators.ItemCount;++j)
+            for (j = 0; j < li_Mutators.ItemCount; ++j)
             {
                 Box = moComboBox(li_Mutators.GetItem(j));
+
                 if (Box.Caption ~= MutRecords[i].FriendlyName)
                 {
                     Box.SetIndex(Index);
+
                     return;
                 }
             }
@@ -192,6 +198,7 @@ function MutChange(GUIComponent Sender)
 function bool CancelClick(GUIComponent Sender)
 {
     Controller.CloseMenu(true);
+
     return true;
 }
 
@@ -207,6 +214,7 @@ function CustomFilter.AFilterRule BuildRule(string Key, string Value, MasterServ
         NewRule.FilterType = DT_Multiple;
     else
         NewRule.FilterType = DT_Unique;
+
     NewRule.ItemName = Key;
 
     return NewRule;
@@ -221,7 +229,6 @@ function bool OkClick(GUIComponent Server)
     cnt = 0;
 
     // Build Query lists
-
     if (ck_Empty.IsChecked())
         Rules[Cnt++] = BuildRule("currentplayers","0",QT_GreaterThan);
 
@@ -250,6 +257,7 @@ function bool OkClick(GUIComponent Server)
         for (i = 0; i < li_Mutators.ItemCount; ++i)
         {
             CB = moComboBox(li_Mutators.GetItem(i));
+
             if (cb.GetIndex() == 1)
                 Rules[Cnt++] = BuildRule("mutator",FindMutClassFromFriendly(cb.Caption),QT_Equals);
             else if (cb.GetIndex() == 2)
@@ -268,26 +276,28 @@ function bool OkClick(GUIComponent Server)
 
 function string FindMutClassFromFriendly(string friendly)
 {
-    local int i,p;
     local string cls;
+    local int i, p;
 
     for (i = 0; i < MutRecords.Length; ++i)
+    {
         if (MutRecords[i].FriendlyName ~= Friendly)
         {
             cls = MutRecords[i].ClassName;
             p = Instr(Cls,".");
-            return Mid(cls,p+1);
+
+            return Mid(cls, p + 1);
         }
+    }
 
     return "";
 }
 
 function bool ebPreDraw(canvas Canvas)
 {
-
     // Reposition
+    eb_Name.WinTop = sb_Options.ActualTop() + 36.0;
 
-    eb_Name.WinTop = sb_Options.ActualTop() + 36;
     return true;
 }
 

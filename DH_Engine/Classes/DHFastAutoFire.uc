@@ -26,7 +26,7 @@ var     float                   PackingThresholdTime;   // If the shots are clos
 function DoFireEffect()
 {
     local vector  StartProj, StartTrace, X,Y,Z;
-    local Rotator R, Aim;
+    local rotator R, Aim;
     local vector  HitLocation, HitNormal;
     local Actor   Other;
     local int     ProjectileID;
@@ -79,7 +79,7 @@ function DoFireEffect()
         Aim = rotator(MuzzlePosition.XAxis);
     }
 
-    SpawnCount = Max(1, ProjPerFire * Int(Load));
+    SpawnCount = Max(1, ProjPerFire * int(Load));
 
     CalcSpreadModifiers();
 
@@ -113,7 +113,7 @@ function DoFireEffect()
 
             for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
-                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
+                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
@@ -244,7 +244,6 @@ event ModeDoFire()
     }
 }
 
-
 // This state handles looping the firing animations and ambient fire sounds as well as firing rounds.
 state FireLoop
 {
@@ -288,7 +287,7 @@ state FireLoop
 
     function StopFiring()
     {
-        if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot == true)
+        if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot)
         {
             HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
 

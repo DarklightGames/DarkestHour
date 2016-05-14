@@ -17,14 +17,13 @@ function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    if (SupplyVolumeToModify == '')
-        return; //end script because volumename was not set
-
-    //Volume are static so use the all actor list
-    foreach AllActors(class'ROAmmoResupplyVolume', RORV, SupplyVolumeToModify)
+    if (SupplyVolumeToModify != '')
     {
-        SupplyVolumeReference = RORV;
-        break;
+        foreach AllActors(class'ROAmmoResupplyVolume', RORV, SupplyVolumeToModify) // volumes are static so have to use the all actor list
+        {
+            SupplyVolumeReference = RORV;
+            break;
+        }
     }
 }
 
@@ -34,26 +33,27 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     if (UseRandomness)
     {
-        RandomNum = Rand(101);  //Gets a random # between 0 & 100
+        RandomNum = Rand(101);  // gets a random # between 0 & 100
+
         if (RandomPercent <= RandomNum)
-            return; //Leave script as it randomly failed
+        {
+            return; // leave script as it randomly failed
+        }
     }
+
     switch (HowToModify)
     {
         case SMT_Activate:
             SupplyVolumeReference.bActive = true;
-        break;
+            break;
+
         case SMT_Deactivate:
             SupplyVolumeReference.bActive = false;
-        break;
-        case SMT_Toggle: //Check volume status and toggle it
-            if (SupplyVolumeReference.bActive == true)
-                SupplyVolumeReference.bActive = false;
-            else
-                SupplyVolumeReference.bActive = true;
-        break;
-        default:
-        break;
+            break;
+
+        case SMT_Toggle:
+            SupplyVolumeReference.bActive = !SupplyVolumeReference.bActive;
+            break;
     }
 }
 

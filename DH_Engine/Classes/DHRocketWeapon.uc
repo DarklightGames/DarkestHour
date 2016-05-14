@@ -434,11 +434,11 @@ static function StaticPrecache(LevelInfo L)
 
 // Modified to stop backblast damage from hurting the shooter (nothing else calls HurtRadius, so this hack should not be harmful)
 // This is a hack, but is also a temporary solution until the backblast system is redesigned
-simulated function HurtRadius( float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation )
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local actor Victims;
-    local float damageScale, dist;
-    local vector dir;
+    local actor  Victims;
+    local vector Dir;
+    local float  Dist, DamageScale;
 
     if (bHurtEntry)
     {
@@ -447,18 +447,19 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors( class 'Actor', Victims, DamageRadius, HitLocation )
+    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
     {
-        if ((Victims != self) && (Victims != Pawn(Owner)) && (Victims.Role == ROLE_Authority) && (!Victims.IsA('FluidSurfaceInfo')))
+        if (Victims != self && Victims != Pawn(Owner) && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
         {
-            dir = Victims.Location - HitLocation;
-            dist = FMax(1,VSize(dir));
-            dir = dir/dist;
-            damageScale = 1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius);
+            Dir = Victims.Location - HitLocation;
+            Dist = FMax(1.0, VSize(Dir));
+            Dir = Dir / Dist;
+            DamageScale = 1.0 - FMax(0.0, (Dist - Victims.CollisionRadius) / DamageRadius);
 
-            Victims.TakeDamage(damageScale * DamageAmount, Instigator, Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir, (damageScale * Momentum * dir), DamageType);
+            Victims.TakeDamage(DamageScale * DamageAmount, Instigator, Victims.Location - (0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * Dir),
+                (DamageScale * Momentum * Dir), DamageType);
 
-            if (Instigator != None && Vehicle(Victims) != None && Vehicle(Victims).Health > 0)
+            if (Instigator != none && Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
             {
                 Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
             }

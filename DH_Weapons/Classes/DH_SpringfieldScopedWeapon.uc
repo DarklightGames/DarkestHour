@@ -19,7 +19,7 @@ defaultproperties
     ScopeYaw=25
     ScopePitchHigh=20
     ScopeYawHigh=40
-    TexturedScopeTexture=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    TexturedScopeTexture=texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
     IronIdleAnim="Scope_Idle"
     IronBringUp="Scope_In"
     IronPutDown="Scope_Out"

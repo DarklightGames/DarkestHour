@@ -19,7 +19,7 @@ function JSONValue Parse(string S)
 
 function JSONValue ReadValue()
 {
-    switch(InputBuffer.Peek(1))
+    switch (InputBuffer.Peek(1))
     {
         case "n":
             return ReadNull();
@@ -312,7 +312,7 @@ private function SkipWhiteSpace()
 {
     local int A;
 
-    while(True)
+    while (True)
     {
         A = Asc(InputBuffer.Peek(1));
 

@@ -28,8 +28,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     if (Switch >= 100) // a trick of passing changed game speed, as a percentage with 100 added so we know it isn't one of the normal numbered messages
     {
-        GameSpeed = Float(Switch - 100) / 100.0; // convert to percentage (as float)
-        GameSpeedRounded = Left(String(GameSpeed), InStr(String(GameSpeed), ".") + 2); // convert to string, rounded to one decimal place
+        GameSpeed = float(Switch - 100) / 100.0; // convert to percentage (as float)
+        GameSpeedRounded = Left(string(GameSpeed), InStr(string(GameSpeed), ".") + 2); // convert to string, rounded to one decimal place
 
         if (Right(GameSpeedRounded, 2) == ".0") // if game speed ends in a ".0", trim that off
         {

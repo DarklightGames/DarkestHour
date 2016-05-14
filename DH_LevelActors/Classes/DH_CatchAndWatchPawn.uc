@@ -5,10 +5,9 @@
 
 class DH_CatchAndWatchPawn extends DH_LevelActors;
 
-var     Pawn        PawnReference; //The pawn to watch
+var     Pawn        PawnReference; // the pawn to watch
 var()   name        EventToTriggerOnDeath;
 var     bool        bFired;
-//messages
 
 function Reset()
 {
@@ -21,7 +20,7 @@ auto state WaitToWatch
     function BeginState()
     {
         bFired = false;
-        PawnReference = none; //incase we get set back to watch we should clear our reference
+        PawnReference = none; //in case we get set back to watch we should clear our reference
     }
 }
 
@@ -29,12 +28,15 @@ state Watch
 {
     function BeginState()
     {
-        SetTimer(1, true);
+        SetTimer(1.0, true);
     }
+
     function Timer()
     {
         if (PawnReference.Health <= 0)
+        {
             PawnReferenceIsDead();
+        }
     }
 }
 
@@ -42,20 +44,19 @@ state Done
 {
     function BeginState()
     {
-        //no point to keep pawn ref
-        PawnReference = none;
+        PawnReference = none; // no point to keep pawn ref
     }
 }
 
-function PassPawnRef(pawn PassedPawn)
+function PassPawnRef(Pawn PassedPawn)
 {
     if (!Level.Game.IsInState('RoundInPlay') || bFired || PassedPawn.Health <= 0)
-        return; //Leave as the game was not in Play was already fired or the pawn was alredy dead
-    else
     {
-        PawnReference = PassedPawn;
-        GotoState('Watch');
+        return; // leave as the game was not in play, was already fired, or the pawn was already dead
     }
+
+    PawnReference = PassedPawn;
+    GotoState('Watch');
 }
 
 function PawnReferenceIsDead()
@@ -64,7 +65,6 @@ function PawnReferenceIsDead()
     {
         TriggerEvent(EventToTriggerOnDeath, self, PawnReference);
         bFired = true;
-        //Messages
         GotoState('Done');
     }
 }

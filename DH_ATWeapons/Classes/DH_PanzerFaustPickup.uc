@@ -10,6 +10,6 @@ defaultproperties
 {
     InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.Panzerfaust'
-    PickupSound=Sound'Inf_Weapons_Foley.WeaponPickup'
+    PickupSound=sound'Inf_Weapons_Foley.WeaponPickup'
     CollisionRadius=25.0
 }

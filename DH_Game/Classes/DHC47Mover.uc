@@ -12,7 +12,7 @@ simulated function BeginPlay()
 {
     local AntiPortalActor AntiPortalA;
 
-LoopAnim(AnimName, AnimRate);               //DH - loop the anim
+    LoopAnim(AnimName, AnimRate);  // DH - loop the anim
 
     if (AntiPortalTag != '')
     {
@@ -23,35 +23,47 @@ LoopAnim(AnimName, AnimRate);               //DH - loop the anim
         }
     }
 
-    // timer updates real position every second in network play
+    // Timer updates real position every second in network play
     if (Level.NetMode != NM_Standalone)
     {
         if (Level.NetMode == NM_Client && bClientAuthoritative)
-            settimer(4.0, true);
+        {
+            SetTimer(4.0, true);
+            
+        }
         else
-            settimer(1.0, true);
+        {
+            SetTimer(1.0, true);
+        }
+
         if (Role < ROLE_Authority)
+        {
             return;
+        }
     }
 
     RealPosition = Location;
     RealRotation = Rotation;
 
-    // Init key info.
+    // Init key info
     super.BeginPlay();
-    KeyNum         = Clamp(KeyNum, 0, arraycount(KeyPos)-1);
-    PhysAlpha      = 0.0;
+
+    KeyNum = Clamp(KeyNum, 0, arraycount(KeyPos) - 1);
+    PhysAlpha = 0.0;
     StartKeyNum = KeyNum;
 
-    // Set initial location.
+    // Set initial location
     Move(BasePos + KeyPos[KeyNum] - Location);
 
-    // Initial rotation.
+    // Initial rotation
     SetRotation(BaseRot + KeyRot[KeyNum]);
 
-    // find movers in same group
+    // Find movers in same group
     if (ReturnGroup == '')
-        ReturnGroup = tag;
+    {
+        ReturnGroup = Tag;
+    }
+
     Leader = none;
     Follower = none;
 }

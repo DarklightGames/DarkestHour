@@ -153,7 +153,7 @@ function DoFireEffect()
     }
 
     Aim = AdjustAim(StartProj, AimError);
-    SpawnCount = Max(1, ProjPerFire * Int(Load));
+    SpawnCount = Max(1, ProjPerFire * int(Load));
     CalcSpreadModifiers();
     AppliedSpread = Spread;
 
@@ -177,7 +177,7 @@ function DoFireEffect()
 
             for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
-                Theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
+                Theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
                 X.X = Cos(Theta);
                 X.Y = Sin(Theta);
                 X.Z = 0.0;

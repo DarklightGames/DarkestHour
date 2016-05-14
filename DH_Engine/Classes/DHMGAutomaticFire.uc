@@ -33,14 +33,17 @@ state FireLoop
     {
         local DHProjectileWeapon RPW;
 
-        NextFireTime = Level.TimeSeconds - 0.1; //fire now!
-
+        NextFireTime = Level.TimeSeconds - 0.1; // fire now!
         RPW = DHProjectileWeapon(Weapon);
 
         if (!Instigator.bBipodDeployed)
+        {
             weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
+        }
         else
+        {
             Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
+        }
 
         PlayAmbientSound(AmbientFireSound);
     }
@@ -54,9 +57,13 @@ function PlayFireEnd()
     RPW = DHProjectileWeapon(Weapon);
 
     if (RPW.HasAnim(FireEndAnim) && !Instigator.bBipodDeployed)
+    {
         RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
+    }
     else if (RPW.HasAnim(FireIronEndAnim) && Instigator.bBipodDeployed)
+    {
         RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
+    }
 }
 
 // Overridden to support hip firing MGs
@@ -73,7 +80,9 @@ simulated function HandleRecoil()
     }
 
     if (ROP == none || ROPwn == none)
+    {
         return;
+    }
 
     if (!ROP.bFreeCamera)
     {
@@ -81,14 +90,16 @@ simulated function HandleRecoil()
         NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
 
         if (Rand(2) == 1)
+        {
             NewRecoilRotation.Yaw *= -1;
+        }
 
         if (Instigator.Physics == PHYS_Falling)
         {
             NewRecoilRotation *= 3;
         }
 
-        // WeaponTODO: Put bipod and resting modifiers in here
+        // WeaponTODO: put bipod & resting modifiers in here
         if (Instigator.bIsCrouched)
         {
             NewRecoilRotation *= PctCrouchRecoil;
@@ -98,7 +109,7 @@ simulated function HandleRecoil()
             NewRecoilRotation *= PctProneRecoil;
         }
 
-        // player is crouched and in iron sights
+        // Player is crouched & in iron sights
         if (Weapon.bUsingSights)
         {
             NewRecoilRotation *= PctHipMGPenalty;
@@ -138,7 +149,7 @@ simulated function HandleRecoil()
 function DoFireEffect()
 {
     local vector StartProj, StartTrace, X,Y,Z;
-    local Rotator R, Aim;
+    local rotator R, Aim;
     local vector HitLocation, HitNormal;
     local Actor Other;
     local int projectileID;
@@ -157,6 +168,7 @@ function DoFireEffect()
 
         // check if projectile would spawn through a wall and adjust start location accordingly
         Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
+
         if (Other != none)
         {
             StartProj = HitLocation;

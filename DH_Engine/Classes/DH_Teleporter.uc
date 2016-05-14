@@ -10,7 +10,7 @@ var()   int     SpawnProtectionTime;
 var()   bool    bResetStamina;
 
 // Set timer for spawn protection
-simulated function bool Accept(actor Incoming, Actor Source)
+simulated function bool Accept(Actor Incoming, Actor Source)
 {
     local rotator newRot, oldRot;
     local float mag;
@@ -64,6 +64,7 @@ simulated function bool Accept(actor Incoming, Actor Source)
 
             LastFired = Level.TimeSeconds;
         }
+
         if (Pawn(Incoming).Controller != none)
         {
             Pawn(Incoming).Controller.MoveTimer = -1.0;
@@ -81,6 +82,7 @@ simulated function bool Accept(actor Incoming, Actor Source)
 
             return false;
         }
+
         if (bChangesYaw)
         {
             Incoming.SetRotation(newRot);
@@ -106,6 +108,7 @@ simulated function bool Accept(actor Incoming, Actor Source)
             mag = Incoming.Velocity dot oldDir;
             Incoming.Velocity = Incoming.Velocity - mag * oldDir + mag * vector(Incoming.Rotation);
         }
+
         if (bReversesX)
         {
             Incoming.Velocity.X *= -1.0;
@@ -142,4 +145,3 @@ defaultproperties
 {
     bResetStamina=true
 }
-

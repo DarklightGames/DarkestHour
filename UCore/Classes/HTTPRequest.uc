@@ -29,7 +29,7 @@ function Send()
     MyLink.ServerIpAddr.Port = 0;
     MyLink.Resolve(Host);
 
-    SetTimer(1, true);
+    SetTimer(1.0, true);
 }
 
 function static int ParseStatus(string S)

@@ -361,7 +361,7 @@ function bool SpawnVehicle(DHPlayer C)
     }
 
     // If we successfully enter the vehicle
-    if(V.TryToDrive(C.Pawn))
+    if (V.TryToDrive(C.Pawn))
     {
         // Set vehicle properties & add to our Vehicles array
         V.SetTeamNum(V.default.VehicleTeam);

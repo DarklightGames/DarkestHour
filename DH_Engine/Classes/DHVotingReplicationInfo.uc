@@ -4,5 +4,3 @@
 //==============================================================================
 
 class DHVotingReplicationInfo extends VotingReplicationInfo;
-
-

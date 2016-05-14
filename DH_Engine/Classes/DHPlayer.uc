@@ -1450,7 +1450,7 @@ state PlayerDriving
         UpdateRotation(DeltaTime, 2.0);
 
         // TODO: Don't send things like aForward and aStrafe for gunners who don't need it - only servers can actually do the driving logic
-        if (Role < ROLE_Authority )
+        if (Role < ROLE_Authority)
         {
             if ((Level.TimeSeconds - LastPingUpdate) > 4.0 && PlayerReplicationInfo != none && !bDemoOwner)
             {
@@ -1523,9 +1523,9 @@ state PlayerDriving
                         CurrentVehicle.ThrottleAmount = 0.0;
                     }
 
-                    CurrentVehicle.Throttle = FClamp(AppliedThrottle / 5000.0, -1.0, 1.0 );
-                    CurrentVehicle.Steering = FClamp(-aStrafe / 5000.0, -1.0, 1.0 );
-                    CurrentVehicle.Rise = FClamp(aUp / 5000.0, -1.0, 1.0 );
+                    CurrentVehicle.Throttle = FClamp(AppliedThrottle / 5000.0, -1.0, 1.0);
+                    CurrentVehicle.Steering = FClamp(-aStrafe / 5000.0, -1.0, 1.0);
+                    CurrentVehicle.Rise = FClamp(aUp / 5000.0, -1.0, 1.0);
 
                     ServerDrive(AppliedThrottle, aStrafe, aUp, bPressedJump, (32767 & (Rotation.Pitch / 2)) * 32768 + (32767 & (Rotation.Yaw / 2)));
                 }
@@ -1555,7 +1555,7 @@ state PlayerDriving
                     CurrentVehicle.ThrottleAmount -= DeltaTime * ThrottleChangeRate;
                 }
 
-                CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0 );
+                CurrentVehicle.ThrottleAmount = FClamp(CurrentVehicle.ThrottleAmount, -6000.0, 6000.0);
                 AppliedThrottle = CurrentVehicle.ThrottleAmount;
 
                 // Stop if the throttle is below this amount
@@ -2431,7 +2431,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     }
 }
 
-// Overriden to fix accessed none errors
+// Overridden to fix accessed none errors
 function EndZoom()
 {
     if (myHUD != none && DesiredFOV != DefaultFOV)
@@ -2551,7 +2551,7 @@ function vector GetObjectiveLocation(int Index)
 // Modified to not have player automatically switch to best weapon when player requests to drop weapon
 function ServerThrowWeapon()
 {
-    local Vector TossVel;
+    local vector TossVel;
 
     if (Pawn.CanThrowWeapon())
     {
@@ -2634,7 +2634,7 @@ function ServerListPlayers()
 
     for (i = 0; i < AllPRI.Length; ++i)
     {
-        if( PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
+        if (PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
         {
             ClientMessage(Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName@" "$PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
             ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ Chr(0xA);

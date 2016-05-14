@@ -107,7 +107,7 @@ function SelectTeamSuccessfull()
     }
 }
 
-function bool InternalOnClick( GUIComponent Sender )
+function bool InternalOnClick(GUIComponent Sender)
 {
     switch (Sender)
     {

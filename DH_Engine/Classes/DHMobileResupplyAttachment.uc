@@ -33,7 +33,7 @@ simulated function PostBeginPlay()
 {
     super(Actor).PostBeginPlay();
 
-    SetTimer(1, true);
+    SetTimer(1.0, true);
 }
 
 function ProcessActorLeave()

@@ -11,9 +11,9 @@ struct ControlProfileBinds
     var array<string> KeyValues;
 };
 
-var automated moComboBox            co_ControlProfiles;
-var localized string                ControlProfiles[6];
-var() ControlProfileBinds           ControlProfileBindings[6];
+var     automated moComboBox    co_ControlProfiles;
+var     localized string        ControlProfiles[6];
+var()   ControlProfileBinds     ControlProfileBindings[6];
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -58,24 +58,25 @@ function SetUpProfileControls(int Index)
     // Always rebuild & set common controls (defaults)
     if (Controller != none)
     {
-        Controller.ResetKeyboard(); //UT/RO defaults
+        Controller.ResetKeyboard(); // UT/RO defaults
 
-        //Integrity check
+        // Integrity check
         if (ControlProfileBindings[Index].KeyNames.Length != ControlProfileBindings[Index].KeyValues.Length)
         {
             Warn("A control profile doesn't have the same number of keys to commands and may not work as expected!!!");
         }
 
-        //DH Defaults
-        for (i = 0;i<ControlProfileBindings[1].KeyNames.Length;++i)
+        // DH Defaults
+        for (i = 0; i < ControlProfileBindings[1].KeyNames.Length; ++i)
         {
             PlayerOwner().ConsoleCommand("set input" @ ControlProfileBindings[1].KeyNames[i] @ ControlProfileBindings[1].KeyValues[i]);
         }
     }
-    // If profile is not 0 or 1 add in controls
+
+    // If profile is not 0 or 1, add in controls
     if (Index > 1)
     {
-        for (i = 0;i<ControlProfileBindings[Index].KeyNames.Length;++i)
+        for (i = 0; i < ControlProfileBindings[Index].KeyNames.Length; ++i)
         {
             PlayerOwner().ConsoleCommand("set input" @ ControlProfileBindings[Index].KeyNames[i] @ ControlProfileBindings[Index].KeyValues[i]);
         }

@@ -238,12 +238,12 @@ function Mutate(string MutateString, PlayerController Sender)
             // Set new game speed
             else if (MutateOption ~= "SetGameSpeed")
             {
-                SetGameSpeed(Float(Words[2]));
+                SetGameSpeed(float(Words[2]));
             }
             // Set new time remaining
             else if (MutateOption ~= "SetRoundMinutesRemaining")
             {
-                SetRoundMinutesRemaining(Float(Words[2]));
+                SetRoundMinutesRemaining(float(Words[2]));
             }
             // Toggle server's setting for bAdminCanPause (the game)
             else if (MutateOption ~= "ToggleAdminCanPauseGame")
@@ -811,7 +811,7 @@ function SetRoundMinutesRemaining(float NewMinutesRemaining)
 {
     if (NewMinutesRemaining > 0.0)
     {
-        ROTG.ElapsedTime = ROTG.RoundStartTime + ROTG.RoundDuration - Int(NewMinutesRemaining * 60.0);
+        ROTG.ElapsedTime = ROTG.RoundStartTime + ROTG.RoundDuration - int(NewMinutesRemaining * 60.0);
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).ElapsedTime = ROTG.ElapsedTime; // copies to GRI on server
         Replicator.NewElapsedTime = ROTG.ElapsedTime;                                         // Replicator copies to GRI on clients
 
@@ -965,7 +965,7 @@ function int RemoveBracketsFromIndex(string IndexString)
     IndexString = Repl(IndexString, "[", "");
     IndexString = Repl(IndexString, "]", "");
 
-    Index = Int(IndexString);
+    Index = int(IndexString);
 
     if (Index == 0) // if Index is 0 it means the cast to int failed, so an invalid string must have been passed, i.e. string did not represent a number
     {
@@ -1153,8 +1153,8 @@ function vector GetGridDropLocation(string GridRef)
     GridRef = Repl(GridRef, "kp", ""); // remove "kp" if the admin has entered a grid ref in format of "E 4 kp 3" (the original Builder mutator format)
 
     GridLetter = Left(GridRef, 1);
-    GridNumber = Byte(Mid(GridRef, 1, 1));
-    KeypadNumber = Byte(Mid(GridRef, 2, 1));
+    GridNumber = byte(Mid(GridRef, 1, 1));
+    KeypadNumber = byte(Mid(GridRef, 2, 1));
 
     if (GridNumber < 1 || GridNumber > 9)
     {
@@ -1164,7 +1164,7 @@ function vector GetGridDropLocation(string GridRef)
     }
 
     // Set GridX & GridY as relative offsets (in grid squares at this stage) from MapCentre, so we have values between -4 and +4 for calculating the drop position
-    GridX = Float(GridNumber - 5);
+    GridX = float(GridNumber - 5);
 
     switch (GridLetter)
     {

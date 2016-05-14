@@ -1044,7 +1044,7 @@ function Timer()
 defaultproperties
 {
     bDoNotUseLabelShiftingOnSituationMap=true
-    Texture=Texture'DHEngine_Tex.Objective'
+    Texture=texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true
     PlayersNeededToCapture=1

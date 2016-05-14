@@ -7,7 +7,7 @@ class DHObjectiveManager extends MasterObjectiveManager;
 
 function PostBeginPlay()
 {
-    if (DarkestHourGame(Level.Game) != None)
+    if (DarkestHourGame(Level.Game) != none)
     {
         DarkestHourGame(Level.Game).ObjectiveManager = self;
     }
@@ -16,19 +16,19 @@ function PostBeginPlay()
 // Override to fix issue with RO vs DH objective arrays in DarkestHourGame
 function ObjectiveStateChanged()
 {
-    local int i,j,k;
     local DarkestHourGame DHGame;
-    local bool bReadyToModify;
+    local bool            bReadyToModify;
+    local int             i,j,k;
 
     DHGame = DarkestHourGame(Level.Game);
 
-    for (i = 0; i < ObjectiveManagers.Length; i++)
+    for (i = 0; i < ObjectiveManagers.Length; ++i)
     {
-        for (k = 0; k < ArrayCount(DHGame.DHObjectives); k++)
+        for (k = 0; k < ArrayCount(DHGame.DHObjectives); ++k)
         {
             bReadyToModify = true;
 
-            for (j = 0; j < ObjectiveManagers[i].AxisRequiredObjectives.Length; j++)
+            for (j = 0; j < ObjectiveManagers[i].AxisRequiredObjectives.Length; ++j)
             {
                 if (DHGame.DHObjectives[ObjectiveManagers[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
@@ -37,7 +37,7 @@ function ObjectiveStateChanged()
                 }
             }
 
-            for (j = 0; j < ObjectiveManagers[i].AlliesRequiredObjectives.Length; j++)
+            for (j = 0; j < ObjectiveManagers[i].AlliesRequiredObjectives.Length; ++j)
             {
                 if (DHGame.DHObjectives[ObjectiveManagers[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
@@ -48,7 +48,7 @@ function ObjectiveStateChanged()
 
             if (bReadyToModify)
             {
-                for (j = 0; j < ObjectiveManagers[i].AxisObjectivesToModify.Length; j++)
+                for (j = 0; j < ObjectiveManagers[i].AxisObjectivesToModify.Length; ++j)
                 {
                     if (ObjectiveManagers[i].ActivationStyle == AS_Activate)
                     {
@@ -63,7 +63,7 @@ function ObjectiveStateChanged()
                     DHGame.DHObjectives[ObjectiveManagers[i].AxisObjectivesToModify[j]].NotifyStateChanged();
                 }
 
-                for (j = 0; j < ObjectiveManagers[i].AlliesObjectivesToModify.Length; j++)
+                for (j = 0; j < ObjectiveManagers[i].AlliesObjectivesToModify.Length; ++j)
                 {
                     if (ObjectiveManagers[i].ActivationStyle == AS_Activate)
                     {

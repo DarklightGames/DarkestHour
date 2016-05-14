@@ -1075,7 +1075,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Should never happen !
     else
     {
-       Log ("?!? We shoulda hit something !!!!");
+       Log("?!? We shoulda hit something !!!!");
        Level.Game.Broadcast(self, "?!? We shoulda hit something !!!!");
 
        return false;

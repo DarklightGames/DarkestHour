@@ -35,6 +35,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     if (UseRandomness)
     {
         RandomNum = Rand(101);  //Gets a random # between 0 & 100
+
         if (RandomPercent <= RandomNum)
             return; //stop function because it randomly failed
     }
@@ -48,6 +49,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
         {
             if (EventToTriggerForFail != '')
                 TriggerEvent(EventToTriggerForFail, self, none); //Triggers the event EventToTriggerForFail
+
             return; //No reason to continue as not all the objectives were in the state to check for
         }
     }
@@ -84,8 +86,9 @@ state Timing
 {
     function BeginState()
     {
-        SetTimer(1, true);
+        SetTimer(1.0, true);
     }
+
     function Timer()
     {
         Trigger(self, none); //calls it's own Trigger Function

@@ -24,11 +24,11 @@ defaultproperties
     FontNames(13)="DHLargeFont"
     FontNames(14)="DHLargeFont"
 
-    Images(0)=Texture'InterfaceArt_tex.Menu.tabssolid'
-    Images(1)=Texture'InterfaceArt_tex.Menu.tabssolid_watched'
-    Images(2)=Texture'InterfaceArt_tex.Menu.tabssolid'
-    Images(3)=Texture'InterfaceArt_tex.Menu.tabssolid_watched'
-    Images(4)=Texture'InterfaceArt_tex.Menu.tabssolid'
+    Images(0)=texture'InterfaceArt_tex.Menu.tabssolid'
+    Images(1)=texture'InterfaceArt_tex.Menu.tabssolid_watched'
+    Images(2)=texture'InterfaceArt_tex.Menu.tabssolid'
+    Images(3)=texture'InterfaceArt_tex.Menu.tabssolid_watched'
+    Images(4)=texture'InterfaceArt_tex.Menu.tabssolid'
 
     FontColors(0)=(R=200,G=200,B=200,A=220) // Normal (unselected)
     FontColors(1)=(R=255,G=255,B=255,A=255) // Mouse over

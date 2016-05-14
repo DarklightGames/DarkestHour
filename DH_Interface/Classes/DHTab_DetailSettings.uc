@@ -80,13 +80,12 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
         case ch_Advanced:
             break; // value is set by co_GlobalDetails
 
-        // copied from UT2K4Tab_DetailSettings
+        // Copied from UT2K4Tab_DetailSettings
         case co_Shadows:
             tempStr = GetNativeClassName("Engine.Engine.RenderDevice");
 
-            // No render-to-texture on anything but Direct3D.
-            if ((tempStr == "D3DDrv.D3DRenderDevice") ||
-                (tempStr == "D3D9Drv.D3D9RenderDevice"))
+            // No render-to-texture on anything but Direct3D
+            if (tempStr == "D3DDrv.D3DRenderDevice" || tempStr == "D3D9Drv.D3D9RenderDevice")
             {
                 a = bool(PC.ConsoleCommand("get ROEngine.ROPawn bPlayerShadows"));
                 b = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
@@ -122,9 +121,10 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             DisableHDRControlIfNeeded();
 
             // Disable control if card doesn't support hdr
-            if (ROPlayer(PlayerOwner()) != none)
-                if (!ROPlayer(PlayerOwner()).PostFX_IsBloomCapable())
-                    ch_HDR.DisableMe();
+            if (ROPlayer(PlayerOwner()) != none && !ROPlayer(PlayerOwner()).PostFX_IsBloomCapable())
+            {
+                ch_HDR.DisableMe();
+            }
 
             break;
     }
@@ -360,24 +360,18 @@ function UpdateGlobalDetails()
             co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(3);         // Range = 0 - 3
 
-            if (
-                  (
-                      (true==bool(PC.ConsoleCommand("ISNVIDIAGPU")))
-                       && (false==bool(PC.ConsoleCommand("SUPPORTEDMULTISAMPLE 4"))
-                  )
-                   || (false==bool(PC.ConsoleCommand("ISNVIDIAGPU"))))
-                   && (MultiSampleModes.Length>3)
-              )
+            if (((true == bool(PC.ConsoleCommand("ISNVIDIAGPU"))) && (false == bool(PC.ConsoleCommand("SUPPORTEDMULTISAMPLE 4"))) || (false == bool(PC.ConsoleCommand("ISNVIDIAGPU"))))
+                && (MultiSampleModes.Length > 3))
                  co_MultiSamples.setindex(3);
-            else if (MultiSampleModes.Length>2)
+            else if (MultiSampleModes.Length > 2)
                  co_MultiSamples.setindex(2);
-            else if (MultiSampleModes.Length>1)
+            else if (MultiSampleModes.Length > 1)
                  co_MultiSamples.setindex(1);
             else
                  co_MultiSamples.setindex(0);
 
-            co_Anisotropy.setindex(AnisotropyModes.Length-1);
-            ch_ForceFSAAScreenshotSupport.SetComponentValue(true,false);
+            co_Anisotropy.setindex(AnisotropyModes.Length - 1);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(true, false);
             ch_Decals.SetComponentValue(true, false);
             ch_DynLight.SetComponentValue(true, false);
             ch_Coronas.SetComponentValue(true, false);
@@ -431,7 +425,6 @@ function SaveSettings()
     {
         class'ROEngine.ROPlayer'.default.GlobalDetailLevel = iGlobalDetails;
         bSavePlayerConfig = true;
-
         iGlobalDetailsD = iGlobalDetails;
     }
 
@@ -485,6 +478,7 @@ defaultproperties
     DisplayModes(14)=(Width=1600,Height=1200)
     DisplayModes(15)=(Width=1920,Height=1200)
     DisplayModes(16)=(Width=2560,Height=1440)
+
     Begin Object Class=DHmoComboBox Name=GlobalDetails
         ComponentJustification=TXTA_Left
         CaptionWidth=0.55

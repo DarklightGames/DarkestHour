@@ -7,8 +7,8 @@ class DHVoiceReplicationInfo extends TeamVoiceReplicationInfo;
 
 const SQUAD_CHANNELS_MAX = 8;
 
-var VoiceChatRoom AxisSquadChannels[SQUAD_CHANNELS_MAX];
-var VoiceChatRoom AlliesSquadChannels[SQUAD_CHANNELS_MAX];
+var     VoiceChatRoom   AxisSquadChannels[SQUAD_CHANNELS_MAX];
+var     VoiceChatRoom   AlliesSquadChannels[SQUAD_CHANNELS_MAX];
 
 replication
 {
@@ -51,9 +51,9 @@ simulated event InitChannels()
     }
 }
 
-simulated function bool ValidRoom( VoiceChatRoom Room )
+simulated function bool ValidRoom(VoiceChatRoom Room)
 {
-    return bEnableVoiceChat && Room != none && Room.ChannelIndex < 20 && Room.Owner == Self;
+    return bEnableVoiceChat && Room != none && Room.ChannelIndex < 20 && Room.Owner == self;
 }
 
 simulated function VoiceChatRoom AddSquadChannel(int TeamIndex, int SquadIndex)

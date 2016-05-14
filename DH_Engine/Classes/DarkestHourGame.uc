@@ -244,6 +244,7 @@ function PostBeginPlay()
     {
         GRI.NorthEastBounds = NE.Location;
     }
+
     foreach AllActors(class'ROMapBoundsSW', SW)
     {
         GRI.SouthWestBounds = SW.Location;
@@ -2515,11 +2516,12 @@ exec function CaptureObj(int Team)
 {
     local int i;
 
-    for (i = 0; i < arraycount(DHObjectives); i++)
+    for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i].bActive)
         {
             DHObjectives[i].ObjectiveCompleted(none, Team);
+
             return;
         }
     }
@@ -2584,7 +2586,7 @@ exec function KillBots(int num)
 
     bKillBots = true;
 
-    while (C != None && num > 0)
+    while (C != none && num > 0)
     {
         nextC = C.NextController;
 
@@ -3383,7 +3385,7 @@ function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional
         TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance,5)));
 
         VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
-        CreatedVehicle = spawn(VehicleClass,,, TargetLocation, Direction);
+        CreatedVehicle = Spawn(VehicleClass,,, TargetLocation, Direction);
 
         if (bool(SetAsCrew) == true && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo != none)
         {

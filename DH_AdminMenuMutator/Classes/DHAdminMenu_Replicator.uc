@@ -74,11 +74,11 @@ simulated function PostBeginPlay()
 // Used to adjust default LifeTime in message classes to take account of the GameSpeed, so messages stay on screen for the same time even if GameSpeed is changed
 static function SetMessageClassLifeTimes(float GameSpeed)
 {
-    class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages'.default.LifeTime = Int(Round(8.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage'.default.LifeTime = Int(Round(9.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage'.default.LifeTime = Int(Round(9.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_AdminMessages'.default.LifeTime  = Int(Round(5.0 * GameSpeed));
-    class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.default.LifeTime  = Int(Round(3.0 * GameSpeed));
+    class'DH_AdminMenuMutator.DHAdminMenu_NotifyMessages'.default.LifeTime = int(Round(8.0 * GameSpeed));
+    class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage'.default.LifeTime = int(Round(9.0 * GameSpeed));
+    class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage'.default.LifeTime = int(Round(9.0 * GameSpeed));
+    class'DH_AdminMenuMutator.DHAdminMenu_AdminMessages'.default.LifeTime  = int(Round(5.0 * GameSpeed));
+    class'DH_AdminMenuMutator.DHAdminMenu_ErrorMessages'.default.LifeTime  = int(Round(3.0 * GameSpeed));
 }
 
 // On clients this waits until the local PlayerController has been replicated & then creates the local menu interactions

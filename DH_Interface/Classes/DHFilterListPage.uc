@@ -68,8 +68,8 @@ function bool CreateClick(GUIComponent Sender)
 
     FM.AddCustomFilter(FN);
     InitFilterList();
-    i= FM.FindFilterIndex(FN);
-    Controller.OpenMenu("DH_Interface.DHFilterEdit", "" $ i,FN);
+    i = FM.FindFilterIndex(FN);
+    Controller.OpenMenu("DH_Interface.DHFilterEdit", "" $ i, FN);
 
     return true;
 }
@@ -82,8 +82,8 @@ function bool EditClick(GUIComponent Sender)
 
     cb = moCheckbox(li_Filters.Get());
     FN = cb.Caption;
-    i= FM.FindFilterIndex(FN);
-    Controller.OpenMenu("DH_Interface.DHFilterEdit", "" $ i,FN);
+    i = FM.FindFilterIndex(FN);
+    Controller.OpenMenu("DH_Interface.DHFilterEdit", "" $ i, FN);
 
     return true;
 }

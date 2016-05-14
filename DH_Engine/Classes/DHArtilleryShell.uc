@@ -283,7 +283,7 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
     }
 }
 
-// Colin: Overriden to just return true. The super function is a pointless
+// Colin: Overridden to just return true. The super function is a pointless
 // micro-optimization that may have made sense in 2008 when graphics harware
 // wasn't as good, but certainly doesn't make sense now. This is an effect
 // that's the size of a building; I don't care how far away it is or if

@@ -61,5 +61,3 @@ defaultproperties
     Options(2)=(Text="Defend",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend')
     Options(3)=(Text="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
 }
-
-

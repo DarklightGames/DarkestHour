@@ -5,18 +5,18 @@
 
 class DH_TriggerProjector extends Projector;
 
-var(Projector) Color ProjColorOn;       // The light color if the projector is on.
-var(Projector) Color ProjColorOff;      //  "    "     "   if the projector is off.
-var(Projector) Color ProjTintOn;        // These colors are overlaid over the projection
-var(Projector) Color ProjTintOff;       // alpha.  Grey will have no effect, white
+var(Projector) color ProjColorOn;       // The light color if the projector is on.
+var(Projector) color ProjColorOff;      //  "    "     "   if the projector is off.
+var(Projector) color ProjTintOn;        // These colors are overlaid over the projection
+var(Projector) color ProjTintOff;       // alpha.  Grey will have no effect, white
                                         // brightens and black darkens.
 var(Projector) float ChangeTime;        // Time light takes to change from on to off.
 var(Projector) bool  bInitiallyOn;      // Whether it's initially on.
 var(Projector) bool  bInitiallyFading;  //    "     "   initially fading up or down.
 
 var float     TimeSinceTriggered;
-var Color     CurrentColor;
-var Color     CurrentTint;
+var color     CurrentColor;
+var color     CurrentTint;
 var bool      bIsOn;
 var protected ScriptedTexture ScriptTexture;
 var Material  MaskTexture;
@@ -27,85 +27,81 @@ var float SwapTime;
 replication
 {
     reliable if (ROLE == ROLE_Authority)
-                ScriptTexture;
+        ScriptTexture;
 }
 
 simulated event PostBeginPlay()
 {
-    local Color startColor;
-    local Color startTint;
+    local color   startColor, startTint;
     local Texture theProjTexture;
 
     super.PostBeginPlay();
 
-    // Allocate a new scripted texture from the pool
-    // and have it call us for updates.
+    // Allocate a new scripted texture from the pool & and have it call us for updates
     ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
     ScriptTexture.SetSize(ProjTexture.MaterialUSize(), ProjTexture.MaterialVSize());
     ScriptTexture.Client = self;
 
-    // Set the scripted texture properties to
-    // match those of the ProjTexture:
+    // Set the scripted texture properties to match those of the ProjTexture
     theProjTexture = Texture(ProjTexture);
+
     if (theProjTexture != none)
     {
-            ScriptTexture.UClampMode = theProjTexture.UClampMode;
-            ScriptTexture.VClampMode = theProjTexture.VClampMode;
+        ScriptTexture.UClampMode = theProjTexture.UClampMode;
+        ScriptTexture.VClampMode = theProjTexture.VClampMode;
     }
 
-    // Remember the given texture to use as a mask:
+    // Remember the given texture to use as a mask
     MaskTexture = ProjTexture;
 
-    // Attach the texture to the displayed projector texture:
+    // Attach the texture to the displayed projector texture
     ProjTexture = ScriptTexture;
 
-    // Work out the starting light color:
+    // Work out the starting light color
     bIsOn = bInitiallyOn;
 
-    // If we're on the client side, start in
-    // the right mode based on its trigger:
+    // If we're on the client side, start in the right mode based on its trigger
     if (ROLE != ROLE_Authority && bClientTrigger)
     {
-            bIsOn = !bIsOn;
+        bIsOn = !bIsOn;
     }
 
     if (bIsOn)
     {
-            startColor = ProjColorOn;
-            startTint = ProjTintOn;
+        startColor = ProjColorOn;
+        startTint = ProjTintOn;
     }
     else
     {
-            startColor = ProjColorOff;
-            startTint = ProjTintOff;
+        startColor = ProjColorOff;
+        startTint = ProjTintOff;
     }
+
     startColor.A = 255;
     startTint.A = 255;
 
-    // Set the color:
+    // Set the color
     SetColors(startColor, startTint);
 
-    // If we're fading, we tick:
+    // If we're fading, we tick
     if (bInitiallyFading)
     {
-            Enable('Tick');
-            bIsOn = !bIsOn;
+        Enable('Tick');
+        bIsOn = !bIsOn;
     }
-    // Otherwise we don't tick:
+    // Otherwise we don't tick
     else
     {
-            Disable('Tick');
+        Disable('Tick');
     }
 }
 
 simulated event Destroyed()
 {
-    // You should disconnect the object
-    // pool texture from everything you've
-    // assigned it to.
+    // You should disconnect the object pool texture from everything you've assigned it to
     ProjTexture = none;
 
-    // Clean up else you will leak resources.
+    // Clean up else you will leak resources
     assert(ScriptTexture != none);
     Level.ObjectPool.FreeObject(ScriptTexture);
     ScriptTexture = none;
@@ -113,15 +109,15 @@ simulated event Destroyed()
     super.Destroyed();
 }
 
-simulated function SetColors(Color NewColor, Color NewTint)
+simulated function SetColors(color NewColor, color NewTint)
 {
-    // Check to see if it's a new color:
-    if ((CurrentColor == NewColor) && (CurrentTint == NewTint))
-            return;
+    // Check to see if it's a new color
+    if (CurrentColor == NewColor && CurrentTint == NewTint)
+    {
+        return;
+    }
 
-    // Change the color and force an update
-    // of the scripted texture on the next
-    // frame that it's visible.
+    // Change the color and force an update of the scripted texture on the next frame that it's visible
     CurrentColor = NewColor;
     CurrentTint = NewTint;
     assert(ScriptedTexture(ProjTexture) != none);
@@ -140,49 +136,50 @@ simulated event RenderTexture(ScriptedTexture Tex)
 simulated function Tick(float DeltaTime)
 {
     local float percent;
-    local Color newColor;
-    local Color newTint;
+    local color newColor, newTint;
 
     TimeSinceTriggered += DeltaTime;
     percent = TimeSinceTriggered / SwapTime;
 
-    // If we're done with the fade, set to final color and leave:
+    // If we're done with the fade, set to final color and leave
     if (percent >= 1)
     {
-            Disable('Tick');
-            if (bIsOn)
+        Disable('Tick');
+        
+        if (bIsOn)
         {
-                SetColors(ProjColorOn, ProjTintOn);
+            SetColors(ProjColorOn, ProjTintOn);
         }
-            else
+        else
         {
-                SetColors(ProjColorOff, ProjTintOff);
+            SetColors(ProjColorOff, ProjTintOff);
         }
 
-            return;
+        return;
     }
 
     // Just fade to the right level:
     if (bIsOn)
     {
-            newColor.R = percent * ProjColorOn.R + (1-percent) * ProjColorOff.R;
-            newColor.G = percent * ProjColorOn.G + (1-percent) * ProjColorOff.G;
-            newColor.B = percent * ProjColorOn.B + (1-percent) * ProjColorOff.B;
+        newColor.R = percent * ProjColorOn.R + (1-percent) * ProjColorOff.R;
+        newColor.G = percent * ProjColorOn.G + (1-percent) * ProjColorOff.G;
+        newColor.B = percent * ProjColorOn.B + (1-percent) * ProjColorOff.B;
 
-            newTint.R = percent * ProjTintOn.R + (1-percent) * ProjTintOff.R;
-            newTint.G = percent * ProjTintOn.G + (1-percent) * ProjTintOff.G;
-            newTint.B = percent * ProjTintOn.B + (1-percent) * ProjTintOff.B;
+        newTint.R = percent * ProjTintOn.R + (1-percent) * ProjTintOff.R;
+        newTint.G = percent * ProjTintOn.G + (1-percent) * ProjTintOff.G;
+        newTint.B = percent * ProjTintOn.B + (1-percent) * ProjTintOff.B;
     }
     else
     {
-            newColor.R = percent * ProjColorOff.R + (1-percent) * ProjColorOn.R;
-            newColor.G = percent * ProjColorOff.G + (1-percent) * ProjColorOn.G;
-            newColor.B = percent * ProjColorOff.B + (1-percent) * ProjColorOn.B;
+        newColor.R = percent * ProjColorOff.R + (1-percent) * ProjColorOn.R;
+        newColor.G = percent * ProjColorOff.G + (1-percent) * ProjColorOn.G;
+        newColor.B = percent * ProjColorOff.B + (1-percent) * ProjColorOn.B;
 
-            newTint.R = percent * ProjTintOff.R + (1-percent) * ProjTintOn.R;
-            newTint.G = percent * ProjTintOff.G + (1-percent) * ProjTintOn.G;
-            newTint.B = percent * ProjTintOff.B + (1-percent) * ProjTintOn.B;
+        newTint.R = percent * ProjTintOff.R + (1-percent) * ProjTintOn.R;
+        newTint.G = percent * ProjTintOff.G + (1-percent) * ProjTintOn.G;
+        newTint.B = percent * ProjTintOff.B + (1-percent) * ProjTintOn.B;
     }
+
     newColor.A = 255;
     newTint.A = 255;
 
@@ -191,7 +188,6 @@ simulated function Tick(float DeltaTime)
 
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
-
     if (bIsOn)
     {
         SwapTime = ChangeTime;
@@ -203,7 +199,7 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
 
     Log("Projector Triggered");
     Enable('Tick');
-    TimeSinceTriggered = 0;
+    TimeSinceTriggered = 0.0;
     bIsOn = !bIsOn;
     bClientTrigger = !bClientTrigger;
 }
@@ -224,7 +220,7 @@ simulated event ClientTrigger()
     // because in Trigger() we updated bClientTrigger.
     Log("Client Projector Triggered");
     Enable('Tick');
-    TimeSinceTriggered = 0;
+    TimeSinceTriggered = 0.0;
     bIsOn = !bIsOn;
 }
 
@@ -232,7 +228,7 @@ simulated function Reset()
 {
     super.Reset();
 
-    //TODO: Fix.
+    //TODO: fix
 }
 
 defaultproperties

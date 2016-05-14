@@ -68,7 +68,7 @@ function OnInputChange(GUIComponent Sender)
         SampleRateString = "0.00" $ SampleRateString;
         PC.ConsoleCommand("set Engine.PlayerInput MouseSamplingTime" @ SampleRateString);
     }
-    else if(Sender == fl_IronSightFactor)
+    else if (Sender == fl_IronSightFactor)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHISTurnSpeedFactor" @ fl_IronSightFactor.GetValue());
 
@@ -78,7 +78,7 @@ function OnInputChange(GUIComponent Sender)
             DHPlayer(PC).SaveConfig();
         }
     }
-    else if(Sender == fl_ScopedFactor)
+    else if (Sender == fl_ScopedFactor)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHScopeTurnSpeedFactor" @ fl_ScopedFactor.GetValue());
 

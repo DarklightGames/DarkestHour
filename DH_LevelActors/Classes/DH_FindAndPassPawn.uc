@@ -13,7 +13,7 @@ enum FindType
     FT_Factory,
 };
 
-//var   int         DelayTimeBeforeFind; //does this need to be variable?
+//var   int                     DelayTimeBeforeFind; // does this need to be variable?
 var()   FindType                HowToFind;
 var()   name                    TagToFind;
 var()   array<class<Pawn> >     PawnClassToFind;
@@ -41,8 +41,9 @@ auto state DelayBeforeFind
 {
     function BeginState()
     {
-        SetTimer(5, false);
+        SetTimer(5.0, false);
     }
+
     function Timer()
     {
         switch (HowToFind)

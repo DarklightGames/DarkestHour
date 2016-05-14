@@ -1516,7 +1516,6 @@ function DrawPlayerNames(Canvas C)
     local string                  PlayerName;
     local bool                    bCanDrawName, bIsInMySquad, bIsTalking, bIsInMySquadOrTalking;
 
-
     if (PawnOwner == none || PlayerOwner == none)
     {
         return;
@@ -1614,7 +1613,7 @@ function DrawPlayerNames(Canvas C)
 
         // NOTE: There's no actual loop here, it's just a shortcut so we don't
         // have to add another boolean value to check.
-        while(true)
+        while (true)
         {
             PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
             PawnLocation.Z += 16.0;
@@ -4475,7 +4474,7 @@ simulated function DrawLCDPlayerStatus(Canvas C, GUIController GC)
         // Draw health info
         if (ROP != none)
         {
-            PawnHealth = int((float(PawnOwner.Health) / float(PawnOwner.Default.Health)) * 100.0);
+            PawnHealth = int((float(PawnOwner.Health) / float(PawnOwner.default.Health)) * 100.0);
 
             if (PawnHealth == 100)
             {
@@ -4501,13 +4500,13 @@ simulated function DrawLCDPlayerStatus(Canvas C, GUIController GC)
         {
             if (ROVWP != none)
             {
-                PawnHealth = int((float(ROVWP.VehicleBase.Health) / float(ROVWP.VehicleBase.Default.Health)) * 100.0);
-                Enginehealth = int((float(ROVWP.VehicleBase.EngineHealth) / float(ROVWP.VehicleBase.Default.EngineHealth)) * 100.0);
+                PawnHealth = int((float(ROVWP.VehicleBase.Health) / float(ROVWP.VehicleBase.default.Health)) * 100.0);
+                Enginehealth = int((float(ROVWP.VehicleBase.EngineHealth) / float(ROVWP.VehicleBase.default.EngineHealth)) * 100.0);
             }
             else
             {
-                PawnHealth = int((float(PawnOwner.Health) / float(PawnOwner.Default.Health)) * 100.0);
-                Enginehealth = int((float(ROVehicle(PawnOwner).EngineHealth) / float(ROVehicle(PawnOwner).Default.EngineHealth)) * 100.0);
+                PawnHealth = int((float(PawnOwner.Health) / float(PawnOwner.default.Health)) * 100.0);
+                Enginehealth = int((float(ROVehicle(PawnOwner).EngineHealth) / float(ROVehicle(PawnOwner).default.EngineHealth)) * 100.0);
             }
 
             if (PawnHealth == 100)
@@ -4605,7 +4604,7 @@ simulated function DrawLCDPlayerStatus(Canvas C, GUIController GC)
     GC.LCDRepaint();
 }
 
-// Colin: Overriden to have the color be green if you are talking in a squad channel.
+// Colin: Overridden to have the color be green if you are talking in a squad channel.
 function DisplayVoiceGain(Canvas C)
 {
     local float VoiceGain;

@@ -99,7 +99,7 @@ function SendVote(GUIComponent Sender)
         {
             GameConfigIndex = int(co_GameType.GetExtra());
 
-            if(MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
+            if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
                 MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }

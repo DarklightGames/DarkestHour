@@ -17,7 +17,6 @@ var     float       FirstPersonOffsetZScale;     // used with HUDOverlay to scal
 var     float       FirstPersonGunShakeScale;    // scales up view shake on 1st person HUDOverlay view
 var     bool        bHideMuzzleFlashAboveSights; // workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights, as it sometimes looks wrong
 
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

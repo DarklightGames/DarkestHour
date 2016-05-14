@@ -153,7 +153,7 @@ simulated function Tick(float DeltaTime)
 // Modified to work generically, using ItemName
 static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
 {
-    switch(Switch)
+    switch (Switch)
     {
         case 0:
             return Repl(default.PickupMessage, "{0}", default.InventoryType.default.ItemName);

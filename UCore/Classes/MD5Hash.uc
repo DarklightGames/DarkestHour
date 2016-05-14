@@ -23,7 +23,7 @@ static final function GUID GetStringHash(string In)
 
     default.StaticData.Length = StrLen;
 
-    for (i = 0; i < StrLen; i++)
+    for (i = 0; i < StrLen; ++i)
     {
         default.StaticData[i] = Asc(Mid(In, i, 1));
     }
@@ -41,7 +41,7 @@ static final function string GetStringHashString(string In)
 
     default.StaticData.Length = StrLen;
 
-    for (i = 0; i < StrLen; i++)
+    for (i = 0; i < StrLen; ++i)
     {
         default.StaticData[i] = Asc(Mid(In, i, 1));
     }
@@ -126,7 +126,7 @@ static final function StaticProcessChunks()
 
     while (default.StaticData.Length > 0)
     {
-        for (i = 0; i < 16; i++)
+        for (i = 0; i < 16; ++i)
         {
             W[i] = (default.StaticData[i * 4 + 3] << 24)
                  | (default.StaticData[i * 4 + 2] << 16)

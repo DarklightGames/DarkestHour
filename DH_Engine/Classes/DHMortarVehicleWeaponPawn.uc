@@ -163,7 +163,7 @@ simulated function DrawHUD(Canvas C)
                 TraverseString $= "+";
             }
 
-            TraverseString $= String(Traverse);
+            TraverseString $= string(Traverse);
 
             // Draw current round type icon
             RoundIndex = VehWep.GetAmmoIndex();
@@ -235,7 +235,7 @@ simulated function DrawHUD(Canvas C)
             // Draw elevation & traverse text
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-            C.DrawText("E:" @ String(Elevation));
+            C.DrawText("E:" @ string(Elevation));
 
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));

@@ -26,7 +26,7 @@ event ConnectFailure(string FailCode,string URL)
 
     if (FailCode == "NEEDPW")
     {
-        for (Index = 0;Index < SavedPasswords.Length;Index++)
+        for (Index = 0; Index < SavedPasswords.Length; ++Index)
         {
             if (SavedPasswords[Index].Server == Server)
             {
@@ -81,7 +81,6 @@ event ConnectFailure(string FailCode,string URL)
 
         return;
     }
-
     else if (FailCode == "SESSIONBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
@@ -89,7 +88,6 @@ event ConnectFailure(string FailCode,string URL)
 
         return;
     }
-
     else if (FailCode == "SERVERFULL")
     {
         ViewportOwner.Actor.ClearProgressMessages();
@@ -97,7 +95,6 @@ event ConnectFailure(string FailCode,string URL)
 
         return;
     }
-
     else if (FailCode == "CHALLENGE")
     {
         ViewportOwner.Actor.ClearProgressMessages();
@@ -184,14 +181,14 @@ state SpeechMenuVisible
        SMArraySize = 0;
        PreviousStateName = ROSMS_Commanders;
 
-       for(i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
+       for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
         {
-            if(DHGRI.DHObjectives[i] != none)
+            if (DHGRI.DHObjectives[i] != none)
             {
-                switch(DHPRI.RoleInfo.Side)
+                switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
-                       if((DHGRI.DHObjectives[i].ObjState == OBJ_Allies ||
+                       if ((DHGRI.DHObjectives[i].ObjState == OBJ_Allies ||
                            DHGRI.DHObjectives[i].ObjState == OBJ_Neutral) &&
                            DHGRI.DHObjectives[i].bActive)
                        {
@@ -202,7 +199,7 @@ state SpeechMenuVisible
                        break;
 
                    case SIDE_Allies:
-                       if((DHGRI.DHObjectives[i].ObjState == OBJ_Axis ||
+                       if ((DHGRI.DHObjectives[i].ObjState == OBJ_Axis ||
                            DHGRI.DHObjectives[i].ObjState == OBJ_Neutral) &&
                            DHGRI.DHObjectives[i].bActive)
                        {
@@ -232,14 +229,14 @@ state SpeechMenuVisible
        PreviousStateName = ROSMS_Commanders;
 
        //TODO: find out if the number of objectives can be hardcoded (16)
-       for(i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
+       for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
        {
-            if(DHGRI.DHObjectives[i] != none)
+            if (DHGRI.DHObjectives[i] != none)
             {
-                switch(DHPRI.RoleInfo.Side)
+                switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
-                       if(DHGRI.DHObjectives[i].ObjState == OBJ_Axis )
+                       if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
                        {
                           SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                           SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
@@ -248,7 +245,7 @@ state SpeechMenuVisible
                        break;
 
                    case SIDE_Allies:
-                       if(DHGRI.DHObjectives[i].ObjState == OBJ_Allies )
+                       if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
                        {
                           SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                           SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
@@ -272,9 +269,9 @@ state SpeechMenuVisible
        PreviousStateName = ROSMS_Vehicle_Orders;
 
        //TODO: find out if the number of objectives can be hardcoded (16)
-       for(i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
+       for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
        {
-            if(DHGRI.DHObjectives[i] != none)
+            if (DHGRI.DHObjectives[i] != none)
             {
                 SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                 SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;

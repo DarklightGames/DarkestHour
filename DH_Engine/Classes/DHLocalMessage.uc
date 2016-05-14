@@ -14,7 +14,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
     return MessageString;
 }
 
-static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
+static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
     if (RelatedPRI_1 != none &&
         RelatedPRI_1.Team != none &&

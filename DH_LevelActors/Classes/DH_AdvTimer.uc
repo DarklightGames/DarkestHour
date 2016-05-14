@@ -5,9 +5,9 @@
 
 class DH_AdvTimer extends DH_LevelActors;
 
-var() localized string  Message; //Message to send to a team when interval is reached
-var() localized string  EndMessage; //Message to send to team when end is reached
-var()   name            MessageType; //Say,TeamSay,SayDead,TeamSayDead,VehicleSay,CriticalEvent,DeathMessage
+var() localized string  Message;     // message to send to a team when interval is reached
+var() localized string  EndMessage;  // message to send to team when end is reached
+var()   name            MessageType; // Say, TeamSay, SayDead, TeamSayDead, VehicleSay, CriticalEvent, DeathMessage
 var()   ROSideIndex     MessageTeam, EndMessageTeam;
 var()   int             TimeMin, TimeMax, MessageIntervalTime;
 var     int             TimeElapsed, TimeActual;
@@ -17,7 +17,7 @@ var()   name            nEventToTrigger;
 
 function Reset()
 {
-    GotoState('Initialize'); //cancles the Timing Timer (allowing for resetgame)
+    GotoState('Initialize'); //cancels the Timing Timer (allowing for resetgame)
     bFired = false;
     TimeElapsed = 0;
 }
@@ -25,9 +25,13 @@ function Reset()
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     if (!IsInState('Timing'))
-        GotoState('Timing'); //Not Timing? Then start
+    {
+        GotoState('Timing'); // Not Timing? Then start
+    }
     else
-        GotoState('Initialize'); //Timing? Then lets stop and only restart if bAutoStart is true
+    {
+        GotoState('Initialize'); // Timing? Then let's stop & only restart if bAutoStart is true
+    }
 }
 
 auto state Initialize
@@ -35,7 +39,9 @@ auto state Initialize
     function BeginState()
     {
         if (bAutoStart)
+        {
             GotoState('Timing');
+        }
     }
 }
 
@@ -49,9 +55,10 @@ state Timing
         if (!bFireOnce || (bFireOnce && !bFired))
         {
             bFired = true;
-            SetTimer(1, true);
+            SetTimer(1.0, true);
         }
     }
+
     function Timer()
     {
         local PlayerController PC;
@@ -69,12 +76,15 @@ state Timing
             if (bUseEndMessage)
             {
                 if (EndMessageTeam == NEUTRAL)
+                {
                     Level.Game.Broadcast(self, EndMessage, MessageType);
+                }
                 else
                 {
                     for (C = Level.ControllerList; C != none; C = C.NextController)
                     {
                         PC = PlayerController(C);
+
                         if (PC != none && PC.GetTeamNum() == EndMessageTeam)
                             PC.TeamMessage(C.PlayerReplicationInfo, EndMessage, MessageType);
                     }
@@ -85,10 +95,12 @@ state Timing
             {
                 TimeActual = RandRange(TimeMin, TimeMax);
                 TimeElapsed = 0;
-                SetTimer(1, true); //Recalls timer if repeat is true
+                SetTimer(1.0, true); // recalls timer if repeat is true
             }
             else
-                GoToState('Done'); //Leave timer as we dont' want to repeat and timer is up
+            {
+                GoToState('Done'); //Leave timer as we don't want to repeat & timer is up
+            }
         }
         else
         {
@@ -98,18 +110,22 @@ state Timing
 
                 MinutesLeft = TimerLeft / 60;
                 r = TimerLeft - (MinutesLeft * 60);
+ 
                 if (r < 10)
                     SecondsLeft = "0" $ string(r);
                 else
                     SecondsLeft = string(r);
 
                 if (MessageTeam == NEUTRAL)
+                {
                     Level.Game.Broadcast(self, MinutesLeft $ ":" $ SecondsLeft @ Message, MessageType);
+                }
                 else
                 {
                     for (C = Level.ControllerList; C != none; C = C.NextController)
                     {
                         PC = PlayerController(C);
+
                         if (PC != none && PC.GetTeamNum() == MessageTeam)
                             PC.TeamMessage(C.PlayerReplicationInfo, MinutesLeft $ ":" $ SecondsLeft @ Message, MessageType);
                     }

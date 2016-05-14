@@ -77,7 +77,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         InitialParticlesPerSecond=5.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=25.0,Max=30.0)
         StartVelocityRange=(X=(Min=-15.0,Max=15.0),Y=(Min=-10.0,Max=10.0),Z=(Min=40.0,Max=70.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.05,Max=0.05),Z=(Min=0.1,Max=0.1))

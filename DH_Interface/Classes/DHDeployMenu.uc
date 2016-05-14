@@ -19,42 +19,42 @@ enum EMapMode
 
 var automated   FloatingImage               i_Background;
 var automated   ROGUIProportionalContainer  c_Teams;
-var automated   GUIButton                       b_Axis;
-var automated   GUIImage                        i_Axis;
-var automated   GUILabel                        l_Axis;
-var automated   GUIButton                       b_Allies;
-var automated   GUIImage                        i_Allies;
-var automated   GUILabel                        l_Allies;
-var automated   GUIButton                       b_Spectate;
-var automated   GUIImage                        i_Spectate;
+var automated   GUIButton                   b_Axis;
+var automated   GUIImage                    i_Axis;
+var automated   GUILabel                    l_Axis;
+var automated   GUIButton                   b_Allies;
+var automated   GUIImage                    i_Allies;
+var automated   GUILabel                    l_Allies;
+var automated   GUIButton                   b_Spectate;
+var automated   GUIImage                    i_Spectate;
 var automated   GUIImage                    i_Reinforcements;
 var automated   GUILabel                    l_Reinforcements;
 var automated   GUIImage                    i_RoundTime;
 var automated   GUILabel                    l_RoundTime;
 var automated   ROGUIProportionalContainer  c_Roles;
-var automated   DHGUIListBox                    lb_Roles;
-var             DHGUIList                       li_Roles;
+var automated   DHGUIListBox                lb_Roles;
+var             DHGUIList                   li_Roles;
 var automated   ROGUIProportionalContainer  LoadoutTabContainer;
-var automated   GUIButton                       b_EquipmentButton;
-var automated   GUIImage                        i_EquipmentButton;
-var automated   GUIButton                       b_VehicleButton;
-var automated   GUIImage                        i_VehiclesButton;
+var automated   GUIButton                   b_EquipmentButton;
+var automated   GUIImage                    i_EquipmentButton;
+var automated   GUIButton                   b_VehicleButton;
+var automated   GUIImage                    i_VehiclesButton;
 var automated   GUILabel                    l_Loadout;
 var automated   ROGUIProportionalContainer  c_Loadout;
-var automated   ROGUIProportionalContainer      c_Equipment;
-var automated   ROGUIProportionalContainer      c_Vehicle;
+var automated   ROGUIProportionalContainer  c_Equipment;
+var automated   ROGUIProportionalContainer  c_Vehicle;
 var automated   ROGUIProportionalContainer  c_MapRoot;
-var automated   ROGUIProportionalContainer      c_Map;
-var automated   GUIImage                            i_MapBorder;
-var automated   DHGUIMapComponent                   p_Map;
-var automated   ROGUIProportionalContainer      c_Squads;
-var automated   DHGUISquadsComponent                p_Squads;
+var automated   ROGUIProportionalContainer  c_Map;
+var automated   GUIImage                    i_MapBorder;
+var automated   DHGUIMapComponent           p_Map;
+var automated   ROGUIProportionalContainer  c_Squads;
+var automated   DHGUISquadsComponent        p_Squads;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
-var automated   GUIImage                        i_PrimaryWeapon;
-var automated   GUIImage                        i_SecondaryWeapon;
-var automated   GUIImage                        i_Vehicle;
-var automated   GUIImage                        i_SpawnVehicle;
+var automated   GUIImage                    i_PrimaryWeapon;
+var automated   GUIImage                    i_SecondaryWeapon;
+var automated   GUIImage                    i_Vehicle;
+var automated   GUIImage                    i_SpawnVehicle;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
@@ -932,7 +932,7 @@ function AutoSelectRole()
             }
         }
     }
-    else if(CurrentTeam == ALLIES_TEAM_INDEX)
+    else if (CurrentTeam == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
@@ -1320,8 +1320,6 @@ function ToggleMapMode()
 
 function SetMapMode(EMapMode Mode)
 {
-    local int i;
-
     MapMode = Mode;
 
     switch (MapMode)

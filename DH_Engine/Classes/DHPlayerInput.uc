@@ -6,12 +6,12 @@
 class DHPlayerInput extends ROPlayerInput within DHPlayer
     config(User);
 
-event PlayerInput( float DeltaTime )
+event PlayerInput(float DeltaTime)
 {
     local float FOVScale;
 
     // Ignore input if we're playing back a client-side demo.
-    if( Outer.bDemoOwner && !Outer.default.bDemoOwner )
+    if (Outer.bDemoOwner && !Outer.default.bDemoOwner)
         return;
 
     // Check for Double click move
@@ -26,7 +26,7 @@ event PlayerInput( float DeltaTime )
     bWasRight = (aStrafe > 0);
 
     // Calculate FOVScale
-    if( Outer.GetMouseModifier() < 0 )
+    if (Outer.GetMouseModifier() < 0)
     {
         FOVScale = DesiredFOV * 0.01111; // 0.01111 = 1/90
     }
@@ -47,17 +47,18 @@ event PlayerInput( float DeltaTime )
     aTurn   *= FOVScale;
 
     // Remap raw x-axis movement.
-    if( bStrafe!=0 ) // strafe
+    if (bStrafe != 0) // strafe
         aStrafe += aBaseX * 7.5 + aMouseX;
     else // forward
         aTurn  += aBaseX * FOVScale + aMouseX;
+
     aBaseX = 0;
 
     // Remap mouse y-axis movement.
-    if( (bStrafe == 0) && (bAlwaysMouseLook || (bLook!=0)) )
+    if (bStrafe == 0 && (bAlwaysMouseLook || bLook != 0))
     {
         // Look up/down.
-        if ( bInvertMouse )
+        if (bInvertMouse)
             aLookUp -= aMouseY;
         else
             aLookUp += aMouseY;
@@ -65,7 +66,7 @@ event PlayerInput( float DeltaTime )
     else // Move forward/backward.
         aForward += aMouseY;
 
-    if ( bSnapLevel != 0 )
+    if (bSnapLevel != 0)
     {
         bCenterView = true;
         bKeyboardLook = false;
@@ -75,27 +76,28 @@ event PlayerInput( float DeltaTime )
         bCenterView = false;
         bKeyboardLook = true;
     }
-    else if ( bSnapToLevel && !bAlwaysMouseLook )
+    else if (bSnapToLevel && !bAlwaysMouseLook)
     {
         bCenterView = true;
         bKeyboardLook = false;
     }
 
     // Remap other y-axis movement.
-    if ( bFreeLook != 0 )
+    if (bFreeLook != 0)
     {
         bKeyboardLook = true;
         aLookUp += 0.5 * aBaseY * FOVScale;
     }
     else
+    {
         aForward += aBaseY;
+    }
 
     aBaseY = 0;
 
     // Handle walking.
     HandleWalking();
 }
-
 
 defaultproperties
 {

@@ -23,9 +23,9 @@ defaultproperties
     FontNames(12)="DHSmallFont"
     FontNames(13)="DHSmallFont"
     FontNames(14)="DHSmallFont"
-    Images(0)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(1)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(2)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(3)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(4)=Texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(0)=texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(1)=texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(2)=texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(3)=texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(4)=texture'DH_GUI_Tex.Menu.DHSmallBox'
 }

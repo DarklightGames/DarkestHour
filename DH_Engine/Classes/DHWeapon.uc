@@ -345,7 +345,7 @@ simulated state AutoLoweringWeapon extends LoweringWeapon
         {
             if (InstigatorIsLocallyControlled())
             {
-                for (i= 0; i < NUM_FIRE_MODES; ++i)
+                for (i = 0; i < NUM_FIRE_MODES; ++i)
                 {
                     if (FireMode[i].bIsFiring)
                     {
@@ -368,7 +368,7 @@ simulated state AutoLoweringWeapon extends LoweringWeapon
 
         SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
 
-        for (i= 0; i < NUM_FIRE_MODES; ++i)
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
             FireMode[i].bServerDelayStartFire = false;
             FireMode[i].bServerDelayStopFire = false;

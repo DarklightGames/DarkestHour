@@ -46,7 +46,7 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
         return true;
     }
 
-    if (!ValidMask() || PRI == None || PRI.VoiceID == 255)
+    if (!ValidMask() || PRI == none || PRI.VoiceID == 255)
     {
         return false;
     }

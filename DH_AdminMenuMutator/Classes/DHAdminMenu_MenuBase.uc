@@ -154,7 +154,7 @@ function DrawMenu(canvas Canvas, int PosX, out int PosY, string Title, array<str
         {
             Title @= Label_PageNumber;
             Title = Repl(Title, "%X%", MenuPage + 1);
-            Title = Repl(Title, "%Y%", String((LineText.Length + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE));
+            Title = Repl(Title, "%Y%", string((LineText.Length + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE));
         }
 
         Canvas.SetPos(PosX, PosY);

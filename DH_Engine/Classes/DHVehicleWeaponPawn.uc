@@ -281,7 +281,7 @@ function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
         bWeaponIsFiring = false;
     }
 
-    if (Gun != None)
+    if (Gun != none)
     {
         Gun.ClientStopFire(Controller, bWasAltFire);
 

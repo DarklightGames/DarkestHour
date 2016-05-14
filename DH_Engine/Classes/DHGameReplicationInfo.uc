@@ -469,7 +469,7 @@ simulated function bool IsVehiclePoolReservable(DHPlayer PC, DHRoleInfo RI, int 
         return false;
     }
 
-    if(!IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
+    if (!IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
     {
         // Invalid vehicle pool specified
         return false;
@@ -486,7 +486,7 @@ simulated function bool IsVehiclePoolReservable(DHPlayer PC, DHRoleInfo RI, int 
 
 function bool ReserveVehicle(DHPlayer PC, byte VehiclePoolIndex)
 {
-    if(VehiclePoolIndex != 255 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
+    if (VehiclePoolIndex != 255 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
     {
         return false;
     }

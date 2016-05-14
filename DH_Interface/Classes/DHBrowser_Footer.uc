@@ -25,7 +25,7 @@ function bool InternalOnClick(GUIComponent Sender)
 // This also allows a proper override of the Captions for the footer buttons
 function UpdateActiveButtons(UT2K4Browser_Page CurrentPanel)
 {
-    if (CurrentPanel == None ||
+    if (CurrentPanel == none ||
         CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageInternet' ||
         CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageLAN' ||
         CurrentPanel != class'DH_Interface.DHBrowser_ServerListPageFavorites')
