@@ -1470,7 +1470,7 @@ function UpdateSquads()
         SetVisible(C.eb_SquadName, false);
     }
 
-    while(j < p_Squads.SquadComponents.Length)
+    while (j < p_Squads.SquadComponents.Length)
     {
         SetVisible(p_Squads.SquadComponents[j], false);
 

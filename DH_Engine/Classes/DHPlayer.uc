@@ -4260,6 +4260,11 @@ simulated function ClientSquadSignal(DHSquadReplicationInfo.ESquadSignalType Typ
     SquadSignals[i].TimeSeconds = Level.TimeSeconds;
 }
 
+simulated function bool IsSquadSignalActive(int i)
+{
+    return i >= 0 && i < arraycount(SquadSignals) && SquadSignals[i].Location != vect(0, 0, 0) && Level.TimeSeconds - SquadSignals[i].TimeSeconds < 15.0;
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // END SQUAD DEBUG FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

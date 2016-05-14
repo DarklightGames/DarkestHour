@@ -80,6 +80,9 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
+var     SpriteWidget        SquadOrderAttackIcon;
+var     SpriteWidget        SquadOrderDefendIcon;
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -1458,7 +1461,7 @@ function DrawSignals(Canvas C)
 
     for (i = 0; i < arraycount(PC.SquadSignals); ++i)
     {
-        if (PC.SquadSignals[i].Location == vect(0, 0, 0) || Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds >= 15.0)
+        if (!PC.IsSquadSignalActive(i))
         {
             continue;
         }
@@ -1484,11 +1487,11 @@ function DrawSignals(Canvas C)
         switch (i)
         {
             case 0: // SIGNAL_Fire
-                C.DrawColor = class'UColor'.default.OrangeRed;
+                C.DrawColor = class'DHColor'.default.SquadSignalFireColor;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire';
                 break;
             case 1: // SIGNAL_Move
-                C.DrawColor = class'UColor'.default.MediumOrchid;
+                C.DrawColor = class'DHColor'.default.SquadSignalMoveColor;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move';
                 break;
             default:
@@ -2565,6 +2568,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
+    DrawSquadOrderOnMap(C, SubCoords, MyMapScale, MapCenter);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
 
     // Overhead map debugging
@@ -2572,6 +2576,44 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     {
         DrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter);
         DrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter);
+    }
+}
+
+simulated function DrawSquadOrderOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHSquadReplicationInfo.ESquadOrderType OrderType;
+    local vector OrderLocation;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    SRI = PC.SquadReplicationInfo;
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (SRI == none || !PRI.IsInSquad())
+    {
+        return;
+    }
+
+    SRI.GetSquadOrder(PC.GetTeamNum(), PRI.SquadIndex, OrderType, OrderLocation);
+
+    switch (OrderType)
+    {
+        case ORDER_Attack:
+            DrawIconOnMap(C, SubCoords, SquadOrderAttackIcon, MyMapScale, OrderLocation, MapCenter);
+            break;
+        case ORDER_Defend:
+            DrawIconOnMap(C, SubCoords, SquadOrderDefendIcon, MyMapScale, OrderLocation, MapCenter);
+            break;
+        default:
+            break;
     }
 }
 
@@ -2674,7 +2716,6 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
 
         if (PRI != none)
         {
-            // TODO: make a bit larger than the regular ones?
             DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, class'UColor'.default.OrangeRed, 0.05);
         }
     }
@@ -4788,9 +4829,29 @@ simulated function SetSkyOff(bool bHideSky)
         }
     }
 }
-
+/*
 simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor Viewer, AbsoluteCoordsInfo GlobalCoords)
 {
+    local int i;
+    local DHPlayer PC;
+
+    //super.DrawCompassIcons(Canvas C, CenterX, CenterY, Radius, RotationCompensation, Viewer, GlobalCoords);
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(PC.SquadSignals); ++i)
+    {
+        if (!PC.IsSquadSignalActive(i))
+        {
+            continue;
+        }
+    }
+
     local ROGameReplicationInfo GRI;
     local vector                Target, Current;
     local rotator               RotAngle;
@@ -4946,7 +5007,7 @@ simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, floa
             DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
         }
     }
-}
+}*/
 
 defaultproperties
 {
@@ -5051,6 +5112,10 @@ defaultproperties
     MapIconMortarSmokeTarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+
+    // Map icons for squad orders
+    SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
+    SquadOrderDefendIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_defend',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
