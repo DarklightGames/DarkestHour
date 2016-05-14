@@ -2678,11 +2678,20 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// Modified to require both tracks to be damaged for vehicle to be disabled, not just one
-// Also to disable an APC if it takes major damage, as well as if engine is dead - this should give time for troops to bail out & escape before vehicle blows
+// Modified so vehicle is treated as disabled if it suffers a range of damage that renders it of very limited use, as well as if the engine is dead
+// Includes if either track is disabled, or if it has a cannon with a smashed gunsight or jammed traverse or pitch mechanism
+// Also includes an APC that takes major damage - the idea being it should give time for troops to bail out & escape before vehicle blows up
 simulated function bool IsDisabled()
 {
-    return EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged) || (bIsApc && Health <= (HealthMax / 3));
+    local DHVehicleCannonPawn CP;
+
+    if (Cannon != none)
+    {
+        CP = DHVehicleCannonPawn(Cannon.WeaponPawn);
+    }
+
+    return EngineHealth <= 0 || bLeftTrackDamaged || bRightTrackDamaged || (bIsApc && Health <= (HealthMax / 3))
+        || (CP != none && (CP.bOpticsDamaged || CP.bTurretRingDamaged || CP.bGunPivotDamaged));
 }
 
 // Modified to eliminate "Waiting for additional crew members" message (Matt: now only used by bots)
