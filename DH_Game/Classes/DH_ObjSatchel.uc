@@ -28,10 +28,7 @@ function Reset()
 {
     super(ROObjective).Reset();
 
-    if (bOverrideGameObjective)
-    {
-        SetActive(bIsInitiallyActive);
-    }
+    SetActive(bIsInitiallyActive);
 }
 
 // Modified to neutralise any inherited timer - should never get called, but just a safeguard

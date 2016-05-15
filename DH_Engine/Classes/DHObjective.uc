@@ -56,7 +56,6 @@ struct ObjOperationAction
 };
 
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
-var(ROObjective) bool               bOverrideGameObjective;     // Enable this to have bIsInitiallyActive override the GameObjective value (this will eventually be removed)
 var()   bool                        bVehiclesCanCapture;
 var()   bool                        bTankersCanCapture;
 var()   bool                        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
@@ -144,7 +143,7 @@ function PostBeginPlay()
     ObjState = InitialObjState;
 
     // Override the GameObjective variable bInitiallyActive with DH
-    if (Role == ROLE_Authority && bOverrideGameObjective)
+    if (Role == ROLE_Authority)
     {
         SetActive(bIsInitiallyActive);
     }
@@ -166,10 +165,7 @@ function Reset()
 {
     super.Reset();
 
-    if (bOverrideGameObjective)
-    {
-        SetActive(bIsInitiallyActive);
-    }
+    SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
