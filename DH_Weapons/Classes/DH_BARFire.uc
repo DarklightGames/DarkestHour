@@ -147,6 +147,6 @@ defaultproperties
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=1200.0
     Spread=130.0
-    HipSpreadModifier=8.0
+    HipSpreadModifier=6.0
     SpreadStyle=SS_Random
 }
