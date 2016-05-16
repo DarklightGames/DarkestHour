@@ -36,8 +36,8 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="tip"
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
-    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
