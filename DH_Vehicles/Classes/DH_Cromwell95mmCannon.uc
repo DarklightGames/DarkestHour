@@ -38,5 +38,4 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
-//  SoundVolume=170 // TODO - maybe should be say 170, as Sherman 105 is 200 instead of default 130? (but all 95/105mm howitzers use tiger's firing sound, which currently has SV of only 120)
 }

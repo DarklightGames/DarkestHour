@@ -61,5 +61,4 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShellHE'
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
-    SoundRadius=300.0
 }

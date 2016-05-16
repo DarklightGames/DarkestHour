@@ -71,6 +71,4 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
-    SoundVolume=200
-    SoundRadius=50.0 // TODO: maybe increase as is far lower than default 200, but it's a powerful gun?
 }

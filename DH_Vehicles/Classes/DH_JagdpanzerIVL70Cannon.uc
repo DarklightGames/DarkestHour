@@ -69,5 +69,4 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
     Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-//  SoundRadius=300.0 // TODO: maybe change to 300 as this uses default 200, but is a powerful gun & this does not match panther's 300
 }

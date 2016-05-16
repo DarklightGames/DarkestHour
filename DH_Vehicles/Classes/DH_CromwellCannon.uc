@@ -67,7 +67,6 @@ defaultproperties
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
     AltReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
-    SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as not a powerful gun
 
     // Cannon range settings
     RangeSettings(1)=200

@@ -70,6 +70,4 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
     ReloadStages(2)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
     ReloadStages(3)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
-    SoundVolume=100
-    SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as a pretty weak gun & this does not match Stuart?
 }

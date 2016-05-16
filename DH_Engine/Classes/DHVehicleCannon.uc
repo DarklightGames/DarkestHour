@@ -1454,12 +1454,11 @@ defaultproperties
     ReloadStages(1)=(HUDProportion=0.75)
     ReloadStages(2)=(HUDProportion=0.5)
     ReloadStages(3)=(HUDProportion=0.25)
+
     // Sounds
     AltFireSoundScaling=3.0
     AltReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
-    SoundVolume=130
     FireSoundVolume=512.0
-    SoundRadius=200.0
     FireSoundRadius=4000.0
     bRotateSoundFromPawn=true
     RotateSoundThreshold=750.0

@@ -77,5 +77,4 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
-//  SoundVolume=200 // TODO: maybe change to 200 to match Sherman 105?
 }

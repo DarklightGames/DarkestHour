@@ -58,7 +58,6 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
-    SoundRadius=300.0
 
     // Cannon range settings
     RangeSettings(1)=100
