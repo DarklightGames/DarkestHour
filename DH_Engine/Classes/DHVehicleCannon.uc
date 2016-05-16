@@ -1456,10 +1456,15 @@ defaultproperties
     ReloadStages(3)=(HUDProportion=0.25)
 
     // Sounds
-    AltFireSoundScaling=3.0
-    AltReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     FireSoundVolume=512.0
     FireSoundRadius=4000.0
+    // Match alt fire (coaxial MG) ambient sound volume & radius to a hull MG, so they sound the same (change AltFireSoundScaling to adjust volume)
+    // Also, as alt sound values are now the same as normal sound values, it stops a server swapping these values back & forth, which used to happen every time coax fired & stopped
+    // So this avoids lots of no unnecessary replication (only alt fire uses ambient sound, no there's never any need to change the ambient sound settings)
+    AltFireSoundVolume=255.0
+    AltFireSoundRadius=100.0
+    AltFireSoundScaling=2.75
+    AltReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     bRotateSoundFromPawn=true
     RotateSoundThreshold=750.0
 

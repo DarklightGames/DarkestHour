@@ -36,7 +36,6 @@ defaultproperties
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
     FireSoundClass=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
     FireEndSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_end'
-    AmbientSoundScaling=5.0
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=5.0,Y=5.0,Z=5.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
