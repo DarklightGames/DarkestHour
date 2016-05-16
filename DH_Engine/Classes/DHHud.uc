@@ -1481,11 +1481,11 @@ function DrawSignals(Canvas C)
         {
             case 0: // SIGNAL_Fire
                 C.DrawColor = class'DHColor'.default.SquadSignalFireColor;
-                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world';
+                //SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world'; // TEMP removed to compile (missing texture)
                 break;
             case 1: // SIGNAL_Move
                 C.DrawColor = class'DHColor'.default.SquadSignalMoveColor;
-                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world';
+                //SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world'; // TEMP removed to compile (missing texture)
                 break;
             default:
                 break;
