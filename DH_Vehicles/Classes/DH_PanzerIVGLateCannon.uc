@@ -7,12 +7,17 @@ class DH_PanzerIVGLateCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=8
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
-    SecondarySpread=0.00127
-    TertiarySpread=0.00357
-    ManualRotationsPerSecond=0.02
-    PoweredRotationsPerSecond=0.04
+    // Turret mesh
+    Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_turret_ext'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
+    Skins(1)=texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
+    Skins(2)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+
+    // Turret armor
     bHasAddedSideArmor=true
     FrontArmorFactor=5.0
     RightArmorFactor=3.1
@@ -26,14 +31,50 @@ defaultproperties
     FrontRightAngle=38.0
     RearRightAngle=142.0
     RearLeftAngle=218.0
+
+    // Turret movement
+    ManualRotationsPerSecond=0.02
+    PoweredRotationsPerSecond=0.04
+    CustomPitchUpLimit=3641
+    CustomPitchDownLimit=64080
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+    ProjectileDescriptions(2)="HEAT"
+    InitialPrimaryAmmo=44
+    InitialSecondaryAmmo=35
+    InitialTertiaryAmmo=8
+    SecondarySpread=0.00127
+    TertiarySpread=0.00357
+
+    // Coaxial MG ammo
+    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    InitialAltAmmo=150
+    NumMGMags=5
+    AltFireInterval=0.07059
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerFrequency=7
+
+    // Weapon fire
+    WeaponFireOffset=138.5
+    AltFireOffset=(X=-60.0,Y=19.0,Z=0.0)
+    AltFireSpawnOffsetX=26.0
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ProjectileDescriptions(2)="HEAT"
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -59,30 +100,4 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    NumMGMags=5
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    TracerFrequency=7
-    WeaponFireOffset=138.5
-    AltFireOffset=(X=-60.0,Y=19.0,Z=0.0)
-    AltFireSpawnOffsetX=26.0
-    AltFireInterval=0.07059
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    CustomPitchUpLimit=3641
-    CustomPitchDownLimit=64080
-    InitialPrimaryAmmo=44
-    InitialSecondaryAmmo=35
-    InitialAltAmmo=150
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
-    Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_turret_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    Skins(1)=texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
-    Skins(2)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
 }

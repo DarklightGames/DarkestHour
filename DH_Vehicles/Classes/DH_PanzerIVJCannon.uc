@@ -3,85 +3,17 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerIVJCannon extends DHVehicleCannon;
+class DH_PanzerIVJCannon extends DH_PanzerIVGLateCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=8
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
-    SecondarySpread=0.00127
-    TertiarySpread=0.00357
-    ManualRotationsPerSecond=0.02
-    bHasAddedSideArmor=true
-    FrontArmorFactor=5.0
-    RightArmorFactor=3.1
-    LeftArmorFactor=3.1
-    RearArmorFactor=3.1
-    FrontArmorSlope=12.0
-    RightArmorSlope=26.0
-    LeftArmorSlope=26.0
-    RearArmorSlope=10.0
-    FrontLeftAngle=322.0
-    FrontRightAngle=38.0
-    RearRightAngle=142.0
-    RearLeftAngle=218.0
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ProjectileDescriptions(2)="HEAT"
-    RangeSettings(1)=100
-    RangeSettings(2)=200
-    RangeSettings(3)=300
-    RangeSettings(4)=400
-    RangeSettings(5)=500
-    RangeSettings(6)=600
-    RangeSettings(7)=700
-    RangeSettings(8)=800
-    RangeSettings(9)=900
-    RangeSettings(10)=1000
-    RangeSettings(11)=1100
-    RangeSettings(12)=1200
-    RangeSettings(13)=1300
-    RangeSettings(14)=1400
-    RangeSettings(15)=1500
-    RangeSettings(16)=1600
-    RangeSettings(17)=1700
-    RangeSettings(18)=1800
-    RangeSettings(19)=1900
-    RangeSettings(20)=2000
-    RangeSettings(21)=2200
-    RangeSettings(22)=2400
-    RangeSettings(23)=2600
-    RangeSettings(24)=2800
-    RangeSettings(25)=3000
-    NumMGMags=5
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    TracerFrequency=7
-    WeaponFireOffset=0.0
-    AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)
-    AltFireSpawnOffsetX=26.0
-    AltFireInterval=0.07059
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    CustomPitchUpLimit=3641
-    CustomPitchDownLimit=64080
-    InitialPrimaryAmmo=56
-    InitialSecondaryAmmo=35
-    InitialAltAmmo=150
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
     Mesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.panzer4J_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_ext'
     Skins(2)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+
+    InitialPrimaryAmmo=56
+    WeaponFireOffset=0.0
+    AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)
 }

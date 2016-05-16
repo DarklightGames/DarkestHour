@@ -7,9 +7,14 @@ class DH_Tiger2BCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.00152
-    ManualRotationsPerSecond=0.0056
-    PoweredRotationsPerSecond=0.04
+    // Turret mesh
+    Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_turret_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
+    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
+
+    // Turret armor
     FrontArmorFactor=18.0
     RightArmorFactor=8.0
     LeftArmorFactor=8.0
@@ -22,13 +27,46 @@ defaultproperties
     FrontRightAngle=34.0
     RearRightAngle=146.0
     RearLeftAngle=214.0
+
+    // Turret movement
+    ManualRotationsPerSecond=0.0056
+    PoweredRotationsPerSecond=0.04
+    CustomPitchUpLimit=2731
+    CustomPitchDownLimit=64189
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShellHE'
+    InitialPrimaryAmmo=45
+    InitialSecondaryAmmo=35
+    SecondarySpread=0.00152
+
+    // Coaxial MG ammo
+    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    InitialAltAmmo=150
+    NumMGMags=10
+    AltFireInterval=0.07059
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerFrequency=7
+
+    // Weapon fire
+    AddedPitch=15
+    WeaponFireOffset=0.0
+    AltFireOffset=(X=-325.0,Y=19.5,Z=4.5)
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_01')
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_04')
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -59,27 +97,4 @@ defaultproperties
     RangeSettings(28)=3600
     RangeSettings(29)=3800
     RangeSettings(30)=4000
-    AddedPitch=15
-    NumMGMags=10
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    TracerFrequency=7
-    WeaponFireOffset=0.0
-    AltFireOffset=(X=-325.0,Y=19.5,Z=4.5)
-    AltFireInterval=0.07059
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    CustomPitchUpLimit=2731
-    CustomPitchDownLimit=64189
-    InitialPrimaryAmmo=45
-    InitialSecondaryAmmo=35
-    InitialAltAmmo=150
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Tiger2BCannonShellHE'
-    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
 }
