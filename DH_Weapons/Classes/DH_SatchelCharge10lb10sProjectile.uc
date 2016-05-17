@@ -109,4 +109,5 @@ defaultproperties
     ShakeScale=2.5
     BlurTime=6.0
     BlurEffectScalar=1.75
+    bAlwaysRelevant=true
 }
