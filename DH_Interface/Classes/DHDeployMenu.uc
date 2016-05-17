@@ -1450,7 +1450,7 @@ function UpdateSquads()
 
         for (k = 0; k < Members.Length; ++k)
         {
-            C.li_Members.Add(Members[k].SquadMemberIndex + 1 $ "." @ Members[i].PlayerName);
+            C.li_Members.Add(Members[k].SquadMemberIndex + 1 $ "." @ Members[k].PlayerName);
         }
 
         ++j;
