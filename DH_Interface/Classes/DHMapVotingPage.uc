@@ -81,7 +81,8 @@ function SendVote(GUIComponent Sender)
                     return;
                 }
             }
-            else if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
+
+            if (MVRI.MapList[MapIndex].bEnabled || PlayerOwner().PlayerReplicationInfo.bAdmin)
             {
                 MVRI.SendMapVote(MapIndex,GameConfigIndex);
             }
