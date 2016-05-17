@@ -38,4 +38,5 @@ defaultproperties
     bAlwaysRelevant=true
     bSkipActorPropertyReplication=true
     LifeSpan = 5.0 // means server version of this actor will be auto-destroyed after a few seconds, once it has had time to replicate to clients
+    bHidden=true
 }
