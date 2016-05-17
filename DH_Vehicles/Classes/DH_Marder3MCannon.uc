@@ -7,16 +7,44 @@ class DH_Marder3MCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.00127
+    // Cannon mesh
+    FireEffectScale=1.75 // turret fire is larger & positioned in centre of open turret
+    FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
+    Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
+
+    // Cannon movement
+//  bHasTurret=false // not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
     ManualRotationsPerSecond=0.033
-//  bHasTurret=false // Matt: not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
+    bLimitYaw=true
+    MaxPositiveYaw=3822
+    MaxNegativeYaw=-3822
+    YawStartConstraint=-4000.0
+    YawEndConstraint=4000.0
+    CustomPitchUpLimit=2367
+    CustomPitchDownLimit=64625
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShellHE'
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=7
+    SecondarySpread=0.00127
+
+    // Weapon fire
+    WeaponFireOffset=0.0
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
     ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -42,21 +70,4 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    YawStartConstraint=-4000.0
-    YawEndConstraint=4000.0
-    WeaponFireOffset=0.0
-    ProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
-    CustomPitchUpLimit=2367
-    CustomPitchDownLimit=64625
-    MaxPositiveYaw=3822
-    MaxNegativeYaw=-3822
-    bLimitYaw=true
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=7
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShellHE'
-    FireEffectScale=1.75 // turret fire is larger & positioned in centre of open turret
-    FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
-    Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
 }

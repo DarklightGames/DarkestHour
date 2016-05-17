@@ -7,18 +7,53 @@ class DH_JagdpantherCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.00135
-    ManualRotationsPerSecond=0.02
-    bHasTurret=false
+    // Cannon mesh
+    Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
+    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
+    Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
+
+    // Cannon armour (mantlet)
     GunMantletArmorFactor=10.0
     GunMantletSlope=35.0
+
+    // Cannon movement
+    bHasTurret=false
+    ManualRotationsPerSecond=0.02
+    YawBone="Gun"
+    bLimitYaw=true
+    MaxPositiveYaw=2367
+    MaxNegativeYaw=-2367
+    YawStartConstraint=-3000.0
+    YawEndConstraint=3000.0
+    PitchBone="gun_pitch"
+    CustomPitchUpLimit=2548
+    CustomPitchDownLimit=64079
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
+    ProjectileDescriptions(2)="Smoke"
+    InitialPrimaryAmmo=42
+    InitialSecondaryAmmo=15
+    SecondarySpread=0.00135
+
+    // Weapon fire
+    WeaponFireOffset=8.5
+    AddedPitch=-56.0
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
     ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -49,25 +84,4 @@ defaultproperties
     RangeSettings(28)=3600
     RangeSettings(29)=3800
     RangeSettings(30)=4000
-    AddedPitch=-56.0
-    YawBone="Gun"
-    YawStartConstraint=-3000.0
-    YawEndConstraint=3000.0
-    PitchBone="gun_pitch"
-    WeaponFireOffset=8.5
-    ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
-    CustomPitchUpLimit=2548
-    CustomPitchDownLimit=64079
-    MaxPositiveYaw=2367
-    MaxNegativeYaw=-2367
-    bLimitYaw=true
-    InitialPrimaryAmmo=42
-    InitialSecondaryAmmo=15
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
-    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
-    Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
 }

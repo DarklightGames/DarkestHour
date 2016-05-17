@@ -7,22 +7,56 @@ class DH_JagdpanzerIVL48Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=5
-    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
-    SecondarySpread=0.00127
-    TertiarySpread=0.00357
-    ManualRotationsPerSecond=0.033
-    bHasTurret=false
+    // Cannon mesh
+    Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    GunnerAttachmentBone="Commander_attachment"
+    FireEffectOffset=(X=10.0,Y=0.0,Z=0.0)
+
+    // Cannon armour (mantlet)
     GunMantletArmorFactor=8.0
     GunMantletSlope=40.0
+
+    // Cannon movement
+    bHasTurret=false
+    ManualRotationsPerSecond=0.033
+    bLimitYaw=true
+    MaxPositiveYaw=1820
+    MaxNegativeYaw=-1820
+    YawStartConstraint=-3000.0
+    YawEndConstraint=3000.0
+    PitchBone="Turret"
+    CustomPitchUpLimit=2731
+    CustomPitchDownLimit=64653
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+    ProjectileDescriptions(2)="Smoke"
+    InitialPrimaryAmmo=54
+    InitialSecondaryAmmo=20
+    InitialTertiaryAmmo=5
+    SecondarySpread=0.00127
+    TertiarySpread=0.00357
+
+    // Weapon fire
+    WeaponFireAttachmentBone="barrel001"
+    WeaponFireOffset=9.0
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
     ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ProjectileDescriptions(2)="Smoke"
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -48,25 +82,4 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    YawStartConstraint=-3000.0
-    YawEndConstraint=3000.0
-    PitchBone="Turret"
-    WeaponFireAttachmentBone="barrel001"
-    GunnerAttachmentBone="Commander_attachment"
-    WeaponFireOffset=9.0
-    ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    CustomPitchUpLimit=2731
-    CustomPitchDownLimit=64653
-    MaxPositiveYaw=1820
-    MaxNegativeYaw=-1820
-    bLimitYaw=true
-    InitialPrimaryAmmo=54
-    InitialSecondaryAmmo=20
-    PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
-    FireEffectOffset=(X=10.0,Y=0.0,Z=0.0)
-    Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
-    Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-    Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
 }
