@@ -60,5 +60,4 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    SoundRadius=300.0 // TODO: maybe remove so inherits default 200, as not an especially powerful gun & this does not match the Sherman 76?
 }

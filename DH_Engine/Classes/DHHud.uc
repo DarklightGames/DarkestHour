@@ -1477,32 +1477,41 @@ function DrawSignals(Canvas C)
             continue;
         }
 
-        if (Angle >= 0.99)
-        {
-            C.DrawColor.A = 128;
-        }
-
-        bHasLOS = !FastTrace(TraceEnd, TraceStart);
-
         switch (i)
         {
             case 0: // SIGNAL_Fire
                 C.DrawColor = class'DHColor'.default.SquadSignalFireColor;
-                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire';
+                //SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world'; // TEMP removed to compile (missing texture)
                 break;
             case 1: // SIGNAL_Move
                 C.DrawColor = class'DHColor'.default.SquadSignalMoveColor;
-                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move';
+                //SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world'; // TEMP removed to compile (missing texture)
                 break;
             default:
                 break;
+        }
+
+        bHasLOS = FastTrace(TraceEnd, TraceStart);
+
+        if (bHasLOS)
+        {
+            C.DrawColor.A = 255;
+        }
+        else
+        {
+            C.DrawColor.A = 64;
+        }
+
+        if (Angle >= 0.99)
+        {
+            C.DrawColor.A = 32;
         }
 
         ScreenLocation = C.WorldToScreen(TraceEnd);
 
         // TODO: convert to spritewidget
         C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - 8);
-        C.DrawTile(SignalMaterial, 16, 16, 0, 0, 31, 31);
+        C.DrawTile(SignalMaterial, 24, 24, 0, 0, 31, 31);
     }
 }
 
@@ -1510,6 +1519,7 @@ function DrawSignals(Canvas C)
 function DrawPlayerNames(Canvas C)
 {
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
+    local DHPawn                  MyPawn, OtherPawn;
     local Pawn                    HitPawn, P;
     local array<Pawn>             Pawns;
     local Vehicle                 V;
@@ -1517,12 +1527,14 @@ function DrawPlayerNames(Canvas C)
     local float                   FadeInTime, FadeOutTime;
     local int                     i;
     local string                  PlayerName;
-    local bool                    bCanDrawName, bIsInMySquad, bIsTalking, bIsInMySquadOrTalking;
+    local bool                    bCanDrawName, bIsInMySquad, bIsTalking, bIsWithinRange, bCanBeResupplied, bCanBeReloaded;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
         return;
     }
+
+    MyPawn = DHPawn(PawnOwner);
 
     ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
 
@@ -1560,7 +1572,10 @@ function DrawPlayerNames(Canvas C)
     {
         P = Pawns[i];
 
-        if (P == none || P.PlayerReplicationInfo == none || P.GetTeamNum() != PlayerOwner.GetTeamNum() || NamedPawns.Contains(P))
+        if (P == none ||
+            P.PlayerReplicationInfo == none ||
+            P.GetTeamNum() != PlayerOwner.GetTeamNum() ||
+            NamedPawns.Contains(P))
         {
             continue;
         }
@@ -1595,7 +1610,7 @@ function DrawPlayerNames(Canvas C)
 
         if (P == none)
         {
-            // Pawn has since been deleted, remove entry from the list.
+            // Pawn has since been destroyed, remove entry from the list.
             NamedPawns.Remove(i--);
             continue;
         }
@@ -1609,35 +1624,18 @@ function DrawPlayerNames(Canvas C)
             continue;
         }
 
+        OtherPawn = DHPawn(P);
+
         bIsInMySquad = class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI);
         bIsTalking = (OtherPRI == PortraitPRI);
-        bIsInMySquadOrTalking = (bIsInMySquad || bIsTalking);
-        bCanDrawName = false;
+        bCanBeResupplied = !MyPawn.bUsedCarriedMGAmmo && OtherPawn != none && OtherPawn.bWeaponNeedsResupply;
+        bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
 
-        // NOTE: There's no actual loop here, it's just a shortcut so we don't
-        // have to add another boolean value to check.
-        while (true)
-        {
-            PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
-            PawnLocation.Z += 16.0;
+        PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
+        PawnLocation.Z += 16.0;
+        bIsWithinRange = VSize(PawnLocation - ViewLocation) > class'DHUnits'.static.MetersToUnreal(25);
 
-            if (!FastTrace(PawnLocation, ViewLocation))
-            {
-                break;
-            }
-
-            // TODO: convert this to use VSizeSquared to make this faster.
-            if (P != HitPawn && ((bIsInMySquadOrTalking && VSize(PawnLocation - ViewLocation) > class'DHUnits'.static.MetersToUnreal(25)) || !bIsInMySquadOrTalking))
-            {
-                // We aren't directly looking at the player and they are outside
-                // of the specified radius.
-                break;
-            }
-
-            bCanDrawName = true;
-
-            break;
-        }
+        bCanDrawName = (P == HitPawn) || (bIsWithinRange && (bIsInMySquad || bIsTalking || bCanBeResupplied || bCanBeReloaded) && FastTrace(PawnLocation, ViewLocation));
 
         if (!bCanDrawName)
         {
@@ -1684,12 +1682,21 @@ function DrawPlayerNames(Canvas C)
 
             DrawShadowedTextClipped(C, PlayerName);
 
+            C.DrawColor = class'UColor'.default.White;
+            C.SetPos(ScreenLocation.X - 16, ScreenLocation.Y - 64.0);
+
             if (bIsTalking)
             {
                 // Set icon screen position & draw the voice icon
-                C.DrawColor = class'UColor'.default.White;
-                C.SetPos(ScreenLocation.X - 16, ScreenLocation.Y - 64.0);
                 C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
+            }
+            else if (bCanBeResupplied)
+            {
+                // TODO: draw icon for resupply
+            }
+            else if (bCanBeReloaded)
+            {
+                // TODO: draw icon for reload
             }
         }
     }

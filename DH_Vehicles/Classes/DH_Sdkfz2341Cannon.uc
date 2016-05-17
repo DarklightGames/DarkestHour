@@ -179,8 +179,6 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_02',HUDProportion=0.6)
     ReloadStages(2)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_04',HUDProportion=0.4)
-    SoundVolume=100
-    SoundRadius=256.0 // TODO: maybe remove so inherits default 200, as this is a weak gun
 
     // Cannon range settings
     RangeSettings(1)=100

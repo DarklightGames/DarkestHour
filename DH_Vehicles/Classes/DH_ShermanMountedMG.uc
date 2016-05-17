@@ -30,8 +30,8 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=5.0
-    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
-    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
+    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     ShakeRotMag=(X=20.0,Y=20.0,Z=20.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 }

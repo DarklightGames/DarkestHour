@@ -45,7 +45,6 @@ defaultproperties
     AmbientEffectEmitterClass=class'VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    AmbientSoundScaling=2.5
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

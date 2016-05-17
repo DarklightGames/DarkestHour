@@ -96,6 +96,9 @@ defaultproperties
     bindings_comm(9)="SquadTalk"
     captions_comm(9)="Squad Say"
 
+    bindings_comm(10)="OrderMenu"
+    captions_comm(10)="Squad Orders Menu"
+
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
         Caption="Bindings"

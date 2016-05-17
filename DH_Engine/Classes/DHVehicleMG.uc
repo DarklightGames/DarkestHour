@@ -249,8 +249,7 @@ defaultproperties
     // Firing effects
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientFireSound=true
-    AmbientSoundScaling=3.0
-    SoundVolume=255
+    AmbientSoundScaling=2.75
     FireForce="minifireb"
     bIsRepeatingFF=true
 

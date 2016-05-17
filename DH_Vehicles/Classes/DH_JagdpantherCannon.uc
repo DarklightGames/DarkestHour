@@ -70,5 +70,4 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
     Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
-    SoundRadius=300.0
 }

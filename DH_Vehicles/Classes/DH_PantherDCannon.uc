@@ -7,12 +7,16 @@ class DH_PantherDCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    InitialTertiaryAmmo=35
-    TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
-    SecondarySpread=0.00165
-    TertiarySpread=0.0012
-    ManualRotationsPerSecond=0.011
-    PoweredRotationsPerSecond=0.033
+    // Turret mesh
+    Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
+    Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll'
+    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=1
+
+    // Turret armor
     FrontArmorFactor=12.0
     RightArmorFactor=4.5
     LeftArmorFactor=4.5
@@ -25,15 +29,50 @@ defaultproperties
     FrontRightAngle=38.0
     RearRightAngle=142.0
     RearLeftAngle=218.0
+
+    // Turret movement
+    ManualRotationsPerSecond=0.011
+    PoweredRotationsPerSecond=0.033
+    CustomPitchUpLimit=3276
+    CustomPitchDownLimit=64080
+
+    // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
+    ProjectileDescriptions(1)="APCR"
+    ProjectileDescriptions(2)="HE"
+    InitialPrimaryAmmo=44
+    InitialSecondaryAmmo=5
+    InitialTertiaryAmmo=35
+    SecondarySpread=0.00165
+    TertiarySpread=0.0012
+
+    // Coaxial MG ammo
+    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
+    InitialAltAmmo=150
+    NumMGMags=9
+    AltFireInterval=0.07059
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
+    TracerFrequency=7
+
+    // Weapon fire
+    WeaponFireOffset=222.0
+    AltFireOffset=(X=-32.0,Y=27.0,Z=7.0)
+
+    // Sounds
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
-    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
-    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
-    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
-    ProjectileDescriptions(1)="APCR"
-    ProjectileDescriptions(2)="HE"
+
+    // Cannon range settings
     RangeSettings(1)=100
     RangeSettings(2)=200
     RangeSettings(3)=300
@@ -59,30 +98,4 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    NumMGMags=9
-    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
-    TracerFrequency=7
-    WeaponFireOffset=222.0
-    AltFireOffset=(X=-32.0,Y=27.0,Z=7.0)
-    AltFireInterval=0.07059
-    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
-    AltFireProjectileClass=class'DH_Weapons.DH_MG34Bullet'
-    CustomPitchUpLimit=3276
-    CustomPitchDownLimit=64080
-    InitialPrimaryAmmo=44
-    InitialSecondaryAmmo=5
-    InitialAltAmmo=150
-    PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
-    Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll'
-    SoundVolume=120 // TODO: maybe remove so inherits default 130, as don't see clear reason for this
-    SoundRadius=300.0
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
 }
