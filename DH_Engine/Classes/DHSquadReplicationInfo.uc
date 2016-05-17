@@ -78,7 +78,9 @@ replication
 
     reliable if (bNetDirty && Role == ROLE_Authority)
         AxisMembers, AxisNames, AxisLocked,
-        AlliesMembers, AlliesNames, AlliesLocked;
+        AlliesMembers, AlliesNames, AlliesLocked,
+        AxisOrderTypes, AxisOrderLocations,
+        AlliesOrderTypes, AlliesOrderLocations;
 }
 
 function PostBeginPlay()
