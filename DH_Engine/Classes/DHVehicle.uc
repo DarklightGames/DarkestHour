@@ -2903,8 +2903,8 @@ defaultproperties
 
     // Sounds
     RumbleSoundVolumeModifier=2.5
-    DamagedStartUpSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
-    DamagedShutDownSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
+    DamagedStartUpSound=sound'DH_AlliedVehicleSounds.Damaged.engine_start_damaged'
+    DamagedShutDownSound=sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
 
