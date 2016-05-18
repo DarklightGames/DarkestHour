@@ -179,31 +179,28 @@ simulated function SpawnHitEffect() // Matt TODO: may want to add EffectIsReleva
     local PlayerController   PC;
     local ROVehicleHitEffect VehEffect;
 
-    if (FiringMode == 0)
+    OldSpawnHitCount = SpawnHitCount;
+
+    if (Role < ROLE_Authority) // authority roles will already have this info
     {
-        OldSpawnHitCount = SpawnHitCount;
+        GetHitInfo();
+    }
 
-        if (Role < ROLE_Authority) // authority roles will already have this info
+    PC = Level.GetLocalPlayerController();
+
+    // Check effect is relevant to player - must either be the local player who fired, or effect would be within a set distance for other players
+    // Using squared distances for efficient processing of distance check (equivalent to 4000 units or 66m)
+    if ((Instigator != none && Instigator.Controller == PC) || VSizeSquared(PC.ViewTarget.Location - mHitLocation) < 16000000.0)
+    {
+        if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
         {
-            GetHitInfo();
+            VehEffect = Spawn(class'ROVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
+            VehEffect.InitHitEffects(mHitLocation, mHitNormal);
         }
-
-        PC = Level.GetLocalPlayerController();
-
-        // Check effect is relevant to player - must either be the local player who fired, or effect would be within a set distance for other players
-        // Using squared distances for efficient processing of distance check (equivalent to 4000 units or 66m)
-        if ((Instigator != none && Instigator.Controller == PC) || VSizeSquared(PC.ViewTarget.Location - mHitLocation) < 16000000.0)
+        else
         {
-            if (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) // removed call to GetVehicleHitInfo(), as it's pointless & just repeats same trace as GetHitInfo()
-            {
-                VehEffect = Spawn(class'ROVehicleHitEffect',,, mHitLocation, rotator(-mHitNormal));
-                VehEffect.InitHitEffects(mHitLocation, mHitNormal);
-            }
-            else
-            {
-                Spawn(class'DHBulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
-                CheckForSplash();
-            }
+            Spawn(class'DHBulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
+            CheckForSplash();
         }
     }
 }
