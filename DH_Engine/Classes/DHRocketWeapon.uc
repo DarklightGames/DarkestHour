@@ -289,6 +289,11 @@ simulated function ClientDoAssistedReload(optional int NumRounds)
 // New state for assisted reloading
 simulated state AssistedReloading extends Reloading
 {
+    simulated function bool WeaponAllowSprint()
+    {
+        return false;
+    }
+
     simulated function BeginState()
     {
         if (Role == ROLE_Authority)
