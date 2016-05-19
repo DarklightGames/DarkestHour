@@ -5,6 +5,66 @@
 
 class DHTab_AudioSettings extends ROTab_AudioSettings;
 
+var automated moNumericEdit     nu_AudioChannels;
+
+var int                         NumberOfChannels;
+
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    Super.InitComponent(MyController, MyOwner);
+
+    i_BG1.ManageComponent(nu_AudioChannels);
+}
+
+function InternalOnLoadINI(GUIComponent Sender, string s)
+{
+    local PlayerController PC;
+
+    super.InternalOnLoadINI(Sender, s);
+
+    PC = PlayerOwner();
+
+    switch (Sender)
+    {
+        case nu_AudioChannels:
+            NumberOfChannels = int(PC.ConsoleCommand("get ini:Engine.Engine.AudioDevice Channels"));
+            nu_AudioChannels.SetComponentValue(NumberOfChannels,true);
+            break;
+    }
+}
+
+function InternalOnChange(GUIComponent Sender)
+{
+    local PlayerController PC;
+
+    Super.InternalOnChange(Sender);
+
+    PC = PlayerOwner();
+
+    switch(Sender)
+    {
+        case nu_AudioChannels:
+            NumberOfChannels = nu_AudioChannels.GetValue();
+            PC.ConsoleCommand("set ini:Engine.Engine.AudioDevice Channels"@NumberOfChannels);
+            //PC.ConsoleCommand("SetMusicVolume"@fMusic);
+            break;
+    }
+}
+
+function SaveSettings()
+{
+    local PlayerController PC;
+
+    PC = PlayerOwner();
+
+    if (NumberOfChannels != nu_AudioChannels.GetValue())
+    {
+        PC.ConsoleCommand("set ini:Engine.Engine.AudioDevice Channels"@NumberOfChannels);
+    }
+
+    Super.SaveSettings();
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUISectionBackground Name=AudioBK1
@@ -282,4 +342,22 @@ defaultproperties
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
     End Object
     co_LANQuality=DHmoComboBox'DH_Interface.DHTab_AudioSettings.VoiceQualityLAN'
+    Begin Object class=DHmoNumericEdit Name=AudioChannelsNum
+        WinWidth=0.381250
+        WinLeft=0.550781
+        WinTop=0.196875
+        Caption="Max Audio Channels"
+        CaptionWidth=0.7
+        MinValue=16
+        MaxValue=128
+        Step=16
+        ComponentJustification=TXTA_Left
+        Hint="Number of sound channels the game can use at once"
+        OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
+        OnChange=DHTab_AudioSettings.InternalOnChange
+        INIOption="@Internal"
+        bAutoSizeCaption=True
+        TabOrder=29
+    End Object
+    nu_AudioChannels=AudioChannelsNum
 }
