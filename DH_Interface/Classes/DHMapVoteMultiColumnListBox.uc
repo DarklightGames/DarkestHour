@@ -27,4 +27,5 @@ function LoadList(VotingReplicationInfo LoadVRI)
 
 defaultproperties
 {
+    ContextMenu=none
 }

@@ -114,8 +114,8 @@ function SendVote(GUIComponent Sender)
 
 defaultproperties
 {
-    lmsgMapQAFailed="Maps that fail quality assurance cannot be voted for in the nomination area."
-    lmsgMapOutOfBounds="Maps with player range not suitable for current players cannot be voted for in the nomination area."
+    lmsgMapQAFailed="Please vote for a map that has not failed quality control."
+    lmsgMapOutOfBounds="Please vote for a map suitable for the current player count."
 
     lmsgMode(0)="Majority Wins"
 
@@ -137,7 +137,7 @@ defaultproperties
         HeaderColumnPerc(5)=0.15
     End Object
     lb_MapListBox=DHMapVoteMultiColumnListBox'DH_Interface.DHMapVotingPage.MapListBox'
-    Begin Object class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
+    Begin Object class=DHMapVoteCountMultiColumnListBox Name=VoteCountListBox
         HeaderColumnPerc(0)=0.3
         HeaderColumnPerc(1)=0.2
         HeaderColumnPerc(2)=0.2
@@ -145,6 +145,7 @@ defaultproperties
         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
         bVisibleWhenEmpty=true
         OnCreateComponent=VoteCountListBox.InternalOnCreateComponent
+        StyleName="ServerBrowserGrid"
         WinTop=0.077369
         WinLeft=0.02
         WinWidth=0.96
@@ -153,7 +154,7 @@ defaultproperties
         bScaleToParent=true
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
-    lb_VoteCountListBox=MapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
+    lb_VoteCountListBox=DHMapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
     Begin Object Class=moComboBox Name=GameTypeCombo
         CaptionWidth=0.35
         Caption="Filter Game Type:"
