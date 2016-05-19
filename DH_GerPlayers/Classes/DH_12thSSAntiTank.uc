@@ -8,10 +8,10 @@ class DH_12thSSAntiTank extends DH_12thSS;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="Tank Hunter"
-    AltName="Panzerj�ger"
+    MyName="Panzerjäger"
+    AltName="Panzerjäger"
     Article="a "
-    PluralName="Tank Hunters"
+    PluralName="Panzerjäger"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_AT'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

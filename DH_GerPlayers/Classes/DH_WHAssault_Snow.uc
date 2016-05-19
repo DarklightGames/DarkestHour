@@ -7,10 +7,10 @@ class DH_WHAssault_Snow extends DH_HeerSnow;
 
 defaultproperties
 {
-    MyName="Assault Troop"
-    AltName="Sto�truppe"
+    MyName="Stoßtruppe"
+    AltName="Stoßtruppe"
     Article="an "
-    PluralName="Assault Troopers"
+    PluralName="Stoßtruppen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Stosstruppe'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

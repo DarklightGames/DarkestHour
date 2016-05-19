@@ -8,10 +8,10 @@ class DH_12thSSMortarObserver extends DH_12thSS;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
+    MyName="Werferbeobachter"
     AltName="Werferbeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Werferbeobachter"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

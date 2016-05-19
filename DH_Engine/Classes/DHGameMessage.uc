@@ -26,7 +26,6 @@ var localized string SquadUnlockedMessage;
 var localized string SquadCreatedMessage;
 
 // This is overridden to change the hard link to ROPlayer that caused a bug where
-// bUseNativeRoleNames was not being honored.
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;
@@ -113,14 +112,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            if (class'DHPlayer'.default.bUseNativeRoleNames)
-            {
-                return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RORoleInfo(OptionalObject).default.AltName;
-            }
-            else
-            {
-                return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RORoleInfo(OptionalObject).default.MyName;
-            }
+            return default.RoleChangeMsg $ RORoleInfo(OptionalObject).default.Article $ RORoleInfo(OptionalObject).default.MyName;
         // Unable to change role message
         case 17:
             if (OptionalObject == none)
@@ -128,14 +120,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return "";
             }
 
-            if (class'DHPlayer'.default.bUseNativeRoleNames)
-            {
-                return default.MaxRoleMsg $ RORoleInfo(OptionalObject).default.AltName;
-            }
-            else
-            {
-                return default.MaxRoleMsg $ RORoleInfo(OptionalObject).default.MyName;
-            }
+            return default.MaxRoleMsg $ RORoleInfo(OptionalObject).default.MyName;
+
         // To forgive type "np" or "forgive" message
         case 18:
             if (RelatedPRI_1 == none)

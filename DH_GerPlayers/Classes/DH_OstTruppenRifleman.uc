@@ -7,10 +7,10 @@ class DH_OstTruppenRifleman extends DH_OstTruppen;
 
 defaultproperties
 {
-    MyName="Osttruppe Rifleman"
-    AltName="Sch�tze Osttruppe"
+    MyName="Schütze Osttruppe"
+    AltName="Schütze Osttruppe"
     Article="a "
-    PluralName="Riflemen"
+    PluralName="Schütze Osttruppen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="OT_1"
     Models(1)="OT_2"

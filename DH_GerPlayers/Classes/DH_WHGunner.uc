@@ -7,10 +7,10 @@ class DH_WHGunner extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Machine-Gunner"
-    AltName="Maschinengewehrsch�tze"
+    MyName="Maschinengewehrschütze"
+    AltName="Maschinengewehrschütze"
     Article="a "
-    PluralName="Machine-Gunners"
+    PluralName="Maschinengewehrschützen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.MG-Schutze'
     Models(0)="WH_1"
     Models(1)="WH_2"

@@ -301,14 +301,7 @@ simulated function UpdateScoreBoard (Canvas C)
 
         if (GermanPRI[i].RoleInfo != none)
         {
-            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
-            {
-                RoleName = GermanPRI[i].RoleInfo.default.AltName;
-            }
-            else
-            {
-                RoleName = GermanPRI[i].RoleInfo.default.MyName;
-            }
+            RoleName = GermanPRI[i].RoleInfo.default.MyName;
         }
         else
         {
@@ -497,14 +490,7 @@ simulated function UpdateScoreBoard (Canvas C)
 
         if (RussianPRI[i].RoleInfo != none)
         {
-            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
-            {
-                RoleName = RussianPRI[i].RoleInfo.default.AltName;
-            }
-            else
-            {
-                RoleName = RussianPRI[i].RoleInfo.default.MyName;
-            }
+            RoleName = RussianPRI[i].RoleInfo.default.MyName;
         }
         else
         {

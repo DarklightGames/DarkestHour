@@ -7,10 +7,10 @@ class DH_WHAssaultC extends DH_HeerCamo;
 
 defaultproperties
 {
-    MyName="Assault Trooper"
-    AltName="Sto�truppe"
+    MyName="Stoßtruppe"
+    AltName="Stoßtruppe"
     Article="an "
-    PluralName="Assault Troopers"
+    PluralName="Stoßtruppen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Stosstruppe'
     Models(0)="WH_C1"
     Models(1)="WH_C2"

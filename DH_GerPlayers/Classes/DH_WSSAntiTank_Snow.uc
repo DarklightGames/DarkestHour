@@ -8,10 +8,10 @@ class DH_WSSAntiTank_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="Tank Hunter"
-    AltName="Panzerj�ger"
+    MyName="Panzerjäger"
+    AltName="Panzerjäger"
     Article="a "
-    PluralName="Tank Hunters"
+    PluralName="Panzerjäger"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_AT'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

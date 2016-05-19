@@ -7,10 +7,10 @@ class DH_WHCombatEngineer_Snow extends DH_HeerSnow;
 
 defaultproperties
 {
-    MyName="Combat Engineer"
-    AltName="St�rmpioniere"
+    MyName="Stürmpioniere"
+    AltName="Stürmpioniere"
     Article="a "
-    PluralName="Combat Engineers"
+    PluralName="Sturmpionieri"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Sturmpionier'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

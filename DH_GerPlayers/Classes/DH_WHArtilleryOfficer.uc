@@ -7,10 +7,10 @@ class DH_WHArtilleryOfficer extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Artillery Officer"
-    AltName="Artillerie Offizier"
+    MyName="Artillerieoffizier"
+    AltName="Artillerieoffizier"
     Article="a "
-    PluralName="Artillery Officers"
+    PluralName="Artillerieoffiziere"
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WHA_1"
     Models(1)="WHA_2"

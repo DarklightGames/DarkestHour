@@ -8,10 +8,10 @@ class DH_WSSMortarObserver_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
+    MyName="Werferbeobachter"
     AltName="Werferbeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Werferbeobachter"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarObserver'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

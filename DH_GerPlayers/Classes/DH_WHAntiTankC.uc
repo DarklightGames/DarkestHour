@@ -8,10 +8,10 @@ class DH_WHAntiTankC extends DH_HeerCamo;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="Tank Hunter"
-    AltName="Panzerj�ger"
+    MyName="Panzerjäger"
+    AltName="Panzerjäger"
     Article="a "
-    PluralName="Tank Hunters"
+    PluralName="Panzerjäger"
     MenuImage=texture'DHGermanCharactersTex.Icons.Pak-soldat'
     Models(0)="WH_C1"
     Models(1)="WH_C2"

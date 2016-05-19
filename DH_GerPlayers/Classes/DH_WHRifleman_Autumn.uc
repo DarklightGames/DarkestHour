@@ -7,10 +7,10 @@ class DH_WHRifleman_Autumn extends DH_HeerAutumn;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Sch�tze"
+    MyName="Schütze"
+    AltName="Schütze"
     Article="a "
-    PluralName="Riflemen"
+    PluralName="Schützen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

@@ -7,10 +7,10 @@ class DH_WSSRadioman extends DH_WaffenSS;
 
 defaultproperties
 {
-    MyName="Radio Operator"
+    MyName="Funktruppe"
     AltName="Funktruppe"
     Article="a "
-    PluralName="Radio Operator"
+    PluralName="Funktruppen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Radioman'
     Models(0)="WSS_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'

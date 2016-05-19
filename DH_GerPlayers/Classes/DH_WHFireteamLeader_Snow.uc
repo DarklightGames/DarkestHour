@@ -7,10 +7,10 @@ class DH_WHFireteamLeader_Snow extends DH_HeerSnow;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
+    MyName="Gefreiter"
     AltName="Gefreiter"
     Article="a "
-    PluralName="Fireteam Leaders"
+    PluralName="Gefreite"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

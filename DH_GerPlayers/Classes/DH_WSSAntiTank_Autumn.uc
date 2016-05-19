@@ -8,10 +8,10 @@ class DH_WSSAntiTank_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="Tank Hunter"
-    AltName="Panzerj�ger"
+    MyName="Panzerjäger"
+    AltName="Panzerjäger"
     Article="a "
-    PluralName="Tank Hunters"
+    PluralName="Panzerjäger"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_AT'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

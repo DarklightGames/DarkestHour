@@ -7,10 +7,10 @@ class DH_WSSTanker extends DH_WaffenSSTankCrew;
 
 defaultproperties
 {
-    MyName="Tank Crewman"
+    MyName="Panzerbesatzung"
     AltName="Panzerbesatzung"
     Article="a "
-    PluralName="Tank Crewmen"
+    PluralName="Panzerbesatzungen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_TankCrew'
     Models(0)="SSP_1"
     Models(1)="SSP_2"

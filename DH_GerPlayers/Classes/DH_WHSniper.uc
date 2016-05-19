@@ -7,10 +7,10 @@ class DH_WHSniper extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Scharfsch�tze"
+    MyName="Scharfschütze"
+    AltName="Scharfschütze"
     Article="a "
-    PluralName="Snipers"
+    PluralName="Scharfschützen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Scharf'
     Models(0)="WH_1"
     Models(1)="WH_2"

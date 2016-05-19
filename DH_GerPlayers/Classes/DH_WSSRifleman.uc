@@ -7,10 +7,10 @@ class DH_WSSRifleman extends DH_WaffenSS;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Sch�tze"
+    MyName="Schütze"
+    AltName="Schütze"
     Article="a "
-    PluralName="Riflemen"
+    PluralName="Schützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_k98'
     Models(0)="SS_1"
     Models(1)="SS_2"

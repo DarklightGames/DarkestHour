@@ -622,14 +622,7 @@ function UpdateRoles()
             continue;
         }
 
-        if (PC != none && PC.bUseNativeRoleNames)
-        {
-            S = RI.AltName;
-        }
-        else
-        {
-            S = RI.MyName;
-        }
+        S = RI.MyName;
 
         GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 
@@ -862,15 +855,7 @@ function PopulateRoles()
         {
             if (GRI.DHAxisRoles[i] != none)
             {
-                if (PC != none && PC.bUseNativeRoleNames)
-                {
-                    RoleName = GRI.DHAxisRoles[i].default.AltName;
-                }
-                else
-                {
-                    RoleName = GRI.DHAxisRoles[i].default.MyName;
-                }
-
+                RoleName = GRI.DHAxisRoles[i].default.MyName;
                 li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
             }
         }
@@ -881,15 +866,7 @@ function PopulateRoles()
         {
             if (GRI.DHAlliesRoles[i] != none)
             {
-                if (PC != none && PC.bUseNativeRoleNames)
-                {
-                    RoleName = GRI.DHAlliesRoles[i].default.AltName;
-                }
-                else
-                {
-                    RoleName = GRI.DHAlliesRoles[i].default.MyName;
-                }
-
+                RoleName = GRI.DHAlliesRoles[i].default.MyName;
                 li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
             }
         }

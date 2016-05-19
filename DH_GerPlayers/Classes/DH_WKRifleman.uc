@@ -7,10 +7,10 @@ class DH_WKRifleman extends DH_Kriegsmarine;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Sch�tze"
+    MyName="Schütze"
+    AltName="Schütze"
     Article="a "
-    PluralName="Riflemen"
+    PluralName="Schützen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WK_1"
     Models(1)="WK_2"

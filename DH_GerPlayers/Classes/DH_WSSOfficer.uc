@@ -8,10 +8,10 @@ class DH_WSSOfficer extends DH_WaffenSS;
 defaultproperties
 {
     bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
+    MyName="Artillerieoffizier"
     AltName="Artillerieoffizier"
     Article="a "
-    PluralName="Artillery Officers"
+    PluralName="Artillerieoffiziere"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Off'
     Models(0)="SS_1"
     Models(1)="SS_2"

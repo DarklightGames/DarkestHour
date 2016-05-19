@@ -8,10 +8,10 @@ class DH_WSSMortarman_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Werfersch�tze"
+    MyName="Werferschütze"
+    AltName="Werferschütze"
     Article="a "
-    PluralName="Mortar Operators"
+    PluralName="Werferschützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarOperator'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

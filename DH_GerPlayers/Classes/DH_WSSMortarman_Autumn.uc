@@ -8,10 +8,10 @@ class DH_WSSMortarman_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Werfersch�tze"
+    MyName="Werferschütze"
+    AltName="Werferschütze"
     Article="a "
-    PluralName="Mortar Operators"
+    PluralName="Werferschützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarOperator'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

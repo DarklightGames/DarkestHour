@@ -8,10 +8,10 @@ class DH_WSSOfficer_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
+    MyName="Artillerieoffizier"
     AltName="Artillerieoffizier"
     Article="a "
-    PluralName="Artillery Officers"
+    PluralName="Artillerieoffiziere"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Off'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

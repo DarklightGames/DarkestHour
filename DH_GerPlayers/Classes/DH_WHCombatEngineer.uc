@@ -7,10 +7,10 @@ class DH_WHCombatEngineer extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Combat Engineer"
+    MyName="Sturmpioniere"
     AltName="Sturmpioniere"
     Article="a "
-    PluralName="Combat Engineers"
+    PluralName="Sturmpionieri"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Sturmpionier'
     Models(0)="WH_1"
     Models(1)="WH_2"

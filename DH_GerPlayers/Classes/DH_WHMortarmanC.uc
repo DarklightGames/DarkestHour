@@ -8,10 +8,10 @@ class DH_WHMortarmanC extends DH_HeerCamo;
 defaultproperties
 {
     bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Werfersch�tze"
+    MyName="Werferschütze"
+    AltName="Werferschütze"
     Article="a "
-    PluralName="Mortar Operators"
+    PluralName="Werferschützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_MortarOperator'
     Models(0)="WH_C1"
     Models(1)="WH_C2"

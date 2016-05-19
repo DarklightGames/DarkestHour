@@ -7,10 +7,10 @@ class DH_FJGunner extends DH_FJ;
 
 defaultproperties
 {
-    MyName="Machine-Gunner"
-    AltName="Maschinengewehrsch�tze"
+    MyName="Maschinengewehrschütze"
+    AltName="Maschinengewehrschütze"
     Article="a "
-    PluralName="Machine-Gunners"
+    PluralName="Maschinengewehrschützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MG'
     Models(0)="FJ1"
     Models(1)="FJ2"

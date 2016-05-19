@@ -7,10 +7,10 @@ class DH_WSSAssault_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    MyName="Assault Trooper"
-    AltName="Sto�truppe"
+    MyName="Stoßtruppe"
+    AltName="Stoßtruppe"
     Article="an "
-    PluralName="Assault Troopers"
+    PluralName="Stoßtruppen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

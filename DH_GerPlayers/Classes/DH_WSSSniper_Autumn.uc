@@ -7,10 +7,10 @@ class DH_WSSSniper_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Scharfsch�tze"
+    MyName="Scharfschütze"
+    AltName="Scharfschütze"
     Article="a "
-    PluralName="Snipers"
+    PluralName="Scharfschützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Sniper'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

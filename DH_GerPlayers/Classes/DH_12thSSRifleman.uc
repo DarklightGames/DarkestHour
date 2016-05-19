@@ -7,10 +7,10 @@ class DH_12thSSRifleman extends DH_12thSS;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Sch�tze"
+    MyName="Schütze"
+    AltName="Schütze"
     Article="a "
-    PluralName="Riflemen"
+    PluralName="Schützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_k98'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

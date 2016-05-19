@@ -8,10 +8,10 @@ class DH_FJ45MortarObserver extends DH_FJ_1945;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
+    MyName="Werferbeobachter"
     AltName="Werferbeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Werferbeobachter"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MortarObserver'
     Models(0)="FJ451"
     Models(1)="FJ452"

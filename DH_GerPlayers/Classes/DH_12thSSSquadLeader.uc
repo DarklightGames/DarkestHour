@@ -8,10 +8,10 @@ class DH_12thSSSquadLeader extends DH_12thSS;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Junior Officer"
+    MyName="Unterscharführer"
     AltName="Unterscharführer"
     Article="a "
-    PluralName="Junior Officers"
+    PluralName="Unterscharführers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_SqL'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

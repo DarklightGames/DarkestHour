@@ -7,10 +7,10 @@ class DH_WSSAssault_Snow extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    MyName="Assault Trooper"
-    AltName="Sto�truppe"
+    MyName="Stoßtruppe"
+    AltName="Stoßtruppe"
     Article="an "
-    PluralName="Assault Troopers"
+    PluralName="Stoßtruppen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

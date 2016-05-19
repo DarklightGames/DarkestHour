@@ -8,10 +8,10 @@ class DH_WHSquadLeaderC extends DH_HeerCamo;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Junior Officer"
+    MyName="Unteroffizier"
     AltName="Unteroffizier"
     Article="a "
-    PluralName="Junior Officers"
+    PluralName="Unteroffiziere"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_SqL'
     Models(0)="WH_C1"
     Models(1)="WH_C2"

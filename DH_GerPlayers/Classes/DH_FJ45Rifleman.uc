@@ -7,10 +7,10 @@ class DH_FJ45Rifleman extends DH_FJ_1945;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Sch�tze"
+    MyName="Schütze"
+    AltName="Schütze"
     Article="a "
-    PluralName="Riflemen"
+    PluralName="Schützen"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_k98'
     Models(0)="FJ451"
     Models(1)="FJ452"

@@ -7,10 +7,10 @@ class DH_WSSFireteamLeader_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
-    AltName="Rottenf�hrer"
+    MyName="Rottenführer"
+    AltName="Rottenführer"
     Article="a "
-    PluralName="Fireteam Leaders"
+    PluralName="Rottenführers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

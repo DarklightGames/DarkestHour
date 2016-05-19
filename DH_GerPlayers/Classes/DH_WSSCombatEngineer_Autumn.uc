@@ -7,10 +7,10 @@ class DH_WSSCombatEngineer_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    MyName="Combat Engineer"
+    MyName="Sturmpioniere"
     AltName="Sturmpioniere"
     Article="a "
-    PluralName="Combat Engineers"
+    PluralName="Sturmpionieri"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Eng'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

@@ -7,10 +7,10 @@ class DH_WHAssault_Autumn extends DH_HeerAutumn;
 
 defaultproperties
 {
-    MyName="Assault Troop"
-    AltName="Sto�truppe"
+    MyName="Stoßtruppe"
+    AltName="Stoßtruppe"
     Article="an "
-    PluralName="Assault Troopers"
+    PluralName="Stoßtruppen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Stosstruppe'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

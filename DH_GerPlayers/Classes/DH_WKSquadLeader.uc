@@ -7,10 +7,10 @@ class DH_WKSquadLeader extends DH_Kriegsmarine;
 
 defaultproperties
 {
-    MyName="Junior Officer"
+    MyName="Gruppenführer"
     AltName="Gruppenführer"
     Article="a "
-    PluralName="Junior Officers"
+    PluralName="Gruppenführers"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WK_1"
     Models(1)="WK_2"

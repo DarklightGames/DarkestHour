@@ -8,10 +8,10 @@ class DH_WHMortarObserver_Snow extends DH_HeerSnow;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
+    MyName="Werferbeobachter"
     AltName="Werferbeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Werferbeobachter"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

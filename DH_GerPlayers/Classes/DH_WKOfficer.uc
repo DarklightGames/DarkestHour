@@ -8,10 +8,10 @@ class DH_WKOfficer extends DH_Kriegsmarine;
 defaultproperties
 {
     bIsArtilleryOfficer=true
-    MyName="Officer"
-    AltName="Zugf�hrer"
+    MyName="Zugführer"
+    AltName="Zugführer"
     Article="a "
-    PluralName="Officers"
+    PluralName="Zugführers"
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WK_1"
     Models(1)="WK_2"

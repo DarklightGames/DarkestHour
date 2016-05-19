@@ -7,10 +7,10 @@ class DH_FJAssault extends DH_FJ;
 
 defaultproperties
 {
-    MyName="Assault Trooper"
-    AltName="Sto�truppe"
+    MyName="Stoßtruppe"
+    AltName="Stoßtruppe"
     Article="an "
-    PluralName="Assault Troopers"
+    PluralName="Stoßtruppen"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Ass'
     Models(0)="FJ1"
     Models(1)="FJ2"
