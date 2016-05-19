@@ -60,8 +60,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
-    AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
-    AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
     ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')

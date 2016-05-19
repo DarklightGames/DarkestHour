@@ -30,8 +30,8 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=25.0
-    FireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
-    FireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 }
