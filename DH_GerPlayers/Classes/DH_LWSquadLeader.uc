@@ -8,10 +8,10 @@ class DH_LWSquadLeader extends DH_LuftwaffeFlak;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Squad Leader"
-    AltName="Gruppenführer"
+    MyName="Junior Officer"
+    AltName="GruppenfÃ¼hrer"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Junior Officers"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WL_1"
     Models(1)="WL_2"

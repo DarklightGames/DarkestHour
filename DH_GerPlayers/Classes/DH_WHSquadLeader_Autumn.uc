@@ -8,10 +8,10 @@ class DH_WHSquadLeader_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Squad Leader"
+    MyName="Junior Officer"
     AltName="Unteroffizier"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Junior Officers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_SqL'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

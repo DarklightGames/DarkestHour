@@ -8,10 +8,10 @@ class DH_FJSquadLeader extends DH_FJ;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Squad Leader"
+    MyName="Junior Officer"
     AltName="Unteroffizier"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Junior Officers"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_SqL'
     Models(0)="FJ1"
     Models(1)="FJ2"
