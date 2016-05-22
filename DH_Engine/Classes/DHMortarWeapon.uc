@@ -346,8 +346,6 @@ defaultproperties
     DeployAnimation="Deploy"
     DeployRadius=32.0
     DeployAngleMaximum=0.349066
-    FireModeClass(0)=class'DH_Engine.DHMortarWeaponFire'
-    FireModeClass(1)=class'DH_Engine.DHMortarWeaponFire'
     AIRating=1.0
     CurrentRating=1.0
     bCanThrow=false
