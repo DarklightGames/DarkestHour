@@ -134,8 +134,15 @@ simulated function GetHitSurfaceType(out ESurfaceTypes SurfaceType)
 }
 
 // Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 simulated singular function Touch(Actor Other)
 {
+    // Added splash if projectile hits a fluid surface (the checks below
+    if (FluidSurfaceInfo(Other) != none)
+    {
+        CheckForSplash(Location);
+    }
+
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
         if (Other.IsA('DHCollisionMeshActor'))

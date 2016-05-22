@@ -59,6 +59,12 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
+    // Added splash if projectile hits a fluid surface (the checks below
+    if (FluidSurfaceInfo(Other) != none)
+    {
+        CheckForSplash(Location);
+    }
+
     // Added bBlockHitPointTraces check here, so can avoid it at start of ProcessTouch(), meaning owner of col mesh gets handled properly in PT (it will have bBlockHitPointTraces=false)
     if (Other != none && (Other.bProjTarget || Other.bBlockActors) && Other.bBlockHitPointTraces)
     {

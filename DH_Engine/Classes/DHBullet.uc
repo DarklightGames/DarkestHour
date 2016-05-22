@@ -127,9 +127,16 @@ simulated function Tick(float DeltaTime)
 }
 
 // Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
+
+    // Added splash if projectile hits a fluid surface (the checks below
+    if (FluidSurfaceInfo(Other) != none)
+    {
+        CheckForSplash(Location);
+    }
 
     // Added bBlockHitPointTraces check here, so can avoid it at start of ProcessTouch(), meaning owner of col mesh gets handled properly in PT (it will have bBlockHitPointTraces=false)
     if (Other != none && (Other.bProjTarget || Other.bBlockActors) && Other.bBlockHitPointTraces)
