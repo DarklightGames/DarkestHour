@@ -1515,19 +1515,62 @@ function DrawSignals(Canvas C)
     }
 }
 
+// Colin: This function is meant to evaluate pawns that are not being directly
+// looked at and are not in our squad and determine if we should display their
+// name above their heads.
+//
+// Note that this function does not apply for pawns we are directly looking at.
+// That is a special exception done outside of this function and inside
+// DrawPlayerNames.
+function bool ShouldDrawPlayerName(Pawn P)
+{
+    local DHPawn MyPawn, OtherPawn;
+    local bool bIsTalking;
+    local bool bCanBeResupplied;
+    local bool bCanBeReloaded;
+    local bool bIsInSameSquad;
+    local bool bIsWithinRange;
+    local vector PawnLocation, ViewLocation;
+    local DHPlayerReplicationInfo MyPRI, OtherPRI;
+
+    if (P == none || PlayerOwner == none || P.GetTeamNum() != PlayerOwner.GetTeamNum())
+    {
+        return false;
+    }
+
+    MyPawn = DHPawn(PlayerOwner.Pawn);
+    OtherPawn = DHPawn(P);
+
+    MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
+    OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    bIsInSameSquad = class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI);
+    bIsTalking = (OtherPRI == PortraitPRI);
+    bCanBeResupplied = (MyPawn != none && !MyPawn.bUsedCarriedMGAmmo) && (OtherPawn != none && OtherPawn.bWeaponNeedsResupply);
+    bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
+
+    PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
+    PawnLocation.Z += 16.0;
+    ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
+    bIsWithinRange = VSize(PawnLocation - ViewLocation) <= class'DHUnits'.static.MetersToUnreal(25);
+
+    return (bIsInSameSquad || bIsTalking || bCanBeResupplied || bCanBeReloaded) && bIsWithinRange && FastTrace(PawnLocation, ViewLocation);
+}
+
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
 function DrawPlayerNames(Canvas C)
 {
+    local Actor A;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
     local DHPawn                  MyPawn, OtherPawn;
     local Pawn                    HitPawn, P;
     local array<Pawn>             Pawns;
     local Vehicle                 V;
-    local vector                  ViewLocation, HitLocation, HitNormal, ScreenLocation, PawnLocation, TextSize, Direction, X, Y, Z;
+    local vector                  ViewLocation, PawnLocation, HitLocation, HitNormal, ScreenLocation, TextSize, Direction, X, Y, Z, TraceStart, TraceEnd;
     local float                   FadeInTime, FadeOutTime;
     local int                     i;
     local string                  PlayerName;
-    local bool                    bCanDrawName, bIsInMySquad, bIsTalking, bIsWithinRange, bCanBeResupplied, bCanBeReloaded;
+    local bool                    bCanDrawName, bIsTalking, bCanBeResupplied, bCanBeReloaded;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -1536,57 +1579,46 @@ function DrawPlayerNames(Canvas C)
 
     MyPawn = DHPawn(PawnOwner);
 
-    ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-
     // Our first step is to accumulate all of the pawns that we are nearby
     // or we are directly looking at.
-    HitPawn = Pawn(Trace(HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50) * vector(PlayerOwner.CalcViewRotation)), ViewLocation, true));
+    ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
+    TraceStart = ViewLocation;
+    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(50) * vector(PlayerOwner.CalcViewRotation));
 
-    if (HitPawn != none && HitPawn != PawnOwner)
+    foreach TraceActors(class'Pawn', P, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (P != none && P != PawnOwner)
+        {
+            HitPawn = P;
+            break;
+        }
+    }
+
+    if (HitPawn != none && HitPawn.GetTeamNum() == PawnOwner.GetTeamNum())
     {
         Pawns[Pawns.Length] = HitPawn;
     }
 
     MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
-    // Accumulate all squad members' pawns within 25 meters.
+    // Accumulate all relevant pawns within 25 meters.
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(25), ViewLocation)
     {
         if (P != PawnOwner && P != HitPawn)
         {
-            OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI) ||
-                OtherPRI == PortraitPRI)
-            {
-                Pawns[Pawns.Length] = P;
-            }
+            Pawns[Pawns.Length] = P;
         }
     }
 
-    C.Font = GetPlayerNameFont(C);
-
     // Now we go through all those pawns we gathered and determine if we should
-    // draw them.
+    // add them to the list of pawns to be drawn this frame.
     for (i = 0; i < Pawns.Length; ++i)
     {
         P = Pawns[i];
 
-        if (P == none ||
-            P.PlayerReplicationInfo == none ||
-            P.GetTeamNum() != PlayerOwner.GetTeamNum() ||
-            NamedPawns.Contains(P))
-        {
-            continue;
-        }
+        OtherPawn = DHPawn(P);
 
-        PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
-        PawnLocation.Z += 16.0;
-
-        // This check is so that we don't put people in the visible player list
-        // who are behind walls. If this check wasn't here, players would be
-        // constantly put in the list and then thrown out of it a second later.
-        if (!FastTrace(PawnLocation, ViewLocation))
+        if (NamedPawns.Contains(P) || (P != HitPawn && !ShouldDrawPlayerName(P)))
         {
             continue;
         }
@@ -1604,6 +1636,8 @@ function DrawPlayerNames(Canvas C)
         }
     }
 
+    C.Font = GetPlayerNameFont(C);
+
     for (i = 0; i < NamedPawns.Size(); ++i)
     {
         P = Pawn(NamedPawns.Get(i));
@@ -1616,6 +1650,7 @@ function DrawPlayerNames(Canvas C)
         }
 
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+        OtherPawn = DHPawn(P);
 
         if (OtherPRI == none)
         {
@@ -1624,18 +1659,7 @@ function DrawPlayerNames(Canvas C)
             continue;
         }
 
-        OtherPawn = DHPawn(P);
-
-        bIsInMySquad = class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI);
-        bIsTalking = (OtherPRI == PortraitPRI);
-        bCanBeResupplied = !MyPawn.bUsedCarriedMGAmmo && OtherPawn != none && OtherPawn.bWeaponNeedsResupply;
-        bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
-
-        PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
-        PawnLocation.Z += 16.0;
-        bIsWithinRange = VSize(PawnLocation - ViewLocation) > class'DHUnits'.static.MetersToUnreal(25);
-
-        bCanDrawName = (P == HitPawn) || (bIsWithinRange && (bIsInMySquad || bIsTalking || bCanBeResupplied || bCanBeReloaded) && FastTrace(PawnLocation, ViewLocation));
+        bCanDrawName = (P == HitPawn || ShouldDrawPlayerName(P));
 
         if (!bCanDrawName)
         {
@@ -1665,6 +1689,8 @@ function DrawPlayerNames(Canvas C)
             FadeOutTime = FClamp(1.0 - FMax(0.0, Level.TimeSeconds - OtherPRI.LastNameDrawTime), 0.0, 1.0);
             C.DrawColor.A = byte(FMin(FadeInTime, FadeOutTime) * 255);
 
+            PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
+            PawnLocation.Z += 16.0;
             ScreenLocation = C.WorldToScreen(PawnLocation);
             PlayerName = P.PlayerReplicationInfo.PlayerName;
 
@@ -1683,7 +1709,12 @@ function DrawPlayerNames(Canvas C)
             DrawShadowedTextClipped(C, PlayerName);
 
             C.DrawColor = class'UColor'.default.White;
+            // TODO: use alpha properly!
             C.SetPos(ScreenLocation.X - 16, ScreenLocation.Y - 64.0);
+
+            bIsTalking = (OtherPRI == PortraitPRI);
+            bCanBeResupplied = (MyPawn != none && !MyPawn.bUsedCarriedMGAmmo) && (OtherPawn != none && OtherPawn.bWeaponNeedsResupply);
+            bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
 
             if (bIsTalking)
             {
@@ -1693,10 +1724,12 @@ function DrawPlayerNames(Canvas C)
             else if (bCanBeResupplied)
             {
                 // TODO: draw icon for resupply
+                C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
             }
             else if (bCanBeReloaded)
             {
                 // TODO: draw icon for reload
+                C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
             }
         }
     }
