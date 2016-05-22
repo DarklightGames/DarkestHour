@@ -4865,16 +4865,9 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
     ResetPhysicsBasedAnim();
 }
 
-// DEBUG exec to check whether bInitializedPlayer has been set to true on a net client - run if player spawns with wrong skin
-simulated function DebugInitPlayer()
-{
-    Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
-}
-
 // Modified so a shallow water volume doesn't send player into swimming state
 function SetMovementPhysics()
 {
-    Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
     if (Physics != PHYS_Falling)
     {
         if (PhysicsVolume != none && PhysicsVolume.bWaterVolume && !(PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(PhysicsVolume).bIsShallowWater))
@@ -4913,6 +4906,22 @@ simulated function NotifySelected(Pawn User)
     {
         P.ReceiveLocalizedMessage(TouchMessageClass, 1, self.PlayerReplicationInfo,, User.Controller);
         LastNotifyTime = Level.TimeSeconds;
+    }
+}
+
+// DEBUG exec to check whether bInitializedPlayer has been set to true on a net client - run if player spawns with wrong skin
+exec function DebugInitPlayer()
+{
+    Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
+}
+
+// Debug exec to set own player on fire
+exec function BurnPlayer()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bOnFire = true;
+        FireDamage = 1;
     }
 }
 
