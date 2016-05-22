@@ -4342,6 +4342,44 @@ function DropWeaponInventory(vector TossVel)
     }
 }
 
+// Implemented to douse the flames of a player who is on fire, if he enters water
+simulated event PhysicsVolumeChange(PhysicsVolume NewVolume)
+{
+    local int i;
+
+    if (bOnFire && NewVolume != none && NewVolume.bWaterVolume)
+    {
+        bOnFire = false;
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            // Stop flame effects on the pawn
+            if (FlameFX != none)
+            {
+                FlameFX.Kill();
+            }
+
+            // Leaving charred looks dumb & anyone with that much burn degree wouldn't be able to fight, so remove charred & turn off all overlay materials
+            // Matt: TODO: removing charred effect doesn't work, as other players don't see it removed (EndBurnFX function gets triggered, which sets charred effect for them)
+            // Suggest remove that part of the functionality & leave the 'charred' effect on, as it arguably just looks like the player is smoke blackened
+            // Or remove all douse flames functionality & just let player die a couple of seconds later, as he's been on fire & probably shouldn't survive
+            bBurnFXOn = false;
+            bCharred = false;
+            SetOverlayMaterial(none, 20.0, true);
+
+            if (HeadGear != none)
+            {
+                HeadGear.SetOverlayMaterial(none, 0.0, true);
+            }
+
+            for (i = 0; i < AmmoPouches.Length; ++i) // have do it to ammo pouches as well
+            {
+                AmmoPouches[i].SetOverlayMaterial(none, 0.0, true);
+            }
+        }
+    }
+}
+
 function bool ResupplyMortarAmmunition()
 {
     local int i;
