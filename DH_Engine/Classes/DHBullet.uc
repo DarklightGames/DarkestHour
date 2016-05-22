@@ -592,7 +592,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         {
             PlaySound(VehiclePenetrateSound, SLOT_None, VehiclePenetrateSoundVolume, false, 100.0);
 
-            if (EffectIsRelevant(Location, false) && VehiclePenetrateEffectClass != none)
+            if (EffectIsRelevant(HitLocation, false) && VehiclePenetrateEffectClass != none)
             {
                 Spawn(VehiclePenetrateEffectClass, ,, HitLocation, rotator(-HitNormal));
             }
@@ -601,7 +601,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
         {
             PlaySound(VehicleDeflectSound, SLOT_None, VehicleDeflectSoundVolume, false, 100.0);
 
-            if (EffectIsRelevant(Location, false) && VehicleDeflectEffectClass != none)
+            if (EffectIsRelevant(HitLocation, false) && VehicleDeflectEffectClass != none)
             {
                 Spawn(VehicleDeflectEffectClass,,, HitLocation, rotator(-HitNormal));
             }
@@ -642,7 +642,7 @@ simulated static function GetWhizType(out int WhizType, DHPawn WhizzedPlayer, Pa
     }
 }
 
-// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing vehicle impact effects to be skipped
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
 simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
@@ -655,7 +655,6 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
         return bForceDedicated;
     }
 
-    // Net clients
     if (Role < ROLE_Authority)
     {
         // Always relevant for the owning net player, i.e. the player that fired the projectile
@@ -664,15 +663,8 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
             return true;
         }
 
-        // Not relevant for other net clients if projectile has not been drawn on their screen recently
-        if (SpawnLocation == Location)
-        {
-            if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
-            {
-                return false;
-            }
-        }
-        else if (Instigator == none || (Level.TimeSeconds - Instigator.LastRenderTime) >= 3.0)
+        // Not relevant to other net clients if the projectile has not been drawn on their screen recently (within last 3 seconds)
+        if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
         {
             return false;
         }
@@ -760,7 +752,7 @@ simulated function CheckForSplash(vector SplashLocation)
     {
         PlaySound(WaterHitSound);
 
-        if (SplashEffect != none && EffectIsRelevant(Location, false))
+        if (SplashEffect != none && EffectIsRelevant(SplashLocation, false))
         {
             // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
             // So we'll raise its location - a little hacky, but works pretty well much of the time

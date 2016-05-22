@@ -95,10 +95,12 @@ simulated function BlowUp(vector HitLocation)
     PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
     DoShakeEffect();
 
-    if (EffectIsRelevant(Location, false))
+    if (Level.NetMode != NM_DedicatedServer)
     {
         GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
         GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
+
+        // Play effects (note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
         Spawn(ExplosionEmitterClass, self,, HitLocation);
         Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
     }

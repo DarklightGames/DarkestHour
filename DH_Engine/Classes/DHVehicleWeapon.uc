@@ -681,7 +681,7 @@ simulated function StartHatchFire()
     }
 }
 
-// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing firing effects to be skipped
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
 simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
@@ -694,7 +694,6 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
         return bForceDedicated;
     }
 
-    // Net clients
     if (Role < ROLE_Authority)
     {
         // Always relevant for the owning net player
@@ -703,15 +702,8 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
             return true;
         }
 
-        // Not relevant for other net clients if cannon has not been drawn on their screen recently
-        if (SpawnLocation == Location)
-        {
-            if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
-            {
-                return false;
-            }
-        }
-        else if (Instigator == none || (Level.TimeSeconds - Instigator.LastRenderTime) >= 3.0)
+        // Not relevant to other net clients if the VehicleWeapon has not been drawn on their screen recently (within last 3 seconds)
+        if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
         {
             return false;
         }

@@ -666,6 +666,10 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
 // Although this has actually been written as a generic function that should handle all or most situations
 simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
 {
+    local vector EffectLocation;
+
+    EffectLocation = HitLocation + (HitNormal * 16.0);
+
     DoShakeEffect();
 
     // Round shatters on vehicle armor
@@ -679,9 +683,9 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         PlaySound(ShatterVehicleHitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
         PlaySound(ShatterSound[Rand(4)], SLOT_None, 5.5 * TransientSoundVolume);
 
-        if (EffectIsRelevant(Location, false))
+        if (EffectIsRelevant(EffectLocation, false))
         {
-            Spawn(ShellShatterEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            Spawn(ShellShatterEffectClass,,, EffectLocation, rotator(HitNormal));
         }
 
         bRoundShattered = false; // reset
@@ -703,9 +707,9 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
 
         PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
 
-        if (EffectIsRelevant(Location, false))
+        if (EffectIsRelevant(EffectLocation, false))
         {
-            Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            Spawn(ShellDeflectEffectClass,,, EffectLocation, rotator(HitNormal));
         }
 
         bDidExplosionFX = true;  // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
@@ -725,9 +729,9 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         {
             PlaySound(VehicleDeflectSound, SLOT_Misc, 5.5 * TransientSoundVolume);
 
-            if (EffectIsRelevant(Location, false))
+            if (EffectIsRelevant(EffectLocation, false))
             {
-                Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+                Spawn(ShellDeflectEffectClass,,, EffectLocation, rotator(HitNormal));
             }
         }
 
@@ -849,7 +853,7 @@ simulated function CheckForSplash(vector SplashLocation)
     {
         PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
 
-        if (ShellHitWaterEffectClass != none && EffectIsRelevant(Location, false))
+        if (ShellHitWaterEffectClass != none && EffectIsRelevant(SplashLocation, false))
         {
             // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
             // So we'll raise it by an arbitrary 10 units in the Z axis, which works pretty well most of the time
@@ -962,12 +966,13 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 
     // Play impact sound & effect
     // Moved effect relevance check so only affects hit effect, as impact sound should play even if effect is skipped because it's not on player's screen
+    // And effect relevance check is skipped altogether for an HE explosion, as it's big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it
     if (HitSound != none)
     {
         PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
     }
 
-    if (HitEmitterClass != none && EffectIsRelevant(Location, false))
+    if (HitEmitterClass != none && (RoundType == RT_HE || EffectIsRelevant(HitLocation, false)))
     {
         Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
     }
@@ -992,7 +997,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     }
 }
 
-// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing impact/explosion effects to be skipped
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
 // Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
 // Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
 simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
@@ -1005,7 +1010,6 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
         return bForceDedicated;
     }
 
-    // Net clients
     if (Role < ROLE_Authority)
     {
         // Always relevant for the owning net player, i.e. the player that fired the projectile
@@ -1014,15 +1018,8 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
             return true;
         }
 
-        // Not relevant for other net clients if projectile has not been drawn on their screen recently
-        if (SpawnLocation == Location)
-        {
-            if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
-            {
-                return false;
-            }
-        }
-        else if (Instigator == none || (Level.TimeSeconds - Instigator.LastRenderTime) >= 3.0)
+        // Not relevant to other net clients if the projectile has not been drawn on their screen recently (within last 3 seconds)
+        if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
         {
             return false;
         }

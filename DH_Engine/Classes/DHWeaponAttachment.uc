@@ -174,7 +174,7 @@ simulated event ThirdPersonEffects()
 
 // New function to spawn projectile hit effects - functionality moved here from ThirdPersonEffects(), from where it is still called on an authority role
 // But for net client this gets called by PostNetReceive() when it receives updated SpawnHitCount & mHitLocation, so it knows where to spawn the effect
-simulated function SpawnHitEffect() // Matt TODO: may want to add EffectIsRelevant check here? (although already has something similar)
+simulated function SpawnHitEffect()
 {
     local PlayerController   PC;
     local ROVehicleHitEffect VehEffect;

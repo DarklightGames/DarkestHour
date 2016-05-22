@@ -38,7 +38,7 @@ simulated function PostNetBeginPlay()
         PlaySound(HitEffects[ST].HitSound, SLOT_None, RandRange(10.0, 32.0), false, 32.0,, true);
     }
 
-    if (Owner == none || Owner.EffectIsRelevant(Owner.Location, false)) // added effect relevance check, using owning bullet actor to call the function
+    if (Owner == none || Owner.EffectIsRelevant(HitLoc, false)) // added effect relevance check, using owning bullet actor to call the function
     {
         if (HitEffects[ST].HitDecal != none)
         {

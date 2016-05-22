@@ -697,7 +697,7 @@ simulated function CheckForSplash(vector SplashLocation)
     {
         PlaySound(HitWaterSound);
 
-        if (HitWaterEmitterClass != none)
+        if (HitWaterEmitterClass != none && EffectIsRelevant(SplashLocation, false))
         {
             // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
             // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well most of the time
@@ -780,6 +780,53 @@ simulated state Whistle
     {
         Explode(Location, HitNormal);
     }
+}
+
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
+// Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
+// Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+{
+    local PlayerController PC;
+
+    // Only relevant on a dedicated server if the bForceDedicated option has been passed
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return bForceDedicated;
+    }
+
+    if (Role < ROLE_Authority)
+    {
+        // Always relevant for the owning net player, i.e. the player that fired the projectile
+        if (Instigator != none && Instigator.IsHumanControlled())
+        {
+            return true;
+        }
+
+        // Not relevant to other net clients if the projectile has not been drawn on their screen recently (within last 3 seconds)
+        if ((Level.TimeSeconds - LastRenderTime) >= 3.0)
+        {
+            return false;
+        }
+    }
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC == none || PC.ViewTarget == none)
+    {
+        return false;
+    }
+
+    // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
+    // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
+    // (doesn't apply to the player that fired the projectile)
+    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+    {
+        return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+    }
+
+    // Effect relevance is based on normal distance check
+    return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
 defaultproperties

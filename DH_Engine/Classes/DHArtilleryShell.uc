@@ -284,10 +284,10 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
 }
 
 // Colin: Overridden to just return true. The super function is a pointless
-// micro-optimization that may have made sense in 2008 when graphics harware
+// micro-optimization that may have made sense in 2008 when graphics hardware
 // wasn't as good, but certainly doesn't make sense now. This is an effect
-// that's the size of a building; I don't care how far away it is or if
-// you're not looking at it right this instant -- it's relevant.
+// that's the size of a building & it's not instantaneous; I don't care how far
+// away it is or if you're not looking at it right this instant -- it's relevant.
 simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
 {
     return true;
