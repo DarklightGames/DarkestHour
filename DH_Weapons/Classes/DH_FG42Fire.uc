@@ -111,8 +111,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'
     FireVolume=512.0
-    maxVerticalRecoilAngle=900
-    maxHorizontalRecoilAngle=180
+    MaxVerticalRecoilAngle=900
+    MaxHorizontalRecoilAngle=180
     PctStandIronRecoil=0.42
     PctCrouchRecoil=0.75
     PctCrouchIronRecoil=0.32

@@ -20,8 +20,8 @@ defaultproperties
     FireIronAnim="Shoot_Loop"
     FireIronLoopAnim="Shoot_Loop"
     FireIronEndAnim="Shoot_End"
-    maxVerticalRecoilAngle=500
-    maxHorizontalRecoilAngle=250
+    MaxVerticalRecoilAngle=500
+    MaxHorizontalRecoilAngle=250
     RecoilRate=0.04
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=15.0,Z=-6.0)

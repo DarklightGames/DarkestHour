@@ -14,8 +14,8 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.EnfieldNo4.EnfieldRifle_Fire03'
     FireVolume=255.0
-    maxVerticalRecoilAngle=1000
-    maxHorizontalRecoilAngle=100
+    MaxVerticalRecoilAngle=1000
+    MaxHorizontalRecoilAngle=100
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=14000)

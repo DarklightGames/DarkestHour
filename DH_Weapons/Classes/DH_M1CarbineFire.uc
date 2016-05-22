@@ -13,8 +13,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Carbine.CarbineFire03'
-    maxVerticalRecoilAngle=550
-    maxHorizontalRecoilAngle=150
+    MaxVerticalRecoilAngle=550
+    MaxHorizontalRecoilAngle=150
     ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
     ShellIronSightOffset=(X=15.0)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)

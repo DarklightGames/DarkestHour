@@ -1560,7 +1560,6 @@ function bool ShouldDrawPlayerName(Pawn P)
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
 function DrawPlayerNames(Canvas C)
 {
-    local Actor A;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
     local DHPawn                  MyPawn, OtherPawn;
     local Pawn                    HitPawn, P;

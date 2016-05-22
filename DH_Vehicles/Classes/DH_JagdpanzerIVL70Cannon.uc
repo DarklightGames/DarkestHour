@@ -27,7 +27,7 @@ defaultproperties
     TertiarySpread=0.0012
 
     // Weapon fire
-    WeaponFireAttachmentBone="Barrel" // TEST
+    WeaponFireAttachmentBone="Barrel"
     WeaponFireOffset=6.0
 
     // Sounds

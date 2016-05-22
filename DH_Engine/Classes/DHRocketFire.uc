@@ -117,8 +117,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
-    maxVerticalRecoilAngle=800
-    maxHorizontalRecoilAngle=400
+    MaxVerticalRecoilAngle=800
+    MaxHorizontalRecoilAngle=400
     bWaitForRelease=true
     TweenTime=0.0
     FireForce="RocketLauncherFire"

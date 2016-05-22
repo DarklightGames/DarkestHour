@@ -15,8 +15,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire03'
-    maxVerticalRecoilAngle=585
-    maxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=585
+    MaxHorizontalRecoilAngle=75
     PctProneIronRecoil=0.5
     RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'

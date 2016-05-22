@@ -13,8 +13,8 @@ defaultproperties
     FAProjSpawnOffset=(X=-15.0)
     FireIronAnim="iron_shoot"
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo2.EnfieldNo2_Fire01'
-    maxVerticalRecoilAngle=600
-    maxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=600
+    MaxHorizontalRecoilAngle=75
     ShellIronSightOffset=(X=10.0)
     ShellHipOffset=(Y=3.0)
     ShellRotOffsetHip=(Pitch=2500,Yaw=4000)

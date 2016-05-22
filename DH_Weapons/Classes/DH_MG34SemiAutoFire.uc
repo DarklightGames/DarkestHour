@@ -17,8 +17,8 @@ defaultproperties
     FireIronLoopAnim="Bipod_shoot_single"
     FireIronEndAnim="Bipod_Shoot_End"
     FireSounds(0)=SoundGroup'Inf_Weapons.mg34.mg34_fire_single'
-    maxVerticalRecoilAngle=600
-    maxHorizontalRecoilAngle=250
+    MaxVerticalRecoilAngle=600
+    MaxHorizontalRecoilAngle=250
     RecoilRate=0.04
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=25.0,Z=-10.0)

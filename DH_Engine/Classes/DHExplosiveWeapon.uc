@@ -18,7 +18,7 @@ var     sound   LeverReleaseSound;   // sound of the lever being released on thi
 var     float   LeverReleaseVolume;  // volume of the lever being released
 var     float   LeverReleaseRadius;  // radius of the lever being released
 
-var     int     StartFireAmmoAmount; // little hack so we don't decrement ammo count client side if we've already recieved a net update from server after firing
+var     int     StartFireAmmoAmount; // little hack so we don't decrement ammo count client side if we've already received a net update from server after firing
 
 replication
 {

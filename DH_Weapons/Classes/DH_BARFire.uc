@@ -113,8 +113,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
     FireVolume=512.0
-    maxVerticalRecoilAngle=800
-    maxHorizontalRecoilAngle=150
+    MaxVerticalRecoilAngle=800
+    MaxHorizontalRecoilAngle=150
     PctStandIronRecoil=0.7
     PctCrouchRecoil=0.65
     PctCrouchIronRecoil=0.45

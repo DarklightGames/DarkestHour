@@ -167,8 +167,8 @@ defaultproperties
     FireIronEndAnim="Iron_Shoot_End"
     FireSounds(0)=SoundGroup'DH_WeaponSounds.c96.C96_FireSingle01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.c96.C96_FireSingle02'
-    maxVerticalRecoilAngle=600
-    maxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=600
+    MaxHorizontalRecoilAngle=75
     RecoilRate=0.05
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)

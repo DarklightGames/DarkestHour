@@ -15,8 +15,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG3'
-    maxVerticalRecoilAngle=650
-    maxHorizontalRecoilAngle=85
+    MaxVerticalRecoilAngle=650
+    MaxHorizontalRecoilAngle=85
     RecoilRate=0.05
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=15.0)

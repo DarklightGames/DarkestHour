@@ -15,8 +15,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'Inf_Weapons.lugerp08.lugerp08_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.lugerp08.lugerp08_fire02'
     FireSounds(2)=SoundGroup'Inf_Weapons.lugerp08.lugerp08_fire03'
-    maxVerticalRecoilAngle=600
-    maxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=600
+    MaxHorizontalRecoilAngle=75
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=10.0)
     ShellHipOffset=(Y=-7.0)

@@ -145,7 +145,7 @@ simulated function Tick(float DeltaTime)
     if (percent >= 1)
     {
         Disable('Tick');
-        
+
         if (bIsOn)
         {
             SetColors(ProjColorOn, ProjTintOn);

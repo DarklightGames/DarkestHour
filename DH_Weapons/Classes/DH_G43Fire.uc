@@ -13,8 +13,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.g41.g41_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.g41.g41_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.g41.g41_fire03'
-    maxVerticalRecoilAngle=1600
-    maxHorizontalRecoilAngle=150
+    MaxVerticalRecoilAngle=1600
+    MaxHorizontalRecoilAngle=150
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=15.0)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)

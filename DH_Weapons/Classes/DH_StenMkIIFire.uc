@@ -15,8 +15,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g3'
-    maxVerticalRecoilAngle=550
-    maxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=550
+    MaxHorizontalRecoilAngle=75
     PctProneIronRecoil=0.5
     RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'

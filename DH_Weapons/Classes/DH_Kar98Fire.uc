@@ -13,8 +13,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.kar98.kar98_fire03'
-    maxVerticalRecoilAngle=1000
-    maxHorizontalRecoilAngle=100
+    MaxVerticalRecoilAngle=1000
+    MaxHorizontalRecoilAngle=100
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=14000)

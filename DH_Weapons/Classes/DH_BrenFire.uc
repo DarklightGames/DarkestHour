@@ -107,8 +107,8 @@ defaultproperties
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
-    maxVerticalRecoilAngle=950
-    maxHorizontalRecoilAngle=120
+    MaxVerticalRecoilAngle=950
+    MaxHorizontalRecoilAngle=120
     PctStandIronRecoil=0.8
     PctCrouchRecoil=0.65
     PctCrouchIronRecoil=0.45

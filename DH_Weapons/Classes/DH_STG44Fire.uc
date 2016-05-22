@@ -16,8 +16,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire03'
-    maxVerticalRecoilAngle=700
-    maxHorizontalRecoilAngle=200
+    MaxVerticalRecoilAngle=700
+    MaxHorizontalRecoilAngle=200
     RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st556mm'
     ShellIronSightOffset=(X=10.0,Z=-5.0)

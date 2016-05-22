@@ -13,8 +13,8 @@ defaultproperties
     FAProjSpawnOffset=(X=-15.0)
     FireIronAnim="iron_shoot"
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Colt45.Colt45_Fire01'
-    maxVerticalRecoilAngle=600
-    maxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=600
+    MaxHorizontalRecoilAngle=75
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=10.0)
     ShellHipOffset=(Y=3.0)

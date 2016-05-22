@@ -29,7 +29,6 @@ simulated function BeginPlay()
         if (Level.NetMode == NM_Client && bClientAuthoritative)
         {
             SetTimer(4.0, true);
-            
         }
         else
         {
