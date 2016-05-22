@@ -1289,24 +1289,16 @@ simulated state StartSprinting
 
 // Take the player out of ironsights
 Begin:
-    if (bUsingSights)
-    {
-        ZoomOut();
+    ZoomOut();  // There are some cases where bUsingIronSights can be false, but the player is still zoomed in,
+                // so lets not check it and just call ZoomOut() regardless
 
-        if (InstigatorIsLocalHuman())
+    if (InstigatorIsLocalHuman())
+    {
+        if (bPlayerFOVZooms)
         {
-            if (bPlayerFOVZooms)
-            {
-                PlayerViewZoom(false);
-            }
-
-            SmoothZoom(false);
+            PlayerViewZoom(false);
         }
-    }
 
-    // Finish unzooming the player if they are zoomed
-    if (DisplayFOV != default.DisplayFOV && InstigatorIsLocalHuman())
-    {
         SmoothZoom(false);
     }
 }
