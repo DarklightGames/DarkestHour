@@ -205,6 +205,34 @@ simulated function SpawnHitEffect()
     }
 }
 
+// Modified to play water splash sound
+simulated function CheckForSplash()
+{
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
+
+    // No splash if detail settings are low, or if projectile is already in a water volume
+    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low && Instigator != none
+        && !(Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
+    {
+        // Trace to see if bullet hits water - from firing point to end hit location, because bullet may splash in water in between
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, mHitLocation, GetBoneCoords(MuzzleBoneName).Origin, true);
+        bTraceWater = false;
+
+        // We hit a water volume or a fluid surface, so play splash effects
+        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
+        {
+            PlaySound(class'DHBullet'.default.WaterHitSound);
+
+            if (SplashEffect != none)
+            {
+                Spawn(SplashEffect,,, HitLocation, rot(16384, 0, 0));
+            }
+        }
+    }
+}
+
 // Modified to force a quick new update, as we really want the new mHitLocation asap, so net clients can spawn a hit effect
 // Also removes setting unused & unreplicated variables on a dedicated server, & deprecates mVehHitNormal
 function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
@@ -279,6 +307,44 @@ simulated function GetHitInfo()
 simulated function Actor GetVehicleHitInfo()
 {
     return none;
+}
+
+// Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
+// Vehicle's rotation was not being factored into calcs using the PlayerController's rotation, which effectively randomised the result of this function
+// Also re-factored to make it a little more optimised, direct & easy to follow (without repeated use of bResult)
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+{
+    local PlayerController PC;
+
+    // Only relevant on a dedicated server if the bForceDedicated option has been passed
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return bForceDedicated;
+    }
+
+    // Always relevant for the owning net player, i.e. the player that fired the projectile
+    if (Role < ROLE_Authority && Instigator != none && Instigator.IsHumanControlled())
+    {
+        return true;
+    }
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC == none || PC.ViewTarget == none)
+    {
+        return false;
+    }
+
+    // Check to see whether effect would spawn off to the side or behind where player is facing, & if so then only spawn if within quite close distance
+    // Using PC's CalcViewRotation, which is the last recorded camera rotation, so a simple way of getting player's non-relative view rotation, even in vehicles
+    // (doesn't apply to the player that fired the projectile)
+    if (PC.Pawn != Instigator && vector(PC.CalcViewRotation) dot (SpawnLocation - PC.ViewTarget.Location) < 0.0)
+    {
+        return VSizeSquared(PC.ViewTarget.Location - SpawnLocation) < 2560000.0; // equivalent to 1600 UU or 26.5m (changed to VSizeSquared as more efficient)
+    }
+
+    // Effect relevance is based on normal distance check
+    return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
 defaultproperties
