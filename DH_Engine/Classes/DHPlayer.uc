@@ -170,6 +170,35 @@ event ClientReset()
     }
 }
 
+// Modified so being in a shallow water volume doesn't send player into swimming state
+function EnterStartState()
+{
+    local name NewState;
+
+    if (Pawn.PhysicsVolume != none && Pawn.PhysicsVolume.bWaterVolume && !(Pawn.PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(Pawn.PhysicsVolume).bIsShallowWater))
+    {
+        NewState = Pawn.WaterMovementState;
+    }
+    else
+    {
+        NewState = Pawn.LandMovementState;
+    }
+
+    if (Pawn.HeadVolume != none && Pawn.HeadVolume.bWaterVolume)
+    {
+        Pawn.BreathTime = Pawn.UnderWaterTime;
+    }
+
+    if (IsInState(NewState))
+    {
+        BeginState();
+    }
+    else
+    {
+        GotoState(NewState);
+    }
+}
+
 // Calculate free-aim and process recoil
 simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 {
@@ -1180,6 +1209,20 @@ state PlayerWalking
         bPressedJump = bSaveJump;
     }
 
+    // Modified so moving into a shallow water volume doesn't send player into swimming state
+    function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
+    {
+        if (NewVolume != none && NewVolume.bWaterVolume)
+        {
+            if (!(NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater))
+            {
+                GotoState(Pawn.WaterMovementState);
+            }
+        }
+
+        return false;
+    }
+
     function EndState()
     {
         GroundPitch = 0;
@@ -1595,17 +1638,15 @@ state PlayerDriving
     }
 }
 
-// Overrided for the awkward "jump" out of water
 state PlayerSwimming
 {
-ignores SeePlayer, HearNoise, Bump;
-
+    // Modified so if player moves into a shallow water volume, they exit swimming state, same as if they move into a non-water volume
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
         local Actor  HitActor;
         local vector HitLocation, HitNormal, CheckPoint;
 
-        if (!NewVolume.bWaterVolume)
+        if (!NewVolume.bWaterVolume || (NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater)) // moving into shallow water volume also exits swimming state
         {
             Pawn.SetPhysics(PHYS_Falling);
 
@@ -1643,6 +1684,108 @@ ignores SeePlayer, HearNoise, Bump;
         {
             Disable('Timer');
             Pawn.SetPhysics(PHYS_Swimming);
+        }
+
+        return false;
+    }
+
+    // Modified so landing in a shallow water volume doesn't send player into swimming state
+    function bool NotifyLanded(vector HitNormal)
+    {
+        if (Pawn.PhysicsVolume != none && Pawn.PhysicsVolume.bWaterVolume && !(Pawn.PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(Pawn.PhysicsVolume).bIsShallowWater))
+        {
+            Pawn.SetPhysics(PHYS_Swimming);
+        }
+        else
+        {
+            GotoState(Pawn.LandMovementState);
+        }
+
+        return bUpdating;
+    }
+
+    // Modified so moving into a shallow water volume also triggers NotifyPhysicsVolumeChange(), same as if they move into a non-water volume
+    function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
+    {
+        local vector OldAccel;
+        local bool   bUpAndOut;
+
+        OldAccel = Pawn.Acceleration;
+
+        if (Pawn.Acceleration != NewAccel)
+        {
+            Pawn.Acceleration = NewAccel;
+        }
+
+        bUpAndOut = (Pawn.Acceleration.Z > 0.0 || Rotation.Pitch > 2048) && (vector(Rotation) Dot Pawn.Acceleration) > 0.0;
+
+        if (Pawn.bUpAndOut != bUpAndOut)
+        {
+            Pawn.bUpAndOut = bUpAndOut;
+        }
+
+        if (!Pawn.PhysicsVolume.bWaterVolume || (Pawn.PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(Pawn.PhysicsVolume).bIsShallowWater))
+        {
+            NotifyPhysicsVolumeChange(Pawn.PhysicsVolume);
+        }
+    }
+
+    // Modified to use VSizeSquared instead of VSize for more efficient processing, as this is a many-times-a-second function
+    function PlayerMove(float DeltaTime)
+    {
+        local vector  NewAccel, X, Y, Z;
+        local rotator OldRotation;
+
+        GetAxes(Rotation, X, Y, Z);
+
+        // Update acceleration
+        NewAccel = (aForward * X) + (aStrafe * Y) + (aUp * vect(0.0, 0.0, 1.0));
+
+        if (VSizeSquared(NewAccel) < 1.0)
+        {
+            NewAccel = vect(0.0, 0.0, 0.0);
+        }
+
+        // Update bob
+        Pawn.CheckBob(DeltaTime, Y);
+
+        // Update rotation
+        OldRotation = Rotation;
+        UpdateRotation(DeltaTime, 2.0);
+
+        // Now process this move (net client saves the move & replicates it)
+        if (Role < ROLE_Authority)
+        {
+            ReplicateMove(DeltaTime, NewAccel, DCLICK_None, OldRotation - Rotation);
+        }
+        else
+        {
+            ProcessMove(DeltaTime, NewAccel, DCLICK_None, OldRotation - Rotation);
+        }
+
+        bPressedJump = false;
+    }
+
+    // Modified so if player is in a shallow water volume, they exit swimming state, same as if they are in a non-water volume
+    function Timer()
+    {
+        if ((!Pawn.PhysicsVolume.bWaterVolume || (Pawn.PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(Pawn.PhysicsVolume).bIsShallowWater)) && Role == ROLE_Authority)
+        {
+            GotoState(Pawn.LandMovementState);
+        }
+
+        Disable('Timer');
+    }
+}
+
+state PlayerClimbing
+{
+    // Modified so moving into a shallow water volume doesn't send player into swimming state
+    function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
+    {
+        if (NewVolume != none && NewVolume.bWaterVolume && !(NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater))
+        {
+            GotoState(Pawn.WaterMovementState);
         }
 
         return false;

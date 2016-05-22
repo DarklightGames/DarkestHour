@@ -43,7 +43,7 @@ simulated function PostBeginPlay()
         Corona = Spawn(CoronaClass, self);
     }
 
-    if (PhysicsVolume.bWaterVolume || WaterVolume(PhysicsVolume) != none)
+    if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
         Velocity *= 0.6;
     }

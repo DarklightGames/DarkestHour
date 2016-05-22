@@ -67,7 +67,7 @@ simulated function PostBeginPlay()
     BCInverse = 1.0 / BallisticCoefficient;
     Velocity = vector(Rotation) * Speed;
 
-    if (Role == ROLE_Authority && Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
+    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
     {
         Velocity *= 0.5;
     }
@@ -823,12 +823,9 @@ simulated function DoShakeEffect()
 // Modified to blow up certain rounds (e.g. HE or HEAT) when they hit water
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
+    if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            CheckForSplash(Location);
-        }
+        CheckForSplash(Location);
 
         if (bExplodesOnHittingWater)
         {
@@ -841,27 +838,32 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
     }
 }
 
-// Modified to remove trace to check whether we hit water, as that ignores a DH_WaterVolume because it has bWaterVolume=false, but we know we've hit water anyway
-// And to add a location adjustment to raise the effect, as the passed SplashLocation is usually below the water surface
-// Also added EffectIsRelevant check before spawning splash effect
+// Modified to add an EffectIsRelevant check before spawning visual splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
-    local float Adjustment;
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
 
-    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
-        && !Level.bDropDetail && Level.DetailMode != DM_Low && (ShellHitWaterEffectClass != none || WaterHitSound != none))
+    // No splash if detail settings are low, or if projectile is already in a water volume
+    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+        && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
     {
-        PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)) , SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
+        bTraceWater = false;
 
-        if (ShellHitWaterEffectClass != none && EffectIsRelevant(SplashLocation, false))
+        // We hit a water volume or a fluid surface, so play splash effects
+        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
         {
-            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
-            // So we'll raise it by an arbitrary 10 units in the Z axis, which works pretty well most of the time
-            // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
-            Adjustment = 10.0 / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
-            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+            if (WaterHitSound != none)
+            {
+                PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
+            }
 
-            Spawn(ShellHitWaterEffectClass,,, SplashLocation, rot(16384, 0, 0));
+            if (ShellHitWaterEffectClass != none && EffectIsRelevant(HitLocation, false))
+            {
+                Spawn(ShellHitWaterEffectClass,,, HitLocation, rot(16384, 0, 0));
+            }
         }
     }
 }
@@ -909,7 +911,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         HitEmitterClass = ShellHitVehicleEffectClass;
     }
     // Hit something else - get material type & set effects
-    else if (!PhysicsVolume.bWaterVolume && WaterVolume(PhysicsVolume) == none)
+    else if (!(PhysicsVolume != none && !PhysicsVolume.bWaterVolume))
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
 

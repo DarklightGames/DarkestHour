@@ -42,7 +42,7 @@ simulated function PostBeginPlay()
     BCInverse = 1.0 / BallisticCoefficient;
     Velocity = vector(Rotation) * Speed;
 
-    if (Role == ROLE_Authority && Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
+    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
     {
         Velocity *= 0.5;
     }
@@ -726,42 +726,35 @@ simulated function Deflect(vector HitNormal)
     }
 }
 
-// Modified to check for class 'WaterVolume' (or subclass) as well as bWaterVolume=true (DH_WaterVolume has bWaterVolume=false)
-simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
-{
-    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
-    {
-        Velocity *= 0.5;
-
-        if (Level.Netmode != NM_DedicatedServer)
-        {
-            CheckForSplash(Location);
-        }
-    }
-}
-
-// Modified to remove trace to check whether we hit water, as that ignores a DH_WaterVolume because it has bWaterVolume=false, but we know we've hit water anyway
-// And to add a location adjustment to raise the effect, as the passed SplashLocation is usually below the water surface
-// Also added EffectIsRelevant check before spawning splash effect
+// Modified to add water splash sound, & to add an EffectIsRelevant check before spawning visual splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
-    local float Adjustment;
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
 
-    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
-        && !Level.bDropDetail && Level.DetailMode != DM_Low && (SplashEffect != none || WaterHitSound != none))
+    // No splash if detail settings are low, or if projectile is already in a water volume
+    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+        && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
     {
-        PlaySound(WaterHitSound);
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)) , SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
+        bTraceWater = false;
 
-        if (SplashEffect != none && EffectIsRelevant(SplashLocation, false))
+        // We hit a water volume or a fluid surface, so play splash effects
+        // Note this seems unnecessary, as we must have hit a water volume, as this is only called by PhysicsVolumeChange() when projectile enters a water volume
+        // But the trace gives a more accurate location to spawn the splash effect, which makes a significant difference, so it's worth doing
+        // TODO: make collision with a FluidSurfaceInfo also call this function, as currently there's no splash when hitting a fluid surface
+        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
         {
-            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
-            // So we'll raise its location - a little hacky, but works pretty well much of the time
-            // The adjustment backs up along the projectile's path & is calculated from its pitch angle
-            // to give an adjustment of at least 10 units vertically, or more for higher speed projectiles
-            Adjustment = FMax(12.0, VSize(Velocity) / 1400.0) / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
-            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+            if (WaterHitSound != none)
+            {
+                PlaySound(WaterHitSound);
+            }
 
-            Spawn(SplashEffect,,, SplashLocation, rot(16384, 0, 0));
+            if (SplashEffect != none && EffectIsRelevant(HitLocation, false))
+            {
+                Spawn(SplashEffect,,, HitLocation, rot(16384, 0, 0));
+            }
         }
     }
 }

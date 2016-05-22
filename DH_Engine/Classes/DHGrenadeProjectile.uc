@@ -17,7 +17,7 @@ simulated function PostBeginPlay()
     {
         Velocity = Speed * vector(Rotation);
 
-        if (Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
+        if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
             Velocity = 0.25 * Velocity;
         }

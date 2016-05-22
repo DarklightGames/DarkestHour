@@ -225,7 +225,7 @@ simulated function CheckForSplash()
         {
             PlaySound(class'DHBullet'.default.WaterHitSound);
 
-            if (SplashEffect != none)
+            if (SplashEffect != none && EffectIsRelevant(HitLocation, false))
             {
                 Spawn(SplashEffect,,, HitLocation, rot(16384, 0, 0));
             }

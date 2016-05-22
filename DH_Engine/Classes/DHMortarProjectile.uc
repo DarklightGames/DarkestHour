@@ -50,7 +50,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        if (Instigator != none && (WaterVolume(Instigator.HeadVolume) != none || (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)))
+        if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
             Velocity *= 0.5;
         }
@@ -663,7 +663,7 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
     local class<Emitter> HitEmitterClass;
     local sound          HitSound;
 
-    if (!PhysicsVolume.bWaterVolume && WaterVolume(PhysicsVolume) == none)
+    if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
         GetHitSurfaceType(HitSurfaceType);
         GetHitSound(HitSound, HitSurfaceType);
@@ -673,16 +673,12 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
     }
 }
 
-// Modified so if hits water we play a splash effect (same as a cannon shell) & the shell explodes
+// Implemented so if hits water we play a splash effect (same as a cannon shell) & the shell explodes
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
+    if (NewVolume != none && NewVolume.bWaterVolume)
     {
-        if (Level.Netmode != NM_DedicatedServer)
-        {
-            CheckForSplash(Location);
-        }
-
+        CheckForSplash(Location);
         Explode(Location, vect(0.0, 0.0, 1.0));
     }
 }
@@ -690,22 +686,28 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 // Added same as cannon shell to play a water splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
-    local float Adjustment;
+    local Actor HitActor;
 
-    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
-        && !Level.bDropDetail && Level.DetailMode != DM_Low && (HitWaterEmitterClass != none || HitWaterSound != none))
+    // No splash if detail settings are low, or if projectile is already in a water volume
+    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+        && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
     {
-        PlaySound(HitWaterSound);
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)) , SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
+        bTraceWater = false;
 
-        if (HitWaterEmitterClass != none && EffectIsRelevant(SplashLocation, false))
+        // We hit a water volume or a fluid surface, so play splash effects
+        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
         {
-            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
-            // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well most of the time
-            // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
-            Adjustment = 10.0 / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
-            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+            if (HitWaterSound != none)
+            {
+                PlaySound(HitWaterSound);
+            }
 
-            Spawn(HitWaterEmitterClass,,, SplashLocation, rot(16384, 0, 0));
+            if (HitWaterEmitterClass != none && EffectIsRelevant(HitLocation, false))
+            {
+                Spawn(HitWaterEmitterClass,,, HitLocation, rot(16384, 0, 0));
+            }
         }
     }
 }

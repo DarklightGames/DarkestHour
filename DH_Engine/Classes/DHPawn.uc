@@ -731,6 +731,7 @@ simulated function bool InExposedVehiclePosition(Vehicle V)
 }
 
 // Modified to avoid restoring collision to players who have exited vehicle because they have been killed (otherwise their collision makes the vehicle jump around)
+// Also so exiting into a shallow water volume doesn't send player into swimming state
 simulated function StopDriving(Vehicle V)
 {
     if (Role == ROLE_Authority && IsHumanControlled() && V != none)
@@ -780,9 +781,9 @@ simulated function StopDriving(Vehicle V)
     {
         Acceleration = vect(0.0, 0.0, 24000.0);
 
-        if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
+        if (PhysicsVolume != none && PhysicsVolume.bWaterVolume && !(PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(PhysicsVolume).bIsShallowWater))
         {
-            SetPhysics(PHYS_Swimming);
+            SetPhysics(PHYS_Swimming); // exiting into shallow water volume doesn't send player into swimming state
         }
         else
         {
@@ -4667,69 +4668,6 @@ function CheckBob(float DeltaTime, vector Y)
     }
 }
 
-// Modified to check for class 'WaterVolume' (or subclass) as well as bWaterVolume=true (DH_WaterVolume has bWaterVolume=false)
-simulated function FootStepping(int Side)
-{
-    local Actor    A;
-    local vector   HitLocation, HitNormal, Start, End;
-    local material FloorMaterial;
-    local int      SurfaceTypeID, i;
-    local float    FootStepVolumeModifier;
-
-    // Play water effects if touching water
-    for (i = 0; i < Touching.Length; ++i)
-    {
-        if (WaterVolume(Touching[i]) != none || (PhysicsVolume(Touching[i]) != none && PhysicsVolume(Touching[i]).bWaterVolume) || FluidSurfaceInfo(Touching[i]) != none)
-        {
-            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
-
-            // Play a water ring effect as you walk through the water
-            if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
-                && !Touching[i].TraceThisActor(HitLocation, HitNormal, Location - (CollisionHeight * vect(0.0, 0.0, 1.1)), Location))
-            {
-                Spawn(class'WaterRingEmitter',,, HitLocation, rot(16384, 0, 0));
-            }
-
-            return;
-        }
-    }
-
-    // No sound if crawling
-    if (bIsCrawling)
-    {
-        return;
-    }
-    // Lets still play the sounds when walking slow, just play them quieter
-    else if (bIsCrouched || bIsWalking)
-    {
-        FootStepVolumeModifier = QuietFootStepVolume;
-    }
-    else
-    {
-        FootStepVolumeModifier = 1.0;
-    }
-
-    // Get surface type we are walking on
-    if (Base != none && !Base.IsA('LevelInfo') && Base.SurfaceType != 0)
-    {
-        SurfaceTypeID = Base.SurfaceType;
-    }
-    else
-    {
-        Start = Location - (vect(0.0, 0.0, 1.0) * CollisionHeight);
-        End = Start - vect(0.0, 0.0, 16.0);
-        A = Trace(HitLocation, HitNormal, End, Start, false,, FloorMaterial);
-
-        if (FloorMaterial != none)
-        {
-            SurfaceTypeID = FloorMaterial.SurfaceType;
-        }
-    }
-
-    // Play footstep sound, based on surface type and volume modifier
-    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * FootStepVolumeModifier,, FootStepSoundRadius * FootStepVolumeModifier);
-}
-
 // Modified to cause some stamina loss for prone diving
 simulated state DivingToProne
 {
@@ -4893,6 +4831,23 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
 simulated function DebugInitPlayer()
 {
     Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
+}
+
+// Modified so a shallow water volume doesn't send player into swimming state
+function SetMovementPhysics()
+{
+    Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
+    if (Physics != PHYS_Falling)
+    {
+        if (PhysicsVolume != none && PhysicsVolume.bWaterVolume && !(PhysicsVolume.IsA('DHWaterVolume') && DHWaterVolume(PhysicsVolume).bIsShallowWater))
+        {
+            SetPhysics(PHYS_Swimming);
+        }
+        else
+        {
+            SetPhysics(PHYS_Walking);
+        }
+    }
 }
 
 simulated function NotifySelected(Pawn User)

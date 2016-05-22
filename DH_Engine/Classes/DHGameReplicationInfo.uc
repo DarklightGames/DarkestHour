@@ -154,27 +154,24 @@ simulated function PostBeginPlay()
 
     foreach AllActors(class'WaterVolume', WV)
     {
-        if (!WV.IsA('DH_WaterVolume'))
+        if (WV.PawnEntryActorName == "ROEffects.WaterRingEmitter")
         {
-            if (WV.PawnEntryActorName == "ROEffects.WaterRingEmitter")
-            {
-                WV.PawnEntryActorName = "";
-            }
+            WV.PawnEntryActorName = "";
+        }
 
-            if (WV.EntryActorName == "ROEffects.WaterSplashEmitter")
-            {
-                WV.EntryActorName = "";
-            }
+        if (WV.EntryActorName == "ROEffects.WaterSplashEmitter")
+        {
+            WV.EntryActorName = "";
+        }
 
-            if (WV.EntrySoundName == "Inf_Player.FootstepWaterDeep")
-            {
-                WV.EntrySoundName = "";
-            }
+        if (WV.EntrySoundName == "Inf_Player.FootstepWaterDeep")
+        {
+            WV.EntrySoundName = "";
+        }
 
-            if (WV.ExitSoundName == "Inf_Player.FootstepWaterDeep")
-            {
-                WV.ExitSoundName = "";
-            }
+        if (WV.ExitSoundName == "Inf_Player.FootstepWaterDeep")
+        {
+            WV.ExitSoundName = "";
         }
     }
 }

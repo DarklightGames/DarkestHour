@@ -449,6 +449,39 @@ function SetAttractionState()
         GotoState('Roaming');
     }
 }
+// Modified so entering a shallow water volume doesn't send bot into swimming state (also stripped out some redundancy)
+function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
+{
+    local vector JumpDir;
+
+    if (Pawn == none || Pawn.IsA('Vehicle'))
+    {
+        return false;
+    }
+
+    if (NewVolume != none && NewVolume.bWaterVolume && !(NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater))
+    {
+        bPlannedJump = false;
+
+        if (Pawn.Physics != PHYS_Swimming)
+        {
+            Pawn.SetPhysics(PHYS_Swimming);
+        }
+    }
+    else if (Pawn.Physics == PHYS_Swimming)
+    {
+        Pawn.SetPhysics(PHYS_Falling);
+
+        if (Destination.Z >= Pawn.Location.Z && (Abs(Pawn.Acceleration.X) + Abs(Pawn.Acceleration.Y)) > 0.0 && Pawn.CheckWaterJump(JumpDir))
+        {
+            Pawn.JumpOutOfWater(JumpDir);
+            bNotifyApex = true;
+            bPendingDoubleJump = true;
+        }
+    }
+
+    return false;
+}
 
 defaultproperties
 {

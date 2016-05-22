@@ -621,39 +621,42 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
 simulated function WeaponLight(); // empty function; can be subclassed
 
-// Modified so if thrown projectile hits water we play a splash effect (same as a bullet or shell) & slow down a lot
+// Implemented so if thrown projectile hits water we play a splash effect (same as a bullet or shell) & slow down a lot
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    if (NewVolume.bWaterVolume || NewVolume.IsA('WaterVolume'))
+    if (NewVolume != none && NewVolume.bWaterVolume)
     {
         Velocity *= 0.25;
-
-        if (Level.Netmode != NM_DedicatedServer)
-        {
-            CheckForSplash(Location);
-        }
+        CheckForSplash(Location);
     }
 }
 
 // Added same as bullet & shell classes to play a water splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
-    local float Adjustment;
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
 
-    if (!(Instigator != none && (WaterVolume(Instigator.PhysicsVolume) != none || (Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume)))
-        && !Level.bDropDetail && Level.DetailMode != DM_Low && (SplashEffect != none || WaterHitSound != none))
+    // No splash if detail settings are low, or if projectile is already in a water volume
+    if (Level.Netmode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+        && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
     {
-        PlaySound(WaterHitSound);
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)) , SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
+        bTraceWater = false;
 
-        if (SplashEffect != none && EffectIsRelevant(SplashLocation, false))
+        // We hit a water volume or a fluid surface, so play splash effects
+        if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
         {
-            // Passed SplashLocation is usually some way below the water surface, so the effect doesn't look quite right, especially the water ring not being seen
-            // So we'll raise it by an arbitrary 10 units in the Z axis - a little hacky, but works pretty well
-            // The adjustment backs up along the projectile's path & is calculated from its pitch angle to give an adjustment of 10 units vertically
-            Adjustment = 10.0 / Sin(class'UUnits'.static.UnrealToRadians(-Rotation.Pitch));
-            SplashLocation = SplashLocation - (Adjustment * vector(Rotation));
+            if (WaterHitSound != none)
+            {
+                PlaySound(WaterHitSound);
+            }
 
-            Spawn(SplashEffect,,, SplashLocation, rot(16384, 0, 0));
+            if (SplashEffect != none && EffectIsRelevant(HitLocation, false))
+            {
+                Spawn(SplashEffect,,, HitLocation, rot(16384, 0, 0));
+            }
         }
     }
 }
