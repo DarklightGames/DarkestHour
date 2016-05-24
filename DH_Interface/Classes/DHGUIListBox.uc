@@ -5,6 +5,25 @@
 
 class DHGUIListBox extends ROGUIListBoxPlus;
 
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    super.InitComponent(MyController, MyOwner);
+
+    if (ContextMenu != none)
+    {
+        ContextMenu.OnOpen = MyOpen;
+        ContextMenu.OnClose = MyClose;
+        ContextMenu.OnSelect = NotifyContextSelect;
+    }
+}
+
+function bool MyOpen(GUIContextMenu Menu)
+{
+    Log("MyOpen");
+
+    return super.MyOpen(Menu);
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar

@@ -64,7 +64,9 @@ var     float               ObituaryDelayTime;
 // Displayed player & voice icon
 var     ArrayList_Object    NamedPawns;             // a list of all pawns whose names are currently being rendered
 var     material            PlayerNameIconMaterial;
-var     material            VoiceIconMaterial;
+var     material            SpeakerIconMaterial;
+var     material            NeedAssistIconMaterial;
+var     material            NeedAmmoIconMaterial;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -1530,7 +1532,7 @@ function bool ShouldDrawPlayerName(Pawn P)
     local bool bCanBeReloaded;
     local bool bIsInSameSquad;
     local bool bIsWithinRange;
-    local vector PawnLocation, ViewLocation;
+    local vector ViewLocation;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
 
     if (P == none || PlayerOwner == none || P.GetTeamNum() != PlayerOwner.GetTeamNum())
@@ -1549,12 +1551,10 @@ function bool ShouldDrawPlayerName(Pawn P)
     bCanBeResupplied = (MyPawn != none && !MyPawn.bUsedCarriedMGAmmo) && (OtherPawn != none && OtherPawn.bWeaponNeedsResupply);
     bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
 
-    PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
-    PawnLocation.Z += 16.0;
     ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-    bIsWithinRange = VSize(PawnLocation - ViewLocation) <= class'DHUnits'.static.MetersToUnreal(25);
+    bIsWithinRange = VSize(P.Location - ViewLocation) <= class'DHUnits'.static.MetersToUnreal(25);
 
-    return (bIsInSameSquad || bIsTalking || bCanBeResupplied || bCanBeReloaded) && bIsWithinRange && FastTrace(PawnLocation, ViewLocation);
+    return bIsWithinRange && (bIsInSameSquad || bIsTalking || bCanBeResupplied || bCanBeReloaded) && FastTrace(P.Location, ViewLocation);
 }
 
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
@@ -1570,6 +1570,7 @@ function DrawPlayerNames(Canvas C)
     local int                     i;
     local string                  PlayerName;
     local bool                    bCanDrawName, bIsTalking, bCanBeResupplied, bCanBeReloaded;
+    local byte                    Alpha;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -1686,7 +1687,8 @@ function DrawPlayerNames(Canvas C)
             C.DrawColor = GetPlayerColor(OtherPRI);
             FadeInTime = FClamp(Level.TimeSeconds - OtherPRI.NameDrawStartTime, 0.0, 1.0);
             FadeOutTime = FClamp(1.0 - FMax(0.0, Level.TimeSeconds - OtherPRI.LastNameDrawTime), 0.0, 1.0);
-            C.DrawColor.A = byte(FMin(FadeInTime, FadeOutTime) * 255);
+            Alpha = byte(FMin(FadeInTime, FadeOutTime) * 255);
+            C.DrawColor.A = Alpha;
 
             PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
             PawnLocation.Z += 16.0;
@@ -1707,9 +1709,10 @@ function DrawPlayerNames(Canvas C)
 
             DrawShadowedTextClipped(C, PlayerName);
 
+            // Set icon screen position & draw the voice icon
             C.DrawColor = class'UColor'.default.White;
-            // TODO: use alpha properly!
-            C.SetPos(ScreenLocation.X - 16, ScreenLocation.Y - 64.0);
+            C.DrawColor.A = Alpha;
+            C.SetPos(ScreenLocation.X - 12, ScreenLocation.Y - 56.0);
 
             bIsTalking = (OtherPRI == PortraitPRI);
             bCanBeResupplied = (MyPawn != none && !MyPawn.bUsedCarriedMGAmmo) && (OtherPawn != none && OtherPawn.bWeaponNeedsResupply);
@@ -1717,18 +1720,15 @@ function DrawPlayerNames(Canvas C)
 
             if (bIsTalking)
             {
-                // Set icon screen position & draw the voice icon
-                C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
+                C.DrawTile(SpeakerIconMaterial, 24, 24, 0, 0, SpeakerIconMaterial.MaterialUSize(), SpeakerIconMaterial.MaterialVSize());
             }
             else if (bCanBeResupplied)
             {
-                // TODO: draw icon for resupply
-                C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
+                C.DrawTile(NeedAmmoIconMaterial, 24, 24, 0, 0, NeedAmmoIconMaterial.MaterialUSize(), NeedAmmoIconMaterial.MaterialVSize());
             }
             else if (bCanBeReloaded)
             {
-                // TODO: draw icon for reload
-                C.DrawTile(VoiceIconMaterial, 32, 32, 0, 0, VoiceIconMaterial.MaterialUSize(), VoiceIconMaterial.MaterialVSize());
+                C.DrawTile(NeedAssistIconMaterial, 24, 24, 0, 0, NeedAssistIconMaterial.MaterialUSize(), NeedAssistIconMaterial.MaterialVSize());
             }
         }
     }
@@ -5082,7 +5082,9 @@ defaultproperties
 
     // Screen indicator icons
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world';
-    VoiceIconMaterial=texture'DH_InterfaceArt_tex.Communication.Voice'
+    SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
+    NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
+    NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
     CanMantleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     CanCutWireIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     DeployOkayIcon=(WidgetTexture=material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))

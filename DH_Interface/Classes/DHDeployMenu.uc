@@ -39,6 +39,11 @@ var automated   GUIButton                   b_EquipmentButton;
 var automated   GUIImage                    i_EquipmentButton;
 var automated   GUIButton                   b_VehicleButton;
 var automated   GUIImage                    i_VehiclesButton;
+var automated   ROGUIProportionalContainer  MapSquadsTabContainer;
+var automated   GUIButton                   b_MapButton;
+var automated   GUIImage                    i_MapButton;
+var automated   GUIButton                   b_SquadsButton;
+var automated   GUIImage                    i_SquadsButton;
 var automated   GUILabel                    l_Loadout;
 var automated   ROGUIProportionalContainer  c_Loadout;
 var automated   ROGUIProportionalContainer  c_Equipment;
@@ -134,6 +139,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     LoadoutTabContainer.ManageComponent(b_VehicleButton);
     LoadoutTabContainer.ManageComponent(i_EquipmentButton);
     LoadoutTabContainer.ManageComponent(i_VehiclesButton);
+
+    MapSquadsTabContainer.ManageComponent(b_MapButton);
+    MapSquadsTabContainer.ManageComponent(b_SquadsButton);
+    MapSquadsTabContainer.ManageComponent(i_MapButton);
+    MapSquadsTabContainer.ManageComponent(i_SquadsButton);
 
     c_MapRoot.ManageComponent(c_Map);
 
@@ -622,7 +632,14 @@ function UpdateRoles()
             continue;
         }
 
-        S = RI.MyName;
+        if (PC != none && PC.bUseNativeRoleNames)
+        {
+            S = RI.AltName;
+        }
+        else
+        {
+            S = RI.MyName;
+        }
 
         GRI.GetRoleCounts(RI, Count, BotCount, Limit);
 
@@ -717,6 +734,16 @@ function bool OnClick(GUIComponent Sender)
         //Vehicle
         case b_VehicleButton:
             SetLoadoutMode(LM_Vehicle);
+            break;
+
+        // Map
+        case b_MapButton:
+            SetMapMode(MODE_Map);
+            break;
+
+        // Squads
+        case b_SquadsButton:
+            SetMapMode(MODE_Squads);
             break;
 
         default:
@@ -855,7 +882,15 @@ function PopulateRoles()
         {
             if (GRI.DHAxisRoles[i] != none)
             {
-                RoleName = GRI.DHAxisRoles[i].default.MyName;
+                if (PC != none && PC.bUseNativeRoleNames)
+                {
+                    RoleName = GRI.DHAxisRoles[i].default.AltName;
+                }
+                else
+                {
+                    RoleName = GRI.DHAxisRoles[i].default.MyName;
+                }
+
                 li_Roles.Add(RoleName, GRI.DHAxisRoles[i]);
             }
         }
@@ -866,7 +901,15 @@ function PopulateRoles()
         {
             if (GRI.DHAlliesRoles[i] != none)
             {
-                RoleName = GRI.DHAlliesRoles[i].default.MyName;
+                if (PC != none && PC.bUseNativeRoleNames)
+                {
+                    RoleName = GRI.DHAlliesRoles[i].default.AltName;
+                }
+                else
+                {
+                    RoleName = GRI.DHAlliesRoles[i].default.MyName;
+                }
+
                 li_Roles.Add(RoleName, GRI.DHAlliesRoles[i]);
             }
         }
@@ -1242,6 +1285,7 @@ function OnTeamChanged(byte Team)
     UpdateStatus();
     UpdateButtons();
     UpdateRoundStatus();
+    UpdateSquads();
 
     NextChangeTeamTime = PC.Level.TimeSeconds + class'DarkestHourGame'.default.ChangeTeamInterval;
 }
@@ -1302,11 +1346,16 @@ function SetMapMode(EMapMode Mode)
     switch (MapMode)
     {
         case MODE_Map:
+            b_MapButton.DisableMe();
+            b_SquadsButton.EnableMe();
             c_Map.SetVisibility(true);
             c_Squads.SetVisibility(false);
             p_Squads.DisableMe();
+            UpdateSpawnPoints();
             break;
         case MODE_Squads:
+            b_MapButton.EnableMe();
+            b_SquadsButton.DisableMe();
             c_Map.SetVisibility(false);
             c_Squads.SetVisibility(true);
             p_Squads.EnableMe();
@@ -1329,7 +1378,7 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
     Log(K @ State @ Delta);
 
-    if (K == IK_Tab && A == IST_Release)
+    if (K == IK_Capslock && A == IST_Release)
     {
         ToggleMapMode();
         return true;
@@ -1345,6 +1394,9 @@ function UpdateSquads()
     local bool bIsInSquad;
     local bool bIsInASquad;
     local bool bIsSquadLeader;
+    local bool bIsSquadFull;
+    local bool bIsSquadLocked;
+    local bool bCanJoinSquad;
     local array<DHPlayerReplicationInfo> Members;
     local DHGUISquadComponent C;
 
@@ -1406,16 +1458,47 @@ function UpdateSquads()
         SetVisible(C, true);
 
         bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
+        bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
         bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
+        bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
 
         SetVisible(C.lb_Members, true);
         SetVisible(C.li_Members, true);
-        SetVisible(C.l_SquadName, true);
+        SetVisible(C.l_SquadName, !C.bIsEditingName);
+        SetVisible(C.eb_SquadName, bIsSquadLeader);
         SetVisible(C.b_CreateSquad, false);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
-        //C.b_LockSquad.SetVisibility(bIsSquadLeader);
-        SetVisible(C.eb_SquadName, bIsSquadLeader);
+        SetVisible(C.b_LockSquad, bIsSquadLeader);
+        SetVisible(C.i_LockSquad, bIsSquadLeader);
+
+        if (bIsSquadLeader)
+        {
+            if (bIsSquadLocked)
+            {
+                C.i_LockSquad.Image = texture'DH_GUI_tex.DeployMenu.lock';
+            }
+            else
+            {
+                C.i_LockSquad.Image = texture'DH_GUI_tex.DeployMenu.unlock';
+            }
+        }
+
+        if (!bIsInSquad)
+        {
+            bCanJoinSquad = !bIsInSquad && (!bIsSquadFull && !bIsSquadLocked);
+
+            if (bCanJoinSquad)
+            {
+                C.b_JoinSquad.EnableMe();
+            }
+            else
+            {
+                C.b_JoinSquad.DisableMe();
+            }
+        }
+
+        C.b_LockSquad.SetVisibility(bIsSquadLeader);
 
         C.l_SquadName.Caption = SRI.GetSquadName(TeamIndex, i);
 
@@ -1648,9 +1731,9 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainerObject
         WinWidth=0.26
-        WinHeight=0.28
+        WinHeight=0.22
         WinLeft=0.02
-        WinTop=0.12
+        WinTop=0.18
         LeftPadding=0.05
         RightPadding=0.05
         TopPadding=0.05
@@ -1696,6 +1779,14 @@ defaultproperties
     End Object
     LoadoutTabContainer=LoadoutTabContainerObject
 
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapSquadsTabContainerObject
+        WinWidth=0.26
+        WinHeight=0.05
+        WinLeft=0.02
+        WinTop=0.13
+    End Object
+    MapSquadsTabContainer=MapSquadsTabContainerObject
+
     Begin Object Class=GUIButton Name=EquipmentButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
@@ -1739,6 +1830,50 @@ defaultproperties
         Image=texture'DH_GUI_Tex.DeployMenu.vehicles'
     End Object
     i_VehiclesButton=VehiclesButtonImageObject
+
+    Begin Object Class=GUIButton Name=MapButtonObject
+        StyleName="DHDeployTabButton"
+        WinWidth=0.5
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.0
+        OnClick=OnClick
+        Hint="Map [CAPSLOCK]"
+    End Object
+    b_MapButton=MapButtonObject
+
+    Begin Object Class=GUIImage Name=MapButtonImageObject
+        WinWidth=0.5
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=texture'DH_GUI_Tex.DeployMenu.compass'
+    End Object
+    i_MapButton=MapButtonImageObject
+
+    Begin Object Class=GUIButton Name=SquadsButtonObject
+        StyleName="DHDeployTabButton"
+        WinWidth=0.5
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.5
+        OnClick=OnClick
+        Hint="Squads [CAPSLOCK]"
+    End Object
+    b_SquadsButton=SquadsButtonObject
+
+    Begin Object Class=GUIImage Name=SquadsButtonImageObject
+        WinWidth=0.5
+        WinHeight=1.0
+        WinLeft=0.5
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=texture'DH_GUI_Tex.DeployMenu.squads'
+    End Object
+    i_SquadsButton=SquadsButtonImageObject
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=LoadoutContainerObject
         WinWidth=0.26

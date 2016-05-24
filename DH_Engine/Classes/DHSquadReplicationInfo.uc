@@ -874,17 +874,10 @@ simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
 {
     local int i;
 
-    Log("checking if squad name is taken" @ TeamIndex @ Name);
-
     for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
     {
-        Log("IsSquadActive(" $ TeamIndex $ "," @ i $ ")" @ IsSquadActive(TeamIndex, i));
-        Log("GetSquadName(" $ TeamIndex $ "," @ i $ ")" @ GetSquadName(TeamIndex, i));
-
         if (IsSquadActive(TeamIndex, i) && GetSquadName(TeamIndex, i) ~= Name)
         {
-            Log("IsSquadNameTaken" @ TeamIndex @ Name);
-
             return true;
         }
     }
@@ -896,8 +889,13 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 {
     local int i;
 
+    Log("===================SETNAME=======================");
+
     if (Name != "")
     {
+        // Trim whitespace from the name.
+        Name = class'UString'.static.Trim(Name);
+
         if (Len(Name) > SQUAD_NAME_LENGTH_MAX)
         {
             // Name is too long, truncate the name.
@@ -910,6 +908,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
             {
                 if (IsSquadNameTaken(TeamIndex, Name))
                 {
+                    Log("SQUAD NAME IS TAKEN!");
                     // Squad name is taken, defer to defaults names.
                     Name = "";
                     break;
@@ -930,13 +929,9 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
         {
             if (!IsSquadNameTaken(TeamIndex, GetDefaultSquadName(TeamIndex, i)))
             {
-                Log("this name not taken:" @ i);
-
                 Name = GetDefaultSquadName(TeamIndex, i);
                 break;
             }
-
-            Log("this name taken:" @ i);
         }
     }
 

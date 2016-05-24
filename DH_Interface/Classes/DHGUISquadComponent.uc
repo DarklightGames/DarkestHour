@@ -7,13 +7,17 @@ class DHGUISquadComponent extends GUIPanel;
 
 var int SquadIndex;
 
+var bool                            bIsEditingName;
+
 var automated   DHGUIListBox        lb_Members;
 var             DHGUIList           li_Members;
-var automated   GUILabel            l_SquadName;
-var automated   DHGUIButton         b_CreateSquad;
-var automated   DHGUIButton         b_JoinSquad;
-var automated   DHGUIButton         b_LeaveSquad;
-//var automated   DHGUIButton         b_LockSquad;
+var automated   GUILabel            l_SquadName;    //
+var automated   DHGUIButton         b_CreateSquad;  // Creates a squad. Only show if squad slot is empty.
+var automated   DHGUIButton         b_JoinSquad;    // Joins the squad. Only show to non-members. Disable if squad is full or locked.
+var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only show to members of this squad.
+var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squad. Only show to squad leader.
+var automated   GUIImage            i_LockSquad;
+var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
 var automated   DHGUILargeEditBox   eb_SquadName;
 var automated   GUIImage            i_Background;
 
@@ -22,6 +26,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     li_Members = DHGUIList(lb_Members.List);
+
+    if (li_Members != none)
+    {
+        lb_Members.NotifyContextSelect = MembersListContextMenuSelect;
+    }
 }
 
 function bool OnClick(GUIComponent Sender)
@@ -40,18 +49,18 @@ function bool OnClick(GUIComponent Sender)
         case b_CreateSquad:
             PC.ServerSquadCreate();
             return true;
-        case eb_SquadName:
-            l_SquadName.bVisible = false;
-            eb_SquadName.Caption = l_SquadName.Caption;
         case b_JoinSquad:
             PC.ServerSquadJoin(PC.GetTeamNum(), SquadIndex);
             return true;
         case b_LeaveSquad:
             PC.ServerSquadLeave();
             return true;
-//        case b_LockSquad:
-//            PC.ServerSquadLock(!SRI.IsSquadLocked(PC.GetTeamNum(), SquadIndex));
-//            return true;
+        case b_LockSquad:
+            if (PC.SquadReplicationInfo != none)
+            {
+                PC.ServerSquadLock(!PC.SquadReplicationInfo.IsSquadLocked(PC.GetTeamNum(), SquadIndex));
+            }
+            return true;
         default:
             break;
     }
@@ -67,20 +76,115 @@ function InternalOnShow()
 function OnSquadNameEditBoxActivate()
 {
     eb_SquadName.InternalActivate();
-    eb_SquadName.Caption = l_SquadName.Caption;
+    eb_SquadName.TextStr = l_SquadName.Caption;
 
     l_SquadName.SetVisibility(false);
+
+    bIsEditingName = true;
 }
 
 function OnSquadNameEditBoxDeactivate()
 {
+    eb_SquadName.TextStr = "";
     eb_SquadName.InternalDeactivate();
 
     l_SquadName.SetVisibility(true);
+
+    bIsEditingName = false;
+}
+
+function OnSquadNameEditBoxEnter()
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none && PC.SquadReplicationInfo != none)
+    {
+        l_SquadName.Caption = eb_SquadName.TextStr;
+
+        PC.SquadReplicationInfo.SetName(PC.GetTeamNum(), SquadIndex, eb_SquadName.TextStr);
+    }
+
+    OnSquadNameEditBoxDeactivate();
+}
+
+function bool MembersListContextMenuOpen(GUIComponent Sender, GUIContextMenu Menu, GUIComponent ContextMenuOwner)
+{
+    return true;
+}
+
+function bool MembersListContextMenuClose(GUIContextMenu Sender)
+{
+    return true;
+}
+
+function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    if (PC.SquadReplicationInfo == none)
+    {
+        return false;
+    }
+
+    PRI = DHPlayerReplicationInfo(li_Members.GetObject());
+
+    Log(PRI);
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    switch (ClickIndex)
+    {
+        case 0: // Kick
+            PC.SquadReplicationInfo.KickFromSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo), PC.GetTeamNum(), SquadIndex, PRI);
+            break;
+        case 1: // Promote
+            PC.SquadReplicationInfo.ChangeSquadLeader(DHPlayerReplicationInfo(PC.PlayerReplicationInfo), PC.GetTeamNum(), SquadIndex, PRI);
+            break;
+    }
+
+    return true;
 }
 
 defaultproperties
 {
+    Begin Object Class=DHGUIButton Name=LockSquadButton
+        Caption=""
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=0.2
+        WinHeight=0.1
+        WinLeft=0.0
+        WinTop=0.0
+        OnClick=OnClick
+    End Object
+    b_LockSquad=LockSquadButton
+
+    Begin Object class=GUIImage Name=LockSquadImage
+        WinWidth=0.2
+        WinHeight=0.1
+        WinLeft=0.0
+        WinTop=0.0
+        Image=texture'DH_GUI_tex.DeployMenu.lock'
+        ImageColor=(R=255,G=255,B=255,A=255);
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Center
+        bBoundToParent=true
+        bScaleToParent=true
+    End Object
+    i_LockSquad=LockSquadImage
+
     Begin Object class=GUIImage Name=BackgroundImage
         WinWidth=1.0
         WinHeight=1.0
@@ -95,6 +199,11 @@ defaultproperties
     End Object
     i_Background=BackgroundImage
 
+    Begin Object Class=GUIContextMenu Name=MembersListContextMenu
+        ContextItems(0)="Kick {0}"
+        ContextItems(1)="Promote {0} to squad leader"
+    End Object
+
     Begin Object Class=DHGUIListBox Name=MembersList
         OutlineStyleName="ItemOutline"
         SectionStyleName="ListSection"
@@ -108,6 +217,10 @@ defaultproperties
         WinLeft=0.05
         WinTop=0.15
         bVisible=false
+        ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
+        HandleContextMenuOpen=DHGUISquadComponent.MembersListContextMenuOpen
+        HandleContextMenuClose=DHGUISquadComponent.MembersListContextMenuClose
+        NotifyContextSelect=DHGUISquadComponent.MembersListContextMenuSelect
     End Object
     lb_Members=MembersList
 
@@ -139,14 +252,14 @@ defaultproperties
         Caption=""
         CaptionAlign=TXTA_Center
         StyleName="DHMenuTextButtonStyle"
-        //OnCreateComponent=IpEntryBox.InternalOnCreateComponent
         WinTop=0.0
-        WinLeft=0.0
+        WinLeft=0.2
         WinHeight=0.1
-        WinWidth=1.0
+        WinWidth=0.6
         TabOrder=0
         OnActivate=OnSquadNameEditBoxActivate
         OnDeactivate=OnSquadNameEditBoxDeactivate
+        OnEnter=OnSquadNameEditBoxEnter
     End Object
     eb_SquadName=SquadNameEditBox
 
@@ -174,6 +287,5 @@ defaultproperties
     End Object
     b_JoinSquad=JoinSquadButton
 
-    //OnHide=InternalOnHide
     OnShow=InternalOnShow
 }
