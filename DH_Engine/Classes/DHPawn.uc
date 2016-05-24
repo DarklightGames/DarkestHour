@@ -4925,6 +4925,22 @@ exec function BurnPlayer()
     }
 }
 
+// Debug exec to increase fly speed
+exec function SetFlySpeed(float NewSpeed)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (NewSpeed != -1.0)
+        {
+            AirSpeed = NewSpeed;
+        }
+        else
+        {
+            AirSpeed = default.AirSpeed;
+        }
+    }
+}
+
 defaultproperties
 {
     StanceChangeStaminaDrain=1.5

@@ -4518,6 +4518,7 @@ defaultproperties
     SpawnPointIndex=255
     VehiclePoolIndex=255
     SpawnVehicleIndex=255
+    SpectateSpeed=+1200.0
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
