@@ -92,3 +92,41 @@ static final function int Hex2Int(string S)
 
     return R;
 }
+
+static final function bool IsWhitespace(string S)
+{
+    local int A;
+
+    A = Asc(S);
+
+    return (A >= 0x0009 && A <= 0x000D) || (A == 0x0020 || A == 0x1680) ||
+           (A >= 0x2000 && A <= 0x200A) || (A >= 0x2028 && A <= 0x2029) ||
+           (A == 0x202F || A == 0x205F  || A == 0x3000  || A == 0x180E ||
+            A == 0x200B || A == 0x200C  || A == 0x200D  || A == 0x2060 ||
+            A == 0xFEFF);
+}
+
+static final function string Trim(string S)
+{
+    local int i, j;
+
+    // Get the index of the first non-whitespace character.
+    for (i = 0; i < Len(S); ++i)
+    {
+        if (!IsWhitespace(Mid(S, i, 1)))
+        {
+            break;
+        }
+    }
+
+    // Get the index of the last non-whitespace character.
+    for (j = Len(S) - 1; j > i; --j)
+    {
+        if (!IsWhitespace(Mid(S, j, 1)))
+        {
+            break;
+        }
+    }
+
+    return Mid(S, i, j - i + 1);
+}

@@ -314,7 +314,7 @@ private function SkipWhiteSpace()
 
     while (True)
     {
-        A = Asc(InputBuffer.Peek(1));
+        class'UString'.static.IsWhitespace(InputBuffer.Peek(1));
 
         if ((A >= 0x0009 && A <= 0x000D) || (A == 0x0020 || A == 0x1680) ||
             (A >= 0x2000 && A <= 0x200A) || (A >= 0x2028 && A <= 0x2029) ||
