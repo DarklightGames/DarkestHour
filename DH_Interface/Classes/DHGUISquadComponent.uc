@@ -27,9 +27,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     li_Members = DHGUIList(lb_Members.List);
 
-    if (li_Members != none)
+    if (lb_Members.ContextMenu != none)
     {
-        lb_Members.NotifyContextSelect = MembersListContextMenuSelect;
+        lb_Members.ContextMenu.OnOpen = MembersListContextMenuOpen;
+        lb_Members.ContextMenu.OnClose = MembersListContextMenuClose;
+        lb_Members.ContextMenu.OnSelect = MembersListContextMenuSelect;
     }
 }
 
@@ -124,6 +126,8 @@ function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
+    Log("Calling MembersListContextMenuSelect!!!!!!!!!!!");
+
     PC = DHPlayer(PlayerOwner());
 
     if (PC == none)
@@ -142,6 +146,7 @@ function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex
 
     if (PRI == none)
     {
+        Log("PRI is none");
         return false;
     }
 
@@ -202,6 +207,9 @@ defaultproperties
     Begin Object Class=GUIContextMenu Name=MembersListContextMenu
         ContextItems(0)="Kick {0}"
         ContextItems(1)="Promote {0} to squad leader"
+        OnSelect=DHGUISquadComponent.MembersListContextMenuSelect
+        OnOpen=DHGUISquadComponent.MembersListContextMenuOpen
+        OnClose=DHGUISquadComponent.MembersListContextMenuClose
     End Object
 
     Begin Object Class=DHGUIListBox Name=MembersList
@@ -211,16 +219,13 @@ defaultproperties
         StyleName="DHLargeText"
         bVisibleWhenEmpty=false
         bSorted=false
-        //OnChange=InternalOnChange
+        //OnChange=none
         WinWidth=0.9
         WinHeight=0.7
         WinLeft=0.05
         WinTop=0.15
         bVisible=false
         ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
-        HandleContextMenuOpen=DHGUISquadComponent.MembersListContextMenuOpen
-        HandleContextMenuClose=DHGUISquadComponent.MembersListContextMenuClose
-        NotifyContextSelect=DHGUISquadComponent.MembersListContextMenuSelect
     End Object
     lb_Members=MembersList
 
