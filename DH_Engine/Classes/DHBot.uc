@@ -15,7 +15,7 @@ function GetOutOfVehicle()
     }
 }
 
-// MOdified to avoid "accessed none" log spam errors on Weapon
+// Modified to avoid "accessed none" log spam errors on Weapon
 function ChooseAttackMode()
 {
     local float EnemyStrength, RetreatThreshold, WeaponRating;

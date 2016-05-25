@@ -4566,7 +4566,7 @@ simulated exec function BobDecay(optional float F)
     }
 }
 
-// Overridden to add some inital weapon bobbing when first iron sighting
+// Overridden to add some initial weapon bobbing when first iron sighting
 function CheckBob(float DeltaTime, vector Y)
 {
     local float OldBobTime, BobModifier, Speed2D, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
@@ -4683,7 +4683,7 @@ function CheckBob(float DeltaTime, vector Y)
     else if (Physics == PHYS_Swimming)
     {
         Speed2D = Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y);
-        WalkBob = Y * Bob *  0.5 * Speed2D * Sin(4.0 * Level.TimeSeconds);
+        WalkBob = Y * Bob * 0.5 * Speed2D * Sin(4.0 * Level.TimeSeconds);
         WalkBob.Z = Bob * 1.5 * Speed2D * Sin(8.0 * Level.TimeSeconds);
     }
     else

@@ -60,7 +60,7 @@ defaultproperties
     ZoomOutTime=0.2
     Handtex=texture'Weapons1st_tex.Arms.hands_gergloves'
     FireModeClass(0)=class'DH_Weapons.DH_MG34AutoFire'
-    FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire' // This econdary fire mode is not a switch, it is done with another button
+    FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire' // this secondary fire mode is not a switch, it is done with another button
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
     PutDownAnim="Put_away"
