@@ -193,13 +193,14 @@ state RangedAttack
     }
 }
 
+// Modified to avoid calling the Super in XBot, as that duplicates the call the pawn's Setup()
 function Possess(Pawn aPawn)
 {
-    super.Possess(aPawn);
+    super(Bot).Possess(aPawn);
 
-    if (DHPawn(aPawn) != none)
+    if (ROPawn(aPawn) != none)
     {
-        DHPawn(aPawn).Setup(PawnSetupRecord);
+        ROPawn(aPawn).Setup(PawnSetupRecord);
     }
 }
 
