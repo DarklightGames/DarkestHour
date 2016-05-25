@@ -111,7 +111,7 @@ function OnSquadNameEditBoxEnter()
     OnSquadNameEditBoxDeactivate();
 }
 
-function bool MembersListContextMenuOpen(GUIComponent Sender, GUIContextMenu Menu, GUIComponent ContextMenuOwner)
+function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 {
     return true;
 }
@@ -121,7 +121,7 @@ function bool MembersListContextMenuClose(GUIContextMenu Sender)
     return true;
 }
 
-function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
+function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
@@ -132,12 +132,12 @@ function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex
 
     if (PC == none)
     {
-        return false;
+        return;
     }
 
     if (PC.SquadReplicationInfo == none)
     {
-        return false;
+        return;
     }
 
     PRI = DHPlayerReplicationInfo(li_Members.GetObject());
@@ -147,7 +147,7 @@ function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex
     if (PRI == none)
     {
         Log("PRI is none");
-        return false;
+        return;
     }
 
     switch (ClickIndex)
@@ -160,7 +160,7 @@ function bool MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex
             break;
     }
 
-    return true;
+    Log("Done running MembersListContextMenuSelect");
 }
 
 defaultproperties
