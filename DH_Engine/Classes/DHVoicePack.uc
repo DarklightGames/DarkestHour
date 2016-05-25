@@ -115,6 +115,80 @@ function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipien
     MessageAnim = AttackAnim;
 }
 
+function Timer()
+{
+    local PlayerController PlayerOwner;
+    local Actor SoundPlayer;
+    CONST VOICEREPEATTIME = 0.0;
+
+    PlayerOwner = PlayerController(Owner);
+
+    if (bDisplayPortrait && (PhraseNum == 0) && !(bIsFromDifferentTeam && bUseAxisStrings))
+    {
+        PlayerController(Owner).myHUD.DisplayPortrait(PortraitPRI);
+    }
+
+    if ((Phrase[PhraseNum] != None) && ((Level.TimeSeconds - PlayerOwner.LastPlaySpeech > VOICEREPEATTIME) || (PhraseNum > 0)))
+    {
+        PlayerOwner.LastPlaySpeech = Level.TimeSeconds;
+
+        if (bUseLocationalVoice)
+        {
+            if (PawnSender != none)
+            {
+                PawnSender.PlaySound(Phrase[PhraseNum], SLOT_None,ShoutVolume,,,1.0,false);
+            }
+            else
+            {
+                SoundPlayer = Spawn(Class'ROVoiceMessageEffect',,, senderLoc);
+
+                if (SoundPlayer != none)
+                {
+                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_None,ShoutVolume,,,1.0,false);
+                }
+                else
+                {
+                    Warn("Unable to spawn ROVoiceMessageEffect at " $ senderLoc $ "!");
+                }
+            }
+        }
+        else
+        {
+            if ((PlayerOwner.ViewTarget != None))
+            {
+                PlayerOwner.ViewTarget.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,,1.0,false);
+            }
+            else
+            {
+                PlayerOwner.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,,1.0,false);
+            }
+        }
+
+        if (MessageAnim != '')
+        {
+            UnrealPlayer(PlayerOwner).Taunt(MessageAnim);
+        }
+
+        if (Phrase[PhraseNum+1] == None)
+        {
+            Destroy();
+        }
+        else
+        {
+            if (GetSoundDuration(Phrase[PhraseNum]) == 0)
+            {
+                Log("ROVoicePack Setting the timer for a sound to zero");
+            }
+            SetTimer(FMax(0.1,GetSoundDuration(Phrase[PhraseNum])), false);
+            PhraseNum++;
+        }
+    }
+    else
+    {
+        Destroy();
+    }
+}
+
 defaultproperties
 {
     bUseLocationalVoice=true
