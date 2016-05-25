@@ -7,5 +7,4 @@ class DH_GermanPawn extends DHPawn;
 
 defaultproperties
 {
-
 }

@@ -91,8 +91,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.ConfirmToggleAdminCanPause;
         case 26:
             return default.DestroyActorInSights;
-
-        default: // just in case something goes wrong we'll return a blank string
+        default:
             return "";
     }
 }
@@ -104,7 +103,7 @@ defaultproperties
     LifeTime=5
     DrawColor=(R=214,G=28,B=36,A=255)
     PosY=0.85
-
+    
     EnterPrivateMessage="Type your private message to the player - then press enter"
     EnterWarningMessage="Type your warning message to the player - then press enter"
     EnterKickReason="Type your kick message to the player - then press enter to KICK them"
