@@ -918,7 +918,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         HitEmitterClass = ShellHitVehicleEffectClass;
     }
     // Hit something else - get material type & set effects
-    else if (!(PhysicsVolume != none && !PhysicsVolume.bWaterVolume))
+    else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false,, HitMaterial);
 
