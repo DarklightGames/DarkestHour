@@ -27,14 +27,22 @@ enum ESpawnMode
 var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
 
-var() sound AlliesWinsMusic;            //Optional override for Allies victory music
-var() sound AxisWinsMusic;              //Optional override for Axis victory music
+var() sound AlliesWinsMusic;            // Optional override for Allies victory music
+var() sound AxisWinsMusic;              // Optional override for Axis victory music
 
 var() ESpawnMode SpawnMode;
-var() InterpCurve   AttritionRateCurve; //Colin: Attrition rate defines the maximum rate of reinforcement drain when the enemy controls all objectives.
 
-var() Material LoadingScreenRef;        //Used to stop loading screen image from being removed on save (not otherwise used)
-                                        //Must be set to myLevel.GUI.LoadingScreen to work!
+// Colin: Defines the rate of reinforcement drain per minute
+// when the enemy controls more objectives.
+// For example, an in value of 1.0 should return the reinforcement
+// drain per minute when one team controls all of the objectives.
+// An in value of 0.5 should return the reinforcement drain per minute
+// when the enemy holds 50% more of the objectives. (eg. Team A has 2
+// objectives, while Team B has 4.)
+var() InterpCurve AttritionRateCurve;
+
+var() Material LoadingScreenRef;        // Used to stop loading screen image from being removed on save (not otherwise used)
+                                        // Must be set to myLevel.GUI.LoadingScreen to work!
 
 var const bool bDHDebugMode;            // flag for whether debug commands can be run
 
