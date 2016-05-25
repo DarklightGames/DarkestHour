@@ -141,12 +141,6 @@ function DoTrace(vector Start, rotator Dir)
 
         if (!Other.bWorldGeometry)
         {
-            // Update hit effect except for pawns (blood) other than vehicles.
-            if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume')))
-            {
-                WeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other, HitLocation, HitNormal);
-            }
-
             HitPawn = ROPawn(Other);
 
             if (HitPawn != none)
