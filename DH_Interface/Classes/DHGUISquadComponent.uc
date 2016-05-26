@@ -180,7 +180,7 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
         case 0: // Kick
             PC.ServerSquadKick(PRI);
             break;
-        case 1: // Promote
+        case 2: // Promote
             PC.ServerSquadPromote(PRI);
             break;
     }
