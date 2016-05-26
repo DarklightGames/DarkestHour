@@ -332,8 +332,13 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
                 VRI.JoinSquadChannel(PRI, TeamIndex, i);
             }
 
+            // "You have created a squad."
             PC.ReceiveLocalizedMessage(SquadMessageClass, 43);
+
             PC.ClientCreateSquadResult(SE_None);
+
+            // Unlock the squad.
+            SetSquadLockedInternal(TeamIndex, i, false);
 
             return i;
         }
@@ -741,17 +746,8 @@ function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int Squa
         return false;
     }
 
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            AxisLocked[SquadIndex] = byte(bLocked);
-            break;
-        case ALLIES_TEAM_INDEX:
-            AlliesLocked[SquadIndex] = byte(bLocked);
-            break;
-        default:
-            break;
-    }
+    SetSquadLockedInternal(TeamIndex, SquadIndex, bLocked);
+
 
     if (bLocked)
     {
@@ -763,6 +759,26 @@ function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int Squa
     }
 
     return true;
+}
+
+private function SetSquadLockedInternal(int TeamIndex, int SquadIndex, bool bLocked)
+{
+    if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
+    {
+        return;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisLocked[SquadIndex] = byte(bLocked);
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesLocked[SquadIndex] = byte(bLocked);
+            break;
+        default:
+            break;
+    }
 }
 
 function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
