@@ -4788,6 +4788,75 @@ event StartCrouch(float HeightAdjust)
     Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
 }
 
+// Override to have more levels of volume for foot steps (sprint, run, crouch/walk)
+simulated function FootStepping(int Side)
+{
+    local int           SurfaceTypeID, i;
+    local actor         A;
+    local material      FloorMat;
+    local vector        HL,HN,Start,End,HitLocation,HitNormal;
+    local float         FootVolumeMod;
+    local float         FootRadiusMod;
+
+    SurfaceTypeID = 0;
+
+    // When in water
+    for (i = 0; i < Touching.Length; i++)
+    {
+        if (((PhysicsVolume(Touching[i]) != None) && PhysicsVolume(Touching[i]).bWaterVolume) || (FluidSurfaceInfo(Touching[i]) != None))
+        {
+            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2,, FootStepSoundRadius);
+
+            // Play a water ring effect as you walk through the water
+            if (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (Level.NetMode != NM_DedicatedServer)
+                && !Touching[i].TraceThisActor(HitLocation, HitNormal,Location - CollisionHeight*vect(0,0,1.1), Location))
+            {
+                    Spawn(class'WaterRingEmitter',,,HitLocation,rot(16384,0,0));
+            }
+
+            return;
+        }
+    }
+
+    FootVolumeMod = 1.0; // For when jogging (default run speed)
+    FootRadiusMod = 1.0;
+
+    if (bIsSprinting) // Louder for sprinting
+    {
+        FootVolumeMod = 1.2; // 20% louder
+        FootRadiusMod = 1.2; // 20% further
+    }
+    else if (bIsCrawling) // No sound for prone
+    {
+        return;
+    }
+    else if ( bIsCrouched || bIsWalking ) // Not so loud when crouched/walking
+    {
+        FootVolumeMod = QuietFootStepVolume;
+        FootRadiusMod = 0.33; // 1/3 the range of default run sound, crouching/walking should be sneaky (bot not complete stealth (like prone)
+    }
+
+    // Handle surface type
+    if ( (Base!=None) && (!Base.IsA('LevelInfo')) && (Base.SurfaceType!=0) )
+    {
+        SurfaceTypeID = Base.SurfaceType;
+    }
+    else
+    {
+        Start = Location - Vect(0,0,1)*CollisionHeight;
+        End = Start - Vect(0,0,16);
+        A = Trace(hl,hn,End,Start,false,,FloorMat);
+
+        if (FloorMat !=None)
+        {
+            SurfaceTypeID = FloorMat.SurfaceType;
+        }
+    }
+
+    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, (FootstepVolume * FootVolumeMod),,(FootStepSoundRadius * FootRadiusMod));
+}
+
+
 simulated function vector CalcZoomedDrawOffset(Inventory Inv)
 {
     local vector DrawOffset;
@@ -5010,9 +5079,11 @@ defaultproperties
     IronsightBobAmplitude=4.0
     IronsightBobFrequency=4.0
     IronsightBobDecay=6.0
+
+    // Footstep sounds
     FootStepSoundRadius=64
-    FootstepVolume=0.33
-    QuietFootStepVolume=0.15
+    FootstepVolume=0.5
+    QuietFootStepVolume=0.66
 
     // Matt: Mesh gets set by .upl file, but seems to be an initial delay until that takes effect & pawn spawns with Mesh from defaultproperties
     // So unless Mesh is overridden in subclass, pawn spawn with inherited 'Characters_anm.ger_rifleman_tunic' mesh (many German roles do this)
