@@ -17,7 +17,7 @@ var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only sh
 var automated   DHGUIButton         b_LockSquad;    // Locks and unlocks the squad. Only show to squad leader.
 var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
-var automated   DHGUILargeEditBox   eb_SquadName;
+var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
 var localized string    KickText;
@@ -80,8 +80,8 @@ function InternalOnShow()
 
 function OnSquadNameEditBoxActivate()
 {
-    eb_SquadName.InternalActivate();
     eb_SquadName.TextStr = l_SquadName.Caption;
+    eb_SquadName.InternalActivate();
 
     l_SquadName.SetVisibility(false);
 
@@ -94,6 +94,8 @@ function OnSquadNameEditBoxDeactivate()
     eb_SquadName.InternalDeactivate();
 
     l_SquadName.SetVisibility(true);
+
+    FocusFirst(none);
 
     bIsEditingName = false;
 }
@@ -187,7 +189,6 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 defaultproperties
 {
     Begin Object Class=DHGUIButton Name=LockSquadButton
-        Caption=""
         StyleName="DHSmallTextButtonStyle"
         WinWidth=0.2
         WinHeight=0.1
@@ -209,6 +210,7 @@ defaultproperties
         ImageAlign=ISTY_Center
         bBoundToParent=true
         bScaleToParent=true
+        RenderWeight=10.0
     End Object
     i_LockSquad=LockSquadImage
 
@@ -273,10 +275,10 @@ defaultproperties
     End Object
     l_SquadName=SquadNameLabel
 
-    Begin Object Class=DHGUILargeEditBox Name=SquadNameEditBox
+    Begin Object Class=DHGUIEditBox Name=SquadNameEditBox
         Caption=""
         CaptionAlign=TXTA_Center
-        StyleName="DHMenuTextButtonStyle"
+        StyleName="DHLargeEditBox"
         WinTop=0.0
         WinLeft=0.2
         WinHeight=0.1
@@ -285,6 +287,7 @@ defaultproperties
         OnActivate=OnSquadNameEditBoxActivate
         OnDeactivate=OnSquadNameEditBoxDeactivate
         OnEnter=OnSquadNameEditBoxEnter
+        MaxWidth=16
     End Object
     eb_SquadName=SquadNameEditBox
 

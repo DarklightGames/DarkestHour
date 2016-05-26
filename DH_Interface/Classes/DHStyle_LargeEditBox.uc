@@ -8,28 +8,28 @@ class DHStyle_LargeEditBox extends STY_EditBox;
 defaultproperties
 {
     KeyName="DHLargeEditBox"
-    FontNames(0)="DHButtonFont"
-    FontNames(1)="DHButtonFont"
-    FontNames(2)="DHButtonFont"
-    FontNames(3)="DHButtonFont"
-    FontNames(4)="DHButtonFont"
-    FontNames(5)="DHButtonFont"
-    FontNames(6)="DHButtonFont"
-    FontNames(7)="DHButtonFont"
-    FontNames(8)="DHButtonFont"
-    FontNames(9)="DHButtonFont"
-    FontNames(10)="DHButtonFont"
-    FontNames(11)="DHButtonFont"
-    FontNames(12)="DHButtonFont"
-    FontNames(13)="DHButtonFont"
-    FontNames(14)="DHButtonFont"
+    FontNames(0)="DHMenuFont"
+    FontNames(1)="DHMenuFont"
+    FontNames(2)="DHMenuFont"
+    FontNames(3)="DHMenuFont"
+    FontNames(4)="DHMenuFont"
+    FontNames(5)="DHMenuFont"
+    FontNames(6)="DHMenuFont"
+    FontNames(7)="DHMenuFont"
+    FontNames(8)="DHMenuFont"
+    FontNames(9)="DHMenuFont"
+    FontNames(10)="DHMenuFont"
+    FontNames(11)="DHMenuFont"
+    FontNames(12)="DHMenuFont"
+    FontNames(13)="DHMenuFont"
+    FontNames(14)="DHMenuFont"
     FontColors(3)=(B=255,G=255,R=255)
     FontColors(4)=(B=255,G=255,R=255)
-    Images(0)=texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(1)=texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(2)=texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(3)=texture'DH_GUI_Tex.Menu.DHSmallBox'
-    Images(4)=texture'DH_GUI_Tex.Menu.DHSmallBox'
+    Images(0)=none
+    Images(1)=none
+    Images(2)=none
+    Images(3)=none
+    Images(4)=none
     ImgStyle(0)=ISTY_PartialScaled
     ImgStyle(1)=ISTY_PartialScaled
     ImgStyle(2)=ISTY_PartialScaled

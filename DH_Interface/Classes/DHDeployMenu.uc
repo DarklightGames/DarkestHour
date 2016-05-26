@@ -82,6 +82,8 @@ var localized   string                      SelectSpawnPointText;
 var localized   string                      DeployInTimeText;
 var localized   string                      DeployNowText;
 var localized   string                      ReservedString;
+var localized   string                      LockText;
+var localized   string                      UnlockText;
 
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -1479,10 +1481,12 @@ function UpdateSquads()
             if (bIsSquadLocked)
             {
                 C.i_LockSquad.Image = texture'DH_GUI_tex.DeployMenu.lock';
+                C.b_LockSquad.SetHint(default.UnlockText);
             }
             else
             {
                 C.i_LockSquad.Image = texture'DH_GUI_tex.DeployMenu.unlock';
+                C.b_LockSquad.SetHint(default.LockText);
             }
         }
 
@@ -2217,4 +2221,6 @@ defaultproperties
     ReservedString="Reserved"
     OnKeyEvent=InternalOnKeyEvent
     MapMode=MODE_Map
+    LockText="Lock"
+    UnlockText="Unlock"
 }
