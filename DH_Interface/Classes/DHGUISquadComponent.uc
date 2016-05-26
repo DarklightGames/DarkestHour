@@ -122,7 +122,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 
     PC = DHPlayer(PlayerOwner());
 
-    if (PC != none)
+    if (PC == none)
     {
         return false;
     }
@@ -135,7 +135,9 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
         return false;
     }
 
+    Sender.ContextItems.Length = 0;
     Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
+    Sender.AddItem("-");
     Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
 
     return true;
