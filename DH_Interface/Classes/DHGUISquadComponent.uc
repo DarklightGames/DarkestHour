@@ -26,6 +26,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     li_Members = DHGUIList(lb_Members.List);
+    li_Members.bAllowEmptyItems = true;
 
     if (lb_Members.ContextMenu != none)
     {
@@ -101,11 +102,11 @@ function OnSquadNameEditBoxEnter()
 
     PC = DHPlayer(PlayerOwner());
 
-    if (PC != none && PC.SquadReplicationInfo != none)
+    if (PC != none)
     {
         l_SquadName.Caption = eb_SquadName.TextStr;
 
-        PC.SquadReplicationInfo.SetName(PC.GetTeamNum(), SquadIndex, eb_SquadName.TextStr);
+        PC.ServerSquadRename(eb_SquadName.TextStr);
     }
 
     OnSquadNameEditBoxDeactivate();
@@ -113,6 +114,18 @@ function OnSquadNameEditBoxEnter()
 
 function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 {
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(li_Members.GetObject());
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    Sender.ReplaceItem(0, "Kick" @ PRI.PlayerName);
+    Sender.ReplaceItem(1, "Promote" @ PRI.PlayerName @ "to leader");
+
     return true;
 }
 
@@ -125,8 +138,6 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
-
-    Log("Calling MembersListContextMenuSelect!!!!!!!!!!!");
 
     PC = DHPlayer(PlayerOwner());
 
@@ -146,21 +157,18 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 
     if (PRI == none)
     {
-        Log("PRI is none");
         return;
     }
 
     switch (ClickIndex)
     {
         case 0: // Kick
-            PC.SquadReplicationInfo.KickFromSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo), PC.GetTeamNum(), SquadIndex, PRI);
+            PC.ServerSquadKick(PRI);
             break;
         case 1: // Promote
-            PC.SquadReplicationInfo.ChangeSquadLeader(DHPlayerReplicationInfo(PC.PlayerReplicationInfo), PC.GetTeamNum(), SquadIndex, PRI);
+            PC.ServerSquadPromote(PRI);
             break;
     }
-
-    Log("Done running MembersListContextMenuSelect");
 }
 
 defaultproperties

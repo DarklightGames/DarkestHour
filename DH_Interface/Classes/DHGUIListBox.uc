@@ -17,13 +17,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
-function bool MyOpen(GUIContextMenu Menu)
-{
-    Log("MyOpen");
-
-    return super.MyOpen(Menu);
-}
-
 defaultproperties
 {
     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar

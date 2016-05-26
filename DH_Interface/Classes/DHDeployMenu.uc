@@ -1399,6 +1399,7 @@ function UpdateSquads()
     local bool bCanJoinSquad;
     local array<DHPlayerReplicationInfo> Members;
     local DHGUISquadComponent C;
+    local DHPlayerReplicationInfo SavedPRI;
 
     super.Timer();
 
@@ -1504,14 +1505,29 @@ function UpdateSquads()
 
         SRI.GetMembers(TeamIndex, i, Members);
 
-        // TODO: we'll need to do something about this because I'm pretty sure
-        // this is going to fuck up our selection
-        C.li_Members.Clear();
+        // Save the current PRI that is selected.
+        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
 
+        // Add or remove entries to match the member count.
+        while (C.li_Members.ItemCount < Members.Length)
+        {
+            C.li_Members.Add("");
+        }
+
+        while (C.li_Members.ItemCount > Members.Length)
+        {
+            C.li_Members.Remove(0, 1);
+        }
+
+        // Update the text and associated object for each item.
         for (k = 0; k < Members.Length; ++k)
         {
-            C.li_Members.Add(Members[k].SquadMemberIndex + 1 $ "." @ Members[k].PlayerName);
+            C.li_Members.SetItemAtIndex(k, Members[k].SquadMemberIndex + 1 $ "." @ Members[k].PlayerName);
+            C.li_Members.SetObjectAtIndex(k, Members[k]);
         }
+
+        // Re-select the previous selection.
+        C.li_Members.SelectByObject(SavedPRI);
 
         ++j;
     }
