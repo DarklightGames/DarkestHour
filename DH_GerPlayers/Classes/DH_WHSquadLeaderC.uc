@@ -7,7 +7,6 @@ class DH_WHSquadLeaderC extends DH_HeerCamo;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "

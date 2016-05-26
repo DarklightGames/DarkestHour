@@ -7,7 +7,6 @@ class DH_BritishSergeantHampshires extends DH_Hampshires;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

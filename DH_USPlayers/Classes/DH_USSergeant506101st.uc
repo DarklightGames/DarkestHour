@@ -7,7 +7,6 @@ class DH_USSergeant506101st extends DH_US_506PIR;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "

@@ -7,7 +7,6 @@ class DH_USSergeant29thBeach extends DH_US_29th_Infantry;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "

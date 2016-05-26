@@ -7,7 +7,6 @@ class DH_WHSquadLeader_Snow extends DH_HeerSnow;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "

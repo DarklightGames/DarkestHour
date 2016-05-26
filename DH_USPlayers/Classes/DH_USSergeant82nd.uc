@@ -7,7 +7,6 @@ class DH_USSergeant82nd extends DH_US_82nd_Airborne;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "

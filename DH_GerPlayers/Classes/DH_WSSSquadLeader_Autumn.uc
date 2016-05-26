@@ -7,7 +7,6 @@ class DH_WSSSquadLeader_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unterscharführer"
     Article="a "

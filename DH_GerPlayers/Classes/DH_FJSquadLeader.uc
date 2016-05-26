@@ -7,7 +7,6 @@ class DH_FJSquadLeader extends DH_FJ;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "

@@ -7,7 +7,6 @@ class DH_BritishSergeantOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

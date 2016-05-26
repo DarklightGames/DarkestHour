@@ -7,7 +7,6 @@ class DH_USSergeantWinter extends DH_US_Winter_Infantry;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "

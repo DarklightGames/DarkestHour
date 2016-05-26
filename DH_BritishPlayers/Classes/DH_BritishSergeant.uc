@@ -7,7 +7,6 @@ class DH_BritishSergeant extends DH_British_Infantry;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

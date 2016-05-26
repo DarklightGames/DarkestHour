@@ -7,7 +7,6 @@ class DH_12thSSSquadLeader extends DH_12thSS;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unterscharführer"
     Article="a "

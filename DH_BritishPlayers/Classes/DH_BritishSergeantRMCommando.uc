@@ -7,7 +7,6 @@ class DH_BritishSergeantRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

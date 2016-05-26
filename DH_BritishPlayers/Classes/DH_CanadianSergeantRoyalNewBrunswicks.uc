@@ -7,7 +7,6 @@ class DH_CanadianSergeantRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

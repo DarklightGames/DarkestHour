@@ -1821,7 +1821,7 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int Reque
     RI = DHRoleInfo(DHPRI.RoleInfo);
 
     // Check if caller is a leader
-    if (RI == none || !RI.bIsSquadLeader || RequestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars))
+    if (RI == none || RequestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars))
     {
         // If not, check if we're a MG requesting ammo
         // Basnett, added mortar operators requesting resupply.

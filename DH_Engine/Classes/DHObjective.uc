@@ -663,11 +663,6 @@ function Timer()
                     continue;
                 }
 
-                if (RI != none && RI.bIsSquadLeader)
-                {
-                    LeaderBonus[C.PlayerReplicationInfo.Team.TeamIndex] = 2.0;
-                }
-
                 Num[C.PlayerReplicationInfo.Team.TeamIndex]++;
 
                 if (RI != none)

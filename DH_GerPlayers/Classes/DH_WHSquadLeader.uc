@@ -7,7 +7,6 @@ class DH_WHSquadLeader extends DH_Heer;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "

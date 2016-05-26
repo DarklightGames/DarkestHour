@@ -7,7 +7,6 @@ class DH_WSSSquadLeader_Snow extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unterscharführer"
     Article="a "

@@ -7,7 +7,6 @@ class DH_WHSquadLeader_Autumn extends DH_HeerAutumn;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "
