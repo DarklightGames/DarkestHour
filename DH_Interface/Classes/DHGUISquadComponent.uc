@@ -6,8 +6,7 @@
 class DHGUISquadComponent extends GUIPanel;
 
 var int SquadIndex;
-
-var bool                            bIsEditingName;
+var bool bIsEditingName;
 
 var automated   DHGUIListBox        lb_Members;
 var             DHGUIList           li_Members;
@@ -199,14 +198,15 @@ defaultproperties
     b_LockSquad=LockSquadButton
 
     Begin Object class=GUIImage Name=LockSquadImage
-        WinWidth=0.2
-        WinHeight=0.1
-        WinLeft=0.0
-        WinTop=0.0
+        WinWidth=0.1
+        WinHeight=0.05
+        WinLeft=0.05
+        WinTop=0.025
         Image=texture'DH_GUI_tex.DeployMenu.lock'
         ImageColor=(R=255,G=255,B=255,A=255);
         ImageRenderStyle=MSTY_Alpha
-        ImageStyle=ISTY_Center
+        ImageStyle=ISTY_Justified
+        ImageAlign=ISTY_Center
         bBoundToParent=true
         bScaleToParent=true
     End Object

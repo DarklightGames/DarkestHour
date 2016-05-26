@@ -1416,7 +1416,8 @@ function UpdateSquads()
             SetVisible(C.b_CreateSquad, false);
             SetVisible(C.b_JoinSquad, false);
             SetVisible(C.b_LeaveSquad, false);
-            //SetVisible(C.b_LockSquad, false);
+            SetVisible(C.b_LockSquad, false);
+            SetVisible(C.i_LockSquad, false);
         }
 
         return;
@@ -1542,7 +1543,8 @@ function UpdateSquads()
         SetVisible(C.b_CreateSquad, true);
         SetVisible(C.b_JoinSquad, false);
         SetVisible(C.b_LeaveSquad, false);
-        //SetVisible(C.b_LockSquad, false);
+        SetVisible(C.b_LockSquad, false);
+        SetVisible(C.i_LockSquad, false);
         SetVisible(C.eb_SquadName, false);
     }
 
