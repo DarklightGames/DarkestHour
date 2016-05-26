@@ -8,10 +8,10 @@ class DH_WKAntiTank extends DH_Kriegsmarine;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="PaK-Soldat"
+    MyName="Anti-tank soldier"
     AltName="PaK-Soldat"
     Article="an "
-    PluralName="PaK-Soldaten"
+    PluralName="Anti-tank soldiers"
     MenuImage=texture'DHGermanCharactersTex.Icons.Pak-soldat'
     Models(0)="WK_1"
     Models(1)="WK_2"

@@ -7,10 +7,10 @@ class DH_12thSSRadioman extends DH_12thSS;
 
 defaultproperties
 {
-    MyName="Funktruppe"
+    MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "
-    PluralName="Funktruppen"
+    PluralName="Radio Operator"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Radioman'
     Models(0)="12SS_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'

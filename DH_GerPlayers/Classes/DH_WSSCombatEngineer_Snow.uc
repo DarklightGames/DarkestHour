@@ -7,10 +7,10 @@ class DH_WSSCombatEngineer_Snow extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    MyName="Sturmpioniere"
+    MyName="Combat Engineer"
     AltName="Sturmpioniere"
     Article="a "
-    PluralName="Sturmpionieri"
+    PluralName="Combat Engineers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Eng'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

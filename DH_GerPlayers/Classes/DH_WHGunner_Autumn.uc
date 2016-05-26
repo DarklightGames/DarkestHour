@@ -7,10 +7,10 @@ class DH_WHGunner_Autumn extends DH_HeerAutumn;
 
 defaultproperties
 {
-    MyName="Maschinengewehrschütze"
-    AltName="Maschinengewehrschütze"
+    MyName="Machine-Gunner"
+    AltName="Maschinengewehrsch�tze"
     Article="a "
-    PluralName="Maschinengewehrschützen"
+    PluralName="Machine-Gunners"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.MG-Schutze'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

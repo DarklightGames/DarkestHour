@@ -7,10 +7,10 @@ class DH_WHSniperC extends DH_HeerCamo;
 
 defaultproperties
 {
-    MyName="Scharfschütze"
-    AltName="Scharfschütze"
+    MyName="Sniper"
+    AltName="Scharfsch�tze"
     Article="a "
-    PluralName="Scharfschützen"
+    PluralName="Snipers"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Scharf'
     Models(0)="WH_C7"
     Models(1)="WH_C8"

@@ -8,10 +8,10 @@ class DH_FJOfficer extends DH_FJ;
 defaultproperties
 {
     bIsArtilleryOfficer=true
-    MyName="Artillerieoffizier"
+    MyName="Artillery Officer"
     AltName="Artillerieoffizier"
     Article="a "
-    PluralName="Artillerieoffiziere"
+    PluralName="Artillery Officers"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Off'
     Models(0)="FJO1"
     Models(1)="FJO2"

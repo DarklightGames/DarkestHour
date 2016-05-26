@@ -7,10 +7,10 @@ class DH_WHRiflemanC extends DH_HeerCamo;
 
 defaultproperties
 {
-    MyName="Schütze"
-    AltName="Schütze"
+    MyName="Rifleman"
+    AltName="Sch�tze"
     Article="a "
-    PluralName="Schützen"
+    PluralName="Riflemen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WH_C1"
     Models(1)="WH_C2"

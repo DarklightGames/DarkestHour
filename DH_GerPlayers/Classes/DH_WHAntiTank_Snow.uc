@@ -8,10 +8,10 @@ class DH_WHAntiTank_Snow extends DH_HeerSnow;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="Panzerjäger"
-    AltName="Panzerjäger"
+    MyName="Tank Hunter"
+    AltName="Panzerj�ger"
     Article="a "
-    PluralName="Panzerjäger"
+    PluralName="Tank Hunters"
     MenuImage=texture'DHGermanCharactersTex.Icons.Pak-soldat'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

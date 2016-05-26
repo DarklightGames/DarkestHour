@@ -8,10 +8,10 @@ class DH_12thSSMortarman extends DH_12thSS;
 defaultproperties
 {
     bCanUseMortars=true
-    MyName="Werferschütze"
-    AltName="Werferschütze"
+    MyName="Mortar Operator"
+    AltName="Werfersch�tze"
     Article="a "
-    PluralName="Werferschützen"
+    PluralName="Mortar Operators"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarOperator'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

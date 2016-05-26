@@ -7,10 +7,10 @@ class DH_WHArtilleryGunner extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Artillerie Schütze"
-    AltName="Artillerie Schütze"
+    MyName="Artillery Gunner"
+    AltName="Artillerie Sch�tze"
     Article="a "
-    PluralName="Artillerie Schützen"
+    PluralName="Artillery Gunners"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WHA_1"
     Models(1)="WHA_2"

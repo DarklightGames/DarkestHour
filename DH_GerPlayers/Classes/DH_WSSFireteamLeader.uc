@@ -7,10 +7,10 @@ class DH_WSSFireteamLeader extends DH_WaffenSS;
 
 defaultproperties
 {
-    MyName="Rottenführer"
-    AltName="Rottenführer"
+    MyName="Fireteam Leader"
+    AltName="Rottenf�hrer"
     Article="a "
-    PluralName="Rottenführers"
+    PluralName="Fireteam Leaders"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'
     Models(0)="SS_1"
     Models(1)="SS_2"

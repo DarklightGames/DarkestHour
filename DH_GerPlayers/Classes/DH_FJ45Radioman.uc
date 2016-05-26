@@ -7,10 +7,10 @@ class DH_FJ45Radioman extends DH_FJ_1945;
 
 defaultproperties
 {
-    MyName="Funktruppe"
+    MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "
-    PluralName="Funktruppen"
+    PluralName="Radio Operator"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Radioman'
     Models(0)="FJ_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'

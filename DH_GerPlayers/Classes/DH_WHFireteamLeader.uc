@@ -7,10 +7,10 @@ class DH_WHFireteamLeader extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Gefreiter"
+    MyName="Fireteam Leader"
     AltName="Gefreiter"
     Article="a "
-    PluralName="Gefreite"
+    PluralName="Fireteam Leaders"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="WH_1"
     Models(1)="WH_2"

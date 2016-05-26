@@ -8,10 +8,10 @@ class DH_WHAntiTank_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     bIsATGunner=true
-    MyName="Panzerjäger"
-    AltName="Panzerjäger"
+    MyName="Tank Hunter"
+    AltName="Panzerj�ger"
     Article="a "
-    PluralName="Panzerjäger"
+    PluralName="Tank Hunters"
     MenuImage=texture'DHGermanCharactersTex.Icons.Pak-soldat'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

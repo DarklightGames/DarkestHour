@@ -7,10 +7,10 @@ class DH_WSSSniper_Snow extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    MyName="Scharfschütze"
-    AltName="Scharfschütze"
+    MyName="Sniper"
+    AltName="Scharfsch�tze"
     Article="a "
-    PluralName="Scharfschützen"
+    PluralName="Snipers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Sniper'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

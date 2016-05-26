@@ -7,10 +7,10 @@ class DH_WSSSniper extends DH_WaffenSS;
 
 defaultproperties
 {
-    MyName="Scharfschütze"
-    AltName="Scharfschütze"
+    MyName="Sniper"
+    AltName="Scharfsch�tze"
     Article="a "
-    PluralName="Scharfschützen"
+    PluralName="Snipers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Sniper'
     Models(0)="SS_1"
     Models(1)="SS_2"

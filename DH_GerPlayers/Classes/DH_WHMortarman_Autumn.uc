@@ -8,10 +8,10 @@ class DH_WHMortarman_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     bCanUseMortars=true
-    MyName="Werferschütze"
-    AltName="Werferschütze"
+    MyName="Mortar Operator"
+    AltName="Werfersch�tze"
     Article="a "
-    PluralName="Werferschützen"
+    PluralName="Mortar Operators"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_MortarOperator'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

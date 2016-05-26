@@ -7,10 +7,10 @@ class DH_WHRadioman extends DH_Heer;
 
 defaultproperties
 {
-    MyName="Funktruppe"
+    MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "
-    PluralName="Funktruppen"
+    PluralName="Radio Operator"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_Radioman'
     Models(0)="Wh_Radio_1"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'

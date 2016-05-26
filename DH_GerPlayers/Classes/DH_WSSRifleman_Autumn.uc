@@ -7,10 +7,10 @@ class DH_WSSRifleman_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    MyName="Schütze"
-    AltName="Schütze"
+    MyName="Rifleman"
+    AltName="Sch�tze"
     Article="a "
-    PluralName="Schützen"
+    PluralName="Riflemen"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_k98'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

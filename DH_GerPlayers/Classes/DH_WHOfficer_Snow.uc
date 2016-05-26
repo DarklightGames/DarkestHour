@@ -8,10 +8,10 @@ class DH_WHOfficer_Snow extends DH_HeerSnow;
 defaultproperties
 {
     bIsArtilleryOfficer=true
-    MyName="Artillerieoffizier"
+    MyName="Artillery Officer"
     AltName="Artillerieoffizier"
     Article="a "
-    PluralName="Artillerieoffiziere"
+    PluralName="Artillery Officers"
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

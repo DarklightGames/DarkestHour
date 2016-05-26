@@ -7,10 +7,10 @@ class DH_LWRifleman extends DH_LuftwaffeFlak;
 
 defaultproperties
 {
-    MyName="Schütze"
-    AltName="Schütze"
+    MyName="Rifleman"
+    AltName="Sch�tze"
     Article="a "
-    PluralName="Schützen"
+    PluralName="Riflemen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WL_1"
     Models(1)="WL_2"

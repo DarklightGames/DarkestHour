@@ -7,10 +7,10 @@ class DH_WKSniper extends DH_Kriegsmarine;
 
 defaultproperties
 {
-    MyName="Scharfschütze"
-    AltName="Scharfschütze"
+    MyName="Sniper"
+    AltName="Scharfsch�tze"
     Article="a "
-    PluralName="Scharfschützen"
+    PluralName="Snipers"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Scharf'
     Models(0)="WK_1"
     Models(1)="WK_2"

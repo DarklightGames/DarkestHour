@@ -7,10 +7,10 @@ class DH_WSSGunner_Snow extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    MyName="Maschinengewehrschütze"
-    AltName="Maschinengewehrschütze"
+    MyName="Machine-Gunner"
+    AltName="Maschinengewehrsch�tze"
     Article="a "
-    PluralName="Maschinengewehrschützen"
+    PluralName="Machine-Gunners"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MG'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

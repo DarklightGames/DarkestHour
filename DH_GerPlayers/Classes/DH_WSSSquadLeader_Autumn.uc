@@ -8,10 +8,10 @@ class DH_WSSSquadLeader_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Unterscharführer"
-    AltName="Unterscharführer"
+    MyName="Squad Leader"
+    AltName="Unterscharf�hrer"
     Article="a "
-    PluralName="Unterscharführers"
+    PluralName="Squad Leaders"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_SqL'
     Models(0)="SSA_1"
     Models(1)="SSA_2"

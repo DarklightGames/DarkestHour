@@ -8,10 +8,10 @@ class DH_WSSMortarObserver extends DH_WaffenSS;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Werferbeobachter"
+    MyName="Mortar Observer"
     AltName="Werferbeobachter"
     Article="a "
-    PluralName="Werferbeobachter"
+    PluralName="Mortar Observers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarObserver'
     Models(0)="SS_1"
     Models(1)="SS_2"

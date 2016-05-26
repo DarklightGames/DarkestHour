@@ -7,10 +7,10 @@ class DH_12thSSSniper extends DH_12thSS;
 
 defaultproperties
 {
-    MyName="Scharfschütze"
-    AltName="Scharfschütze"
+    MyName="Sniper"
+    AltName="Scharfsch�tze"
     Article="a "
-    PluralName="Scharfschützen"
+    PluralName="Snipers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Sniper'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

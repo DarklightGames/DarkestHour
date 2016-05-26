@@ -7,10 +7,10 @@ class DH_WHGunnerC extends DH_HeerCamo;
 
 defaultproperties
 {
-    MyName="Maschinengewehrschütze"
-    AltName="Maschinengewehrschütze"
+    MyName="Machine-Gunner"
+    AltName="Maschinengewehrsch�tze"
     Article="a "
-    PluralName="Maschinengewehrschützen"
+    PluralName="Machine-Gunners"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.MG-Schutze'
     Models(0)="WH_C1"
     Models(1)="WH_C2"

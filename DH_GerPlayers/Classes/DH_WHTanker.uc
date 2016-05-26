@@ -7,10 +7,10 @@ class DH_WHTanker extends DH_HeerTankCrew;
 
 defaultproperties
 {
-    MyName="Panzerbesatzung"
+    MyName="Tank Crewman"
     AltName="Panzerbesatzung"
     Article="a "
-    PluralName="Panzerbesatzungen"
+    PluralName="Tank Crewmen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Panzerbezatsung'
     Models(0)="WHP_1"
     Models(1)="WHP_2"

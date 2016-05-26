@@ -7,10 +7,10 @@ class DH_WHSPCrew extends DH_HeerTankCrew;
 
 defaultproperties
 {
-    MyName="Stugbesatzung"
+    MyName="Assault Gun Crewman"
     AltName="Stugbesatzung"
     Article="a "
-    PluralName="Stugbesatzungen"
+    PluralName="Assault Gun Crewmen"
     MenuImage=texture'DHGermanCharactersTex.Icons.IconSPCrew'
     Models(0)="WHSP_1"
     Models(1)="WHSP_2"

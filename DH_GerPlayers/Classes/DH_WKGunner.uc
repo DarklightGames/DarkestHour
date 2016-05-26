@@ -7,10 +7,10 @@ class DH_WKGunner extends DH_Kriegsmarine;
 
 defaultproperties
 {
-    MyName="Maschinengewehrschütze"
-    AltName="Maschinengewehrschütze"
+    MyName="Machine-gunner"
+    AltName="MG-Sch�tze"
     Article="a "
-    PluralName="Maschinengewehrschützen"
+    PluralName="Machine-gunners"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.MG-Schutze'
     Models(0)="WK_1"
     Models(1)="WK_2"

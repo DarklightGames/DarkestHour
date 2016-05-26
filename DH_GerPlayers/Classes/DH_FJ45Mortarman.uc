@@ -8,10 +8,10 @@ class DH_FJ45Mortarman extends DH_FJ_1945;
 defaultproperties
 {
     bCanUseMortars=true
-    MyName="Werferschütze"
-    AltName="Werferschütze"
+    MyName="Mortar Operator"
+    AltName="Werfersch�tze"
     Article="a "
-    PluralName="Werferschützen"
+    PluralName="Mortar Operators"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MortarOperator'
     Models(0)="FJ451"
     Models(1)="FJ452"

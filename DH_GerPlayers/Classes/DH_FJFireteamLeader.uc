@@ -7,10 +7,10 @@ class DH_FJFireteamLeader extends DH_FJ;
 
 defaultproperties
 {
-    MyName="Gefreiter"
+    MyName="Fireteam Leader"
     AltName="Gefreiter"
     Article="a "
-    PluralName="Gefreite"
+    PluralName="Fireteam Leaders"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Ftl'
     Models(0)="FJ1"
     Models(1)="FJ2"

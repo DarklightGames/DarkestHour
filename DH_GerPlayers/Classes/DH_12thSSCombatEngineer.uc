@@ -7,10 +7,10 @@ class DH_12thSSCombatEngineer extends DH_12thSS;
 
 defaultproperties
 {
-    MyName="Sturmpioniere"
+    MyName="Combat Engineer"
     AltName="Sturmpioniere"
     Article="a "
-    PluralName="Sturmpionieri"
+    PluralName="Combat Engineers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Eng'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

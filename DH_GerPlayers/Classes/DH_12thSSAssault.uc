@@ -7,10 +7,10 @@ class DH_12thSSAssault extends DH_12thSS;
 
 defaultproperties
 {
-    MyName="Stoßtruppe"
-    AltName="Stoßtruppe"
+    MyName="Assault Trooper"
+    AltName="Sto�truppe"
     Article="an "
-    PluralName="Stoßtruppen"
+    PluralName="Assault Troopers"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

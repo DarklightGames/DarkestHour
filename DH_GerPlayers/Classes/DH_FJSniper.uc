@@ -7,10 +7,10 @@ class DH_FJSniper extends DH_FJ;
 
 defaultproperties
 {
-    MyName="Scharfschütze"
-    AltName="Scharfschütze"
+    MyName="Sniper"
+    AltName="Scharfsch�tze"
     Article="a "
-    PluralName="Scharfschützen"
+    PluralName="Snipers"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Sniper'
     Models(0)="FJ1"
     Models(1)="FJ2"

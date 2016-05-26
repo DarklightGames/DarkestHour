@@ -8,10 +8,10 @@ class DH_WHOfficer extends DH_Heer;
 defaultproperties
 {
     bIsArtilleryOfficer=true
-    MyName="Artillerieoffizier"
+    MyName="Artillery Officer"
     AltName="Artillerieoffizier"
     Article="a "
-    PluralName="Artillerieoffiziere"
+    PluralName="Artillery Officers"
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WH_1"
     Models(1)="WH_2"

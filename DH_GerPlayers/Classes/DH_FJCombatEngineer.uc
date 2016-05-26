@@ -7,10 +7,10 @@ class DH_FJCombatEngineer extends DH_FJ;
 
 defaultproperties
 {
-    MyName="Sturmpioniere"
+    MyName="Combat Engineer"
     AltName="Sturmpioniere"
     Article="a "
-    PluralName="Sturmpionieri"
+    PluralName="Combat Engineers"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Eng'
     Models(0)="FJ1"
     Models(1)="FJ2"

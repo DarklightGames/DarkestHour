@@ -7,10 +7,10 @@ class DH_WHCombatEngineer_Autumn extends DH_HeerAutumn;
 
 defaultproperties
 {
-    MyName="Stürmpioniere"
+    MyName="Combat Engineer"
     AltName="Sturmpioniere"
     Article="a "
-    PluralName="Sturmpionieri"
+    PluralName="Combat Engineers"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Sturmpionier'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

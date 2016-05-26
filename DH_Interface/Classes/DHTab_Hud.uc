@@ -48,6 +48,18 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
              bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
              ch_ShowDeathMessages.SetComponentValue(bShowDeathMessages, true);
              break;
+        case ch_UseNativeRoleNames:
+            if (DHP != none)
+            {
+                bUseNativeRoleNames = DHP.bUseNativeRoleNames;
+            }
+            else
+            {
+                bUseNativeRoleNames = class'DHPlayer'.default.bUseNativeRoleNames;
+            }
+            bUseNativeRoleNamesD = bUseNativeRoleNames;
+            ch_UseNativeRoleNames.SetComponentValue(bUseNativeRoleNames,true);
+            break;
         case ch_ShowMapFirstSpawn:
             if (DHP != none)
             {
@@ -123,6 +135,21 @@ function SaveSettings()
 
     PC = PlayerOwner();
     H = DHHud(PlayerOwner().myHud);
+
+    if (bUseNativeRoleNamesD != bUseNativeRoleNames)
+    {
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).bUseNativeRoleNames = bUseNativeRoleNames;
+            PC.ConsoleCommand("set DH_Engine.DHPlayer bUseNativeRoleNames" @ string(bUseNativeRoleNames));
+            DHPlayer(PC).SaveConfig();
+        }
+        else
+        {
+            class'DHPlayer'.default.bUseNativeRoleNames = bUseNativeRoleNames;
+            class'DHPlayer'.static.StaticSaveConfig();
+        }
+    }
 
     if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
     {
@@ -245,8 +272,6 @@ function InternalOnChange(GUIComponent Sender)
 
 defaultproperties
 {
-    ch_UseNativeRoleNames=none
-
     Begin Object Class=DHmoCheckBox Name=GameHudSimpleColours
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -319,6 +344,21 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowMapFirstSpawn=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowMapFirstSpawn'
+    Begin Object Class=DHmoCheckBox Name=UseNativeRoleNames
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Use Native Role Names"
+        OnCreateComponent=UseNativeRoleNames.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.822959
+        WinLeft=0.555313
+        WinWidth=0.373749
+        WinHeight=0.034156
+        TabOrder=25
+        OnChange=DHTab_Hud.InternalOnChange
+        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+    End Object
+    ch_UseNativeRoleNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeRoleNames'
     Begin Object Class=DHmoComboBox Name=HintsCombo
         ComponentJustification=TXTA_Left
         CaptionWidth=0.55
