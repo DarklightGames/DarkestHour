@@ -155,4 +155,11 @@ defaultproperties
     CollisionRadius=20.0
     CollisionHeight=10.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.MortarBase_generic' // not visible, just a 1 bone mesh to attach VehicleWeapon to, so don't need separate models for different mortars
+
+    // Exit positions
+    ExitPositions(0)=(Y=48.0)
+    ExitPositions(1)=(X=-48.0)
+    ExitPositions(2)=(X=-48.0,Y=-48.0)
+    ExitPositions(3)=(X=-48.0,Y=48.0)
+    ExitPositions(4)=(Y=-48.0)
 }

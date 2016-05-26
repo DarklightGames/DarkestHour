@@ -886,12 +886,4 @@ defaultproperties
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
-
-    // Exit positions
-    ExitPositions(0)=(X=-48.0)
-    ExitPositions(1)=(X=-48.0,Y=-48.0)
-    ExitPositions(2)=(X=-48.0,Y=48.0)
-    ExitPositions(3)=(Y=-48.0)
-    ExitPositions(4)=(Y=48.0)
-    ExitPositions(5)=(Z=64.0)
 }
