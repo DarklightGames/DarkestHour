@@ -7,7 +7,6 @@ class DH_USSergeant1st extends DH_US_1st_Infantry;
 
 defaultproperties
 {
-    bIsSquadLeader=true
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "
