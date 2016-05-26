@@ -2762,6 +2762,7 @@ simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
     TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(PlayerYaw);
 
     MapPlayerIcon.Tints[0] = Color;
+    MapPlayerIcon.Tints[0].A = 192;
 
     // Draw the player icon
     DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter);
