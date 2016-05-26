@@ -870,7 +870,7 @@ function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerRepli
     }
 }
 
-simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
+simulated function bool IsSquadNameTaken(int TeamIndex, string Name, optional out int SquadIndex)
 {
     local int i;
 
@@ -878,6 +878,8 @@ simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
     {
         if (IsSquadActive(TeamIndex, i) && GetSquadName(TeamIndex, i) ~= Name)
         {
+            SquadIndex = i;
+
             return true;
         }
     }
@@ -888,8 +890,7 @@ simulated function bool IsSquadNameTaken(int TeamIndex, string Name)
 function SetName(int TeamIndex, int SquadIndex, string Name)
 {
     local int i;
-
-    Log("===================SETNAME=======================");
+    local int OutSquadIndex;
 
     if (Name != "")
     {
@@ -904,15 +905,10 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 
         if (Len(Name) >= SQUAD_NAME_LENGTH_MIN)
         {
-            for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+            if (IsSquadNameTaken(TeamIndex, Name, OutSquadIndex) && OutSquadIndex != SquadIndex)
             {
-                if (IsSquadNameTaken(TeamIndex, Name))
-                {
-                    Log("SQUAD NAME IS TAKEN!");
-                    // Squad name is taken, defer to defaults names.
-                    Name = "";
-                    break;
-                }
+                // Squad name is taken, defer to defaults names.
+                Name = "";
             }
         }
         else
