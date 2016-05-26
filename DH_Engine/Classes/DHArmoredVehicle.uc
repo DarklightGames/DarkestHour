@@ -1863,7 +1863,10 @@ exec function HullFire()
 
 function ServerHullFire()
 {
-    if (!bOnFire) StartHullFire(none);
+    if (!bOnFire)
+    {
+        StartHullFire(none);
+    }
 }
 
 // New debug exec for testing engine fire damage & effects
@@ -1877,7 +1880,10 @@ exec function EngineFire()
 
 function ServerEngineFire()
 {
-    if (!bEngineOnFire) StartEngineFire(none);
+    if (!bEngineOnFire)
+    {
+        StartEngineFire(none);
+    }
 }
 
 // New debug exec to adjust location of driver's hatch fire position

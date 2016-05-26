@@ -6,37 +6,50 @@
 class DHBoltFire extends DHProjectileFire
     abstract;
 
-// Overridden to support our recoil system
+// Modified to support our recoil system
 event ModeDoFire()
 {
     if (!AllowFire())
+    {
         return;
+    }
 
     if (MaxHoldTime > 0.0)
+    {
         HoldTime = FMin(HoldTime, MaxHoldTime);
+    }
 
-    // server
+    // Server
     if (Weapon.Role == ROLE_Authority)
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
         DoFireEffect();
         HoldTime = 0;   // if bot decides to stop firing, HoldTime must be reset first
-        if ((Instigator == none) || (Instigator.Controller == none))
+
+        if (Instigator == none || Instigator.Controller == none)
+        {
             return;
+        }
 
         if (AIController(Instigator.Controller) != none)
+        {
             AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
+        }
 
         Instigator.DeactivateSpawnProtection();
     }
 
-    // client
+    // Client
     if (Instigator.IsLocallyControlled())
     {
         if (!bDelayedRecoil)
+        {
             HandleRecoil();
+        }
         else
+        {
             SetTimer(DelayedRecoilTime, false);
+        }
 
         ShakeView();
         PlayFiring();
@@ -44,12 +57,15 @@ event ModeDoFire()
         if (!bMeleeMode)
         {
             if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
+            {
                 EjectShell();
+            }
+
             FlashMuzzleFlash();
             StartMuzzleSmoke();
         }
     }
-    else // server
+    else // Server
     {
         ServerPlayFiring();
     }

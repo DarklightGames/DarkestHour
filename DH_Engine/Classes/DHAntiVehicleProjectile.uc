@@ -29,9 +29,9 @@ var     bool            bExplodesOnHittingWater; // shell explodes on hitting a 
 var     bool            bBotNotifyIneffective;   // notify bot of an ineffective attack on target
 var     bool            bIsAlliedShell;          // only used in debugging, so info is shown in metric or imperial
 
-var     array<sound>    ExplosionSound;       // sound of the round exploding (array for random selection)
-var     float           ExplosionSoundVolume; // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
-var     bool            bAlwaysDoShakeEffect; // this shell will always DoShakeEffect when it explodes, not just if hit vehicle armor
+var     array<sound>    ExplosionSound;          // sound of the round exploding (array for random selection)
+var     float           ExplosionSoundVolume;    // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
+var     bool            bAlwaysDoShakeEffect;    // this shell will always DoShakeEffect when it explodes, not just if hit vehicle armor
 
 // Shatter
 var     bool            bShatterProne;           // projectile may shatter on vehicle armor

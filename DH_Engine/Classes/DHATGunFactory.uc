@@ -197,32 +197,13 @@ function Activate(ROSideIndex T)
         TeamNum = T;
         bFactoryActive = true;
         SpawningBuildEffects = true;
-//      ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonTeamStatus(GunIndex,T);
-//      ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, true);
         Timer();
     }
 }
 
-/*
-function Deactivate()
-{
-    super.Deactivate();
-
-    if (Role == ROLE_Authority && LastSpawnedVehicle != none && LastSpawnedVehicle.Health <= 0)
-    {
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
-    }
-}
-*/
-
 // Need to handle Reset differently for this actor - if we are using the randomizer, only MasterFactory is reset here & and all other factories are reset by master factory
 simulated function Reset()
 {
-    if (Role == ROLE_Authority)
-    {
-//      ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
-    }
-
     if (!bUsesSpawnAreas && !bUseRandomizer)
     {
         SpawnVehicle();
@@ -258,18 +239,6 @@ simulated function SpecialReset()
     TotalSpawnedVehicles = 0;
     Deactivate();
 }
-
-/*
-event VehicleDestroyed(Vehicle V) // Matt: deleted as in 6.0 we no longer show AT guns on the map, so this does nothing except maybe write "array out of bounds" log errors
-{
-    if (TotalSpawnedVehicles >= VehicleRespawnLimit || !bFactoryActive)
-    {
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
-    }
-
-    super.VehicleDestroyed(V);
-}
-*/
 
 defaultproperties
 {
