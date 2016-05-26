@@ -11,7 +11,7 @@ var bool                            bIsEditingName;
 
 var automated   DHGUIListBox        lb_Members;
 var             DHGUIList           li_Members;
-var automated   GUILabel            l_SquadName;    //
+var automated   GUILabel            l_SquadName;
 var automated   DHGUIButton         b_CreateSquad;  // Creates a squad. Only show if squad slot is empty.
 var automated   DHGUIButton         b_JoinSquad;    // Joins the squad. Only show to non-members. Disable if squad is full or locked.
 var automated   DHGUIButton         b_LeaveSquad;   // Leaves the squad. Only show to members of this squad.
@@ -20,6 +20,9 @@ var automated   GUIImage            i_LockSquad;
 var automated   GUIImage            i_Locked;       // Show this when the squad is locked an the user is not a member of this squad.
 var automated   DHGUILargeEditBox   eb_SquadName;
 var automated   GUIImage            i_Background;
+
+var localized string    KickText;
+var localized string    PromoteText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -114,17 +117,26 @@ function OnSquadNameEditBoxEnter()
 
 function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 {
-    local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo MyPRI, OtherPRI;
 
-    PRI = DHPlayerReplicationInfo(li_Members.GetObject());
+    PC = DHPlayer(PlayerOwner());
 
-    if (PRI == none)
+    if (PC != none)
     {
         return false;
     }
 
-    Sender.ReplaceItem(0, "Kick" @ PRI.PlayerName);
-    Sender.ReplaceItem(1, "Promote" @ PRI.PlayerName @ "to leader");
+    MyPRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    OtherPRI = DHPlayerReplicationInfo(li_Members.GetObject());
+
+    if (MyPRI == none || OtherPRI == none || MyPRI == OtherPRI || !MyPRI.IsSquadLeader())
+    {
+        return false;
+    }
+
+    Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
+    Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
 
     return true;
 }
@@ -213,8 +225,6 @@ defaultproperties
     i_Background=BackgroundImage
 
     Begin Object Class=GUIContextMenu Name=MembersListContextMenu
-        ContextItems(0)="Kick {0}"
-        ContextItems(1)="Promote {0} to squad leader"
         OnSelect=DHGUISquadComponent.MembersListContextMenuSelect
         OnOpen=DHGUISquadComponent.MembersListContextMenuOpen
         OnClose=DHGUISquadComponent.MembersListContextMenuClose
@@ -301,4 +311,7 @@ defaultproperties
     b_JoinSquad=JoinSquadButton
 
     OnShow=InternalOnShow
+
+    KickText="Kick {0}"
+    PromoteText="Promote {0} to leader"
 }
