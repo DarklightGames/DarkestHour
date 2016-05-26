@@ -2480,22 +2480,17 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
 // Function for changing a team's ReinforcementInterval
 exec function SetReinforcementInterval(int Team, int Amount)
 {
-    if (Amount == -1)
+    if (Amount > 0 && DHGameReplicationInfo(GameReplicationInfo) != none)
     {
         if (Team == AXIS_TEAM_INDEX)
         {
-            DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
+            LevelInfo.Axis.ReinforcementInterval = Amount;
         }
         else if (Team == ALLIES_TEAM_INDEX)
         {
-            DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
+            LevelInfo.Allies.ReinforcementInterval = Amount;
         }
 
-        return;
-    }
-
-    if (Amount > 0 && DHGameReplicationInfo(GameReplicationInfo) != none)
-    {
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[Team] = Amount;
     }
 }
