@@ -136,7 +136,7 @@ function Timer()
         {
             if (PawnSender != none)
             {
-                PawnSender.PlaySound(Phrase[PhraseNum], SLOT_None,ShoutVolume,,,1.0,false);
+                PawnSender.PlaySound(Phrase[PhraseNum], SLOT_None, ShoutVolume,, ShoutRadius, 1.0, true);
             }
             else
             {
@@ -144,7 +144,7 @@ function Timer()
 
                 if (SoundPlayer != none)
                 {
-                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_None,ShoutVolume,,,1.0,false);
+                    SoundPlayer.PlaySound(Phrase[PhraseNum], SLOT_None, ShoutVolume,, ShoutRadius, 1.0, true);
                 }
                 else
                 {
@@ -154,13 +154,13 @@ function Timer()
         }
         else
         {
-            if ((PlayerOwner.ViewTarget != None))
+            if (PlayerOwner.ViewTarget != None)
             {
-                PlayerOwner.ViewTarget.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,,1.0,false);
+                PlayerOwner.ViewTarget.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,ShoutRadius, 1.0, true);
             }
             else
             {
-                PlayerOwner.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,,1.0,false);
+                PlayerOwner.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,ShoutRadius, 1.0, true);
             }
         }
 
@@ -193,5 +193,11 @@ defaultproperties
 {
     bUseLocationalVoice=true
     EnemyAbbrevAxis(3)="Pioneer"
+
+    unitWhisperDistance=512.0
+    unitShoutDistance=2048.0
+    ShoutRadius=204.8
+    WhisperRadius=25.6
+    ShoutVolume=10.0
 }
 
