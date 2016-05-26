@@ -7,10 +7,10 @@ class DH_USSquadMG29thBeach extends DH_US_29th_Infantry;
 
 defaultproperties
 {
-    MyName="Squad Machine-Gunner"
-    AltName="Squad Machine-Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Squad Machine-Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHUSCharactersTex.Icons.IconSMG'
     Models(0)="US_29Inf1b"
     Models(1)="US_29Inf2b"

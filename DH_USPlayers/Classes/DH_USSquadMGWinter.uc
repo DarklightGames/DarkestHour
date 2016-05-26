@@ -7,10 +7,10 @@ class DH_USSquadMGWinter extends DH_US_Winter_Infantry;
 
 defaultproperties
 {
-    MyName="Squad Machine-Gunner"
-    AltName="Squad Machine-Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Squad Machine-Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHUSCharactersTex.Icons.IconSMG'
     Models(0)="US_WinterInf1"
     Models(1)="US_WinterInf2"

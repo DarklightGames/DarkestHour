@@ -7,10 +7,10 @@ class DH_USSquadMG2ndR extends DH_US_2ndRangersBattalion;
 
 defaultproperties
 {
-    MyName="Squad Machine-Gunner"
-    AltName="Squad Machine-Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Squad Machine-Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHUSCharactersTex.Icons.IconSMG'
     Models(0)="US_2R1"
     Models(1)="US_2R2"

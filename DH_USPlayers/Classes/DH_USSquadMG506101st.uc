@@ -7,10 +7,10 @@ class DH_USSquadMG506101st extends DH_US_506PIR;
 
 defaultproperties
 {
-    MyName="Squad Machine-Gunner"
-    AltName="Squad Machine-Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Squad Machine-Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHUSCharactersTex.Icons.ABSMG'
     Models(0)="US_506101AB1"
     Models(1)="US_506101AB2"

@@ -7,10 +7,10 @@ class DH_USSquadMG1st extends DH_US_1st_Infantry;
 
 defaultproperties
 {
-    MyName="Squad Machine-Gunner"
-    AltName="Squad Machine-Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Squad Machine-Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHUSCharactersTex.Icons.IconSMG'
     Models(0)="US_1Inf1"
     Models(1)="US_1Inf2"
