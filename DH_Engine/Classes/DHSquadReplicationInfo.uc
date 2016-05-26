@@ -161,6 +161,7 @@ function Timer()
     }
 }
 
+// Gets the maximum size of a squad for a given team.
 simulated function int GetTeamSquadSize(int TeamIndex)
 {
     switch (TeamIndex)
@@ -174,6 +175,7 @@ simulated function int GetTeamSquadSize(int TeamIndex)
     }
 }
 
+// Gets the the number of squads a team can have.
 simulated function int GetTeamSquadLimit(int TeamIndex)
 {
     local int TeamSquadSize;
@@ -189,7 +191,7 @@ simulated function int GetTeamSquadLimit(int TeamIndex)
     return TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex);
 }
 
-// Gets whether or not there are any members in the squad.
+// Returns true when there are members in the squad.
 simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
 {
     local int i;
@@ -210,21 +212,25 @@ simulated function bool IsSquadActive(byte TeamIndex, int SquadIndex)
     return false;
 }
 
+// Returns true if the specified player is a squad leader.
 simulated function bool IsASquadLeader(DHPlayerReplicationInfo PRI)
 {
     return PRI != none && PRI.Team != none && PRI == GetSquadLeader(PRI.Team.TeamIndex, PRI.SquadIndex);
 }
 
+// Returns the squad leader for the specified squad,.
 simulated function DHPlayerReplicationInfo GetSquadLeader(int TeamIndex, int SquadIndex)
 {
     return GetMember(TeamIndex, SquadIndex, SQUAD_LEADER_INDEX);
 }
 
+// Returns true if the squad has a squad leader.
 simulated function bool HasSquadLeader(int TeamIndex, int SquadIndex)
 {
     return GetSquadLeader(TeamIndex, SquadIndex) != none;
 }
 
+// Returns true if the specified player is the squad leader of the specified squad.
 simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
     if (PRI == none || PRI.SquadIndex == -1 || PRI.Team == none || PRI.Team.TeamIndex != TeamIndex || PRI.SquadIndex != SquadIndex)
@@ -235,6 +241,7 @@ simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex
     return PRI.SquadMemberIndex == SQUAD_LEADER_INDEX;
 }
 
+// Swaps the position of squad members in the same squad by index.
 private function bool SwapSquadMembersByIndex(int TeamIndex, int SquadIndex, int MemberIndex1, int MemberIndex2)
 {
     local DHPlayerReplicationInfo PRI1, PRI2;
@@ -255,6 +262,7 @@ private function bool SwapSquadMembersByIndex(int TeamIndex, int SquadIndex, int
     return true;
 }
 
+// Swaps the position of squad members in the same squad.
 function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
     local int T, U;
@@ -273,6 +281,7 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
     return true;
 }
 
+// Returns the default squad name for the specified team and squad index.
 simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
 {
     if (SquadIndex < 0 || SquadIndex > GetTeamSquadLimit(TeamIndex))
@@ -289,8 +298,8 @@ simulated function string GetDefaultSquadName(int TeamIndex, int SquadIndex)
     }
 }
 
-// Returns the index of the newly created squad, or -1 if there was an error.
-function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
+// Creates a squad. Returns the index of the newly created squad, or -1 if there was an error.
+function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 {
     local int i;
     local int TeamIndex;
@@ -349,7 +358,7 @@ function byte CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
     return -1;
 }
 
-// Returns true if the squad leader was successfully changed.
+// Changes the squad leader. Returns true if the squad leader was successfully changed.
 function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo NewSquadLeader)
 {
     local DHPlayer PC;
@@ -405,8 +414,10 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
     return true;
 }
 
-// Returns true if player successfully leaves a squad. The player is guaranteed
-// to not be a member of a squad after this call, regardless of the return value.
+// Makes the specified player leave their squad, if it exists.
+// Returns true if player successfully leaves his squad.
+// The player is guaranteed to not be a member of a squad after this
+// call, regardless of the return value.
 function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 {
     local int TeamIndex;
@@ -465,6 +476,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         {
             TeamVCR = VRI.GetChannel("Team", TeamIndex);
 
+            // Change the player's voice channel to the "team" channel.
             Level.Game.ChangeVoiceChannel(PRI, TeamVCR.ChannelIndex, SquadVCR.ChannelIndex);
 
             if (TeamVCR != none && TeamVCR.IsMember(PRI))
@@ -491,13 +503,14 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     return true;
 }
 
+// Attempts to make the specified player the leader of the specified squad.
+// Returns true if the specified play is now the new squad leader.
 function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
     local DHPlayer PC;
     local bool bResult;
 
     if (!IsInSquad(PRI, TeamIndex, SquadIndex) ||
-        IsSquadLeader(PRI, TeamIndex, SquadIndex) ||
         HasSquadLeader(TeamIndex, SquadIndex))
     {
         return false;
@@ -522,12 +535,13 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
     return bResult;
 }
 
+// Returns true if the specified play is a member of the specified squad.
 simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
 {
     return PRI != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
 }
 
-// Will attempt to join the most populous open squad.
+// Attempt to make the specified player join the most populous open squad.
 function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 {
     local int i, SquadIndex, MaxMemberCount, MemberCount;
@@ -564,8 +578,9 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
     return -1;
 }
 
-// Returns the index of the new SquadMemberIndex of the player or -1 if
-// joining a squad failed.
+// Attempts to make the specified player join the specified squad.
+// Returns the index of the player's new SquadMemberIndex or -1 if 
+// they were unable to join the squad.
 function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited)
 {
     local bool bDidJoinSquad;
@@ -629,6 +644,7 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
     }
 }
 
+// Attempts to kick the specified player from the specified squad.
 // Returns true if the the player was successfully kicked from a squad.
 function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo MemberToKick)
 {
@@ -657,11 +673,14 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     return true;
 }
 
+// Returns true if the specified player is a member of the specified team.
 simulated function bool IsOnTeam(DHPlayerReplicationInfo PRI, int TeamIndex)
 {
     return PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex;
 }
 
+// Sends an invitation to the specified recipient to join the specified squad.
+// Returns true if the invitation was successfully sent.
 function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, DHPlayerReplicationInfo Recipient)
 {
     local DHPlayer PC, OtherPC;
@@ -716,11 +735,13 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     return true;
 }
 
+// Returns true if the specified squad is full.
 simulated function bool IsSquadFull(int TeamIndex, int SquadIndex)
 {
     return GetMemberCount(TeamIndex, SquadIndex) == GetTeamSquadSize(TeamIndex);
 }
 
+// Returns true if the specified squad is locked.
 simulated function bool IsSquadLocked(int TeamIndex, int SquadIndex)
 {
     if (!IsSquadActive(TeamIndex, SquadIndex))
@@ -739,6 +760,7 @@ simulated function bool IsSquadLocked(int TeamIndex, int SquadIndex)
     }
 }
 
+// Attempts to lock or unlock the specified squad.
 function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int SquadIndex, bool bLocked)
 {
     if (!IsSquadLeader(PC, TeamIndex, SquadIndex))
@@ -751,10 +773,12 @@ function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int Squa
 
     if (bLocked)
     {
+        // "The squad has been locked."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 41);
     }
     else
     {
+        // "The squad has been unlocked."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 42);
     }
 
@@ -805,6 +829,8 @@ function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<Lo
     }
 }
 
+// Returns the name of the specified squad.
+// NOTE: Specifying an inactive squad will return the last name of the squad.
 simulated function string GetSquadName(int TeamIndex, int SquadIndex)
 {
     switch (TeamIndex)
@@ -818,6 +844,7 @@ simulated function string GetSquadName(int TeamIndex, int SquadIndex)
     return "";
 }
 
+// Returns the member of the specified squad at the specified member index.
 simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int MemberIndex)
 {
     switch (TeamIndex)
@@ -831,6 +858,7 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     return none;
 }
 
+// Returns the number of members in the specified squad.
 // TODO: Sort of inefficient. Rewrite if you're bored.
 simulated function int GetMemberCount(int TeamIndex, int SquadIndex)
 {
@@ -841,7 +869,8 @@ simulated function int GetMemberCount(int TeamIndex, int SquadIndex)
     return Members.Length;
 }
 
-// Gets a list of all the members in a squad.
+// Populates members with the members of the specified squad.
+// NOTE: Empty slots are not added to the array.
 simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Members)
 {
     local int i;
@@ -865,6 +894,7 @@ simulated function GetMembers(int TeamIndex, int SquadIndex, out array<DHPlayerR
     }
 }
 
+// Sets the member of the specified squad and member index to the specified player.
 function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerReplicationInfo PRI)
 {
     switch (TeamIndex)
@@ -886,6 +916,8 @@ function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerRepli
     }
 }
 
+// Returns true if the specified name is already being used by another squad
+// on the specified team.
 simulated function bool IsSquadNameTaken(int TeamIndex, string Name, optional out int SquadIndex)
 {
     local int i;
@@ -903,6 +935,7 @@ simulated function bool IsSquadNameTaken(int TeamIndex, string Name, optional ou
     return false;
 }
 
+// Sets the specified squad's name to the specified name.
 function SetName(int TeamIndex, int SquadIndex, string Name)
 {
     local int i;
@@ -1033,7 +1066,7 @@ function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIn
         return;
     }
 
-    // TODO: make sure there's no spam
+    // TODO: make sure there's no spam?
 
     GetMembers(TeamIndex, SquadIndex, Members);
 

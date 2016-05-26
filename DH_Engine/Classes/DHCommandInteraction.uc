@@ -35,7 +35,7 @@ function Hide()
     GotoState('FadeOut');
 }
 
-function PushMenu(string ClassName)
+function DHCommandMenu PushMenu(string ClassName)
 {
     local DHCommandMenu Menu;
     local class<DHCommandMenu> MenuClass;
@@ -47,10 +47,13 @@ function PushMenu(string ClassName)
     if (Menu == none)
     {
         Warn("Failed to load menu class" @ ClassName);
-        return;
+
+        return none;
     }
 
     Menus.Push(Menu);
+
+    return Menu;
 }
 
 function PopMenu()

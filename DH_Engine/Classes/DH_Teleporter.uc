@@ -2,19 +2,26 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2016
 //==============================================================================
+// This is now largely unused, but was heavily used in pre-6.0 "spawn rooms"
+// where players would walk through ethereal portals to teleport to the battle.
+//==============================================================================
 
 class DH_Teleporter extends Teleporter
     placeable;
 
+// The amount of time, in seconds, that the player will have spawn protection
+// after using the teleporter.
 var()   int     SpawnProtectionTime;
+
+// When true, the player's stamina will be reset upon using the teleporter.
 var()   bool    bResetStamina;
 
 // Set timer for spawn protection
 simulated function bool Accept(Actor Incoming, Actor Source)
 {
-    local rotator newRot, oldRot;
-    local float mag;
-    local vector oldDir;
+    local rotator NewRotation, OldRotation;
+    local float Magnitude;
+    local vector OldDirection;
     local Controller P;
 
     if (Incoming == none)
@@ -25,12 +32,12 @@ simulated function bool Accept(Actor Incoming, Actor Source)
     // Move the actor here.
     Disable('Touch');
 
-    newRot = Incoming.Rotation;
+    NewRotation = Incoming.Rotation;
 
     if (bChangesYaw)
     {
-        oldRot = Incoming.Rotation;
-        newRot.Yaw = Rotation.Yaw;
+        OldRotation = Incoming.Rotation;
+        NewRotation.Yaw = Rotation.Yaw;
     }
 
     if (Pawn(Incoming) != none)
@@ -56,11 +63,11 @@ simulated function bool Accept(Actor Incoming, Actor Source)
 
         if (Role == ROLE_Authority || (Level.TimeSeconds - LastFired) > 0.5)
         {
-            newRot.Roll = 0;
+            NewRotation.Roll = 0;
 
-            Pawn(Incoming).SetRotation(newRot);
-            Pawn(Incoming).SetViewRotation(newRot);
-            Pawn(Incoming).ClientSetRotation(newRot);
+            Pawn(Incoming).SetRotation(NewRotation);
+            Pawn(Incoming).SetViewRotation(NewRotation);
+            Pawn(Incoming).ClientSetRotation(NewRotation);
 
             LastFired = Level.TimeSeconds;
         }
@@ -85,7 +92,7 @@ simulated function bool Accept(Actor Incoming, Actor Source)
 
         if (bChangesYaw)
         {
-            Incoming.SetRotation(newRot);
+            Incoming.SetRotation(NewRotation);
         }
     }
 
@@ -104,9 +111,9 @@ simulated function bool Accept(Actor Incoming, Actor Source)
                 OldRot.Pitch = 0;
             }
 
-            oldDir = vector(OldRot);
-            mag = Incoming.Velocity dot oldDir;
-            Incoming.Velocity = Incoming.Velocity - mag * oldDir + mag * vector(Incoming.Rotation);
+            OldDirection = vector(OldRot);
+            Magnitude = Incoming.Velocity dot OldDirection;
+            Incoming.Velocity = Incoming.Velocity - Magnitude * OldDirection + Magnitude * vector(Incoming.Rotation);
         }
 
         if (bReversesX)

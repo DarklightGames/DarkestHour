@@ -10,7 +10,9 @@ var localized string    IncreasedText;
 var localized string    DecreasedText;
 var localized string    ChangedText;
 var localized string    RoundTimeModifiedText;
-var sound               sound; //The sound to play when this actor is triggered.
+
+//The sound to play when this actor is triggered.
+var sound               Sound;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -32,12 +34,12 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
 {
     super.ClientReceive(P, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 
-    P.PlayAnnouncement(default.sound, 1, true);
+    P.PlayAnnouncement(default.Sound, 1, true);
 }
 
 defaultproperties
 {
-    sound=sound'Miscsounds.Music.notify_drum'
+    Sound=sound'Miscsounds.Music.notify_drum'
     IncreasedText="increased"
     DecreasedText="decreased"
     ChangedText="changed"
