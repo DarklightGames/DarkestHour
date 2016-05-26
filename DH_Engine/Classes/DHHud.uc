@@ -1660,17 +1660,22 @@ function DrawPlayerNames(Canvas C)
 
         bCanDrawName = (P == HitPawn || ShouldDrawPlayerName(P));
 
-        if (!bCanDrawName && Level.TimeSeconds - OtherPRI.LastNameDrawTime > 1.0)
+        if (!bCanDrawName)
         {
-            // We haven't been able to fully see this player for 1 second
-            // so let's take him out of the list.
-            NamedPawns.Remove(i--);
+            if (Level.TimeSeconds - OtherPRI.LastNameDrawTime > 1.0)
+            {
+                // We haven't been able to fully see this player for 1 second
+                // so let's take him out of the list.
+                NamedPawns.Remove(i--);
 
-            continue;
+                continue;
+            }
         }
-
-        // Set the last draw time to now.
-        OtherPRI.LastNameDrawTime = Level.TimeSeconds;
+        else
+        {
+            // Set the last draw time to now.
+            OtherPRI.LastNameDrawTime = Level.TimeSeconds;
+        }
 
         Direction = Normal(P.Location - PawnOwner.Location);
         GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
