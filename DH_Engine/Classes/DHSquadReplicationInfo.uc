@@ -444,7 +444,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     }
 
     // "{0} has left the squad."
-    BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadMemberIndex, SquadMessageClass, 31, PRI);
+    BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadIndex, SquadMessageClass, 31, PRI);
 
     if (PRI.SquadMemberIndex == SQUAD_LEADER_INDEX)
     {
