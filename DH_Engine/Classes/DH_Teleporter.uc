@@ -108,10 +108,10 @@ simulated function bool Accept(Actor Incoming, Actor Source)
         {
             if (Incoming.Physics == PHYS_Walking)
             {
-                OldRot.Pitch = 0;
+                OldRotation.Pitch = 0;
             }
 
-            OldDirection = vector(OldRot);
+            OldDirection = vector(OldRotation);
             Magnitude = Incoming.Velocity dot OldDirection;
             Incoming.Velocity = Incoming.Velocity - Magnitude * OldDirection + Magnitude * vector(Incoming.Rotation);
         }
