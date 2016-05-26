@@ -1378,7 +1378,7 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
     Log(K @ State @ Delta);
 
-    if (K == IK_Capslock && A == IST_Release)
+    if (K == IK_F1 && A == IST_Release)
     {
         ToggleMapMode();
         return true;
@@ -1854,7 +1854,7 @@ defaultproperties
         WinTop=0.0
         WinLeft=0.0
         OnClick=OnClick
-        Hint="Map [CAPSLOCK]"
+        Hint="Map [F1]"
     End Object
     b_MapButton=MapButtonObject
 
@@ -1876,7 +1876,7 @@ defaultproperties
         WinTop=0.0
         WinLeft=0.5
         OnClick=OnClick
-        Hint="Squads [CAPSLOCK]"
+        Hint="Squads [F1]"
     End Object
     b_SquadsButton=SquadsButtonObject
 
