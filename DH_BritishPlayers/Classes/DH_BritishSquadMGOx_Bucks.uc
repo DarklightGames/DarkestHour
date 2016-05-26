@@ -7,10 +7,10 @@ class DH_BritishSquadMGOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
-    MyName="Bren Gunner"
-    AltName="Bren Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Bren Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHBritishCharactersTex.Icons.Para_SMG'
     Models(0)="para1"
     Models(1)="para2"

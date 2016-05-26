@@ -7,10 +7,10 @@ class DH_CanadianSquadMGRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
-    MyName="Bren Gunner"
-    AltName="Bren Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Bren Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHCanadianCharactersTex.Icons.Can_SMG'
     Models(0)="RNB_1"
     Models(1)="RNB_2"

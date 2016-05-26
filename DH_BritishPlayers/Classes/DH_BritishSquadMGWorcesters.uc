@@ -7,10 +7,10 @@ class DH_BritishSquadMGWorcesters extends DH_Worcesters;
 
 defaultproperties
 {
-    MyName="Bren Gunner"
-    AltName="Bren Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Bren Gunners"
+    PluralName="Light Machine-Gunners"
     MenuImage=texture'DHBritishCharactersTex.Icons.Brit_SMG'
     Models(0)="Wor_1"
     Models(1)="Wor_2"
