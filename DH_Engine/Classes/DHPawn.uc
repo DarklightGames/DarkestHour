@@ -5010,7 +5010,9 @@ defaultproperties
     IronsightBobAmplitude=4.0
     IronsightBobFrequency=4.0
     IronsightBobDecay=6.0
-    FootStepSoundRadius=80
+    FootStepSoundRadius=64
+    FootstepVolume=0.33
+    QuietFootStepVolume=0.15
 
     // Matt: Mesh gets set by .upl file, but seems to be an initial delay until that takes effect & pawn spawns with Mesh from defaultproperties
     // So unless Mesh is overridden in subclass, pawn spawn with inherited 'Characters_anm.ger_rifleman_tunic' mesh (many German roles do this)
