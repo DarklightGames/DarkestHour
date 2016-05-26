@@ -929,8 +929,8 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
         }
         else
         {
-            // Name is too short, defer to default names.
-            Name = "";
+            // Name is too short, do nothing.
+            return;
         }
     }
 
