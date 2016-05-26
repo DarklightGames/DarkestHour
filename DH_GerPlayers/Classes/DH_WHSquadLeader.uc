@@ -8,10 +8,10 @@ class DH_WHSquadLeader extends DH_Heer;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Squad Leader"
+    MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Sergeants"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_SqL'
     Models(0)="WH_1"
     Models(1)="WH_2"

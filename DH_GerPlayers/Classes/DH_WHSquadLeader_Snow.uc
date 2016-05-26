@@ -8,10 +8,10 @@ class DH_WHSquadLeader_Snow extends DH_HeerSnow;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Squad Leader"
+    MyName="Sergeant"
     AltName="Unteroffizier"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Sergeants"
     MenuImage=texture'DHGermanCharactersTex.Icons.WH_SqL'
     Models(0)="WHS_1"
     Models(1)="WHS_2"

@@ -8,10 +8,10 @@ class DH_WSSSquadLeader_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     bIsSquadLeader=true
-    MyName="Squad Leader"
-    AltName="Unterscharführer"
+    MyName="Sergeant"
+    AltName="UnterscharfÃ¼hrer"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Sergeants"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_SqL'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

@@ -7,10 +7,10 @@ class DH_WHFireteamLeader_Autumn extends DH_HeerAutumn;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
+    MyName="Corporal"
     AltName="Gefreiter"
     Article="a "
-    PluralName="Fireteam Leaders"
+    PluralName="Corporals"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"

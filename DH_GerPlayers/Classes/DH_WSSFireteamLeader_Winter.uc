@@ -7,10 +7,10 @@ class DH_WSSFireteamLeader_Winter extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
-    AltName="Rottenführer"
+    MyName="Corporal"
+    AltName="RottenfÃ¼hrer"
     Article="a "
-    PluralName="Fireteam Leaders"
+    PluralName="Corporals"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'
     Models(0)="WHS_1"
     Models(1)="WHS_2"
