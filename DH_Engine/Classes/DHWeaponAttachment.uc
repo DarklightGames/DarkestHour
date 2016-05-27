@@ -205,7 +205,7 @@ simulated function SpawnHitEffect()
     }
 }
 
-// Modified to play water splash sound
+// Modified to play water splash sound, & to use pawn's eye position as trace start as it's much closer to bullet's spawn location than pawn's location (strangely, even when hip firing)
 simulated function CheckForSplash()
 {
     local Actor  HitActor;
@@ -217,7 +217,7 @@ simulated function CheckForSplash()
     {
         // Trace to see if bullet hits water - from firing point to end hit location, because bullet may splash in water in between
         bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, mHitLocation, GetBoneCoords(MuzzleBoneName).Origin, true);
+        HitActor = Trace(HitLocation, HitNormal, mHitLocation, Instigator.Location + Instigator.EyePosition(), true);
         bTraceWater = false;
 
         // We hit a water volume or a fluid surface, so play splash effects
@@ -259,16 +259,18 @@ function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
     }
 }
 
-// Modified to use bTraceActors option in the trace (making GetVehicleHitInfo() redundant), to use MuzzleBone location for more accurate trace,
-// to handle new collision mesh actor, to remove pointlessly setting NetUpdateTime on net client,
+// Modified to use bTraceActors option in the trace (making GetVehicleHitInfo() redundant),
+// to use pawn's eye position as trace start as it's much closer to bullet's spawn location than pawn's location (strangely, even when hip firing)
+// to handle new collision mesh actor, to remove pointlessly setting NetUpdateTime on net client, to add a debug option,
 // & to skip function on any authority role & not just standalone (listen server will also already have the info)
 simulated function GetHitInfo()
 {
     local vector Offset, HitLocation;
 
-    if (Role < ROLE_Authority)
+    if (Role < ROLE_Authority && Instigator != none)
     {
-        Offset = 20.0 * Normal(GetBoneCoords(MuzzleBoneName).Origin - mHitLocation);
+        // Do a very short trace spanning the replicated hit location, to check what type of object we hit, so we know what hit effect to spawn
+        Offset = 20.0 * Normal((Instigator.Location + Instigator.EyePosition()) - mHitLocation);
         mHitActor = Trace(HitLocation, mHitNormal, mHitLocation - Offset, mHitLocation + Offset, true);
 
         // If hit a collision mesh actor, we switch mHitActor to col mesh's owner & proceed as if we'd hit that actor
