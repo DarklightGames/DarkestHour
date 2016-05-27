@@ -24,6 +24,17 @@ replication
         ServerBipodDeploy;
 }
 
+// Modified to play BipodHipIdle animation on a server, instead of the usual IdleAnim, so that weapon will be in the right position for hip hire calculations
+simulated function PostBeginPlay()
+{
+    super(DHWeapon).PostBeginPlay();
+
+    if (Role == ROLE_Authority && !InstigatorIsLocallyControlled() && HasAnim(BipodHipIdle))
+    {
+        PlayAnim(BipodHipIdle, IdleAnimRate, 0.0);
+    }
+}
+
 // Modified to prevent firing (with message) if neither ironsighted or bipod deployed
 simulated function Fire(float F)
 {

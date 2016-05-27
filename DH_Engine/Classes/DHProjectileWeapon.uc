@@ -98,7 +98,8 @@ replication
         ClientDoReload, ClientCancelReload, ClientSetBarrelSteam;
 }
 
-// Play an idle animation on the server so that weapon will be in the right position for free-aim calculations (not the ref pose)
+// Play an idle animation on a server so that weapon will be in the right position for hip hire calculations (requires muzzle bone to be in correct location & rotation)
+// Server won't be in sync with net client's weapon position when ironsighted or bipod deployed, but doesn't matter as sighted calculations don't use weapon's position
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
