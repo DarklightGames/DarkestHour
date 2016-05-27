@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_Kz8cmGrW42Attachment extends DHMortarAttachment;
+class DH_Kz8cmGrW42Attachment extends DHWeaponAttachment;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Mortars_tex.utx
 
