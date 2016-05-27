@@ -214,6 +214,13 @@ simulated function ToggleRoundType()
     PlayClickSound();
 }
 
+// Emptied out as a mortar re-spawns every time a player deploys it, & we can't have it restored to full ammo every time
+// Instead its ammo gets transferred between the mortar & the DHPawn, so when the player acts as the ammo record
+function bool GiveInitialAmmo()
+{
+    return false;
+}
+
 // New function to handle resupply of mortar ammo by another player
 function PlayerResupply()
 {
