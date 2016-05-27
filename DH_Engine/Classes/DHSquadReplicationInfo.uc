@@ -579,7 +579,7 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 }
 
 // Attempts to make the specified player join the specified squad.
-// Returns the index of the player's new SquadMemberIndex or -1 if 
+// Returns the index of the player's new SquadMemberIndex or -1 if
 // they were unable to join the squad.
 function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited)
 {
@@ -769,7 +769,6 @@ function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int Squa
     }
 
     SetSquadLockedInternal(TeamIndex, SquadIndex, bLocked);
-
 
     if (bLocked)
     {

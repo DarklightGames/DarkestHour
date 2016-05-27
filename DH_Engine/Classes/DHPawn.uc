@@ -4788,74 +4788,77 @@ event StartCrouch(float HeightAdjust)
     Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
 }
 
-// Override to have more levels of volume for foot steps (sprint, run, crouch/walk)
+// Modified to increase volume & radius of sound if sprinting, & to reduce sound radius if moving slowly
 simulated function FootStepping(int Side)
 {
-    local int           SurfaceTypeID, i;
-    local actor         A;
-    local material      FloorMat;
-    local vector        HL,HN,Start,End,HitLocation,HitNormal;
-    local float         FootVolumeMod;
-    local float         FootRadiusMod;
+    local Actor    A;
+    local vector   HitLocation, HitNormal, Start;
+    local material FloorMaterial;
+    local int      SurfaceTypeID, i;
+    local float    SoundVolumeModifier, SoundRadiusModifier;
 
-    SurfaceTypeID = 0;
-
-    // When in water
-    for (i = 0; i < Touching.Length; i++)
+    // Play water effects if touching water
+    for (i = 0; i < Touching.Length; ++i)
     {
-        if (((PhysicsVolume(Touching[i]) != None) && PhysicsVolume(Touching[i]).bWaterVolume) || (FluidSurfaceInfo(Touching[i]) != None))
+        if ((PhysicsVolume(Touching[i]) != none && PhysicsVolume(Touching[i]).bWaterVolume) || FluidSurfaceInfo(Touching[i]) != none)
         {
-            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2,, FootStepSoundRadius);
+            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
 
             // Play a water ring effect as you walk through the water
-            if (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (Level.NetMode != NM_DedicatedServer)
-                && !Touching[i].TraceThisActor(HitLocation, HitNormal,Location - CollisionHeight*vect(0,0,1.1), Location))
+            if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
+                && !Touching[i].TraceThisActor(HitLocation, HitNormal, Location - (CollisionHeight * vect(0.0, 0.0, 1.1)), Location))
             {
-                    Spawn(class'WaterRingEmitter',,,HitLocation,rot(16384,0,0));
+                Spawn(class'WaterRingEmitter',,, HitLocation, rot(16384, 0, 0));
             }
 
             return;
         }
     }
 
-    FootVolumeMod = 1.0; // For when jogging (default run speed)
-    FootRadiusMod = 1.0;
-
-    if (bIsSprinting) // Louder for sprinting
-    {
-        FootVolumeMod = 1.2; // 20% louder
-        FootRadiusMod = 1.2; // 20% further
-    }
-    else if (bIsCrawling) // No sound for prone
+    // No footstep sound if crawling
+    if (bIsCrawling)
     {
         return;
     }
-    else if ( bIsCrouched || bIsWalking ) // Not so loud when crouched/walking
+
+    // 20 % increase in footstep sound if sprinting
+    if (bIsSprinting)
     {
-        FootVolumeMod = QuietFootStepVolume;
-        FootRadiusMod = 0.33; // 1/3 the range of default run sound, crouching/walking should be sneaky (bot not complete stealth (like prone)
+        SoundVolumeModifier = 1.2;
+        SoundRadiusModifier = 1.2;
+    }
+    // Reduce footstep sound if moving slower (crouching or walking)
+    else if (bIsCrouched || bIsWalking)
+    {
+        SoundVolumeModifier = QuietFootStepVolume;
+        SoundRadiusModifier = 0.33; // 1/3 the range of default jog sound, as crouching/walking should be sneaky (but not complete stealth like crawling)
+    }
+    // Default jogging movement - no sound modifiers
+    else
+    {
+        SoundVolumeModifier = 1.0;
+        SoundRadiusModifier = 1.0;
     }
 
-    // Handle surface type
-    if ( (Base!=None) && (!Base.IsA('LevelInfo')) && (Base.SurfaceType!=0) )
+    // Get surface type we are walking on, so we know what kind of sound to play
+    if (Base != none && !Base.IsA('LevelInfo') && Base.SurfaceType != EST_Default)
     {
         SurfaceTypeID = Base.SurfaceType;
     }
     else
     {
-        Start = Location - Vect(0,0,1)*CollisionHeight;
-        End = Start - Vect(0,0,16);
-        A = Trace(hl,hn,End,Start,false,,FloorMat);
+        Start = Location - (vect(0.0, 0.0, 1.0) * CollisionHeight);
+        A = Trace(HitLocation, HitNormal, Start - vect(0.0, 0.0, 16.0), Start, false,, FloorMaterial);
 
-        if (FloorMat !=None)
+        if (FloorMaterial != none)
         {
-            SurfaceTypeID = FloorMat.SurfaceType;
+            SurfaceTypeID = FloorMaterial.SurfaceType;
         }
     }
 
-    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, (FootstepVolume * FootVolumeMod),,(FootStepSoundRadius * FootRadiusMod));
+    // Play footstep sound, based on surface type & volume/radius modifiers
+    PlaySound(SoundFootsteps[SurfaceTypeID], SLOT_Interact, FootstepVolume * SoundVolumeModifier,, FootStepSoundRadius * SoundRadiusModifier);
 }
-
 
 simulated function vector CalcZoomedDrawOffset(Inventory Inv)
 {
