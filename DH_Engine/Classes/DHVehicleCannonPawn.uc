@@ -855,7 +855,7 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
             Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.AltFireOffset);
         }
 
-        Log(Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was" @ OldAltFireOffset $ ")");
+        Log(Gun.Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was" @ OldAltFireOffset $ ")");
     }
 }
 
@@ -864,7 +864,7 @@ exec function SetAltFireSpawnOffset(float NewValue)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHVehicleCannon(Gun) != none)
     {
-        Log(Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was" @ DHVehicleCannon(Gun).AltFireSpawnOffsetX $ ")");
+        Log(Gun.Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was" @ DHVehicleCannon(Gun).AltFireSpawnOffsetX $ ")");
         DHVehicleCannon(Gun).AltFireSpawnOffsetX = NewValue;
     }
 }

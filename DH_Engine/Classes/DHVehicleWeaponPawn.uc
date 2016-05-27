@@ -1533,7 +1533,7 @@ exec function SetWeaponFireOffset(float NewValue)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
     {
-        Log(Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
+        Log(Gun.Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
         Gun.WeaponFireOffset = NewValue;
 
         if (Gun.FlashEmitter != none)
@@ -1566,7 +1566,7 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
         }
 
         VehWep.SetRelativeLocation(VehWep.WeaponAttachOffset);
-        Log(Tag @ "WeaponAttachOffset =" @ VehWep.WeaponAttachOffset @ "(was" @ OldOffset $ ")");
+        Log(VehWep.Tag @ "WeaponAttachOffset =" @ VehWep.WeaponAttachOffset @ "(was" @ OldOffset $ ")");
     }
 }
 
@@ -1583,7 +1583,25 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
         }
 
         VehWep.StartHatchFire();
-        Log(Tag @ "FireEffectOffset =" @ VehWep.FireEffectOffset);
+        Log(VehWep.Tag @ "FireEffectOffset =" @ VehWep.FireEffectOffset);
+    }
+}
+
+// New debug exec to adjust ambient sound radius
+exec function SetSoundRadius(float NewValue)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    {
+        if (bHasAltFire)
+        {
+            Log(Gun.Tag @ "AltFireSoundRadius =" @ NewValue @ "(was" @ Gun.AltFireSoundRadius $ ")");
+            Gun.AltFireSoundRadius = NewValue;
+        }
+        else
+        {
+            Log(Gun.Tag @ "SoundRadius =" @ NewValue @ "(was" @ Gun.SoundRadius $ ")");
+            Gun.SoundRadius = NewValue;
+        }
     }
 }
 
