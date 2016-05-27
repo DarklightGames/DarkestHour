@@ -41,12 +41,14 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// When new values of SpawnHitCount & mHitLocation are received, we spawn the hit effect, instead of letting ThirdPersonEffects() do it, as it does for other net modes
-// That's because net client gets ThirdPersonEffects() called by native code before we have the new mHitLocation, so the effect spawns at location of last hit
-// Also, non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off
+// Modified to we spawn the hit effects from a replicated pre-launch trace, when a changed value of mHitLocation is received
+// Now doing this here instead of letting ThirdPersonEffects() do it, as it does for other net modes, to solve a bug
+// Net client gets ThirdPersonEffects() called by native code before we have the new mHitLocation, so the effect used to spawn at the location of the last hit!
+// Also modified so non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off
 simulated function PostNetReceive()
 {
-    if (SpawnHitCount != OldSpawnHitCount && mHitLocation != SavedmHitLocation)
+    // Have deprecated use of replicated byte SpawnHitCount, which used to trigger hit effects, as changing mHitLocation is enough & any more is wasted replication
+    if (mHitLocation != SavedmHitLocation)
     {
         SavedmHitLocation = mHitLocation;
         SpawnHitEffect();
@@ -231,6 +233,7 @@ simulated function CheckForSplash()
 }
 
 // Modified to force a quick new update, as we really want the new mHitLocation asap, so net clients can spawn a hit effect
+// And have deprecated use of replicated byte SpawnHitCount, which used to trigger hit effects, as changing mHitLocation is enough & any more is wasted replication
 // Also removes setting unused & unreplicated variables on a dedicated server, & deprecates mVehHitNormal
 function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
 {
@@ -245,7 +248,7 @@ function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
         mHitLocation = HitLocation;
     }
 
-    SpawnHitCount++;
+    //SpawnHitCount++; // unnecessary replication (changing mHitLocation is enough)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -253,6 +256,9 @@ function UpdateHit(Actor HitActor, vector HitLocation, vector HitNormal)
         mHitActor = HitActor;
         mHitNormal = HitNormal;
 //      mVehHitNormal = HitNormal; // pointless, just use mHitNormal
+
+        // Little trick to make single player or listen server spawn hit effects, since we are no longer incrementing SpawnHitCount & they check old vs new values
+        OldSpawnHitCount++;
     }
 }
 
