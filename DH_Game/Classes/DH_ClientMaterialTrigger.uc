@@ -5,123 +5,109 @@
 
 class DH_ClientMaterialTrigger extends MaterialTrigger;
 
-// whether triggering resets or triggers the materials
-var(MaterialTrigger) enum ETriggerAction {
-    TriggerTriggers,
-    TriggerResets,
-    TriggerDoesNothing
-} TriggerAction;
+enum ETriggerAction
+{
+    TR_DoesNothing,
+    TR_Triggers,
+    TR_Resets
+};
 
-// whether untriggering resets or triggers the materials
-var(MaterialTrigger) enum EUnriggerAction {
-    UntriggerDoesNothing,
-    UntriggerTriggers,
-    UntriggerResets
-} UntriggerAction;
+var(MaterialTrigger)    ETriggerAction  TriggerAction;   // whether triggering resets or triggers the materials
+var(MaterialTrigger)    ETriggerAction  UntriggerAction; // whether un-triggering resets or triggers the materials
 
-// array holding the ReplicationInfos for clientside triggering
-var array<DH_MaterialTriggerReplicationInfo> ReplicatedMaterialTriggers;
+var  array<DH_MaterialTriggerReplicationInfo>   ReplicatedMaterialTriggers; // array holding the ReplicationInfos for clientside triggering
 
-//=============================================================================
-// PostBeginPlay
-//
-// Spawns a MaterialTriggerReplicationInfo for each triggered material.
-//=============================================================================
-
+// Modified to spawn & set up a MaterialTriggerReplicationInfo for each triggered material
 function PostBeginPlay()
 {
     local int i;
 
-    ReplicatedMaterialTriggers.Length = MaterialsToTrigger.Length;
+//    ReplicatedMaterialTriggers.Length = MaterialsToTrigger.Length; // TEST rem
 
     for (i = 0; i < MaterialsToTrigger.Length; ++i)
     {
         ReplicatedMaterialTriggers[i] = Spawn(class'DH_MaterialTriggerReplicationInfo', self);
-        ReplicatedMaterialTriggers[i].SetMaterialToTrigger(string(MaterialsToTrigger[i]));
+
+        if (ReplicatedMaterialTriggers[i] != none)
+        {
+            ReplicatedMaterialTriggers[i].SetMaterialToTrigger(string(MaterialsToTrigger[i]));
+        }
     }
 }
 
-//=============================================================================
-// Trigger
-//
-// Tells the MTRIs about the Instigators and triggering actors and tells them
-// to trigger the material.
-//=============================================================================
-
+// Modified to trigger or reset all the materials, depending on the specified TriggerAction property
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-    local int i;
-
     if (Other == none)
     {
         Other = self;
     }
 
-    if (TriggerAction == TriggerTriggers)
+    if (TriggerAction == TR_Triggers)
     {
-        for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-        {
-            if (ReplicatedMaterialTriggers[i] != none)
-            {
-                ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
-            }
-        }
+        TriggerMaterials(Other, EventInstigator);
     }
-    else if (TriggerAction == TriggerResets)
+    else if (TriggerAction == TR_Resets)
     {
-        for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-        {
-            if (ReplicatedMaterialTriggers[i] != none)
-            {
-                ReplicatedMaterialTriggers[i].ResetMaterial();
-            }
-        }
+        ResetMaterials();
     }
 }
 
-//=============================================================================
-// Untrigger
-//
-// Triggers or resets the materials depending on the UntriggerAction property.
-//=============================================================================
+// Modified to trigger or reset all the materials, depending on the specified UntriggerAction property
 function Untrigger(Actor Other, Pawn EventInstigator)
 {
-    local int i;
-
     if (Other == none)
     {
         Other = self;
+    }
 
-        if (UntriggerAction == UntriggerTriggers)
+    if (UntriggerAction == TR_Triggers)
+    {
+        TriggerMaterials(Other, EventInstigator);
+    }
+    else if (UntriggerAction == TR_Resets)
+    {
+        ResetMaterials();
+    }
+}
+
+// New function to trigger all the ReplicatedMaterialTriggers, passing them the Triggerer & EventInstigator
+function TriggerMaterials(Actor Other, Pawn EventInstigator)
+{
+    local int i;
+
+    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
+    {
+        if (ReplicatedMaterialTriggers[i] != none)
         {
-            for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-            {
-                if (ReplicatedMaterialTriggers[i] != none)
-                {
-                    ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
-                }
-            }
-        }
-        else if (UntriggerAction == UntriggerResets)
-        {
-            for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
-            {
-                if (ReplicatedMaterialTriggers[i] != none)
-                {
-                    ReplicatedMaterialTriggers[i].ResetMaterial();
-                }
-            }
+            ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
         }
     }
 }
 
-simulated function Reset()
+// New function to reset all the ReplicatedMaterialTriggers
+function ResetMaterials()
+{
+    local int i;
+
+    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
+    {
+        if (ReplicatedMaterialTriggers[i] != none)
+        {
+            ReplicatedMaterialTriggers[i].ResetMaterial();
+        }
+    }
+}
+
+/*
+simulated function Reset() // TODO: fix
 {
     super.Reset();
-
-    //TODO: Fix.
 }
+*/
 
 defaultproperties
 {
+    TriggerAction=TR_Triggers
+    UntriggerAction=TR_DoesNothing
 }

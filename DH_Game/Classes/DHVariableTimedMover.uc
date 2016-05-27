@@ -5,17 +5,17 @@
 
 class DHVariableTimedMover extends Mover;
 
-var() bool          bActAsClientMover;
-var() array<float>  KeyMoveTime;
-var   array<float>  KeyMoveSpeed;
+var()   bool            bActAsClientMover;
+var()   array<float>    KeyMoveTime;
+var     array<float>    KeyMoveSpeed;
 
 function PostBeginPlay()
 {
-    local int n;
+    local int i;
 
-    for (n = 0; n < KeyMoveTime.Length; n++)
+    for (i = 0; i < KeyMoveTime.Length; ++i)
     {
-        KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
+        KeyMoveSpeed[i] = KeyMoveTime[i] * MoveTime;
     }
 
     KeyMoveSpeed[KeyMoveTime.Length] = 0.0; // this is to prevent OutOfBounds errors on the array
@@ -57,9 +57,9 @@ function DoClose()
     super.DoClose();
 }
 
+// Do nothing on the server
 state ServerIdle
 {
-    // Do nothing on the Server
 }
 
 state() LoopMove

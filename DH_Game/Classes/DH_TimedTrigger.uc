@@ -9,40 +9,53 @@ var()   float   DelayTime;
 
 var()   bool    bIsStateOne;
 
+// Modified to set a timer for specified DelayTime, then tell our parent
 simulated function PostBeginPlay()
 {
-    // Set up the timer, then tell our parent:
     SetTimer(DelayTime, false);
 
     super.PostBeginPlay();
 }
 
-// The timer will go off every 'DelayTime' seconds:
+// Modified to trigger the event after the specified delay & flag that we are no longer in the original state
 simulated function Timer()
 {
-    // Trigger:
     if (bIsStateOne)
     {
         TriggerEvent(Event, self, none);
-        Log("TRIGGERED EVENT!");
         bIsStateOne = false;
     }
 }
+/*
+function Timer() // THE SUPER
+{
+    bKeepTiming = false;
 
-// Reset actor to initial state - used when restarting level without reloading.
+    foreach TouchingActors(class'Actor', A)
+    {
+        if (IsRelevant(A))
+        {
+            bKeepTiming = true;
+            Touch(A);
+        }
+    }
+
+    if (bKeepTiming)
+    {
+        SetTimer(RepeatTriggerTime, false);
+    }
+}
+*/
+
+// Modified to reset actor to initial state - used when restarting level without reloading
+// Re-trigger event to revert back to initial state then reset timer
 function Reset()
 {
     super.Reset();
 
-    // collision, bInitiallyactive
-    bInitiallyActive = bSavedInitialActive;
-    SetCollision(bSavedInitialCollision, bBlockActors);
-
-    //re-trigger event to revert back to initial state then reset timer:
     if (!bIsStateOne)
     {
         TriggerEvent(Event, self, none);
-        Log("TRIGGERED EVENT TO RESET!");
         bIsStateOne = true;
     }
 

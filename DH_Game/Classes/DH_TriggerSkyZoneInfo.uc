@@ -5,109 +5,110 @@
 
 class DH_TriggerSkyZoneInfo extends SkyZoneInfo;
 
-var() color OnColor;       // Color when light is on
-var() color OffColor;      // Color when light is off
+var()   color   OnColor;          // color when light is on
+var()   color   OffColor;         // color when light is off
+var()   float   ChangeTime;       // time light takes to change from on to off
+var()   bool    bInitiallyOn;     // whether it's initially on
+var()   bool    bInitiallyFading; // whether it's initially fading up or down
 
-var() float ChangeTime;        // Time light takes to change from on to off.
-var() bool  bInitiallyOn;      // Whether it's initially on.
-var() bool  bInitiallyFading;  //    "     "   initially fading up or down.
-
-var float     TimeSinceTriggered;
-var bool      bIsOn;
+var     float   TimeSinceTriggered;
+var     bool    bIsOn;
 
 simulated event PostBeginPlay()
 {
-   super.PostBeginPlay();
+    super.PostBeginPlay();
 
-   // Work out the starting light color:
-   bIsOn = bInitiallyOn;
+    // Work out the starting light color
+    bIsOn = bInitiallyOn;
 
-   // If we're on the client side, start in
-   // the right mode based on its trigger:
-   if (ROLE != ROLE_Authority && bClientTrigger) {
-      bIsOn = !bIsOn;
-   }
+    if (ROLE < ROLE_Authority && bClientTrigger) // if we're on the client side, start in the right mode based on its trigger
+    {
+        bIsOn = !bIsOn;
+    }
 
-   if (bIsOn) {
-      DistanceFogColor = OnColor;
-   } else {
-      DistanceFogColor = OffColor;
-   }
+    if (bIsOn)
+    {
+        DistanceFogColor = OnColor;
+    }
+    else
+    {
+        DistanceFogColor = OffColor;
+    }
 
-   // If we're fading, we tick:
-   if (bInitiallyFading) {
-      Enable('Tick');
-      bIsOn = !bIsOn;
-   }
-   // Otherwise we don't tick:
-   else {
-      Disable('Tick');
-   }
-
+    // We only tick if we're fading
+    if (bInitiallyFading)
+    {
+        Enable('Tick');
+        bIsOn = !bIsOn;
+    }
+    else
+    {
+        Disable('Tick');
+    }
 }
 
 simulated function Tick(float DeltaTime)
 {
-   local float percent;
+    local float Percent;
 
-   TimeSinceTriggered += DeltaTime;
+    TimeSinceTriggered += DeltaTime;
+    Percent = TimeSinceTriggered / ChangeTime;
 
-   percent = TimeSinceTriggered / ChangeTime;
+    // If we're done with the fade, set to final color & leave
+    if (Percent >= 1.0)
+    {
+        Disable('Tick');
 
-   // If we're done with the fade, set to final color and leave:
-   if (percent >= 1) {
-     Disable('Tick');
-     if (bIsOn) {
-        DistanceFogColor.R = OnColor.R;
-        DistanceFogColor.G = OnColor.G;
-        DistanceFogColor.B = OnColor.B;
-     }
-     else {
-        DistanceFogColor.R = OffColor.R;
-        DistanceFogColor.G = OffColor.G;
-        DistanceFogColor.B = OffColor.B;
-     }
+        if (bIsOn)
+        {
+            DistanceFogColor.R = OnColor.R;
+            DistanceFogColor.G = OnColor.G;
+            DistanceFogColor.B = OnColor.B;
+        }
+        else
+        {
+            DistanceFogColor.R = OffColor.R;
+            DistanceFogColor.G = OffColor.G;
+            DistanceFogColor.B = OffColor.B;
+        }
 
-     return;
-   }
+        return;
+    }
 
-   // Just fade to the right level:
-   if (bIsOn) {
-      DistanceFogColor.R = percent * OnColor.R + (1-percent) * OffColor.R;
-      DistanceFogColor.G = percent * OnColor.G + (1-percent) * OffColor.G;
-      DistanceFogColor.B = percent * OnColor.B + (1-percent) * OffColor.B;
-   }
-   else {
-      DistanceFogColor.R = percent * OffColor.R + (1-percent) * OnColor.R;
-      DistanceFogColor.G = percent * OffColor.G + (1-percent) * OnColor.G;
-      DistanceFogColor.B = percent * OffColor.B + (1-percent) * OnColor.B;
-   }
-
+    // Just fade to the right level
+    if (bIsOn)
+    {
+        DistanceFogColor.R = (Percent * OnColor.R) + ((1.0 - Percent) * OffColor.R);
+        DistanceFogColor.G = (Percent * OnColor.G) + ((1.0 - Percent) * OffColor.G);
+        DistanceFogColor.B = (Percent * OnColor.B) + ((1.0 - Percent) * OffColor.B);
+    }
+    else
+    {
+        DistanceFogColor.R = (Percent * OffColor.R) + ((1.0 - Percent) * OnColor.R);
+        DistanceFogColor.G = (Percent * OffColor.G) + ((1.0 - Percent) * OnColor.G);
+        DistanceFogColor.B = (Percent * OffColor.B) + ((1.0 - Percent) * OnColor.B);
+    }
 }
 
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
-   Log("SkyZoneInfo Triggered");
-   Enable('Tick');
-   TimeSinceTriggered = 0;
-   bIsOn = !bIsOn;
-   bClientTrigger = !bClientTrigger;
+    Enable('Tick');
+    TimeSinceTriggered = 0.0;
+    bIsOn = !bIsOn;
+    bClientTrigger = !bClientTrigger;
 }
 
-simulated event ClientTrigger() {
-   // This is called client-side when triggered server-side
-   // because in Trigger() we updated bClientTrigger.
-   Log("Client SkyZoneInfo Triggered");
-   Enable('Tick');
-   TimeSinceTriggered = 0;
-   bIsOn = !bIsOn;
+// This is called client-side when triggered server-side, because in Trigger() we updated bClientTrigger
+simulated event ClientTrigger()
+{
+    Enable('Tick');
+    TimeSinceTriggered = 0.0;
+    bIsOn = !bIsOn;
 }
 
-simulated function Reset()
+simulated function Reset() // TODO: fix
 {
     super.Reset();
-
-    //TODO: Fix.
 }
 
 defaultproperties

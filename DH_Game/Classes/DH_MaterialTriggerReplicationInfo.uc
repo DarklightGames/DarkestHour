@@ -5,20 +5,22 @@
 
 class DH_MaterialTriggerReplicationInfo extends ReplicationInfo;
 
-var Material MaterialToTrigger;
-var string MaterialName;
-var int ClientTriggerCount;
-var int ClientUnTriggerCount;
-var int TriggerCount;
+var     material    MaterialToTrigger;
+var     string      MaterialName;
+var     int         ClientTriggerCount;
+var     int         ClientUnTriggerCount;
+var     int         TriggerCount;
 
-var struct TTriggerData {
-    var Actor Triggerer;
-    var Pawn EventInstigator;
-    var byte TriggerAction; // 0 = nothing/idle, 1 = trigger, 2 = reset
+var struct TTriggerData
+{
+    var Actor       Triggerer;
+    var Pawn        EventInstigator;
+    var byte        TriggerAction; // 0 = nothing/idle, 1 = trigger, 2 = reset
 } LastTriggerings[10];
 
 replication
 {
+    // Variables the server will replicate to all clients
     reliable if (Role == ROLE_Authority)
         TriggerCount, LastTriggerings, MaterialName;
 }
@@ -53,7 +55,7 @@ simulated function Timer()
 {
     if (MaterialName != "" && MaterialToTrigger == none)
     {
-        MaterialToTrigger = Material(DynamicLoadObject(MaterialName, class'Material'));
+        MaterialToTrigger = material(DynamicLoadObject(MaterialName, class'Material'));
 
         if (MaterialToTrigger != none)
         {
@@ -61,9 +63,7 @@ simulated function Timer()
         }
     }
 
-    if (MaterialToTrigger != none &&
-        TriggerCount > ClientTriggerCount &&
-        LastTriggerings[(ClientTriggerCount + 1) % arraycount(LastTriggerings)].TriggerAction != 0)
+    if (MaterialToTrigger != none && TriggerCount > ClientTriggerCount && LastTriggerings[(ClientTriggerCount + 1) % arraycount(LastTriggerings)].TriggerAction != 0)
     {
         ++ClientTriggerCount;
 

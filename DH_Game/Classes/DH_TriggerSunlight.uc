@@ -6,90 +6,89 @@
 class DH_TriggerSunlight extends Sunlight
     hidecategories(Emitter,Force,Karma,Corona);
 
-var() color OnColor;       // Color when sunlight is on
-var() color OffColor;      // Color when light is off
+var()   color   OnColor;          // color when sunlight is on
+var()   color   OffColor;         // color when light is off
+var()   float   ChangeTime;       // time light takes to change from on to off
+var()   float   ChangeTimeTwo;
+var()   bool    bInitiallyOn;     // whether it's initially on
+var()   bool    bInitiallyFading; // whether it's initially fading up or down
 
-var() float ChangeTime;        // Time light takes to change from on to off.
-var() bool  bInitiallyOn;      // Whether it's initially on.
-var() bool  bInitiallyFading;  //    "     "   initially fading up or down.
-
-var color   CurrentColor;
-var float   TimeSinceTriggered;
-var bool    bIsOn;
-
-var() float ChangeTimeTwo;
-var float SwapTime;
+var     color   CurrentColor;
+var     float   TimeSinceTriggered;
+var     float   SwapTime;
+var     bool    bIsOn;
 
 event PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    // Work out the starting light color:
+    // Work out the starting light color
     bIsOn = bInitiallyOn;
+
     if (bIsOn)
     {
-            RGBSetColor(OnColor);
+        RGBSetColor(OnColor);
     }
     else
     {
-            RGBSetColor(OffColor);
+        RGBSetColor(OffColor);
     }
 
-    // If we're fading, we tick:
+    // We only tick if we're fading
     if (bInitiallyFading)
     {
-            Enable('Tick');
-            bIsOn = !bIsOn;
+        Enable('Tick');
+        bIsOn = !bIsOn;
     }
-    // Otherwise we don't tick:
     else
     {
-            Disable('Tick');
+        Disable('Tick');
     }
 }
 
 function Tick(float DeltaTime)
 {
-    local float percent;
+    local float Percent;
 
     TimeSinceTriggered += DeltaTime;
-    percent = TimeSinceTriggered / SwapTime;
+    Percent = TimeSinceTriggered / SwapTime;
 
-    // If we're done with the fade, set to final color and leave:
-    if (percent >= 1)
+    // If we're done with the fade, set to final color & leave
+    if (Percent >= 1.0)
     {
-            Disable('Tick');
-            if (bIsOn)
+        Disable('Tick');
+
+        if (bIsOn)
         {
-                    CurrentColor.R = OnColor.R;
-                    CurrentColor.G = OnColor.G;
-                    CurrentColor.B = OnColor.B;
-            }
-            else
+            CurrentColor.R = OnColor.R;
+            CurrentColor.G = OnColor.G;
+            CurrentColor.B = OnColor.B;
+        }
+        else
         {
-                    CurrentColor.R = OffColor.R;
-                    CurrentColor.G = OffColor.G;
-                    CurrentColor.B = OffColor.B;
-            }
+            CurrentColor.R = OffColor.R;
+            CurrentColor.G = OffColor.G;
+            CurrentColor.B = OffColor.B;
+        }
 
         return;
     }
 
-    // Just fade to the right level:
+    // Just fade to the right level
     if (bIsOn)
     {
-            CurrentColor.R = percent * OnColor.R + (1-percent) * OffColor.R;
-            CurrentColor.G = percent * OnColor.G + (1-percent) * OffColor.G;
-            CurrentColor.B = percent * OnColor.B + (1-percent) * OffColor.B;
+        CurrentColor.R = (Percent * OnColor.R) + ((1.0 - Percent) * OffColor.R);
+        CurrentColor.G = (Percent * OnColor.G) + ((1.0 - Percent) * OffColor.G);
+        CurrentColor.B = (Percent * OnColor.B) + ((1.0 - Percent) * OffColor.B);
     }
     else
     {
-            CurrentColor.R = percent * OffColor.R + (1-percent) * OnColor.R;
-            CurrentColor.G = percent * OffColor.G + (1-percent) * OnColor.G;
-            CurrentColor.B = percent * OffColor.B + (1-percent) * OnColor.B;
+        CurrentColor.R = (Percent * OffColor.R) + ((1.0 - Percent) * OnColor.R);
+        CurrentColor.G = (Percent * OffColor.G) + ((1.0 - Percent) * OnColor.G);
+        CurrentColor.B = (Percent * OffColor.B) + ((1.0 - Percent) * OnColor.B);
     }
 
-    // Convert the current color from RGB to HSL:
+    // Convert the current color from RGB to HSL
     RGBSetColor(CurrentColor);
 }
 
@@ -100,61 +99,76 @@ simulated function RGBSetColor(color inRGB)
     RGB.X = inRGB.R / 255.0;
     RGB.Y = inRGB.G / 255.0;
     RGB.Z = inRGB.B / 255.0;
-    HLS = colourmap(RGB);
+    HLS = ColourMap(RGB);
 
     LightHue = HLS.X;
     LightBrightness = HLS.Y;
     LightSaturation = HLS.Z;
 }
 
-// Function ColorMap - code courtesy of DWeather by
-// Mazerium, from the file: DWParent.uc
-simulated function vector ColourMap (vector rgb)
- {
-  local float min;
-  local float max;
-  local vector hls;
-  local float r,g,b,h,l,s;
+// Function ColorMap - code courtesy of DWeather by Mazerium, from the file DWParent.uc
+simulated function vector ColourMap(vector RGB)
+{
+    local float  Min, Max, R, G, B, H, L, S;
+    local vector HLS;
 
-  rgb.x= Fclamp(rgb.x, 0, 1);
-  rgb.y= Fclamp(rgb.y, 0, 1);
-  rgb.z= Fclamp(rgb.z, 0, 1);
+    RGB.X = FClamp(RGB.X, 0.0, 1.0);
+    RGB.Y = FClamp(RGB.Y, 0.0, 1.0);
+    RGB.Z = FClamp(RGB.Z, 0.0, 1.0);
 
-  r = rgb.x;
-  g = rgb.y;
-  b = rgb.z;
+    R = RGB.X;
+    G = RGB.Y;
+    B = RGB.Z;
 
-  max = Fmax(fmax(r,g),b);
-  min = Fmin(Fmin(r,g),b);
+    Max = FMax(FMax(R, G), B);
+    Min = FMin(FMin(R, G), B);
 
-  l = (max+min)/2;
+    L = (Max + Min) / 2.0;
 
-  if (max==min)
-   {
-     s = 0;
-     h = 0;
-   }
-  else
-   {
-    if (l < 0.5)  s =(max-min)/(max+min);
-    If (l >=0.5)  s =(max-min)/(2.0-max-min);
-   }
+    if (Max == Min)
+    {
+        S = 0.0;
+        H = 0.0;
+    }
+    else
+    {
+        if (L < 0.5)
+        {
+            S = (Max - Min) / (Max + Min);
+        }
 
-  If (R == max)  h  = (G-B)/(max-min);
-  If (G == max) h = 2.0 + (B-R)/(max-min);
-  If (B == max)    h = 4.0 + (R-G)/(max-min);
+        if (L >= 0.5)
+        {
+            S = (Max - Min) / (2.0 - Max - Min);
+        }
+    }
 
-  hls.x = (h/6)*255;
-  hls.y = (l*255);
-  hls.z = (255-s*255);
+    if (R == Max)
+    {
+        H  = (G - B) / (Max - Min);
+    }
 
-  return(hls);
+    if (G == Max)
+    {
+        H = 2.0 + ((B - R) / (Max - Min));
+    }
+
+    if (B == Max)
+    {
+        H = 4.0 + ((R - G) / (Max - Min));
+    }
+
+    HLS.X = H / 6.0 * 255.0;
+    HLS.Y = L * 255.0;
+    HLS.Z = 255.0 - (S * 255.0);
+
+    return(HLS);
 }
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
     Enable('Tick');
-    TimeSinceTriggered = 0;
+    TimeSinceTriggered = 0.0;
     bIsOn = !bIsOn;
 
     if (bIsOn)
@@ -167,11 +181,9 @@ function Trigger(Actor Other, Pawn EventInstigator)
     }
 }
 
-simulated function Reset()
+simulated function Reset() // TODO: fix
 {
     super.Reset();
-
-    //TODO: Fix.
 }
 
 defaultproperties

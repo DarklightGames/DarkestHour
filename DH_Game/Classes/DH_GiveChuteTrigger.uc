@@ -5,20 +5,22 @@
 
 class DH_GiveChuteTrigger extends Trigger;
 
+// Modified to give a touching player a parachute & static line
 function Touch(Actor Other)
 {
     local Pawn P;
-    local int i;
+    local int  i;
+
+    // Do nothing unless a little time has passed since last trigger, to avoid spamming
+    if (ReTriggerDelay > 0.0 && (Level.TimeSeconds - TriggerTime) < ReTriggerDelay)
+    {
+        return;
+    }
 
     if (IsRelevant(Other))
     {
         if (ReTriggerDelay > 0.0)
         {
-            if (Level.TimeSeconds - TriggerTime < ReTriggerDelay)
-            {
-                return;
-            }
-
             TriggerTime = Level.TimeSeconds;
         }
 
@@ -56,6 +58,7 @@ function Touch(Actor Other)
             SetTimer(RepeatTriggerTime, false);
         }
 
+        // Give the player a parachute & static line
         if (DHPawn(Other.Instigator) != none)
         {
             DHPawn(Other.Instigator).GiveChute();
