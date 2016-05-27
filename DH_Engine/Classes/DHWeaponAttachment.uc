@@ -181,10 +181,7 @@ simulated function SpawnHitEffect()
 
     OldSpawnHitCount = SpawnHitCount;
 
-    if (Role < ROLE_Authority) // authority roles will already have this info
-    {
-        GetHitInfo();
-    }
+    GetHitInfo(); // authority roles will already have this info & only access a debug option here
 
     PC = Level.GetLocalPlayerController();
 
@@ -285,22 +282,27 @@ simulated function GetHitInfo()
 
             mHitActor = mHitActor.Owner;
         }
+    }
 
-        // Debug option - draws a line representing the trace (enabled if DHBullet.bDebugROBallistics is set true in config file or in bullet's default properties)
-        if (Instigator != none && Instigator.Weapon != none && class<DHBullet>(Instigator.Weapon.default.FireModeClass[0].default.ProjectileClass) != none
-            && class<DHBullet>(Instigator.Weapon.default.FireModeClass[0].default.ProjectileClass).default.bDebugROBallistics)
+    // Debug option - draws a line representing the trace
+    if (class'DHBullet'.default.bDebugROBallistics)
+    {
+        Log(Tag $ ".GetHitInfo: traced mHitActor =" @ mHitActor);
+        ClearStayingDebugLines();
+
+        if (Role == ROLE_Authority) // single player or listen server will have won't have calculated these above & needs them to draw debug lines
         {
-            Log(Tag $ ".GetHitInfo: traced mHitActor =" @ mHitActor);
-            ClearStayingDebugLines();
+            HitLocation = mHitLocation;
+            Offset = 20.0 * Normal(mHitLocation - (Instigator.Location + Instigator.EyePosition()));
+        }
 
-            if (mHitActor != none)
-            {
-                DrawStayingDebugLine(mHitLocation + Offset, HitLocation, 0, 255, 0); // green, hit something
-            }
-            else
-            {
-                DrawStayingDebugLine(mHitLocation + Offset, mHitLocation - Offset, 255, 0, 0); // red, hit nothing
-            }
+        if (mHitActor != none)
+        {
+            DrawStayingDebugLine(mHitLocation - Offset, HitLocation, 0, 255, 0); // green, hit something
+        }
+        else
+        {
+            DrawStayingDebugLine(mHitLocation - Offset, mHitLocation + Offset, 255, 0, 0); // red, hit nothing
         }
     }
 }
