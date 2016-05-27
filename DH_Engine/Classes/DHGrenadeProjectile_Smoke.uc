@@ -65,11 +65,6 @@ function BlowUp(vector HitLocation)
     }
 }
 
-// Function emptied out to remove everything relating to explosion, as not an exploding grenade
-simulated function Destroyed()
-{
-}
-
 defaultproperties
 {
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned

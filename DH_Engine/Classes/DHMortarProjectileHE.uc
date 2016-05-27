@@ -81,35 +81,26 @@ simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalCla
     }
 }
 
+// Modified to cause blast damage
 simulated function BlowUp(vector HitLocation)
 {
+    super.BlowUp(HitLocation);
+
+    if (!bDud && Role == ROLE_Authority)
+    {
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+    }
+}
+
+// Modified to stop shell from exploding if it's a dud or if it's in a no arty volume (if so, play impact effects only)
+// And to add explosion effects for a non-dud shell
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    local DHVolumeTest     VT;
     local ESurfaceTypes    HitSurfaceType;
     local class<Emitter>   ExplosionEmitterClass;
     local class<Projector> ExplosionDecalClass;
     local sound            ExplosionSound;
-
-    super.BlowUp(HitLocation);
-
-    GetHitSurfaceType(HitSurfaceType);
-    GetExplosionSound(ExplosionSound, HitSurfaceType);
-    PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
-    DoShakeEffect();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
-        GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
-
-        // Play effects (note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
-        Spawn(ExplosionEmitterClass, self,, HitLocation);
-        Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
-    }
-}
-
-// Modified to stop shell from exploding if it's a dud or if it's in a no arty volume
-simulated function Explode(vector HitLocation, vector HitNormal)
-{
-    local DHVolumeTest VT;
 
     // Check if in no arty volume & just make the shell a dud if it is
     if (!bDud)
@@ -119,7 +110,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         VT.Destroy();
     }
 
-    // If shell is a dud then impact effects only
+    // If shell is a dud then impact effects only (don't bother with impact effects if not a dud, as the HE explosion will drown them out)
     if (bDud)
     {
         if (Level.NetMode != NM_DedicatedServer)
@@ -130,6 +121,21 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     // Otherwise explode normally
     else
     {
+        GetHitSurfaceType(HitSurfaceType, HitNormal);
+        GetExplosionSound(ExplosionSound, HitSurfaceType);
+        PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
+
+        // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
+            GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
+            Spawn(ExplosionEmitterClass, self,, HitLocation);
+            Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
+
+            DoShakeEffect();
+        }
+
         super.Explode(HitLocation, HitNormal);
     }
 
@@ -160,16 +166,6 @@ simulated function DoShakeEffect()
             }
         }
     }
-}
-
-simulated function Destroyed()
-{
-    if (!bDud && Role == ROLE_Authority)
-    {
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, Location);
-    }
-
-    super.Destroyed();
 }
 
 defaultproperties

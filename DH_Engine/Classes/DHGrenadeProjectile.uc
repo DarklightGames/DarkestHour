@@ -6,7 +6,7 @@
 class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporating ROGrenadeProjectile
     abstract;
 
-var bool bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
+var     bool    bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
 
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
@@ -53,21 +53,21 @@ function BlowUp(vector HitLocation)
 {
     local DHPawn DHP;
 
-    // Check for any players so close that they must be on top of the grenade
-    foreach RadiusActors(class'DHPawn', DHP, 5.0)
-    {
-        // Make sure player is actually lying on the grenade, not just standing over it
-        if (DHP.bIsCrawling)
-        {
-            DamageRadius *= 0.25; // shrink the radius so that no-one but the proned player is touched
-            break;
-        }
-    }
-
-    DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-
     if (Role == ROLE_Authority)
     {
+        // Check for any players so close that they must be on top of the grenade
+        foreach RadiusActors(class'DHPawn', DHP, 5.0)
+        {
+            // Make sure player is actually lying on the grenade, not just standing over it
+            if (DHP.bIsCrawling)
+            {
+                DamageRadius *= 0.25; // shrink the radius so that no-one but the proned player is touched
+                break;
+            }
+        }
+
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+
         MakeNoise(1.0);
     }
 }

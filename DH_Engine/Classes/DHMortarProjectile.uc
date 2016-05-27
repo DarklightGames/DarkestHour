@@ -117,19 +117,19 @@ simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation
     }
 }
 
-simulated function GetHitSurfaceType(out ESurfaceTypes SurfaceType)
+simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector HitNormal)
 {
-    local Material M;
+    local material M;
 
-    Trace(HitLocation, HitNormal, Location + vect(0.0, 0.0, -16.0), Location + vect(0.0, 0.0, 16.0), false,, M);
+    Trace(HitLocation, HitNormal, Location - (16.0 * HitNormal), Location, false,, M);
 
     if (M == none)
     {
-        SurfaceType = EST_Default;
+        HitSurfaceType = EST_Default;
     }
     else
     {
-        SurfaceType = ESurfaceTypes(M.SurfaceType);
+        HitSurfaceType = ESurfaceTypes(M.SurfaceType);
     }
 }
 
@@ -200,6 +200,18 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
+    local ESurfaceTypes HitSurfaceType;
+
+    GetHitSurfaceType(HitSurfaceType, HitNormal);
+
+    // Destroy projectile without effects or deflection if it hit special BSP that we are using as a network culler, signified by being textured with material surface type 'EST_Custom00'
+    if (HitSurfaceType == EST_Custom00)
+    {
+        Destroy();
+
+        return;
+    }
+
     self.HitNormal = HitNormal;
 
     GotoState('Whistle');
@@ -672,7 +684,7 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
 
     if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
-        GetHitSurfaceType(HitSurfaceType);
+        GetHitSurfaceType(HitSurfaceType, HitNormal);
         GetHitSound(HitSound, HitSurfaceType);
         PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
         GetHitEmitterClass(HitEmitterClass, HitSurfaceType);

@@ -23,7 +23,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     {
         super.Explode(HitLocation, HitNormal);
 
-        if (Level.NetMode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer && !bCollided) // checking bCollided again, as may change in the Super
         {
             Spawn(SmokeEmitterClass, self,, HitLocation, rotator(-HitNormal));
             PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);

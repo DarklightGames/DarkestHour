@@ -363,18 +363,21 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local ROVehicle        HitVehicle;
     local DHArmoredVehicle AV;
     local bool             bPenetratedVehicle;
-    local vector           HitLoc;
-    local Material         HitMat;
+    local vector           TempHitLocation, TempHitNormal;
+    local material         HitMaterial;
 
-    // This stops tracers from bouncing off thin air where the hidden BSP that network cuts is.
-    // It supports network cutting BSP that is textured with a material surface type of `EST_Custom00`
-    if (Wall.bHiddenEd) // `LevelInfo` which is BSP is set to bHiddenEd = true
+    // Destroy bullet without effects or deflection if it hit special BSP that we are using as a network culler, signified by being textured with a material surface type 'EST_Custom00'
+    // bHiddenEd is used as a quick screening check, as it's very unusual & is pretty good at flagging up this special BSP (a little hacky, but cheap & effective)
+    // Then we have to do a short trace just to get the hit material, to confirm it is our special BSP
+    if (Wall.bHiddenEd)
     {
-        Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16.0, Location, true,, HitMat);
+        Trace(TempHitLocation, TempHitNormal, Location + (16.0 * vector(Rotation)), Location, false,, HitMaterial);
 
-        if (HitMat != none && HitMat.SurfaceType == EST_Custom00)
+        if (HitMaterial != none && HitMaterial.SurfaceType == EST_Custom00)
         {
+            bBounce = false;
             Destroy();
+
             return;
         }
     }

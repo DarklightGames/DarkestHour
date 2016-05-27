@@ -136,6 +136,131 @@ simulated function BlowUp(vector HitLocation)
     super.BlowUp(HitLocation);
 }
 
+// New function just to consolidate long code that's repeated in more than one function
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+{
+    local sound          HitSound;
+    local class<Emitter> HitEmitterClass;
+    local vector         TraceHitLocation, TraceHitNormal;
+    local Material       HitMaterial;
+    local ESurfaceTypes  SurfType;
+    local bool           bShowDecal, bSnowDecal;
+
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    // Hit a vehicle - set hit effects
+    if (ROVehicle(SavedHitActor) != none)
+    {
+        HitSound = VehicleHitSound;
+        HitEmitterClass = ShellHitVehicleEffectClass;
+    }
+    // Hit something else - get material type & set effects
+    else if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
+    {
+        Trace(TraceHitLocation, TraceHitNormal, HitLocation + (16.0 * vector(Rotation)), HitLocation, false,, HitMaterial);
+
+        if (HitMaterial == none)
+        {
+            SurfType = EST_Default;
+        }
+        else
+        {
+            SurfType = ESurfaceTypes(HitMaterial.SurfaceType);
+        }
+
+        switch (SurfType)
+        {
+            case EST_Snow:
+            case EST_Ice:
+                HitSound = DirtHitSound;
+                HitEmitterClass = ShellHitSnowEffectClass;
+                bShowDecal = true;
+                bSnowDecal = true;
+                break;
+
+            case EST_Rock:
+            case EST_Gravel:
+            case EST_Concrete:
+                HitSound = RockHitSound;
+                HitEmitterClass = ShellHitRockEffectClass;
+                bShowDecal = true;
+                break;
+
+            case EST_Wood:
+            case EST_HollowWood:
+                HitSound = WoodHitSound;
+                HitEmitterClass = ShellHitWoodEffectClass;
+                bShowDecal = true;
+                break;
+
+            case EST_Water:
+                HitSound = WaterHitSound; // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
+                HitEmitterClass = ShellHitWaterEffectClass;
+                break;
+
+            // Destroy shell without effects if we hit special BSP that we are using as a network culler, signified by being textured with a material surface type 'EST_Custom00'
+            case EST_Custom00:
+                bCollided = true; // stops possibility of further unwanted explosion features (specifically BlowUp)
+                Destroy();
+
+                return;
+
+            default:
+                HitSound = DirtHitSound;
+                HitEmitterClass = ShellHitDirtEffectClass;
+                bShowDecal = true;
+                break;
+        }
+    }
+
+    // Play impact sound (moved effect relevance check so only affects hit effect, as impact sound should play even if effect is skipped because it's not on player's screen)
+    if (HitSound != none)
+    {
+        PlaySound(HitSound, SLOT_Misc, 5.5 * TransientSoundVolume);
+    }
+
+    // Play random explosion sound if this shell has any
+    if (ExplosionSound.Length > 0)
+    {
+        PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume);
+    }
+
+    // Play explosion effect
+    // Effect relevance check is skipped altogether for an HE explosion, as it's big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it
+    if (HitEmitterClass != none && (RoundType == RT_HE || EffectIsRelevant(HitLocation, false)))
+    {
+        Spawn(HitEmitterClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
+    }
+
+    // Spawn explosion decal
+    if (bShowDecal)
+    {
+        // Adjust decal position to reverse any offset already applied to passed HitLocation to spawn explosion effects away from hit surface (e.g. PeneExploWall adjustment in HEAT shell)
+        if (ActualLocationAdjustment != 0.0)
+        {
+            HitLocation -= (ActualLocationAdjustment * HitNormal);
+        }
+
+        if (bSnowDecal && ExplosionDecalSnow != none)
+        {
+            Spawn(ExplosionDecalSnow, self,, HitLocation, rotator(-HitNormal));
+        }
+        else if (ExplosionDecal != none)
+        {
+            Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
+        }
+    }
+
+    // Do a shake effect if projectile always causes shake, or if we hit a vehicle
+    if (bAlwaysDoShakeEffect || ROVehicle(SavedHitActor) != none)
+    {
+        DoShakeEffect();
+    }
+}
+
 simulated function Destroyed()
 {
     if (!bDidExplosionFX)
