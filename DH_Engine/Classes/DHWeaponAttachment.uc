@@ -6,13 +6,13 @@
 class DHWeaponAttachment extends ROWeaponAttachment
     abstract;
 
-var     name    PA_AssistedReloadAnim;
-var     name    PA_MortarDeployAnim;
-var     name    WA_MortarDeployAnim;
+var     name        PA_AssistedReloadAnim;
+var     name        PA_MortarDeployAnim;
+var     name        WA_MortarDeployAnim;
 
-var     bool    bBarrelCanOverheat;
+var     bool        bBarrelCanOverheat;
 
-var     vector  SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
+var     vector      SavedmHitLocation; // used so net client's PostNetReceive() can tell when we've received a new mHitLocation & spawn a hit effect
 
 // SHAME: this is in here because of the laziness of previous developers;
 // The correct solution would be to just fix the ejection port in the model.
@@ -99,9 +99,7 @@ simulated function SpawnShells(float Frequency)
     local   rotator     EjectorRotation;
     local   vector      SpawnLocation;
 
-    if (ROShellCaseClass != none &&
-        Instigator != none &&
-        !Instigator.IsFirstPerson())
+    if (ROShellCaseClass != none && ShellEjectionBoneName != '' && Instigator != none && !Instigator.IsFirstPerson())
     {
         if (default.bSpawnShellsOutBottom)
         {
@@ -198,7 +196,7 @@ simulated function SpawnHitEffect()
         }
         else
         {
-            Spawn(class'DHBulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
+            Spawn(class'DHBullet'.default.ImpactEffect,,, mHitLocation, rotator(-mHitNormal));
             CheckForSplash();
         }
     }
