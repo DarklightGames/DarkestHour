@@ -11,11 +11,11 @@ simulated state Reloading
 {
     simulated function PlayIdle()
     {
-        if (bUsingSights)
+        if (bUsingSights && HasAnim(IronIdleEmptyAnim))
         {
             LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
         }
-        else
+        else if (HasAnim(IdleAnim))
         {
             LoopAnim(IdleAnim, IdleAnimRate, 0.2);
         }

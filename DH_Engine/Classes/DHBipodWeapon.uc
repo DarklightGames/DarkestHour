@@ -215,11 +215,11 @@ Begin:
 // Modified to handle animations for bipod deployed & firing from the hip
 simulated function PlayIdle()
 {
-    if (Instigator != none && Instigator.bBipodDeployed)
+    if (Instigator != none && Instigator.bBipodDeployed && HasAnim(IronIdleAnim))
     {
         LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
     }
-    else if (bUsingSights)
+    else if (bUsingSights && HasAnim(BipodHipIdle))
     {
         LoopAnim(BipodHipIdle, IdleAnimRate, 0.2);
     }

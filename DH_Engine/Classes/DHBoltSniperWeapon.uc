@@ -250,7 +250,7 @@ simulated function PlayPreReload()
 {
     SetTimer(GetAnimDuration(PreReloadAnim, 1.0) + FastTweenTime, false);
 
-    if (InstigatorIsLocallyControlled())
+    if (InstigatorIsLocallyControlled() && HasAnim(PreReloadAnim))
     {
         PlayAnim(PreReloadAnim, 1.0, FastTweenTime);
     }
@@ -264,7 +264,11 @@ simulated function PlayReload()
     if (InstigatorIsLocallyControlled())
     {
         NumRoundsToLoad--;
-        PlayAnim(SingleReloadAnim, 1.0);
+
+        if (HasAnim(SingleReloadAnim))
+        {
+            PlayAnim(SingleReloadAnim, 1.0);
+        }
     }
 }
 
@@ -273,7 +277,7 @@ simulated function PlayPostReload()
 {
     SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
 
-    if (InstigatorIsLocallyControlled())
+    if (InstigatorIsLocallyControlled() && HasAnim(PostReloadAnim))
     {
         PlayAnim(PostReloadAnim, 1.0);
     }

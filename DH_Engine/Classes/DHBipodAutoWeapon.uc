@@ -60,7 +60,7 @@ simulated function bool ShouldUseFreeAim()
 // Modified to add bipod deployed animation
 simulated function PlayIdle()
 {
-    if (Instigator != none && Instigator.bBipodDeployed)
+    if (Instigator != none && Instigator.bBipodDeployed && HasAnim(SightUpIronIdleAnim))
     {
         LoopAnim(SightUpIronIdleAnim, IdleAnimRate, 0.2);
     }

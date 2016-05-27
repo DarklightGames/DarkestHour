@@ -126,7 +126,7 @@ simulated function InstantPrime()
 
         if (bHasReleaseLever)
         {
-            if (Instigator.IsLocallyControlled())
+            if (InstigatorIsLocallyControlled())
             {
                 PlayOwnedSound(LeverReleaseSound, SLOT_None, LeverReleaseVolume,, LeverReleaseRadius,, false);
             }

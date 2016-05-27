@@ -50,11 +50,11 @@ simulated exec function Deploy()
 // Modified to play the weapon iron animations for different ranges
 simulated function PlayIdle()
 {
-    if (bUsingSights)
+    if (bUsingSights && HasAnim(RangeSettings[RangeIndex].IronIdleAnim))
     {
         LoopAnim(RangeSettings[RangeIndex].IronIdleAnim, IdleAnimRate, 0.2);
     }
-    else
+    else if (HasAnim(IdleAnim))
     {
         LoopAnim(IdleAnim, IdleAnimRate, 0.2);
     }

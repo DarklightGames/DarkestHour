@@ -138,7 +138,10 @@ simulated state StartMantle extends Busy
 
                 if (ClientState == WS_BringUp)
                 {
-                    TweenAnim(SelectAnim, PutDownTime);
+                    if (HasAnim(SelectAnim))
+                    {
+                        TweenAnim(SelectAnim, PutDownTime);
+                    }
                 }
                 else if (HasAnim(PutDownAnim))
                 {
@@ -355,7 +358,10 @@ simulated state AutoLoweringWeapon extends LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    TweenAnim(SelectAnim, PutDownTime);
+                    if (HasAnim(SelectAnim))
+                    {
+                        TweenAnim(SelectAnim, PutDownTime);
+                    }
                 }
                 else if (HasAnim(PutDownAnim))
                 {
@@ -548,7 +554,7 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
 
         AnimTimer = GetAnimDuration(Anim, AnimRate) + FastTweenTime;
 
-        if (ServerTimerReduction > 0.0 && (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && (Instigator == none || !Instigator.IsLocallyControlled()))))
+        if (ServerTimerReduction > 0.0 && (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !InstigatorIsLocallyControlled())))
         {
             SetTimer(AnimTimer * (1.0 - ServerTimerReduction), false);
         }

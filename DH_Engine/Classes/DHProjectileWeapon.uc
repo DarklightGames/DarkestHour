@@ -103,7 +103,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Role == ROLE_Authority && !InstigatorIsLocallyControlled())
+    if (Role == ROLE_Authority && !InstigatorIsLocallyControlled() && HasAnim(IdleAnim))
     {
         PlayAnim(IdleAnim, IdleAnimRate, 0.0);
     }
@@ -505,7 +505,10 @@ simulated state LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    TweenAnim(SelectAnim, PutDownTime);
+                    if (HasAnim(SelectAnim))
+                    {
+                        TweenAnim(SelectAnim, PutDownTime);
+                    }
                 }
                 else if (HasAnim(Anim))
                 {
@@ -1138,7 +1141,7 @@ simulated state TweenDown extends WeaponBusy
             {
                 TweenAnim(IronIdleEmptyAnim, FastTweenTime);
             }
-            else
+            else if (HasAnim(IronIdleAnim))
             {
                 TweenAnim(IronIdleAnim, FastTweenTime);
             }
@@ -1153,7 +1156,7 @@ simulated state TweenDown extends WeaponBusy
             {
                 TweenAnim(IdleEmptyAnim, FastTweenTime);
             }
-            else
+            else if (HasAnim(IdleAnim))
             {
                 TweenAnim(IdleAnim, FastTweenTime);
             }
@@ -1207,7 +1210,7 @@ simulated function PlayIdle()
         {
             LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
         }
-        else
+        else if (HasAnim(IronIdleAnim))
         {
             LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
         }
@@ -1222,7 +1225,7 @@ simulated function PlayIdle()
         {
             LoopAnim(IdleEmptyAnim, IdleAnimRate, 0.2);
         }
-        else
+        else if (HasAnim(IdleAnim))
         {
             LoopAnim(IdleAnim, IdleAnimRate, 0.2);
         }
@@ -1262,7 +1265,6 @@ simulated state StartSprinting
     simulated function PlayIdle()
     {
         local float LoopSpeed, Speed2d;
-        local name  Anim;
 
         if (InstigatorIsLocallyControlled())
         {
@@ -1273,16 +1275,11 @@ simulated state StartSprinting
 
             if ((AmmoAmount(0) <= 0) && HasAnim(SprintLoopEmptyAnim))
             {
-                Anim = SprintLoopEmptyAnim;
+                LoopAnim(SprintLoopEmptyAnim, LoopSpeed, 0.2);
             }
-            else
+            else if (HasAnim(SprintLoopAnim))
             {
-                Anim = SprintLoopAnim;
-            }
-
-            if (HasAnim(Anim))
-            {
-                LoopAnim(Anim, LoopSpeed, 0.2);
+                LoopAnim(SprintLoopAnim, LoopSpeed, 0.2);
             }
         }
     }
@@ -1310,7 +1307,7 @@ simulated function PlayStartSprint()
     {
         PlayAnimAndSetTimer(SprintStartEmptyAnim, 1.5);
     }
-    else
+    else if (HasAnim(SprintStartAnim))
     {
         PlayAnimAndSetTimer(SprintStartAnim, 1.5);
     }
@@ -1322,7 +1319,6 @@ simulated state WeaponSprinting
     simulated function PlayIdle()
     {
         local float LoopSpeed, Speed2d;
-        local name  Anim;
 
         if (InstigatorIsLocallyControlled())
         {
@@ -1333,16 +1329,11 @@ simulated state WeaponSprinting
 
             if (AmmoAmount(0) <= 0 && HasAnim(SprintLoopEmptyAnim))
             {
-                Anim = SprintLoopEmptyAnim;
+                LoopAnim(SprintLoopEmptyAnim, LoopSpeed, FastTweenTime);
             }
-            else
+            else if (HasAnim(SprintLoopAnim))
             {
-                Anim = SprintLoopAnim;
-            }
-
-            if (HasAnim(Anim))
-            {
-                LoopAnim(Anim, LoopSpeed, FastTweenTime);
+                LoopAnim(SprintLoopAnim, LoopSpeed, FastTweenTime);
             }
         }
     }
@@ -2053,7 +2044,7 @@ simulated state ChangingBarrels extends WeaponBusy
 
             if (Role == ROLE_Authority)
             {
-                if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && (Instigator == none || !Instigator.IsLocallyControlled())))
+                if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !InstigatorIsLocallyControlled()))
                 {
                     BarrelChangeDuration = 0.9 * AnimTimer; // 10% ServerTimerReduction
                 }
