@@ -47,4 +47,5 @@ defaultproperties
     PA_IdleWeaponAnim="stand_idle_M2Mortar"
     MenuImage=texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2'
     Mesh=SkeletalMesh'DH_Mortars_3rd.M2Mortar_carried'
+    CullDistance=0.0 // no cull as it's too big
 }

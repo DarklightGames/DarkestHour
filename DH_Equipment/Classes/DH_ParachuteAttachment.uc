@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_ParachuteAttachment extends DHWeaponAttachment;    //InventoryAttachment;
+class DH_ParachuteAttachment extends DHWeaponAttachment;
 
 var     name    ChuteDeployAnim;
 var name    ChuteIdleAnim;
@@ -15,6 +15,7 @@ simulated function PlayIdle()
 
 defaultproperties
 {
+    CullDistance=0.0 // no cull as it's too big
     ChuteDeployAnim="Deploy"
     ChuteIdleAnim="Idle"
     PA_MovementAnims(0)="stand_jogF_nade"
@@ -133,7 +134,6 @@ defaultproperties
     PA_LandAnims(2)="chute_undeploy"
     PA_LandAnims(3)="chute_undeploy"
     MenuImage=texture'DH_Sundries_Tex.Parachute.ParachuteIcon'
-    CullDistance=12000.0
     AttachmentBone="HIP"
     Mesh=SkeletalMesh'DH_Parachute_anm.Parachute3rd'
     Skins(0)=texture'DH_Sundries_Tex.Parachute.Parachute'

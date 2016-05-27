@@ -47,5 +47,6 @@ defaultproperties
     PA_IdleWeaponAnim="stand_Idle_GrW42"
     MenuImage=texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
     Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_carried'
+    CullDistance=0.0 // no cull as it's too big
 }
 

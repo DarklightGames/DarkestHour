@@ -31,6 +31,7 @@ simulated event ThirdPersonEffects()
 
 defaultproperties
 {
+    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as binoculars don't have a muzzle flash & are also small
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
