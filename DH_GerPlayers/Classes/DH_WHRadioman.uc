@@ -15,7 +15,7 @@ defaultproperties
     Models(0)="Wh_Radio_1"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    GivenItems(0)="DH_Equipment.DH_GerRadioItem"
+    GivenItems(0)="DH_Equipment.DHRadioItem"
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     RolePawnClass="DH_GerPlayers.DH_WHRadiomanPawn"
