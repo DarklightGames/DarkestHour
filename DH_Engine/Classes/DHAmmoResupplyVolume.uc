@@ -83,12 +83,12 @@ function Timer()
             {
                 W = ROWeapon(I);
 
-                if (W == none || W.IsGrenade())
+                if (W == none || W.IsGrenade() || W.IsA('DHMortarWeapon'))
                 {
                     continue;
                 }
 
-                if (W != none && W.FillAmmo())
+                if (W.FillAmmo())
                 {
                     bResupplied = true;
                 }
@@ -104,7 +104,7 @@ function Timer()
 
         V = Vehicle(P);
 
-        if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
+        if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All) && !V.IsA('DHMortarVehicle'))
         {
             // Resupply vehicles
             if (V.ResupplyAmmo())
@@ -114,20 +114,25 @@ function Timer()
         }
 
         //Mortar specific resupplying.
-        if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && RI != none)
+        if (ResupplyType == RT_Mortars || ResupplyType == RT_All)
         {
-            if (RI.bCanUseMortars)
+            // Resupply player carrying a mortar
+            if (DHP != none)
             {
-                if (DHP.ResupplyMortarAmmunition())
+                if (RI != none && RI.bCanUseMortars && DHP.ResupplyMortarAmmunition())
                 {
                     bResupplied = true;
                 }
+
+                if (DHP.bUsedCarriedMGAmmo)
+                {
+                    DHP.bUsedCarriedMGAmmo = false;
+                    bResupplied = true;
+                }
             }
-
-            if (DHP.bUsedCarriedMGAmmo)
+            // Resupply deployed mortar
+            else if (DHMortarVehicle(V) != none && V.ResupplyAmmo())
             {
-                DHP.bUsedCarriedMGAmmo = false;
-
                 bResupplied = true;
             }
         }

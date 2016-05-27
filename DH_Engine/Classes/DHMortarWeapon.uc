@@ -314,29 +314,10 @@ function bool ResupplyAmmo()
     return P.ResupplyMortarAmmunition();
 }
 
+// Emptied out as mortar's use a different system in an ammo resupply area, based on DHPawn.ResupplyMortarAmmunition(), with a check whether the resupply is set up to resupply mortars
 function bool FillAmmo()
 {
-    local DHPawn P;
-    local bool bReturn;
-
-    P = DHPawn(Instigator);
-
-    if (P != none)
-    {
-        if (P.MortarHEAmmo < HighExplosiveMaximum)
-        {
-            P.MortarHEAmmo = HighExplosiveMaximum;
-            bReturn = true;
-        }
-
-        if (P.MortarSmokeAmmo < SmokeMaximum)
-        {
-            P.MortarSmokeAmmo = SmokeMaximum;
-            bReturn = true;
-        }
-    }
-
-    return bReturn;
+    return false;
 }
 
 defaultproperties

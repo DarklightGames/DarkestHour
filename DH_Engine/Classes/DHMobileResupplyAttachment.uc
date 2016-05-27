@@ -135,18 +135,18 @@ function Timer()
                     {
                         recvr_weapon = ROWeapon(recvr_inv);
 
-                        if (recvr_weapon.IsGrenade())
+                        if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
                         {
                             continue;
                         }
 
-                        if (recvr_weapon != none && recvr_weapon.FillAmmo())
+                        if (recvr_weapon.FillAmmo())
                         {
                             bResupplied = true;
                         }
                     }
 
-                    Log("RI != none" @ RI != none);
+                    Log("RI != none" @ RI != none); // TEMPDEBUG x 2
                     Log("P.bUsedCarriedMGAmmo" @ P.bUsedCarriedMGAmmo);
 
                     if (RI != none && P.bUsedCarriedMGAmmo)
@@ -156,7 +156,7 @@ function Timer()
                     }
                 }
 
-                if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
+                if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All) && !V.IsA('DHMortarVehicle'))
                 {
                     // Resupply vehicles
                     if (V.ResupplyAmmo())
@@ -166,14 +166,26 @@ function Timer()
                 }
 
                 //Mortar specific resupplying.
-                if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && RI != none)
+                if (ResupplyType == RT_Mortars || ResupplyType == RT_All)
                 {
-                    if (RI.bCanUseMortars)
+                    // Resupply player carrying a mortar
+                    if (P != none)
                     {
-                        if (P.ResupplyMortarAmmunition())
+                        if (RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition())
                         {
                             bResupplied = true;
                         }
+
+                        if (P.bUsedCarriedMGAmmo)
+                        {
+                            P.bUsedCarriedMGAmmo = false;
+                            bResupplied = true;
+                        }
+                    }
+                    // Resupply deployed mortar
+                    else if (DHMortarVehicle(V) != none && V.ResupplyAmmo())
+                    {
+                        bResupplied = true;
                     }
                 }
 

@@ -221,16 +221,23 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// New function to handle resupply of mortar ammo by another player
-function PlayerResupply()
+// Implemented to handle mortar resupply based on specified resupply quantities, but only for an occupied mortar (ammo is transferred to player when he exits & mortar will be empty)
+function bool ResupplyAmmo()
 {
-    MainAmmoCharge[0] = Clamp(MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, default.InitialPrimaryAmmo);
-    MainAmmoCharge[1] = Clamp(MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, default.InitialSecondaryAmmo);
-
-    if (DHMortarVehicle(Base) != none)
+    if (MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo)
     {
-        DHMortarVehicle(Base).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
+        MainAmmoCharge[0] = Clamp(MainAmmoCharge[0] + PlayerResupplyAmounts[0], 0, default.InitialPrimaryAmmo);
+        MainAmmoCharge[1] = Clamp(MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, default.InitialSecondaryAmmo);
+
+        if (DHMortarVehicle(Base) != none)
+        {
+            DHMortarVehicle(Base).bCanBeResupplied = MainAmmoCharge[0] < default.InitialPrimaryAmmo || MainAmmoCharge[1] < default.InitialSecondaryAmmo;
+        }
+
+        return true;
     }
+
+    return false;
 }
 
 defaultproperties

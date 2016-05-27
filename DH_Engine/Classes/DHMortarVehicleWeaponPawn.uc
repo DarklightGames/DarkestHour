@@ -405,22 +405,6 @@ exec function SwitchFireMode()
     }
 }
 
-// Modified to flag that the mortar no longer needs resupply
-function bool ResupplyAmmo()
-{
-    if (super(VehicleWeaponPawn).ResupplyAmmo()) // TODO: mortar resupply still uses RO's full resupply system instead of DH's incremental resupply - do ppl want to keep that?
-    {
-        if (DHMortarVehicle(VehicleBase) != none)
-        {
-            DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 // New function to handle transfer of player's mortar ammo to the mortar when player enters
 function DriverEnterTransferAmmunition(Pawn P)
 {

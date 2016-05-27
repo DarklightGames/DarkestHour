@@ -935,7 +935,7 @@ exec function ThrowMGAmmo()
 
     if (OtherPawn != none)
     {
-        Log("MyPawn.bUsedCarriedMGAmmo" @ MyPawn.bUsedCarriedMGAmmo);
+        Log("MyPawn.bUsedCarriedMGAmmo" @ MyPawn.bUsedCarriedMGAmmo); // TEMPDEBUG x 3
         Log("OtherPawn.bWeaponNeedsResupply" @ OtherPawn.bWeaponNeedsResupply);
         Log("OtherPawn.bWeaponNeedsReload" @ OtherPawn.bWeaponNeedsReload);
 
