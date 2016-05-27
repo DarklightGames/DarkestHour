@@ -104,7 +104,6 @@ defaultproperties
     SightUpFireIronEndAnim="SightUp_iron_shoot_end"
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
-    PreLaunchTraceDistance=2624.0 // 43.5m (revert to usual distance, as auto weapons use half the usual)
     TracerFrequency=5
     TracerProjectileClass=class'DH_BARTracerBullet'
     FireIronAnim="Iron_Shoot_Loop"

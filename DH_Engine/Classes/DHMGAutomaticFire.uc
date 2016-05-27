@@ -317,7 +317,6 @@ simulated function EjectShell()
 defaultproperties
 {
     PctHipMGPenalty=2.0
-    PreLaunchTraceDistance=2624.0 // 43.5m (revert to usual distance, as auto weapons use the half the usual)
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     BlurTime=0.04
     BlurTimeIronsight=0.04

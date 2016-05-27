@@ -18,7 +18,8 @@ var     vector          ProjSpawnOffset;             // positional offset to spa
 var     vector          FAProjSpawnOffset;           // positional offset to spawn projectile for free-aim mode
 var     int             AddedPitch;                  // additional pitch to add to firing calculations (primarily used for rocket launchers)
 var     bool            bUsePreLaunchTrace;          // use pre-projectile spawn trace to see if we hit anything close before launching projectile (saves CPU and net usage)
-var     float           PreLaunchTraceDistance;      // how long of a pre launch trace to use (shorter for SMGs and pistols, longer for rifles and MGs)
+var     float           PreLaunchTraceDistance;      // length of a pre-launch trace, in Unreal units (calculated automatically, based on bullet's maximum speed)
+var     float           PreLaunchTraceLengthFactor;  // determines pre launch trace length, as a factor to be multiplied by the bullet's speed
 var     bool            bTraceHitBulletProofColMesh; // bullet has hit a collision mesh actor that is bullet proof, so we can handle vehicle hits accordingly
 
 // Weapon spread/inaccuracy
@@ -47,6 +48,17 @@ var     float           BlurTime;                    // how long to blur when fi
 var     float           BlurTimeIronsight;           // how long to blur when firing ironsighted
 var     float           BlurScale;                   // blur effect scale when firing non-ironsighted
 var     float           BlurScaleIronsight;          // blur effect scale when firing ironsighted
+
+// Modified to set pre-launch trace distance, based on bullet's maximum speed, so slower bullets that drop sooner use a shorter trace
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (bUsePreLaunchTrace)
+    {
+        PreLaunchTraceDistance = PreLaunchTraceLengthFactor * ProjectileClass.default.Speed;
+    }
+}
 
 function float MaxRange()
 {
@@ -562,8 +574,7 @@ simulated function HandleRecoil()
 defaultproperties
 {
     bUsePreLaunchTrace=true
-    PreLaunchTraceDistance=2624.0 // 43.5m
-
+    PreLaunchTraceLengthFactor=0.1 // gives trace length of around 18m to 37m for pistol, 74m to 85m for full power rifle or MG
     ProjPerFire=1
     CrouchSpreadModifier=0.85
     ProneSpreadModifier=0.7
