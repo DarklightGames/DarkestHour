@@ -1448,7 +1448,6 @@ function DrawSignals(Canvas C)
     local vector    TraceStart, TraceEnd;
     local vector    ScreenLocation;
     local material  SignalMaterial;
-    local vector    X, Y, Z;
     local float     Angle;
     local bool      bHasLOS;
 
@@ -1471,8 +1470,7 @@ function DrawSignals(Canvas C)
         TraceEnd = PC.SquadSignals[i].Location;
 
         Direction = Normal(TraceEnd - TraceStart);
-        GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
-        Angle = Direction dot X;
+        Angle = Direction dot vector(PlayerOwner.CalcViewRotation);
 
         if (Angle < 0.0)
         {
@@ -1564,7 +1562,7 @@ function DrawPlayerNames(Canvas C)
     local Pawn                    HitPawn, P;
     local array<Pawn>             Pawns;
     local Vehicle                 V;
-    local vector                  ViewLocation, PawnLocation, HitLocation, HitNormal, ScreenLocation, TextSize, Direction, X, Y, Z, TraceStart, TraceEnd;
+    local vector                  ViewLocation, PawnLocation, HitLocation, HitNormal, ScreenLocation, TextSize, Direction, TraceStart, TraceEnd;
     local float                   FadeInTime, FadeOutTime;
     local int                     i;
     local string                  PlayerName;
@@ -1678,9 +1676,8 @@ function DrawPlayerNames(Canvas C)
         }
 
         Direction = Normal(P.Location - PawnOwner.Location);
-        GetAxes(PlayerOwner.CalcViewRotation, X, Y, Z);
 
-        if (Direction dot X >= 0.0)
+        if (Direction dot vector(PlayerOwner.CalcViewRotation) >= 0.0)
         {
             // Determine the draw color and alpha
             C.DrawColor = GetPlayerColor(OtherPRI);
