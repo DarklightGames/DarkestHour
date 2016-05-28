@@ -365,6 +365,73 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
+// Modified to avoid resetting FlashCount immediately, instead briefly entering a new state 'ServerCeaseFire', to use state timing to introduce a slight delay
+// This gives time for the changed value of FlashCount to be replicated to non-owning net clients, triggering 3rd person firing effects in their FlashMuzzleFlash()
+// This is needed as our slightly modified cease fire process (to optimise replication) means CeaseFire() gets called on the server as soon as the only/last shot is fired
+// Also removed similar reset of HitCount as that is only relevant to instant fire weapons, which aren't used in DH (makes no difference but it's tidier)
+function CeaseFire(Controller C, bool bWasAltFire)
+{
+//  FlashCount = 0;
+//  HitCount = 0;
+
+    if (AmbientEffectEmitter != none)
+    {
+        AmbientEffectEmitter.SetEmitterStatus(false);
+    }
+
+    if (bAmbientFireSound || bAmbientAltFireSound)
+    {
+        if (AmbientSound != none)
+        {
+            if (AmbientSound == FireSoundClass && FireEndSound != none)
+            {
+                PlaySound(FireEndSound, SLOT_None, SoundVolume / 255.0 * AmbientSoundScaling,, SoundRadius);
+            }
+            else if (AmbientSound == AltFireSoundClass && AltFireEndSound != none)
+            {
+                PlaySound(AltFireEndSound, SLOT_None, AltFireSoundVolume / 255.0 * AltFireSoundScaling,, AltFireSoundRadius);
+            }
+        }
+
+        AmbientSound = none;
+        SoundVolume = default.SoundVolume;
+        SoundRadius = default.SoundRadius;
+        AmbientSoundScaling = default.AmbientSoundScaling;
+    }
+
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+    {
+        GotoState('ServerCeaseFire');
+    }
+}
+
+// New state to add slight delay before resetting FlashCount, giving time for last changed value of FlashCount to be replicated to non-owning net clients
+// Meaning FlashCount triggers 3rd person firing effects in their FlashMuzzleFlash(), before the reset zero value gets replicated to them (which stops any firing effects)
+// If Fire() or AltFire() are called in the meantime, we exit this state early & resume firing (in that situation there's no need to reset FlashCount)
+// The 0.1 second delay is arbitrary, but should give sufficient time, while not being a noticeable delay
+// Note that the delay in the original system was essentially random & caused by its network inefficiency
+// The server called ClientCeaseFire() on owning client, which in return called VehicleCeaseFire() on the server - both know they need to cease fire, so that was unnecessary
+// But it did create delay - however, timing was from 2-way replication between server & owning client, which is random to other clients & no better than an arbitrary time delay, maybe worse
+state ServerCeaseFire extends ProjectileFireMode
+{
+    function Fire(Controller C)
+    {
+        super.Fire(C);
+        GotoState('ProjectileFireMode');
+    }
+
+    function AltFire(Controller C)
+    {
+        super.AltFire(C);
+        GotoState('ProjectileFireMode');
+    }
+
+Begin:
+    Sleep(0.1);
+    FlashCount = 0;
+    GotoState('ProjectileFireMode');
+}
+
 // New function to play the main weapon firing sound (allows easy subclassing)
 simulated function sound GetFireSound()
 {
