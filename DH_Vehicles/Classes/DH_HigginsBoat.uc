@@ -245,14 +245,13 @@ defaultproperties
     ChassisTorqueScale=0.095
     MinBrakeFriction=4.0
     MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
-    // TODO: boat will move very slowly in a water volume (i.e. with bWaterVolume=true), so TorqueCurve out values need increasing
-    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
+    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=10.0),(InVal=2200.0)))
     GearRatios(0)=-0.2
     GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.5
-    GearRatios(4)=0.63
-    TransRatio=0.09
+    GearRatios(2)=0.3
+    GearRatios(3)=0.45
+    GearRatios(4)=0.8
+    TransRatio=0.1
     ChangeUpPoint=1990.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001

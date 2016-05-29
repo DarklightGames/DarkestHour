@@ -3263,6 +3263,18 @@ exec function SetGearRatio(byte Index, float NewValue)
     }
 }
 
+// New debug exec to adjust the TransRatio, which affects the vehicle's speed (along with GearRatios)
+exec function SetTransRatio(float NewValue)
+{
+    local DHVehicle V;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        Log(V.Tag @ "TransRatio =" @ NewValue @ "(was" @ V.TransRatio $ ")");
+        V.TransRatio = NewValue;
+    }
+}
+
 // New debug exec to set a vehicle's ExitPositions (use it in single player; it's too much hassle on a server)
 exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 {
