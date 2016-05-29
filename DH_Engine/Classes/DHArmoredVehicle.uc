@@ -1375,7 +1375,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (!bEngineStoppedProjectile && !bAmmoDetonation) // we can skip lots of checks if either has been flagged true
     {
-        if (bProjectilePenetrated || NewVehHitpoints.Length > 0 && Cannon != none)
+        if ((bProjectilePenetrated || NewVehHitpoints.Length > 0) && Cannon != none)
         {
             CannonPawn = DHVehicleCannonPawn(Cannon.WeaponPawn);
         }
