@@ -2663,6 +2663,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     local vector PlayerLocation;
     local int PlayerYaw;
     local Pawn P, OtherPawn;
+    local color SquadMemberColor, SelfColor;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -2716,7 +2717,10 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
                 continue;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i, class'DHColor'.default.SquadColor, 0.03);
+            SquadMemberColor = class'DHColor'.default.SquadColor;
+            SquadMemberColor.A = 160;
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i, SquadMemberColor, 0.03);
         }
     }
 
@@ -2752,7 +2756,9 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
 
         if (PRI != none)
         {
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, class'UColor'.default.OrangeRed, 0.05);
+            SelfColor = class'UColor'.default.OrangeRed;
+            SelfColor.A = 160;
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05);
         }
     }
 }
