@@ -274,55 +274,55 @@ simulated function PostNetReceive()
 // Clientside function to toggle the capture progress bars at objectives
 simulated function ClientToggleCapProgress()
 {
-    local ROHUD MyHUD;
+    local ROHUD HUD;
 
-    MyHUD = ROHud(Level.GetLocalPlayerController().myHUD);
+    HUD = ROHud(Level.GetLocalPlayerController().myHUD);
 
-    if (MyHUD != none)
+    if (HUD != none)
     {
         if (bHideCapProgress)
         {
-            MyHUD.MapIconDispute[1].Tints[0].A = 0;
-            MyHUD.MapIconDispute[1].Tints[1].A = 0;
-            MyHUD.CaptureBarAttacker.Tints[0].A = 0;
-            MyHUD.CaptureBarAttacker.Tints[1].A = 0;
-            MyHUD.CaptureBarDefender.Tints[0].A = 0;
-            MyHUD.CaptureBarDefender.Tints[1].A = 0;
-            MyHUD.CaptureBarAttackerRatio.Tints[0].A = 0;
-            MyHUD.CaptureBarAttackerRatio.Tints[1].A = 0;
-            MyHUD.CaptureBarDefenderRatio.Tints[0].A = 0;
-            MyHUD.CaptureBarDefenderRatio.Tints[1].A = 0;
-            MyHUD.CaptureBarTeamIcons[0] = none;
-            MyHUD.CaptureBarTeamIcons[1] = none;
-            MyHUD.CaptureBarTeamColors[0].A = 0;
-            MyHUD.CaptureBarTeamColors[1].A = 0;
-            MyHUD.MapIconsFlash = MyHUD.MapIconTeam[0].WidgetTexture;
-            MyHUD.MapIconsFastFlash = MyHUD.MapIconTeam[0].WidgetTexture;
-            MyHUD.MapIconsAltFlash = MyHUD.MapIconTeam[0].WidgetTexture;
-            MyHUD.MapIconsAltFastFlash = MyHUD.MapIconTeam[0].WidgetTexture;
+            HUD.MapIconDispute[1].Tints[0].A = 0;
+            HUD.MapIconDispute[1].Tints[1].A = 0;
+            HUD.CaptureBarAttacker.Tints[0].A = 0;
+            HUD.CaptureBarAttacker.Tints[1].A = 0;
+            HUD.CaptureBarDefender.Tints[0].A = 0;
+            HUD.CaptureBarDefender.Tints[1].A = 0;
+            HUD.CaptureBarAttackerRatio.Tints[0].A = 0;
+            HUD.CaptureBarAttackerRatio.Tints[1].A = 0;
+            HUD.CaptureBarDefenderRatio.Tints[0].A = 0;
+            HUD.CaptureBarDefenderRatio.Tints[1].A = 0;
+            HUD.CaptureBarTeamIcons[0] = none;
+            HUD.CaptureBarTeamIcons[1] = none;
+            HUD.CaptureBarTeamColors[0].A = 0;
+            HUD.CaptureBarTeamColors[1].A = 0;
+            HUD.MapIconsFlash = HUD.MapIconTeam[0].WidgetTexture;
+            HUD.MapIconsFastFlash = HUD.MapIconTeam[0].WidgetTexture;
+            HUD.MapIconsAltFlash = HUD.MapIconTeam[0].WidgetTexture;
+            HUD.MapIconsAltFastFlash = HUD.MapIconTeam[0].WidgetTexture;
         }
         else
         {
-            MyHUD.MapIconDispute[0].Tints[0] = MyHUD.default.MapIconDispute[0].Tints[0];
-            MyHUD.MapIconDispute[0].Tints[1] = MyHUD.default.MapIconDispute[0].Tints[1];
-            MyHUD.MapIconDispute[1].Tints[0] = MyHUD.default.MapIconDispute[1].Tints[0];
-            MyHUD.MapIconDispute[1].Tints[1] = MyHUD.default.MapIconDispute[1].Tints[1];
-            MyHUD.CaptureBarAttacker.Tints[0] = MyHUD.default.CaptureBarAttacker.Tints[0];
-            MyHUD.CaptureBarAttacker.Tints[1] = MyHUD.default.CaptureBarAttacker.Tints[1];
-            MyHUD.CaptureBarDefender.Tints[0] = MyHUD.default.CaptureBarDefender.Tints[0];
-            MyHUD.CaptureBarDefender.Tints[1] = MyHUD.default.CaptureBarDefender.Tints[1];
-            MyHUD.CaptureBarAttackerRatio.Tints[0] = MyHUD.default.CaptureBarAttackerRatio.Tints[0];
-            MyHUD.CaptureBarAttackerRatio.Tints[1] = MyHUD.default.CaptureBarAttackerRatio.Tints[1];
-            MyHUD.CaptureBarDefenderRatio.Tints[0] = MyHUD.default.CaptureBarDefenderRatio.Tints[0];
-            MyHUD.CaptureBarDefenderRatio.Tints[1] = MyHUD.default.CaptureBarDefenderRatio.Tints[1];
-            MyHUD.CaptureBarTeamIcons[0] = MyHUD.default.CaptureBarTeamIcons[0];
-            MyHUD.CaptureBarTeamIcons[1] = MyHUD.default.CaptureBarTeamIcons[1];
-            MyHUD.CaptureBarTeamColors[0] = MyHUD.default.CaptureBarTeamColors[0];
-            MyHUD.CaptureBarTeamColors[1] = MyHUD.default.CaptureBarTeamColors[1];
-            MyHUD.MapIconsFlash = MyHUD.default.MapIconsFlash;
-            MyHUD.MapIconsFastFlash = MyHUD.default.MapIconsFastFlash;
-            MyHUD.MapIconsAltFlash = MyHUD.default.MapIconsAltFlash;
-            MyHUD.MapIconsAltFastFlash = MyHUD.default.MapIconsAltFastFlash;
+            HUD.MapIconDispute[0].Tints[0] = HUD.default.MapIconDispute[0].Tints[0];
+            HUD.MapIconDispute[0].Tints[1] = HUD.default.MapIconDispute[0].Tints[1];
+            HUD.MapIconDispute[1].Tints[0] = HUD.default.MapIconDispute[1].Tints[0];
+            HUD.MapIconDispute[1].Tints[1] = HUD.default.MapIconDispute[1].Tints[1];
+            HUD.CaptureBarAttacker.Tints[0] = HUD.default.CaptureBarAttacker.Tints[0];
+            HUD.CaptureBarAttacker.Tints[1] = HUD.default.CaptureBarAttacker.Tints[1];
+            HUD.CaptureBarDefender.Tints[0] = HUD.default.CaptureBarDefender.Tints[0];
+            HUD.CaptureBarDefender.Tints[1] = HUD.default.CaptureBarDefender.Tints[1];
+            HUD.CaptureBarAttackerRatio.Tints[0] = HUD.default.CaptureBarAttackerRatio.Tints[0];
+            HUD.CaptureBarAttackerRatio.Tints[1] = HUD.default.CaptureBarAttackerRatio.Tints[1];
+            HUD.CaptureBarDefenderRatio.Tints[0] = HUD.default.CaptureBarDefenderRatio.Tints[0];
+            HUD.CaptureBarDefenderRatio.Tints[1] = HUD.default.CaptureBarDefenderRatio.Tints[1];
+            HUD.CaptureBarTeamIcons[0] = HUD.default.CaptureBarTeamIcons[0];
+            HUD.CaptureBarTeamIcons[1] = HUD.default.CaptureBarTeamIcons[1];
+            HUD.CaptureBarTeamColors[0] = HUD.default.CaptureBarTeamColors[0];
+            HUD.CaptureBarTeamColors[1] = HUD.default.CaptureBarTeamColors[1];
+            HUD.MapIconsFlash = HUD.default.MapIconsFlash;
+            HUD.MapIconsFastFlash = HUD.default.MapIconsFastFlash;
+            HUD.MapIconsAltFlash = HUD.default.MapIconsAltFlash;
+            HUD.MapIconsAltFastFlash = HUD.default.MapIconsAltFastFlash;
         }
     }
 }
@@ -330,21 +330,21 @@ simulated function ClientToggleCapProgress()
 // Clientside function to toggle the player icon on the map
 simulated function ClientTogglePlayerIcon()
 {
-    local ROHUD MyHUD;
+    local DHHud HUD;
 
-    MyHUD = ROHud(Level.GetLocalPlayerController().myHUD);
+    HUD = DHHud(Level.GetLocalPlayerController().myHUD);
 
-    if (MyHUD != none)
+    if (HUD != none)
     {
         if (bHidePlayerIcon)
         {
-            MyHUD.MapPlayerIcon.Tints[0].A = 0;
-            MyHUD.MapPlayerIcon.Tints[1].A = 0;
+            HUD.MapPlayerIcon.RenderStyle = STY_None;
+            HUD.MapPlayerNumberIcon.RenderStyle = STY_None;
         }
         else
         {
-            MyHUD.MapPlayerIcon.Tints[0].A = 255;
-            MyHUD.MapPlayerIcon.Tints[1].A = 255;
+            HUD.MapPlayerIcon.RenderStyle = HUD.default.MapPlayerIcon.RenderStyle;
+            HUD.MapPlayerNumberIcon.RenderStyle = HUD.default.MapPlayerNumberIcon.RenderStyle;
         }
     }
 }
