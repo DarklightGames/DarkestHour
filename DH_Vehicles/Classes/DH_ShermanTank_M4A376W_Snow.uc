@@ -11,6 +11,8 @@ defaultproperties
 {
     Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.ShermanM4A3_ext_snow'
     Skins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.ShermanM4A3E2_wheels_snow'
+    Skins(4)=texture'DH_VehiclesUS_tex2.Treads.Sherman_treadsnow'
+    Skins(5)=texture'DH_VehiclesUS_tex2.Treads.Sherman_treadsnow'
 
     // TODO: make whitewash texture for 76mm turret - this uses a snow-topped texture, which doesn't match when used on the M4A3 whitewashed hull
     CannonSkins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'

@@ -9,4 +9,6 @@ defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_JagdpantherTank_Snow'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.jagdpanther_body_snow'
+    Skins(1)=texture'DH_VehiclesGE_tex3.Treads.Jagdpanther_treads_snow'
+    Skins(2)=texture'DH_VehiclesGE_tex3.Treads.Jagdpanther_treads_snow'
 }
