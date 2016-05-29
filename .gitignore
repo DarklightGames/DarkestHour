@@ -1,3 +1,4 @@
+*.bat
 *.opensdf
 *.orig
 *.sdf
@@ -18,6 +19,7 @@
 /Textures/
 /Web/
 AHZ_ROVehicles/
+CC/
 Core/
 DarkestHourDev/
 DarkestHourDev/System/DarkestHourDev.ini
@@ -28,6 +30,8 @@ Fire/
 Gameplay/
 GUI2K4/
 IpDrv/
+MareNostrum/
+reslists/
 ROAmmo/
 ROCustom/
 ROEffects/
@@ -38,6 +42,8 @@ ROInventory/
 RORoles/
 ROVehicles/
 ScreenShots/
+tools/
+turul/
 Unrealed/
 UnrealGame/
 UTV2004c/
@@ -48,27 +54,11 @@ XGame/
 XInterface/
 XVoting/
 XWebAdmin/
-DH__TEMP source (smoke, Guns, chutes, rockets, Veh)/
-MareNostrum/
-NEWSystem (with older file versions plus custom files)/
-Red OrchestraRMFSystemstuff/
-SystemOLD/
-Tank reset test/
-tools/
-reslists/
-turul/
-UserLogs/
-CC/
 AHZ vehicle pack/
 EH-M43/
-COMPILE.bat
-ROclient.bat
-ROserver.bat
-DH__TEMP source move/
-DH_AdminMenuMutator_WIP/
+DH__AllSourceCode
 /System/*.det
 /System/*.int
-/System/AHZ_ROVehicles.u
 /System/*.blob
 /System/*.u
 /System/*.bat
@@ -91,15 +81,18 @@ DH_AdminMenuMutator_WIP/
 /System/ArmoredBeasts2.ini
 /System/Build.ini
 /System/ChatRestriction.ini
+/System/Default.ini
 /System/DefUnrealEd.ini
 /System/DefUser.ini
-/System/Default.ini
 /System/Manifest.ini
 /System/MapGrenades.ini
 /System/MapVoteHistory.ini
 /System/RedOrchestra.ini
 /System/ServerFilters.ini
-/System/UPlaylists.ini
-/System/UnrealEdTips.ini
-/System/User.ini
+/System/Setup.ini
 /System/unrealed.ini
+/System/UnrealEdTips.ini
+/System/UPlaylists.ini
+/System/User.ini
+/System/XAdmin.ini
+/System/DHSwappingMutatorConfig.ini
