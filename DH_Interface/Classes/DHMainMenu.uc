@@ -621,7 +621,7 @@ defaultproperties
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
 
     Begin Object class=GUILabel Name=VersionNum
-        StyleName="DHBlackText"
+        StyleName="DHTabButton"
         TextAlign=TXTA_Right
         WinWidth=1.0
         WinHeight=1.0
