@@ -357,7 +357,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     GetHitSurfaceType(ST, HitNormal);
 
-    // Destroy projectile without effects or deflection if it hit special BSP that we are using as a network culler, signified by being textured with material surface type 'EST_Custom00'
+    // Destroy projectile without effects if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
     if (ST == EST_Custom00)
     {
         bAlreadyExploded = true; // make sure projectile doesn't explode

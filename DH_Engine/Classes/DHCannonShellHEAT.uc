@@ -165,7 +165,10 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             HandleShellDebug(HitLocation);
         }
 
-        BlowUp(HitLocation);
+        if (!bCollided) // another check on !bCollided is in case the SpawnExplosionEffects() aborts explosion effects, e.g. if hit invisible BSP used as a network culler
+        {
+            BlowUp(HitLocation);
+        }
     }
 }
 

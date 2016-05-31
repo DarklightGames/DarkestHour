@@ -201,9 +201,10 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 HitEmitterClass = ShellHitWaterEffectClass;
                 break;
 
-            // Destroy shell without effects if we hit special BSP that we are using as a network culler, signified by being textured with a material surface type 'EST_Custom00'
+            // Destroy projectile without effects if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
             case EST_Custom00:
-                bCollided = true; // stops possibility of further unwanted explosion features (specifically BlowUp)
+                bCollided = true;      // stops possibility of further unwanted explosion features, including calling BlowUp()
+                Role = ROLE_Authority; // allows immediate destruction on net client, without having to wait for server
                 Destroy();
 
                 return;
@@ -259,16 +260,6 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     {
         DoShakeEffect();
     }
-}
-
-simulated function Destroyed()
-{
-    if (!bDidExplosionFX)
-    {
-        SpawnExplosionEffects(SavedHitLocation, SavedHitNormal);
-    }
-
-    super.Destroyed();
 }
 
 defaultproperties

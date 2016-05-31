@@ -301,7 +301,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
             continue;
         }
 
-        // Abort pre-launch trace if we hit a special BSP that we are using as a network culler, signified by being textured with a material surface type 'EST_Custom00'
+        // Abort pre-launch trace if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
         // bHiddenEd is used as a quick screening check, as it's very unusual & is pretty good at flagging up this special BSP (a little hacky, but cheap & effective)
         // Then we have to do a short trace just to get the hit material, to confirm it is our special BSP
         if (A.bHiddenEd)
