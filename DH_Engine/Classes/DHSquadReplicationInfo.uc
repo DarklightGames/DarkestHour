@@ -1022,15 +1022,26 @@ simulated function bool GetSquadOrder(int TeamIndex, int SquadIndex, out ESquadO
 
 function SetSquadOrder(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadOrderType Type, vector Location)
 {
+    local Controller C;
+
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         return;
     }
 
-    if (Level.TimeSeconds - GetSquadOrderTime(TeamIndex, SquadIndex) < 5)   // TODO: magic number
+    if (Level.TimeSeconds - GetSquadOrderTime(TeamIndex, SquadIndex) < 2)
     {
         // "Please wait before making a new order"
-        PRI.BroadcastLocalizedMessage(class'DHSquadOrderMessage', 0);
+        for (C = Level.ControllerList; C != none; C = C.nextController)
+        {
+            if (C.PlayerReplicationInfo == PRI && C.Pawn != none)
+            {
+                C.Pawn.ReceiveLocalizedMessage(class'DHSquadOrderMessage', 0);
+
+                break;
+            }
+        }
+
         return;
     }
 

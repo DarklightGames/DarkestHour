@@ -47,7 +47,7 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
 
 defaultproperties
 {
-    WaitText="Please wait 5 secounds before making a new order"
+    WaitText="Please wait before making a new order"
     AttackText="Squad has a new attack order"
     DefendText="Squad has a new defend order"
 }
