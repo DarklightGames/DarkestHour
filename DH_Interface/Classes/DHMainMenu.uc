@@ -39,7 +39,10 @@ var     bool                    bShouldRequestMOTD;
 var     bool                    bShouldRequestQuickPlayIP;
 var     bool                    bIsRequestingQuickPlayIP;
 
-var     /*config */bool             bHasSeenPatreon;
+var     config string           SavedVersion;
+var     string                  ControlsChangedMessage;
+
+delegate OnHideAnnouncement();
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -65,13 +68,52 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     l_Version.Caption = class'DarkestHourGame'.static.GetVersionString();
 }
 
+function ShowControlsChangedMessage()
+{
+    Controller.OpenMenu("GUI2K4.GUI2K4QuestionPage");
+    GUIQuestionPage(Controller.TopPage()).SetupQuestion(ControlsChangedMessage, QBTN_No | QBTN_Yes, QBTN_Yes);
+    GUIQuestionPage(Controller.TopPage()).OnButtonClick = OnControlsChangedButtonClicked;
+}
+
+function OnControlsChangedButtonClicked(byte bButton)
+{
+    switch (bButton)
+    {
+        case QBTN_Yes:
+            Controller.OpenMenu(Controller.GetSettingsPage());
+            break;
+        default:
+            break;
+    }
+}
+
 function InternalOnOpen()
 {
+    local string CurrentVersion;
+
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
 
-    if (!bHasSeenPatreon)
+    CurrentVersion = class'DarkestHourGame'.static.GetVersionString();
+
+    if (SavedVersion != CurrentVersion)
     {
+        // To make a long story short, we can't force the client to delete
+        // their configuration file at will, so we need to forcibly create
+        // control bindings for new commands.
+        if (SavedVersion == "")
+        {
+            // v7.0.0
+            OnHideAnnouncement = ShowControlsChangedMessage;
+
+            PlayerOwner().ConsoleCommand("set input i SquadTalk");
+            PlayerOwner().ConsoleCommand("set input insert Speak Squad");
+            PlayerOwner().ConsoleCommand("set input capslock ShowOrderMenu | OnRelease HideOrderMenu");
+        }
+
         ShowAnnouncement();
+
+        SavedVersion = class'DarkestHourGame'.static.GetVersionString();
+        SaveConfig();
     }
 }
 
@@ -220,16 +262,14 @@ function ShowAnnouncement()
 {
     i_Overlay.Show();
     i_Announcement.Show();
-
-    bHasSeenPatreon = true;
-
-    SaveConfig();
 }
 
 function HideAnnouncement()
 {
     i_Overlay.Hide();
     i_Announcement.Hide();
+
+    OnHideAnnouncement();
 }
 
 event Opened(GUIComponent Sender)
@@ -621,7 +661,7 @@ defaultproperties
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
 
     Begin Object class=GUILabel Name=VersionNum
-        StyleName="DHBlackText"
+        StyleName="DHSmallText"
         TextAlign=TXTA_Right
         WinWidth=1.0
         WinHeight=1.0
@@ -696,8 +736,7 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/wiki"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
-    PatreonURL="http://www.patreon.com" //TODO: placeholder
-
-    bHasSeenPatreon=false
+    PatreonURL="http://www.patreon.com"
+    ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
 }
 
