@@ -23,7 +23,7 @@ var globalconfig float DistortionScale;  // global distortion scale factor
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local Actor  TraceHitActor;
-    local vector DirectionNormal, TempHitLocation, TempHitNormal;
+    local vector Direction, TempHitLocation, TempHitNormal;
     local float  xH, TempMaxWall;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
@@ -95,8 +95,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     bInHitWall = true; // set flag to prevent recursive calls
 
     // Do the MaxWall calculations
-    DirectionNormal = vector(Rotation);
-    CheckWall(HitNormal, DirectionNormal);
+    Direction = vector(Rotation);
+    CheckWall(HitNormal, Direction);
     xH = 1.0 / Hardness;
     MaxWall = EnergyFactor * xH * PenetrationScale * WScale;
 
@@ -114,10 +114,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                 TempMaxWall = MaxWall;
             }
 
-            TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (DirectionNormal * TempMaxWall), false);
+            TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (Direction * TempMaxWall), false);
 
             // Due to static meshes resulting in a hit even with the trace starting right inside of them (terrain and BSP 'space' would return none)
-            if (TraceHitActor != none && !SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * DirectionNormal)))
+            if (TraceHitActor != none && !SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * Direction)))
             {
                 TraceHitActor = none;
             }
@@ -126,10 +126,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
     else
     {
-        TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (DirectionNormal * MaxWall), false);
+        TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (Direction * MaxWall), false);
     }
 
-    if (TraceHitActor != none && SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * DirectionNormal)))
+    if (TraceHitActor != none && SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * Direction)))
     {
         WorldPenetrationExplode(TempHitLocation + (PeneExploWallOut * TempHitNormal), TempHitNormal);
 

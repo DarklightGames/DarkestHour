@@ -128,7 +128,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local Pawn         InstigatorPlayer;
     local Actor        A;
     local array<Actor> SavedHitActors;
-    local vector       DirectionNormal, PawnHitLocation, TempHitLocation, HitNormal;
+    local vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
     local bool         bPenetratedVehicle;
     local float        V;
     local array<int>   HitPoints;
@@ -162,14 +162,14 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         return;
     }
 
-    DirectionNormal = Normal(Velocity);
+    Direction = Normal(Velocity);
 
     // Handle hit on a vehicle weapon
     if (Other.IsA('ROVehicleWeapon'))
     {
         bPenetratedVehicle = !HasDeflected() && PenetrateVehicleWeapon(ROVehicleWeapon(Other));
 
-        PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, -DirectionNormal);
+        PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, -Direction);
 
         // Exit if failed to penetrate, destroying bullet unless it's a tracer deflection
         if (!bPenetratedVehicle)
@@ -178,7 +178,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // Added the trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
             if (Level.NetMode != NM_DedicatedServer && bHasTracer && VSizeSquared(Velocity) > 500000.0)
             {
-                Trace(HitLocation, HitNormal, HitLocation + (DirectionNormal * 50.0), HitLocation - (DirectionNormal * 50.0), true);
+                Trace(HitLocation, HitNormal, HitLocation + (Direction * 50.0), HitLocation - (Direction * 50.0), true);
                 DHDeflect(HitLocation, HitNormal, Other);
             }
             else
@@ -197,11 +197,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     {
         V = VSize(Velocity);
 
-        // If bullet collides right after launch it won't have any velocity yet, so give it the default speed & use its rotation to get a DirectionNormal
+        // If bullet collides right after launch it won't have any velocity yet, so give it the default speed & use its rotation to get a Direction
         if (V < 25.0)
         {
             V = default.Speed;
-            DirectionNormal = vector(Rotation);
+            Direction = vector(Rotation);
         }
     }
 
@@ -233,7 +233,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         for (i = 0; i < 3; ++i)
         {
             // HitPointTraces don't work well with short traces, so we have to do long trace first, then if we hit player we check whether he was within the whip attachment
-            A = InstigatorPlayer.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (DirectionNormal * 65535.0), HitPoints, HitLocation,, TraceWhizType);
+            A = InstigatorPlayer.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (Direction * 65535.0), HitPoints, HitLocation,, TraceWhizType);
 
             // We're primarily interested if we hit a player, but also need to check if hit invalid col mesh or destro mesh that doesn't stop bullet (as would need to repeat trace)
             if (DHPawn(A) != none || (DHCollisionMeshActor(A) != none && DHCollisionMeshActor(A).bWontStopBullet)
@@ -334,7 +334,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (!HitPlayer.bDeleteMe)
             {
-                HitPlayer.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, PawnHitLocation, MomentumTransfer * DirectionNormal, MyDamageType, HitPoints);
+                HitPlayer.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, PawnHitLocation, MomentumTransfer * Direction, MyDamageType, HitPoints);
             }
 
             // If traced hit on destro mesh that won't stop bullet (e.g. glass) in front of player, need to damage it now as we're destroying bullet & it won't collide with destro mesh
@@ -342,14 +342,14 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (RODestroyableStaticMesh(SavedHitActors[i]) != none)
                 {
-                    SavedHitActors[i].TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, SavedHitActors[i].Location, MomentumTransfer * DirectionNormal, MyDamageType);
+                    SavedHitActors[i].TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, SavedHitActors[i].Location, MomentumTransfer * Direction, MyDamageType);
                 }
             }
         }
         // Damage something else
         else
         {
-            Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * DirectionNormal, MyDamageType);
+            Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * Direction, MyDamageType);
         }
     }
 

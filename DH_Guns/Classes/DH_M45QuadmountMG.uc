@@ -23,12 +23,12 @@ state ProjectileFireMode
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P, LastProjectile;
-    local vector     StartLocation, FireOffset, FireRotationVector;
+    local vector     StartLocation, FireOffset, WeaponFireDirection;
     local rotator    FireRot;
     local int        VolleysFired, TracerIndex, i;
 
     // Just to avoid multiple calcs
-    FireRotationVector = vector(WeaponFireRotation);
+    WeaponFireDirection = vector(WeaponFireRotation);
     FireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation;
 
     // Work out which barrel is due to fire a tracer
@@ -40,7 +40,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     for (i = 0; i < arraycount(BarrelBones); ++i)
     {
         StartLocation = GetBoneCoords(BarrelBones[i]).Origin + FireOffset;
-        FireRot = rotator(FireRotationVector + (VRand() * FRand() * Spread));
+        FireRot = rotator(WeaponFireDirection + (VRand() * FRand() * Spread));
 
         // Switch to tracer class if this barrel matches the current TracerIndex for this volley
         if (i == TracerIndex && TracerProjectileClass != none)

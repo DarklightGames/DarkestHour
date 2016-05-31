@@ -3207,7 +3207,7 @@ simulated function bool CanMantleActor(Actor A)
 simulated function bool CanMantle(optional bool bActualMantle, optional bool bForceTest)
 {
     local DHWeapon DHW;
-    local vector   Extent, HitLoc, HitNorm, StartLoc, EndLoc, RotationVector;
+    local vector   Extent, HitLoc, HitNorm, StartLoc, EndLoc, Direction;
     local int      i;
     local DHPlayer Player;
 
@@ -3232,11 +3232,11 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     Extent.Y = CollisionRadius;
     Extent.Z = 28.0; // half the height of the actual trace
 
-    RotationVector = vector(Rotation);
+    Direction = vector(Rotation);
 
     StartLoc = Location;
     StartLoc.Z += 5.0; // necessary to make the bottom of the extent just clip the MINFLOORZ height and the top hit shoulder height
-    EndLoc = StartLoc + (15.0 * RotationVector);
+    EndLoc = StartLoc + (15.0 * Direction);
 
     // This is the initial trace to see if there's anything in front of the pawn
     if (!CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent))) // * 50.0
@@ -3254,7 +3254,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     Extent.Z = 0.5;
 
     StartLoc.Z = Location.Z + 31.1; // ~89 uu above ground, roughly shoulder height - 0.55 higher than max climb height
-    EndLoc = StartLoc + (30.0 * RotationVector);
+    EndLoc = StartLoc + (30.0 * Direction);
 
     if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
     {
@@ -3263,7 +3263,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         return false;
     }
 
-    EndLoc += (7.0 * RotationVector); // brings us to a total of 60uu out from our starting location, which is how far our animations go
+    EndLoc += (7.0 * Direction); // brings us to a total of 60uu out from our starting location, which is how far our animations go
     StartLoc = EndLoc;
     EndLoc.Z = Location.Z - 22.0; // 36 UU above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
@@ -3328,7 +3328,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         Extent.Z = 0.5;
         StartLoc = Location;
         StartLoc.Z = MantleEndPoint.Z - 1.0;
-        EndLoc = StartLoc + (30.0 * RotationVector);
+        EndLoc = StartLoc + (30.0 * Direction);
 
         for (i = 0; i < 5; ++i)
         {
