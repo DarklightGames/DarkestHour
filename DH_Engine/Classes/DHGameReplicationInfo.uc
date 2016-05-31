@@ -640,7 +640,7 @@ simulated function bool IgnoresMaxTeamVehiclesFlags(class<Vehicle> VehicleClass)
 
     if (i != 255)
     {
-        return (VehiclePoolIgnoreMaxTeamVehiclesFlags | (1 << i)) != 0;
+        return (VehiclePoolIgnoreMaxTeamVehiclesFlags & (1 << i)) != 0;
     }
 
     return false;

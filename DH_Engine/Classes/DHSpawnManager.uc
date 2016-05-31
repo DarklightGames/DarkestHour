@@ -127,7 +127,11 @@ function PostBeginPlay()
         // VP is valid so copy to GRI, set length of its Slots array, & pre-cache the vehicle class
         GRI.VehiclePoolVehicleClasses[i] = VehiclePools[i].VehicleClass;
         GRI.VehiclePoolIsSpawnVehicles[i] = byte(VehiclePools[i].bIsSpawnVehicle);
-        GRI.VehiclePoolIgnoreMaxTeamVehiclesFlags = GRI.VehiclePoolIgnoreMaxTeamVehiclesFlags | (1 << i);
+
+        if (VehiclePools[i].bIgnoreMaxTeamVehicles)
+        {
+            GRI.VehiclePoolIgnoreMaxTeamVehiclesFlags = GRI.VehiclePoolIgnoreMaxTeamVehiclesFlags | (1 << i);
+        }
 
         if (VehiclePools[i].MaxActive != 255)
         {
