@@ -1613,8 +1613,6 @@ function DrawPlayerNames(Canvas C)
     {
         P = Pawns[i];
 
-        OtherPawn = DHPawn(P);
-
         if (NamedPawns.Contains(P) || (P != HitPawn && !ShouldDrawPlayerName(P)))
         {
             continue;
