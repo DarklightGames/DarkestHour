@@ -101,48 +101,52 @@ simulated function DrawHUD(Canvas C)
     super.DrawHUD(C);
 
     PC = PlayerController(Controller);
-    V = DHVehicle(VehicleBase);
-    HUD = ROHud(PC.myHUD);
 
-    if (PC != none && !PC.bBehindView && !HUD.bHideHud && Gun != none && HUD != none && V != none && V.VehicleHudTurretLook != none && V.VehicleHudTurret != none)
+    if (PC != none && !PC.bBehindView && Gun != none)
     {
-        // Figure where to draw
-        Coords.PosX = C.ClipX * HUD.VehicleIconCoords.X;
-        Coords.Height = C.ClipY * HUD.VehicleIconCoords.YL * HUD.HudScale;
-        Coords.PosY = C.ClipY * HUD.VehicleIconCoords.Y - Coords.Height;
-        Coords.Width = Coords.Height;
+        HUD = ROHud(PC.myHUD);
+        V = DHVehicle(VehicleBase);
 
-        // Set turret color based on any damage
-        VehicleHealthScale = V.Health / V.HealthMax;
-
-        if (VehicleHealthScale > 0.75)
+        if (HUD != none && !HUD.bHideHud && V != none && V.VehicleHudTurretLook != none && V.VehicleHudTurret != none)
         {
-            VehicleColor = class'DHHud'.default.VehicleNormalColor;
-        }
-        else if (VehicleHealthScale > 0.35)
-        {
-            VehicleColor = class'DHHud'.default.VehicleDamagedColor;
-        }
-        else
-        {
-            VehicleColor = class'DHHud'.default.VehicleCriticalColor;
-        }
+            // Figure where to draw
+            Coords.PosX = C.ClipX * HUD.VehicleIconCoords.X;
+            Coords.Height = C.ClipY * HUD.VehicleIconCoords.YL * HUD.HudScale;
+            Coords.PosY = C.ClipY * HUD.VehicleIconCoords.Y - Coords.Height;
+            Coords.Width = Coords.Height;
 
-        Widget = HUD.VehicleIcon;
-        Widget.Tints[0] = VehicleColor;
-        Widget.Tints[1] = VehicleColor;
+            // Set turret color based on any damage
+            VehicleHealthScale = V.Health / V.HealthMax;
 
-        // Draw the turret, with current turret rotation
-        MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-        V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
-        Widget.WidgetTexture = V.VehicleHudTurret;
-        HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
+            if (VehicleHealthScale > 0.75)
+            {
+                VehicleColor = class'DHHud'.default.VehicleNormalColor;
+            }
+            else if (VehicleHealthScale > 0.35)
+            {
+                VehicleColor = class'DHHud'.default.VehicleDamagedColor;
+            }
+            else
+            {
+                VehicleColor = class'DHHud'.default.VehicleCriticalColor;
+            }
 
-        V.VehicleHudTurretLook.Rotation.Yaw = V.Rotation.Yaw - CustomAim.Yaw;
-        Widget.WidgetTexture = V.VehicleHudTurretLook;
-        Widget.Tints[0].A /= 2;
-        Widget.Tints[1].A /= 2;
-        HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
+            Widget = HUD.VehicleIcon;
+            Widget.Tints[0] = VehicleColor;
+            Widget.Tints[1] = VehicleColor;
+
+            // Draw the turret, with current turret rotation
+            MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
+            V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = V.VehicleHudTurret;
+            HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
+
+            V.VehicleHudTurretLook.Rotation.Yaw = V.Rotation.Yaw - CustomAim.Yaw;
+            Widget.WidgetTexture = V.VehicleHudTurretLook;
+            Widget.Tints[0].A /= 2;
+            Widget.Tints[1].A /= 2;
+            HUD.DrawSpriteWidgetClipped(C, Widget, Coords, true);
+        }
     }
 }
 
