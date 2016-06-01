@@ -43,7 +43,6 @@ var     array<PassengerPawn> PassengerPawns;     // array with properties usuall
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
 var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;                  // used for scoring
-var     float       SpikeTime;                   // time (seconds) before an empty, disabled vehicle will be automatically blown up
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning vehicle
 var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly player pawn found (ignoring line of sight check)
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
@@ -2633,14 +2632,15 @@ event CheckReset()
         }
     }
 
+    // Reset (i.e. re-spawn) the vehicle, as it is empty & has no friendly players nearby
+    if (bDebuggingText)
+    {
+        Level.Game.Broadcast(self, Tag @ "is empty vehicle & re-spawned as no friendly player nearby");
+    }
+
     // If factory is active, we want it to spawn new vehicle NOW
     if (ParentFactory != none)
     {
-        if (bDebuggingText)
-        {
-            Level.Game.Broadcast(self, Tag @ "is empty vehicle & re-spawned as no friendly player nearby");
-        }
-
         ParentFactory.VehicleDestroyed(self);
         ParentFactory.Timer();
         ParentFactory = none; // so doesn't call ParentFactory.VehicleDestroyed() again in Destroyed()

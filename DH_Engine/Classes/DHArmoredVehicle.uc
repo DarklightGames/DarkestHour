@@ -60,6 +60,7 @@ var     float       GunnerKillChance;           // chance that shrapnel will kil
 var     float       GunDamageChance;            // chance that shrapnel will damage gun pivot mechanism
 var     float       TraverseDamageChance;       // chance that shrapnel will damage gun traverse mechanism or turret ring is jammed
 var     float       OpticsDamageChance;         // chance that shrapnel will break gunsight optics
+var     float       SpikeTime;                  // saved future time when a disabled vehicle will be automatically blown up, if empty at that time
 
 // Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
@@ -1790,12 +1791,28 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to stop vehicle from prematurely destroying itself when on fire
+// Modified to stop vehicle from prematurely destroying itself when on fire, & to record a future SpikeTime for a spiked, disabled vehicle (to work with interwoven Timer system)
 function MaybeDestroyVehicle()
 {
-    if (!bOnFire && !bEngineOnFire)
+    if (!bNeverReset && IsVehicleEmpty() && !bOnFire && !bEngineOnFire)
     {
-        super.MaybeDestroyVehicle();
+        if (IsDisabled())
+        {
+            bSpikedVehicle = true;
+            SpikeTime = Level.TimeSeconds + VehicleSpikeTime; // record SpikeTime due & call SetNextTimer(), instead of directly setting a timer for VehicleSpikeTime
+            SetNextTimer();
+
+            if (bDebuggingText)
+            {
+                Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
+            }
+        }
+
+        // If vehicle is now empty & some way from its spawn point (> 83m or out of sight), set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
+        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
+        {
+            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+        }
     }
 }
 
