@@ -7,6 +7,18 @@ class DHWaterVolume extends PhysicsVolume;
 
 var()   bool    bIsShallowWater; // means we won't get functionality associated with state 'Swimming' in deep water, but will still get splash effects
 
+// Modified to nullify any splash effects, as they are now handled better by projectiles & we don't want any duplication
+function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    PawnEntryActor = none;
+    EntryActor = none;
+    EntrySound = none;
+    ExitActor = none;
+    ExitSound = none;
+}
+
 defaultproperties
 {
     bWaterVolume=true

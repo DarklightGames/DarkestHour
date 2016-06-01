@@ -130,13 +130,14 @@ replication
 }
 
 // Modified to build SpawnPoints array
-// Also to disable all default water splash effects in WaterVolumes, as they clash with splash effects in projectile classes that are more specific to the projectile
+// Also to nullify all water splash effects in WaterVolumes & FluidSurfaceInfos, as they clash with splash effects in projectile classes that are more specific to the projectile
 // Another problem is a big splash effect was being played for every ejected bullet shell case that hit water, looking totally wrong for such a small, relatively slow object
 simulated function PostBeginPlay()
 {
-    local DHSpawnPoint SP;
-    local WaterVolume  WV;
-    local int          i;
+    local DHSpawnPoint     SP;
+    local WaterVolume      WV;
+    local FluidSurfaceInfo FSI;
+    local int              i;
 
     super.PostBeginPlay();
 
@@ -154,25 +155,21 @@ simulated function PostBeginPlay()
 
     foreach AllActors(class'WaterVolume', WV)
     {
-        if (WV.PawnEntryActorName == "ROEffects.WaterRingEmitter")
-        {
-            WV.PawnEntryActorName = "";
-        }
+        WV.PawnEntryActor = none;
+        WV.PawnEntryActorName = "";
+        WV.EntryActor = none;
+        WV.EntryActorName = "";
+        WV.EntrySound = none;
+        WV.EntrySoundName = "";
+        WV.ExitActor = none;
+        WV.ExitSound = none;
+        WV.ExitSoundName = "";
+    }
 
-        if (WV.EntryActorName == "ROEffects.WaterSplashEmitter")
-        {
-            WV.EntryActorName = "";
-        }
-
-        if (WV.EntrySoundName == "Inf_Player.FootstepWaterDeep")
-        {
-            WV.EntrySoundName = "";
-        }
-
-        if (WV.ExitSoundName == "Inf_Player.FootstepWaterDeep")
-        {
-            WV.ExitSoundName = "";
-        }
+    foreach AllActors(class'FluidSurfaceInfo', FSI)
+    {
+        FSI.TouchEffect = none;
+        FSI.TouchEffect = none;
     }
 }
 
