@@ -41,8 +41,6 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
-var     DHSquadReplicationInfo      SquadReplicationInfo;
-
 var struct VersionInfo
 {
     var int Major;
@@ -65,13 +63,6 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
     }
-}
-
-function PreBeginPlay()
-{
-    super.PreBeginPlay();
-
-    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()
@@ -951,19 +942,11 @@ event PlayerController Login(string Portal, string Options, out string Error)
 {
     local string InName;
     local PlayerController NewPlayer;
-    local DHPlayer PC;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
     NewPlayer = super.Login(Portal, Options, Error);
-
-    PC = DHPlayer(NewPlayer);
-
-    if (PC != none)
-    {
-        PC.SquadReplicationInfo = SquadReplicationInfo;
-    }
 
     ChangeName(NewPlayer, InName, false);
 
@@ -2791,8 +2774,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SpawnVehicleIndex = 255;
 
             GRI.UnreserveVehicle(PC);
-
-            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
         }
     }
 
@@ -3468,8 +3449,6 @@ function NotifyLogout(Controller Exiting)
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-        SquadReplicationInfo.LeaveSquad(PRI);
     }
 
     super.Destroyed();
@@ -3576,20 +3555,6 @@ event PostLogin(PlayerController NewPlayer)
     if (DHPlayer(NewPlayer) != none && Level.NetMode == NM_DedicatedServer)
     {
         DHPlayer(NewPlayer).ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
-    }
-}
-
-function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
-{
-    local DHBroadcastHandler BH;
-
-    Log("BroadcastSquad" @ Sender @ Msg @ Type);
-
-    BH = DHBroadcastHandler(BroadcastHandler);
-
-    if (BH != none)
-    {
-        BH.BroadcastSquad(Sender, Msg, Type);
     }
 }
 

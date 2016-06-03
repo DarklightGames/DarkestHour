@@ -53,7 +53,7 @@ singular static function bool DHDebugMode()
 
 defaultproperties
 {
-    bDHDebugMode=true // TEMP - remove before any release !
+    bDHDebugMode=false
     Texture=texture'DHEngine_Tex.LevelInfo'
     AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
