@@ -3,12 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHPlayer extends ROPlayer
-    dependson(DHSquadReplicationInfo);
+class DHPlayer extends ROPlayer;
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
-const SQUAD_SIGNALS_MAX = 3;
-const SQUAD_SIGNAL_DURATION = 15.0;
 
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
@@ -65,23 +62,6 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
-// Squads
-var     DHSquadReplicationInfo  SquadReplicationInfo;
-var     bool                    bIgnoreSquadInvitations;
-var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
-
-var     DHCommandInteraction SquadOrderInteraction;
-
-struct SquadSignal
-{
-    var vector Location;
-    var float TimeSeconds;
-    var float FirstDrawTime;
-    var float LastDrawTime;
-};
-
-var     SquadSignal             SquadSignals[2];
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -89,7 +69,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
         bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex, SquadReplicationInfo, SquadMemberPositions;
+        MortarTargetIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -99,18 +79,13 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, // these ones in debug mode only
-        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
-        SeverSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
-        ServerSquadRename;
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite,
-        ClientSquadSignal;
+        ClientFadeFromBlack, ClientAddHudDeathMessage;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)

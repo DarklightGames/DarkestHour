@@ -23,7 +23,7 @@ simulated function PostBeginPlay()
     PRIComparator.CompareFunction = PRIComparatorFunction;
 }
 
-simulated function UpdateScoreBoard (Canvas C)
+simulated function UpdateScoreBoard(Canvas C)
 {
     local DHPlayerReplicationInfo myPRI, PRI;
     local array<DHPlayerReplicationInfo> GermanPRI, RussianPRI, UnassignedPRI;
@@ -290,14 +290,7 @@ simulated function UpdateScoreBoard (Canvas C)
             bHighlight = false;
         }
 
-        if ((bHighlight && myPRI.IsInSquad()) || class'DHPlayerReplicationInfo'.static.IsInSameSquad(myPRI, GermanPRI[i]))
-        {
-            PlayerColor = class'DHColor'.default.SquadColor;
-        }
-        else
-        {
-            PlayerColor = TeamColor;
-        }
+        PlayerColor = TeamColor;
 
         if (GermanPRI[i].RoleInfo != none)
         {
@@ -486,14 +479,7 @@ simulated function UpdateScoreBoard (Canvas C)
             bHighlight = false;
         }
 
-        if ((bHighlight && myPRI.IsInSquad()) || class'DHPlayerReplicationInfo'.static.IsInSameSquad(myPRI, RussianPRI[i]))
-        {
-            PlayerColor = class'DHColor'.default.SquadColor;
-        }
-        else
-        {
-            PlayerColor = TeamColor;
-        }
+        PlayerColor = TeamColor;
 
         if (RussianPRI[i].RoleInfo != none)
         {
