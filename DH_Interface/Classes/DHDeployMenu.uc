@@ -1470,9 +1470,9 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainerObject
         WinWidth=0.26
-        WinHeight=0.22
+        WinHeight=0.28
         WinLeft=0.02
-        WinTop=0.18
+        WinTop=0.12
         LeftPadding=0.05
         RightPadding=0.05
         TopPadding=0.05
@@ -1841,8 +1841,6 @@ defaultproperties
         bVisible=false
     End Object
     i_SpawnVehicle=SpawnVehicleImageObject
-
-    i_SpawnVehicle
 
     Begin Object Class=GUILabel Name=StatusLabelObject
         WinWidth=0.26
