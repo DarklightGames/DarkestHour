@@ -10,21 +10,6 @@ var localized string VehicleDepletedMessage;
 var localized string VehicleArrivedMessage;
 var localized string VehicleCutOffMessage;
 
-var localized string SquadJoinedMessage;
-var localized string SquadLeftMessage;
-var localized string SquadKickedMessage;
-var localized string SquadNoLongerLeaderMessage;
-var localized string SquadYouAreNowLeaderMessage;
-var localized string SquadNewLeaderMessage;
-var localized string SquadInviteAlreadyInSquadMessage;
-var localized string SquadFullMessage;
-var localized string SquadInvitePendingMessage;
-var localized string SquadInviteSentMessage;
-var localized string SquadNoLeaderMessage;
-var localized string SquadLockedMessage;
-var localized string SquadUnlockedMessage;
-var localized string SquadCreatedMessage;
-
 // This is overridden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored.
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -160,36 +145,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
         // You have logged out of admin message(used for AdminLoginSilent)
         case 21:
             return default.YouHaveLoggedOutOfAdminMsg;
-        // {0} has joined the squad.
-        case 30:
-            return Repl(default.SquadJoinedMessage, "{0}", RelatedPRI_1.PlayerName);
-        // {0} has left the squad.
-        case 31:
-            return Repl(default.SquadLeftMessage, "{0}", RelatedPRI_1.PlayerName);
-        case 32:
-            return default.SquadKickedMessage;
-        case 33:
-            return default.SquadNoLongerLeaderMessage;
-        case 34:
-            return default.SquadYouAreNowLeaderMessage;
-        case 35:
-            return Repl(default.SquadNewLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
-        case 36:
-            return Repl(default.SquadInviteAlreadyInSquadMessage, "{0}", RelatedPRI_1.PlayerName);
-        case 37:
-            return default.SquadFullMessage;
-        case 38:
-            return Repl(default.SquadInvitePendingMessage, "{0}", RelatedPRI_1.PlayerName);
-        case 39:
-            return Repl(default.SquadInviteSentMessage, "{0}", RelatedPRI_1.PlayerName);
-        case 40:
-            return default.SquadNoLeaderMessage;
-        case 41:
-            return default.SquadLockedMessage;
-        case 42:
-            return default.SquadUnlockedMessage;
-        case 43:
-            return default.SquadCreatedMessage;
         default:
             break;
     }
@@ -233,19 +188,4 @@ defaultproperties
     VehicleDepletedMessage="{0} reinforcements have been depleted."
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
-
-    SquadJoinedMessage="{0} has joined the squad."
-    SquadLeftMessage="{0} has left the squad."
-    SquadKickedMessage="You have been kicked from the squad."
-    SquadNoLongerLeaderMessage="You are no longer the squad leader."
-    SquadYouAreNowLeaderMessage="You are now the squad leader."
-    SquadNewLeaderMessage="{0} has become the squad leader."
-    SquadInviteAlreadyInSquadMessage="{0} is already in a squad."
-    SquadFullMessage="You cannot be send invitations because the squad is full."
-    SquadInvitePendingMessage="{0} has already been invited to join a squad. Please try again later."
-    SquadInviteSentMessage="{0} has been invited to join the squad."
-    SquadNoLeaderMessage="The squad leader has left the squad."
-    SquadLockedMessage="The squad has been locked."
-    SquadUnlockedMessage="The squad has been unlocked."
-    SquadCreatedMessage="You have created a squad."
 }
