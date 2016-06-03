@@ -97,7 +97,7 @@ function InternalOnOpen()
 
     if (SavedVersion != CurrentVersion)
     {
-        ShowAnnouncement();
+        //ShowAnnouncement();
 
         SavedVersion = class'DarkestHourGame'.static.GetVersionString();
         SaveConfig();
