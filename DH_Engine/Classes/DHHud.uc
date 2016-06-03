@@ -1559,6 +1559,13 @@ function DrawPlayerNames(Canvas C)
             C.DrawColor.A = Alpha;
 
             PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
+
+            // HACK: this fixes an odd bug I didn't have time to fully investigate.
+            if (PawnLocation == vect(0, 0, 0))
+            {
+                continue;
+            }
+
             PawnLocation.Z += 16.0;
             ScreenLocation = C.WorldToScreen(PawnLocation);
             PlayerName = P.PlayerReplicationInfo.PlayerName;

@@ -134,11 +134,28 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 // Modified to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
-    if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
+    local DHPawn P;
+
+    P = DHPawn(User);
+
+    if (Level.NetMode != NM_DedicatedServer &&
+        P != none &&
+        P.IsHumanControlled() &&
+        P.GetTeamNum() == VehicleTeam &&
+        ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime))
     {
-        NotifyParameters.Put("Controller", User.Controller);
-        User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
-        LastNotifyTime = Level.TimeSeconds;
+        if (P.GetRoleInfo() != none &&
+            P.GetRoleInfo().bCanUseMortars)
+        {
+            NotifyParameters.Put("Controller", User.Controller);
+            User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
+            LastNotifyTime = Level.TimeSeconds;
+        }
+        else if (bCanBeResupplied && !P.bUsedCarriedMGAmmo && OwningPawn != P)
+        {
+            User.ReceiveLocalizedMessage(class'DHPawnTouchMessage', 0, PlayerReplicationInfo,, User.Controller);
+            LastNotifyTime = Level.TimeSeconds;
+        }
     }
 }
 

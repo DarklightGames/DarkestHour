@@ -946,7 +946,7 @@ function ServerThrowMortarAmmo(Pawn Gunner)
     P = DHPawn(Pawn);
     M = DHMortarVehicle(Gunner);
 
-    if (P == none || M == none)
+    if (P == none || M == none || M.OwningPawn == P)
     {
         return;
     }
