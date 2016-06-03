@@ -445,7 +445,7 @@ defaultproperties
     i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
 
     Begin Object Class=FloatingImage Name=AnnouncementImage
-        Image=texture'DH_GUI_Tex.MainMenu.patreon'
+        Image=texture'DH_GUI_Tex.MainMenu.patreon_announce_image'
         DropShadow=none
         ImageStyle=ISTY_Justified
         WinTop=0.1
