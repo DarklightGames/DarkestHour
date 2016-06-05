@@ -910,10 +910,6 @@ exec function ThrowMGAmmo()
 
     if (OtherPawn != none)
     {
-        Log("MyPawn.bUsedCarriedMGAmmo" @ MyPawn.bUsedCarriedMGAmmo); // TEMPDEBUG x 3
-        Log("OtherPawn.bWeaponNeedsResupply" @ OtherPawn.bWeaponNeedsResupply);
-        Log("OtherPawn.bWeaponNeedsReload" @ OtherPawn.bWeaponNeedsReload);
-
         if (!MyPawn.bUsedCarriedMGAmmo && OtherPawn.bWeaponNeedsResupply)
         {
             ServerThrowMGAmmo(OtherPawn);
@@ -2776,8 +2772,6 @@ function ClientCopyToClipboard(string Str)
 // Similar to ClientOpenMenu(), but only opens menu if no menu is already open and the player isn't typing
 event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 {
-    Log("ClientProposeMenu has been called, checking if the user is typing or not");
-
     // if player is typing don't open menu
     if (Player.Console.bTyping)
     {

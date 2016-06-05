@@ -1470,8 +1470,6 @@ function DrawPlayerNames(Canvas C)
         Pawns[Pawns.Length] = HitPawn;
     }
 
-    Log("====================================================================");
-
     MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
     // Accumulate all relevant pawns within 25 meters.
@@ -2490,13 +2488,10 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
 
 simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
 {
-    local int i;
     local Actor A;
     local DHPlayer PC;
-    local DHPlayerReplicationInfo PRI, OtherPRI;
-    local vector PlayerLocation;
+    local DHPlayerReplicationInfo PRI;
     local int PlayerYaw;
-    local Pawn P, OtherPawn;
     local color SelfColor;
 
     PC = DHPlayer(PlayerOwner);

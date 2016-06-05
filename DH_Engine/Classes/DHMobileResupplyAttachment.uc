@@ -146,9 +146,6 @@ function Timer()
                         }
                     }
 
-                    Log("RI != none" @ RI != none); // TEMPDEBUG x 2
-                    Log("P.bUsedCarriedMGAmmo" @ P.bUsedCarriedMGAmmo);
-
                     if (RI != none && P.bUsedCarriedMGAmmo)
                     {
                         P.bUsedCarriedMGAmmo = false;
