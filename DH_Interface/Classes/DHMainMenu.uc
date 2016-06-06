@@ -10,7 +10,7 @@ var()   config string           MenuSong;
 var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
 var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity/*, b_Patreon*/;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
@@ -59,7 +59,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_Facebook);
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
-    sb_Social.ManageComponent(b_Patreon);
+    //sb_Social.ManageComponent(b_Patreon);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
@@ -228,9 +228,9 @@ function bool ButtonClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             break;
 
-        case b_Patreon:
-            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
-            break;
+//        case b_Patreon:
+//            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+//            break;
 
         case i_Overlay:
             HideAnnouncement();
@@ -623,20 +623,20 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
-    Begin Object Class=GUIGFXButton Name=PatreonButton
-        WinWidth=0.05
-        WinHeight=0.075
-        WinLeft=0.875
-        WinTop=0.925
-        OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.patreon'
-        bTabStop=true
-        Position=ICP_Center
-        Hint="Support us on Patreon!"
-        bRepeatClick=false
-        StyleName="TextLabel"
-    End Object
-    b_Patreon=PatreonButton
+//    Begin Object Class=GUIGFXButton Name=PatreonButton
+//        WinWidth=0.05
+//        WinHeight=0.075
+//        WinLeft=0.875
+//        WinTop=0.925
+//        OnClick=DHMainMenu.ButtonClick
+//        Graphic=texture'DH_GUI_Tex.MainMenu.patreon'
+//        bTabStop=true
+//        Position=ICP_Center
+//        Hint="Support us on Patreon!"
+//        bRepeatClick=false
+//        StyleName="TextLabel"
+//    End Object
+//    b_Patreon=PatreonButton
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
