@@ -965,7 +965,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 
     S = StripColor(S); // strip out color codes
 
-    if (Other.PlayerReplicationInfo.PlayerName ~= S)
+    if (Other == none || Other.PlayerReplicationInfo == none || Other.PlayerReplicationInfo.PlayerName ~= S)
     {
         return;
     }
