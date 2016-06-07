@@ -2655,7 +2655,7 @@ function vector GetObjectiveLocation(int Index)
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none && GRI.DHObjectives[Index] != none)
+    if (GRI != none && GRI.DHObjectives[Index] != none)
     {
         return GRI.DHObjectives[Index].Location;
     }
