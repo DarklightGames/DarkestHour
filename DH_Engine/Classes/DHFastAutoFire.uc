@@ -287,7 +287,7 @@ state FireLoop
 
     function StopFiring()
     {
-        if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot)
+        if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment != none && HiROFWeaponAttachment.bUnReplicatedShot)
         {
             HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
 
