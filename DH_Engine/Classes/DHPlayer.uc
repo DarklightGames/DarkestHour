@@ -2618,7 +2618,7 @@ state Dead
 // TODO: Check and confirm we actually need to override this
 event ClientReplaceMenu(string Menu, optional bool bDisconnect, optional string Msg1, optional string Msg2)
 {
-    if (Player.Console != none && Player.Console.bTyping)
+    if (Player == none || (Player.Console != none && Player.Console.bTyping))
     {
         return;
     }
