@@ -199,6 +199,7 @@ function PossessedBy(Controller C)
     local array<class<ROAmmoPouch> > AmmoClasses;
     local int i, Prim, Sec, Gren;
     local DHRoleInfo DHRI;
+    local ROPlayerReplicationInfo PRI;
 
     super(Pawn).PossessedBy(C);
 
@@ -229,17 +230,18 @@ function PossessedBy(Controller C)
             }
         }
 
-        HeadgearClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.GetHeadgear();
-        ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.GetAmmoPouches(AmmoClasses, Prim, Sec, Gren);
+        PRI = ROPlayerReplicationInfo(PlayerReplicationInfo);
 
-        if (ROPlayerReplicationInfo(PlayerReplicationInfo) != none && ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo != none)
+        if (PRI != none && PRI.RoleInfo != none)
         {
-            DetachedArmClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.static.GetArmClass();
-            DetachedLegClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.static.GetLegClass();
+            HeadgearClass = PRI.RoleInfo.GetHeadgear();
+            DetachedArmClass = PRI.RoleInfo.static.GetArmClass();
+            DetachedLegClass = PRI.RoleInfo.static.GetLegClass();
+            PRI.RoleInfo.GetAmmoPouches(AmmoClasses, Prim, Sec, Gren);
         }
         else
         {
-            Log("Error!!! Possess with no RoleInfo!!!");
+            Warn("Error!!! Possess with no RoleInfo!!!");
         }
 
         for (i = 0; i < AmmoClasses.Length; ++i)
