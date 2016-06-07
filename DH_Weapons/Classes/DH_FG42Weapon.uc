@@ -17,6 +17,7 @@ defaultproperties
     SightUpIronIdleAnim="deploy_idle"
     SightUpMagEmptyReloadAnim="deploy_reload_empty"
     SightUpMagPartialReloadAnim="deploy_reload_half"
+    NumMagsToResupply=2
     MaxNumPrimaryMags=6
     InitialNumPrimaryMags=6
     bHasSelectFire=true
