@@ -8,7 +8,7 @@
 class CRC extends Object
     abstract;
 
-private var int Table[256];
+var private int Table[256];
 
 static final function int CRC(array<byte> Bytes)
 {
