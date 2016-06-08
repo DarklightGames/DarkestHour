@@ -261,7 +261,7 @@ simulated function UpdateScoreBoard(Canvas C)
     DrawCell(C, PingText, 1, CalcX(BaseGermanX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
     Y += CellHeight;
 
-    CellHeight = YL/* * 0.85*/;
+    CellHeight = YL * 0.9;
     for (i = 0; i < GECount; ++i)
     {
         // if we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
@@ -450,7 +450,7 @@ simulated function UpdateScoreBoard(Canvas C)
     DrawCell(C, PingText, 1, CalcX(BaseRussianX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
     Y += CellHeight;
 
-    CellHeight = YL * 0.85;
+    CellHeight = YL * 0.9;
     for (i = 0; i < RUCount; ++i)
     {
         // If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
