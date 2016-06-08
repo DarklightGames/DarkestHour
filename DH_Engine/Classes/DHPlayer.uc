@@ -1755,9 +1755,13 @@ state PlayerClimbing
     // Modified so moving into a shallow water volume doesn't send player into swimming state
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
-        if (NewVolume != none && NewVolume.bWaterVolume && !(NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater))
+        if (NewVolume != none && NewVolume.bWaterVolume && !(NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater) && Pawn != none)
         {
             GotoState(Pawn.WaterMovementState);
+        }
+        else
+        {
+            GotoState(Pawn.LandMovementState);
         }
 
         return false;
