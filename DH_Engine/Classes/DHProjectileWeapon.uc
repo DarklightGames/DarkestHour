@@ -483,6 +483,11 @@ simulated state LoweringWeapon
         local name Anim;
         local int  i;
 
+        if (bUsingSights)
+        {
+            ZoomOut();
+        }
+
         if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
         {
             Anim = PutDownEmptyAnim;
