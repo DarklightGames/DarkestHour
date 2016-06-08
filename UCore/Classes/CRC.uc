@@ -12,7 +12,7 @@ var private int Table[256];
 
 static final function int CRC(array<byte> Bytes)
 {
-    local int i, j, CRC;
+    local int i, j, Mask, CRC;
 
     if (default.Table[0] == 0)
     {
@@ -34,7 +34,7 @@ static final function int CRC(array<byte> Bytes)
 
     for (i = 0; i  < Bytes.Length; ++i)
     {
-        CRC = (CRC >> 8) ^ Table[(CRC ^ Bytes[i]) & 0xFF];
+        CRC = (CRC >> 8) ^ default.Table[(CRC ^ Bytes[i]) & 0xFF];
     }
 
     return ~CRC;
