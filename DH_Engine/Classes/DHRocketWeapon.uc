@@ -104,8 +104,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 // Modified to unload a loaded rocket if weapon is flagged as bDoesNotRetainLoadedMag
 simulated function bool PutDown()
 {
-    super.PutDown();
-
     if (bDoesNotRetainLoadedMag && IsLoaded())
     {
         AmmoCharge[0] = 0; // unload rocket
