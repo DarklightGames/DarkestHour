@@ -4037,7 +4037,7 @@ defaultproperties
     DHScopeTurnSpeedFactor=0.2
 
     // Max flinch offset for close snaps
-    FlinchMaxOffset=512.0
+    FlinchMaxOffset=350.0
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
