@@ -56,5 +56,5 @@ function VerifyTeamChatters()
 defaultproperties
 {
     ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
+    ChatBroadcastClass=class'DH_Engine.DHChatHandler'
 }
-
