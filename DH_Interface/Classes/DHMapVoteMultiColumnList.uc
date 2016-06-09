@@ -98,27 +98,30 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         Min = int(Parts[2]);
         Max = int(Parts[3]);
 
-        if (Max >= GRI.MaxPlayers && Min <= 0)
+        if (Min > 0 && Max >= GRI.MaxPlayers)
         {
-            PlayerRangeString = "<" $ Max;
-        }
-        else if (Min > 0 && Max >= GRI.MaxPlayers)
-        {
-            PlayerRangeString = Min $ "+";
-        }
-        else
-        {
-            PlayerRangeString = Min $ "-" $ Max;
-        }
+            if (Min >= GRI.MaxPlayers)
+            {
+                PlayerRangeString = "(" $ Min $ "+" $ ")";
+            }
+            else if (Max > GRI.MaxPlayers)
+            {
+                PlayerRangeString = "(" $ Min $ "-" $ GRI.MaxPlayers $ ")";
+            }
+            else
+            {
+                PlayerRangeString = "(" $ Min $ "-" $ Max $ ")";
+            }
 
-        // Do a check if the current player count is in bounds of recommended range
-        if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MenuState != MSAT_Disabled)
-        {
-            DrawStyle = RedListStyle;
-        }
+            // Do a check if the current player count is in bounds of recommended range
+            if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MenuState != MSAT_Disabled)
+            {
+                DrawStyle = RedListStyle;
+            }
 
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, PlayerRangeString, FontScale);
-        DrawStyle = OldDrawTyle;
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, PlayerRangeString, FontScale);
+            DrawStyle = OldDrawTyle;
+        }
     }
 
     // Quality Control
@@ -160,11 +163,11 @@ function string GetSortString(int i)
     local string ColumnData[6];
 
     ColumnData[0] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
-    ColumnData[1] = right("000000" $ VRI.MapList[MapVoteData[i]].PlayCount,6);
-    ColumnData[2] = right("000000" $ VRI.MapList[MapVoteData[i]].Sequence,6);
-    ColumnData[3] = right("000000" $ VRI.MapList[MapVoteData[i]].Sequence,6);
-    ColumnData[4] = right("000000" $ VRI.MapList[MapVoteData[i]].Sequence,6);
-    ColumnData[5] = right("000000" $ VRI.MapList[MapVoteData[i]].Sequence,6);
+    ColumnData[1] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
+    ColumnData[2] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
+    ColumnData[3] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
+    ColumnData[4] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
+    ColumnData[5] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
 
     return ColumnData[SortColumn] $ ColumnData[PrevSortColumn];
 }
