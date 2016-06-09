@@ -25,8 +25,13 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     local eMenuState MState;
     local GUIStyles DrawStyle, OldDrawTyle;
     local array<string> Parts;
+    local DHGameReplicationInfo GRI;
+    local int Min, Max;
+    local string PlayerRangeString;
 
-    if (VRI == none)
+    GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
+
+    if (VRI == none || GRI == none)
     {
         return;
     }
@@ -89,23 +94,31 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     if (Parts.Length >= 4)
     {
         GetCellLeftWidth(3, CellLeft, CellWidth);
+        OldDrawTyle = DrawStyle;
+        Min = int(Parts[2]);
+        Max = int(Parts[3]);
 
-        // Do a check if the current player count is in bounds of recommended range
-        if ((DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length < int(Parts[2]) ||
-            DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length > int(Parts[3])) &&
-            MState != MSAT_Disabled)
+        if (Max >= GRI.MaxPlayers && Min <= 0)
         {
-            OldDrawTyle = DrawStyle;
-            DrawStyle = RedListStyle;
-
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[2] $ "-" $ Parts[3], FontScale);
-
-            DrawStyle = OldDrawTyle;
+            PlayerRangeString = "<" $ Max;
+        }
+        else if (Min > 0 && Max >= GRI.MaxPlayers)
+        {
+            PlayerRangeString = Min $ "+";
         }
         else
         {
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, Parts[2] $ "-" $ Parts[3], FontScale);
+            PlayerRangeString = Min $ "-" $ Max;
         }
+
+        // Do a check if the current player count is in bounds of recommended range
+        if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MenuState != MSAT_Disabled)
+        {
+            DrawStyle = RedListStyle;
+        }
+
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Center, PlayerRangeString, FontScale);
+        DrawStyle = OldDrawTyle;
     }
 
     // Quality Control

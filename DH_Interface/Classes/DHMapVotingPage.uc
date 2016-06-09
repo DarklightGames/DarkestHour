@@ -52,7 +52,21 @@ function bool AlignBK(Canvas C)
 function SendVote(GUIComponent Sender)
 {
     local int MapIndex, GameConfigIndex;
+    local DHGameReplicationInfo GRI;
+    local int Min, Max;
     local array<string> Parts;
+
+    if (PlayerOwner() == none)
+    {
+        return;
+    }
+
+    GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
+
+    if (MVRI == none || GRI == none)
+    {
+        return;
+    }
 
     if (Sender == lb_VoteCountListBox.List)
     {
@@ -66,16 +80,18 @@ function SendVote(GUIComponent Sender)
             Split(MVRI.MapList[MapIndex].MapName, ";", Parts);
 
             // Do a check if the current player count is in bounds of recommended range or if level has failed QA
-            if (Parts.Length >= 5)
+            if (Parts.Length >= 5) //Require all info
             {
+                Min = int(Parts[2]);
+                Max = int(Parts[3]);
+
                 if (Parts[4] ~= "Failed")
                 {
                     PlayerOwner().ClientMessage(lmsgMapQAFailed);
                     return;
                 }
 
-                if (DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length < int(Parts[2]) ||
-                    DHGameReplicationInfo(PlayerOwner().GameReplicationInfo).PRIArray.Length > int(Parts[3]))
+                if (GRI.PRIArray.Length < Min || (GRI.PRIArray.Length > Max && GRI.PRIArray.Length < GRI.MaxPlayers))
                 {
                     PlayerOwner().ClientMessage(lmsgMapOutOfBounds);
                     return;
@@ -114,8 +130,8 @@ function SendVote(GUIComponent Sender)
 
 defaultproperties
 {
-    lmsgMapQAFailed="Please vote for a map that has not failed quality control."
-    lmsgMapOutOfBounds="Please vote for a map suitable for the current player count."
+    lmsgMapQAFailed="Please vote for a map that has not failed quality control. You can still vote for this map on the full list."
+    lmsgMapOutOfBounds="Please vote for a map suitable for the current player count. You can still vote for this map on the full list."
 
     lmsgMode(0)="Majority Wins"
 
