@@ -188,26 +188,6 @@ simulated function UnTrackPlayer(int PlayerID)
     Log("UnTrackPlayer couldn't find restriction for PlayerID:" @ PlayerID, 'ChatManager');
 }
 
-// TEST - what?
-event bool AcceptVoice(PlayerReplicationInfo SenderPRI)
-{
-    local int i;
-
-    if (SenderPRI == none)
-    {
-        return true;
-    }
-
-    i = GetIDIndex(SenderPRI.PlayerID);
-
-    if (!IsValid(i))
-    {
-        return true;
-    }
-
-    return !bool(ChatRestrictions[i].Restriction & NOVOICE);
-}
-
 // Modified to prevent remote possibility of runaway loop due to ChatRestrictions array somehow being set at an extreme length
 function bool IsBanned(PlayerReplicationInfo PRI)
 {
