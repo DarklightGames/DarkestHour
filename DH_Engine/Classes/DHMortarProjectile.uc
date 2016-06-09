@@ -200,18 +200,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local ESurfaceTypes HitSurfaceType;
-
-    GetHitSurfaceType(HitSurfaceType, HitNormal);
-
-    // Destroy projectile without effects if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
-    if (HitSurfaceType == EST_Custom00)
-    {
-        Destroy();
-
-        return;
-    }
-
     self.HitNormal = HitNormal;
 
     GotoState('Whistle');

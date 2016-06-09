@@ -18,13 +18,54 @@ var sound           WaterHitSound; // sound of this bullet hitting water
 var PlayerReplicationInfo SavedPRI;
 var Pawn SavedInstigator;
 
-// Modified to move explosion stuff (moving karma ragdolls around) into Explode()
 simulated function Destroyed()
 {
-    if (Fear != none)
+    local int           i;
+    local vector        Start;
+    local ESurfaceTypes ST;
+
+    WeaponLight();
+
+    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
+
+    Start = Location + 32.0 * vect(0.0, 0.0, 1.0);
+
+    if (ShrapnelCount > 0 && Role == ROLE_Authority)
     {
-        Fear.Destroy();
+        for (i = 0; i < ShrapnelCount; ++i)
+        {
+            Spawn(class'ROShrapnelChunk',, '', Start);
+        }
     }
+
+    DoShakeEffect();
+
+    if (EffectIsRelevant(Start, false))
+    {
+        // If the projectile is still moving we'll need to spawn a different explosion effect
+        if (Physics == PHYS_Falling)
+        {
+            Spawn(ExplodeMidAirEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+        }
+        // If the projectile has stopped and is on the ground we'll spawn a ground explosion effect and spawn some dirt flying out
+        else if (Physics == PHYS_None)
+        {
+            GetHitSurfaceType(ST, vect(0.0, 0.0, 1.0));
+
+            if (ST == EST_Snow || ST == EST_Ice)
+            {
+                Spawn(ExplodeSnowEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
+            }
+            else
+            {
+                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecal, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
+            }
+        }
+    }
+
+    super.Destroyed();
 }
 
 // Modified to optimise
@@ -37,7 +78,6 @@ simulated function Tick(float DeltaTime)
         if (FuzeLengthTimer <= 0.0)
         {
             bAlreadyExploded = true;
-
             Explode(Location, vect(0.0, 0.0, 1.0));
         }
     }
@@ -356,16 +396,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     GetHitSurfaceType(ST, HitNormal);
-
-    // Destroy projectile without effects if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
-    if (ST == EST_Custom00)
-    {
-        bAlreadyExploded = true; // make sure projectile doesn't explode
-        Destroy();
-
-        return;
-    }
-
     GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projetile hit
 
     Bounces--;
@@ -451,89 +481,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
-// Modified to add various explosion effects & a call to the BlowUp() function to cause radius damage
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    local ESurfaceTypes ST;
-    local ROPawn        Victims;
-    local vector        Direction, Start;
-    local float         DamageScale, Distance;
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        WeaponLight();
-        DoShakeEffect();
-
-        Start = HitLocation + (32.0 * vect(0.0, 0.0, 1.0));
-
-        if (EffectIsRelevant(Start, false))
-        {
-            // If the projectile is still moving we'll need to spawn a different explosion effect
-            if (Physics == PHYS_Falling)
-            {
-                Spawn(ExplodeMidAirEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
-            }
-            // If the projectile has stopped and is on the ground we'll spawn a ground explosion effect and spawn some dirt flying out
-            else if (Physics == PHYS_None)
-            {
-                GetHitSurfaceType(ST, vect(0.0, 0.0, 1.0));
-
-                if (ST == EST_Snow || ST == EST_Ice)
-                {
-                    Spawn(ExplodeSnowEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
-                    Spawn(ExplosionDecalSnow, self,, HitLocation, rotator(-vect(0.0, 0.0, 1.0)));
-                }
-                else
-                {
-                    Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
-                    Spawn(ExplosionDecal, self,, HitLocation, rotator(-vect(0.0, 0.0, 1.0)));
-                }
-            }
-        }
-
-        // Move karma ragdolls around when this explodes (formerly in ROThrowableExplosiveProjectile's Destroyed event)
-        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
-        {
-            if (Victims.Physics == PHYS_KarmaRagDoll && Victims != self)
-            {
-                Direction = Victims.Location - Start;
-                Distance = FMax(1.0, VSize(Direction));
-                Direction = Direction / Distance;
-                DamageScale = 1.0 - FMax(0.0, (Distance - Victims.CollisionRadius) / DamageRadius);
-
-                Victims.DeadExplosionKarma(MyDamageType, DamageScale * MomentumTransfer * Direction, DamageScale);
-            }
-        }
-    }
-
-    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
-
     BlowUp(HitLocation);
-
     Destroy();
-}
-
-simulated function BlowUp(vector HitLocation)
-{
-    local vector Start;
-    local int    i;
-
-    if (Role == ROLE_Authority)
-    {
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-
-        MakeNoise(1.0);
-
-        if (ShrapnelCount > 0)
-        {
-            Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
-
-            for (i = 0; i < ShrapnelCount; ++i)
-            {
-                Spawn(class'ROShrapnelChunk',, '', Start);
-            }
-        }
-    }
 }
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
