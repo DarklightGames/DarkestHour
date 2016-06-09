@@ -10,13 +10,13 @@ class CRC extends Object
 
 var private int Table[256];
 
-static final function int CRC(array<byte> Bytes)
+static final function int FromBytes(array<byte> Bytes)
 {
     local int i, j, Mask, CRC;
 
     if (default.Table[0] == 0)
     {
-        for (i = 0; i <= 255; ++i)
+        for (i = 0; i < 256; ++i)
         {
             CRC = i;
 
@@ -32,7 +32,7 @@ static final function int CRC(array<byte> Bytes)
 
     CRC = 0xFFFFFFFF;
 
-    for (i = 0; i  < Bytes.Length; ++i)
+    for (i = 0; i < Bytes.Length; ++i)
     {
         CRC = (CRC >> 8) ^ default.Table[(CRC ^ Bytes[i]) & 0xFF];
     }
