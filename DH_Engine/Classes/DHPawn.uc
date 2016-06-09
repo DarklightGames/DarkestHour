@@ -4922,9 +4922,26 @@ function SetMovementPhysics()
     }
 }
 
+// Colin: This is a bit of a half-measure, since we need to retain support for
+// "using" the radio trigger normally. Unforunately, the Pawns is consuming the
+// use requests when players are looking directly at the player and trying to
+// use the radio. This override simply passes the UsedBy call to the radio
+// trigger, if it exists. All error handling and sanity checks are performed
+// by the artillery trigger.
+function UsedBy(Pawn User)
+{
+    if (CarriedRadioTrigger != none)
+    {
+        CarriedRadioTrigger.UsedBy(user);
+    }
+
+    super.UsedBy(User);
+}
+
 simulated function NotifySelected(Pawn User)
 {
     local DHPawn P;
+    local DHRoleInfo RI;
 
     P = DHPawn(User);
 
@@ -4947,6 +4964,16 @@ simulated function NotifySelected(Pawn User)
     {
         P.ReceiveLocalizedMessage(TouchMessageClass, 1, self.PlayerReplicationInfo,, User.Controller);
         LastNotifyTime = Level.TimeSeconds;
+    }
+    else if (CarriedRadioTrigger != none)
+    {
+        RI = P.GetRoleInfo();
+
+        if (RI != none && RI.bIsArtilleryOfficer)
+        {
+            P.ReceiveLocalizedMessage(TouchMessageClass, 2, self.PlayerReplicationInfo,, User.Controller);
+            LastNotifyTime = Level.TimeSeconds;
+        }
     }
 }
 
