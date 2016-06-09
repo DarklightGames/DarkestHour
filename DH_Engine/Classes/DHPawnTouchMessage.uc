@@ -37,6 +37,7 @@ defaultproperties
 {
     Messages(0)="Press [%THROWMGAMMO%] to resupply {0}"
     Messages(1)="Press [%THROWMGAMMO%] to reload {0}"
+    Messages(2)="Press [%USE%] to request artillery"
     FallbackPlayerName="friendly soldier"
 }
 
