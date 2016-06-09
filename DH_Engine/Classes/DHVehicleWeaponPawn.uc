@@ -415,8 +415,8 @@ function KDriverEnter(Pawn P)
     {
         OldReloadState = VehWep.ReloadState;
 
-        // If the weapon isn't loaded & this player does not have manual reloading on, try to start/resume a reload
-        if (VehWep.ReloadState != RL_ReadyToFire && !VehWep.PlayerUsesManualReloading())
+        // Try to resume any paused reload, or start a new reload if in waiting state & the player does not use manual reloading
+        if (VehWep.ReloadState < RL_ReadyToFire || (VehWep.ReloadState == RL_Waiting && !VehWep.PlayerUsesManualReloading()))
         {
             VehWep.AttemptReload();
         }

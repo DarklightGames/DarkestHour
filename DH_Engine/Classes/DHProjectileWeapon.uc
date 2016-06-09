@@ -483,6 +483,11 @@ simulated state LoweringWeapon
         local name Anim;
         local int  i;
 
+        if (bUsingSights)
+        {
+            ZoomOut();
+        }
+
         if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
         {
             Anim = PutDownEmptyAnim;
@@ -1668,14 +1673,19 @@ function bool ResupplyAmmo()
 // New function to update the player's resupply status & number of spare mags
 function UpdateResupplyStatus(bool bCurrentWeapon)
 {
+    local DHPawn P;
+
+    P = DHPawn(Instigator);
+
     if (bCurrentWeapon)
     {
         CurrentMagCount = Max(0, PrimaryAmmoArray.Length - 1); // update number of spare mags (replicated)
     }
 
-    if (ROPawn(Instigator) != none)
+    if (P != none)
     {
-        ROPawn(Instigator).bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1);
+        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1);
+        P.bWeaponNeedsReload = false;
     }
 }
 
