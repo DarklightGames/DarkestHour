@@ -5,7 +5,10 @@
 
 // Just a legacy class for backwards compatibility, as DHObjective is now in DH_Engine code package
 // That allows it to be accessed by DarkestHourGame, which allows us to have the game access DHObjective variables
-// TODO - this class should be removed in some future release when people have had time to convert maps to the new actor
+
+// Do not make this notplacable because it deletes the actor on rebuild with no warning or indication!
+// At this point this actor should NOT ever be deleted as it would break even official maps.
+
 class DH_ObjTerritory extends DHObjective
     hidecategories(Assault,GameObjective,JumpDest,JumpSpot,MothershipHack)
-    notplaceable;
+    placeable;
