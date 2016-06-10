@@ -17,17 +17,20 @@ var  float          SmokeSoundDuration;
 // var    Emitter    SmokeEmitter;
 
 // Modified to add smoke effects
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
-
-    if (Level.NetMode != NM_DedicatedServer && !bCollided) // check on !bCollided is in case the Super flags no more effects, e.g. if hit invisible BSP used as a network culler
+    if (!bCollided)
     {
-        Spawn(SmokeEmitterClass, self,, HitLocation, rotator(-HitNormal));
-        PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
-        AmbientSound = SmokeLoopSound;
-        AmbientVolumeScale = 1.0; // overriding defaults for shells, which are intended for their in-flight 'whistle' - this (& radius) match smoke grenade sounds
-        SoundRadius = 200.0;
+        super.Explode(HitLocation, HitNormal);
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            Spawn(SmokeEmitterClass, self,, HitLocation, rotator(-HitNormal));
+            PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
+            AmbientSound = SmokeLoopSound;
+            AmbientVolumeScale = 1.0; // overriding defaults for shells, which are intended for their in-flight 'whistle' - this (& radius) match smoke grenade sounds
+            SoundRadius = 200.0;
+        }
     }
 }
 

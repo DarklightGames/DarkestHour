@@ -11,6 +11,11 @@ var  sound          SmokeIgniteSound;
 var  sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
+// Function emptied out to remove everything relating to explosion, as not an exploding grenade
+simulated function Destroyed()
+{
+}
+
 // Modified to remove 'Fear' stuff, as not an exploding grenade
 simulated function Landed(vector HitNormal)
 {

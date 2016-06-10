@@ -16,7 +16,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
 
     // Move karma ragdolls around when this explodes
-    if (Level.NetMode != NM_DedicatedServer && !bCollided) // check on !bCollided is in case the Super flags no more effects, e.g. if hit invisible BSP used as a network culler
+    if (Level.NetMode != NM_DedicatedServer)
     {
         Start = SavedHitLocation + vect(0.0, 0.0, 32.0); // changed from Location to SavedHitLocation
 

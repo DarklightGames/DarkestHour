@@ -873,6 +873,8 @@ exec function LogCannon() // DEBUG (Matt: please use & report if you ever find y
 {
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
     Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " ProjectileClass =" @ VehWep.ProjectileClass @ " Controller =" @ Controller.Tag);
+    Log("AmmoIndex =" @ VehWep.GetAmmoIndex() @ " LocalPendingAmmoIndex =" @ DHVehicleCannon(VehWep).LocalPendingAmmoIndex
+        @ " ServerPendingAmmoIndex =" @ DHVehicleCannon(VehWep).ServerPendingAmmoIndex);
     Log("PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
 }
 

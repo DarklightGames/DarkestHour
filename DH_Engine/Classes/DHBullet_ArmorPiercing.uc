@@ -363,24 +363,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local ROVehicle        HitVehicle;
     local DHArmoredVehicle AV;
     local bool             bPenetratedVehicle;
-    local vector           TempHitLocation, TempHitNormal;
-    local material         HitMaterial;
-
-    // Destroy projectile without effects or deflection if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
-    // bHiddenEd is used as a quick screening check, as it's very unusual & is pretty good at flagging up this special BSP (a little hacky, but cheap & effective)
-    // Then we have to do a short trace just to get the hit material, to confirm it is our special BSP
-    if (Wall.bHiddenEd)
-    {
-        Trace(TempHitLocation, TempHitNormal, Location + (16.0 * vector(Rotation)), Location, false,, HitMaterial);
-
-        if (HitMaterial != none && HitMaterial.SurfaceType == EST_Custom00)
-        {
-            bBounce = false;
-            Destroy();
-
-            return;
-        }
-    }
 
     // Hit SavedHitActor that we've already hit & recorded
     if (SavedHitActor != none && SavedHitActor == Wall)

@@ -280,8 +280,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 {
     local Actor           Other, A;
     local DHPawn          HitPlayer, WhizzedPlayer;
-    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal, TempHitNormal, Momentum;
-    local material        HitMaterial;
+    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal, Momentum;
     local int             WhizType, Damage, i;
     local array<int>      HitPoints;
     local array<WhizInfo> SavedWhizzes;
@@ -299,19 +298,6 @@ function bool PreLaunchTrace(vector Start, vector Direction)
         if (!A.bWorldGeometry && A.Physics != PHYS_Karma && !((A.bBlockActors || A.bProjTarget) && A.bBlockHitPointTraces))
         {
             continue;
-        }
-
-        // Abort pre-launch trace if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
-        // bHiddenEd is used as a quick screening check, as it's very unusual & is pretty good at flagging up this special BSP (a little hacky, but cheap & effective)
-        // Then we have to do a short trace just to get the hit material, to confirm it is our special BSP
-        if (A.bHiddenEd)
-        {
-            Weapon.Trace(TempHitLocation, TempHitNormal, HitLocation + (16.0 * Direction), HitLocation, true,, HitMaterial);
-
-            if (HitMaterial != none && HitMaterial.SurfaceType == EST_Custom00)
-            {
-                return true; // this will stop the bullet from spawning & we won't play any hit effects
-            }
         }
 
         // If hit collision mesh actor, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor

@@ -57,6 +57,17 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 }
 
+simulated function Destroyed()
+{
+    if (!bDidExplosionFX)
+    {
+        SpawnExplosionEffects(SavedHitLocation, SavedHitNormal);
+        bDidExplosionFX = true;
+    }
+
+    super.Destroyed();
+}
+
 // Pitch aim adjustment for cannons with mechanically linked gunsight range setting - returns the proper pitch adjustment to hit a target at a particular range
 simulated static function int GetPitchForRange(int Range)
 {
@@ -200,14 +211,6 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 HitSound = WaterHitSound; // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
                 HitEmitterClass = ShellHitWaterEffectClass;
                 break;
-
-            // Destroy projectile without effects if we hit invisible BSP used as a network culler (signified by being textured with a material surface type 'EST_Custom00')
-            case EST_Custom00:
-                bCollided = true;      // stops possibility of further unwanted explosion features, including calling BlowUp()
-                Role = ROLE_Authority; // allows immediate destruction on net client, without having to wait for server
-                Destroy();
-
-                return;
 
             default:
                 HitSound = DirtHitSound;
