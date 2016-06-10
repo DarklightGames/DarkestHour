@@ -8,6 +8,7 @@ class DH_SpringfieldScopedPickup extends DHWeaponPickup
 
 defaultproperties
 {
+    DrawScale3d=(Y=0.75) // Mesh is improperly scaled, need this to make it look right
     InventoryType=class'DH_Weapons.DH_SpringfieldScopedWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1903A4_Springfield'
     PrePivot=(Z=3.0)
