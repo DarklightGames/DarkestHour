@@ -795,11 +795,6 @@ event VehicleDestroyed(Vehicle V)
                 ++GRI.MaxTeamVehicles[VehiclePools[i].VehicleClass.default.VehicleTeam];
             }
 
-            if (!GRI.IsVehiclePoolInfinite(i))
-            {
-                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 100 + i,,, self); // "vehicle has been destroyed"
-            }
-
             if (VehiclePools[i].OnVehicleDestroyedEvent != '')
             {
                 TriggerEvent(VehiclePools[i].OnVehicleDestroyedEvent, self, none);
