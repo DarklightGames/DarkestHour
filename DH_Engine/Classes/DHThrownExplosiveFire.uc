@@ -257,8 +257,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
             }
 
             // Have the grenade go in the direction the instigator was going
-            SpawnedProjectile.Speed = VSize(Instigator.Velocity);
-            SpawnedProjectile.Velocity = SpawnedProjectile.Speed * Instigator.Velocity;
+            SpawnedProjectile.Velocity = Instigator.Velocity;
 
             return SpawnedProjectile;
         }
@@ -384,3 +383,4 @@ defaultproperties
     SpreadStyle=SS_Random
     bShouldBlurOnFire=false
 }
+
