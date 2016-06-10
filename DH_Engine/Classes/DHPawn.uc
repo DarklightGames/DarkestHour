@@ -1971,7 +1971,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     if (!bShouldGib && DrivenVehicle == none)
     {
         // Drop inventory if player is not in a vehicle and is not about to be completely obliterated
-        DropWeaponInventory(TossVel);
+        BurningDropWeaps();
     }
 
     DestroyRadioTrigger();
