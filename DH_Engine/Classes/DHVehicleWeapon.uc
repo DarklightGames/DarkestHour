@@ -828,7 +828,7 @@ defaultproperties
     NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     PitchUpLimit=15000
     PitchDownLimit=45000
-    SoundRadius=750.0
+    SoundRadius=272.7
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireEffectScale=1.0
     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.9)

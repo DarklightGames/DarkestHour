@@ -1462,7 +1462,7 @@ defaultproperties
     // Also, as alt sound values are now the same as normal sound values, it stops a server swapping these values back & forth, which used to happen every time coax fired & stopped
     // So this avoids lots of unnecessary replication (only alt fire uses ambient sound, no there's never any need to change the ambient sound settings)
     AltFireSoundVolume=255.0
-    AltFireSoundRadius=750.0
+    AltFireSoundRadius=272.7
     AltFireSoundScaling=2.75
     AltReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     bRotateSoundFromPawn=true
