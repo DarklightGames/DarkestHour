@@ -569,6 +569,12 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
     }
 }
 
+// Determines if the weapon is thrown on death.
+function bool CanDeadThrow()
+{
+    return bCanThrow;
+}
+
 defaultproperties
 {
     PlayerIronsightFOV=60.0

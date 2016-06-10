@@ -103,10 +103,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
     }
 }
 
-// Modified so player can choose to throw away binoculars, but won't drop them every time he dies
-simulated function bool CanThrow()
+function bool CanDeadThrow()
 {
-    return Instigator != none && Instigator.Health > 0;
+    return false;
 }
 
 // Modified to avoid re-setting DHPawn.bPreventWeaponFire to false, as binocs can never fire (doesn't actually make a difference, but avoids unnecessary update on replicated variable)

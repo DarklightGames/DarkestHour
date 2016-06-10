@@ -4305,6 +4305,7 @@ function DropWeaponInventory(vector TossVel)
 {
     local Inventory Inv;
     local Weapon    W;
+    local DHWeapon  DHW;
     local vector    X, Y, Z;
     local int       i;
     local array<Inventory> InventoryList;
@@ -4324,7 +4325,14 @@ function DropWeaponInventory(vector TossVel)
     {
         W = Weapon(InventoryList[i]);
 
-        if (W != none && W.CanThrow()) // check weapon's CanThrow(), allowing certain weapons to prevent themselves being dropped when player dies
+        if (W == none)
+        {
+            continue;
+        }
+
+        DHW = DHWeapon(W);
+
+        if ((DHW != none && DHW.CanDeadThrow()) || (DHW == none && W.bCanThrow))
         {
             W.DropFrom(Location + (0.8 * CollisionRadius * X) - (0.5 * CollisionRadius * Y));
         }

@@ -5,9 +5,9 @@
 
 class DH_RedSmokeWeapon extends DHExplosiveWeapon;
 
-simulated function bool CanThrow()
+function bool CanDeadThrow()
 {
-    return Instigator != none && Instigator.Health > 0;
+    return false;
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
