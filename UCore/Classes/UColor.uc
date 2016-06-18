@@ -148,6 +148,23 @@ var color WhiteSmoke;
 var color Yellow;
 var color YellowGreen;
 
+static final function string ToString(color C)
+{
+    return "(R=" $ C.R $ ",G=" $ C.G $ ",B=" $ C.B $ ",A=" $ C.A $ ")";
+}
+
+static final function color Interp(float X, color A, color B)
+{
+    local color C;
+
+    C.R = byte(Lerp(X, A.R, B.R));
+    C.G = byte(Lerp(X, A.G, B.G));
+    C.B = byte(Lerp(X, A.B, B.B));
+    C.A = byte(Lerp(X, A.A, B.A));
+
+    return C;
+}
+
 defaultproperties
 {
     AliceBlue=(R=240,G=248,B=255,A=255)

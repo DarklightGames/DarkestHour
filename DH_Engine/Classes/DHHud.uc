@@ -3744,6 +3744,7 @@ simulated function DrawSpectatingHud(Canvas C)
     local float  Scale, X, Y, strX, strY, NameWidth, SmallH, XL;
     local int    Time;
     local string s;
+    local bool bShouldFlashText;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3793,7 +3794,7 @@ simulated function DrawSpectatingHud(Canvas C)
         // Draw deploy text
         if (PRI == none || PRI.Team == none || PRI.bOnlySpectator)
         {
-            s = default.JoinTeamText; // press ESC to join a team
+            s = default.JoinTeamText; // Press ESC to join a team
         }
         else if (DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
@@ -3818,6 +3819,7 @@ simulated function DrawSpectatingHud(Canvas C)
                             {
                                 // Press ESC to select a spawn point
                                 s = default.SelectSpawnPointText;
+                                bShouldFlashText = true;
                             }
                             else
                             {
@@ -3838,12 +3840,14 @@ simulated function DrawSpectatingHud(Canvas C)
                             {
                                 // Press ESC to select a spawn point
                                 s = default.SelectSpawnPointText;
+                                bShouldFlashText= true;
                             }
                         }
                         else
                         {
                             // Press ESC to select a spawn point
                             s = default.SelectSpawnPointText;
+                            bShouldFlashText = true;
                         }
 
                         break;
@@ -3878,6 +3882,12 @@ simulated function DrawSpectatingHud(Canvas C)
         }
 
         Y += 4.0 * Scale + strY;
+
+        // Flash the "Press ESC to select a spawn point" message to make it more noticeable.
+        if (bShouldFlashText)
+        {
+            C.DrawColor = class'UColor'.static.Interp(class'UInterp'.static.InterpSin(Level.TimeSeconds), WhiteColor, RedColor);
+        }
 
         C.SetPos(X, Y);
         C.DrawTextClipped(s);
@@ -4212,13 +4222,13 @@ defaultproperties
     TeamMessagePrefix="*TEAM* "
 
     // Deploying text
-    JoinTeamText="Press ESC to join a team"
-    SelectSpawnPointText="Press ESC to select a spawn point"
-    ReinforcementText="You will deploy as a {0} in {2} | Press ESC to change"
-    SpawnInfantryText="You will deploy as a {0} in {2} | Press ESC to change"
-    SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press ESC to change"
-    SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
-    SpawnNoRoleText="You will deploy in {2} | Press ESC to change"
+    JoinTeamText="Press [ESC] to join a team"
+    SelectSpawnPointText="Press [ESC] to select a spawn point"
+    ReinforcementText="You will deploy as a {0} in {2} | Press [ESC] to change"
+    SpawnInfantryText="You will deploy as a {0} in {2} | Press [ESC] to change"
+    SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press [ESC] to change"
+    SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
+    SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
 
     // Screen indicator icons
