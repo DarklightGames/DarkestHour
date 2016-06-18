@@ -216,6 +216,12 @@ simulated function UpdateScoreBoard(Canvas C)
         X = CalcX(BaseGermanX, C);
         Y = CalcY(2.0, C);
 
+        // Drop shadow
+        C.DrawColor = class'UColor'.default.Black;
+        C.DrawColor.A = 128;
+        C.SetPos(X + 1, Y + 1);
+        C.DrawTextClipped(S);
+
         C.DrawColor = HudClass.default.WhiteColor;
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
@@ -588,6 +594,7 @@ simulated function UpdateScoreBoard(Canvas C)
             break;
         }
     }
+
     CellHeight = YL + (YL * 0.25);
 
     Y += CellHeight;
@@ -644,6 +651,41 @@ simulated function UpdateScoreBoard(Canvas C)
             DrawCell(C, S, 0, CalcX(BaseGermanX, C), Y, CalcX(29.0, C), CellHeight, false, HudClass.default.WhiteColor);
         }
     }
+}
+
+// Colin: Modified to add a drop shadow to the text drawing.
+simulated function DrawCell(Canvas C, coerce string Text, byte Align, float XPos, float YPos, float Width, float Height, bool bDrawBacking, Color F, optional Color B)
+{
+    local float X, Y, XL, YL;
+
+    X = XPos;
+    Y = YPos;
+
+    C.TextSize("TEST", XL, YL);
+    C.SetOrigin(X, Y);
+    C.SetClip(XPos + Width, YPos + Height);
+
+    if (bDrawBacking)
+    {
+        C.SetPos(0.0, 0.0);
+        C.DrawColor = B;
+        C.DrawRect(texture'WhiteSquaretexture', C.ClipX - C.OrgX, C.ClipY - C.OrgY);
+    }
+
+    if (Text != "")
+    {
+        C.SetPos(0, 0);
+
+        C.DrawColor = class'UColor'.default.Black;
+        C.DrawColor.A = 128;
+        C.DrawTextJustified(Text, Align, X + 1, Y + 1, C.ClipX, C.ClipY);
+
+        C.DrawColor = F;
+        C.DrawTextJustified(Text, Align, X, Y, C.ClipX, C.ClipY);
+    }
+
+    C.SetOrigin(0.0, 0.0);
+    C.SetClip(C.SizeX, C.SizeY);
 }
 
 defaultproperties
