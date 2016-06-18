@@ -1910,7 +1910,7 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 // DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
-    local vector          TossVel, HitDirection;
+    local vector          HitDirection;
     local Trigger         T;
     local NavigationPoint N;
     local float           DamageBeyondZero;
