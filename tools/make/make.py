@@ -29,7 +29,7 @@ def main():
     args = argparser.parse_args()
 
     if not os.path.isdir(args.dir):
-        print 'error: "{dir}" is not a directory'.format(dir)
+        print 'error: "{}" is not a directory'.format(dir)
         sys.exit(1)
 
     # system directory
@@ -114,12 +114,6 @@ def main():
 
         package_crcs[package] = package_crc
 
-    try:
-        with open(manifest_filename, 'w') as f:
-            json.dump(package_crcs, f)
-    except:
-        print 'could not write mod make manifest'
-
     if len(packages_to_compile) == 0:
         print 'no packages to compile'
         sys.exit(0)
@@ -144,6 +138,12 @@ def main():
                     print 'error: failed to remove file {} (do you have the client, server or editor running?)'.format(package)
                     sys.exit(1)
 
+    try:
+        with open(manifest_filename, 'w') as f:
+            json.dump(package_crcs, f)
+    except:
+        print 'could not write mod make manifest'
+
     os.chdir(sys_dir)
 
     # run ucc make
@@ -164,9 +164,12 @@ def main():
 
     # run dumpint on compiled packages
     if args.dumpint:
+        print 'running dumpint (note: output will be garbled due to ucc writing to stdout in parallel)'
+        processes = []
         for package in packages_to_compile:
-            proc = subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod])
-            proc.communicate()
+            processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
+        
+        exit_codes = [p.wait() for p in processes]
 
         # move localization files to mod directory
         for root, dirs, files in os.walk(sys_dir):
