@@ -703,25 +703,46 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
     }
 }
 
-function ClearMortarTarget(byte TeamIndex, byte Index)
+function ClearAllMortarTargets()
 {
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        if (GermanMortarTargets[Index].Controller != none)
-        {
-            GermanMortarTargets[Index].Controller.MortarTargetIndex = 255;
-        }
+    local int i;
 
-        GermanMortarTargets[Index].bIsActive = false;
+    for (i = 0; i < arraycount(GermanMortarTargets); ++i)
+    {
+        GermanMortarTargets[i].bIsActive = false;
     }
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        if (AlliedMortarTargets[Index].Controller != none)
-        {
-            AlliedMortarTargets[Index].Controller.MortarTargetIndex = 255;
-        }
 
-        AlliedMortarTargets[Index].bIsActive = false;
+    for (i = 0; i < arraycount(AlliedMortarTargets); ++i)
+    {
+        AlliedMortarTargets[i].bIsActive = false;
+    }
+}
+
+function ClearMortarTarget(DHPlayer PC)
+{
+    local int i;
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(GermanMortarTargets); ++i)
+    {
+        if (GermanMortarTargets[i].Controller == PC)
+        {
+            GermanMortarTargets[i].bIsActive = false;
+            break;
+        }
+    }
+
+    for (i = 0; i < arraycount(AlliedMortarTargets); ++i)
+    {
+        if (AlliedMortarTargets[i].Controller == PC)
+        {
+            AlliedMortarTargets[i].bIsActive = false;
+            break;
+        }
     }
 }
 

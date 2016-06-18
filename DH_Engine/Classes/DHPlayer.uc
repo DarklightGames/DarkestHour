@@ -43,9 +43,6 @@ var     bool                    bLockJump;
 var     bool                    bMantleDebug;
 var     int                     MantleLoopCount;
 
-// Mortars
-var     byte                    MortarTargetIndex;
-
 // Spawning
 var     byte                    SpawnPointIndex;
 var     byte                    SpawnVehicleIndex;
@@ -68,8 +65,7 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
-        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
-        MortarTargetIndex;
+        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -833,7 +829,6 @@ function ServerSaveMortarTarget(bool bIsSmoke)
                 GRI.GermanMortarTargets[i].Location = HitLocation;
                 GRI.GermanMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.GermanMortarTargets[i].bIsSmoke = bIsSmoke;
-                MortarTargetIndex = i;
                 bMortarTargetMarked = true;
                 break;
             }
@@ -852,7 +847,6 @@ function ServerSaveMortarTarget(bool bIsSmoke)
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
                 GRI.AlliedMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.AlliedMortarTargets[i].bIsSmoke = bIsSmoke;
-                MortarTargetIndex = i;
                 bMortarTargetMarked = true;
                 break;
             }
@@ -864,11 +858,11 @@ function ServerSaveMortarTarget(bool bIsSmoke)
         // [DH]Basnett has marked a mortar target
         if (bIsSmoke)
         {
-            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PlayerReplicationInfo,,);
+            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PlayerReplicationInfo);
         }
         else
         {
-            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo,,);
+            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo);
         }
     }
     else
@@ -2572,7 +2566,6 @@ function Reset()
     VehiclePoolIndex = default.VehiclePoolIndex;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
-    MortarTargetIndex = default.MortarTargetIndex;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -4049,7 +4042,6 @@ defaultproperties
 
     // Other values
     NextSpawnTime=15
-    MortarTargetIndex=255
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
     DesiredFOV=90.0

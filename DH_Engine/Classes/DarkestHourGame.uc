@@ -1435,9 +1435,9 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
             GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-            if (GRI != none && DHPlayer(aPlayer) != none && DHPlayer(aPlayer).MortarTargetIndex != 255)
+            if (GRI != none)
             {
-                GRI.ClearMortarTarget(aPlayer.PlayerReplicationInfo.Team.TeamIndex, DHPlayer(aPlayer).MortarTargetIndex);
+                GRI.ClearMortarTarget(DHPlayer(aPlayer));
             }
         }
         else
@@ -2286,31 +2286,13 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
 
 function ResetMortarTargets()
 {
-    local int k;
     local DHGameReplicationInfo GRI;
-
-    if (GameReplicationInfo == none)
-    {
-        return;
-    }
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none)
+    if (GRI != none)
     {
-        return;
-    }
-
-    // Clear mortar allied targets
-    for (k = 0; k < arraycount(GRI.AlliedMortarTargets); ++k)
-    {
-        GRI.ClearMortarTarget(ALLIES_TEAM_INDEX, k);
-    }
-
-    // Clear mortar german targets
-    for (k = 0; k < arraycount(GRI.GermanMortarTargets); ++k)
-    {
-        GRI.ClearMortarTarget(AXIS_TEAM_INDEX, k);
+        GRI.ClearAllMortarTargets();
     }
 }
 
@@ -2797,9 +2779,9 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     // Since we're changing teams, remove all rally points/help requests/etc
     ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
 
-    if (GRI != none && DHPlayer(Other) != none && DHPlayer(Other).MortarTargetIndex != 255)
+    if (GRI != none)
     {
-        GRI.ClearMortarTarget(OldTeam, DHPlayer(Other).MortarTargetIndex);
+        GRI.ClearMortarTarget(DHPlayer(Other));
     }
 
     if (PC != none)
@@ -3441,11 +3423,7 @@ function NotifyLogout(Controller Exiting)
 
     if (GRI != none && PC != none)
     {
-        if (PC.MortarTargetIndex != 255)
-        {
-            GRI.ClearMortarTarget(Exiting.PlayerReplicationInfo.Team.TeamIndex, PC.MortarTargetIndex);
-        }
-
+        GRI.ClearMortarTarget(PC);
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
