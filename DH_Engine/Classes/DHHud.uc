@@ -1458,7 +1458,7 @@ function DrawPlayerNames(Canvas C)
 
     foreach TraceActors(class'Pawn', P, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
-        if (P != none && P != PawnOwner)
+        if (P != none && P != PawnOwner && FastTrace(HitLocation, TraceStart))
         {
             HitPawn = P;
             break;
