@@ -3886,7 +3886,7 @@ simulated function DrawSpectatingHud(Canvas C)
         // Flash the "Press ESC to select a spawn point" message to make it more noticeable.
         if (bShouldFlashText)
         {
-            C.DrawColor = class'UColor'.static.Interp(class'UInterp'.static.InterpSin(Level.TimeSeconds), WhiteColor, RedColor);
+            C.DrawColor = class'UColor'.static.Interp(class'UInterp'.static.Cosine(Level.TimeSeconds, 0.0, 1.0), WhiteColor, RedColor);
         }
 
         C.SetPos(X, Y);
