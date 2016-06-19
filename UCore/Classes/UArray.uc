@@ -1,8 +1,8 @@
 //==============================================================================
 // Darklight Games (c) 2008-2016
 //==============================================================================
-// Since array types are copied when passed to these functions using these
-// functions is not recommended on large datasets.
+// Since array types are copied when passed to these functions, frequent use of
+// these functions is not recommended on large datasets.
 //==============================================================================
 class UArray extends Object
     abstract;
@@ -27,7 +27,7 @@ static final function IReverse(out array<int> A)
     }
 }
 
-static final function FisherYatesShuffle(out array<Object> _Array)
+static final function Shuffle(out array<Object> _Array)
 {
     local int i, j;
 
@@ -39,7 +39,7 @@ static final function FisherYatesShuffle(out array<Object> _Array)
     }
 }
 
-static final function IFisherYatesShuffle(out array<int> _Array)
+static final function IShuffle(out array<int> _Array)
 {
     local int i, j;
 
@@ -132,3 +132,89 @@ static final function int SErase(out array<string> _Array, string O)
 
     return 0;
 }
+
+static final function array<string> ToStringArray(array<Object> A)
+{
+    local int i;
+    local array<string> Strings;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        Strings[i] = string(A[i]);
+    }
+
+    return Strings;
+}
+
+static final function string ToString(array<Object> A)
+{
+    return "[" $ class'UString'.static.Join(", ", ToStringArray(A)) $ "]";
+}
+
+static final function array<string> CToStringArray(array<byte> A)
+{
+    local int i;
+    local array<string> Strings;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        Strings[i] = string(A[i]);
+    }
+
+    return Strings;
+}
+
+static final function string CToString(array<byte> A)
+{
+    return "[" $ class'UString'.static.Join(", ", CToStringArray(A)) $ "]";
+}
+
+static final function array<string> IToStringArray(array<int> A)
+{
+    local int i;
+    local array<string> Strings;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        Strings[i] = string(A[i]);
+    }
+
+    return Strings;
+}
+
+static final function string IToString(array<int> A)
+{
+    return "[" $ class'UString'.static.Join(", ", IToStringArray(A)) $ "]";
+}
+
+static final function array<string> FToStringArray(array<float> A)
+{
+    local int i;
+    local array<string> Strings;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        Strings[i] = string(A[i]);
+    }
+
+    return Strings;
+}
+
+static final function string FToString(array<float> A)
+{
+    return "[" $ class'UString'.static.Join(", ", FToStringArray(A)) $ "]";
+}
+
+static final function string SToString(array<string> A)
+{
+    local int i;
+
+    // Escape double-quote (") characters.
+    for (i = 0; i < A.Length; ++i)
+    {
+        A[i] = Repl(A[i], "\"", "\\\"");
+    }
+
+    return "[" $ class'UString'.static.Join(", ", A) $ "]";
+}
+

@@ -229,7 +229,7 @@ function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, 
 
     // Scramble location hint indices so we don't use the same ones repeatedly
     LocationHintIndices = class'DHLib'.static.CreateIndicesArray(LocationHints.Length);
-    class'UArray'.static.IFisherYatesShuffle(LocationHintIndices);
+    class'UArray'.static.IShuffle(LocationHintIndices);
 
     // Put location hints with enemies nearby at the end of the array to be evaluated last
     if (LocationHintIndices.Length > 1)
@@ -470,7 +470,7 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
     {
         // Randomise exit locations
         ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
-        class'UArray'.static.IFisherYatesShuffle(ExitPositionIndices);
+        class'UArray'.static.IShuffle(ExitPositionIndices);
 
         VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
 
