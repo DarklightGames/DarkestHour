@@ -5,7 +5,7 @@
 // http://www.hackersdelight.org/hdcodetxt/crc.c.txt
 //==============================================================================
 
-class CRC extends Object
+class CRCHash extends Object
     abstract;
 
 var private int Table[256];
