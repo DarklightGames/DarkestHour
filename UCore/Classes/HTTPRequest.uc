@@ -38,7 +38,7 @@ function static int ParseStatus(string S)
 
     Split(S, " ", Parts);
 
-    if (Parts.Length == 3 && Parts[0] == "HTTP/1.1")
+    if (Parts.Length >= 3 && (Parts[0] == "HTTP/1.0" || Parts[0] == "HTTP/1.1"))
     {
         return int(Parts[1]);
     }
@@ -95,6 +95,8 @@ function Timer()
 
             Divide(Response, MyLink.CRLF, StatusString, Response);
             Divide(Response, MyLink.CRLF $ MyLink.CRLF, HeadersString, Response);
+
+            Log(StatusString);
 
             Status = ParseStatus(StatusString);
             ResponseHeaders = ParseHeaders(HeadersString);
