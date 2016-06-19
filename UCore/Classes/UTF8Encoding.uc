@@ -4,19 +4,17 @@
 // http://clang.llvm.org/doxygen/ConvertUTF_8c_source.html
 //==============================================================================
 
-class UTF8 extends Object
+class UTF8Encoding extends Object
     abstract;
 
 const BYTE_MASK = 0xBF;
 const BYTE_MARK = 0x80;
 
-var private byte FirstByteMarks[7];
-
-static final function array<byte> ToBytes(string S)
+static final function array<int> ToBytes(string S)
 {
     local int i, j, c, BytesToWrite;
     local array<int> UTF32Bytes;
-    local array<byte> UTF8Bytes;
+    local array<int> UTF8Bytes;
 
     UTF32Bytes = class'UString'.static.ToBytes(S);
 
@@ -51,16 +49,16 @@ static final function array<byte> ToBytes(string S)
         switch (BytesToWrite)
         {
             case 4:
-                UTF8Bytes[--j] = byte((c | BYTE_MARK) & BYTE_MASK);
+                UTF8Bytes[--j] = ((c | BYTE_MARK) & BYTE_MASK) & 0xFF;
                 c = c >> 6;
             case 3:
-                UTF8Bytes[--j] = byte((c | BYTE_MARK) & BYTE_MASK);
+                UTF8Bytes[--j] = ((c | BYTE_MARK) & BYTE_MASK) & 0xFF;
                 c = c >> 6;
             case 2:
-                UTF8Bytes[--j] = byte((c | BYTE_MARK) & BYTE_MASK);
+                UTF8Bytes[--j] = ((c | BYTE_MARK) & BYTE_MASK) & 0xFF;
                 c = c >> 6;
             case 1:
-                UTF8Bytes[--j] = byte(c | default.FirstByteMarks[BytesToWrite]);
+                UTF8Bytes[--j] = (c | GetFirstByteMark(BytesToWrite)) & 0xFF;
         }
 
         j += BytesToWrite;
@@ -69,7 +67,7 @@ static final function array<byte> ToBytes(string S)
     return UTF8Bytes;
 }
 
-static final function string FromBytes(array<byte> Bytes)
+static final function string FromBytes(array<int> Bytes)
 {
     local string S;
     local int i, c, ExtraBytesToRead;
@@ -112,7 +110,7 @@ static final function string FromBytes(array<byte> Bytes)
     return S;
 }
 
-static private final function int GetTrailingBytesForUTF8(byte B)
+static private final function int GetTrailingBytesForUTF8(int B)
 {
     if (B < 0xC0)
     {
@@ -140,13 +138,25 @@ static private final function int GetTrailingBytesForUTF8(byte B)
     }
 }
 
-defaultproperties
+static final private function int GetFirstByteMark(int BytesToWrite)
 {
-    FirstByteMarks(0)=0x00
-    FirstByteMarks(1)=0x00
-    FirstByteMarks(2)=0xC0
-    FirstByteMarks(3)=0xE0
-    FirstByteMarks(4)=0xF0
-    FirstByteMarks(5)=0xF8
-    FirstByteMarks(6)=0xFC
+    switch (BytesToWrite)
+    {
+        case 0:
+        case 1:
+            return 0x00;
+        case 2:
+            return 0xC0;
+        case 3:
+            return 0xE0;
+        case 4:
+            return 0xF0;
+        case 5:
+            return 0xF8;
+        case 6:
+            return 0xFC;
+        default:
+            return 0x00;
+    }
 }
+

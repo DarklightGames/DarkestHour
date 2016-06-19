@@ -7,7 +7,7 @@
 // transfer encoding.
 //==============================================================================
 
-class Base64 extends Object
+class Base64Encoding extends Object
     abstract;
 
 var private string Codes;
