@@ -12,7 +12,9 @@ event PlayerInput(float DeltaTime)
 
     // Ignore input if we're playing back a client-side demo.
     if (Outer.bDemoOwner && !Outer.default.bDemoOwner)
+    {
         return;
+    }
 
     // Check for Double click move
     // flag transitions
@@ -36,21 +38,25 @@ event PlayerInput(float DeltaTime)
     }
 
     // Handle mouse movement based on sensitivity
-    aMouseX = SmoothMouse(aMouseX*MouseSensitivity, DeltaTime,bXAxis,0);
-    aMouseY = SmoothMouse(aMouseY*MouseSensitivity, DeltaTime,bYAxis,1);
+    aMouseX = SmoothMouse(aMouseX * MouseSensitivity, DeltaTime, bXAxis, 0);
+    aMouseY = SmoothMouse(aMouseY * MouseSensitivity, DeltaTime, bYAxis, 1);
 
     aMouseX = AccelerateMouse(aMouseX);
     aMouseY = AccelerateMouse(aMouseY);
 
     // adjust keyboard and joystick movements
     aLookUp *= FOVScale;
-    aTurn   *= FOVScale;
+    aTurn *= FOVScale;
 
     // Remap raw x-axis movement.
     if (bStrafe != 0) // strafe
+    {
         aStrafe += aBaseX * 7.5 + aMouseX;
+    }
     else // forward
+    {
         aTurn  += aBaseX * FOVScale + aMouseX;
+    }
 
     aBaseX = 0;
 
@@ -59,12 +65,18 @@ event PlayerInput(float DeltaTime)
     {
         // Look up/down.
         if (bInvertMouse)
+        {
             aLookUp -= aMouseY;
+        }
         else
+        {
             aLookUp += aMouseY;
+        }
     }
     else // Move forward/backward.
+    {
         aForward += aMouseY;
+    }
 
     if (bSnapLevel != 0)
     {
