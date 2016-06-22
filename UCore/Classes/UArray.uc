@@ -7,6 +7,47 @@
 class UArray extends Object
     abstract;
 
+// Slice tries to immitate Python's slice syntax.
+static final function array<Object> Slice(array<Object> A, int Start, int End, optional int Step)
+{
+    local int i;
+    local array<Object> B;
+
+    if (Step <= 0)
+    {
+        Warn("Slice step must be a positive integer.")
+
+        return B;
+    }
+
+    for (i = Start; i <= End; i += Step)
+    {
+        B[B.Length] = A[i];
+    }
+
+    return B;
+}
+
+static final function array<int> ISlice(array<int> A, int Start, int End, optional int Step)
+{
+    local int i;
+    local array<int> B;
+
+    if (Step <= 0)
+    {
+        Warn("Slice step must be a positive integer.")
+        
+        return B;
+    }
+
+    for (i = Start; i <= End; i += Step)
+    {
+        B[B.Length] = A[i];
+    }
+
+    return B;
+}
+
 static final function Reverse(out array<Object> A)
 {
     local int i;
@@ -149,24 +190,6 @@ static final function array<string> ToStringArray(array<Object> A)
 static final function string ToString(array<Object> A)
 {
     return "[" $ class'UString'.static.Join(", ", ToStringArray(A)) $ "]";
-}
-
-static final function array<string> CToStringArray(array<byte> A)
-{
-    local int i;
-    local array<string> Strings;
-
-    for (i = 0; i < A.Length; ++i)
-    {
-        Strings[i] = string(A[i]);
-    }
-
-    return Strings;
-}
-
-static final function string CToString(array<byte> A)
-{
-    return "[" $ class'UString'.static.Join(", ", CToStringArray(A)) $ "]";
 }
 
 static final function array<string> IToStringArray(array<int> A)
