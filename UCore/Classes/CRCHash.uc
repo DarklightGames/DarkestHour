@@ -10,7 +10,12 @@ class CRCHash extends Object
 
 var private int Table[256];
 
-static final function int FromBytes(array<byte> Bytes)
+static final function int FromString(string S)
+{
+    return FromBytes(class'UString'.static.ToBytes(S));
+}
+
+static final function int FromBytes(array<int> Bytes)
 {
     local int i, j, Mask, CRC;
 
@@ -39,3 +44,4 @@ static final function int FromBytes(array<byte> Bytes)
 
     return ~CRC;
 }
+
