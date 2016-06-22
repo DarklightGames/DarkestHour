@@ -15,6 +15,18 @@ var string Query;
 var string Fragment;
 var int Port;
 
+function string ToString()
+{
+    local string S;
+
+    if (Scheme != "")
+    {
+        S $= Scheme $ "://";
+    }
+
+    return S;
+}
+
 static final function URL FromString(string URL)
 {
     local URL U;
@@ -260,7 +272,138 @@ JustPath:
     }
 
     /* check for port */
+    if (Mid(URL, s, 1) == "[" && Mid(URL, e - 1, 1) == "]")
+    {
+        /* Short circuit portscan, we're dealing with an IPv6 embedded address */
+        p = s;
+    }
+    else
+    {
+        /* memrchr is a GNU specific extension, emulate for wide compatibility */
+        for (p = e; p >= s && Mid(URL, p, 1) != ":"; --p);
+    }
+
+    if (p >= s && Mid(URL, p, 1) == ":")
+    {
+        if (U.Port == 0)
+        {
+            ++p;
+
+            if (e - p > 5)
+            {
+                /* port cannot be longer than 5 characters */
+                Warn("port cannot be longer than 5 characters");
+                return None;
+            }
+            else if (e - p > 0)
+            {
+                Port = int(Mid(URL, p, e - p));
+
+                if (Port > 0 && Port <= 65536)
+                {
+                    U.Port = Port;
+                }
+                else
+                {
+                    return None;
+                }
+            }
+
+            --p;
+        }
+    }
+    else
+    {
+        p = e;
+    }
+
+    /* check if we have a valid host, if we don't reject the string as url */
+    if ((p - s) < 1)
+    {
+        return None;
+    }
+
+    U.Host = Mid(URL, s, p - s);
+    // TODO: replace control characters
+
+    if (e == ue)
+    {
+        return U;
+    }
+
+    s = e;
+
 NoHost:
+    p = InStr(Mid(URL, s, ue - s), "?");
+
+    if (p >= 0)
+    {
+        pp = InStr(Mid(URL, s, ue - s), "#");
+
+        if (pp && pp < p)
+        {
+            if (pp - s)
+            {
+                U.Path = Mid(URL, s, pp - s);
+                // TODO: replace control characters
+            }
+
+            p = pp;
+
+            goto LabelParse;
+        }
+
+        if (p - s)
+        {
+            U. Path = Mid(URL, s, p - s);
+            // TODO: replace control characters
+        }
+
+        if (pp)
+        {
+            if (pp - ++p)
+            {
+                U.Query = Mid(URL, p, pp - p);
+                // TODO: replace control characters
+            }
+
+            p = pp;
+
+            goto LabelParse;
+        }
+        else if (++p - ue)
+        {
+            U.Query = Mid(URL, p, ue - p);
+            // TODO: replace control characters
+        }
+    }
+    else
+    {
+        p = InStr(Mid(URL, s, ue - s), "#");
+
+        if (p >= 0)
+        {
+            if (p - s)
+            {
+                U.Path = Mid(URL, s, p - s);
+                // TODO: replace control characters
+            }
+
+LabelParse:
+            ++p;
+
+            if (ue - p)
+            {
+                U.Fragment = Mid(URL, p, ue - p);
+                // TODO: replace control characters
+            }
+        }
+        else
+        {
+            U.Path = Mid(URL, p, ue - p);
+            // TODO: replace control characters
+        }
+    }
 End:
     return U;
 }
