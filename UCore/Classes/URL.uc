@@ -13,19 +13,21 @@ var string Host;
 var string Path;
 var string Query;
 var string Fragment;
+var int Port;
 
-static final function FromString(string URL)
+static final function URL FromString(string URL)
 {
     local URL U;
-    local int s, e, p, pp;
+    local int l, s, e, ue, p, pp;
     local int Port, Query, Fragment;
 
     U = new class'URL';
-
-    e = InStr(URL, ":")
+    l = Len(URL);
+    ue = s + l;
+    e = InStr(URL, ":");
 
     /* parse scheme */
-    if (e >= 0 && e - Len(URL))
+    if (e >= 0)
     {
         while (p < e)
         {
@@ -33,7 +35,7 @@ static final function FromString(string URL)
                 !class'UString'.static.IsDigit(Mid(URL, p, 1)) &&
                 Mid(URL, p, 1) != "+" && Mid(URL, p, 1) != "." && Mid(URL, p, 1) != "-")
             {
-                if (e + 1 < Len(URL) && e < Strcpsn(URL, "?#"))
+                if (e + 1 < l && e < s + class'UString'.static.FindFirstOf(URL, "?#"))
                 {
                     goto ParsePort;
                 }
@@ -46,7 +48,7 @@ static final function FromString(string URL)
             ++p;
         }
 
-        if (e + 1 == Len(URL))
+        if (e + 1 == l)
         {
             /* only scheme is available */
             U.Scheme = Mid(URL, 0, e);
@@ -76,6 +78,7 @@ static final function FromString(string URL)
             U.Scheme = Mid(URL, s, e);
             // TODO: replace control characters
 
+            l -= ++e - s;
             s = e;
 
             goto JustPath;
@@ -89,7 +92,7 @@ static final function FromString(string URL)
             {
                 s = e + 3;
 
-                if (Scheme ~= "file")
+                if (U.Scheme ~= "file")
                 {
                     if (Mid(URL, e + 3, 1) == "/")
                     {
@@ -113,7 +116,7 @@ static final function FromString(string URL)
                 }
                 else
                 {
-                    // TODO: set length? (length -= ++e - s;)
+                    l -= ++e - s;
                     s = e;
 
                     goto JustPath;
@@ -121,7 +124,7 @@ static final function FromString(string URL)
             }
         }
     }
-    else if (e)
+    else if (e != -1)
     {
         /* no scheme; starts with colon: look for port */
 ParsePort:
@@ -144,13 +147,13 @@ ParsePort:
                 if (Mid(URL, s, 1) == "/" && Mid(URL, s + 1, 1) == "/")
                 {
                     /* relative-scheme URL */
-                    s += 3;
+                    s += 2;
                 }
             }
             else
             {
-                Warn("Invalid port.")
-                return None;
+                Warn("Invalid port.");
+                return none;
             }
         }
         else if (p == pp && pp == Len(S))
@@ -158,10 +161,10 @@ ParsePort:
             Warn("Expected port.");
             return None;
         }
-        else if (Mid(URL, 0, 1) == "/" && Mid(URL, 1, 1) == "/")
+        else if (Mid(URL, s, 1) == "/" && Mid(URL, s + 1, 1) == "/")
         {
             /* relative-scheme URL */
-            S = Mid(URL, 2);
+            s += 2;
         }
         else
         {
@@ -171,23 +174,25 @@ ParsePort:
     else if (Mid(URL, 0, 1) == "/" && Mid(URL, 1, 1) == "/")
     {
         /* relative-scheme URL */
-        S = Mid(URL, 2);
+        s += 2;
     }
     else
     {
 JustPath:
-        ue = Len(S);
+        ue = s + Len(URL);
         goto NoHost;
     }
 
     e = ue;
 
-    if (!(p = InStr(Mid(URL, 0, ue), "/")))
-    {
-        Query = InStr(Mid(URL, 0, ue), "?");
-        Fragment = InStr(Mid(URL, 0, ue), "#");
+    p = InStr(Mid(URL, s), "/");
 
-        if (Query && Fragment)
+    if (p == -1)
+    {
+        Query = InStr(Mid(URL, s), "?");
+        Fragment = InStr(Mid(URL, s), "#");
+
+        if (Query != -1 && Fragment != -1)
         {
             if (Query > Fragment)
             {
@@ -198,11 +203,11 @@ JustPath:
                 e = Query;
             }
         }
-        else if (Query)
+        else if (Query != -1)
         {
             e = Query;
         }
-        else if (Fragment)
+        else if (Fragment != -1)
         {
             e = Fragment;
         }
@@ -213,10 +218,12 @@ JustPath:
     }
 
     /* check for login and password */
-    if ((p = InStr(Mid(URL, 0, e), "@")))
+    p = InStr(Mid(URL, s, e), "@");
+
+    if (p != -1)
     {
         /* check for invalid chars inside login/pass */
-        pp = 0; // TODO: dubious
+        pp = s;
 
         while (pp < p)
         {
@@ -231,9 +238,11 @@ JustPath:
             }
         }
 
-        if ((pp = InStr(Mid(URL, 0, p), ":")))
+        pp = InStr(Mid(URL, s, p - s), ":");
+
+        if (pp != -1)
         {
-            U.User = Mid(URL, 0, pp);
+            U.User = Mid(URL, s, pp);
             // TODO: replace control characters
 
             ++p;
@@ -251,5 +260,7 @@ JustPath:
     }
 
     /* check for port */
-
+NoHost:
+End:
+    return U;
 }
