@@ -15,7 +15,7 @@ static final function array<Object> Slice(array<Object> A, int Start, int End, o
 
     if (Step <= 0)
     {
-        Warn("Slice step must be a positive integer.")
+        Warn("Slice step must be a positive integer.");
 
         return B;
     }
@@ -35,8 +35,8 @@ static final function array<int> ISlice(array<int> A, int Start, int End, option
 
     if (Step <= 0)
     {
-        Warn("Slice step must be a positive integer.")
-        
+        Warn("Slice step must be a positive integer.");
+
         return B;
     }
 

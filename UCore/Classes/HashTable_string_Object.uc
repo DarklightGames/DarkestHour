@@ -4,20 +4,21 @@
 // http://algs4.cs.princeton.edu/34hash/LinearProbingHashST.java.html
 //==============================================================================
 
-class Hashtable_string_Object extends Object
-    abstract;
+class Hashtable_string_Object extends Object;
 
-private var int Size;
-private var array<string> Keys;
-private var array<Object> Values;
+var private int Size;
+var private array<string> Keys;
+var private array<Object> Values;
 
-static function Create(int Capacity)
+static function Hashtable_string_Object Create(int Capacity)
 {
     local Hashtable_string_Object HT;
 
     HT = new class'Hashtable_string_Object';
     HT.Keys.Length = Capacity;
     HT.Values.Length = Capacity;
+
+    return HT;
 }
 
 function int GetSize()
@@ -32,12 +33,12 @@ function bool IsEmpty()
 
 function bool Contains(string Key)
 {
-    return Get(Key) != none;
+    return Get(Key);
 }
 
 private function int Hash(string Key)
 {
-    return (class'CRC'.static.CRC(Key) & 0x7FFFFFFF) % Keys.Length;
+    return (class'CRCHash'.static.FromString(Key) & 0x7FFFFFFF) % Keys.Length;
 }
 
 private function Resize(int Capacity)
@@ -72,7 +73,7 @@ function Put(string Key, Object Value)
         return;
     }
 
-    if (Size >= (Keys.Length / 2)
+    if (Size >= (Keys.Length / 2))
     {
         Resize(2 * Keys.Length);
     }
@@ -92,24 +93,25 @@ function Put(string Key, Object Value)
     ++Size;
 }
 
-function Object Get(string Key)
+function bool Get(string Key, optional out Object Value)
 {
     local int i;
 
     if (Key == "")
     {
-        return none;
+        return false;
     }
 
     for (i = Hash(Key); Keys[i] != ""; i = (i + 1) % Keys.Length)
     {
         if (Keys[i] == Key)
         {
-            return Values[i];
+            Value = Values[i];
+            return true;
         }
     }
 
-    return none;
+    return false;
 }
 
 function Delete(string Key)
@@ -166,13 +168,13 @@ function Delete(string Key)
 function array<string> GetKeys()
 {
     local int i;
-    local array<string> Keys;
+    local array<string> _Keys;
 
     for (i = 0; i < self.Keys.Length; ++i)
     {
         if (self.Keys[i] != "")
         {
-            Keys[Queue.Length] = self.Keys[i];
+            _Keys[_Keys.Length] = self.Keys[i];
         }
     }
 
