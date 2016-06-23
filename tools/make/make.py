@@ -5,19 +5,18 @@ import subprocess
 import ConfigParser
 import shutil
 import json
-import tempfile
-import re
 from pprint import pprint
 from binascii import crc32
 from collections import OrderedDict
 
 
 class MultiOrderedDict(OrderedDict):
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value, **kwargs):
         if isinstance(value, list) and key in self:
             self[key].extend(value)
         else:
             super(OrderedDict, self).__setitem__(key, value)
+
 
 def main():
     # parse options
@@ -79,7 +78,7 @@ def main():
     try:
         with open(manifest_filename, 'r') as f:
             package_crcs = json.load(f)
-    except:
+    except IOError:
         pass
 
     for package in packages:
@@ -93,17 +92,14 @@ def main():
             packages_to_compile.append(package + '.u')
             continue
 
-        mod_sys_package_path = os.path.join(mod_sys_dir, package + '.u')
-
         should_compile_package = False
         package_src_dir = os.path.join(args.dir, package, 'Classes')
         package_crc = 0
 
-        for root, dirs, files in os.walk(package_src_dir):
-            for file in filter(lambda x: x.endswith('.uc'), files):
-                filename = os.path.join(root, file)
+        for root, dirs, filenames in os.walk(package_src_dir):
+            for filename in filter(lambda x: x.endswith('.uc'), filenames):
 
-                with open(filename, 'rb') as f:
+                with open(os.path.join(root, filename), 'rb') as f:
                     package_crc = crc32(f.read(), package_crc)
 
         if package not in package_crcs or package_crcs[package] != package_crc:
@@ -117,8 +113,6 @@ def main():
     if len(packages_to_compile) == 0:
         print 'no packages to compile'
         sys.exit(0)
-
-    package_paths = dict()
 
     print 'compiling the following packages:'
 
@@ -134,14 +128,14 @@ def main():
             if os.path.isfile(package_path):
                 try:
                     os.remove(package_path)
-                except:
-                    print 'error: failed to remove file {} (do you have the client, server or editor running?)'.format(package)
+                except OSError:
+                    print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
                     sys.exit(1)
 
     try:
         with open(manifest_filename, 'w') as f:
             json.dump(package_crcs, f)
-    except:
+    except OSError:
         print 'could not write mod make manifest'
 
     os.chdir(sys_dir)
@@ -156,11 +150,11 @@ def main():
     ucc_log_file.close()
 
     # move compiled packages to mod directory
-    for root, dirs, files in os.walk(sys_dir):
-        for file in files:
-            if file in packages_to_compile:
-                shutil.copy(os.path.join(root, file), mod_sys_dir)
-                os.remove(os.path.join(root, file))
+    for root, dirs, filenames in os.walk(sys_dir):
+        for filename in filenames:
+            if filename in packages_to_compile:
+                shutil.copy(os.path.join(root, filename), mod_sys_dir)
+                os.remove(os.path.join(root, filename))
 
     # run dumpint on compiled packages
     if args.dumpint:
@@ -168,15 +162,15 @@ def main():
         processes = []
         for package in packages_to_compile:
             processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
-        
-        exit_codes = [p.wait() for p in processes]
+
+        [p.wait() for p in processes]
 
         # move localization files to mod directory
-        for root, dirs, files in os.walk(sys_dir):
-            for file in files:
-                if file.replace('.int', '.u') in packages_to_compile:
-                    shutil.copy(os.path.join(root, file), mod_sys_dir)
-                    os.remove(os.path.join(root, file))
+        for root, dirs, filenames in os.walk(sys_dir):
+            for filename in filenames:
+                if filename.replace('.int', '.u') in packages_to_compile:
+                    shutil.copy(os.path.join(root, filename), mod_sys_dir)
+                    os.remove(os.path.join(root, filename))
 
     # rewrite ucc.log to be the contents of the original ucc make command (so that WOTgreal can parse it correctly)
     ucc_log_file = open('ucc.log', 'wb')
