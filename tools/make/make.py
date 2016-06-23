@@ -21,10 +21,10 @@ class MultiOrderedDict(OrderedDict):
 def main():
     # parse options
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('dir')
-    argparser.add_argument('-mod', required=True)
-    argparser.add_argument('-clean', required=False, action='store_true')
-    argparser.add_argument('-dumpint', required=False, action='store_true')
+    argparser.add_argument('dir', default='.', help='root directory')
+    argparser.add_argument('-mod', required=True, help='mod name')
+    argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
+    argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     args = argparser.parse_args()
 
     if not os.path.isdir(args.dir):
@@ -88,7 +88,7 @@ def main():
             # compiled file exists in root system folder
             continue
 
-        if args.clean:
+        if args.clean or len(packages_to_compile) > 0:
             packages_to_compile.append(package + '.u')
             continue
 
