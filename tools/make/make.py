@@ -73,10 +73,10 @@ def main():
     packages_to_compile = []
     package_crcs = dict()
 
-    manifest_filename = '{0}.manifest'.format(args.mod)
+    manifest_path = os.path.join(mod_dir, '.make'.format(args.mod))
 
     try:
-        with open(manifest_filename, 'r') as f:
+        with open(manifest_path, 'r') as f:
             package_crcs = json.load(f)
     except IOError:
         pass
@@ -133,7 +133,7 @@ def main():
                     sys.exit(1)
 
     try:
-        with open(manifest_filename, 'w') as f:
+        with open(manifest_path, 'w') as f:
             json.dump(package_crcs, f)
     except OSError:
         print 'could not write mod make manifest'
