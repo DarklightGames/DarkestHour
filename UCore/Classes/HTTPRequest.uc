@@ -9,6 +9,7 @@ var string Method;
 var string Host;
 var string Path;
 var string Protocol;
+var bool bAllowRedirects;
 var TreeMap_string_string Headers;
 var private int Timeout;
 
@@ -34,13 +35,17 @@ function Send()
 
 function static int ParseStatus(string S)
 {
-    local array<string> Parts;
+    local string Version;
+    local string StatusCode;
+    local string ReasonPhrase;
 
-    Split(S, " ", Parts);
+    Divide(S, " ", Version, S);
 
-    if (Parts.Length >= 3 && (Parts[0] == "HTTP/1.0" || Parts[0] == "HTTP/1.1"))
+    if (Version == "HTTP/1.0" || Version == "HTTP/1.1")
     {
-        return int(Parts[1]);
+        Divide(S, " ", StatusCode, ReasonPhrase);
+
+        return int(StatusCode);
     }
 
     return -1;
@@ -81,11 +86,13 @@ function Timer()
     local string StatusString;
     local string HeadersString;
     local string Value;
+    local string Location;
     local int Status;
     local TreeMap_string_string ResponseHeaders;
     local int i;
     local array<string> HeaderKeys;
     local int ChunkLength;
+    //local HTTPRequest R;
 
     if (MyLink.ReceiveState == MyLink.Match)
     {
@@ -96,10 +103,35 @@ function Timer()
             Divide(Response, MyLink.CRLF, StatusString, Response);
             Divide(Response, MyLink.CRLF $ MyLink.CRLF, HeadersString, Response);
 
-            Log(StatusString);
-
             Status = ParseStatus(StatusString);
+
             ResponseHeaders = ParseHeaders(HeadersString);
+
+            switch (Status)
+            {
+                case 301:   // Moved Permanently
+                case 302:   // Found
+                case 307:   // Temporary Redirect
+                case 308:   // Permanent Redirect
+                    if (bAllowRedirects && ResponseHeaders.Get("Location", Location))
+                    {
+                        // TODO: parse host and path from location in response headers
+//                        R = Spawn(class'HTTPRequest');
+//                        R.Method = self.Method;
+//                        R.Host = self.Host;
+//                        R.Path = self.Path;
+//                        R.Protocol = self.Protocol;
+//                        R.bAllowRedirects = self.bAllowRedirects;
+//                        R.Headers = self.Headers;
+//                        R.Send();
+
+                        Destroy();
+                        return;
+                    }
+                    break;
+                default:
+                    break;
+            }
 
             if (ResponseHeaders.Get("Transfer-Encoding", TransferEncoding) &&
                 TransferEncoding ~= "chunked")
@@ -138,7 +170,7 @@ function Timer()
     else if (MyLink.ReceiveState == "" && MyLink.ServerIpAddr.Port != 0 && MyLink.IsConnected())
     {
         Command = Method @ Path @ Protocol $ MyLink.CRLF $
-            "Host:" @ Host $ MyLink.CRLF;
+                  "Host:" @ Host $ MyLink.CRLF;
 
         HeaderKeys = Headers.GetKeys();
 
@@ -172,4 +204,5 @@ defaultproperties
     Method="GET"
     Timeout=30
     Protocol="HTTP/1.1"
+    bAllowRedirects=true
 }
