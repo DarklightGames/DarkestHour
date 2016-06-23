@@ -41,6 +41,8 @@ static final function URL FromString(string URL)
     /* parse scheme */
     if (e >= 0)
     {
+        Log(": character found at index" @ e);
+
         while (p < e)
         {
             if (!class'UString'.static.IsAlpha(Mid(URL, p, 1)) &&
@@ -62,8 +64,10 @@ static final function URL FromString(string URL)
 
         if (e + 1 == l)
         {
+            Log("only scheme is available");
+
             /* only scheme is available */
-            U.Scheme = Mid(URL, 0, e);
+            U.Scheme = URL;
             // TODO: replace control characters
             goto End;
         }
@@ -165,12 +169,14 @@ ParsePort:
             else
             {
                 Warn("Invalid port.");
+
                 return none;
             }
         }
         else if (p == pp && pp == Len(S))
         {
             Warn("Expected port.");
+
             return None;
         }
         else if (Mid(URL, s, 1) == "/" && Mid(URL, s + 1, 1) == "/")
@@ -201,32 +207,32 @@ JustPath:
 
     if (p == -1)
     {
-        Query = InStr(Mid(URL, s), "?");
-        Fragment = InStr(Mid(URL, s), "#");
+        Query = InStr(Mid(URL, s, ue - s), "?");
+        Fragment = InStr(Mid(URL, s, ue - s), "#");
 
         if (Query != -1 && Fragment != -1)
         {
             if (Query > Fragment)
             {
-                e = Fragment;
+                e = s + Fragment;
             }
             else
             {
-                e = Query;
+                e = s + Query;
             }
         }
         else if (Query != -1)
         {
-            e = Query;
+            e = s + Query;
         }
         else if (Fragment != -1)
         {
-            e = Fragment;
+            e = s + Fragment;
         }
     }
     else
     {
-        e = p;
+        e = s + p;
     }
 
     /* check for login and password */
@@ -285,6 +291,8 @@ JustPath:
 
     if (p >= s && Mid(URL, p, 1) == ":")
     {
+        Log("port indicator found");
+
         if (U.Port == 0)
         {
             ++p;
@@ -314,6 +322,8 @@ JustPath:
     }
     else
     {
+        Log("no port indicator found");
+
         p = e;
     }
 
@@ -338,11 +348,14 @@ NoHost:
 
     if (p >= 0)
     {
+        p += s;
         pp = InStr(Mid(URL, s, ue - s), "#");
 
-        if (pp && pp < p)
+        if (pp != -1 && pp + s < p)
         {
-            if (pp - s)
+            pp += s;
+
+            if (pp - s > 0)
             {
                 U.Path = Mid(URL, s, pp - s);
                 // TODO: replace control characters
@@ -353,15 +366,21 @@ NoHost:
             goto LabelParse;
         }
 
-        if (p - s)
+        if (p - s > 0)
         {
-            U. Path = Mid(URL, s, p - s);
+            U.Path = Mid(URL, s, p - s);
             // TODO: replace control characters
         }
 
-        if (pp)
+        Log("p" @ p);
+        Log("pp" @ pp);
+        Log("ue" @ ue);
+
+        if (pp >= 0)
         {
-            if (pp - ++p)
+            pp += s;
+
+            if (pp - ++p >= 0)
             {
                 U.Query = Mid(URL, p, pp - p);
                 // TODO: replace control characters
@@ -371,7 +390,7 @@ NoHost:
 
             goto LabelParse;
         }
-        else if (++p - ue)
+        else if (++p - ue != 0)
         {
             U.Query = Mid(URL, p, ue - p);
             // TODO: replace control characters
@@ -383,7 +402,9 @@ NoHost:
 
         if (p >= 0)
         {
-            if (p - s)
+            p += s;
+
+            if (p - s > 0)
             {
                 U.Path = Mid(URL, s, p - s);
                 // TODO: replace control characters
@@ -392,7 +413,7 @@ NoHost:
 LabelParse:
             ++p;
 
-            if (ue - p)
+            if (ue - p > 0)
             {
                 U.Fragment = Mid(URL, p, ue - p);
                 // TODO: replace control characters
@@ -400,7 +421,7 @@ LabelParse:
         }
         else
         {
-            U.Path = Mid(URL, p, ue - p);
+            U.Path = Mid(URL, s, ue - s);
             // TODO: replace control characters
         }
     }
