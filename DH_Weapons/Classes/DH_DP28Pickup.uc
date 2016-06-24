@@ -6,10 +6,6 @@
 class DH_DP28Pickup extends DHWeaponPickup
    notplaceable;
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.DP28');
@@ -22,14 +18,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: DP-28 MG"
-     MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_DP28Weapon'
-     PickupMessage="You got the DP-28."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.DP28'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: DP-28 MG"
+    MaxDesireability=0.400000
+    InventoryType=Class'DH_Weapons.DH_DP28Weapon'
+    PickupMessage="You got the DP-28."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.DP28'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

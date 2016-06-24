@@ -6,10 +6,6 @@
 class DH_MN9130DamType extends DHWeaponProjectileDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
     DeathString="%o was killed by %k's MN 91/30."

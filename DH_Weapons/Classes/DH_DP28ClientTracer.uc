@@ -1,14 +1,9 @@
-//=============================================================================
-// DP28ClientTracer
-//=============================================================================
-// Client side DP28 bullet with a tracer effect
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2005 John Ramm-Jaeger" Gibson
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2016
+//==============================================================================
 
 class DH_DP28ClientTracer extends ROClientTracer;
-
 
 //Theel: Do I need to change the tracer classes?  why green tracers?
 defaultproperties

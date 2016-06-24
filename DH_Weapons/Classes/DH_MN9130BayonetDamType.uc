@@ -6,10 +6,6 @@
 class DH_MN9130BayonetDamType extends DHWeaponBayonetDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
     DeathString="%o was stabbed by %k's mounted bayonet."

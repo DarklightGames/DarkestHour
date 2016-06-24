@@ -6,10 +6,6 @@
 class DH_M38Pickup extends DHWeaponPickup
    notplaceable;
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.Nagant9138');
@@ -24,14 +20,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: M38"
-     MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_M38Weapon'
-     PickupMessage="You got the M38."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.nagant9138'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: M38"
+    MaxDesireability=0.400000
+    InventoryType=Class'DH_Weapons.DH_M38Weapon'
+    PickupMessage="You got the M38."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.nagant9138'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

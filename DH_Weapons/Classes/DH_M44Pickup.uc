@@ -6,10 +6,6 @@
 class DH_M44Pickup extends DHWeaponPickup
    notplaceable;
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.M44');
@@ -26,14 +22,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: M44"
-     MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_M44Weapon'
-     PickupMessage="You got the M44."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.M44'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: M44"
+    MaxDesireability=0.400000
+    InventoryType=Class'DH_Weapons.DH_M44Weapon'
+    PickupMessage="You got the M44."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.M44'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

@@ -6,10 +6,6 @@
 class DH_F1GrenadePickup extends DHOneShotWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.F1Grenade');
@@ -21,15 +17,15 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: F1 Grenade"
-     MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_F1GrenadeWeapon'
-     PickupMessage="You got the F1 Grenade."
-     PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=15.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: F1 Grenade"
+    MaxDesireability=0.780000
+    InventoryType=Class'DH_Weapons.DH_F1GrenadeWeapon'
+    PickupMessage="You got the F1 Grenade."
+    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=15.000000
+    CollisionHeight=3.000000
 }

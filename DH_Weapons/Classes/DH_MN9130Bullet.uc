@@ -7,7 +7,7 @@ class DH_MN9130Bullet extends DHBullet;
 
 defaultproperties
 {
-    BallisticCoefficient=0.511 //
+    BallisticCoefficient=0.511
     Damage=115
     MyDamageType=class'DH_Weapons.DH_MN9130DamType'
     MyVehicleDamage=class'ROInventory.MN9130VehDamType'

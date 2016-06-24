@@ -6,10 +6,6 @@
 class DH_MN9130BashDamType extends DHWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
     DeathString="%o was smacked with %k's MN 91/30."
