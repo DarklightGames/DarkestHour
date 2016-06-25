@@ -8,6 +8,7 @@
 class DHAdminMenu_AdminMessages extends LocalMessage
     abstract;
 
+var     localized string    EnterNewPlayerName;
 var     localized string    EnterPrivateMessage;
 var     localized string    EnterWarningMessage;
 var     localized string    EnterKickReason;
@@ -40,57 +41,60 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 1:
-            return default.EnterPrivateMessage;
+            return default.EnterNewPlayerName;
         case 2:
-            return default.EnterWarningMessage;
+            return default.EnterPrivateMessage;
         case 3:
-            return default.EnterKickReason;
+            return default.EnterWarningMessage;
         case 4:
-            return default.ConfirmKillPlayer;
+            return default.EnterKickReason;
         case 5:
-            return default.ConfirmSwitchToAlliesRole;
+            return default.ConfirmKillPlayer;
         case 6:
-            return default.ConfirmSwitchToAxisRole;
+            return default.ConfirmSwitchToAlliesRole;
         case 7:
-            return default.ConfirmDropAtObjective;
+            return default.ConfirmSwitchToAxisRole;
         case 8:
-            return default.EnterGridLocation;
+            return default.ConfirmDropAtObjective;
         case 9:
-            return default.ConfirmDropAtCurrentLocation;
+            return default.EnterGridLocation;
         case 10:
-            return default.ConfirmEnableRealism;
+            return default.ConfirmDropAtCurrentLocation;
         case 11:
-            return default.ConfirmDisableRealism;
+            return default.ConfirmEnableRealism;
         case 12:
-            return default.ConfirmMatchLive;
+            return default.ConfirmDisableRealism;
         case 13:
-            return default.ConfirmDropAlliesAtObjective;
+            return default.ConfirmMatchLive;
         case 14:
-            return default.ConfirmDropAxisAtObjective;
+            return default.ConfirmDropAlliesAtObjective;
         case 15:
-            return default.ConfirmDropAllAtObjective;
+            return default.ConfirmDropAxisAtObjective;
         case 16:
-            return default.ConfirmDisableMines;
+            return default.ConfirmDropAllAtObjective;
         case 17:
-            return default.ConfirmEnableMines;
+            return default.ConfirmDisableMines;
         case 18:
-            return default.ConfirmDisableCapProgress;
+            return default.ConfirmEnableMines;
         case 19:
-            return default.ConfirmEnableCapProgress;
+            return default.ConfirmDisableCapProgress;
         case 20:
-            return default.ConfirmDisablePlayerIcon;
+            return default.ConfirmEnableCapProgress;
         case 21:
-            return default.ConfirmEnablePlayerIcon;
+            return default.ConfirmDisablePlayerIcon;
         case 22:
-            return default.ConfirmKillAll;
+            return default.ConfirmEnablePlayerIcon;
         case 23:
-            return default.EnterGameSpeed;
+            return default.ConfirmKillAll;
         case 24:
-            return default.EnterTimeRemaining;
+            return default.EnterGameSpeed;
         case 25:
-            return default.ConfirmToggleAdminCanPause;
+            return default.EnterTimeRemaining;
         case 26:
+            return default.ConfirmToggleAdminCanPause;
+        case 27:
             return default.DestroyActorInSights;
+
         default:
             return "";
     }
@@ -103,7 +107,8 @@ defaultproperties
     LifeTime=5
     DrawColor=(R=214,G=28,B=36,A=255)
     PosY=0.85
-    
+
+    EnterNewPlayerName="Please enter a new name for the player - then press enter"
     EnterPrivateMessage="Type your private message to the player - then press enter"
     EnterWarningMessage="Type your warning message to the player - then press enter"
     EnterKickReason="Type your kick message to the player - then press enter to KICK them"

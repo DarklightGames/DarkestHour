@@ -7,6 +7,7 @@
 class DHAdminMenu_NotifyMessages extends LocalMessage
     abstract;
 
+var     localized string    NotifyRename;
 var     localized string    NotifyKill;
 var     localized string    NotifySwitch;
 var     localized string    NotifyParaDrop;
@@ -45,42 +46,45 @@ static function string GetString(optional int Switch, optional PlayerReplication
         switch (Switch)
         {
             case 1:
-                MessageString = default.NotifyKill;
+                MessageString = default.NotifyRename;
                 break;
             case 2:
-                MessageString = default.NotifySwitch;
+                MessageString = default.NotifyKill;
                 break;
             case 3:
-                MessageString = default.NotifyParaDrop;
+                MessageString = default.NotifySwitch;
                 break;
             case 4:
-                MessageString = default.BroadcastMinesDisabled;
+                MessageString = default.NotifyParaDrop;
                 break;
             case 5:
-                MessageString = default.BroadcastMinesEnabled;
+                MessageString = default.BroadcastMinesDisabled;
                 break;
             case 6:
-                MessageString = default.BroadcastCapProgressDisabled;
+                MessageString = default.BroadcastMinesEnabled;
                 break;
             case 7:
-                MessageString = default.BroadcastCapProgressEnabled;
+                MessageString = default.BroadcastCapProgressDisabled;
                 break;
             case 8:
-                MessageString = default.BroadcastPlayerIconDisabled;
+                MessageString = default.BroadcastCapProgressEnabled;
                 break;
             case 9:
-                MessageString = default.BroadcastPlayerIconEnabled;
+                MessageString = default.BroadcastPlayerIconDisabled;
                 break;
             case 10:
-                MessageString = default.BroadcastKilledAllPlayers;
+                MessageString = default.BroadcastPlayerIconEnabled;
                 break;
             case 11:
-                MessageString = default.BroadcastSetTimeRemaining;
+                MessageString = default.BroadcastKilledAllPlayers;
                 break;
             case 12:
-                MessageString = Repl(default.NotifyToggleAdminCanPause, "#bAdminCanPause#", "true");
+                MessageString = default.BroadcastSetTimeRemaining;
                 break;
             case 13:
+                MessageString = Repl(default.NotifyToggleAdminCanPause, "#bAdminCanPause#", "true");
+                break;
+            case 14:
                 MessageString = Repl(default.NotifyToggleAdminCanPause, "#bAdminCanPause#", "false");
                 break;
 
@@ -104,6 +108,7 @@ defaultproperties
     DrawColor=(R=214,G=28,B=36,A=255)
     PosY=0.2
 
+    NotifyRename="Your game name has been changed by admin"
     NotifyKill="You've been re-spawned by admin"
     NotifySwitch="You've been switched to new role or team by admin"
     NotifyParaDrop="You've been para dropped somewhere by admin"

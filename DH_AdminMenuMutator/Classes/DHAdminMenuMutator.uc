@@ -170,6 +170,11 @@ function Mutate(string MutateString, PlayerController Sender)
         {
             SwitchPlayer(Words[2], Words[3], Words[4], Words[5]); // Words[2] is PlayerName, Words[3] is TeamName, Words[4] is RoleName, Words[5] is RoleIndex
         }
+        // Rename a player
+        else if (MutateOption ~= "RenamePlayer")
+        {
+            RenamePlayer(Words[2], Words[3]); // Words[2] is OldPlayerName, Words[3] is NewPlayerName
+        }
         // Drop single player at an objective or at a grid location or at their current location
         else if (MutateOption ~= "ParaDropPlayer")
         {
@@ -464,8 +469,37 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
 
     if (Admin != none)
     {
-        NotifyPlayer(2, PlayerToSwitch); // admin switched your role/team
+        NotifyPlayer(3, PlayerToSwitch); // admin switched your role/team
         Log("DHAdminMenu: admin" @ GetAdminName() @ "switched player '" $ PlayerName $ "' to" @ Locs(TeamName) @ Locs(RoleName));
+    }
+}
+
+function RenamePlayer(string OldPlayerName, string NewPlayerName)
+{
+    local Controller PlayerToRename;
+
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
+
+    PlayerToRename = FindControllerFromName(OldPlayerName, true);
+
+    if (PlayerToRename != none)
+    {
+        ROTG.ChangeName(PlayerToRename, NewPlayerName, true);
+
+        // Use the Replicator to change the player name on his client
+        if (PlayerToRename.IsA('PlayerController') && Replicator != none)
+        {
+            Replicator.ServerRenamePlayer(PlayerToRename, NewPlayerName);
+        }
+
+        if (Admin != none)
+        {
+            NotifyPlayer(1, PlayerToRename); // admin changed your game name
+            Log("DHAdminMenu: admin" @ GetAdminName() @ "renamed player '" $ OldPlayerName $ "' to '" @ NewPlayerName $ "'");
+        }
     }
 }
 
@@ -550,7 +584,7 @@ function KillThisPlayer(Controller PlayerToKill, optional string PlayerName)
         // If a specific player name was passed (only used in KillPlayer) then give notification message to killed player & log the event
         if (PlayerName != "" && Admin != none)
         {
-            NotifyPlayer(1, PlayerToKill); // admin killed you
+            NotifyPlayer(2, PlayerToKill); // admin killed you
             Log("DHAdminMenu: admin" @ GetAdminName() @ "killed player '" $ PlayerName $ "'");
         }
     }
@@ -673,7 +707,7 @@ function DisableMinefields() // doesn't actually disable them, but it makes thei
             }
         }
 
-        BroadcastMessageToAll(4);
+        BroadcastMessageToAll(5);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "disabled all minefields");
     }
     else
@@ -715,7 +749,7 @@ function EnableMinefields()
             }
         }
 
-        BroadcastMessageToAll(5);
+        BroadcastMessageToAll(6);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "re-enabled all minefields");
     }
     else
@@ -735,12 +769,12 @@ function ToggleCapProgress()
 
     if (bHideCapProgress)
     {
-        BroadcastMessageToAll(6);
+        BroadcastMessageToAll(7);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "disabled capture progress indicators");
     }
     else
     {
-        BroadcastMessageToAll(7);
+        BroadcastMessageToAll(8);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "re-enabled capture progress indicators");
     }
 
@@ -758,12 +792,12 @@ function TogglePlayerIcon()
 
     if (bHidePlayerIcon)
     {
-        BroadcastMessageToAll(8);
+        BroadcastMessageToAll(9);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "disabled the player icon on the map");
     }
     else
     {
-        BroadcastMessageToAll(9);
+        BroadcastMessageToAll(10);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "re-enabled the player icon on the map");
     }
 
@@ -784,7 +818,7 @@ function KillAllPlayers()
         KillThisPlayer(C);
     }
 
-    BroadcastMessageToAll(10);
+    BroadcastMessageToAll(11);
     Log("DHAdminMenu: admin" @ GetAdminName() @ "killed all players");
 }
 
@@ -815,7 +849,7 @@ function SetRoundMinutesRemaining(float NewMinutesRemaining)
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).ElapsedTime = ROTG.ElapsedTime; // copies to GRI on server
         Replicator.NewElapsedTime = ROTG.ElapsedTime;                                         // Replicator copies to GRI on clients
 
-        BroadcastMessageToAll(11);
+        BroadcastMessageToAll(12);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ class'ROEngine.ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
     }
 }
@@ -829,11 +863,11 @@ function ToggleAdminCanPauseGame()
     {
         if (ROTG.bAdminCanPause)
         {
-            NotifyPlayer(12, Admin, true); // you toggled 'admin can pause' to true
+            NotifyPlayer(13, Admin, true); // you toggled 'admin can pause' to true
         }
         else
         {
-            NotifyPlayer(13, Admin, true); // you toggled 'admin can pause' to false
+            NotifyPlayer(14, Admin, true); // you toggled 'admin can pause' to false
         }
 
         Log("DHAdminMenu: admin" @ GetAdminName() @ "toggled bAdminCanPause setting to" @ ROTG.bAdminCanPause);
@@ -1115,7 +1149,7 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
         // If a specific player name was passed (only used in ParaDropPlayer) then give notification message to dropped player & log the event
         if (PlayerName != "" && Admin != none)
         {
-            NotifyPlayer(3, PlayerToDrop); // admin paradropped you
+            NotifyPlayer(4, PlayerToDrop); // admin paradropped you
             Log("DHAdminMenu: admin" @ GetAdminName() @ "paradropped player '" $ PlayerName $ "'");
         }
     }

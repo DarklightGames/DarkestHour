@@ -16,7 +16,7 @@ exec function EnableRealismMatch()
 {
     if (RealismMutatorIsPresent())
     {
-        BuildMutateCommand("EnableRealismMatch", 10);
+        BuildMutateCommand("EnableRealismMatch", 11);
     }
 }
 
@@ -24,7 +24,7 @@ exec function DisableRealismMatch()
 {
     if (RealismMutatorIsPresent())
     {
-        BuildMutateCommand("DisableRealismMatch", 11);
+        BuildMutateCommand("DisableRealismMatch", 12);
     }
 }
 
@@ -32,34 +32,34 @@ exec function ForceRealismMatchLive()
 {
     if (RealismMutatorIsPresent())
     {
-        BuildMutateCommand("ForceRealismMatchLive", 12);
+        BuildMutateCommand("ForceRealismMatchLive", 13);
     }
 }
 
 exec function ParaDropAlliesAtGrid()
 {
-    BuildMutateCommand("ParaDropAll Allies AtGridRef ", 8);
+    BuildMutateCommand("ParaDropAll Allies AtGridRef ", 9);
 }
 
 exec function ParaDropAxisAtGrid()
 {
-    BuildMutateCommand("ParaDropAll Axis AtGridRef ", 8);
+    BuildMutateCommand("ParaDropAll Axis AtGridRef ", 9);
 }
 
 exec function ParaDropAllAtGrid()
 {
-    BuildMutateCommand("ParaDropAll Players AtGridRef ", 8);
+    BuildMutateCommand("ParaDropAll Players AtGridRef ", 9);
 }
 
 exec function ToggleMinefields()
 {
     if (Replicator != none && !Replicator.bMinesDisabled)
     {
-        BuildMutateCommand("DisableMinefields", 16); // message "do you want to disable ..."
+        BuildMutateCommand("DisableMinefields", 17); // message "do you want to disable ..."
     }
     else
     {
-        BuildMutateCommand("EnableMinefields", 17); // message "do you want to re-enable ..."
+        BuildMutateCommand("EnableMinefields", 18); // message "do you want to re-enable ..."
     }
 }
 
@@ -67,11 +67,11 @@ exec function ToggleCapProgress()
 {
     if (Replicator != none && !Replicator.bHideCapProgress)
     {
-        BuildMutateCommand("ToggleCapProgress", 18); // message "do you want to disable ..."
+        BuildMutateCommand("ToggleCapProgress", 19); // message "do you want to disable ..."
     }
     else
     {
-        BuildMutateCommand("ToggleCapProgress", 19); // message "do you want to re-enable ..."
+        BuildMutateCommand("ToggleCapProgress", 20); // message "do you want to re-enable ..."
     }
 }
 
@@ -79,37 +79,37 @@ exec function TogglePlayerIcon()
 {
     if (Replicator != none && !Replicator.bHidePlayerIcon)
     {
-        BuildMutateCommand("TogglePlayerIcon", 20); // message "do you want to disable ..."
+        BuildMutateCommand("TogglePlayerIcon", 21); // message "do you want to disable ..."
     }
     else
     {
-        BuildMutateCommand("TogglePlayerIcon", 21); // message "do you want to re-enable ..."
+        BuildMutateCommand("TogglePlayerIcon", 22); // message "do you want to re-enable ..."
     }
 }
 
 exec function KillAllPlayers()
 {
-    BuildMutateCommand("KillAllPlayers", 22);
+    BuildMutateCommand("KillAllPlayers", 23);
 }
 
 exec function SetGameSpeed()
 {
-    BuildMutateCommand("SetGameSpeed ", 23);
+    BuildMutateCommand("SetGameSpeed ", 24);
 }
 
 exec function SetRoundMinutesRemaining()
 {
-    BuildMutateCommand("SetRoundMinutesRemaining ", 24);
+    BuildMutateCommand("SetRoundMinutesRemaining ", 25);
 }
 
 exec function ToggleAdminCanPauseGame()
 {
-    BuildMutateCommand("ToggleAdminCanPauseGame", 25);
+    BuildMutateCommand("ToggleAdminCanPauseGame", 26);
 }
 
 exec function DestroyActorInSights()
 {
-    BuildMutateCommand("DestroyActorInSights", 26);
+    BuildMutateCommand("DestroyActorInSights", 27);
 }
 
 // Checks if our mutator's Replicator actor has flagged that the realism match mutator is present on the server - gives a message & logout if it is not
