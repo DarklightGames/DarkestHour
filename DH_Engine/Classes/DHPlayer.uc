@@ -3115,6 +3115,27 @@ function ServerPossessBody(Pawn NewPawn)
     }
 }
 
+exec function URL(string S)
+{
+    local URL U;
+
+    U = class'URL'.static.FromString(S);
+
+    Log(U);
+
+    if (U != none)
+    {
+        Log("Scheme" @ U.Scheme);
+        Log("User" @ U.User);
+        Log("Pass" @ U.Pass);
+        Log("Host" @ U.Host);
+        Log("Path" @ U.Path);
+        Log("Query" @ U.Query);
+        Log("Fragment" @ U.Fragment);
+        Log("Port" @ U.Port);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -4010,27 +4031,6 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
                 V.VehicleAttachments.Remove(i, 1);
             }
         }
-    }
-}
-
-exec function URL(string S)
-{
-    local URL U;
-
-    U = class'URL'.static.FromString(S);
-
-    Log(U);
-
-    if (U != none)
-    {
-        Log("Scheme" @ U.Scheme);
-        Log("User" @ U.User);
-        Log("Pass" @ U.Pass);
-        Log("Host" @ U.Host);
-        Log("Path" @ U.Path);
-        Log("Query" @ U.Query);
-        Log("Fragment" @ U.Fragment);
-        Log("Port" @ U.Port);
     }
 }
 
