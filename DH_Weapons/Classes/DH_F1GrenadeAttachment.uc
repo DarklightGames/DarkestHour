@@ -253,7 +253,6 @@ defaultproperties
     WA_Idle="idle_F1"
     WA_Fire="idle_F1"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.f1grenade_icon'
-    MenuDescription="The F1 was a standard fragmentation grenade available throughout the war. Can be 'cooked'. Normally set with about a 5-second fuse."
     bRapidFire=False
     LightType=LT_None
     LightEffect=LE_None

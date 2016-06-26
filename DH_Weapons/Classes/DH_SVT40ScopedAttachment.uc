@@ -14,7 +14,6 @@ defaultproperties
 {
     Mesh=mesh'Weapons3rd_anm.svt40Scope'    // placeholder until we get svt world mesh
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.svt40scoped_icon'
-    MenuDescription="SVT40: semi-automatic rifle with sniper scope. Being complex, issued to snipers who would look after it. Used the 10-round box mag."
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bHeavy=false

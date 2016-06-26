@@ -187,6 +187,5 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_ppd40"
     WA_ProneReloadEmpty="prone_reloadempty_ppd40"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.ppd40_icon'
-    MenuDescription="PPD40: fore-runner of the PPSh sub-machine gun. Used the same 71-round drum mag, firing at 800 rpm. Only made in small numbers before the PPSh replaced it."
     Mesh=SkeletalMesh'Weapons3rd_anm.ppd40'
 }

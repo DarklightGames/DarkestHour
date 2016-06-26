@@ -183,6 +183,5 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_dp28"
     WA_ProneReloadEmpty="prone_reloadempty_dp28"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.dp28_icon'
-    MenuDescription="The DP27/28 was the standard-issue Soviet light MG throughout the war. Used a flat 47-round mag, firing at 500rpm with a good degree of accuracy. No barrel change."
     Mesh=SkeletalMesh'Weapons3rd_anm.DP28'
 }

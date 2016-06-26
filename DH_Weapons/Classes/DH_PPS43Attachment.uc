@@ -187,6 +187,5 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_pps43"
     WA_ProneReloadEmpty="prone_reloadempty_pps43"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.pps43_icon'
-    MenuDescription="PPS43 (and PPS42): very basic sub-machine gun produced in Leningrad during the siege. Used a 35-round box mag, firing at 700 rpm. Found in small numbers."
     Mesh=SkeletalMesh'Weapons3rd_anm.pps43'
 }

@@ -141,7 +141,6 @@ defaultproperties
     WA_WorkBolt="bolt_nagant9138"
     WA_BayonetWorkBolt="bolt_nagant9138"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.m44_icon'
-    MenuDescription="Mosin-Nagant M44: bolt-action rifle. Shortened version of the 91/30, with slightly reduced accuracy. 5-round mag/clip with permanent bayonet attachment."
     bRapidFire=False
     Mesh=SkeletalMesh'Weapons3rd_anm.M44'
 }

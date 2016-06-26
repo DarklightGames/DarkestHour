@@ -20,7 +20,6 @@ simulated function AnimEnd(int Channel)
 defaultproperties
 {
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
-    MenuDescription="Mosin-Nagant 91/30: bolt-action rifle with sniper scope. A favourite of Russian snipers. Reliable and accurate, using a 5-round mag/clip."
     Mesh=mesh'Weapons3rd_anm.Nagant9130_scoped'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'

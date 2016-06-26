@@ -18,6 +18,5 @@ defaultproperties
      WA_Idle="Idle"
      WA_Fire="Idle"
      //compile error  menuImage=texture'DH_ROFX_Tex.HUD.rpg43gui'
-     MenuDescription="RPG-43 ||HEAT based Soviet hand grenade. ||Explodes on sudden impact and has a penetration of around 75 mm of armor."
      //compile error  mesh=SkeletalMesh'DO_RU_Weapons.RPG_43_3rd'
 }

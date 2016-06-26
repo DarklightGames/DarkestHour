@@ -134,7 +134,6 @@ defaultproperties
     WA_ProneReload="prone_reload_nagant9138"
     WA_WorkBolt="bolt_nagant9138"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
-    MenuDescription="Mosin-Nagant M38: bolt-action rifle. Shortened version of the 91/30, with slightly reduced accuracy. 5-round mag/clip."
     bRapidFire=False
     Mesh=SkeletalMesh'Weapons3rd_anm.nagant9138'
 }

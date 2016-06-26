@@ -177,7 +177,6 @@ defaultproperties
     WA_ProneReload="prone_reload_ptrd"
     WA_ProneReloadEmpty="prone_reload_ptrd"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.prtd_icon'
-    MenuDescription="PTRD: anti-tank rifle, firing a 14.5mm tungsten-cored round. Can penetrate the thinner armour on old tanks or sides/rear of newer models. Also lethal to people!"
     bRapidFire=False
     Mesh=SkeletalMesh'Weapons3rd_anm.PTRD'
 }

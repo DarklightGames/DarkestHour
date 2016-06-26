@@ -187,6 +187,5 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_ppsh41"
     WA_ProneReloadEmpty="prone_reloadempty_ppsh41"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_icon'
-    MenuDescription="PPSh41: the classic Soviet sub-machine-gun. Widely used and loved, simple and robust. Used the 71-round drum mag, firing at 900 rpm."
     Mesh=SkeletalMesh'Weapons3rd_anm.ppsh41'
 }

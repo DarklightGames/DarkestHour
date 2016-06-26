@@ -9,7 +9,6 @@ defaultproperties
 {
     Mesh=mesh'Weapons3rd_anm.svt40'
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon'
-    MenuDescription="SVT40: semi-automatic rifle. Accurate, but complicated, so not issued to all. Used the 10-round box mag, with bayonet attachment possible."
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bHeavy=false

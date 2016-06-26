@@ -8,7 +8,6 @@ class DH_TT33Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.tt33_icon'
-    MenuDescription="Tokarev TT33: automatic pistol. Standard issue in the Red Army. Used an 8-round box mag, with reasonable accuracy and good stopping power."
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
     Mesh=mesh'Weapons3rd_anm.tt33'
