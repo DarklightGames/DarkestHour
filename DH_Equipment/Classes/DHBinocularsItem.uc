@@ -225,7 +225,6 @@ defaultproperties
     DisplayFOV=70.0
     ZoomInTime=0.4
     ZoomOutTime=0.2
-    SelectForce="SwitchToAssaultRifle"
     SelectAnim="Draw"
     PutDownAnim="Put_Away"
     SelectAnimRate=1.0

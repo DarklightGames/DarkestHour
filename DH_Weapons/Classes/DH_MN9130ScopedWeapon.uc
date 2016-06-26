@@ -62,6 +62,6 @@ defaultproperties
     AIRating=+0.4
     CurrentRating=0.4
     bSniping=true
-    SelectForce="SwitchToAssaultRifle"
+
     TexturedScopeTexture=Texture'Weapon_overlays.Scopes.Rus_sniperscope_overlay'
 }

@@ -11,7 +11,6 @@ defaultproperties
 {
     FireModeClass(0)=class'DH_Weapons.DH_RPG43GrenadeFire'
     FireModeClass(1)=None
-    SelectForce="SwitchToAssaultRifle"
     PutDownAnim="Put_away"
     SelectAnimRate=1.000000
     PutDownAnimRate=1.000000

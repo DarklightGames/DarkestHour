@@ -54,5 +54,5 @@ defaultproperties
     AIRating=+0.4
     CurrentRating=0.4
     bSniping=true
-    SelectForce="SwitchToAssaultRifle"
+
 }

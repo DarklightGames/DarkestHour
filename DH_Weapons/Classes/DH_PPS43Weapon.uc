@@ -30,7 +30,6 @@ defaultproperties
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
      PutDownAnimRate=1.000000
-     SelectForce="SwitchToAssaultRifle"
      AIRating=0.700000
      CurrentRating=0.700000
      DisplayFOV=70.000000
