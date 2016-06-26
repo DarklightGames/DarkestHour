@@ -1,17 +1,11 @@
-//=============================================================================
-// RDG1GrenadeAttachment
-//=============================================================================
-// Russian RDG1 smoke grenade Weapon attachment
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2006 Tripwire Interactive LLC
-// - John "Ramm-Jaeger" Gibson
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2016
+//==============================================================================
 
 class DH_RPG43GrenadeAttachment extends DH_StielGranateAttachment;
 
 #exec OBJ LOAD File=DO_RU_Weapons.ukx
-//#exec OBJ LOAD File=DO_RU_Weapons.utx
 
 defaultproperties
 {

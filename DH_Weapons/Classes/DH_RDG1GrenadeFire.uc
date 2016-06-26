@@ -45,20 +45,13 @@ function DoFireEffect()
 
     // check if projectile would spawn through a wall and adjust start location accordingly
     Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-    if (Other != none )
+
+    if (Other != none)
     {
         StartProj = HitLocation;
     }
 
-
     Aim = AdjustAim(StartProj, AimError);
-
-    //log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
-    //PlayerController(Instigator.Controller).ClientMessage("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
-
-//    Instigator.ClearStayingDebugLines();
-//    Instigator.DrawStayingDebugLine(StartProj, StartProj+65535* MuzzlePosition.XAxis, 0,0,255);
-//    Instigator.DrawStayingDebugLine(StartProj, StartProj+65535* vector(Aim), 0,255,0);
 
     SpawnCount = Max(1, ProjPerFire * int(Load));
 

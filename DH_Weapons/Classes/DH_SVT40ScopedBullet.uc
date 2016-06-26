@@ -5,13 +5,9 @@
 
 class DH_SVT40ScopedBullet extends DHBullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
-    BallisticCoefficient=0.511 // ?
+    BallisticCoefficient=0.511
     Damage=115
     MyDamageType=class'DH_Weapons.DH_SVT40ScopedDamType'
     MyVehicleDamage=class'SVT40ScopedVehDamType'

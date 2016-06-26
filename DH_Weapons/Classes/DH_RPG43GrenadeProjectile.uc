@@ -7,30 +7,22 @@ class DH_RPG43GrenadeProjectile extends DH_StielGranateProjectile;
 
 #exec OBJ LOAD File=Inf_WeaponsTwo.uax
 
-var float DestroyTimer,SurfaceAngleRadian,RPG43PenetrationAbility;
+var float DestroyTimer, SurfaceAngleRadian, RPG43PenetrationAbility;
 var bool bCalledDestroy, bIsHEATRound;
-var class<DamageType>   GrenadeImpactDamage;
+var class<DamageType> GrenadeImpactDamage;
 
-//-----------------------------------------------------------------------------
-// Landed
-//-----------------------------------------------------------------------------
 simulated function Landed(vector HitNormal)
 {
     if (Bounces <= 0)
     {
         SetPhysics(PHYS_None);
-        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
+        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
     }
     else
     {
         HitWall(HitNormal, none);
     }
 }
-
-
-//-----------------------------------------------------------------------------
-// HitWall
-//-----------------------------------------------------------------------------
 
 simulated function HitWall(vector HitNormal, actor Wall)
 {
@@ -42,7 +34,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
     GetDampenAndSoundValue(ST);
 
     // Return here, this was causing the famous "Nade bug"
-    if(ROCollisionAttachment(Wall) != none)
+    if (ROCollisionAttachment(Wall) != none)
     {
         return;
     }
@@ -52,10 +44,6 @@ simulated function HitWall(vector HitNormal, actor Wall)
 
     //Set hitangle
     HitAngle = 1.57;  //Pointless number
-
-    //Lets check if the grenade hit a wall hard enough to explode
-    //SpeedDebug = VSize(Velocity);
-    //Level.Game.Broadcast(self, "Grenade hit wall, speed: "$SpeedDebug, 'Say');
 
     if( VSize(Velocity) >= 820 + Rand(81))
     {
@@ -71,10 +59,6 @@ simulated function HitWall(vector HitNormal, actor Wall)
             }
             else //else lets check if the armor is too thick to damage
             {
-                // commented out for compile
-                //if( Wall.IsA('DH_ROTreadCraft') && DH_ROTreadCraft(Wall).DHShouldPenetrateHEAT( Location, Normal(Velocity), RPG43PenetrationAbility, HitAngle, GrenadeImpactDamage, bIsHEATRound))
-                //    Wall.TakeDamage(Damage*0.66, none, Location, Location, MyDamageType); //We pen, so lets do some minor damages and explode
-
                 explode(Location,vect(0,0,0));
             }
             //Because we exploded, let's end the function here
@@ -128,12 +112,10 @@ simulated function Destroyed()
     local Vector Start;
     local ESurfaceTypes ST;
 
-    if(bAlreadyExploded)
+    if (bAlreadyExploded)
         return;
 
-    //WeaponLight();
     PlaySound(ExplosionSound[Rand(3)],, 5.0);
-
     Start = Location + 32 * vect(0,0,1);
 
     DoShakeEffect();
@@ -141,20 +123,19 @@ simulated function Destroyed()
     if (EffectIsRelevant(Location,false))
     {
         // if the grenade is still moving we'll need to spawn a different explosion effect
-        if( Physics == PHYS_Falling )
+        if (Physics == PHYS_Falling)
         {
-            Spawn(class'GrenadeExplosion_midair',,, Start, rotator(vect(0,0,1)));
+            Spawn(class'GrenadeExplosion_midair',,, Start, rotator(vect(0, 0, 1)));
         }
 
         // if the grenade has stopped and is on the ground we'll spawn a ground explosion
         // effect and spawn some dirt flying out
-        else if( Physics == PHYS_None )
+        else if (Physics == PHYS_None)
         {
             GetHitSurfaceType(ST, vect(0,0,1));
 
-            if (  ST == EST_Snow || ST == EST_Ice )
+            if (ST == EST_Snow || ST == EST_Ice)
             {
-                //Spawn(ExplodeSnowEffectClass,,, Start, rotator(HitNormal));
                 Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0,0,1)));
                 Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0,0,1)));
             }
@@ -163,11 +144,10 @@ simulated function Destroyed()
                 Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0,0,1)));
                 Spawn(ExplosionDecal, self,, Location, rotator(-vect(0,0,1)));
             }
-
-
         }
     }
-    Super.Destroyed();
+
+    super.Destroyed();
 }
 
 defaultproperties

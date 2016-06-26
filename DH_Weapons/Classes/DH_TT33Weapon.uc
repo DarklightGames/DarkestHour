@@ -19,7 +19,6 @@ defaultproperties
     HighDetailOverlay=Material'Weapons1st_tex.Pistols.TT33_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-
     FireModeClass(0)=class'DH_Weapons.DH_TT33Fire'
     FireModeClass(1)=class'DH_Weapons.DH_TT33MeleeFire'
     InitialNumPrimaryMags=5
@@ -27,12 +26,9 @@ defaultproperties
     CurrentMagIndex=0
     bPlusOneLoading=true
     bHasBayonet=false
-
     bCanRestDeploy=true
-
     PickupClass=class'DH_Weapons.DH_TT33Pickup'
     AttachmentClass=class'DH_Weapons.DH_TT33Attachment'
-
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
     IdleEmptyAnim=idle-empty
@@ -50,7 +46,6 @@ defaultproperties
     IronPutDown=iron_out
     IronBringUpEmpty=iron_in_empty
     IronPutDownEmpty=iron_out_empty
-
     CrawlForwardAnim=crawlF
     CrawlBackwardAnim=crawlB
     CrawlStartAnim=crawl_in
@@ -59,17 +54,13 @@ defaultproperties
     CrawlBackwardEmptyAnim=crawlB_empty
     CrawlStartEmptyAnim=crawl_in_empty
     CrawlEndEmptyAnim=crawl_out_empty
-
     SprintStartEmptyAnim=Sprint_Empty_Start
     SprintLoopEmptyAnim=Sprint_Empty_Middle
     SprintEndEmptyAnim=Sprint_Empty_End
-
     ZoomInTime=0.4
     ZoomOutTime=0.2
-
     AIRating=+0.35
     CurrentRating=0.35
     bSniping=false
-
     SelectForce="SwitchToAssaultRifle"
 }

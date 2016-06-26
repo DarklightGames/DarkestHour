@@ -19,7 +19,9 @@ simulated function Landed(vector HitNormal)
         SetPhysics(PHYS_None);
 
         if(Role == ROLE_Authority)
+        {
             SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
+        }
     }
     else
     {
@@ -36,7 +38,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
     GetDampenAndSoundValue(ST);
 
     // Return here, this was causing the famous "Nade bug"
-    if(ROCollisionAttachment(Wall) != none)
+    if (ROCollisionAttachment(Wall) != none)
     {
         return;
     }
@@ -61,34 +63,24 @@ simulated function HitWall(vector HitNormal, actor Wall)
     }
 }
 
-//-----------------------------------------------------------------------------
-// BlowUp
-//-----------------------------------------------------------------------------
-
 function BlowUp(vector HitLocation)
 {
-    //DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-
     if (Role == ROLE_Authority)
+    {
         MakeNoise(1.0);
+    }
 }
-
-//-----------------------------------------------------------------------------
-// Explode
-//-----------------------------------------------------------------------------
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     BlowUp(HitLocation);
 
-    if( Role == ROLE_Authority )
+    if (Role == ROLE_Authority)
     {
         AmbientSound = SmokeSound;
     }
 
-    PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
-
-    //DoShakeEffect();
+    PlaySound(ExplosionSound[Rand(3)],, 1.0,, 200);
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -101,7 +93,7 @@ simulated function Destroyed()
 {
     super(ROThrowableExplosiveProjectile).Destroyed();
 
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
         SmokeEmitter.Kill();
     }
@@ -109,7 +101,7 @@ simulated function Destroyed()
 
 function Reset()
 {
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
         SmokeEmitter.Destroy();
     }

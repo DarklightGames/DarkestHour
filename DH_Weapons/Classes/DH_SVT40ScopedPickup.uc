@@ -10,10 +10,6 @@ class DH_SVT40ScopedPickup extends DHWeaponPickup
 #exec OBJ LOAD File=..\Textures\Weapons3rd_tex.utx
 #exec OBJ LOAD File=Weapons1st_tex.utx
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.svt40Scope');
@@ -28,17 +24,13 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_SVT40ScopedWeapon'
-
     PickupMessage="You got the SVT40 Scoped."
     TouchMessage="Pick Up: SVT40 Scoped"
-    PickupForce="AssaultRiflePickup"  // jdf
-
+    PickupForce="AssaultRiflePickup"
     MaxDesireability=+0.78
-
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.svt40Scope'
     DrawType=DT_StaticMesh
     DrawScale=1.0
-
     CollisionRadius=25.0
     CollisionHeight=3.0
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
