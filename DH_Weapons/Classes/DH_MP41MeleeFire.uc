@@ -7,7 +7,7 @@ class DH_MP41MeleeFire extends DH_MP40MeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_MP41BashDamType'
-     TraceRange=80.000000
-     GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
+    DamageType=Class'DH_Weapons.DH_MP41BashDamType'
+    TraceRange=80.000000
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
 }

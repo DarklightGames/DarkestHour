@@ -13,9 +13,9 @@ simulated function EjectShell()
     local rotator EjectRot;
     local ROShellEject Shell;
 
-    if( Instigator.bBipodDeployed )
+    if (Instigator.bBipodDeployed)
     {
-        if ( ShellEjectClass != None )
+        if (ShellEjectClass != None)
         {
             Weapon.GetViewAxes(X,Y,Z);
 
@@ -37,7 +37,7 @@ simulated function EjectShell()
     }
     else
     {
-        if ( ShellEjectClass != None )
+        if (ShellEjectClass != None)
         {
             EjectCoords = Weapon.GetBoneCoords(ShellEmitBone);
 
@@ -64,37 +64,37 @@ simulated function EjectShell()
 
 defaultproperties
 {
-     ProjSpawnOffset=(X=25.000000)
-     FAProjSpawnOffset=(X=-225.000000,Y=-15.000000,Z=-15.000000)
-     bUsePreLaunchTrace=False
-     FireIronAnim="shoot"
-     FireSounds(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-     FireSounds(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-     FireSounds(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-     maxVerticalRecoilAngle=750
-     maxHorizontalRecoilAngle=650
-     ShellEjectClass=Class'ROAmmo.ShellEject1st14mm'
-     ShellIronSightOffset=(X=10.000000,Y=3.000000)
-     ShellRotOffsetIron=(Pitch=-10000)
-     bAnimNotifiedShellEjects=False
-     bWaitForRelease=True
-     FireAnim="shoot"
-     TweenTime=0.000000
-     FireForce="RocketLauncherFire"
-     FireRate=2.400000
-     AmmoClass=Class'ROAmmo.PTRDAmmo'
-     ShakeRotMag=(X=100.000000,Y=100.000000,Z=800.000000)
-     ShakeRotRate=(X=12500.000000,Y=12500.000000,Z=12500.000000)
-     ShakeRotTime=7.000000
-     ShakeOffsetMag=(X=6.000000,Y=2.000000,Z=10.000000)
-     ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-     ShakeOffsetTime=4.000000
-     ProjectileClass=Class'DH_Weapons.DH_PTRDBullet'
-     BotRefireRate=0.500000
-     WarnTargetPct=0.900000
-     FlashEmitterClass=Class'ROEffects.MuzzleFlash1stPTRD'
-     SmokeEmitterClass=Class'ROEffects.ROMuzzleSmoke'
-     aimerror=800.000000
-     Spread=75.000000
-     SpreadStyle=SS_Random
+    ProjSpawnOffset=(X=25.000000)
+    FAProjSpawnOffset=(X=-225.000000,Y=-15.000000,Z=-15.000000)
+    bUsePreLaunchTrace=False
+    FireIronAnim="shoot"
+    FireSounds(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
+    FireSounds(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
+    FireSounds(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
+    maxVerticalRecoilAngle=750
+    maxHorizontalRecoilAngle=650
+    ShellEjectClass=Class'ROAmmo.ShellEject1st14mm'
+    ShellIronSightOffset=(X=10.000000,Y=3.000000)
+    ShellRotOffsetIron=(Pitch=-10000)
+    bAnimNotifiedShellEjects=False
+    bWaitForRelease=True
+    FireAnim="shoot"
+    TweenTime=0.000000
+    FireForce="RocketLauncherFire"
+    FireRate=2.400000
+    AmmoClass=Class'ROAmmo.PTRDAmmo'
+    ShakeRotMag=(X=100.000000,Y=100.000000,Z=800.000000)
+    ShakeRotRate=(X=12500.000000,Y=12500.000000,Z=12500.000000)
+    ShakeRotTime=7.000000
+    ShakeOffsetMag=(X=6.000000,Y=2.000000,Z=10.000000)
+    ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
+    ShakeOffsetTime=4.000000
+    ProjectileClass=Class'DH_Weapons.DH_PTRDBullet'
+    BotRefireRate=0.500000
+    WarnTargetPct=0.900000
+    FlashEmitterClass=Class'ROEffects.MuzzleFlash1stPTRD'
+    SmokeEmitterClass=Class'ROEffects.ROMuzzleSmoke'
+    aimerror=800.000000
+    Spread=75.000000
+    SpreadStyle=SS_Random
 }

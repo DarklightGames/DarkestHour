@@ -7,10 +7,10 @@ class DH_PPD40Bullet_S extends DHBullet;
 
 defaultproperties
 {
-     WhizType=2
-     MyVehicleDamage=Class'ROInventory.PPD40VehDamType'
-     BallisticCoefficient=0.150000
-     Speed=25000.000000
-     Damage=50.000000
-     MyDamageType=Class'DH_Weapons.DH_PPD40DamType'
+    WhizType=2
+    MyVehicleDamage=Class'ROInventory.PPD40VehDamType'
+    BallisticCoefficient=0.150000
+    Speed=25000.000000
+    Damage=50.000000
+    MyDamageType=Class'DH_Weapons.DH_PPD40DamType'
 }

@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2016
+//==============================================================================
+
 class DH_MN9130ScopedAttachment extends DHWeaponAttachment;
 
 simulated function AnimEnd(int Channel)
@@ -7,7 +12,7 @@ simulated function AnimEnd(int Channel)
 
     GetAnimParams(0, anim, frame, rate);
 
-    if( anim == WA_Reload || anim == WA_PreReload )
+    if (anim == WA_Reload || anim == WA_PreReload)
     {
         return;
     }
@@ -27,7 +32,6 @@ defaultproperties
     bRapidFire=false
     bAltRapidFire=false
     bAnimNotifiedShellEjects=true
-
     bDynamicLight=false
     LightType=LT_Steady
     LightEffect=LE_NonIncidence
@@ -36,9 +40,6 @@ defaultproperties
     LightHue=30
     LightSaturation=150
     LightRadius=4.0
-
-// MergeTODO: Replace these with the right anims
-
     PA_MovementAnims(0)=stand_jogF_kar
     PA_MovementAnims(1)=stand_jogB_kar
     PA_MovementAnims(2)=stand_jogL_kar
@@ -47,7 +48,6 @@ defaultproperties
     PA_MovementAnims(5)=stand_jogFR_kar
     PA_MovementAnims(6)=stand_jogBL_kar
     PA_MovementAnims(7)=stand_jogBR_kar
-
     PA_ProneAnims(0)=prone_crawlF_kar
     PA_ProneAnims(1)=prone_crawlB_kar
     PA_ProneAnims(2)=prone_crawlL_kar
@@ -64,7 +64,6 @@ defaultproperties
     PA_ProneIronAnims(5)=prone_slowcrawlR_kar
     PA_ProneIronAnims(6)=prone_slowcrawlB_kar
     PA_ProneIronAnims(7)=prone_slowcrawlB_kar
-
     PA_ProneTurnRightAnim=prone_turnR_kar
     PA_ProneTurnLeftAnim=prone_turnL_kar
     PA_StandToProneAnim=StandtoProne_kar
@@ -74,7 +73,6 @@ defaultproperties
     PA_ProneIdleRestAnim=prone_idle_kar
     PA_DiveToProneStartAnim=prone_divef_Kar
     PA_DiveToProneEndAnim=prone_diveend_Kar
-
     PA_SprintAnims(0)=stand_sprintF_kar
     PA_SprintAnims(1)=stand_sprintB_kar
     PA_SprintAnims(2)=stand_sprintL_kar
@@ -91,7 +89,6 @@ defaultproperties
     PA_SprintCrouchAnims(5)=crouch_sprintFR_kar
     PA_SprintCrouchAnims(6)=crouch_sprintBL_kar
     PA_SprintCrouchAnims(7)=crouch_sprintBR_kar
-
     PA_CrouchAnims(0)=crouch_walkF_scope
     PA_CrouchAnims(1)=crouch_walkB_scope
     PA_CrouchAnims(2)=crouch_walkL_scope
@@ -103,7 +100,6 @@ defaultproperties
     PA_CrouchTurnRightAnim=crouch_turnR_scope
     PA_CrouchTurnLeftAnim=crouch_turnL_scope
     PA_CrouchIdleRestAnim=crouch_idle_scope
-
     PA_WalkAnims(0)=stand_walkFhip_kar
     PA_WalkAnims(1)=stand_walkBhip_kar
     PA_WalkAnims(2)=stand_walkLhip_kar
@@ -120,7 +116,6 @@ defaultproperties
     PA_WalkIronAnims(5)=stand_walkFRiron_scope
     PA_WalkIronAnims(6)=stand_walkBLiron_scope
     PA_WalkIronAnims(7)=stand_walkBRiron_scope
-
     PA_IdleCrouchAnim=crouch_idle_scope
     PA_IdleRestAnim=stand_idlehip_kar
     PA_IdleWeaponAnim=stand_idlehip_kar
@@ -128,14 +123,12 @@ defaultproperties
     PA_IdleIronWeaponAnim=stand_idleiron_scope
     PA_IdleCrouchIronWeaponAnim=crouch_idleiron_scope
     PA_IdleProneAnim=prone_idle_kar
-
     PA_TurnLeftAnim=stand_turnLhip_kar
     PA_TurnRightAnim=stand_turnRhip_kar
     PA_TurnIronLeftAnim=stand_turnLiron_scope
     PA_TurnIronRightAnim=stand_turnRiron_scope
     PA_CrouchTurnIronLeftAnim=crouch_turnRiron_scope
     PA_CrouchTurnIronRightAnim=crouch_turnRiron_scope
-
     PA_Fire=stand_shoothip_kar
     PA_CrouchFire=crouch_shoot_scope
     PA_CrouchIronFire=crouch_shootiron_scope
@@ -145,8 +138,6 @@ defaultproperties
     PA_CrouchFireLastShot=crouch_shoot_scope
     PA_ProneFireLastShot=prone_shoot_kar
     PA_IronFireLastShot=stand_shootiron_scope
-
-// Moving fire anims
     PA_MoveStandFire(0)=stand_shootFhip_kar
     PA_MoveStandFire(1)=stand_shootFhip_kar
     PA_MoveStandFire(2)=stand_shootLRhip_kar
@@ -155,7 +146,6 @@ defaultproperties
     PA_MoveStandFire(5)=stand_shootFRhip_kar
     PA_MoveStandFire(6)=stand_shootFRhip_kar
     PA_MoveStandFire(7)=stand_shootFLhip_kar
-
     PA_MoveCrouchFire(0)=crouch_shootF_scope
     PA_MoveCrouchFire(1)=crouch_shootF_scope
     PA_MoveCrouchFire(2)=crouch_shootLR_scope
@@ -164,7 +154,6 @@ defaultproperties
     PA_MoveCrouchFire(5)=crouch_shootF_scope
     PA_MoveCrouchFire(6)=crouch_shootF_scope
     PA_MoveCrouchFire(7)=crouch_shootF_scope
-
     PA_MoveStandIronFire(0)=stand_shootiron_scope
     PA_MoveStandIronFire(1)=stand_shootiron_scope
     PA_MoveStandIronFire(2)=stand_shootLRiron_scope
@@ -173,7 +162,6 @@ defaultproperties
     PA_MoveStandIronFire(5)=stand_shootFRiron_scope
     PA_MoveStandIronFire(6)=stand_shootFRiron_scope
     PA_MoveStandIronFire(7)=stand_shootFLiron_scope
-
     PA_MoveWalkFire(0)=stand_shootFwalk_kar
     PA_MoveWalkFire(1)=stand_shootFwalk_kar
     PA_MoveWalkFire(2)=stand_shootLRwalk_kar
@@ -182,7 +170,6 @@ defaultproperties
     PA_MoveWalkFire(5)=stand_shootFRwalk_kar
     PA_MoveWalkFire(6)=stand_shootFRwalk_kar
     PA_MoveWalkFire(7)=stand_shootFLwalk_kar
-
     PA_ReloadAnim=stand_insert_karscope
     PA_ProneReloadAnim=prone_insert_karscope
     //PA_ReloadEmptyAnim=prone_reload_kar
@@ -191,18 +178,15 @@ defaultproperties
     PA_PostReloadAnim=stand_close_karscope
     PA_PronePreReloadAnim=prone_open_karscope
     PA_PronePostReloadAnim=prone_close_karscope
-
     PA_HitFAnim=hitF_rifle
     PA_HitBAnim=hitB_rifle
     PA_HitLAnim=hitL_rifle
     PA_HitRAnim=hitR_rifle
     PA_HitLLegAnim=hitL_leg_rifle
     PA_HitRLegAnim=hitR_leg_rifle
-
     PA_AltFire=stand_idlestrike_kar
     PA_CrouchAltFire=stand_idlestrike_kar
     PA_ProneAltFire=prone_idlestrike_bayo
-
     PA_AirStillAnim=jump_mid_kar
     PA_AirAnims(0)=jumpF_mid_kar
     PA_AirAnims(1)=jumpB_mid_kar
@@ -221,7 +205,6 @@ defaultproperties
     PA_DodgeAnims(1)=jumpB_mid_kar
     PA_DodgeAnims(2)=jumpL_mid_kar
     PA_DodgeAnims(3)=jumpR_mid_kar
-
     PA_LimpAnims(0)=stand_limpFhip_kar
     PA_LimpAnims(1)=stand_limpBhip_kar
     PA_LimpAnims(2)=stand_limpLhip_kar
@@ -230,7 +213,6 @@ defaultproperties
     PA_LimpAnims(5)=stand_limpFRhip_kar
     PA_LimpAnims(6)=stand_limpBLhip_kar
     PA_LimpAnims(7)=stand_limpBRhip_kar
-
     PA_LimpIronAnims(0)=stand_limpFiron_scope
     PA_LimpIronAnims(1)=stand_limpBiron_scope
     PA_LimpIronAnims(2)=stand_limpLiron_scope
@@ -239,12 +221,10 @@ defaultproperties
     PA_LimpIronAnims(5)=stand_limpFRiron_scope
     PA_LimpIronAnims(6)=stand_limpBLiron_scope
     PA_LimpIronAnims(7)=stand_limpBRiron_scope
-
     WA_Idle=idle_nagant9130scoped
     WA_Fire=idle_nagant9130scoped
     WA_Reload=insert_nagantscoped
     WA_PreReload=open_nagantscoped
     WA_PostReload=close_nagantscoped
-
     WA_WorkBolt=bolt_nagantscope
 }

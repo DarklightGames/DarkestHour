@@ -19,24 +19,17 @@ simulated function HitWall(vector HitNormal, actor Wall)
         return;
     }
 
-    // Reflect off Wall w/damping
-    //VNorm = (Velocity dot HitNormal) * HitNormal;
-    //Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-    //Velocity = -HitNormal * Velocity * 0.3;
     Bounces--;
 
     if (Bounces <= 0)
     {
         bBounce = false;
-        //SetPhysics(PHYS_None);
     }
     else
     {
         // Reflect off Wall w/damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
         Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-        //Velocity = 0.3 * (Velocity - 2.0 * HitNormal * (Velocity dot HitNormal));
-        //RandSpin(100000);
         Speed = VSize(Velocity);
     }
 
@@ -46,11 +39,6 @@ simulated function HitWall(vector HitNormal, actor Wall)
     }
 }
 
-//-----------------------------------------------------------------------------
-// BlowUp
-// Overridden to allow players to dive on grenades to save teammates
-//-----------------------------------------------------------------------------
-
 function BlowUp(vector HitLocation)
 {
     local DHPawn DHP;
@@ -59,7 +47,7 @@ function BlowUp(vector HitLocation)
     foreach RadiusActors(class'DHPawn', DHP, 5)
     {
         // Make sure player is actually lying on the grenade, not just standing over it
-        if( DHP.bIsCrawling )
+        if (DHP.bIsCrawling)
         {
             DamageRadius *= 0.25; // Shrink the radius so that no-one but the proned player is touched
         }
@@ -68,7 +56,9 @@ function BlowUp(vector HitLocation)
     DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
 
     if (Role == ROLE_Authority)
+    {
         MakeNoise(1.0);
+    }
 }
 
 simulated function Landed(vector HitNormal)

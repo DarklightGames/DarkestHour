@@ -6,10 +6,6 @@
 class DH_PPSh41Pickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.ppsh41');
@@ -21,14 +17,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: PPSh41 SMG"
-     MaxDesireability=0.900000
-     InventoryType=Class'DH_Weapons.DH_PPSH41Weapon'
-     PickupMessage="You got the PPSh41 SMG."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.ppsh41'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: PPSh41 SMG"
+    MaxDesireability=0.900000
+    InventoryType=Class'DH_Weapons.DH_PPSH41Weapon'
+    PickupMessage="You got the PPSh41 SMG."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.ppsh41'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

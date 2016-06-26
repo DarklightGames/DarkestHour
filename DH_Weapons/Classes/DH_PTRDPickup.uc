@@ -8,10 +8,6 @@ class DH_PTRDPickup extends DHWeaponPickup
 
 #exec OBJ LOAD FILE=InterfaceArt_tex.utx
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.ptrd');
@@ -23,14 +19,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: PTRD AT Rifle"
-     MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_PTRDWeapon'
-     PickupMessage="You got the PTRD."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PTRD'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: PTRD AT Rifle"
+    MaxDesireability=0.400000
+    InventoryType=Class'DH_Weapons.DH_PTRDWeapon'
+    PickupMessage="You got the PTRD."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PTRD'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }
