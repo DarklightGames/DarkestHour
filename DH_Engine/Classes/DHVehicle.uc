@@ -2721,19 +2721,22 @@ function bool IsVehicleEmpty()
     return true;
 }
 
-// Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
+// Modified to also check bDriving as well as Driver != none, so this function works reliably for a net client
+// That's because another player's Driver pawn doesn't get replicated to a net client if that player is set to be bHidden, meaning it fails network relevance checks
+// Affects vehicles or weapon pawns with bDrawDriverInTP=false, e.g. hull MGs and some tank driver positions, where the player isn't drawn
+// Also to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
 simulated function int NumPassengers()
 {
     local int i, Num;
 
-    if (Driver != none)
+    if (Driver != none || bDriving)
     {
         Num = 1;
     }
 
     for (i = 0; i < WeaponPawns.Length; ++i)
     {
-        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+        if (WeaponPawns[i] != none && (WeaponPawns[i].Driver != none || WeaponPawns[i].bDriving))
         {
             ++Num;
         }
