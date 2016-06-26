@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1GrenadeProjectile extends StielGranateProjectile;
+class DH_RDG1GrenadeProjectile extends StielGranateProjectile;  // TODO: fix hierarchy
 
 #exec OBJ LOAD File=Inf_WeaponsTwo.uax
 
@@ -11,10 +11,6 @@ var float DestroyTimer;
 var bool bCalledDestroy;
 var Emitter SmokeEmitter;
 var sound SmokeSound;
-
-//-----------------------------------------------------------------------------
-// Landed
-//-----------------------------------------------------------------------------
 
 simulated function Landed(vector HitNormal)
 {
@@ -31,10 +27,6 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-//-----------------------------------------------------------------------------
-// HitWall
-//-----------------------------------------------------------------------------
-
 simulated function HitWall(vector HitNormal, actor Wall)
 {
     local vector VNorm;
@@ -49,24 +41,17 @@ simulated function HitWall(vector HitNormal, actor Wall)
         return;
     }
 
-    // Reflect off Wall w/damping
-    //VNorm = (Velocity dot HitNormal) * HitNormal;
-    //Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-    //Velocity = -HitNormal * Velocity * 0.3;
     Bounces--;
 
     if (Bounces <= 0)
     {
         bBounce = false;
-        //SetPhysics(PHYS_None);
     }
     else
     {
         // Reflect off Wall w/damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
         Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-        //Velocity = 0.3 * (Velocity - 2.0 * HitNormal * (Velocity dot HitNormal));
-        //RandSpin(100000);
         Speed = VSize(Velocity);
     }
 
@@ -148,18 +133,18 @@ simulated function Tick(float DeltaTime)
 
 defaultproperties
 {
-     DestroyTimer=30.000000
-     SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-     ExplodeDirtEffectClass=Class'ROEffects.GrenadeSmokeEffect'
-     ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-     ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-     ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-     Damage=0.000000
-     DamageRadius=0.000000
-     MyDamageType=Class'DH_Weapons.DH_RDG1GrenadeDamType'
-     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
-     bAlwaysRelevant=True
-     LifeSpan=30.000000
-     SoundVolume=255
-     SoundRadius=200.000000
+    DestroyTimer=30.000000
+    SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    ExplodeDirtEffectClass=Class'ROEffects.GrenadeSmokeEffect'
+    ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    Damage=0.000000
+    DamageRadius=0.000000
+    MyDamageType=Class'DH_Weapons.DH_RDG1GrenadeDamType'
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
+    bAlwaysRelevant=True
+    LifeSpan=30.000000
+    SoundVolume=255
+    SoundRadius=200.000000
 }

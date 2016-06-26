@@ -5,6 +5,9 @@
 *.tlog
 *.ucl
 *.~bak
+*.make
+*.int
+*.u
 /Animations/
 /Cache/
 /DarkestHour/
@@ -21,7 +24,6 @@
 AHZ_ROVehicles/
 CC/
 Core/
-DarkestHourDev/
 DarkestHourDev/System/DarkestHourDev.ini
 DarkestHourDev/System/DarkestHourDevUser.ini
 Editor/
@@ -43,7 +45,6 @@ RORoles/
 ROVehicles/
 ScreenShots/
 tools/
-turul/
 Unrealed/
 UnrealGame/
 UTV2004c/
@@ -54,9 +55,6 @@ XGame/
 XInterface/
 XVoting/
 XWebAdmin/
-AHZ vehicle pack/
-EH-M43/
-DH__AllSourceCode
 /System/*.det
 /System/*.int
 /System/*.blob
@@ -73,8 +71,6 @@ DH__AllSourceCode
 /System/*.md5
 /System/*.txt
 /System/*.sav
-/System/sadfasdf
-/System/sdfMicrosoft
 /System/ucc
 /System/*.upl
 /System/Microsoft
@@ -95,4 +91,3 @@ DH__AllSourceCode
 /System/UPlaylists.ini
 /System/User.ini
 /System/XAdmin.ini
-/System/DHSwappingMutatorConfig.ini

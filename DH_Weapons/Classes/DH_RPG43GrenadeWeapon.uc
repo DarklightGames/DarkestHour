@@ -18,7 +18,7 @@ defaultproperties
      PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
      AttachmentClass=class'DH_Weapons.DH_RPG43GrenadeAttachment'
      ItemName="RPG43 Anti-Tank Grenade"
-     mesh=SkeletalMesh'DO_RU_Weapons.Sov_rpg43'
+     //mesh=SkeletalMesh'DO_RU_Weapons.Sov_rpg43'
      HighDetailOverlay=None
      bUseHighDetailOverlayIndex=False
      InventoryGroup=7

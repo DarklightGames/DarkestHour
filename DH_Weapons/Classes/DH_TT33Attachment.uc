@@ -7,7 +7,7 @@ class DH_TT33Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    menuImage=Texture'InterfaceArt_tex.Menu_weapons.tt33'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.tt33_icon'
     MenuDescription="Tokarev TT33: automatic pistol. Standard issue in the Red Army. Used an 8-round box mag, with reasonable accuracy and good stopping power."
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
@@ -15,7 +15,6 @@ defaultproperties
     bHeavy=false
     bRapidFire=false
     bAltRapidFire=false
-
     bDynamicLight=false
     LightType=LT_Steady
     LightEffect=LE_NonIncidence
@@ -24,7 +23,6 @@ defaultproperties
     LightHue=30
     LightSaturation=150
     LightRadius=4.0
-
     PA_MovementAnims(0)=stand_jogF_pistol
     PA_MovementAnims(1)=stand_jogB_pistol
     PA_MovementAnims(2)=stand_jogL_pistol
@@ -33,7 +31,6 @@ defaultproperties
     PA_MovementAnims(5)=stand_jogFR_pistol
     PA_MovementAnims(6)=stand_jogBL_pistol
     PA_MovementAnims(7)=stand_jogBR_pistol
-
     PA_ProneAnims(0)=prone_crawlF_pistol
     PA_ProneAnims(1)=prone_crawlB_pistol
     PA_ProneAnims(2)=prone_crawlL_pistol
@@ -50,7 +47,6 @@ defaultproperties
     PA_ProneIronAnims(5)=prone_slowcrawlR_pistol
     PA_ProneIronAnims(6)=prone_slowcrawlB_pistol
     PA_ProneIronAnims(7)=prone_slowcrawlB_pistol
-
     PA_ProneTurnRightAnim=prone_turnR_pistol
     PA_ProneTurnLeftAnim=prone_turnL_pistol
     PA_StandToProneAnim=StandtoProne_pistol
@@ -60,7 +56,6 @@ defaultproperties
     PA_ProneIdleRestAnim=prone_idle_pistol
     PA_DiveToProneStartAnim=prone_divef_pistol
     PA_DiveToProneEndAnim=prone_diveend_pistol
-
     PA_SprintAnims(0)=stand_sprintF_pistol
     PA_SprintAnims(1)=stand_sprintB_pistol
     PA_SprintAnims(2)=stand_sprintL_pistol
@@ -77,7 +72,6 @@ defaultproperties
     PA_SprintCrouchAnims(5)=crouch_sprintFR_pistol
     PA_SprintCrouchAnims(6)=crouch_sprintBL_pistol
     PA_SprintCrouchAnims(7)=crouch_sprintBR_pistol
-
     PA_CrouchAnims(0)=crouch_walkF_pistol
     PA_CrouchAnims(1)=crouch_walkB_pistol
     PA_CrouchAnims(2)=crouch_walkL_pistol
@@ -89,7 +83,6 @@ defaultproperties
     PA_CrouchTurnRightAnim=crouch_turnR_pistol
     PA_CrouchTurnLeftAnim=crouch_turnL_pistol
     PA_CrouchIdleRestAnim=crouch_idle_pistol
-
     PA_WalkAnims(0)=stand_walkFhip_pistol
     PA_WalkAnims(1)=stand_walkBhip_pistol
     PA_WalkAnims(2)=stand_walkLhip_pistol
@@ -106,7 +99,6 @@ defaultproperties
     PA_WalkIronAnims(5)=stand_walkFRiron_pistol
     PA_WalkIronAnims(6)=stand_walkBLiron_pistol
     PA_WalkIronAnims(7)=stand_walkBRiron_pistol
-
     PA_IdleCrouchAnim=crouch_idle_pistol
     PA_IdleRestAnim=stand_idlehip_pistol
     PA_IdleWeaponAnim=stand_idlehip_pistol
@@ -114,14 +106,12 @@ defaultproperties
     PA_IdleIronWeaponAnim=stand_idleiron_pistol
     PA_IdleCrouchIronWeaponAnim=crouch_idleiron_pistol
     PA_IdleProneAnim=prone_idle_pistol
-
     PA_TurnLeftAnim=stand_turnLhip_pistol
     PA_TurnRightAnim=stand_turnRhip_pistol
     PA_TurnIronLeftAnim=stand_turnLiron_pistol
     PA_TurnIronRightAnim=stand_turnRiron_pistol
     PA_CrouchTurnIronLeftAnim=crouch_turnRiron_pistol
     PA_CrouchTurnIronRightAnim=crouch_turnRiron_pistol
-
     PA_Fire=stand_shoothip_pistol
     PA_CrouchFire=crouch_shoot_pistol
     PA_CrouchIronFire=crouch_shootiron_pistol
@@ -131,7 +121,6 @@ defaultproperties
     PA_CrouchFireLastShot=crouch_shoot_pistol
     PA_ProneFireLastShot=prone_shoot_pistol
     PA_IronFireLastShot=stand_shootiron_pistol
-
     PA_MoveStandFire(0)=stand_shootFhip_pistol
     PA_MoveStandFire(1)=stand_shootFhip_pistol
     PA_MoveStandFire(2)=stand_shootLRhip_pistol
@@ -140,7 +129,6 @@ defaultproperties
     PA_MoveStandFire(5)=stand_shootFRhip_pistol
     PA_MoveStandFire(6)=stand_shootFRhip_pistol
     PA_MoveStandFire(7)=stand_shootFLhip_pistol
-
     PA_MoveCrouchFire(0)=crouch_shootF_pistol
     PA_MoveCrouchFire(1)=crouch_shootF_pistol
     PA_MoveCrouchFire(2)=crouch_shootLR_pistol
@@ -149,7 +137,6 @@ defaultproperties
     PA_MoveCrouchFire(5)=crouch_shootF_pistol
     PA_MoveCrouchFire(6)=crouch_shootF_pistol
     PA_MoveCrouchFire(7)=crouch_shootF_pistol
-
     PA_MoveStandIronFire(0)=stand_shootiron_pistol
     PA_MoveStandIronFire(1)=stand_shootiron_pistol
     PA_MoveStandIronFire(2)=stand_shootLRiron_pistol
@@ -158,7 +145,6 @@ defaultproperties
     PA_MoveStandIronFire(5)=stand_shootFRiron_pistol
     PA_MoveStandIronFire(6)=stand_shootFRiron_pistol
     PA_MoveStandIronFire(7)=stand_shootFLiron_pistol
-
     PA_MoveWalkFire(0)=stand_shootFwalk_pistol
     PA_MoveWalkFire(1)=stand_shootFwalk_pistol
     PA_MoveWalkFire(2)=stand_shootLRwalk_pistol
@@ -167,27 +153,22 @@ defaultproperties
     PA_MoveWalkFire(5)=stand_shootFRwalk_pistol
     PA_MoveWalkFire(6)=stand_shootFRwalk_pistol
     PA_MoveWalkFire(7)=stand_shootFLwalk_pistol
-
     PA_ReloadAnim=stand_reloadhalf_tt33
     PA_ProneReloadAnim=prone_reloadhalf_tt33
     PA_ReloadEmptyAnim=stand_reloadempty_tt33
     PA_ProneReloadEmptyAnim=prone_reloadempty_tt33
-
     PA_HitFAnim=hitF_pistol
     PA_HitBAnim=hitB_pistol
     PA_HitLAnim=hitL_pistol
     PA_HitRAnim=hitR_pistol
     PA_HitLLegAnim=hitL_leg_pistol
     PA_HitRLegAnim=hitR_leg_pistol
-
     PA_AltFire=stand_idlestrike_kar
     PA_CrouchAltFire=stand_idlestrike_kar
     PA_ProneAltFire=prone_idlestrike_bayo
-
     PA_BayonetAltFire=stand_stab_kar
     PA_CrouchBayonetAltFire=crouch_idlestrike_bayo
     PA_ProneBayonetAltFire=prone_idlestrike_bayo
-
     PA_AirStillAnim=jump_mid_pistol
     PA_AirAnims(0)=jumpF_mid_pistol
     PA_AirAnims(1)=jumpB_mid_pistol
@@ -206,7 +187,6 @@ defaultproperties
     PA_DodgeAnims(1)=jumpB_mid_pistol
     PA_DodgeAnims(2)=jumpL_mid_pistol
     PA_DodgeAnims(3)=jumpR_mid_pistol
-
     PA_LimpAnims(0)=stand_limpFhip_pistol
     PA_LimpAnims(1)=stand_limpBhip_pistol
     PA_LimpAnims(2)=stand_limpLhip_pistol
@@ -215,7 +195,6 @@ defaultproperties
     PA_LimpAnims(5)=stand_limpFRhip_pistol
     PA_LimpAnims(6)=stand_limpBLhip_pistol
     PA_LimpAnims(7)=stand_limpBRhip_pistol
-
     PA_LimpIronAnims(0)=stand_limpFiron_pistol
     PA_LimpIronAnims(1)=stand_limpBiron_pistol
     PA_LimpIronAnims(2)=stand_limpLiron_pistol
@@ -224,7 +203,6 @@ defaultproperties
     PA_LimpIronAnims(5)=stand_limpFRiron_pistol
     PA_LimpIronAnims(6)=stand_limpBLiron_pistol
     PA_LimpIronAnims(7)=stand_limpBRiron_pistol
-
     WA_Idle=idle_tt33
     WA_IdleEmpty=empty_tt33
     WA_Fire=shoot_tt33

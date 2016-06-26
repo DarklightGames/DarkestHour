@@ -6,10 +6,6 @@
 class DH_RDG1GrenadePickup extends DHOneShotWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.rgd1');
@@ -21,15 +17,15 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Russian RDG-1 Smoke Grenade"
-     MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_RDG1GrenadeWeapon'
-     PickupMessage="You got the Russian RDG-1 Smoke Grenade."
-     PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=15.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: Russian RDG-1 Smoke Grenade"
+    MaxDesireability=0.780000
+    InventoryType=Class'DH_Weapons.DH_RDG1GrenadeWeapon'
+    PickupMessage="You got the Russian RDG-1 Smoke Grenade."
+    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=15.000000
+    CollisionHeight=3.000000
 }

@@ -7,7 +7,7 @@ class DH_MN9130Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    menuImage=Texture'InterfaceArt_tex.Menu_weapons.nagant9130'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
     MenuDescription="Mosin-Nagant 91/30: bolt-action rifle. Pre-war design updated slightly and produced by the million. Reliable and accurate, using a 5-round mag/clip with bayonet attachment."
     Mesh=mesh'Weapons3rd_anm.Nagant9130'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
