@@ -61,7 +61,6 @@ var     float               ObituaryFadeInTime;     // for some added suspense:
 var     float               ObituaryDelayTime;
 
 // Displayed player & voice icon
-//var     ArrayList_Object    NamedPawns;             // a list of all pawns whose names are currently being rendered // TEMP - deprecated by revision
 var     material            PlayerNameIconMaterial;
 var     material            SpeakerIconMaterial;
 var     material            NeedAssistIconMaterial;
@@ -77,15 +76,6 @@ var     bool                bDebugVehicleHitPoints; // show all vehicle's specia
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
-
-/*
-function PostBeginPlay() // TEMP - removed as NamedPawns array is deprecated by revision
-{
-    super.PostBeginPlay();
-
-    NamedPawns = new class'ArrayList_Object';
-}
-*/
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
@@ -1394,59 +1384,24 @@ function color GetPlayerColor(DHPlayerReplicationInfo PRI)
 
     return class'UColor'.default.White;
 }
-/*
-// Colin: This function is meant to evaluate pawns that are not being directly
-// looked at if we should display their name above their heads.
-//
-// Note that this function does not apply for pawns we are directly looking at.
-// That is a special exception outside the scope of this function.
-function bool ShouldDrawPlayerName(Pawn P) // TEMP - deprecated by revised DrawPlayerNames() function
-{
-    local DHPawn MyPawn, OtherPawn;
-    local bool bIsTalking;
-    local bool bCanBeResupplied;
-    local bool bCanBeReloaded;
-    local bool bIsWithinRange;
-    local vector ViewLocation;
-    local DHPlayerReplicationInfo MyPRI, OtherPRI;
 
-    if (P == none || PlayerOwner == none || P.GetTeamNum() != PlayerOwner.GetTeamNum())
-    {
-        return false;
-    }
-
-    MyPawn = DHPawn(PlayerOwner.Pawn);
-    OtherPawn = DHPawn(P);
-
-    MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
-    OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-    bIsTalking = (OtherPRI == PortraitPRI);
-    bCanBeResupplied = (MyPawn != none && !MyPawn.bUsedCarriedMGAmmo) && (OtherPawn != none && OtherPawn.bWeaponNeedsResupply);
-    bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
-
-    ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-    bIsWithinRange = VSize(P.Location - ViewLocation) <= class'DHUnits'.static.MetersToUnreal(25);
-
-    return bIsWithinRange && (bIsTalking || bCanBeResupplied || bCanBeReloaded) && FastTrace(P.Location, ViewLocation);
-}
-*/
 // Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
 function DrawPlayerNames(Canvas C)
 {
     local DHPlayerReplicationInfo OtherPRI;
-    local Controller              Con;
-    local Pawn                    LookedAtPawn, LocationPawn, P;
     local DHPawn                  OtherDHPawn;
     local ROVehicle               VehicleBase;
     local VehicleWeaponPawn       WepPawn;
+    local DHMortarVehicle         Mortar;
     local Actor                   A;
+    local Pawn                    LookedAtPawn, P;
+    local array<Pawn>             Pawns;
     local material                IconMaterial;
-    local vector                  ViewLocation, PawnLocation, HitLocation, HitNormal, ScreenLocation, TextSize, PlayerDirection;
+    local vector                  ViewLocation, DrawLocation, HitLocation, HitNormal, TextSize, PlayerDirection;
     local string                  PlayerName;
     local float                   NameFadeTime, HighestFadeInReached;
     local int                     NumOtherOccupants, i;
-    local bool                    bValidPlayer, bIsTalking, bCanBeResupplied, bCanBeReloaded;
+    local bool                    bLookingAtPawn, bValidPlayer, bIsTalking, bCanBeResupplied, bCanBeReloaded;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -1456,14 +1411,9 @@ function DrawPlayerNames(Canvas C)
     C.Font = GetPlayerNameFont(C);
     C.DrawColor = GetPlayerColor(DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)); // we only draw friendly player names, so we only need our own team color
     ViewLocation = PlayerOwner.CalcViewLocation;
-/*
-    TEMP (Matt) - tracing Actors instead of Pawns, for these benefits:
-    1. Includes turrets (& some other VehicleWeapons with collision)
-    2. Blocking actors like vehicles also hide player names behind them, as well as world geometry
-    3. Avoids need for extra FastTrace, as this trace returns terrain or static meshes as blocking actors
-*/
+
     // Our first step is to check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
-    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (3000.0 * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
+    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (3018.0 * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
     {
         if (A.bBlockActors)
         {
@@ -1479,7 +1429,7 @@ function DrawPlayerNames(Canvas C)
 
             if (WepPawn != none)
             {
-                if (WepPawn.Occupied())
+                if (WepPawn.bDriving)
                 {
                     A = WepPawn;
                 }
@@ -1495,7 +1445,7 @@ function DrawPlayerNames(Canvas C)
             // But we skip this if we've already found an occupied weapon pawn
             if (VehicleBase != none && A != WepPawn)
             {
-                if (VehicleBase.Occupied())
+                if (VehicleBase.bDriving)
                 {
                     A = VehicleBase;
                 }
@@ -1505,7 +1455,7 @@ function DrawPlayerNames(Canvas C)
                     {
                         WepPawn = VehicleBase.WeaponPawns[i];
 
-                        if (WepPawn != none && WepPawn.Occupied())
+                        if (WepPawn != none && WepPawn.bDriving)
                         {
                             A = WepPawn;
                             break;
@@ -1515,85 +1465,87 @@ function DrawPlayerNames(Canvas C)
             }
 
             // Make sure we aren't looking at our own pawn (happens in a vehicle or if moving forward)
-            // Otherwise record any pawn that we're looking at & exit the foreach iteration
-            if (A != PawnOwner)
+            // Otherwise if we're looking at a pawn, record it & put it in the start of our Pawns array, then exit the foreach iteration
+            if (A != PawnOwner && A != none)
             {
                 LookedAtPawn = Pawn(A);
+
+                if (LookedAtPawn != none)
+                {
+                    Pawns[0] = LookedAtPawn;
+                }
+
                 break;
             }
         }
     }
 
-    // Now we loop through all Controllers & find all those on our own team
-    for (Con = Level.ControllerList; Con != none; Con = Con.NextController)
+    // Find all other pawns within 25 meters & build our Pawns array
+    // We exclude our own pawn & any LookedAtPawn we've already added
+    foreach RadiusActors(class'Pawn', P, 1509.0, ViewLocation)
     {
-        P = Con.Pawn;
+        if (P != PawnOwner && P != LookedAtPawn)
+        {
+            Pawns[Pawns.Length] = P;
+        }
+    }
+
+    // Now we loop through all those pawns we gathered, check whether they need to be shown, & if so we draw their name & any relevant icon
+    for (i = 0; i < Pawns.Length; ++i)
+    {
+        P = Pawns[i];
 
         // Ignore enemy players & spectators
-        if (P == none || P == PawnOwner || Con.GetTeamNum() != PlayerOwner.GetTeamNum())
+        if (P == none || P.GetTeamNum() != PlayerOwner.GetTeamNum())
         {
             continue;
         }
 
         // Set some references that need to be set each time (for each pawn)
-        OtherPRI = DHPlayerReplicationInfo(Con.PlayerReplicationInfo);
+        // Ignore pawns that are not being controlled, e.g. empty vehicle pawns
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
         if (OtherPRI == none)
         {
             continue;
         }
 
+        bLookingAtPawn = P == LookedAtPawn; // we may switch P, so record this now
+
         if (P.IsA('Vehicle'))
         {
+            if (P.IsA('DHMortarVehicleWeaponPawn'))
+            {
+                Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
+            }
+
+            if (Vehicle(P).Driver != none)
+            {
+                P = Vehicle(P).Driver; // switch P to the vehicle/weapon pawn's player pawn, as we'll use it to get a more accurate location
+            }
+
             OtherDHPawn = none;
-            LocationPawn = Vehicle(P).Driver;
-            VehicleBase = ROVehicle(P);
-
-            if (VehicleBase == none && P.IsA('VehicleWeaponPawn'))
-            {
-                VehicleBase = VehicleWeaponPawn(P).VehicleBase;
-            }
-
-            if (LocationPawn == none)
-            {
-                LocationPawn = VehicleBase;
-
-                if (LocationPawn == none)
-                {
-                    LocationPawn = P; // fallback, shouldn't happen
-                }
-            }
         }
         else
         {
             OtherDHPawn = DHPawn(P);
-            LocationPawn = P;
-            VehicleBase = none;
         }
 
-        // Check whether friendly player is talking, or needs resupply or assisted reload
+        // Check whether friendly player is talking, or we can resupply them or assist them with loading a rocket
         // If so then we will (1) show their name, even if we aren't looking directly at them, & (2) show a relevant icon over their name
         bIsTalking = OtherPRI == PortraitPRI;
         bCanBeReloaded = OtherDHPawn != none && OtherDHPawn.bWeaponNeedsReload;
-
-        if (DHMortarVehicle(VehicleBase) != none) // a deployed mortar is a special case to check for resupply
-        {
-            bCanBeResupplied = DHMortarVehicle(VehicleBase).bCanBeResupplied;
-        }
-        else
-        {
-            bCanBeResupplied = OtherDHPawn != none && OtherDHPawn.bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo;
-        }
+        bCanBeResupplied = ((OtherDHPawn != none && OtherDHPawn.bWeaponNeedsResupply) || (Mortar != none && Mortar.bCanBeResupplied)) // a mortar is a special case to check for resupply
+            && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo;
 
         // Check whether this is a currently valid player to draw their name
         // LookedAtPawn is always valid, as we're looking directly at them & know they are within range
-        if (P == LookedAtPawn)
+        if (bLookingAtPawn)
         {
             bValidPlayer = true;
         }
-        // Other players are only valid if they are talking or need reload/resupply, and are within 25m & not behind something
-        else if ((bIsTalking || bCanBeResupplied || bCanBeReloaded)
-            && VSizeSquared(LocationPawn.Location - ViewLocation) <= 2250000.0 && FastTrace(LocationPawn.Location, ViewLocation)) // squared distance check for efficiency, approx 25m
+        // Other players are only valid if they are talking or need reload/resupply, & are not behind something
+        else if ((bIsTalking || bCanBeResupplied || bCanBeReloaded) && FastTrace(P.Location, ViewLocation))
         {
             bValidPlayer = true;
         }
@@ -1610,22 +1562,19 @@ function DrawPlayerNames(Canvas C)
             if (OtherPRI.NameDrawStartTime <= 0.0)
             {
                 OtherPRI.NameDrawStartTime = Level.TimeSeconds;
-/*
-                log(Level.TimeSeconds @ " New player =" @ OtherPRI.PlayerName @ " bIsTalking =" @ bIsTalking @ " bCanBeResupplied =" @ bCanBeResupplied
-                    @ " bCanBeReloaded =" @ bCanBeReloaded @ " Is LookedAtPawn =" @ P == LookedAtPawn); // TEMP
-*/
             }
 
             OtherPRI.LastNameDrawTime = Level.TimeSeconds; // update LastNameDrawTime to now
         }
-        // Player isn't currently valid, but recently was & his name still needs to be shown fading out (signified by NameDrawStartTime not having been zeroed yet)
+        // Player isn't currently valid, but recently was & his name may still need to be shown fading out (signified by NameDrawStartTime not having been zeroed yet)
+        // Name may fade out in less than 1 second if the player wasn't drawn long enough to fully fade in
         else if (OtherPRI.NameDrawStartTime > 0.0)
         {
             HighestFadeInReached = FClamp(OtherPRI.LastNameDrawTime - OtherPRI.NameDrawStartTime, 0.0, 1.0); // maximum fade in value reached while player was valid
             NameFadeTime = OtherPRI.LastNameDrawTime + HighestFadeInReached - Level.TimeSeconds;
 
-            // Ignore player as no fading out time remains (must have become invalid before fully fading in, so takes less than 1 second to fade out)
-            // We use zero NameDrawStartTime to signify invalid player has fully faded out, so we know if he becomes newly valid again
+            // Stop drawing this player's name as he's fully faded out now
+            // We zero his NameDrawStartTime, as that is used to signify a player not being drawn, so we know if he becomes newly valid in future
             if (NameFadeTime < 0.05)
             {
                 OtherPRI.NameDrawStartTime = 0.0;
@@ -1639,9 +1588,9 @@ function DrawPlayerNames(Canvas C)
         }
 
         // For players other than the one we're looking directly at, check that they are broadly in front of us & so will be on our screen
-        if (P != LookedAtPawn)
+        if (bLookingAtPawn)
         {
-            PlayerDirection = Normal(LocationPawn.Location - PawnOwner.Location);
+            PlayerDirection = Normal(P.Location - PawnOwner.Location);
 
             if (PlayerDirection dot vector(PlayerOwner.CalcViewRotation) < 0.0)
             {
@@ -1649,21 +1598,21 @@ function DrawPlayerNames(Canvas C)
             }
         }
 
-        // Player names fade in or out over 1 second when they become valid or invalid, so check for any required fade & lower the drawing alpha value accordingly
-        // Currently valid players are set here, but invalid players were calculated further up (& may fade out in less than 1 second if weren't drawn long enough to fully fade in)
+        // Player names fade in & out when they become valid/invalid, so check for any required fade & lower the drawing alpha value accordingly
+        // We've already calculated fade for any fading out players, but need to do it now for currently valid players
         if (bValidPlayer)
         {
             NameFadeTime = Level.TimeSeconds - OtherPRI.NameDrawStartTime;
 
-            // A slight threshold before starting to draw looked at player's name, just to it flickering up briefly if you very quickly track your view over a player
+            // A slight threshold before starting to draw a looked at player's name, just to stop it flickering up briefly if you very quickly track your view over him
             // Doesn't apply if player is talking or needs resupply or assisted reload
-            if (NameFadeTime < 0.05 && P == LookedAtPawn && !bIsTalking && !bCanBeResupplied && !bCanBeReloaded)
+            if (NameFadeTime < 0.05 && bLookingAtPawn && !bIsTalking && !bCanBeResupplied && !bCanBeReloaded)
             {
                 continue;
             }
         }
 
-        if (NameFadeTime < 1.0 && NameFadeTime > 0.0)
+        if (NameFadeTime < 1.0 && NameFadeTime > 0.0) // name is fading in or fading out
         {
             C.DrawColor.A = byte(NameFadeTime * 255.0);
         }
@@ -1672,7 +1621,7 @@ function DrawPlayerNames(Canvas C)
         // And if we are looking at a player in a vehicle, count any other vehicle occupants & append the count to his name, in the format "HisPlayerName (+2)"
         PlayerName = OtherPRI.PlayerName;
 
-        if (VehicleBase != none && P == LookedAtPawn)
+        if (VehicleBase != none && bLookingAtPawn)
         {
             NumOtherOccupants = VehicleBase.NumPassengers() - 1;
 
@@ -1683,30 +1632,24 @@ function DrawPlayerNames(Canvas C)
         }
 
         // Get the screen location for drawing player name
-        if (LocationPawn.IsA('ROPawn'))
+        if (P.HeadBone != '')
         {
-            PawnLocation = LocationPawn.GetBoneCoords(LocationPawn.HeadBone).Origin;
-            PawnLocation.Z += 16.0;
+            DrawLocation = P.GetBoneCoords(P.HeadBone).Origin;
+            DrawLocation.Z += 16.0;
         }
         else
         {
-            PawnLocation = LocationPawn.Location;
+            DrawLocation = P.Location;
         }
-/*
-        // TEMP (Matt): this is where P is a VehicleWeapPawn & so had no HeadBone, resulting in a zero PawnLocation (an ROVehicle, with a mesh, returns its Location if null bone is passed)
-        if (PawnLocation == vect(0.0, 0.0, 0.0)) // HACK: this fixes an odd bug I didn't have time to fully investigate (CB)
-        {
-            continue;
-        }
-*/
-        ScreenLocation = C.WorldToScreen(PawnLocation);
+
+        DrawLocation = C.WorldToScreen(DrawLocation);
 
         // Now draw the player name, with a name icon above it
         C.TextSize(PlayerName, TextSize.X, TextSize.Y);
-        C.SetPos(ScreenLocation.X - 8.0, ScreenLocation.Y - (TextSize.Y * 0.5));
+        C.SetPos(DrawLocation.X - 8.0, DrawLocation.Y - (TextSize.Y * 0.5));
         C.DrawTile(PlayerNameIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
 
-        C.SetPos(ScreenLocation.X - TextSize.X * 0.5, ScreenLocation.Y - 32.0);
+        C.SetPos(DrawLocation.X - TextSize.X * 0.5, DrawLocation.Y - 32.0);
         DrawShadowedTextClipped(C, PlayerName);
 
         // Finally draw any relevant icon above the player's name (if he's talking or needs resupply or assisted reload)
@@ -1727,192 +1670,11 @@ function DrawPlayerNames(Canvas C)
             continue; // no icon to be drawn, so move on to the next player
         }
 
-        C.SetPos(ScreenLocation.X - 12.0, ScreenLocation.Y - 56.0);
+        C.SetPos(DrawLocation.X - 12.0, DrawLocation.Y - 56.0);
         C.DrawTile(IconMaterial, 24.0, 24.0, 0.0, 0.0, IconMaterial.MaterialUSize(), IconMaterial.MaterialVSize());
     }
 }
-/*
-// Modified to handle resupply text for AT weapons & mortars & assisted reload text for AT weapons
-function DrawPlayerNames(Canvas C) // TEMP - replaced by revised function above
-{
-    local DHPlayerReplicationInfo MyPRI, OtherPRI;
-    local DHPawn                  MyPawn, OtherPawn;
-    local Pawn                    HitPawn, P;
-    local array<Pawn>             Pawns;
-    local Vehicle                 V;
-    local vector                  ViewLocation, PawnLocation, HitLocation, HitNormal, ScreenLocation, TextSize, Direction, TraceStart, TraceEnd;
-    local float                   FadeInTime, FadeOutTime;
-    local int                     i;
-    local string                  PlayerName;
-    local bool                    bCanDrawName, bIsTalking, bCanBeResupplied, bCanBeReloaded;
-    local byte                    Alpha;
 
-    if (PawnOwner == none || PlayerOwner == none)
-    {
-        return;
-    }
-
-    MyPawn = DHPawn(PawnOwner);
-
-    // Our first step is to accumulate all of the pawns that we are nearby
-    // or we are directly looking at.
-    ViewLocation = PawnOwner.Location + (PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-    TraceStart = ViewLocation;
-    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(50) * vector(PlayerOwner.CalcViewRotation));
-
-    foreach TraceActors(class'Pawn', P, HitLocation, HitNormal, TraceEnd, TraceStart)
-    {
-        if (P != none && P != PawnOwner && FastTrace(HitLocation, TraceStart))
-        {
-            HitPawn = P;
-            break;
-        }
-    }
-
-    if (HitPawn != none && HitPawn.GetTeamNum() == PawnOwner.GetTeamNum())
-    {
-        Pawns[Pawns.Length] = HitPawn;
-    }
-
-    MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
-
-    // Accumulate all relevant pawns within 25 meters.
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(25), ViewLocation)
-    {
-        if (P != PawnOwner && P != HitPawn)
-        {
-            Pawns[Pawns.Length] = P;
-        }
-    }
-
-    // Now we go through all those pawns we gathered and determine if we should
-    // add them to the list of pawns to be drawn this frame.
-    for (i = 0; i < Pawns.Length; ++i)
-    {
-        P = Pawns[i];
-
-        if (NamedPawns.Contains(P) || (P != HitPawn && !ShouldDrawPlayerName(P)))
-        {
-            continue;
-        }
-
-        // We can see this player, add them to the list.
-        NamedPawns.Add(P);
-
-        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-        if (OtherPRI != none)
-        {
-            // Set the draw times to now.
-            OtherPRI.NameDrawStartTime = Level.TimeSeconds;
-            OtherPRI.LastNameDrawTime = Level.TimeSeconds;
-        }
-    }
-
-    C.Font = GetPlayerNameFont(C);
-
-    for (i = 0; i < NamedPawns.Size(); ++i)
-    {
-        P = Pawn(NamedPawns.Get(i));
-
-        if (P == none)
-        {
-            // Pawn has since been destroyed, remove entry from the list.
-            NamedPawns.Remove(i--);
-            continue;
-        }
-
-        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-        OtherPawn = DHPawn(P);
-
-        if (OtherPRI == none)
-        {
-            // Not sure how this would be possible, but in for good measure.
-            NamedPawns.Remove(i--);
-            continue;
-        }
-
-        bCanDrawName = (P == HitPawn || ShouldDrawPlayerName(P));
-
-        if (!bCanDrawName)
-        {
-            if (Level.TimeSeconds - OtherPRI.LastNameDrawTime > 1.0)
-            {
-                // We haven't been able to fully see this player for 1 second
-                // so let's take him out of the list.
-                NamedPawns.Remove(i--);
-
-                continue;
-            }
-        }
-        else
-        {
-            // Set the last draw time to now.
-            OtherPRI.LastNameDrawTime = Level.TimeSeconds;
-        }
-
-        Direction = Normal(P.Location - PawnOwner.Location);
-
-        if (Direction dot vector(PlayerOwner.CalcViewRotation) >= 0.0)
-        {
-            // Determine the draw color and alpha
-            C.DrawColor = GetPlayerColor(OtherPRI);
-            FadeInTime = FClamp(Level.TimeSeconds - OtherPRI.NameDrawStartTime, 0.0, 1.0);
-            FadeOutTime = FClamp(1.0 - FMax(0.0, Level.TimeSeconds - OtherPRI.LastNameDrawTime), 0.0, 1.0);
-            Alpha = byte(FMin(FadeInTime, FadeOutTime) * 255);
-            C.DrawColor.A = Alpha;
-
-            PawnLocation = P.GetBoneCoords(P.HeadBone).Origin;
-
-            // HACK: this fixes an odd bug I didn't have time to fully investigate.
-            if (PawnLocation == vect(0, 0, 0))
-            {
-                continue;
-            }
-
-            PawnLocation.Z += 16.0;
-            ScreenLocation = C.WorldToScreen(PawnLocation);
-            PlayerName = P.PlayerReplicationInfo.PlayerName;
-
-            V = Vehicle(P);
-
-            if (V != none && V.NumPassengers() > 1)
-            {
-                PlayerName @= "(+" $ (V.NumPassengers() - 1) $ ")";
-            }
-
-            C.TextSize(PlayerName, TextSize.X, TextSize.Y);
-            C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - (TextSize.Y * 0.5));
-            C.DrawTile(PlayerNameIconMaterial, 16, 16, 0, 0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
-            C.SetPos(ScreenLocation.X - TextSize.X * 0.5, ScreenLocation.Y - 32.0);
-
-            DrawShadowedTextClipped(C, PlayerName);
-
-            // Set icon screen position & draw the voice icon
-            C.DrawColor = class'UColor'.default.White;
-            C.DrawColor.A = Alpha;
-            C.SetPos(ScreenLocation.X - 12, ScreenLocation.Y - 56.0);
-
-            bIsTalking = (OtherPRI == PortraitPRI);
-            bCanBeResupplied = (MyPawn != none && !MyPawn.bUsedCarriedMGAmmo) && (OtherPawn != none && OtherPawn.bWeaponNeedsResupply);
-            bCanBeReloaded = OtherPawn != none && OtherPawn.bWeaponNeedsReload;
-
-            if (bIsTalking)
-            {
-                C.DrawTile(SpeakerIconMaterial, 24, 24, 0, 0, SpeakerIconMaterial.MaterialUSize(), SpeakerIconMaterial.MaterialVSize());
-            }
-            else if (bCanBeResupplied)
-            {
-                C.DrawTile(NeedAmmoIconMaterial, 24, 24, 0, 0, NeedAmmoIconMaterial.MaterialUSize(), NeedAmmoIconMaterial.MaterialVSize());
-            }
-            else if (bCanBeReloaded)
-            {
-                C.DrawTile(NeedAssistIconMaterial, 24, 24, 0, 0, NeedAssistIconMaterial.MaterialUSize(), NeedAssistIconMaterial.MaterialVSize());
-            }
-        }
-    }
-}
-*/
 simulated function DrawShadowedTextClipped(Canvas C, string Text)
 {
     local color SavedDrawColor;

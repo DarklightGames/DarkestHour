@@ -1309,6 +1309,13 @@ function int LocalLimitPitch(int pitch)
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Modified to make simulated, so can be used on a net client
+// Especially as simulated function GetTeamNum() relies on this!
+simulated function Vehicle GetVehicleBase()
+{
+    return VehicleBase;
+}
+
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {

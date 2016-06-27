@@ -131,6 +131,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 {
 }
 
+// From ROWheeledVehicle, to use VehicleTeam, same as all other vehicles
+simulated function int GetTeamNum()
+{
+    if (Role == Role_Authority && (Team == 255 || Team == 2) && Controller != none)
+    {
+        SetTeamNum(Controller.GetTeamNum());
+    }
+
+    return VehicleTeam;
+}
+
 // Modified to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
