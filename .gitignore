@@ -5,6 +5,8 @@
 *.tlog
 *.ucl
 *.~bak
+*.DS_Store
+Red Orchestra.app
 /Animations/
 /Cache/
 /DarkestHour/
