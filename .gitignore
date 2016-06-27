@@ -56,9 +56,6 @@ XGame/
 XInterface/
 XVoting/
 XWebAdmin/
-AHZ vehicle pack/
-EH-M43/
-DH__AllSourceCode
 /System/*.det
 /System/*.int
 /System/*.blob
@@ -75,8 +72,6 @@ DH__AllSourceCode
 /System/*.md5
 /System/*.txt
 /System/*.sav
-/System/sadfasdf
-/System/sdfMicrosoft
 /System/ucc
 /System/*.upl
 /System/Microsoft
