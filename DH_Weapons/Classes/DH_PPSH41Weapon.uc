@@ -24,8 +24,8 @@ defaultproperties
     IronSightDisplayFOV=30.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.200000
-    FireModeClass(0)=Class'DH_Weapons.DH_PPSH41Fire'
-    FireModeClass(1)=Class'DH_Weapons.DH_PPSH41MeleeFire'
+    FireModeClass(0)=class'DH_Weapons.DH_PPSH41Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_PPSH41MeleeFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
     SelectAnimRate=1.000000
@@ -35,9 +35,9 @@ defaultproperties
     CurrentRating=0.700000
     DisplayFOV=70.000000
     bCanRestDeploy=True
-    PickupClass=Class'DH_Weapons.DH_PPSH41Pickup'
+    PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_PPSH41Attachment'
+    AttachmentClass=class'DH_Weapons.DH_PPSH41Attachment'
     ItemName="PPSh41 SMG"
     Mesh=SkeletalMesh'Allies_Ppsh_1st.PPSH-41-mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'

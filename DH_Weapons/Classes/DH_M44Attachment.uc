@@ -7,8 +7,8 @@ class DH_M44Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mmGreen'
+    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=True
     bBayonetAttached=True
     PA_MovementAnims(0)="stand_jogF_kar"

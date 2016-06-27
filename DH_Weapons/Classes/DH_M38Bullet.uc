@@ -7,9 +7,9 @@ class DH_M38Bullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=Class'ROInventory.M38VehDamType'
+    MyVehicleDamage=class'ROInventory.M38VehDamType'
     BallisticCoefficient=0.511
     Speed=48282 // 2625 fps
     Damage=120.000000
-    MyDamageType=Class'DH_Weapons.DH_M38DamType'
+    MyDamageType=class'DH_Weapons.DH_M38DamType'
 }

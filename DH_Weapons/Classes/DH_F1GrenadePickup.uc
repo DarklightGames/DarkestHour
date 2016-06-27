@@ -19,7 +19,7 @@ defaultproperties
 {
     TouchMessage="Pick Up: F1 Grenade"
     MaxDesireability=0.780000
-    InventoryType=Class'DH_Weapons.DH_F1GrenadeWeapon'
+    InventoryType=class'DH_Weapons.DH_F1GrenadeWeapon'
     PickupMessage="You got the F1 Grenade."
     PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
     PickupForce="AssaultRiflePickup"

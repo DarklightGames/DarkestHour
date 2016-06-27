@@ -158,7 +158,7 @@ defaultproperties
      SurfaceAngleRadian=0.1195555555555556
      DestroyTimer=15.000000 //Used incase the grenade didn't hit hard enough to explode (will stay around for a bit for effect)
      //SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-     ExplodeDirtEffectClass=Class'ROEffects.GrenadeExplosion'
+     ExplodeDirtEffectClass=class'ROEffects.GrenadeExplosion'
      ExplosionSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
      ExplosionSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
      ExplosionSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'

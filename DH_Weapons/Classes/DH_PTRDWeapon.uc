@@ -143,8 +143,8 @@ defaultproperties
     IronSightDisplayFOV=35.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.350000
-    FireModeClass(0)=Class'DH_Weapons.DH_PTRDFire'
-    FireModeClass(1)=Class'DH_Weapons.DH_PTRDFire'
+    FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
+    FireModeClass(1)=class'DH_Weapons.DH_PTRDFire'
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
     PutDownAnim="Put_away"
@@ -155,9 +155,9 @@ defaultproperties
     CurrentRating=0.400000
     bSniping=True
     DisplayFOV=70.000000
-    PickupClass=Class'DH_Weapons.DH_PTRDPickup'
+    PickupClass=class'DH_Weapons.DH_PTRDPickup'
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_PTRDAttachment'
+    AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
     ItemName="PTRD AT Rifle"
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'

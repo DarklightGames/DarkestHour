@@ -7,8 +7,8 @@ class DH_PTRDAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPTRD'
-    ROShellCaseClass=Class'ROAmmo.RO3rdShellEject14mm'
+    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
     PA_MovementAnims(0)="stand_jogF_ptrd"
     PA_MovementAnims(1)="stand_jogB_ptrd"
     PA_MovementAnims(2)="stand_jogL_ptrd"

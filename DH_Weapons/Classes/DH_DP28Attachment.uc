@@ -8,12 +8,12 @@ class DH_DP28Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     bSpawnShellsOutBottom=False
-    ClientProjectileClass=Class'DH_Weapons.DH_DP28Bullet_C'
-    ClientTracerClass=Class'DH_Weapons.DH_DP28ClientTracer'
+    ClientProjectileClass=class'DH_Weapons.DH_DP28Bullet_C'
+    ClientTracerClass=class'DH_Weapons.DH_DP28ClientTracer'
     bUsesTracers=True
     TracerFrequency=4
-    mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdDP'
-    ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
+    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     PA_MovementAnims(0)="stand_jogF_dp27"
     PA_MovementAnims(1)="stand_jogB_dp27"
     PA_MovementAnims(2)="stand_jogL_dp27"

@@ -21,7 +21,7 @@ defaultproperties
 {
     TouchMessage="Pick Up: PTRD AT Rifle"
     MaxDesireability=0.400000
-    InventoryType=Class'DH_Weapons.DH_PTRDWeapon'
+    InventoryType=class'DH_Weapons.DH_PTRDWeapon'
     PickupMessage="You got the PTRD."
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh

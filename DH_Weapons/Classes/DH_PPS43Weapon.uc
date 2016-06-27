@@ -24,8 +24,8 @@ defaultproperties
      IronSightDisplayFOV=35.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_Weapons.DH_PPS43Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_PPS43MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_PPS43Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_PPS43MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -35,9 +35,9 @@ defaultproperties
      CurrentRating=0.700000
      DisplayFOV=70.000000
      bCanRestDeploy=True
-     PickupClass=Class'DH_Weapons.DH_PPS43Pickup'
+     PickupClass=class'DH_Weapons.DH_PPS43Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_PPS43Attachment'
+     AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
      ItemName="PPS43 SMG"
      Mesh=SkeletalMesh'Allies_Pps43_1st.PPS-43-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPS43_S'

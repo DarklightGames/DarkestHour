@@ -22,7 +22,7 @@ defaultproperties
 {
     TouchMessage="Pick Up: M38"
     MaxDesireability=0.400000
-    InventoryType=Class'DH_Weapons.DH_M38Weapon'
+    InventoryType=class'DH_Weapons.DH_M38Weapon'
     PickupMessage="You got the M38."
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh

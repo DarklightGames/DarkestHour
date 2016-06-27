@@ -7,9 +7,9 @@ class DH_PPS43Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=Class'DH_Weapons.DH_PPS43Bullet_C'
-    mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPPSH'
-    ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x25mm'
+    ClientProjectileClass=class'DH_Weapons.DH_PPS43Bullet_C'
+    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
     PA_MovementAnims(0)="stand_jogF_pps43"
     PA_MovementAnims(1)="stand_jogB_pps43"
     PA_MovementAnims(2)="stand_jogL_pps43"

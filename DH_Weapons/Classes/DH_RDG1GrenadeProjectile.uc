@@ -127,13 +127,13 @@ defaultproperties
 {
     DestroyTimer=30.000000
     SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-    ExplodeDirtEffectClass=Class'ROEffects.GrenadeSmokeEffect'
+    ExplodeDirtEffectClass=class'ROEffects.GrenadeSmokeEffect'
     ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     Damage=0.000000
     DamageRadius=0.000000
-    MyDamageType=Class'DH_Weapons.DH_RDG1GrenadeDamType'
+    MyDamageType=class'DH_Weapons.DH_RDG1GrenadeDamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
     bAlwaysRelevant=True
     LifeSpan=30.000000

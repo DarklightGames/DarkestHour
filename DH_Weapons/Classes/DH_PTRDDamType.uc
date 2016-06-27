@@ -20,7 +20,7 @@ defaultproperties
     VehicleDamageModifier=0.75
     TreadDamageModifier=0.5
     GibModifier=4.000000
-    PawnDamageEmitter=Class'ROEffects.ROBloodPuffLarge'
+    PawnDamageEmitter=class'ROEffects.ROBloodPuffLarge'
     GibPerterbation=0.150000
     KDamageImpulse=4500.000000
     KDeathVel=200.000000

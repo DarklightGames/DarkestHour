@@ -94,6 +94,6 @@ defaultproperties
     bSplashDamage=False
     bRecommendSplashDamage=False
     MaxHoldTime=4.950000
-    AmmoClass=Class'ROAmmo.RDG1GrenadeAmmo'
-    ProjectileClass=Class'DH_Weapons.DH_RDG1GrenadeProjectile'
+    AmmoClass=class'ROAmmo.RDG1GrenadeAmmo'
+    ProjectileClass=class'DH_Weapons.DH_RDG1GrenadeProjectile'
 }

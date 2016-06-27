@@ -34,8 +34,8 @@ defaultproperties
     ZoomInTime=0.400000
     ZoomOutTime=0.350000
     FreeAimRotationSpeed=7.000000
-    FireModeClass(0)=Class'DH_Weapons.DH_M44Fire'
-    FireModeClass(1)=Class'DH_Weapons.DH_M44MeleeFire'
+    FireModeClass(0)=class'DH_Weapons.DH_M44Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_M44MeleeFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
     SelectAnimRate=1.000000
@@ -47,9 +47,9 @@ defaultproperties
     DisplayFOV=70.000000
     bBayonetMounted=True
     bCanRestDeploy=True
-    PickupClass=Class'DH_Weapons.DH_M44Pickup'
+    PickupClass=class'DH_Weapons.DH_M44Pickup'
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_M44Attachment'
+    AttachmentClass=class'DH_Weapons.DH_M44Attachment'
     ItemName="M44 Rifle"
     Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_M44'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'

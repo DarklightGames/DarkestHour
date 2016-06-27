@@ -8,9 +8,9 @@ class DH_PPS43Bullet_S extends DHBullet;
 defaultproperties
 {
     WhizType=2
-    MyVehicleDamage=Class'DH_Weapons.DH_PPS43VehDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_PPS43VehDamType'
     BallisticCoefficient=0.150000
     Speed=25000.000000
     Damage=50.000000
-    MyDamageType=Class'DH_Weapons.DH_PPS43DamType'
+    MyDamageType=class'DH_Weapons.DH_PPS43DamType'
 }

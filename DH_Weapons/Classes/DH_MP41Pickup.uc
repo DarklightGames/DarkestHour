@@ -18,7 +18,7 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     TouchMessage="Pick Up: MP41 smg"
-    InventoryType=Class'DH_Weapons.DH_MP41Weapon'
+    InventoryType=class'DH_Weapons.DH_MP41Weapon'
     PickupMessage="You got the MP41 smg."
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.mp41'
 }

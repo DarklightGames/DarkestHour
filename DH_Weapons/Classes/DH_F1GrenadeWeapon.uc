@@ -19,8 +19,8 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
-    FireModeClass(0)=Class'DH_Weapons.DH_F1GrenadeFire'
-    FireModeClass(1)=Class'DH_Weapons.DH_F1GrenadeTossFire'
+    FireModeClass(0)=class'DH_Weapons.DH_F1GrenadeFire'
+    FireModeClass(1)=class'DH_Weapons.DH_F1GrenadeTossFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
     SelectAnimRate=1.000000
@@ -29,10 +29,10 @@ defaultproperties
     AIRating=0.400000
     CurrentRating=0.400000
     DisplayFOV=70.000000
-    PickupClass=Class'DH_Weapons.DH_F1GrenadePickup'
+    PickupClass=class'DH_Weapons.DH_F1GrenadePickup'
     PlayerViewOffset=(X=5.000000,Y=5.000000)
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_F1GrenadeAttachment'
+    AttachmentClass=class'DH_Weapons.DH_F1GrenadeAttachment'
     ItemName="F1 Grenade"
     Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Grenades.f1grenade_s'

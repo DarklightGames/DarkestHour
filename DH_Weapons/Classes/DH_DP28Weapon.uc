@@ -10,7 +10,7 @@ class DH_DP28Weapon extends DHMGWeapon;
 defaultproperties
 {
     InitialBarrels=1
-    //compile error  ROBarrelClass=Class'DH_Weapons.DH_DP28Barrel'
+    //compile error  ROBarrelClass=class'DH_Weapons.DH_DP28Barrel'
     BarrelSteamBone="bipod"
     NumMagsToResupply=4
     IdleToBipodDeploy="Rest_2_Bipod"
@@ -35,7 +35,7 @@ defaultproperties
     IronSightDisplayFOV=45.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.200000
-    FireModeClass(0)=Class'DH_Weapons.DH_DP28Fire'
+    FireModeClass(0)=class'DH_Weapons.DH_DP28Fire'
     FireModeClass(1)=class'ROInventory.ROEmptyFireClass'
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
@@ -47,9 +47,9 @@ defaultproperties
     CurrentRating=0.400000
     bSniping=True
     DisplayFOV=70.000000
-    PickupClass=Class'DH_Weapons.DH_DP28Pickup'
+    PickupClass=class'DH_Weapons.DH_DP28Pickup'
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_DP28Attachment'
+    AttachmentClass=class'DH_Weapons.DH_DP28Attachment'
     ItemName="DP28 Machine Gun"
     Mesh=SkeletalMesh'Allies_Dp28_1st.DP28_Mesh'
     PlayerIronsightFOV=80.0

@@ -8,11 +8,11 @@ class DH_M44BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    WeaponClass=Class'DH_Weapons.DH_M44Weapon'
+    WeaponClass=class'DH_Weapons.DH_M44Weapon'
     DeathString="%o was stabbed by %k's mounted bayonet."
     FemaleSuicide="%o turned the bayonet on herself."
     MaleSuicide="%o turned the bayonet on himself."
     GibModifier=0.000000
-    PawnDamageEmitter=Class'ROEffects.ROBloodPuff'
+    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
     KDamageImpulse=400.000000
 }

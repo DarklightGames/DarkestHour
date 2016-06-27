@@ -8,7 +8,7 @@ class DH_M38BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=Class'DH_Weapons.DH_M38Weapon'
+    WeaponClass=class'DH_Weapons.DH_M38Weapon'
     DeathString="%o was smacked with %k's M38."
     FemaleSuicide="%o turned the gun on herself."
     MaleSuicide="%o turned the gun on himself."

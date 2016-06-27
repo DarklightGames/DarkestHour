@@ -8,7 +8,7 @@ class DH_PPS43BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=Class'DH_Weapons.DH_PPS43Weapon'
+    WeaponClass=class'DH_Weapons.DH_PPS43Weapon'
     DeathString="%o was smacked with %k's PPS43."
     FemaleSuicide="%o turned the gun on herself."
     MaleSuicide="%o turned the gun on himself."

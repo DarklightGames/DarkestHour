@@ -19,7 +19,7 @@ defaultproperties
 {
     TouchMessage="Pick Up: Russian RDG-1 Smoke Grenade"
     MaxDesireability=0.780000
-    InventoryType=Class'DH_Weapons.DH_RDG1GrenadeWeapon'
+    InventoryType=class'DH_Weapons.DH_RDG1GrenadeWeapon'
     PickupMessage="You got the Russian RDG-1 Smoke Grenade."
     PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
     PickupForce="AssaultRiflePickup"

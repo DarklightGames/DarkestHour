@@ -24,8 +24,8 @@ defaultproperties
     IronSightDisplayFOV=35.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.200000
-    FireModeClass(0)=Class'DH_Weapons.DH_PPD40Fire'
-    FireModeClass(1)=Class'DH_Weapons.DH_PPD40MeleeFire'
+    FireModeClass(0)=class'DH_Weapons.DH_PPD40Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_PPD40MeleeFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
     SelectAnimRate=1.000000
@@ -35,9 +35,9 @@ defaultproperties
     CurrentRating=0.700000
     DisplayFOV=70.000000
     bCanRestDeploy=True
-    PickupClass=Class'DH_Weapons.DH_PPD40Pickup'
+    PickupClass=class'DH_Weapons.DH_PPD40Pickup'
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_PPD40Attachment'
+    AttachmentClass=class'DH_Weapons.DH_PPD40Attachment'
     ItemName="PPD40 SMG"
     Mesh=SkeletalMesh'Allies_Ppd40_1st.PPD-40-Mesh'
 }

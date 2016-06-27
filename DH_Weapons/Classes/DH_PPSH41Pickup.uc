@@ -19,7 +19,7 @@ defaultproperties
 {
     TouchMessage="Pick Up: PPSh41 SMG"
     MaxDesireability=0.900000
-    InventoryType=Class'DH_Weapons.DH_PPSH41Weapon'
+    InventoryType=class'DH_Weapons.DH_PPSH41Weapon'
     PickupMessage="You got the PPSh41 SMG."
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh

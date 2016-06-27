@@ -29,8 +29,8 @@ defaultproperties
     ZoomInTime=0.400000
     ZoomOutTime=0.350000
     FreeAimRotationSpeed=7.000000
-    FireModeClass(0)=Class'DH_Weapons.DH_M38Fire'
-    FireModeClass(1)=Class'DH_Weapons.DH_M38MeleeFire'
+    FireModeClass(0)=class'DH_Weapons.DH_M38Fire'
+    FireModeClass(1)=class'DH_Weapons.DH_M38MeleeFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
     SelectAnimRate=1.000000
@@ -41,9 +41,9 @@ defaultproperties
     bSniping=True
     DisplayFOV=70.000000
     bCanRestDeploy=True
-    PickupClass=Class'DH_Weapons.DH_M38Pickup'
+    PickupClass=class'DH_Weapons.DH_M38Pickup'
     BobDamping=1.600000
-    AttachmentClass=Class'DH_Weapons.DH_M38Attachment'
+    AttachmentClass=class'DH_Weapons.DH_M38Attachment'
     ItemName="M38 Rifle"
     Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_Carbine_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'

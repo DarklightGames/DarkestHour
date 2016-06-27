@@ -7,7 +7,7 @@ class DH_M38MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=Class'DH_Weapons.DH_M38BashDamType'
+    DamageType=class'DH_Weapons.DH_M38BashDamType'
     TraceRange=75.000000
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"
