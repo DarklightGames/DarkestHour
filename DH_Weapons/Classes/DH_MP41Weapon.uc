@@ -14,7 +14,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
     PickupClass=class'DH_Weapons.DH_MP41Pickup'
     AttachmentClass=class'DH_Weapons.DH_MP41Attachment'
-    ItemName="MP41 SMG"
+    ItemName="Maschinenpistole 41"
     Mesh=SkeletalMesh'Axis_Mp40_1st.mp41_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP41_S'
 }

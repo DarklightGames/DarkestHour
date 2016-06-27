@@ -17,7 +17,7 @@ replication
 
 defaultproperties
 {
-    ItemName="SVT40 Semi Auto Rifle"
+    ItemName="SVT-40"
     Mesh=mesh'Allies_Svt40_1st.svt40_mesh'
     DrawScale=1.0
     DisplayFOV=70

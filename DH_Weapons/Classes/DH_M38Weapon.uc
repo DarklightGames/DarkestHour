@@ -44,7 +44,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_M38Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_M38Attachment'
-    ItemName="M38 Rifle"
+    ItemName="Mosin–Nagant M38 Carbine"
     Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_Carbine_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true

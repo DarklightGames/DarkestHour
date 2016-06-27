@@ -38,6 +38,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPD40Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_PPD40Attachment'
-    ItemName="PPD40 SMG"
+    ItemName="PPD-40"
     Mesh=SkeletalMesh'Allies_Ppd40_1st.PPD-40-Mesh'
 }

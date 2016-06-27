@@ -38,7 +38,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_PPSH41Attachment'
-    ItemName="PPSh41 SMG"
+    ItemName="PPSh-41"
     Mesh=SkeletalMesh'Allies_Ppsh_1st.PPSH-41-mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true

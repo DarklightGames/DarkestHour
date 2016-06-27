@@ -9,7 +9,7 @@ class DH_TT33Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
-    ItemName="TT33 Pistol"
+    ItemName="TT-30"
     Mesh=mesh'Allies_Tt33_1st.TT-33-Mesh'
     DrawScale=1.0
     DisplayFOV=70

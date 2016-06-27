@@ -158,7 +158,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_PTRDPickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
-    ItemName="PTRD AT Rifle"
+    ItemName="PTRD-41"
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'
     bUseHighDetailOverlayIndex=true

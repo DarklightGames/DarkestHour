@@ -71,7 +71,7 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-    ItemName="SVT40 Semi-Auto Sniper Rifle"
+    ItemName="SVT-40 Scoped"
     Mesh=mesh'Allies_Svt40_1st.svt40_scoped_mesh'
     DrawScale=1.0
     DisplayFOV=70

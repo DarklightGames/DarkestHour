@@ -38,7 +38,7 @@ defaultproperties
      PickupClass=class'DH_Weapons.DH_PPS43Pickup'
      BobDamping=1.600000
      AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
-     ItemName="PPS43 SMG"
+     ItemName="PPS-43"
      Mesh=SkeletalMesh'Allies_Pps43_1st.PPS-43-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPS43_S'
      bUseHighDetailOverlayIndex=true
