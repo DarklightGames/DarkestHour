@@ -10,9 +10,9 @@ class DH_DP28Weapon extends DHMGWeapon;
 defaultproperties
 {
     InitialBarrels=1
-    //compile error  ROBarrelClass=class'DH_Weapons.DH_DP28Barrel'
+    BarrelClass=class'DH_Weapons.DH_DP28Barrel'
     BarrelSteamBone="bipod"
-    NumMagsToResupply=4
+    NumMagsToResupply=1
     IdleToBipodDeploy="Rest_2_Bipod"
     BipodDeployToIdle="Bipod_2_Rest"
     BipodHipIdle="Hip_Idle"
@@ -52,5 +52,5 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_DP28Attachment'
     ItemName="DP28 Machine Gun"
     Mesh=SkeletalMesh'Allies_Dp28_1st.DP28_Mesh'
-    PlayerIronsightFOV=80.0
+    PlayerIronsightFOV=90.0
 }
