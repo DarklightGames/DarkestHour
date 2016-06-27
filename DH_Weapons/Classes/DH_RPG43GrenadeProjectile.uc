@@ -152,7 +152,7 @@ simulated function Destroyed()
 
 defaultproperties
 {
-     bIsHEATRound=True
+     bIsHEATRound=true
      //compile error  GrenadeImpactDamage=class'DH_Vehicles.DH_TankShellImpactDamage'
      RPG43PenetrationAbility=7.6
      SurfaceAngleRadian=0.1195555555555556
@@ -166,11 +166,11 @@ defaultproperties
      DamageRadius=250.000000
      MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43_Tossed'
-     bAlwaysRelevant=True
+     bAlwaysRelevant=true
      LifeSpan=30.000000
      SoundVolume=255
      SoundRadius=200.000000
      FuzeLengthTimer=0.0
      Speed=900.000000
-     bUseCollisionStaticMesh=True
+     bUseCollisionStaticMesh=true
 }

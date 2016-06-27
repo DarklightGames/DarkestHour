@@ -38,15 +38,15 @@ defaultproperties
     SelectForce="SwitchToAssaultRifle"
     AIRating=0.400000
     CurrentRating=0.400000
-    bSniping=True
+    bSniping=true
     DisplayFOV=70.000000
-    bCanRestDeploy=True
+    bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_M38Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_M38Attachment'
     ItemName="M38 Rifle"
     Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_Carbine_mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
-    bUseHighDetailOverlayIndex=True
+    bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 }

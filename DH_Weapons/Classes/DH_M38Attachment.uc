@@ -9,7 +9,7 @@ defaultproperties
 {
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
-    bAnimNotifiedShellEjects=True
+    bAnimNotifiedShellEjects=true
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -134,6 +134,6 @@ defaultproperties
     WA_ProneReload="prone_reload_nagant9138"
     WA_WorkBolt="bolt_nagant9138"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
-    bRapidFire=False
+    bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.nagant9138'
 }

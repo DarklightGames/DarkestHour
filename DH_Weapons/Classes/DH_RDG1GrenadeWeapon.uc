@@ -15,6 +15,6 @@ defaultproperties
     ItemName="RDG-1 Smoke Grenade"
     Mesh=SkeletalMesh'Allies_RGD1_1st.RGD1_mesh'
     HighDetailOverlay=None
-    bUseHighDetailOverlayIndex=False
+    bUseHighDetailOverlayIndex=false
     InventoryGroup=7
 }

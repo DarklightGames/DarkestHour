@@ -9,8 +9,8 @@ defaultproperties
 {
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
-    bAnimNotifiedShellEjects=True
-    bBayonetAttached=True
+    bAnimNotifiedShellEjects=true
+    bBayonetAttached=true
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -141,6 +141,6 @@ defaultproperties
     WA_WorkBolt="bolt_nagant9138"
     WA_BayonetWorkBolt="bolt_nagant9138"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.m44_icon'
-    bRapidFire=False
+    bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.M44'
 }

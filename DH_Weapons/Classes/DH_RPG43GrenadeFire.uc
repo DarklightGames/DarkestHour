@@ -73,8 +73,8 @@ function DoFireEffect()
 
 defaultproperties
 {
-    bSplashDamage=False
-    bRecommendSplashDamage=False
+    bSplashDamage=false
+    bRecommendSplashDamage=false
     MaxHoldTime=60.0000 //Why hold a grenade for more than a minute?
     AmmoClass=class'DH_Weapons.DH_RPG43GrenadeAmmo'
     ProjectileClass=class'DH_Weapons.DH_RPG43GrenadeProjectile'

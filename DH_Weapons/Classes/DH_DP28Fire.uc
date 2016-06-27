@@ -15,7 +15,7 @@ defaultproperties
     //compile error  ServerProjectileClass=class'DH_Weapons.DH_DP28Bullet_S'
     ProjSpawnOffset=(X=25.000000)
     FAProjSpawnOffset=(X=-20.000000)
-    bUsesTracers=True
+    bUsesTracers=true
     TracerFrequency=5
     //compile error  DummyTracerClass=class'DH_Weapons.DH_DP28ClientTracer'
     FireIronAnim="Bipod_Shoot_Loop"

@@ -18,7 +18,7 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'
     ShellIronSightOffset=(X=10.000000,Y=3.000000,Z=-5.000000)
     ShellRotOffsetHip=(Pitch=5000)
-    bWaitForRelease=True
+    bWaitForRelease=true
     FireAnim="shoot_last"
     TweenTime=0.000000
     FireForce="RocketLauncherFire"

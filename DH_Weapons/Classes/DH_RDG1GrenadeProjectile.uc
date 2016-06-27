@@ -135,7 +135,7 @@ defaultproperties
     DamageRadius=0.000000
     MyDamageType=class'DH_Weapons.DH_RDG1GrenadeDamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
-    bAlwaysRelevant=True
+    bAlwaysRelevant=true
     LifeSpan=30.000000
     SoundVolume=255
     SoundRadius=200.000000

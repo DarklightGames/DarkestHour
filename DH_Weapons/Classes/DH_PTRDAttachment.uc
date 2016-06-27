@@ -177,6 +177,6 @@ defaultproperties
     WA_ProneReload="prone_reload_ptrd"
     WA_ProneReloadEmpty="prone_reload_ptrd"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.prtd_icon'
-    bRapidFire=False
+    bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.PTRD'
 }

@@ -24,7 +24,7 @@ defaultproperties
     IronPutDown="Hip_2_Rest"
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
-    bPlusOneLoading=True
+    bPlusOneLoading=true
     SprintStartAnim="Rest_Sprint_Start"
     SprintLoopAnim="Rest_Sprint_Middle"
     SprintEndAnim="Rest_Sprint_End"
@@ -45,7 +45,7 @@ defaultproperties
     SelectForce="SwitchToAssaultRifle"
     AIRating=0.400000
     CurrentRating=0.400000
-    bSniping=True
+    bSniping=true
     DisplayFOV=70.000000
     PickupClass=class'DH_Weapons.DH_DP28Pickup'
     BobDamping=1.600000

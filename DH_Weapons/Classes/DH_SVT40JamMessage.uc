@@ -28,8 +28,8 @@ defaultproperties
 {
      JamMessage="Weapon Jammed! Reload"
      NoMessage="An error in the jamming system has occured, please report"
-     bIsUnique=True
-     bIsConsoleMessage=False
+     bIsUnique=true
+     bIsConsoleMessage=false
      Lifetime=3
      PosX=0.50000
      PosY=0.750000

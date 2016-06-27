@@ -13,7 +13,7 @@ defaultproperties
     DeathString="%o was killed by %k's PTRD."
     FemaleSuicide="%o turned the gun on herself."
     MaleSuicide="%o turned the gun on himself."
-    bThrowRagdoll=True
+    bThrowRagdoll=true
     bArmorStops=true
     TankDamageModifier=0.75
     APCDamageModifier=0.5

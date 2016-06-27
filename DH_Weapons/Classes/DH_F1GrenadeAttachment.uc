@@ -253,7 +253,7 @@ defaultproperties
     WA_Idle="idle_F1"
     WA_Fire="idle_F1"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.f1grenade_icon'
-    bRapidFire=False
+    bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None
     Mesh=SkeletalMesh'Weapons3rd_anm.F1Grenade'

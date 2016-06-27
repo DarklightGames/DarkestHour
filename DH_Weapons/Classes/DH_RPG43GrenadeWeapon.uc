@@ -20,6 +20,6 @@ defaultproperties
     ItemName="RPG43 Anti-Tank Grenade"
     //mesh=SkeletalMesh'DO_RU_Weapons.Sov_rpg43'
     HighDetailOverlay=None
-    bUseHighDetailOverlayIndex=False
+    bUseHighDetailOverlayIndex=false
     InventoryGroup=7
 }

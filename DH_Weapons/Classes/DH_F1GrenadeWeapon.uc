@@ -10,7 +10,7 @@ class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     PreFireHoldAnim="pre_fire_idle"
-    bHasReleaseLever=True
+    bHasReleaseLever=true
     FuzeLength=4.000000
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.000000
@@ -36,6 +36,6 @@ defaultproperties
     ItemName="F1 Grenade"
     Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Grenades.f1grenade_s'
-    bUseHighDetailOverlayIndex=True
+    bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 }

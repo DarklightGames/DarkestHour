@@ -66,7 +66,7 @@ defaultproperties
 {
     ProjSpawnOffset=(X=25.000000)
     FAProjSpawnOffset=(X=-225.000000,Y=-15.000000,Z=-15.000000)
-    bUsePreLaunchTrace=False
+    bUsePreLaunchTrace=false
     FireIronAnim="shoot"
     FireSounds(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
@@ -76,8 +76,8 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st14mm'
     ShellIronSightOffset=(X=10.000000,Y=3.000000)
     ShellRotOffsetIron=(Pitch=-10000)
-    bAnimNotifiedShellEjects=False
-    bWaitForRelease=True
+    bAnimNotifiedShellEjects=false
+    bWaitForRelease=true
     FireAnim="shoot"
     TweenTime=0.000000
     FireForce="RocketLauncherFire"

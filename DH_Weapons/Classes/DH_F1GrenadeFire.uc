@@ -8,8 +8,8 @@ class DH_F1GrenadeFire extends DHThrownExplosiveFire;
 defaultproperties
 {
     ProjSpawnOffset=(X=25.000000)
-    bUsePreLaunchTrace=False
-    bWaitForRelease=True
+    bUsePreLaunchTrace=false
+    bWaitForRelease=true
     PreFireAnim="Pre_Fire"
     FireAnim="Throw"
     TweenTime=0.010000

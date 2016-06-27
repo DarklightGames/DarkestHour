@@ -16,7 +16,7 @@ defaultproperties
     IronPutDown="iron_out"
     MaxNumPrimaryMags=2
     InitialNumPrimaryMags=2
-    bPlusOneLoading=True
+    bPlusOneLoading=true
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
@@ -34,13 +34,13 @@ defaultproperties
     AIRating=0.700000
     CurrentRating=0.700000
     DisplayFOV=70.000000
-    bCanRestDeploy=True
+    bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_PPSH41Attachment'
     ItemName="PPSh41 SMG"
     Mesh=SkeletalMesh'Allies_Ppsh_1st.PPSH-41-mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPSH41_S'
-    bUseHighDetailOverlayIndex=True
+    bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 }

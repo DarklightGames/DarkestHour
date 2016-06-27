@@ -91,8 +91,8 @@ function DoFireEffect()
 
 defaultproperties
 {
-    bSplashDamage=False
-    bRecommendSplashDamage=False
+    bSplashDamage=false
+    bRecommendSplashDamage=false
     MaxHoldTime=4.950000
     AmmoClass=class'ROAmmo.RDG1GrenadeAmmo'
     ProjectileClass=class'DH_Weapons.DH_RDG1GrenadeProjectile'

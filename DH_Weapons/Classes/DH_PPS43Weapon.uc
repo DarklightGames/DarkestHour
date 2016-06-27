@@ -16,7 +16,7 @@ defaultproperties
      IronPutDown="iron_out"
      MaxNumPrimaryMags=4
      InitialNumPrimaryMags=4
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
@@ -34,13 +34,13 @@ defaultproperties
      AIRating=0.700000
      CurrentRating=0.700000
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=class'DH_Weapons.DH_PPS43Pickup'
      BobDamping=1.600000
      AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
      ItemName="PPS43 SMG"
      Mesh=SkeletalMesh'Allies_Pps43_1st.PPS-43-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.PPS43_S'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

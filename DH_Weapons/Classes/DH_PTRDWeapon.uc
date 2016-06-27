@@ -153,7 +153,7 @@ defaultproperties
     SelectForce="SwitchToAssaultRifle"
     AIRating=0.400000
     CurrentRating=0.400000
-    bSniping=True
+    bSniping=true
     DisplayFOV=70.000000
     PickupClass=class'DH_Weapons.DH_PTRDPickup'
     BobDamping=1.600000
@@ -161,6 +161,6 @@ defaultproperties
     ItemName="PTRD AT Rifle"
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'
-    bUseHighDetailOverlayIndex=True
+    bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 }
