@@ -776,7 +776,6 @@ simulated function AnimateTransition()
 // Optimises network performance generally & specifically avoids a rider camera bug when unsuccessfully trying to switch to another vehicle position
 simulated function SwitchWeapon(byte F)
 {
-    local VehicleWeaponPawn WeaponPawn;
     local bool              bMustBeTankerToSwitch;
     local byte              ChosenWeaponPawnIndex;
 
@@ -791,7 +790,7 @@ simulated function SwitchWeapon(byte F)
         if (F == 1)
         {
 /*
-            // TODO (Matt, June 1016): commented out this section as it doesn't work - it's the VehicleBase that may be IsHumanControlled(), not its Driver
+            // TODO (Matt, June 2016): commented out this section as it doesn't work - it's the VehicleBase that may be IsHumanControlled(), not its Driver
             // But if it were 'corrected' like that it still wouldn't work because Controller is only replicated to owning net client
             // In fact it would cause big problems, because when you exit a Vehicle, you remain referenced as its Controller, as the server doesn't replicate 'none' to you!
             // Also, a hidden Driver, where bDrawDriverInTP is false, won't replicate to other net clients
