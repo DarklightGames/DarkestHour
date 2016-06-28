@@ -3156,7 +3156,8 @@ simulated function bool GetVehicleBase(out DHVehicle V)
 // New debug exec to spawn any vehicle
 exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DarkestHourGame(Level.Game) != none)
+    if ((Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin) ||
+        class'DH_LevelInfo'.static.DHDebugMode()) && DarkestHourGame(Level.Game) != none)
     {
         DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
     }
