@@ -11,7 +11,6 @@ defaultproperties
     AltName="MG-Schütze"
     Article="a "
     PluralName="Machine-gunners"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.MG-Schutze'
     Models(0)="WK_1"
     Models(1)="WK_2"
     Models(2)="WK_3"

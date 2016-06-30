@@ -11,7 +11,6 @@ defaultproperties
     AltName="Combat Engineer"
     Article="a "
     PluralName="Combat Engineers"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconEng'
     Models(0)="US_2R1"
     Models(1)="US_2R2"
     Models(2)="US_2R3"

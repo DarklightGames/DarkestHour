@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Operator"
     Article="a "
     PluralName="Mortar Operators"
-    MenuImage=texture'DHUSCharactersTex.Icons.ABMortarOperator'
     Models(0)="US_502101AB1"
     Models(1)="US_502101AB2"
     Models(2)="US_502101AB3"

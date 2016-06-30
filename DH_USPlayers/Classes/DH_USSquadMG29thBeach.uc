@@ -11,7 +11,6 @@ defaultproperties
     AltName="Light Machine-Gunner"
     Article="a "
     PluralName="Light Machine-Gunners"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconSMG'
     Models(0)="US_29Inf1b"
     Models(1)="US_29Inf2b"
     Models(2)="US_29Inf3b"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Tank Crewman"
     Article="a "
     PluralName="Tank Crewmen"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_TankCrew'
     Models(0)="Can_1stH1"
     Models(1)="Can_1stH2"
     Models(2)="Can_1stH3"

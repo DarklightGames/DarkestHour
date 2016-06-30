@@ -11,7 +11,6 @@ defaultproperties
     AltName="Schütze Osttruppe"
     Article="a "
     PluralName="Riflemen"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="OT_1"
     Models(1)="OT_2"
     Models(2)="OT_3"

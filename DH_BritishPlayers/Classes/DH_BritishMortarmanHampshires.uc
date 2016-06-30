@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Operator"
     Article="a "
     PluralName="Mortar Operators"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_MortarOperator'
     Models(0)="Hamp_1"
     Models(1)="Hamp_2"
     Models(2)="Hamp_3"

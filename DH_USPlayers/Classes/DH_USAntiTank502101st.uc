@@ -12,7 +12,6 @@ defaultproperties
     AltName="Anti-Tank Soldier"
     Article="an "
     PluralName="Anti-Tank Soldiers"
-    MenuImage=texture'DHUSCharactersTex.Icons.ABAT'
     Models(0)="US_502101AB1"
     Models(1)="US_502101AB2"
     Models(2)="US_502101AB3"

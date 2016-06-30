@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconGI'
     Models(0)="US_3Inf1"
     Models(1)="US_3Inf2"
     Models(2)="US_3Inf3"

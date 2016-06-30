@@ -11,7 +11,6 @@ defaultproperties
     AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.MG-Schutze'
     Models(0)="WL_1"
     Models(1)="WL_2"
     Models(2)="WL_3"

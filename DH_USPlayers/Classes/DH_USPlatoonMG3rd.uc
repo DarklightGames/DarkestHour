@@ -11,7 +11,6 @@ defaultproperties
     AltName="Machine-Gunner"
     Article="a "
     PluralName="Machine-Gunners"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconPMG'
     Models(0)="US_3Inf1"
     Models(1)="US_3Inf2"
     Models(2)="US_3Inf3"

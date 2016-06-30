@@ -12,7 +12,6 @@ defaultproperties
     AltName="Werferschütze"
     Article="a "
     PluralName="Mortar Operators"
-    MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MortarOperator'
     Models(0)="FJ451"
     Models(1)="FJ452"
     Models(2)="FJ453"

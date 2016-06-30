@@ -11,7 +11,6 @@ defaultproperties
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_RadOp'
     Models(0)="RNB_Rad1"
     Models(1)="RNB_Rad2"
     Models(2)="RNB_Rad3"

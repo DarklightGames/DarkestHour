@@ -12,7 +12,6 @@ defaultproperties
     AltName="Zugführer"
     Article="a "
     PluralName="Officers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WK_1"
     Models(1)="WK_2"
     Models(2)="WK_3"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconCorporal'
     Models(0)="US_3Inf1"
     Models(1)="US_3Inf2"
     Models(2)="US_3Inf3"

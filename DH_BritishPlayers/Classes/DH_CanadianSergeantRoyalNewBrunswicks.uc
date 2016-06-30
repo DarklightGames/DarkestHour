@@ -11,7 +11,6 @@ defaultproperties
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_Sg'
     Models(0)="RNB_Sarg1"
     Models(1)="RNB_Sarg2"
     Models(2)="RNB_Sarg3"

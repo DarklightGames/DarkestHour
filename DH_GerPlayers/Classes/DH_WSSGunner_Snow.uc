@@ -11,7 +11,6 @@ defaultproperties
     AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MG'
     Models(0)="SSS_1"
     Models(1)="SSS_2"
     Models(2)="SSS_3"

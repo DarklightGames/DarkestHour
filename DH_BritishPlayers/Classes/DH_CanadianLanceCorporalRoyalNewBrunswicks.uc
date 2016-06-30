@@ -11,7 +11,6 @@ defaultproperties
     AltName="Lance Corporal"
     Article="a "
     PluralName="Lance Corporals"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_LanceCorporal'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"

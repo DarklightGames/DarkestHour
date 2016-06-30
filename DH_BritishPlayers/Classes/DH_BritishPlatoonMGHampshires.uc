@@ -11,7 +11,6 @@ defaultproperties
     AltName="Machine-Gunner"
     Article="a "
     PluralName="Machine-Gunners"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_PMG'
     Models(0)="Hamp_1"
     Models(1)="Hamp_2"
     Models(2)="Hamp_3"

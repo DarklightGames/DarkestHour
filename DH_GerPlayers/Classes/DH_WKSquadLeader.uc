@@ -11,7 +11,6 @@ defaultproperties
     AltName="Gruppenführer"
     Article="a "
     PluralName="Sergeants"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WK_1"
     Models(1)="WK_2"
     Models(2)="WK_3"

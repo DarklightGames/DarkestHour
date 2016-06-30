@@ -11,7 +11,6 @@ defaultproperties
     AltName="Light Machine-Gunner"
     Article="a "
     PluralName="Light Machine-Gunners"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_SMG'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"

@@ -12,7 +12,6 @@ defaultproperties
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Off'
     Models(0)="RMCOf1"
     Models(1)="RMCOf2"
     Models(2)="RMCOf3"

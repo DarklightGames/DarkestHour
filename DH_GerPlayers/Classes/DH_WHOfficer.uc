@@ -12,7 +12,6 @@ defaultproperties
     AltName="Artillerieoffizier"
     Article="a "
     PluralName="Artillery Officers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WH_1"
     Models(1)="WH_2"
     Models(2)="WH_3"

@@ -12,7 +12,6 @@ defaultproperties
     AltName="Tank Hunter"
     Article="an "
     PluralName="Tank Hunters"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_AT'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"

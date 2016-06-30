@@ -12,7 +12,6 @@ defaultproperties
     AltName="Artillery Officer"
     Article="a "
     PluralName="Artillery Officers"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_Off'
     Models(0)="RNB_Of1"
     Models(1)="RNB_Of2"
     Models(2)="RNB_Of3"

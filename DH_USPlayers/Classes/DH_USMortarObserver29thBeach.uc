@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Observer"
     Article="a "
     PluralName="Mortar Observers"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconMortarObserver'
     Models(0)="US_29Inf1B"
     Models(1)="US_29Inf2B"
     Models(2)="US_29Inf3B"

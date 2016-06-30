@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Observer"
     Article="a "
     PluralName="Mortar Observers"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_MortarObserver'
     Models(0)="RMC1"
     Models(1)="RMC2"
     Models(2)="RMC3"

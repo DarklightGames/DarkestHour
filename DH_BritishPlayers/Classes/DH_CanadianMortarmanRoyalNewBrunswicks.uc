@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Operator"
     Article="a "
     PluralName="Mortar Operators"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_MortarOperator'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"

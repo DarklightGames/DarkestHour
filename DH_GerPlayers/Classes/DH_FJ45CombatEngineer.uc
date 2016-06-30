@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sturmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Eng'
     Models(0)="FJ451"
     Models(1)="FJ452"
     Models(2)="FJ453"

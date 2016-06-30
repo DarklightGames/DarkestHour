@@ -11,7 +11,6 @@ defaultproperties
     AltName="Unteroffizier"
     Article="a "
     PluralName="Sergeants"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WH_SqL'
     Models(0)="WH_1"
     Models(1)="WH_2"
     Models(2)="WH_3"

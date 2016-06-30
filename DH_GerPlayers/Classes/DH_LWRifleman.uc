@@ -11,7 +11,6 @@ defaultproperties
     AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WL_1"
     Models(1)="WL_2"
     Models(2)="WL_3"

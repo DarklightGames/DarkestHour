@@ -11,7 +11,6 @@ defaultproperties
     AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Scharf'
     Models(0)="WH_C7"
     Models(1)="WH_C8"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'

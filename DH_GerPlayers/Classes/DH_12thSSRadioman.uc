@@ -11,7 +11,6 @@ defaultproperties
     AltName="Funktruppe"
     Article="a "
     PluralName="Radio Operator"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Radioman'
     Models(0)="12SS_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')

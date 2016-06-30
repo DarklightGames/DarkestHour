@@ -11,7 +11,6 @@ defaultproperties
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconRadOp'
     Models(0)="US_82ABRad1"
     Models(1)="US_82ABRad2"
     Models(2)="US_82ABRad3"

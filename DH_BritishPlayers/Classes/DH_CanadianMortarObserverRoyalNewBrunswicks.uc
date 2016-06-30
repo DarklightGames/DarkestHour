@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Observer"
     Article="a "
     PluralName="Mortar Observers"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_MortarObserver'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"
