@@ -9,7 +9,7 @@ class DH_MN9130Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="Mosin–Nagant M91/30"
+    ItemName="Mosin-Nagant M91/30"
     mesh=mesh'Allies_Nagant_1st.Mosin-Nagant-9130-mesh'
     DrawScale=1.0
     DisplayFOV=70

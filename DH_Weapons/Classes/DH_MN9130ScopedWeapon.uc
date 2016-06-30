@@ -9,7 +9,7 @@ class DH_MN9130ScopedWeapon extends DHBoltSniperWeapon;
 
 defaultproperties
 {
-    ItemName="Mosin–Nagant M91/30 PU Sniper"
+    ItemName="Mosin-Nagant M91/30 PU Sniper"
     Mesh=mesh'Allies_Nagantscope_1st.Mosin-Nagant-9130-Scoped-Mesh'
     DrawScale=1.0
     DisplayFOV=70
