@@ -3,8 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_NoHeadgear extends DH_Headgear;
+class DH_NoHeadgear extends DHHeadgear;
 
 defaultproperties
 {
+    bIsHelmet=false
 }
