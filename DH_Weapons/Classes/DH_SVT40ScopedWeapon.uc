@@ -71,6 +71,7 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
+    LensMaterialID=4
     ItemName="SVT-40 Scoped"
     Mesh=mesh'Allies_Svt40_1st.svt40_scoped_mesh'
     DrawScale=1.0
