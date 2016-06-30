@@ -5,7 +5,7 @@
 
 class DH_RPG43GrenadeAmmo extends ROAmmunition;
 
-DefaultProperties
+defaultproperties
 {
      MaxAmmo=3
      InitialAmount=3
