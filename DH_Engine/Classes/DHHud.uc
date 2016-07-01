@@ -1588,7 +1588,7 @@ function DrawPlayerNames(Canvas C)
         }
 
         // For players other than the one we're looking directly at, check that they are broadly in front of us & so will be on our screen
-        if (bLookingAtPawn)
+        if (!bLookingAtPawn)
         {
             PlayerDirection = Normal(P.Location - PawnOwner.Location);
 
