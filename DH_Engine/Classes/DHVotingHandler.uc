@@ -559,6 +559,7 @@ function ExitVoteAndSwap()
     SetTimer(0.0, false); // stop the timer
     DarkestHourGame(Level.Game).bGameEnded = false;
     DarkestHourGame(Level.Game).SwapTeams();
+        DHG.bGameRestarted = false; // have to reset this for the next round, or at the end of it the server will end up jammed (state MatchOver timer won't re-start)
 }
 
 // Resets all player votes
