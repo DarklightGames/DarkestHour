@@ -18,6 +18,6 @@ defaultproperties
     BallisticCoefficient=0.511
     Speed=50696 // 840 m/s
     DrawType=DT_StaticMesh
-    //compile error  mTracerClass=class'DH_ROEffects.DH_SovietGreenTracer'
+    mTracerClass=class'DH_Effects.DHShellTracer_Green'
     DrawScale=2.000000
 }

@@ -14,7 +14,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_RDG1GrenadeAttachment'
     ItemName="RDG-1 Smoke Grenade"
     Mesh=SkeletalMesh'Allies_RGD1_1st.RGD1_mesh'
-    HighDetailOverlay=None
+    HighDetailOverlay=none
     bUseHighDetailOverlayIndex=false
     InventoryGroup=7
 }
