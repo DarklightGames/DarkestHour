@@ -553,13 +553,20 @@ function TallyVotes(bool bForceMapSwitch)
 
 function ExitVoteAndSwap()
 {
+    local DarkestHourGame DHG;
+
     CloseAllVoteWindows();
     ResetMapVotes();
     bMidGameVote = false;
     SetTimer(0.0, false); // stop the timer
-    DarkestHourGame(Level.Game).bGameEnded = false;
-    DarkestHourGame(Level.Game).SwapTeams();
+    DHG = DarkestHourGame(Level.Game);
+
+    if (DHG != none)
+    {
         DHG.bGameRestarted = false; // have to reset this for the next round, or at the end of it the server will end up jammed (state MatchOver timer won't re-start)
+        DHG.bGameEnded = false;
+        DHG.SwapTeams();
+    }
 }
 
 // Resets all player votes
