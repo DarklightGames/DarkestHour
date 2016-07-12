@@ -29,7 +29,7 @@ static final function Sort(out array<Object> A, UComparator Comparator)
     }
 }
 
-static final function ISort(out array<int> A, UComparator Comparator)
+static final function ISort(out array<int> A, UComparator_int Comparator)
 {
     local int i, j;
 
@@ -37,7 +37,7 @@ static final function ISort(out array<int> A, UComparator Comparator)
     {
         j = i;
 
-        while (j > 0 && A[j - 1] < A[j])
+        while (j > 0 && Comparator.CompareFunction(A[j - 1], A[j]))
         {
             class'UCore'.static.ISwap(A[j], A[j + 1]);
 
