@@ -5,82 +5,55 @@
 
 class DHMetrics extends Actor;
 
-var private TreeMap_string_Object   Players;
+var private Hashtable_string_Object Players;
 var private array<DHMetricsFrag>    Frags;
 
 function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    Players = new class'TreeMap_string_Object';
+    Players = class'Hashtable_string_Object'.static.Create(128);
 }
 
 function string Dump()
 {
-    local int i, j;
-    local array<string> Keys;
-    local Object O;
-    local DHMetricsPlayer P;
+    local Object Object;
+    local HashtableIterator_string_Object PlayersIterator;
     local JSONObject Root;
-    local JSONObject PlayersObject;
-    local JSONArray NamesArray;
-    local JSONObject PlayerObject;
     local JSONObject ServerObject;
-    local JSONArray FragsArray;
+    local array<DHMetricsPlayer> PlayersArray;
+    local FileLog F;
 
     Root = new class'JSONObject';
 
     // Server
     ServerObject = new class'JSONObject';
-
-    ServerObject.Put("name", class'JSONString'.static.Create(Level.Game.GameReplicationInfo.ServerName));
+    ServerObject.PutString("name", Level.Game.GameReplicationInfo.ServerName);
 
     Root.Put("server", ServerObject);
 
+    PlayersIterator = Players.CreateIterator();
+
     // Players
-    PlayersObject = new class'JSONObject';
-
-    Keys = Players.GetKeys();
-
-    for (i = 0; i < Keys.Length; ++i)
+    while (PlayersIterator.Next(, Object))
     {
-        PlayerObject = new class'JSONObject';
-        NamesArray = new class'JSONArray';
-
-        Players.Get(Keys[i], O);
-
-        P = DHMetricsPlayer(O);
-
-        if (P == none)
-        {
-            continue;
-        }
-
-        for (j = 0; j < P.Names.Length; ++j)
-        {
-            NamesArray.Add(class'JSONString'.static.Create(P.Names[j]));
-        }
-
-        PlayerObject.Put("names", NamesArray);
-        PlayerObject.Put("ip", class'JSONString'.static.Create(P.NetworkAddress));
-
-        PlayersObject.Put(Keys[i], PlayerObject);
+        PlayersArray[PlayersArray.Length] = DHMetricsPlayer(Object);
     }
 
-    Root.Put("players", PlayersObject);
+    Root.Put("players", class'JSONArray'.static.CreateFromSerializableArray(PlayersArray));
 
     // Frags
-    FragsArray = new class'JSONArray';
+    Root.Put("frags", class'JSONArray'.static.CreateFromSerializableArray(Frags));
 
-    for (i = 0; i < Frags.Length; ++i)
-    {
-        if (Frags[i] != none)
-        {
-            FragsArray.Add(Frags[i].EncodeJSON());
-        }
-    }
+    StopWatch(false);
 
-    Root.Put("frags", FragsArray);
+    F = Spawn(class'FileLog');
+    F.OpenLog("nope", "log");
+    F.Logf(Root.Encode());
+    F.CloseLog();
+    F.Destroy();
+
+    StopWatch(true);
 
     return Root.Encode();
 }
@@ -90,14 +63,11 @@ function OnPlayerLogin(PlayerController PC)
     local Object O;
     local DHMetricsPlayer P;
 
-    Level.Game.Broadcast(self, "OnPlayerLogin" @ PC);
-
     if (!Players.Get(PC.GetPlayerIDHash(), O))
     {
         P = new class'DHMetricsPlayer';
         P.ID = PC.GetPlayerIDHash();
         P.NetworkAddress = PC.GetPlayerNetworkAddress();
-
         Players.Put(P.ID, P);
     }
     else

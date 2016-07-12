@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMetricsFrag extends Object;
+class DHMetricsFrag extends JSONSerializable;
 
 var class<DamageType>   DamageType;
 var string              KillerID;
@@ -14,7 +14,7 @@ var vector              VictimLocation;
 var byte                VictimTeam;
 var int                 HitIndex;
 
-function JSONObject EncodeJSON()
+function JSONValue ToJSON()
 {
     local JSONObject Root;
     local JSONObject KillerObject;
@@ -23,25 +23,24 @@ function JSONObject EncodeJSON()
     Root = new class'JSONObject';
 
     // Damage Type
-    Root.Put("damage_type", class'JSONString'.static.Create(string(DamageType.Name)));
-    Root.Put("hit_index", class'JSONNumber'.static.ICreate(HitIndex));
+    Root.PutString("damage_type", DamageType.Name);
+    Root.PutInteger("hit_index", HitIndex);
 
     // Killer
     KillerObject = new class'JSONObject';
-    KillerObject.Put("id", class'JSONString'.static.Create(KillerID));
-    KillerObject.Put("location", class'JSONArray'.static.VCreate(KillerLocation));
-    KillerObject.Put("team", class'JSONNumber'.static.ICreate(KillerTeam));
+    KillerObject.PutString("id", KillerID);
+    KillerObject.Put("location", class'JSONArray'.static.CreateFromVector(KillerLocation));
+    KillerObject.PutInteger("team", KillerTeam);
 
     Root.Put("killer", KillerObject);
 
     // Victim
     VictimObject = new class'JSONObject';
-    VictimObject.Put("id", class'JSONString'.static.Create(VictimID));
-    VictimObject.Put("location", class'JSONArray'.static.VCreate(VictimLocation));
-    VictimObject.Put("team", class'JSONNumber'.static.ICreate(VictimTeam));
+    VictimObject.PutString("id", VictimID);
+    VictimObject.Put("location", class'JSONArray'.static.CreateFromVector(VictimLocation));
+    VictimObject.PutInteger("team", VictimTeam);
 
     Root.Put("victim", VictimObject);
 
     return Root;
 }
-
