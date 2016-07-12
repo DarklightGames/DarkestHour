@@ -4,6 +4,7 @@
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
 //==============================================================================
+
 class UArray extends Object
     abstract;
 
