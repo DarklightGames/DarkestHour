@@ -41,6 +41,9 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
+var     class<DHMetrics>            MetricsClass;
+var     DHMetrics                   Metrics;
+
 var struct VersionInfo
 {
     var int Major;
@@ -323,6 +326,11 @@ function PostBeginPlay()
     if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
     {
         GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
+    }
+
+    if (MetricsClass != none)
+    {
+        Metrics = Spawn(MetricsClass);
     }
 }
 
@@ -1052,6 +1060,11 @@ function ChangeName(Controller Other, string S, bool bNameChange)
                 PlayerController(C).ReceiveLocalizedMessage(class'GameMessage', 2, Other.PlayerReplicationInfo);
             }
         }
+    }
+
+    if (Metrics != none)
+    {
+        Metrics.OnPlayerChangeName(PlayerController(Other));
     }
 }
 
@@ -3534,6 +3547,11 @@ event PostLogin(PlayerController NewPlayer)
     {
         DHPlayer(NewPlayer).ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
     }
+
+    if (Metrics != none)
+    {
+        Metrics.OnPlayerLogin(NewPlayer);
+    }
 }
 
 defaultproperties
@@ -3630,4 +3648,6 @@ defaultproperties
     ReinforcementMessagePercentages(3)=0.0
 
     Version=(Major=7,Minor=0,Patch=2)
+
+    MetricsClass=class'DHMetrics'
 }

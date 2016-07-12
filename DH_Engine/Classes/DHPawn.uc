@@ -1058,6 +1058,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 {
     local int        ActualDamage;
     local Controller Killer;
+    local DarkestHourGame G;
 
     if (DamageType == none)
     {
@@ -1197,6 +1198,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
 
         Died(Killer, DamageType, HitLocation);
+
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none && G.Metrics != none)
+        {
+            G.Metrics.OnPlayerFragged(PlayerController(Killer),
+                                      PlayerController(Controller),
+                                      DamageType,
+                                      HitLocation,
+                                      HitIndex);
+        }
     }
     else
     {

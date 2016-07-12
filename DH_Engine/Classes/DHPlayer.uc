@@ -75,7 +75,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog; // these ones in debug mode only
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, ServerMetricsDump; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -4032,6 +4032,25 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
                 V.VehicleAttachments.Remove(i, 1);
             }
         }
+    }
+}
+
+exec function MetricsDump()
+{
+    ServerMetricsDump();
+}
+
+function ServerMetricsDump()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G.Metrics != none)
+    {
+        G.Broadcast(self, G.Metrics.Dump());
+
+        Log(G.Metrics.Dump());
     }
 }
 
