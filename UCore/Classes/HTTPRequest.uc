@@ -13,6 +13,7 @@ var bool bAllowRedirects;
 var TreeMap_string_string Headers;
 var private int Timeout;
 
+delegate OnRedirect(int Status, string Location);
 delegate OnResponse(int Status, TreeMap_string_string Headers, string Content);
 
 function PostBeginPlay()
@@ -92,6 +93,7 @@ function Timer()
     local int i;
     local array<string> HeaderKeys;
     local int ChunkLength;
+    local URL U;
     //local HTTPRequest R;
 
     if (MyLink.ReceiveState == MyLink.Match)
@@ -115,20 +117,24 @@ function Timer()
                 case 308:   // Permanent Redirect
                     if (bAllowRedirects && ResponseHeaders.Get("Location", Location))
                     {
-                        // TODO: parse host and path from location in response headers
-//                        R = Spawn(class'HTTPRequest');
-//                        R.Method = self.Method;
-//                        R.Host = self.Host;
-//                        R.Path = self.Path;
-//                        R.Protocol = self.Protocol;
-//                        R.bAllowRedirects = self.bAllowRedirects;
-//                        R.Headers = self.Headers;
-//                        R.Send();
+                        OnRedirect(Status, Location);
 
-                        Destroy();
-                        return;
+//                        U = class'URL'.static.FromString(Location);
+//
+//                        if (URL != none)
+//                        {
+//                            R = Spawn(class'HTTPRequest');
+//                            R.Method = self.Method;
+//                            R.Host = U.Host;
+//                            R.Path = U.Path;
+//                            R.Protocol = U.Protocol;
+//                            R.bAllowRedirects = self.bAllowRedirects;
+//                            R.Headers = self.Headers;
+//                            R.Send();
+//                        }
                     }
-                    break;
+                    Destroy();
+                    return;
                 default:
                     break;
             }
@@ -204,5 +210,4 @@ defaultproperties
     Method="GET"
     Timeout=30
     Protocol="HTTP/1.1"
-    bAllowRedirects=true
 }
