@@ -4,6 +4,7 @@
 
 class HTTPRequest extends Actor;
 
+var HTTPSession Session;
 var UCoreBufferedTCPLink MyLink;
 var string Method;
 var string Host;
@@ -13,7 +14,7 @@ var bool bAllowRedirects;
 var TreeMap_string_string Headers;
 var private int Timeout;
 
-delegate OnRedirect(int Status, string Location);
+delegate bool OnRedirect(HTTPRequest Request, int Status, string Location);
 delegate OnResponse(int Status, TreeMap_string_string Headers, string Content);
 
 function PostBeginPlay()
@@ -80,7 +81,7 @@ function static TreeMap_string_string ParseHeaders(string S)
 
 function Timer()
 {
-    local string TransferEncoding;
+    local string TransferEncoding, SetCookie;
     local string Response;
     local string Command;
     local string Content;
@@ -94,7 +95,8 @@ function Timer()
     local array<string> HeaderKeys;
     local int ChunkLength;
     local URL U;
-    //local HTTPRequest R;
+    local HTTPRequest R;
+    local HTTPCookie Cookie;
 
     if (MyLink.ReceiveState == MyLink.Match)
     {
@@ -109,29 +111,39 @@ function Timer()
 
             ResponseHeaders = ParseHeaders(HeadersString);
 
+            // TODO: Fix ParseHeaders to return a TreeMap_string_array_string
+            // so we can retrieve multiple instances of Set-Cookie. (this is
+            // essentially an "unordered multimap")
+            if (ResponseHeaders.Get("Set-Cookie", SetCookie))
+            {
+                Session.SetCookie(SetCookie);
+            }
+
             switch (Status)
             {
                 case 301:   // Moved Permanently
                 case 302:   // Found
                 case 307:   // Temporary Redirect
                 case 308:   // Permanent Redirect
-                    if (bAllowRedirects && ResponseHeaders.Get("Location", Location))
+                    if (bAllowRedirects && ResponseHeaders.Get("Location", Location) && !OnRedirect(self, Status, Location))
                     {
-                        OnRedirect(Status, Location);
+                        U = class'URL'.static.FromString(Location);
 
-//                        U = class'URL'.static.FromString(Location);
-//
-//                        if (URL != none)
-//                        {
-//                            R = Spawn(class'HTTPRequest');
-//                            R.Method = self.Method;
-//                            R.Host = U.Host;
-//                            R.Path = U.Path;
-//                            R.Protocol = U.Protocol;
-//                            R.bAllowRedirects = self.bAllowRedirects;
-//                            R.Headers = self.Headers;
-//                            R.Send();
-//                        }
+                        if (URL != none)
+                        {
+                            R = Spawn(class'HTTPRequest');
+                            R.Method = self.Method;
+                            R.Host = U.Host;
+                            R.Path = U.Path;
+                            R.Protocol = U.Protocol;
+                            R.bAllowRedirects = self.bAllowRedirects;
+                            R.Headers = self.Headers;
+                            R.Send();
+                        }
+                        else
+                        {
+                            Warn("Could not parse URL for redirection (" $ Location $ ")");
+                        }
                     }
                     Destroy();
                     return;
@@ -188,6 +200,20 @@ function Timer()
         }
 
         Command $= MyLink.CRLF;
+
+        if (Session != none)
+        {
+            HeaderKeys = Session.Cookies.GetKeys();
+
+            for (i = 0; i < HeaderKeys.Length; ++i)
+            {
+                Session.Cookies.Get(HeaderKeys[i])
+
+                Command $= HeaderKeys[i] $ ":" @ 
+            }
+        }
+
+        // TODO: Add Cookies to the headers
 
         MyLink.SendCommand(Command);
         MyLink.WaitForCount(0, Timeout, 0);
