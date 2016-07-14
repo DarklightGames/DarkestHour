@@ -6,7 +6,7 @@
 
 class HTTPSession extends Object;
 
-var private TreeMap_string_Object Cookies;
+var TreeMap_string_Object Cookies;
 
 function HTTPCookie SetCookie(string S)
 {
@@ -15,12 +15,13 @@ function HTTPCookie SetCookie(string S)
     local string CookieName, AttributeName;
     local string Value;
     local HTTPCookie Cookie;
+    local Object O;
 
     Split(S, ";", Crumbs);
 
     if (Crumbs.Length <= 0)
     {
-        Warn("Invalid Set-Cookie value:" @ S)
+        Warn("Invalid Set-Cookie value:" @ S);
         return none;
     }
 
@@ -29,7 +30,11 @@ function HTTPCookie SetCookie(string S)
     Value = class'UString'.static.Trim(Value);
 
     // Check for existing cookie.
-    if (!Cookies.Get(CookieName, Cookie))
+    if (Cookies.Get(CookieName, O))
+    {
+        Cookie = HTTPCookie(O);
+    }
+    else
     {
         Cookie = new class'HTTPCookie';
         Cookie.CookieName = CookieName;

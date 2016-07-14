@@ -97,6 +97,7 @@ function Timer()
     local URL U;
     local HTTPRequest R;
     local HTTPCookie Cookie;
+    local Object O;
 
     if (MyLink.ReceiveState == MyLink.Match)
     {
@@ -129,13 +130,13 @@ function Timer()
                     {
                         U = class'URL'.static.FromString(Location);
 
-                        if (URL != none)
+                        if (U != none)
                         {
                             R = Spawn(class'HTTPRequest');
                             R.Method = self.Method;
                             R.Host = U.Host;
                             R.Path = U.Path;
-                            R.Protocol = U.Protocol;
+                            R.Protocol = U.Scheme;
                             R.bAllowRedirects = self.bAllowRedirects;
                             R.Headers = self.Headers;
                             R.Send();
@@ -207,9 +208,9 @@ function Timer()
 
             for (i = 0; i < HeaderKeys.Length; ++i)
             {
-                Session.Cookies.Get(HeaderKeys[i])
+                Session.Cookies.Get(HeaderKeys[i], O);
 
-                Command $= HeaderKeys[i] $ ":" @ 
+                Command $= HeaderKeys[i] $ ":" @ HTTPCookie(O).Value $ MyLink.CRLF;
             }
         }
 
