@@ -1,0 +1,75 @@
+[DH_17PounderGun]
+VehiclePositionString="Benutze eine 17-Pfünder PaK"
+VehicleNameString="17-Pfünder PaK"
+
+[DH_17PounderGunCannon]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_17PounderGunCannonPawn]
+VehiclePositionString="Benutze eine 17-Pfünder PaK "
+VehicleNameString="17-Pfünder PaK "
+
+[DH_6PounderGun]
+VehiclePositionString="Benutze eine 6-Pfünder Mark IV PaK"
+VehicleNameString="6-Pfünder Mark IV PaK"
+
+[DH_6PounderGunCannon]
+ProjectileDescriptions=("AP",)
+
+[DH_6PounderGunCannonPawn]
+RangeText="Meter"
+VehiclePositionString="Benutze eine 6-Pfünder Mark IV PaK"
+VehicleNameString="6-Pfünder Mark IV PaK"
+
+[DH_AT57Cannon]
+ProjectileDescriptions=("APC","HE")
+
+[DH_AT57CannonPawn]
+RangeText="Meter"
+VehiclePositionString="Benutze eine 57mm PaK "
+VehicleNameString="57mm PaK"
+
+[DH_AT57Gun]
+VehiclePositionString="Benutze 57mm PaK"
+VehicleNameString="57mm PaK"
+
+[DH_ATGun]
+TouchMessage="Benutze "
+VehiclePositionString="Benutze eine Pak"
+VehicleNameString="PaK"
+
+[DH_ATGunTwoCannonPawn]
+HudName="Schütze"
+
+[DH_Flak88Cannon]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_Flak88CannonPawn]
+VehiclePositionString="Benutze eine FlaK 36"
+VehicleNameString="FlaK 36"
+
+[DH_Flak88Gun]
+VehiclePositionString="Benutze eine FlaK 36"
+VehicleNameString="FlaK 36"
+
+[DH_Pak40ATGun]
+VehiclePositionString="Benutze eine PaK 40"
+VehicleNameString="PaK 40"
+
+[DH_Pak40Cannon]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_Pak40CannonPawn]
+VehiclePositionString="Benutze eine PaK 40"
+VehicleNameString="PaK 40"
+
+[DH_Pak43ATGun]
+VehiclePositionString="Benutze eine PaK 43/41"
+VehicleNameString="PaK 43/41"
+
+[DH_Pak43Cannon]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_Pak43CannonPawn]
+VehiclePositionString="Benutze eine PaK 43/41"
+VehicleNameString="PaK 43/41"

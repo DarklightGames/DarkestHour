@@ -1,0 +1,66 @@
+[DHArtilleryTriggerUSMap]
+Message="Benötige Artillerieunterstützung vom Hauptquartier"
+
+[DH_BritishRadioAttachment]
+MenuDescription="SRC-300 Funkgerät wird von Funkern als Rucksack getragen;
+ zur Benutzung von Offizieren für Artillerieunterstützung."
+
+[DH_BritishRadioItem]
+ItemName="Funkgerät"
+
+[DH_GerArtyBinocularsAttachment]
+MenuDescription="Für Offiziere; wird im Spiel zur Markierung von Artilleriezielen und Beobachtung von Feindbewegungen benutzt."
+
+[DH_GerBinocularsAttachment]
+MenuDescription="Für Unteroffiziere und Panzermannschaften; wird im Spiel zur Beobachtung von Feindbewegungen benutzt."
+
+[DH_ParachuteAttachment]
+MenuDescription="Fallschirm; gut zu haben wenn man aus einem Flugzeug springt!"
+
+[DH_ParachuteItem]
+ItemName="Fallschirm"
+
+[DH_ParachuteStaticLine]
+ItemName="Rettungsleine"
+
+[DH_RedSmokeAmmo]
+ItemName="Rote Rauchgranate"
+
+[DH_RedSmokeDamType]
+DeathString="%o wurde von %k's Rauchgranate verbrannt."
+
+[DH_RedSmokePickup]
+TouchMessage="Aufnehmen: Rote Rauchgranate"
+PickupMessage="Sie haben die Rote Rauchgranate."
+
+[DH_RedSmokeWeapon]
+ItemName="Rote Rauchgranate "
+
+[DH_USArtyBinocularsAttachment]
+MenuDescription="Für Offiziere; wird im Spiel zur Markierung von Artilleriezielen und Beobachtung von Feindbewegungen benutzt."
+
+[DH_USBinocularsAttachment]
+MenuDescription="Für Unteroffiziere und Panzermannschaften; wird im Spiel zur Beobachtung von Feindbewegungen benutzt."
+
+[DH_USRadioAttachment]
+MenuDescription=" SRC-300 Funkgerät wird von Funkern als Rucksack getragen;
+ zur Benutzung von Offizieren für Artillerieunterstützung."
+
+[DH_USRadioItem]
+ItemName="Funkgerät"
+
+[DH_USSmokeGrenadeAmmo]
+ItemName="Rauchgranate"
+
+[DH_USSmokeGrenadeAttachment]
+MenuDescription="M15 Rauchgranate: einfache amerikanische Rauchgranate."
+
+[DH_USSmokeGrenadeDamType]
+DeathString="%o wurde von %k's Rauchgranate verbrannt."
+
+[DH_USSmokeGrenadePickup]
+TouchMessage="Aufnehmen: US M15 Rauchgranate"
+PickupMessage="Sie haben die US M15 Rauchgranate."
+
+[DH_USSmokeGrenadeWeapon]
+ItemName="M15 Rauchgranate"

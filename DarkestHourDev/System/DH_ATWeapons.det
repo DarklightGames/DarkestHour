@@ -1,0 +1,136 @@
+[DH_BazookaAmmo]
+ItemName="Bazooka Rakete"
+
+[DH_BazookaAmmoMsg]
+RocketLoaded="Rakete geladen"
+
+[DH_BazookaAmmoPickup]
+TouchMessage="Aufnehmen: Bazooka Rakete"
+PickupMessage="Sie haben eine Bazooka Rakete genommen."
+
+[DH_BazookaAttachment]
+MenuDescription="Bazooka: Eine amerikanische Panzerabwehrwaffe."
+
+[DH_BazookaBashDamType]
+DeathString="%o wurde getroffen von %k's Bazooka."
+FemaleSuicide="%o hat ihre Bazooka gegen sich selbst gerichtet."
+MaleSuicide="%o hat seine Bazooka gegen sich selbst gerichtet."
+
+[DH_BazookaExhaustDamType]
+DeathString="%o wurde vom Feuerstrahl von %k's Bazooka gekocht."
+FemaleSuicide="%o wurde vom Feuerstrahl ihrer eigenen Bazooka gekocht."
+MaleSuicide="%o wurde vom Feuerstrahl seiner eigenen Bazooka gekocht."
+
+[DH_BazookaImpactDamType]
+DeathString="%o wurde von %k's Bazooka getötet."
+FemaleSuicide="%o war unvorsichtig mit ihrer eigenen Bazooka."
+MaleSuicide="%o war unvorsichtig mit seiner eigenen Bazooka."
+
+[DH_BazookaPickup]
+TouchMessage="Aufnehmen: Bazooka"
+PickupMessage="Sie haben die Bazooka genommen."
+
+[DH_BazookaWarningMsg]
+NoProneFire="Sie können die Bazooka nicht aus der Bauchlage heraus abfeuern!"
+NeedSupport="Sie müssen sich hinknien oder die Waffe irgendwo auflegen um die Bazooka abfeuern zu können"
+NoHipFire="Sie können die Bazooka nicht aus der Hüfte heraus abfeuern"
+NotInIS="Die Bazooka muss entweder irgendwo aufgelegt sein oder Sie müssen sich hinknien und die Ironsight Ansicht Ansicht wählen um Hilfe beim Nachladen zu bekommen"
+NoProneReload="Sie können die Bazooka nicht in Bauchlage nachladen"
+PIATNoCrouchReload="Sie können nur die PIAT im Stehen oder im Liegen nachladen"
+
+[DH_BazookaWeapon]
+ItemName="Bazooka"
+
+[DH_PIATAmmo]
+ItemName="PIAT Granate"
+
+[DH_PIATAmmoPickup]
+TouchMessage="Aufnehmen: PIAT Granate"
+PickupMessage="Sie haben eine PIAT Granate genommen."
+
+[DH_PIATAttachment]
+MenuDescription="PIAT: Britische Panzerabwehrwaffe. Verwendet das SPIGOT System um eine Hohlladungsgranate zu verschießen; zum Zielen kann man die verschiedenen Sichtlöcher benutzen."
+
+[DH_PIATBashDamType]
+DeathString="%o wurde von %k's PIAT getroffen."
+FemaleSuicide="%o hat ihre PIAT gegen sich selbst gerichtet."
+MaleSuicide="%o hat seine PIAT gegen sich selbst gerichtet."
+
+[DH_PIATImpactDamType]
+DeathString=“%o wurde getötet von %k’s PIAT."
+FemaleSuicide=“%o war unvorsichtig mit ihrer PIAT."
+MaleSuicide=“%o war unvorsichtig mit seiner PIAT."
+
+[DH_PIATPickup]
+TouchMessage="Aufnehmen: PIAT"
+PickupMessage="Sie haben die PIAT."
+
+[DH_PIATWeapon]
+ItemName="PIAT"
+
+[DH_PIAT_Pickup]
+TouchMessage="Aufnehmen: PIAT"
+PickupMessage="Sie haben die PIAT."
+
+[DH_PanzerFaustAmmo]
+ItemName="Panzerfaust 60"
+
+[DH_PanzerFaustImpactDamType]
+DeathString=“%o wurde getötet von %k’s Panzerfaust."
+FemaleSuicide=“%o war unvorsichtig mit ihrer Panzerfaust."
+MaleSuicide=“%o war unvorsichtig mit seiner Panzerfaust."
+
+[DH_PanzerFaustPickup]
+TouchMessage="Aufnehmen: Panzerfaust 60"
+PickupMessage="Sie haben die Panzerfaust 60."
+
+[DH_PanzerFaustWeapon]
+ItemName="Panzerfaust 60"
+
+[DH_PanzerfaustExhaustDamType]
+DeathString="%o wurde vom Feuerstrahl von %k's Panzerfaust gekocht."
+FemaleSuicide="%o wurde vom Feuerstrahl ihrer eigenen Panzerfaust gekocht."
+MaleSuicide="%o wurde vom Feuerstrahl seiner eigenen Panzerfaust gekocht."
+
+[DH_PanzerschreckAmmo]
+ItemName="Panzerschreck Rakete"
+
+[DH_PanzerschreckAmmoPickup]
+TouchMessage="Aufnehmen: Panzerschreck Rakete"
+PickupMessage="Sie haben eine Panzerschreck Rakete genommen."
+
+[DH_PanzerschreckAttachment]
+MenuDescription="Panzerschreck: Deutsche Panzerabwehrwaffe, ähnlich der amerikanischen Bazooka."
+
+[DH_PanzerschreckBashDamType]
+DeathString=“%o wurde getroffen von %k’s Panzerschreck."
+FemaleSuicide="%o hat ihren Panzerschreck gegen sich selbst gerichtet."
+MaleSuicide="%o hat seinen Panzerschreck gegen sich selbst gerichtet."
+
+[DH_PanzerschreckExhaustDamType]
+DeathString="%o wurde vom Feuerstrahl von %k's Panzerschreck gekocht."
+FemaleSuicide="%o wurde vom Feuerstrahl ihres eigenen Panzerschrecks gekocht."
+MaleSuicide="%o wurde vom Feuerstrahl seines eigenen Panzerschrecks gekocht."
+
+[DH_PanzerschreckImpactDamType]
+DeathString=“%o wurde getötet von %k’s Panzerschreck."
+FemaleSuicide=“%o war unvorsichtig mit ihrem Panzerschreck."
+MaleSuicide=“%o war unvorsichtig mit seinem Panzerschreck."
+
+[DH_PanzerschreckPickup]
+TouchMessage="Aufnehmen: Panzerschreck"
+PickupMessage="Sie haben den Panzerschreck."
+
+[DH_PanzerschreckWarningMsg]
+NoProneFire="Sie können den Panzerschreck nicht aus der Bauchlage heraus abfeuern!"
+NeedSupport="Sie müssen sich hinknien oder die Waffe irgendwo auflegen um den Panzerschreck abfeuern zu können"
+NoHipFire="Sie können den Panzerschreck nicht aus der Hüfte heraus abfeuern”
+NotInIS="Der Panzerschreck muss entweder irgendwo aufgelegt sein oder Sie müssen sich hinknien und die Ironsight Ansicht Ansicht Ansicht wählen um Hilfe beim Nachladen zu bekommen"
+NoProneReload="Sie können den Panzerschreck nicht in Bauchlage nachladen "
+
+[DH_PanzerschreckWeapon]
+ItemName="Panzerschreck"
+
+[DH_PlaceablePanzerFaustPickup]
+TouchMessage="Aufnehmen: Panzerfaust 60"
+PickupMessage="Sie haben die Panzerfaust 60."

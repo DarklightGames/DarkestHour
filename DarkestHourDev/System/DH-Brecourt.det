@@ -1,0 +1,123 @@
+[DH_LevelInfo3]
+Axis.UnitName="1. Bataillon, Fallschirmjäger-Regiment 6"
+Allies.UnitName="506th PIR, 101st Airborne Division"
+AxisUnitDescription="An: Bn. 1, Fallschirmjägerregiment 6||Von: HQ Fallschirmjägerregiment 6||Achtung: Weiterhin Meldungen über amerikanische Fallschirmjäger Aktivität in Ihrem Gebiet. Angriffe feindlicher Infanterie sind möglich.||Ihre Einheit ist verantwortlich für die Sicherheit der Kanonenstellungen des 90. Infantrieregiments. Es ist äußerst wichtig das diese Kanonen intakt bleiben, da sie für den Widerstand gegen die Invasion dringend benötigt werden.||Halten Sie die Stellung!"
+AlliesUnitDescription="An: CO, E Company||Von: 2nd Bn., 506th PIR||"Entlang den Hecken haben wir Kanonenfeuer gesichtet. Kümmern Sie sich darum! "
+
+[DH_ObjSatchel0]
+objName="Kanone1"
+AttackerDescription="Vernichten Sie Kanone 1"
+DefenderDescription="Verteidigen Sie Kanone 1"
+ObjectiveName="Kanone1"
+DestructionMessage="Kanone 1 zerstört!"
+
+[DH_ObjSatchel1]
+objName="Kanone2"
+AttackerDescription="Vernichten Sie Kanone 2"
+DefenderDescription="Verteidigen Sie Kanone 2"
+ObjectiveName="Kanone2"
+DestructionMessage="Kanone 2 zerstört!"
+
+[DH_ObjSatchel2]
+objName="Kanone4"
+AttackerDescription="Vernichten Sie Kanone 4"
+DefenderDescription="Verteidigen Sie Kanone 4"
+ObjectiveName="Kanone4"
+DestructionMessage="Kanone 4 zerstört!"
+
+[DH_ObjSatchel3]
+objName="Kanone3"
+AttackerDescription="Vernichten Sie Kanone 3"
+DefenderDescription="Verteidigen Sie Kanone 3"
+ObjectiveName="Kanone3"
+DestructionMessage="Kanone 3 zerstört!"
+
+[DH_ObjTerritory0]
+objName="Stellung1"
+AttackerDescription="Einnehmen von Kanonenstellung 1"
+DefenderDescription="Verteidigen Sie Kanonenstellung 1"
+
+[DH_ObjTerritory1]
+objName="Stellung2"
+AttackerDescription="Einnehmen von Kanonenstellung 2"
+DefenderDescription="Verteidigen Sie Kanonenstellung 2"
+
+[DH_ObjTerritory2]
+objName="Stellung3"
+AttackerDescription="Einnehmen von Kanonenstellung 3"
+DefenderDescription="Verteidigen Sie Kanonenstellung 3"
+
+[DH_ObjTerritory3]
+objName="Stellung4"
+AttackerDescription="Einnehmen von Kanonenstellung 4"
+DefenderDescription="Verteidigen Sie Kanonenstellung 4"
+
+[LevelInfo0]
+Title="D-Day 08:30 Uhr - Brecourt Manoir"
+
+[LevelSummary]
+Title="D-Day 08:30 Uhr - Brecourt Manoir"
+Description="6. Juni 1944||Im Sommer 1944 hatten die Alliierten im Westen endlich auf Stalins Bitten reagiert und eine Westfront gegen die Truppen des Dritten Reiches errichtet.||Diese Operation wurde unter dem Namen Operation Overlord bekannt.||Ein Erfolg in Frankreich würde die deutsche Stärke an der Ostfront reduzieren, sodass Stalins Armeen einen schnellen, unaufhaltsamen Vorstoß nach Berlin wagen können. Es würde auch die komplette Einkesselung des Reichs bedeuten - durch Armeen aus dem Westen, Osten, und den verlorenen Achsenmächten Italiens im Süden und Finnlands im Norden.||Dies ist eine der ersten Gefechte der Operation Overlord - die alliierte Invasion der Festung Europa. Die ersten Einheiten die in Kämpfe verwickelt wurden waren Fallschirmspringer und Gleitereinheiten. Ihre Aufgabe war es, strategisch wichtige Ziele wie Brücken, Artilleriestellungen, Kommunikationszentren und Nachschublinien einzunehmen oder zu vernichten.||Mit etwas Glück würden sich ihnen nur zweitklassige und kriegsmüde Einheiten entgegenstellen..."
+
+[ROMineVolume11]
+WarningMessage="Wo wollen Sie hin? Nach Berlin? Kommen Sie sofort zurück!!!"
+
+[Volume0]
+LocationName="Graben zwischen Kanone 1 und Kanone 2"
+
+[Volume10]
+LocationName="Graben zwischen Kanone 1 und Kanone 2"
+
+[Volume11]
+LocationName="Graben zwischen Kanone 2 und Bunker"
+
+[Volume12]
+LocationName="Hauptbunker"
+
+[Volume13]
+LocationName="Munitionsbunker"
+
+[Volume14]
+LocationName="Felder hinter Kanone 4"
+
+[Volume15]
+LocationName="Hintere Verteidigungsgräben"
+
+[Volume16]
+LocationName="Felder hinter Kanone 2"
+
+[Volume17]
+LocationName="Felder hinter Kanone 2"
+
+[Volume18]
+LocationName="Felder hinter Kanone 2"
+
+[Volume19]
+LocationName="Felder hinter Kanone 3"
+
+[Volume20]
+LocationName="Felder hinter Kanone 1"
+
+[Volume3]
+LocationName="Kanonenstellung 1"
+
+[Volume4]
+LocationName="Kanonenstellung 2"
+
+[Volume5]
+LocationName="Kanonenstellung 3"
+
+[Volume6]
+LocationName=" Kanonenstellung 4"
+
+[Volume7]
+LocationName="Graben zwischen Kanone 3 und 4"
+
+[Volume8]
+LocationName="Graben zwischen Bunker und Kanone 3"
+
+[ZoneInfo0]
+LocationName="Brecourt"
+
+[ZoneInfo1]
+LocationName="Brecourt"

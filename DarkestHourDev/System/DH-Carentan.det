@@ -1,0 +1,104 @@
+[Action_DISPLAYMESSAGE0]
+Message="An alle DH Tester: Die Macht sei mit Euch :)"
+
+[Action_DISPLAYMESSAGE1]
+Message="Danke an Tripwire Interactive für ein großartiges Spiel - und besonderer Dank geht an Alan für die Unterstützung"
+
+[Action_DISPLAYMESSAGE2]
+Message="Exocet - hat das Feuer die ganze Zeit brennen gelassen - ein Held unter Männern. :)"
+
+[Action_DISPLAYMESSAGE3]
+Message="Schütze Sepp, weil er uns gezeigt hat wie eine großartige Map aussehen kann"
+
+[Action_DISPLAYMESSAGE4]
+Message="Psychochookie - machts dir was aus wenn wir dich Bruce nennen um Verwechslungen zu vermeiden?"
+
+[Action_DISPLAYMESSAGE5]
+Message="Shurek - danke für die Panzer, Kumpel"
+
+[Action_DISPLAYMESSAGE6]
+Message="Danke an TWB für den Server"
+
+[DH_LevelInfo0]
+Axis.UnitName="Fallschirmjäger-Regiment 6"
+Allies.UnitName="506th PIR, 101st Airborne "
+AxisUnitDescription="An: Oberst von der Heydte, Kommandant des Fallschirmjäger-Regiment 6||Von: HQ Armeegruppe B||Sie haben die Aufgabe Carentan zu halten.|| Die Stadt und der Damm, der zur See führt, müssen in unserer Hand sein um unseren Gegenschlag auf die Invasionsbrückenköpfe auszuführen. Die verbleibenden Einheiten des Grenadierregiments 1058 wurden Ihnen zu diesem Zwecke unterstellt; Panzergrenadiere wurden zur Ihrer Unterstützung beordert, aber Sie werden wohl Carentan vorerst mit den Ihnen zur Verfügung stehenden Truppen halten müssen - wenn es sein muss, bis zum letzten Mann!||Gezeichnet Erwin Rommel."
+AlliesUnitDescription="An: CO 506th Parachute Infantry Regiment|Von: CG 101st U.S. Airborne Division||Einheiten der Division kreisen Carentan ein.|| Ihre Aufgabe ist es die Stadt und die Brücke nach Isigny einzunehmen und zu halten. ||Hinweise unserer Spähtrupps besagen dass die Stadt nur leicht verteidigt zu sein scheint, jedoch fähige deutsche Einheiten vor Ort sind (6. Fallschirmjägerregiment). Desweiteren wird erwartet, dass schwere Einheiten unterwegs sind, um die Garnison in Carentan zu verstärken. Sie müssen erfolgreich zuschlagen bevor diese Einheiten ihr Ziel erreichen können!||Viel Glück!"
+
+[DH_ObjTerritory0]
+objName="Brücke"
+AttackerDescription="Die Brücke Einnehmen um die Deutschen aus der Stadt zu vertreiben"
+DefenderDescription="Die Brücke halten oder wir verlieren die Stadt"
+
+[DH_ObjTerritory1]
+objName="Lagerhaus"
+AttackerDescription="Das Lagerhaus einnehmen"
+DefenderDescription="Das Lagerhaus halten"
+
+[DH_ObjTerritory2]
+objName="Bogen"
+AttackerDescription="Die Bögen einnehmen"
+DefenderDescription="Die Bögen verteidigen"
+
+[DH_ObjTerritory3]
+objName="Kreuzung"
+AttackerDescription="Die Kreuzung einnehmen"
+DefenderDescription="Den Feind am Erobern der Kreuzung hindern"
+
+[LevelInfo0]
+Title="Carentan"
+
+[LevelSummary]
+Title="Carentan"
+Description="14. Juni 1944||Im Sommer 1944 hatten die Alliierten im Westen endlich auf Stalins Bitten reagiert und eine Westfront gegen die Truppen des Dritten Reiches errichtet.||Diese Operation wurde unter dem Namen Operation Overlord bekannt.||Ein Erfolg in Frankreich würde die deutsche Stärke an der Ostfront reduzieren, sodass Stalins Armeen einen schnellen, unaufhaltsamen Vorstoß nach Berlin wagen können. Es würde auch die komplette Einkesselung des Reichs bedeuten - durch Armeen aus dem Westen, Osten, und den verlorenen Achsenmächten Italiens im Süden und Finnlands im Norden.||Dies ist eine weiteres frühes Gefecht der Operation Overlord. Zu diesem Zeitpunkt waren die Brückenköpfe schon gesichert aber noch immer verwundbar. Alliierte Einheiten mussten weiter ins Inland vorstoßen um die Landungstruppen zu sammeln und gegen feindliche Gegenangriffen schützen.||Um dies zu erreichen, hatte General Omar Bradley die Anweisung gegeben, dass die Einnahme von Carentan wohl die beste Möglichkeit darstellen würde, eine potentielle Gefahr für die Brückenköpfe abzuwehren.||Die Schlacht um die Normandie nahm ihren Anfang"
+ 
+[ROMineVolume2]
+WarningMessage="Sie stoßen zu weit vor!!!"
+
+[ROMineVolume3]
+WarningMessage="Sie stoßen zu weit vor!!!"
+
+[ROMineVolume4]
+WarningMessage="Sie stoßen zu weit vor!!!"
+
+[Volume0]
+LocationName="Lagerhaus"
+
+[Volume1]
+LocationName="Haus mit Bögen"
+
+[Volume10]
+LocationName="Zentrales Haus im Norden"
+
+[Volume11]
+LocationName="Haus im Westen"
+
+[Volume12]
+LocationName="Fluss"
+
+[Volume13]
+LocationName="Brücke"
+
+[Volume2]
+LocationName="Kreuzung"
+
+[Volume3]
+LocationName="Café de Normandie"
+
+[Volume4]
+LocationName="Häuser im Südwesten"
+
+[Volume5]
+LocationName="Häuser im Südosten"
+
+[Volume6]
+LocationName="Häuser im Osten"
+
+[Volume7]
+LocationName="Häuser im Nordosten"
+
+[Volume8]
+LocationName="Nördliches Haus an der Flussufer"
+
+[Volume9]
+LocationName="Reihenhäuser am Flussufer"
