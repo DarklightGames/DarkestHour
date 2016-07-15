@@ -5,6 +5,7 @@ import subprocess
 import ConfigParser
 import shutil
 import json
+import re
 from pprint import pprint
 from binascii import crc32
 from collections import OrderedDict
@@ -133,13 +134,6 @@ def main():
                     print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
                     sys.exit(1)
 
-    # write package manifest
-    try:
-        with open(manifest_path, 'w') as f:
-            json.dump(package_crcs, f)
-    except OSError:
-        print 'could not write mod make manifest'
-
     os.chdir(sys_dir)
 
     # run ucc make
@@ -179,6 +173,22 @@ def main():
     ucc_log_file.truncate()
     ucc_log_file.write(ucc_log_contents)
     ucc_log_file.close()
+
+    # search for error messages in log to know if build failed
+    did_build_fail = re.search('Failure - \d+ error\(s\)', ucc_log_contents) is not None
+
+    if did_build_fail:
+        print 'BUILD FAILED'
+        sys.exit(1)
+
+    print 'BUILD PASSED'
+
+    # write package manifest
+    try:
+        with open(manifest_path, 'w') as f:
+            json.dump(package_crcs, f)
+    except OSError:
+        print 'could not write mod make manifest'
 
 if __name__ == "__main__":
     main()
