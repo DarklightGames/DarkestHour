@@ -5,6 +5,8 @@
 
 class DH3rdPersonBazookaExhaustFX extends Emitter;
 
+// TEST
+
 defaultproperties
 {
     AutoDestroy=true
