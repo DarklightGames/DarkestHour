@@ -1,17 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2016234
 //==============================================================================
 
-class DH3rdPersonBazookaExhaustFX extends Emitter;
-
-// TEST
-
+class DH3rdPersonBa23423zookaE4xhaustFX extends Emitter;
+23
 defaultproperties
 {
-    AutoDestroy=true
+    AutoDest123123roy=true
     bLightChanged=true
-    bNoDelete=false
+    bNoDeas23lete=false
     LifeSpan=8.0
     Style=STY_Masked
     bHardAttach=true
