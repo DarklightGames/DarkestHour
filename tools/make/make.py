@@ -88,17 +88,16 @@ def main():
             # compiled file exists in root system folder
             continue
 
-        if args.clean or len(packages_to_compile) > 0:
-            packages_to_compile.append(package + '.u')
-            continue
-
         should_compile_package = False
+
+        if args.clean or len(packages_to_compile) > 0:
+            should_compile_package = True
+        
         package_src_dir = os.path.join(args.dir, package, 'Classes')
         package_crc = 0
 
         for root, dirs, filenames in os.walk(package_src_dir):
             for filename in filter(lambda x: x.endswith('.uc'), filenames):
-
                 with open(os.path.join(root, filename), 'rb') as f:
                     package_crc = crc32(f.read(), package_crc)
 
