@@ -178,10 +178,7 @@ def main():
     did_build_fail = re.search('Failure - \d+ error\(s\)', ucc_log_contents) is not None
 
     if did_build_fail:
-        print 'BUILD FAILED'
         sys.exit(1)
-
-    print 'BUILD PASSED'
 
     # write package manifest
     try:
