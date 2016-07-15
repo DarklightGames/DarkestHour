@@ -27,6 +27,8 @@ def main():
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     args = argparser.parse_args()
 
+    args.dir = os.path.abspath(args.dir)
+
     if not os.path.isdir(args.dir):
         print 'error: "{}" is not a directory'.format(dir)
         sys.exit(1)
@@ -131,6 +133,7 @@ def main():
                     print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
                     sys.exit(1)
 
+    # write package manifest
     try:
         with open(manifest_path, 'w') as f:
             json.dump(package_crcs, f)
