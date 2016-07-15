@@ -3647,7 +3647,7 @@ defaultproperties
     ReinforcementMessagePercentages(2)=0.1
     ReinforcementMessagePercentages(3)=0.0
 
-    Version=(Major=7,Minor=0,Patch=2)
+    Version=(Major=7,Minor=0,Patch=3)
 
     MetricsClass=class'DHMetrics'
 }
