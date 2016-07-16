@@ -12,7 +12,7 @@ var UComparator PRIComparator;
 
 private static function bool PRIComparatorFunction(Object A, Object B)
 {
-    return PlayerReplicationInfo(A).PlayerName < PlayerReplicationInfo(B).PlayerName;
+    return PlayerReplicationInfo(A).PlayerName > PlayerReplicationInfo(B).PlayerName;
 }
 
 simulated function PostBeginPlay()
