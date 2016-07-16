@@ -1,4 +1,5 @@
 *.bat
+*.Lnk
 *.opensdf
 *.orig
 *.sdf
@@ -23,6 +24,7 @@ Red Orchestra.app
 AHZ_ROVehicles/
 CC/
 Core/
+DarkestHourDev/*.txt
 DarkestHourDev/System/DarkestHourDev.ini
 DarkestHourDev/System/DarkestHourDevUser.ini
 Editor/
