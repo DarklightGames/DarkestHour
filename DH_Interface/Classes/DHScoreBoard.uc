@@ -10,284 +10,309 @@ const DHMAXPERSIDEWIDE = 35;
 
 var UComparator PRIComparator;
 
-private static function bool PRIComparatorFunction(Object A, Object B)
-{
-    return Caps(PlayerReplicationInfo(A).PlayerName) > Caps(PlayerReplicationInfo(B).PlayerName);
-}
-
+// Modified to create a special 'PRIComparator' object that is used to efficiently sort each team array, with variable methods of sorting
+// Note the bAlphaSortScoreBoard option can only be enabled by changing the config file before playing, not during the game, so no need to check which option after this
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
     PRIComparator = new class'UComparator';
-    PRIComparator.CompareFunction = PRIComparatorFunction;
-}
 
-simulated function UpdateScoreBoard(Canvas C)
-{
-    local DHPlayerReplicationInfo myPRI, PRI;
-    local array<DHPlayerReplicationInfo> GermanPRI, RussianPRI, UnassignedPRI;
-    local color  TeamColor, PlayerColor;
-    local float  X, Y, CellHeight, XL, YL, LeftY, RightY, CurrentTime;
-    local int    i, CurMaxPerSide, GECount, RUCount, UnassignedCount, AxisTotalScore, AlliesTotalScore;
-    local int    AxisReqObjCount, AlliesReqObjCount, Axis2ndObjCount, Allies2ndObjCount;
-    local string RoleName, S;
-    local bool   bHighLight, bRequiredObjectives, bOwnerDrawn;
-
-    myPRI = DHPlayerReplicationInfo(PlayerController(Owner).PlayerReplicationInfo);
-
-    if (myPRI == none)
+    if (bAlphaSortScoreBoard)
     {
-        return;
-    }
-
-    if (C == none)
-    {
-        return;
-    }
-
-    // Widescreen mode uses a different maximum per side setting
-    if (float(C.SizeX) / C.SizeY >= 1.6) // 1.6 = 16/10, which is 16:10 ratio and 16:9 comes to 1.77
-    {
-        CurMaxPerSide = DHMAXPERSIDEWIDE;
+        PRIComparator.CompareFunction = PRIAlphabeticalComparatorFunction;
     }
     else
     {
-        CurMaxPerSide = DHMAXPERSIDE;
+        PRIComparator.CompareFunction = PRIComparatorFunction;
     }
+}
 
-    bOwnerDrawn = false;
-
-    Padding = 0.025 * C.SizeX;
-
-    C.Style = 5;
-    C.SetDrawColor(0, 0, 0, 128);
-    C.SetPos(0.0, 0.0);
-    C.DrawRect(texture'WhiteSquaretexture', C.ClipX, C.ClipY);
-
-    C.SetPos(0.0, CalcY(0.5, C));
-    C.SetDrawColor(255, 255, 255, 255);
-    C.DrawTile(HeaderImage, C.ClipX, CalcY(1.0, C), 0.0, 0.0, 2048.0, 64.0);
-
-    C.SetDrawColor(0, 0, 0, 255);
-    C.Font = Class<DHHud>(HudClass).static.GetLargeMenuFont(C);
-    C.DrawTextJustified(TitleText, 1, 0.0, 0.0, C.ClipX, CalcY(2, C));
-    C.DrawColor = HudClass.default.WhiteColor;
-    C.Font = Class<DHHud>(HudClass).static.GetSmallerMenuFont(C);
-
-    C.TextSize("Text", XL, YL);
-    CellHeight = YL + (YL * 0.25);
-
-    for (i = 0; i < 4; ++i)
+// Modified to remove automatic sorting of entire PRI, which instead we do for each team using the PRIComparator object
+function bool UpdateGRI()
+{
+    if (GRI == none)
     {
-        AvgPing[i] = 0;
+        InitGRI();
     }
 
+    return GRI != none;
+}
+
+// New function used by PRIComparator object for standard sort method, primarily by player score
+// Does what InOrder() function originally did - except note this is in reverse, as a true return value makes the PRIComparator swap the compared pair
+private static function bool PRIComparatorFunction(Object A, Object B)
+{
+    local PlayerReplicationInfo P1, P2;
+
+    P1 = PlayerReplicationInfo(A);
+    P2 = PlayerReplicationInfo(B);
+
+    // The passed objects should always be PRIs of active players on a team, but just in case we return false, signifying no need to swap
+    if (P1 == none || P2 == none || P1.bOnlySpectator || P2.bOnlySpectator)
+    {
+        return false;
+    }
+
+    // The pair are out of order if player 2's score is higher
+    if (P1.Score != P2.Score)
+    {
+        return P2.Score > P1.Score;
+    }
+
+    // But if scores are the same, they are out of order if player 2's deaths is lower
+    if (P1.Deaths != P1.Deaths)
+    {
+        return P2.Deaths < P1.Deaths;
+    }
+
+    // And if everything else is the same, they are out of order if player 2 is the local human player (i.e. we move local human higher in the list)
+    return PlayerController(P2.Owner) != none && Viewport(PlayerController(P2.Owner).Player) != none;
+}
+
+// New function used by PRIComparator object for alternative sort method by player names alphabetically, if that option is specified (bAlphaSortScoreBoard=true in player's config file)
+private static function bool PRIAlphabeticalComparatorFunction(Object A, Object B)
+{
+    return Caps(PlayerReplicationInfo(A).PlayerName) > Caps(PlayerReplicationInfo(B).PlayerName);
+}
+
+// Emptied out as instead we use the PRIComparator object & it's own functions, as above
+simulated function SortPRIArray() ;
+simulated function bool InOrder(PlayerReplicationInfo P1, PlayerReplicationInfo P2) { return true;}
+
+// Emptied out as these ROScoreBoard functions were never used, so just to de-clutter & avoid possible confusion
+simulated function float DrawTeam(Canvas C, int TeamNum, float YPos, int PlayerCount) { return 0.0;}
+simulated function float DrawHeaders(Canvas C) { return 0.0;}
+
+// Modified to re-factor to substantially reduce repetition & use of literals, also simplifying, making clearer & removing some redundancy
+// Also adds some extra information in the scoreboard header
+simulated function UpdateScoreBoard(Canvas C)
+{
+    local array<ROPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
+    local ROPlayerReplicationInfo        PRI;
+    local PlayerReplicationInfo          MyPRI;
+    local DHGameReplicationInfo          DHGRI;
+    local class<DHHud>                   HUD;
+    local color  TeamColor, PlayerNameColor;
+    local string NameSuffix, RoleName, s;
+    local float  BaseLineHeight, LineHeight, MaxAxisYPos, BaseXPos[2], MaxTeamWidth, X, Y, XL, YL;
+    local int    MaxPlayersListedPerSide, RequiredObjCount[2], SecondaryObjCount[2], TeamIndex, TeamTotalScore, i;
+    local bool   bHighLight, bOwnerDrawn;
+
+    //////////////////// SET UP ////////////////////
+
+    if (PlayerController(Owner) != none)
+    {
+        MyPRI = PlayerController(Owner).PlayerReplicationInfo;
+        DHGRI = DHGameReplicationInfo(GRI);
+        HUD = class<DHHud>(HudClass);
+    }
+
+    if (MyPRI == none || DHGRI == none || HUD == none || C == none)
+    {
+        return;
+    }
+
+    C.Style = ERenderStyle.STY_Alpha;
+
+    if (float(C.SizeX) / float(C.SizeY) >= 1.6)
+    {
+        MaxPlayersListedPerSide = DHMAXPERSIDEWIDE; // widescreen uses a different maximum per side setting (for 16:10 or 16:9 screen aspect ratio)
+    }
+    else
+    {
+        MaxPlayersListedPerSide = DHMAXPERSIDE;
+    }
+
+    AvgPing[AXIS_TEAM_INDEX] = 0; // reset
+    AvgPing[ALLIES_TEAM_INDEX] = 0;
+
+    // Assign all players to relevant array of PRIs for their team or unassigned/spectators
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
-        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+        PRI = ROPlayerReplicationInfo(GRI.PRIArray[i]);
 
         if (PRI != none)
         {
-            if (PRI.bOnlySpectator || PRI.RoleInfo == none)
+            if (PRI.bOnlySpectator || PRI.RoleInfo == none || PRI.Team == none)
             {
-                UnassignedPRI[UnassignedCount++] = PRI;
+                UnassignedPRI[UnassignedPRI.Length] = PRI;
             }
             else
             {
-                if (PRI.Team != none)
+                switch (PRI.Team.TeamIndex)
                 {
-                    switch (PRI.Team.TeamIndex)
-                    {
-                        case 0:
-                            GermanPRI[GECount++] = PRI;
-                            break;
-                        case 1:
-                            RussianPRI[RUCount++] = PRI;
-                            break;
-                        case 2:
-                            UnassignedPRI[UnassignedCount++] = PRI;
-                    }
-
-                    AvgPing[PRI.Team.TeamIndex] += 4 * PRI.Ping; // because this is how it is done in ROTeamGame DRR
+                    case 0:
+                        AxisPRI[AxisPRI.Length] = PRI;
+                        break;
+                    case 1:
+                        AlliesPRI[AlliesPRI.Length] = PRI;
+                        break;
+                    case 2:
+                        UnassignedPRI[UnassignedPRI.Length] = PRI;
                 }
+
+                // Temporarily build AvgPing into a total ping total for the team, so later we can calculate an average team ping
+                AvgPing[PRI.Team.TeamIndex] += PRI.Ping;
             }
         }
     }
 
-    for (i = 0; i < arraycount(DHGameReplicationInfo(GRI).DHObjectives); ++i)
+    // Sort the team arrays by whatever method has been specified (by default this is primarily by score, but there is an option to sort alphabetically by name)
+    class'USort'.static.Sort(AxisPRI, PRIComparator);
+    class'USort'.static.Sort(AlliesPRI, PRIComparator);
+
+    // Count up how many objectives each team holds
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
     {
-        if (DHGameReplicationInfo(GRI).DHObjectives[i] == none)
+        if (DHGRI.DHObjectives[i] != none && DHGRI.DHObjectives[i].ObjState != OBJ_Neutral)
+        {
+            if (DHGRI.DHObjectives[i].bRequired)
+            {
+                RequiredObjCount[DHGRI.DHObjectives[i].ObjState]++;
+            }
+            else
+            {
+                SecondaryObjCount[DHGRI.DHObjectives[i].ObjState]++;
+            }
+        }
+    }
+
+    // To avoid repeated CalcX calculations & use of literals
+    BaseXPos[AXIS_TEAM_INDEX] = CalcX(BaseGermanX, C);
+    BaseXPos[ALLIES_TEAM_INDEX] = CalcX(BaseRussianX, C);
+    NameLength = CalcX(default.NameLength, C);
+    RoleLength = CalcX(default.RoleLength, C);
+    ScoreLength = CalcX(default.ScoreLength, C);
+    PingLength = CalcX(default.PingLength, C);
+    MaxTeamWidth = NameLength + RoleLength + ScoreLength + PingLength;
+
+    //////////// DRAW SCOREBOARD HEADER ////////////
+
+    // Draw scoreboard banner along top of screen
+    C.DrawColor = HUD.default.WhiteColor;
+    C.SetPos(0.0, 0.0);
+    Y = CalcY(1.0, C);
+    C.DrawTile(HeaderImage, C.ClipX, Y, 0.0, 0.0, 2048.0, 64.0);
+
+    C.DrawColor = HUD.default.BlackColor;
+    C.Font = HUD.static.GetLargeMenuFont(C);
+    C.DrawTextJustified(TitleText, 1, 0.0, 0.0, C.ClipX, Y);
+
+    // Now set standard font & line height
+    C.Font = HUD.static.GetSmallerMenuFont(C);
+    C.TextSize("Text", XL, BaseLineHeight);
+    LineHeight = BaseLineHeight * 1.25;
+
+    // Construct a line with various information about the round & the server
+    s = HUD.default.TimeRemainingText; // start with the round timer (time remaining)
+
+    if (DHGRI.RoundDuration == 0)
+    {
+        s $= HUD.default.NoTimeLimitText;
+    }
+    else if (DHGRI.bMatchHasBegun)
+    {
+        s $= HUD.static.GetTimeString(DHGRI.RoundEndTime - GRI.ElapsedTime);
+    }
+    else
+    {
+        s $= HUD.static.GetTimeString(DHGRI.RoundStartTime + DHGRI.PreStartTime - GRI.ElapsedTime);
+    }
+
+    s $= HUD.default.SpacingText $ HUD.default.TimeElapsedText $ HUD.static.GetTimeString(GRI.ElapsedTime - DHGRI.RoundStartTime); // add time elapsed (extra in DH)
+
+    if (DHGRI.bShowServerIPOnScoreboard && Level.NetMode != NM_Standalone) // add server IP (optional)
+    {
+        s $= HUD.default.SpacingText $ HUD.default.IPText $ PlayerController(Owner).GetServerIP();
+    }
+
+    if (DHGRI.bShowTimeOnScoreboard) // add real world time, at server location (optional)
+    {
+        s $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'DHLib'.static.GetNumberString(Level.Minute, 2)
+        @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
+    }
+
+    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ Left(Level, InStr(Level, "."));; // add level name (extra in DH)
+
+    // Draw our round/server info line, with a drop shadow
+    C.DrawColor.A = 128; // DrawColor is already black for shadow
+    X = BaseXPos[AXIS_TEAM_INDEX];
+    C.SetPos(X + 1, Y + 1);
+    C.DrawTextClipped(s);
+
+    C.DrawColor = HUD.default.WhiteColor;
+    C.SetPos(X, Y);
+    C.DrawTextClipped(s);
+
+    //////////////// DRAW AXIS TEAM ////////////////
+
+    TeamIndex = AXIS_TEAM_INDEX;
+    TeamColor = class'DHColor'.default.TeamColors[TeamIndex];
+
+    // Draw axis team header info
+    Y += LineHeight;
+    DrawCell(C, TeamNameAxis @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    Y += LineHeight;
+    DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
+
+    if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+    {
+        S  $= "/" $ GRI.RoundLimit;
+    }
+
+    DrawCell(C, s, 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    Y += LineHeight;
+
+    if (SecondaryObjCount[TeamIndex] > 0)
+    {
+        DrawCell(C, RequiredObjHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        DrawCell(C, SecondaryObjHeldText @ ":" @ SecondaryObjCount[TeamIndex], 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
+    else
+    {
+        DrawCell(C, ObjectivesHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
+
+    // Draw axis column headers for players
+    Y += LineHeight;
+    DrawCell(C, PlayerText @ "(" $ AxisPRI.Length $ ")", 0, X, Y, NameLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, RoleText, 0, X += NameLength, Y, RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, ScoreText, 1, X += RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, PingText, 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+
+    // Loop through axis players & draw names, role, score & ping
+    Y += LineHeight;
+    LineHeight = BaseLineHeight * 0.9; // smaller lines to fit more players on the scoreboard
+
+    for (i = 0; i < AxisPRI.Length; ++i)
+    {
+        if (AxisPRI[i] == none)
         {
             continue;
         }
 
-        // Count up the objective types
-        if (DHGameReplicationInfo(GRI).DHObjectives[i].ObjState == OBJ_Axis)
+        // If we're on the last available line for our own team & we haven't yet drawn our own player, then reserve the last slot for him
+        if (i >= MaxPlayersListedPerSide - 1 && MyPRI.Team != none && MyPRI.Team.TeamIndex == TeamIndex && !bOwnerDrawn)
         {
-            if (DHGameReplicationInfo(GRI).DHObjectives[i].bRequired)
-            {
-                AxisReqObjCount++;
-            }
-            else
-            {
-                bRequiredObjectives = true;
-                Axis2ndObjCount++;
-            }
-        }
-        else if (DHGameReplicationInfo(GRI).DHObjectives[i].ObjState == OBJ_Allies)
-        {
-            if (DHGameReplicationInfo(GRI).DHObjectives[i].bRequired)
-            {
-                AlliesReqObjCount++;
-            }
-            else
-            {
-                bRequiredObjectives = true;
-                Allies2ndObjCount++;
-            }
-        }
-    }
-
-    if (RUCount > 0)
-    {
-        AvgPing[1] /= RUCount;
-    }
-    else
-    {
-        AvgPing[1] = 0;
-    }
-
-    if (GECount > 0)
-    {
-        AvgPing[0] /= GECount;
-    }
-    else
-    {
-        AvgPing[0] = 0;
-    }
-
-    if (bAlphaSortScoreBoard)
-    {
-        class'USort'.static.Sort(GermanPRI, PRIComparator);
-        class'USort'.static.Sort(RussianPRI, PRIComparator);
-    }
-
-    if (DHGameReplicationInfo(GRI) != none)
-    {
-        // Update round timer
-        if (!DHGameReplicationInfo(GRI).bMatchHasBegun)
-        {
-            CurrentTime = DHGameReplicationInfo(GRI).RoundStartTime + DHGameReplicationInfo(GRI).PreStartTime - GRI.ElapsedTime;
-        }
-        else
-        {
-            CurrentTime = DHGameReplicationInfo(GRI).RoundEndTime - GRI.ElapsedTime;
-        }
-
-        if (DHGameReplicationInfo(GRI).RoundDuration == 0)
-        {
-            S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).default.NoTimeLimitText;
-        }
-        else
-        {
-            S = class<DHHud>(HudClass).default.TimeRemainingText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
-        }
-
-        // Add time elapsed after time remaining
-        CurrentTime = GRI.ElapsedTime - DHGameReplicationInfo(GRI).RoundStartTime;
-        S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeElapsedText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
-
-        // Server IP on scoreboard
-        if (DHGameReplicationInfo(GRI).bShowServerIPOnScoreboard && Level.NetMode != NM_Standalone && PlayerController(Owner) != none)
-        {
-            S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.IPText $ PlayerController(Owner).GetServerIP();
-        }
-
-        // Server Time on scoreboard
-        if (DHGameReplicationInfo(GRI).bShowTimeOnScoreboard)
-        {
-            S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeText $ Level.Hour $ ":" $ class'DHLib'.static.GetNumberString(Level.Minute, 2)
-                @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
-        }
-
-        // Show level name on scoreboard
-        S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.MapNameText $ Left(string(Level), InStr(string(Level), "."));;
-
-        X = CalcX(BaseGermanX, C);
-        Y = CalcY(2.0, C);
-
-        // Drop shadow
-        C.DrawColor = class'UColor'.default.Black;
-        C.DrawColor.A = 128;
-        C.SetPos(X + 1, Y + 1);
-        C.DrawTextClipped(S);
-
-        C.DrawColor = HudClass.default.WhiteColor;
-        C.SetPos(X, Y);
-        C.DrawTextClipped(S);
-    }
-
-    // Draw German data
-    X = CalcX(BaseGermanX, C);
-    Y = CalcY(2.0, C);
-    Y += CellHeight;
-    TeamColor = class'DHColor'.default.TeamColors[0];
-    DrawCell(C, TeamNameAxis @ "-" @ DHGameReplicationInfo(GRI).UnitName[0], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-
-    Y += CellHeight;
-
-    DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).SpawnsRemaining[0]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-
-    if (GRI.RoundLimit != 0)
-    {
-        DrawCell(C, RoundsWonText @ ":" @ string(int(GRI.Teams[0].Score)) $ "/" $ string(GRI.RoundLimit), 0, CalcX(BaseGermanX + 7.0, C), Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    }
-    else
-    {
-        DrawCell(C, RoundsWonText @ ":" @ string(int(GRI.Teams[0].Score)), 0, CalcX(BaseGermanX + 7.0, C), Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    }
-
-    Y += CellHeight;
-
-    if (bRequiredObjectives)
-    {
-        DrawCell(C, RequiredObjHeldText @ ":" @ string(AxisReqObjCount), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-        DrawCell(C, SecondaryObjHeldText @ ":" @ string(Axis2ndObjCount), 0, CalcX(BaseGermanX + 7.0, C), Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    }
-    else
-    {
-        DrawCell(C,ObjectivesHeldText @ ":" @ string(AxisReqObjCount), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    }
-
-    Y += CellHeight;
-    DrawCell(C, PlayerText @ "(" $ GECount $ ")", 0, X, Y, CalcX(7.0, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-
-    DrawCell(C, RoleText, 0, CalcX(BaseGermanX + 7.0, C), Y, CalcX(4.0, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, ScoreText, 1, CalcX(BaseGermanX + 11.0, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, PingText, 1, CalcX(BaseGermanX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    Y += CellHeight;
-
-    CellHeight = YL * 0.9;
-    for (i = 0; i < GECount; ++i)
-    {
-        // if we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
-        if (i >= CurMaxPerSide - 1 && myPRI.Team != none && myPRI.Team.TeamIndex == AXIS_TEAM_INDEX && !bOwnerDrawn)
-        {
-            // If this is not the owner, skip it
-            if (GermanPRI[i] != myPRI)
+            if (AxisPRI[i] != MyPRI)
             {
                 continue;
             }
         }
-        else if (i >= CurMaxPerSide)
+        // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
+        else if (i >= MaxPlayersListedPerSide)
         {
-            //Draw "..." to indicate there are more!
-            DrawCell(C,"...", 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
+            DrawCell(C,"...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, HUD.default.WhiteColor, HighLightColor);
             break;
         }
 
-        if (GermanPRI[i] == myPRI)
+        // If this is our own player, set it to draw highlighted & record that we've drawn him
+        if (AxisPRI[i] == MyPRI)
         {
             bHighlight = true;
             bOwnerDrawn = true;
@@ -297,17 +322,41 @@ simulated function UpdateScoreBoard(Canvas C)
             bHighlight = false;
         }
 
-        PlayerColor = TeamColor;
-
-        if (GermanPRI[i].RoleInfo != none)
+        // Set drawing color & any name suffix text
+        if (DHGRI.bPlayerMustReady && !AxisPRI[i].bReadyToPlay && !AxisPRI[i].bBot && Level.NetMode != NM_Standalone)
         {
-            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
+            PlayerNameColor = HUD.default.GrayColor;
+
+            if (AxisPRI[i].bAdmin)
             {
-                RoleName = GermanPRI[i].RoleInfo.default.AltName;
+                NameSuffix = AdminWaitingText;
             }
             else
             {
-                RoleName = GermanPRI[i].RoleInfo.default.MyName;
+                NameSuffix = WaitingText;
+            }
+        }
+        else if (AxisPRI[i].bAdmin)
+        {
+            PlayerNameColor = HUD.default.WhiteColor;
+            NameSuffix = AdminText;
+        }
+        else
+        {
+            PlayerNameColor = TeamColor;
+            NameSuffix = "";
+        }
+
+        // Get role name
+        if (AxisPRI[i].RoleInfo != none)
+        {
+            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
+            {
+                RoleName = AxisPRI[i].RoleInfo.default.AltName;
+            }
+            else
+            {
+                RoleName = AxisPRI[i].RoleInfo.default.MyName;
             }
         }
         else
@@ -315,168 +364,117 @@ simulated function UpdateScoreBoard(Canvas C)
             RoleName = "";
         }
 
-        // Draw name
-        if (Level.NetMode != NM_Standalone && DHGameReplicationInfo(GRI).bPlayerMustReady)
-        {
-            if (GermanPRI[i].bReadyToPlay || GermanPRI[i].bBot)
-            {
-                if (GermanPRI[i].bAdmin)
-                {
-                    // Draw Player name
-                    C.StrLen(GermanPRI[i].PlayerName @ AdminText, XL, YL);
+        // Draw axis player's name, role, score & ping
+        X = BaseXPos[TeamIndex];
+        DrawCell(C, AxisPRI[i].PlayerName $ NameSuffix, 0, X, Y, NameLength, LineHeight, bHighlight, PlayerNameColor, HighLightColor);
+        DrawCell(C, RoleName, 0, X += NameLength, Y, RoleLength, LineHeight, bHighlight, TeamColor, HighLightColor);
+        DrawCell(C, int(AxisPRI[i].Score), 1, X += RoleLength, Y, ScoreLength, LineHeight, bHighLight, TeamColor, HighLightColor);
+        DrawCell(C, 4 * AxisPRI[i].Ping, 1, X += ScoreLength, Y, PingLength, LineHeight, bHighLight, TeamColor, HighLightColor);
 
-                    if ((XL/C.ClipX) > 0.21)
-                    {
-                        DrawCell(C,GermanPRI[i].PlayerName @ AdminText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                    }
-                    else
-                    {
-                        DrawCell(C,GermanPRI[i].PlayerName @ AdminText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                    }
-                }
-                else
-                {
-                    DrawCell(C,GermanPRI[i].PlayerName, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-                }
-            }
-            else
-            {
-                if (GermanPRI[i].bAdmin)
-                {
-                    // Draw Player name
-                    C.StrLen(GermanPRI[i].PlayerName $ AdminWaitingText, XL, YL);
+        // Update axis team's total score
+        TeamTotalScore += AxisPRI[i].Score;
 
-                    if ((XL/C.ClipX) > 0.22)
-                    {
-                        DrawCell(C,GermanPRI[i].PlayerName $ AdminWaitingText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.GrayColor, HighLightColor);
-                    }
-                    else
-                    {
-                        DrawCell(C,GermanPRI[i].PlayerName $ AdminWaitingText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.GrayColor, HighLightColor);
-                    }
-                }
-                else
-                {
-                    DrawCell(C,GermanPRI[i].PlayerName$WaitingText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.GrayColor, HighLightColor);
-                }
-            }
-        }
-        else
-        {
-            if (GermanPRI[i].bAdmin)
-            {
-                // Draw Player name
-                C.StrLen(GermanPRI[i].PlayerName @ AdminText, XL, YL);
+        // Move to next drawing line (exit drawing axis players if this takes us off the bottom of the screen)
+        Y += LineHeight;
 
-                if ((XL/C.ClipX) > 0.21)
-                {
-                    DrawCell(C,GermanPRI[i].PlayerName @ AdminText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                }
-                else
-                {
-                    DrawCell(C,GermanPRI[i].PlayerName @ AdminText, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                }
-            }
-            else
-            {
-                DrawCell(C,GermanPRI[i].PlayerName, 0, CalcX(BaseGermanX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-            }
-        }
-
-        // Draw rolename
-        C.StrLen(RoleName, XL, YL);
-
-        if ((XL/C.ClipX) > 0.13)
-        {
-            DrawCell(C, RoleName, 0, CalcX(BaseGermanX + 7.0, C), Y, CalcX(4.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        }
-        else
-        {
-            DrawCell(C, RoleName, 0, CalcX(BaseGermanX + 7.0, C), Y, CalcX(4.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        }
-
-        AxisTotalScore += GermanPRI[i].Score;
-
-        DrawCell(C, string(int(GermanPRI[i].Score)), 1, CalcX(BaseGermanX + 11.0, C), Y, CalcX(1.5, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        DrawCell(C, string(4 * GermanPRI[i].Ping), 1, CalcX(BaseGermanX + 12.5, C), Y, CalcX(1.5, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        Y += CellHeight;
-
-        if (Y + CellHeight > C.ClipY)
+        if (Y + LineHeight > C.ClipY)
         {
             break;
         }
     }
-    CellHeight = YL + (YL * 0.25);
 
-    Y += CellHeight;
-
-    DrawCell(C, TotalsText @ ": ", 0, CalcX(BaseGermanX, C), Y, CalcX(11.0, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, string(AxisTotalScore), 1, CalcX(BaseGermanX + 11.0, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, string(AvgPing[0]), 1, CalcX(BaseGermanX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-
-    LeftY = Y;
-
-    // Draw Russian data
-    X = CalcX(BaseRussianX, C);
-    Y = CalcY(2, C);
-
-    TeamColor = class'DHColor'.default.TeamColors[1];
-
-    Y += CellHeight;
-    DrawCell(C, TeamNameAllies @ "-" @ DHGameReplicationInfo(GRI).UnitName[1], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-    Y += CellHeight;
-
-    DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).SpawnsRemaining[1]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-
-    if (GRI.RoundLimit != 0)
+    // Calculate average ping for axis team
+    // Need to multiply by 4 because ping gets divided by 4 before replication to net clients (so higher pings fit into one byte)
+    if (AxisPRI.Length > 0)
     {
-        DrawCell(C, RoundsWonText @ ":" @ string(int(GRI.Teams[1].Score)) $ "/" $ string(GRI.RoundLimit), 0, CalcX(BaseRussianX + 7.0, C), Y, CalcX(13.5, C), CellHeight, false, TeamColor);
+        AvgPing[TeamIndex] *= 4 / AxisPRI.Length;
     }
     else
     {
-        DrawCell(C, RoundsWonText @ ":" @ string(int(GRI.Teams[1].Score)), 0, CalcX(BaseRussianX + 7.0, C), Y, CalcX(13.5, C), CellHeight, false, TeamColor);
+        AvgPing[TeamIndex] = 0;
     }
 
-    Y += CellHeight;
+    // Draw axis team totals
+    X = BaseXPos[TeamIndex];
+    LineHeight = BaseLineHeight * 1.25;
+    Y += LineHeight;
+    DrawCell(C, TotalsText @ ": ", 0, X, Y, NameLength + RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, TeamTotalScore, 1, X += NameLength + RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, AvgPing[TeamIndex], 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
 
-    if (bRequiredObjectives)
+    MaxAxisYPos = Y; // record lowest drawing position of axis team, so later we can work out where to start drawing a spectator line
+
+    /////////////// DRAW ALLIES TEAM ///////////////
+
+    TeamIndex = ALLIES_TEAM_INDEX;
+    TeamColor = class'DHColor'.default.TeamColors[TeamIndex];
+    TeamTotalScore = 0;
+    X = BaseXPos[TeamIndex];
+    Y = CalcY(1.0, C);
+
+    // Draw allies team header info
+    Y += LineHeight;
+    DrawCell(C, TeamNameAllies @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    Y += LineHeight;
+    DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
+
+    if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
     {
-        DrawCell(C, RequiredObjHeldText @ ":" @ string(AlliesReqObjCount), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
-        DrawCell(C, SecondaryObjHeldText @ ":" @ string(Allies2ndObjCount), 0, CalcX(BaseRussianX + 7.0, C), Y, CalcX(13.5, C), CellHeight, false, TeamColor);
+        S  $= "/" $ GRI.RoundLimit;
+    }
+
+    DrawCell(C, s, 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    Y += LineHeight;
+
+    if (SecondaryObjCount[TeamIndex] > 0)
+    {
+        DrawCell(C, RequiredObjHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        DrawCell(C, SecondaryObjHeldText @ ":" @ SecondaryObjCount[TeamIndex], 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
     else
     {
-        DrawCell(C,ObjectivesHeldText @ ":" @ string(AlliesReqObjCount), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
+        DrawCell(C, ObjectivesHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
 
-    Y += CellHeight;
+    // Draw allies column headers for players
+    Y += LineHeight;
+    DrawCell(C, PlayerText @ "(" $ AlliesPRI.Length $ ")", 0, X, Y, NameLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, RoleText, 0, X += NameLength, Y, RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, ScoreText, 1, X += RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, PingText, 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
 
-    DrawCell(C, PlayerText @ "(" $ RUCount $ ")", 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, RoleText, 0, CalcX(BaseRussianX + 7.0, C), Y, CalcX(4.0, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, ScoreText, 1, CalcX(BaseRussianX + 11.0, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, PingText, 1, CalcX(BaseRussianX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    Y += CellHeight;
+    // Loop through allies players & draw names, role, score & ping
+    Y += LineHeight;
+    LineHeight = BaseLineHeight * 0.9; // smaller lines to fit more players on the scoreboard
 
-    CellHeight = YL * 0.9;
-    for (i = 0; i < RUCount; ++i)
+    for (i = 0; i < AlliesPRI.Length; ++i)
     {
-        // If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
-        if (i >= CurMaxPerSide - 1 && myPRI.Team != none && myPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && !bOwnerDrawn)
+        if (AlliesPRI[i] == none)
         {
-            // If this is not the owner, skip it
-            if (RussianPRI[i] != myPRI)
+            continue;
+        }
+
+        // If we're on the last available line for our own team & we haven't yet drawn our own player, then reserve the last slot for him
+        if (i >= MaxPlayersListedPerSide - 1 && MyPRI.Team != none && MyPRI.Team.TeamIndex == TeamIndex && !bOwnerDrawn)
+        {
+            if (AlliesPRI[i] != MyPRI)
             {
                 continue;
             }
         }
-        else if (i >= CurMaxPerSide)
+        // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
+        else if (i >= MaxPlayersListedPerSide)
         {
-            //Draw "..." to indicate there are more!
-            DrawCell(C,"...", 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
+            DrawCell(C,"...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, HUD.default.WhiteColor, HighLightColor);
             break;
         }
 
-        if (RussianPRI[i] == myPRI)
+        // If this is our own player, set it to draw highlighted & record that we've drawn him
+        if (AlliesPRI[i] == MyPRI)
         {
             bHighlight = true;
             bOwnerDrawn = true;
@@ -486,17 +484,41 @@ simulated function UpdateScoreBoard(Canvas C)
             bHighlight = false;
         }
 
-        PlayerColor = TeamColor;
-
-        if (RussianPRI[i].RoleInfo != none)
+        // Set drawing color & any name suffix text
+        if (DHGRI.bPlayerMustReady && !AlliesPRI[i].bReadyToPlay && !AlliesPRI[i].bBot && Level.NetMode != NM_Standalone)
         {
-            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
+            PlayerNameColor = HUD.default.GrayColor;
+
+            if (AlliesPRI[i].bAdmin)
             {
-                RoleName = RussianPRI[i].RoleInfo.default.AltName;
+                NameSuffix = AdminWaitingText;
             }
             else
             {
-                RoleName = RussianPRI[i].RoleInfo.default.MyName;
+                NameSuffix = WaitingText;
+            }
+        }
+        else if (AlliesPRI[i].bAdmin)
+        {
+            PlayerNameColor = HUD.default.WhiteColor;
+            NameSuffix = AdminText;
+        }
+        else
+        {
+            PlayerNameColor = TeamColor;
+            NameSuffix = "";
+        }
+
+        // Get role name
+        if (AlliesPRI[i].RoleInfo != none)
+        {
+            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
+            {
+                RoleName = AlliesPRI[i].RoleInfo.default.AltName;
+            }
+            else
+            {
+                RoleName = AlliesPRI[i].RoleInfo.default.MyName;
             }
         }
         else
@@ -504,189 +526,117 @@ simulated function UpdateScoreBoard(Canvas C)
             RoleName = "";
         }
 
-        // Draw name
-        if (Level.NetMode != NM_Standalone && DHGameReplicationInfo(GRI).bPlayerMustReady)
-        {
-            if (RussianPRI[i].bReadyToPlay || RussianPRI[i].bBot)
-            {
-                if (RussianPRI[i].bAdmin)
-                {
-                    // Draw rolename
-                    C.StrLen(RussianPRI[i].PlayerName @ AdminText, XL, YL);
+        // Draw allies player's name, role, score & ping
+        X = BaseXPos[TeamIndex];
+        DrawCell(C, AlliesPRI[i].PlayerName $ NameSuffix, 0, X, Y, NameLength, LineHeight, bHighlight, PlayerNameColor, HighLightColor);
+        DrawCell(C, RoleName, 0, X += NameLength, Y, RoleLength, LineHeight, bHighlight, TeamColor, HighLightColor);
+        DrawCell(C, int(AlliesPRI[i].Score), 1, X += RoleLength, Y, ScoreLength, LineHeight, bHighLight, TeamColor, HighLightColor);
+        DrawCell(C, 4 * AlliesPRI[i].Ping, 1, X += ScoreLength, Y, PingLength, LineHeight, bHighLight, TeamColor, HighLightColor);
 
-                    if ((XL/C.ClipX) > 0.21)
-                    {
-                        DrawCell(C, RussianPRI[i].PlayerName @ AdminText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                    }
-                    else
-                    {
-                        DrawCell(C, RussianPRI[i].PlayerName @ AdminText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                    }
-                }
-                else
-                {
-                    DrawCell(C,RussianPRI[i].PlayerName, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-                }
-            }
-            else
-            {
-                if (RussianPRI[i].bAdmin)
-                {
-                    // Draw Player name
-                    C.StrLen(RussianPRI[i].PlayerName $ AdminWaitingText, XL, YL);
+        // Update allies team's total score
+        TeamTotalScore += AlliesPRI[i].Score;
 
-                    if ((XL/C.ClipX) > 0.22)
-                    {
-                        DrawCell(C, RussianPRI[i].PlayerName $ AdminWaitingText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.GrayColor, HighLightColor);
-                    }
-                    else
-                    {
-                        DrawCell(C, RussianPRI[i].PlayerName $ AdminWaitingText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.GrayColor, HighLightColor);
-                    }
-                }
-                else
-                {
-                    DrawCell(C, RussianPRI[i].PlayerName$WaitingText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.GrayColor, HighLightColor);
-                }
-            }
-        }
-        else
-        {
-            if (RussianPRI[i].bAdmin)
-            {
-                // Draw rolename
-                C.StrLen(RussianPRI[i].PlayerName @ AdminText, XL, YL);
+        // Move to next drawing line (exit drawing allies players if this takes us off the bottom of the screen)
+        Y += LineHeight;
 
-                if ((XL/C.ClipX) > 0.21)
-                {
-                    DrawCell(C, RussianPRI[i].PlayerName @ AdminText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                }
-                else
-                {
-                    DrawCell(C, RussianPRI[i].PlayerName @ AdminText, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, HudClass.default.WhiteColor, HighLightColor);
-                }
-            }
-            else
-            {
-                DrawCell(C,RussianPRI[i].PlayerName, 0, CalcX(BaseRussianX, C), Y, CalcX(7.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-            }
-        }
-
-        // Draw rolename
-        C.StrLen(RoleName, XL, YL);
-
-        if ((XL/C.ClipX) > 0.13)
-        {
-            DrawCell(C, RoleName, 0, CalcX(BaseRussianX + 7.0, C), Y, CalcX(4.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        }
-        else
-        {
-            DrawCell(C, RoleName, 0, CalcX(BaseRussianX + 7.0, C), Y, CalcX(4.0, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        }
-
-        AlliesTotalScore += RussianPRI[i].Score;
-
-        DrawCell(C, string(int(RussianPRI[i].Score)), 1, CalcX(BaseRussianX + 11.0, C), Y, CalcX(1.5, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        DrawCell(C, string(4 * RussianPRI[i].Ping), 1, CalcX(BaseRussianX + 12.5, C), Y, CalcX(1.5, C), CellHeight, bHighLight, PlayerColor, HighLightColor);
-        Y += CellHeight;
-
-        if (Y + CellHeight > C.ClipY)
+        if (Y + LineHeight > C.ClipY)
         {
             break;
         }
     }
 
-    CellHeight = YL + (YL * 0.25);
-
-    Y += CellHeight;
-
-    DrawCell(C, TotalsText @ ": ", 0, CalcX(BaseRussianX, C), Y, CalcX(11.0, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, string(AlliesTotalScore), 1, CalcX(BaseRussianX + 11.0, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-    DrawCell(C, string(AvgPing[1]), 1, CalcX(BaseRussianX + 12.5, C), Y, CalcX(1.5, C), CellHeight, true, HudClass.default.WhiteColor, TeamColor);
-
-    RightY = Y;
-
-    if (LeftY <= RightY)
+    // Calculate average ping for allies team
+    // Need to multiply by 4 because ping gets divided by 4 before replication to net clients (so higher pings fit into one byte)
+    if (AlliesPRI.Length > 0)
     {
-        Y = RightY;
+        AvgPing[TeamIndex] *= 4 / AlliesPRI.Length;
     }
     else
     {
-        Y = LeftY;
+        AvgPing[TeamIndex] = 0;
     }
 
-    Y += CellHeight + 3; // add some extra spacing above the spectators
+    // Draw allies team totals
+    LineHeight = BaseLineHeight * 1.25;
+    X = BaseXPos[TeamIndex];
+    Y += LineHeight;
+    DrawCell(C, TotalsText @ ": ", 0, X, Y, NameLength + RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, TeamTotalScore, 1, X += NameLength + RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DrawCell(C, AvgPing[TeamIndex], 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
 
-    if (Y + CellHeight > C.ClipY)
+    //////////////// DRAW SPECTATORS ///////////////
+
+    // Draw spectators underneath the biggest team
+    if (MaxAxisYPos > Y)
     {
-        return;
+        Y = MaxAxisYPos;
     }
 
-    C.TextSize("Text", XL, YL);
-    CellHeight = YL + (YL * 0.05);
-    S = SpectatorTeamName @ "&" @ UnassignedTeamName @ "(" $ UnassignedCount $ ") : ";
+    LineHeight = BaseLineHeight * 1.05;
+    X = BaseXPos[AXIS_TEAM_INDEX];
+    Y += 1.5 * LineHeight;
 
-    for (i = 0; i < UnassignedCount; ++i)
+    if (Y + LineHeight > C.ClipY)
     {
-        C.TextSize(S $ "," $ UnassignedPRI[i].PlayerName, XL, YL);
+        return; // spectator line would draw off the bottom of the screen, so stop drawing
+    }
 
-        if (CalcX(1, C) + XL > C.ClipX)
+    // Construct a spectator line
+    s = SpectatorTeamName @ "&" @ UnassignedTeamName @ "(" $ UnassignedPRI.Length $ ") : ";
+
+    for (i = 0; i < UnassignedPRI.Length; ++i)
+    {
+        C.TextSize(s $ "," $ UnassignedPRI[i].PlayerName, XL, YL); // get the draw length of the player's name (XL)
+
+        if (CalcX(1.0, C) + XL > C.ClipX)
         {
-            DrawCell(C, S, 0, CalcX(BaseGermanX, C), Y, CalcX(29.0, C), CellHeight, false, HudClass.default.WhiteColor);
-            S = "";
-            Y = Y + CellHeight;
+            DrawCell(C, s, 0, X, Y, BaseXPos[ALLIES_TEAM_INDEX] + MaxTeamWidth, LineHeight, false, HUD.default.WhiteColor);
+            s = "";
+            Y = Y + LineHeight;
 
-            if (Y + CellHeight > C.ClipY)
+            if (Y + LineHeight > C.ClipY)
             {
                 return;
             }
         }
 
-        if (i < UnassignedCount - 1)
+        S $= UnassignedPRI[i].PlayerName;
+
+        if (i < UnassignedPRI.Length - 1)
         {
-            S = S $ UnassignedPRI[i].PlayerName $ ",";
-        }
-        else
-        {
-            S = S $ UnassignedPRI[i].PlayerName;
-            DrawCell(C, S, 0, CalcX(BaseGermanX, C), Y, CalcX(29.0, C), CellHeight, false, HudClass.default.WhiteColor);
+            S $= ", ";
         }
     }
+
+    // Finally, draw our spectator line
+    DrawCell(C, s, 0, X, Y, BaseXPos[ALLIES_TEAM_INDEX] + MaxTeamWidth, LineHeight, false, HUD.default.WhiteColor);
 }
 
-// Colin: Modified to add a drop shadow to the text drawing.
+// Colin: modified to add a drop shadow to the text drawing (& also to remove unused variables)
 simulated function DrawCell(Canvas C, coerce string Text, byte Align, float XPos, float YPos, float Width, float Height, bool bDrawBacking, Color F, optional Color B)
 {
-    local float X, Y, XL, YL;
-
-    X = XPos;
-    Y = YPos;
-
-    C.TextSize("TEST", XL, YL);
-    C.SetOrigin(X, Y);
-    C.SetClip(XPos + Width, YPos + Height);
-
-    if (bDrawBacking)
-    {
-        C.SetPos(0.0, 0.0);
-        C.DrawColor = B;
-        C.DrawRect(texture'WhiteSquaretexture', C.ClipX - C.OrgX, C.ClipY - C.OrgY);
-    }
-
     if (Text != "")
     {
-        C.SetPos(0, 0);
+        C.SetOrigin(XPos, YPos);
+        C.SetClip(XPos + Width, YPos + Height);
+        C.SetPos(0.0, 0.0);
+
+        if (bDrawBacking)
+        {
+            C.DrawColor = B;
+            C.DrawRect(texture'WhiteSquaretexture', C.ClipX - C.OrgX, C.ClipY - C.OrgY);
+        }
 
         C.DrawColor = class'UColor'.default.Black;
         C.DrawColor.A = 128;
-        C.DrawTextJustified(Text, Align, X + 1, Y + 1, C.ClipX, C.ClipY);
+        C.DrawTextJustified(Text, Align, XPos + 1, YPos + 1, C.ClipX, C.ClipY);
 
         C.DrawColor = F;
-        C.DrawTextJustified(Text, Align, X, Y, C.ClipX, C.ClipY);
-    }
+        C.DrawTextJustified(Text, Align, XPos, YPos, C.ClipX, C.ClipY);
 
-    C.SetOrigin(0.0, 0.0);
-    C.SetClip(C.SizeX, C.SizeY);
+        C.SetOrigin(0.0, 0.0);
+        C.SetClip(C.SizeX, C.SizeY);
+    }
 }
 
 defaultproperties
@@ -695,4 +645,9 @@ defaultproperties
     TeamColors(0)=(B=80,G=80,R=200)
     TeamColors(1)=(B=75,G=150,R=80)
     HudClass=class'DH_Engine.DHHud'
+    NameLength=7.0
+    RoleLength=4.0
+    ScoreLength=1.5
+    PingLength=1.5
+    AdminText=" (Admin)"
 }
