@@ -199,7 +199,7 @@ simulated function UpdateScoreBoard(Canvas C)
         S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeElapsedText $ class<DHHud>(HudClass).static.GetTimeString(CurrentTime);
 
         // Server IP on scoreboard
-        if (DHGameReplicationInfo(GRI).bShowServerIPOnScoreboard && PlayerController(Owner) != none)
+        if (DHGameReplicationInfo(GRI).bShowServerIPOnScoreboard && Level.NetMode != NM_Standalone && PlayerController(Owner) != none)
         {
             S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.IPText $ PlayerController(Owner).GetServerIP();
         }
