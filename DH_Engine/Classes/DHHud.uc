@@ -1536,7 +1536,7 @@ function DrawPlayerNames(Canvas C)
         }
 
         // Player may be valid as he is talking or needs resupply/reload, but we need to check he's not hidden behind an obstruction
-        if (bMayBeValid && P != LookedAtPawn)
+        if (bMayBeValid && !bCurrentlyValid)
         {
             // If player is in a vehicle, use the vehicle/weapon pawn's DHPawn location for a more accurate line of sight check
             if (P.IsA('Vehicle') && Vehicle(P).Driver != none && Vehicle(P).bDrawDriverInTP)
@@ -1659,7 +1659,7 @@ function DrawPlayerNames(Canvas C)
             }
         }
 
-        // If player is in a vehicle, use the vehicle/weapon pawn's DHPawn so we can get a more location for position checks & drawing
+        // If player is in a vehicle, use the vehicle/weapon pawn's DHPawn so we can get a more accurate location for position checks & drawing
         if (P.IsA('Vehicle') && Vehicle(P).Driver != none && Vehicle(P).bDrawDriverInTP)
         {
             PawnForLocation = Vehicle(P).Driver;
