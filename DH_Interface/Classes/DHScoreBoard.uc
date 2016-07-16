@@ -207,7 +207,8 @@ simulated function UpdateScoreBoard(Canvas C)
         // Server Time on scoreboard
         if (DHGameReplicationInfo(GRI).bShowTimeOnScoreboard)
         {
-            S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeText $ Level.Hour $ ":" $ Level.Minute @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
+            S $= class<DHHud>(HudClass).default.SpacingText $ class<DHHud>(HudClass).default.TimeText $ Level.Hour $ ":" $ class'DHLib'.static.GetNumberString(Level.Minute, 2)
+                @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
         }
 
         // Show level name on scoreboard
