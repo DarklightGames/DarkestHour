@@ -128,7 +128,7 @@ private function int QuickSortPartition(int Lo, int Hi)
 
     Pivot = Items[Lo];
     i = Lo - 1;
-    j = Hi + 1
+    j = Hi + 1;
 
     while (true)
     {
