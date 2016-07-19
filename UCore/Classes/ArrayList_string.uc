@@ -123,7 +123,8 @@ private function QuickSort(int Lo, int Hi)
 
 private function int QuickSortPartition(int Lo, int Hi)
 {
-    local int Pivot, i, j;
+    local string Pivot;
+    local int i, j;
 
     Pivot = Items[Lo];
     i = Lo - 1;
