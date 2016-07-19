@@ -38,6 +38,15 @@ static final function VSwap(out vector A, out vector B)
     FSwap(A.Z, B.Z);
 }
 
+static final function SSwap(out string A, out string B)
+{
+    local string T;
+
+    T = A;
+    A = B;
+    B = T;
+}
+
 static final function vector VReflect(vector V, vector N)
 {
     return V - (N * 2.0 * (V dot N));
