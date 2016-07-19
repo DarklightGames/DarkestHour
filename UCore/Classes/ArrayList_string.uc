@@ -132,11 +132,11 @@ private function int QuickSortPartition(int Lo, int Hi)
 
     while (true)
     {
-        while (A[++i] < Pivot)
+        while (Items[++i] < Pivot)
         {
         }
 
-        while (A[--j] > Pivot)
+        while (Items[--j] > Pivot)
         {
         }
 
@@ -145,6 +145,6 @@ private function int QuickSortPartition(int Lo, int Hi)
             return j;
         }
 
-        class'UCore'.static.SSwap(A[i], A[j]);
+        class'UCore'.static.SSwap(Items[i], Items[j]);
     }
 }
