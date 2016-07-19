@@ -1,4 +1,3 @@
-*.bat
 *.Lnk
 *.opensdf
 *.orig
@@ -61,7 +60,6 @@ XWebAdmin/
 /System/*.int
 /System/*.blob
 /System/*.u
-/System/*.bat
 /System/config/*.vdf
 /System/editorres/*.bmp
 /System/logs/*.txt
