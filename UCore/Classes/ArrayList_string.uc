@@ -104,7 +104,7 @@ function array<string> ToArray()
 
 function ArrayList_string Sort()
 {
-    QuickSort(1, Items.Length - 1);
+    QuickSort(0, Items.Length - 1);
 
     return self;
 }
