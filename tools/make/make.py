@@ -58,7 +58,7 @@ def main():
     config = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
 
     # mod config path
-    config_path = os.path.join(mod_sys_dir, '.ini')
+    config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
 
     if os.path.isfile(config_path):
         config.read(config_path)
