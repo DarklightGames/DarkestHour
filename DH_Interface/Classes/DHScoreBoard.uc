@@ -229,7 +229,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     if (DHGRI.bShowTimeOnScoreboard) // add real world time, at server location (optional)
     {
-        s $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'DHLib'.static.GetNumberString(Level.Minute, 2)
+        s $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2)
         @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
     }
 

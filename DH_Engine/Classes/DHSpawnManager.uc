@@ -228,7 +228,7 @@ function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, 
     local bool          bIsBlocked;
 
     // Scramble location hint indices so we don't use the same ones repeatedly
-    LocationHintIndices = class'DHLib'.static.CreateIndicesArray(LocationHints.Length);
+    LocationHintIndices = class'UArray'.static.Range(0, LocationHints.Length - 1);
     class'UArray'.static.IShuffle(LocationHintIndices);
 
     // Put location hints with enemies nearby at the end of the array to be evaluated last
@@ -258,7 +258,7 @@ function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, 
         }
     }
 
-    LocationHintIndex = -1; // initialize with invalid index, so later we can tell is we found a valid one
+    LocationHintIndex = -1; // initialize with invalid index, so later we can tell if we found a valid one
 
     // Loop through location hints & try to find one that isn't blocked by a nearby pawn
     for (i = 0; i < LocationHintIndices.Length; ++i)
@@ -469,7 +469,7 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
     if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
     {
         // Randomise exit locations
-        ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
+        ExitPositionIndices = class'UArray'.static.Range(0, V.ExitPositions.Length - 1);
         class'UArray'.static.IShuffle(ExitPositionIndices);
 
         VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);

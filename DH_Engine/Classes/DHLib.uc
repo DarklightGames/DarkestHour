@@ -6,35 +6,6 @@
 class DHLib extends Object
     abstract;
 
-static final function array<int> CreateIndicesArray(int Length)
-{
-    local int i;
-    local array<int> Indices;
-
-    for (i = 0; i < Length; ++i)
-    {
-        Indices[i] = i;
-    }
-
-    return Indices;
-}
-
-static final function string GetNumberString(int N, int Digits)
-{
-    local string NumberString;
-
-    NumberString = string(N);
-
-    N = Digits - Len(NumberString);
-
-    while (N-- > 0)
-    {
-        NumberString = "0" $ NumberString;
-    }
-
-    return NumberString;
-}
-
 static final function string GetDurationString(int Seconds, string Format)
 {
     local int TotalYears;
@@ -161,7 +132,7 @@ static final function string GetDurationString(int Seconds, string Format)
 
         if (!bIsOptional || N > 0)
         {
-            S $= GetNumberString(N, Precision);
+            S $= class'UString'.static.ZFill(N, Precision);
         }
     }
 
