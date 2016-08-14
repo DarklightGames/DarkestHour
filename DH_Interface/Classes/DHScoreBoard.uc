@@ -114,6 +114,9 @@ simulated function UpdateScoreBoard(Canvas C)
     }
 
     C.Style = ERenderStyle.STY_Alpha;
+    C.SetDrawColor(0, 0, 0, 128);
+    C.SetPos(0.0, 0.0);
+    C.DrawRect(texture'WhiteSquaretexture', C.ClipX, C.ClipY);
 
     if (float(C.SizeX) / float(C.SizeY) >= 1.6)
     {
