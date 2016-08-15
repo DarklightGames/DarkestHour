@@ -43,6 +43,7 @@ var     bool                        bSwapTeams;
 
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
+var     config bool                 bEnableMetrics;
 
 var struct VersionInfo
 {
@@ -328,7 +329,7 @@ function PostBeginPlay()
         GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
     }
 
-    if (MetricsClass != none)
+    if (bEnableMetrics && MetricsClass != none)
     {
         Metrics = Spawn(MetricsClass);
     }
@@ -1845,6 +1846,11 @@ state RoundInPlay
 
         bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
         bTeamOutOfReinforcements[AXIS_TEAM_INDEX] = 0;
+
+        if (Metrics != none)
+        {
+            Metrics.OnRoundBegin();
+        }
     }
 
     // Modified for DHObjectives
@@ -2067,6 +2073,11 @@ state RoundInPlay
 
                 ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements).MatchEnded();
             }
+        }
+
+        if (Metrics != none)
+        {
+            Metrics.OnRoundEnd(Winner);
         }
     }
 
@@ -3650,4 +3661,5 @@ defaultproperties
     Version=(Major=7,Minor=0,Patch=3)
 
     MetricsClass=class'DHMetrics'
+    bEnableMetrics=true
 }

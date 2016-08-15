@@ -48,7 +48,7 @@ function string Dump()
     StopWatch(false);
 
     F = Spawn(class'FileLog');
-    F.OpenLog("nope", "log");
+    F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
     F.Logf(Root.Encode());
     F.CloseLog();
     F.Destroy();
@@ -56,6 +56,16 @@ function string Dump()
     StopWatch(true);
 
     return Root.Encode();
+}
+
+function OnRoundBegin()
+{
+    Frags.Length = 0;
+}
+
+function OnRoundEnd(int WinnerTeamIndex)
+{
+    Dump();
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -119,6 +129,11 @@ function OnPlayerChangeName(PlayerController PC)
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex)
 {
     local DHMetricsFrag F;
+
+    if (Killer == none || Victim == none || DamageType == none)
+    {
+        return;
+    }
 
     F = new class'DHMetricsFrag';
 

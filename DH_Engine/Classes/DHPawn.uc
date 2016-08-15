@@ -1203,11 +1203,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         if (G != none && G.Metrics != none)
         {
-            G.Metrics.OnPlayerFragged(PlayerController(Killer),
-                                      PlayerController(Controller),
-                                      DamageType,
-                                      HitLocation,
-                                      HitIndex);
+            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex);
         }
     }
     else
