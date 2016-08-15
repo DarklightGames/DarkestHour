@@ -39,7 +39,6 @@ function string Dump()
 
     PlayersIterator = Players.CreateIterator();
 
-
     // Players
     while (PlayersIterator.Next(, Object))
     {
@@ -48,8 +47,12 @@ function string Dump()
 
     Root.Put("players", class'JSONArray'.static.CreateFromSerializableArray(PlayersArray));
 
+    Log("LOGGING FRAGS");
+
     // Frags
     Root.Put("frags", class'JSONArray'.static.CreateFromSerializableArray(Frags));
+
+    Log("DONE LOGGING FRAGS");
 
     StopWatch(false);
 
@@ -139,8 +142,6 @@ function OnPlayerChangeName(PlayerController PC)
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex)
 {
     local DHMetricsFrag F;
-
-    Level.Game.Broadcast(self, "OnPlayerFragged" @ Killer @ Victim @ DamageType @ HitLocation @ HitIndex);
 
     if (Killer == none || Victim == none || DamageType == none)
     {
