@@ -7,6 +7,8 @@ class DHMetrics extends Actor;
 
 var private Hashtable_string_Object Players;
 var private array<DHMetricsFrag>    Frags;
+var private DateTime                RoundStartTime;
+var private DateTime                RoundEndTime;
 
 function PostBeginPlay()
 {
@@ -31,8 +33,12 @@ function string Dump()
     ServerObject.PutString("name", Level.Game.GameReplicationInfo.ServerName);
 
     Root.Put("server", ServerObject);
+    Root.PutString("map", class'DHLib'.static.GetMapName(Level));
+    Root.PutString("round_start", RoundStartTime.IsoFormat());
+    Root.PutString("round_end", RoundEndTime.IsoFormat());
 
     PlayersIterator = Players.CreateIterator();
+
 
     // Players
     while (PlayersIterator.Next(, Object))
@@ -60,11 +66,15 @@ function string Dump()
 
 function OnRoundBegin()
 {
+    RoundStartTime = class'DateTime'.static.Now(self);
+
     Frags.Length = 0;
 }
 
 function OnRoundEnd(int WinnerTeamIndex)
 {
+    RoundEndTime = class'DateTime'.static.Now(self);
+
     Dump();
 }
 
@@ -130,19 +140,19 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
 {
     local DHMetricsFrag F;
 
+    Level.Game.Broadcast(self, "OnPlayerFragged" @ Killer @ Victim @ DamageType @ HitLocation @ HitIndex);
+
     if (Killer == none || Victim == none || DamageType == none)
     {
         return;
     }
 
     F = new class'DHMetricsFrag';
-
     F.KillerID = Killer.GetPlayerIDHash();
     F.VictimID = Victim.GetPlayerIDHash();
     F.DamageType = DamageType;
     F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
-
     Frags[Frags.Length] = F;
 }
 

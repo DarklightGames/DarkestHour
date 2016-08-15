@@ -6,6 +6,34 @@
 class DHLib extends Object
     abstract;
 
+static final function string GetMapName(LevelInfo L)
+{
+    local string MapName;
+    local int i, j;
+
+    MapName = L.GetLocalURL();
+    i = InStr(MapName, "/");
+
+    if (i < 0)
+    {
+        i = 0;
+    }
+
+    j = InStr(MapName, "?");
+
+    if (j < 0)
+    {
+        j = Len(MapName);
+    }
+
+    if (Mid(MapName, j - 3, 3) ~= "rom")
+    {
+        j -= 5;
+    }
+
+    return Mid(MapName, i + 1, j - i);
+}
+
 static final function string GetDurationString(int Seconds, string Format)
 {
     local int TotalYears;
