@@ -3545,6 +3545,18 @@ event PostLogin(PlayerController NewPlayer)
     }
 }
 
+exec function MidGameVote()
+{
+    local DHVotingHandler VH;
+
+    VH = DHVotingHandler(VotingHandler);
+
+    if (VH != none)
+    {
+        VH.MidGameVote();
+    }
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
