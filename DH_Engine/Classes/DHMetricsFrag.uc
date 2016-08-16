@@ -29,7 +29,7 @@ function JSONValue ToJSON()
     // Killer
     KillerObject = new class'JSONObject';
     KillerObject.PutString("id", KillerID);
-    KillerObject.Put("location", class'JSONArray'.static.CreateFromVector(KillerLocation));
+    KillerObject.Put("location", class'JSONArray'.static.ICreateFromVector(KillerLocation));
     KillerObject.PutInteger("team", KillerTeam);
 
     Root.Put("killer", KillerObject);
@@ -37,7 +37,7 @@ function JSONValue ToJSON()
     // Victim
     VictimObject = new class'JSONObject';
     VictimObject.PutString("id", VictimID);
-    VictimObject.Put("location", class'JSONArray'.static.CreateFromVector(VictimLocation));
+    VictimObject.Put("location", class'JSONArray'.static.ICreateFromVector(VictimLocation));
     VictimObject.PutInteger("team", VictimTeam);
 
     Root.Put("victim", VictimObject);

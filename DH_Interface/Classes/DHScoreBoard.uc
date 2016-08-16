@@ -114,6 +114,9 @@ simulated function UpdateScoreBoard(Canvas C)
     }
 
     C.Style = ERenderStyle.STY_Alpha;
+    C.SetDrawColor(0, 0, 0, 128);
+    C.SetPos(0.0, 0.0);
+    C.DrawRect(texture'WhiteSquaretexture', C.ClipX, C.ClipY);
 
     if (float(C.SizeX) / float(C.SizeY) >= 1.6)
     {
@@ -229,7 +232,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     if (DHGRI.bShowTimeOnScoreboard) // add real world time, at server location (optional)
     {
-        s $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'DHLib'.static.GetNumberString(Level.Minute, 2)
+        s $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2)
         @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
     }
 

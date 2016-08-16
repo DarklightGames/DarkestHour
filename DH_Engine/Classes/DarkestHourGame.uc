@@ -43,6 +43,7 @@ var     bool                        bSwapTeams;
 
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
+var     config bool                 bEnableMetrics;
 
 var struct VersionInfo
 {
@@ -328,7 +329,7 @@ function PostBeginPlay()
         GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
     }
 
-    if (MetricsClass != none)
+    if (bEnableMetrics && MetricsClass != none)
     {
         Metrics = Spawn(MetricsClass);
     }
@@ -1845,6 +1846,11 @@ state RoundInPlay
 
         bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
         bTeamOutOfReinforcements[AXIS_TEAM_INDEX] = 0;
+
+        if (Metrics != none)
+        {
+            Metrics.OnRoundBegin();
+        }
     }
 
     // Modified for DHObjectives
@@ -1972,7 +1978,7 @@ state RoundInPlay
     function EndRound(int Winner)
     {
         local string MapName;
-        local int    i, j;
+        local int    i;
         local bool   bMatchOver, bRussianSquadLeader;
 
         switch (Winner)
@@ -2014,27 +2020,7 @@ state RoundInPlay
         }
 
         // Get the MapName out of the URL
-        MapName = Level.GetLocalURL();
-        i = InStr(MapName, "/");
-
-        if (i < 0)
-        {
-            i = 0;
-        }
-
-        j = InStr(MapName, "?");
-
-        if (j < 0)
-        {
-            j = Len(MapName);
-        }
-
-        if (Mid(MapName, j - 3, 3) ~= "rom")
-        {
-            j -= 5;
-        }
-
-        MapName = Mid(MapName, i + 1, j - i);
+        MapName = class'DHLib'.static.GetMapName(Level);
 
         // Set the map as won in the Steam Stats of everyone on the winning team
         for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
@@ -2067,6 +2053,11 @@ state RoundInPlay
 
                 ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements).MatchEnded();
             }
+        }
+
+        if (Metrics != none)
+        {
+            Metrics.OnRoundEnd(Winner);
         }
     }
 
@@ -3554,6 +3545,18 @@ event PostLogin(PlayerController NewPlayer)
     }
 }
 
+exec function MidGameVote()
+{
+    local DHVotingHandler VH;
+
+    VH = DHVotingHandler(VotingHandler);
+
+    if (VH != none)
+    {
+        VH.MidGameVote();
+    }
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
@@ -3601,7 +3604,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="GÃ¼nther Liebing"
+    GermanNames(0)="Günther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -3610,10 +3613,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton MÃ¼ller"
+    GermanNames(9)="Anton Müller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans GrÃ¼schke"
-    GermanNames(12)="Wilhelm KrÃ¼ger"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
@@ -3650,4 +3653,5 @@ defaultproperties
     Version=(Major=7,Minor=0,Patch=3)
 
     MetricsClass=class'DHMetrics'
+    bEnableMetrics=true
 }

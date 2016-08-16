@@ -7,6 +7,8 @@ class DHMetrics extends Actor;
 
 var private Hashtable_string_Object Players;
 var private array<DHMetricsFrag>    Frags;
+var private DateTime                RoundStartTime;
+var private DateTime                RoundEndTime;
 
 function PostBeginPlay()
 {
@@ -31,6 +33,9 @@ function string Dump()
     ServerObject.PutString("name", Level.Game.GameReplicationInfo.ServerName);
 
     Root.Put("server", ServerObject);
+    Root.PutString("map", class'DHLib'.static.GetMapName(Level));
+    Root.PutString("round_start", RoundStartTime.IsoFormat());
+    Root.PutString("round_end", RoundEndTime.IsoFormat());
 
     PlayersIterator = Players.CreateIterator();
 
@@ -48,14 +53,28 @@ function string Dump()
     StopWatch(false);
 
     F = Spawn(class'FileLog');
-    F.OpenLog("nope", "log");
-    F.Logf(Root.Encode());
+    F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
+    class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
 
     StopWatch(true);
 
     return Root.Encode();
+}
+
+function OnRoundBegin()
+{
+    RoundStartTime = class'DateTime'.static.Now(self);
+
+    Frags.Length = 0;
+}
+
+function OnRoundEnd(int WinnerTeamIndex)
+{
+    RoundEndTime = class'DateTime'.static.Now(self);
+
+    Dump();
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -119,15 +138,25 @@ function OnPlayerChangeName(PlayerController PC)
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex)
 {
     local DHMetricsFrag F;
+    local vector KillerLocation;
+
+    if (Killer == none || Victim == none || DamageType == none)
+    {
+        return;
+    }
+
+    if (Killer.Pawn != none)
+    {
+        KillerLocation = Killer.Pawn.Location;
+    }
 
     F = new class'DHMetricsFrag';
-
     F.KillerID = Killer.GetPlayerIDHash();
     F.VictimID = Victim.GetPlayerIDHash();
+    F.KillerLocation = KillerLocation;
     F.DamageType = DamageType;
     F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
-
     Frags[Frags.Length] = F;
 }
 

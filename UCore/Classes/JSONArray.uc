@@ -83,8 +83,20 @@ static function JSONArray CreateFromVector(vector V)
 
     A = Create();
     A.Add(class'JSONNumber'.static.FCreate(V.X));
-    A.Add(class'JSONNumber'.static.FCreate(V.X));
-    A.Add(class'JSONNumber'.static.FCreate(V.X));
+    A.Add(class'JSONNumber'.static.FCreate(V.Y));
+    A.Add(class'JSONNumber'.static.FCreate(V.Z));
+
+    return A;
+}
+
+static function JSONArray ICreateFromVector(vector V)
+{
+    local JSONArray A;
+
+    A = Create();
+    A.Add(class'JSONNumber'.static.ICreate(V.X));
+    A.Add(class'JSONNumber'.static.ICreate(V.Y));
+    A.Add(class'JSONNumber'.static.ICreate(V.Z));
 
     return A;
 }

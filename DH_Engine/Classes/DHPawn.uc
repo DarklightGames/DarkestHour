@@ -1197,18 +1197,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             SetTearOffMomemtum(Momentum);
         }
 
-        Died(Killer, DamageType, HitLocation);
-
         G = DarkestHourGame(Level.Game);
 
         if (G != none && G.Metrics != none)
         {
-            G.Metrics.OnPlayerFragged(PlayerController(Killer),
-                                      PlayerController(Controller),
-                                      DamageType,
-                                      HitLocation,
-                                      HitIndex);
+            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex);
         }
+
+        Died(Killer, DamageType, HitLocation);
     }
     else
     {

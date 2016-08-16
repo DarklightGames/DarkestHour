@@ -6,33 +6,32 @@
 class DHLib extends Object
     abstract;
 
-static final function array<int> CreateIndicesArray(int Length)
+static final function string GetMapName(LevelInfo L)
 {
-    local int i;
-    local array<int> Indices;
+    local string MapName;
+    local int i, j;
 
-    for (i = 0; i < Length; ++i)
+    MapName = L.GetLocalURL();
+    i = InStr(MapName, "/");
+
+    if (i < 0)
     {
-        Indices[i] = i;
+        i = 0;
     }
 
-    return Indices;
-}
+    j = InStr(MapName, "?");
 
-static final function string GetNumberString(int N, int Digits)
-{
-    local string NumberString;
-
-    NumberString = string(N);
-
-    N = Digits - Len(NumberString);
-
-    while (N-- > 0)
+    if (j < 0)
     {
-        NumberString = "0" $ NumberString;
+        j = Len(MapName);
     }
 
-    return NumberString;
+    if (Mid(MapName, j - 3, 3) ~= "rom")
+    {
+        j -= 5;
+    }
+
+    return Mid(MapName, i + 1, j - i);
 }
 
 static final function string GetDurationString(int Seconds, string Format)
@@ -161,7 +160,7 @@ static final function string GetDurationString(int Seconds, string Format)
 
         if (!bIsOptional || N > 0)
         {
-            S $= GetNumberString(N, Precision);
+            S $= class'UString'.static.ZFill(N, Precision);
         }
     }
 

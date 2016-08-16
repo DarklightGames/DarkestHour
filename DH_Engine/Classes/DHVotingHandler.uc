@@ -414,13 +414,7 @@ function TallyVotes(bool bForceMapSwitch)
     // Mid game vote initiated
     if (Level.Game.NumPlayers > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.NumPlayers)) * 100 >= MidGameVotePercent)
     {
-        Level.Game.Broadcast(self,lmsgMidGameVote);
-        bMidGameVote = true;
-
-        // Start voting count-down timer
-        TimeLeft = VoteTimeLimit;
-        ScoreBoardTime = 1;
-        SetTimer(1.0, true);
+        MidGameVote();
     }
 
     Index = 0;
@@ -681,6 +675,20 @@ function LoadMapList()
     }
 
     Loader.Destroy();
+}
+
+function MidGameVote()
+{
+    if (bMidGameVote)
+    {
+        return;
+    }
+
+    Level.Game.Broadcast(self, lmsgMidGameVote);
+    bMidGameVote = true;
+    TimeLeft = VoteTimeLimit;
+    ScoreBoardTime = 1;
+    SetTimer(1.0, true);
 }
 
 defaultproperties
