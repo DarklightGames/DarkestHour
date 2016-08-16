@@ -47,18 +47,14 @@ function string Dump()
 
     Root.Put("players", class'JSONArray'.static.CreateFromSerializableArray(PlayersArray));
 
-    Log("LOGGING FRAGS");
-
     // Frags
     Root.Put("frags", class'JSONArray'.static.CreateFromSerializableArray(Frags));
-
-    Log("DONE LOGGING FRAGS");
 
     StopWatch(false);
 
     F = Spawn(class'FileLog');
     F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
-    F.Logf(Root.Encode());
+    class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
 
@@ -142,15 +138,22 @@ function OnPlayerChangeName(PlayerController PC)
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex)
 {
     local DHMetricsFrag F;
+    local vector KillerLocation;
 
     if (Killer == none || Victim == none || DamageType == none)
     {
         return;
     }
 
+    if (Killer.Pawn != none)
+    {
+        KillerLocation = Killer.Pawn.Location;
+    }
+
     F = new class'DHMetricsFrag';
     F.KillerID = Killer.GetPlayerIDHash();
     F.VictimID = Victim.GetPlayerIDHash();
+    F.KillerLocation = KillerLocation;
     F.DamageType = DamageType;
     F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
