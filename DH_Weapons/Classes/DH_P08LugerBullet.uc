@@ -11,6 +11,6 @@ defaultproperties
     MyVehicleDamage=class'DH_Weapons.DH_P08LugerVehDamType'
     BallisticCoefficient=0.15
     Speed=22632.0
-    Damage=50.0
+    Damage=60.0
     MyDamageType=class'DH_Weapons.DH_P08LugerDamType'
 }

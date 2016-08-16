@@ -10,6 +10,6 @@ defaultproperties
     MyVehicleDamage=class'DH_Weapons.DH_STG44VehDamType'
     BallisticCoefficient=0.27
     Speed=41341.0
-    Damage=70.0
+    Damage=75.0
     MyDamageType=class'DH_Weapons.DH_STG44DamType'
 }
