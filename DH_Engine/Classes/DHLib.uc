@@ -31,7 +31,7 @@ static final function string GetMapName(LevelInfo L)
         j -= 5;
     }
 
-    return Mid(MapName, i + 1, j - i);
+    return Mid(MapName, i, j - i);
 }
 
 static final function string GetDurationString(int Seconds, string Format)
