@@ -319,6 +319,20 @@ function GetMapCoords(vector Location, out float X, out float Y, optional float 
                1.0 - Height);
 }
 
+function int GetSelectedVehiclePoolIndex()
+{
+    local UInteger Index;
+
+    Index = UInteger(li_Vehicles.GetObject());
+
+    if (Index != none)
+    {
+        return Index.Value;
+    }
+
+    return -1;
+}
+
 function UpdateSpawnPoints()
 {
     local int i;
@@ -343,7 +357,7 @@ function UpdateSpawnPoints()
             p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
             p_Map.b_SpawnPoints[i].SetVisibility(true);
 
-            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())), 255))
+            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GetSelectedVehiclePoolIndex(), 255))
             {
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
@@ -374,8 +388,8 @@ function UpdateSpawnPoints()
     for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
     {
         if (GRI != none &&
-            GRI.SpawnVehicles[i].VehicleClass != none &&
-            GRI.SpawnVehicles[i].TeamIndex == CurrentTeam)
+            GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex] != none &&
+            GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex].default.VehicleTeam == CurrentTeam)
         {
             L.X = GRI.SpawnVehicles[i].LocationX;
             L.Y = GRI.SpawnVehicles[i].LocationY;
@@ -467,7 +481,7 @@ function string GetStatusText()
         return default.SelectSpawnPointText;
     }
 
-    SpawnTime = Max(0, PC.GetNextSpawnTime(RI, GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject()))) - GRI.ElapsedTime);
+    SpawnTime = Max(0, PC.GetNextSpawnTime(RI, GetSelectedVehiclePoolIndex()) - GRI.ElapsedTime);
 
     if (SpawnTime > 0)
     {
@@ -490,12 +504,11 @@ function PopulateVehicles()
         if (GRI.VehiclePoolVehicleClasses[i] != none &&
             GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam == CurrentTeam)
         {
-            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, GRI.VehiclePoolVehicleClasses[i]);
+            li_Vehicles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString, class'UInteger'.static.Create(i));
         }
     }
 
     li_Vehicles.SortList();
-
     li_Vehicles.Insert(0, default.NoneText, none,, true);
 
     UpdateVehicles();
@@ -520,20 +533,21 @@ function UpdateVehicles()
 
     for (i = 0; i < li_Vehicles.ItemCount; ++i)
     {
-        VehicleClass = class<ROVehicle>(li_Vehicles.GetObjectAtIndex(i));
-        j = GRI.GetVehiclePoolIndex(VehicleClass);
+        j = GetSelectedVehiclePoolIndex();
 
         if (j == -1)
         {
             continue;
         }
 
+        VehicleClass = GRI.VehiclePoolVehicleClasses[j];
+
         PC = DHPlayer(PlayerOwner());
 
         //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
         bDisabled = VehicleClass != none &&
                     ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
-                    (!GRI.IgnoresMaxTeamVehiclesFlags(VehicleClass) && GRI.MaxTeamVehicles[CurrentTeam] <= 0) ||
+                    (!GRI.IgnoresMaxTeamVehiclesFlags(j) && GRI.MaxTeamVehicles[CurrentTeam] <= 0) ||
                     GRI.GetVehiclePoolSpawnsRemaining(j) <= 0 ||
                     !GRI.IsVehiclePoolActive(j) ||
                     GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||
@@ -747,7 +761,7 @@ function Apply()
                            cb_PrimaryWeapon.GetIndex(),
                            cb_SecondaryWeapon.GetIndex(),
                            SpawnPointIndex,
-                           GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
+                           GetSelectedVehiclePoolIndex(),
                            SpawnVehicleIndex);
 }
 
@@ -791,7 +805,7 @@ function UpdateButtons()
             (li_Vehicles.Index >= 0 && GRI.AreSpawnSettingsValid(CurrentTeam,
                                            DHRoleInfo(li_Roles.GetObject()),
                                            SpawnPointIndex,
-                                           GRI.GetVehiclePoolIndex(class<Vehicle>(li_Vehicles.GetObject())),
+                                           GetSelectedVehiclePoolIndex(),
                                            SpawnVehicleIndex)))
         {
             bContinueEnabled = true;
@@ -1191,14 +1205,15 @@ function InternalOnChange(GUIComponent Sender)
 function UpdateVehicleImage()
 {
     local class<Vehicle> VehicleClass;
+    local int VehiclePoolIndex;
 
-    VehicleClass = class<Vehicle>(li_Vehicles.GetObject());
+    VehiclePoolIndex = GetSelectedVehiclePoolIndex();
 
-    if (VehicleClass != none)
+    if (VehiclePoolIndex >= 0)
     {
         i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
 
-        if (GRI.VehiclePoolIsSpawnVehicles[GRI.GetVehiclePoolIndex(VehicleClass)] != 0)
+        if (GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0)
         {
             i_SpawnVehicle.Show();
         }

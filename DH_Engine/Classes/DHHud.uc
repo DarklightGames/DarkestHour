@@ -3991,7 +3991,7 @@ simulated function DrawSpectatingHud(Canvas C)
                         }
                         else if (PC.SpawnVehicleIndex != 255)
                         {
-                            SVC = DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehicleClass;
+                            SVC = DHGRI.VehiclePoolVehicleClasses[DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehiclePoolIndex];
 
                             if (SVC != none)
                             {
