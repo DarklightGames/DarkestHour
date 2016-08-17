@@ -24,17 +24,26 @@ function JSONArray AsArray()
 function string Encode()
 {
     local int i;
-    local array<string> Strings;
+    local string S;
+
+    S = "[";
 
     if (Values != none)
     {
         for (i = 0; i < Values.Size(); ++i)
         {
-            Strings[Strings.Length] = Values.Get(i).Encode();
+            S $= Values.Get(i).Encode();
+
+            if (i < Values.Size() - 1)
+            {
+                S $= ",";
+            }
         }
     }
 
-    return "[" $ class'UString'.static.Join(",", Strings) $ "]";
+    S $= "]";
+
+    return S;
 }
 
 function Add(JSONValue Item)
