@@ -51,14 +51,7 @@ function SpawnVehicle()
     // Otherwise spawn a vehicle
     else
     {
-        if (bAllowOpposingForceCapture && TeamNum == AXIS)
-        {
-            LastSpawnedVehicle = Spawn(VehicleClass, self,, Location, Rotation + rot(0, 32768, 0));
-        }
-        else
-        {
-            LastSpawnedVehicle = Spawn(VehicleClass, self,, Location, Rotation);
-        }
+        LastSpawnedVehicle = Spawn(VehicleClass, self,, Location, Rotation);
 
         if (LastSpawnedVehicle != none)
         {

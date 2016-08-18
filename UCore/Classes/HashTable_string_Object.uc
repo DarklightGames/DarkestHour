@@ -7,8 +7,8 @@
 class Hashtable_string_Object extends Object;
 
 var private int Size;
-var private array<string> Keys;
-var private array<Object> Values;
+var array<string> Keys;
+var array<Object> Values;
 
 static function Hashtable_string_Object Create(int Capacity)
 {
@@ -178,5 +178,31 @@ function array<string> GetKeys()
         }
     }
 
-    return Keys;
+    return _Keys;
+}
+
+function array<Object> GetValues()
+{
+    local int i;
+    local array<Object> _Values;
+
+    for (i = 0; i < self.Keys.Length; ++i)
+    {
+        if (self.Keys[i] != "")
+        {
+            _Values[_Values.Length] = self.Values[i];
+        }
+    }
+
+    return _Values;
+}
+
+function HashtableIterator_string_Object CreateIterator()
+{
+    local HashtableIterator_string_Object I;
+
+    I = new class'HashtableIterator_string_Object';
+    I.Hashtable = self;
+
+    return I;
 }

@@ -75,7 +75,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog; // these ones in debug mode only
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, ServerMetricsDump; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -3115,6 +3115,27 @@ function ServerPossessBody(Pawn NewPawn)
     }
 }
 
+exec function URL(string S)
+{
+    local URL U;
+
+    U = class'URL'.static.FromString(S);
+
+    Log(U);
+
+    if (U != none)
+    {
+        Log("Scheme" @ U.Scheme);
+        Log("User" @ U.User);
+        Log("Pass" @ U.Pass);
+        Log("Host" @ U.Host);
+        Log("Path" @ U.Path);
+        Log("Query" @ U.Query);
+        Log("Fragment" @ U.Fragment);
+        Log("Port" @ U.Port);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3135,8 +3156,7 @@ simulated function bool GetVehicleBase(out DHVehicle V)
 // New debug exec to spawn any vehicle
 exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
 {
-    if ((Level.NetMode == NM_Standalone ||
-        (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin) ||
+    if ((Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin) ||
         class'DH_LevelInfo'.static.DHDebugMode()) && DarkestHourGame(Level.Game) != none)
     {
         DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
@@ -4015,24 +4035,22 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
     }
 }
 
-exec function URL(string S)
+exec function MetricsDump()
 {
-    local URL U;
+    ServerMetricsDump();
+}
 
-    U = class'URL'.static.FromString(S);
+function ServerMetricsDump()
+{
+    local DarkestHourGame G;
 
-    Log(U);
+    G = DarkestHourGame(Level.Game);
 
-    if (U != none)
+    if (G.Metrics != none)
     {
-        Log("Scheme" @ U.Scheme);
-        Log("User" @ U.User);
-        Log("Pass" @ U.Pass);
-        Log("Host" @ U.Host);
-        Log("Path" @ U.Path);
-        Log("Query" @ U.Query);
-        Log("Fragment" @ U.Fragment);
-        Log("Port" @ U.Port);
+        G.Broadcast(self, G.Metrics.Dump());
+
+        Log(G.Metrics.Dump());
     }
 }
 

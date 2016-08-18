@@ -49,22 +49,22 @@ function GetAllObjectiveNames()
 
 exec function ParaDropPlayerAtObjective(string PlayerName, string ObjectiveName, string ObjectiveIndex)
 {
-    BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtObjective" @ ObjectiveName @ ObjectiveIndex, 7);
+    BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtObjective" @ ObjectiveName @ ObjectiveIndex, 8);
 }
 
 exec function ParaDropAlliesAtObjective(string ObjectiveName, string ObjectiveIndex)
 {
-    BuildMutateCommand("ParaDropAll Allies AtObjective" @ ObjectiveName @ ObjectiveIndex, 13);
+    BuildMutateCommand("ParaDropAll Allies AtObjective" @ ObjectiveName @ ObjectiveIndex, 14);
 }
 
 exec function ParaDropAxisAtObjective(string ObjectiveName, string ObjectiveIndex)
 {
-    BuildMutateCommand("ParaDropAll Axis AtObjective" @ ObjectiveName @ ObjectiveIndex, 14);
+    BuildMutateCommand("ParaDropAll Axis AtObjective" @ ObjectiveName @ ObjectiveIndex, 15);
 }
 
 exec function ParaDropAllAtObjective(string ObjectiveName, string ObjectiveIndex)
 {
-    BuildMutateCommand("ParaDropAll Players AtObjective" @ ObjectiveName @ ObjectiveIndex, 15);
+    BuildMutateCommand("ParaDropAll Players AtObjective" @ ObjectiveName @ ObjectiveIndex, 16);
 }
 
 defaultproperties

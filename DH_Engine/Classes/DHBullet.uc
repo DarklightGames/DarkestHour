@@ -602,16 +602,16 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 }
 
 // New helper function, just to improve readability & to avoid repeating functionality in other classes (e.g. bullet's pre-launch trace)
-simulated static function GetWhizType(out int WhizType, DHPawn WhizzedPlayer, Pawn Instigator, vector LaunchLocation)
+simulated static function GetWhizType(out int TraceWhizType, DHPawn WhizzedPlayer, Pawn Instigator, vector LaunchLocation)
 {
     local bool  bFriendlyFire;
     local float BulletDistance;
 
-    bFriendlyFire = Instigator != none && Instigator.Controller != none && WhizzedPlayer != none && WhizzedPlayer.Controller != none
-        && Instigator.Controller.SameTeamAs(WhizzedPlayer.Controller);
+    bFriendlyFire = Instigator != none && WhizzedPlayer != none && Instigator.GetTeamNum() == WhizzedPlayer.GetTeamNum()
+        && WhizzedPlayer.PlayerReplicationInfo != none && !WhizzedPlayer.PlayerReplicationInfo.bBot;
 
-    // We only need to calculate distance travelled by bullet if it's friendly fire or default WhizType is a supersonic 'snap'
-    if (bFriendlyFire || WhizType == 1)
+    // We only need to calculate distance travelled by bullet if it's friendly fire or the passed default WhizType is a supersonic 'snap'
+    if (bFriendlyFire || TraceWhizType == 1)
     {
         // If bullet collides immediately after launch, it has no location (or so it would appear, go figure) - let's check against the firer's location instead
         if (LaunchLocation == vect(0.0, 0.0, 0.0) && Instigator != none)
@@ -621,15 +621,15 @@ simulated static function GetWhizType(out int WhizType, DHPawn WhizzedPlayer, Pa
 
         BulletDistance = class'DHUnits'.static.UnrealToMeters(VSize(WhizzedPlayer.Location - LaunchLocation)); // in metres
 
-        // If it's friendly fire at close range, we won't suppress, so send a different WhizType in the HitPointTrace
+        // If it's friendly fire at close range, we won't suppress, so send a different TraceWhizType in the HitPointTrace
         if (bFriendlyFire && BulletDistance < 10.0)
         {
-            WhizType = 3;
+            TraceWhizType = 3;
         }
         // Bullets only "snap" after a certain distance in reality, same goes here
-        else if (WhizType == 1 && BulletDistance < 20.0)
+        else if (TraceWhizType == 1 && BulletDistance < 20.0)
         {
-            WhizType = 2;
+            TraceWhizType = 2;
         }
     }
 }

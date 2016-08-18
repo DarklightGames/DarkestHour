@@ -1,0 +1,569 @@
+[DH_AchillesKanone]
+ProjectileDescriptions=("APCBC","APDS","HE")
+
+[DH_AchillesKanonePawn]
+VehiclePositionString="an einer Achilles Kanone"
+VehicleNameString="Achilles Kanone"
+
+[DH_AchillesTank]
+VehiclePositionString="in einem Achilles Mk.IC"
+VehicleNameString="Achilles Mk.IC"
+
+[DH_AmericanTankKanonePawn]
+RangeText="Meter"
+
+[DH_BoatVehicle]
+VehiclePositionString="in einem Boot"
+VehicleNameString="Boot"
+
+[DH_BritishTankKanonePawn]
+RangeText="Meter"
+
+[DH_CanisterShotDamType]
+DeathString="%o wurde von %k’s Kartätsche zersiebt."
+FemaleSuicide="%o hat ihre Waffe gegen sich selbst gerichtet."
+MaleSuicide="%o hat seine Waffe gegen sich selbst gerichtet."
+
+[DH_CanisterShotVehDamType]
+DeathString="%o's Fahrzeug wurde von %k's Kartäsche zersiebt."
+FemaleSuicide="%o hat ihre Waffe gegen sich selbst gerichtet."
+MaleSuicide="%o hat seine Waffe gegen sich selbst gerichtet."
+
+[DH_CromwellKanonePawn]
+VehiclePositionString="an einer Cromwell Mk.IV Kanone"
+VehicleNameString="Cromwell Mk.IV Kanone"
+
+[DH_CromwellMountedMGPawn]
+VehiclePositionString="an einem Cromwell MG"
+VehicleNameString="Cromwell montiertes MG"
+
+[DH_CromwellTank]
+VehiclePositionString="in einem Cromwell Mk.IV"
+VehicleNameString="Cromwell Mk.IV"
+
+[DH_ExitMovingVehicleDamType]
+DeathString="%k hat %o aus einem fahrenden Fahrzeug geworfen"
+FemaleSuicide="%o hat sich selbst aus ihrem fahrenden Fahrzeug geworfen"
+MaleSuicide="%o hat sich selbst aus seinem fahrenden Fahrzeug geworfen "
+
+[DH_GreyhoundKanone]
+ProjectileDescriptions=("APCBC","HE","Canister")
+
+[DH_GreyhoundKanonePawn]
+VehiclePositionString="an einer M8 Panzerspahwagen Kanone"
+VehicleNameString="M8 Panzerspahwagen Kanone"
+
+[DH_GreyhoundArmoredCar]
+VehiclePositionString="in einem M8 Panzerspahwagen"
+VehicleNameString="M8 Panzerspahwagen"
+
+[DH_HigginsBoat]
+VehiclePositionString="in einem Higgins Boot"
+VehicleNameString="Higgins Boot"
+
+[DH_HigginsBoatDriver]
+HudName="Higgins Boot Passagier"
+VehicleNameString="Higgins Boot"
+
+[DH_HigginsPassagierPawn]
+VehiclePositionString="in einem Higgins Boot"
+VehicleNameString="Higgins Boot Passagier"
+HudName="Passagier"
+DriverHudName="Steuermann"
+
+[DH_JacksonKanone]
+ProjectileDescriptions=("APCBC","HVAP","HE")
+
+[DH_JacksonKanonePawn]
+VehiclePositionString="an einer M36 Jackson Kanone"
+VehicleNameString="M36 Jackson Kanone"
+
+[DH_JacksonKanone_Early]
+ProjectileDescriptions=("APCBC","HE","")
+
+[DH_JacksonTank]
+VehiclePositionString="in einem M36 Jackson"
+VehicleNameString="M36 Jackson"
+
+[DH_JagdpantherKanone]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_JagdpantherKanonePawn]
+VehiclePositionString="an einer Jagdpanzer V Kanone"
+VehicleNameString="Jagdpanzer V montierte Kanone"
+
+[DH_JagdpantherMountedMGPawn]
+VehiclePositionString="an einem Jagdpanzer V MG"
+VehicleNameString="Jagdpanzer V montiertes MG"
+
+[DH_JagdpantherTank]
+VehiclePositionString="in einem Jagdpanzer V"
+VehicleNameString="Jagdpanzer V"
+
+[DH_JagdpanzerIVL48Kanone]
+ProjectileDescriptions=("APCBC","HE","Smoke")
+
+[DH_JagdpanzerIVL48KanonePawn]
+VehiclePositionString="an einer Jagdpanzer IV/48 Kanone"
+VehicleNameString="Jagdpanzer IV/48 montierte Kanone"
+
+[DH_JagdpanzerIVMountedMGPawn]
+VehiclePositionString="an einem Jagdpanzer IV MG"
+VehicleNameString="Jagdpanzer IV montiertes MG"
+
+[DH_JagdpanzerIVL48Destroyer]
+VehiclePositionString="in einem Jagdpanzer IV/48"
+VehicleNameString="Jagdpanzer IV/48"
+
+[DH_JagdpanzerIVL70Kanone]
+ProjectileDescriptions=("APCBC","APCR","HE")
+
+[DH_JagdpanzerIVL70KanonePawn]
+VehiclePositionString="an einer Jagdpanzer IV/70(V) Kanone"
+VehicleNameString="Jagdpanzer IV/70(V) montierte Kanone"
+
+[DH_JagdpanzerIVL70Destroyer]
+VehiclePositionString="in einem Jagdpanzer IV/70(V)"
+VehicleNameString="Jagdpanzer IV/70(V)"
+
+[DH_JagdtigerKanone]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_JagdtigerKanonePawn]
+VehiclePositionString="an einer Jagdpanzer VI Ausf.B Kanone"
+VehicleNameString="Jagdpanzer VI Ausf.B montierte Kanone"
+
+[DH_JagdtigerTank]
+VehiclePositionString="in einem Jagdpanzer VI Ausf.B"
+VehicleNameString="Jagdpanzer VI Ausf.B"
+
+[DH_KubelwagenCar_WH]
+VehiclePositionString="in einem Volkswagen Type 82"
+VehicleNameString="Volkswagen Type 82"
+
+[DH_KubelwagenPassagierOne]
+VehiclePositionString="in einem VW Type 82"
+VehicleNameString="VW Type 82 Passagier"
+
+[DH_KubelwagenPassagierThree]
+VehiclePositionString="in einem VW Type 82"
+VehicleNameString="VW Type 82 Passagier"
+
+[DH_KubelwagenPassagierTwo]
+VehiclePositionString="in einem VW Type 82"
+VehicleNameString="VW Type 82 Passagier"
+
+[DH_M3A1HalftrackGunPawn]
+VehiclePositionString="an einem M3A1 Halbkette Kaliber 30 MG"
+VehicleNameString="M3A1 Halbkette Kaliber 30 MG"
+
+[DH_M3A1HalftrackPassagierFive]
+VehiclePositionString="in einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette Passagier"
+
+[DH_M3A1HalftrackPassagierFour]
+VehiclePositionString="an einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette Passagier"
+
+[DH_M3A1HalftrackPassagierOne]
+VehiclePositionString="in einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette Passagier"
+
+[DH_M3A1HalftrackPassagierSix]
+VehiclePositionString="in einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette Passagier"
+
+[DH_M3A1HalftrackPassagierThree]
+VehiclePositionString="in einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette Passagier"
+
+[DH_M3A1HalftrackPassagierTwo]
+VehiclePositionString="in einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette Passagier"
+
+[DH_M3A1HalftrackTransport]
+VehiclePositionString="in einer M3A1 Halbkette"
+VehicleNameString="M3A1 Halbkette"
+
+[DH_OpelBlitzPassagierFive]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzPassagierFour]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzPassagierOne]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzPassagierSeven]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzPassagierSix]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzPassagierThree]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzPassagierTwo]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz Passagier"
+
+[DH_OpelBlitzTransport]
+VehiclePositionString="in einem Opel Blitz"
+VehicleNameString="Opel Blitz"
+
+[DH_PantherDKanone]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_PantherDKanonePawn]
+VehiclePositionString="an einer Panzer V Ausf. D Kanone"
+VehicleNameString="Panzer V Ausf. D Kanone"
+
+[DH_PantherDTank]
+VehiclePositionString="in einem Panzer V Ausf. D"
+VehicleNameString="Panzer V Ausf. D"
+
+[DH_PantherGKanonePawn]
+VehiclePositionString="an einer Panzer V Ausf. G Kanone"
+VehicleNameString="Panzer V Ausf.G Kanone"
+
+[DH_PantherGMountedMGPawn]
+VehiclePositionString="an einem Panther Ausf. G MG"
+VehicleNameString="Panther Ausf. G MG"
+
+[DH_PantherGTank]
+VehiclePositionString="in einem Panzer V Ausf. G"
+VehicleNameString="Panzer V Ausf. G"
+
+[DH_PanzerIIILKanone]
+ProjectileDescriptions=("APC","APCR","HE")
+
+[DH_PanzerIIILKanonePawn]
+VehiclePositionString="an einer Panzer III Ausf. L Kanone"
+VehicleNameString="Panzer III Ausf. L Kanone"
+
+[DH_PanzerIIILMountedMGPawn]
+VehiclePositionString="an einem Panzer III Ausf. L MG"
+VehicleNameString="Panzer III Ausf. L MG"
+
+[DH_PanzerIIILTank]
+VehiclePositionString="in einem Panzer III Ausf. L"
+VehicleNameString="Panzer III Ausf. L"
+
+[DH_PanzerIVF2Kanone]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_PanzerIVF2KanonePawn]
+VehiclePositionString="an einer Panzer IV Ausf. F/2 Kanone"
+VehicleNameString="Panzer IV Ausf. F/2 Kanone"
+
+[DH_PanzerIVF2MountedMGPawn]
+VehiclePositionString="an einem Panzer IV montierten MG"
+VehicleNameString="Panzer IV montierten MG"
+
+[DH_PanzerIVF2Tank]
+VehiclePositionString="in einem Panzer IV Ausf. F/2"
+VehicleNameString="Panzer IV Ausf.F/2"
+
+[DH_PanzerIVGLateKanonePawn]
+VehiclePositionString="an einer Panzer IV Ausf. G Kanone"
+VehicleNameString="Panzer IV Ausf. G Kanone"
+
+[DH_PanzerIVGLateMountedMGPawn]
+VehiclePositionString="an einem Panzer IV Ausf. G MG"
+VehicleNameString="Panzer IV Ausf.G MG"
+
+[DH_PanzerIVGLateTank]
+VehiclePositionString="in einem Panzer IV Ausf. G"
+VehicleNameString="Panzer IV Ausf. G"
+
+[DH_PanzerIVHKanonePawn]
+VehiclePositionString="an einer Panzer IV Ausf. H Kanone"
+VehicleNameString="Panzer IV Ausf. H Kanone"
+
+[DH_PanzerIVHMountedMGPawn]
+VehiclePositionString="an einem Panzer IV Ausf. H MG"
+VehicleNameString="Panzer IV Ausf. H MG"
+
+[DH_PanzerIVHTank]
+VehiclePositionString="in einem Panzer IV Ausf. H"
+VehicleNameString="Panzer IV Ausf. H"
+
+[DH_PanzerIVJKanonePawn]
+VehiclePositionString="an einer Panzer IV Ausf. J Kanone"
+VehicleNameString="Panzer IV Ausf. J Kanone"
+
+[DH_PanzerIVJTank]
+VehiclePositionString="in einem Panzer IV Ausf. J"
+VehicleNameString="Panzer IV Ausf. J"
+
+[DH_Sdkfz251GunPawn]
+VehiclePositionString="in einer SDKFZ-251 Waffen Position"
+VehicleNameString="SDKFZ-251 Waffe"
+
+[DH_Sdkfz251PassagierFive]
+VehiclePositionString="in einem SDKFZ-251 Transporter"
+VehicleNameString="SDKFZ-251 Passagier"
+
+[DH_Sdkfz251PassagierFour]
+VehiclePositionString="in einem SDKFZ-251 Transporter"
+VehicleNameString="SDKFZ-251 Passagier"
+
+[DH_Sdkfz251PassagierOne]
+VehiclePositionString="in einem SDKFZ-251 Transporter"
+VehicleNameString="SDKFZ-251 Passagier"
+
+[DH_Sdkfz251PassagierSix]
+VehiclePositionString="in einem SDKFZ-251 Transporter"
+VehicleNameString="SDKFZ-251 Passagier"
+
+
+[DH_Sdkfz251PassagierThree]
+VehiclePositionString="in einem SDKFZ-251 Transporter"
+VehicleNameString="SDKFZ-251 Passagier"
+
+[DH_Sdkfz251PassagierTwo]
+VehiclePositionString="in einem SDKFZ-251 Transporter"
+VehicleNameString="SDKFZ-251 Passagier"
+
+[DH_Sdkfz251Transport]
+VehiclePositionString="in einem SdKfz-251"
+VehicleNameString="SdKfz-251 Halbkette"
+
+[DH_ShermanKanone]
+ProjectileDescriptions=("APC","HE","Smoke")
+
+[DH_ShermanKanone_M4A3E2]
+ProjectileDescriptions=("APC","HE","Smoke")
+
+[DH_ShermanKanoneA_M4A176W]
+ProjectileDescriptions=("APCBC","HVAP","HE")
+
+[DH_ShermanKanoneA_M4A176W_Early]
+ProjectileDescriptions=("APCBC","HE",)
+
+[DH_ShermanKanonePawn]
+VehiclePositionString="an einer M4A1 Sherman Kanone"
+VehicleNameString="M4A1 Sherman Kanone"
+
+[DH_ShermanKanonePawn_M4A3E2]
+VehiclePositionString="an einer M4A3E2 75(W) Sherman Kanone"
+VehicleNameString="M4A3E2 75(W) Sherman Kanone"
+
+[DH_ShermanKanonePawnA_M4A176W]
+VehiclePositionString="an einer Sherman M4A1(76)W Kanone"
+VehicleNameString="Sherman M4A1(76)W Kanone"
+
+[DH_ShermanKanonePawn_British]
+VehiclePositionString="an einer Sherman Mk.II Kanone"
+VehicleNameString="Sherman Mk.II Kanone"
+
+[DH_ShermanFireFlyKanone]
+ProjectileDescriptions=("APCBC","APDS","HE")
+
+[DH_ShermanFireFlyKanonePawn]
+VehiclePositionString="an einer Sherman Mk.VC Kanone"
+VehicleNameString="Sherman Mk.VC Kanone"
+
+[DH_ShermanFireflyTank]
+VehiclePositionString="in einen Sherman Mk.VC"
+VehicleNameString="Sherman Mk.VC"
+
+[DH_ShermanMountedMGPawn]
+VehiclePositionString="an einem Sherman MG"
+VehicleNameString="Sherman MG"
+
+[DH_ShermanMountedMGPawn_M4A176W]
+VehiclePositionString="an einem Sherman MG"
+VehicleNameString="Sherman MG"
+
+[DH_ShermanTank]
+VehiclePositionString="in einem M4A1 Sherman"
+VehicleNameString="M4A1 Sherman"
+
+[DH_ShermanTank_M4A3E2]
+VehiclePositionString="in einem M4A3E2 Sherman"
+VehicleNameString="M4A3E2 Sherman"
+
+[DH_ShermanTankA_M4A176W]
+VehiclePositionString="in einem M4A1(76)W Sherman"
+VehicleNameString="M4A1(76)W Sherman"
+
+[DH_ShermanTank_British]
+VehiclePositionString="in einem Sherman Mk.II"
+VehicleNameString="Sherman Mk.II"
+
+[DH_StuartKanone]
+ProjectileDescriptions=("AP","Canister","Smoke")
+
+[DH_StuartKanonePawn]
+VehiclePositionString="an einer M5 Stuart Kanone"
+VehicleNameString="M5 Stuart Kanone"
+
+[DH_StuartKanonePawn_British]
+VehiclePositionString="an einer M5A1 Stuart Kanone"
+VehicleNameString="M5A1 Stuart Kanone"
+
+[DH_StuartMountedMGPawn]
+VehiclePositionString="an einem Stuart MG"
+VehicleNameString="Stuart MG"
+
+[DH_StuartPassagierOne]
+VehiclePositionString="fahre in einem M5 Stuart"
+VehicleNameString="M5 Stuart Passagier"
+
+[DH_StuartPassagierThree]
+VehiclePositionString="fahre in einem M5 Stuart"
+VehicleNameString="M5 Stuart Passagier"
+
+[DH_StuartPassagierTwo]
+VehiclePositionString="fahre in einem M5 Stuart"
+VehicleNameString="M5 Stuart Passagier"
+
+[DH_StuartTank]
+VehiclePositionString="in einem M5 Stuart"
+VehicleNameString="M5 Stuart"
+
+[DH_StuartTank_British]
+VehiclePositionString="in einem M5A1 Stuart"
+VehicleNameString="M5A1 Stuart"
+
+[DH_Stug3GKanone]
+ProjectileDescriptions=("APCBC","HE","Smoke")
+
+[DH_Stug3GKanonePawn]
+VehiclePositionString="an einer StuG III Ausf. G Kanone"
+VehicleNameString="StuG III Ausf. G Kanone"
+
+[DH_Stug3GDestroyer]
+VehiclePositionString="in einem StuG III Ausf. G"
+VehicleNameString="StuG III Ausf. G"
+
+[DH_Stug3GMountedMGPawn]
+VehiclePositionString="bemanne ein StuG III Ausf. G MG34"
+VehicleNameString="StuG III Ausf. G MG34"
+
+[DH_Stug3GPassagierFour]
+VehiclePositionString="fahre in einem StuG III Ausf. G"
+VehicleNameString="StuG III Ausf. G Passagier"
+
+[DH_Stug3GPassagierOne]
+VehiclePositionString="fahre in einem StuG III Ausf. G"
+VehicleNameString="StuG III Ausf. G Passagier"
+
+[DH_Stug3GPassagierThree]
+VehiclePositionString="fahre in einem StuG III Ausf. G"
+VehicleNameString="StuG III Ausf. G Passagier"
+
+[DH_Stug3GPassagierTwo]
+VehiclePositionString="fahre in einem StuG III Ausf. G"
+VehicleNameString="StuG III Ausf. G Passagier"
+
+[DH_Tiger2BKanone]
+ProjectileDescriptions=("APCBC","APCR","HE")
+
+[DH_Tiger2BKanonePawn]
+VehiclePositionString="an einer Panzer VI Ausf. B Kanone"
+VehicleNameString="Panzer VI Ausf. B Kanone"
+
+[DH_Tiger2BMountedMGPawn]
+VehiclePositionString="an einem Tiger II Ausf. B MG"
+VehicleNameString="Tiger II Ausf. B MG"
+
+[DH_Tiger2BTank]
+VehiclePositionString="in einem Panzer VI Ausf. B"
+VehicleNameString="Panzer VI Ausf. B"
+
+[DH_TigerKanone]
+ProjectileDescriptions=("APCBC","HE")
+
+[DH_TigerKanonePawn]
+VehiclePositionString="an einer Panzer VI Ausf. E Kanone"
+VehicleNameString="Panzer VI Ausf. E Kanone"
+
+[DH_TigerKanonePawn_Late]
+VehiclePositionString="an einer Panzer VI Ausf. E Kanone"
+VehicleNameString="Panzer VI Ausf. E Kanone"
+
+[DH_TigerMountedMGPawn]
+VehiclePositionString="an einem Tiger I Ausf. E MG"
+VehicleNameString="Tiger I Ausf. E MG"
+
+[DH_TigerTank]
+VehiclePositionString="in einem Panzer VI Ausf. E"
+VehicleNameString="Panzer VI Ausf. E"
+
+[DH_UniCarrierGunPawn]
+VehiclePositionString="in einer Mk.I Bren Carrier Waffen Position"
+VehicleNameString="Mk. I Bren Carrier Waffe"
+
+[DH_UniCarrierPassagierFour]
+VehiclePositionString="in einem Bren Carrier Transporter"
+VehicleNameString="Bren Carrier Passagier"
+
+[DH_UniCarrierPassagierOne]
+VehiclePositionString="in einem Bren Carrier Transporter"
+VehicleNameString="Bren Carrier Passagier"
+
+[DH_UniCarrierPassagierThree]
+VehiclePositionString="in einem Bren Carrier Transporter"
+VehicleNameString="Bren Carrier Passagier"
+
+[DH_UniCarrierPassagierTwo]
+VehiclePositionString="in einem Bren Carrier Transporter"
+VehicleNameString="Bren Carrier Passagier"
+
+[DH_UniCarrierTransport]
+VehiclePositionString="in einem Mk.I Bren Carrier"
+VehicleNameString="Mk.I Bren Carrier"
+
+[DH_VehicleBurningDamType]
+DeathString="%o ist in einem Panzer verbannt der von %k abgeschossen wurde."
+FemaleSuicide="%o ist in ihrem eigenen Panzer verbrannt."
+MaleSuicide="%o ist in seinem eigenen Panzer verbrannt."
+
+[DH_VehicleCollisionDamType]
+DeathString="%o ist mit %k's Fahrzeug zusammengestoßen."
+FemaleSuicide="%o wurde in ihrem Fahrzeug getötet."
+MaleSuicide="%o wurde in seinem Fahrzeug getötet."
+
+[DH_VehicleMessage]
+CannotRide="Sie können hier nicht mitfahren"
+VehicleFull="Alle Plätze sind bereits besetzt"
+CannotExit="Sie müssen erst die Luke öffnen um auszusteigen"
+AssaultGunExit="Sie müssen aus der Kommandantenluke aussteigen"
+
+[DH_WillysJeep]
+VehiclePositionString="in einem Willys Jeep MB"
+VehicleNameString="Willys Jeep MB"
+
+[DH_WillysJeepPassagierOne]
+VehiclePositionString="in einem Willys Jeep MB"
+VehicleNameString="Willys Jeep MB Passagier"
+
+[DH_WillysJeepPassagierThree]
+VehiclePositionString="in einem Willys Jeep MB"
+VehicleNameString="Willys Jeep MB Passagier"
+
+[DH_WillysJeepPassagierTwo]
+VehiclePositionString="in einem Willys Jeep MB"
+VehicleNameString="Willys Jeep MB Passagier"
+
+[DH_WolverineKanone]
+ProjectileDescriptions=("APCBC","HVAP","HE")
+
+[DH_WolverineKanonePawn]
+VehiclePositionString="an einer M10 Wolverine Kanone"
+VehicleNameString="M10 Wolverine Kanone"
+
+[DH_WolverineKanone_Early]
+ProjectileDescriptions=("APCBC","HE","HE")
+
+[DH_WolverineTank]
+VehiclePositionString="in einem M10 Wolverine"
+VehicleNameString="M10 Wolverine"

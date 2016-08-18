@@ -1,4 +1,4 @@
-*.bat
+*.Lnk
 *.opensdf
 *.orig
 *.sdf
@@ -8,6 +8,8 @@
 *.make
 *.int
 *.u
+*.DS_Store
+Red Orchestra.app
 /Animations/
 /Cache/
 /DarkestHour/
@@ -24,6 +26,7 @@
 AHZ_ROVehicles/
 CC/
 Core/
+DarkestHourDev/*.txt
 DarkestHourDev/System/DarkestHourDev.ini
 DarkestHourDev/System/DarkestHourDevUser.ini
 Editor/
@@ -59,7 +62,6 @@ XWebAdmin/
 /System/*.int
 /System/*.blob
 /System/*.u
-/System/*.bat
 /System/config/*.vdf
 /System/editorres/*.bmp
 /System/logs/*.txt
@@ -90,4 +92,3 @@ XWebAdmin/
 /System/UnrealEdTips.ini
 /System/UPlaylists.ini
 /System/User.ini
-/System/XAdmin.ini

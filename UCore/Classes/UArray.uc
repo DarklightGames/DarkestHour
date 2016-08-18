@@ -4,6 +4,7 @@
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
 //==============================================================================
+
 class UArray extends Object
     abstract;
 
@@ -241,3 +242,14 @@ static final function string SToString(array<string> A)
     return "[" $ class'UString'.static.Join(", ", A) $ "]";
 }
 
+static final function array<int> Range(int Min, int Max)
+{
+    local array<int> A;
+
+    while (Min <= Max)
+    {
+        A[A.Length] = Min++;
+    }
+
+    return A;
+}

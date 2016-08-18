@@ -84,10 +84,8 @@ simulated function Weapon WeaponChange(byte F, bool bSilent)
     {
         return Inventory.WeaponChange(F, bSilent);
     }
-    else
-    {
-        return none;
-    }
+
+    return none;
 }
 
 simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
@@ -96,10 +94,8 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     {
         return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
     }
-    else
-    {
-        return none;
-    }
+
+    return none;
 }
 
 simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
@@ -108,10 +104,8 @@ simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     {
         return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
     }
-    else
-    {
-        return none;
-    }
+
+    return none;
 }
 
 defaultproperties

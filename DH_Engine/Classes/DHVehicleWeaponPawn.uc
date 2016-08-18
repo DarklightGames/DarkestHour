@@ -791,7 +791,7 @@ simulated function SwitchWeapon(byte F)
         if (F == 1)
         {
             // Stop call to server as there is already a human driver
-            if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
+            if (VehicleBase.PlayerReplicationInfo != none && !VehicleBase.PlayerReplicationInfo.bBot)
             {
                 return;
             }
@@ -825,7 +825,7 @@ simulated function SwitchWeapon(byte F)
             {
                 WeaponPawn = VehicleBase.WeaponPawns[ChosenWeaponPawnIndex];
 
-                if (WeaponPawn != none && WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+                if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && !WeaponPawn.PlayerReplicationInfo.bBot)
                 {
                     return;
                 }
@@ -1298,6 +1298,13 @@ function int LocalLimitPitch(int pitch)
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to make simulated, so can be used on a net client
+// Especially as simulated function GetTeamNum() relies on this!
+simulated function Vehicle GetVehicleBase()
+{
+    return VehicleBase;
+}
 
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)

@@ -1,0 +1,255 @@
+[DH_LevelInfo0]
+Allies.UnitName="Canadian Royal New Brunswick"
+AxisUnitDescription="Von: HQ 716. Division||An: Alle Einheiten des Atlantikwalls ||Der Tag ist hier! Eine große Anzahl feindlicher Verbände versuchen in unseren befestigten Gebieten zu landen.|Wir werden die Strände bis zum Schluss verteidigen! Männer, Maschinen, und Festungen werden eine Einheit sein; eine Waffe in der Verteidigung des Reiches!|Manche meinen, dass diese Division nur eine Einheit zweiten Ranges wäre, aber jetzt ist die Front zu uns gekommen. Wir werden diese Schlacht so schlagen, dass das ganze Vaterland stolz auf uns sein wird. Kameraden, dies weiß ich ganz gewiss!"
+AlliesUnitDescription="Von: HQ 3rd Canadian Infantry Division||An: OC The Royal New Brunswick Regiment (RNBR)||Eine schwere See verhindert das Eintreffen Ihrer Panzer. Sie müssen vorstoßen und so schnell es geht vom Strand runter!|Wir werde Ihre Panzer innerhalb von Minuten an Land bringen. Arbeiten Sie eng mit ihnen zusammen, da die Gegend stark von den Deutschen verteidigt wird.|Nehmen Sie das erste Ziel ein und bereiten Sie sich darauf vor, weiter nach Caen vorzustoßen."
+
+[DH_ObjTerritory0]
+objName="MG-Bunker West"
+AttackerDescription="Einnehmen von West MG-Bunker"
+DefenderDescription="Verteidigen von West MG-Bunker"
+
+[DH_ObjTerritory1]
+objName="MG-Bunker Ost"
+AttackerDescription="Einnehmen von East MG-Bunker"
+DefenderDescription="Verteidigen von East MG-Bunker"
+
+[DH_ObjTerritory2]
+objName="La Ferme Duboise"
+AttackerDescription="Einnehmen von La Ferme Duboise"
+DefenderDescription="Verteidigen von La Ferme Duboise"
+
+[DH_ObjTerritory3]
+objName="Verlassenes Haus"
+AttackerDescription="Angreifen und einnehmen des verlassenen Hauses"
+DefenderDescription="Verteidigen und halten des verlassenen Hauses"
+
+[DH_ObjTerritory4]
+objName="FlaK 88mm"
+AttackerDescription="Angreifen der FlaK Stellungen"
+DefenderDescription="Halten der FlaK 88mm"
+
+[DH_ObjTerritory6]
+objName="Rathaus"
+AttackerDescription="Einnehmen des Rathauses"
+DefenderDescription="Verteidigen des Rathauses"
+
+[DH_ObjTerritory7]
+objName="Rangierbahnhof Ost"
+AttackerDescription="Angreifen des östlichen Rangierbahnhofes"
+DefenderDescription="Halten des östlichen Rangierbahnhofes"
+
+[DH_ObjTerritory8]
+objName="Rangierbahnhof West"
+AttackerDescription="Angreifen des westlichen Rangierbahnhofes"
+DefenderDescription="Halten des westlichen Rangierbahnhofes"
+
+[LevelInfo0]
+Title="D-Day 08:30 Uhr - Juno Strand"
+
+[LevelSummary]
+Title="D-Day 08:30 Uhr - Juno Strand"
+Description="Juno Strand||14.000 kanadische Einheiten haben den ersten sandigen Streifen der Festung Europa angegriffen - Juno Strand.|Es handelte sich dabei um die am schwersten verteidigte Zone der fünf Angriffsgebiete die für D-Day gewählt wurden. Die Kanadier haben schwere Verluste erlitten, die ähnlich hoch waren wie die einer anderen Zone - Omaha Strand.|Ihnen gegenüber stand, hinter Festungen die über Jahre hinweg verstärkt wurden, die 716. Division der Wehrmacht. Diese Einheit war zur heftigste Gegenwehr bereit und würde einen entschlossenen Kampf liefern.||Befehligt von General Wilhelm Richter würde die Division ihre 11 schweren 155mm Kanonen und ihre 9 mittleren 75mm Kanonen einsetzen.|In der am schwersten verteidigten Zone, der Courseulles-su-Mer Region,|waren die Seemauern doppelt so hoch wie am Omaha Strand. Die See war außerdem dicht vermint.|Mit den Worten eines Mannes, der es wissen musste - Es war eine verdammt knappe Angelegenheit!"
+
+[ROMineVolume0]
+WarningMessage="Sie befinden sich zu weit vor der Front!"
+
+[ROMineVolume1]
+WarningMessage="Achtung: Minenfelder sind nicht so gut für die Gesundheit"
+
+[ROMineVolume2]
+WarningMessage="Achtung: Minenfelder sind nicht so gut für die Gesundheit"
+
+[ROMineVolume3]
+WarningMessage="Achtung: Minenfelder sind nicht so gut für die Gesundheit"
+
+[ROMineVolume4]
+WarningMessage="Achtung: Diese Minen funktionieren gut!!!"
+
+[ROMineVolume5]
+WarningMessage="Achtung: Minen gehen früher oder später hoch!"
+
+[ROMineVolume6]
+WarningMessage="Sie befinden sich zu weit vor der Front!"
+
+[ROMineVolume7]
+WarningMessage="Sie befinden sich zu weit vor der Front!"
+
+[ROMineVolume8]
+WarningMessage="Sie befinden sich zu weit vor der Front!"
+
+[Volume0]
+LocationName="Eckhaus bei der westlichen Ruine "
+
+[Volume1]
+LocationName="Untere Hauptstrasse"
+
+[Volume10]
+LocationName="Westlicher Bauernhof"
+
+[Volume11]
+LocationName="Westlicher MG-Bunker"
+
+[Volume12]
+LocationName="Östlicher MG-Bunker"
+
+[Volume13]
+LocationName="Hauptstrasse beim Rathaus"
+
+[Volume14]
+LocationName="Zentraler Rangierbahnhof"
+
+[Volume15]
+LocationName="Flanke des westlichen Bauernhofes"
+
+[Volume16]
+LocationName="Mitte der Küstenstrasse"
+
+[Volume17]
+LocationName="Östlicher MG-Bunker - Feld"
+
+[Volume18]
+LocationName="Westliche Küstenstrasse"
+
+[Volume19]
+LocationName="Östliche Küstenstraße"
+
+[Volume2]
+LocationName="Hauptstrasse bei den Ruinen"
+
+[Volume20]
+LocationName="Östliche Landungsgebiet am Strand"
+
+[Volume21]
+LocationName="Westliches MG-Bunker - Feld"
+
+[Volume22]
+LocationName="Westliches Landungsgebiet am Strand "
+
+[Volume23]
+LocationName="Zentrales Landungsgebiet am Strand"
+
+[Volume24]
+LocationName="Westlicher Bauernhof - Feld"
+
+[Volume25]
+LocationName="FlaK 88 - Feld"
+
+[Volume26]
+LocationName="Zentraler Rangierbahnhof"
+
+[Volume27]
+LocationName="Westlicher Rangierbahnhof - Lager"
+
+[Volume28]
+LocationName="Östlicher Rangierbahnhof"
+
+[Volume29]
+LocationName="Westlicher Rangierbahnhof"
+
+[Volume3]
+LocationName="Östlicher Rangierbahnhof"
+
+[Volume30]
+LocationName="Westliche Scheune"
+
+[Volume31]
+LocationName="Stationsgebäude"
+
+[Volume32]
+LocationName="Westlicher Rangierbahnhof Achsenmächte Spawngebiet"
+
+[Volume33]
+LocationName="Östlicher Rangierbahnhof Achsenmächte Spawngebiet "
+
+[Volume34]
+LocationName="Küstenstrasse - Eckhaus"
+
+[Volume36]
+LocationName="Westliches Haus - Hof"
+
+[Volume37]
+LocationName="Westliche Häuser - Höfe"
+
+[Volume38]
+LocationName="Westliches Haus - Hof"
+
+[Volume39]
+LocationName="Westliche Ruine - Hof"
+
+[Volume4]
+LocationName="Hauptstrasse bei Kirche"
+
+[Volume5]
+LocationName="Westlicher Rangierbahnhof"
+
+[Volume6]
+LocationName="Rathaus"
+
+[Volume7]
+LocationName="Kirche"
+
+[Volume8]
+LocationName="Östliche Ruinen"
+
+[Volume9]
+LocationName="FlaK 88mm"
+
+[ZoneInfo0]
+LocationName="Juno Strand"
+
+[ZoneInfo1]
+LocationName="Juno Kirche"
+
+[ZoneInfo10]
+LocationName="Juno Strand"
+
+[ZoneInfo13]
+LocationName="Juno Strand"
+
+[ZoneInfo16]
+LocationName="Juno Strand"
+
+[ZoneInfo2]
+LocationName="Juno Strand"
+
+[ZoneInfo23]
+LocationName="Juno Strand"
+
+[ZoneInfo3]
+LocationName="Juno Strand"
+
+[ZoneInfo35]
+LocationName="Juno Strand"
+
+[ZoneInfo5]
+LocationName="Juno Strand"
+
+[ZoneInfo56]
+LocationName="Juno Strand"
+
+[ZoneInfo58]
+LocationName="Juno Strand"
+
+[ZoneInfo6]
+LocationName="Juno Strand"
+
+[ZoneInfo60]
+LocationName="Juno Strand"
+
+[ZoneInfo64]
+LocationName="Juno Strand"
+
+[ZoneInfo65]
+LocationName="Juno Strand"
+
+[ZoneInfo69]
+LocationName="Juno Strand"
+
+[ZoneInfo70]
+LocationName="Juno Strand"
+
+[ZoneInfo75]
+LocationName="Juno Strand"
+
+[ZoneInfo81]
+LocationName="Juno Strand"

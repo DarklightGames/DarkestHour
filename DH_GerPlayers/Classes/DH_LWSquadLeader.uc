@@ -8,7 +8,7 @@ class DH_LWSquadLeader extends DH_LuftwaffeFlak;
 defaultproperties
 {
     MyName="Sergeant"
-    AltName="GruppenfÃ¼hrer"
+    AltName="Gruppenführer"
     Article="a "
     PluralName="Sergeants"
     Models(0)="WL_1"

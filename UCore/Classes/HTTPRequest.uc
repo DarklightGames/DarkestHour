@@ -4,6 +4,7 @@
 
 class HTTPRequest extends Actor;
 
+var HTTPSession Session;
 var UCoreBufferedTCPLink MyLink;
 var string Method;
 var string Host;
@@ -13,6 +14,7 @@ var bool bAllowRedirects;
 var TreeMap_string_string Headers;
 var private int Timeout;
 
+delegate bool OnRedirect(HTTPRequest Request, int Status, string Location);
 delegate OnResponse(int Status, TreeMap_string_string Headers, string Content);
 
 function PostBeginPlay()
@@ -79,7 +81,7 @@ function static TreeMap_string_string ParseHeaders(string S)
 
 function Timer()
 {
-    local string TransferEncoding;
+    local string TransferEncoding, SetCookie;
     local string Response;
     local string Command;
     local string Content;
@@ -92,7 +94,10 @@ function Timer()
     local int i;
     local array<string> HeaderKeys;
     local int ChunkLength;
-    //local HTTPRequest R;
+    local URL U;
+    local HTTPRequest R;
+    local HTTPCookie Cookie;
+    local Object O;
 
     if (MyLink.ReceiveState == MyLink.Match)
     {
@@ -107,28 +112,42 @@ function Timer()
 
             ResponseHeaders = ParseHeaders(HeadersString);
 
+            // TODO: Fix ParseHeaders to return a TreeMap_string_array_string
+            // so we can retrieve multiple instances of Set-Cookie. (this is
+            // essentially an "unordered multimap")
+            if (ResponseHeaders.Get("Set-Cookie", SetCookie))
+            {
+                Session.SetCookie(SetCookie);
+            }
+
             switch (Status)
             {
                 case 301:   // Moved Permanently
                 case 302:   // Found
                 case 307:   // Temporary Redirect
                 case 308:   // Permanent Redirect
-                    if (bAllowRedirects && ResponseHeaders.Get("Location", Location))
+                    if (bAllowRedirects && ResponseHeaders.Get("Location", Location) && !OnRedirect(self, Status, Location))
                     {
-                        // TODO: parse host and path from location in response headers
-//                        R = Spawn(class'HTTPRequest');
-//                        R.Method = self.Method;
-//                        R.Host = self.Host;
-//                        R.Path = self.Path;
-//                        R.Protocol = self.Protocol;
-//                        R.bAllowRedirects = self.bAllowRedirects;
-//                        R.Headers = self.Headers;
-//                        R.Send();
+                        U = class'URL'.static.FromString(Location);
 
-                        Destroy();
-                        return;
+                        if (U != none)
+                        {
+                            R = Spawn(class'HTTPRequest');
+                            R.Method = self.Method;
+                            R.Host = U.Host;
+                            R.Path = U.Path;
+                            R.Protocol = U.Scheme;
+                            R.bAllowRedirects = self.bAllowRedirects;
+                            R.Headers = self.Headers;
+                            R.Send();
+                        }
+                        else
+                        {
+                            Warn("Could not parse URL for redirection (" $ Location $ ")");
+                        }
                     }
-                    break;
+                    Destroy();
+                    return;
                 default:
                     break;
             }
@@ -183,6 +202,20 @@ function Timer()
 
         Command $= MyLink.CRLF;
 
+        if (Session != none)
+        {
+            HeaderKeys = Session.Cookies.GetKeys();
+
+            for (i = 0; i < HeaderKeys.Length; ++i)
+            {
+                Session.Cookies.Get(HeaderKeys[i], O);
+
+                Command $= HeaderKeys[i] $ ":" @ HTTPCookie(O).Value $ MyLink.CRLF;
+            }
+        }
+
+        // TODO: Add Cookies to the headers
+
         MyLink.SendCommand(Command);
         MyLink.WaitForCount(0, Timeout, 0);
     }
@@ -204,5 +237,4 @@ defaultproperties
     Method="GET"
     Timeout=30
     Protocol="HTTP/1.1"
-    bAllowRedirects=true
 }

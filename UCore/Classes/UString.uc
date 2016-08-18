@@ -2,8 +2,19 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class UString extends Object
-    abstract;
+class UString extends Object;
+
+var string Value;
+
+static final function UString Create(optional string Value)
+{
+    local UString S;
+
+    S = new class'UString';
+    S.Value = Value;
+
+    return S;
+}
 
 static final function string Join(string Divider, array<string> Strings)
 {
@@ -169,4 +180,16 @@ static final function string Trim(string S)
     }
 
     return Mid(S, i, j - i + 1);
+}
+
+static final function string ZFill(coerce string S, int N)
+{
+    N -= Len(S);
+
+    while (N-- > 0)
+    {
+        S = "0" $ S;
+    }
+
+    return S;
 }

@@ -5,6 +5,7 @@ import subprocess
 import ConfigParser
 import shutil
 import json
+import re
 from pprint import pprint
 from binascii import crc32
 from collections import OrderedDict
@@ -26,6 +27,8 @@ def main():
     argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     args = argparser.parse_args()
+
+    args.dir = os.path.abspath(args.dir)
 
     if not os.path.isdir(args.dir):
         print 'error: "{}" is not a directory'.format(dir)
@@ -55,7 +58,7 @@ def main():
     config = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
 
     # mod config path
-    config_path = os.path.join(mod_sys_dir, '.ini')
+    config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
 
     if os.path.isfile(config_path):
         config.read(config_path)
@@ -88,17 +91,16 @@ def main():
             # compiled file exists in root system folder
             continue
 
-        if args.clean or len(packages_to_compile) > 0:
-            packages_to_compile.append(package + '.u')
-            continue
-
         should_compile_package = False
+
+        if args.clean or len(packages_to_compile) > 0:
+            should_compile_package = True
+        
         package_src_dir = os.path.join(args.dir, package, 'Classes')
         package_crc = 0
 
         for root, dirs, filenames in os.walk(package_src_dir):
             for filename in filter(lambda x: x.endswith('.uc'), filenames):
-
                 with open(os.path.join(root, filename), 'rb') as f:
                     package_crc = crc32(f.read(), package_crc)
 
@@ -131,12 +133,6 @@ def main():
                 except OSError:
                     print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
                     sys.exit(1)
-
-    try:
-        with open(manifest_path, 'w') as f:
-            json.dump(package_crcs, f)
-    except OSError:
-        print 'could not write mod make manifest'
 
     os.chdir(sys_dir)
 
@@ -177,6 +173,19 @@ def main():
     ucc_log_file.truncate()
     ucc_log_file.write(ucc_log_contents)
     ucc_log_file.close()
+
+    # search for error messages in log to know if build failed
+    did_build_fail = re.search('Failure - \d+ error\(s\)', ucc_log_contents) is not None
+
+    if did_build_fail:
+        sys.exit(1)
+
+    # write package manifest
+    try:
+        with open(manifest_path, 'w') as f:
+            json.dump(package_crcs, f)
+    except OSError:
+        print 'could not write mod make manifest'
 
 if __name__ == "__main__":
     main()

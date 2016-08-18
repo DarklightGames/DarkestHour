@@ -193,7 +193,7 @@ defaultproperties
     // Firing effects
     AmbientEffectEmitterClass=class'DH_Guns.DH_M45QuadmountEmitterController' // isn't really an emitter; acts as a master controller for the 4 real BarrelEffectEmitters
     BarrelEffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter'      // this is the real emitter class
-    FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_loop'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.Quad50Cal_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
     AmbientSoundScaling=5.0
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)

@@ -8,7 +8,7 @@ class DH_WSSSquadLeader extends DH_WaffenSS;
 defaultproperties
 {
     MyName="Sergeant"
-    AltName="UnterscharfÃ¼hrer"
+    AltName="Unterscharführer"
     Article="a "
     PluralName="Sergeants"
     Models(0)="SS_1"

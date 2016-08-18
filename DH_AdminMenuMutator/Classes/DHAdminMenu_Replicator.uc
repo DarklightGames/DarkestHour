@@ -34,7 +34,7 @@ replication
 
     // Functions the server can call on the owning client
     reliable if (Role == ROLE_Authority)
-        ClientPrivateMessage;
+        ClientRenamePlayer, ClientPrivateMessage;
 }
 
 // On the server this copies variables from the mutator, which will then get replicated to each client version of this helper actor
@@ -162,6 +162,28 @@ simulated function RemoveMenu(string MenuPartName)
             MenuArray.Remove(i, 1);
             break;
         }
+    }
+}
+
+// Serverside function called from the mutator to change the player name on the client - it passes the info to the relevant client using a replicated client function
+function ServerRenamePlayer(Controller PlayerToRename, string NewPlayerName)
+{
+    if (PlayerToRename != none && NewPlayerName != "")
+    {
+        SetOwner(PlayerToRename); // need to temporarily make the target player the owner of this actor, so we can call a replicated client function for that player
+        ClientRenamePlayer(PlayerToRename, NewPlayerName);
+        SetOwner(none); // reset
+    }
+}
+
+// Replicated clientside function that passes info to client for player to receive private message on an ROCriticalMessage background in the middle of the their screen
+// Crucial part is when message function is called, this actor is included as OptionalObject parameter, allowing message to access this actor's PrivateMessage variable
+simulated function ClientRenamePlayer(Controller PlayerToRename, string NewPlayerName)
+{
+    if (PlayerToRename != none && NewPlayerName != "")
+    {
+        PlayerToRename.UpdateURL("Name", NewPlayerName, true);
+        PlayerToRename.SaveConfig();
     }
 }
 

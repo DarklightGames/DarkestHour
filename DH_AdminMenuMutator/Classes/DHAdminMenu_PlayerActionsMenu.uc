@@ -27,34 +27,39 @@ exec function PlayerActionsMenu(string PlayerName)
     }
 }
 
+exec function RenamePlayer(string OldPlayerName, string NewPlayerName)
+{
+    BuildMutateCommand("RenamePlayer" @ OldPlayerName @ NewPlayerName, 1);
+}
+
 exec function PrivateMessageToPlayer(string PlayerName)
 {
-    BuildMutateCommand("PrivateMessageToPlayer" @ PlayerName $ " ", 1);
+    BuildMutateCommand("PrivateMessageToPlayer" @ PlayerName $ " ", 2);
 }
 
 exec function WarningMessageToPlayer(string PlayerName)
 {
-    BuildMutateCommand("WarningMessageToPlayer" @ PlayerName $ " ", 2);
+    BuildMutateCommand("WarningMessageToPlayer" @ PlayerName $ " ", 3);
 }
 
 exec function KickPlayerWithReason(string PlayerName)
 {
-    BuildMutateCommand("KickPlayerWithReason" @ PlayerName $ " ", 3);
+    BuildMutateCommand("KickPlayerWithReason" @ PlayerName $ " ", 4);
 }
 
 exec function KillPlayer(string PlayerName)
 {
-    BuildMutateCommand("KillPlayer" @ PlayerName, 4);
+    BuildMutateCommand("KillPlayer" @ PlayerName, 5);
 }
 
 exec function ParaDropPlayerAtGrid(string PlayerName)
 {
-    BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtGridRef ", 8);
+    BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtGridRef ", 9);
 }
 
 exec function ParaDropPlayerAtCurrentLocation(string PlayerName)
 {
-    BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtCurrentLocation", 9);
+    BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtCurrentLocation", 10);
 }
 
 defaultproperties
@@ -62,6 +67,7 @@ defaultproperties
     MenuTitle="PLAYER ACTIONS:"
     PreviousMenu="Menu" // means we return to the player list menu if we press the 'previous menu' key
 
+    MenuText(0)="Rename player"
     MenuText(1)="Send private message"
     MenuText(2)="Send warning message (with sound)"
     MenuText(3)="Kick with message"
@@ -72,7 +78,8 @@ defaultproperties
     MenuText(8)="Paradrop player at grid"
     MenuText(9)="Paradrop player at current location"
 
-    MenuCommand(1)="*PrivateMessageToPlayer"[[
+    MenuCommand(0)="*RenamePlayer"
+    MenuCommand(1)="*PrivateMessageToPlayer"
     MenuCommand(2)="*WarningMessageToPlayer"
     MenuCommand(3)="*KickPlayerWithReason"
     MenuCommand(4)="*KillPlayer"

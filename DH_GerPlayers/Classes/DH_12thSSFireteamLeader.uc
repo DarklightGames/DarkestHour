@@ -8,7 +8,7 @@ class DH_12thSSFireteamLeader extends DH_12thSS;
 defaultproperties
 {
     MyName="Corporal"
-    AltName="RottenfÃ¼hrer"
+    AltName="Rottenführer"
     Article="a "
     PluralName="Corporals"
     Models(0)="12SS_1"

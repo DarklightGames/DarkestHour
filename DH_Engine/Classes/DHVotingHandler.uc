@@ -414,13 +414,7 @@ function TallyVotes(bool bForceMapSwitch)
     // Mid game vote initiated
     if (Level.Game.NumPlayers > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.NumPlayers)) * 100 >= MidGameVotePercent)
     {
-        Level.Game.Broadcast(self,lmsgMidGameVote);
-        bMidGameVote = true;
-
-        // Start voting count-down timer
-        TimeLeft = VoteTimeLimit;
-        ScoreBoardTime = 1;
-        SetTimer(1.0, true);
+        MidGameVote();
     }
 
     Index = 0;
@@ -553,12 +547,20 @@ function TallyVotes(bool bForceMapSwitch)
 
 function ExitVoteAndSwap()
 {
+    local DarkestHourGame DHG;
+
     CloseAllVoteWindows();
     ResetMapVotes();
     bMidGameVote = false;
     SetTimer(0.0, false); // stop the timer
-    DarkestHourGame(Level.Game).bGameEnded = false;
-    DarkestHourGame(Level.Game).SwapTeams();
+    DHG = DarkestHourGame(Level.Game);
+
+    if (DHG != none)
+    {
+        DHG.bGameRestarted = false; // have to reset this for the next round, or at the end of it the server will end up jammed (state MatchOver timer won't re-start)
+        DHG.bGameEnded = false;
+        DHG.SwapTeams();
+    }
 }
 
 // Resets all player votes
@@ -673,6 +675,20 @@ function LoadMapList()
     }
 
     Loader.Destroy();
+}
+
+function MidGameVote()
+{
+    if (bMidGameVote)
+    {
+        return;
+    }
+
+    Level.Game.Broadcast(self, lmsgMidGameVote);
+    bMidGameVote = true;
+    TimeLeft = VoteTimeLimit;
+    ScoreBoardTime = 1;
+    SetTimer(1.0, true);
 }
 
 defaultproperties

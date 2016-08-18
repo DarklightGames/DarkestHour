@@ -1,0 +1,47 @@
+[DH_LevelInfo0]
+Axis.UnitName="2. Panzer Division"
+Allies.UnitName="101st, 506th Parachute Infantry Regiment, Easy Company"
+AxisUnitDescription="|Von: HQ LVIII Armee-Korps||An:  Kdr. 2. Panzer-Division||Bastogne muss genommen werden!|Ansonsten wird es ein Geschwür auf unsren Kommunikationswegen bleiben. Wir müssen Bastogne komplett säubern und dann weiter marschieren.|Sie werden ein Regiment abstellen und durch die amerikanischen Stellungen in der Bois Jacques Gegend stoßen.|Halten Sie die Augen auf in diesem schweren Gelände; hier kann die feindliche Panzerabwehr sich sehr gut verstecken.|Beschützen Sie Ihre Panzer beim Vorstoß - wir können es uns nicht erlauben auch nur einen zu verlieren."
+AlliesUnitDescription="|Von: HQ 101st US Airborne Division||An: CO 506th Parachute Infrantry Regt.||Der Befehl ist Ihre Stellungen in Bois Jacques zu halten!|Patton ist unterwegs hierher und bei seiner Ankunft werden wir Gelände zurückgewinnen!|Foy ist als erstes auf unserer Liste aber wir können Foy nicht von Brüssel aus nehmen.|Halten Sie die Stellung mit allen Mitteln. Ich habe keine Panzer für Sie - Sie müssen mit dem auskommen was Sie haben: Bazookas und TNT."
+
+[DH_ObjTerritory10]
+objName="Höhe "
+AttackerDescription="Den Hügel einnehmen"
+DefenderDescription="Den Hügel halten"
+
+[DH_ObjTerritory6]
+objName="Front"
+AttackerDescription="Die Front einnehmen "
+DefenderDescription="Die Front halten "
+
+[DH_ObjTerritory8]
+objName="Lazarett"
+AttackerDescription="Das Lazarett einnehmen"
+DefenderDescription="Das Lazarett halten"
+
+[DH_ObjTerritory9]
+objName="Feld HQ"
+AttackerDescription="Das Feld HQ einnehmen"
+DefenderDescription="Das Feld HQ halten"
+
+[LevelInfo0]
+Title="Bois Jacques"
+
+[LevelSummary]
+Title="Bois Jacques"
+Description="Bois Jacques war eine der vielen intensiven Gefechte welche über Wochen im Dezember 1944 ausgetragen wurde.|Das unmittelbare Ziel der deutschen Einheiten war die Einnahme von Bastogne.|Alle sieben Hauptrouten in den Ardennen liefen in dieser kleinen Stadt zusammen.|Die Strassen die von dort ausgehen dienten als Rollbahnen um Panzer und Vorräte für den Angriff auf Liege zu bewegen was,|im Gegenzug, die Straßen zum Hauptziel nach Antwerpen und Brüssel öffnen würde.||Beim Waldgebiet Bois Jacques hatte die 2. Panzer Division einen Vorstoß durch das dichte Unterholz in Richtung Bastogne gewagt.|Ihnen stand jedoch die E Company der 506th PIR der 101st US Airborne Division im Weg. Stark in der Unterzahl musste die E Company die Stellung halten. Sie hatten etwas Freiraum zum Zurückfallen, aber nicht viel.|"
+
+[ROArtilleryTrigger0]
+Message="Benutzen Sie das Funkgerät um Artillerieunterstützung anzufordern"
+
+[ROArtilleryTrigger1]
+Message="Benutzen Sie das Funkgerät um Artillerieunterstützung anzufordern "
+
+[ROMineVolume13]
+WarningMessage="Achtung: Nehmen Sie den Hügel ein!"
+
+[ROMineVolume3]
+WarningMessage="Achtung: Bleiben Sie in den Schützenlöchern!"
+
+[ROMineVolume44]
+WarningMessage="Achtung: Bleiben Sie in den Schützenlöchern!"

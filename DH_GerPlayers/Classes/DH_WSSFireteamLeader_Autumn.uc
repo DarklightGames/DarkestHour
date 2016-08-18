@@ -8,7 +8,7 @@ class DH_WSSFireteamLeader_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     MyName="Corporal"
-    AltName="RottenfÃ¼hrer"
+    AltName="Rottenführer"
     Article="a "
     PluralName="Corporals"
     Models(0)="WHAu_1"

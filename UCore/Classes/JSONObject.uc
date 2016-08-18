@@ -38,6 +38,21 @@ function Put(string Key, JSONValue Value)
     Map.Put(Key, Value);
 }
 
+function PutString(string Key, coerce string Value)
+{
+    Put(Key, class'JSONString'.static.Create(Value));
+}
+
+function PutInteger(string Key, int Value)
+{
+    Put(Key, class'JSONNumber'.static.Create(string(Value)));
+}
+
+function PutFloat(string Key, float Value)
+{
+    Put(Key, class'JSONNumber'.static.Create(string(Value)));
+}
+
 function Erase(string Key)
 {
     if (Map != none)

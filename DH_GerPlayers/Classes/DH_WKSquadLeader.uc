@@ -8,7 +8,7 @@ class DH_WKSquadLeader extends DH_Kriegsmarine;
 defaultproperties
 {
     MyName="Sergeant"
-    AltName="GruppenfÃ¼hrer"
+    AltName="Gruppenführer"
     Article="a "
     PluralName="Sergeants"
     Models(0)="WK_1"

@@ -101,3 +101,50 @@ function array<string> ToArray()
 {
     return Items;
 }
+
+function ArrayList_string Sort()
+{
+    QuickSort(0, Items.Length - 1);
+
+    return self;
+}
+
+private function QuickSort(int Lo, int Hi)
+{
+    local int p;
+
+    if (Lo < Hi)
+    {
+        p = QuickSortPartition(Lo, Hi);
+        QuickSort(Lo, p);
+        QuickSort(p + 1, Hi);
+    }
+}
+
+private function int QuickSortPartition(int Lo, int Hi)
+{
+    local string Pivot;
+    local int i, j;
+
+    Pivot = Items[Lo];
+    i = Lo - 1;
+    j = Hi + 1;
+
+    while (true)
+    {
+        while (Items[++i] < Pivot)
+        {
+        }
+
+        while (Items[--j] > Pivot)
+        {
+        }
+
+        if (i >= j)
+        {
+            return j;
+        }
+
+        class'UCore'.static.SSwap(Items[i], Items[j]);
+    }
+}

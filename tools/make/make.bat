@@ -1,6 +1,5 @@
 @echo off
 pushd %~dp0
-make.py "%RODIR%" -mod DarkestHourDev -dumpint
+make.py ../../. -mod DarkestHourDev
 popd
-echo 
 pause
