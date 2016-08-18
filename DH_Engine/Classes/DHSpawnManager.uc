@@ -151,6 +151,11 @@ function Reset()
         SpawnPoints[i].bIsLocked = SpawnPoints[i].bIsInitiallyLocked;
     }
 
+    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
+    {
+        GRI.SpawnVehicles[i].VehiclePoolIndex = -1;
+    }
+
     for (i = 0; i < VehiclePools.Length; ++i)
     {
         SetVehiclePoolIsActive(i, VehiclePools[i].bIsInitiallyActive);

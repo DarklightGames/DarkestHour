@@ -388,6 +388,7 @@ function UpdateSpawnPoints()
     for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
     {
         if (GRI != none &&
+            GRI.SpawnVehicles[i].VehiclePoolIndex >= 0 &&
             GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex] != none &&
             GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex].default.VehicleTeam == CurrentTeam)
         {
@@ -533,12 +534,12 @@ function UpdateVehicles()
 
     for (i = 0; i < li_Vehicles.ItemCount; ++i)
     {
-        j = GetSelectedVehiclePoolIndex();
-
-        if (j == -1)
+        if (UInteger(li_Vehicles.GetObjectAtIndex(i)) == none)
         {
             continue;
         }
+
+        j = UInteger(li_Vehicles.GetObjectAtIndex(i)).Value;
 
         VehicleClass = GRI.VehiclePoolVehicleClasses[j];
 
@@ -1211,6 +1212,7 @@ function UpdateVehicleImage()
 
     if (VehiclePoolIndex >= 0)
     {
+        VehicleClass = GRI.VehiclePoolVehicleClasses[VehiclePoolIndex];
         i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
 
         if (GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0)
