@@ -69,7 +69,7 @@ function PostBeginPlay()
 {
     local DHSpawnPoint SP;
     local bool         bVehiclePoolIsInvalid;
-    local int          i, j;
+    local int          i;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -100,19 +100,6 @@ function PostBeginPlay()
         if (VehiclePools[i].VehicleClass == none)
         {
             bVehiclePoolIsInvalid = true;
-        }
-        else
-        {
-            // Make sure VP's vehicle class isn't a duplicate of another class
-            for (j = i - 1; j >= 0; --j)
-            {
-                // Same vehicle class already exists earlier in array, so is invalid
-                if (VehiclePools[i].VehicleClass == VehiclePools[j].VehicleClass)
-                {
-                    bVehiclePoolIsInvalid = true;
-                    break;
-                }
-            }
         }
 
         // Remove VP if it is invalid (no specified class or it's a duplicate)
@@ -162,6 +149,11 @@ function Reset()
     {
         SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
         SpawnPoints[i].bIsLocked = SpawnPoints[i].bIsInitiallyLocked;
+    }
+
+    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
+    {
+        GRI.SpawnVehicles[i].VehiclePoolIndex = -1;
     }
 
     for (i = 0; i < VehiclePools.Length; ++i)
@@ -382,7 +374,7 @@ function bool SpawnVehicle(DHPlayer C)
         // If it's a spawn vehicle that doesn't require the engine to be off, add to GRI's SpawnVehicles array
         if (VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle)
         {
-            GRI.AddSpawnVehicle(V);
+            GRI.AddSpawnVehicle(C.VehiclePoolIndex, V);
         }
 
         // Increment vehicle counts
@@ -437,7 +429,7 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
     local Vehicle    V, EntryVehicle;
     local vector     Offset;
     local array<int> ExitPositionIndices;
-    local int        VehiclePoolIndex, i;
+    local int        i;
 
     if (C == none || GRI == none || DarkestHourGame(Level.Game) == none)
     {
@@ -471,8 +463,6 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
         // Randomise exit locations
         ExitPositionIndices = class'UArray'.static.Range(0, V.ExitPositions.Length - 1);
         class'UArray'.static.IShuffle(ExitPositionIndices);
-
-        VehiclePoolIndex = GRI.GetVehiclePoolIndex(GRI.SpawnVehicles[C.SpawnVehicleIndex].VehicleClass);
 
         // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
         if (V.IsA('DHVehicle') && DHVehicle(V).bEngineOff)
@@ -510,7 +500,7 @@ function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
     C.UnPossess();
     P.Suicide();
 
-    // This makes sure the player doesn't watch see and hear himself die. A
+    // This makes sure the player doesn't watch and hear himself die. A
     // dirty hack, but the alternative is much worse.
     C.ServerNextViewPoint();
 
@@ -678,7 +668,7 @@ function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return false;
     }
 
-    if (!GRI.IgnoresMaxTeamVehiclesFlags(VehiclePools[C.VehiclePoolIndex].VehicleClass) &&
+    if (!GRI.IgnoresMaxTeamVehiclesFlags(C.VehiclePoolIndex) &&
         TeamVehicleCounts[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam])
     {
         return false;

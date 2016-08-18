@@ -18,11 +18,10 @@ struct MortarTarget
 
 struct SpawnVehicle
 {
-    var byte            TeamIndex;
+    var int             VehiclePoolIndex;
+    var Vehicle         Vehicle;
     var int             LocationX;
     var int             LocationY;
-    var class<Vehicle>  VehicleClass;
-    var Vehicle         Vehicle;
     var byte            BlockFlags;
 };
 
@@ -509,7 +508,7 @@ function UnreserveVehicle(DHPlayer PC)
 // Spawn Vehicle Functions
 //------------------------------------------------------------------------------
 
-function int AddSpawnVehicle(Vehicle V)
+function int AddSpawnVehicle(int VehiclePoolIndex, Vehicle V)
 {
     local int i;
 
@@ -528,10 +527,9 @@ function int AddSpawnVehicle(Vehicle V)
     {
         if (SpawnVehicles[i].Vehicle == none)
         {
+            SpawnVehicles[i].VehiclePoolIndex = VehiclePoolIndex;
             SpawnVehicles[i].LocationX = V.Location.X;
             SpawnVehicles[i].LocationY = V.Location.Y;
-            SpawnVehicles[i].TeamIndex = V.GetTeamNum();
-            SpawnVehicles[i].VehicleClass = V.Class;
             SpawnVehicles[i].Vehicle = V;
             SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
 
@@ -558,8 +556,7 @@ function bool RemoveSpawnVehicle(Vehicle V)
         {
             SpawnVehicles[i].LocationX = 0;
             SpawnVehicles[i].LocationY = 0;
-            SpawnVehicles[i].TeamIndex = 0;
-            SpawnVehicles[i].VehicleClass = none;
+            SpawnVehicles[i].VehiclePoolIndex = -1;
             SpawnVehicles[i].Vehicle = none;
             SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
 
@@ -584,8 +581,8 @@ function bool RemoveSpawnVehicle(Vehicle V)
 simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
 {
     if (Index >= arraycount(SpawnVehicles) ||
-        SpawnVehicles[Index].VehicleClass == none ||
-        SpawnVehicles[Index].TeamIndex != Team ||
+        SpawnVehicles[Index].VehiclePoolIndex < 0 ||
+        VehiclePoolVehicleClasses[SpawnVehicles[Index].VehiclePoolIndex].default.VehicleTeam != Team ||
         SpawnVehicles[Index].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
     {
         return false;
@@ -629,15 +626,11 @@ simulated function byte GetVehiclePoolIndex(class<Vehicle> VehicleClass)
     return 255;
 }
 
-simulated function bool IgnoresMaxTeamVehiclesFlags(class<Vehicle> VehicleClass)
+simulated function bool IgnoresMaxTeamVehiclesFlags(int VehiclePoolIndex)
 {
-    local byte i;
-
-    i = GetVehiclePoolIndex(VehicleClass);
-
-    if (i != 255)
+    if (VehiclePoolIndex >= 0)
     {
-        return (VehiclePoolIgnoreMaxTeamVehiclesFlags & (1 << i)) != 0;
+        return (VehiclePoolIgnoreMaxTeamVehiclesFlags & (1 << VehiclePoolIndex)) != 0;
     }
 
     return false;

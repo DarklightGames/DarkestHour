@@ -11,6 +11,6 @@ defaultproperties
     MyVehicleDamage=class'DH_Weapons.DH_MP40VehDamType'
     BallisticCoefficient=0.16
     Speed=22934.0
-    Damage=60.0
+    Damage=50.0
     MyDamageType=class'DH_Weapons.DH_MP40DamType'
 }
