@@ -69,7 +69,7 @@ function PostBeginPlay()
 {
     local DHSpawnPoint SP;
     local bool         bVehiclePoolIsInvalid;
-    local int          i, j;
+    local int          i;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
