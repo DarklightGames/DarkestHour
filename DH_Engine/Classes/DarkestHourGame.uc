@@ -41,6 +41,8 @@ var     float                       TeamAttritionCounter[2];    //When this hits
 
 var     bool                        bSwapTeams;
 
+var     float                       AlliesToAxisRatio;
+
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
@@ -144,6 +146,7 @@ function PostBeginPlay()
     }
 
     RoundDuration = LevelInfo.RoundDuration * 60;
+    AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
 
     // Setup some GRI stuff
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -662,6 +665,27 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
     return FMax(Score, 5.0);
 }
 
+// Modified to have bots fall into teams based on AlliesToAxisRatio
+function UnrealTeamInfo GetBotTeam(optional int TeamBots)
+{
+    local int TeamSizes[2];
+    local int IdealTeamSizes[2];
+    local float TeamSizeRatings[2];
+
+    // Calc the team balance variables
+    CalculateTeamBalanceValues(TeamSizes, IdealTeamSizes, TeamSizeRatings);
+
+    // Always weaker team
+    if (TeamSizeRatings[0] > TeamSizeRatings[1])
+    {
+        return Teams[1];
+    }
+    else
+    {
+        return Teams[0];
+    }
+}
+
 // Spawns the bot and randomly gives them a role
 function Bot SpawnBot(optional string botName)
 {
@@ -763,64 +787,146 @@ function Bot SpawnBot(optional string botName)
     return NewBot;
 }
 
+// Override to handle picking a team with AlliesToAxisRatio calculated in
+function byte PickTeam(byte num, Controller C)
+{
+    local UnrealTeamInfo NewTeam;
+    local int SmallTeam, BigTeam;
+
+    local int TeamSizes[2];
+    local int IdealTeamSizes[2];
+    local float TeamSizeRatings[2];
+
+    if (bPlayersVsBots && (Level.NetMode != NM_Standalone))
+    {
+        if (PlayerController(C) != None)
+        {
+            return 1;
+        }
+        return 0;
+    }
+
+    // Calc the team balance stuff
+    CalculateTeamBalanceValues(TeamSizes, IdealTeamSizes, TeamSizeRatings);
+
+    if (TeamSizeRatings[0] > TeamSizeRatings[1])
+    {
+        SmallTeam = 1;
+        BigTeam = 0;
+    }
+    else
+    {
+        SmallTeam = 0;
+        BigTeam = 1;
+    }
+
+    if (num < 2)
+    {
+        NewTeam = Teams[num];
+    }
+
+    if (NewTeam == None)
+    {
+        NewTeam = Teams[SmallTeam];
+    }
+    else if (bPlayersBalanceTeams && (Level.NetMode != NM_Standalone) && (PlayerController(C) != None))
+    {
+        // If the teams are on the verge of being off balance, force the player onto the small team
+        if ((Abs(IdealTeamSizes[0] - TeamSizes[0]) >=  MaxTeamDifference) || (Abs(IdealTeamSizes[1] - TeamSizes[1]) >=  MaxTeamDifference))
+        {
+            NewTeam = Teams[SmallTeam];
+        }
+    }
+
+    return NewTeam.TeamIndex;
+}
+
+// Handles calculation of team balance variables (in seperate function so this code isn't duplicated in a couple places)
+function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes[2], out float TeamSizeRatings[2])
+{
+    local float TeamRatios[2];
+    local float TeamSizeFactor;
+
+    // Do some integral checks
+    if (DH_LevelInfo(LevelInfo) == none)
+    {
+        return;
+    }
+    else if (AlliesToAxisRatio < 0.0 || AlliesToAxisRatio > 1.0)
+    {
+        Log("AlliesToAxisRatio for this level is out of bounds, please make sure it is between 0.0 and 1.0");
+        Level.Game.Broadcast(self, "AlliesToAxisRatio for this level is out of bounds, please make sure it is between 0.0 and 1.0", 'Say');
+        return;
+    }
+
+    // Get the current TeamSizes for all players/bots who have selected a role
+    GetTeamSizes(TeamSizes);
+
+    // If HardRatio then TeamSizeFactor should be 0.5
+    if (DH_LevelInfo(LevelInfo).bHardTeamRatio)
+    {
+        TeamRatios[0] = 1.0 - AlliesToAxisRatio;
+        TeamRatios[1] = AlliesToAxisRatio;
+    }
+    else
+    {
+        TeamSizeFactor = ((float(TeamSizes[0] + TeamSizes[1]) / float(MaxPlayers)) * (AlliesToAxisRatio - 0.5));
+        TeamRatios[0] = (TeamSizeFactor + 0.5);
+        TeamRatios[1] = (1.0 - (TeamSizeFactor + 0.5));
+    }
+
+    TeamSizeRatings[0] = TeamRatios[0] * TeamSizes[0];
+    TeamSizeRatings[1] = TeamRatios[1] * TeamSizes[1];
+
+    IdealTeamSizes[0] = Round((TeamSizes[0] + TeamSizes[1]) * TeamRatios[1]);
+    IdealTeamSizes[1] = Round((TeamSizes[0] + TeamSizes[1]) * TeamRatios[0]);
+}
+
+// Get imbalance team "count", but calculate AlliedToAxisRatio
+function int GetTeamUnbalanceCount(out UnrealTeamInfo BigTeam, out UnrealTeamInfo SmallTeam)
+{
+    local int TeamSizes[2];
+    local int IdealTeamSizes[2];
+    local float TeamSizeRatings[2];
+
+    // Calc the team balance variables
+    CalculateTeamBalanceValues(TeamSizes, IdealTeamSizes, TeamSizeRatings);
+
+    // If Axis has higher rating than Allies
+    if (TeamSizeRatings[0] > TeamSizeRatings[1])
+    {
+        SmallTeam = Teams[1];
+        BigTeam = Teams[0];
+
+        // We need to return an int that expects 0 for even teams and > 0 if imbalanced (higher meaning more imbalanced)
+        return Ceil(Abs(IdealTeamSizes[0] - TeamSizes[0]) - MaxTeamDifference);
+    }
+    else
+    {
+        SmallTeam = Teams[0];
+        BigTeam = Teams[1];
+
+        // We need to return an int that expects 0 for even teams and > 0 if imbalanced (higher meaning more imbalanced)
+        return Ceil(Abs(IdealTeamSizes[1] - TeamSizes[1]) - MaxTeamDifference);
+    }
+}
+
 // Get a new random role for a bot - replaces old GetBotNewRole to use DHBots instead
 // If a new role is successfully found the role number for that role will be returned (if a role cannot be found, returns -1)
 function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 {
-    local int MyRole, Count, AltRole;
+    local int i;
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (ThisBot != none)
+    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
-        MyRole = Rand(arraycount(GRI.DHAxisRoles));
-
-        do
+        if (GetRoleInfo(BotTeamNum,i).Limit == 255)
         {
-            if (FRand() < LevelInfo.VehicleBotRoleBalance)
-            {
-                AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
-
-                if (AltRole != -1)
-                {
-                    MyRole = AltRole;
-                    break;
-                }
-            }
-
-            // Temp hack to prevent bots from getting MG roles
-            if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || (GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG) ||
-                (GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD))
-            {
-                ++Count;
-
-                if (Count > 10)
-                {
-                    Log("DarkestHourGame: Unable to find a suitable role in SpawnBot()");
-
-                    return -1;
-                }
-                else
-                {
-                    ++MyRole;
-
-                    if ((BotTeamNum == 0 && MyRole >= arraycount(GRI.DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= arraycount(GRI.DHAxisRoles)))
-                    {
-                        MyRole = 0;
-                    }
-                }
-            }
-            else
-            {
-                break;
-            }
+            return i;
         }
-
-        return MyRole;
     }
-
-    return -1;
 }
 
 // Give player points for destroying an enemy vehicle
@@ -2446,6 +2552,33 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
     }
 }
 
+// Function for changing the AlliesToAxisRatio for testing and real time balance changes
+exec function SetAlliesToAxisRatio(float Value)
+{
+    // Pass -1 to reset
+    if (Value == -1.0)
+    {
+        AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
+    }
+
+    // Prevent values outside of range
+    if (Value < 0.0 || Value > 1.0)
+    {
+        Log("Valued supplied in SetAlliesToAxisRatio is out of bounds");
+        return;
+    }
+
+    AlliesToAxisRatio = Value;
+
+    Level.Game.Broadcast(self, "Changed AlliesToAxisRatio to: " $ Value);
+}
+
+// Function for changing bHardTeamRatio at real time
+exec function SetHardTeamRatio(bool bNewHardTeamRatio)
+{
+    DH_LevelInfo(LevelInfo).bHardTeamRatio = bNewHardTeamRatio;
+}
+
 // Function for changing a team's ReinforcementInterval
 exec function SetReinforcementInterval(int Team, int Amount)
 {
@@ -3604,7 +3737,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="GÃ¼nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -3613,10 +3746,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton MÃ¼ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans GrÃ¼schke"
+    GermanNames(12)="Wilhelm KrÃ¼ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
