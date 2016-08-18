@@ -70,6 +70,7 @@ var localized   string                      SelectSpawnPointText;
 var localized   string                      DeployInTimeText;
 var localized   string                      DeployNowText;
 var localized   string                      ReservedString;
+var localized   string                      VehicleUnavailableString;
 
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -254,7 +255,7 @@ function Timer()
     if (GRI != none)
     {
         UpdateRoles();
-        UpdateVehicles();
+        UpdateVehicles(true);
         UpdateRoundStatus();
         UpdateStatus();
         UpdateButtons();
@@ -516,7 +517,7 @@ function PopulateVehicles()
     AutoSelectVehicle();
 }
 
-function UpdateVehicles()
+function UpdateVehicles(optional bool bShowAlert)
 {
     local int i, j;
     local class<ROVehicle> VehicleClass;
@@ -587,13 +588,25 @@ function UpdateVehicles()
 
         li_Vehicles.SetDisabledAtIndex(i, bDisabled);
 
-        // Colin: If selected vehicle pool becomes disabled, select the "None"
-        // option.
+        // If selected vehicle pool becomes disabled, select the "None" option
+        // and display a warning to the user, if specified.
         if (bDisabled && li_Vehicles.Index == i)
         {
-            li_Vehicles.SetIndex(-1);
+            if (bShowAlert)
+            {
+                Controller.OpenMenu("GUI2K4.GUI2K4QuestionPage");
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(default.VehicleUnavailableString, QBTN_OK, QBTN_OK);
+                GUIQuestionPage(Controller.TopPage()).OnButtonClick = OnOKButtonClick;
+            }
+
+            li_Vehicles.SetIndex(0);
         }
     }
+}
+
+function OnOKButtonClick(byte Button)
+{
+    Controller.CloseMenu(true);
 }
 
 function UpdateRoles()
@@ -1168,7 +1181,7 @@ function InternalOnChange(GUIComponent Sender)
                 SetLoadoutMode(LM_Equipment);
             }
 
-            // Colin: Vehicle eligibility may have changed, update vehicles.
+            // Vehicle eligibility may have changed, update vehicles.
             UpdateVehicles();
             UpdateStatus();
 
@@ -1881,4 +1894,6 @@ defaultproperties
     NextChangeTeamTime=0.0
     OnPreDraw=InternalOnPreDraw
     ReservedString="Reserved"
+    VehicleUnavailableString="The vehicle you had selected is no longer available."
 }
+
