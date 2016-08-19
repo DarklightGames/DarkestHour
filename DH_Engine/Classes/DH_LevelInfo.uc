@@ -16,7 +16,7 @@ enum EAlliedNation
     NATION_USA,
     NATION_Britain,
     NATION_Canada,
-    NATION_Russia
+    NATION_USSR
 };
 
 enum ESpawnMode
@@ -24,6 +24,9 @@ enum ESpawnMode
     ESM_RedOrchestra,
     ESM_DarkestHour
 };
+
+var() float     AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
+var() bool      bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
 
 var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
@@ -54,6 +57,7 @@ singular static function bool DHDebugMode()
 
 defaultproperties
 {
+    AlliesToAxisRatio=0.5
     bDHDebugMode=false // TEMP - revert to false before any release
     Texture=texture'DHEngine_Tex.LevelInfo'
     AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'

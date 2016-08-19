@@ -17,8 +17,8 @@ var     array<DHWeaponBarrel>   Barrels;                  // array of any carrie
 var     byte                    BarrelIndex;              // index number of current barrel
 var     bool                    bBarrelSteamActive;       // barrel is steaming
 var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
-var     class<ROMGSteam>        BarrelSteamEmitterClass;
-var     ROMGSteam               BarrelSteamEmitter;
+var     class<DHMGSteam>        BarrelSteamEmitterClass;
+var     DHMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
 replication
@@ -182,6 +182,6 @@ defaultproperties
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
-    BarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
+    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
 }

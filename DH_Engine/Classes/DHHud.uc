@@ -37,6 +37,7 @@ var     SpriteWidget        DeployEnemiesNearbyIcon;
 var     SpriteWidget        DeployInObjectiveIcon;
 var     SpriteWidget        VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var     SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
+var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
 
 // Map or screen text that can be localized for different languages
 var     localized string    MapNameText;
@@ -487,6 +488,12 @@ simulated function DrawHudPassC(Canvas C)
         DrawSpriteWidget(C, HealthFigure);
         DrawSpriteWidget(C, StanceIcon);
         DrawLocationHits(C, ROPawn(PawnOwner));
+
+        // Extra ammo icon
+        if (!DHPawn(PawnOwner).bUsedCarriedMGAmmo)
+        {
+            DrawSpriteWidget(C, ExtraAmmoIcon);
+        }
     }
 
     // MG deploy icon if the weapon can be deployed
@@ -4441,6 +4448,9 @@ defaultproperties
     LocationHitAlliesImages(12)=texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
     LocationHitAlliesImages(13)=texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
     LocationHitAlliesImages(14)=texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
+
+    // Extra ammo indicator icon
+    ExtraAmmoIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map general icons
     MapBackground=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_background')

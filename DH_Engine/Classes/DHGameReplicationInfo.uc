@@ -760,7 +760,8 @@ function AddCarriedRadioTrigger(ROArtilleryTrigger AT)
             }
         }
     }
-    else if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
+
+    if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
     {
         for (i = 0; i < arraycount(CarriedAlliedRadios); ++i)
         {
@@ -793,7 +794,8 @@ function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
             }
         }
     }
-    else if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
+
+    if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
     {
         for (i = 0; i < arraycount(CarriedAlliedRadios); ++i)
         {

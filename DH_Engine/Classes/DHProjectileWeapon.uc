@@ -75,8 +75,8 @@ var     byte                BarrelIndex;            // index number of current b
 var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
 var     bool                bCallBarrelChangeTimer; // we're in middle of a barrel change, so Timer() should call PerformBarrelChange() instead of exiting state ChangingBarrels
 var     float               BarrelChangeDuration;   // saves duration of barrel change, so Timer() can be called at mid point & then again at end of barrel change animation
-var     class<ROMGSteam>    BarrelSteamEmitterClass;
-var     ROMGSteam           BarrelSteamEmitter;
+var     class<DHMGSteam>    BarrelSteamEmitterClass;
+var     DHMGSteam           BarrelSteamEmitter;
 var     name                BarrelSteamBone;        // bone we attach the barrel steam emitter to
 var     bool                bBarrelSteamActive;     // barrel is steaming
 var     bool                bBarrelDamaged;         // barrel is close to failure, accuracy is VERY BAD
@@ -2296,6 +2296,6 @@ defaultproperties
     LightRadius=4.0
     LightPeriod=3
     FillAmmoMagCount=1
-    BarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
+    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
     MuzzleBone="Muzzle"
 }
