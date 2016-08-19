@@ -360,5 +360,5 @@ defaultproperties
     CullDistance=8192.0 // 136m - was originally 4000 UU (approx 66m), but when the 3rd person weapon attachment gets culled, player's can't see a muzzle flash, which is important
     bNetNotify=true
     bSpawnShellsOutBottom=false
-    ROMGSteamEmitterClass=class'ROEffects.ROMGSteam'
+    ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
 }
