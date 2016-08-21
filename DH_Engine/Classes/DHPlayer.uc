@@ -2825,6 +2825,11 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+exec function LockWeapons(int Seconds)
+{
+    DHPlayerReplicationInfo(PlayerReplicationInfo).WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+}
+
 // Modified to work in debug mode, as well as in single player
 exec function FOV(float F)
 {
