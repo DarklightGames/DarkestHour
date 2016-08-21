@@ -110,7 +110,7 @@ state Timing
 
                 MinutesLeft = TimerLeft / 60;
                 r = TimerLeft - (MinutesLeft * 60);
- 
+
                 if (r < 10)
                     SecondsLeft = "0" $ string(r);
                 else
