@@ -12,7 +12,8 @@ enum ESpawnPointType
     ESPT_Infantry,
     ESPT_Vehicles,
     ESPT_Mortars,
-    ESPT_All
+    ESPT_All,
+    ESPT_InfantryVehicles,
 };
 
 var()   ESpawnPointType Type;
@@ -82,12 +83,17 @@ function PostBeginPlay()
 
 simulated function bool CanSpawnInfantry()
 {
-    return Type == ESPT_Infantry || Type == ESPT_All;
+    return Type == ESPT_Infantry || Type == ESPT_InfantryVehicles || Type == ESPT_All;
 }
 
 simulated function bool CanSpawnVehicles()
 {
     return Type == ESPT_Vehicles || Type == ESPT_All;
+}
+
+simulated function bool CanSpawnInfantryVehicles()
+{
+    return Type == ESPT_InfantryVehicles || Type == ESPT_Vehicles || Type == ESPT_All;
 }
 
 simulated function bool CanSpawnMortars()
