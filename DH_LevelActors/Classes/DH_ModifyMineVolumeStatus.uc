@@ -6,7 +6,7 @@
 class DH_ModifyMineVolumeStatus extends DH_ModifyActors;
 
 var()   name                    MineVolumeToModify;
-var     DHMineVolume            MineVolumeReference;
+var     ROMineVolume            MineVolumeReference;
 var()   bool                    UseRandomness;
 var()   int                     RandomPercent; // 100 for always succeed, 0 for always fail
 var()   StatusModifyType        HowToModify;
@@ -21,7 +21,7 @@ function PostBeginPlay()
     }
 
     // Volume are static so use the all actor list
-    foreach AllActors(class'DHMineVolume', MineVolumeReference, MineVolumeToModify)
+    foreach AllActors(class'ROMineVolume', MineVolumeReference, MineVolumeToModify)
     {
         break;
     }
@@ -46,14 +46,21 @@ event Trigger(Actor Other, Pawn EventInstigator)
     {
         case SMT_Activate:
             //Level.Game.Broadcast(self, "Activated Minefield");
-            MineVolumeReference.bActive = true;
+            MineVolumeReference.Activate();
         break;
         case SMT_Deactivate:
             //Level.Game.Broadcast(self, "Deactivated Minefield");
-            MineVolumeReference.bActive = false;
+            MineVolumeReference.Deactivate();
         break;
         case SMT_Toggle:
-            MineVolumeReference.bActive = !MineVolumeReference.bActive;
+            if (MineVolumeReference.bActive)
+            {
+                MineVolumeReference.Deactivate();
+            }
+            else
+            {
+                MineVolumeReference.Activate();
+            }
         break;
         default:
         break;

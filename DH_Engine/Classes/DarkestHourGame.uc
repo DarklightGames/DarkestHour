@@ -2441,6 +2441,34 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     }
 }
 
+// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
+// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
+// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
+// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
+function CheckMineVolumes()
+{
+    local int i;
+
+    for (i = 0; i < MineVolumes.Length; ++i)
+    {
+        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
+        {
+            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
+            {
+                MineVolumes[i].Activate();
+            }
+            else
+            {
+                MineVolumes[i].Deactivate();
+            }
+        }
+    }
+}
+
 function ResetMortarTargets()
 {
     local DHGameReplicationInfo GRI;

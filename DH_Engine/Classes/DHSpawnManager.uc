@@ -864,7 +864,14 @@ private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 
         if (SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef != none)
         {
-            SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.bActive = bIsActive;
+            if (bIsActive)
+            {
+                SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.Activate();
+            }
+            else
+            {
+                SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.Deactivate();
+            }
         }
     }
 }

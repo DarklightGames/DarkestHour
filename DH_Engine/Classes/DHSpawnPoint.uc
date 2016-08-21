@@ -36,7 +36,7 @@ var     bool                    bIsLocked;
 var     int                     TeamIndex;
 var     array<DHLocationHint>   InfantryLocationHints;
 var     array<DHLocationHint>   VehicleLocationHints;
-var     DHMineVolume            MineVolumeProtectionRef;
+var     ROMineVolume            MineVolumeProtectionRef;
 
 function PostBeginPlay()
 {
@@ -61,7 +61,7 @@ function PostBeginPlay()
     // Find any associated mine volume (that will only protect this spawn point only if the spawn is active)
     if (MineVolumeProtectionTag != '')
     {
-        foreach AllActors(class'DHMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
+        foreach AllActors(class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
         {
             break;
         }
