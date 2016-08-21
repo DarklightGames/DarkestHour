@@ -48,8 +48,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
         case TR_Percentage:
             for (i = 0; i < ObjectivesNumsToModify.Length; ++i)
             {
-                RandomNum = Rand(101);  //Gets a random # between 0 & 100
-                if (RandomPercent >= RandomNum)
+                RandomNum = Rand(100);  //Gets a random # between 0 & 99
+                if (RandomPercent > RandomNum)
                 {
                     switch (HowToModify)
                     {
