@@ -38,7 +38,6 @@ var     array<DHLocationHint>   VehicleLocationHints;
 function PostBeginPlay()
 {
     local DHLocationHint LH;
-    local DHMineVolume MV;
 
     foreach AllActors(class'DHLocationHint', LH)
     {
@@ -57,13 +56,9 @@ function PostBeginPlay()
 
     if (MineVolumeProtectionTag != '')
     {
-        foreach AllActors(class'DHMineVolume', MV)
+        foreach AllActors(class'DHMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
         {
-            if (MV.Tag == MineVolumeProtectionTag)
-            {
-                MineVolumeProtectionRef = MV;
-                break;
-            }
+            break;
         }
     }
 

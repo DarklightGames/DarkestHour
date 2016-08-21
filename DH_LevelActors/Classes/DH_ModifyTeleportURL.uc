@@ -18,14 +18,11 @@ var     int                 PreviousEventIndex; // for use in problems dealing w
 
 function PostBeginPlay()
 {
-    local Teleporter    Tele;
-
     super.PostBeginPlay();
 
     //Teleporter is bStatic so use AllActors list
-    foreach AllActors(class'Teleporter', Tele, TeleporterToModify)
+    foreach AllActors(class'Teleporter', TeleReference, TeleporterToModify)
     {
-        TeleReference = Tele;
         break;
     }
 

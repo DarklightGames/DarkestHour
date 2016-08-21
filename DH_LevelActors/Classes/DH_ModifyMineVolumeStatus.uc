@@ -13,8 +13,6 @@ var()   StatusModifyType        HowToModify;
 
 function PostBeginPlay()
 {
-    local DHMineVolume ROMV;
-
     super.PostBeginPlay();
 
     if (MineVolumeToModify == '')
@@ -23,9 +21,8 @@ function PostBeginPlay()
     }
 
     // Volume are static so use the all actor list
-    foreach AllActors(class'DHMineVolume', ROMV, MineVolumeToModify)
+    foreach AllActors(class'DHMineVolume', MineVolumeReference, MineVolumeToModify)
     {
-        MineVolumeReference = ROMV;
         break;
     }
 }

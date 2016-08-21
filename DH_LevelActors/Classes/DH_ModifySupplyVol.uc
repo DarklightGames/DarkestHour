@@ -13,15 +13,12 @@ var()   StatusModifyType        HowToModify;
 
 function PostBeginPlay()
 {
-    local ROAmmoResupplyVolume  RORV;
-
     super.PostBeginPlay();
 
     if (SupplyVolumeToModify != '')
     {
-        foreach AllActors(class'ROAmmoResupplyVolume', RORV, SupplyVolumeToModify) // volumes are static so have to use the all actor list
+        foreach AllActors(class'ROAmmoResupplyVolume', SupplyVolumeReference, SupplyVolumeToModify) // volumes are static so have to use the all actor list
         {
-            SupplyVolumeReference = RORV;
             break;
         }
     }

@@ -19,17 +19,14 @@ var()   bool                        bRepairIfNotFullHealth;
 
 function PostBeginPlay()
 {
-    local DH_DestroyableSM  RODSM;
-
     super.PostBeginPlay();
 
     if (DSMToModify == '')
         return; //end script because DSMToModify was not set
 
     //DSM are dynamic so use dynamic actor list
-    foreach DynamicActors(class'DH_DestroyableSM', RODSM, DSMToModify)
+    foreach DynamicActors(class'DH_DestroyableSM', DSMReference, DSMToModify)
     {
-        DSMReference = RODSM;
         break;
     }
 }
