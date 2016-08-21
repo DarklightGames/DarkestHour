@@ -39,8 +39,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
     {
         if (UseRandomness)
         {
-            RandomNum = Rand(101);  //Gets a random # between 0 & 100
-            if (RandomPercent <= RandomNum)
+            RandomNum = Rand(100);  //Gets a random # between 0 & 99
+            if (RandomPercent < RandomNum)
                 continue; //continue for loop, but skip this one
         }
         if (ConditionReferenceArray[i].bEnabled == bTriggerIf)

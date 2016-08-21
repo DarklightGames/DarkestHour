@@ -5,6 +5,15 @@
 
 class DarkestHourGame extends ROTeamGame;
 
+// This may seem like it belongs in GRI, but all of this info is already replicated, the server just needs to update it if the player reconnects
+struct PlayerStoredData
+{
+    var string      IDHash;
+    var int         WeaponUnlockTime, FFDamage, Kills, PersonalLives;
+    var float       FFKills, Score, Deaths;
+};
+var     array<PlayerStoredData>     PlayerData; // When a player leaves the server this info is stored for the session so if they return these values won't reset
+
 var     DH_LevelInfo                DHLevelInfo;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
@@ -18,8 +27,9 @@ var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 
-var     array<string>               FFViolationIDs; //Array of ROIDs that have been kicked once this session
+var     array<string>               FFViolationIDs; // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
+var()   config bool                 bUseWeaponLocking; // Weapons can lock (preventing fire) for punishment
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
@@ -1036,21 +1046,68 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
     Mortarman.PlayerReplicationInfo.Score += 1;
 }
 
-// Handles reduction or elimination of damage
+// Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
+// Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
 function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
 {
-    // Check if the player has just used a select-a-spawn teleport and should be protected from damage
-    if (InstigatedBy != none &&
-        Injured != none &&
-        InstigatedBy != Injured &&
-        Injured.PlayerReplicationInfo != none &&
-        DHPawn(Injured) != none &&
-        DHPawn(Injured).TeleSpawnProtected())
+    local RORoleInfo  RoleInfo;
+    local ROSpawnArea SpawnArea;
+    local int         TeamIndex;
+
+    // Check if the player has recently spawned & should be protected from damage
+    if (InstigatedBy != none && Injured != none && InstigatedBy != Injured && Injured.PlayerReplicationInfo != none)
     {
-        return 0;
+        // Check if the player has just used a select-a-spawn teleport and is protected
+        if (DHPawn(Injured) != none && DHPawn(Injured).TeleSpawnProtected())
+        {
+            return 0;
+        }
+
+        // Check if the player is in a spawn area and is protected
+        if (LevelInfo.bUseSpawnAreas && Injured.PlayerReplicationInfo.Team != none && ROPlayerReplicationInfo(Injured.PlayerReplicationInfo) != none)
+        {
+            TeamIndex = Injured.PlayerReplicationInfo.Team.TeamIndex;
+            RoleInfo = ROPlayerReplicationInfo(Injured.PlayerReplicationInfo).RoleInfo;
+
+            if (RoleInfo != none)
+            {
+                if (RoleInfo.bCanBeTankCrew && CurrentTankCrewSpawnArea[TeamIndex] != none)
+                {
+                    SpawnArea = CurrentTankCrewSpawnArea[TeamIndex];
+                }
+                else if (DHRoleInfo(RoleInfo) != none && DHRoleInfo(RoleInfo).bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
+                {
+                    SpawnArea = DHCurrentMortarSpawnArea[TeamIndex];
+                }
+                else if (CurrentSpawnArea[TeamIndex] != none)
+                {
+                    SpawnArea = CurrentSpawnArea[TeamIndex];
+                }
+
+                if (SpawnArea != none && SpawnArea.PreventDamage(Injured))
+                {
+                    return 0;
+                }
+            }
+        }
     }
 
-    return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
+    Damage = super(TeamGame).ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType); // skip over Super in ROTeamGame as it is re-stated here
+
+    // Check for friendly fire damage here since it's convenient
+    if (Damage > 0 && ROPawn(InstigatedBy) != none && InstigatedBy.IsHumanControlled() && ROPawn(Injured) != none && Injured != InstigatedBy
+        && InstigatedBy.PlayerReplicationInfo != none && Injured.PlayerReplicationInfo != none && InstigatedBy.PlayerReplicationInfo.Team == Injured.PlayerReplicationInfo.Team)
+    {
+        ROPlayerReplicationInfo(InstigatedBy.PlayerReplicationInfo).FFDamage += Damage;
+        PlayerController(InstigatedBy.Controller).ReceiveLocalizedMessage(GameMessageClass, 15);
+
+        if (ROPlayerReplicationInfo(InstigatedBy.PlayerReplicationInfo).FFDamage > FFDamageLimit && FFDamageLimit != 0)
+        {
+            HandleFFViolation(PlayerController(InstigatedBy.Controller));
+        }
+    }
+
+    return Damage;
 }
 
 event PlayerController Login(string Portal, string Options, out string Error)
@@ -2394,6 +2451,34 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     }
 }
 
+// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
+// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
+// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
+// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
+function CheckMineVolumes()
+{
+    local int i;
+
+    for (i = 0; i < MineVolumes.Length; ++i)
+    {
+        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
+        {
+            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
+            {
+                MineVolumes[i].Activate();
+            }
+            else
+            {
+                MineVolumes[i].Deactivate();
+            }
+        }
+    }
+}
+
 function ResetMortarTargets()
 {
     local DHGameReplicationInfo GRI;
@@ -3661,20 +3746,111 @@ function OpenPlayerMenus()
     }
 }
 
-// Override to tell client to save their ROID to their ini so they can easily copy it
-// Note: this will likely also be used for weapon locking and PRI session data storage stuff
+// Override to tell client to save their ROID to their ini so they can easily copy it, store session data, and handle metrics
 event PostLogin(PlayerController NewPlayer)
 {
+    local int i;
+    local DHPlayer DHP;
+    local DHPlayerReplicationInfo PRI;
+
     super.PostLogin(NewPlayer);
 
-    if (DHPlayer(NewPlayer) != none && Level.NetMode == NM_DedicatedServer)
+    if (NewPlayer != none)
     {
-        DHPlayer(NewPlayer).ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
+        DHP = DHPlayer(NewPlayer);
+
+        if (DHP != none)
+        {
+            PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+        }
+    }
+
+    if (DHP == none || PRI == none)
+    {
+        return;
+    }
+
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        DHP.ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
     }
 
     if (Metrics != none)
     {
         Metrics.OnPlayerLogin(NewPlayer);
+    }
+
+    // Cycle through the PlayerData and if there is stored data, update the PRI info
+    for (i = 0; i < PlayerData.Length; ++i)
+    {
+        if (DHP.GetPlayerIDHash() ~= PlayerData[i].IDHash)
+        {
+            // An ID exists, lets setup PRI values with stored data
+            PRI.Deaths = PlayerData[i].Deaths;
+            PRI.FFDamage = PlayerData[i].FFDamage;
+            PRI.FFKills = PlayerData[i].FFKills;
+            PRI.Kills = PlayerData[i].Kills;
+            PRI.Score = PlayerData[i].Score;
+            PRI.WeaponUnlockTime = PlayerData[i].WeaponUnlockTime; // Testing: GameReplicationInfo.ElapsedTime + 60;
+            break;
+        }
+    }
+
+    // Set the player's hash variable! We have to set this here, because GetPlayerIDHash() returns gibberish while in Logout()
+    PRI.IDHash = DHP.GetPlayerIDHash();
+}
+
+// Override to leave hash and info in PlayerData, basically to save PRI data for the session
+function Logout(controller Exiting)
+{
+    local int i;
+    local bool bUpdatedData;
+    local DHPlayer DHP;
+    local DHPlayerReplicationInfo PRI;
+
+    super.Logout(Exiting);
+
+    DHP = DHPlayer(Exiting);
+
+    if (Exiting == none || DHP == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    // Cycle through the PlayerData
+    for (i = 0; i < PlayerData.Length; ++i)
+    {
+        // if an entry already exists update it
+        if (PRI.IDHash ~= PlayerData[i].IDHash)
+        {
+            PlayerData[i].Deaths = PRI.Deaths;
+            PlayerData[i].FFDamage = PRI.FFDamage;
+            PlayerData[i].FFKills = PRI.FFKills;
+            PlayerData[i].Kills = PRI.Kills;
+            PlayerData[i].Score = PRI.Score;
+            PlayerData[i].WeaponUnlockTime = PRI.WeaponUnlockTime;
+            bUpdatedData = true;
+        }
+    }
+
+    // If we didn't update any data, lets add the data to the array
+    if (!bUpdatedData)
+    {
+        PlayerData.Insert(0, 1);
+        PlayerData[0].Deaths = PRI.Deaths;
+        PlayerData[0].FFDamage = PRI.FFDamage;
+        PlayerData[0].FFKills = PRI.FFKills;
+        PlayerData[0].IDHash = PRI.IDHash;
+        PlayerData[0].Kills = PRI.Kills;
+        PlayerData[0].Score = PRI.Score;
+        PlayerData[0].WeaponUnlockTime = PRI.WeaponUnlockTime;
     }
 }
 
@@ -3787,4 +3963,5 @@ defaultproperties
 
     MetricsClass=class'DHMetrics'
     bEnableMetrics=true
+    bUseWeaponLocking=true
 }

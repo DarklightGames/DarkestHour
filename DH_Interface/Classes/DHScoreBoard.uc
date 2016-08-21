@@ -236,7 +236,7 @@ simulated function UpdateScoreBoard(Canvas C)
         @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
     }
 
-    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ Left(Level, InStr(Level, "."));; // add level name (extra in DH)
+    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ Left(Level, InStr(Level, ".")); // add level name (extra in DH)
 
     // Draw our round/server info line, with a drop shadow
     C.DrawColor.A = 128; // DrawColor is already black for shadow

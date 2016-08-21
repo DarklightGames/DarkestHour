@@ -14,24 +14,20 @@ var()   int                 RandomPercent; // 100 for always succeed, 0 for alwa
 
 function PostBeginPlay()
 {
-    local TriggeredCondition    TD;
-
     super.PostBeginPlay();
 
     //Check to make sure name was set
     if (ConditionToModifytrue != '')
     {   //TriggeredConditions are dynamic so use dynamic actor list
-        foreach DynamicActors(class'TriggeredCondition', TD, ConditionToModifytrue)
+        foreach DynamicActors(class'TriggeredCondition', ConditiontrueRef, ConditionToModifytrue)
         {
-            ConditiontrueRef = TD;
             break;
         }
     }
     if (ConditionToModifyfalse != '')
     {
-        foreach DynamicActors(class'TriggeredCondition', TD, ConditionToModifyfalse)
+        foreach DynamicActors(class'TriggeredCondition', ConditionfalseRef, ConditionToModifyfalse)
         {
-            ConditionfalseRef = TD;
             break;
         }
     }
@@ -43,8 +39,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     if (UseRandomness)
     {
-        RandomNum = Rand(101);  //Gets a random # between 0 & 100
-        if (RandomPercent <= RandomNum)
+        RandomNum = Rand(100);  //Gets a random # between 0 & 99
+        if (RandomPercent < RandomNum)
             return; //Leave script as it randomly failed
     }
     if (ConditiontrueRef != none) //Check to make sure the reference exists

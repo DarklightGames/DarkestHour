@@ -18,14 +18,11 @@ var     int                 PreviousEventIndex; // for use in problems dealing w
 
 function PostBeginPlay()
 {
-    local Teleporter    Tele;
-
     super.PostBeginPlay();
 
     //Teleporter is bStatic so use AllActors list
-    foreach AllActors(class'Teleporter', Tele, TeleporterToModify)
+    foreach AllActors(class'Teleporter', TeleReference, TeleporterToModify)
     {
-        TeleReference = Tele;
         break;
     }
 
@@ -53,8 +50,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     if (UseRandomness)
     {
-        RandomNum = Rand(101);  //Gets a random # between 0 & 100
-        if (RandomPercent <= RandomNum)
+        RandomNum = Rand(100);  //Gets a random # between 0 & 99
+        if (RandomPercent < RandomNum)
             return; //Leave script randomly failed
     }
     if (TeleReference != none)

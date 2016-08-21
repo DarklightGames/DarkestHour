@@ -2825,6 +2825,11 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+exec function LockWeapons(int Seconds)
+{
+    DHPlayerReplicationInfo(PlayerReplicationInfo).WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+}
+
 // Modified to work in debug mode, as well as in single player
 exec function FOV(float F)
 {
@@ -2840,7 +2845,7 @@ exec function DoLog(string LogMessage)
 {
     if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
-        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+        Log(GetHumanReadableName() @ ":" @ LogMessage);
 
         if (Role < ROLE_Authority)
         {
@@ -2853,7 +2858,7 @@ function ServerDoLog(string LogMessage)
 {
     if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
-        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+        Log(GetHumanReadableName() @ ":" @ LogMessage);
     }
 }
 

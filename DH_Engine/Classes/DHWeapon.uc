@@ -26,6 +26,25 @@ simulated function BringUp(optional Weapon PrevWeapon)
     ResetPlayerFOV();
 }
 
+// Modified to handle weapon locking
+simulated function bool ReadyToFire(int Mode)
+{
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(Instigator.Controller.PlayerReplicationInfo);
+
+    // If weapon unlock time has not been reached, then do not allow fire (as weapons are locked)
+    if (GRI != none && PRI != none && PRI.WeaponUnlockTime > GRI.ElapsedTime)
+    {
+        PlayerController(Instigator.Controller).myHUD.Message(PRI, "Weapon locked for another" @ PRI.WeaponUnlockTime - GRI.ElapsedTime @ "seconds.", 'Say');
+        return false;
+    }
+
+    return super.ReadyToFire(Mode);
+}
+
 // Modified to take player out of ironsights if necessary, & to allow for multiple copies of weapon to drop with spread (so they aren't inside each other)
 function DropFrom(vector StartLocation)
 {
