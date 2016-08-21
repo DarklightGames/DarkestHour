@@ -2840,7 +2840,7 @@ exec function DoLog(string LogMessage)
 {
     if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
-        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+        Log(GetHumanReadableName() @ ":" @ LogMessage);
 
         if (Role < ROLE_Authority)
         {
@@ -2853,7 +2853,7 @@ function ServerDoLog(string LogMessage)
 {
     if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
-        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+        Log(GetHumanReadableName() @ ":" @ LogMessage);
     }
 }
 
