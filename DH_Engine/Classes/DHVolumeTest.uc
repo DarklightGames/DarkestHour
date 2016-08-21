@@ -5,7 +5,7 @@
 
 class DHVolumeTest extends ROVolumeTest;
 
-// Modified to handle no arty volumes that are linked to a DHSpawnPoint (as well as an old spawn area)
+// Modified to handle no arty volumes that are linked to a DHSpawnPoint (as well as an old spawn area) or to a DHObjective
 // Also to handle DHMineVolumes that use the option to also act as a NoArtyVolume
 function bool IsInNoArtyVolume()
 {
@@ -26,6 +26,13 @@ function bool IsInNoArtyVolume()
             else if (RONoArtyVolume(V).AssociatedSpawn != none)
             {
                 if (IsCurrentSpawnArea(RONoArtyVolume(V).AssociatedSpawn))
+                {
+                    return true;
+                }
+            }
+            else if (DHObjective(V.AssociatedActor) != none)
+            {
+                if (DHObjective(V.AssociatedActor).IsActive())
                 {
                     return true;
                 }

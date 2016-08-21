@@ -63,6 +63,7 @@ var()   bool                        bDisableWhenAlliesClearObj;
 var()   bool                        bDisableWhenAxisClearObj;
 var()   bool                        bGroupActionsAtDisable;
 var()   int                         PlayersNeededToCapture;
+var()   name                        NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
@@ -124,6 +125,7 @@ var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
 function PostBeginPlay()
 {
     local DHGameReplicationInfo DHGRI;
+    local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
@@ -136,6 +138,17 @@ function PostBeginPlay()
         foreach AllActors(class'Volume', AttachedVolume, VolumeTag)
         {
             AttachedVolume.AssociatedActor = self;
+            break;
+        }
+    }
+
+    // Find any associated no arty volume (that will only protect this objective if the objective is active)
+    // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this objective
+    if (NoArtyVolumeProtectionTag != '')
+    {
+        foreach AllActors(class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
+        {
+            NAV.AssociatedActor = self;
             break;
         }
     }
