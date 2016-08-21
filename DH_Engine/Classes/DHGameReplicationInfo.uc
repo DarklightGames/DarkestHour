@@ -300,9 +300,22 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
         return false;
     }
 
-    return (SP.CanSpawnInfantry() && VehicleClass == none) ||
-    (SP.CanSpawnVehicles() && ((class<ROVehicle>(VehicleClass) != none && SP.TeamIndex == class<ROVehicle>(VehicleClass).default.VehicleTeam) || RI.default.bCanBeTankCrew)) ||
-    (SP.CanSpawnMortars() && RI.default.bCanUseMortars);
+    if (RI.default.bCanUseMortars && SP.CanSpawnMortars())
+    {
+        return true;
+    }
+
+    if (VehicleClass == none)
+    {
+        return SP.CanSpawnInfantry() || (RI.default.bCanBeTankCrew && SP.CanSpawnVehicles());
+    }
+
+    if (class<ROVehicle>(VehicleClass) != none && SP.TeamIndex == class<ROVehicle>(VehicleClass).default.VehicleTeam)
+    {
+        return SP.CanSpawnVehicles() || (!class<ROVehicle>(VehicleClass).default.bMustBeTankCommander && SP.CanSpawnInfantryVehicles());
+    }
+
+    return false;
 }
 
 simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)

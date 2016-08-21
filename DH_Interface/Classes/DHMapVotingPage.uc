@@ -16,7 +16,7 @@ function InternalOnOpen()
 
     super.InternalOnOpen();
 
-    // Loops the Vote Replication Map List, foreach map, it loops the client's MapList config and if matches, changes the string
+    // Loops the Vote Replication Map List, for each map, it loops the client's MapList config and if matches, changes the string
     if (MVRI != none || !MVRI.bMapVote)
     {
         for (m = 0; m < MVRI.MapList.Length; m++)

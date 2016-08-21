@@ -10,14 +10,6 @@ const   VEHICLE_POOLS_MAX = 32;
 const   SPAWN_VEHICLES_MAX = 8;
 const   SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
-enum ESpawnPointType
-{
-    ESPT_Infantry,
-    ESPT_Vehicles,
-    ESPT_Mortars,
-    ESPT_All
-};
-
 struct VehiclePoolSlot
 {
     var ROVehicle   Vehicle;
@@ -653,7 +645,7 @@ function Vehicle FindEntryVehicle(bool bCanBeTankCrew, ROVehicle V)
 
 function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
 {
-    if (C == none || GRI == none)
+    if (SP == none || C == none || GRI == none)
     {
         return false;
     }
@@ -663,7 +655,7 @@ function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return false;
     }
 
-    if (SP == none || (SP.Type != ESPT_All && SP.Type != ESPT_Vehicles))
+    if (!SP.CanSpawnVehicles() && !(SP.CanSpawnInfantryVehicles() && !VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander))
     {
         return false;
     }
@@ -872,7 +864,14 @@ private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 
         if (SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef != none)
         {
-            SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.bActive = bIsActive;
+            if (bIsActive)
+            {
+                SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.Activate();
+            }
+            else
+            {
+                SpawnPoints[SpawnPointIndex].MineVolumeProtectionRef.Deactivate();
+            }
         }
     }
 }

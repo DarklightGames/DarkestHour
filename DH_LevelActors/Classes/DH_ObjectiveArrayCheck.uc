@@ -34,9 +34,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     if (UseRandomness)
     {
-        RandomNum = Rand(101);  //Gets a random # between 0 & 100
+        RandomNum = Rand(100);  //Gets a random # between 0 & 99
 
-        if (RandomPercent <= RandomNum)
+        if (RandomPercent < RandomNum)
             return; //stop function because it randomly failed
     }
 

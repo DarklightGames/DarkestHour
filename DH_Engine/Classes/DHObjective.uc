@@ -63,6 +63,7 @@ var()   bool                        bDisableWhenAlliesClearObj;
 var()   bool                        bDisableWhenAxisClearObj;
 var()   bool                        bGroupActionsAtDisable;
 var()   int                         PlayersNeededToCapture;
+var()   name                        NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
@@ -124,6 +125,7 @@ var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
 function PostBeginPlay()
 {
     local DHGameReplicationInfo DHGRI;
+    local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
@@ -136,6 +138,17 @@ function PostBeginPlay()
         foreach AllActors(class'Volume', AttachedVolume, VolumeTag)
         {
             AttachedVolume.AssociatedActor = self;
+            break;
+        }
+    }
+
+    // Find any associated no arty volume (that will only protect this objective if the objective is active)
+    // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this objective
+    if (NoArtyVolumeProtectionTag != '')
+    {
+        foreach AllActors(class'RONoArtyVolume', NAV, NoArtyVolumeProtectionTag)
+        {
+            NAV.AssociatedActor = self;
             break;
         }
     }
@@ -176,11 +189,11 @@ function Reset()
 
 function DoSpawnPointAction(SpawnPointAction SPA)
 {
-    local DHSpawnManager VM;
+    local DHSpawnManager SM;
 
-    VM = DarkestHourGame(Level.Game).SpawnManager;
+    SM = DarkestHourGame(Level.Game).SpawnManager;
 
-    if (VM == none)
+    if (SM == none)
     {
         return;
     }
@@ -188,19 +201,19 @@ function DoSpawnPointAction(SpawnPointAction SPA)
     switch (SPA.Operation)
     {
         case ESPO_Enable:
-            VM.SetSpawnPointIsActiveByTag(SPA.SpawnPointTag, true);
+            SM.SetSpawnPointIsActiveByTag(SPA.SpawnPointTag, true);
             break;
         case ESPO_Disable:
-            VM.SetSpawnPointIsActiveByTag(SPA.SpawnPointTag, false);
+            SM.SetSpawnPointIsActiveByTag(SPA.SpawnPointTag, false);
             break;
         case ESPO_Toggle:
-            VM.ToggleSpawnPointIsActiveByTag(SPA.SpawnPointTag);
+            SM.ToggleSpawnPointIsActiveByTag(SPA.SpawnPointTag);
             break;
         case ESPO_Lock:
-            VM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, true);
+            SM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, true);
             break;
         case ESPO_Unlock:
-            VM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, false);
+            SM.SetSpawnPointIsLockedByTag(SPA.SpawnPointTag, false);
             break;
         default:
             Warn("Unhandled ESpawnPointOperation");
@@ -210,11 +223,11 @@ function DoSpawnPointAction(SpawnPointAction SPA)
 
 function DoVehiclePoolAction(VehiclePoolAction VPA)
 {
-    local DHSpawnManager VM;
+    local DHSpawnManager SM;
 
-    VM = DarkestHourGame(Level.Game).SpawnManager;
+    SM = DarkestHourGame(Level.Game).SpawnManager;
 
-    if (VM == none)
+    if (SM == none)
     {
         return;
     }
@@ -222,25 +235,25 @@ function DoVehiclePoolAction(VehiclePoolAction VPA)
     switch (VPA.Operation)
     {
         case EVPO_Enable:
-            VM.SetVehiclePoolIsActiveByTag(VPA.VehiclePoolTag, true);
+            SM.SetVehiclePoolIsActiveByTag(VPA.VehiclePoolTag, true);
             break;
         case EVPO_Disable:
-            VM.SetVehiclePoolIsActiveByTag(VPA.VehiclePoolTag, false);
+            SM.SetVehiclePoolIsActiveByTag(VPA.VehiclePoolTag, false);
             break;
         case EVPO_Toggle:
-            VM.ToggleVehiclePoolIsActiveByTag(VPA.VehiclePoolTag);
+            SM.ToggleVehiclePoolIsActiveByTag(VPA.VehiclePoolTag);
             break;
         case EVPO_MaxSpawnsAdd:
-            VM.AddVehiclePoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
+            SM.AddVehiclePoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         case EVPO_MaxSpawnsSet:
-            VM.SetVehiclePoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
+            SM.SetVehiclePoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         case EVPO_MaxActiveAdd:
-            VM.AddVehiclePoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
+            SM.AddVehiclePoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         case EVPO_MaxActiveSet:
-            VM.SetVehiclePoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
+            SM.SetVehiclePoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
             break;
         default:
             Warn("Unhandled EVehiclePoolOperation");

@@ -70,7 +70,8 @@ simulated event PostNetBeginPlay()
     }
     else if (Role == ROLE_Authority)
     {
-        Error(self @ "self-destructing as no WeaponType has been set");
+        Log("WARNING:" @ Name @ "self-destructing as no WeaponType has been set!");
+        Destroy();
     }
 }
 

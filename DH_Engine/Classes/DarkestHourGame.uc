@@ -1046,21 +1046,68 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
     Mortarman.PlayerReplicationInfo.Score += 1;
 }
 
-// Handles reduction or elimination of damage
+// Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
+// Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
 function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
 {
-    // Check if the player has just used a select-a-spawn teleport and should be protected from damage
-    if (InstigatedBy != none &&
-        Injured != none &&
-        InstigatedBy != Injured &&
-        Injured.PlayerReplicationInfo != none &&
-        DHPawn(Injured) != none &&
-        DHPawn(Injured).TeleSpawnProtected())
+    local RORoleInfo  RoleInfo;
+    local ROSpawnArea SpawnArea;
+    local int         TeamIndex;
+
+    // Check if the player has recently spawned & should be protected from damage
+    if (InstigatedBy != none && Injured != none && InstigatedBy != Injured && Injured.PlayerReplicationInfo != none)
     {
-        return 0;
+        // Check if the player has just used a select-a-spawn teleport and is protected
+        if (DHPawn(Injured) != none && DHPawn(Injured).TeleSpawnProtected())
+        {
+            return 0;
+        }
+
+        // Check if the player is in a spawn area and is protected
+        if (LevelInfo.bUseSpawnAreas && Injured.PlayerReplicationInfo.Team != none && ROPlayerReplicationInfo(Injured.PlayerReplicationInfo) != none)
+        {
+            TeamIndex = Injured.PlayerReplicationInfo.Team.TeamIndex;
+            RoleInfo = ROPlayerReplicationInfo(Injured.PlayerReplicationInfo).RoleInfo;
+
+            if (RoleInfo != none)
+            {
+                if (RoleInfo.bCanBeTankCrew && CurrentTankCrewSpawnArea[TeamIndex] != none)
+                {
+                    SpawnArea = CurrentTankCrewSpawnArea[TeamIndex];
+                }
+                else if (DHRoleInfo(RoleInfo) != none && DHRoleInfo(RoleInfo).bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
+                {
+                    SpawnArea = DHCurrentMortarSpawnArea[TeamIndex];
+                }
+                else if (CurrentSpawnArea[TeamIndex] != none)
+                {
+                    SpawnArea = CurrentSpawnArea[TeamIndex];
+                }
+
+                if (SpawnArea != none && SpawnArea.PreventDamage(Injured))
+                {
+                    return 0;
+                }
+            }
+        }
     }
 
-    return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
+    Damage = super(TeamGame).ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType); // skip over Super in ROTeamGame as it is re-stated here
+
+    // Check for friendly fire damage here since it's convenient
+    if (Damage > 0 && ROPawn(InstigatedBy) != none && InstigatedBy.IsHumanControlled() && ROPawn(Injured) != none && Injured != InstigatedBy
+        && InstigatedBy.PlayerReplicationInfo != none && Injured.PlayerReplicationInfo != none && InstigatedBy.PlayerReplicationInfo.Team == Injured.PlayerReplicationInfo.Team)
+    {
+        ROPlayerReplicationInfo(InstigatedBy.PlayerReplicationInfo).FFDamage += Damage;
+        PlayerController(InstigatedBy.Controller).ReceiveLocalizedMessage(GameMessageClass, 15);
+
+        if (ROPlayerReplicationInfo(InstigatedBy.PlayerReplicationInfo).FFDamage > FFDamageLimit && FFDamageLimit != 0)
+        {
+            HandleFFViolation(PlayerController(InstigatedBy.Controller));
+        }
+    }
+
+    return Damage;
 }
 
 event PlayerController Login(string Portal, string Options, out string Error)
@@ -2399,6 +2446,34 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
                 {
                     ModifyRoundTime(Min(GetRoundTime(), 90), 2); //Set time remaining to 90 seconds
                 }
+            }
+        }
+    }
+}
+
+// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
+// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
+// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
+// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
+function CheckMineVolumes()
+{
+    local int i;
+
+    for (i = 0; i < MineVolumes.Length; ++i)
+    {
+        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
+        {
+            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
+            {
+                MineVolumes[i].Activate();
+            }
+            else
+            {
+                MineVolumes[i].Deactivate();
             }
         }
     }

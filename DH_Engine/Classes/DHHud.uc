@@ -2069,7 +2069,7 @@ simulated function DrawVehiclePhysiscsWheels()
 }
 
 // New function to split out lengthy map drawing functionality from the DrawObjectives() function
-// As this is now called from the DHDeployMenu class as well as DrawObjectives (& also it helps
+// As this is now called from the DHGUIMapComponent class as well as DrawObjectives (& also it helps
 // shorten a very length DrawObjectives function)
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
@@ -3259,7 +3259,7 @@ simulated function DrawObjectives(Canvas C)
 
         for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
         {
-            if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive|| DHGRI.DHObjectives[i].bRequired)
+            if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || DHGRI.DHObjectives[i].bRequired)
             {
                 continue;
             }
