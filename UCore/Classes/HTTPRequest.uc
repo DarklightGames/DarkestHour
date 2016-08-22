@@ -96,7 +96,6 @@ function Timer()
     local int ChunkLength;
     local URL U;
     local HTTPRequest R;
-    local HTTPCookie Cookie;
     local Object O;
 
     if (MyLink.ReceiveState == MyLink.Match)
