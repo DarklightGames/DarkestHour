@@ -168,6 +168,16 @@ simulated function DrawHUD(Canvas C)
 // Modified to prevent fire based on CanFire() & to add dry-fire effects if trying to fire empty MG
 function Fire(optional float F)
 {
+    local DHPlayer PC;
+
+    PC = DHPlayer(Controller);
+
+    if (PC != none && PC.IsWeaponLocked())
+    {
+        PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+        return;
+    }
+
     if (CanFire() && VehWep != none)
     {
         if (VehWep.ReadyToFire(false))

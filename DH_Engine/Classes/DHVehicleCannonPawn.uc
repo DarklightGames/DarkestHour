@@ -342,6 +342,17 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
 function Fire(optional float F)
 {
+    local DHPlayer PC;
+
+    PC = DHPlayer(Controller);
+
+    if (PC != none && PC.IsWeaponLocked())
+    {
+        PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+
+        return;
+    }
+
     if (CanFire() && VehWep != none)
     {
         if (VehWep.ReadyToFire(false))
@@ -368,6 +379,17 @@ function Fire(optional float F)
 // Modified (from deprecated ROTankCannonPawn) to check CanFire(), to skip over obsolete RO functionality, & to add dry-fire sound if trying to fire empty MG
 function AltFire(optional float F)
 {
+    local DHPlayer PC;
+
+    PC = DHPlayer(Controller);
+
+    if (PC != none && PC.IsWeaponLocked())
+    {
+        PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+
+        return;
+    }
+
     if (!bHasAltFire || !CanFire() || VehWep == none)
     {
         return;

@@ -469,6 +469,16 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
+        local DHPlayer PC;
+
+        PC = DHPlayer(Controller);
+
+        if (PC != none && PC.IsWeaponLocked())
+        {
+            PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+            return;
+        }
+
         if (VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('Firing');
@@ -539,6 +549,16 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
+        local DHPlayer PC;
+
+        PC = DHPlayer(Controller);
+
+        if (PC != none && PC.IsWeaponLocked())
+        {
+            PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+            return;
+        }
+
         if (VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('KnobRaisedToFire');
@@ -624,6 +644,16 @@ simulated state FireToIdle extends Busy
 {
     simulated function Fire(optional float F)
     {
+        local DHPlayer PC;
+
+        PC = DHPlayer(Controller);
+
+        if (PC != none && PC.IsWeaponLocked())
+        {
+            PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+            return;
+        }
+
         bPendingFire = true; // allows us to queue up a shot in this stage so we don't have an arbitrary 'waiting time' before we accept input after firing
     }
 
