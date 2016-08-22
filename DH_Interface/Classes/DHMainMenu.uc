@@ -65,7 +65,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_MOTD.ManageComponent(b_MOTDTitle);
     c_MOTD.ManageComponent(i_MOTDLoading);
 
-    l_Version.Caption = class'DarkestHourGame'.static.GetVersionString();
+    l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
 }
 
 function ShowControlsChangedMessage()
@@ -93,13 +93,13 @@ function InternalOnOpen()
 
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
 
-    CurrentVersion = class'DarkestHourGame'.static.GetVersionString();
+    CurrentVersion = class'DarkestHourGame'.default.Version.ToString();
 
     if (SavedVersion != CurrentVersion)
     {
         //ShowAnnouncement();
 
-        SavedVersion = class'DarkestHourGame'.static.GetVersionString();
+        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();
     }
 }
