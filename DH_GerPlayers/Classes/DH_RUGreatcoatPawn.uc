@@ -7,7 +7,7 @@ class DH_RUGreatcoatPawn extends DHPawn;
 
 defaultproperties
 {
-    mesh=SkeletalMesh'DH_ROCharacters.DH_rus_greatcoat'
-    Skins(0)=texture'DH_ROUniformTex.RussianTunics.DH_rus_greatcoat'
+    mesh=SkeletalMesh'DHCharacters_anm.DH_rus_greatcoat'
+    Skins(0)=texture'DHRussianCharactersTex.RussianTunics.DH_rus_greatcoat'
     Skins(1)=texture'Characters_tex.rus_heads.rus_face01'
 }

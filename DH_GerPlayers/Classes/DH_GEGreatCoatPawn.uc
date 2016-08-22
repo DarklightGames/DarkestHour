@@ -7,6 +7,6 @@ class DH_GEGreatCoatPawn extends DHPawn;
 
 defaultproperties
 {
-    mesh=SkeletalMesh'DH_ROCharacters.DH_ger_greatcoat'
+    mesh=SkeletalMesh'DHCharacters_anm.DH_ger_greatcoat'
     Skins(0)=Texture'Characters_tex.ger_uniforms.ger_greatcoat'
 }

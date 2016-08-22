@@ -33,7 +33,7 @@ defaultproperties
     PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     SoundVolume=140
-    GunsightOverlay=texture'DH_ROVehicleOptics_tex.Allied.M1937_optics'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.M1937_optics'
     CannonScopeCenter=texture'Vehicle_Optic.T3476_sight_mover'
     //ScopePositionX=0.075
     //ScopeCenterScaleX=1.0
