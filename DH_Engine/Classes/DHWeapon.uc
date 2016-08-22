@@ -26,20 +26,24 @@ simulated function BringUp(optional Weapon PrevWeapon)
     ResetPlayerFOV();
 }
 
-// Modified to handle weapon locking
 simulated function bool ReadyToFire(int Mode)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
+    local int WeaponLockTimeLeft;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-    PRI = DHPlayerReplicationInfo(Instigator.Controller.PlayerReplicationInfo);
-
-    // If weapon unlock time has not been reached, then do not allow fire (as weapons are locked)
-    if (GRI != none && PRI != none && PRI.WeaponUnlockTime > GRI.ElapsedTime)
+    if (Instigator != none)
     {
-        PlayerController(Instigator.Controller).myHUD.Message(PRI, "Weapon locked for another" @ PRI.WeaponUnlockTime - GRI.ElapsedTime @ "seconds.", 'Say');
-        return false;
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.IsWeaponLocked(WeaponLockTimeLeft))
+        {
+            if (Instigator.IsLocallyControlled())
+            {
+                PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
+            }
+
+            return false;
+        }
     }
 
     return super.ReadyToFire(Mode);

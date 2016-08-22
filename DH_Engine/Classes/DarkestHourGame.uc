@@ -5,14 +5,8 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-// This may seem like it belongs in GRI, but all of this info is already replicated, the server just needs to update it if the player reconnects
-struct PlayerStoredData
-{
-    var string      IDHash;
-    var int         WeaponUnlockTime, FFDamage, Kills, PersonalLives;
-    var float       FFKills, Score, Deaths;
-};
-var     array<PlayerStoredData>     PlayerData; // When a player leaves the server this info is stored for the session so if they return these values won't reset
+// When a player leaves the server this info is stored for the session so if they return these values won't reset
+var     Hashtable_string_Object     PlayerSessions;
 
 var     DH_LevelInfo                DHLevelInfo;
 
@@ -57,17 +51,7 @@ var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
-var struct VersionInfo
-{
-    var int Major;
-    var int Minor;
-    var int Patch;
-} Version;
-
-static function string GetVersionString()
-{
-    return "v" $ default.Version.Major $ "." $ default.Version.Minor $ "." $ default.Version.Patch;
-}
+var     UVersion                    Version;
 
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
@@ -346,6 +330,8 @@ function PostBeginPlay()
     {
         Metrics = Spawn(MetricsClass);
     }
+
+    PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
 }
 
 event Tick(float DeltaTime)
@@ -2241,6 +2227,7 @@ state RoundInPlay
         local int i, ArtilleryStrikeInt;
         local Controller P;
         local DHGameReplicationInfo GRI;
+        local DHPlayer PC;
 
         global.Timer();
 
@@ -2308,6 +2295,19 @@ state RoundInPlay
         {
             Level.Game.Broadcast(self, "The battle ended because time ran out", 'Say');
             ChooseWinner();
+        }
+
+        // Send "weapon unlock" notification to players
+        for (P = Level.ControllerList; P != none; P = P.nextController)
+        {
+            PC = DHPlayer(P);
+
+            if (PC != none && PC.bAreWeaponsLocked && ElapsedTime > PC.WeaponUnlockTime)
+            {
+                PC.bAreWeaponsLocked = false;
+
+                PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2);
+            }
         }
     }
 }
@@ -3749,30 +3749,30 @@ function OpenPlayerMenus()
 // Override to tell client to save their ROID to their ini so they can easily copy it, store session data, and handle metrics
 event PostLogin(PlayerController NewPlayer)
 {
-    local int i;
-    local DHPlayer DHP;
+    local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
+    local Object O;
+    local DHPlayerSession S;
 
     super.PostLogin(NewPlayer);
 
-    if (NewPlayer != none)
-    {
-        DHP = DHPlayer(NewPlayer);
+    PC = DHPlayer(NewPlayer);
 
-        if (DHP != none)
-        {
-            PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
-        }
+    if (PC == none)
+    {
+        return;
     }
 
-    if (DHP == none || PRI == none)
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none)
     {
         return;
     }
 
     if (Level.NetMode == NM_DedicatedServer)
     {
-        DHP.ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
+        PC.ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
     }
 
     if (Metrics != none)
@@ -3780,77 +3780,63 @@ event PostLogin(PlayerController NewPlayer)
         Metrics.OnPlayerLogin(NewPlayer);
     }
 
-    // Cycle through the PlayerData and if there is stored data, update the PRI info
-    for (i = 0; i < PlayerData.Length; ++i)
+    if (PlayerSessions.Get(PC.GetPlayerIDHash(), O))
     {
-        if (DHP.GetPlayerIDHash() ~= PlayerData[i].IDHash)
+        S = DHPlayerSession(O);
+
+        PRI.Deaths = S.Deaths;
+        PRI.FFDamage = S.FFDamage;
+        PRI.FFKills = S.FFKills;
+        PRI.Kills = S.Kills;
+        PRI.Score = S.Score;
+
+        if (S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
         {
-            // An ID exists, lets setup PRI values with stored data
-            PRI.Deaths = PlayerData[i].Deaths;
-            PRI.FFDamage = PlayerData[i].FFDamage;
-            PRI.FFKills = PlayerData[i].FFKills;
-            PRI.Kills = PlayerData[i].Kills;
-            PRI.Score = PlayerData[i].Score;
-            PRI.WeaponUnlockTime = PlayerData[i].WeaponUnlockTime; // Testing: GameReplicationInfo.ElapsedTime + 60;
-            break;
+            PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
         }
     }
-
-    // Set the player's hash variable! We have to set this here, because GetPlayerIDHash() returns gibberish while in Logout()
-    PRI.IDHash = DHP.GetPlayerIDHash();
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
-function Logout(controller Exiting)
+function Logout(Controller Exiting)
 {
-    local int i;
-    local bool bUpdatedData;
-    local DHPlayer DHP;
+    local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
+    local Object O;
+    local DHPlayerSession S;
 
     super.Logout(Exiting);
 
-    DHP = DHPlayer(Exiting);
+    PC = DHPlayer(Exiting);
 
-    if (Exiting == none || DHP == none)
+    if (PC == none)
     {
         return;
     }
 
-    PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     if (PRI == none)
     {
         return;
     }
 
-    // Cycle through the PlayerData
-    for (i = 0; i < PlayerData.Length; ++i)
+    if (!PlayerSessions.Get(PC.ROIDHash, O))
     {
-        // if an entry already exists update it
-        if (PRI.IDHash ~= PlayerData[i].IDHash)
-        {
-            PlayerData[i].Deaths = PRI.Deaths;
-            PlayerData[i].FFDamage = PRI.FFDamage;
-            PlayerData[i].FFKills = PRI.FFKills;
-            PlayerData[i].Kills = PRI.Kills;
-            PlayerData[i].Score = PRI.Score;
-            PlayerData[i].WeaponUnlockTime = PRI.WeaponUnlockTime;
-            bUpdatedData = true;
-        }
+        O = new class'DHPlayerSession';
+        PlayerSessions.Put(PC.ROIDHash, O);
     }
 
-    // If we didn't update any data, lets add the data to the array
-    if (!bUpdatedData)
+    S = DHPlayerSession(O);
+
+    if (S != none)
     {
-        PlayerData.Insert(0, 1);
-        PlayerData[0].Deaths = PRI.Deaths;
-        PlayerData[0].FFDamage = PRI.FFDamage;
-        PlayerData[0].FFKills = PRI.FFKills;
-        PlayerData[0].IDHash = PRI.IDHash;
-        PlayerData[0].Kills = PRI.Kills;
-        PlayerData[0].Score = PRI.Score;
-        PlayerData[0].WeaponUnlockTime = PRI.WeaponUnlockTime;
+        S.Deaths = PRI.Deaths;
+        S.FFDamage = PRI.FFDamage;
+        S.FFKills = PRI.FFKills;
+        S.Kills = PRI.Kills;
+        S.Score = PRI.Score;
+        S.WeaponUnlockTime = PC.WeaponUnlockTime;
     }
 }
 
@@ -3959,7 +3945,12 @@ defaultproperties
     ReinforcementMessagePercentages(2)=0.1
     ReinforcementMessagePercentages(3)=0.0
 
-    Version=(Major=7,Minor=0,Patch=3)
+    Begin Object Class=UVersion Name=VersionObject
+        Major=7
+        Minor=0
+        Patch=3
+    End Object
+    Version=VersionObject
 
     MetricsClass=class'DHMetrics'
     bEnableMetrics=true

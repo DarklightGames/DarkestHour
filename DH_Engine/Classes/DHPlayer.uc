@@ -59,13 +59,18 @@ var     bool                    bSpawnPointInvalidated;
 
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 
+// Weapon locking
+var     bool                    bAreWeaponsLocked;          // server-side only, flag used for sending unlocked message after timer expires (done in DarkestHourGame.Timer)
+var     int                     WeaponUnlockTime;           // the time (relative to ElpasedTime) at which the player's weapons will be unlocked
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon,
-        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime;
+        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
+        WeaponUnlockTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -75,7 +80,9 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog, ServerMetricsDump; // these ones in debug mode only
+        // these ones in debug mode only
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog,
+        ServerMetricsDump, ServerLockWeapons;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -357,7 +364,7 @@ function ChangeName(coerce string S)
 {
     if (Len(S) > 32)
     {
-        S = left(S, 32);
+        S = Left(S, 32);
     }
 
     ReplaceText(S, "\"", "");
@@ -1224,7 +1231,7 @@ state Mantling
             Pawn.Velocity = vect(0.0, 0.0, 0.0);
         }
 
-        super.PlayerTick(DeltaTime);
+        global.PlayerTick(DeltaTime);
     }
 
     function Timer()
@@ -2821,13 +2828,47 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
     }
 }
 
+function LockWeapons(int Seconds)
+{
+    if (Level != none && Level.Game != none && Level.Game.GameReplicationInfo != none)
+    {
+        bAreWeaponsLocked = true;
+        WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+
+        // "Your weapons have been locked due to excessive spawn killing."
+        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0);
+    }
+}
+
+simulated function bool IsWeaponLocked(optional out int WeaponLockTimeLeft)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        WeaponLockTimeLeft = (WeaponUnlockTime - GRI.ElapsedTime);
+    }
+
+    return WeaponLockTimeLeft > 0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-exec function LockWeapons(int Seconds)
+exec function DebugLockWeapons(int Seconds)
 {
-    DHPlayerReplicationInfo(PlayerReplicationInfo).WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ServerLockWeapons(Seconds);
+    }
+}
+
+function ServerLockWeapons(int Seconds)
+{
+    LockWeapons(SecondS);
 }
 
 // Modified to work in debug mode, as well as in single player
