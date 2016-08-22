@@ -13,34 +13,21 @@ var string              VictimID;
 var vector              VictimLocation;
 var byte                VictimTeam;
 var int                 HitIndex;
+var int                 RoundTime;
 
 function JSONValue ToJSON()
 {
-    local JSONObject Root;
-    local JSONObject KillerObject;
-    local JSONObject VictimObject;
-
-    Root = new class'JSONObject';
-
-    // Damage Type
-    Root.PutString("damage_type", DamageType.Name);
-    Root.PutInteger("hit_index", HitIndex);
-
-    // Killer
-    KillerObject = new class'JSONObject';
-    KillerObject.PutString("id", KillerID);
-    KillerObject.Put("location", class'JSONArray'.static.ICreateFromVector(KillerLocation));
-    KillerObject.PutInteger("team", KillerTeam);
-
-    Root.Put("killer", KillerObject);
-
-    // Victim
-    VictimObject = new class'JSONObject';
-    VictimObject.PutString("id", VictimID);
-    VictimObject.Put("location", class'JSONArray'.static.ICreateFromVector(VictimLocation));
-    VictimObject.PutInteger("team", VictimTeam);
-
-    Root.Put("victim", VictimObject);
-
-    return Root;
+    return (new class'JSONObject')
+        .PutString("damage_type", DamageType.Name)
+        .PutInteger("hit_index", HitIndex)
+        .PutInteger("time", RoundTime)
+        .Put("killer", (new class'JSONObject')
+            .PutString("id", KillerID)
+            .PutInteger("team", KillerTeam)
+            .PutIVector("location", KillerLocation))
+        .Put("victim", (new class'JSONObject')
+            .PutString("id", VictimID)
+            .PutInteger("team", VictimTeam)
+            .PutIVector("location", VictimLocation));
 }
+

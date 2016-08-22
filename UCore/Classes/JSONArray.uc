@@ -86,7 +86,7 @@ static function JSONArray Create()
     return A;
 }
 
-static function JSONArray CreateFromVector(vector V)
+static function JSONArray FromVector(vector V)
 {
     local JSONArray A;
 
@@ -98,7 +98,7 @@ static function JSONArray CreateFromVector(vector V)
     return A;
 }
 
-static function JSONArray ICreateFromVector(vector V)
+static function JSONArray IFromVector(vector V)
 {
     local JSONArray A;
 
@@ -110,7 +110,7 @@ static function JSONArray ICreateFromVector(vector V)
     return A;
 }
 
-static function JSONArray CreateFromStringArray(array<string> Strings)
+static function JSONArray FromStrings(array<string> Strings)
 {
     local int i;
     local JSONArray A;
@@ -125,7 +125,22 @@ static function JSONArray CreateFromStringArray(array<string> Strings)
     return A;
 }
 
-static function JSONArray CreateFromSerializableArray(array<JSONSerializable> Serializables)
+static function JSONArray FromValues(array<JSONValue> Values)
+{
+    local int i;
+    local JSONArray A;
+
+    A = Create();
+
+    for (i = 0; i < Values.Length; ++i)
+    {
+        A.Add(Values[i]);
+    }
+
+    return A;
+}
+
+static function JSONArray FromSerializables(array<JSONSerializable> Serializables)
 {
     local int i;
     local JSONArray A;
@@ -139,3 +154,4 @@ static function JSONArray CreateFromSerializableArray(array<JSONSerializable> Se
 
     return A;
 }
+

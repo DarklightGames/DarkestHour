@@ -80,11 +80,40 @@ function Trigger(Actor Other, Pawn EventInstigator)
 // From ROObjSatchel class
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local Controller C;
+    local DarkestHourGame G;
+    local array<string> PlayerIDs;
+    local DHGameReplicationInfo GRI;
+    local int RoundTime;
+
     bActive = false;
 
     if (CompletePRI != none)
     {
         Level.Game.ScoreObjective(CompletePRI, 10.0);
+    }
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        for (C = Level.ControllerList; C != none; C = C.nextController)
+        {
+            if (C.PlayerReplicationInfo == CompletePRI)
+            {
+                PlayerIDs[PlayerIDs.Length] = PlayerController(C).GetPlayerIDHash();
+                break;
+            }
+        }
+
+        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        }
+
+        G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
 
     BroadcastLocalizedMessage(class'ROObjectiveMsg', Team + 2, none, none, self);

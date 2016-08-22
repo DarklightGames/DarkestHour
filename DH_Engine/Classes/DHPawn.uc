@@ -1059,6 +1059,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local int        ActualDamage;
     local Controller Killer;
     local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
+    local int RoundTime;
 
     if (DamageType == none)
     {
@@ -1201,7 +1203,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         if (G != none && G.Metrics != none)
         {
-            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex);
+            GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+            if (GRI != none)
+            {
+                RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+            }
+
+            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex, RoundTime);
         }
 
         Died(Killer, DamageType, HitLocation);

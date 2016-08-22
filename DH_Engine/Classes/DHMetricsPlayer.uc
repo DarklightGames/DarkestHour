@@ -11,12 +11,9 @@ var string          NetworkAddress;
 
 function JSONValue ToJSON()
 {
-    local JSONObject O;
-
-    O = new class'JSONObject';
-    O.PutString("id", ID);
-    O.Put("names", class'JSONArray'.static.CreateFromStringArray(Names));
-    O.PutString("ip", NetworkAddress);
-
-    return O;
+    return (new class'JSONObject')
+        .PutString("id", ID)
+        .Put("names", class'JSONArray'.static.FromStrings(Names))
+        .PutString("ip", NetworkAddress);
 }
+

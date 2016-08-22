@@ -28,7 +28,7 @@ function JSONValue Get(string Key)
     return Value;
 }
 
-function Put(string Key, JSONValue Value)
+function JSONObject Put(string Key, JSONValue Value)
 {
     if (Map == none)
     {
@@ -36,29 +36,53 @@ function Put(string Key, JSONValue Value)
     }
 
     Map.Put(Key, Value);
+
+    return self;
 }
 
-function PutString(string Key, coerce string Value)
+function JSONObject PutString(string Key, coerce string Value)
 {
-    Put(Key, class'JSONString'.static.Create(Value));
+    return Put(Key, class'JSONString'.static.Create(Value));
 }
 
-function PutInteger(string Key, int Value)
+function JSONObject PutInteger(string Key, int Value)
 {
-    Put(Key, class'JSONNumber'.static.Create(string(Value)));
+    return Put(Key, class'JSONNumber'.static.Create(string(Value)));
 }
 
-function PutFloat(string Key, float Value)
+function JSONObject PutFloat(string Key, float Value)
 {
-    Put(Key, class'JSONNumber'.static.Create(string(Value)));
+    return Put(Key, class'JSONNumber'.static.Create(string(Value)));
 }
 
-function Erase(string Key)
+function JSONObject PutVector(string Key, vector Value)
+{
+    return Put(Key, class'JSONArray'.static.FromVector(Value));
+}
+
+function JSONObject PutIVector(string Key, vector Value)
+{
+    return Put(Key, class'JSONArray'.static.IFromVector(Value));
+}
+
+function JSONObject PutArrayValues(string Key, array<JSONValue> Values)
+{
+    return Put(Key, class'JSONArray'.static.FromValues(Values));
+}
+
+function JSONObject PutArraySerializables(string Key, array<JSONSerializable> Serializables)
+{
+    return Put(Key, class'JSONArray'.static.FromSerializables(Serializables));
+}
+
+function JSONObject Erase(string Key)
 {
     if (Map != none)
     {
         Map.Erase(Key);
     }
+
+    return self;
 }
 
 function array<string> GetKeys()

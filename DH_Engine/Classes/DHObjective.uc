@@ -482,19 +482,15 @@ function HandleGroupActions(int Team)
 
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
-    local DarkesthourGame         DHGame;
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo              RI;
-    local Controller              C;
-    local Pawn                    P;
-    local int                     i;
-
-    DHGame = DarkesthourGame(Level.Game);
-
-    if (DHGame == none)
-    {
-        return;
-    }
+    local DarkestHourGame           G;
+    local DHPlayerReplicationInfo   PRI;
+    local DHGameReplicationInfo     GRI;
+    local DHRoleInfo                RI;
+    local Controller                C;
+    local Pawn                      P;
+    local int                       i;
+    local array<string>             PlayerIDs;
+    local int                       RoundTime;
 
     CurrentCapProgress = 0.0;
     bAlliesContesting = false; // set to false as the objective was captured
@@ -553,9 +549,28 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         }
 
         Level.Game.ScoreObjective(C.PlayerReplicationInfo, 10);
+
+        if (PlayerController(C) != none)
+        {
+             PlayerIDs[PlayerIDs.Length] = PlayerController(C).GetPlayerIDHash();
+        }
     }
 
     BroadcastLocalizedMessage(class'DHObjectiveMessage', Team, none, none, self);
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        }
+
+        G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
+    }
 
     switch (Team)
     {

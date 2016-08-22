@@ -7,6 +7,7 @@ class DHMetrics extends Actor;
 
 var private Hashtable_string_Object Players;
 var private array<DHMetricsFrag>    Frags;
+var private array<DHMetricsCapture> Captures;
 var private DateTime                RoundStartTime;
 var private DateTime                RoundEndTime;
 
@@ -22,20 +23,8 @@ function string Dump()
     local Object Object;
     local HashtableIterator_string_Object PlayersIterator;
     local JSONObject Root;
-    local JSONObject ServerObject;
     local array<DHMetricsPlayer> PlayersArray;
     local FileLog F;
-
-    Root = new class'JSONObject';
-
-    // Server
-    ServerObject = new class'JSONObject';
-    ServerObject.PutString("name", Level.Game.GameReplicationInfo.ServerName);
-
-    Root.Put("server", ServerObject);
-    Root.PutString("map", class'DHLib'.static.GetMapName(Level));
-    Root.PutString("round_start", RoundStartTime.IsoFormat());
-    Root.PutString("round_end", RoundEndTime.IsoFormat());
 
     PlayersIterator = Players.CreateIterator();
 
@@ -45,10 +34,16 @@ function string Dump()
         PlayersArray[PlayersArray.Length] = DHMetricsPlayer(Object);
     }
 
-    Root.Put("players", class'JSONArray'.static.CreateFromSerializableArray(PlayersArray));
-
     // Frags
-    Root.Put("frags", class'JSONArray'.static.CreateFromSerializableArray(Frags));
+    Root = (new class'JSONObject')
+        .Put("server", (new class'JSONObject')
+            .PutString("name", Level.Game.GameReplicationInfo.ServerName))
+        .PutString("map", class'DHLib'.static.GetMapName(Level))
+        .PutString("round_start", RoundStartTime.IsoFormat())
+        .PutString("round_end", RoundEndTime.IsoFormat())
+        .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
+        .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
+        .Put("captures", class'JSONArray'.static.FromSerializables(Captures));
 
     StopWatch(false);
 
@@ -135,7 +130,7 @@ function OnPlayerChangeName(PlayerController PC)
     }
 }
 
-function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex)
+function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
 {
     local DHMetricsFrag F;
     local vector KillerLocation;
@@ -157,6 +152,21 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     F.DamageType = DamageType;
     F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
+    F.RoundTime = RoundTime;
+
     Frags[Frags.Length] = F;
+}
+
+function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, array<string> PlayerIDs)
+{
+    local DHMetricsCapture C;
+
+    C = new class'DHMetricsCapture';
+    C.ObjectiveIndex = ObjectiveIndex;
+    C.TeamIndex = TeamIndex;
+    C.PlayerIDs = PlayerIDs;
+    C.RoundTime = RoundTime;
+
+    Captures[Captures.Length] = C;
 }
 
