@@ -36,6 +36,7 @@ function string Dump()
 
     // Frags
     Root = (new class'JSONObject')
+        .PutString("version", class'DarkestHourGame'.default.Version.ToString())
         .Put("server", (new class'JSONObject')
             .PutString("name", Level.Game.GameReplicationInfo.ServerName))
         .PutString("map", class'DHLib'.static.GetMapName(Level))
