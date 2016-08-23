@@ -8,7 +8,7 @@ class DH_ROGE extends DHRoleInfo
 
 defaultproperties
 {
-    Side=SIDE_Axis
+    Texture=texture'DHEngine_Tex.Axis_RoleInfo'
     VoiceType="DH_GerPlayers.DHGerVoice"
     AltVoiceType="DH_GerPlayers.DHGerVoice"
     SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'

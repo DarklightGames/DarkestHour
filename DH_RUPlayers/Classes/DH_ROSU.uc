@@ -8,6 +8,7 @@ class DH_ROSU extends DHRoleInfo
 
 defaultproperties
 {
+    Texture=texture'DHEngine_Tex.Allies_RoleInfo'
     Side=SIDE_Allies
     VoiceType="DH_RUPlayers.DHRussianVoice"
     AltVoiceType="DH_RUPlayers.DHRussianVoice"
