@@ -8,7 +8,7 @@ class DH_ROSU_RKK_Greatcoat extends DH_ROSU_RKK
 
 defaultproperties
 {
-    SleeveTexture=texture'DH_ROUniformTex.RussianSleeves.DH_RussianCoatSleeves'
+    SleeveTexture=texture'DHRussianCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
     RolePawnClass="DH_RUPlayers.DH_RUGreatcoatPawn"
     Models(0)="RUGreatCoat1"
     Models(1)="RUGreatCoat2"

@@ -8,7 +8,7 @@ class DH_ROSU_RKK_TanTelogreika extends DH_ROSU_RKK
 
 defaultproperties
 {
-    SleeveTexture=texture'DH_ROUniformTex.RussianSleeves.DH_rus_sleeves_tan'
+    SleeveTexture=texture'DHRussianCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
     RolePawnClass="DH_RUPlayers.DH_RUTeloTanPawn"
     Models(0)="RUTelogreikaTan1"
     Models(1)="RUTelogreikaTan2"

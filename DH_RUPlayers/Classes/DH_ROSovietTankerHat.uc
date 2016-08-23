@@ -8,5 +8,5 @@ class DH_ROSovietTankerHat extends DH_ROSovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'gear_anm.rus_tanker_cap'
-    Skins(0)=texture'DH_ROUniformTex.RussianHeadgear.DH_rus_headgear'
+    Skins(0)=texture'DHRussianCharactersTex.RussianHeadgear.DH_rus_headgear'
 }

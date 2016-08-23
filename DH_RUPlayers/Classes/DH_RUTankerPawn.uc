@@ -7,7 +7,7 @@ class DH_RUTankerPawn extends DHPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_ROCharacters.DH_rus_tanker'
+    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_tanker'
     Skins(0)=Texture'Characters_tex.rus_uniforms.Russian_Tanker'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face01'
 }

@@ -7,7 +7,7 @@ class DH_RUTeloTanPawn extends DHPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_ROCharacters.DH_rus_rifleman_tunic'
-    Skins(0)=Texture'DH_ROUniformTex.RussianTunics.DH_rus_telogreika_tan01'
+    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_rifleman_tunic'
+    Skins(0)=Texture'DHRussianCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
     Skins(1)=texture'Characters_tex.rus_heads.rus_face01'
 }

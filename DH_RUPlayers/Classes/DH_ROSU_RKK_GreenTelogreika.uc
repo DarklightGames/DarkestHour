@@ -8,7 +8,7 @@ class DH_ROSU_RKK_GreenTelogreika extends DH_ROSU_RKK
 
 defaultproperties
 {
-    SleeveTexture=texture'DH_ROUniformTex.RussianSleeves.DH_rus_sleeves_green'
+    SleeveTexture=texture'DHRussianCharactersTex.RussianSleeves.DH_rus_sleeves_green'
     RolePawnClass="DH_RUPlayers.DH_RUTeloGreenPawn"
     Models(0)="RUTelogreikaGreen1"
     Models(1)="RUTelogreikaGreen2"

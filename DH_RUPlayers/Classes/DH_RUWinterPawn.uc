@@ -7,7 +7,7 @@ class DH_RUWinterPawn extends DHPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_ROCharacters.DH_rus_snowcamo'
+    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_snowcamo'
     Skins(0)=Texture'Characters_tex.rus_uniforms.rus_snowcamo'
     Skins(1)=Texture'Characters_tex.rus_heads.rus_face01'
 }
