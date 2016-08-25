@@ -11,4 +11,4 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PTRDWeapon',Amount=1,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     Grenades(0)=none
     GivenItems(0)="DH_Equipment.DHBinocularsItems"
-    }
+}
