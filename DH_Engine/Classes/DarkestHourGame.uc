@@ -233,19 +233,7 @@ function PostBeginPlay()
         GRI.OverheadOffset = 0;
     }
 
-    // Store allied nationality for customising HUD
-    if (DHLevelInfo.AlliedNation == NATION_Britain)
-    {
-        GRI.AlliedNationID = 1;
-    }
-    else if (DHLevelInfo.AlliedNation == NATION_Canada)
-    {
-        GRI.AlliedNationID = 2;
-    }
-    else
-    {
-        GRI.AlliedNationID = 0;
-    }
+    GRI.AlliedNationID = int(DHLevelInfo.AlliedNation);
 
     // Find the location of the map bounds
     foreach AllActors(class'ROMapBoundsNE', NE)
