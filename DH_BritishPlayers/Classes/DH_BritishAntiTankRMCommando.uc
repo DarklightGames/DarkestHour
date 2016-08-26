@@ -12,7 +12,6 @@ defaultproperties
     AltName="Tank Hunter"
     Article="a "
     PluralName="Tank Hunters"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_AT'
     Models(0)="RMC1"
     Models(1)="RMC2"
     Models(2)="RMC3"

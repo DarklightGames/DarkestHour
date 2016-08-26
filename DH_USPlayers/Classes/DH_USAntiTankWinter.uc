@@ -12,7 +12,6 @@ defaultproperties
     AltName="Anti-Tank Soldier"
     Article="an "
     PluralName="Anti-Tank Soldiers"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconAT'
     Models(0)="US_WinterInf1"
     Models(1)="US_WinterInf2"
     Models(2)="US_WinterInf3"

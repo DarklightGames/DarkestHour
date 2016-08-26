@@ -12,7 +12,6 @@ defaultproperties
     AltName="Artillerieoffizier"
     Article="a "
     PluralName="Artillery Officers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Off'
     Models(0)="FJO451"
     Models(1)="FJO452"
     Models(2)="FJO453"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sturmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Eng'
     Models(0)="SSA_1"
     Models(1)="SSA_2"
     Models(2)="SSA_3"

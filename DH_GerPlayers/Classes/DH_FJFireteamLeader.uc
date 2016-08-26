@@ -11,7 +11,6 @@ defaultproperties
     AltName="Gefreiter"
     Article="a "
     PluralName="Corporals"
-    MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Ftl'
     Models(0)="FJ1"
     Models(1)="FJ2"
     Models(2)="FJ3"

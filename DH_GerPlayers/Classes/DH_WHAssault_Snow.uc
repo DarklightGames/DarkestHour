@@ -11,7 +11,6 @@ defaultproperties
     AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Stosstruppe'
     Models(0)="WHS_1"
     Models(1)="WHS_2"
     Models(2)="WHS_3"

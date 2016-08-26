@@ -12,7 +12,6 @@ defaultproperties
     AltName="Panzerjäger"
     Article="a "
     PluralName="Tank Hunters"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_AT'
     Models(0)="SSS_1"
     Models(1)="SSS_2"
     Models(2)="SSS_3"

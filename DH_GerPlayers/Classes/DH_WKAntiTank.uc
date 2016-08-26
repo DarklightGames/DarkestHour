@@ -12,7 +12,6 @@ defaultproperties
     AltName="PaK-Soldat"
     Article="an "
     PluralName="Anti-tank soldiers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.Pak-soldat'
     Models(0)="WK_1"
     Models(1)="WK_2"
     Models(2)="WK_3"

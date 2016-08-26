@@ -11,7 +11,6 @@ defaultproperties
     AltName="Combat Engineer"
     Article="a "
     PluralName="Combat Engineers"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_Eng'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"

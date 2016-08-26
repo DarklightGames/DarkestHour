@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sniper"
     Article="a "
     PluralName="Snipers"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Snip'
     Models(0)="Wor_1"
     Models(1)="Wor_2"
     Models(2)="Wor_3"

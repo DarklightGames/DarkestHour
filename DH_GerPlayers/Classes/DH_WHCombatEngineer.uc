@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sturmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Sturmpionier'
     Models(0)="WH_1"
     Models(1)="WH_2"
     Models(2)="WH_3"

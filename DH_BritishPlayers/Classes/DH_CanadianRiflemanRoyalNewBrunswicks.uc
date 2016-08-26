@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    MenuImage=texture'DHCanadianCharactersTex.Icons.Can_Rifleman'
     Models(0)="RNB_1"
     Models(1)="RNB_2"
     Models(2)="RNB_3"

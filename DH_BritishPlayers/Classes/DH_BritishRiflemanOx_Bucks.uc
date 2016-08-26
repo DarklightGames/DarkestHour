@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Para_Rifleman'
     Models(0)="para1"
     Models(1)="para2"
     Models(2)="para3"

@@ -5,8 +5,7 @@
 
 class DHGUITeamSelection extends ROGUITeamSelection;
 
-var automated BackgroundImage               bg_Background2,
-                                            bg_Background3;
+var array<texture>                          BackgroundTextures;
 
 var automated GUIButton                     b_Disconnect, b_Settings;
 
@@ -61,30 +60,7 @@ function SetBackground()
 
     if (LI != none)
     {
-        if (LI.AlliedNation == NATION_Britain)
-        {
-            bg_Background.SetVisibility(false);
-            bg_Background2.SetVisibility(true);
-            bg_Background3.SetVisibility(false);
-        }
-        else if (LI.AlliedNation == NATION_Canada)
-        {
-            bg_Background.SetVisibility(false);
-            bg_Background2.SetVisibility(false);
-            bg_Background3.SetVisibility(true);
-        }
-        else // NATION_USA
-        {
-            bg_Background.SetVisibility(true);
-            bg_Background2.SetVisibility(false);
-            bg_Background3.SetVisibility(false);
-        }
-    }
-    else
-    {
-        bg_Background.SetVisibility(true);
-        bg_Background2.SetVisibility(false);
-        bg_Background3.SetVisibility(false);
+        bg_Background.Image = BackgroundTextures[int(LI.AlliedNation)];
     }
 }
 
@@ -204,27 +180,10 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
 defaultproperties
 {
-    Begin Object Class=BackgroundImage Name=PageBackground2
-        Image=texture'DH_GUI_Tex.Menu.TeamselectB'
-        ImageStyle=ISTY_Scaled
-        ImageRenderStyle=MSTY_Alpha
-        X1=0
-        Y1=0
-        X2=1023
-        Y2=1023
-    End Object
-    bg_Background2=BackgroundImage'DH_Interface.DHGUITeamSelection.PageBackground2'
-
-    Begin Object Class=BackgroundImage Name=PageBackground3
-        Image=texture'DH_GUI_Tex.Menu.TeamselectC'
-        ImageStyle=ISTY_Scaled
-        ImageRenderStyle=MSTY_Alpha
-        X1=0
-        Y1=0
-        X2=1023
-        Y2=1023
-    End Object
-    bg_Background3=BackgroundImage'DH_Interface.DHGUITeamSelection.PageBackground3'
+    BackgroundTextures(0)=texture'DH_GUI_Tex.Menu.Teamselect'
+    BackgroundTextures(1)=texture'DH_GUI_Tex.Menu.TeamselectB'
+    BackgroundTextures(2)=texture'DH_GUI_Tex.Menu.TeamselectC'
+    BackgroundTextures(3)=texture'DH_GUI_Tex.Menu.TeamselectD'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? units"

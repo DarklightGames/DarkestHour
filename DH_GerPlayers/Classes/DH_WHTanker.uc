@@ -11,7 +11,6 @@ defaultproperties
     AltName="Panzerbesatzung"
     Article="a "
     PluralName="Tank Crewmen"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Panzerbezatsung'
     Models(0)="WHP_1"
     Models(1)="WHP_2"
     Models(2)="WHP_3"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Combat Engineer"
     Article="a "
     PluralName="Combat Engineers"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Eng'
     Models(0)="RMC1"
     Models(1)="RMC2"
     Models(2)="RMC3"

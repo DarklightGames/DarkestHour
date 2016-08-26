@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rottenführer"
     Article="a "
     PluralName="Corporals"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'
     Models(0)="WHS_1"
     Models(1)="WHS_2"
     Models(2)="WHS_3"

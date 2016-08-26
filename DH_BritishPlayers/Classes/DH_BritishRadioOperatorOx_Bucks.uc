@@ -11,7 +11,6 @@ defaultproperties
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Para_RadOp'
     Models(0)="paraRad1"
     Models(1)="paraRad2"
     Models(2)="paraRad3"

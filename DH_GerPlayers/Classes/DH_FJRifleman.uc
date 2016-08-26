@@ -11,7 +11,6 @@ defaultproperties
     AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
-    MenuImage=texture'DHGermanCharactersTex.Icons.FJ_k98'
     Models(0)="FJ1"
     Models(1)="FJ2"
     Models(2)="FJ3"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Gefreiter"
     Article="a "
     PluralName="Corporals"
-    MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"
     Models(2)="WHAu_3"

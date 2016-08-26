@@ -12,7 +12,6 @@ defaultproperties
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    MenuImage=texture'DHUSCharactersTex.Icons.ABOf'
     Models(0)="US_502101ABOf1"
     Models(1)="US_502101ABOf2"
     Models(2)="US_502101ABOf3"

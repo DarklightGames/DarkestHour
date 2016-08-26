@@ -11,7 +11,6 @@ defaultproperties
     AltName="Panzerbesatzung"
     Article="a "
     PluralName="Tank Crewmen"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_TankCrew'
     Models(0)="Ardennes_SSP_1"
     Models(1)="Ardennes_SSP_2"
     Models(2)="Ardennes_SSP_3"

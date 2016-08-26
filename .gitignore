@@ -5,6 +5,9 @@
 *.tlog
 *.ucl
 *.~bak
+*.make
+*.int
+*.u
 *.DS_Store
 Red Orchestra.app
 /Animations/
@@ -45,7 +48,6 @@ RORoles/
 ROVehicles/
 ScreenShots/
 tools/
-turul/
 Unrealed/
 UnrealGame/
 UTV2004c/
@@ -90,5 +92,3 @@ XWebAdmin/
 /System/UnrealEdTips.ini
 /System/UPlaylists.ini
 /System/User.ini
-/System/XAdmin.ini
-/System/DHSwappingMutatorConfig.ini

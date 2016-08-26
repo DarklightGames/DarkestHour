@@ -11,7 +11,6 @@ defaultproperties
     AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="SSS_1"
     Models(1)="SSS_2"
     Models(2)="SSS_3"

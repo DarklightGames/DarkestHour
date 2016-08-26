@@ -12,7 +12,6 @@ defaultproperties
     AltName="Werferbeobachter"
     Article="a "
     PluralName="Mortar Observers"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
     Models(0)="WH_C1"
     Models(1)="WH_C2"
     Models(2)="WH_C3"

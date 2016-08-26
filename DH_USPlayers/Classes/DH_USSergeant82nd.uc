@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sergeant"
     Article="a "
     PluralName="Sergeants"
-    MenuImage=texture'DHUSCharactersTex.Icons.ABSg'
     Models(0)="US_82ABSarg1"
     Models(1)="US_82ABSarg2"
     Models(2)="US_82ABSarg3"

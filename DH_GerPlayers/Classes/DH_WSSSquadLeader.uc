@@ -11,7 +11,6 @@ defaultproperties
     AltName="Unterscharführer"
     Article="a "
     PluralName="Sergeants"
-    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_SqL'
     Models(0)="SS_1"
     Models(1)="SS_2"
     Models(2)="SS_3"

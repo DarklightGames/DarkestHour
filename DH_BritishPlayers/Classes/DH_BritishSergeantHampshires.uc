@@ -11,7 +11,6 @@ defaultproperties
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Sg'
     Models(0)="Hamp_Sarg1"
     Models(1)="Hamp_Sarg2"
     Models(2)="Hamp_Sarg3"

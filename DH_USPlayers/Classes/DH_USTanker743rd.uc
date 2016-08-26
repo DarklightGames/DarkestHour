@@ -11,7 +11,6 @@ defaultproperties
     AltName="Tank Crewman"
     Article="a "
     PluralName="Tank Crewmen"
-    MenuImage=texture'DHUSCharactersTex.Icons.IconTCrew'
     Models(0)="US_743rdT1"
     Models(1)="US_743rdT2"
     Models(2)="US_743rdT3"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
-    MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MG'
     Models(0)="FJ451"
     Models(1)="FJ452"
     Models(2)="FJ453"
