@@ -132,7 +132,8 @@ simulated function bool Accept(Actor Incoming, Actor Source)
         }
     }
 
-    DHPawn(Incoming).TeleSpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+    DHPawn(Incoming).SpawnProtEnds = Level.TimeSeconds + Min(2, SpawnProtectionTime);
+    DHPawn(Incoming).SpawnKillTimeEnds = Level.TimeSeconds + SpawnProtectionTime;
 
     if (Role == ROLE_Authority && bResetStamina && DHPawn(Incoming) != none)
     {

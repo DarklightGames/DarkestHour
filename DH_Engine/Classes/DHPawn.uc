@@ -9,7 +9,8 @@ class DHPawn extends ROPawn
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
 // General
-var     float   TeleSpawnProtEnds;        // is set when a player teleports for "spawn" protection in selectable spawn maps
+var     float   SpawnProtEnds;            // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
+var     float   SpawnKillTimeEnds;        // is set when a player spawns
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
 var     vector  LastWhizLocation;         // last whiz sound location on pawn (basically a non-replicated version of Pawn's mWhizSoundLocation, as we no longer want it to replicate)
@@ -529,14 +530,20 @@ function name GetWeaponBoneFor(Inventory I)
     return 'weapon_rhand';
 }
 
-function bool TeleSpawnProtected()
+function bool SpawnProtected()
 {
-    return TeleSpawnProtEnds > Level.TimeSeconds;
+    return SpawnProtEnds > Level.TimeSeconds;
+}
+
+function bool SpawnKillProtected()
+{
+    return SpawnKillTimeEnds > Level.TimeSeconds;
 }
 
 function DeactivateSpawnProtection()
 {
-    TeleSpawnProtEnds = -10000.0;
+    SpawnProtEnds = -10000.0;
+    //SpawnKillTimeEnds = -10000.0;
 
     super.DeactivateSpawnProtection();
 }

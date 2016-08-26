@@ -62,6 +62,7 @@ var     float                   NextChangeTeamTime;         // the time at which
 // Weapon locking
 var     bool                    bAreWeaponsLocked;          // server-side only, flag used for sending unlocked message after timer expires (done in DarkestHourGame.Timer)
 var     int                     WeaponUnlockTime;           // the time (relative to ElpasedTime) at which the player's weapons will be unlocked
+var     int                     WeaponLockViolations;       // the number of violations this player has
 
 replication
 {
@@ -2700,7 +2701,15 @@ function PawnDied(Pawn P)
 
         if (RI != none)
         {
-            NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
+            // If death was a spawn kill, set the next respawn time to 2 seconds; otherwise set normally
+            if (DHPawn(P).SpawnKillProtected())
+            {
+                NextSpawnTime = LastKilledTime + 2;
+            }
+            else
+            {
+                NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
+            }
         }
     }
 }

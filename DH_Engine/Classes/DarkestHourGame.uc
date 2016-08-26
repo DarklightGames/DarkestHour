@@ -864,6 +864,9 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
 
     IdealTeamSizes[0] = Round((TeamSizes[0] + TeamSizes[1]) * TeamRatios[1]);
     IdealTeamSizes[1] = Round((TeamSizes[0] + TeamSizes[1]) * TeamRatios[0]);
+
+    // Update the GRI CurrentAlliedToAxisRatio
+    DHGameReplicationInfo(GameReplicationInfo).CurrentAlliedToAxisRatio = TeamRatios[1];
 }
 
 // Get imbalance team "count", but calculate AlliedToAxisRatio
@@ -921,7 +924,17 @@ function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
         return;
     }
 
-    Killer.PlayerReplicationInfo.Score += Points;
+    // Decide to reward or punish score based on spawn kill
+    if (false) //if vehicle is in spawn protection
+    {
+        //++ vehicle pool
+        //-- killer score?
+        //set respawn time lower!
+    }
+    else
+    {
+        Killer.PlayerReplicationInfo.Score += Points;
+    }
 
     ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
 }
@@ -1032,7 +1045,13 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     if (InstigatedBy != none && Injured != none && InstigatedBy != Injured && Injured.PlayerReplicationInfo != none)
     {
         // Check if the player has just used a select-a-spawn teleport and is protected
-        if (DHPawn(Injured) != none && DHPawn(Injured).TeleSpawnProtected())
+        if (DHPawn(Injured) != none && DHPawn(Injured).SpawnProtected())
+        {
+            return 0;
+        }
+
+        // If the instigator has weapons locked, return no damage
+        if (DHPlayer(InstigatedBy.Controller).IsWeaponLocked())
         {
             return 0;
         }
@@ -1666,6 +1685,30 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         if (Killed.PlayerReplicationInfo != none)
         {
             Killed.PlayerReplicationInfo.Deaths += 1.0;
+        }
+
+        // If this was a spawn kill, handle the rules for spawn kill and adjust damage type
+        // Note: Suiciding after spawn (while spawn kill protected) does not decrease reinforcements anymore
+        if (DHPawn(KilledPawn).SpawnKillProtected())
+        {
+            // Increase infantry reinforcements for victim's team (vehicle stuff is handled in ScoreVehicleKill()
+            ModifyReinforcements(Killed.GetTeamNum(),1);
+
+            // Change the damage type because this was a spawn kill and we want to signify that
+            DamageType = class'DHSpawnKillDamageType';
+
+            // If instigator is not victim (not a suicide)
+            if (Killer != Killed)
+            {
+                // Punish instigator for spawn killing (lock weapons)
+                DHPlayer(Killer).WeaponLockViolations++;
+                DHPlayer(Killer).LockWeapons(5*DHPlayer(Killer).WeaponLockViolations);
+
+                // Punish instigator for spawn killing (reduce score)
+                Killer.PlayerReplicationInfo.Score -= 3;
+            }
+
+            //inform metrics?
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);

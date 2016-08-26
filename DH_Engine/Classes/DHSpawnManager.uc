@@ -740,7 +740,8 @@ function bool SpawnInfantry(DHPlayer C)
         return false;
     }
 
-    P.TeleSpawnProtEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+    P.SpawnProtEnds = Level.TimeSeconds + Min(2, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
+    P.SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
 
     return true;
 }
