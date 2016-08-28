@@ -15,8 +15,8 @@ defaultproperties
     FireSounds(0)=SoundGroup'Inf_Weapons.mp40.mp40_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.mp40.mp40_fire02'
     FireSounds(2)=SoundGroup'Inf_Weapons.mp40.mp40_fire03'
-    MaxVerticalRecoilAngle=550
-    MaxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=500
+    MaxHorizontalRecoilAngle=65
     PctProneIronRecoil=0.5
     RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'

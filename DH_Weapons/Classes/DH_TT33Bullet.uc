@@ -11,7 +11,7 @@ defaultproperties
     MyVehicleDamage=class'TT33VehDamType'
     BallisticCoefficient=0.14
     Speed=22000
-    Damage=50
+    Damage=55.0
     MyDamageType=class'DH_Weapons.DH_TT33DamType'
 }
 

@@ -9,8 +9,8 @@ defaultproperties
 {
     WhizType=2
     MyVehicleDamage=class'DH_Weapons.DH_MP41VehDamType'
-    BallisticCoefficient=0.160000
-    Speed=19952.000000
-    Damage=50.000000
+    BallisticCoefficient=0.16
+    Speed=19952.0
+    Damage=55.0
     MyDamageType=class'DH_Weapons.DH_MP41DamType'
 }
