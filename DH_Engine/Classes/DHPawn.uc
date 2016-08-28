@@ -543,7 +543,6 @@ function bool IsSpawnKillProtected()
 function DeactivateSpawnProtection()
 {
     SpawnProtEnds = -10000.0;
-    //SpawnKillTimeEnds = -10000.0;
 
     super.DeactivateSpawnProtection();
 }
@@ -1992,9 +1991,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
 
-    if (!bShouldGib && DrivenVehicle == none)
+    // If the pawn has not been gibbed, is not in a vehicle, and has not been spawn killed
+    if (!bShouldGib && DrivenVehicle == none && !IsSpawnKillProtected())
     {
-        // Drop inventory if player is not in a vehicle and is not about to be completely obliterated
+        // Then drop weapons
         BurningDropWeaps();
     }
 

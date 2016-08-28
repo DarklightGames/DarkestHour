@@ -24,6 +24,7 @@ var     DHObstacleManager           ObstacleManager;
 var     array<string>               FFViolationIDs; // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking; // Weapons can lock (preventing fire) for punishment
+var     int                         WeaponLockTimes[6];
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
@@ -35,6 +36,7 @@ var     int                         bTeamOutOfReinforcements[2];
 
 const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
+const SPAWN_KILL_RESPAWN_TIME =     2;
 
 var()   config float                ServerTickForInflation; // Value that determines when inflation will start if ServerTickRateAverage is less than
 var     float                       ServerTickRateAverage; // The average tick rate over the past SERVERTICKRATE_UPDATETIME
@@ -928,11 +930,9 @@ function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
     }
 
     // Decide to reward or punish score based on spawn kill
-    if (false) //if vehicle is in spawn protection
+    if (DHVehicle(Vehicle) != none && DHVehicle(Vehicle).IsSpawnProtected())
     {
-        //++ vehicle pool
-        //-- killer score?
-        //set respawn time lower!
+        Killer.PlayerReplicationInfo.Score -= Points;
     }
     else
     {
@@ -1049,6 +1049,12 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     {
         // Check if the player has just used a select-a-spawn teleport and is protected
         if (DHPawn(Injured) != none && DHPawn(Injured).IsSpawnProtected())
+        {
+            return 0;
+        }
+
+        // Check if the vehicle has protection
+        if (DHVehicle(Injured) != none && DHVehicle(Injured).IsSpawnProtected())
         {
             return 0;
         }
@@ -1669,9 +1675,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
-    local Controller P;
-    local float      FFPenalty;
-    local int        Num, i;
+    local Controller        P;
+    local DHPlayer          DHP;
+    local DHPawn            KPawn;
+    local float             FFPenalty;
+    local int               Num, i;
 
     if (Killed == none)
     {
@@ -1690,28 +1698,34 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             Killed.PlayerReplicationInfo.Deaths += 1.0;
         }
 
-        // If this was a spawn kill, handle the rules for spawn kill and adjust damage type
-        // Note: Suiciding after spawn (while spawn kill protected) does not decrease reinforcements anymore
-        if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).IsSpawnKillProtected())
+        if (KilledPawn != none)
         {
+            KPawn = DHPawn(KilledPawn);
+            DHP = DHPlayer(Killer);
+        }
+
+        // If this was a spawn kill, handle the rules for spawn kill and adjust damage type
+        // Suiciding will not count as a Spawn Kill, did this because suiciding after a combat spawn will not act the same way, and thus is not intuitive
+        if (DHP != none && KPawn != none && KPawn.IsSpawnKillProtected() && Killer != Killed && DHPlayer(Killed) != none)
+        {
+            // Inform the victim's DHPlayer that it was spawn killed
+            DHPlayer(Killed).bSpawnedKilled = true;
+
             // Increase infantry reinforcements for victim's team (only if nonzero)
             ModifyReinforcements(Killed.GetTeamNum(),1,false,true);
 
             // Change the damage type because this was a spawn kill and we want to signify that
             DamageType = class'DHSpawnKillDamageType';
 
-            // If instigator is not victim (not a suicide)
-            if (Killer != Killed && DHPlayer(Killer) != none)
-            {
-                // Punish instigator for spawn killing (lock weapons)
-                DHPlayer(Killer).WeaponLockViolations++;
-                DHPlayer(Killer).LockWeapons(5*DHPlayer(Killer).WeaponLockViolations);
+            // Punish instigator for spawn killing (lock weapons)
+            DHP.WeaponLockViolations++;
+            DHP.LockWeapons(WeaponLockTimes[Min(DHP.WeaponLockViolations, arraycount(WeaponLockTimes))]);
 
-                // Punish instigator for spawn killing (reduce score)
-                Killer.PlayerReplicationInfo.Score -= 3;
-            }
+            // Punish instigator for spawn killing (reduce score)
+            DHP.PlayerReplicationInfo.Score -= 2;
 
-            //inform metrics?
+            // Allow the player to spawn a vehicle right away
+            DHP.NextVehicleSpawnTime = DHP.LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
@@ -3825,10 +3839,9 @@ event PostLogin(PlayerController NewPlayer)
         S = DHPlayerSession(O);
 
         PRI.Deaths = S.Deaths;
-        PRI.FFDamage = S.FFDamage;
-        PRI.FFKills = S.FFKills;
         PRI.Kills = S.Kills;
         PRI.Score = S.Score;
+        PC.WeaponLockViolations = S.WeaponLockViolations;
 
         if (S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
         {
@@ -3872,11 +3885,10 @@ function Logout(Controller Exiting)
     if (S != none)
     {
         S.Deaths = PRI.Deaths;
-        S.FFDamage = PRI.FFDamage;
-        S.FFKills = PRI.FFKills;
         S.Kills = PRI.Kills;
         S.Score = PRI.Score;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
+        S.WeaponLockViolations = PC.WeaponLockViolations;
     }
 }
 
@@ -3995,4 +4007,11 @@ defaultproperties
     MetricsClass=class'DHMetrics'
     bEnableMetrics=true
     bUseWeaponLocking=true
+
+    WeaponLockTimes(0)=0
+    WeaponLockTimes(1)=5
+    WeaponLockTimes(2)=15
+    WeaponLockTimes(3)=30
+    WeaponLockTimes(4)=45
+    WeaponLockTimes(5)=60
 }

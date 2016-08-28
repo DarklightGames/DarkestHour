@@ -64,6 +64,8 @@ var     sound       DamagedStartUpSound;         // sound played when trying to 
 var     sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
 var     sound       VehicleBurningSound;         // ambient sound when vehicle's engine is burning
 var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
+var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
+var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -1885,6 +1887,16 @@ event TakeImpactDamage(float AccelMag)
         VehicleExplosion(Normal(ImpactInfo.ImpactNorm), 0.5);
         LastImpactExplosionTime = Level.TimeSeconds;
     }
+}
+
+function bool IsSpawnProtected()
+{
+    return SpawnProtEnds > Level.TimeSeconds;
+}
+
+function bool IsSpawnKillProtected()
+{
+    return SpawnKillTimeEnds > Level.TimeSeconds;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -49,6 +49,7 @@ var     byte                    SpawnPointIndex;
 var     byte                    SpawnVehicleIndex;
 var     byte                    VehiclePoolIndex;
 var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
+var     bool                    bSpawnedKilled;             // player was spawn killed (set to false, when the spawn time is reduced)
 var     int                     NextSpawnTime;              // the next time the player will be able to spawn
 var     int                     LastKilledTime;             // the time at which last death occured
 var     int                     NextVehicleSpawnTime;       // the time at which a player can spawn a vehicle next (this gets set when a player spawns a vehicle)
@@ -2171,7 +2172,16 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
         return 0;
     }
 
-    T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime;
+    // If player was spawn killed, set the respawn time to be the spawn kill respawn time
+    if (bSpawnedKilled)
+    {
+        T = LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
+        bSpawnedKilled = false; // We got the reduced time, so we should set this to false
+    }
+    else
+    {
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime;
+    }
 
     if (VehiclePoolIndex != 255)
     {
@@ -2702,15 +2712,7 @@ function PawnDied(Pawn P)
 
         if (RI != none)
         {
-            // If death was a spawn kill, set the next respawn time to be faster
-            if (DHPawn(P) != none && DHPawn(P).IsSpawnKillProtected())
-            {
-                NextSpawnTime = LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
-            }
-            else
-            {
-                NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
-            }
+            NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
         }
     }
 }

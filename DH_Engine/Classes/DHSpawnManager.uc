@@ -9,6 +9,7 @@ const   SPAWN_POINTS_MAX = 48;
 const   VEHICLE_POOLS_MAX = 32;
 const   SPAWN_VEHICLES_MAX = 8;
 const   SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
+const   SPAWN_PROTECTION_TIME = 2; // The full protection time given to players/vehicles (they cannot be damaged/killed within this time)
 
 struct VehiclePoolSlot
 {
@@ -398,6 +399,20 @@ function bool SpawnVehicle(DHPlayer C)
             TriggerEvent(VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
         }
 
+        // Set spawn protection variables for the vehicle & assign the VehiclePoolTag
+        if (DHVehicle(V) != none)
+        {
+            DHVehicle(V).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
+            DHVehicle(V).SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+        }
+
+        // Set spawn protection variables for the player that spawned the vehicle
+        if (DHPawn(V.Driver) != none)
+        {
+            DHPawn(V.Driver).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
+            DHPawn(V.Driver).SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+        }
+
         // Decrement reservation count
         GRI.UnreserveVehicle(C);
 
@@ -740,7 +755,7 @@ function bool SpawnInfantry(DHPlayer C)
         return false;
     }
 
-    P.SpawnProtEnds = Level.TimeSeconds + Min(2, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
+    P.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
     P.SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
 
     return true;
@@ -749,8 +764,16 @@ function bool SpawnInfantry(DHPlayer C)
 event VehicleDestroyed(Vehicle V)
 {
     local int NextAvailableTime, i, j;
+    local bool bWasSpawnKilled;
+    const SPAWN_KILL_RESPAWN_TIME = 2;
 
     super.VehicleDestroyed(V);
+
+    // Find out if the vehicle was spawned killed
+    if (V != none && DHVehicle(V) != none && DHVehicle(V).IsSpawnKillProtected())
+    {
+        bWasSpawnKilled = true;
+    }
 
     // Removes the destroyed vehicle from the managed Vehicles array
     for (i = Vehicles.Length - 1; i >= 0; --i)
@@ -772,6 +795,11 @@ event VehicleDestroyed(Vehicle V)
         {
             // Updates due to vehicle being destroyed
             GRI.VehiclePoolActiveCounts[i] -= 1;
+
+            if (bWasSpawnKilled)
+            {
+                --GRI.VehiclePoolSpawnCounts[i];
+            }
 
             if (!VehiclePools[i].bIgnoreMaxTeamVehicles)
             {
@@ -805,7 +833,15 @@ event VehicleDestroyed(Vehicle V)
                 if (VehiclePools[i].Slots[j].Vehicle == V)
                 {
                     VehiclePools[i].Slots[j].Vehicle = none;
-                    VehiclePools[i].Slots[j].RespawnTime = GRI.ElapsedTime + VehiclePools[i].RespawnTime;
+
+                    if (bWasSpawnKilled)
+                    {
+                        VehiclePools[i].Slots[j].RespawnTime = GRI.ElapsedTime + SPAWN_KILL_RESPAWN_TIME;
+                    }
+                    else
+                    {
+                        VehiclePools[i].Slots[j].RespawnTime = GRI.ElapsedTime + VehiclePools[i].RespawnTime;
+                    }
 
                     break;
                 }
