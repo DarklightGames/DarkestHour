@@ -9,6 +9,8 @@
 class DH_Teleporter extends Teleporter
     placeable;
 
+const SPAWN_DAMAGE_PROTECTION_TIME = 2;
+
 // The amount of time, in seconds, that the player will have spawn protection
 // after using the teleporter.
 var()   int     SpawnProtectionTime;
@@ -23,6 +25,7 @@ simulated function bool Accept(Actor Incoming, Actor Source)
     local float Magnitude;
     local vector OldDirection;
     local Controller P;
+    local DHPawn DHP;
 
     if (Incoming == none)
     {
@@ -40,7 +43,9 @@ simulated function bool Accept(Actor Incoming, Actor Source)
         NewRotation.Yaw = Rotation.Yaw;
     }
 
-    if (Pawn(Incoming) != none)
+    DHP = DHPawn(Incoming);
+
+    if (DHP != none)
     {
         //tell enemies about teleport
         if (Role == ROLE_Authority)
@@ -54,7 +59,7 @@ simulated function bool Accept(Actor Incoming, Actor Source)
             }
         }
 
-        if (!Pawn(Incoming).SetLocation(Location))
+        if (!DHP.SetLocation(Location))
         {
             Log(self @ "Teleport failed for" @ Incoming);
 
@@ -65,18 +70,18 @@ simulated function bool Accept(Actor Incoming, Actor Source)
         {
             NewRotation.Roll = 0;
 
-            Pawn(Incoming).SetRotation(NewRotation);
-            Pawn(Incoming).SetViewRotation(NewRotation);
-            Pawn(Incoming).ClientSetRotation(NewRotation);
+            DHP.SetRotation(NewRotation);
+            DHP.SetViewRotation(NewRotation);
+            DHP.ClientSetRotation(NewRotation);
 
             LastFired = Level.TimeSeconds;
         }
 
-        if (Pawn(Incoming).Controller != none)
+        if (DHP.Controller != none)
         {
-            Pawn(Incoming).Controller.MoveTimer = -1.0;
-            Pawn(Incoming).Anchor = self;
-            Pawn(Incoming).SetMoveTarget(self);
+            DHP.Controller.MoveTimer = -1.0;
+            DHP.Anchor = self;
+            DHP.SetMoveTarget(self);
         }
 
         Incoming.PlayTeleportEffect(false, true);
@@ -132,13 +137,17 @@ simulated function bool Accept(Actor Incoming, Actor Source)
         }
     }
 
-    DHPawn(Incoming).SpawnProtEnds = Level.TimeSeconds + Min(2, SpawnProtectionTime);
-    DHPawn(Incoming).SpawnKillTimeEnds = Level.TimeSeconds + SpawnProtectionTime;
-
-    if (Role == ROLE_Authority && bResetStamina && DHPawn(Incoming) != none)
+    // Handle DH features (Spawn damage protection, spawn kill punishment, and stamina reset)
+    if (DHP != none)
     {
-        DHPawn(Incoming).Stamina = DHPawn(Incoming).default.Stamina;
-        DHPawn(Incoming).ClientForceStaminaUpdate(DHPawn(Incoming).default.Stamina);
+        DHP.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_DAMAGE_PROTECTION_TIME, SpawnProtectionTime);
+        DHP.SpawnKillTimeEnds = Level.TimeSeconds + SpawnProtectionTime;
+
+        if (Role == ROLE_Authority && bResetStamina)
+        {
+            DHP.Stamina = DHP.default.Stamina;
+            DHP.ClientForceStaminaUpdate(DHP.default.Stamina);
+        }
     }
 
     return true;

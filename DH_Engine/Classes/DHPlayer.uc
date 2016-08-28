@@ -6,6 +6,7 @@
 class DHPlayer extends ROPlayer;
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
+const SPAWN_KILL_RESPAWN_TIME = 2;
 
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
@@ -2701,10 +2702,10 @@ function PawnDied(Pawn P)
 
         if (RI != none)
         {
-            // If death was a spawn kill, set the next respawn time to 2 seconds; otherwise set normally
-            if (DHPawn(P).SpawnKillProtected())
+            // If death was a spawn kill, set the next respawn time to be faster
+            if (DHPawn(P) != none && DHPawn(P).IsSpawnKillProtected())
             {
-                NextSpawnTime = LastKilledTime + 2;
+                NextSpawnTime = LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
             }
             else
             {

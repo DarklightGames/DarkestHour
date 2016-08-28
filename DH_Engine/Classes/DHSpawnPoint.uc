@@ -115,7 +115,7 @@ defaultproperties
     bStatic=true
     RemoteRole=ROLE_None
     DrawScale=1.5
-    SpawnProtectionTime=5.0
+    SpawnProtectionTime=8.0
     bCollideWhenPlacing=true
     CollisionRadius=+00040.0
     CollisionHeight=+00043.0

@@ -530,12 +530,12 @@ function name GetWeaponBoneFor(Inventory I)
     return 'weapon_rhand';
 }
 
-function bool SpawnProtected()
+function bool IsSpawnProtected()
 {
     return SpawnProtEnds > Level.TimeSeconds;
 }
 
-function bool SpawnKillProtected()
+function bool IsSpawnKillProtected()
 {
     return SpawnKillTimeEnds > Level.TimeSeconds;
 }
