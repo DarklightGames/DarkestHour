@@ -399,7 +399,7 @@ function bool SpawnVehicle(DHPlayer C)
             TriggerEvent(VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
         }
 
-        // Set spawn protection variables for the vehicle & assign the VehiclePoolTag
+        // Set spawn protection variables for the vehicle
         if (DHVehicle(V) != none)
         {
             DHVehicle(V).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
