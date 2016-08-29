@@ -260,14 +260,24 @@ simulated function UpdateScoreBoard(Canvas C)
     Y += LineHeight;
     DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
 
-    s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
-
-    if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+    if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
     {
-        S  $= "/" $ GRI.RoundLimit;
+        DrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
 
-    DrawCell(C, s, 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    if (GRI.RoundLimit > 1)
+    {
+        s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
+
+        if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+        {
+            S  $= "/" $ GRI.RoundLimit;
+        }
+
+        Y += LineHeight;
+
+        DrawCell(C, s, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
 
     Y += LineHeight;
 
@@ -422,14 +432,25 @@ simulated function UpdateScoreBoard(Canvas C)
     Y += LineHeight;
     DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
 
-    s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
-
-    if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+    if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
     {
-        S  $= "/" $ GRI.RoundLimit;
+        DrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
 
-    DrawCell(C, s, 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    // Draw rounds won/remaining for the team if not limited to 1 round
+    if (GRI.RoundLimit > 1)
+    {
+        s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
+
+        if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+        {
+            S  $= "/" $ GRI.RoundLimit;
+        }
+
+        Y += LineHeight;
+
+        DrawCell(C, s, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
 
     Y += LineHeight;
 

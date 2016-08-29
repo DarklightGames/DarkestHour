@@ -23,6 +23,8 @@ var automated   GUIButton                       b_Spectate;
 var automated   GUIImage                        i_Spectate;
 var automated   GUIImage                    i_Reinforcements;
 var automated   GUILabel                    l_Reinforcements;
+var automated   GUIImage                    i_SizeAdvantage;
+var automated   GUILabel                    l_SizeAdvantage;
 var automated   GUIImage                    i_RoundTime;
 var automated   GUILabel                    l_RoundTime;
 var automated   ROGUIProportionalContainer  c_Roles;
@@ -284,6 +286,8 @@ function UpdateRoundStatus()
         }
 
         l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
+
+        l_SizeAdvantage.Caption = GRI.GetTeamScaleString(CurrentTeam);
 
         if (!GRI.bMatchHasBegun)
         {
@@ -1476,6 +1480,29 @@ defaultproperties
         TextFont="DHMenuFont"
     End Object
     l_Reinforcements=ReinforcementsLabelObject
+
+    Begin Object Class=GUIImage Name=SizeAdvantageImageObject
+        WinWidth=0.04
+        WinHeight=0.05
+        WinLeft=0.06
+        WinTop=0.07
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=texture'DH_GUI_Tex.DeployMenu.ForceScale'
+    End Object
+    i_SizeAdvantage=SizeAdvantageImageObject
+
+    Begin Object class=GUILabel Name=SizeAdvantageLabelObject
+        TextAlign=TXTA_Left
+        VertAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        WinWidth=0.09
+        WinHeight=0.05
+        WinLeft=0.10
+        WinTop=0.07
+        TextFont="DHMenuFont"
+    End Object
+    l_SizeAdvantage=SizeAdvantageLabelObject
 
     Begin Object Class=GUIImage Name=RoundTimeImageObject
         WinWidth=0.04

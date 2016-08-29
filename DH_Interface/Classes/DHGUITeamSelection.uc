@@ -11,6 +11,8 @@ var automated GUIButton                     b_Disconnect, b_Settings;
 
 var DHPlayer                                PC;
 
+var localized   string                      SizeBonusText;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -43,9 +45,46 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 
     Timer();
-    SetTimer(0.1, true);
+    SetTimer(0.25, true); //changed to 0.25 (4 times a second 10 times prob too much)
 
     SetBackground(); // this is added in DH
+}
+
+// Modified to keep trying to get PC and GRI if it hasn't been initialized yet
+function Timer()
+{
+    if (PC == none)
+    {
+        PC = DHPlayer(PlayerOwner());
+    }
+
+    if (PC != none && GRI == none)
+    {
+        GRI = ROGameReplicationInfo(PC.GameReplicationInfo);
+    }
+
+    UpdateTeamCounts();
+}
+
+// Modified to add information to the end of the string like (+10% size advantage)
+function UpdateTeamCounts()
+{
+    local DHGameReplicationInfo DHGRI;
+    local string AlliedStr, AxisStr;
+
+    if (GRI != none)
+    {
+        DHGRI = DHGameReplicationInfo(GRI);
+    }
+
+    if (DHGRI != none && DHGRI.CurrentAlliedToAxisRatio != 0.5)
+    {
+        AxisStr = " (" $ DHGRI.GetTeamScaleString(AXIS_TEAM_INDEX) @ SizeBonusText $ ")";
+        AlliedStr = " (" $ DHGRI.GetTeamScaleString(ALLIES_TEAM_INDEX) @ SizeBonusText $ ")";
+    }
+
+    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ getTeamCount(AXIS_TEAM_INDEX) $ UnitsText $ AxisStr;
+    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ getTeamCount(ALLIES_TEAM_INDEX) $ UnitsText $ AlliedStr;
 }
 
 function SetBackground()
@@ -180,13 +219,16 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
 defaultproperties
 {
+    UnitsText=" players"
+    SizeBonusText="size advantage"
+
     BackgroundTextures(0)=texture'DH_GUI_Tex.Menu.Teamselect'
     BackgroundTextures(1)=texture'DH_GUI_Tex.Menu.TeamselectB'
     BackgroundTextures(2)=texture'DH_GUI_Tex.Menu.TeamselectC'
     BackgroundTextures(3)=texture'DH_GUI_Tex.Menu.TeamselectD'
 
     Begin Object Class=GUILabel Name=TeamsCount
-        Caption="? units"
+        Caption="? players"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
         WinTop=0.871667
@@ -197,7 +239,7 @@ defaultproperties
     l_TeamCount(0)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount'
 
     Begin Object Class=GUILabel Name=TeamsCount2
-        Caption="? units"
+        Caption="? players"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
         WinTop=0.415

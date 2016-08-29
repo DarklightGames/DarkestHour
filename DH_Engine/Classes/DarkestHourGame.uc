@@ -870,7 +870,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     // Update the GRI CurrentAlliedToAxisRatio
     if (DHGameReplicationInfo(GameReplicationInfo) != none)
     {
-        DHGameReplicationInfo(GameReplicationInfo).CurrentAlliedToAxisRatio = TeamRatios[1];
+        DHGameReplicationInfo(GameReplicationInfo).CurrentAlliedToAxisRatio = Abs(TeamRatios[0]);
     }
 }
 

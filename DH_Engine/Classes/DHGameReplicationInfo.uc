@@ -92,6 +92,8 @@ const OBJECTIVES_MAX = 32;
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
+var() localized string  ForceScaleText;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -856,10 +858,42 @@ simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
     return class'DHSpawnManager'.default.BlockFlags_None;
 }
 
+
+
+
+
+simulated function string GetTeamScaleString(int Team)
+{
+   local float     d;
+   local int       i;
+
+   if (Team == AXIS_TEAM_INDEX)
+   {
+       d = (1.0 - CurrentAlliedToAxisRatio) - (1.0 - (1.0 - CurrentAlliedToAxisRatio));
+   }
+
+   else if (Team == ALLIES_TEAM_INDEX)
+   {
+       d = CurrentAlliedToAxisRatio - (1.0 - CurrentAlliedToAxisRatio);
+   }
+
+   i = int(Round(d * 100));
+
+   if (i > 0)
+   {
+       return "+" $ i $ "%";
+   }
+   else
+   {
+       return string(i) $ "%";
+   }
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     MortarTargetDistanceThreshold=15088 //250 meters in UU
+    ForceScaleText="Size Advantage"
 }
 
