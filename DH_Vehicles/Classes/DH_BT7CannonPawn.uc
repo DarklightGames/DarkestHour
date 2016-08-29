@@ -7,7 +7,6 @@ class DH_BT7CannonPawn extends DHVehicleCannonPawn;
 
 defaultproperties
 {
-    VehiclePositionString="in a BT-7 cannon"
     VehicleNameString="BT-7 Cannon"
     EntryPosition=(X=0,Y=0,Z=0)
     EntryRadius=130.0
