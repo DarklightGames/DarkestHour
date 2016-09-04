@@ -10,7 +10,7 @@ var localized string OfficialText;
 var localized string LegacyText;
 var localized string CommunityText;
 
-var protected string OfficialMaps[32]; // Make sure size matches correctly
+var protected string OfficialMaps[33]; // Make sure size matches correctly
 var protected string LegacyMaps[6];
 
 static function string GetMapSource(string S)
