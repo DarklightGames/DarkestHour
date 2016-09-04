@@ -1849,7 +1849,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     // Send DM to every human player
     if (DeathMessageMode == DM_All)
     {
-        // Loop through al controllers & DM each human player
+        // Loop through all controllers & DM each human player
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             if (DHPlayer(C) != none)
@@ -2466,13 +2466,13 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     }
 
     // Update GRI with the new value
-    if (!bSetReinforcements)
+    if (!bSetReinforcements && GRI.SpawnsRemaining[Team] != -1)
     {
         GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] += Amount);
     }
     else
     {
-        GRI.SpawnsRemaining[Team] = Max(0, Amount);
+        GRI.SpawnsRemaining[Team] = Max(-1, Amount);
     }
 
     // Check for zero reinforcements
@@ -2562,7 +2562,7 @@ function HandleReinforcements(Controller C)
     }
 
     //TODO: look into improving or rewriting this, as this is garbage looking
-    if (PC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0 && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
@@ -2576,7 +2576,7 @@ function HandleReinforcements(Controller C)
             ++TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX];
         }
     }
-    else if (PC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
+    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0 && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
@@ -3726,7 +3726,7 @@ function SendReinforcementMessage(int Team, int Num)
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
-    return DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] <= 0;
+    return DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] == 0;
 }
 
 function int GetRoundTime()

@@ -258,7 +258,15 @@ simulated function UpdateScoreBoard(Canvas C)
     DrawCell(C, TeamNameAxis @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
 
     Y += LineHeight;
-    DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
+    {
+        DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
+    else
+    {
+        DrawCell(C, ReinforcementsText @ ":" @ DHGRI.ReinforcementsInfiniteText, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
 
     if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
     {
@@ -430,7 +438,16 @@ simulated function UpdateScoreBoard(Canvas C)
     DrawCell(C, TeamNameAllies @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
 
     Y += LineHeight;
-    DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    // Draw reinforcement remaining
+    if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
+    {
+        DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
+    else
+    {
+        DrawCell(C, ReinforcementsText @ ":" @ DHGRI.ReinforcementsInfiniteText, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
 
     if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
     {

@@ -62,6 +62,10 @@ var()   bool                        bUsePostCaptureOperations;  // Enables below
 var()   bool                        bDisableWhenAlliesClearObj;
 var()   bool                        bDisableWhenAxisClearObj;
 var()   bool                        bGroupActionsAtDisable;
+var()   bool                        bHideOnMap;
+var()   bool                        bHideOnMapWhenInactive;
+var()   int                         AlliedAwardedReinforcements; // Amount of reinforcement to aware for allies if the obj is captured
+var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to aware for axis if the obj is captured
 var()   int                         PlayersNeededToCapture;
 var()   name                        NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
@@ -571,6 +575,10 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
         G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
+
+    // Award reinforcements
+    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
 
     switch (Team)
     {

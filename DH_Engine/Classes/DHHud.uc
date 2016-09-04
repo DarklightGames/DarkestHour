@@ -300,7 +300,16 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     O.VictimName = Victim.PlayerName;
     O.VictimColor = class'DHColor'.default.TeamColors[Victim.Team.TeamIndex];
     O.DamageType = DamageType;
-    O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
+
+    // If a suicide, team kill, or spawn kill then have the kill message display ASAP
+    if (Killer.Team.TeamIndex == Victim.Team.TeamIndex || DamageType == class'DHSpawnKillDamageType')
+    {
+        O.EndOfLife = Level.TimeSeconds + (ObituaryLifeSpan - ObituaryDelayTime);
+    }
+    else // Otherwise have it wait the delay time (the entire life span)
+    {
+        O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
+    }
 
     // Making the player's name show up in white in the kill list
     if (PlayerOwner != none &&
@@ -2581,6 +2590,12 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             continue;
         }
 
+        // Do not show the objective if it is supposed to be hidden on the map
+        if (DHGRI.DHObjectives[i].bHideOnMap || (!DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bHideOnMapWhenInactive))
+        {
+            continue;
+        }
+
         // Set up icon info
         if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
         {
@@ -3967,7 +3982,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
         else if (DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            if (DHGRI.SpawnsRemaining[PRI.Team.TeamIndex] > 0)
+            if (DHGRI.SpawnsRemaining[PRI.Team.TeamIndex] > 0 || DHGRI.SpawnsRemaining[PRI.Team.TeamIndex] == -1)
             {
                 Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
 

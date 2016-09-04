@@ -10,7 +10,6 @@ var int         WeaponLockViolations;
 var int         WeaponUnlockTime;
 var int         FFDamage;
 var int         Kills;
-var int         PersonalLives;
 var int         FFKills;
 var int         Score;
 var int         Deaths;

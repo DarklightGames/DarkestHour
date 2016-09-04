@@ -285,7 +285,14 @@ function UpdateRoundStatus()
             i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
 
-        l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
+        if (GRI.SpawnsRemaining[CurrentTeam] == -1)
+        {
+            l_Reinforcements.Caption = GRI.ReinforcementsInfiniteText;
+        }
+        else
+        {
+            l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
+        }
 
         l_SizeAdvantage.Caption = GRI.GetTeamScaleString(CurrentTeam);
 

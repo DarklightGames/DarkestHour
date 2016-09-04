@@ -92,7 +92,8 @@ const OBJECTIVES_MAX = 32;
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
-var() localized string  ForceScaleText;
+var localized string    ForceScaleText;
+var localized string    ReinforcementsInfiniteText;
 
 replication
 {
@@ -895,5 +896,6 @@ defaultproperties
     AxisVictoryMusicIndex=-1
     MortarTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size Advantage"
+    ReinforcementsInfiniteText="Infinite"
 }
 

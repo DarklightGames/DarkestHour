@@ -2579,6 +2579,7 @@ function Reset()
 {
     super.Reset();
 
+    WeaponUnlockTime = default.WeaponUnlockTime;
     NextSpawnTime = default.NextSpawnTime;
     SpawnPointIndex = default.SpawnPointIndex;
     SpawnVehicleIndex = default.SpawnVehicleIndex;
