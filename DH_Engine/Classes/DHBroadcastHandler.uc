@@ -169,6 +169,39 @@ function BroadcastTeam(Controller Sender, coerce string Msg, optional name Type)
     }
 }
 
+// Modified to allow dead players to chat to everyone (aka remove the SayDead type)
+function Broadcast(Actor Sender, coerce string Msg, optional name Type)
+{
+    local Controller C;
+    local PlayerController P;
+    local PlayerReplicationInfo PRI;
+
+
+    if (!AllowsBroadcast(Sender, Len(Msg)))
+    {
+        return;
+    }
+
+    if (Pawn(Sender) != none)
+    {
+        PRI = Pawn(Sender).PlayerReplicationInfo;
+    }
+    else if (Controller(Sender) != none)
+    {
+        PRI = Controller(Sender).PlayerReplicationInfo;
+    }
+
+    for (C = Level.ControllerList; C != None; C = C.NextController)
+    {
+        P = PlayerController(C);
+
+        if (P != None)
+        {
+            BroadcastText(PRI, P, Msg, Type);
+        }
+    }
+}
+
 defaultproperties
 {
 }

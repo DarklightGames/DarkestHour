@@ -2851,6 +2851,19 @@ exec function SwapTeams()
     ResetGame();
 }
 
+// Forces a mid game vote to start
+exec function MidGameVote()
+{
+    local DHVotingHandler VH;
+
+    VH = DHVotingHandler(VotingHandler);
+
+    if (VH != none)
+    {
+        VH.MidGameVote();
+    }
+}
+
 //***********************************************************************************
 // END exec Functions!!!
 //***********************************************************************************
@@ -3889,18 +3902,6 @@ function Logout(Controller Exiting)
         S.Score = PRI.Score;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
-    }
-}
-
-exec function MidGameVote()
-{
-    local DHVotingHandler VH;
-
-    VH = DHVotingHandler(VotingHandler);
-
-    if (VH != none)
-    {
-        VH.MidGameVote();
     }
 }
 
