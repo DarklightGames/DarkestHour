@@ -146,6 +146,29 @@ function RegisterBroadcastHandler(BroadcastHandler NewBH)
     }
 }
 
+// Modified to allow players to team chat when dead to rest of team
+// Also removed some spectator team chat stuff, that is never needed
+function BroadcastTeam(Controller Sender, coerce string Msg, optional name Type)
+{
+    local Controller C;
+    local PlayerController P;
+
+    if (!AllowsBroadcast(Sender, Len(Msg)) || Sender == none || PlayerController(Sender) == none || PlayerController(Sender).IsSpectating())
+    {
+        return;
+    }
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        P = PlayerController(C);
+
+        if (P != none && P.PlayerReplicationInfo.Team == Sender.PlayerReplicationInfo.Team)
+        {
+            BroadcastText(Sender.PlayerReplicationInfo, P, Msg, Type);
+        }
+    }
+}
+
 defaultproperties
 {
 }
