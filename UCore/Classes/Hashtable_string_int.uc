@@ -44,6 +44,23 @@ function bool Contains(string Key)
     return Get(Key);
 }
 
+function Clear()
+{
+    local int i;
+
+    Size = 0;
+
+    for (i = 0; i < Keys.Length; ++i)
+    {
+        Keys[i] = "";
+    }
+
+    for (i = 0; i < Values.Length; ++i)
+    {
+        Values[i] = NULL_VALUE;
+    }
+}
+
 private function int Hash(string Key)
 {
     return (class'CRCHash'.static.FromString(Key) & 0x7FFFFFFF) % Keys.Length;
