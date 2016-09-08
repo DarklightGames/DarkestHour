@@ -1468,7 +1468,7 @@ defaultproperties
     Begin Object Class=GUIImage Name=ReinforcementsImageObject
         WinWidth=0.04
         WinHeight=0.05
-        WinLeft=0.06
+        WinLeft=0.02
         WinTop=0.07
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -1482,17 +1482,17 @@ defaultproperties
         TextColor=(R=255,G=255,B=255,A=255)
         WinWidth=0.09
         WinHeight=0.05
-        WinLeft=0.10
+        WinLeft=0.0575
         WinTop=0.07
         TextFont="DHMenuFont"
     End Object
     l_Reinforcements=ReinforcementsLabelObject
 
     Begin Object Class=GUIImage Name=SizeAdvantageImageObject
-        WinWidth=0.04
-        WinHeight=0.05
-        WinLeft=0.06
-        WinTop=0.07
+        WinWidth=0.035
+        WinHeight=0.04
+        WinLeft=0.106
+        WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
         Image=texture'DH_GUI_Tex.DeployMenu.ForceScale'
@@ -1505,7 +1505,7 @@ defaultproperties
         TextColor=(R=255,G=255,B=255,A=255)
         WinWidth=0.09
         WinHeight=0.05
-        WinLeft=0.10
+        WinLeft=0.144
         WinTop=0.07
         TextFont="DHMenuFont"
     End Object
@@ -1514,7 +1514,7 @@ defaultproperties
     Begin Object Class=GUIImage Name=RoundTimeImageObject
         WinWidth=0.04
         WinHeight=0.05
-        WinLeft=0.15
+        WinLeft=0.183
         WinTop=0.07
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -1528,7 +1528,7 @@ defaultproperties
         TextColor=(R=255,G=255,B=255,A=255)
         WinWidth=0.09
         WinHeight=0.05
-        WinLeft=0.19
+        WinLeft=0.223
         WinTop=0.07
         Hint="Time Remaining"
         TextFont="DHMenuFont"

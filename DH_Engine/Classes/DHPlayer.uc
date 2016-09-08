@@ -7,6 +7,7 @@ class DHPlayer extends ROPlayer;
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
+const DEATH_PENALTY_FACTOR = 10;
 
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
@@ -53,13 +54,12 @@ var     bool                    bSpawnedKilled;             // player was spawn 
 var     int                     NextSpawnTime;              // the next time the player will be able to spawn
 var     int                     LastKilledTime;             // the time at which last death occured
 var     int                     NextVehicleSpawnTime;       // the time at which a player can spawn a vehicle next (this gets set when a player spawns a vehicle)
-
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
-
 var     bool                    bSpawnPointInvalidated;
-
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
+var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
+                                                            // it resets whenever an objective is taken
 
 // Weapon locking
 var     bool                    bAreWeaponsLocked;          // server-side only, flag used for sending unlocked message after timer expires (done in DarkestHourGame.Timer)
@@ -71,8 +71,8 @@ replication
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
-        DHPrimaryWeapon, DHSecondaryWeapon,
-        bSpawnPointInvalidated, NextVehicleSpawnTime, LastKilledTime,
+        DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
+         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
         WeaponUnlockTime;
 
     // Variables the server will replicate to all clients
@@ -2180,7 +2180,9 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
     }
     else
     {
-        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime;
+        // LastKilledTime is 0 the first time a player joins a server, but if he leaves, the time is stored (using the sessions thing)
+        // this means the player can pretty much spawn right away the first time connecting, but from then on he will be subject to the respawn time factors
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + (DeathPenaltyCount * DEATH_PENALTY_FACTOR);
     }
 
     if (VehiclePoolIndex != 255)
@@ -2544,6 +2546,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
 
                 bSpawnPointInvalidated = false;
 
+                // Everything is good
                 ClientChangePlayerInfoResult(0);
             }
             else
@@ -2553,6 +2556,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 SpawnVehicleIndex = default.SpawnVehicleIndex;
                 NextSpawnTime = default.NextSpawnTime;
 
+                // this needs commented on what it is doing, in fact most of this function does, very hard to follow
                 ClientChangePlayerInfoResult(19);
             }
         }
@@ -2696,6 +2700,7 @@ function ServerThrowWeapon()
 function PawnDied(Pawn P)
 {
     local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
     local DHRoleInfo      RI;
 
     if (P == none)
@@ -2706,6 +2711,7 @@ function PawnDied(Pawn P)
     super.PawnDied(P);
 
     G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (G != none)
     {
@@ -2715,6 +2721,11 @@ function PawnDied(Pawn P)
         {
             NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
         }
+    }
+
+    if (GRI != none && GRI.bUseDeathPenaltyCount)
+    {
+        ++DeathPenaltyCount;
     }
 }
 

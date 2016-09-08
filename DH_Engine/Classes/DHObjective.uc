@@ -500,6 +500,14 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     bAlliesContesting = false; // set to false as the objective was captured
     bAxisContesting = false;   // ...
 
+    G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+    if (G == none || GRI == none)
+    {
+        return;
+    }
+
     // If it's not recapturable, make it inactive
     if (!bRecaptureable)
     {
@@ -527,8 +535,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             {
                 P = ROVehicleWeaponPawn(C.Pawn);
 
-                // This check is redundant
-                if (P == none || !bVehiclesCanCapture)
+                if (!bVehiclesCanCapture)
                 {
                     continue;
                 }
@@ -537,6 +544,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             {
                 continue;
             }
+        }
+
+        // If bUseDeathPenaltyCount, then reset everyone's count as an objective was captured!
+        if (GRI.bUseDeathPenaltyCount && DHPlayer(C) != none)
+        {
+            DHPlayer(C).DeathPenaltyCount = DHPlayer(C).default.DeathPenaltyCount;
         }
 
         PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
@@ -562,17 +575,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
     BroadcastLocalizedMessage(class'DHObjectiveMessage', Team, none, none, self);
 
-    G = DarkestHourGame(Level.Game);
-
-    if (G != none && G.Metrics != none)
+    if (G.Metrics != none)
     {
-        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
-
-        if (GRI != none)
-        {
-            RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
-        }
-
+        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
         G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
 

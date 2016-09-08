@@ -130,7 +130,7 @@ function PostBeginPlay()
         return; // don't setup the game if LevelInfo isn't DH
     }
 
-    //We made it here so lets setup our DarkestHourGame
+    // We made it here so lets setup our DarkestHourGame
 
     // Setup spectator viewpoints
     for (n = 0; n < LevelInfo.EntryCamTags.Length; ++n)
@@ -150,6 +150,22 @@ function PostBeginPlay()
     if (GRI == none)
     {
         return;
+    }
+
+    // Setup game type variables
+    switch (DHLevelInfo.GameType)
+    {
+        case GT_Push:
+            // placeholder
+        break;
+
+        case GT_Advance:
+            GRI.bUseDeathPenaltyCount = true;
+        break;
+
+        default:
+            // do nothing
+        break;
     }
 
     // General game type settings
@@ -1928,6 +1944,9 @@ state RoundInPlay
 
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
+
+        // Reset PlayerSessions
+        PlayerSessions.Clear();
 
         // Role limits
         for (i = 0; i < arraycount(GRI.DHAlliesRoleLimit); ++i)
@@ -3839,22 +3858,25 @@ event PostLogin(PlayerController NewPlayer)
 
     if (Level.NetMode == NM_DedicatedServer)
     {
-        PC.ClientSaveROIDHash(NewPlayer.GetPlayerIDHash());
+        PC.ROIDHash = PC.GetPlayerIDHash(); // server (important)
+        PC.ClientSaveROIDHash(PC.GetPlayerIDHash());  // client (nice thing for client)
     }
 
     if (Metrics != none)
     {
-        Metrics.OnPlayerLogin(NewPlayer);
+        Metrics.OnPlayerLogin(PC);
     }
 
-    if (PlayerSessions.Get(PC.GetPlayerIDHash(), O))
+    if (PC.GetPlayerIDHash() != "" && PlayerSessions.Get(PC.GetPlayerIDHash(), O))
     {
         S = DHPlayerSession(O);
 
         PRI.Deaths = S.Deaths;
         PRI.Kills = S.Kills;
         PRI.Score = S.Score;
+        PC.LastKilledTime = S.LastKilledTime;
         PC.WeaponLockViolations = S.WeaponLockViolations;
+        PC.DeathPenaltyCount = S.DeathPenaltyCount;
 
         if (S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
         {
@@ -3887,7 +3909,7 @@ function Logout(Controller Exiting)
         return;
     }
 
-    if (!PlayerSessions.Get(PC.ROIDHash, O))
+    if (PC.ROIDHash != "" && !PlayerSessions.Get(PC.ROIDHash, O))
     {
         O = new class'DHPlayerSession';
         PlayerSessions.Put(PC.ROIDHash, O);
@@ -3900,8 +3922,10 @@ function Logout(Controller Exiting)
         S.Deaths = PRI.Deaths;
         S.Kills = PRI.Kills;
         S.Score = PRI.Score;
+        S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
+        S.DeathPenaltyCount = PC.DeathPenaltyCount;
     }
 }
 

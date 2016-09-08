@@ -5,6 +5,59 @@
 
 class DHConsole extends ROConsole;
 
+const RECONNECT_DELAY = 1.0;
+
+var bool        bLockConsoleOpen;
+var bool        bDelayForReconnect;
+var float       DelayWaitTime;
+var string      StoredServerAddress;
+
+// Modified to fix the reconnect console command, a delay is need, but so is a bit in ConnectFailure, as it does techically fail still
+simulated event Tick(float Delta)
+{
+    super.Tick(Delta);
+
+    // We have been queued with reconnect command
+    if (bDelayForReconnect)
+    {
+        // Handle delay count up
+        DelayWaitTime += Delta;
+
+        // Once we have been delayed long enough
+        if (DelayWaitTime > RECONNECT_DELAY)
+        {
+            // Make sure we properly stored the server address
+            if (StoredServerAddress != "")
+            {
+                // Even if you strip the extra bit off of the address string here, it is somehow added later, and must be stripped/handled in ConnectFailure
+                DelayedConsoleCommand("Open" @ StoredServerAddress);
+            }
+
+            // Lets not hang forever here or otherwise somehow get stuck/repeat commands
+            DelayWaitTime = 0.0;
+            bDelayForReconnect = false;
+        }
+    }
+}
+
+exec function Reconnect()
+{
+    if (ViewportOwner == none || ViewportOwner.Actor == none)
+    {
+        return;
+    }
+
+    // Initiate a locked console which is queued for reconnect in RECONNECT_DELAY seconds
+    bDelayForReconnect = true;
+    bLockConsoleOpen = true;
+
+    // Store current network address
+    StoredServerAddress = ViewportOwner.Actor.GetServerNetworkAddress();
+
+    // Disconnect from the current server (tick will handle the reconnect, sorta)
+    DelayedConsoleCommand("Disconnect");
+}
+
 // Testing override of this function in hopes to stop the Unknown Steam Error bug
 event ConnectFailure(string FailCode,string URL)
 {
@@ -24,7 +77,7 @@ event ConnectFailure(string FailCode,string URL)
 
     Log("Connect Failure: " @ FailCode $ "[" $ Error $ "] (" $ URL $ ")", 'Debug');
 
-    if (FailCode == "NEEDPW")
+    if (FailCode == "NEEDPW" || FailCode == "noreconnect")
     {
         for (Index = 0; Index < SavedPasswords.Length; ++Index)
         {
@@ -78,14 +131,12 @@ event ConnectFailure(string FailCode,string URL)
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'AccessControl'.default.IPBanned);
-
         return;
     }
     else if (FailCode == "SESSIONBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'AccessControl'.default.SessionBanned);
-
         return;
     }
     else if (FailCode == "SERVERFULL")
@@ -139,26 +190,29 @@ event ConnectFailure(string FailCode,string URL)
 
         return;
     }
-    else if (FailCode == "STEAMAUTH" /*|| FailCode == "STEAMVALIDATIONSTALLED"*/)
+    else if (FailCode == "STEAMAUTH")
     {
-        if (SteamLoginRetryCount < 5)
+        // Check to see if the URL is more than just the IP, if so then use the cut off IP
+        if (InStr(URL, "/") != -1)
+        {
+            ViewportOwner.Actor.ClientTravel(Server,TRAVEL_Absolute, false);
+            ViewportOwner.GUIController.CloseAll(false, true);
+            return;
+        }
+        else if (SteamLoginRetryCount < 5) // Try again a few times
         {
             SteamLoginRetryCount++;
-
             ViewportOwner.Actor.ClientTravel(URL,TRAVEL_Absolute, false);
             ViewportOwner.GUIController.CloseAll(false, true);
-
             return;
         }
         else
         {
             ViewportOwner.Actor.ClearProgressMessages();
             ViewportOwner.Actor.ClientNetworkMessage("ST_Unknown","");
-
             return;
         }
     }
-    // end _RO_
 
     Log("Unhandled connection failure!  FailCode '" $ FailCode @ "'   URL '" $ URL $ "'");
     ViewportOwner.Actor.ProgressCommand("menu:" $ class'GameEngine'.default.DisconnectMenuClass, FailCode, Error);
@@ -292,6 +346,20 @@ exec function VehicleTalk()
         TypedStrPos = Len(TypedStr);
         TypingOpen();
     }
+}
+
+// Modified to fix reconnect command bug
+exec function ConsoleClose()
+{
+    // If we are locked open, then do nothing and return
+    if (bLockConsoleOpen)
+    {
+        // To prevent from always being locked lets unlock now, this also gives the user a chance to cancel the reconnect by closing the console
+        bLockConsoleOpen = false;
+        return;
+    }
+
+    super.ConsoleClose();
 }
 
 defaultproperties

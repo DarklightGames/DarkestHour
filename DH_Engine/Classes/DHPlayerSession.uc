@@ -8,9 +8,9 @@ class DHPlayerSession extends Object;
 var string      IDHash;
 var int         WeaponLockViolations;
 var int         WeaponUnlockTime;
-var int         FFDamage;
+var int         LastKilledTime;
 var int         Kills;
-var int         FFKills;
 var int         Score;
 var int         Deaths;
+var int         DeathPenaltyCount;
 

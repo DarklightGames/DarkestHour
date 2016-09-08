@@ -25,11 +25,21 @@ enum ESpawnMode
     ESM_DarkestHour
 };
 
+enum EGameType
+{
+    GT_Push,
+    GT_Attrition,
+    GT_Advance,
+    GT_SearchAndDestroy
+};
+
 var() float     AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
 var() bool      bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
 
 var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
+
+var() EGameType GameType;
 
 var() sound AlliesWinsMusic;            // Optional override for Allies victory music
 var() sound AxisWinsMusic;              // Optional override for Axis victory music

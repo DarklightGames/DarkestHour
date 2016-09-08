@@ -88,7 +88,7 @@ function Timer()
     local string StatusString;
     local string HeadersString;
     local string Value;
-    local string Location;
+    local string Loc;
     local int Status;
     local TreeMap_string_string ResponseHeaders;
     local int i;
@@ -125,9 +125,9 @@ function Timer()
                 case 302:   // Found
                 case 307:   // Temporary Redirect
                 case 308:   // Permanent Redirect
-                    if (bAllowRedirects && ResponseHeaders.Get("Location", Location) && !OnRedirect(self, Status, Location))
+                    if (bAllowRedirects && ResponseHeaders.Get("Location", Loc) && !OnRedirect(self, Status, Loc))
                     {
-                        U = class'URL'.static.FromString(Location);
+                        U = class'URL'.static.FromString(Loc);
 
                         if (U != none)
                         {
@@ -142,7 +142,7 @@ function Timer()
                         }
                         else
                         {
-                            Warn("Could not parse URL for redirection (" $ Location $ ")");
+                            Warn("Could not parse URL for redirection (" $ Loc $ ")");
                         }
                     }
                     Destroy();

@@ -61,7 +61,6 @@ var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
 var float               CurrentAlliedToAxisRatio;
 
-
 // Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
 const VEHICLE_POOLS_MAX = 32;
 
@@ -92,8 +91,11 @@ const OBJECTIVES_MAX = 32;
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
+var bool                bUseDeathPenaltyCount;
+
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
+var localized string    DeathPenaltyText;
 
 replication
 {
@@ -128,6 +130,7 @@ replication
         MaxTeamVehicles,
         DHObjectives,
         AttritionRate,
+        bUseDeathPenaltyCount,
         CurrentAlliedToAxisRatio;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
@@ -897,5 +900,6 @@ defaultproperties
     MortarTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size Advantage"
     ReinforcementsInfiniteText="Infinite"
+    DeathPenaltyText="Death Penalty"
 }
 
