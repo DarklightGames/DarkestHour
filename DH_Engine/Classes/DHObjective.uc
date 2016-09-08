@@ -64,10 +64,11 @@ var()   bool                        bDisableWhenAxisClearObj;
 var()   bool                        bGroupActionsAtDisable;
 var()   bool                        bHideOnMap;
 var()   bool                        bHideOnMapWhenInactive;
+var()   bool                        bResetDeathPenalties;        // will reset all players death penalty counts
 var()   int                         AlliedAwardedReinforcements; // Amount of reinforcement to aware for allies if the obj is captured
 var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to aware for axis if the obj is captured
 var()   int                         PlayersNeededToCapture;
-var()   name                        NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
+var()   name                        NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
@@ -547,7 +548,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         }
 
         // If bUseDeathPenaltyCount, then reset everyone's count as an objective was captured!
-        if (GRI.bUseDeathPenaltyCount && DHPlayer(C) != none)
+        if (bResetDeathPenalties && GRI.bUseDeathPenaltyCount && DHPlayer(C) != none)
         {
             DHPlayer(C).DeathPenaltyCount = DHPlayer(C).default.DeathPenaltyCount;
         }
@@ -1079,5 +1080,6 @@ defaultproperties
     Texture=texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true
+    bResetDeathPenalties=true
     PlayersNeededToCapture=1
 }
