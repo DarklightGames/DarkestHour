@@ -3196,8 +3196,8 @@ exec function URL(string S)
     if (U != none)
     {
         Log("Scheme" @ U.Scheme);
-        Log("User" @ U.User);
-        Log("Pass" @ U.Pass);
+        Log("User" @ U.Username);
+        Log("Pass" @ U.Password);
         Log("Host" @ U.Host);
         Log("Path" @ U.Path);
         Log("Query" @ U.Query);
