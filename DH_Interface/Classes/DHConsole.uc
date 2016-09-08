@@ -77,7 +77,7 @@ event ConnectFailure(string FailCode,string URL)
 
     Log("Connect Failure: " @ FailCode $ "[" $ Error $ "] (" $ URL $ ")", 'Debug');
 
-    if (FailCode == "NEEDPW" || FailCode == "noreconnect")
+    if (FailCode == "NEEDPW")
     {
         for (Index = 0; Index < SavedPasswords.Length; ++Index)
         {
