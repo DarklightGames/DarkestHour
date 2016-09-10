@@ -1916,7 +1916,7 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
         }
 
         StartDriverHatchFire();
-        Log(Tag @ "FireEffectOffset =" @ FireEffectOffset);
+        Log(VehicleNameString @ "FireEffectOffset =" @ FireEffectOffset);
     }
 }
 

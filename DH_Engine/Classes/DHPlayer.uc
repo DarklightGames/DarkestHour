@@ -3241,7 +3241,7 @@ exec function LogVehDamage()
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        DamageText = V.Tag @ "Health =" @ V.Health @ " EngineHealth =" @ V.EngineHealth
+        DamageText = V.VehicleNameString @ "Health =" @ V.Health @ " EngineHealth =" @ V.EngineHealth
             @ " bLeftTrackDamaged =" @ V.bLeftTrackDamaged @ " bRightTrackDamaged =" @ V.bRightTrackDamaged @ " IsDisabled =" @ V.IsDisabled();
 
         Pawn.ClientMessage(DamageText);
@@ -3258,7 +3258,7 @@ exec function LogVehAttach(optional bool bIncludeAttachedArray)
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
         Log("-----------------------------------------------------------");
-        Log(Caps(V.Tag) @ "ATTACHMENTS:");
+        Log(Caps(V.VehicleNameString) @ "ATTACHMENTS:");
 
         if (V.VehicleAttachments.Length > 0)
         {
@@ -3316,7 +3316,7 @@ exec function SetGearRatio(byte Index, float NewValue)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < arraycount(V.GearRatios))
     {
-        Log(V.Tag @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
+        Log(V.VehicleNameString @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
         V.GearRatios[Index] = NewValue;
     }
 }
@@ -3328,7 +3328,7 @@ exec function SetTransRatio(float NewValue)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        Log(V.Tag @ "TransRatio =" @ NewValue @ "(was" @ V.TransRatio $ ")");
+        Log(V.VehicleNameString @ "TransRatio =" @ NewValue @ "(was" @ V.TransRatio $ ")");
         V.TransRatio = NewValue;
     }
 }
@@ -3340,7 +3340,7 @@ exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExitPositions.Length)
     {
-        Log(V.Tag @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
+        Log(V.VehicleNameString @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
         V.ExitPositions[Index].X = NewX;
         V.ExitPositions[Index].Y = NewY;
         V.ExitPositions[Index].Z = NewZ;
@@ -3440,7 +3440,7 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
 
             V.DetachDriver(V.Driver);
             V.AttachDriver(V.Driver);
-            Log(V.Tag @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
+            Log(V.VehicleNameString @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
         }
     }
 }
@@ -3477,7 +3477,7 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
             }
             else
             {
-                Log(V.Tag @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
+                Log(V.VehicleNameString @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
             }
         }
     }
@@ -3527,7 +3527,7 @@ exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
             NewValue += V.TreadVelocityScale;
         }
 
-        Log(V.Tag @ "TreadVelocityScale =" @ NewValue @ "(was" @ V.TreadVelocityScale $ ")");
+        Log(V.VehicleNameString @ "TreadVelocityScale =" @ NewValue @ "(was" @ V.TreadVelocityScale $ ")");
         V.TreadVelocityScale = NewValue;
     }
 }
@@ -3548,7 +3548,7 @@ exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
             NewValue += V.WheelRotationScale;
         }
 
-        Log(V.Tag @ "WheelRotationScale =" @ NewValue @ "(was" @ V.WheelRotationScale $ ")");
+        Log(V.VehicleNameString @ "WheelRotationScale =" @ NewValue @ "(was" @ V.WheelRotationScale $ ")");
         V.WheelRotationScale = NewValue;
     }
 }
@@ -3564,7 +3564,7 @@ exec function SetOccPos(byte Index, int NewX, int NewY)
     {
         X = float(NewX) / 1000.0;
         Y = float(NewY) / 1000.0;
-        Log(V.Tag @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
+        Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
         V.VehicleHudOccupantsX[Index] = X;
         V.VehicleHudOccupantsY[Index] = Y;
     }
@@ -3578,8 +3578,9 @@ exec function SetHUDTreads(int NewPosX0, int NewPosX1, int NewPosY, int NewScale
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        Log(V.Tag @ "VehicleHudTreadsPosX[0] =" @ string(float(NewPosX0) / 1000.0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1) / 1000.0 @ "VehicleHudTreadsPosY =" @ float(NewPosY) / 1000.0
-            @ "VehicleHudTreadsScale =" @ float(NewScale) / 1000.0 @ "(was" @ V.VehicleHudTreadsPosX[0] @ V.VehicleHudTreadsPosX[1] @ V.VehicleHudTreadsPosY @ V.VehicleHudTreadsScale $ ")");
+        Log(V.VehicleNameString @ "VehicleHudTreadsPosX[0] =" @ string(float(NewPosX0) / 1000.0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1) / 1000.0
+            @ "VehicleHudTreadsPosY =" @ float(NewPosY) / 1000.0 @ "VehicleHudTreadsScale =" @ float(NewScale) / 1000.0
+            @ "(was" @ V.VehicleHudTreadsPosX[0] @ V.VehicleHudTreadsPosX[1] @ V.VehicleHudTreadsPosY @ V.VehicleHudTreadsScale $ ")");
 
         V.VehicleHudTreadsPosX[0] = float(NewPosX0) / 1000.0;
         V.VehicleHudTreadsPosX[1] = float(NewPosX1) / 1000.0;
@@ -3595,7 +3596,7 @@ exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
     {
-        Log(V.Tag @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
+        Log(V.VehicleNameString @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
         V.ExhaustPipes[Index].ExhaustPosition.X = NewX;
         V.ExhaustPipes[Index].ExhaustPosition.Y = NewY;
         V.ExhaustPipes[Index].ExhaustPosition.Z = NewZ;
@@ -3615,7 +3616,7 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
     {
-        Log(V.Tag @ "ExhaustPipes[" $ Index $ "].ExhaustRotation =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.ExhaustPipes[Index].ExhaustRotation $ ")");
+        Log(V.VehicleNameString @ "ExhaustPipes[" $ Index $ "].ExhaustRotation =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.ExhaustPipes[Index].ExhaustRotation $ ")");
         V.ExhaustPipes[Index].ExhaustRotation.Pitch = NewPitch;
         V.ExhaustPipes[Index].ExhaustRotation.Yaw = NewYaw;
         V.ExhaustPipes[Index].ExhaustRotation.Roll = NewRoll;
@@ -3651,7 +3652,7 @@ exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional b
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(V.Tag @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
             V.Wheels[i].WheelRadius = NewRadius;
         }
     }
@@ -3683,7 +3684,7 @@ exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleO
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(V.Tag @ "Wheels[" $ i $ "].BoneOffset =" @ NewBoneOffset @ "(was" @ V.Wheels[i].BoneOffset $ ")");
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].BoneOffset =" @ NewBoneOffset @ "(was" @ V.Wheels[i].BoneOffset $ ")");
             V.Wheels[i].WheelPosition += (NewBoneOffset - V.Wheels[i].BoneOffset); // this updates a native code setting (experimentation showed it's a relative offset)
             V.Wheels[i].BoneOffset = NewBoneOffset;
         }
@@ -3731,7 +3732,7 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
                 V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
             }
 
-            Log(Tag @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
                 ") MaxRenderTravel =" @ V.Wheels[i].SuspensionMaxRenderTravel @ "(was" @ OldRenderTravel $ ")");
         }
     }
@@ -3764,7 +3765,7 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(Tag @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
             V.Wheels[i].SuspensionOffset = NewOffset;
         }
     }
@@ -3777,7 +3778,7 @@ exec function SetMass(float NewValue)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        Log(V.Tag @ "VehicleMass =" @ NewValue @ "(old was" @ V.VehicleMass $ ")");
+        Log(V.VehicleNameString @ "VehicleMass =" @ NewValue @ "(old was" @ V.VehicleMass $ ")");
         V.VehicleMass = NewValue;
         V.KSetMass(NewValue);
     }
@@ -3820,7 +3821,7 @@ exec function SetCOM(int NewX, int NewY, int NewZ)
         V.SetPhysics(PHYS_None);
         V.SetPhysics(PHYS_Karma);
         DrawCOM();
-        Log(V.Tag @ "KCOMOffset =" @ COM @ "(old was" @ OldCOM $ ")");
+        Log(V.VehicleNameString @ "KCOMOffset =" @ COM @ "(old was" @ OldCOM $ ")");
     }
 }
 
@@ -3831,7 +3832,7 @@ exec function SetMaxAngSpeed(float NewValue)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
     {
-        Log(V.Tag @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
+        Log(V.VehicleNameString @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
         KarmaParams(V.KParams).KMaxAngularSpeed = NewValue;
         V.SetPhysics(PHYS_None);
         V.SetPhysics(PHYS_Karma);
@@ -3845,7 +3846,7 @@ exec function SetAngDamp(float NewValue)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
     {
-        Log(V.Tag @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
+        Log(V.VehicleNameString @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
         KarmaParams(V.KParams).KAngularDamping = NewValue;
         V.SetPhysics(PHYS_None);
         V.SetPhysics(PHYS_Karma);
@@ -3867,7 +3868,7 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             V.DamagedEffectOffset.Z = NewZ;
         }
 
-        Log(V.Tag @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
+        Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
 
         // Appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
         if (V.DamagedEffect == none)
@@ -3915,7 +3916,7 @@ exec function SetTreadHeight(float NewValue)
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
     {
-        Log(V.Tag @ "TreadHitMaxHeight =" @ NewValue @ "(was" @ V.TreadHitMaxHeight $ ")");
+        Log(V.VehicleNameString @ "TreadHitMaxHeight =" @ NewValue @ "(was" @ V.TreadHitMaxHeight $ ")");
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
 
         if (NewValue != V.TreadHitMaxHeight)

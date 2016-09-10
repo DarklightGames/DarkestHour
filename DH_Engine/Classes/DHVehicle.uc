@@ -2883,7 +2883,7 @@ exec function ShowColMesh()
 // New debug exec to adjust the volume of the interior rumble sound
 exec function SetRumbleVol(float NewValue)
 {
-    Log(Tag @ "RumbleSoundVolumeModifier =" @ NewValue @ "(was" @ RumbleSoundVolumeModifier $ ")");
+    Log(VehicleNameString @ "RumbleSoundVolumeModifier =" @ NewValue @ "(was" @ RumbleSoundVolumeModifier $ ")");
     RumbleSoundVolumeModifier = NewValue;
 }
 
