@@ -338,7 +338,7 @@ function FightEnemy(bool bCanCharge, float EnemyStrength)
         }
         else if (Squad.IsDefending(self) && LostContact(4.0) && ClearShot(LastSeenPos, false))
         {
-            GoalString = "Stake Out "$LastSeenPos;
+            GoalString = "Stake Out " $ LastSeenPos;
             DoStakeOut();
         }
         else if (((Aggression < 1.0 && !LostContact(3.0 + (2.0 * FRand()))) || IsSniping()) && CanStakeOut())

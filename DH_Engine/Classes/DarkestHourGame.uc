@@ -712,9 +712,9 @@ function Bot SpawnBot(optional string botName)
 
     if (NewBot != none)
     {
-        InitializeBot(NewBot,BotTeam,Chosen);
+        InitializeBot(NewBot, BotTeam, Chosen);
 
-        MyRole = GetDHBotNewRole(NewBot,BotTeam.TeamIndex);
+        MyRole = GetDHBotNewRole(NewBot, BotTeam.TeamIndex);
 
         if (MyRole >= 0)
         {
@@ -930,7 +930,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 
     for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
-        if (GetRoleInfo(BotTeamNum,i).Limit == 255)
+        if (GetRoleInfo(BotTeamNum, i).Limit == 255)
         {
             return i;
         }
@@ -1728,7 +1728,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             DHPlayer(Killed).bSpawnedKilled = true;
 
             // Increase infantry reinforcements for victim's team (only if nonzero)
-            ModifyReinforcements(Killed.GetTeamNum(),1,false,true);
+            ModifyReinforcements(Killed.GetTeamNum(), 1, false, true);
 
             // Change the damage type because this was a spawn kill and we want to signify that
             DamageType = class'DHSpawnKillDamageType';
@@ -1976,9 +1976,9 @@ state RoundInPlay
         for (i = 0; i < arraycount(GRI.AxisRallyPoints); ++i)
         {
             GRI.AlliedRallyPoints[i].OfficerPRI = none;
-            GRI.AlliedRallyPoints[i].RallyPointLocation = vect(0.0 ,0.0, 0.0);
+            GRI.AlliedRallyPoints[i].RallyPointLocation = vect(0.0, 0.0, 0.0);
             GRI.AxisRallyPoints[i].OfficerPRI = none;
-            GRI.AxisRallyPoints[i].RallyPointLocation = vect(0.0 ,0.0, 0.0);
+            GRI.AxisRallyPoints[i].RallyPointLocation = vect(0.0, 0.0, 0.0);
         }
 
         // Clear help requests
@@ -2645,7 +2645,7 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
         return Str;
     }
 
-    return super.ParseChatPercVar(BaseMutator, Who,Cmd);
+    return super.ParseChatPercVar(BaseMutator, Who, Cmd);
 }
 
 //***********************************************************************************
@@ -2763,7 +2763,7 @@ exec function WinRound(optional int TeamToWin)
 
 exec function SetReinforcements(int Team, int Amount)
 {
-    ModifyReinforcements(Team,Amount,true);
+    ModifyReinforcements(Team, Amount, true);
 }
 
 // Function to allow for capturing a currently active objective (for the supplied team), useful for debugging
@@ -3057,7 +3057,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SecondaryWeapon = -1;
             PC.GrenadeWeapon = -1;
             PC.bWeaponsSelected = false;
-            PC.SavedArtilleryCoords = vect(0, 0, 0);
+            PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
 
             // DARKEST HOUR
             PC.SpawnPointIndex = 255;
@@ -3648,7 +3648,7 @@ function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional
     if (DHP != none && DHP.Pawn != none)
     {
         Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance,5)));
+        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5)));
 
         VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
         CreatedVehicle = Spawn(VehicleClass,,, TargetLocation, Direction);

@@ -146,7 +146,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
         return false;
     }
 
-    // Stop firing if weapon not ready to fire , or if player has moved to ineligible firing position while holding down fire button
+    // Stop firing if weapon not ready to fire, or if player has moved to ineligible firing position while holding down fire button
     if (!ReadyToFire(bAltFire) || (WeaponPawn != none && !WeaponPawn.CanFire()))
     {
          if (WeaponPawn != none)

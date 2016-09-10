@@ -59,7 +59,7 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface (the checks below
+    // Added splash if projectile hits a fluid surface#
     if (FluidSurfaceInfo(Other) != none)
     {
         CheckForSplash(Location);
@@ -499,7 +499,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 
             if (EffectIsRelevant(HitLocation, false) && ShellHitVehicleEffectClass != none)
             {
-                Spawn(ShellHitVehicleEffectClass, ,, HitLocation, rotator(-HitNormal));
+                Spawn(ShellHitVehicleEffectClass,,, HitLocation, rotator(-HitNormal));
             }
         }
         else

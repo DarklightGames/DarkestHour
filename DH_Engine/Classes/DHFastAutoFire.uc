@@ -25,7 +25,7 @@ var     float                   PackingThresholdTime;   // If the shots are clos
 // Overridden to support packing two shots together to save net bandwidth
 function DoFireEffect()
 {
-    local vector  StartProj, StartTrace, X,Y,Z;
+    local vector  StartProj, StartTrace, X, Y, Z;
     local rotator R, Aim;
     local vector  HitLocation, HitNormal;
     local Actor   Other;
@@ -275,7 +275,7 @@ state FireLoop
     {
         Weapon.AnimStopLooping();
         PlayAmbientSound(none);
-        Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,,AmbientFireSoundRadius);
+        Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
         Weapon.StopFire(ThisModeNum);
 
         //If we are not switching weapons, go to the idle state

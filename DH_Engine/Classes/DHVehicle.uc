@@ -1167,7 +1167,7 @@ function bool PlaceExitingDriver()
 
     // Set extent & ZOffset, using a smaller extent than original
     Extent.X = Driver.default.DrivingRadius;
-    Extent.Y = Driver.default.DrivingRadius ;
+    Extent.Y = Driver.default.DrivingRadius;
     Extent.Z = Driver.default.DrivingHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 

@@ -310,7 +310,7 @@ simulated function AssignInitialPose()
 {
     if (DrivenVehicle == none)
     {
-        TweenAnim(MovementAnims[0],0.0);
+        TweenAnim(MovementAnims[0], 0.0);
     }
     else if (HasAnim(DrivenVehicle.DriveAnim))
     {
@@ -947,7 +947,7 @@ simulated function ProcessHitFX()
                 }
                 else
                 {
-                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0,150.0),, 80,, true);
+                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0, 150.0),, 80,, true);
                 }
             }
 
@@ -3018,13 +3018,13 @@ simulated event SetAnimAction(name NewAction)
         // Weapon switching actions
         if (IsDrawAnim(UsedAction))
         {
-            AnimBlendParams(1, 1.0 , 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
             AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
             PlayUpperBodyAnim(UsedAction, 1.0, 0.0);
         }
         else if (IsPutAwayAnim(UsedAction))
         {
-            AnimBlendParams(1, 1.0 , 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
             AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
             WeaponState = GS_IgnoreAnimend;
             PlayUpperBodyAnim(UsedAction, 1.0, 0.1, GetAnimDuration(AnimAction, 1.0) * 2.0);

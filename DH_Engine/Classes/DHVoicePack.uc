@@ -156,11 +156,11 @@ function Timer()
         {
             if (PlayerOwner.ViewTarget != None)
             {
-                PlayerOwner.ViewTarget.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,ShoutRadius, 1.0, true);
+                PlayerOwner.ViewTarget.PlaySound(Phrase[PhraseNum], SLOT_Interface, ShoutVolume,, ShoutRadius, 1.0, true);
             }
             else
             {
-                PlayerOwner.PlaySound(Phrase[PhraseNum], SLOT_Interface,ShoutVolume,,ShoutRadius, 1.0, true);
+                PlayerOwner.PlaySound(Phrase[PhraseNum], SLOT_Interface, ShoutVolume,, ShoutRadius, 1.0, true);
             }
         }
 
@@ -179,7 +179,7 @@ function Timer()
             {
                 Log("ROVoicePack Setting the timer for a sound to zero");
             }
-            SetTimer(FMax(0.1,GetSoundDuration(Phrase[PhraseNum])), false);
+            SetTimer(FMax(0.1, GetSoundDuration(Phrase[PhraseNum])), false);
             PhraseNum++;
         }
     }

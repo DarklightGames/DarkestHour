@@ -862,10 +862,6 @@ simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
     return class'DHSpawnManager'.default.BlockFlags_None;
 }
 
-
-
-
-
 simulated function string GetTeamScaleString(int Team)
 {
    local float     d;

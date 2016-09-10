@@ -67,7 +67,7 @@ function float MaxRange()
 
 function DoFireEffect()
 {
-    local vector  StartProj, StartTrace, X,Y,Z;
+    local vector  StartProj, StartTrace, X, Y, Z;
     local rotator R, Aim;
     local vector  HitLocation, HitNormal;
     local Actor   Other;

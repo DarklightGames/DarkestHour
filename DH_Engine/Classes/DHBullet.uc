@@ -132,7 +132,7 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface (the checks below
+    // Added splash if projectile hits a fluid surface
     if (FluidSurfaceInfo(Other) != none)
     {
         CheckForSplash(Location);
@@ -586,7 +586,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 
             if (EffectIsRelevant(HitLocation, false) && VehiclePenetrateEffectClass != none)
             {
-                Spawn(VehiclePenetrateEffectClass, ,, HitLocation, rotator(-HitNormal));
+                Spawn(VehiclePenetrateEffectClass,,, HitLocation, rotator(-HitNormal));
             }
         }
         else
@@ -729,13 +729,12 @@ simulated function CheckForSplash(vector SplashLocation)
         && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
     {
         bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)) , SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)), SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
         bTraceWater = false;
 
         // We hit a water volume or a fluid surface, so play splash effects
         // Note this seems unnecessary, as we must have hit a water volume, as this is only called by PhysicsVolumeChange() when projectile enters a water volume
         // But the trace gives a more accurate location to spawn the splash effect, which makes a significant difference, so it's worth doing
-        // TODO: make collision with a FluidSurfaceInfo also call this function, as currently there's no splash when hitting a fluid surface
         if ((PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume) || FluidSurfaceInfo(HitActor) != none)
         {
             if (WaterHitSound != none)

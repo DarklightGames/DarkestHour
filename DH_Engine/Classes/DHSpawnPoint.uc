@@ -67,7 +67,7 @@ function PostBeginPlay()
         }
     }
 
-    // Find any associated no arty volume (that will only protect this objective if the objective is active)
+    // Find any associated no arty volume (that will only protect this spawn point if the spawn is active)
     // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this spawn point
     if (NoArtyVolumeProtectionTag != '')
     {

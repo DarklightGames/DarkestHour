@@ -2208,7 +2208,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     local int i;
 
-    super.GiveTo(Other,Pickup);
+    super.GiveTo(Other, Pickup);
 
     if (BarrelClass != none && Role == ROLE_Authority)
     {

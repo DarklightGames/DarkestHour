@@ -137,7 +137,7 @@ simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector Hi
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 simulated singular function Touch(Actor Other)
 {
-    // Added splash if projectile hits a fluid surface (the checks below
+    // Added splash if projectile hits a fluid surface
     if (FluidSurfaceInfo(Other) != none)
     {
         CheckForSplash(Location);
@@ -700,7 +700,7 @@ simulated function CheckForSplash(vector SplashLocation)
         && !(Instigator != none && Instigator.PhysicsVolume != none && Instigator.PhysicsVolume.bWaterVolume))
     {
         bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)) , SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - (50.0 * vect(0.0, 0.0, 1.0)), SplashLocation + (15.0 * vect(0.0, 0.0, 1.0)), true);
         bTraceWater = false;
 
         // We hit a water volume or a fluid surface, so play splash effects

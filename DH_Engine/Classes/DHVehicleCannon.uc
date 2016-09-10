@@ -830,7 +830,7 @@ simulated function AttemptAltReload()
         NumMGMags--;
         AltAmmoCharge = InitialAltAmmo;
         ClientAltReload();
-        PlayOwnedSound(AltReloadSound, SLOT_None, 1.5,, 25.0, , true);
+        PlayOwnedSound(AltReloadSound, SLOT_None, 1.5,, 25.0,, true);
     }
 }
 
@@ -840,7 +840,7 @@ simulated function ClientAltReload()
     if (Role < ROLE_Authority)
     {
         FireCountdown = GetSoundDuration(AltReloadSound);
-        PlaySound(AltReloadSound, SLOT_None, 1.5,, 25.0, , true);
+        PlaySound(AltReloadSound, SLOT_None, 1.5,, 25.0,, true);
 
         // Necessary because using FireCountdown to stop fire during coax reload stops OwnerEffects() from being called, which would normally handle the cease fire
         if (WeaponPawn != none)

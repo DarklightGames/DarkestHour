@@ -146,8 +146,8 @@ simulated event RenderOverlays(Canvas Canvas)
         ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
         Canvas.SetPos(0.0, 0.0);
 
-        Canvas.DrawTile(TexturedScopeTexture , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+        Canvas.DrawTile(TexturedScopeTexture, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
     }
     else
     {

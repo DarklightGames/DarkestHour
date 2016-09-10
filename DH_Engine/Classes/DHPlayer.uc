@@ -409,7 +409,7 @@ simulated function PlayerFlinched(float Intensity)
 
         FlinchRate = 0.125;
 
-        SetRecoil(AfterFlinchRotation,FlinchRate);
+        SetRecoil(AfterFlinchRotation, FlinchRate);
     }
     else
     {
@@ -746,7 +746,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
 
     TraceStart = Pawn.Location + Pawn.EyePosition();
     TraceEnd = TraceStart + (vector(Rotation) * GetMaxViewDistance());
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,,);
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
     VT = Spawn(class'DHVolumeTest', self,, HitLocation);
 
@@ -2779,12 +2779,12 @@ function ServerListPlayers()
     {
         if (PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
         {
-            ClientMessage(Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName@" "$PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
+            ClientMessage(Right("   " $ AllPRI[i].PlayerID, 3) $ ")" @ AllPRI[i].PlayerName @ " " $ PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
             ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ Chr(0xA);
         }
         else
         {
-            ClientMessage(Right("   "$AllPRI[i].PlayerID, 3)$")"@AllPRI[i].PlayerName);
+            ClientMessage(Right("   " $ AllPRI[i].PlayerID, 3) $ ")" @ AllPRI[i].PlayerName);
         }
     }
 

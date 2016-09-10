@@ -176,7 +176,6 @@ function Broadcast(Actor Sender, coerce string Msg, optional name Type)
     local PlayerController P;
     local PlayerReplicationInfo PRI;
 
-
     if (!AllowsBroadcast(Sender, Len(Msg)))
     {
         return;

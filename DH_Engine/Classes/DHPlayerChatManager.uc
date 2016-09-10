@@ -89,7 +89,7 @@ simulated protected function StoreChatBan(string PlayerHash, byte Restriction)
     }
     else if (Restriction == 0)
     {
-        StoredChatRestrictions.Remove(i,1);
+        StoredChatRestrictions.Remove(i, 1);
 
         return;
     }
@@ -179,7 +179,7 @@ simulated function UnTrackPlayer(int PlayerID)
 
         if (ChatRestrictions[i].PlayerID == PlayerID)
         {
-            ChatRestrictions.Remove(i,1);
+            ChatRestrictions.Remove(i, 1);
 
             return;
         }

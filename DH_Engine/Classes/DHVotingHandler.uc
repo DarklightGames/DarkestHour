@@ -32,7 +32,7 @@ function PlayerExit(Controller Exiting)
             // Remove players vote from vote count
             if (MVRI[i] != none && (MVRI[i].PlayerOwner == none || MVRI[i].PlayerOwner == Exiting))
             {
-                Log("exiting player MVRI found" @ i,'MapVoteDebug');
+                Log("exiting player MVRI found" @ i, 'MapVoteDebug');
 
                 ExitingPlayerIndex = i;
 
@@ -134,7 +134,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         TextMessage = lmsgAdminMapChange;
         TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
         Level.Game.Broadcast(self, TextMessage);
-        Log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")",'MapVote');
+        Log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
 
         if (MapList[MapIndex].MapName == SwapAndRestartText)
         {
@@ -147,7 +147,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         bLevelSwitchPending = true;
         MapInfo = History.PlayMap(MapList[MapIndex].MapName);
         ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
-        Log("ServerTravelString = " $ ServerTravelString ,'MapVoteDebug');
+        Log("ServerTravelString = " $ ServerTravelString, 'MapVoteDebug');
         Level.ServerTravel(ServerTravelString, false); // change the map
         SetTimer(1.0, true);
 
@@ -172,7 +172,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    Log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")",'MapVote');
+    Log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
 
     PrevMapVote = MVRI[Index].MapVote;
     PrevGameVote = MVRI[Index].GameVote;
@@ -216,7 +216,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
         TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
         TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
-        Level.Game.Broadcast(self,TextMessage);
+        Level.Game.Broadcast(self, TextMessage);
     }
 
     UpdateVoteCount(MapIndex, GameIndex, VoteCount);
@@ -350,7 +350,7 @@ function GetDefaultMap(out int MapIdx, out int GameIdx)
     GameIdx = GCIdx;
     MapIdx = i;
 
-    Log("Default Map Chosen = " $ MapList[MapIdx].MapName $ "(" $ GameConfig[GameIdx].Acronym $ ")",'MapVoteDebug');
+    Log("Default Map Chosen = " $ MapList[MapIdx].MapName $ "(" $ GameConfig[GameIdx].Acronym $ ")", 'MapVoteDebug');
 }
 
 // Override to support additional vote options like Swap Teams and Restart
@@ -409,7 +409,7 @@ function TallyVotes(bool bForceMapSwitch)
         }
     }
 
-    Log("___Voted - " $ PlayersThatVoted,'MapVoteDebug');
+    Log("___Voted - " $ PlayersThatVoted, 'MapVoteDebug');
 
     // Mid game vote initiated
     if (Level.Game.NumPlayers > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.NumPlayers)) * 100 >= MidGameVotePercent)
@@ -512,14 +512,14 @@ function TallyVotes(bool bForceMapSwitch)
         }
 
         TextMessage = lmsgMapWon;
-        TextMessage = Repl(TextMessage,"%mapname%",MapList[TopMap - TopMap / MapCount * MapCount].MapName $ "(" $ GameConfig[TopMap / MapCount].Acronym $ ")");
+        TextMessage = Repl(TextMessage, "%mapname%", MapList[TopMap - TopMap / MapCount * MapCount].MapName $ "(" $ GameConfig[TopMap / MapCount].Acronym $ ")");
         Level.Game.Broadcast(self, TextMessage);
 
         CloseAllVoteWindows();
 
         MapInfo = History.PlayMap(MapList[TopMap - TopMap / MapCount * MapCount].MapName);
         ServerTravelString = SetupGameMap(MapList[TopMap - TopMap / MapCount * MapCount], TopMap / MapCount, MapInfo);
-        Log("ServerTravelString =" $ ServerTravelString ,'MapVoteDebug');
+        Log("ServerTravelString =" $ ServerTravelString, 'MapVoteDebug');
         History.Save();
 
         if (bEliminationMode)
@@ -596,14 +596,14 @@ function LoadMapList()
     MapCount = 0;
 
     MapVoteHistoryClass = class<MapVoteHistory>(DynamicLoadObject(MapVoteHistoryType, class'Class'));
-    History = new(none, "MapVoteHistory"$string(ServerNumber)) MapVoteHistoryClass;
+    History = new(none, "MapVoteHistory" $ string(ServerNumber)) MapVoteHistoryClass;
 
     if (History == none)
     {
-        History = new(none, "MapVoteHistory"$string(ServerNumber)) class'MapVoteHistory_INI';
+        History = new(none, "MapVoteHistory" $ string(ServerNumber)) class'MapVoteHistory_INI';
     }
 
-    Log("GameTypes:",'MapVote');
+    Log("GameTypes:", 'MapVote');
 
     if (GameConfig.Length == 0)
     {
@@ -625,11 +625,11 @@ function LoadMapList()
     {
         if (GameConfig[i].GameClass != "")
         {
-            Log(GameConfig[i].GameName,'MapVote');
+            Log(GameConfig[i].GameName, 'MapVote');
         }
     }
 
-    Log("MapListLoaderType = " $ MapListLoaderType,'MapVote');
+    Log("MapListLoaderType = " $ MapListLoaderType, 'MapVote');
 
     MapListLoaderClass = class<MapListLoader>(DynamicLoadObject(MapListLoaderType, class'Class'));
     Loader = Spawn(MapListLoaderClass);
@@ -646,7 +646,7 @@ function LoadMapList()
         AddMap(SwapAndRestartText, "", "");
     }
 
-    Log(MapCount $ " maps loaded.",'MapVote');
+    Log(MapCount $ " maps loaded.", 'MapVote');
 
     History.Save();
 
@@ -665,7 +665,7 @@ function LoadMapList()
 
         if (EnabledMapCount < MinMapCount || EnabledMapCount == 0)
         {
-            Log("Elimination Mode Reset/Reload.",'MapVote');
+            Log("Elimination Mode Reset/Reload.", 'MapVote');
             RepeatLimit = 0;
             MapList.Length = 0;
             MapCount = 0;

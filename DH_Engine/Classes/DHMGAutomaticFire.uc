@@ -129,7 +129,7 @@ simulated function HandleRecoil()
         }
 
         // Need to set this value per weapon
-        ROP.SetRecoil(NewRecoilRotation,RecoilRate);
+        ROP.SetRecoil(NewRecoilRotation, RecoilRate);
     }
 
     if (Level.NetMode != NM_DedicatedServer && Instigator != none && ROPlayer(Instigator.Controller) != none)
@@ -148,7 +148,7 @@ simulated function HandleRecoil()
 // Overridden to support ironsight mode being hipped mode for MGs
 function DoFireEffect()
 {
-    local vector StartProj, StartTrace, X,Y,Z;
+    local vector StartProj, StartTrace, X, Y, Z;
     local rotator R, Aim;
     local vector HitLocation, HitNormal;
     local Actor Other;
@@ -158,7 +158,7 @@ function DoFireEffect()
     local coords MuzzlePosition;
 
     Instigator.MakeNoise(1.0);
-    Weapon.GetViewAxes(X,Y,Z);
+    Weapon.GetViewAxes(X, Y, Z);
 
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
     if (Instigator.bBipodDeployed)
@@ -183,7 +183,7 @@ function DoFireEffect()
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace, rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer', Instigator,, StartTrace, rotator(MuzzlePosition.XAxis));
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
@@ -261,7 +261,7 @@ simulated function EjectShell()
 {
     local coords EjectCoords;
     local vector EjectOffset;
-    local vector X,Y,Z;
+    local vector X, Y, Z;
     local rotator EjectRot;
     local ROShellEject Shell;
 
@@ -269,14 +269,14 @@ simulated function EjectShell()
     {
         if (ShellEjectClass != none)
         {
-            Weapon.GetViewAxes(X,Y,Z);
+            Weapon.GetViewAxes(X, Y, Z);
 
             EjectOffset = Instigator.Location + Instigator.EyePosition();
             EjectOffset = EjectOffset + X * ShellIronSightOffset.X + Y * ShellIronSightOffset.Y +  Z * ShellIronSightOffset.Z;
 
             EjectRot = rotator(Y);
             EjectRot.Yaw += 16384;
-            Shell = Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
+            Shell = Weapon.Spawn(ShellEjectClass, none,, EjectOffset, EjectRot);
             EjectRot = rotator(Y);
             EjectRot += ShellRotOffsetIron;
 
@@ -301,7 +301,7 @@ simulated function EjectShell()
             EjectOffset = EjectOffset + EjectCoords.XAxis * ShellHipOffset.X + EjectCoords.YAxis * ShellHipOffset.Y +  EjectCoords.ZAxis * ShellHipOffset.Z;
 
             EjectRot = rotator(-EjectCoords.YAxis);
-            Shell = Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
+            Shell = Weapon.Spawn(ShellEjectClass, none,, EjectOffset, EjectRot);
             EjectRot = rotator(EjectCoords.XAxis);
             EjectRot += ShellRotOffsetHip;
 

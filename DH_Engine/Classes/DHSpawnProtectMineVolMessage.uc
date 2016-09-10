@@ -26,7 +26,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
         return Repl(MineVolume.SafePeriodWarningMessage, "%remaining%", Switch);
     }
 
-    Switch(Switch)
+    Switch (Switch)
     {
         case 0: // null value means just the standard 'live' minefield warning message
             return MineVolume.WarningMessage;

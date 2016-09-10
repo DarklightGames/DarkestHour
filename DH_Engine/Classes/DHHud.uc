@@ -4152,7 +4152,7 @@ simulated function DrawSpectatingHud(Canvas C)
         if (C.ClipX >= 640.0)
         {
             C.Font = GetConsoleFont(C);
-            C.StrLen("W" ,XL, SmallH);
+            C.StrLen("W", XL, SmallH);
             C.SetPos(79.0 * C.ClipX / 80.0 - NameWidth, C.ClipY * 0.68);
             C.DrawText(NowViewing, false);
         }
