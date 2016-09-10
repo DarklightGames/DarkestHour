@@ -204,7 +204,7 @@ function Activate(ROSideIndex T)
 // Need to handle Reset differently for this actor - if we are using the randomizer, only MasterFactory is reset here & and all other factories are reset by master factory
 simulated function Reset()
 {
-    if (!bUsesSpawnAreas && !bUseRandomizer)
+    if (!bUsesSpawnAreas && !bControlledBySpawnPoint && !bUseRandomizer)
     {
         SpawnVehicle();
         TotalSpawnedVehicles = 0;

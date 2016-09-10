@@ -6,7 +6,9 @@
 class DHVehicleFactory extends ROVehicleFactory
     abstract;
 
-var() name FactoryDepletedEvent;
+var(ROVehicleFactory)   name    FactoryDepletedEvent; // option for specified event to be triggered if factory reaches its vehicle limit (i.e. won't spawn any more)
+
+var     bool    bControlledBySpawnPoint; // flags that this factory is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
 
 // Modified to call UpdatePrecacheMaterials(), allowing any subclassed factory materials to be cached
 // And we no longer call StaticPrecache on the VehicleClass from here, as that gets done in our UpdatePrecacheMaterials(), so we don't want to do it twice
@@ -15,6 +17,22 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         UpdatePrecacheMaterials();
+    }
+}
+
+// Modified so doesn't activate if controlled by a spawn point (similar to if linked to a spawn area)
+function Reset()
+{
+    TotalSpawnedVehicles = 0;
+
+    if (!bUsesSpawnAreas && !bControlledBySpawnPoint)
+    {
+        SpawnVehicle();
+        Activate(TeamNum);
+    }
+    else
+    {
+        Deactivate();
     }
 }
 

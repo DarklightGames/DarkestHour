@@ -17,12 +17,13 @@ enum ESpawnPointType
 };
 
 var()   ESpawnPointType Type;
-var()   bool            bIsInitiallyActive;        // whether or not the SP is active at the start of the round (or waits to be activated later)
-var()   name            InfantryLocationHintTag;   // the Tag for associated LocationHint actors used to spawn players on foot
-var()   name            VehicleLocationHintTag;    // the Tag for associated LocationHint actors used to spawn players in vehicles
-var()   float           SpawnProtectionTime;       // duration in seconds when a spawned player is protected from all damage
-var()   name            MineVolumeProtectionTag;   // optional Tag for associated mine volume that protects this SP only when the SP is active
-var()   name            NoArtyVolumeProtectionTag; // optional Tag for associated no arty volume that protects this SP only when the SP is active
+var()   bool            bIsInitiallyActive;          // whether or not the SP is active at the start of the round (or waits to be activated later)
+var()   name            InfantryLocationHintTag;     // the Tag for associated LocationHint actors used to spawn players on foot
+var()   name            VehicleLocationHintTag;      // the Tag for associated LocationHint actors used to spawn players in vehicles
+var()   float           SpawnProtectionTime;         // duration in seconds when a spawned player is protected from all damage
+var()   name            MineVolumeProtectionTag;     // optional Tag for associated mine volume that protects this SP only when the SP is active
+var()   name            NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
+var()   name            LinkedVehicleFactoriesTag;   // optional Tag for vehicle factories that are only active when this SP is active
 
 // Colin: The spawn manager will defer evaluation of any location hints that
 // have enemies within this distance. In layman's terms, the spawn manager will
@@ -37,11 +38,13 @@ var     int                     TeamIndex;
 var     array<DHLocationHint>   InfantryLocationHints;
 var     array<DHLocationHint>   VehicleLocationHints;
 var     ROMineVolume            MineVolumeProtectionRef;
+var     array<DHVehicleFactory> LinkedVehicleFactories;
 
 function PostBeginPlay()
 {
-    local DHLocationHint LH;
-    local RONoArtyVolume NAV;
+    local DHLocationHint   LH;
+    local RONoArtyVolume   NAV;
+    local DHVehicleFactory VF;
 
     foreach AllActors(class'DHLocationHint', LH)
     {
@@ -75,6 +78,17 @@ function PostBeginPlay()
         {
             NAV.AssociatedActor = self;
             break;
+        }
+    }
+
+    // Find any linked vehicle factories (that will only be activated if this spawn point is active)
+    // And tell them they will be controlled by a spawn point, so they do not activate themselves
+    if (LinkedVehicleFactoriesTag != '')
+    {
+        foreach DynamicActors(class'DHVehicleFactory', VF, LinkedVehicleFactoriesTag)
+        {
+            LinkedVehicleFactories[LinkedVehicleFactories.Length] = VF;
+            VF.bControlledBySpawnPoint = true;
         }
     }
 
