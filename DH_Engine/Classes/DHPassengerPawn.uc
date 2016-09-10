@@ -173,6 +173,11 @@ function KDriverEnter(Pawn P)
     {
         VehicleLostTime = 0.0;
     }
+
+    if (VehicleBase != none)
+    {
+        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
+    }
 }
 
 // Modified to set rotation to match the way the rider is facing, so his view starts facing the same way

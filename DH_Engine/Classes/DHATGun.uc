@@ -23,8 +23,6 @@ simulated function DestroyTreads();
 function CheckTreadDamage(vector HitLocation, vector Momentum);
 function DamageTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
-function MaybeDestroyVehicle();
-event CheckReset();
 simulated function SetFireEffects();
 function TakeFireDamage();
 function TakeEngineFireDamage();

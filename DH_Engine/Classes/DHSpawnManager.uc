@@ -763,14 +763,15 @@ function bool SpawnInfantry(DHPlayer C)
 
 event VehicleDestroyed(Vehicle V)
 {
-    local int NextAvailableTime, i, j;
-    local bool bWasSpawnKilled;
+    local ROVehicle ROV;
+    local int       NextAvailableTime, i, j;
+    local bool      bWasSpawnKilled;
     const SPAWN_KILL_RESPAWN_TIME = 2;
 
     super.VehicleDestroyed(V);
 
     // Find out if the vehicle was spawned killed
-    if (V != none && DHVehicle(V) != none && DHVehicle(V).IsSpawnKillProtected())
+    if (V.IsA('DHVehicle') && DHVehicle(V).IsSpawnKillProtected())
     {
         bWasSpawnKilled = true;
     }
@@ -834,7 +835,15 @@ event VehicleDestroyed(Vehicle V)
                 {
                     VehiclePools[i].Slots[j].Vehicle = none;
 
-                    if (bWasSpawnKilled)
+                    ROV = ROVehicle(V);
+
+                    // If empty, abandoned vehicle has just been destroyed by CheckReset() event, make it available immediately (same as a factory would be made to respawn immediately)
+                    // If vehicle's ResetTime was in last 0.5 secs it must have just been been destroyed by CheckReset()
+                    if (ROV != none && ROV.ResetTime <= Level.TimeSeconds && (Level.TimeSeconds - ROV.ResetTime) < 0.5)
+                    {
+                        VehiclePools[i].Slots[j].RespawnTime = GRI.ElapsedTime;
+                    }
+                    else if (bWasSpawnKilled)
                     {
                         VehiclePools[i].Slots[j].RespawnTime = GRI.ElapsedTime + SPAWN_KILL_RESPAWN_TIME;
                     }

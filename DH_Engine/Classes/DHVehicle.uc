@@ -43,8 +43,7 @@ var     array<PassengerPawn> PassengerPawns;     // array with properties usuall
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
 var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;                  // used for scoring
-var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning vehicle
-var     float       DriverTraceDistSquared;      // used in CheckReset() as range check on any friendly player pawn found (ignoring line of sight check)
+var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning empty vehicle
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 var     TreeMap_string_Object  NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
@@ -2560,105 +2559,168 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
     }
 }
 
-// Modified to include setting ResetTime for an empty vehicle away from its spawn (moved from DriverLeft)
+// Modified to include setting ResetTime for an empty vehicle, which natively calls future CheckReset() event that may destroy & respawn an apparently abandoned vehicle
+// Moved this functionality here from DriverLeft() as it fits well here, but functionality has been substantially modified & improved
+// We never consider destroying a spawn vehicle, or if it's our factory's last/only vehicle (because it won't spawn a replacement so no point 'recycling' it)
+// But we do do now set a ResetTime for an empty bNeverReset vehicle (e.g, AT gun) if its factory has since been deactivated & should destroy an empty vehicle
+// And we skip check that vehicle has moved from its spawning location if parent is DH spawn manager, as that has no location & doesn't spawn empty vehicle like a factory
 function MaybeDestroyVehicle()
 {
-    if (!bNeverReset && IsVehicleEmpty())
+    local bool bDeactivatedFactoryWantsToDestroy;
+
+    // Do nothing if vehicle is a spawn vehicle, or isn't empty, or is factory's last vehicle (no point destroying vehicle if factory won't spawn replacement)
+    if (bIsSpawnVehicle || !IsVehicleEmpty() || IsFactorysLastVehicle())
     {
-        if (IsDisabled())
-        {
-            bSpikedVehicle = true;
-            SetTimer(VehicleSpikeTime, false);
+        return;
+    }
 
-            if (bDebuggingText)
-            {
-                Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
-            }
-        }
+    // If vehicle is classed as disabled, set a spike timer to destroy it after a set period if still empty
+    if (IsDisabled())
+    {
+        bSpikedVehicle = true;
+        SetSpikeTimer(); // separate function for easy subclassing
 
-        // If vehicle is now empty & some way from its spawn point (> 83m or out of sight), set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
-        // Changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
+        if (bDebuggingText)
         {
-            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+            Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
         }
+    }
+
+    // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicles when empty
+    bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
+        && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
+
+    // We don't set a CheckReset timer for vehicles that have bNeverReset (e.g. AT guns), so they don't get reset if left empty
+    // The exception is if our factory has deactivated & should destroy an empty vehicle
+    if (bNeverReset && !bDeactivatedFactoryWantsToDestroy)
+    {
+        return;
+    }
+
+    // Set a ResetTime for empty vehicle, so that CheckReset() event gets called after specified time
+    // But if spawned by vehicle factory, make sure vehicle has moved some way from spawning location (> 83m or out of sight) as no point making it re-spawn nearby
+    // Skip that check if spawned by DH spawn manager system as it doesn't spawn an empty vehicle that just sits there as a factory does
+    // Also skip the check if our factory has deactivated & should destroy an empty vehicle
+    if (ParentFactory.IsA('DHSpawnManager') || bDeactivatedFactoryWantsToDestroy
+        || VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) // changed to VSizeSquared for efficiency
+    {
+        ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
     }
 }
 
-// Modified so spawn vehicles never respawn when left empty, to use DriverTraceDistSquared instead of literal values,
-// to include a nearby friendly vehicle that has an occupied vehicle weapon position, & to add debug
+// New function to set a 'spike timer' to destroy a disabled, empty vehicle (just for easier subclassing)
+function SetSpikeTimer()
+{
+    SetTimer(VehicleSpikeTime, false);
+}
+
+// Modified so we don't destroy an empty spawn vehicle, or if it's our factory's last/only vehicle (because it won't spawn a replacement so no point 'recycling' it)
+// Also when checking for nearby friendlies, we ignore empty team vehicles (previously counted) but count any player in vehicle weapon position (previously ignored)
+// And we only count friendly players that could actually use this vehicle, i.e. so nearby infantry don't prevent an abandoned tank from re-spawning
 event CheckReset()
 {
-    local Pawn P;
+    local Controller C;
+    local float      Distance;
 
-    if (bIsSpawnVehicle)
+    // Do nothing if vehicle is a spawn vehicle, or isn't empty, or is its factory's last vehicle (no point destroying vehicle if factory won't spawn replacement)
+    // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
+    // Occupied vehicle shouldn't have CheckReset timer running & if player exits, leaving vehicle empty, then a new CheckReset timer gets started
+    if (bIsSpawnVehicle || !IsVehicleEmpty() || IsFactorysLastVehicle())
     {
         return;
     }
 
-    // Vehicle occupied, so reset ResetTime
-    if (!IsVehicleEmpty())
+    if (!bKeyVehicle)
     {
-        ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-
-        return;
-    }
-    // Vehicle empty & is a bKeyVehicle, so destroy it now to make it respawn
-    else if (bKeyVehicle)
-    {
-        Died(none, class'DamageType', Location);
-
-        return;
-    }
-
-    // Check for friendlies nearby
-    foreach CollidingActors(class'Pawn', P, FriendlyResetDistance)
-    {
-        // Found a friendly pawn within rang (ignoring an empty vehicle), but now make further checks
-        if (P != self && (P.Controller != none || (P.IsA('ROVehicle') && !ROVehicle(P).IsVehicleEmpty())) && P.GetTeamNum() == GetTeamNum())
+        // Check for any nearby friendly players who could use this vehicle, which will prevent vehicle from being 'recycled'
+        // Previously used a foreach CollidingActors iteration but no need as we can simply loop the ControllerList
+        for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            // Don't reset if it's a friendly player pawn within DriverTraceDistSquared, without line of sight check (using squared values as VSizeSquared is more efficient)
-            if (ROPawn(P) != none && (VSizeSquared(P.Location - Location) < DriverTraceDistSquared))
+            // Found friendly player who could use this vehicle, so now do distance check
+            if (C != Controller && C.GetTeamNum() == GetTeamNum() && C.Pawn != none && C.Pawn.Health > 0
+                && (!bMustBeTankCommander || (ROPlayerReplicationInfo(C.PlayerReplicationInfo) != none
+                && ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)))
             {
-                if (bDebuggingText)
+                Distance = VSize(C.Pawn.Location - Location);
+
+                // Friendly player prevents vehicle reset if within FriendlyResetDistance & line of sight, or if on foot within half of FriendlyResetDistance (no LOS)
+                if (Distance <= FriendlyResetDistance && ((C.Pawn.IsA('ROPawn') && Distance < 0.5 * FriendlyResetDistance)
+                    || FastTrace(C.Pawn.Location + C.Pawn.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0))))
                 {
-                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly player pawn nearby");
+                    // Instead of destroying vehicle we set a new ResetTime to check again fairly soon
+                    // Was using IdleTimeBeforeReset but was being used in the wrong function, so we revert back to original fixed 10 second delay before repeating this check
+                    // IdleTimeBeforeReset should be used when a player exits & leaves vehicle empty, setting initial CheckReset timer (functionality now in MaybeDestroyVehicle)
+                    ResetTime = Level.TimeSeconds + 10.0;
+
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
+                    }
+
+                    return;
                 }
-
-                ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-
-                return;
-            }
-            // Don't reset if it's a friendly player pawn  that's within line of sight
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0)))
-            {
-                if (bDebuggingText)
-                {
-                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly pawn nearby & in line of sight");
-                }
-
-                ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-
-                return;
             }
         }
     }
 
-    // Reset (i.e. re-spawn) the vehicle, as it is empty & has no friendly players nearby
+    // Debug
     if (bDebuggingText)
     {
-        Level.Game.Broadcast(self, Tag @ "is empty vehicle & re-spawned as no friendly player nearby");
+        if (bKeyVehicle)
+        {
+            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
+        }
+        else
+        {
+            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
+        }
     }
 
-    // If factory is active, we want it to spawn new vehicle NOW
+    // Destroy & reset the vehicle as it is empty & appears abandoned
+    // We want a new vehicle to be available or respawned now, without waiting for usual respawn time, because we've 'recycled' the vehicle rather than it being killed
     if (ParentFactory != none)
     {
         ParentFactory.VehicleDestroyed(self);
-        ParentFactory.Timer();
-        ParentFactory = none; // so doesn't call ParentFactory.VehicleDestroyed() again in Destroyed()
+
+        // Make factory re-spawn immediately (but not if spawned by DH spawn manager system, as calling Timer doesn't handle respawn & does irrelevant stuff)
+        if (!ParentFactory.IsA('DHSpawnManager'))
+        {
+            ParentFactory.Timer();
+        }
+
+        ParentFactory = none; // so doesn't call ParentFactory.VehicleDestroyed() again in our Destroyed() event
     }
 
     Destroy();
+}
+
+// New helper function to check whether this is the last or only vehicle of our parent spawn manager/vehicle factory
+function bool IsFactorysLastVehicle()
+{
+    local DHGameReplicationInfo GRI;
+    local ROVehicleFactory      VF;
+    local byte                  VehiclePoolIndex;
+
+    if (ParentFactory == none)
+    {
+        return true; // if somehow we don't have a factory, no other vehicle is going to get spawned so we the only one
+    }
+
+    if (ParentFactory.IsA('DHSpawnManager'))
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            VehiclePoolIndex = GRI.GetVehiclePoolIndex(Class);
+        }
+
+        return GRI != none && VehiclePoolIndex < arraycount(GRI.VehiclePoolMaxSpawns) && GRI.GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) <= 0; // if spawn manager's last vehicle
+    }
+
+    VF = ROVehicleFactory(ParentFactory);
+
+    return VF != none && (!VF.bAllowVehicleRespawn || VF.TotalSpawnedVehicles >= VF.VehicleRespawnLimit); // if vehicle factory's last vehicle
 }
 
 // Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
@@ -2697,13 +2759,24 @@ simulated function bool IsDisabled()
 {
     local DHVehicleCannonPawn CP;
 
+    if ((EngineHealth <= 0 && default.EngineHealth > 0)
+        || bLeftTrackDamaged || bRightTrackDamaged
+        || (bIsApc && Health <= (HealthMax / 3)))
+    {
+        return true;
+    }
+
     if (Cannon != none)
     {
         CP = DHVehicleCannonPawn(Cannon.WeaponPawn);
+
+        if (CP != none && (CP.bOpticsDamaged || CP.bTurretRingDamaged || CP.bGunPivotDamaged))
+        {
+            return true;
+        }
     }
 
-    return EngineHealth <= 0 || bLeftTrackDamaged || bRightTrackDamaged || (bIsApc && Health <= (HealthMax / 3))
-        || (CP != none && (CP.bOpticsDamaged || CP.bTurretRingDamaged || CP.bGunPivotDamaged));
+    return false;
 }
 
 // Modified to eliminate "Waiting for additional crew members" message (Matt: now only used by bots)
@@ -2944,7 +3017,6 @@ defaultproperties
     VehicleSpikeTime=30.0    // if disabled
     IdleTimeBeforeReset=90.0 // if empty & no friendlies nearby
     FriendlyResetDistance=4000.0 // 66m
-    DriverTraceDistSquared=20250000.0 // increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
 
     // Miscellaneous
     VehicleMass=3.0

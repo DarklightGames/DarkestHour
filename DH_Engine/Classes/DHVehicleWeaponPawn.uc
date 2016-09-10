@@ -398,7 +398,8 @@ function bool TryToDrive(Pawn P)
 }
 
 // Modified to try to start a reload or resume any previously paused reload if weapon isn't loaded,
-// to use InitialPositionIndex instead of assuming start in position zero, & to record whether player has binoculars
+// to use InitialPositionIndex instead of assuming start in position zero, to record whether player has binoculars,
+// and to cancel any CheckReset timer for vehicle as it is now occupied
 function KDriverEnter(Pawn P)
 {
     local byte OldReloadState;
@@ -410,6 +411,11 @@ function KDriverEnter(Pawn P)
     }
 
     super.KDriverEnter(P);
+
+    if (VehicleBase != none)
+    {
+        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
+    }
 
     if (VehWep != none && VehWep.bMultiStageReload)
     {

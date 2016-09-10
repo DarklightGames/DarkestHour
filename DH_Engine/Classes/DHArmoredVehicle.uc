@@ -1791,29 +1791,20 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to stop vehicle from prematurely destroying itself when on fire, & to record a future SpikeTime for a spiked, disabled vehicle (to work with interwoven Timer system)
+// Modified to stop vehicle from prematurely destroying itself when on fire; instead just let the fire run its course
 function MaybeDestroyVehicle()
 {
-    if (!bNeverReset && IsVehicleEmpty() && !bOnFire && !bEngineOnFire)
+    if (!bOnFire && !bEngineOnFire)
     {
-        if (IsDisabled())
-        {
-            bSpikedVehicle = true;
-            SpikeTime = Level.TimeSeconds + VehicleSpikeTime; // record SpikeTime due & call SetNextTimer(), instead of directly setting a timer for VehicleSpikeTime
-            SetNextTimer();
-
-            if (bDebuggingText)
-            {
-                Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
-            }
-        }
-
-        // If vehicle is now empty & some way from its spawn point (> 83m or out of sight), set a time for CheckReset() to maybe re-spawn the vehicle after a certain period
-        if (ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
-        {
-            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
-        }
+        super.MaybeDestroyVehicle();
     }
+}
+
+// Modified to work with interwoven Timer system instead of directly setting a timer for VehicleSpikeTime duration
+function SetSpikeTimer()
+{
+    SpikeTime = Level.TimeSeconds + VehicleSpikeTime;
+    SetNextTimer();
 }
 
 // Bot functions from deprecated ROTreadCraft class

@@ -210,8 +210,7 @@ function bool EncroachingOn(Actor Other)
 defaultproperties
 {
     bIsApc=true
-    bKeyVehicle=true
-    DriverTraceDistSquared=4000000.0 // 2000 squared
+    bKeyVehicle=true // means we skip usual check for nearby friendly players before resetting empty vehicle & making it respawn
     InitialPositionIndex=1
     BinocPositionIndex=2
     bEngineOff=false
