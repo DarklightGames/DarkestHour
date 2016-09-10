@@ -442,6 +442,35 @@ function CheckResupplyVolumes()
     }
 }
 
+// Modified to use more efficient DynamicActors iteration instead of AllActors (vehicle factories aren't static actors), & re-factored to generally optimise
+function CheckVehicleFactories()
+{
+    local ROVehicleFactory VehFact;
+    local int              TeamIndex;
+
+    foreach DynamicActors(class'ROVehicleFactory', VehFact)
+    {
+        if (VehFact.bUsesSpawnAreas)
+        {
+            if (class<ROVehicle>(VehFact.VehicleClass) != none)
+            {
+                TeamIndex = class<ROVehicle>(VehFact.VehicleClass).default.VehicleTeam;
+
+                if ((TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX) &&
+                    ((CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == VehFact.Tag) ||
+                    (CurrentSpawnArea[TeamIndex] != none && CurrentSpawnArea[TeamIndex].Tag == VehFact.Tag)))
+                {
+                    VehFact.ActivatedBySpawn(TeamIndex);
+                }
+                else
+                {
+                    VehFact.Deactivate();
+                }
+            }
+        }
+    }
+}
+
 function CheckMortarmanSpawnAreas()
 {
     local DHSpawnArea Best[2];
@@ -2017,7 +2046,7 @@ state RoundInPlay
         }
 
         // Reset ALL ROVehicleFactorys - must reset these after vehicles, otherwise the vehicles that get spawned by the vehicle factories get destroyed instantly as they are reset
-        foreach AllActors(class'ROVehicleFactory', ROV)
+        foreach DynamicActors(class'ROVehicleFactory', ROV)
         {
             ROV.Reset();
         }
