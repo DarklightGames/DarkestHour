@@ -843,13 +843,9 @@ function SetGameSpeed(float NewSpeed)
 
 function SetRoundMinutesRemaining(float NewMinutesRemaining)
 {
-    if (NewMinutesRemaining > 0.0)
+    if (NewMinutesRemaining > 0.0 && DarkestHourGame(ROTG) != none)
     {
-        ROTG.ElapsedTime = ROTG.RoundStartTime + ROTG.RoundDuration - int(NewMinutesRemaining * 60.0);
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).ElapsedTime = ROTG.ElapsedTime; // copies to GRI on server
-        Replicator.NewElapsedTime = ROTG.ElapsedTime;                                         // Replicator copies to GRI on clients
-
-        BroadcastMessageToAll(12);
+        DarkestHourGame(ROTG).ModifyRoundTime(int(NewMinutesRemaining * 60.0), 2);
         Log("DHAdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ class'ROEngine.ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
     }
 }
