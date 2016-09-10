@@ -3206,6 +3206,43 @@ exec function URL(string S)
     }
 }
 
+// New debug exec to trigger or un-trigger a specified event
+exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EventToTrigger != '')
+    {
+        if (bUntrigger)
+        {
+            Log("DebugEvent: UN-triggering event" @ EventToTrigger);
+            UnTriggerEvent(EventToTrigger, none, none);
+        }
+        else
+        {
+            Log("DebugEvent: triggering event" @ EventToTrigger);
+            TriggerEvent(EventToTrigger, none, none);
+        }
+    }
+}
+
+exec function MetricsDump()
+{
+    ServerMetricsDump();
+}
+
+function ServerMetricsDump()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G.Metrics != none)
+    {
+        G.Broadcast(self, G.Metrics.Dump());
+
+        Log(G.Metrics.Dump());
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -4103,25 +4140,6 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
                 V.VehicleAttachments.Remove(i, 1);
             }
         }
-    }
-}
-
-exec function MetricsDump()
-{
-    ServerMetricsDump();
-}
-
-function ServerMetricsDump()
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G.Metrics != none)
-    {
-        G.Broadcast(self, G.Metrics.Dump());
-
-        Log(G.Metrics.Dump());
     }
 }
 
