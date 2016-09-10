@@ -256,10 +256,7 @@ function PostBeginPlay()
             GRI.AxisRadios[i] = RAT;
             ++i;
         }
-    }
 
-    foreach AllActors(class'ROArtilleryTrigger', RAT)
-    {
         if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
         {
             GRI.AlliedRadios[j] = RAT;
