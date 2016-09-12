@@ -9,7 +9,7 @@ defaultproperties
 {
     MyVehicleDamage=class'DH_Weapons.DH_DP28VehDamType'
     BallisticCoefficient=0.511
-    Speed=50696 // 840 m/s
-    Damage=115.000000
+    Speed=50696.0 // 840 m/s
+    Damage=115.0
     MyDamageType=class'DH_Weapons.DH_DP28DamType'
 }

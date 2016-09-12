@@ -7,12 +7,12 @@ class DH_EnfieldNo4ScopedAttachment extends DHWeaponAttachment;
 
 simulated function AnimEnd(int Channel)
 {
-    local name anim;
-    local float frame, rate;
+    local name  Anim;
+    local float Frame, Rate;
 
-    GetAnimParams(0, anim, frame, rate);
+    GetAnimParams(0, Anim, Frame, Rate);
 
-    if (anim == WA_Reload || anim == WA_PreReload)
+    if (Anim == WA_Reload || Anim == WA_PreReload)
     {
         return;
     }

@@ -17,14 +17,14 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     TouchMessage="Pick Up: Russian RPG-43 Anti-Tank Grenade"
-    MaxDesireability=0.80000
+    MaxDesireability=0.8
     InventoryType=class'DH_Weapons.DH_RPG43GrenadeWeapon'
     PickupMessage="You got the Russian RPG-43 Anti-Tank Grenade."
-    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43'
-    PrePivot=(Z=3.000000)
-    CollisionRadius=15.000000
-    CollisionHeight=3.000000
+    PrePivot=(Z=3.0)
+    CollisionRadius=15.0
+    CollisionHeight=3.0
 }

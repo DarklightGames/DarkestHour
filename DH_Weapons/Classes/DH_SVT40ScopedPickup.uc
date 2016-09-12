@@ -8,17 +8,17 @@ class DH_SVT40ScopedPickup extends DHWeaponPickup
 
 #exec OBJ LOAD FILE=..\StaticMeshes\WeaponPickupSM.usx
 #exec OBJ LOAD File=..\Textures\Weapons3rd_tex.utx
-#exec OBJ LOAD File=Weapons1st_tex.utx
+#exec OBJ LOAD File=..\Textures\Weapons1st_tex.utx
 
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.svt40Scope');
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.svt40pouch');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.svt40_world');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.Rifles.svt40_sniper_s');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.SniperScopes.svt_scope_s');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.svt40_ammo');
-    L.AddPrecacheMaterial(Material'Weapon_overlays.Scopes.Rus_sniperscope_overlay');
+    L.AddPrecacheMaterial(material'Weapons3rd_tex.Soviet.svt40_world');
+    L.AddPrecacheMaterial(material'Weapons1st_tex.Rifles.svt40_sniper_s');
+    L.AddPrecacheMaterial(material'Weapons1st_tex.SniperScopes.svt_scope_s');
+    L.AddPrecacheMaterial(material'InterfaceArt_tex.HUD.svt40_ammo');
+    L.AddPrecacheMaterial(material'Weapon_overlays.Scopes.Rus_sniperscope_overlay');
 }
 
 defaultproperties
@@ -27,7 +27,7 @@ defaultproperties
     PickupMessage="You got the SVT40 Scoped."
     TouchMessage="Pick Up: SVT40 Scoped"
     PickupForce="AssaultRiflePickup"
-    MaxDesireability=+0.78
+    MaxDesireability=0.78
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.svt40Scope'
     DrawType=DT_StaticMesh
     DrawScale=1.0

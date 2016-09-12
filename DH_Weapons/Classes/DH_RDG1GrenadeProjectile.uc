@@ -7,10 +7,10 @@ class DH_RDG1GrenadeProjectile extends StielGranateProjectile;  // TODO: fix hie
 
 #exec OBJ LOAD File=Inf_WeaponsTwo.uax
 
-var float DestroyTimer;
-var bool bCalledDestroy;
-var Emitter SmokeEmitter;
-var sound SmokeSound;
+var     float       DestroyTimer;
+var     bool        bCalledDestroy;
+var     Emitter     SmokeEmitter;
+var     sound       SmokeSound;
 
 simulated function Landed(vector HitNormal)
 {
@@ -18,21 +18,21 @@ simulated function Landed(vector HitNormal)
     {
         SetPhysics(PHYS_None);
 
-        if(Role == ROLE_Authority)
+        if (Role == ROLE_Authority)
         {
-            SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
+            SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
         }
     }
     else
     {
-        HitWall(HitNormal, None);
+        HitWall(HitNormal, none);
     }
 }
 
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local vector VNorm;
     local ESurfaceTypes ST;
+    local vector        VNorm;
 
     GetHitSurfaceType(ST, HitNormal);
     GetDampenAndSoundValue(ST);
@@ -57,9 +57,9 @@ simulated function HitWall(vector HitNormal, actor Wall)
         Speed = VSize(Velocity);
     }
 
-    if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none )
+    if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150.0) && ImpactSound != none)
     {
-        PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
+        PlaySound(ImpactSound, SLOT_Misc, 1.1); // increase volume of impact
     }
 }
 
@@ -80,12 +80,12 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         AmbientSound = SmokeSound;
     }
 
-    PlaySound(ExplosionSound[Rand(3)],, 1.0,, 200);
+    PlaySound(ExplosionSound[Rand(3)],, 1.0,, 200.0);
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
-        SmokeEmitter.SetBase(Self);
+        SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0.0, 0.0, 1.0)));
+        SmokeEmitter.SetBase(self);
     }
 }
 
@@ -109,7 +109,6 @@ function Reset()
     super.Reset();
 }
 
-
 simulated function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
@@ -125,18 +124,18 @@ simulated function Tick(float DeltaTime)
 
 defaultproperties
 {
-    DestroyTimer=30.000000
-    SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    DestroyTimer=30.0
+    SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     ExplodeDirtEffectClass=class'ROEffects.GrenadeSmokeEffect'
-    ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    Damage=0.000000
-    DamageRadius=0.000000
+    ExplosionSound(0)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    ExplosionSound(1)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    ExplosionSound(2)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    Damage=0.0
+    DamageRadius=0.0
     MyDamageType=class'DH_Weapons.DH_RDG1GrenadeDamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
     bAlwaysRelevant=true
-    LifeSpan=30.000000
+    LifeSpan=30.0
     SoundVolume=255
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

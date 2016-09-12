@@ -5,14 +5,14 @@
 
 class DH_BARAttachment extends DHWeaponAttachment;
 
-var()   name        WA_SightUp_Idle;
-var()   name        WA_SightUp_Fire;
-var()   name        WA_SightUp_Reload;
-var()   name        WA_SightUp_ReloadEmpty;
-var()   name        WA_SightDown_Idle;
-var()   name        WA_SightDown_Fire;
-var()   name        WA_SightDown_Reload;
-var()   name        WA_SightDown_ReloadEmpty;
+var     name    WA_SightUp_Idle;
+var     name    WA_SightUp_Fire;
+var     name    WA_SightUp_Reload;
+var     name    WA_SightUp_ReloadEmpty;
+var     name    WA_SightDown_Idle;
+var     name    WA_SightDown_Fire;
+var     name    WA_SightDown_Reload;
+var     name    WA_SightDown_ReloadEmpty;
 
 // Overwritten to allow for BAR deployed anims - not the best way of doing this but saves having to overwrite functions in ROPawn
 simulated function PlayIdle()

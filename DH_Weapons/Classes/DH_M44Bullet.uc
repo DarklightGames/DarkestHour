@@ -10,6 +10,6 @@ defaultproperties
     MyVehicleDamage=class'DH_Weapons.DH_M44VehDamType'
     BallisticCoefficient=0.511 // ?
     Speed=48282 // 2625 fps
-    Damage=115.000000
+    Damage=115.0
     MyDamageType=class'DH_Weapons.DH_M44DamType'
 }

@@ -10,7 +10,7 @@ class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="10lb Satchel Charge"
-    Mesh=mesh'Common_Satchel_1st.Sachel_Charge'
+    Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
     PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
     bCanThrow=true
     FuzeLength=15.0

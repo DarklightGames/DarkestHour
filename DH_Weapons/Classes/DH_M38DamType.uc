@@ -8,12 +8,12 @@ class DH_M38DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_M38Weapon'
     DeathString="%o was killed by %k's M38."
     FemaleSuicide="%o turned the gun on herself."
     MaleSuicide="%o turned the gun on himself."
-    GibModifier=0.000000
+    GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
-    KDamageImpulse=2250.000000
+    KDamageImpulse=2250.0
 }

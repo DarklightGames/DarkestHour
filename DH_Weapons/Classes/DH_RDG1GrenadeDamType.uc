@@ -8,9 +8,9 @@ class DH_RDG1GrenadeDamType extends ROGrenadeDamType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.germgrenade'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.germgrenade'
     WeaponClass=class'DH_Weapons.DH_RDG1GrenadeWeapon'
     DeathString="%o was burned up by %k's smoke grenade."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.000000
+    DeathOverlayTime=999.0
 }

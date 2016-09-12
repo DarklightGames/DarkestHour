@@ -20,5 +20,5 @@ defaultproperties
     BayoStabAnim="stab_attack"
     BayoFinishAnim="stab_return"
     BotRefireRate=0.25
-    aimerror=800.0
+    AimError=800.0
 }

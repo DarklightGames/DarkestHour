@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=9
     InitialAmount=8
-    IconMaterial=Material'InterfaceArt_tex.HUD.tt33_ammo'
+    IconMaterial=material'InterfaceArt_tex.HUD.tt33_ammo'
 }

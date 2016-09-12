@@ -11,6 +11,6 @@ defaultproperties
 {
      WA_Idle="Idle"
      WA_Fire="Idle"
-     //compile error  menuImage=texture'DH_ROFX_Tex.HUD.rpg43gui'
-     //compile error  mesh=SkeletalMesh'DO_RU_Weapons.RPG_43_3rd'
+     //compile error  MenuImage=texture'DH_ROFX_Tex.HUD.rpg43gui'
+     //compile error  Mesh=SkeletalMesh'DO_RU_Weapons.RPG_43_3rd'
 }

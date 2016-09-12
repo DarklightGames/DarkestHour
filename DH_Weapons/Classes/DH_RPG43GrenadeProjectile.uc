@@ -7,9 +7,12 @@ class DH_RPG43GrenadeProjectile extends DH_StielGranateProjectile;
 
 #exec OBJ LOAD File=Inf_WeaponsTwo.uax
 
-var float DestroyTimer, SurfaceAngleRadian, RPG43PenetrationAbility;
-var bool bCalledDestroy, bIsHEATRound;
-var class<DamageType> GrenadeImpactDamage;
+var     float               DestroyTimer;
+var     float               SurfaceAngleRadian;
+var     float               RPG43PenetrationAbility;
+var     bool                bCalledDestroy;
+var     bool                bIsHEATRound;
+var     class<DamageType>   GrenadeImpactDamage;
 
 simulated function Landed(vector HitNormal)
 {
@@ -24,11 +27,10 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local vector VNorm;
     local ESurfaceTypes ST;
-    local float HitAngle;
+    local vector        VNorm;
 
     GetHitSurfaceType(ST, HitNormal);
     GetDampenAndSoundValue(ST);
@@ -39,41 +41,34 @@ simulated function HitWall(vector HitNormal, actor Wall)
         return;
     }
 
-    // Subtract bounce number
     Bounces--;
 
-    //Set hitangle
-    HitAngle = 1.57;  //Pointless number
-
-    if( VSize(Velocity) >= 820 + Rand(81))
+    if (int(VSize(Velocity)) >= (820 + Rand(81)))
     {
-        //Lets check if we hit a vehicle (but not passenger pawn)
-        if( Wall.IsA('SVehicle') && !Wall.IsA('ROPassengerPawn') )
+        // Let's check if we hit a vehicle (but not passenger pawn)
+        if (Wall.IsA('SVehicle') && !Wall.IsA('ROPassengerPawn'))
         {
-            //Lets fuck up the vehicle hard core if we hit a top and flat surface
-            if(Acos(HitNormal dot vect(0, 0, 1)) < SurfaceAngleRadian)
+            // Let's damage the vehicle if we hit a top & flat surface
+            if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) < SurfaceAngleRadian)
             {
-                //Hurt the vehicle itself
-                Wall.TakeDamage(Damage*1.5, none, Location, Location, MyDamageType);
-                explode(Location,vect(0,0,0));
+                Wall.TakeDamage(Damage * 1.5, none, Location, Location, MyDamageType); // hurt the vehicle itself
+                Explode(Location,vect(0.0, 0.0, 0.0));
             }
-            else //else lets check if the armor is too thick to damage
+            else // else lets check if the armor is too thick to damage
             {
-                explode(Location,vect(0,0,0));
+                Explode(Location,vect(0.0, 0.0, 0.0));
             }
-            //Because we exploded, let's end the function here
-            return;
         }
-        //we didn't hit a vehicle, ground can be softer so lets be harsher on velocity
-        else if( VSize(Velocity) >= 950 + Rand(101) )
+        // We didn't hit a vehicle & ground can be softer, so let's require more impact speed to explode
+        else if (int(VSize(Velocity)) >= (950 + Rand(101)))
         {
-            explode(Location,vect(0,0,0));
-            //Because we exploded, let's end the function here
-            return;
+            Explode(Location,vect(0.0, 0.0, 0.0));
         }
+
+        return; // because we exploded, let's end the function here
     }
 
-    //We didn't hit the wall hard enough so lets try bouncing
+    // We didn't hit the wall hard enough so lets try bouncing
     if (Bounces <= 0)
     {
         bBounce = false;
@@ -82,41 +77,43 @@ simulated function HitWall(vector HitNormal, actor Wall)
     {
         // Reflect off Wall w/damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
-        Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+        Velocity = -VNorm * DampenFactor + ((Velocity - VNorm) * DampenFactorParallel);
         Speed = VSize(Velocity);
     }
 
-    if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none )
+    if (Level.NetMode != NM_DedicatedServer && Speed > 150.0 && ImpactSound != none)
     {
-        PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
+        PlaySound(ImpactSound, SLOT_Misc, 1.1); // increase volume of impact
     }
 }
 
-//Overrided because there is no fuse on this grenade
+// Overrided because there is no fuse on this grenade
 simulated function Tick(float DeltaTime)
 {
-    //Count down on the destroy timer
+    // Count down on the destroy timer
     DestroyTimer -= DeltaTime;
 
     if (DestroyTimer <= 0.0 && !bCalledDestroy)
     {
         bCalledDestroy = true;
-        bAlreadyExploded = true; //Make sure it doesnt' explode on destroy
-        Reset(); //delete the actor
+        bAlreadyExploded = true; // make sure it doesn't explode on destroy
+        Reset(); // delete the actor
     }
 }
 
-//Overrideen to support alreadyexploded variable
+// Overrideen to support bAlreadyExploded variable
 simulated function Destroyed()
 {
-    local Vector Start;
     local ESurfaceTypes ST;
+    local vector        Start;
 
     if (bAlreadyExploded)
+    {
         return;
+    }
 
     PlaySound(ExplosionSound[Rand(3)],, 5.0);
-    Start = Location + 32 * vect(0,0,1);
+    Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
 
     DoShakeEffect();
 
@@ -125,24 +122,23 @@ simulated function Destroyed()
         // if the grenade is still moving we'll need to spawn a different explosion effect
         if (Physics == PHYS_Falling)
         {
-            Spawn(class'GrenadeExplosion_midair',,, Start, rotator(vect(0, 0, 1)));
+            Spawn(class'GrenadeExplosion_midair',,, Start, rotator(vect(0.0, 0.0, 1.0)));
         }
 
-        // if the grenade has stopped and is on the ground we'll spawn a ground explosion
-        // effect and spawn some dirt flying out
+        // If the grenade has stopped & is on the ground we'll spawn a ground explosion effect & spawn some dirt flying out
         else if (Physics == PHYS_None)
         {
-            GetHitSurfaceType(ST, vect(0,0,1));
+            GetHitSurfaceType(ST, vect(0.0, 0.0, 1.0));
 
             if (ST == EST_Snow || ST == EST_Ice)
             {
-                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0,0,1)));
-                Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0,0,1)));
+                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
             else
             {
-                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0,0,1)));
-                Spawn(ExplosionDecal, self,, Location, rotator(-vect(0,0,1)));
+                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecal, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
         }
     }
@@ -152,25 +148,25 @@ simulated function Destroyed()
 
 defaultproperties
 {
-     bIsHEATRound=true
-     //compile error  GrenadeImpactDamage=class'DH_Vehicles.DH_TankShellImpactDamage'
-     RPG43PenetrationAbility=7.6
-     SurfaceAngleRadian=0.1195555555555556
-     DestroyTimer=15.000000 //Used incase the grenade didn't hit hard enough to explode (will stay around for a bit for effect)
-     //SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-     ExplodeDirtEffectClass=class'ROEffects.GrenadeExplosion'
-     ExplosionSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-     ExplosionSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-     ExplosionSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-     Damage=200.000000
-     DamageRadius=250.000000
-     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
-     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43_Tossed'
-     bAlwaysRelevant=true
-     LifeSpan=30.000000
-     SoundVolume=255
-     SoundRadius=200.000000
-     FuzeLengthTimer=0.0
-     Speed=900.000000
-     bUseCollisionStaticMesh=true
+    bIsHEATRound=true
+    //compile error  GrenadeImpactDamage=class'DH_Vehicles.DH_TankShellImpactDamage'
+    RPG43PenetrationAbility=7.6
+    SurfaceAngleRadian=0.1195555555555556
+    DestroyTimer=15.0 // used in case the grenade didn't hit hard enough to explode (will stay around for a bit for effect)
+//  SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    ExplodeDirtEffectClass=class'ROEffects.GrenadeExplosion'
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
+    Damage=200.0
+    DamageRadius=250.0
+    MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43_Tossed'
+    bAlwaysRelevant=true
+    LifeSpan=30.0
+    SoundVolume=255
+    SoundRadius=200.0
+    FuzeLengthTimer=0.0
+    Speed=900.0
+    bUseCollisionStaticMesh=true
 }

@@ -8,8 +8,8 @@ class DH_SVT40Bullet extends DHBullet;
 defaultproperties
 {
     BallisticCoefficient=0.511
-    Damage=115
+    Damage=115.0
     MyDamageType=class'DH_Weapons.DH_SVT40DamType'
     MyVehicleDamage=class'SVT40VehDamType'
-    Speed=50696
+    Speed=50696.0
 }

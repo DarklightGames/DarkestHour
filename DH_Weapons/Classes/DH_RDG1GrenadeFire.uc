@@ -5,21 +5,21 @@
 
 class DH_RDG1GrenadeFire extends StielGranateFire;
 
-event ModeTick(float dt)
+event ModeTick(float DeltaTime)
 {
     local ROExplosiveWeapon Exp;
 
-    if( Weapon.Role == ROLE_Authority )
+    if (Weapon.Role == ROLE_Authority)
     {
         Exp = ROExplosiveWeapon(Weapon);
 
-        if( Exp.bPrimed && HoldTime > 0 )
+        if (Exp.bPrimed && HoldTime > 0.0)
         {
-            if( Exp.CurrentFuzeTime  > (AddedFuseTime * -1) )
+            if (Exp.CurrentFuzeTime > (AddedFuseTime * -1.0))
             {
-                Exp.CurrentFuzeTime -= dt;
+                Exp.CurrentFuzeTime -= DeltaTime;
             }
-            else if( !Exp.bAlreadyExploded )
+            else if (!Exp.bAlreadyExploded)
             {
                 Exp.bAlreadyExploded = true;
             }
@@ -29,21 +29,19 @@ event ModeTick(float dt)
 
 function DoFireEffect()
 {
-    local Vector StartProj, StartTrace, X,Y,Z;
-    local Rotator R, Aim;
-    local Vector HitLocation, HitNormal;
-    local Actor Other;
-    local int projectileID;
-    local int SpawnCount;
-    local float theta;
+    local Actor   Other;
+    local vector  StartProj, StartTrace, HitLocation, HitNormal, X, Y, Z;
+    local rotator R, Aim;
+    local float   Theta;
+    local int     ProjectileID, SpawnCount;
 
     Instigator.MakeNoise(1.0);
-    Weapon.GetViewAxes(X,Y,Z);
+    Weapon.GetViewAxes(X, Y, Z);
 
     StartTrace = Instigator.Location + Instigator.EyePosition();
-    StartProj = StartTrace + X * ProjSpawnOffset.X;
+    StartProj = StartTrace + (X * ProjSpawnOffset.X);
 
-    // check if projectile would spawn through a wall and adjust start location accordingly
+    // Check if projectile would spawn through a wall & adjust start location accordingly
     Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
 
     if (Other != none)
@@ -56,31 +54,33 @@ function DoFireEffect()
     SpawnCount = Max(1, ProjPerFire * int(Load));
 
     CalcSpreadModifiers();
-
     AppliedSpread = Spread;
 
     switch (SpreadStyle)
     {
         case SS_Random:
-            X = Vector(Aim);
-            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            X = vector(Aim);
+
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
-                R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
-                R.Pitch = AppliedSpread * (FRand()-0.5);
-                R.Roll = AppliedSpread * (FRand()-0.5);
-                SpawnProjectile(StartProj, Rotator(X >> R));
+                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+                R.Pitch = AppliedSpread * (FRand() - 0.5);
+                R.Roll = AppliedSpread * (FRand() - 0.5);
+                SpawnProjectile(StartProj, rotator(X >> R));
             }
+
             break;
 
         case SS_Line:
-            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
-                theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
-                X.X = Cos(theta);
-                X.Y = Sin(theta);
+                Theta = AppliedSpread * PI / 32768 * (ProjectileID - float(SpawnCount - 1) / 2.0);
+                X.X = Cos(Theta);
+                X.Y = Sin(Theta);
                 X.Z = 0.0;
-                SpawnProjectile(StartProj, Rotator(X >> Aim));
+                SpawnProjectile(StartProj, rotator(X >> Aim));
             }
+
             break;
 
         default:
@@ -90,9 +90,9 @@ function DoFireEffect()
 
 defaultproperties
 {
-     bSplashDamage=false
-     bRecommendSplashDamage=false
-     MaxHoldTime=4.950000
-     AmmoClass=class'DH_Weapons.DH_RDG1GrenadeAmmo'
-     ProjectileClass=class'DH_Weapons.DH_RDG1GrenadeProjectile'
+    bSplashDamage=false
+    bRecommendSplashDamage=false
+    MaxHoldTime=4.95
+    AmmoClass=class'DH_Weapons.DH_RDG1GrenadeAmmo'
+    ProjectileClass=class'DH_Weapons.DH_RDG1GrenadeProjectile'
 }

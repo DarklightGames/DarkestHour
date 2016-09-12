@@ -8,17 +8,17 @@ class DH_SVT40Pickup extends DHWeaponPickup
 
 #exec OBJ LOAD FILE=..\StaticMeshes\WeaponPickupSM.usx
 #exec OBJ LOAD File=..\Textures\Weapons3rd_tex.utx
-#exec OBJ LOAD File=Weapons1st_tex.utx
+#exec OBJ LOAD File=..\Textures\Weapons1st_tex.utx
 
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.svt40');
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.svt40pouch');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.svt40_world');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.svt40_bayonet_world');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.Rifles.SVT40_S');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.bayonet.SVTBayonet_S');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.svt40_ammo');
+    L.AddPrecacheMaterial(material'Weapons3rd_tex.Soviet.svt40_world');
+    L.AddPrecacheMaterial(material'Weapons3rd_tex.Soviet.svt40_bayonet_world');
+    L.AddPrecacheMaterial(material'Weapons1st_tex.Rifles.SVT40_S');
+    L.AddPrecacheMaterial(material'Weapons1st_tex.bayonet.SVTBayonet_S');
+    L.AddPrecacheMaterial(material'InterfaceArt_tex.HUD.svt40_ammo');
 }
 
 defaultproperties
@@ -27,7 +27,7 @@ defaultproperties
     PickupMessage="You got the SVT40."
     TouchMessage="Pick Up: SVT40"
     PickupForce="AssaultRiflePickup"
-    MaxDesireability=+0.78
+    MaxDesireability=0.78
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.svt40'
     DrawType=DT_StaticMesh
     DrawScale=1.0

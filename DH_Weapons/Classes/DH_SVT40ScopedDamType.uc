@@ -13,9 +13,9 @@ defaultproperties
     FemaleSuicide="%o turned the gun on herself."
     WeaponClass=class'SVT40ScopedWeapon'
     GibModifier=0.0
-    KDeathVel=115.000000
-    KDamageImpulse=2500
-    KDeathUpKick=5
+    KDeathVel=115.0
+    KDamageImpulse=2500.0
+    KDeathUpKick=5.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
 }

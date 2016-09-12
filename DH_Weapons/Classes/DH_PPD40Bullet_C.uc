@@ -8,6 +8,6 @@ class DH_PPD40Bullet_C extends DHBullet;
 defaultproperties
 {
     WhizType=2
-    BallisticCoefficient=0.150000
-    Speed=25000.000000
+    BallisticCoefficient=0.15
+    Speed=25000.0
 }

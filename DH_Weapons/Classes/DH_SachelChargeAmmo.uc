@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=Material'InterfaceArt_tex.HUD.satchel_ammo'
+    IconMaterial=material'InterfaceArt_tex.HUD.satchel_ammo'
 }

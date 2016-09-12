@@ -39,7 +39,7 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.0
+    AimError=1200.0
     Spread=325.0
     SpreadStyle=SS_Random
 }

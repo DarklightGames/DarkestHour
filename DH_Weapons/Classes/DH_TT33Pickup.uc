@@ -11,9 +11,9 @@ static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.tt33');
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.tt33pouch');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.tt33_world');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.Pistols.TT33_S');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.tt33_ammo');
+    L.AddPrecacheMaterial(material'Weapons3rd_tex.Soviet.tt33_world');
+    L.AddPrecacheMaterial(material'Weapons1st_tex.Pistols.TT33_S');
+    L.AddPrecacheMaterial(material'InterfaceArt_tex.HUD.tt33_ammo');
 }
 
 defaultproperties

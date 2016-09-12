@@ -13,6 +13,6 @@ defaultproperties
     FemaleSuicide="%o turned the gun on herself."
     WeaponClass=class'DH_Weapons.DH_MN9130ScopedWeapon'
     GibModifier=0.0
-    KDamageImpulse=400
+    KDamageImpulse=400.0
 }
 

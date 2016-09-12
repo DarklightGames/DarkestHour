@@ -16,5 +16,5 @@ defaultproperties
     WeaponClass=class'DH_Weapons.DH_RPG43GrenadeWeapon'
     DeathString="%o was blown up by %k's RPG-43 grenade."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.000000
+    DeathOverlayTime=999.0
 }

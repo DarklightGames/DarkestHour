@@ -5,19 +5,19 @@
 
 class DH_M1GarandFire extends DHSemiAutoFire;
 
-var()           array<sound>    FirePingSounds;     // An array of the last round firing sound with ping
-var(FireAnims)  name            FireLastAnim;       //last round animation
-var(FireAnims)  name            FireIronlastAnim;   //iron last round animation
+var     array<sound>    FirePingSounds;   // an array of the last round firing sound with ping
+var     name            FireLastAnim;     // last round animation
+var     name            FireIronlastAnim; // iron last round animation
+var     bool            NextShotIsLast;   // set on the second last shot to facilitate clip eject
 
-var             bool            NextShotIsLast;     // Set on the second last shot to facilitate clip eject
-
+// Adds last round clip eject sound
 function ServerPlayFiring()
 {
     local DH_M1GarandWeapon Gun;
 
     Gun = DH_M1GarandWeapon(Weapon);
 
-    if (Gun.WasLastRound())     // adds last round clip eject sound
+    if (Gun.WasLastRound())
     {
         if (FirePingSounds.Length > 0)
         {
@@ -33,10 +33,11 @@ function ServerPlayFiring()
     }
 }
 
-function PlayFiring()   // overridden to make last round eject clip & add audible ping
+// Overridden to make last round eject clip & add audible ping
+function PlayFiring()
 {
     local DH_M1GarandWeapon Gun;
-    local bool IsLastRound;
+    local bool              IsLastRound;
 
     Gun = DH_M1GarandWeapon(Weapon);
     IsLastRound = Gun.bIsLastRound;
@@ -142,7 +143,7 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSVT'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=800.0
+    AimError=800.0
     Spread=75.0
     SpreadStyle=SS_Random
 }

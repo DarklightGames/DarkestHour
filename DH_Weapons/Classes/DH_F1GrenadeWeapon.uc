@@ -11,10 +11,10 @@ defaultproperties
 {
     PreFireHoldAnim="pre_fire_idle"
     bHasReleaseLever=true
-    FuzeLength=4.000000
-    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
-    LeverReleaseVolume=1.000000
-    LeverReleaseRadius=200.000000
+    FuzeLength=4.0
+    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseVolume=1.0
+    LeverReleaseRadius=200.0
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
@@ -23,14 +23,14 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_F1GrenadeTossFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.400000
-    CurrentRating=0.400000
-    DisplayFOV=70.000000
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.4
+    CurrentRating=0.4
+    DisplayFOV=70.0
     PickupClass=class'DH_Weapons.DH_F1GrenadePickup'
-    PlayerViewOffset=(X=5.000000,Y=5.000000)
-    BobDamping=1.600000
+    PlayerViewOffset=(X=5.0,Y=5.0)
+    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_F1GrenadeAttachment'
     ItemName="F1 Grenade"
     Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'

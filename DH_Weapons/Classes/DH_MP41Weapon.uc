@@ -9,7 +9,7 @@ defaultproperties
 {
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8
-    FreeAimRotationSpeed=7.500000
+    FreeAimRotationSpeed=7.5
     FireModeClass(0)=class'DH_Weapons.DH_MP41Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
     PickupClass=class'DH_Weapons.DH_MP41Pickup'

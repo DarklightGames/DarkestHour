@@ -8,7 +8,7 @@ class DH_PTRDDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_PTRDWeapon'
     DeathString="%o was killed by %k's PTRD."
     FemaleSuicide="%o turned the gun on herself."
@@ -19,11 +19,11 @@ defaultproperties
     APCDamageModifier=0.5
     VehicleDamageModifier=0.75
     TreadDamageModifier=0.5
-    GibModifier=4.000000
+    GibModifier=4.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuffLarge'
-    GibPerterbation=0.150000
-    KDamageImpulse=4500.000000
-    KDeathVel=200.000000
-    KDeathUpKick=25.000000
-    VehicleMomentumScaling=0.100000
+    GibPerterbation=0.15
+    KDamageImpulse=4500.0
+    KDeathVel=200.0
+    KDeathUpKick=25.0
+    VehicleMomentumScaling=0.1
 }

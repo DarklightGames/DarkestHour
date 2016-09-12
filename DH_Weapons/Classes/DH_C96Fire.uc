@@ -5,10 +5,8 @@
 
 class DH_C96Fire extends DHFastAutoFire;
 
-/* =================================================================================== *
-* Overridden here to allow semi auto fire sound handling for a fastauto weapon class
-* This is an extremely messy and inefficient way of doing this, however it works - Ch!cken
-* =================================================================================== */
+// Overridden here to allow semi auto fire sound handling for a FastAuto weapon class
+// This is an extremely messy & inefficient way of doing this, however it works - Ch!cken
 state FireLoop
 {
     function BeginState()
@@ -111,7 +109,7 @@ state FireLoop
             Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
             Weapon.StopFire(ThisModeNum);
 
-            //If we are not switching weapons, go to the idle state
+            // If we are not switching weapons, go to the idle state
             if (!Weapon.IsInState('LoweringWeapon'))
             {
                 ROWeapon(Weapon).GotoState('Idle');
@@ -140,16 +138,14 @@ state FireLoop
         GotoState('');
     }
 
-    function ModeTick(float dt)
+    function ModeTick(float DeltaTime)
     {
-        super.ModeTick(dt);
+        super.ModeTick(DeltaTime);
 
-        // WeaponTODO: See how to properly reimplement this
+        // WeaponTODO: see how to properly reimplement this
         if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHMGWeapon(Weapon) != none && DHMGWeapon(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
         {
             GotoState('');
-
-            return;
         }
     }
 }
@@ -190,7 +186,7 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.0
+    AimError=1200.0
     Spread=400.0
     SpreadStyle=SS_Random
 }

@@ -7,7 +7,7 @@ class DH_SVT40ScopedWeapon extends DHSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Allies_Svt40_1st.ukx
 
-var bool bJammed;
+var     bool    bJammed;
 
 replication
 {
@@ -18,26 +18,26 @@ replication
 // Overriden to prevent the exploit of freezing your animations after firing
 simulated function AnimEnd(int channel)
 {
-    local name anim;
-    local float frame, rate;
+    local name  Anim;
+    local float Frame, Rate;
 
-    GetAnimParams(0, anim, frame, rate);
+    GetAnimParams(0, Anim, Frame, Rate);
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring )
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
-        else if (anim == ROProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring )
+        else if (Anim == ROProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
         {
             PlayIdle();
         }
-        else if (anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (Anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
-        else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }
@@ -54,7 +54,7 @@ simulated event StopFire(int Mode)
 
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-        if( !IsAnimating(0) )
+        if (!IsAnimating(0))
         {
             PlayIdle();
         }
@@ -73,17 +73,17 @@ defaultproperties
 {
     LensMaterialID=4
     ItemName="SVT-40 Scoped"
-    Mesh=mesh'Allies_Svt40_1st.svt40_scoped_mesh'
+    Mesh=SkeletalMesh'Allies_Svt40_1st.svt40_scoped_mesh'
     DrawScale=1.0
-    DisplayFOV=70
-    IronSightDisplayFOV=60
+    DisplayFOV=70.0
+    IronSightDisplayFOV=60.0
     BobDamping=1.6
-    BayonetBoneName=Bayonet
-    HighDetailOverlay=Material'Weapons1st_tex.Rifles.SVT40_S'
+    BayonetBoneName="bayonet"
+    HighDetailOverlay=material'Weapons1st_tex.Rifles.SVT40_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    FireModeClass(0)=DH_SVT40ScopedFire
-    FireModeClass(1)=DH_SVT40ScopedMeleeFire
+    FireModeClass(0)=class'DH_Weapons.DH_SVT40ScopedFire'
+    FireModeClass(1)=class'DH_Weapons.DH_SVT40ScopedMeleeFire'
     InitialNumPrimaryMags=5
     MaxNumPrimaryMags=5
     CurrentMagIndex=0
@@ -94,31 +94,31 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SVT40ScopedAttachment'
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
-    SelectAnim=Draw
-    PutDownAnim=Put_Away
-    MagEmptyReloadAnim=reload_empty
-    MagPartialReloadAnim=reload_half
-    IronBringUp=Scope_in
-    IronIdleAnim=Scope_Idle
-    IronPutDown=Scope_out
-    CrawlForwardAnim=crawlF
-    CrawlBackwardAnim=crawlB
-    CrawlStartAnim=crawl_in
-    CrawlEndAnim=crawl_out
+    SelectAnim="Draw"
+    PutDownAnim="Put_Away"
+    MagEmptyReloadAnim="reload_empty"
+    MagPartialReloadAnim="reload_half"
+    IronBringUp="Scope_in"
+    IronIdleAnim="Scope_Idle"
+    IronPutDown="Scope_out"
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
     ZoomInTime=0.4
     ZoomOutTime=0.2
-    PlayerFOVZoom=24    // The will be the PlayerFOV when using the scope in iron sight mode - 3.5x
-    scopePortalFOV = 8// 3.5x
-    XoffsetScoped = (X=0.0,Y=0.0,Z=0.0)
-    scopePitch= -10
-    scopeYaw= 40
-    scopePortalFOVHigh = 15 // 3.5x
-    IronSightDisplayFOVHigh = 32
-    XoffsetHighDetail = (X=0.0,Y=0.0,Z=0.0)
-    scopePitchHigh= 0
-    scopeYawHigh= 35
-    AIRating=+0.4
+    PlayerFOVZoom=24.0 // the PlayerFOV when using the scope in iron sight mode - 3.5x
+    ScopePortalFOV=8.0 // 3.5x
+    XoffsetScoped=(X=0.0,Y=0.0,Z=0.0)
+    ScopePitch=-10
+    ScopeYaw=40
+    ScopePortalFOVHigh=15.0 // 3.5x
+    IronSightDisplayFOVHigh=32.0
+    XoffsetHighDetail=(X=0.0,Y=0.0,Z=0.0)
+    ScopePitchHigh=0
+    ScopeYawHigh=35
+    AIRating=0.4
     CurrentRating=0.4
     bSniping=true
-    TexturedScopeTexture=Texture'Weapon_overlays.Scopes.Rus_sniperscope_overlay'
+    TexturedScopeTexture=texture'Weapon_overlays.Scopes.Rus_sniperscope_overlay'
 }

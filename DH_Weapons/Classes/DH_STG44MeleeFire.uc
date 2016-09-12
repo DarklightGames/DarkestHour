@@ -14,5 +14,5 @@ defaultproperties
     BashAnim="bash_attack"
     BashFinishAnim="bash_return"
     BotRefireRate=0.25
-    aimerror=800.0
+    AimError=800.0
 }

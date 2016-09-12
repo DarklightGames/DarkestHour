@@ -8,5 +8,5 @@ class DH_DP28Bullet_C extends DHBullet;
 defaultproperties
 {
     BallisticCoefficient=0.511
-    Speed=50696 // 840 m/s
+    Speed=50696.0 // 840 m/s
 }

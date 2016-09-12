@@ -14,6 +14,6 @@ defaultproperties
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
     ShakeRotTime=5.0
     ProjectileClass=class'DH_Weapons.DH_Kar98ScopedBullet'
-    aimerror=550.0
+    AimError=550.0
     Spread=30.0
 }

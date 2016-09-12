@@ -7,5 +7,5 @@ class DH_DP28Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    FiringHeatIncrement=0.8500000
+    FiringHeatIncrement=0.85
 }

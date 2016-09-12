@@ -5,13 +5,13 @@
 
 class DH_BARFire extends DHAutomaticFire;
 
-var(FireAnims)  name        SightUpFireIronAnim;
-var(FireAnims)  name        SightUpFireIronLoopAnim;
-var(FireAnims)  name        SightUpFireIronEndAnim;
+var     name    SightUpFireIronAnim;
+var     name    SightUpFireIronLoopAnim;
+var     name    SightUpFireIronEndAnim;
 
-function ModeTick(float dt)
+function ModeTick(float DeltaTime)
 {
-    super.ModeTick(dt);
+    super.ModeTick(DeltaTime);
 
     if (bIsFiring && !AllowFire())
     {
@@ -144,7 +144,7 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.0
+    AimError=1200.0
     Spread=130.0
     HipSpreadModifier=6.0
     SpreadStyle=SS_Random

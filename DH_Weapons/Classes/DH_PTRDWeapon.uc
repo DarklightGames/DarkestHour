@@ -7,8 +7,7 @@ class DH_PTRDWeapon extends DHBipodWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Allies_Ptrd_1st.ukx
 
-// Overriden because we don't want to allow reloading unless the weapon is out of
-// ammo
+// Overriden because we don't want to allow reloading unless the weapon is out of ammo
 simulated function bool AllowReload()
 {
     if (AmmoAmount(0) > 0)
@@ -19,9 +18,8 @@ simulated function bool AllowReload()
     return super.AllowReload();
 }
 
-// Implemented in various states to show whether the weapon is busy performing
-// some action that normally shouldn't be interuppted. Overriden because we
-// have no melee attack
+// Implemented in various states to show whether the weapon is busy performing some action that normally shouldn't be interuppted
+// Overriden because we have no melee attack
 simulated function bool IsBusy()
 {
     return false;
@@ -34,19 +32,19 @@ simulated function ROIronSights()
 
 simulated function AnimEnd(int channel)
 {
-    local name anim;
-    local float frame, rate;
+    local name  Anim;
+    local float Frame, Rate;
 
-    GetAnimParams(0, anim, frame, rate);
+    GetAnimParams(0, Anim, Frame, Rate);
 
     if (ClientState == WS_ReadyToFire)
     {
         // Every time the PTRD fires its out of ammo, so play the empty animation
-        if (anim == FireMode[0].FireAnim)
+        if (Anim == FireMode[0].FireAnim)
         {
             LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
         }
-        else if (anim == FireMode[1].FireAnim)
+        else if (Anim == FireMode[1].FireAnim)
         {
             LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
         }
@@ -103,11 +101,12 @@ simulated function Fire(float F)
 {
     if (Level.NetMode != NM_DedicatedServer && Instigator.bBipodDeployed)
     {
-       if (!HasAmmo())
-       {
-          ROManualReload();
-          return;
-       }
+        if (!HasAmmo())
+        {
+            ROManualReload();
+
+            return;
+        }
     }
 
     super.Fire(F);
@@ -140,22 +139,22 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=35.000000
-    ZoomInTime=0.400000
-    ZoomOutTime=0.350000
+    IronSightDisplayFOV=35.0
+    ZoomInTime=0.4
+    ZoomOutTime=0.35
     FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
     FireModeClass(1)=class'DH_Weapons.DH_PTRDFire'
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.400000
-    CurrentRating=0.400000
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.4
+    CurrentRating=0.4
     bSniping=true
-    DisplayFOV=70.000000
+    DisplayFOV=70.0
     PickupClass=class'DH_Weapons.DH_PTRDPickup'
-    BobDamping=1.600000
+    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
     ItemName="PTRD-41"
     Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'

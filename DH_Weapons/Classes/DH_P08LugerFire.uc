@@ -35,7 +35,7 @@ defaultproperties
     BotRefireRate=0.5
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
-    aimerror=800.0
+    AimError=800.0
     Spread=450.0
     SpreadStyle=SS_Random
 }

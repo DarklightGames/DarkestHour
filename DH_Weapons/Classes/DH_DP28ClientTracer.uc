@@ -5,19 +5,19 @@
 
 class DH_DP28ClientTracer extends ROClientTracer;
 
-//Theel: Do I need to change the tracer classes?  why green tracers?
+// Theel: Do I need to change the tracer classes? Why green tracers?
 defaultproperties
 {
     LightHue=80
     LightSaturation=128
-    LightRadius=10.000000
+    LightRadius=10.0
     Bounces=1
     //compile error  StaticMesh=StaticMesh'DH_ROTracers.Russ_Tracer'
     //compile error  DeflectedMesh=StaticMesh'DH_ROTracers.Russ_Tracer_Ball'
-    SpeedFudgeScale=0.500000
+    SpeedFudgeScale=0.5
     BallisticCoefficient=0.511
-    Speed=50696 // 840 m/s
+    Speed=50696.0 // 840 m/s
     DrawType=DT_StaticMesh
     mTracerClass=class'DH_Effects.DHShellTracer_Green'
-    DrawScale=2.000000
+    DrawScale=2.0
 }

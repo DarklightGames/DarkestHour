@@ -5,9 +5,9 @@
 
 class DH_FG42Fire extends DHAutomaticFire;
 
-var(FireAnims)  name        SightUpFireIronAnim;
-var(FireAnims)  name        SightUpFireIronLoopAnim;
-var(FireAnims)  name        SightUpFireIronEndAnim;
+var     name    SightUpFireIronAnim;
+var     name    SightUpFireIronLoopAnim;
+var     name    SightUpFireIronEndAnim;
 
 function PlayFiring()
 {
@@ -141,7 +141,7 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.0
+    AimError=1200.0
     Spread=160.0
     SpreadStyle=SS_Random
 }

@@ -87,8 +87,8 @@ defaultproperties
 {
     FuzeLengthTimer=15.0
     Speed=300.0
-    Damage=550.0 //was 600 in 5.1
-    DamageRadius=500.0 //was 725.0 in 5.1
+    Damage=550.0 // was 600 in 5.1
+    DamageRadius=500.0 // was 725.0 in 5.1
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
     ExplosionSound(0)=sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=sound'Inf_Weapons.satchel.satchel_explode02'

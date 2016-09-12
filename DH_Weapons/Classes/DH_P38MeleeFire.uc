@@ -20,5 +20,5 @@ defaultproperties
     BashEmptyAnim="bash_attack_empty"
     BashFinishEmptyAnim="bash_return_empty"
     BotRefireRate=0.25
-    aimerror=800.0
+    AimError=800.0
 }

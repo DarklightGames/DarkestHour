@@ -11,7 +11,7 @@ var(FireAnims)  name        BipodDeployFireEndAnim;
 
 function PlayFiring()
 {
-    local   DH_BrenWeapon   BipodStatus;
+    local DH_BrenWeapon BipodStatus;
 
     BipodStatus = DH_BrenWeapon(Owner);
 
@@ -63,7 +63,9 @@ function PlayFiring()
     }
 
     if (FireSounds.Length > 0)
+    {
         Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+    }
 
     ClientPlayForceFeedback(FireForce);
 
@@ -72,8 +74,9 @@ function PlayFiring()
 
 function PlayFireEnd()
 {
-local   DH_BrenWeapon   BipodStatus;
-BipodStatus = DH_BrenWeapon(Owner);
+    local DH_BrenWeapon BipodStatus;
+
+    BipodStatus = DH_BrenWeapon(Owner);
 
     if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))
     {
@@ -136,7 +139,7 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.0
+    AimError=1200.0
     Spread=125.0
     SpreadStyle=SS_Random
 }

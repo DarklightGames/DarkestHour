@@ -16,6 +16,6 @@ defaultproperties
     TreadDamageModifier=0.50
     VehicleMomentumScaling=0.05
     HumanObliterationThreshhold=500
-    DeathOverlayMaterial=Material'Effects_Tex.PlayerDeathOverlay'
-    DeathOverlayTime=999
+    DeathOverlayMaterial=material'Effects_Tex.PlayerDeathOverlay'
+    DeathOverlayTime=999.0
 }

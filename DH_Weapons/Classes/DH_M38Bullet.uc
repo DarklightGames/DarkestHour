@@ -10,6 +10,6 @@ defaultproperties
     MyVehicleDamage=class'ROInventory.M38VehDamType'
     BallisticCoefficient=0.511
     Speed=48282 // 2625 fps
-    Damage=120.000000
+    Damage=120.0
     MyDamageType=class'DH_Weapons.DH_M38DamType'
 }

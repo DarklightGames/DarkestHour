@@ -13,9 +13,9 @@ defaultproperties
     FemaleSuicide="%o turned the gun on herself."
     WeaponClass=class'DH_Weapons.DH_MN9130Weapon'
     GibModifier=0.0
-    KDeathVel=115.000000
+    KDeathVel=115.0
     KDamageImpulse=2250
     KDeathUpKick=5
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
 }
