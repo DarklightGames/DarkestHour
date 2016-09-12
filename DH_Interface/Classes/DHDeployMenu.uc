@@ -294,7 +294,17 @@ function UpdateRoundStatus()
             l_Reinforcements.Caption = string(GRI.SpawnsRemaining[CurrentTeam]);
         }
 
-        l_SizeAdvantage.Caption = GRI.GetTeamScaleString(CurrentTeam);
+        if (GRI.CurrentAlliedToAxisRatio != 0.5)
+        {
+            l_SizeAdvantage.Caption = GRI.GetTeamScaleString(CurrentTeam);
+            l_SizeAdvantage.Show();
+            i_SizeAdvantage.Show();
+        }
+        else
+        {
+            l_SizeAdvantage.Hide();
+            i_SizeAdvantage.Hide();
+        }
 
         if (!GRI.bMatchHasBegun)
         {
@@ -1467,10 +1477,10 @@ defaultproperties
     i_Spectate=SpectateImageObject
 
     Begin Object Class=GUIImage Name=ReinforcementsImageObject
-        WinWidth=0.04
-        WinHeight=0.05
+        WinWidth=0.035
+        WinHeight=0.04
         WinLeft=0.02
-        WinTop=0.07
+        WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
         Image=texture'DH_GUI_Tex.DeployMenu.reinforcements'
@@ -1481,7 +1491,7 @@ defaultproperties
         TextAlign=TXTA_Left
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
-        WinWidth=0.09
+        WinWidth=0.08
         WinHeight=0.05
         WinLeft=0.0575
         WinTop=0.07
@@ -1490,9 +1500,9 @@ defaultproperties
     l_Reinforcements=ReinforcementsLabelObject
 
     Begin Object Class=GUIImage Name=SizeAdvantageImageObject
-        WinWidth=0.035
-        WinHeight=0.04
-        WinLeft=0.106
+        WinWidth=0.03
+        WinHeight=0.035
+        WinLeft=0.09
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -1504,19 +1514,19 @@ defaultproperties
         TextAlign=TXTA_Left
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
-        WinWidth=0.09
+        WinWidth=0.08
         WinHeight=0.05
-        WinLeft=0.144
+        WinLeft=0.12
         WinTop=0.07
         TextFont="DHMenuFont"
     End Object
     l_SizeAdvantage=SizeAdvantageLabelObject
 
     Begin Object Class=GUIImage Name=RoundTimeImageObject
-        WinWidth=0.04
-        WinHeight=0.05
-        WinLeft=0.183
-        WinTop=0.07
+        WinWidth=0.035
+        WinHeight=0.04
+        WinLeft=0.17
+        WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
         Image=texture'DH_GUI_Tex.DeployMenu.StopWatch'
@@ -1527,9 +1537,9 @@ defaultproperties
         TextAlign=TXTA_Left
         VertAlign=TXTA_Center
         TextColor=(R=255,G=255,B=255,A=255)
-        WinWidth=0.09
+        WinWidth=0.08
         WinHeight=0.05
-        WinLeft=0.223
+        WinLeft=0.2
         WinTop=0.07
         Hint="Time Remaining"
         TextFont="DHMenuFont"
