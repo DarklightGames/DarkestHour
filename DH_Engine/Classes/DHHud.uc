@@ -54,6 +54,7 @@ var     localized string    SpawnNoRoleText;
 var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
+var     localized string    DeathPenaltyText;
 
 // Death messages
 var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
@@ -4074,6 +4075,20 @@ simulated function DrawSpectatingHud(Canvas C)
 
         C.SetPos(X, Y);
         C.DrawTextClipped(s);
+
+        // Draw death penalty count if > 0
+        if (PC.DeathPenaltyCount > 0)
+        {
+            Y += 4.0 * Scale + strY;
+
+            s = DeathPenaltyText;
+            s = Repl(s, "{0}", PC.DeathPenaltyCount);
+            s = Repl(s, "{1}", string((PC.DeathPenaltyCount - 1) * PC.DEATH_PENALTY_FACTOR));
+
+            C.DrawColor = WhiteColor;
+            C.SetPos(X, Y);
+            C.DrawTextClipped(s);
+        }
     }
 
     // Draw player's name
@@ -4413,6 +4428,7 @@ defaultproperties
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
     SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
+    DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
 
     // Screen indicator icons
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world';
