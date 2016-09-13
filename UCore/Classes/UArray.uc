@@ -154,6 +154,21 @@ static final function int SIndexOf(array<string> _Array, string O)
     return -1;
 }
 
+static final function int IIndexOf(array<int> _Array, int O)
+{
+    local int i;
+
+    for (i = 0; i < _Array.Length; ++i)
+    {
+        if (_Array[i] ~= O)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 static final function int Erase(out array<Object> _Array, Object O)
 {
     local int i, j;
