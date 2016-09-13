@@ -27,6 +27,8 @@ struct SpawnVehicle
 
 const RADIOS_MAX = 10;
 
+var string              CurrentGameType;
+
 var ROArtilleryTrigger  CarriedAlliedRadios[RADIOS_MAX];
 var ROArtilleryTrigger  CarriedAxisRadios[RADIOS_MAX];
 
@@ -131,6 +133,7 @@ replication
         DHObjectives,
         AttritionRate,
         bUseDeathPenaltyCount,
+        CurrentGameType,
         CurrentAlliedToAxisRatio;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))

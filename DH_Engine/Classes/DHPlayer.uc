@@ -2590,6 +2590,7 @@ function Reset()
     VehiclePoolIndex = default.VehiclePoolIndex;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
+    DeathPenaltyCount = default.DeathPenaltyCount;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)

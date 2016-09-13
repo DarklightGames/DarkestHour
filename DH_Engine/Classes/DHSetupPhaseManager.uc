@@ -15,6 +15,7 @@ var() bool              bScaleStartingReinforcements;       // Scales starting r
 var() bool              bReplacePreStart;                   // If true will override the game's default PreStartTime, making it zero
 
 var int                 TimerCount;
+var int                 SetupPhaseDurationActual;
 
 event PreBeginPlay()
 {
@@ -32,6 +33,8 @@ event PreBeginPlay()
     {
         G.PreStartTime = 0;
     }
+
+    SetupPhaseDurationActual = SetupPhaseDuration + 5;
 
     super.PreBeginPlay();
 }
@@ -76,10 +79,10 @@ state Timing
         local DarkestHourGame G;
         local DHGameReplicationInfo GRI;
 
-        if (TimerCount < SetupPhaseDuration)
+        if (TimerCount < SetupPhaseDurationActual)
         {
             // Set the message out every 5 seconds
-            if (TimerCount % 5 == 0)
+            if (TimerCount > 0 && TimerCount % 5 == 0)
             {
                 for (C = Level.ControllerList; C != none; C = C.NextController)
                 {
@@ -87,7 +90,7 @@ state Timing
 
                     if (PC != none)
                     {
-                        s = Repl(PhaseMessage, "{0}", SetupPhaseDuration - TimerCount);
+                        s = Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount);
                         PC.ClientMessage(s,'CriticalEvent');
                     }
                 }

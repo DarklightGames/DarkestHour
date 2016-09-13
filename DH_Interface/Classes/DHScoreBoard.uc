@@ -223,20 +223,27 @@ simulated function UpdateScoreBoard(Canvas C)
         s $= HUD.static.GetTimeString(DHGRI.RoundStartTime + DHGRI.PreStartTime - GRI.ElapsedTime);
     }
 
-    s $= HUD.default.SpacingText $ HUD.default.TimeElapsedText $ HUD.static.GetTimeString(GRI.ElapsedTime - DHGRI.RoundStartTime); // add time elapsed (extra in DH)
+    // Add time elapsed (extra in DH)
+    s $= HUD.default.SpacingText $ HUD.default.TimeElapsedText $ HUD.static.GetTimeString(GRI.ElapsedTime - DHGRI.RoundStartTime);
 
-    if (DHGRI.bShowServerIPOnScoreboard && Level.NetMode != NM_Standalone) // add server IP (optional)
+    // Add server IP (optional)
+    if (DHGRI.bShowServerIPOnScoreboard && Level.NetMode != NM_Standalone)
     {
         s $= HUD.default.SpacingText $ HUD.default.IPText $ PlayerController(Owner).GetServerIP();
     }
 
-    if (DHGRI.bShowTimeOnScoreboard) // add real world time, at server location (optional)
+    // Add real world time, at server location (optional)
+    if (DHGRI.bShowTimeOnScoreboard)
     {
         s $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2)
-        @ " on " @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
+        @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
     }
 
-    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ Left(Level, InStr(Level, ".")); // add level name (extra in DH)
+    // Add level name (extra in DH)
+    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ Left(Level, InStr(Level, "."));
+
+    // Add game type
+    s $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.CurrentGameType;
 
     // Draw our round/server info line, with a drop shadow
     C.DrawColor.A = 128; // DrawColor is already black for shadow

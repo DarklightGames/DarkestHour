@@ -41,6 +41,7 @@ var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the pla
 
 // Map or screen text that can be localized for different languages
 var     localized string    MapNameText;
+var     localized string    MapGameTypeText;
 var     localized string    NoTimeLimitText;
 var     localized string    AndMoreText;
 var     localized string    LegendCarriedArtilleryRadioText;
@@ -4397,6 +4398,7 @@ defaultproperties
     MouseInterfaceIcon=(WidgetTexture=texture'DH_GUI_Tex.Menu.DHPointer')
     PlayerNameFontSize=1
     OverrideConsoleFontName="DHFonts.DHFont14"
+    SpacingText="        "
 
     // Death messages
     bShowDeathMessages=true
@@ -4406,6 +4408,7 @@ defaultproperties
 
     // Map text
     MapNameText="Map: "
+    MapGameTypeText="Gametype: "
     AndMoreText="and more..."
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"
@@ -4447,8 +4450,8 @@ defaultproperties
     MGDeployIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-144,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     ResupplyZoneNormalPlayerIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     ResupplyZoneNormalVehicleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-//  ResupplyZoneResupplyingPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
-//  ResupplyZoneResupplyingVehicleIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
+    //  ResupplyZoneResupplyingPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
+    //  ResupplyZoneResupplyingVehicleIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
 
     // Capture bar icons
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

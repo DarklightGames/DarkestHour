@@ -158,12 +158,21 @@ function PostBeginPlay()
     switch (DHLevelInfo.GameType)
     {
         case GT_Push:
-            // placeholder
-        break;
+            GRI.CurrentGameType = "Push";
+            break;
+
+        case GT_Attrition:
+            GRI.CurrentGameType = "Attrition";
+            break;
 
         case GT_Advance:
+            GRI.CurrentGameType = "Advance";
             GRI.bUseDeathPenaltyCount = true;
-        break;
+            break;
+
+        case GT_SearchAndDestroy:
+            GRI.CurrentGameType = "SearchAndDestroy";
+            break;
 
         default:
             // do nothing
