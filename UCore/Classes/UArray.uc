@@ -8,8 +8,39 @@
 class UArray extends Object
     abstract;
 
+// https://en.wikipedia.org/wiki/Filter_(higher-order_function)
+static final function array<Object> Filter(array<Object> A, Functor_bool_Object FilterFunction)
+{
+    local int i;
+    local array<Object> B;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        if (FilterFunction.DelegateFunction(A[i]))
+        {
+            B[B.Length] = A[i];
+        }
+    }
+
+    return B;
+}
+
+// https://en.wikipedia.org/wiki/Map_(higher-order_function)
+static final function array<Object> Map(array<Object> A, Functor_Object_Object MapFunction)
+{
+    local int i;
+    local array<Object> B;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        B[B.Length] = MapFunction.DelegateFunction(A[i]);
+    }
+
+    return B;
+}
+
 // Slice tries to immitate Python's slice syntax.
-static final function array<Object> Slice(array<Object> A, int Start, int End, optional int Step)
+static final function array<Object> Slice(array<Object> A, int Start, int End, int Step)
 {
     local int i;
     local array<Object> B;
@@ -29,7 +60,7 @@ static final function array<Object> Slice(array<Object> A, int Start, int End, o
     return B;
 }
 
-static final function array<int> ISlice(array<int> A, int Start, int End, optional int Step)
+static final function array<int> ISlice(array<int> A, int Start, int End, int Step)
 {
     local int i;
     local array<int> B;
