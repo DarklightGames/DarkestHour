@@ -404,6 +404,7 @@ function UpdateSpawnPoints()
     {
         if (GRI != none &&
             GRI.SpawnVehicles[i].VehiclePoolIndex >= 0 &&
+            GRI.SpawnVehicles[i].LocationX != 0 && GRI.SpawnVehicles[i].LocationY != 0 &&
             GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex] != none &&
             GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex].default.VehicleTeam == CurrentTeam)
         {
