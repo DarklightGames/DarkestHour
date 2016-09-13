@@ -568,9 +568,14 @@ function ResetMapVotes()
 {
     local int i, x;
 
+    if (!bMapVote)
+    {
+        return;
+    }
+
     for (i = 0; i < MVRI.Length; ++i)
     {
-        if (bMapVote && MVRI[i] != none && MVRI[i].MapVote > -1 && MVRI[i].GameVote > -1)
+        if (MVRI[i] != none && MVRI[i].MapVote > -1 && MVRI[i].GameVote > -1)
         {
             for (x = 0; x < MapVoteCount.Length; x++)
             {
