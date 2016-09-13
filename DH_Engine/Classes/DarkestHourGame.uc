@@ -21,9 +21,9 @@ var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 
-var     array<string>               FFViolationIDs; // Array of ROIDs that have been kicked once this session
+var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
-var()   config bool                 bUseWeaponLocking; // Weapons can lock (preventing fire) for punishment
+var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
 var     int                         WeaponLockTimes[6];
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
@@ -38,12 +38,14 @@ const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
 const SPAWN_KILL_RESPAWN_TIME =     2;
 
-var()   config float                ServerTickForInflation; // Value that determines when inflation will start if ServerTickRateAverage is less than
-var     float                       ServerTickRateAverage; // The average tick rate over the past SERVERTICKRATE_UPDATETIME
-var     float                       ServerTickRateConsolidated; // Keeps track of tick rates over time, used to calculate average
-var     int                         ServerTickFrameCount; // Keeps track of how many frames are between ServerTickRateConsolidated
+var()   config float                ServerTickForInflation;                 // Value that determines when inflation will start if ServerTickRateAverage is less than
+var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
+var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
+var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 
-var     float                       TeamAttritionCounter[2];    //When this hits over 1
+var     float                       TeamAttritionCounter[2];
+
+var     array<int>                  AttritionObjOrder;                      // Order of objectives that were randomly opened
 
 var     bool                        bSwapTeams;
 
@@ -335,6 +337,12 @@ function PostBeginPlay()
     }
 
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
+}
+
+// Modified to remove any return on # of bots
+function int GetNumPlayers()
+{
+    return Min(NumPlayers, MaxPlayers);
 }
 
 event Tick(float DeltaTime)
@@ -1959,6 +1967,8 @@ state RoundInPlay
         local DHGameReplicationInfo GRI;
         local ROVehicleFactory ROV;
 
+        // Noticing no cast/ref checks here :P
+
         // Reset all round properties
         RoundStartTime = ElapsedTime;
         GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -1970,6 +1980,8 @@ state RoundInPlay
 
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
+
+        AttritionObjOrder.Length = 0;
 
         // Reset PlayerSessions
         PlayerSessions.Clear();
@@ -2093,6 +2105,18 @@ state RoundInPlay
         {
             Metrics.OnRoundBegin();
         }
+
+        // Activate attrition objectives
+        if (DHLevelInfo.GameType == GT_Attrition)
+        {
+            AttritionSelectObjectiveOrder();
+
+            for (i = 0; i < DHLevelInfo.AttritionMaxOpenObj; ++i)
+            {
+                AttritionUnlockObjective();
+            }
+        }
+
     }
 
     // Modified for DHObjectives
@@ -2799,7 +2823,7 @@ exec function CaptureObj(int Team)
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
-        if (DHObjectives[i].bActive)
+        if (DHObjectives[i].bActive && DHObjectives[i].ObjState != Team)
         {
             DHObjectives[i].ObjectiveCompleted(none, Team);
 
@@ -3952,6 +3976,73 @@ function Logout(Controller Exiting)
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
         S.DeathPenaltyCount = PC.DeathPenaltyCount;
+    }
+}
+
+function int GetNumObjectives()
+{
+    local int i;
+    local int count;
+
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        if (DHObjectives[i] != none)
+        {
+            ++count;
+        }
+    }
+
+    return count;
+}
+
+// This is called at the start of an attrition round, it develops a random order at which the objectives will unlock
+function AttritionSelectObjectiveOrder()
+{
+    local int i;
+
+    AttritionObjOrder.Length = 0; // Clear the array just in case, (we do reset it at the beginning of the round also)
+
+    // Build array of objective indices
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        if (DHObjectives[i] != none)
+        {
+            AttritionObjOrder[AttritionObjOrder.Length] = i;
+        }
+    }
+
+    // Shuffle the constructed array
+    class'UArray'.static.IShuffle(AttritionObjOrder);
+}
+
+// This function unlocks the next objective that is not active in the attrition objective order
+// It is called when an objective is taken and at the beginning of the round foreach AttritionMaxOpenObj
+function AttritionUnlockObjective(optional int ObjNum)
+{
+    local int i, j, StartIndex;
+
+    StartIndex = class'UArray'.static.IIndexOf(AttritionObjOrder, ObjNum);
+
+    if (StartIndex == -1)
+    {
+        Warn("Issue in AttritionUnlockObjective()");
+        return;
+    }
+
+    // i = 1 so we skip the objective just captured (otherwise it'll pick itself each time due to setting itself inactive in HandleCompletion)
+    for (i = 1; i < AttritionObjOrder.Length; ++i)
+    {
+        j = AttritionObjOrder[(StartIndex + i) % AttritionObjOrder.Length];
+
+        if (DHObjectives[j].IsActive())
+        {
+            continue;
+        }
+        else if (!DHObjectives[j].IsActive())
+        {
+            DHObjectives[j].SetActive(true);
+            break;
+        }
     }
 }
 

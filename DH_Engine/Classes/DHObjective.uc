@@ -55,6 +55,7 @@ struct ObjOperationAction
     var() EObjectiveOperation Operation;
 };
 
+var(ROObjTerritory) bool            bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 var()   bool                        bVehiclesCanCapture;
 var()   bool                        bTankersCanCapture;
@@ -523,6 +524,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         DisableCapBarsForThisObj(); // might want to move this to above if statement, but would need testing
     }
 
+    // Don't "disable" the objective, just "deactivate it"
+    if (bSetInactiveOnCapture)
+    {
+        SetActive(false);
+    }
+
     // Give players points for helping with the capture
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
@@ -585,6 +592,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Award reinforcements
     G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
     G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
+
+    // Handle attrition unlock
+    if (G.DHLevelInfo != none && G.DHLevelInfo.AttritionMaxOpenObj > 0)
+    {
+        G.AttritionUnlockObjective(ObjNum);
+    }
 
     switch (Team)
     {

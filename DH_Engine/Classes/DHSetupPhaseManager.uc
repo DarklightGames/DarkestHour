@@ -63,8 +63,6 @@ state Timing
             return;
         }
 
-        GRI.bInSetupPhase = true;
-
         SetTimer(1.0, true);
     }
 
@@ -149,8 +147,6 @@ state Timing
                 PC.ClientMessage(PhaseEndMessage,'CriticalEvent');
             }
         }
-
-        GRI.bInSetupPhase = false;
 
         GotoState('Done');
     }
