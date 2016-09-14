@@ -969,7 +969,14 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
     local int i;
     local DHGameReplicationInfo GRI;
 
+    //return GetBotNewRole(ThisBot, BotTeamNum); // Use this for debuging (when you need to see bots as other roles)
+
     GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return -1;
+    }
 
     for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
@@ -2358,11 +2365,6 @@ state RoundInPlay
         global.Timer();
 
         GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-        if (NeedPlayers() && AddBot() && RemainingBots > 0)
-        {
-            RemainingBots--;
-        }
 
         // Go through both teams and spawn reinforcements if necessary
         for (i = 0; i < 2; ++i)
