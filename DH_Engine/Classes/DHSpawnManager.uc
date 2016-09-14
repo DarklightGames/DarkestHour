@@ -61,7 +61,6 @@ var     const byte  BlockFlags_Full;
 function PostBeginPlay()
 {
     local DHSpawnPoint SP;
-    local bool         bVehiclePoolIsInvalid;
     local int          i;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
@@ -92,18 +91,14 @@ function PostBeginPlay()
         // VP doesn't have a specified vehicle class, so is invalid
         if (VehiclePools[i].VehicleClass == none)
         {
-            bVehiclePoolIsInvalid = true;
-        }
-
-        // Remove VP if it is invalid (no specified class or it's a duplicate)
-        if (bVehiclePoolIsInvalid)
-        {
+            // Remove VP if it is invalid (no specified class or it's a duplicate)
             Warn("VehiclePools[" $ i $ "] is invalid & has been removed! (VehicleClass =" @ VehiclePools[i].VehicleClass $ ")");
             VehiclePools.Remove(i, 1);
-            bVehiclePoolIsInvalid = false; // reset for next VP to be checked
-            continue;
         }
+    }
 
+    for (i = 0; i < VehiclePools.Length; ++i)
+    {
         // VP is valid so copy to GRI, set length of its Slots array, & pre-cache the vehicle class
         GRI.VehiclePoolVehicleClasses[i] = VehiclePools[i].VehicleClass;
         GRI.VehiclePoolIsSpawnVehicles[i] = byte(VehiclePools[i].bIsSpawnVehicle);
