@@ -60,7 +60,6 @@ defaultproperties
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.54
     VehicleHudTreadsScale=0.61
-    bVehicleHudUsesLargeTexture=true
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

@@ -102,7 +102,6 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
-    bVehicleHudUsesLargeTexture=true
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsX(2)=0.55

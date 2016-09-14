@@ -85,7 +85,6 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VTiger_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger1_body'
-    bVehicleHudUsesLargeTexture=true
     VehHitpoints(0)=(PointRadius=40.0,PointHeight=40.0,PointOffset=(X=-100.0,Z=10.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-5.0,Y=-50.0,Z=35.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

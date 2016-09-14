@@ -892,15 +892,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     // Draw vehicle icon, with passenger dots & any damage indicators
     /////////////////////////////////////////////////////////////////
 
-    // Large vehicles may use a larger icon texture
-    if (Vehicle.bVehicleHudUsesLargeTexture)
-    {
-        Widget = VehicleIconAlt;
-    }
-    else
-    {
-        Widget = VehicleIcon;
-    }
+    Widget = VehicleIcon;
 
     // Set vehicle color based on any damage
     f = Vehicle.Health / Vehicle.HealthMax;
@@ -922,10 +914,18 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Widget.Tints[1] = VehicleColor;
 
     // Draw vehicle icon, with clockface around it
-    Widget.WidgetTexture = Vehicle.VehicleHudImage;
-    DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+    if (Vehicle.VehicleHudImage != none)
+    {
+        Widget.WidgetTexture = Vehicle.VehicleHudImage;
+        Widget.TextureCoords.X2 = Vehicle.VehicleHudImage.MaterialUSize() - 1;
+        Widget.TextureCoords.Y2 = Vehicle.VehicleHudImage.MaterialVSize() - 1;
+        Widget.TextureScale = Vehicle.VehicleHudImage.MaterialUSize() / 256;
+        DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+    }
+
     VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
+
     VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
@@ -973,6 +973,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             MyRot = rotator(vector(V.Cannon.CurrentAim) >> V.Cannon.Rotation);
             V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
             Widget.WidgetTexture = V.VehicleHudTurret;
+            Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
+            Widget.TextureCoords.Y2 = V.VehicleHudTurret.MaterialVSize() - 1;
+            Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
     }

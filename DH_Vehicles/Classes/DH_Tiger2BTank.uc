@@ -102,7 +102,6 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.8
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
-    bVehicleHudUsesLargeTexture=true
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
