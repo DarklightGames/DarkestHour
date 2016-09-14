@@ -30,7 +30,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'allies_vehicles_tex.ext_vehicles.T3476_ext');
     L.AddPrecacheMaterial(Material'allies_vehicles_tex.Treads.T3476_treads');
@@ -45,7 +45,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'allies_vehicles_tex.int_vehicles.T3476_int');
     Level.AddPrecacheMaterial(Material'allies_vehicles_tex.int_vehicles.t3476_int_s');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 
@@ -67,9 +67,9 @@ defaultproperties
     HighDetailOverlayIndex=3
 
     // Hud stuff
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.T3476_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.T3476_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.T3476_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_look'
 
     VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.44
@@ -296,4 +296,6 @@ defaultproperties
 
     LeftTreadIndex=1
     RightTreadIndex=2
+
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.t34_76'
 }
