@@ -67,8 +67,8 @@ defaultproperties
 
     // Hud stuff
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_85_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_85_turret_look'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_look'
 
     VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.44
