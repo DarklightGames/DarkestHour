@@ -7,15 +7,23 @@ class DHRoleInfo extends RORoleInfo
     placeable
     abstract;
 
-var     bool    bIsATGunner;         // enable player to request AT resupply.
-var     bool    bCanUseMortars;      // enable player to use mortars.
+struct RolePawn
+{
+   var class<Pawn>      PawnClass;
+   var float            Weight;
+};
 
-var     bool    bIsMortarObserver;
-var     bool    bIsArtilleryOfficer;
+var     bool                    bIsATGunner;            // enable player to request AT resupply.
+var     bool                    bCanUseMortars;         // enable player to use mortars.
 
-var()   int     AddedReinforcementTime;
+var     bool                    bIsMortarObserver;
+var     bool                    bIsArtilleryOfficer;
 
-var array<float> HeadgearProbabilities;
+var()   int                     AddedReinforcementTime;
+
+var     array<RolePawn>         RolePawns;
+
+var     array<float>            HeadgearProbabilities;
 
 function PostBeginPlay()
 {
@@ -100,6 +108,36 @@ simulated function HandlePrecache()
     {
         DynamicLoadObject(default.AltVoiceType, class'Class');
     }
+}
+
+static function string GetPawnClass()
+{
+    local int i;
+    local float w, WeightTotal;
+
+    if (default.RolePawnClass == "" && default.RolePawns.Length > 0)
+    {
+        for (i = 0; i < default.RolePawns.Length; ++i)
+        {
+            WeightTotal += FMax(0, default.RolePawns[i].Weight);
+        }
+
+        w = FRand() * WeightTotal;
+
+        for (i = 0; i < default.RolePawns.Length - 1; ++i)
+        {
+            w -= FMax(0, default.RolePawns[i].Weight);
+
+            if (w < 0)
+            {
+                return string(default.RolePawns[i].PawnClass);
+            }
+       }
+
+       return string(default.RolePawns[default.RolePawns.Length - 1].PawnClass);
+    }
+
+    return default.RolePawnClass;
 }
 
 function class<ROHeadgear> GetHeadgear()

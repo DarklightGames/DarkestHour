@@ -7,14 +7,13 @@ class DH_USOfficer1st extends DH_US_1st_Infantry;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USOfficer1stPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=none,Weight=0.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    Models(0)="US_1InfOf1"
-    Models(1)="US_1InfOf2"
-    Models(2)="US_1InfOf3"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')

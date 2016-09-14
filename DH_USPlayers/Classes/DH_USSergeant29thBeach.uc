@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USSergeant29thBeach extends DH_US_29th_Infantry;
+class DH_USSergeant29thBeach extends DH_US_29th_Infantry_Beach;
 
 defaultproperties
 {
@@ -11,9 +11,6 @@ defaultproperties
     AltName="Sergeant"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="US_29InfSarg1B"
-    Models(1)="US_29InfSarg2B"
-    Models(2)="US_29InfSarg3B"
     bIsLeader=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')

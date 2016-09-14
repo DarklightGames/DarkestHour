@@ -3,18 +3,17 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USOfficer29thBeach extends DH_US_29th_Infantry;
+class DH_USOfficer29thBeach extends DH_US_29th_Infantry_Beach;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USOfficer29thPawn',Weight=1.0)
+    RolePawns(1)=(PawnClass=none,Weight=0.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    Models(0)="US_29InfOf1B"
-    Models(1)="US_29InfOf2B"
-    Models(2)="US_29InfOf3B"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')

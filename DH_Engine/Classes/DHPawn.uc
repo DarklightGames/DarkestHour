@@ -8,6 +8,13 @@ class DHPawn extends ROPawn
 
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
+// Model record variables
+var     array<Material>         FaceSkins;
+var     array<Material>         BodySkins;
+
+var     int                     FaceSlot;
+var     int                     BodySlot;
+
 // General
 var     float   SpawnProtEnds;            // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
 var     float   SpawnKillTimeEnds;        // is set when a player spawns
@@ -115,6 +122,17 @@ replication
 simulated function PostBeginPlay()
 {
     super(Pawn).PostBeginPlay();
+
+    // Theel: we can make this replicated!  Also even make it customizable!
+    if (default.BodySkins.Length > 0)
+    {
+        default.Skins[default.BodySlot] = default.BodySkins[Rand(default.BodySkins.Length)];
+    }
+
+    if (default.FaceSkins.Length > 0)
+    {
+        default.Skins[default.FaceSlot] = default.FaceSkins[Rand(default.FaceSkins.Length)];
+    }
 
     if (Level.bStartup && !bNoDefaultInventory)
     {
@@ -4914,7 +4932,8 @@ function PlayDyingSound()
     PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20.0, 200.0), true, 80.0,, true);
 }
 
-// Modified to avoid "accessed none" errors on Species
+// Modified to avoid "accessed none" errors on Species and remove model records
+// Theel: Once I remove all the UPL files, I prob need to edit this to not bullshit around with the UPL system
 simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
 {
     if (Rec.Species == none || ForceDefaultCharacter())
@@ -4924,6 +4943,11 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
 
     Species = Rec.Species;
     RagdollOverride = Rec.Ragdoll;
+
+    if (Species == none)
+    {
+        Species = default.Species;
+    }
 
     if (Species == none || !Species.static.Setup(self, Rec))
     {
@@ -5129,4 +5153,7 @@ defaultproperties
     CrouchStaminaRecoveryRate=1.3
     ProneStaminaRecoveryRate=1.5
     SlowStaminaRecoveryRate=0.5
+
+    FaceSlot=0
+    BodySlot=1
 }

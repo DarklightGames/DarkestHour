@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USRiflemanWinterPawn extends DH_AmericanPawn;
+class DH_USRadioAutumnPawn extends DH_USAutumnPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_TrenchcoatS'
-    Skins(0)=texture'DHUSCharactersTex.Winter.TrenchcoatWithScarf'
-    Skins(1)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
+    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_GI_Radioman'
+    Skins(0)=texture'DHUSCharactersTex.us_heads.WinterFace2'
+    Skins(1)=texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
 }

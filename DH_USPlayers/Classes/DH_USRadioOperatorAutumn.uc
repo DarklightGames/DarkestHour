@@ -7,13 +7,12 @@ class DH_USRadioOperatorAutumn extends DH_US_Autumn_Infantry;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioAutumnPawn',Weight=1.0)
+    RolePawns(1)=(PawnClass=none,Weight=0.0)
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    Models(0)="US_AutumnInfRad1"
-    Models(1)="US_AutumnInfRad2"
-    Models(2)="US_AutumnInfRad3"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')

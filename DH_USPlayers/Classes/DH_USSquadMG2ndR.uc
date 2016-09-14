@@ -11,11 +11,6 @@ defaultproperties
     AltName="Light Machine-Gunner"
     Article="a "
     PluralName="Light Machine-Gunners"
-    Models(0)="US_2R1"
-    Models(1)="US_2R2"
-    Models(2)="US_2R3"
-    Models(3)="US_2R4"
-    Models(4)="US_2R5"
     bIsGunner=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')

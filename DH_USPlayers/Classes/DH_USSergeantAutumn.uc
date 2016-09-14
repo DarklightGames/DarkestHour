@@ -11,9 +11,6 @@ defaultproperties
     AltName="Sergeant"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="US_AutumnInfSarg1"
-    Models(1)="US_AutumnInfSarg2"
-    Models(2)="US_AutumnInfSarg3"
     bIsLeader=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')

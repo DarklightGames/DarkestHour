@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_GEGreatCoatPawn extends DHPawn;
+class DH_GEGreatCoatPawn extends DH_GermanPawn;
 
 defaultproperties
 {

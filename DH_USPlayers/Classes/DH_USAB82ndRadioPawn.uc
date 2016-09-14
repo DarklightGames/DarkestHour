@@ -3,11 +3,13 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USRiflemanAutumnPawn extends DH_AmericanPawn;
+class DH_USAB82ndRadioPawn extends DH_USABPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_GI'
+    Mesh=SkeletalMesh'DHCharacters_anm.US_Airborne_Radioman'
+    BodySkins(0)=texture'DHUSCharactersTex.82ndAB.US82AB_rifleman1'
+    BodySkins(1)=texture'DHUSCharactersTex.82ndAB.US82AB_rifleman2'
     Skins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
-    Skins(1)=texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
+    Skins(1)=texture'DHUSCharactersTex.82ndAB.US82AB_rifleman1'
 }

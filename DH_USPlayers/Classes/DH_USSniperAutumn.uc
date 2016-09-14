@@ -11,11 +11,6 @@ defaultproperties
     AltName="Sniper"
     Article="a "
     PluralName="Snipers"
-    Models(0)="US_AutumnInf1"
-    Models(1)="US_AutumnInf2"
-    Models(2)="US_AutumnInf3"
-    Models(3)="US_AutumnInf4"
-    Models(4)="US_AutumnInf5"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')

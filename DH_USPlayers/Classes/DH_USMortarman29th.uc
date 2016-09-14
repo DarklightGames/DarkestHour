@@ -12,11 +12,6 @@ defaultproperties
     AltName="Mortar Operator"
     Article="a "
     PluralName="Mortar Operators"
-    Models(0)="US_29Inf1"
-    Models(1)="US_29Inf2"
-    Models(2)="US_29Inf3"
-    Models(3)="US_29Inf4"
-    Models(4)="US_29Inf5"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"

@@ -8,5 +8,6 @@ class DH_US_Autumn_Infantry extends DH_American_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_USPlayers.DH_USRiflemanAutumnPawn"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAutumnPawn',Weight=3.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=2.0)
 }

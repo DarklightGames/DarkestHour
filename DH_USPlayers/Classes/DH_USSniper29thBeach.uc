@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USSniper29thBeach extends DH_US_29th_Infantry;
+class DH_USSniper29thBeach extends DH_US_29th_Infantry_Beach;
 
 defaultproperties
 {
@@ -11,11 +11,6 @@ defaultproperties
     AltName="Sniper"
     Article="a "
     PluralName="Snipers"
-    Models(0)="US_29Inf1B"
-    Models(1)="US_29Inf2B"
-    Models(2)="US_29Inf3B"
-    Models(3)="US_29Inf4B"
-    Models(4)="US_29Inf5B"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')

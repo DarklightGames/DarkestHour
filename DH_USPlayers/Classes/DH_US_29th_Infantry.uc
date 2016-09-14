@@ -8,5 +8,6 @@ class DH_US_29th_Infantry extends DH_American_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US29thPawn',Weight=3.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest29thPawn',Weight=1.0)
 }

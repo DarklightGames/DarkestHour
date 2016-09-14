@@ -11,9 +11,6 @@ defaultproperties
     AltName="Machine-Gunner"
     Article="a "
     PluralName="Machine-Gunners"
-    Models(0)="US_502101AB1"
-    Models(1)="US_502101AB2"
-    Models(2)="US_502101AB3"
     bIsGunner=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon')

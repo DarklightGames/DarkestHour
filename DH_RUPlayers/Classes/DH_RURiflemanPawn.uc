@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RURiflemanPawn extends DHPawn;
+class DH_RURiflemanPawn extends DH_RussianPawn;
 
 defaultproperties
 {

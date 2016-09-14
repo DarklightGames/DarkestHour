@@ -11,11 +11,6 @@ defaultproperties
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    Models(0)="US_1Inf1"
-    Models(1)="US_1Inf2"
-    Models(2)="US_1Inf3"
-    Models(3)="US_1Inf4"
-    Models(4)="US_1Inf5"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')

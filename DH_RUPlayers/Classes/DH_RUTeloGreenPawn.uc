@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RUTeloGreenPawn extends DHPawn;
+class DH_RUTeloGreenPawn extends DH_RussianPawn;
 
 defaultproperties
 {

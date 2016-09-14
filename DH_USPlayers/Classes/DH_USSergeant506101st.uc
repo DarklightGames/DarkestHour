@@ -7,13 +7,11 @@ class DH_USSergeant506101st extends DH_US_506PIR;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USABNCOPawn',Weight=1.0)
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="US_506101ABSarg1"
-    Models(1)="US_506101ABSarg2"
-    Models(2)="US_506101ABSarg3"
     bIsLeader=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')

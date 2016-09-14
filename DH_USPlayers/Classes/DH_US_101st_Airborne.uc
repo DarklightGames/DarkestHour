@@ -8,5 +8,5 @@ class DH_US_101st_Airborne extends DH_American_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_USPlayers.DH_USABPawn"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USABPawn',Weight=1.0)
 }

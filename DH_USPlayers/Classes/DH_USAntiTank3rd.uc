@@ -12,11 +12,6 @@ defaultproperties
     AltName="Anti-Tank Soldier"
     Article="an "
     PluralName="Anti-Tank Soldiers"
-    Models(0)="US_3Inf1"
-    Models(1)="US_3Inf2"
-    Models(2)="US_3Inf3"
-    Models(3)="US_3Inf4"
-    Models(4)="US_3Inf5"
     bIsGunner=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
