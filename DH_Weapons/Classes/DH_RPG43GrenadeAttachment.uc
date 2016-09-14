@@ -5,12 +5,11 @@
 
 class DH_RPG43GrenadeAttachment extends DH_StielGranateAttachment;
 
-#exec OBJ LOAD File=DO_RU_Weapons.ukx
-
 defaultproperties
 {
      WA_Idle="Idle"
      WA_Fire="Idle"
-     //compile error  MenuImage=texture'DH_ROFX_Tex.HUD.rpg43gui'
-     //compile error  Mesh=SkeletalMesh'DO_RU_Weapons.RPG_43_3rd'
+     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.rpg43_icon'
+     //Mesh=SkeletalMesh'DH_WeaponPickups.Weapons.RPG43'
 }
+

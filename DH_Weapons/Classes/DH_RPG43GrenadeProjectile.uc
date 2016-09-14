@@ -153,7 +153,6 @@ defaultproperties
     RPG43PenetrationAbility=7.6
     SurfaceAngleRadian=0.1195555555555556
     DestroyTimer=15.0 // used in case the grenade didn't hit hard enough to explode (will stay around for a bit for effect)
-//  SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     ExplodeDirtEffectClass=class'ROEffects.GrenadeExplosion'
     ExplosionSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
