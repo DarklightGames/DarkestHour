@@ -17,12 +17,9 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-    TouchMessage="Pick Up: F1 Grenade"
     MaxDesireability=0.78
     InventoryType=class'DH_Weapons.DH_F1GrenadeWeapon'
-    PickupMessage="You got the F1 Grenade."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1Grenade'
     PrePivot=(Z=3.0)

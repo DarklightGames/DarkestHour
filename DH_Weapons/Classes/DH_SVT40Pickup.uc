@@ -24,9 +24,6 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_SVT40Weapon'
-    PickupMessage="You got the SVT40."
-    TouchMessage="Pick Up: SVT40"
-    PickupForce="AssaultRiflePickup"
     MaxDesireability=0.78
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.svt40'
     DrawType=DT_StaticMesh

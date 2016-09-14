@@ -25,9 +25,6 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_MN9130ScopedWeapon'
-    PickupMessage="You got the MN 91/30 sniper."
-    TouchMessage="Pick Up: MN 91/30 sniper"
-    PickupForce="AssaultRiflePickup"
     MaxDesireability=0.4
     StaticMesh=StaticMesh'WeaponPickupSM.Nagant9130Scoped'
     DrawType=DT_StaticMesh

@@ -20,11 +20,8 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-    TouchMessage="Pick Up: M38"
     MaxDesireability=0.4
     InventoryType=class'DH_Weapons.DH_M38Weapon'
-    PickupMessage="You got the M38."
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.nagant9138'
     PrePivot=(Z=3.0)
