@@ -4392,7 +4392,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
                 }
             }
 
-            for (; i < arraycount(LocalMessages) - 1; ++i)
+            for (i = i; i < arraycount(LocalMessages) - 1; ++i)
             {
                 LocalMessages[i] = LocalMessages[i + 1];
                 LocalMessagesExtra[i] = LocalMessagesExtra[i + 1];
