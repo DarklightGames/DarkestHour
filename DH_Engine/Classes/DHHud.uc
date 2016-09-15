@@ -4307,6 +4307,188 @@ simulated function DrawFadeToBlack(Canvas Canvas)
     }
 }
 
+// Modified to fix an accessed none error in ROHud.
+simulated function LocalizedMessage(class<LocalMessage> Message, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject, optional String CriticalString)
+{
+    local int i, Count;
+    local PlayerReplicationInfo PRI;
+
+    if (Message == none || (bIsCinematic && !ClassIsChildOf(Message,class'ActionMessage')))
+    {
+        return;
+    }
+
+    if (CriticalString == "")
+    {
+        if (PawnOwner != none && PawnOwner.PlayerReplicationInfo != none)
+        {
+            PRI = PawnOwner.PlayerReplicationInfo;
+        }
+        else
+        {
+            PRI = PlayerOwner.PlayerReplicationInfo;
+        }
+
+        if (PRI == RelatedPRI_1)
+        {
+            CriticalString = Message.static.GetRelatedString(Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+        }
+        else
+        {
+            CriticalString = Message.static.GetString(Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+        }
+    }
+
+    if (bMessageBeep && Message.default.bBeep)
+    {
+        PlayerOwner.PlayBeepSound();
+    }
+
+    if (!Message.default.bIsSpecial)
+    {
+        if (PlayerOwner.bDemoOwner)
+        {
+            for (i = 0; i < ConsoleMessageCount; ++i)
+            {
+                if (i >= arraycount(TextMessages) || TextMessages[i].Text == "")
+                {
+                    break;
+                }
+            }
+
+            if (i > 0 && TextMessages[i - 1].Text == CriticalString)
+            {
+                return;
+            }
+        }
+
+        AddTextMessage(CriticalString, Message,RelatedPRI_1);
+
+        return;
+    }
+
+    if (class'Object'.static.ClassIsChildOf(Message, class'ROCriticalMessage') &&
+        class'ROCriticalMessage'.default.MaxMessagesOnScreen > 0)
+    {
+        // Check if we have too many critical messages in stack
+        Count = 0;
+
+        for (i = 0; i < arraycount(LocalMessages); ++i)
+        {
+            if (class'Object'.static.ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
+            {
+                Count++;
+            }
+        }
+
+        if (Count >= class'ROCriticalMessage'.default.MaxMessagesOnScreen)
+        {
+            // We have too many critical messages -- delete oldest one
+            for (i = 0; i < arraycount(LocalMessages); ++i)
+            {
+                if (class'Object'.static.ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
+                {
+                    break;
+                }
+            }
+
+            for (; i < arraycount(LocalMessages) - 1; ++i)
+            {
+                LocalMessages[i] = LocalMessages[i + 1];
+                LocalMessagesExtra[i] = LocalMessagesExtra[i + 1];
+            }
+
+            // BUGFIX: The previous implementation was indexing the array
+            // as LocalMessages[i + 1], which, aside from being wrong,
+            // could overrun the bounds of the array.
+            ClearMessage(LocalMessages[i]);
+        }
+    }
+
+    i = arraycount(LocalMessages);
+
+    if (Message.default.bIsUnique)
+    {
+        for (i = 0; i < arraycount(LocalMessages); ++i)
+        {
+            if(LocalMessages[i].Message != none && LocalMessages[i].Message == Message)
+            {
+                break;
+            }
+        }
+    }
+    else if (Message.default.bIsPartiallyUnique || PlayerOwner.bDemoOwner)
+    {
+        for (i = 0; i < arraycount(LocalMessages); ++i)
+        {
+            if (LocalMessages[i].Message == none)
+            {
+                continue;
+            }
+
+            if (LocalMessages[i].Message == Message && LocalMessages[i].Switch == Switch)
+            {
+                break;
+            }
+        }
+    }
+
+    if (i == arraycount(LocalMessages))
+    {
+        // Find index of first empty message
+        for (i = 0; i < arraycount(LocalMessages); ++i)
+        {
+            if (LocalMessages[i].Message == none)
+            {
+                break;
+            }
+        }
+    }
+
+    if (i == arraycount(LocalMessages))
+    {
+        // No empty messages, so move all messages to the "left" except the last one
+        for (i = 0; i < arraycount(LocalMessages) - 1; ++i)
+        {
+            LocalMessages[i] = LocalMessages[i + 1];
+            LocalMessagesExtra[i] = LocalMessagesExtra[i + 1];
+        }
+    }
+
+    ClearMessage(LocalMessages[i]);
+
+    LocalMessages[i].Message = Message;
+    LocalMessages[i].Switch = Switch;
+    LocalMessages[i].RelatedPRI = RelatedPRI_1;
+    LocalMessages[i].RelatedPRI2 = RelatedPRI_2;
+    LocalMessages[i].OptionalObject = OptionalObject;
+
+    // Hackish for ROCriticalMessages
+    if (class'Object'.static.ClassIsChildOf(Message, class'ROCriticalMessage') &&
+        class<ROCriticalMessage>(Message).default.bQuickFade)
+    {
+         LocalMessages[i].LifeTime = Message.static.GetLifetime(Switch) + class<ROCriticalMessage>(Message).default.QuickFadeTime;
+         LocalMessages[i].EndOfLife = LocalMessages[i].LifeTime + Level.TimeSeconds;
+
+         // Mild hax: used to show hints when an obj is captured
+         // This was simpliest way of doing it without having server call another
+         // server-to-client function
+         if (class'Object'.static.ClassIsChildOf(Message, class'ROObjectiveMsg') &&
+            (Switch == 0 || Switch == 1) &&
+            ROPlayer(PlayerOwner) != none)
+         {
+            ROPlayer(PlayerOwner).CheckForHint(17);
+         }
+    }
+    else
+    {
+         LocalMessages[i].EndOfLife = Message.static.GetLifetime(Switch) + Level.TimeSeconds;
+         LocalMessages[i].LifeTime = Message.static.GetLifetime(Switch);
+    }
+
+    LocalMessages[i].StringMessage = CriticalString;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
