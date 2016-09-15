@@ -304,7 +304,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     O.DamageType = DamageType;
 
     // If a suicide, team kill, or spawn kill then have the kill message display ASAP
-    if (Killer.Team.TeamIndex == Victim.Team.TeamIndex || DamageType == class'DHSpawnKillDamageType')
+    if ((Killer != none && Killer.Team.TeamIndex == Victim.Team.TeamIndex) || DamageType == class'DHSpawnKillDamageType')
     {
         O.EndOfLife = Level.TimeSeconds + (ObituaryLifeSpan - ObituaryDelayTime);
     }
