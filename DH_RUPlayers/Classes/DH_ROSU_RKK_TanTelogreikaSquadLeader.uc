@@ -17,7 +17,7 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_RDG1GrenadeWeapon',Amount=2)
-    GivenItems(0)="DH_Equipment.DHBinocularsItems"
+    GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_RUPlayers.DH_ROSovietHelmet'
     Headgear(1)=class'DH_RUPlayers.DH_ROSovietHelmet'
     Headgear(2)=class'DH_RUPlayers.DH_ROSovietHelmet'
