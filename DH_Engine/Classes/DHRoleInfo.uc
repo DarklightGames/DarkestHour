@@ -93,10 +93,25 @@ simulated function HandlePrecache()
 
     for (i = 0; i < default.Models.Length; ++i)
     {
-        PR = class'xUtil'.static.FindPlayerRecord(default.Models[i]);
-        DynamicLoadObject(PR.MeshName, class'Mesh');
-        Level.ForceLoadTexture(texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
-        Level.ForceLoadTexture(texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
+        if (default.Models[i] != "")
+        {
+            PR = class'xUtil'.static.FindPlayerRecord(default.Models[i]);
+
+            if (PR.MeshName != "")
+            {
+                DynamicLoadObject(PR.MeshName, class'Mesh');
+            }
+
+            if (PR.BodySkinName != "")
+            {
+                Level.ForceLoadTexture(texture(DynamicLoadObject(PR.BodySkinName, class'Material')));
+            }
+
+            if (PR.FaceSkinName != "")
+            {
+                Level.ForceLoadTexture(texture(DynamicLoadObject(PR.FaceSkinName, class'Material')));
+            }
+        }
     }
 
     if (default.VoiceType != "")

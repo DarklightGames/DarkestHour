@@ -6,7 +6,7 @@
 class DHSPECIES_Human extends ROSPECIES_Human
     abstract;
 
-// Modified to avoid "accessed none" errors on PlayerReplicationInfo, & also to remove unused local variables
+// Modified to avoid "accessed none" errors
 static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 {
     local ROPawn                ROP;
@@ -23,7 +23,10 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
         return false;
     }
 
-    NewMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
+    if (Rec.MeshName != "")
+    {
+        NewMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
+    }
 
     if (NewMesh == none)
     {
@@ -42,8 +45,16 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
     }
 
     ROP.SoundGroupClass = class<ROPawnSoundGroup>(DynamicLoadObject(default.MaleSoundGroup, class'Class'));
-    ROP.Skins[0] = material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
-    ROP.Skins[1] = material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
+
+    if (Rec.BodySkinName != "")
+    {
+        ROP.Skins[0] = material(DynamicLoadObject(Rec.BodySkinName, class'Material'));
+    }
+
+    if (Rec.FaceSkinName != "")
+    {
+        ROP.Skins[1] = material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
+    }
 
     if (ROPlayerReplicationInfo(PRI) != none && ROPlayerReplicationInfo(PRI).RoleInfo != none)
     {
