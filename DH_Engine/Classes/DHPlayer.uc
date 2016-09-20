@@ -2784,11 +2784,7 @@ function ServerListPlayers()
         if (PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
         {
             ClientMessage(Right("   " $ AllPRI[i].PlayerID, 3) $ ")" @ AllPRI[i].PlayerName @ " " $ PlayerController(AllPRI[i].Owner).GetPlayerIDHash());
-<<<<<<< a88c853ea2bfa170d1c2cf457ebb8b5bc847927d
             ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName @ class'UString'.static.CRLF();
-=======
-            ParseString $= PlayerController(AllPRI[i].Owner).GetPlayerIDHash() @ AllPRI[i].PlayerName $ Chr(13) $ Chr(10);
->>>>>>> ae47e83ef39be10b50e9a27c87dacc6971ab89d4
         }
         else
         {
