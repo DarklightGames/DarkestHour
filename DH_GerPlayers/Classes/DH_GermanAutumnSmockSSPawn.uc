@@ -12,5 +12,6 @@ defaultproperties
     BodySkins(1)=texture'DHGermanCharactersTex.WSS.WSSSmockAutumnOak2'
     BodySkins(2)=texture'DHGermanCharactersTex.WSS.WSSSmockAutumnPlanetree1'
     BodySkins(3)=none
-    Skins(0)=texture'DHGermanCharactersTex.WSS.WSSSmockAutumnOak1'
+    Skins(0)=texture'Characters_tex.ger_heads.ger_face01'
+    Skins(1)=texture'DHGermanCharactersTex.WSS.WSSSmockAutumnOak1'
 }

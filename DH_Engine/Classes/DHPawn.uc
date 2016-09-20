@@ -123,16 +123,8 @@ simulated function PostBeginPlay()
 {
     super(Pawn).PostBeginPlay();
 
-    // Theel: we can make this replicated!  Also even make it customizable!
-    if (default.BodySkins.Length > 0)
-    {
-        default.Skins[default.BodySlot] = default.BodySkins[Rand(default.BodySkins.Length)];
-    }
-
-    if (default.FaceSkins.Length > 0)
-    {
-        default.Skins[default.FaceSlot] = default.FaceSkins[Rand(default.FaceSkins.Length)];
-    }
+    SetBodySkin(Rand(default.BodySkins.Length));
+    SetFaceSkin(Rand(default.FaceSkins.Length));
 
     if (Level.bStartup && !bNoDefaultInventory)
     {
@@ -147,6 +139,48 @@ simulated function PostBeginPlay()
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
+}
+
+simulated function SetBodySkin(optional int Index)
+{
+    local int i;
+
+    //return;
+
+    for (i = default.BodySkins.Length - 1; i >= 0; --i)
+    {
+        if (default.BodySkins[i] == None)
+        {
+            default.BodySkins.Remove(i, 1);
+            i -= 1;
+        }
+    }
+
+    if (default.BodySkins.Length > 0)
+    {
+        default.Skins[default.BodySlot] = default.BodySkins[Rand(default.BodySkins.Length)];
+    }
+}
+
+simulated function SetFaceSkin(optional int Index)
+{
+    local int i;
+
+    //return;
+
+    for (i = default.FaceSkins.Length - 1; i >= 0; --i)
+    {
+        if (default.FaceSkins[i] == none)
+        {
+            default.FaceSkins.Remove(i, 1);
+            i -= 1;
+        }
+    }
+
+    if (default.FaceSkins.Length > 0)
+    {
+        default.Skins[default.FaceSlot] = default.FaceSkins[Index % default.FaceSkins.Length];
+    }
 }
 
 simulated function Tick(float DeltaTime)

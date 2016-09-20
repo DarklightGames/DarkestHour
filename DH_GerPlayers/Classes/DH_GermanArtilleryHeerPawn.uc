@@ -9,5 +9,5 @@ defaultproperties
 {
     BodySkins(0)=texture'DHGermanCharactersTex.Heer.WH_Artillery1'
     BodySkins(1)=texture'DHGermanCharactersTex.Heer.WH_Artillery2'
-    Skins(0)=texture'DHGermanCharactersTex.Heer.WH_Artillery1'
+    Skins(1)=texture'DHGermanCharactersTex.Heer.WH_Artillery1'
 }

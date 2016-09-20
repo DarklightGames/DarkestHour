@@ -12,6 +12,6 @@ defaultproperties
     BodySkins(1)=none
     BodySkins(2)=none
     BodySkins(3)=none
-    Skins(0)=texture'DHGermanCharactersTex.WSS.ger_camo'
+    Skins(1)=texture'DHGermanCharactersTex.WSS.ger_camo'
     //DHGermanCharactersTex.Heads.Ger_facef ???
 }

@@ -7,6 +7,8 @@ class DH_GermanPawn extends DHPawn;
 
 defaultproperties
 {
+    BodySlot=0
+    FaceSlot=1
     FaceSkins(0)=texture'Characters_tex.ger_heads.ger_face01'
     FaceSkins(1)=texture'Characters_tex.ger_heads.ger_face02'
     FaceSkins(2)=texture'Characters_tex.ger_heads.ger_face03'
@@ -22,6 +24,5 @@ defaultproperties
     FaceSkins(12)=texture'Characters_tex.ger_heads.ger_face13'
     FaceSkins(13)=texture'Characters_tex.ger_heads.ger_face14'
     FaceSkins(14)=texture'Characters_tex.ger_heads.ger_face15'
-
     Species=class'DH_Engine.DHSPECIES_Human'
 }

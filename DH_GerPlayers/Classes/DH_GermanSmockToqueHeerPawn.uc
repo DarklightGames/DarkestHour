@@ -10,5 +10,5 @@ defaultproperties
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_SmockToque'
     BodySkins(0)=texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
     BodySkins(1)=none
-    Skins(0)=texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
+    Skins(1)=texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
 }

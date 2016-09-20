@@ -12,5 +12,6 @@ defaultproperties
     BodySkins(1)=texture'DHGermanCharactersTex.WSS.WSSSmockSnow2'
     BodySkins(2)=none
     BodySkins(3)=none
-    Skins(0)=texture'DHGermanCharactersTex.WSS.WSSSmockSnow1'
+    Skins(0)=texture'Characters_tex.ger_heads.ger_face01'
+    Skins(1)=texture'DHGermanCharactersTex.WSS.WSSSmockSnow1'
 }
