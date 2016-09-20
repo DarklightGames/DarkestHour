@@ -64,7 +64,7 @@ function static TreeMap_string_string ParseHeaders(string S)
 
     Headers = new class'TreeMap_string_string';
 
-    Split(S, Chr(13) $ Chr(10), Lines);
+    Split(S, class'UString'.static.CRLF(), Lines);
 
     for (i = 0; i < Lines.Length; ++i)
     {
