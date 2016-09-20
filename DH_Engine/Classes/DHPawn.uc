@@ -4932,34 +4932,26 @@ function PlayDyingSound()
     PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20.0, 200.0), true, 80.0,, true);
 }
 
-// Modified to avoid "accessed none" errors on Species and remove model records
-// Theel: Once I remove all the UPL files, I prob need to edit this to not bullshit around with the UPL system
+// Modified to remove all DefaultCharacter stuff as just returns nonsense value that can never work & only cause log errors
+// Will still work with original PlayerRecord info (from nation's .upl file), but causes no errors when using new RolePawns array in DHRoleInfo classes
+// If no PlayerRecord is passed in (i.e. not using .upl file) it only results in setting Species to default Species
 simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
 {
-    if (Rec.Species == none || ForceDefaultCharacter())
+    if (Rec.Species != none)
     {
-        Rec = class'xUtil'.static.FindPlayerRecord(GetDefaultCharacter());
+        Species = Rec.Species;
     }
-
-    Species = Rec.Species;
-    RagdollOverride = Rec.Ragdoll;
-
-    if (Species == none)
+    else
     {
         Species = default.Species;
     }
 
-    if (Species == none || !Species.static.Setup(self, Rec))
+    RagdollOverride = Rec.Ragdoll;
+
+    if (Species != none && Species.static.Setup(self, Rec))
     {
-        Rec = class'xUtil'.static.FindPlayerRecord(GetDefaultCharacter());
-
-        if (Species == none || !Species.static.Setup(self, Rec))
-        {
-            return;
-        }
+        ResetPhysicsBasedAnim();
     }
-
-    ResetPhysicsBasedAnim();
 }
 
 // Modified so a shallow water volume doesn't send player into swimming state
