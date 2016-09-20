@@ -7,14 +7,12 @@ class DH_CanadianOfficerRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianOfficerBrunswicksPawn',Weight=1.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"
     Article="a "
     PluralName="Artillery Officers"
-    Models(0)="RNB_Of1"
-    Models(1)="RNB_Of2"
-    Models(2)="RNB_Of3"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

@@ -7,13 +7,11 @@ class DH_CanadianRadioOperatorRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianRadioBrunswicksPawn',Weight=1.0)
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    Models(0)="RNB_Rad1"
-    Models(1)="RNB_Rad2"
-    Models(2)="RNB_Rad3"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"

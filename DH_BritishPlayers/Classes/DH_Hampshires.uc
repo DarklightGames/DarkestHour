@@ -8,4 +8,5 @@ class DH_Hampshires extends DH_British_Infantry_Units
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishHampshiresPawn',Weight=1.0)
 }

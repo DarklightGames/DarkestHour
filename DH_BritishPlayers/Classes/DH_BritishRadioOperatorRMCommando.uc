@@ -7,13 +7,11 @@ class DH_BritishRadioOperatorRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioRMCommandoPawn',Weight=1.0)
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    Models(0)="RMCRad1"
-    Models(1)="RMCRad2"
-    Models(2)="RMCRad3"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"

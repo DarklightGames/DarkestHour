@@ -7,13 +7,11 @@ class DH_BritishSergeantOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishAirbornSergeantPawn',Weight=1.0)
     MyName="Corporal"
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    Models(0)="paraSarg1"
-    Models(1)="paraSarg2"
-    Models(2)="paraSarg3"
     bIsLeader=true
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')

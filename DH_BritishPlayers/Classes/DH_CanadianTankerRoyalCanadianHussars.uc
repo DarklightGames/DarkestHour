@@ -7,13 +7,11 @@ class DH_CanadianTankerRoyalCanadianHussars extends DH_RoyalCanadianHussars;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianOfficerHussarsPawn',Weight=1.0)
     MyName="Tank Crewman"
     AltName="Tank Crewman"
     Article="a "
     PluralName="Tank Crewmen"
-    Models(0)="Can_Tanker1"
-    Models(1)="Can_Tanker2"
-    Models(2)="Can_Tanker3"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

@@ -11,12 +11,6 @@ defaultproperties
     AltName="Combat Engineer"
     Article="a "
     PluralName="Combat Engineers"
-    Models(0)="para1"
-    Models(1)="para2"
-    Models(2)="para3"
-    Models(3)="para4"
-    Models(4)="para5"
-    Models(5)="para6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

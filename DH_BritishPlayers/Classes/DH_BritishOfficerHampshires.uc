@@ -7,14 +7,12 @@ class DH_BritishOfficerHampshires extends DH_Hampshires;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishOfficerHampshiresPawn',Weight=1.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    Models(0)="Hamp_Of1"
-    Models(1)="Hamp_Of2"
-    Models(2)="Hamp_Of3"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

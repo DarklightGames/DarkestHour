@@ -12,12 +12,6 @@ defaultproperties
     AltName="Tank Hunter"
     Article="a "
     PluralName="Tank Hunters"
-    Models(0)="PBI_1"
-    Models(1)="PBI_2"
-    Models(2)="PBI_3"
-    Models(3)="PBI_4"
-    Models(4)="PBI_5"
-    Models(5)="PBI_6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')

@@ -11,12 +11,6 @@ defaultproperties
     AltName="Sniper"
     Article="a "
     PluralName="Snipers"
-    Models(0)="Hamp_1"
-    Models(1)="Hamp_2"
-    Models(2)="Hamp_3"
-    Models(3)="Hamp_4"
-    Models(4)="Hamp_5"
-    Models(5)="Hamp_6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

@@ -7,13 +7,11 @@ class DH_BritishSergeant extends DH_British_Infantry;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishSergeantPawn',Weight=1.0)
     MyName="Corporal"
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    Models(0)="PBI_Sarg1"
-    Models(1)="PBI_Sarg2"
-    Models(2)="PBI_Sarg3"
     bIsLeader=true
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')

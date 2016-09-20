@@ -10,5 +10,4 @@ defaultproperties
 {
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
-    RolePawnClass="DH_BritishPlayers.DH_CanadianRiflemanPawn"
 }

@@ -7,13 +7,11 @@ class DH_BritishSergeantRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishSergeantRMCommandoPawn',Weight=1.0)
     MyName="Corporal"
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    Models(0)="RMCSarg1"
-    Models(1)="RMCSarg2"
-    Models(2)="RMCSarg3"
     bIsLeader=true
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')

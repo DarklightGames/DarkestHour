@@ -7,14 +7,12 @@ class DH_BritishOfficerOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishAirborneOfficerPawn',Weight=1.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    Models(0)="paraOf1"
-    Models(1)="paraOf2"
-    Models(2)="paraOf3"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

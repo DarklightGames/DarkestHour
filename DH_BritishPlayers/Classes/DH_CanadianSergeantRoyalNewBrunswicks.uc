@@ -7,13 +7,11 @@ class DH_CanadianSergeantRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianSergeantBrunswicksPawn',Weight=1.0)
     MyName="Corporal"
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    Models(0)="RNB_Sarg1"
-    Models(1)="RNB_Sarg2"
-    Models(2)="RNB_Sarg3"
     bIsLeader=true
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')

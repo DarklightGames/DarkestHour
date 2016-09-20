@@ -11,12 +11,6 @@ defaultproperties
     AltName="Combat Engineer"
     Article="a "
     PluralName="Combat Engineers"
-    Models(0)="Wor_1"
-    Models(1)="Wor_2"
-    Models(2)="Wor_3"
-    Models(3)="Wor_4"
-    Models(4)="Wor_5"
-    Models(5)="Wor_6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')

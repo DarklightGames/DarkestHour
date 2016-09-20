@@ -11,12 +11,6 @@ defaultproperties
     AltName="Light Machine-Gunner"
     Article="a "
     PluralName="Light Machine-Gunners"
-    Models(0)="RMC1"
-    Models(1)="RMC2"
-    Models(2)="RMC3"
-    Models(3)="RMC4"
-    Models(4)="RMC5"
-    Models(5)="RMC6"
     bIsGunner=true
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BrenWeapon')

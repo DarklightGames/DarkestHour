@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BritishPawn extends DHPawn;
+class DH_BritishPawn extends DH_CommonwealthPawn;
 
 defaultproperties
 {
-    Species=class'DH_BritishPlayers.DH_British'
+    Mesh=SkeletalMesh'DHCharacters_anm.Brit_Infantry'
+    Skins(0)=texture'DHBritishCharactersTex.PBI.British_Infantry'
+    Skins(1)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
 }

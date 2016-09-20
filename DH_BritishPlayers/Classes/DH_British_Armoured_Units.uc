@@ -7,5 +7,5 @@ class DH_British_Armoured_Units extends DH_British_Commonwealth_Units;
 
 defaultproperties
 {
-    RolePawnClass="DH_BritishPlayers.DH_BritishTankerPawn"
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishOfficer7thPawn',Weight=1.0)
 }

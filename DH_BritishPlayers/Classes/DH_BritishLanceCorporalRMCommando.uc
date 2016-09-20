@@ -11,12 +11,6 @@ defaultproperties
     AltName="Lance Corporal"
     Article="a "
     PluralName="Lance Corporals"
-    Models(0)="RMC1"
-    Models(1)="RMC2"
-    Models(2)="RMC3"
-    Models(3)="RMC4"
-    Models(4)="RMC5"
-    Models(5)="RMC6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
