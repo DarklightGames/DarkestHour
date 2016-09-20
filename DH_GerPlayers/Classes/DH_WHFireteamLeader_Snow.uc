@@ -11,12 +11,6 @@ defaultproperties
     AltName="Gefreiter"
     Article="a "
     PluralName="Corporals"
-    Models(0)="WHS_1"
-    Models(1)="WHS_2"
-    Models(2)="WHS_3"
-    Models(3)="WHS_4"
-    Models(4)="WHS_5"
-    Models(5)="WHS_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')

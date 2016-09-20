@@ -11,12 +11,6 @@ defaultproperties
     AltName="Unteroffizier"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="WHAu_1"
-    Models(1)="WHAu_2"
-    Models(2)="WHAu_3"
-    Models(3)="WHAu_4"
-    Models(4)="WHAu_5"
-    Models(5)="WHAu_6"
     bIsLeader=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

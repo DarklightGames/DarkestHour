@@ -6,7 +6,9 @@
 class DH_FJ_Standard extends DH_Fallschirmjager
     abstract;
 
+// Theel: This class needs to be deprecated one day
+
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_FJRiflemanPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanFJPawn',Weight=1.0)
 }

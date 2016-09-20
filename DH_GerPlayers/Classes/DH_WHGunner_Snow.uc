@@ -8,15 +8,9 @@ class DH_WHGunner_Snow extends DH_HeerSnow;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="MaschinengewehrschÃ¼tze"
     Article="a "
     PluralName="Machine-Gunners"
-    Models(0)="WHS_1"
-    Models(1)="WHS_2"
-    Models(2)="WHS_3"
-    Models(3)="WHS_4"
-    Models(4)="WHS_5"
-    Models(5)="WHS_6"
     bIsGunner=true
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')

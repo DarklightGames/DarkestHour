@@ -9,15 +9,9 @@ defaultproperties
 {
     bCanUseMortars=true
     MyName="Mortar Operator"
-    AltName="Werferschütze"
+    AltName="WerferschÃ¼tze"
     Article="a "
     PluralName="Mortar Operators"
-    Models(0)="WHAu_1"
-    Models(1)="WHAu_2"
-    Models(2)="WHAu_3"
-    Models(3)="WHAu_4"
-    Models(4)="WHAu_5"
-    Models(5)="WHAu_6"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"

@@ -7,14 +7,11 @@ class DH_WHArtilleryOfficer extends DH_Heer;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn',Weight=1.0)
     MyName="Artillery Officer"
     AltName="Artillerie Offizier"
     Article="a "
     PluralName="Artillery Officers"
-    Models(0)="WHA_1"
-    Models(1)="WHA_2"
-    Models(2)="WHA_3"
-    Models(3)="WHA_4"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

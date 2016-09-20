@@ -7,16 +7,12 @@ class DH_FJOfficer extends DH_FJ;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanOfficerFJPawn',Weight=1.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillerieoffizier"
     Article="a "
     PluralName="Artillery Officers"
-    Models(0)="FJO1"
-    Models(1)="FJO2"
-    Models(2)="FJO3"
-    Models(3)="FJO4"
-    Models(4)="FJO5"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')

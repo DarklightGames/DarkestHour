@@ -11,11 +11,6 @@ defaultproperties
     AltName="Panzerbesatzung"
     Article="a "
     PluralName="Tank Crewmen"
-    Models(0)="SSP_1"
-    Models(1)="SSP_2"
-    Models(2)="SSP_3"
-    Models(3)="SSP_4"
-    Models(4)="SSP_5"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'

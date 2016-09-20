@@ -8,13 +8,9 @@ class DH_WKGunner extends DH_Kriegsmarine;
 defaultproperties
 {
     MyName="Machine-gunner"
-    AltName="MG-Schütze"
+    AltName="MG-SchÃ¼tze"
     Article="a "
     PluralName="Machine-gunners"
-    Models(0)="WK_1"
-    Models(1)="WK_2"
-    Models(2)="WK_3"
-    Models(3)="WK_4"
     bIsGunner=true
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')

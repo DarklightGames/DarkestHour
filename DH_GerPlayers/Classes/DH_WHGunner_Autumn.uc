@@ -8,15 +8,9 @@ class DH_WHGunner_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="MaschinengewehrschÃ¼tze"
     Article="a "
     PluralName="Machine-Gunners"
-    Models(0)="WHAu_1"
-    Models(1)="WHAu_2"
-    Models(2)="WHAu_3"
-    Models(3)="WHAu_4"
-    Models(4)="WHAu_5"
-    Models(5)="WHAu_6"
     bIsGunner=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')

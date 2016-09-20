@@ -8,15 +8,9 @@ class DH_WSSSquadLeader_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     MyName="Sergeant"
-    AltName="Unterscharführer"
+    AltName="UnterscharfÃ¼hrer"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="SSA_1"
-    Models(1)="SSA_2"
-    Models(2)="SSA_3"
-    Models(3)="SSA_4"
-    Models(4)="SSA_5"
-    Models(5)="SSA_6"
     bIsLeader=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')

@@ -8,13 +8,9 @@ class DH_WKSquadLeader extends DH_Kriegsmarine;
 defaultproperties
 {
     MyName="Sergeant"
-    AltName="Gruppenführer"
+    AltName="GruppenfÃ¼hrer"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="WK_1"
-    Models(1)="WK_2"
-    Models(2)="WK_3"
-    Models(3)="WK_4"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

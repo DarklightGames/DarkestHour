@@ -8,5 +8,5 @@ class DH_Kriegsmarine extends DH_German_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_KriegsmarinePawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanKriegsmarinePawn',Weight=1.0)
 }

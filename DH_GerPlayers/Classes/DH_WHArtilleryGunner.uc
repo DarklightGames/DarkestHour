@@ -7,14 +7,11 @@ class DH_WHArtilleryGunner extends DH_Heer;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn',Weight=1.0)
     MyName="Artillery Gunner"
-    AltName="Artillerie Schütze"
+    AltName="Artillerie SchÃ¼tze"
     Article="a "
     PluralName="Artillery Gunners"
-    Models(0)="WHA_1"
-    Models(1)="WHA_2"
-    Models(2)="WHA_3"
-    Models(3)="WHA_4"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

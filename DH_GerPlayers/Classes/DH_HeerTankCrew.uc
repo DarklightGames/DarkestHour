@@ -8,5 +8,5 @@ class DH_HeerTankCrew extends DH_German_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.WH_TankerPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCrewHeerPawn',Weight=1.0)
 }

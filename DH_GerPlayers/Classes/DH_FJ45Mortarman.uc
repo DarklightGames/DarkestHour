@@ -9,14 +9,9 @@ defaultproperties
 {
     bCanUseMortars=true
     MyName="Mortar Operator"
-    AltName="Werferschütze"
+    AltName="WerferschÃ¼tze"
     Article="a "
     PluralName="Mortar Operators"
-    Models(0)="FJ451"
-    Models(1)="FJ452"
-    Models(2)="FJ453"
-    Models(3)="FJ454"
-    Models(4)="FJ455"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

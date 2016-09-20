@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_Heer extends DH_German_Units
-    abstract;
+class DH_GermanCamoHeerPawn extends DH_GermanHeerPawn;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
+    BodySkins(0)=texture'DHGermanCharactersTex.Heer.WH_3'
+    BodySkins(1)=texture'DHGermanCharactersTex.Heer.WH_4'
+    Skins(0)=texture'DHGermanCharactersTex.Heer.WH_3'
 }

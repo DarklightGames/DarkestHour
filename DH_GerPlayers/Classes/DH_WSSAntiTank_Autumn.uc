@@ -9,15 +9,9 @@ defaultproperties
 {
     bIsATGunner=true
     MyName="Tank Hunter"
-    AltName="Panzerj‰ger"
+    AltName="Panzerj√§ger"
     Article="a "
     PluralName="Tank Hunters"
-    Models(0)="SSA_1"
-    Models(1)="SSA_2"
-    Models(2)="SSA_3"
-    Models(3)="SSA_4"
-    Models(4)="SSA_5"
-    Models(5)="SSA_6"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')

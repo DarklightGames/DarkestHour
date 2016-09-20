@@ -7,11 +7,11 @@ class DH_12thSSRadioman extends DH_12thSS;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioSSPawn',Weight=1.0)
     MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "
     PluralName="Radio Operator"
-    Models(0)="12SS_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     GivenItems(0)="DH_Equipment.DHRadioItem"

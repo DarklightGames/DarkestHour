@@ -8,14 +8,9 @@ class DH_FJGunner extends DH_FJ;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="MaschinengewehrschÃ¼tze"
     Article="a "
     PluralName="Machine-Gunners"
-    Models(0)="FJ1"
-    Models(1)="FJ2"
-    Models(2)="FJ3"
-    Models(3)="FJ4"
-    Models(4)="FJ5"
     bIsGunner=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')

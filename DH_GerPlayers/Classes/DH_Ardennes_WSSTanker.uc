@@ -7,15 +7,11 @@ class DH_Ardennes_WSSTanker extends DH_WaffenSSTankCrew;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCrewAutumnSSPawn',Weight=1.0)
     MyName="Tank Crewman"
     AltName="Panzerbesatzung"
     Article="a "
     PluralName="Tank Crewmen"
-    Models(0)="Ardennes_SSP_1"
-    Models(1)="Ardennes_SSP_2"
-    Models(2)="Ardennes_SSP_3"
-    Models(3)="Ardennes_SSP_4"
-    Models(4)="Ardennes_SSP_5"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'

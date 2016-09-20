@@ -8,5 +8,6 @@ class DH_HeerCamo extends DH_German_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_HeerPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCamoHeerPawn',Weight=8.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSniperHeerPawn',Weight=1.0)
 }

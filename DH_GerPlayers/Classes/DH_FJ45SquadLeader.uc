@@ -11,11 +11,6 @@ defaultproperties
     AltName="Unteroffizier"
     Article="a "
     PluralName="Sergeants"
-    Models(0)="FJ451"
-    Models(1)="FJ452"
-    Models(2)="FJ453"
-    Models(3)="FJ454"
-    Models(4)="FJ455"
     bIsLeader=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')

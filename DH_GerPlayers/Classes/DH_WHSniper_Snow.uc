@@ -8,15 +8,9 @@ class DH_WHSniper_Snow extends DH_HeerSnow;
 defaultproperties
 {
     MyName="Sniper"
-    AltName="Scharfschütze"
+    AltName="ScharfschÃ¼tze"
     Article="a "
     PluralName="Snipers"
-    Models(0)="WHS_1"
-    Models(1)="WHS_2"
-    Models(2)="WHS_3"
-    Models(3)="WHS_4"
-    Models(4)="WHS_5"
-    Models(5)="WHS_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

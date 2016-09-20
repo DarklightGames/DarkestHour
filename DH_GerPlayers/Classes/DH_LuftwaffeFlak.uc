@@ -8,5 +8,5 @@ class DH_LuftwaffeFlak extends DH_German_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_LuftwaffeFlakPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanLuftwaffePawn',Weight=1.0)
 }

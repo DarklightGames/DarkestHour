@@ -8,13 +8,9 @@ class DH_WHGunner extends DH_Heer;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="MaschinengewehrschÃ¼tze"
     Article="a "
     PluralName="Machine-Gunners"
-    Models(0)="WH_1"
-    Models(1)="WH_2"
-    Models(2)="WH_3"
-    Models(3)="WH_4"
     bIsGunner=true
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')

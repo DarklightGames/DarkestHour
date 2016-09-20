@@ -9,14 +9,9 @@ defaultproperties
 {
     bIsATGunner=true
     MyName="Tank Hunter"
-    AltName="Panzerj‰ger"
+    AltName="Panzerj√§ger"
     Article="a "
     PluralName="Tank Hunters"
-    Models(0)="FJ1"
-    Models(1)="FJ2"
-    Models(2)="FJ3"
-    Models(3)="FJ4"
-    Models(4)="FJ5"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

@@ -8,5 +8,6 @@ class DH_HeerSnow extends DH_German_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_HeerSnowPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowHeerPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueHeerPawn',Weight=1.0)
 }

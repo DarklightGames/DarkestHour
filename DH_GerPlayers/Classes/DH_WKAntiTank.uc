@@ -12,10 +12,6 @@ defaultproperties
     AltName="PaK-Soldat"
     Article="an "
     PluralName="Anti-tank soldiers"
-    Models(0)="WK_1"
-    Models(1)="WK_2"
-    Models(2)="WK_3"
-    Models(3)="WK_4"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"

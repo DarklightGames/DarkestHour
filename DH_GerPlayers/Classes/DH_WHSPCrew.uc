@@ -7,16 +7,11 @@ class DH_WHSPCrew extends DH_HeerTankCrew;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCrewSPHeerPawn',Weight=1.0)
     MyName="Assault Gun Crewman"
     AltName="Stugbesatzung"
     Article="a "
     PluralName="Assault Gun Crewmen"
-    Models(0)="WHSP_1"
-    Models(1)="WHSP_2"
-    Models(2)="WHSP_3"
-    Models(3)="WHSP_4"
-    Models(4)="WHSP_5"
-    Models(5)="WHSP_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
@@ -26,7 +21,6 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'ROInventory.ROGermanHat'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
-    RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     bCanBeTankCrew=true

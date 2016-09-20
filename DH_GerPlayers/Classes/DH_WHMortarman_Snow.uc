@@ -9,15 +9,9 @@ defaultproperties
 {
     bCanUseMortars=true
     MyName="Mortar Operator"
-    AltName="Werferschütze"
+    AltName="WerferschÃ¼tze"
     Article="a "
     PluralName="Mortar Operators"
-    Models(0)="WHS_1"
-    Models(1)="WHS_2"
-    Models(2)="WHS_3"
-    Models(3)="WHS_4"
-    Models(4)="WHS_5"
-    Models(5)="WHS_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"

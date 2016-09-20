@@ -8,5 +8,5 @@ class DH_OstTruppen extends DH_German_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_HeerPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
 }

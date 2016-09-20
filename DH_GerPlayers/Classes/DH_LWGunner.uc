@@ -8,13 +8,9 @@ class DH_LWGunner extends DH_LuftwaffeFlak;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="MaschinengewehrschÃ¼tze"
     Article="a "
     PluralName="Machine-Gunners"
-    Models(0)="WL_1"
-    Models(1)="WL_2"
-    Models(2)="WL_3"
-    Models(3)="WL_4"
     bIsGunner=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')

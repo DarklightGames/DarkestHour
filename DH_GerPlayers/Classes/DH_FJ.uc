@@ -8,5 +8,5 @@ class DH_FJ extends DH_Fallschirmjager
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_FJRiflemanPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanFJPawn',Weight=1.0)
 }

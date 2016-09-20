@@ -7,11 +7,11 @@ class DH_FJRadioman extends DH_FJ;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioFJPawn',Weight=1.0)
     MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "
     PluralName="Radio Operator"
-    Models(0)="FJ_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"

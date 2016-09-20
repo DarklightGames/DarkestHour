@@ -9,7 +9,6 @@ class DH_American_Units extends DHRoleInfo
 defaultproperties
 {
     RolePawnClass=""
-
     Texture=texture'DHEngine_Tex.Allies_RoleInfo'
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8

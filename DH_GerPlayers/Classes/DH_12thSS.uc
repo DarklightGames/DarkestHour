@@ -7,5 +7,5 @@ class DH_12thSS extends DH_German_Units;
 
 defaultproperties
 {
-    RolePawnClass="DH_GerPlayers.DH_WaffenSSPawn"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_German12thSSPawn',Weight=1.0)
 }
