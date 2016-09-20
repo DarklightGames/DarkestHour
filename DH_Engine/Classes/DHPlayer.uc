@@ -2894,6 +2894,12 @@ exec function DebugPawnPermutations(string ClassName)
     local float d;
     local rotator R;
 
+    // Return if not debug mode
+    if (!class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        return;
+    }
+
     C = class<DHPawn>(DynamicLoadObject(ClassName, class'Class'));
 
     if (C == none)
