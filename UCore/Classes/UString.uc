@@ -193,3 +193,8 @@ static final function string ZFill(coerce string S, int N)
 
     return S;
 }
+
+static final function string CRLF()
+{
+    return Chr(13) $ Chr(10);
+}
