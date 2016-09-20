@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RUGreatcoatPawn extends DH_RussianPawn;
+class DH_SovietGreenTeloPawn extends DH_SovietPawn;
 
 defaultproperties
 {
-    mesh=SkeletalMesh'DHCharacters_anm.DH_rus_greatcoat'
-    Skins(0)=texture'DHRussianCharactersTex.RussianTunics.DH_rus_greatcoat'
+    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_rifleman_tunic'
+    BodySkins(0)=texture'DHRussianCharactersTex.RussianTunics.DH_rus_telogreika_green01'
+    Skins(0)=texture'DHRussianCharactersTex.RussianTunics.DH_rus_telogreika_green01'
     Skins(1)=texture'Characters_tex.rus_heads.rus_face01'
 }
