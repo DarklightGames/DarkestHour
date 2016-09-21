@@ -9,5 +9,4 @@ defaultproperties
 {
     MaleVoice="DH_USPlayers.DHUSVoice"
     FemaleVoice="DH_USPlayers.DHUSVoice"
-    PawnClassName="DH_USPlayers.DH_AmericanPawn"
 }

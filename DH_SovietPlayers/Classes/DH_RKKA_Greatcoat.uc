@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_British extends DHSPECIES_Human;
+class DH_RKKA_Greatcoat extends DH_Soviet_Units
+      abstract;
 
 defaultproperties
 {
-    MaleVoice="DH_BritishPlayers.DHBritishVoice"
-    FemaleVoice="DH_BritishPlayers.DHBritishVoice"
+    SleeveTexture=texture'DHRussianCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
 }

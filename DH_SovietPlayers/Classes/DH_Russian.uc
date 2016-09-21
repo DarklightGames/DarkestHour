@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_British extends DHSPECIES_Human;
+class DH_Russian extends DHSPECIES_Human;
 
 defaultproperties
 {
-    MaleVoice="DH_BritishPlayers.DHBritishVoice"
-    FemaleVoice="DH_BritishPlayers.DHBritishVoice"
+    MaleVoice="DH_SovietPlayers.DHRussianVoice"
+    FemaleVoice="DH_SovietPlayers.DHRussianVoice"
 }

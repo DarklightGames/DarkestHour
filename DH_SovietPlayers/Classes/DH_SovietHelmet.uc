@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_British extends DHSPECIES_Human;
+class DH_SovietHelmet extends DH_SovietHeadgear;
 
 defaultproperties
 {
-    MaleVoice="DH_BritishPlayers.DHBritishVoice"
-    FemaleVoice="DH_BritishPlayers.DHBritishVoice"
+    bIsHelmet=true
+    Mesh=SkeletalMesh'gear_anm.rus_helmet'
+    Skins(0)=texture'DHRussianCharactersTex.RussianHeadgear.DH_rus_headgear'
 }

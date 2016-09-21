@@ -69,4 +69,5 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
 defaultproperties
 {
+    PawnClassName="DH_Engine.DHPawn"
 }

@@ -14,4 +14,6 @@ defaultproperties
     HeadgearProbabilities(1)=0.8
     VoiceType="DH_GerPlayers.DHGerVoice"
     AltVoiceType="DH_GerPlayers.DHGerVoice"
+    DetachedArmClass=Class'ROEffects.SeveredArmGerTunic'
+    DetachedLegClass=Class'ROEffects.SeveredLegGerTunic'
 }
