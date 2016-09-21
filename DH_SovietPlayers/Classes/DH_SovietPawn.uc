@@ -7,6 +7,9 @@ class DH_SovietPawn extends DHPawn;
 
 defaultproperties
 {
+    FaceSlot=1
+    BodySlot=0
+
     FaceSkins(0)=texture'Characters_tex.rus_heads.rus_face01'
     FaceSkins(1)=texture'Characters_tex.rus_heads.rus_face02'
     FaceSkins(2)=texture'Characters_tex.rus_heads.rus_face03'
