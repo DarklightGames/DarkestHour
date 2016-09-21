@@ -7,5 +7,6 @@ class DH_BritishRadioRMCommandoPawn extends DH_BritishRadioPawn;
 
 defaultproperties
 {
+    BodySkins(0)=texture'DHBritishCharactersTex.PBI.British_RMCommando'
     Skins(1)=texture'DHBritishCharactersTex.PBI.British_RMCommando'
 }

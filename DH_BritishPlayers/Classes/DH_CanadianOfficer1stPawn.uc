@@ -8,5 +8,6 @@ class DH_CanadianOfficer1stPawn extends DH_BritishOfficerPawn;
 defaultproperties
 {
     Species=class'DH_BritishPlayers.DH_Canadian'
+    BodySkins(0)=texture'DHCanadianCharactersTex.Armoured.Canadian1stHussars'
     Skins(1)=texture'DHCanadianCharactersTex.Armoured.Canadian1stHussars'
 }
