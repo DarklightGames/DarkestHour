@@ -8,7 +8,7 @@ class DH_SovietTanTeloPawn extends DH_SovietPawn;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_rifleman_tunic'
-    BodySkins(0)=texture'DHRussianCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
-    Skins(0)=Texture'DHRussianCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
+    BodySkins(0)=texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
+    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
     Skins(1)=texture'Characters_tex.rus_heads.rus_face01'
 }

@@ -9,5 +9,5 @@ class DH_RKKA_Greatcoat extends DH_Soviet_Units
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreatcoatPawn',Weight=1.0)
-    SleeveTexture=texture'DHRussianCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
+    SleeveTexture=texture'DHSovietCharactersTex.RussianSleeves.DH_RussianCoatSleeves'
 }

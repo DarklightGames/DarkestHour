@@ -8,5 +8,5 @@ class DH_SovietOfficerHat extends DH_SovietHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'gear_anm.rus_NCOcap'
-    Skins(0)=texture'DHRussianCharactersTex.RussianHeadgear.DH_rus_headgear'
+    Skins(0)=texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
 }
