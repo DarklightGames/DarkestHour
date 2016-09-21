@@ -60,6 +60,10 @@ def main():
     # mod config path
     config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
 
+    if args.clean and os.path.isfile(config_path):
+        # clean build deletes the existing mod config
+        os.remove(config_path)
+
     if os.path.isfile(config_path):
         config.read(config_path)
         packages = config.get('Editor.EditorEngine', 'editpackages')
