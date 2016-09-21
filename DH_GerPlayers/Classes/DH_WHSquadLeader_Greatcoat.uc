@@ -11,8 +11,6 @@ defaultproperties
     AltName="Gruppenführer"
     Article="a "
     PluralName="Squad Leaders"
-    InfoText="The squad leader is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the squad leader's presence is an excellent force multiplier to the units under his command."
-    menuImage=Texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     ObjCaptureWeight=2
     PointValue=3.000000
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

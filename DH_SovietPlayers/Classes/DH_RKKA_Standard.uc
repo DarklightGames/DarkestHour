@@ -8,5 +8,4 @@ class DH_RKKA_Standard extends DH_Soviet_Units
 
 defaultproperties
 {
-    RolePawnClass="DH_SovietPlayers.DH_RURiflemanPawn"
 }

@@ -11,8 +11,6 @@ defaultproperties
     AltName="Stürmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    InfoText="The combat engineer is tasked with destroying front-line enemy obstacles and fortifications.  Geared for close quarters combat, the combat engineer is generally equipped with submachine-guns and grenades.  For instances where enemy fortifications or obstacles are exposed to enemy fire, he is equipped with concealment smoke so he may get close enough to destroy the target."
-    menuImage=Texture'InterfaceArt_tex.SelectMenus.Sturmpionier'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)

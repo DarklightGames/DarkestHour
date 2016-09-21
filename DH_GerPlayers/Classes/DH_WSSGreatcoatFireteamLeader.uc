@@ -11,8 +11,6 @@ defaultproperties
      AltName="SS Rottenführer"
      Article="a "
      PluralName="SS Fireteam Leaders"
-     InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objectives. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
-     menuImage=Texture'DHGermanCharactersTex.Icons.WSS_Semi'
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
      PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_G41Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')

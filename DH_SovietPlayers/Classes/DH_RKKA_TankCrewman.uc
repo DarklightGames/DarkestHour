@@ -20,7 +20,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'ROInventory.ROSovietTankerHat'
-    RolePawnClass="DH_SovietPlayers.DH_RUTankerPawn"
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     bCanBeTankCrew=true
