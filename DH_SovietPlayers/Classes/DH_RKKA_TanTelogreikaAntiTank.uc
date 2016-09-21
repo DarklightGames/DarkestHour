@@ -20,5 +20,5 @@ defaultproperties
     Headgear(2)=class'DH_SovietPlayers.DH_SovietSidecap'
     bEnhancedAutomaticControl=false
     bIsGunner=true
-    limit=2
+    Limit=2
 }

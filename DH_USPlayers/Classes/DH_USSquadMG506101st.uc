@@ -12,7 +12,6 @@ defaultproperties
     Article="a "
     PluralName="Light Machine-Gunners"
     bIsGunner=true
-    SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'

@@ -12,7 +12,6 @@ defaultproperties
     AltName="Tank Hunter"
     Article="an "
     PluralName="Tank Hunters"
-    SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'

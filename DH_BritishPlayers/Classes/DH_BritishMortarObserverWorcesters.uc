@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Observer"
     Article="a "
     PluralName="Mortar Observers"
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"

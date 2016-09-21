@@ -187,6 +187,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
+    RolePawnClass=""
     Limit=255 //Infinite (0 is now deactivated)
     AddedReinforcementTime=0
     HeadgearProbabilities(0)=1.0

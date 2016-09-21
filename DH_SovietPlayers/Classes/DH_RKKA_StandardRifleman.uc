@@ -18,4 +18,4 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietSidecap'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietSidecap'
-    }
+}

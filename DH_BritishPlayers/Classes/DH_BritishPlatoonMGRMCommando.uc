@@ -12,7 +12,6 @@ defaultproperties
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'

@@ -12,7 +12,6 @@ defaultproperties
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true
-    SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stEMa'

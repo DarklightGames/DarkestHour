@@ -12,7 +12,7 @@ defaultproperties
     AltName="Funktruppe"
     Article="a "
     PluralName="Radio Operator"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"

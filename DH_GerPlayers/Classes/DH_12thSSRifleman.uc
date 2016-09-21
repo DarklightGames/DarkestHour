@@ -11,7 +11,6 @@ defaultproperties
     AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'

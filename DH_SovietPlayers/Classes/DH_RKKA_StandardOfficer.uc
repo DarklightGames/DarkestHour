@@ -22,6 +22,6 @@ defaultproperties
     Headgear(2)=class'DH_SovietPlayers.DH_SovietOfficerHat'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
-    limit=1
+    Limit=1
     bIsArtilleryOfficer=true
 }

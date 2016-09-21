@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sniper"
     Article="a "
     PluralName="Snipers"
-    SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'

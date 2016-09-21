@@ -12,7 +12,6 @@ defaultproperties
     AltName="Mortar Operator"
     Article="a "
     PluralName="Mortar Operators"
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"

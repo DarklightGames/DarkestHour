@@ -11,7 +11,7 @@ defaultproperties
     AltName="Sturmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

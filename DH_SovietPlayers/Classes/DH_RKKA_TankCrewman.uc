@@ -7,12 +7,11 @@ class DH_RKKA_TankCrewman extends DH_Soviet_Units;
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietCrewPawn',Weight=1.0)
     MyName="Tank Crewman"
     AltName="Ekipazh tanka"
     Article="a "
     PluralName="Tank Crewmen"
-    ObjCaptureWeight=2
-    PointValue=3.000000
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianTankerSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovTanker'
     DetachedLegClass=class'ROEffects.SeveredLegSovTanker'
@@ -24,5 +23,5 @@ defaultproperties
     bEnhancedAutomaticControl=true
     bCanBeTankCrew=true
     bCanBeTankCommander=true
-    limit=1
+    Limit=1
 }

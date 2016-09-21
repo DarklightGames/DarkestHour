@@ -20,6 +20,6 @@ defaultproperties
     Headgear(1)=Class'DH_GerPlayers.DH_HeerCrushercap'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=True
-    limit=1
+    Limit=1
     bIsArtilleryOfficer=true
 }

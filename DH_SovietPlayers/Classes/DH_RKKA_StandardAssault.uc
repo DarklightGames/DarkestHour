@@ -18,5 +18,5 @@ defaultproperties
     Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
     bEnhancedAutomaticControl=true
-    limit=3
+    Limit=3
 }

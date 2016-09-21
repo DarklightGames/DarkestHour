@@ -13,7 +13,6 @@ defaultproperties
     Article="an "
     PluralName="Anti-Tank Soldiers"
     bIsGunner=true
-    SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
     Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')

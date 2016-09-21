@@ -13,7 +13,6 @@ defaultproperties
     Article="a "
     PluralName="Corporals"
     bIsLeader=true
-    SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')

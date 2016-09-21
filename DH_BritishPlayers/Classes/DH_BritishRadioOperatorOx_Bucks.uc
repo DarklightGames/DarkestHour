@@ -11,7 +11,6 @@ defaultproperties
     AltName="Radio Operator"
     Article="a "
     PluralName="Radio Operators"
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"

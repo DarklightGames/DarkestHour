@@ -11,7 +11,7 @@ defaultproperties
     AltName="Stoßtruppe"
     Article="an "
     PluralName="Assault Troopers"
-    SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'

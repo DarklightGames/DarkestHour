@@ -7,7 +7,8 @@ class DH_WaffenSSGreatcoat extends DH_German_Units;
 
 defaultproperties
 {
-     SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
-     DetachedArmClass=Class'ROEffects.SeveredArmGerGreat'
-     DetachedLegClass=Class'ROEffects.SeveredLegGerGreat'
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
+    DetachedArmClass=Class'ROEffects.SeveredArmGerGreat'
+    DetachedLegClass=Class'ROEffects.SeveredLegGerGreat'
 }

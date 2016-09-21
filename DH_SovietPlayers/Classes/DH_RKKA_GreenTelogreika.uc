@@ -8,5 +8,6 @@ class DH_RKKA_GreenTelogreika extends DH_Soviet_Units
 
 defaultproperties
 {
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloPawn',Weight=1.0)
     SleeveTexture=texture'DHRussianCharactersTex.RussianSleeves.DH_rus_sleeves_green'
 }

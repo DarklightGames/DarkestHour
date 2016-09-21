@@ -19,5 +19,5 @@ defaultproperties
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
     bIsGunner=true
     bCarriesMGAmmo=false
-    limit=2
+    Limit=2
 }

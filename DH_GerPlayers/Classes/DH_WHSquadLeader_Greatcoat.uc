@@ -11,8 +11,6 @@ defaultproperties
     AltName="Gruppenführer"
     Article="a "
     PluralName="Squad Leaders"
-    ObjCaptureWeight=2
-    PointValue=3.000000
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP41Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_G41Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
@@ -24,5 +22,5 @@ defaultproperties
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=True
     bIsLeader=true
-    limit=2
+    Limit=2
 }

@@ -12,7 +12,7 @@ defaultproperties
     Article="a "
     PluralName="Sergeants"
     bIsLeader=true
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

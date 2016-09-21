@@ -12,7 +12,6 @@ defaultproperties
     AltName="Tank Crewman"
     Article="a "
     PluralName="Tank Crewmen"
-    SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"

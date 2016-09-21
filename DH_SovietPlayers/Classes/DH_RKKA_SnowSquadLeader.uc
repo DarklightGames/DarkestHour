@@ -22,8 +22,6 @@ defaultproperties
     Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
     bEnhancedAutomaticControl=true
-    PointValue=3.0
-    ObjCaptureWeight=2
     bIsLeader=true
-    limit=2
+    Limit=2
 }

@@ -11,7 +11,7 @@ defaultproperties
     AltName="Rottenführer"
     Article="a "
     PluralName="Corporals"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

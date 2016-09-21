@@ -17,5 +17,5 @@ defaultproperties
      Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
      PrimaryWeaponType=WT_Assault
      bEnhancedAutomaticControl=True
-     limit=4
+     Limit=4
 }

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Tank Crewman"
     Article="a "
     PluralName="Tank Crewmen"
-    SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_GreaseGunWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"

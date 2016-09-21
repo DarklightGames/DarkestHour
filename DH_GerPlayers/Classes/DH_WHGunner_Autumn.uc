@@ -12,7 +12,7 @@ defaultproperties
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

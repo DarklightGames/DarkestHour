@@ -16,5 +16,5 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietFurHat'
-    limit=1
+    Limit=1
 }

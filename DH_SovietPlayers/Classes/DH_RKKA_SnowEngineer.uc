@@ -21,5 +21,5 @@ defaultproperties
     Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietFurHat'
     bEnhancedAutomaticControl=true
-    limit=2
+    Limit=2
 }

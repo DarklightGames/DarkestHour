@@ -12,7 +12,6 @@ defaultproperties
     AltName="Werferbeobachter"
     Article="a "
     PluralName="Mortar Observers"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"

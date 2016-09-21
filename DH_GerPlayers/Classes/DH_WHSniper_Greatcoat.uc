@@ -18,5 +18,5 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
     PrimaryWeaponType=WT_Sniper
-    limit=1
+    Limit=1
 }

@@ -12,7 +12,7 @@ defaultproperties
     AltName="Panzerjäger"
     Article="a "
     PluralName="Tank Hunters"
-    SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"

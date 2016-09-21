@@ -12,7 +12,6 @@ defaultproperties
     Article="a "
     PluralName="Light Machine-Gunners"
     bIsGunner=true
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BrenWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'

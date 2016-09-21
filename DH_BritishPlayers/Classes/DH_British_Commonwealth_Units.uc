@@ -8,7 +8,6 @@ class DH_British_Commonwealth_Units extends DHRoleInfo
 
 defaultproperties
 {
-    RolePawnClass=""
     Texture=texture'DHEngine_Tex.Allies_RoleInfo'
     HeadgearProbabilities(0)=0.1
     HeadgearProbabilities(1)=0.1

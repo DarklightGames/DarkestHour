@@ -12,7 +12,7 @@ defaultproperties
     AltName="Werferschütze"
     Article="a "
     PluralName="Mortar Operators"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43ScopedWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

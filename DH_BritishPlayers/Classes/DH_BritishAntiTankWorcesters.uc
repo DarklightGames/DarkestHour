@@ -12,7 +12,6 @@ defaultproperties
     AltName="Tank Hunter"
     Article="a "
     PluralName="Tank Hunters"
-    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
