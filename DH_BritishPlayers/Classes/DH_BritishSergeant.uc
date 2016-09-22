@@ -24,7 +24,5 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishInfantryBeretHampshires'
     HeadgearProbabilities(1)=0.5
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    bEnhancedAutomaticControl=true
-    PrimaryWeaponType=WT_Rifle
     Limit=2
 }

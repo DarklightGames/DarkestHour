@@ -17,7 +17,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stOfficera'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stOfficerb'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=1
 }

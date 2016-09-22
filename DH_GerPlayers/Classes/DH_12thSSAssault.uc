@@ -16,7 +16,5 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=4
 }

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Saper"
     Article="a "
     PluralName="Combat Engineers"
-    PrimaryWeaponType=WT_SMG
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Weapons.DH_RDG1GrenadeWeapon',Amount=1)
@@ -19,6 +18,5 @@ defaultproperties
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietSidecap'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietSidecap'
-    bEnhancedAutomaticControl=true
     Limit=2
 }

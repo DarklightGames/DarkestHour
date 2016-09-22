@@ -11,7 +11,6 @@ defaultproperties
     AltName="Strelok"
     Article="a "
     PluralName="Riflemen"
-    PrimaryWeaponType=WT_Rifle
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)

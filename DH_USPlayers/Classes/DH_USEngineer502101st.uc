@@ -19,6 +19,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHWireCuttersItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stEMb'
-    PrimaryWeaponType=WT_SemiAuto
     Limit=3
 }

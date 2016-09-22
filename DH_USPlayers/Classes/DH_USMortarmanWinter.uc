@@ -17,6 +17,5 @@ defaultproperties
     GivenItems(1)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    PrimaryWeaponType=WT_SemiAuto
     Limit=1
 }

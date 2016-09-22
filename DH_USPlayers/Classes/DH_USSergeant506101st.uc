@@ -20,7 +20,5 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stNCOa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stNCOb'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=2
 }

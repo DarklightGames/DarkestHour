@@ -21,7 +21,5 @@ defaultproperties
     Grenades(2)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=2
 }

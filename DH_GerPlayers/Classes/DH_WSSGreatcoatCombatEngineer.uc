@@ -17,6 +17,5 @@ defaultproperties
     Grenades(1)=(Item=Class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
     Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetTwo'
-    PrimaryWeaponType=WT_SMG
     Limit=1
 }

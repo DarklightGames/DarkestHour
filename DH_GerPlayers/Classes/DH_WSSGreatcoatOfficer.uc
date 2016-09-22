@@ -19,8 +19,6 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DH_GerArtyBinocularsItem"
     Headgear(0)=Class'DH_GerPlayers.DH_WSSOfficercap'
     Headgear(1)=Class'DH_GerPlayers.DH_WSSCrushercap'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=True
     Limit=1
     bIsArtilleryOfficer=true
 }

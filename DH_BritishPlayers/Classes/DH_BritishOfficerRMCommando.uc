@@ -19,7 +19,5 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=1
 }

@@ -18,6 +18,5 @@ defaultproperties
     SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetTwo'
-    PrimaryWeaponType=WT_Sniper
     Limit=1
 }

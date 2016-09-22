@@ -18,6 +18,5 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmet2'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
-    PrimaryWeaponType=WT_Sniper
     Limit=2
 }

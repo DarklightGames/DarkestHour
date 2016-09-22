@@ -23,6 +23,5 @@ defaultproperties
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
     HeadgearProbabilities(2)=0.334
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet2'
-    PrimaryWeaponType=WT_SemiAuto
     Limit=1
 }

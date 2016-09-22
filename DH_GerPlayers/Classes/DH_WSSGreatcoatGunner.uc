@@ -17,7 +17,6 @@ defaultproperties
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
-    PrimaryWeaponType=WT_LMG
     Limit=2
     bCarriesMGAmmo=false
 }

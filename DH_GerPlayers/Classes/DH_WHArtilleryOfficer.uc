@@ -19,8 +19,6 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetOne'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     bCanBeTankCrew=true
     Limit=1
 }

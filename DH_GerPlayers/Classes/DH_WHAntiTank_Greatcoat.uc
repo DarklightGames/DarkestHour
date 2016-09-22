@@ -18,6 +18,5 @@ defaultproperties
     GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"
     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
-    PrimaryWeaponType=WT_SMG
     Limit=1
 }

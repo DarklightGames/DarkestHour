@@ -19,6 +19,5 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetNet1'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet2'
-    PrimaryWeaponType=WT_LMG
     Limit=2
 }

@@ -22,8 +22,6 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
     Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     bCanBeTankCrew=true
     Limit=3
 }

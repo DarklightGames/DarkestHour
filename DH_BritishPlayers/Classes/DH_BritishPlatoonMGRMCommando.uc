@@ -17,6 +17,5 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    PrimaryWeaponType=WT_LMG
     Limit=1
 }

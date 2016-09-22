@@ -15,6 +15,5 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stEMb'
-    PrimaryWeaponType=WT_Sniper
     Limit=1
 }

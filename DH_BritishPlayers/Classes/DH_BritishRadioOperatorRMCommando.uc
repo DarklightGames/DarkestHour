@@ -15,6 +15,5 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Equipment.DHRadioItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    PrimaryWeaponType=WT_SMG
     Limit=1
 }

@@ -18,6 +18,5 @@ defaultproperties
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet7thEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet7thEMb'
-    PrimaryWeaponType=WT_SemiAuto
     Limit=2
 }

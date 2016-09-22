@@ -23,8 +23,6 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamo1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamo2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=1
     Limit33to44=2
     LimitOver44=2

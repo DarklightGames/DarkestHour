@@ -11,7 +11,6 @@ defaultproperties
     AltName="Komandir zvena"
     Article="a "
     PluralName="Fireteam Leaders"
-    PrimaryWeaponType=WT_SemiAuto
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'

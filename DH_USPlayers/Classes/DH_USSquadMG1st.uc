@@ -15,6 +15,5 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
-    PrimaryWeaponType=WT_SMG
     Limit=2
 }

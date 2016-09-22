@@ -19,7 +19,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    PrimaryWeaponType=WT_SemiAuto
-    bEnhancedAutomaticControl=true
     Limit=1
 }

@@ -21,8 +21,6 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'ROInventory.ROGermanHat'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     bCanBeTankCrew=true
     Limit=3
 }

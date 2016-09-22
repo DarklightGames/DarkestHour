@@ -19,6 +19,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHRadioItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
-    PrimaryWeaponType=WT_SemiAuto
     Limit=1
 }

@@ -19,8 +19,6 @@ defaultproperties
      Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetCover'
      Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetNoCover'
-     PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
      Limit=1
      Limit33to44=2        // How many people can be this role on a 33 to 44 player server?
      LimitOver44=2

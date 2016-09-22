@@ -18,7 +18,5 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineCap'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=2
 }

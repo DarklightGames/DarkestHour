@@ -17,6 +17,5 @@ defaultproperties
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
-    PrimaryWeaponType=WT_Sniper
     Limit=2
 }

@@ -15,5 +15,4 @@ defaultproperties
     GivenItems(0)="DH_ATWeapons.DH_PanzerFaustWeapon"
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
-    PrimaryWeaponType=WT_SMG
 }

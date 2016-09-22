@@ -19,6 +19,5 @@ defaultproperties
     GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
-    PrimaryWeaponType=WT_SMG
     Limit=1
 }

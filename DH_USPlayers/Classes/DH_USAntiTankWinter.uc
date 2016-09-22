@@ -19,6 +19,5 @@ defaultproperties
     GivenItems(0)="DH_ATWeapons.DH_BazookaWeapon"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    PrimaryWeaponType=WT_SMG
     Limit=1
 }

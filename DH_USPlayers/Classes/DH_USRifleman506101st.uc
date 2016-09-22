@@ -17,5 +17,4 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
-    PrimaryWeaponType=WT_SemiAuto
 }

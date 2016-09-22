@@ -23,7 +23,5 @@ defaultproperties
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
     HeadgearProbabilities(2)=0.4
     Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
     Limit=2
 }

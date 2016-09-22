@@ -19,6 +19,5 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
     GivenItems(0)="DH_Equipment.DHWireCuttersItem"
-    PrimaryWeaponType=WT_SMG
     Limit=3
 }

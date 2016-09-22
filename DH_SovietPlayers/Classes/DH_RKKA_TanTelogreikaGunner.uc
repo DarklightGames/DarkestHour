@@ -11,7 +11,6 @@ defaultproperties
     AltName="Pulemetchik"
     Article="a "
     PluralName="Machine-gunners"
-    PrimaryWeaponType=WT_LMG
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon',Amount=1)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'

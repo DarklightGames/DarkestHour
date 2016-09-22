@@ -21,7 +21,5 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    PrimaryWeaponType=WT_Rifle
-    bEnhancedAutomaticControl=true
     Limit=2
 }

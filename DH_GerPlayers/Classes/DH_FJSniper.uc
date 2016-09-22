@@ -17,6 +17,5 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamo1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamo2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
-    PrimaryWeaponType=WT_Sniper
     Limit=2
 }
