@@ -37,4 +37,6 @@ defaultproperties
     HighDetailOverlay=Shader'Weapons1st_tex.Grenades.f1grenade_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+    InventoryGroup=2
 }
+
