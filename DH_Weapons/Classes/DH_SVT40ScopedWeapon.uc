@@ -84,8 +84,8 @@ defaultproperties
     HighDetailOverlayIndex=2
     FireModeClass(0)=class'DH_Weapons.DH_SVT40ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_SVT40ScopedMeleeFire'
-    InitialNumPrimaryMags=5
-    MaxNumPrimaryMags=5
+    InitialNumPrimaryMags=6
+    MaxNumPrimaryMags=6
     CurrentMagIndex=0
     bPlusOneLoading=true
     bHasBayonet=false

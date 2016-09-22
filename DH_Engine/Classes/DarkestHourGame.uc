@@ -910,8 +910,8 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     // If HardRatio then TeamSizeFactor should be 0.5
     if (DH_LevelInfo(LevelInfo).bHardTeamRatio)
     {
-        TeamRatios[0] = 1.0 - AlliesToAxisRatio;
-        TeamRatios[1] = AlliesToAxisRatio;
+        TeamRatios[0] = AlliesToAxisRatio;
+        TeamRatios[1] = 1.0 - AlliesToAxisRatio;
     }
     else
     {

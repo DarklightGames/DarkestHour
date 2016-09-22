@@ -65,6 +65,7 @@ var()   bool                        bDisableWhenAxisClearObj;
 var()   bool                        bGroupActionsAtDisable;
 var()   bool                        bHideOnMap;
 var()   bool                        bHideOnMapWhenInactive;
+var()   bool                        bHideLabelWhenInactive;
 var()   bool                        bResetDeathPenalties;        // will reset all players death penalty counts
 var()   int                         AlliedAwardedReinforcements; // Amount of reinforcement to aware for allies if the obj is captured
 var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to aware for axis if the obj is captured

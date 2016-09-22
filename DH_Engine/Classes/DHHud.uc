@@ -2095,7 +2095,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     local Pawn                      NetPawn;
     local DHPawn                    DHP;
     local SpriteWidget              Widget;
-    local string                    S, DistanceString;
+    local string                    S, DistanceString, ObjLabel;
     local DHRoleInfo                RI;
     local DHPlayerReplicationInfo   PRI;
 
@@ -2627,25 +2627,34 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             Widget.Tints[1] = WhiteColor;
         }
 
+        if (!DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bHideLabelWhenInactive)
+        {
+            ObjLabel = "";
+        }
+        else
+        {
+            ObjLabel = DHGRI.DHObjectives[i].ObjName;
+        }
+
         // Draw flashing icon if objective is disputed
         if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
         {
             if (DHGRI.DHObjectives[i].CompressedCapProgress == 1 || DHGRI.DHObjectives[i].CompressedCapProgress == 2)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 2, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 2, ObjLabel, DHGRI, i);
             }
             else if (DHGRI.DHObjectives[i].CompressedCapProgress == 3 || DHGRI.DHObjectives[i].CompressedCapProgress == 4)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 3, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 3, ObjLabel, DHGRI, i);
             }
             else
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, ObjLabel, DHGRI, i);
             }
         }
         else
         {
-            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, DHGRI.DHObjectives[i].ObjName, DHGRI, i);
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, ObjLabel, DHGRI, i);
         }
 
         // If the objective isn't completely captured, overlay a flashing icon from other team

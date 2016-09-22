@@ -14,8 +14,8 @@ defaultproperties
     IronIdleAnim="Iron_idle"
     IronBringUp="iron_in"
     IronPutDown="iron_out"
-    MaxNumPrimaryMags=2
-    InitialNumPrimaryMags=2
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
     bPlusOneLoading=true
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"

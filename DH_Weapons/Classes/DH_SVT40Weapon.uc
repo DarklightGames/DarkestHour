@@ -29,8 +29,8 @@ defaultproperties
     HighDetailOverlayIndex=2
     FireModeClass(0)=class'DH_Weapons.DH_SVT40Fire'
     FireModeClass(1)=class'DH_Weapons.DH_SVT40MeleeFire'
-    InitialNumPrimaryMags=5
-    MaxNumPrimaryMags=5
+    InitialNumPrimaryMags=8
+    MaxNumPrimaryMags=8
     CurrentMagIndex=0
     bPlusOneLoading=true
     bHasBayonet=true

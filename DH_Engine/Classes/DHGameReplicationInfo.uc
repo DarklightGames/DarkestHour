@@ -897,7 +897,7 @@ defaultproperties
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     MortarTargetDistanceThreshold=15088 //250 meters in UU
-    ForceScaleText="Size Advantage"
+    ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
     DeathPenaltyText="Death Penalty"
 }

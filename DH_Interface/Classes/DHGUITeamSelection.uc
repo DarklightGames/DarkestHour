@@ -220,7 +220,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 defaultproperties
 {
     UnitsText=" players"
-    SizeBonusText="size advantage"
+    SizeBonusText="army size"
 
     BackgroundTextures(0)=texture'DH_GUI_Tex.Menu.Teamselect'
     BackgroundTextures(1)=texture'DH_GUI_Tex.Menu.TeamselectB'

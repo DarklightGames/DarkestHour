@@ -22,8 +22,8 @@ defaultproperties
     IronIdleAnim="Bipod_Idle"
     IronBringUp="Rest_2_Hipped"
     IronPutDown="Hip_2_Rest"
-    MaxNumPrimaryMags=3
-    InitialNumPrimaryMags=3
+    MaxNumPrimaryMags=4
+    InitialNumPrimaryMags=4
     bPlusOneLoading=true
     SprintStartAnim="Rest_Sprint_Start"
     SprintLoopAnim="Rest_Sprint_Middle"
