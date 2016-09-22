@@ -6,45 +6,36 @@
 class DHSPECIES_Human extends ROSPECIES_Human
     abstract;
 
-// Modified to avoid "accessed none" errors
+// Modified to avoid "accessed none" errors and allow for Pawn setup system instead of Record
 static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 {
-    local ROPawn                ROP;
-    local PlayerReplicationInfo PRI;
-    local mesh                  NewMesh;
-    local class<VoicePack>      VoiceClass;
+    local ROPawn                    ROP;
+    local ROPlayerReplicationInfo   PRI;
+    local mesh                      NewMesh;
+    local class<VoicePack>          VoiceClass;
 
     ROP = ROPawn(P);
 
     if (ROP == none)
     {
-        Log("DHSPECIES_Human.Setup() error: no ROPawn");
+        Warn("DHSPECIES_Human.Setup() error: no ROPawn");
 
         return false;
-    }
-
-    if (Rec.MeshName != "")
-    {
-        NewMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
-    }
-
-    if (NewMesh == none)
-    {
-        return false;
-    }
-
-    PRI = ROP.PlayerReplicationInfo;
-
-    ROP.LinkMesh(NewMesh);
-    ROP.AssignInitialPose();
-    ROP.bIsFemale = false;
-
-    if (PRI != none)
-    {
-        PRI.bIsFemale = false;
     }
 
     ROP.SoundGroupClass = class<ROPawnSoundGroup>(DynamicLoadObject(default.MaleSoundGroup, class'Class'));
+
+    // Check if the record has a mesh, otherwise we need to setup from Pawn
+    if (Rec.MeshName != "")
+    {
+        NewMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
+
+        if (NewMesh != none)
+        {
+            ROP.LinkMesh(NewMesh);
+            ROP.AssignInitialPose();
+        }
+    }
 
     if (Rec.BodySkinName != "")
     {
@@ -56,9 +47,11 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
         ROP.Skins[1] = material(DynamicLoadObject(Rec.FaceSkinName, class'Material'));
     }
 
-    if (ROPlayerReplicationInfo(PRI) != none && ROPlayerReplicationInfo(PRI).RoleInfo != none)
+    PRI = ROPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    if (PRI != none && PRI.RoleInfo != none)
     {
-        ROP.VoiceType = ROPlayerReplicationInfo(PRI).RoleInfo.default.VoiceType;
+        ROP.VoiceType = PRI.RoleInfo.default.VoiceType;
         VoiceClass = class<VoicePack>(DynamicLoadObject(ROP.VoiceType, class'Class'));
         PRI.VoiceType = VoiceClass;
         ROP.VoiceClass = class<TeamVoicePack>(VoiceClass);
