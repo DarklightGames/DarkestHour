@@ -48,7 +48,7 @@ var     float                       TeamAttritionCounter[2];
 var     array<int>                  AttritionObjOrder;                      // Order of objectives that were randomly opened
 
 var     bool                        bSwapTeams;
-
+var     bool                        bUseReinforcementWarning;
 var     float                       AlliesToAxisRatio;
 
 var     class<DHMetrics>            MetricsClass;
@@ -168,6 +168,7 @@ function PostBeginPlay()
         case GT_Advance:
             GRI.CurrentGameType = "Advance";
             GRI.bUseDeathPenaltyCount = true;
+            bUseReinforcementWarning = false;
             break;
 
         case GT_SearchAndDestroy:
@@ -2648,12 +2649,16 @@ function HandleReinforcements(Controller C)
 
         ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
 
-        while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
-                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
+        // Handle reinforcement % message
+        if (bUseReinforcementWarning)
         {
-            SendReinforcementMessage(ALLIES_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+            while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
+                    ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
+            {
+                SendReinforcementMessage(ALLIES_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
 
-            ++TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX];
+                ++TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX];
+            }
         }
     }
     else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0 && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
@@ -2662,12 +2667,16 @@ function HandleReinforcements(Controller C)
 
         ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
 
-        while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
-                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
+        // Handle reinforcement % message
+        if (bUseReinforcementWarning)
         {
-            SendReinforcementMessage(AXIS_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
+            while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
+                    ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
+            {
+                SendReinforcementMessage(AXIS_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
 
-            ++TeamReinforcementMessageIndices[AXIS_TEAM_INDEX];
+                ++TeamReinforcementMessageIndices[AXIS_TEAM_INDEX];
+            }
         }
     }
 
@@ -4160,6 +4169,7 @@ defaultproperties
     MetricsClass=class'DHMetrics'
     bEnableMetrics=true
     bUseWeaponLocking=true
+    bUseReinforcementWarning=true
 
     WeaponLockTimes(0)=0
     WeaponLockTimes(1)=5
