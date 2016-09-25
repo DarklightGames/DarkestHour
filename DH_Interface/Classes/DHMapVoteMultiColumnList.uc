@@ -98,7 +98,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         Min = int(Parts[2]);
         Max = int(Parts[3]);
 
-        if (Min > 0 && Max >= GRI.MaxPlayers)
+        if (Min > 0 || Max <= GRI.MaxPlayers)
         {
             if (Min >= GRI.MaxPlayers)
             {
@@ -114,7 +114,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             }
 
             // Do a check if the current player count is in bounds of recommended range
-            if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MenuState != MSAT_Disabled)
+            if ((GRI.PRIArray.Length < Min || GRI.PRIArray.Length > Max) && MState != MSAT_Disabled)
             {
                 DrawStyle = RedListStyle;
             }
