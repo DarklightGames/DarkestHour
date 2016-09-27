@@ -56,6 +56,7 @@ struct ObjOperationAction
 };
 
 var(ROObjTerritory) bool            bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
+var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the capture rate to always be the base value, so we can have consistent capture times
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 var()   bool                        bVehiclesCanCapture;
 var()   bool                        bTankersCanCapture;
@@ -848,7 +849,11 @@ function Timer()
     // Rate is defined as: Number of players in the area * BaseCaptureRate * Leader bonus (if any) * Percentage of players on the team in the area
     for (i = 0; i < 2; ++i)
     {
-        if (Num[i] >= PlayersNeededToCapture)
+        if (Num[i] >= PlayersNeededToCapture && bUseHardBaseRate)
+        {
+            Rate[i] = BaseCaptureRate;
+        }
+        else if (Num[i] >= PlayersNeededToCapture)
         {
             Rate[i] = FMin(Num[i] * BaseCaptureRate * LeaderBonus[i] * (float(Num[i]) / NumTotal[i]), MaxCaptureRate);
         }
