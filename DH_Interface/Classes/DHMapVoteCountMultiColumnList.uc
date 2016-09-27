@@ -116,14 +116,24 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
 function string GetSortString(int i)
 {
-    local string ColumnData[5];
+    local array<string> Parts;
 
-    ColumnData[0] = Left(Caps(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName), 20);
-    ColumnData[1] = Left(Caps(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName), 20);
-    ColumnData[2] = Left(Caps(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName), 20);
-    ColumnData[3] = Left(Caps(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName), 20);
+    Split(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName, ";", Parts);
 
-    return ColumnData[SortColumn] $ ColumnData[PrevSortColumn];
+    switch (SortColumn)
+    {
+        case 0: // Map name
+            if (Parts.Length > 0)
+            {
+                return Caps(class'DHMapList'.static.GetPrettyName(Parts[0]));
+            }
+        case 1: // Votes
+            return class'UString'.static.ZFill(string(VRI.MapVoteCount[i].VoteCount), 4);
+        default:
+            break;
+    }
+
+    return "";
 }
 
 defaultproperties

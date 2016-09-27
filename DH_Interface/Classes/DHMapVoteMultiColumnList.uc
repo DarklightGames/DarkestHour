@@ -157,19 +157,47 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     }
 }
 
-// Theel: will need a way to sort stuff
 function string GetSortString(int i)
 {
-    local string ColumnData[6];
+    local array<string> Parts;
 
-    ColumnData[0] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
-    ColumnData[1] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
-    ColumnData[2] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
-    ColumnData[3] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
-    ColumnData[4] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
-    ColumnData[5] = left(Caps(VRI.MapList[MapVoteData[i]].MapName),20);
+    Split(VRI.MapList[i].MapName, ";", Parts);
 
-    return ColumnData[SortColumn] $ ColumnData[PrevSortColumn];
+    switch (SortColumn)
+    {
+        case 0: // Map name
+            if (Parts.Length > 0)
+            {
+                return Caps(class'DHMapList'.static.GetPrettyName(Parts[0]));
+            }
+        case 1: // Source
+            if (Parts.Length > 0)
+            {
+                return class'DHMapList'.static.GetMapSource(Parts[0]);
+            }
+        case 2: // Type
+            if (Parts.Length > 2)
+            {
+                return Caps(Parts[1]);
+            }
+            break;
+        case 4: // Quality Control
+            if (Parts.Length > 4)
+            {
+                return Caps(Parts[4]);
+            }
+            break;
+        case 5: // Author
+            if (Parts.Length > 5)
+            {
+                return Caps(Parts[5]);
+            }
+            break;
+        default:
+            break;
+    }
+
+    return "";
 }
 
 defaultproperties
