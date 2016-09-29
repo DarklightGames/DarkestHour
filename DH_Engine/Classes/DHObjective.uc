@@ -57,7 +57,6 @@ struct ObjOperationAction
 
 var(ROObjTerritory) bool            bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
 var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the capture rate to always be the base value, so we can have consistent capture times
-var(ROObjTerritory) float           DHFallOffRate;              // Override for the falloff rate, which was static in RO
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 var()   bool                        bVehiclesCanCapture;
 var()   bool                        bTankersCanCapture;
@@ -874,7 +873,7 @@ function Timer()
         // Have to work down the progress the other team made first, but this is quickened since the fall off rate still occurs
         if (CurrentCapTeam == ALLIES_TEAM_INDEX)
         {
-            CurrentCapProgress -= 0.25 * (DHFallOffRate + Rate[AXIS_TEAM_INDEX]);
+            CurrentCapProgress -= 0.25 * (MaxCaptureRate + Rate[AXIS_TEAM_INDEX]);
         }
         else
         {
@@ -893,7 +892,7 @@ function Timer()
     {
         if (CurrentCapTeam == AXIS_TEAM_INDEX)
         {
-            CurrentCapProgress -= 0.25 * (DHFallOffRate + Rate[ALLIES_TEAM_INDEX]);
+            CurrentCapProgress -= 0.25 * (MaxCaptureRate + Rate[ALLIES_TEAM_INDEX]);
         }
         else
         {
@@ -914,7 +913,7 @@ function Timer()
     }
     else
     {
-        CurrentCapProgress -= 0.25 * DHFallOffRate;
+        CurrentCapProgress -= 0.25 * MaxCaptureRate;
     }
 
     CurrentCapProgress = FClamp(CurrentCapProgress, 0.0, 1.0);
@@ -1102,5 +1101,4 @@ defaultproperties
     bTankersCanCapture=true
     bResetDeathPenalties=true
     PlayersNeededToCapture=1
-    DHFallOffRate=0.08333
 }
