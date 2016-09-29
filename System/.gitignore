@@ -1,4 +1,9 @@
 *.dll
-*.exe
 *.log
 /editorres/
+RedOrchestra.exe
+ROEd.exe
+Setup.exe
+UCC.exe
+UccDepend.exe
+UDebugger.exe
