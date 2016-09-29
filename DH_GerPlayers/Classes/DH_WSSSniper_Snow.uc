@@ -8,7 +8,7 @@ class DH_WSSSniper_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
 

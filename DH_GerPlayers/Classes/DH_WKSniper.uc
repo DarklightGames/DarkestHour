@@ -8,7 +8,7 @@ class DH_WKSniper extends DH_Kriegsmarine;
 defaultproperties
 {
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')

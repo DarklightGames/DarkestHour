@@ -8,7 +8,7 @@ class DH_FJRifleman extends DH_FJ;
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="SchÃ¼tze"
+    AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')

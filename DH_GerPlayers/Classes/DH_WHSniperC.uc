@@ -10,7 +10,7 @@ defaultproperties
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCamoHeerPawn',Weight=1.0)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSniperHeerPawn',Weight=8.0)
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'

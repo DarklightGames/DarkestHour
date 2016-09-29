@@ -8,7 +8,7 @@ class DH_WHSniper extends DH_Heer;
 defaultproperties
 {
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
 

@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsATGunner=true
     MyName="Tank Hunter"
-    AltName="Panzerj√§ger"
+    AltName="Panzerj‰ger"
     Article="a "
     PluralName="Tank Hunters"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

@@ -8,7 +8,7 @@ class DH_12thSSAssault extends DH_12thSS;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')

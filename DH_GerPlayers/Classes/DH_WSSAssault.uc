@@ -8,7 +8,7 @@ class DH_WSSAssault extends DH_WaffenSS;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
 

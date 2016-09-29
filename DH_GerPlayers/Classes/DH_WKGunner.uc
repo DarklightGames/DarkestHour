@@ -8,7 +8,7 @@ class DH_WKGunner extends DH_Kriegsmarine;
 defaultproperties
 {
     MyName="Machine-gunner"
-    AltName="MG-SchÃ¼tze"
+    AltName="MG-Schütze"
     Article="a "
     PluralName="Machine-gunners"
     bIsGunner=true

@@ -8,7 +8,7 @@ class DH_WHAssaultC extends DH_HeerCamo;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
 

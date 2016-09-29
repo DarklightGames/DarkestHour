@@ -8,7 +8,7 @@ class DH_FJ45Assault extends DH_FJ_1945;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
 

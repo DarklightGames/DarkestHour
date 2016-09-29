@@ -8,7 +8,7 @@ class DH_WKSquadLeader extends DH_Kriegsmarine;
 defaultproperties
 {
     MyName="Sergeant"
-    AltName="GruppenfÃ¼hrer"
+    AltName="Gruppenführer"
     Article="a "
     PluralName="Sergeants"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

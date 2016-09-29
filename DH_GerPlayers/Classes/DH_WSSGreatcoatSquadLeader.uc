@@ -8,7 +8,7 @@ class DH_WSSGreatcoatSquadLeader extends DH_WaffenSSGreatcoat;
 defaultproperties
 {
     MyName="SS Squad Leader"
-    AltName="GruppenfÃ¼hrer-SS"
+    AltName="Gruppenführer-SS"
     Article="a "
     PluralName="SS Squad Leaders"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

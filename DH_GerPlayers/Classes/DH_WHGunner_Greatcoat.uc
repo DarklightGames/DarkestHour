@@ -8,7 +8,7 @@ class DH_WHGunner_Greatcoat extends DH_HeerGreatcoat;
 defaultproperties
 {
     MyName="Machine-gunner"
-    AltName="MaschinengewehrschÃ¼tze"
+    AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-gunners"
     bIsGunner=True

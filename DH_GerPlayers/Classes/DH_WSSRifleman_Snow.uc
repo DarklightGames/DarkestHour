@@ -8,7 +8,7 @@ class DH_WSSRifleman_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="SchÃ¼tze"
+    AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
 

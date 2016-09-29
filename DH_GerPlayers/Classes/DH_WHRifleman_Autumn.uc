@@ -8,7 +8,7 @@ class DH_WHRifleman_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="SchÃ¼tze"
+    AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
 

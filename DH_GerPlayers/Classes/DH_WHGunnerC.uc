@@ -8,7 +8,7 @@ class DH_WHGunnerC extends DH_HeerCamo;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="MaschinengewehrschÃ¼tze"
+    AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true

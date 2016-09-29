@@ -8,7 +8,7 @@ class DH_WSSGreatcoatSniper extends DH_WaffenSSGreatcoat;
 defaultproperties
 {
     MyName="SS Sniper"
-    AltName="SS ScharfschÃ¼tze"
+    AltName="SS Scharfschütze"
     Article="a "
     PluralName="SS Snipers"
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'

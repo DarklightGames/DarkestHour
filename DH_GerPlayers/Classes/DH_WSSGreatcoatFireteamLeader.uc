@@ -8,7 +8,7 @@ class DH_WSSGreatcoatFireteamLeader extends DH_WaffenSSGreatcoat;
 defaultproperties
 {
      MyName="SS Fireteam Leader"
-     AltName="SS RottenfÃ¼hrer"
+     AltName="SS Rottenführer"
      Article="a "
      PluralName="SS Fireteam Leaders"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'

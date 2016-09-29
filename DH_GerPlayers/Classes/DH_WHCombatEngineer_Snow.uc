@@ -8,7 +8,7 @@ class DH_WHCombatEngineer_Snow extends DH_HeerSnow;
 defaultproperties
 {
     MyName="Combat Engineer"
-    AltName="StÃ¼rmpioniere"
+    AltName="Stürmpioniere"
     Article="a "
     PluralName="Combat Engineers"
 

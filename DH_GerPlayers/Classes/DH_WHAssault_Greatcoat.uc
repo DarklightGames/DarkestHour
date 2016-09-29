@@ -8,7 +8,7 @@ class DH_WHAssault_Greatcoat extends DH_HeerGreatcoat;
 defaultproperties
 {
      MyName="Assault Trooper"
-     AltName="Sto√ütruppe"
+     AltName="Stoﬂtruppe"
      Article="an "
      PluralName="Assault Troops"
      PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

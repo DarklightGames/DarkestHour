@@ -8,7 +8,7 @@ class DH_WSSGunner_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="MaschinengewehrschÃ¼tze"
+    AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true

@@ -8,7 +8,7 @@ class DH_WHCombatEngineer_Greatcoat extends DH_HeerGreatcoat;
 defaultproperties
 {
     MyName="Combat Engineer"
-    AltName="StÃ¼rmpioniere"
+    AltName="Stürmpioniere"
     Article="a "
     PluralName="Combat Engineers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

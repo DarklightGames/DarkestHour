@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsATGunner=true
     MyName="Tank Hunter"
-    AltName="Panzerj√§ger"
+    AltName="Panzerj‰ger"
     Article="a "
     PluralName="Tank Hunters"
 

@@ -8,7 +8,7 @@ class DH_WSSRifleman_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="SchÃ¼tze"
+    AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
 

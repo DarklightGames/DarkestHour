@@ -8,7 +8,7 @@ class DH_WSSAssault_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
 

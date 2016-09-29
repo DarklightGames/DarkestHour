@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsATGunner=True
     MyName="SS Tank Hunter"
-    AltName="SS Panzerj√§ger"
+    AltName="SS Panzerj‰ger"
     Article="a "
     PluralName="SS Tank Hunters"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'

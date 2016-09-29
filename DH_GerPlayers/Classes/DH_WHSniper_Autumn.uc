@@ -8,7 +8,7 @@ class DH_WHSniper_Autumn extends DH_HeerAutumn;
 defaultproperties
 {
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
 

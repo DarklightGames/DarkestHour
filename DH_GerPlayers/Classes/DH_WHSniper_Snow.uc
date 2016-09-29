@@ -8,7 +8,7 @@ class DH_WHSniper_Snow extends DH_HeerSnow;
 defaultproperties
 {
     MyName="Sniper"
-    AltName="ScharfschÃ¼tze"
+    AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
 

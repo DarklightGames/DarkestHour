@@ -8,7 +8,7 @@ class DH_FJ45Gunner extends DH_FJ_1945;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="MaschinengewehrschÃ¼tze"
+    AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true

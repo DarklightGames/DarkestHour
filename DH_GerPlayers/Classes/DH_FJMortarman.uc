@@ -9,7 +9,7 @@ defaultproperties
 {
     bCanUseMortars=true
     MyName="Mortar Operator"
-    AltName="WerferschÃ¼tze"
+    AltName="Werferschütze"
     Article="a "
     PluralName="Mortar Operators"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')

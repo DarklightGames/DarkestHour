@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsArtilleryOfficer=true
     MyName="Officer"
-    AltName="ZugfÃ¼hrer"
+    AltName="Zugführer"
     Article="a "
     PluralName="Officers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

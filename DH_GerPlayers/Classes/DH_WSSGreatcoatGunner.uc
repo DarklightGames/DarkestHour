@@ -8,7 +8,7 @@ class DH_WSSGreatcoatGunner extends DH_WaffenSSGreatcoat;
 defaultproperties
 {
     MyName="SS Machine-gunner"
-    AltName="MG-SchÃ¼tze-SS"
+    AltName="MG-Schütze-SS"
     Article="a "
     PluralName="SS Machine-gunners"
     bIsGunner=True

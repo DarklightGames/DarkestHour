@@ -8,7 +8,7 @@ class DH_12thSSFireteamLeader extends DH_12thSS;
 defaultproperties
 {
     MyName="Corporal"
-    AltName="RottenfÃ¼hrer"
+    AltName="Rottenführer"
     Article="a "
     PluralName="Corporals"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

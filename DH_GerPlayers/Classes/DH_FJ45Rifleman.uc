@@ -8,7 +8,7 @@ class DH_FJ45Rifleman extends DH_FJ_1945;
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="SchÃ¼tze"
+    AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
 

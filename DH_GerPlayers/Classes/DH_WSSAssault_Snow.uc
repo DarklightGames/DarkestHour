@@ -8,7 +8,7 @@ class DH_WSSAssault_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
 

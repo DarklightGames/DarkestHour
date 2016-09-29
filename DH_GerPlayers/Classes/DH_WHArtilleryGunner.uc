@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn',Weight=1.0)
     MyName="Artillery Gunner"
-    AltName="Artillerie SchÃ¼tze"
+    AltName="Artillerie Schütze"
     Article="a "
     PluralName="Artillery Gunners"
 

@@ -8,7 +8,7 @@ class DH_WSSGunner_Snow extends DH_WaffenSSSnow;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="MaschinengewehrschÃ¼tze"
+    AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
     bIsGunner=true
