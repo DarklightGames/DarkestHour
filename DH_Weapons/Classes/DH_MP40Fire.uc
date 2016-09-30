@@ -12,9 +12,9 @@ defaultproperties
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"
-    FireSounds(0)=SoundGroup'Inf_Weapons.mp40.mp40_fire01'
-    FireSounds(1)=SoundGroup'Inf_Weapons.mp40.mp40_fire02'
-    FireSounds(2)=SoundGroup'Inf_Weapons.mp40.mp40_fire03'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.mp40_fire01'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.mp40_fire02'
+  FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.mp40_fire03'
     MaxVerticalRecoilAngle=500
     MaxHorizontalRecoilAngle=65
     PctProneIronRecoil=0.5
