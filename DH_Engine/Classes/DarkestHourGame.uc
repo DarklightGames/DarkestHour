@@ -628,61 +628,117 @@ function CheckMortarmanSpawnAreas()
     DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 }
 
+// Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
+// Also removed associated redundancy as game only accepts PlayerStart actors, which aren't in NavigationPointList (checking that is root cause of misleading warning)
+function NavigationPoint FindPlayerStart(Controller Player, optional byte InTeam, optional string IncomingName)
+{
+    local NavigationPoint BestStart;
+    local PlayerStart     PS;
+    local float           BestRating, NewRating;
+
+    // If player has a StartSpot, record it as the most recent one so it gets de-prioritised next time
+    if (Player != none && Player.StartSpot != none)
+    {
+        LastPlayerStartSpot = Player.StartSpot;
+    }
+
+    // In single player if player has a StartSpot & we're waiting to start, we'll use the StartSpot
+    if (Level.NetMode == NM_Standalone && Player != none && Player.StartSpot != none
+        && (bWaitingToStartMatch || (Player.PlayerReplicationInfo != none && Player.PlayerReplicationInfo.bWaitingPlayer)))
+    {
+        BestStart = Player.StartSpot;
+    }
+    // If we have a rules modifier, give that a chance to find a start
+    else if (GameRulesModifiers != none)
+    {
+        BestStart = GameRulesModifiers.FindPlayerStart(Player, InTeam, IncomingName);
+    }
+
+    // Assuming we don't yet have a start we'll find the highest rated PlayerStart
+    if (BestStart == none)
+    {
+        // Get player's team (use passed InTeam if player doesn't yet have a team)
+        if (Player != none && Player.PlayerReplicationInfo != none && Player.PlayerReplicationInfo.Team != none)
+        {
+            InTeam = Player.PlayerReplicationInfo.Team.TeamIndex;
+        }
+
+        BestRating = -100000000.0;
+
+        foreach AllActors(class 'PlayerStart', PS)
+        {
+            NewRating = RatePlayerStart(PS, InTeam, Player); // now passing the actual team, where this used to pass zero (& so always axis)
+            NewRating += 20.0 * FRand(); // add some randomisation
+
+            if (NewRating > BestRating)
+            {
+                BestRating = NewRating;
+                BestStart = PS;
+            }
+        }
+    }
+
+    // Providing we found a start, record it as the most recent one so it gets de-prioritised next time
+    // Then return the best start we identified
+    if (BestStart != none)
+    {
+        LastStartSpot = BestStart;
+    }
+    else
+    {
+        Log("Warning - FindPlayerStart failed to find anything!");
+    }
+
+    return BestStart;
+}
+
+// Modified to include check for mortar crew spawn area
+// Also removed redundant check on PlayerStart being for enemy team, as a PlayerStart's TeamNumber is obsolete in RO/DH
 function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
 {
     local PlayerStart P;
-    local DHRoleInfo DHRI;
-    local float       Score, NextDist;
+    local DHRoleInfo  DHRI;
     local Controller  OtherPlayer;
+    local float       Score, NextDist;
 
     P = PlayerStart(N);
 
-    if (P == none || Player == none)
+    // Return extreme negative rating if not a PlayerStart or not enabled or in a WaterVolume
+    if (P == none || !P.bEnabled || (P.PhysicsVolume != none && P.PhysicsVolume.bWaterVolume))
     {
         return -10000000.0;
     }
 
-    DHRI = DHRoleInfo(DHPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
-
-    if (LevelInfo.bUseSpawnAreas && CurrentSpawnArea[Team] != none)
+    // Return very low rating if level uses spawn areas & this PlayerStart is not linked to the relevant current spawn
+    if (LevelInfo.bUseSpawnAreas && Team < arraycount(CurrentSpawnArea) && CurrentSpawnArea[Team] != none)
     {
-        if (CurrentTankCrewSpawnArea[Team]!= none && Player != none && DHRI.bCanBeTankCrew)
+        if (Player != none && ROPlayerReplicationInfo(Player.PlayerReplicationInfo) != none)
+        {
+            DHRI = DHRoleInfo(ROPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
+        }
+
+        if (CurrentTankCrewSpawnArea[Team] != none && DHRI != none && DHRI.bCanBeTankCrew)
         {
             if (P.Tag != CurrentTankCrewSpawnArea[Team].Tag)
             {
                 return -9000000.0;
             }
         }
-
         // Mortar spawn addition - Colin Basnett, 2010
-        else if (DHCurrentMortarSpawnArea[Team] != none && Player != none && DHRI != none && DHRI.bCanUseMortars)
+        else if (DHCurrentMortarSpawnArea[Team] != none && DHRI != none && DHRI.bCanUseMortars)
         {
             if (P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
             {
                 return -9000000.0;
             }
         }
-        else
+        else if (P.Tag != CurrentSpawnArea[Team].Tag)
         {
-            if (P.Tag != CurrentSpawnArea[Team].Tag)
-            {
-                return -9000000.0;
-            }
+            return -9000000.0;
         }
     }
-    else if (Team != P.TeamNumber)
-    {
-        return -9000000.0;
-    }
 
-    P = PlayerStart(N);
-
-    if (P == none || !P.bEnabled || P.PhysicsVolume.bWaterVolume)
-    {
-        return -10000000.0;
-    }
-
-    // Assess candidate
+    // A possible start position, so begin rating it by assigning a base score
     if (P.bPrimaryStart)
     {
         Score = 10000000.0;
@@ -692,18 +748,21 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         Score = 5000000.0;
     }
 
+    // De-prioritise PlayerStart if used last time
     if (N == LastStartSpot || N == LastPlayerStartSpot)
     {
         Score -= 10000.0;
     }
+    // Otherwise add some randomisation to the score
     else
     {
-        Score += 3000.0 * FRand(); // randomize
+        Score += 3000.0 * FRand();
     }
 
+    // Check the PlayerStart's proximity to other players & de-prioritise if near
     for (OtherPlayer = Level.ControllerList; OtherPlayer != none; OtherPlayer = OtherPlayer.NextController)
     {
-        if (OtherPlayer.bIsPlayer && (OtherPlayer.Pawn != none))
+        if (OtherPlayer.Pawn != none && OtherPlayer.bIsPlayer)
         {
             if (OtherPlayer.Pawn.Region.Zone == N.Region.Zone)
             {
