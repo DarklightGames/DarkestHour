@@ -72,7 +72,6 @@ event InitGame(string Options, out string Error)
 function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
-    local DH_LevelInfo          DLI;
     local ROLevelInfo           LI;
     local ROMapBoundsNE         NE;
     local ROMapBoundsSW         SW;
@@ -81,8 +80,9 @@ function PostBeginPlay()
     local ROMineVolume          MV;
     local ROArtilleryTrigger    RAT;
     local SpectatorCam          ViewPoint;
-    local int                   i, j, k, m, n, o, p;
     local DHObstacleInfo        DHOI;
+    local bool                  bMultipleLevelInfos;
+    local int                   i, j, k, m, n, o, p;
 
     // Don't call the RO super because we already do everything for DH and don't
     // want levels using ROLevelInfo
@@ -90,30 +90,34 @@ function PostBeginPlay()
 
     Level.bKickLiveIdlers = MaxIdleTime > 0.0;
 
-    // Find the ROLevelInfo
+    // Find the DHLevelInfo
+    // Note the DHLI is an extension of RHLI, so we look for RHLIs as that allows us to check for multiple DH/ROLevelInfos (a map set up error)
     foreach AllActors(class'ROLevelInfo', LI)
     {
-        if (LevelInfo == none)
+        if (LevelInfo != none) // if we previously found either an ROLI or a DHLI, it will have been recorded as LevelInfo, so we've got some kind of extra LI
         {
-            LevelInfo = LI;
-        }
-        else
-        {
-            Log("DarkestHourGame: More than one ROLevelInfo detected!");
-            break;
-        }
-    }
-
-    // Find the DH_LevelInfo
-    foreach AllActors(class'DH_LevelInfo', DLI)
-    {
-        if (DHLevelInfo != none)
-        {
-            Log("DarkestHourGame: More than one DH_LevelInfo detected!");
-            break;
+            bMultipleLevelInfos = true;
         }
 
-        DHLevelInfo = DLI;
+        if (LI.IsA('DH_LevelInfo') && DHLevelInfo == none)
+        {
+            DHLevelInfo = DH_LevelInfo(LI);
+        }
+
+        if (LevelInfo == none || (LevelInfo != DHLevelInfo && DHLevelInfo != none))
+        {
+            LevelInfo = LI; // even if we found & recorded an ROLevelInfo, if it's not the DHLI then we make it the DHLI (DHLI takes precedence)
+        }
+
+        if (bMultipleLevelInfos)
+        {
+            Log("DarkestHourGame: More than one DH/ROLevelInfo actor detected - should only be a single DHLevelInfo!");
+
+            if (DHLevelInfo != none) // if we don't yet have a DHLI we'll keep looking as that is essential
+            {
+                break;
+            }
+        }
     }
 
     foreach AllActors(class'DHObstacleInfo', DHOI)
@@ -122,12 +126,14 @@ function PostBeginPlay()
         break;
     }
 
-    // Darkest Hour Game Check
-    // Prevents ROLevelInfo from working with DH levels
-    if (LevelInfo == none || !LevelInfo.IsA('DH_LevelInfo'))
+    // Make sure we have a DH_LevelInfo actor (stops an ROLevelInfo from trying to work with DH levels)
+    if (DHLevelInfo == none)
     {
-        Warn("DarkestHourGame: No DH_LevelInfo detected!");
-        Warn("Level may not be using DH_LevelInfo and needs to be!");
+        if (class'DHLib'.static.GetMapName(Level) != "DHIntro") // simple hack to prevent logging errors for intro map
+        {
+            Warn("DarkestHourGame: No DH_LevelInfo detected!");
+            Warn("Level may not be using DH_LevelInfo and needs to be!");
+        }
 
         return; // don't setup the game if LevelInfo isn't DH
     }
