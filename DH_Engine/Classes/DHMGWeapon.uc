@@ -64,12 +64,6 @@ simulated function RenewAmmoBelt()
     }
 }
 
-// Overridden because we have no melee attack
-simulated function bool IsBusy()
-{
-    return false;
-}
-
 // Modified to prevent deploying if player is moving
 simulated exec function Deploy()
 {
