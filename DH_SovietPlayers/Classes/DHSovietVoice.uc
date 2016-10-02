@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHRussianVoice extends DHVoicePack;
+class DHSovietVoice extends DHVoicePack;
 
 #exec OBJ LOAD FILE=..\Sounds\voice_sov_infantry.uax
 #exec OBJ LOAD FILE=..\Sounds\voice_sov_vehicle.uax

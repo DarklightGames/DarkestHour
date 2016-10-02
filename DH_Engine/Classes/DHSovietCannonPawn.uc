@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHRussianCannonPawn extends DHVehicleCannonPawn
+class DHSovietCannonPawn extends DHVehicleCannonPawn
     abstract;
 
 defaultproperties

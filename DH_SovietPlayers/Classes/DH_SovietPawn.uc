@@ -26,5 +26,5 @@ defaultproperties
     FaceSkins(13)=texture'Characters_tex.rus_heads.rus_face14'
     FaceSkins(14)=texture'Characters_tex.rus_heads.rus_face15'
 
-    Species=class'DH_SovietPlayers.DH_Russian'
+    Species=class'DH_SovietPlayers.DH_Soviet'
 }
