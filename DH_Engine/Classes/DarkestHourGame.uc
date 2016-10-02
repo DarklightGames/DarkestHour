@@ -84,6 +84,15 @@ function PostBeginPlay()
     local bool                  bMultipleLevelInfos;
     local int                   i, j, k, m, n, o, p;
 
+    // Matt: for info, this hack could be used to prevent net clients & SP from logging "accessed none" errors for redundant SteamStatsAndAchievements actor
+    // Even though PostLogin() event has been overridden & SS&A functionality removed, some native code still calls the event's Super from GameInfo class
+    // That tries to spawn a SS&A actor from GameInfo's default SS&A class, which is none, so the Super logs 2 errors as it lacks "!= none" checks
+    // By setting a default SS&A class the actor gets spawned harmlessly without log errors, although it is pointless & immediately destroys itself
+//  if (Level.NetMode != NM_DedicatedServer)
+//  {
+//      class'PlayerController'.default.SteamStatsAndAchievementsClass = class'ROSteamStatsAndAchievements';
+//  }
+
     // Don't call the RO super because we already do everything for DH and don't
     // want levels using ROLevelInfo
     super(TeamGame).PostBeginPlay();
@@ -3922,55 +3931,166 @@ function OpenPlayerMenus()
     }
 }
 
-// Override to tell client to save their ROID to their ini so they can easily copy it, store session data, and handle metrics
+// Modified to tell client to save their ROID to their .ini file so they can easily copy it, store session data & handle metrics
+// Also to remove redundant SteamStatsAndAchievements stuff that caused "accessed none" log errors (some other redundancy also removed)
+// Note: on net client & SP it appears some native code is calling the Super of this event from GameInfo class, so any override here is ignored by that
 event PostLogin(PlayerController NewPlayer)
 {
-    local DHPlayer PC;
+    local class<HUD>              HudClass;
+    local class<Scoreboard>       ScoreboardClass;
+    local SpectatorCam            StartSpectatorCamera;
     local DHPlayerReplicationInfo PRI;
-    local Object O;
-    local DHPlayerSession S;
+    local DHPlayer                PC;
+    local Object                  O;
+    local DHPlayerSession         S;
+    local string                  ROIDHash;
 
-    super.PostLogin(NewPlayer);
-
-    PC = DHPlayer(NewPlayer);
-
-    if (PC == none)
+    if (NewPlayer == none)
     {
         return;
     }
 
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    // If we are using a GameStats actor, log the player's login
+    if (GameStats != none && !bIsSaveGame && NewPlayer.PlayerReplicationInfo != none)
+    {
+        GameStats.ConnectEvent(NewPlayer.PlayerReplicationInfo);
+        GameStats.GameEvent("NameChange", NewPlayer.PlayerReplicationInfo.PlayerName, NewPlayer.PlayerReplicationInfo);
+    }
+
+    // Tell client what HUD & scoreboard to use
+    if (HUDType != "")
+    {
+        HudClass = class<HUD>(DynamicLoadObject(HUDType, class'Class'));
+    }
+
+    if (HudClass == none)
+    {
+        Log("Can't find HUD class" @ HUDType, 'Error');
+    }
+
+    if (ScoreBoardType != "")
+    {
+        ScoreboardClass = class<Scoreboard>(DynamicLoadObject(ScoreBoardType, class'Class'));
+    }
+
+    if (ScoreboardClass == none)
+    {
+        Log("Can't find scoreboard class" @ ScoreBoardType, 'Error');
+    }
+
+    NewPlayer.ClientSetHUD(HudClass, ScoreboardClass);
+
+    // Pass server's weapon view shake setting to client
+    SetWeaponViewShake(NewPlayer);
+
+    if (bIsSaveGame)
+    {
+        return;
+    }
+
+    // Various updates & notifications
+    if (NewPlayer.Pawn != none)
+    {
+        NewPlayer.Pawn.ClientSetRotation(NewPlayer.Pawn.Rotation);
+    }
+
+    if (VotingHandler != none)
+    {
+        VotingHandler.PlayerJoin(NewPlayer);
+    }
+
+    if (AccessControl != none)
+    {
+        NewPlayer.LoginDelay = AccessControl.LoginDelaySeconds;
+    }
+
+    if (NewPlayer.Player != none)
+    {
+        NewPlayer.ClientCapBandwidth(NewPlayer.Player.CurrentNetSpeed);
+    }
+
+    if (NewPlayer.PlayerReplicationInfo != none)
+    {
+        NotifyLogin(NewPlayer.PlayerReplicationInfo.PlayerID);
+        Log("New Player" @ NewPlayer.PlayerReplicationInfo.PlayerName @ " ID =" @ NewPlayer.GetPlayerIDHash());
+
+        if (NewPlayer.PlayerReplicationInfo.Team != none)
+        {
+            GameEvent("TeamChange", "" $ NewPlayer.PlayerReplicationInfo.Team.TeamIndex, NewPlayer.PlayerReplicationInfo);
+        }
+    }
+
+    // Find & set player's starting view location based on level's start spectator camera
+    if (NewPlayer.Pawn == none && LevelInfo != none && LevelInfo.StartCamTag != '' && Role == ROLE_Authority)
+    {
+        foreach AllActors(class'SpectatorCam', StartSpectatorCamera, LevelInfo.StartCamTag)
+        {
+            break;
+        }
+
+        if (StartSpectatorCamera != none)
+        {
+            NewPlayer.SetLocation(StartSpectatorCamera.Location);
+            NewPlayer.ClientSetLocation(StartSpectatorCamera.Location, StartSpectatorCamera.Rotation);
+        }
+    }
+
+    // Set player's spectator properties, copied from the GameInfo's properties
+    NewPlayer.bLockedBehindView = bSpectateLockedBehindView;
+    NewPlayer.bFirstPersonSpectateOnly = bSpectateFirstPersonOnly;
+    NewPlayer.bAllowRoamWhileSpectating = bSpectateAllowRoaming;
+    NewPlayer.bViewBlackWhenDead = bSpectateBlackoutWhenDead;
+    NewPlayer.bViewBlackOnDeadNotViewingPlayers = bSpectateBlackoutWhenNotViewingPlayers;
+    NewPlayer.bAllowRoamWhileDeadSpectating = bSpectateAllowDeadRoaming;
+
+    PC = DHPlayer(NewPlayer);
+
+    if (PC != none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    }
 
     if (PRI == none)
     {
         return;
     }
 
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        PC.ROIDHash = PC.GetPlayerIDHash(); // server (important)
-        PC.ClientSaveROIDHash(PC.GetPlayerIDHash());  // client (nice thing for client)
-    }
-
+    // Set up the player in the DH metrics recording actor
     if (Metrics != none)
     {
         Metrics.OnPlayerLogin(PC);
     }
 
-    if (PC.GetPlayerIDHash() != "" && PlayerSessions.Get(PC.GetPlayerIDHash(), O))
+    ROIDHash = PC.GetPlayerIDHash();
+
+    if (ROIDHash != "")
     {
-        S = DHPlayerSession(O);
-
-        PRI.Deaths = S.Deaths;
-        PRI.Kills = S.Kills;
-        PRI.Score = S.Score;
-        PC.LastKilledTime = S.LastKilledTime;
-        PC.WeaponLockViolations = S.WeaponLockViolations;
-        PC.DeathPenaltyCount = S.DeathPenaltyCount;
-
-        if (S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
+        // Record player's ROID on server & his client
+        if (Level.NetMode == NM_DedicatedServer)
         {
-            PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
+            PC.ROIDHash = ROIDHash;          // server (important)
+            PC.ClientSaveROIDHash(ROIDHash); // client (nice thing for client)
+        }
+
+        // If player has been on server before during this round, restore his game status from his player session record
+        if (PlayerSessions != none && PlayerSessions.Get(ROIDHash, O))
+        {
+            S = DHPlayerSession(O);
+
+            if (S != none)
+            {
+                PRI.Deaths = S.Deaths;
+                PRI.Kills = S.Kills;
+                PRI.Score = S.Score;
+                PC.LastKilledTime = S.LastKilledTime;
+                PC.WeaponLockViolations = S.WeaponLockViolations;
+                PC.DeathPenaltyCount = S.DeathPenaltyCount;
+
+                if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
+                {
+                    PC.LockWeapons(S.WeaponUnlockTime - GameReplicationInfo.ElapsedTime);
+                }
+            }
         }
     }
 }
