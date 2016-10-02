@@ -314,7 +314,7 @@ function ServerPlayFiring()
 }
 
 // Modified so a smoke grenade doesn't blows up in player's hand
-event ModeTick(float dt)
+event ModeTick(float DeltaTime)
 {
     local DHExplosiveWeapon Exp;
 
@@ -326,7 +326,7 @@ event ModeTick(float dt)
         {
             if (Exp.CurrentFuzeTime > (AddedFuseTime * -1.0))
             {
-                Exp.CurrentFuzeTime -= dt;
+                Exp.CurrentFuzeTime -= DeltaTime;
             }
             else if (!Exp.bAlreadyExploded)
             {

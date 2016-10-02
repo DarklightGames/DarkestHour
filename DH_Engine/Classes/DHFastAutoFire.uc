@@ -306,9 +306,9 @@ state FireLoop
         GotoState('');
     }
 
-    function ModeTick(float dt)
+    function ModeTick(float DeltaTime)
     {
-        super(WeaponFire).ModeTick(dt);
+        super(WeaponFire).ModeTick(DeltaTime);
 
         // Stopped firing, magazine empty or barrel overheat // WeaponTODO: see how to properly reimplement this
         if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHProjectileWeapon(Weapon) != none && DHProjectileWeapon(Weapon).bBarrelFailed))

@@ -20,9 +20,9 @@ simulated function bool AllowFire()
     return super.AllowFire();
 }
 
-function ModeTick(float dt)
+function ModeTick(float DeltaTime)
 {
-    super.ModeTick(dt);
+    super.ModeTick(DeltaTime);
 
     if (bIsFiring && !AllowFire())
     {
