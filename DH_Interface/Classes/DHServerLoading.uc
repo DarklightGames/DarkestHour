@@ -30,7 +30,7 @@ simulated event Init()
 
     if (bVACSecured)
     {
-        DrawOpImage(Operations[9]).Image = VACIcon;
+        DrawOpImage(Operations[8]).Image = VACIcon;
     }
 }
 
