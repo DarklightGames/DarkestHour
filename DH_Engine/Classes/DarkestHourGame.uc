@@ -3720,20 +3720,24 @@ function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional
     local vector                TargetLocation;
     local rotator               Direction;
 
-    if (DHP != none && DHP.Pawn != none)
+    if (DHP != none && DHP.Pawn != none && VehicleString != "")
     {
         Direction.Yaw = DHP.Pawn.Rotation.Yaw;
         TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5)));
 
         VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
-        CreatedVehicle = Spawn(VehicleClass,,, TargetLocation, Direction);
 
-        if (bool(SetAsCrew) == true && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo != none)
+        if (VehicleClass != none)
         {
-            DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew = true;
-        }
+            CreatedVehicle = Spawn(VehicleClass,,, TargetLocation, Direction);
 
-        Level.Game.Broadcast(self, "Admin" @ DHP.GetHumanReadableName() @ "spawned a" @ CreatedVehicle.GetHumanReadableName());
+            if (bool(SetAsCrew) == true && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo != none)
+            {
+                DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew = true;
+            }
+
+            Level.Game.Broadcast(self, "Admin" @ DHP.GetHumanReadableName() @ "spawned a" @ CreatedVehicle.GetHumanReadableName());
+        }
     }
 }
 

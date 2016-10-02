@@ -4448,7 +4448,10 @@ function bool ResupplyMortarAmmunition()
 
     for (i = 0; i < RI.GivenItems.Length; ++i)
     {
-        W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+        if (RI.GivenItems[i] != "")
+        {
+            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+        }
 
         if (W == none)
         {
@@ -4483,7 +4486,10 @@ function CheckIfMortarCanBeResupplied()
 
     for (i = 0; i < RI.GivenItems.Length; ++i)
     {
-        W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+        if (RI.GivenItems[i] != "")
+        {
+            W = class<DHMortarWeapon>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+        }
 
         if (W == none)
         {

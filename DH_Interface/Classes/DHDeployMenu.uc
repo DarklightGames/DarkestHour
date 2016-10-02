@@ -1169,27 +1169,30 @@ function InternalOnChange(GUIComponent Sender)
 
                 for (i = 0; i < RI.GivenItems.Length; ++i)
                 {
-                    InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'class'));
-
-                    if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
+                    if (RI.GivenItems[i] != "")
                     {
-                        InventoryMaterial = class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass).default.MenuImage;
+                        InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'class'));
 
-                        if (InventoryMaterial != none)
+                        if (InventoryClass != none && class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass) != none)
                         {
-                            if (InventoryMaterial.MaterialUSize() > InventoryMaterial.MaterialVSize())
+                            InventoryMaterial = class<ROWeaponAttachment>(InventoryClass.default.AttachmentClass).default.MenuImage;
+
+                            if (InventoryMaterial != none)
                             {
-                                //Weapon material is wider than it is high.
-                                //This means it's probably a rocket or some
-                                //other long thing that needs to be put in our
-                                //"wide" slot (0).
-                                i_GivenItems[0].Image = InventoryMaterial;
-                            }
-                            else
-                            {
-                                if (j < arraycount(i_GivenItems))
+                                if (InventoryMaterial.MaterialUSize() > InventoryMaterial.MaterialVSize())
                                 {
-                                    i_GivenItems[j++].Image = InventoryMaterial;
+                                    //Weapon material is wider than it is high.
+                                    //This means it's probably a rocket or some
+                                    //other long thing that needs to be put in our
+                                    //"wide" slot (0).
+                                    i_GivenItems[0].Image = InventoryMaterial;
+                                }
+                                else
+                                {
+                                    if (j < arraycount(i_GivenItems))
+                                    {
+                                        i_GivenItems[j++].Image = InventoryMaterial;
+                                    }
                                 }
                             }
                         }

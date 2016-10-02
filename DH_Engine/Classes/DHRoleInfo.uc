@@ -35,11 +35,13 @@ function PostBeginPlay()
     HandlePrecache();
 }
 
-// Modified to include GivenItems array, to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching), & to avoid pre-cache stuff on a server
+// Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
+// Also to avoid pre-cache stuff on a server & avoid accessed none errors
 simulated function HandlePrecache()
 {
     local xUtil.PlayerRecord PR;
-    local int i;
+    local class<DHWeapon>    GivenItemClass;
+    local int                i;
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -69,9 +71,14 @@ simulated function HandlePrecache()
 
         for (i = 0; i < GivenItems.Length; ++i)
         {
-            if (class<DHWeapon>(DynamicLoadObject(GivenItems[i], class'class')) != none)
+            if (GivenItems[i] != "")
             {
-                class<DHWeapon>(DynamicLoadObject(GivenItems[i], class'class')).static.StaticPrecache(Level);
+                GivenItemClass = class<DHWeapon>(DynamicLoadObject(GivenItems[i], class'class'));
+
+                if (GivenItemClass != none)
+                {
+                    GivenItemClass.static.StaticPrecache(Level);
+                }
             }
         }
 
