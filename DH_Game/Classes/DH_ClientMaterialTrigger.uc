@@ -22,8 +22,6 @@ function PostBeginPlay()
 {
     local int i;
 
-//    ReplicatedMaterialTriggers.Length = MaterialsToTrigger.Length; // TEST rem
-
     for (i = 0; i < MaterialsToTrigger.Length; ++i)
     {
         ReplicatedMaterialTriggers[i] = Spawn(class'DH_MaterialTriggerReplicationInfo', self);

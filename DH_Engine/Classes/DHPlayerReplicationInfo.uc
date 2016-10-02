@@ -7,4 +7,3 @@ class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
-

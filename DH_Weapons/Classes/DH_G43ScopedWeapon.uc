@@ -13,7 +13,7 @@ simulated function AnimEnd(int channel)
     local name  Anim;
     local float Frame, Rate;
 
-    GetAnimParams(0, anim, Frame, Rate);
+    GetAnimParams(0, Anim, Frame, Rate);
 
     if (ClientState == WS_ReadyToFire)
     {
@@ -25,7 +25,7 @@ simulated function AnimEnd(int channel)
         {
             PlayIdle();
         }
-        else if (Anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (Anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }

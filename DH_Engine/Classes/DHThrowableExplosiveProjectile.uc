@@ -396,7 +396,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     GetHitSurfaceType(ST, HitNormal);
-    GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projetile hit
+    GetDampenAndSoundValue(ST); // gets the deflect dampen factor & the hit sound, based on the type of surface the projectile hit
 
     Bounces--;
 
@@ -408,7 +408,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         // Reflect off Wall with damping
         VNorm = (Velocity dot HitNormal) * HitNormal;
-        Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+        Velocity = -VNorm * DampenFactor + ((Velocity - VNorm) * DampenFactorParallel);
         Speed = VSize(Velocity);
     }
 

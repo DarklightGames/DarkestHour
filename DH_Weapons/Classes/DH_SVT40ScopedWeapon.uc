@@ -15,7 +15,7 @@ replication
         bJammed;
 }
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated function AnimEnd(int channel)
 {
     local name  Anim;
@@ -44,7 +44,7 @@ simulated function AnimEnd(int channel)
     }
 }
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
@@ -52,12 +52,9 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
     {
-        if (!IsAnimating(0))
-        {
-            PlayIdle();
-        }
+        PlayIdle();
     }
 
     FireMode[Mode].bIsFiring = false;

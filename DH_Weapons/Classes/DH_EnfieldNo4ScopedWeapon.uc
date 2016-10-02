@@ -10,9 +10,7 @@ class DH_EnfieldNo4ScopedWeapon extends DHBoltSniperWeapon;
 
 defaultproperties
 {
-    //Correction of textured scope sights
-    OverlayCorrectionX=-8.0
-
+    OverlayCorrectionX=-8.0 // correction of textured scope sights
     PreReloadAnim="Single_Open"
     SingleReloadAnim="Single_Insert"
     PostReloadAnim="Single_Close"

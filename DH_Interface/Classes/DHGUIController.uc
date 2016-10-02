@@ -5,7 +5,7 @@
 
 class DHGUIController extends UT2K4GUIController;
 
-var Array<string>       RODefaultStyleNames;      // Holds the name of all styles to use
+var     array<string>   RODefaultStyleNames; // holds the name of all styles to use
 
 event InitializeController()
 {
@@ -17,7 +17,7 @@ event InitializeController()
     RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
 
     LastGameType = "DH_Engine.DarkestHourGame";
-    Log("DHGUIController initialized ");
+    Log("DHGUIController initialized");
 }
 
 function PurgeObjectReferences()
@@ -27,7 +27,9 @@ function PurgeObjectReferences()
 static simulated event Validate()
 {
     if (default.MainMenuOptions.Length < 5)
+    {
         ResetConfig();
+    }
 }
 
 static simulated function string GetServerBrowserPage()
@@ -39,24 +41,28 @@ static simulated function string GetServerBrowserPage()
 static simulated function string GetMultiplayerPage()
 {
     Validate();
+
     return default.MainMenuOptions[1];
 }
 
 static simulated function string GetInstantActionPage()
 {
     Validate();
+
     return default.MainMenuOptions[2];
 }
 
 static simulated function string GetSettingsPage()
 {
     Validate();
+
     return default.MainMenuOptions[3];
 }
 
 static simulated function string GetQuitPage()
 {
     Validate();
+
     return default.MainMenuOptions[4];
 }
 

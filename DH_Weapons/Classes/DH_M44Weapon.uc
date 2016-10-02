@@ -7,6 +7,7 @@ class DH_M44Weapon extends DHBoltActionWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Allies_Nagant_1st.ukx
 
+// Modified as this rifle has a fixed bayonet
 simulated exec function Deploy()
 {
 }

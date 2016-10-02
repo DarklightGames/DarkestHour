@@ -176,8 +176,7 @@ function PostBeginPlay()
             break;
 
         default:
-            // do nothing
-        break;
+            break; // do nothing
     }
 
     // General game type settings
@@ -223,9 +222,9 @@ function PostBeginPlay()
     for (k = 0; k < arraycount(GRI.AlliedHelpRequests); ++k)
     {
         GRI.AlliedHelpRequests[k].OfficerPRI = none;
-        GRI.AlliedHelpRequests[k].requestType = 255;
+        GRI.AlliedHelpRequests[k].RequestType = 255;
         GRI.AxisHelpRequests[k].OfficerPRI = none;
-        GRI.AxisHelpRequests[k].requestType = 255;
+        GRI.AxisHelpRequests[k].RequestType = 255;
     }
 
     ResetMortarTargets();
@@ -2040,9 +2039,9 @@ state RoundInPlay
         for (i = 0; i < arraycount(GRI.AxisHelpRequests); ++i)
         {
             GRI.AlliedHelpRequests[i].OfficerPRI = none;
-            GRI.AlliedHelpRequests[i].requestType = 255;
+            GRI.AlliedHelpRequests[i].RequestType = 255;
             GRI.AxisHelpRequests[i].OfficerPRI = none;
-            GRI.AxisHelpRequests[i].requestType = 255;
+            GRI.AxisHelpRequests[i].RequestType = 255;
         }
 
         // Reset all controllers
