@@ -4242,6 +4242,7 @@ defaultproperties
     InputClass=class'DH_Engine.DHPlayerInput'
     PawnClass=class'DH_Engine.DHPawn'
     PlayerChatType="DH_Engine.DHPlayerChatManager"
+    SteamStatsAndAchievementsClass=none
     SpawnPointIndex=255
     VehiclePoolIndex=255
     SpawnVehicleIndex=255

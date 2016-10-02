@@ -2283,12 +2283,9 @@ state RoundInPlay
         NotifyObjectiveManagers();
     }
 
+    // Modified to use DHRoundOverMessage class & to add DH metrics recording (also removes redundant SteamStatsAndAchievements stuff)
     function EndRound(int Winner)
     {
-        local string MapName;
-        local int    i;
-        local bool   bMatchOver, bRussianSquadLeader;
-
         switch (Winner)
         {
             case AXIS_TEAM_INDEX:
@@ -2310,9 +2307,6 @@ state RoundInPlay
 
         RoundCount++;
 
-        // Used for Steam Stats below
-        bMatchOver = true;
-
         if (RoundLimit != 0 && RoundCount >= RoundLimit)
         {
             EndGame(none, "RoundLimit");
@@ -2323,44 +2317,7 @@ state RoundInPlay
         }
         else
         {
-            bMatchOver = false;
             GotoState('RoundOver');
-        }
-
-        // Get the MapName out of the URL
-        MapName = class'DHLib'.static.GetMapName(Level);
-
-        // Set the map as won in the Steam Stats of everyone on the winning team
-        for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
-        {
-            if (ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements) != none)
-            {
-                if (GameReplicationInfo.PRIArray[i].Team != none && GameReplicationInfo.PRIArray[i].Team.TeamIndex == Winner)
-                {
-                    if (bMatchOver)
-                    {
-                        if (GameReplicationInfo.PRIArray[i].Team.TeamIndex == ALLIES_TEAM_INDEX && ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]) != none)
-                        {
-                            bRussianSquadLeader = ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bIsLeader &&
-                                !ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bCanBeTankCrew;
-                        }
-                        else
-                        {
-                            bRussianSquadLeader = false;
-                        }
-
-                        // NOTE: This MUST be called before ROSteamStatsAndAchievements.MatchEnded()
-                        ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements).WonMatch(MapName, Winner, bRussianSquadLeader);
-                    }
-                    else
-                    {
-                        // NOTE: This MUST be called before ROSteamStatsAndAchievements.MatchEnded()
-                        ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements).WonRound();
-                    }
-                }
-
-                ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements).MatchEnded();
-            }
         }
 
         if (Metrics != none)
