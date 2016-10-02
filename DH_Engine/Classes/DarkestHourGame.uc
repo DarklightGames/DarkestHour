@@ -268,19 +268,25 @@ function PostBeginPlay()
     // Find all the radios
     foreach AllActors(class'ROArtilleryTrigger', RAT)
     {
-        if (RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
+        if ((RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both) && i < arraycount(GRI.AxisRadios))
         {
             GRI.AxisRadios[i] = RAT;
             ++i;
         }
 
-        if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
+        if ((RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both) && j < arraycount(GRI.AlliedRadios))
         {
             GRI.AlliedRadios[j] = RAT;
             ++j;
         }
+
+        if (i >= arraycount(GRI.AxisRadios) && j >= arraycount(GRI.AlliedRadios)) // can only record maximum 10 per team as defined in RO as static arrays
+        {
+            break;
+        }
     }
 
+    // Find all the resupply areas
     foreach AllActors(class'DHAmmoResupplyVolume', ARV)
     {
         DHResupplyAreas[m] = ARV;
@@ -302,6 +308,11 @@ function PostBeginPlay()
         }
 
         m++;
+
+        if (m >= arraycount(GRI.ResupplyAreas)) // can only record maximum of 10 as defined in RO as a static array
+        {
+            break;
+        }
     }
 
     foreach AllActors(class'ROMineVolume', MV)
