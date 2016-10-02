@@ -3,12 +3,13 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1GrenadeAttachment extends DH_StielGranateAttachment;
+class DH_RDG1SmokeGrenadeAmmo extends ROAmmunition;
 
 defaultproperties
 {
-    WA_Idle="Idle"
-    WA_Fire="Idle"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.rgd1_icon'
-    Mesh=SkeletalMesh'Weapons3rd_anm.RGD1'
+     MaxAmmo=1
+     InitialAmount=1
+     IconMaterial=texture'InterfaceArt_tex.HUD.RDG1_ammo'
+     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
+     ItemName="StielHandGrenate"
 }

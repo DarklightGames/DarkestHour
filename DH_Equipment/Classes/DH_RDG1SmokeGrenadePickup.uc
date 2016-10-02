@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1GrenadePickup extends DHOneShotWeaponPickup
+class DH_RDG1SmokeGrenadePickup extends DHOneShotWeaponPickup
    notplaceable;
 
 static function StaticPrecache(LevelInfo L)
@@ -18,7 +18,7 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     MaxDesireability=0.78
-    InventoryType=class'DH_Weapons.DH_RDG1GrenadeWeapon'
+    InventoryType=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon'
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1'

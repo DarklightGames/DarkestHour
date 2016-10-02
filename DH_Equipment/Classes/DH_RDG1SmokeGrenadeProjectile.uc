@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1GrenadeProjectile extends StielGranateProjectile;  // TODO: fix hierarchy
+class DH_RDG1SmokeGrenadeProjectile extends StielGranateProjectile;  // TODO: fix hierarchy
 
 #exec OBJ LOAD File=Inf_WeaponsTwo.uax
 
@@ -132,7 +132,7 @@ defaultproperties
     ExplosionSound(2)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     Damage=0.0
     DamageRadius=0.0
-    MyDamageType=class'DH_Weapons.DH_RDG1GrenadeDamType'
+    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
     bAlwaysRelevant=true
     LifeSpan=30.0

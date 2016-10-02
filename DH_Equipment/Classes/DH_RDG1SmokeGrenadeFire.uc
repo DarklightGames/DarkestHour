@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1GrenadeFire extends StielGranateFire;
+class DH_RDG1SmokeGrenadeFire extends StielGranateFire;
 
 event ModeTick(float DeltaTime)
 {
@@ -93,6 +93,6 @@ defaultproperties
     bSplashDamage=false
     bRecommendSplashDamage=false
     MaxHoldTime=4.95
-    AmmoClass=class'DH_Weapons.DH_RDG1GrenadeAmmo'
-    ProjectileClass=class'DH_Weapons.DH_RDG1GrenadeProjectile'
+    AmmoClass=class'DH_Equipment.DH_RDG1SmokeGrenadeAmmo'
+    ProjectileClass=class'DH_Equipment.DH_RDG1SmokeGrenadeProjectile'
 }

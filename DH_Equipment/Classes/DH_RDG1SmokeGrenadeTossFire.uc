@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1GrenadeTossFire extends DH_M1GrenadeTossFire;
+class DH_RDG1SmokeGrenadeTossFire extends DH_M1GrenadeTossFire;
 
 event ModeTick(float DeltaTime)
 {
@@ -94,5 +94,5 @@ defaultproperties
     bRecommendSplashDamage=false
     MaxHoldTime=4.95
     AmmoClass=class'ROAmmo.RDG1GrenadeAmmo'
-    ProjectileClass=class'DH_Weapons.DH_RDG1GrenadeProjectile'
+    ProjectileClass=class'DH_Equipment.DH_RDG1SmokeGrenadeProjectile'
 }
