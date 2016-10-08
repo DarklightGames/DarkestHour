@@ -3355,7 +3355,15 @@ simulated function DrawLocationHits(Canvas C, ROPawn P)
             }
             else if (Team == ALLIES_TEAM_INDEX)
             {
-                Widget.WidgetTexture = LocationHitAlliesImages[i];
+                switch(DHGRI.AlliedNationID)
+                {
+                    case 3: // USSR
+                        Widget.WidgetTexture = class'ROHud'.default.LocationHitAlliesImages[i];
+                        break;
+                    default:
+                        Widget.WidgetTexture = LocationHitAlliesImages[i];
+                        break;
+                }
             }
             else
             {
@@ -3379,9 +3387,12 @@ simulated function UpdateHud()
     local ROPawn P;
     local Weapon W;
     local byte   Nation;
+    local bool bIsRussian;
 
     if (PawnOwnerPRI != none)
     {
+        bIsRussian = PawnOwnerPRI.Team != none && PawnOwnerPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && DHGRI != none && DHGRI.AlliedNationID == 3;
+
         P = ROPawn(PawnOwner);
 
         if (P != none)
@@ -3411,18 +3422,49 @@ simulated function UpdateHud()
         if (PawnOwnerPRI.Team != none && PlayerOwner.GameReplicationInfo != none)
         {
             Nation = PlayerOwner.GameReplicationInfo.NationIndex[PawnOwnerPRI.Team.TeamIndex];
-            HealthFigure.WidgetTexture = NationHealthFigures[Nation];
-            HealthFigureBackground.WidgetTexture = NationHealthFiguresBackground[Nation];
+
+            if (bIsRussian)
+            {
+                HealthFigure.WidgetTexture = class'ROHud'.default.NationHealthFigures[Nation];
+            }
+            else
+            {
+                HealthFigure.WidgetTexture = NationHealthFigures[Nation];
+            }
+
+            if (bIsRussian)
+            {
+                HealthFigureBackground.WidgetTexture = class'ROHud'.default.NationHealthFiguresBackground[Nation];
+            }
+            else
+            {
+                HealthFigureBackground.WidgetTexture = NationHealthFiguresBackground[Nation];
+            }
 
             if (HealthFigureStamina.Scale > 0.9)
             {
-                HealthFigureStamina.WidgetTexture = NationHealthFiguresStaminaCritical[Nation];
+                if (bIsRussian)
+                {
+                    HealthFigureStamina.WidgetTexture = class'ROHud'.default.NationHealthFiguresStaminaCritical[Nation];
+                }
+                else
+                {
+                    HealthFigureStamina.WidgetTexture = NationHealthFiguresStaminaCritical[Nation];
+                }
+
                 HealthFigureStamina.Tints[0].G = 255; HealthFigureStamina.Tints[1].G = 255;
                 HealthFigureStamina.Tints[0].B = 255; HealthFigureStamina.Tints[1].B = 255;
             }
             else
             {
-                HealthFigureStamina.WidgetTexture = NationHealthFiguresStamina[Nation];
+                if (bIsRussian)
+                {
+                    HealthFigureStamina.WidgetTexture = class'ROHud'.default.NationHealthFiguresStamina[Nation];
+                }
+                else
+                {
+                    HealthFigureStamina.WidgetTexture = NationHealthFiguresStamina[Nation];
+                }
             }
         }
     }
