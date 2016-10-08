@@ -10,14 +10,14 @@ var()   float       TriggerDelay;
 
 var     float       TriggerTime;
 var     DHPawn      Carrier;
-var     SoundGroup  CommonwealthRequestSound;
-var     SoundGroup  CommonwealthConfirmSound;
-var     SoundGroup  CommonwealthDenySound;
+var     SoundGroup  AlliedNationRequestSounds[4];
+var     SoundGroup  AlliedNationConfirmSounds[4];
+var     SoundGroup  AlliedNationDenySounds[4];
 
 function UsedBy(Pawn User)
 {
     local DHRoleInfo   RI;
-    local DHPlayer     DHPC;
+    local DHPlayer     PC;
     local DHVolumeTest VolumeTest;
     local sound        RequestSound;
 
@@ -39,31 +39,31 @@ function UsedBy(Pawn User)
         return;
     }
 
-    DHPC = DHPlayer(User.Controller);
+    PC = DHPlayer(User.Controller);
 
     // Bots can't call arty yet
-    if (DHPC == none)
+    if (PC == none)
     {
         return;
     }
 
     // Exit if no co-ordinates selected (with message)
-    if (DHPC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
+    if (PC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
     {
-        DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4); // no co-ords selected
+        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4); // no co-ords selected
 
         return;
     }
 
     // Don't let the player call in an arty strike on a location that has become an active NoArtyVolume after they marked the location.
-    VolumeTest = Spawn(class'DHVolumeTest', self,, DHPC.SavedArtilleryCoords);
+    VolumeTest = Spawn(class'DHVolumeTest', self,, PC.SavedArtilleryCoords);
 
     if (VolumeTest != none)
     {
         if (VolumeTest.IsInNoArtyVolume())
         {
             VolumeTest.Destroy();
-            DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid target
+            PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid target
 
             return;
         }
@@ -72,34 +72,75 @@ function UsedBy(Pawn User)
     }
 
     // If player is of a team that can use this trigger, call in an arty strike
-    if (ApprovePlayerTeam(DHPC.GetTeamNum()))
+    if (ApprovePlayerTeam(PC.GetTeamNum()))
     {
         bAvailable = false;
         SavedUser = User;
-        DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 1); // request strike
-
-        if (DHPC.GetTeamNum() == AXIS_TEAM_INDEX)
-        {
-            RequestSound = GermanRequestSound;
-        }
-        else if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).DHLevelInfo != none)
-        {
-            switch (DarkestHourGame(Level.Game).DHLevelInfo.AlliedNation)
-            {
-                case NATION_USA:
-                case NATION_Canada:
-                    RequestSound = RussianRequestSound;
-                    break;
-
-                case NATION_Britain:
-                    RequestSound = CommonwealthRequestSound;
-                    break;
-            }
-        }
-
+        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 1); // request strike
+        RequestSound = GetRequestSound(PC.GetTeamNum());
         User.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
         SetTimer(GetSoundDuration(RequestSound), false);
     }
+}
+
+function sound GetRequestSound(int TeamIndex)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        switch (TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                return GermanRequestSound;
+            case ALLIES_TEAM_INDEX:
+                return AlliedNationRequestSounds[GRI.AlliedNationID];
+        }
+    }
+
+    return none;
+}
+
+function sound GetConfirmSound(int TeamIndex)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        switch (TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                return GermanConfirmSound;
+            case ALLIES_TEAM_INDEX:
+                return AlliedNationConfirmSounds[GRI.AlliedNationID];
+        }
+    }
+
+    return none;
+}
+
+function sound GetDenySound(int TeamIndex)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        switch (TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                return GermanDenySound;
+            case ALLIES_TEAM_INDEX:
+                return AlliedNationDenySounds[GRI.AlliedNationID];
+        }
+    }
+
+    return none;
 }
 
 function Touch(Actor Other)
@@ -145,10 +186,25 @@ defaultproperties
     bShouldShowOnSituationMap=true
     TriggerDelay=5.0
     Message="Request artillery support from HQ"
-    RussianRequestSound=SoundGroup'DH_ArtillerySounds.requests.USrequest'
-    RussianConfirmSound=SoundGroup'DH_US_Voice_Infantry.Artillery.confirm'
-    RussianDenySound=SoundGroup'DH_US_Voice_Infantry.Artillery.Deny'
-    CommonwealthRequestSound=SoundGroup'DH_ArtillerySounds.requests.britrequest'
-    CommonwealthConfirmSound=SoundGroup'DH_Brit_Voice_Infantry.Artillery.confirm'
-    CommonwealthDenySound=SoundGroup'DH_Brit_Voice_Infantry.Artillery.Deny'
+
+    // USA
+    AlliedNationRequestSounds(0)=SoundGroup'DH_ArtillerySounds.requests.USrequest'
+    AlliedNationConfirmSounds(0)=SoundGroup'DH_US_Voice_Infantry.Artillery.confirm'
+    AlliedNationDenySounds(0)=SoundGroup'DH_US_Voice_Infantry.Artillery.Deny'
+
+    // Britain
+    AlliedNationRequestSounds(1)=SoundGroup'DH_ArtillerySounds.requests.britrequest'
+    AlliedNationConfirmSounds(1)=SoundGroup'DH_Brit_Voice_Infantry.Artillery.confirm'
+    AlliedNationDenySounds(1)=SoundGroup'DH_Brit_Voice_Infantry.Artillery.Deny'
+
+    // Canada
+    AlliedNationRequestSounds(2)=SoundGroup'DH_ArtillerySounds.requests.USrequest'
+    AlliedNationConfirmSounds(2)=SoundGroup'DH_US_Voice_Infantry.Artillery.confirm'
+    AlliedNationDenySounds(2)=SoundGroup'DH_US_Voice_Infantry.Artillery.Deny'
+
+    // USSR
+    AlliedNationRequestSounds(3)=SoundGroup'Artillery.Request.RusRequest'
+    AlliedNationConfirmSounds(3)=SoundGroup'voice_sov_infantry.artillery.confirm'
+    AlliedNationDenySounds(3)=SoundGroup'voice_sov_infantry.artillery.Deny'
 }
+

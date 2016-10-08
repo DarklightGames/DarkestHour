@@ -2036,19 +2036,15 @@ function BecomeSpectator()
 
 function HitThis(ROArtilleryTrigger RAT)
 {
-    local DarkestHourGame       DHG;
+    local DarkestHourGame       G;
     local ROGameReplicationInfo GRI;
-    local DHArtilleryTrigger    DHAT;
+    local DHArtilleryTrigger    AT;
     local int TimeTilNextStrike, PawnTeam;
 
-    if (RAT == none)
-    {
-        return;
-    }
+    G = DarkestHourGame(Level.Game);
+    AT = DHArtilleryTrigger(RAT);
 
-    DHG = DarkestHourGame(Level.Game);
-
-    if (DHG == none)
+    if (G == none && AT == none)
     {
         return;
     }
@@ -2056,45 +2052,29 @@ function HitThis(ROArtilleryTrigger RAT)
     GRI = ROGameReplicationInfo(GameReplicationInfo);
     PawnTeam = Pawn.GetTeamNum();
 
-    if (GRI.bArtilleryAvailable[Pawn.GetTeamNum()] > 0)
+    if (GRI.bArtilleryAvailable[PawnTeam] > 0)
     {
         ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self); // strike confirmed
 
-        if (PawnTeam == 0)
-        {
-            RAT.PlaySound(RAT.GermanConfirmSound, SLOT_None, 3.0, false, 100, 1.0, true);
-        }
-        else
-        {
-            RAT.PlaySound(RAT.RussianConfirmSound, SLOT_None, 3.0, false, 100, 1.0, true);
-        }
+        AT.PlaySound(AT.GetConfirmSound(PawnTeam), SLOT_None, 3.0, false, 100, 1.0, true);
 
         GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
         GRI.TotalStrikes[PawnTeam]++;
 
-        DHAT = DHArtilleryTrigger(RAT);
-
-        if (DHAT != none && DHAT.Carrier != none)
+        if (AT.Carrier != none)
         {
-            DHG.ScoreRadioUsed(DHAT.Carrier.Controller);
+            G.ScoreRadioUsed(AT.Carrier.Controller);
         }
 
         ServerArtyStrike();
 
-        DHG.NotifyPlayersOfMapInfoChange(PawnTeam, self);
+        G.NotifyPlayersOfMapInfoChange(PawnTeam, self);
     }
     else
     {
-        if (PawnTeam == 0)
-        {
-            RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100, 1.0, true);
-        }
-        else
-        {
-            RAT.PlaySound(RAT.RussianDenySound, SLOT_None, 3.0, false, 100, 1.0, true);
-        }
+        AT.PlaySound(AT.GetDenySound(PawnTeam), SLOT_None, 3.0, false, 100, 1.0, true);
 
-        TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + ROTeamGame(Level.Game).LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
+        TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + G.LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
 
         if (GRI.TotalStrikes[PawnTeam] >= GRI.ArtilleryStrikeLimit[PawnTeam])
         {
