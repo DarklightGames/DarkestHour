@@ -18,7 +18,7 @@ defaultproperties
     LightSaturation=128
     LightRadius=10.000000
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_Tracers.Russ_Tracer'
-    DeflectedMesh=StaticMesh'DH_Tracers.Russ_Tracer_Ball'
+    StaticMesh=StaticMesh'DH_Tracers.Soviet_Tracer'
+    DeflectedMesh=StaticMesh'DH_Tracers.Soviet_Tracer_Ball'
     DrawScale=2.0
 }

@@ -53,6 +53,6 @@ defaultproperties
     MechanicalRanges(7)=(Range=2500,RangeValue=0) //
 
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    StaticMesh=StaticMesh'DH_Tracers.shells.Russian_shell'
+    StaticMesh=StaticMesh'DH_Tracers.shells.Soviet_shell'
     ShellShatterEffectClass=Class'DH_Effects.DHShellShatterEffect_Small'
 }
