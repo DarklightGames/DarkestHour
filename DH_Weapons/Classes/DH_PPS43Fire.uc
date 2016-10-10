@@ -11,7 +11,6 @@ defaultproperties
     AmbientFireSoundRadius=750.0
     AmbientFireSound=SoundGroup'Inf_Weapons.pps43.pps43_fire_loop'
     AmbientFireVolume=255
-    //compile error  ServerProjectileClass=class'DH_Weapons.DH_PPS43Bullet_S'
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-20.0)
     FireIronAnim="Iron_Shoot_Loop"
