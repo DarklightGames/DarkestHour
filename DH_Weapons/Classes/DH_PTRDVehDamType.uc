@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PTRDDamType extends DHWeaponProjectileDamageType
-    abstract;
+class DH_PTRDVehDamType extends DHVehicleDamageType
+      abstract;
 
 defaultproperties
 {

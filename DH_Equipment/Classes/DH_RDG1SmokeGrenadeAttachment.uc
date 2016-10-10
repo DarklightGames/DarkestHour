@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1SmokeGrenadeAttachment extends DH_StielGranateAttachment;
+class DH_RDG1SmokeGrenadeAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {

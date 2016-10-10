@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PTRDFire extends ROBoltFire;
+class DH_PTRDFire extends DHBoltFire;
 
 // Modified to check if Instigator has the bipod deployed instead of checking if he is using ironsights
 simulated function EjectShell()

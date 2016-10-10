@@ -23,7 +23,7 @@ defaultproperties
     BallisticCoefficient=0.675 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
     Damage=125.0
     MyDamageType=class'DH_Weapons.DH_PTRDDamType'
-    MyVehicleDamage=class'DH_Weapons.DH_PTRDBulletShellDamageAP'
+    MyVehicleDamage=class'DH_Weapons.DH_PTRDVehDamType'
     Speed=60352.0 // 1000 m/s
     MaxSpeed=60352.0
 }
