@@ -592,11 +592,20 @@ function bool IsSpawnKillProtected()
     return SpawnKillTimeEnds > Level.TimeSeconds;
 }
 
+// Modified to handle new DH SpawnProtEnds variable, & also to avoid occasional "accessed none" log error (re Level.Game) when called on net client
 function DeactivateSpawnProtection()
 {
     SpawnProtEnds = -10000.0;
 
-    super.DeactivateSpawnProtection();
+    if (!bSpawnDone)
+    {
+        bSpawnDone = true;
+
+        if (DeathMatch(Level.Game) != none && (Level.TimeSeconds - SpawnTime) < DeathMatch(Level.Game).SpawnProtectionTime)
+        {
+            SpawnTime = Level.TimeSeconds - DeathMatch(Level.Game).SpawnProtectionTime - 1.0;
+        }
+    }
 }
 
 // Modified to handle bullet 'snaps' for supersonic rounds, as well as whizzes, & also to add suppression effects - all based on passed WhizType
