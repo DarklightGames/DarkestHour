@@ -53,11 +53,11 @@ defaultproperties
     SecondarySpread=0.002
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Vehicles.DH_DP28VehicleBullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     InitialAltAmmo=60
     NumMGMags=15
     AltFireInterval=0.1
-    TracerProjectileClass=class'DH_Vehicles.DH_DP28VehicleClientTracer'
+    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     TracerFrequency=7
     AltFireOffset=(X=20.0,Y=24.0,Z=1.0)
 

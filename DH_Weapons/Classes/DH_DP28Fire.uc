@@ -11,13 +11,12 @@ defaultproperties
     AmbientFireSoundRadius=750.0
     AmbientFireSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
     AmbientFireVolume=255
-    //compile error  ServerProjectileClass=class'DH_Weapons.DH_DP28Bullet_S'
     PackingThresholdTime=0.12
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-20.0)
     bUsesTracers=true
     TracerFrequency=5
-    //compile error  DummyTracerClass=class'DH_Weapons.DH_DP28ClientTracer'
+    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     FireIronAnim="Bipod_Shoot_Loop"
     FireIronLoopAnim="Bipod_Shoot_Loop"
     FireIronEndAnim="Bipod_Shoot_End"

@@ -33,7 +33,7 @@ defaultproperties
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireInterval=4
     FireSoundVolume=500
-    AltFireProjectileClass=class'DH_Vehicles.DH_DP28VehicleBullet'
+    AltFireProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     AltFireInterval=0.1
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
@@ -44,8 +44,8 @@ defaultproperties
     bAmbientAltFireSound=true
     bAltFireTracersOnly=true
     bUsesTracers=true
-    mTracerInterval=0.5
-    DummyTracerClass=class'DH_Vehicles.DH_DP28VehicleClientTracer'
+    TracerFrequency=5
+    TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
 
     //Reduced due to light calibre
     ShakeRotMag=(Z=1.0)

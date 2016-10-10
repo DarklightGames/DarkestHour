@@ -19,7 +19,7 @@ defaultproperties
     CustomPitchDownLimit=63500
 
     // Ammo
-    ProjectileClass=class'DH_Vehicles.DH_DP28VehicleBullet'
+    ProjectileClass=class'DH_Weapons.DH_DP28Bullet'
     InitialPrimaryAmmo=60
     NumMGMags=15
     FireInterval=0.1
