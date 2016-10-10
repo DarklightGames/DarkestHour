@@ -7,14 +7,6 @@ class DH_SVT40Weapon extends DHSemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Allies_Svt40_1st.ukx
 
-var     bool    bJammed;
-
-replication
-{
-    reliable if (Role == ROLE_Authority)
-        bJammed;
-}
-
 defaultproperties
 {
     ItemName="SVT-40"

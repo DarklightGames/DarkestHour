@@ -7,14 +7,6 @@ class DH_SVT40ScopedWeapon extends DHSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Allies_Svt40_1st.ukx
 
-var     bool    bJammed;
-
-replication
-{
-    reliable if (Role == ROLE_Authority)
-        bJammed;
-}
-
 // Overridden to prevent the exploit of freezing your animations after firing
 simulated function AnimEnd(int channel)
 {
