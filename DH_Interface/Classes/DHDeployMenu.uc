@@ -321,7 +321,7 @@ function UpdateRoundStatus()
         }
         else
         {
-            l_RoundTime.Caption = class'DHLib'.static.GetDurationString(Max(0, RoundTime), "m:ss");
+            l_RoundTime.Caption = class'TimeSpan'.static.ToString(Max(0, RoundTime));
         }
     }
 }

@@ -216,11 +216,11 @@ simulated function UpdateScoreBoard(Canvas C)
     }
     else if (DHGRI.bMatchHasBegun)
     {
-        s $= HUD.static.GetTimeString(DHGRI.RoundEndTime - GRI.ElapsedTime);
+        s $= class'TimeSpan'.static.ToString(DHGRI.RoundEndTime - GRI.ElapsedTime);
     }
     else
     {
-        s $= HUD.static.GetTimeString(DHGRI.RoundStartTime + DHGRI.PreStartTime - GRI.ElapsedTime);
+        s $= class'TimeSpan'.static.ToString(DHGRI.RoundStartTime + DHGRI.PreStartTime - GRI.ElapsedTime);
     }
 
     // Add time elapsed (extra in DH)
