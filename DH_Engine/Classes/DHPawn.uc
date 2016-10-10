@@ -1482,27 +1482,26 @@ function LoadWeapon(Pawn Gunner)
     }
 }
 
-// Update anims to match attachment
+// Modified to avoid cast to deprecated ROProjectileWeapon (base class DHWeapon extends ROWeapon & bypasses ROProjectileWeapon)
+// Also re-factored slightly to optimise
 simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
 {
     WeaponAttachment = NewAtt;
 
-    if (!bInitializedWeaponAttachment && NewAtt != none)
+    if (WeaponAttachment != none)
     {
-        bInitializedWeaponAttachment = true;
-    }
+        if (!bInitializedWeaponAttachment)
+        {
+            bInitializedWeaponAttachment = true;
+        }
 
-    if (WeaponAttachment == none)
-    {
-        return;
-    }
+        if (Weapon != none) // cast is unnecessary as bBayonetMounted is in the base Weapon class
+        {
+            WeaponAttachment.bBayonetAttached = Weapon.bBayonetMounted;
+        }
 
-    if (DHProjectileWeapon(Weapon) != none)
-    {
-        WeaponAttachment.bBayonetAttached = DHProjectileWeapon(Weapon).bBayonetMounted;
+        WeaponAttachment.AnimEnd(0);
     }
-
-    WeaponAttachment.AnimEnd(0);
 }
 
 // Handles the stamina calculations and sprinting functionality
