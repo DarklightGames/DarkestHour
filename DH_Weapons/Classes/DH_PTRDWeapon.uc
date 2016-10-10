@@ -7,44 +7,29 @@ class DH_PTRDWeapon extends DHBipodWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Allies_Ptrd_1st.ukx
 
-// Overriden because we don't want to allow reloading unless the weapon is out of ammo
+// Modified so can't reload unless empty
 simulated function bool AllowReload()
 {
-    if (AmmoAmount(0) > 0)
-    {
-        return false;
-    }
-
-    return super.AllowReload();
+    return AmmoAmount(0) < 1 && super.AllowReload();
 }
 
-// Implemented in various states to show whether the weapon is busy performing some action that normally shouldn't be interuppted
-// Overriden because we have no melee attack
-simulated function bool IsBusy()
-{
-    return false;
-}
-
+// Modified to make ironsights key try to deploy/undeploy the bipod
 simulated function ROIronSights()
 {
     Deploy();
 }
 
+// Modified as every time the PTRD fires its out of ammo, so play the empty animation
 simulated function AnimEnd(int channel)
 {
     local name  Anim;
     local float Frame, Rate;
 
-    GetAnimParams(0, Anim, Frame, Rate);
-
     if (ClientState == WS_ReadyToFire)
     {
-        // Every time the PTRD fires its out of ammo, so play the empty animation
-        if (Anim == FireMode[0].FireAnim)
-        {
-            LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
-        }
-        else if (Anim == FireMode[1].FireAnim)
+        GetAnimParams(0, Anim, Frame, Rate);
+
+        if (Anim == FireMode[0].FireAnim || Anim == FireMode[1].FireAnim)
         {
             LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
         }
@@ -55,61 +40,44 @@ simulated function AnimEnd(int channel)
     }
 }
 
-// Overridden so we don't play idle empty anims after a reload
-simulated state Reloading
-{
-    simulated function PlayIdle()
-    {
-        if (Instigator.bBipodDeployed)
-        {
-            LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
-        }
-        else
-        {
-            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
-        }
-    }
-}
-
+// Modified so we don't play idle empty anims after a reload
 simulated function PlayIdle()
 {
-    if (Instigator.bBipodDeployed)
+    if (Instigator != none && Instigator.bBipodDeployed)
     {
-        if (AmmoAmount(0) > 0)
-        {
-            LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
-        }
-        else
+        if (AmmoAmount(0) < 1 && !IsInState('Reloading') && HasAnim(IronIdleEmptyAnim))
         {
             LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
+        }
+        else if (HasAnim(IronIdleAnim))
+        {
+            LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
         }
     }
     else
     {
-        if (AmmoAmount(0) > 0)
-        {
-            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
-        }
-        else
+        if (AmmoAmount(0) < 1 && !IsInState('Reloading') && HasAnim(IdleEmptyAnim))
         {
             LoopAnim(IdleEmptyAnim, IdleAnimRate, 0.2);
+        }
+        else if (HasAnim(IdleAnim))
+        {
+            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
         }
     }
 }
 
+// Modified to start a reload if weapon is empty
 simulated function Fire(float F)
 {
-    if (Level.NetMode != NM_DedicatedServer && Instigator.bBipodDeployed)
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.bBipodDeployed && !HasAmmo())
     {
-        if (!HasAmmo())
-        {
-            ROManualReload();
-
-            return;
-        }
+        ROManualReload();
     }
-
-    super.Fire(F);
+    else
+    {
+        super.Fire(F);
+    }
 }
 
 defaultproperties
@@ -143,7 +111,7 @@ defaultproperties
     ZoomInTime=0.4
     ZoomOutTime=0.35
     FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PTRDFire'
+    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     IdleAnim="Rest_Idle"
     SelectAnim="Draw"
     PutDownAnim="Put_away"
