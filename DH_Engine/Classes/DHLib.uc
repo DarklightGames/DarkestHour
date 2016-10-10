@@ -28,7 +28,7 @@ static final function string GetMapName(LevelInfo L)
 
     if (Mid(MapName, j - 3, 3) ~= "rom")
     {
-        j -= 5;
+        j -= 4;
     }
 
     return Mid(MapName, i, j - i);
