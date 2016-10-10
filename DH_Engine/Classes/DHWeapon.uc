@@ -495,6 +495,38 @@ simulated function bool WeaponAllowMantle()
     return true;
 }
 
+// Determines if the weapon is thrown on death.
+function bool CanDeadThrow()
+{
+    return bCanThrow;
+}
+
+// Modified to avoid "accessed none" Instigator log errors
+simulated function ClientWeaponThrown()
+{
+    local int i;
+
+    AmbientSound = none;
+
+    if (ROWeaponAttachment(ThirdPersonActor) != none)
+    {
+        ROWeaponAttachment(ThirdPersonActor).AmbientSound = none;
+    }
+
+    if (Level.NetMode == NM_Client && Instigator != none)
+    {
+        Instigator.DeleteInventory(self);
+
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
+        {
+            if (Ammo[i] != none)
+            {
+                Instigator.DeleteInventory(Ammo[i]);
+            }
+        }
+    }
+}
+
 // Added function to this class to handle all related pre-caching - DHRoleInfo.HandlePrecache calls it on every inventory item (assuming it is a DHWeapon)
 static function StaticPrecache(LevelInfo L)
 {
@@ -590,12 +622,6 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
     {
         Timer();
     }
-}
-
-// Determines if the weapon is thrown on death.
-function bool CanDeadThrow()
-{
-    return bCanThrow;
 }
 
 defaultproperties
