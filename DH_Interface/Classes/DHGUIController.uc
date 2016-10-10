@@ -177,12 +177,11 @@ defaultproperties
     DefaultStyleNames(83)="DH_Interface.DHStyle_DeployTabButton"
     DefaultStyleNames(84)="DH_Interface.DHStyle_DeployContinueButton"
     DefaultStyleNames(85)="DH_Interface.DHStyle_SpawnVehicleButton"
-    DefaultStyleNames(86)="DH_Interface.DHStyle_DeployContinueButton"
-    DefaultStyleNames(87)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
-    DefaultStyleNames(89)="DH_Interface.DHStyle_MenuTextButtonWhite"
-    DefaultStyleNames(90)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
-    DefaultStyleNames(91)="DH_Interface.DHStyle_LargeEditBox"
-    DefaultStyleNames(92)="DH_Interface.DHStyle_ServerBrowserGridRed"
+    DefaultStyleNames(86)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
+    DefaultStyleNames(87)="DH_Interface.DHStyle_MenuTextButtonWhite"
+    DefaultStyleNames(88)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
+    DefaultStyleNames(89)="DH_Interface.DHStyle_LargeEditBox"
+    DefaultStyleNames(90)="DH_Interface.DHStyle_ServerBrowserGridRed"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
@@ -195,3 +194,4 @@ defaultproperties
     MainMenuOptions(4)="DH_Interface.DHQuitPage"
     LCDLogo=texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
 }
+[
