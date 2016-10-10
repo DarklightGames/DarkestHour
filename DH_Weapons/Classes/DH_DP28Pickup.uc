@@ -25,4 +25,5 @@ defaultproperties
     PrePivot=(Z=3.000000)
     CollisionRadius=25.000000
     CollisionHeight=3.000000
+    BarrelSteamEmitterOffset=(X=0.0,Y=-25.0,Z=5.0)
 }

@@ -14,6 +14,7 @@ defaultproperties
     TracerFrequency=5
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bBarrelCanOverheat=true
     PA_MovementAnims(0)="stand_jogF_dp27"
     PA_MovementAnims(1)="stand_jogB_dp27"
     PA_MovementAnims(2)="stand_jogL_dp27"
