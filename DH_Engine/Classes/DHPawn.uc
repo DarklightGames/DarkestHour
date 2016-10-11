@@ -210,12 +210,13 @@ simulated function PostNetReceive()
 
         // This is the crucial check that the PRI's CharacterName has been updated from the default
         // Note than in the new DH pawn set up system, which deprecates PlayerRecords & .upl files, the CharacterName will be null but that is handled fine
-        if (PRI != none && PRI.RoleInfo != none && PRI.RoleInfo.static.GetModel() == PRI.CharacterName)
+        // Using a new IsValidCharacterName() function instead of GetModel() as was randomly selecting one role from Models array, which is incorrect for a client validity check
+        if (PRI != none && DHRoleInfo(PRI.RoleInfo) != none && DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
         {
             Setup(class'xUtil'.static.FindPlayerRecord(PRI.CharacterName));
             bInitializedPlayer = true;
         }
-        else if (DrivenVehicle != none && PRI != none && PRI.RoleInfo != none && PRI.RoleInfo.static.GetModel() != PRI.CharacterName)
+        else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
             log("DHPawn.PNRec: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG
     }
 

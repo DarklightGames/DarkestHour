@@ -192,6 +192,34 @@ function class<ROHeadgear> GetHeadgear()
     return none;
 }
 
+// New function to check whether a CharacterName for a player record is valid for this role
+// Note that player records are not used in new DH system, resulting in a null value being passed into this function & we return true if role has no defined Models array
+simulated function bool IsValidCharacterName(string InCharacterName)
+{
+    local int i;
+
+    // If role has no defined Models (e.g. using new DH system) return true if a null CharacterName has been passed
+    if (default.Models.Length == 0)
+    {
+        if (InCharacterName != "") log(name @ "IsValidCharacterName: no Models array so returning FALSE for passed CharacterName" @ InCharacterName @ "!!!"); // TEMPDEBUG
+
+        return InCharacterName == "";
+    }
+
+    // Otherwise check whether passed CharacterName is in Models array
+    for (i = 0; i < default.Models.Length; ++i)
+    {
+        if (default.Models[i] == InCharacterName)
+        {
+            return true;
+        }
+    }
+
+    log(name @ "IsValidCharacterName: returning FALSE for passed CharacterName" @ InCharacterName @ "which is not in the Models array !!!"); // TEMPDEBUG
+
+    return false;
+}
+
 defaultproperties
 {
     RolePawnClass=""
