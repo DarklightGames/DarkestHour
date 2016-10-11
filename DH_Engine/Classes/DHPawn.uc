@@ -141,6 +141,105 @@ simulated function PostBeginPlay()
     LastResupplyTime = Level.TimeSeconds - 1.0;
 }
 
+// Matt 2016: modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
+// Caused because PRI initially has default character model from DarkestHourUser.ini file, which by default is RO's German 'G_Heer1' model, which is obsolete in DH
+// When DHPawn is possessed on server, PRI's correct CharacterName gets set & replicates to net clients, natively triggering PRI's UpdateCharacter() event, setting correct model
+// But network timing issues, especially in a bad network environment, could result in Setup() being called here BEFORE the PRI's CharacterName gets updated to the client
+// Original function included a check for this, but only if player is controlling the DHPawn & it has a PRI, NOT if player is in a vehicle when the DHPawn spawns on client
+simulated function PostNetReceive()
+{
+    local ROPlayerReplicationInfo PRI;
+    local Inventory Inv;
+    local bool      bVerifiedPrimary, bVerifiedSecondary, bVerifiedNades;
+    local int       i;
+
+    // Flag bRecievedInitialLoadout when all of our role's weapons & equipment have been replicated, then switch to best weapon
+    if (!bRecievedInitialLoadout)
+    {
+        for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
+        {
+            if (Weapon(Inv) != none)
+            {
+                if (VerifyPrimary(Inv))
+                {
+                    bVerifiedPrimary = true;
+                }
+
+                if (VerifySecondary(Inv))
+                {
+                    bVerifiedSecondary = true;
+                }
+
+                if (VerifyNades(Inv))
+                {
+                    bVerifiedNades = true;
+                }
+            }
+
+            i++;
+
+            if (i > 500) // prevents possibility of runaway loop
+            {
+                break;
+            }
+        }
+
+        if (bVerifiedPrimary && bVerifiedSecondary && bVerifiedNades && VerifyGivenItems()) // minor re-factor so don't check given items unless other tests passed
+        {
+            bRecievedInitialLoadout = true;
+
+            if (Controller != none)
+            {
+                Controller.SwitchToBestWeapon();
+            }
+        }
+    }
+
+    // Set up the player model when we have received the PRI & its CharacterName property has been updated
+    // Includes fix to verify CharacterName property has been updated when player is in a vehicle (check for DrivenVehicle.PRI instead of just DHPawn's PRI)
+    if (!bInitializedPlayer)
+    {
+        if (DrivenVehicle != none)
+        {
+            PRI = ROPlayerReplicationInfo(DrivenVehicle.PlayerReplicationInfo);
+        }
+        else
+        {
+            PRI = ROPlayerReplicationInfo(PlayerReplicationInfo);
+        }
+
+        // This is the crucial check that the PRI's CharacterName has been updated from the default
+        // Note than in the new DH pawn set up system, which deprecates PlayerRecords & .upl files, the CharacterName will be null but that is handled fine
+        if (PRI != none && PRI.RoleInfo != none && PRI.RoleInfo.static.GetModel() == PRI.CharacterName)
+        {
+            Setup(class'xUtil'.static.FindPlayerRecord(PRI.CharacterName));
+            bInitializedPlayer = true;
+        }
+        else if (DrivenVehicle != none && PRI != none && PRI.RoleInfo != none && PRI.RoleInfo.static.GetModel() != PRI.CharacterName)
+            log("DHPawn.PNRec: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG
+    }
+
+    // Initialise weapon attachment (check if one has been received in our Attached array of attached actors)
+    if (!bInitializedWeaponAttachment && WeaponAttachment == none)
+    {
+        for (i = 0; i < Attached.Length; ++i)
+        {
+            if (ROWeaponAttachment(Attached[i]) != none)
+            {
+                SetWeaponAttachment(ROWeaponAttachment(Attached[i]));
+                bInitializedWeaponAttachment = true;
+                break;
+            }
+        }
+    }
+
+    // Disable PostNetReceive() notifications once we have initialised everything for this pawn
+    if (bInitializedPlayer && bInitializedWeaponAttachment && bRecievedInitialLoadout)
+    {
+        bNetNotify = false;
+    }
+}
+
 simulated function SetBodySkin(optional int Index)
 {
     local int i;
@@ -4994,7 +5093,7 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
         Species = default.Species;
     }
 
-    RagdollOverride = Rec.Ragdoll;
+    RagdollOverride = Rec.Ragdoll; // allows PlayerRecord to specify a different ragdoll skeleton (null in new DH pawn model setup system)
 
     if (Species != none && Species.static.Setup(self, Rec))
     {
