@@ -50,7 +50,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_M44Pickup'
     BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_M44Attachment'
-    ItemName="Mosin–Nagant M44 Carbine"
+    ItemName="Mosin-Nagant M44 Carbine"
     Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_M44'
     HighDetailOverlay=Shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
