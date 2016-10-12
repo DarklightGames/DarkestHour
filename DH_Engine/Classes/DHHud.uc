@@ -4053,7 +4053,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
         else
         {
-            s = default.TimeRemainingText $ class'TimeSpan'.static.ToString(CurrentTime);
+            s = default.TimeRemainingText $ class'TimeSpan'.static.ToString(Max(0, CurrentTime));
         }
 
         X = 8.0 * Scale;
@@ -4149,7 +4149,7 @@ simulated function DrawSpectatingHud(Canvas C)
                     s = default.SpawnNoRoleText;
                 }
 
-                s = Repl(s, "{2}", class'TimeSpan'.static.ToString(Time));
+                s = Repl(s, "{2}", class'TimeSpan'.static.ToString(Max(0, Time)));
             }
             else
             {
