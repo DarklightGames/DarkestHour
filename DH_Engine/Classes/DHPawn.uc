@@ -142,13 +142,9 @@ simulated function PostBeginPlay()
 }
 
 // Matt 2016: modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
-// Caused because PRI initially has default character model from DarkestHourUser.ini file, which by default is RO's German 'G_Heer1' model, which is obsolete in DH
-// When DHPawn is possessed on server, PRI's correct CharacterName gets set & replicates to net clients, natively triggering PRI's UpdateCharacter() event, setting correct model
-// But network timing issues, especially in a bad network environment, could result in Setup() being called here BEFORE the PRI's CharacterName gets updated to the client
-// Original function included a check for this, but only if player is controlling the DHPawn & it has a PRI, NOT if player is in a vehicle when the DHPawn spawns on client
+// The functionality is now in a new SetUpPlayerModel() function to avoid code duplication, so see that function for explanatory comments
 simulated function PostNetReceive()
 {
-    local ROPlayerReplicationInfo PRI;
     local Inventory Inv;
     local bool      bVerifiedPrimary, bVerifiedSecondary, bVerifiedNades;
     local int       i;
@@ -196,28 +192,10 @@ simulated function PostNetReceive()
     }
 
     // Set up the player model when we have received the PRI & its CharacterName property has been updated
-    // Includes fix to verify CharacterName property has been updated when player is in a vehicle (check for DrivenVehicle.PRI instead of just DHPawn's PRI)
+    // Called function includes crucial fix to verify CharacterName property has been updated when player is in a vehicle
     if (!bInitializedPlayer)
     {
-        if (DrivenVehicle != none)
-        {
-            PRI = ROPlayerReplicationInfo(DrivenVehicle.PlayerReplicationInfo);
-        }
-        else
-        {
-            PRI = ROPlayerReplicationInfo(PlayerReplicationInfo);
-        }
-
-        // This is the crucial check that the PRI's CharacterName has been updated from the default
-        // Note than in the new DH pawn set up system, which deprecates PlayerRecords & .upl files, the CharacterName will be null but that is handled fine
-        // Using a new IsValidCharacterName() function instead of GetModel() as was randomly selecting one role from Models array, which is incorrect for a client validity check
-        if (PRI != none && DHRoleInfo(PRI.RoleInfo) != none && DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
-        {
-            Setup(class'xUtil'.static.FindPlayerRecord(PRI.CharacterName));
-            bInitializedPlayer = true;
-        }
-        else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
-            log("DHPawn.PNRec: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG
+        SetUpPlayerModel();
     }
 
     // Initialise weapon attachment (check if one has been received in our Attached array of attached actors)
@@ -5099,6 +5077,59 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
     if (Species != none && Species.static.Setup(self, Rec))
     {
         ResetPhysicsBasedAnim();
+    }
+}
+
+// Modified to fix serious net client bugs introduced in ROPawn override because it can undesirably disable our PostNetReceive (PNR) event
+// This function can be called from the PRI's PNR event & that may happen before other crucial set up gets done in our own PNR
+// This functionality basically does the same thing as the part of PNR that handled player set up (now moved to SetUpPlayerModel() function)
+// In bypassed UT2004 'XPawn' class this function just called its own PNR, which was ok because XPawn's PNR only handled player initialisation, which is what we want
+// But ROPawn extended PNR & someone way back realised that impacts on this function & so copied the XPawn's PNR functionality here, without modification
+// However, they didn't consider either the changes made to player initialisation in ROPawn's PNR or the impact of setting bNetNotify=false here
+// That created 2 major potential problems:
+// (1) Before calling Setup() the XPawn functionality didn't have a crucial check added in ROPawn that PRI's CharacterName had been updated & is valid for player's role
+// That could cause the 'enemy uniform bug', as described in comments in SetUpPlayerModel()
+// (2) It disabled our PNR (bNetNotify=false) even though in ROPawn there are 2 other separate initialisation elements in PNR, which may still be pending
+// Those are the bRecievedInitialLoadout & bInitializedWeaponAttachment sections, which would cause major bugs if not executed
+// In this override we just do exactly what PNR does in its player initialisation section
+simulated function NotifyTeamChanged()
+{
+    SetUpPlayerModel();
+}
+
+// New function for net client to handle setting up the player model when we have received the PRI & its CharacterName property has been updated
+// A separate function just to save code duplication in PostNetReceive() & NotifyTeamChanged()
+// Original functionality was in ROPawn.PostNetReceive(), but now with crucial fixes for 'uniform bug' where player on net client would sometimes spawn with wrong player model
+// Bug was caused because PRI initially has default character model from DarkestHourUser.ini file, which by default is RO's German 'G_Heer1' model, which is obsolete in DH
+// When DHPawn is possessed on server, PRI's correct CharacterName gets set & replicates to net clients, natively triggering PRI's UpdateCharacter() event, setting correct model
+// But network timing issues, especially in a bad network environment, could result in Setup() being called here BEFORE the PRI's CharacterName gets updated to the client
+// Original function included a check for this, but only if player is controlling the DHPawn & it has a PRI, NOT if player is in a vehicle when the DHPawn spawns on client
+simulated function SetUpPlayerModel()
+{
+    local ROPlayerReplicationInfo PRI;
+
+    if (!bInitializedPlayer)
+    {
+        // Get PRI - but DHPawn may have been replicated to us with player in a vehicle, in which case we need to get the PRI from our controlled DrivenVehicle actor
+        if (DrivenVehicle != none)
+        {
+            PRI = ROPlayerReplicationInfo(DrivenVehicle.PlayerReplicationInfo);
+        }
+        else
+        {
+            PRI = ROPlayerReplicationInfo(PlayerReplicationInfo);
+        }
+
+        // Crucial check that PRI's CharacterName has been updated from default value, but now also checked for a player in a vehicle, which original functionality did not
+        // Note than in the new DH pawn set up system, which deprecates PlayerRecords & .upl files, the CharacterName will be null but that is handled fine
+        // Using new IsValidCharacterName() function instead of GetModel() as was randomly selecting one role from Models array, which is incorrect for a client validity check
+        if (PRI != none && DHRoleInfo(PRI.RoleInfo) != none && DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
+        {
+            Setup(class'xUtil'.static.FindPlayerRecord(PRI.CharacterName));
+            bInitializedPlayer = true;
+        }
+        else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
+            log(PRI.PlayerName @ "SetUpPlayerModel: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG
     }
 }
 
