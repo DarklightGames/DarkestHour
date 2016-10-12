@@ -94,6 +94,41 @@ function DrawDamageIndicators(Canvas C)
 {
 }
 
+function DrawDebugInformation(Canvas C)
+{
+    local DHPlayer PC;
+    local string S;
+    local float X, Y, StrX, StrY;
+
+    PC = DHPlayer(PlayerOwner);
+
+    S = class'DHLib'.static.GetMapName(Level);
+
+    if (PC != none && PC.Pawn != none)
+    {
+        S @= "[" $ int(PC.Pawn.Location.X) $ "," @ int(PC.Pawn.Location.Y) $ "," $ int(PC.Pawn.Location.Z) $ "]";
+    }
+
+    S @= class'DarkestHourGame'.default.Version.ToString();
+
+    C.Style = ERenderStyle.STY_Alpha;
+    C.Font = C.TinyFont;
+
+    C.TextSize(S, StrX, StrY);
+    Y = C.ClipY - StrY;
+    X = C.ClipX - StrX;
+
+    C.DrawColor = BlackColor;
+
+    C.SetPos(X + 1, Y + 1);
+    C.DrawTextClipped(S);
+
+    C.DrawColor = WhiteColor;
+
+    C.SetPos(X, Y);
+    C.DrawTextClipped(S);
+}
+
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(material'DH_GUI_Tex.GUI.overheadmap_Icons');
@@ -852,6 +887,8 @@ simulated function DrawHudPassC(Canvas C)
             DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
             DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0); // red line to show camera rotation
         }
+
+        DrawDebugInformation(C);
     }
 }
 
