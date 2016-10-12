@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerschreckMeleeFire extends DHMeleeFire;
+class DH_PIATMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-    DamageType=class'DH_ATWeapons.DH_PanzerschreckBashDamType'
+    DamageType=class'DH_Weapons.DH_PIATBashDamType'
     TraceRange=75.0
     BashBackAnim="bash_pullback"
     BashHoldAnim="bash_hold"

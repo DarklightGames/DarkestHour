@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerschreckDamType extends DHAntiTankProjectileDamageType
+class DH_PIATBashDamType extends DHWeaponBashDamageType
     abstract;
 
 defaultproperties
 {
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.schreckkill'
-    WeaponClass=class'DH_ATWeapons.DH_PanzerschreckWeapon'
+    WeaponClass=class'DH_Weapons.DH_PIATWeapon'
 }

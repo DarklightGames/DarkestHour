@@ -9,9 +9,9 @@ defaultproperties
 {
     ExhaustLength=320.0
     ExhaustDamage=180.0
-    ExhaustDamageType=class'DH_ATWeapons.DH_BazookaExhaustDamType'
+    ExhaustDamageType=class'DH_Weapons.DH_BazookaExhaustDamType'
     MuzzleBone="warhead1"
-    AmmoClass=class'DH_ATWeapons.DH_BazookaAmmo'
-    ProjectileClass=class'DH_ATWeapons.DH_BazookaRocket'
+    AmmoClass=class'DH_Weapons.DH_BazookaAmmo'
+    ProjectileClass=class'DH_Weapons.DH_BazookaRocket'
     Spread=400.0
 }

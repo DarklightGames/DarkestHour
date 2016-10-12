@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BazookaImpactDamType extends DHRocketImpactDamage
+class DH_PanzerFaustDamType extends DHAntiTankProjectileDamageType
     abstract;
 
 defaultproperties
 {
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.zookakill'
-    WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
+    HUDIcon=texture'InterfaceArt2_tex.deathicons.faustkill'
+    WeaponClass=class'DH_Weapons.DH_PanzerFaustWeapon'
 }

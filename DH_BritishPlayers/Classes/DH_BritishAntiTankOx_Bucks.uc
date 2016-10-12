@@ -17,7 +17,7 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    GivenItems(0)="DH_ATWeapons.DH_PIATWeapon"
+    GivenItems(0)="DH_Weapons.DH_PIATWeapon"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmet2'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'

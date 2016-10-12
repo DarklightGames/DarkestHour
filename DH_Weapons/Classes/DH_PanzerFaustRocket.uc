@@ -19,11 +19,11 @@ defaultproperties
     DHPenetrationTable(6)=21.5
     bIsAlliedShell=false
     bHasTracer=false
-    ShellImpactDamage=class'DH_ATWeapons.DH_PanzerFaustImpactDamType'
+    ShellImpactDamage=class'DH_Weapons.DH_PanzerFaustImpactDamType'
     ImpactDamage=650
     BallisticCoefficient=0.075
     Speed=2716.0
     MaxSpeed=2716.0
-    MyDamageType=class'DH_ATWeapons.DH_PanzerFaustDamType'
+    MyDamageType=class'DH_Weapons.DH_PanzerFaustDamType'
     StaticMesh=StaticMesh'DH_Military_Axis.Weapons.Panzerfaust_warhead'
 }

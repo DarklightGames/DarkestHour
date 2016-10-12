@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BazookaBashDamType extends DHWeaponBashDamageType
-    abstract;
+class DH_BazookaPickup extends DHRocketWeaponPickup
+    notplaceable;
 
 defaultproperties
 {
-    WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
+    InventoryType=class'DH_Weapons.DH_BazookaWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Bazooka'
 }

@@ -2,12 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2016
 //==============================================================================
+// This class has been deprecated and will be deleted in v8.
+//==============================================================================
 
-class DH_PlaceablePanzerFaustPickup extends DHPlaceableWeaponPickup;
-
-defaultproperties
-{
-    WeaponType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
-    InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
-}
+class DH_PlaceablePanzerFaustPickup extends DH_Weapons.DH_PlaceablePanzerFaustPickup;

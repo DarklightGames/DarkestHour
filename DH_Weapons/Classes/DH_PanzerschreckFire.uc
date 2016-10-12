@@ -9,8 +9,8 @@ defaultproperties
 {
     ExhaustLength=280.0
     ExhaustDamage=210.0
-    ExhaustDamageType=class'DH_ATWeapons.DH_PanzerschreckExhaustDamType'
-    AmmoClass=class'DH_ATWeapons.DH_PanzerschreckAmmo'
-    ProjectileClass=class'DH_ATWeapons.DH_PanzerschreckRocket'
+    ExhaustDamageType=class'DH_Weapons.DH_PanzerschreckExhaustDamType'
+    AmmoClass=class'DH_Weapons.DH_PanzerschreckAmmo'
+    ProjectileClass=class'DH_Weapons.DH_PanzerschreckRocket'
 }
 

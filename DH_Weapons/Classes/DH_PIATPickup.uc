@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BazookaDamType extends DHAntiTankProjectileDamageType
-    abstract;
+class DH_PIATPickup extends DHRocketWeaponPickup
+    notplaceable;
 
 defaultproperties
 {
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.zookakill'
-    WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
+    InventoryType=class'DH_Weapons.DH_PIATWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
+    DrawScale=1.23
 }

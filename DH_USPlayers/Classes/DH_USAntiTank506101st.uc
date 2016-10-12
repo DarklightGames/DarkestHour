@@ -17,7 +17,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    GivenItems(0)="DH_ATWeapons.DH_BazookaWeapon"
+    GivenItems(0)="DH_Weapons.DH_BazookaWeapon"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
     Limit=1

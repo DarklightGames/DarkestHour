@@ -16,11 +16,11 @@ defaultproperties
     DHPenetrationTable(5)=9.1
     DHPenetrationTable(6)=9.1
     bHasTracer=false
-    ShellImpactDamage=class'DH_ATWeapons.DH_PIATImpactDamType'
+    ShellImpactDamage=class'DH_Weapons.DH_PIATImpactDamType'
     ImpactDamage=650
     DamageRadius=300
     Speed=4526.0
     MaxSpeed=4526.0
-    MyDamageType=class'DH_ATWeapons.DH_PIATDamType'
+    MyDamageType=class'DH_Weapons.DH_PIATDamType'
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.PIATBomb_1st'
 }

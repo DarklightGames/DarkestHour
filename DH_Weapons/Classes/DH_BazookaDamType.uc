@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerschreckPickup extends DHRocketWeaponPickup
-    notplaceable;
+class DH_BazookaDamType extends DHAntiTankProjectileDamageType
+    abstract;
 
 defaultproperties
 {
-    InventoryType=class'DH_ATWeapons.DH_PanzerschreckWeapon'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Panzerschreck'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.zookakill'
+    WeaponClass=class'DH_Weapons.DH_BazookaWeapon'
 }

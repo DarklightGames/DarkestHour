@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BazookaExhaustDamType extends DHRocketExhaustDamageType
+class DH_PanzerschreckImpactDamType extends DHRocketImpactDamage
     abstract;
 
 defaultproperties
 {
-    WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.schreckkill'
+    WeaponClass=class'DH_Weapons.DH_PanzerschreckWeapon'
 }

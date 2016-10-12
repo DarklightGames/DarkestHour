@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PIATBashDamType extends DHWeaponBashDamageType
+class DH_PanzerfaustExhaustDamType extends DHRocketExhaustDamageType
     abstract;
 
 defaultproperties
 {
-    WeaponClass=class'DH_ATWeapons.DH_PIATWeapon'
+    WeaponClass=class'DH_Weapons.DH_PanzerFaustWeapon'
 }

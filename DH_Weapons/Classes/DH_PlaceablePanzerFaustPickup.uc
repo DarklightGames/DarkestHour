@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerFaustImpactDamType extends DHRocketImpactDamage
-    abstract;
+class DH_PlaceablePanzerFaustPickup extends DHPlaceableWeaponPickup;
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt2_tex.deathicons.faustkill'
-    WeaponClass=class'DH_ATWeapons.DH_PanzerFaustWeapon'
+    WeaponType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    InventoryType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
 }

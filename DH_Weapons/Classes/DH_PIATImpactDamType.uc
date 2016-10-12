@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerFaustDamType extends DHAntiTankProjectileDamageType
+class DH_PIATImpactDamType extends DHRocketImpactDamage
     abstract;
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt2_tex.deathicons.faustkill'
-    WeaponClass=class'DH_ATWeapons.DH_PanzerFaustWeapon'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.piatkill'
+    WeaponClass=class'DH_Weapons.DH_PIATWeapon'
 }

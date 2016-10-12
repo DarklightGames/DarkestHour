@@ -17,7 +17,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
-    GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetNet2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'

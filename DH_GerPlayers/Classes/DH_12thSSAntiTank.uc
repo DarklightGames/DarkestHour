@@ -16,7 +16,7 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
-    GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"
+    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
     Limit=1

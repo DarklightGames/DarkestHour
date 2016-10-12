@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PanzerFaustPickup extends DHOneShotWeaponPickup
+class DH_PanzerschreckPickup extends DHRocketWeaponPickup
     notplaceable;
 
 defaultproperties
 {
-    InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
-    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.Panzerfaust'
-    PickupSound=sound'Inf_Weapons_Foley.WeaponPickup'
-    CollisionRadius=25.0
+    InventoryType=class'DH_Weapons.DH_PanzerschreckWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Panzerschreck'
 }

@@ -8,5 +8,5 @@ class DH_PanzerschreckExhaustDamType extends DHRocketExhaustDamageType
 
 defaultproperties
 {
-    WeaponClass=class'DH_ATWeapons.DH_PanzerschreckWeapon'
+    WeaponClass=class'DH_Weapons.DH_PanzerschreckWeapon'
 }
