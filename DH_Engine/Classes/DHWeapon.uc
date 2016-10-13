@@ -566,9 +566,9 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheStaticMesh(default.FireModeClass[0].default.ProjectileClass.default.StaticMesh); // projectile SM
     }
 
-    if (default.StaticMesh != none)
+    if (default.PickupClass != none && default.PickupClass.default.StaticMesh != none)
     {
-        L.AddPrecacheStaticMesh(default.StaticMesh); // pickup SM
+        L.AddPrecacheStaticMesh(default.PickupClass.default.StaticMesh); // pickup SM
     }
 }
 
