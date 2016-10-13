@@ -3050,7 +3050,7 @@ exec function SoundPlay(string SoundName, optional float Volume)
         if (SoundToPlay != none)
         {
             ClientPlaySound(SoundToPlay, Volume > 0.0, Volume);
-            Log("Playing sound" @ SoundToPlay @ " Volume =" @ Volume);
+            Log("Playing sound" @ SoundToPlay @ " Volume =" @ Volume @ " Duration =" @ GetSoundDuration(SoundToPlay));
         }
     }
 }
