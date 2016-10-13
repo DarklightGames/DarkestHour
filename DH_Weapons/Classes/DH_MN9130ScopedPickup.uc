@@ -19,7 +19,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(material'Weapons1st_tex.Bullets.mn_stripper_s');
     L.AddPrecacheMaterial(material'Weapons1st_tex.Bayonet.MNBayonet_s');
     L.AddPrecacheMaterial(material'InterfaceArt_tex.HUD.nagant_ammo');
-    L.AddPrecacheMaterial(material'Weapon_overlays.Scopes.Rus_sniperscope_overlay');
 }
 
 defaultproperties

@@ -18,7 +18,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(material'Weapons1st_tex.Rifles.svt40_sniper_s');
     L.AddPrecacheMaterial(material'Weapons1st_tex.SniperScopes.svt_scope_s');
     L.AddPrecacheMaterial(material'InterfaceArt_tex.HUD.svt40_ammo');
-    L.AddPrecacheMaterial(material'Weapon_overlays.Scopes.Rus_sniperscope_overlay');
 }
 
 defaultproperties

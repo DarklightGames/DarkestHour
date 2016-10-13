@@ -6,7 +6,6 @@
 class DH_SpringfieldScopedWeapon extends DHBoltSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Springfield_1st.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_Scopeshaders.utx
 
 defaultproperties
 {

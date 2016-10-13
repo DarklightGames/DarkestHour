@@ -109,5 +109,5 @@ defaultproperties
     AIRating=0.4
     CurrentRating=0.4
     bSniping=true
-    TexturedScopeTexture=texture'Weapon_overlays.Scopes.Rus_sniperscope_overlay'
+    TexturedScopeTexture=texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
 }
