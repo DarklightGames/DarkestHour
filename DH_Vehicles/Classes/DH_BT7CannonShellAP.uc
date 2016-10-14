@@ -7,30 +7,38 @@ class DH_BT7CannonShellAP extends DHCannonShellAP;
 
 defaultproperties
 {
-    Tag="BR-240" //APHE
-    BallisticCoefficient=1.12
-    Speed=45806 // 759 M/S, (60.35 * 759), using BR-240 SP ( Armor Piercing Ballistic Cap )
-    MaxSpeed=45806
-    SpeedFudgeScale=0.50
-    bDebugBallistics=false
-    bMechanicalAiming=True
     ShellDiameter=4.5
+    BallisticCoefficient=1.12
+    Speed=45806 // 759 m/s
+    MaxSpeed=45806
+    ImpactDamage=350
     ShellImpactDamage=class'DH_Vehicles.DH_BT7CannonShellDamageAP'
-    ImpactDamage=350.0
+    Tag="BR-240"
+    bMechanicalAiming=true
+    StaticMesh=StaticMesh'DH_Tracers.shells.Soviet_shell'
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
 
-    DHPenetrationTable(0)=5.5  //100
-    DHPenetrationTable(1)=4.7  //250
-    DHPenetrationTable(2)=3.9  //500
-    DHPenetrationTable(3)=3.3  //750
-    DHPenetrationTable(4)=2.7  //1000
-    DHPenetrationTable(5)=2.2  //1250
-    DHPenetrationTable(6)=1.9  //1500
-    DHPenetrationTable(7)=1.5  //1750
-    DHPenetrationTable(8)=1.3  //2000
-    DHPenetrationTable(9)=1.0  //2500
-    DHPenetrationTable(10)=0.7 //3000
+    DHPenetrationTable(0)=5.5
+    DHPenetrationTable(1)=4.7
+    DHPenetrationTable(2)=3.9
+    DHPenetrationTable(3)=3.3
+    DHPenetrationTable(4)=2.7
+    DHPenetrationTable(5)=2.2
+    DHPenetrationTable(6)=1.9
+    DHPenetrationTable(7)=1.5
+    DHPenetrationTable(8)=1.3
+    DHPenetrationTable(9)=1.0
+    DHPenetrationTable(10)=0.7
 
-    //adjusts the range bar // disabled anyway
+    MechanicalRanges(0)=(Range=0,RangeValue=0)
+    MechanicalRanges(1)=(Range=250,RangeValue=0)
+    MechanicalRanges(2)=(Range=500,RangeValue=0)
+    MechanicalRanges(3)=(Range=750,RangeValue=0)
+    MechanicalRanges(4)=(Range=1000,RangeValue=0)
+    MechanicalRanges(5)=(Range=1500,RangeValue=0)
+    MechanicalRanges(6)=(Range=2000,RangeValue=0)
+    MechanicalRanges(7)=(Range=2500,RangeValue=0)
+
     OpticalRanges(0)=(Range=0,RangeValue=0.48)
     OpticalRanges(1)=(Range=250,RangeValue=0.496)
     OpticalRanges(2)=(Range=500,RangeValue=0.512)
@@ -39,14 +47,4 @@ defaultproperties
     OpticalRanges(5)=(Range=1500,RangeValue=0.5885)
     OpticalRanges(6)=(Range=2000,RangeValue=0.6441)
     OpticalRanges(7)=(Range=2500,RangeValue=0.7053)
-
-    //adjusts the strike of the round (changed to normal superelevation angles)
-    MechanicalRanges(0)=(Range=0,RangeValue=0)
-    MechanicalRanges(1)=(Range=250,RangeValue=0)
-    MechanicalRanges(2)=(Range=500,RangeValue=0)
-    MechanicalRanges(3)=(Range=750,RangeValue=0)
-    MechanicalRanges(4)=(Range=1000,RangeValue=0)
-    MechanicalRanges(5)=(Range=1500,RangeValue=0) //
-    MechanicalRanges(6)=(Range=2000,RangeValue=0) //
-    MechanicalRanges(7)=(Range=2500,RangeValue=0) //
 }
