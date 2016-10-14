@@ -7,21 +7,14 @@ class DH_T3476Cannon extends DHVehicleCannon;
 
 defaultproperties
 {
-    WeaponFireAttachmentBone=gun
-    VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=com_player,PointOffset=(X=8.0,Y=-29.0,Z=17.0))
-    VehHitpoints(1)=(PointRadius=15.0,PointHeight=0.0,PointScale=1.0,PointBone=com_player,PointOffset=(X=6.0,Y=-23.0,Z=0.0))
-    AddedPitch=220
-    ProjectileDescriptions(0)="APBC"
-    ProjectileDescriptions(1)="HE"
-
     // Turret mesh
-    Mesh=Mesh'allies_t3476_anm.t3476_turret_ext'
-    skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
-    skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
-    //BB CollisionStaticMesh=
-    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.t3476_int_s'
+    Mesh=SkeletalMesh'allies_t3476_anm.t3476_turret_ext'
+    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
+    Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
+    HighDetailOverlay=material'allies_vehicles_tex.int_vehicles.t3476_int_s'
+//  CollisionStaticMesh=StaticMesh // TODO: make one
 
     // Turret armor
     FrontArmorFactor=4.0
@@ -40,14 +33,14 @@ defaultproperties
     // Turret movement
     ManualRotationsPerSecond=0.029
     PoweredRotationsPerSecond=0.07
-    //BB Theel: I don't think this is used RotationsPerSecond=0.07 //14 seconds to rotate 360
     CustomPitchUpLimit=4660
     CustomPitchDownLimit=64535
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShellEarly'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellEarly'
+    ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
+    ProjectileDescriptions(0)="APBC"
     InitialPrimaryAmmo=27
     InitialSecondaryAmmo=50
     SecondarySpread=0.002
@@ -58,11 +51,13 @@ defaultproperties
     NumMGMags=15
     AltFireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
-    TracerFrequency=7
-    AltFireOffset=(X=20.0,Y=24.0,Z=1.0)
+    TracerFrequency=5
 
     // Weapon fire
+    WeaponFireAttachmentBone="Gun"
     WeaponFireOffset=200.0
+    AddedPitch=360
+    AltFireOffset=(X=13.0,Y=12.0,Z=2.0)
 
     // Sounds
     CannonFireSound(0)=sound'Vehicle_Weapons.T34_76.76mm_fire01'
@@ -71,13 +66,13 @@ defaultproperties
     AltFireSoundClass=sound'Inf_Weapons.dt_fire_loop'
     AltFireEndSound=sound'Inf_Weapons.dt.dt_fire_end'
     AltFireSoundScaling=3.0
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
+    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_01')
+    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_02')
+    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_03')
+    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_04')
+    AltReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
 
     // Cannon range settings
-    RangeSettings(0)=0
     RangeSettings(1)=200
     RangeSettings(2)=400
     RangeSettings(3)=600

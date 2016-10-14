@@ -7,28 +7,17 @@ class DH_T34MountedMGPawn extends DHVehicleMGPawn;
 
 defaultproperties
 {
-    bDrawDriverinTP=false
-    bDrawMeshInFP=false
-    bStationary=true
-    DrawType=DT_None
-
     GunClass=class'DH_Vehicles.DH_T34MountedMG'
     GunsightOverlay=texture'Vehicle_Optic.MG_sight'
-    HUDOverlayClass=class'ROVehicles.ROVehDTOverlay'
-    HUDOverlayOffset=(X=-40,Y=0,Z=0)
-    HUDOverlayFOV=45
     OverlayCenterSize=0.40
-    WeaponFov=72
-    FPCamPos=(X=0,Y=0,Z=0)
-    //PitchUpLimit=3000
-    //PitchDownLimit=64000
-    CameraBone=T34_mg
-    FPCamViewOffset=(X=5,Y=0,Z=10)
-    bFPNoZFromCameraPitch=False
-    TPCamLookat=(X=-25,Y=0,Z=0)
-    TPCamWorldOffset=(X=0,Y=0,Z=120)
-    TPCamDistance=300
-    DrivePos=(X=0.0,Y=0.0,Z=130.0)
-    DriverDamageMult=0.0
+    WeaponFOV=72.0
+    CameraBone="T34_mg"
+    FPCamPos=(X=5.0,Y=0.0,Z=10.0)
+    bDrawMeshInFP=false // as uses HUD overlay in 1st person
+    HUDOverlayClass=class'ROVehicles.ROVehDTOverlay'
+    HUDOverlayOffset=(X=-40.0,Y=0.0,Z=0.0)
+    HUDOverlayFOV=45.0
+	PitchUpLimit=3000
+   	PitchDownLimit=64000
+//  VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.DP27_ammo_reload' // TODO: make this (may need to adjust HUDProportions in ReloadStages - see BrenCarrier MG)
 }
-

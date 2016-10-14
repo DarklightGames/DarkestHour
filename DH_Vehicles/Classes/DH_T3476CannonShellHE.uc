@@ -7,33 +7,31 @@ class DH_T3476CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Tag="OF-350"
+    // Have matched several damage & similar properties to Sherman 76mm HE shell, as the RO values were at odds with comparable DH shells
     ShellDiameter=7.62
-    PenetrationMag=1000.000000
-    //BB ShellImpactDamage=Class'DH_Vehicles.DH_T3476CannonShellDamageAP'
-    ImpactDamage=475
-    BallisticCoefficient=2.5
-    Speed=39832 //660 M/S
+    BallisticCoefficient=1.55
+    Speed=39832 // 660 m/s
     MaxSpeed=39832
-    Damage=415.000000
-    DamageRadius=1550.000000
-    //BB MyDamageType=Class'DH_Vehicles.DH_T3476CannonShellDamageHE'
+    Damage=400.0 // 350 in RO
+    DamageRadius=1140.0 // 750 in RO
+    ImpactDamage=450 // 200 in RO
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    PenetrationMag=780.0 // 1000 in RO
+    Tag="OF-350"
+    bOpticalAiming=true
+    bMechanicalAiming=true
 
-    bDebugBallistics=False
-    bOpticalAiming=True
-    bMechanicalAiming=True
-
-    DHPenetrationTable(0)=3.300000
-    DHPenetrationTable(1)=3.100000
-    DHPenetrationTable(2)=2.800000
-    DHPenetrationTable(3)=2.400000
-    DHPenetrationTable(4)=2.000000
-    DHPenetrationTable(5)=1.700000
-    DHPenetrationTable(6)=1.300000
-    DHPenetrationTable(7)=1.100000
-    DHPenetrationTable(8)=0.900000
-    DHPenetrationTable(9)=0.500000
-    DHPenetrationTable(10)=0.300000
+    DHPenetrationTable(0)=3.3
+    DHPenetrationTable(1)=3.1
+    DHPenetrationTable(2)=2.8
+    DHPenetrationTable(3)=2.4
+    DHPenetrationTable(4)=2.0
+    DHPenetrationTable(5)=1.7
+    DHPenetrationTable(6)=1.3
+    DHPenetrationTable(7)=1.1
+    DHPenetrationTable(8)=0.9
+    DHPenetrationTable(9)=0.5
+    DHPenetrationTable(10)=0.3
 
     OpticalRanges(0)=(Range=0,RangeValue=0.410)
     OpticalRanges(1)=(Range=200,RangeValue=0.418)
@@ -63,28 +61,27 @@ defaultproperties
     OpticalRanges(25)=(Range=5000,RangeValue=0.813)
 
     MechanicalRanges(0)=(Range=0,RangeValue=0)
-    MechanicalRanges(1)=(Range=200,RangeValue=0)
-    MechanicalRanges(2)=(Range=400,RangeValue=0)
-    MechanicalRanges(3)=(Range=600,RangeValue=0)
-    MechanicalRanges(4)=(Range=800,RangeValue=0)
-    MechanicalRanges(5)=(Range=1000,RangeValue=0)
-    MechanicalRanges(6)=(Range=1200,RangeValue=0)
-    MechanicalRanges(7)=(Range=1400,RangeValue=0)
-    MechanicalRanges(8)=(Range=1600,RangeValue=0)
-    MechanicalRanges(9)=(Range=1800,RangeValue=0)
-    MechanicalRanges(10)=(Range=2000,RangeValue=0)
-    MechanicalRanges(11)=(Range=2200,RangeValue=0)
-    MechanicalRanges(12)=(Range=2400,RangeValue=0)
-    MechanicalRanges(13)=(Range=2600,RangeValue=0)
-    MechanicalRanges(14)=(Range=2800,RangeValue=0)
-    MechanicalRanges(15)=(Range=3000,RangeValue=0)
-    MechanicalRanges(16)=(Range=3200,RangeValue=0)
-    MechanicalRanges(17)=(Range=3400,RangeValue=0)
-    MechanicalRanges(18)=(Range=3600,RangeValue=0)
-    MechanicalRanges(19)=(Range=3800,RangeValue=0)
-    //Range below is an estimate because it hit the ceiling on the test map
-    MechanicalRanges(20)=(Range=4000,RangeValue=0)
-    // TODO - dial in the rest of these ranges
+    MechanicalRanges(1)=(Range=200,RangeValue=-15)
+    MechanicalRanges(2)=(Range=400,RangeValue=-30)
+    MechanicalRanges(3)=(Range=600,RangeValue=-40)
+    MechanicalRanges(4)=(Range=800,RangeValue=-65)
+    MechanicalRanges(5)=(Range=1000,RangeValue=-70)
+    MechanicalRanges(6)=(Range=1200,RangeValue=-82)
+    MechanicalRanges(7)=(Range=1400,RangeValue=-92)
+    MechanicalRanges(8)=(Range=1600,RangeValue=-113)
+    MechanicalRanges(9)=(Range=1800,RangeValue=-138)
+    MechanicalRanges(10)=(Range=2000,RangeValue=-180)
+    MechanicalRanges(11)=(Range=2200,RangeValue=-235)
+    MechanicalRanges(12)=(Range=2400,RangeValue=-283)
+    MechanicalRanges(13)=(Range=2600,RangeValue=-335)
+    MechanicalRanges(14)=(Range=2800,RangeValue=-397)
+    MechanicalRanges(15)=(Range=3000,RangeValue=-458)
+    MechanicalRanges(16)=(Range=3200,RangeValue=-518)
+    MechanicalRanges(17)=(Range=3400,RangeValue=-578)
+    MechanicalRanges(18)=(Range=3600,RangeValue=-642)
+    MechanicalRanges(19)=(Range=3800,RangeValue=-704)
+    MechanicalRanges(20)=(Range=4000,RangeValue=-769) // an estimate because it hit the ceiling on the test map
+    // RO TODO - dial in the rest of these ranges
     MechanicalRanges(21)=(Range=4200,RangeValue=0)
     MechanicalRanges(22)=(Range=4400,RangeValue=0)
     MechanicalRanges(23)=(Range=4600,RangeValue=0)
