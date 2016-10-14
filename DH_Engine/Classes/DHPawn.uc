@@ -5111,7 +5111,7 @@ simulated function SetUpPlayerModel()
     if (!bInitializedPlayer)
     {
         // Get PRI - but DHPawn may have been replicated to us with player in a vehicle, in which case we need to get the PRI from our controlled DrivenVehicle actor
-        if (DrivenVehicle != none)
+        if (DrivenVehicle != none && DrivenVehicle.PlayerReplicationInfo != none)
         {
             PRI = ROPlayerReplicationInfo(DrivenVehicle.PlayerReplicationInfo);
         }

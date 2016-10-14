@@ -50,7 +50,7 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
     // Fix to get PRI if player is in a vehicle when his DHPawn spawns on a net client (the vehicle, not the DHPawn, now holds the PRI reference)
     // Get PRI - but DHPawn may have been replicated to us with player in a vehicle, in which case we need to get the PRI from our controlled DrivenVehicle actor
-    if (P.DrivenVehicle != none)
+    if (P.DrivenVehicle != none && P.DrivenVehicle.PlayerReplicationInfo != none)
     {
         PRI = ROPlayerReplicationInfo(P.DrivenVehicle.PlayerReplicationInfo);
     }
