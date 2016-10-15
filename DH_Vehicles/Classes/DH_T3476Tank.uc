@@ -114,9 +114,9 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-175,Y=-30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
 
     // HUD
-    VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.T3476_body'
-    VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.T3476_turret_rot'
-    VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.T3476_turret_look'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_look'
     VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosY=0.51
