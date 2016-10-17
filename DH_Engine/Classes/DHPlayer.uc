@@ -4188,7 +4188,7 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
 defaultproperties
 {
     // Sway values
-    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.3),(InVal=12.0,OutVal=0.25),(InVal=45.0,OutVal=0.4),(InVal=10000000000.0,OutVal=0.5)))
+    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.35),(InVal=12.0,OutVal=0.3),(InVal=45.0,OutVal=0.45),(InVal=10000000000.0,OutVal=0.55)))
     BobCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=3.0,OutVal=0.2),(InVal=12.0,OutVal=0.15),(InVal=45.0,OutVal=0.2),(InVal=10000000000.0,OutVal=0.25)))
     DHSwayElasticFactor=8.0;
     DHSwayDampingFactor=0.51;
