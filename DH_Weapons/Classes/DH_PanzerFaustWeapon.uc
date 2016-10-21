@@ -111,7 +111,7 @@ defaultproperties
 {
     ItemName="Panzerfaust 60"
     FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
-    FireModeClass(1)=class'ROInventory.PanzerFaustMeleeFire'
+    FireModeClass(1)=class'DH_Weapons.DH_PanzerFaustMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
     PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
 
