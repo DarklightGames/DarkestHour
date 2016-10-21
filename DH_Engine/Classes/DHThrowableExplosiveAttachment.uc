@@ -6,6 +6,7 @@
 class DHThrowableExplosiveAttachment extends DHWeaponAttachment
     abstract;
 
+// Modified to remove stuff related to bullets
 simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer && ROPawn(Instigator) != none)

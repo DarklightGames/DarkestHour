@@ -19,11 +19,7 @@ simulated function PostBeginPlay()
 // Modified because the 3rd person effects are handled differently for rocket weapons
 simulated event ThirdPersonEffects()
 {
-    local ROPawn P;
-
-    P = ROPawn(Instigator);
-
-    if (P == none || Level.NetMode == NM_DedicatedServer)
+    if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
     {
         return;
     }
@@ -35,7 +31,7 @@ simulated event ThirdPersonEffects()
 
     if (FlashCount > 0 && (FiringMode == 0 || bAltFireFlash))
     {
-        if (Level.TimeSeconds - LastRenderTime > 0.2 && PlayerController(Instigator.Controller) == none)
+        if ((Level.TimeSeconds - LastRenderTime) > 0.2 && PlayerController(Instigator.Controller) == none)
         {
             return;
         }
@@ -57,15 +53,15 @@ simulated event ThirdPersonEffects()
 
     if (FlashCount == 0)
     {
-        P.StopFiring();
+        ROPawn(Instigator).StopFiring();
     }
     else if (FiringMode == 0)
     {
-        P.StartFiring(false, bRapidFire);
+        ROPawn(Instigator).StartFiring(false, bRapidFire);
     }
     else
     {
-        P.StartFiring(true, bAltRapidFire);
+        ROPawn(Instigator).StartFiring(true, bAltRapidFire);
     }
 }
 
