@@ -5,20 +5,20 @@
 
 class DH_SVT40MeleeFire extends DHMeleeFire;
 
+// Modified to remove tween time for the post stab anim as it causes a visual glitch on this weapon - hacky, but works for now
 function PlayFireEnd()
 {
-    if (Weapon.bBayonetMounted)
+    if (Weapon != none)
     {
-        // No tween time for the post stab anim, as it causes a visual glitch on this weapon - hacky, but works for now
-        Weapon.PlayAnim(BayoFinishAnim, FireEndAnimRate, 0.0);
-    }
-    else
-    {
-        if (Weapon.AmmoAmount(0) < 1 && Weapon.HasAnim(BashFinishEmptyAnim))
+        if (Weapon.bBayonetMounted && Weapon.HasAnim(BayoFinishAnim))
+        {
+            Weapon.PlayAnim(BayoFinishAnim, FireEndAnimRate, 0.0); // zero here instead of TweenTime
+        }
+        else if (Weapon.AmmoAmount(0) < 1 && Weapon.HasAnim(BashFinishEmptyAnim))
         {
             Weapon.PlayAnim(BashFinishEmptyAnim, FireEndAnimRate, TweenTime);
         }
-        else
+        else if (Weapon.HasAnim(BashFinishAnim))
         {
             Weapon.PlayAnim(BashFinishAnim, FireEndAnimRate, TweenTime);
         }

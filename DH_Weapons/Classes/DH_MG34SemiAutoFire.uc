@@ -12,7 +12,7 @@ defaultproperties
     FAProjSpawnOffset=(X=-20.0)
     bUsesTracers=true
     TracerFrequency=6
-    TracerProjectileClass=class'DH_MG34TracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     FireIronAnim="Shoot_Loop"
     FireIronLoopAnim="Bipod_shoot_single"
     FireIronEndAnim="Bipod_Shoot_End"

@@ -10,97 +10,81 @@ var     name            FireLastAnim;     // last round animation
 var     name            FireIronlastAnim; // iron last round animation
 var     bool            NextShotIsLast;   // set on the second last shot to facilitate clip eject
 
-// Adds last round clip eject sound
+// Modified to add clip eject ping to firing sound after firing last round
 function ServerPlayFiring()
 {
-    local DH_M1GarandWeapon Gun;
-
-    Gun = DH_M1GarandWeapon(Weapon);
-
-    if (Gun.WasLastRound())
+    if (DH_M1GarandWeapon(Weapon) != none && DH_M1GarandWeapon(Weapon).WasLastRound())
     {
-        if (FirePingSounds.Length > 0)
-        {
-            Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)], SLOT_None, FireVolume,,,, false);
-        }
+        Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)], SLOT_None, FireVolume,,,, false);
     }
     else
     {
-        if (FireSounds.Length > 0)
-        {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-        }
+        super.ServerPlayFiring();
     }
 }
 
-// Overridden to make last round eject clip & add audible ping
+// Modified to make last round eject clip & add audible ping
 function PlayFiring()
 {
-    local DH_M1GarandWeapon Gun;
-    local bool              IsLastRound;
+    local DH_M1GarandWeapon Garand;
+    local name              FiringAnim;
+    local sound             FiringSound;
+    local bool              bLastRound;
 
-    Gun = DH_M1GarandWeapon(Weapon);
-    IsLastRound = Gun.bIsLastRound;
+    Garand = DH_M1GarandWeapon(Weapon);
 
-    if (Weapon.Mesh != none)
+    if (Weapon != none && Weapon.Mesh != none)
     {
-        if (IsLastRound)
+        if (Garand != none && Garand.bIsLastRound)
         {
             if (Weapon.bUsingSights)
             {
-                Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
+                FiringAnim = FireIronLastAnim;
             }
             else
             {
-                Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
+                FiringAnim = FireLastAnim;
             }
         }
         else
         {
             if (Weapon.bUsingSights)
             {
-                Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
+                FiringAnim = FireIronAnim;
             }
             else
             {
-                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                FiringAnim = FireAnim;
             }
+        }
+
+        if (Weapon.HasAnim(FiringAnim))
+        {
+            Weapon.PlayAnim(FiringAnim, FireAnimRate, FireTweenTime);
         }
     }
 
-    if (Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
+    if (Instigator != none && Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
     {
-        if (IsLastRound)
-        {
-            if (FirePingSounds.Length > 0)
-            {
-                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)], SLOT_None, FireVolume,,,, false);
-            }
-        }
-        else
-        {
-            if (FireSounds.Length > 0)
-            {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-            }
-        }
+        bLastRound = Garand != none && Garand.bIsLastRound;
     }
     else
     {
-        if (Gun.WasLastRound())
-        {
-            if (FirePingSounds.Length > 0)
-            {
-                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)], SLOT_None, FireVolume,,,, false);
-            }
-        }
-        else
-        {
-            if (FireSounds.Length > 0)
-            {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-            }
-        }
+        bLastRound = Garand != none && Garand.WasLastRound();
+    }
+
+    if (bLastRound)
+    {
+        FiringSound = FirePingSounds[Rand(FirePingSounds.Length)];
+    }
+    else
+    {
+        FiringSound = FireSounds[Rand(FireSounds.Length)];
+    }
+
+    if (FiringSound != none && Weapon != none)
+    {
+        Weapon.PlayOwnedSound(FiringSound, SLOT_None, FireVolume,,,, false);
     }
 
     ClientPlayForceFeedback(FireForce);

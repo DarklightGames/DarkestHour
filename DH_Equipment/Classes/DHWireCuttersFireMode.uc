@@ -5,63 +5,22 @@
 
 class DHWireCuttersFireMode extends WeaponFire;
 
+// Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-    local Actor HitActor;
-    local DHObstacleInstance O;
+    local DHObstacleInstance TracedObstacle;
+    local vector             HitLocation, HitNormal;
 
-    TraceStart = Weapon.Location;
-    TraceEnd = vector(Weapon.Rotation) * 100.0;
+    TracedObstacle = DHObstacleInstance(Trace(HitLocation, HitNormal, 100.0 * vector(Weapon.Rotation), Weapon.Location, true));
 
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-    O = DHObstacleInstance(HitActor);
-
-    if (O == none || !O.Info.CanBeCut())
+    if (TracedObstacle != none && TracedObstacle.Info.CanBeCut() &&
+        Instigator != none && !Instigator.IsProneTransitioning() && Instigator.Velocity == vect(0.0, 0.0, 0.0))
     {
-        return false;
+        return true;
     }
 
-    if (Instigator == none ||
-        Instigator.IsProneTransitioning() ||
-        Instigator.Velocity != vect(0.0, 0.0, 0.0))
-    {
-        return false;
-
-    }
-
-    return true;
+    return false;
 }
-
-function StartFiring()
-{
-    Log("DHWireCuttersFireMode::StartFiring");
-}
-
-function StopFiring()
-{
-    Log("DHWireCuttersFireMode::StopFiring");
-}
-
-/*event ModeDoFire()
-{
-    if (!AllowFire())
-    {
-        return;
-    }
-}
-
-event ModeHoldFire()
-{
-    super.ModeHoldFire
-
-    if (!AllowFire())
-    {
-        return;
-    }
-
-    bIsFiring = true;
-}*/
 
 defaultproperties
 {

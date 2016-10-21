@@ -7,7 +7,7 @@ class DH_MN9130Fire extends DHBoltFire;
 
 defaultproperties
 {
-    AmmoClass=class'MN762x54RAmmo'
+    AmmoClass=class'ROAmmo.MN762x54RAmmo'
     AmmoPerFire=1
     ProjectileClass=class'DH_Weapons.DH_MN9130Bullet'
     ProjSpawnOffset=(X=25.0,Y=0.0,Z=0.0)

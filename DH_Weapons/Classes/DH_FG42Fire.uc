@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FG42Fire extends DHAutomaticFire;
+class DH_FG42Fire extends DHAutomaticFire; // TODO: could maybe use DHFastAutoFire/DHHighROFWeaponAttachment as fires at 750 rpm (higher than PPs-43 SMG's 700 rpm, which does use fast auto)
 
 var     name    BipodDeployFireAnim;
 var     name    BipodDeployFireLoopAnim;
@@ -97,7 +97,7 @@ defaultproperties
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
     TracerFrequency=5
-    TracerProjectileClass=class'DH_FG42TracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_FG42TracerBullet' // TODO: has a tracer class but doesn't fire tracer because doesn't have bUsesTracers=true // go one way or the other
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"
