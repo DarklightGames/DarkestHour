@@ -34,8 +34,11 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
         return;
     }
 
-    if (IsCurrentWeapon()) // this weapon was switched to while waiting for replication, switch to it now
+    if (Instigator != none && (Instigator.Weapon == self || Instigator.PendingWeapon == self)) // this weapon was switched to while waiting for replication, switch to it now
     {
+        if (Instigator != none && Instigator.PendingWeapon == self && Instigator.Weapon != self)
+            log("******** ChuteItem.ClientWeaponSet: WOULD HAVE MISSED calling ChangeWeapon(), PendingWep =" @ Instigator.PendingWeapon @ " Weapon =" @ Instigator.Weapon); // TEMPDEBUG (Matt)
+
         if (Instigator.PendingWeapon != none)
         {
             Instigator.ChangedWeapon();
