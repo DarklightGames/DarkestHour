@@ -11,6 +11,53 @@ var localized string    SwapAndRestartText;
 var config    float     MapVoteIntervalDuration;
 var config    bool      bUseSwapVote;
 
+// Modified to avoid calling PlayCountDown() on the VotingReplicationInfo as that just spams log errors as this game doesn't have a StatusAnnouncer actor
+function Timer()
+{
+    local MapHistoryInfo MapInfo;
+    local int            Mapidx, GameIdx;
+
+    if (bLevelSwitchPending)
+    {
+        if (Level.NextURL == "")
+        {
+            // If negative then level switch failed
+            if (Level.NextSwitchCountdown < 0)
+            {
+                Log("___Map change FAILED - bad or missing map file", 'MapVote');
+                GetDefaultMap(Mapidx, GameIdx);
+                MapInfo = History.PlayMap(MapList[Mapidx].MapName);
+                ServerTravelString = SetupGameMap(MapList[Mapidx], GameIdx, MapInfo);
+                Log("ServerTravelString =" @ ServerTravelString, 'MapVoteDebug');
+                History.Save();
+                Level.ServerTravel(ServerTravelString, false); // change the map
+            }
+        }
+
+        return;
+    }
+
+    if (ScoreBoardTime > -1)
+    {
+        if (ScoreBoardTime == 0)
+        {
+            OpenAllVoteWindows();
+        }
+
+        ScoreBoardTime--;
+
+        return;
+    }
+
+    TimeLeft--;
+
+    // Force level switch if time limit is up (if no-one has voted a random map will be chosen)
+    if (TimeLeft == 0)
+    {
+        TallyVotes(true);
+    }
+}
+
 // NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
