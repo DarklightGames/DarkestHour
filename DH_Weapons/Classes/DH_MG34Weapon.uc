@@ -5,7 +5,7 @@
 
 class DH_MG34Weapon extends DHMGWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Mg34_1st.ukx
 
 // Modified to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode) // TODO: check this shouldn't apply to all MGs, as same override is is applied to all other auto & semi-auto weapons
@@ -37,7 +37,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MG34Attachment'
     PickupClass=class'DH_Weapons.DH_MG34Pickup'
 
-    Mesh=SkeletalMesh'DH_Mg34_1st.MG_34_Mesh'
+    Mesh=SkeletalMesh'DH_Mg34_1st.MG_34_Mesh' // TODO: check whether the DH version of MG34 anim file actually differs from the RO mesh & is worth keeping
     HandTex=texture'Weapons1st_tex.Arms.hands_gergloves'
 
     PlayerIronsightFOV=90.0
