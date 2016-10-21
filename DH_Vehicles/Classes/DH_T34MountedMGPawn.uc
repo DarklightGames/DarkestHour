@@ -14,7 +14,7 @@ defaultproperties
     CameraBone="T34_mg"
     FPCamPos=(X=5.0,Y=0.0,Z=10.0)
     bDrawMeshInFP=false // as uses HUD overlay in 1st person
-    HUDOverlayClass=class'ROVehicles.ROVehDTOverlay'
+    HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_DTmg'
     HUDOverlayOffset=(X=-40.0,Y=0.0,Z=0.0)
     HUDOverlayFOV=45.0
 	PitchUpLimit=3000
