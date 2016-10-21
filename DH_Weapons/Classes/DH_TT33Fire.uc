@@ -7,7 +7,7 @@ class DH_TT33Fire extends DHPistolFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Weapons.DH_TT33Ammo'
+    AmmoClass=class'ROAmmo.TT33Ammo'
     AmmoPerFire=1
     ProjectileClass=class'DH_Weapons.DH_TT33Bullet'
     ProjSpawnOffset=(X=25.0,Y=0.0,Z=0.0)
