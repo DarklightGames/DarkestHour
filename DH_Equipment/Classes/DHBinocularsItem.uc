@@ -209,37 +209,29 @@ function bool CanDeadThrow()
 
 defaultproperties
 {
+    ItemName="Binoculars"
+    AttachmentClass=class'DH_Equipment.DHBinocularsAttachment'
+    PickupClass=class'DH_Equipment.DHBinocularsPickup'
     InventoryGroup=4
     Priority=1
+    bCanAttachOnBack=false
+
+    Mesh=mesh'Common_Binoc_1st.binoculars'
+    HighDetailOverlay=shader'Weapons1st_tex.SniperScopes.Binoc_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+
+    BinocsOverlay=texture'Weapon_overlays.Scopes.BINOC_overlay'
     BinocsEnlargementFactor=0.2
+    IronSightDisplayFOV=70.0
+    bPlayerFOVZooms=true
+    PlayerFOVZoom=12.0
+    bCanSway=false
+
     IronBringUp="Zoom_in"
     IronIdleAnim="Zoom_idle"
     IronPutDown="Zoom_out"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    bPlayerFOVZooms=true
-    PlayerFOVZoom=12.0
-    IronSightDisplayFOV=70.0
-    DisplayFOV=70.0
-    ZoomInTime=0.4
-    ZoomOutTime=0.2
-    SelectAnim="Draw"
-    PutDownAnim="Put_Away"
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
-    bCanRestDeploy=true
-    BobDamping=1.6
-    bCanSway=false
+
     AIRating=0.0
     CurrentRating=0.0
-    PickupClass=class'DH_Equipment.DHBinocularsPickup'
-    AttachmentClass=class'DH_Equipment.DHBinocularsAttachment'
-    ItemName="Binoculars"
-    Mesh=mesh'Common_Binoc_1st.binoculars'
-    BinocsOverlay=texture'Weapon_overlays.Scopes.BINOC_overlay'
-    HighDetailOverlay=Material'Weapons1st_tex.SniperScopes.Binoc_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
 }

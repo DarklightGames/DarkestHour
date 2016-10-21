@@ -36,42 +36,30 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 defaultproperties
 {
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
-    IronIdleAnim="Iron_idle"
-    IronIdleEmptyAnim="iron_idle_empty"
-    IronBringUp="iron_in"
-    IronBringUpEmpty="Iron_In_empty"
-    IronPutDown="iron_out"
-    IronPutDownEmpty="Iron_Out_empty"
+    ItemName="M1 Garand"
+    FireModeClass(0)=class'DH_Weapons.DH_M1GarandFire'
+    FireModeClass(1)=class'DH_Weapons.DH_M1GarandMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_M1GarandAttachment'
+    PickupClass=class'DH_Weapons.DH_M1GarandPickup'
+
+    Mesh=SkeletalMesh'DH_Garand_1st.M1_Garand'
+
+    IronSightDisplayFOV=20.0
+    FreeAimRotationSpeed=7.5
+
+    MaxNumPrimaryMags=11
+    InitialNumPrimaryMags=11
+    bPlusOneLoading=false
+    bDiscardMagOnReload=true
+
+    bHasBayonet=true
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
     BayonetBoneName="bayonet"
-    bHasBayonet=true
-    IdleEmptyAnim="idle_empty"
-    MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=11
-    bDiscardMagOnReload=true
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=20.0
-    ZoomInTime=0.4
-    ZoomOutTime=0.2
-    FreeAimRotationSpeed=7.5
-    FireModeClass(0)=class'DH_Weapons.DH_M1GarandFire'
-    FireModeClass(1)=class'DH_Weapons.DH_M1GarandMeleeFire'
-    SelectAnim="Draw"
+
     PutDownAnim="putaway"
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
-    AIRating=0.4
-    CurrentRating=0.4
-    DisplayFOV=70.0
-    bCanRestDeploy=true
-    PickupClass=class'DH_Weapons.DH_M1GarandPickup'
-    AttachmentClass=class'DH_Weapons.DH_M1GarandAttachment'
-    ItemName="M1 Garand"
-    Mesh=SkeletalMesh'DH_Garand_1st.M1_Garand'
+    IronBringUpEmpty="Iron_In_empty"
+    IronPutDownEmpty="Iron_Out_empty"
+    IdleEmptyAnim="idle_empty"
+    IronIdleEmptyAnim="iron_idle_empty"
 }

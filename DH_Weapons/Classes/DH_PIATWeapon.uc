@@ -63,19 +63,22 @@ simulated function bool CanFire(optional bool bShowFailureMessage)
 
 defaultproperties
 {
-    RangeSettings(0)=(FirePitch=85,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
-    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")
-    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar")
+    ItemName="PIAT"
+    FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
+    FireModeClass(1)=class'DH_Weapons.DH_PIATMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
+    PickupClass=class'DH_Weapons.DH_PIATPickup'
+
+    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
+
+    RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
+    MuzzleBone="Warhead"
+    InitialNumPrimaryMags=2
     NumMagsToResupply=2
     MagEmptyReloadAnim="Reload"
     MagPartialReloadAnim="Reload"
-    InitialNumPrimaryMags=2
-    FireModeClass(0)=class'DH_Weapons.DH_PIATFire'
-    FireModeClass(1)=class'DH_Weapons.DH_PIATMeleeFire'
-    PickupClass=class'DH_Weapons.DH_PIATPickup'
-    MuzzleBone="Warhead"
-    AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
-    RocketAttachmentClass=class'DH_PIATAmmoRound'
-    ItemName="PIAT"
-    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
+
+    RangeSettings(0)=(FirePitch=85,IronIdleAnim="Iron_idle",FireIronAnim="iron_shoot")
+    RangeSettings(1)=(FirePitch=325,IronIdleAnim="iron_idleMid",FireIronAnim="iron_shootMid")
+    RangeSettings(2)=(FirePitch=500,IronIdleAnim="iron_idleFar",FireIronAnim="iron_shootFar")
 }

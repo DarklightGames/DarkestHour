@@ -2284,10 +2284,19 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
 
 defaultproperties
 {
-    IronSwitchAnimRate=1.0
-    FastTweenTime=0.2
     Priority=9
     bUsesFreeAim=true
+    bCanRestDeploy=true
+    bCanAttachOnBack=true
+    DisplayFOV=70.0
+    IronSwitchAnimRate=1.0
+    FastTweenTime=0.2
+    ZoomInTime=0.4
+    ZoomOutTime=0.2
+    FillAmmoMagCount=1
+    MuzzleBone="Muzzle"
+    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
+
     LightType=LT_Steady
     LightEffect=LE_NonIncidence
     LightHue=30
@@ -2295,7 +2304,13 @@ defaultproperties
     LightBrightness=255.0
     LightRadius=4.0
     LightPeriod=3
-    FillAmmoMagCount=1
-    BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
-    MuzzleBone="Muzzle"
+
+    SelectAnim="Draw"
+    PutDownAnim="Put_away"
+    IronBringUp="iron_in"
+    IronPutDown="iron_out"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
 }

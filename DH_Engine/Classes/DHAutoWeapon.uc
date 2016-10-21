@@ -206,5 +206,11 @@ function float SuggestDefenseStyle()
 
 defaultproperties
 {
-    bCanAttachOnBack=true
+    bPlusOneLoading=true
+    IronIdleAnim="Iron_idle"
+    MagEmptyReloadAnim="reload_empty"
+    MagPartialReloadAnim="reload_half"
+
+    AIRating=0.7
+    CurrentRating=0.7
 }

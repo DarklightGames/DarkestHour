@@ -9,59 +9,29 @@ class DH_MN9130ScopedWeapon extends DHBoltSniperWeapon;
 
 defaultproperties
 {
-    LensMaterialID=5
     ItemName="Mosin-Nagant M91/30 PU Sniper"
-    Mesh=SkeletalMesh'Allies_Nagantscope_1st.Mosin-Nagant-9130-Scoped-Mesh'
-    DrawScale=1.0
-    DisplayFOV=70.0
-    IronSightDisplayFOV=40
-    BobDamping=1.6
-    BayonetBoneName="bayonet"
-    HighDetailOverlay=material'Weapons1st_tex.Rifles.MN_sniper_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
     FireModeClass(0)=class'DH_Weapons.DH_MN9130ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_MN9130ScopedMeleeFire'
-    InitialNumPrimaryMags=10
-    MaxNumPrimaryMags=10
-    CurrentMagIndex=0
-    bPlusOneLoading=false
-    bHasBayonet=false
-    bCanRestDeploy=true
-    PickupClass=class'DH_Weapons.DH_MN9130ScopedPickup'
     AttachmentClass=class'DH_Weapons.DH_MN9130ScopedAttachment'
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
-    SelectAnim="Draw"
-    PutDownAnim="Put_Away"
-    PreReloadAnim="Single_Open"
-    SingleReloadAnim="Single_insert"
-    PostReloadAnim="Single_Close"
-    IronBringUp="Scope_in"
-    IronIdleAnim="Scope_Idle"
-    IronPutDown="Scope_out"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    PostFireIronIdleAnim="Scope_Idle"
-    PostFireIdleAnim="Idle"
-    BoltHipAnim="bolt_scope"
-    BoltIronAnim="scope_bolt"
-    ZoomInTime=0.4
-    ZoomOutTime=0.4
-    PlayerFOVZoom=24
+    PickupClass=class'DH_Weapons.DH_MN9130ScopedPickup'
+
+    Mesh=SkeletalMesh'Allies_Nagantscope_1st.Mosin-Nagant-9130-Scoped-Mesh'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+
+    IronSightDisplayFOV=40.0
+    PlayerFOVZoom=24.0
+    ZoomOutTime=0.35
     ScopePortalFOV=7.0 // 3.5x
-    XoffsetScoped=(X=0.0,Y=0.0,Z=0.0)
-    ScopePitch=0
-    ScopeYaw=25
-    ScopePortalFOVHigh=15 // 3.5x
+    ScopePortalFOVHigh=15.0 // 3.5x
     IronSightDisplayFOVHigh=43.0
-    XoffsetHighDetail=(X=-6.0,Y=0.0,Z=0.0)
+    XOffsetHighDetail=(X=-6.0,Y=0.0,Z=0.0)
+    ScopeYaw=25
     ScopePitchHigh=20
     ScopeYawHigh=40
-    AIRating=0.4
-    CurrentRating=0.4
-    bSniping=true
     TexturedScopeTexture=texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+    LensMaterialID=5
+
+    InitialNumPrimaryMags=10
+    MaxNumPrimaryMags=10
 }

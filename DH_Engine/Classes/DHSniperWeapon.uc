@@ -278,12 +278,22 @@ simulated function ClearScopeObjects()
 
 defaultproperties
 {
-    ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
-    OverlayCenterSize=0.7
     bIsSniper=true
-    bSniping=true
-    FreeAimRotationSpeed=6.0
-    bCanAttachOnBack=true
-    BobModifyFactor=0.15
+    bPlusOneLoading=true
+    OverlayCenterSize=0.7
+    ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
+
     PlayerIronsightFOV=90.0
+    FreeAimRotationSpeed=6.0
+    BobModifyFactor=0.15
+
+    IronBringUp="Scope_in"
+    IronPutDown="Scope_out"
+    IronIdleAnim="Scope_Idle"
+    MagEmptyReloadAnim="reload_empty"
+    MagPartialReloadAnim="reload_half"
+
+    AIRating=0.4
+    CurrentRating=0.4
+    bSniping=true
 }

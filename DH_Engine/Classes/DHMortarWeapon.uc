@@ -322,15 +322,16 @@ function bool FillAmmo()
 
 defaultproperties
 {
+    InventoryGroup=9
+    bCanThrow=false
+    bCanSway=false
+
     SelectAnim="Draw"
     PutDownAnim="putaway"
     DeployAnimation="Deploy"
     DeployRadius=32.0
     DeployAngleMaximum=0.349066
+
     AIRating=1.0
     CurrentRating=1.0
-    bCanThrow=false
-    bCanSway=false
-    InventoryGroup=9
-    BobDamping=1.6
 }

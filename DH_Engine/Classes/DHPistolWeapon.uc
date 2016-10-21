@@ -24,12 +24,11 @@ simulated state Reloading
 
 defaultproperties
 {
-    Priority=5
-    InventoryGroup=3
-
-    // Override unwanted defaults inherited from semi-auto
-    BobDamping=0.96
-    FreeAimRotationSpeed=8.0
     bCanAttachOnBack=false
+    InventoryGroup=3
+    Priority=5
+    FreeAimRotationSpeed=8.0
+    AIRating=0.35
+    CurrentRating=0.35
     bSniping=false
 }

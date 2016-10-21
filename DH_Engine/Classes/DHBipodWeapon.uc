@@ -378,9 +378,20 @@ simulated state PendingAction
 
 defaultproperties
 {
-    PlayerDeployFOV=60.0
     Priority=10
     bCanBipodDeploy=true
-    bCanAttachOnBack=true
+    bCanRestDeploy=false
+    PlayerDeployFOV=60.0
+
+    IronBringUp="Rest_2_Bipod"
+    IronPutDown="Bipod_2_Rest"
+    IdleAnim="Rest_Idle"
+    IronIdleAnim="Bipod_Idle"
+    IdleToBipodDeploy="Rest_2_Bipod"
+    BipodDeployToIdle="Bipod_2_Rest"
+    MagEmptyReloadAnim="Reload"
+
+    AIRating=0.4
+    CurrentRating=0.4
     bSniping=true
 }

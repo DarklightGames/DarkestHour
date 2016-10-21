@@ -110,11 +110,9 @@ simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 
 defaultproperties
 {
-    FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    ItemName="Radio"
     InventoryGroup=10
+    AttachmentClass=class'DH_Equipment.DHRadioAttachment'
     AttachBoneName="hip"
     ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTrigger'
-    AttachmentClass=class'DH_Equipment.DHRadioAttachment'
-    ItemName="Radio"
 }

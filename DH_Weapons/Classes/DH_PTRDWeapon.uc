@@ -82,16 +82,28 @@ simulated function Fire(float F)
 
 defaultproperties
 {
-    IdleToBipodDeploy="Rest_2_Bipod"
-    BipodDeployToIdle="Bipod_2_Rest"
-    IdleToBipodDeployEmpty="Rest_2_Bipod_Empty"
-    BipodDeployToIdleEmpty="Bipod_2_Rest_Empty"
-    MagEmptyReloadAnim="Reload"
-    IronIdleAnim="Bipod_Idle"
-    IronBringUp="Rest_2_Bipod"
-    IronPutDown="Bipod_2_Rest"
+    ItemName="PTRD-41"
+    FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
+    AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
+    PickupClass=class'DH_Weapons.DH_PTRDPickup'
+
+    Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
+    HighDetailOverlay=shader'Weapons1st_tex.Rifles.PTRD_S'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+
+    IronSightDisplayFOV=35.0
+    ZoomOutTime=0.35
+
+    MaxNumPrimaryMags=20
+    InitialNumPrimaryMags=15
+
+    SelectEmptyAnim="Draw_empty"
+    PutDownEmptyAnim="put_away_empty"
     IdleEmptyAnim="Rest_Idle_Empty"
     IronIdleEmptyAnim="Bipod_Idle_Empty"
+    IdleToBipodDeployEmpty="Rest_2_Bipod_Empty"
+    BipodDeployToIdleEmpty="Bipod_2_Rest_Empty"
     SprintStartEmptyAnim="Sprint_Start_Empty"
     SprintLoopEmptyAnim="Sprint_Middle_Empty"
     SprintEndEmptyAnim="Sprint_End_Empty"
@@ -99,34 +111,4 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB"
     CrawlStartEmptyAnim="crawl_in"
     CrawlEndEmptyAnim="crawl_out"
-    SelectEmptyAnim="Draw_empty"
-    PutDownEmptyAnim="put_away_empty"
-    MaxNumPrimaryMags=20
-    InitialNumPrimaryMags=15
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=35.0
-    ZoomInTime=0.4
-    ZoomOutTime=0.35
-    FireModeClass(0)=class'DH_Weapons.DH_PTRDFire'
-    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
-    IdleAnim="Rest_Idle"
-    SelectAnim="Draw"
-    PutDownAnim="Put_away"
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
-    AIRating=0.4
-    CurrentRating=0.4
-    bSniping=true
-    DisplayFOV=70.0
-    PickupClass=class'DH_Weapons.DH_PTRDPickup'
-    BobDamping=1.6
-    AttachmentClass=class'DH_Weapons.DH_PTRDAttachment'
-    ItemName="PTRD-41"
-    Mesh=SkeletalMesh'Allies_Ptrd_1st.PTRD41_Mesh'
-    HighDetailOverlay=Shader'Weapons1st_tex.Rifles.PTRD_S'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
 }

@@ -177,41 +177,37 @@ simulated function Fire(float F)
 defaultproperties
 {
     ItemName="Wire Cutters"
+    AttachmentClass=class'DHWireCuttersAttachment'
+    InventoryGroup=4
+    Priority=1
+    bCanThrow=false
+    CutDistance=100.0
+
     Mesh=mesh'DH_Wirecutters_1st.wirecutters'
-    DrawScale=1.0
-    DisplayFOV=70
-    IronSightDisplayFOV=70
-    BobDamping=1.6
     HighDetailOverlay=Material'Weapons1st_tex.SniperScopes.Binoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    bCanRestDeploy=false
-    bUsesFreeAim=false
-    AttachmentClass=class'DHWireCuttersAttachment'
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
-    SelectAnim=Draw
-    PutDownAnim=putaway
-    CrawlForwardAnim=crawlF
-    CrawlBackwardAnim=crawlB
-    CrawlStartAnim=crawlIn
-    CrawlEndAnim=crawlOut
+
+    DisplayFOV=70.0
+    IronSightDisplayFOV=70.0
+    PlayerFOVZoom=10.0
+    bPlayerFOVZooms=true
     ZoomInTime=0.4
     ZoomOutTime=0.2
-    PlayerFOVZoom=10
-    bPlayerFOVZooms=true
-    AIRating=+0.0
-    CurrentRating=0.0
-    bSniping=false
-    bCanThrow=false
+    bUsesFreeAim=false
     bCanSway=false
-    InventoryGroup=4
-    Priority=1
-    FireModeClass(0)=class'ROInventory.ROEmptyFireClass'
-    FireModeClass(1)=class'ROInventory.ROEmptyFireClass'
-    CutAnim=cutStart
-    SprintStartAnim=sprintStart
-    SprintLoopAnim=sprintMiddle
-    SprintEndAnim=sprintEnd
-    CutDistance=100.0
+
+    SelectAnim="Draw"
+    PutDownAnim="putaway"
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawlIn"
+    CrawlEndAnim="crawlOut"
+    SprintStartAnim="sprintStart"
+    SprintLoopAnim="sprintMiddle"
+    SprintEndAnim="sprintEnd"
+    CutAnim="cutStart"
+
+    AIRating=0.0
+    CurrentRating=0.0
 }

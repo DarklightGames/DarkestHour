@@ -533,5 +533,17 @@ simulated function OutOfAmmo()
 
 defaultproperties
 {
+    bPlusOneLoading=false
     BobModifyFactor=0.05
+    ZoomOutTime=0.4
+
+    PostFireIdleAnim="Idle"
+    PostFireIronIdleAnim="Scope_Idle"
+    BoltHipAnim="bolt_scope"
+    BoltIronAnim="scope_bolt"
+    PreReloadAnim="Single_Open"
+    SingleReloadAnim="Single_insert"
+    PostReloadAnim="Single_Close"
+    MagEmptyReloadAnim=none
+    MagPartialReloadAnim=none
 }

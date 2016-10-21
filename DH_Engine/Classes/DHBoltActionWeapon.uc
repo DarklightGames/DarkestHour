@@ -170,10 +170,19 @@ simulated function OutOfAmmo()
 
 defaultproperties
 {
-    BobDamping=0.8
     FreeAimRotationSpeed=6.0
-    bCanAttachOnBack=true
     SwayModifyFactor=0.4
     BobModifyFactor=0.12
+    ZoomOutTime=0.4
+
+    IronIdleAnim="Iron_idle"
+    PostFireIdleAnim="Idle"
+    PostFireIronIdleAnim="Iron_idlerest"
+    BoltHipAnim="bolt"
+    BoltIronAnim="iron_boltrest"
+    MagEmptyReloadAnim="Reload"
+
+    AIRating=0.4
+    CurrentRating=0.4
     bSniping=true
 }

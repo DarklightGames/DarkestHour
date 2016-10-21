@@ -9,47 +9,26 @@ class DH_TT33Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
-    ItemName="TT-30"
-    Mesh=SkeletalMesh'Allies_Tt33_1st.TT-33-Mesh'
-    DrawScale=1.0
-    DisplayFOV=70.0
-    IronSightDisplayFOV=40.0
-    BobDamping=1.6
-    BayonetBoneName="bayonet"
-    HighDetailOverlay=material'Weapons1st_tex.Pistols.TT33_S'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    ItemName="TT-33"
     FireModeClass(0)=class'DH_Weapons.DH_TT33Fire'
     FireModeClass(1)=class'DH_Weapons.DH_TT33MeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_TT33Attachment'
+    PickupClass=class'DH_Weapons.DH_TT33Pickup'
+
+    Mesh=SkeletalMesh'Allies_Tt33_1st.TT-33-Mesh'
+    HighDetailOverlay=shader'Weapons1st_tex.Pistols.TT33_S'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+
+    IronSightDisplayFOV=40.0
+
     InitialNumPrimaryMags=5
     MaxNumPrimaryMags=5
-    CurrentMagIndex=0
-    bPlusOneLoading=true
-    bHasBayonet=false
-    bCanRestDeploy=true
-    PickupClass=class'DH_Weapons.DH_TT33Pickup'
-    AttachmentClass=class'DH_Weapons.DH_TT33Attachment'
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
+
     IdleEmptyAnim="idle-empty"
-    SelectAnim="Draw"
-    PutDownAnim="Put_Away"
-    SelectEmptyAnim="Draw_Empty"
-    PutDownEmptyAnim="Put_Away_empty"
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
-    BayoAttachAnim="Bayonet_on"
-    BayoDetachAnim="Bayonet_off"
-    IronBringUp="iron_in"
-    IronIdleAnim="Iron_idle"
     IronIdleEmptyAnim="iron_idle_empty"
-    IronPutDown="iron_out"
     IronBringUpEmpty="iron_in_empty"
     IronPutDownEmpty="iron_out_empty"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
     CrawlForwardEmptyAnim="crawlF_empty"
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
@@ -57,9 +36,6 @@ defaultproperties
     SprintStartEmptyAnim="Sprint_Empty_Start"
     SprintLoopEmptyAnim="Sprint_Empty_Middle"
     SprintEndEmptyAnim="Sprint_Empty_End"
-    ZoomInTime=0.4
-    ZoomOutTime=0.2
-    AIRating=0.35
-    CurrentRating=0.35
-    bSniping=false
+    SelectEmptyAnim="Draw_Empty"
+    PutDownEmptyAnim="Put_Away_empty"
 }

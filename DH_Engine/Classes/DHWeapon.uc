@@ -629,9 +629,12 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
 defaultproperties
 {
     PlayerIronsightFOV=60.0
-    ScopeDetail=RO_TextureScope
     SwayModifyFactor=0.66
     BobModifyFactor=0.2
+    BobDamping=1.6
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    ScopeDetail=RO_TextureScope
     FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
 }

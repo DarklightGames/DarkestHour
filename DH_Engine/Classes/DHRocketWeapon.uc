@@ -469,35 +469,26 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
 defaultproperties
 {
+    InventoryGroup=5
+    Priority=8
+    WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
+
+    IronSightDisplayFOV=25.0
+    FreeAimRotationSpeed=7.5
+
+    MaxNumPrimaryMags=2
+    InitialNumPrimaryMags=2
+    FillAmmoMagCount=1
     bCanBeResupplied=true
     NumMagsToResupply=1
+
     MagEmptyReloadAnim="Reloads"
     MagPartialReloadAnim="Reloads"
     AssistedMagEmptyReloadAnim="reloadA"
     AssistedMagPartialReloadAnim="reloadA"
-    IronBringUp="iron_in"
-    IronPutDown="iron_out"
-    MaxNumPrimaryMags=2
-    InitialNumPrimaryMags=2
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=25.0
-    ZoomInTime=0.4
-    ZoomOutTime=0.2
-    FreeAimRotationSpeed=7.5
-    SelectAnim="Draw"
     PutDownAnim="putaway"
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
+    IronIdleAnim=""
+
     AIRating=0.6
     CurrentRating=0.6
-    DisplayFOV=70.0
-    Priority=8
-    bCanRestDeploy=true
-    InventoryGroup=5
-    BobDamping=1.6
-    FillAmmoMagCount=1
-    WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
 }

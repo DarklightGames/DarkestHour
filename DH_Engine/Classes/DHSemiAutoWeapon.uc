@@ -67,8 +67,13 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-    BobDamping=1.33
+    bPlusOneLoading=true
     FreeAimRotationSpeed=6.0
-    bCanAttachOnBack=true
+    IronIdleAnim="Iron_idle"
+    MagEmptyReloadAnim="reload_empty"
+    MagPartialReloadAnim="reload_half"
+
     bSniping=true
+    AIRating=0.4
+    CurrentRating=0.4
 }

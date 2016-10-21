@@ -34,21 +34,25 @@ simulated function bool UsingAutoFire()
 
 defaultproperties
 {
+    ItemName="Browning Automatic Rifle"
+    FireModeClass(0)=class'DH_Weapons.DH_BARFire'
+    FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_BARAttachment'
+    PickupClass=class'DH_Weapons.DH_BARPickup'
+
+    Mesh=SkeletalMesh'DH_BAR_1st.BAR'
+
+    IronSightDisplayFOV=25.0
+    FreeAimRotationSpeed=2.0
+
+    MaxNumPrimaryMags=8
+    InitialNumPrimaryMags=8
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+
+    bHasSelectFire=true
+    bSlowFireRate=true
     SelectFireAnim="switch_fire"
     SelectFireIronAnim="Iron_switch_fire"
     SightUpSelectFireIronAnim="SightUp_iron_switch_fire"
-    bSlowFireRate=true
-    bCanBeResupplied=true
-    NumMagsToResupply=2
-    MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8
-    IronSightDisplayFOV=25.0
-    FreeAimRotationSpeed=2.0
-    bHasSelectFire=true
-    FireModeClass(0)=class'DH_Weapons.DH_BARFire'
-    FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
-    PickupClass=class'DH_Weapons.DH_BARPickup'
-    AttachmentClass=class'DH_Weapons.DH_BARAttachment'
-    ItemName="Browning Automatic Rifle"
-    Mesh=SkeletalMesh'DH_BAR_1st.BAR'
 }

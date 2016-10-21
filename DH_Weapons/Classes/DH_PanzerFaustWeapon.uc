@@ -109,23 +109,25 @@ Begin:
 
 defaultproperties
 {
+    ItemName="Panzerfaust 60"
+    FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
+    FireModeClass(1)=class'ROInventory.PanzerFaustMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
+    PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
+
+    Mesh=SkeletalMesh'Axis_Panzerfaust_1st.Panzerfaust_Mesh'
+    HighDetailOverlay=shader'Weapons1st_tex.Grenades.Panzerfaust_S'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
+
+    RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
+    MuzzleBone="Warhead"
+    MaxNumPrimaryMags=1
+    InitialNumPrimaryMags=1
+    bCanBeResupplied=false
+
     RangeSettings(0)=(FirePitch=500,IronIdleAnim="Iron_idle30",FireIronAnim="shoot30")
     RangeSettings(1)=(FirePitch=1150,IronIdleAnim="Iron_idle",FireIronAnim="shoot")
     RangeSettings(2)=(FirePitch=2000,IronIdleAnim="Iron_idle90",FireIronAnim="shoot90")
     IdleAnim="idle30"
-    MaxNumPrimaryMags=1
-    InitialNumPrimaryMags=1
-    bCanBeResupplied=false
-    FireModeClass(0)=class'DH_Weapons.DH_PanzerFaustFire'
-    FireModeClass(1)=class'ROInventory.PanzerFaustMeleeFire'
-    PickupClass=class'DH_Weapons.DH_PanzerFaustPickup'
-    AttachmentClass=class'DH_Weapons.DH_PanzerFaustAttachment'
-    RocketAttachmentClass=class'ROGame.ROFPAmmoRound'
-    MuzzleBone="Warhead"
-    ItemName="Panzerfaust 60"
-    Mesh=SkeletalMesh'Axis_Panzerfaust_1st.Panzerfaust_Mesh'
-    Skins(2)=texture'Weapons1st_tex.Grenades.PanzerFaust'
-    HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
 }

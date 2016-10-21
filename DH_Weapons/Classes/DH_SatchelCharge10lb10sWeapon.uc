@@ -10,14 +10,16 @@ class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
 defaultproperties
 {
     ItemName="10lb Satchel Charge"
-    Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
-    PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
-    bCanThrow=true
-    FuzeLength=15.0
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
-    PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
-    PreFireHoldAnim="Weapon_Down"
+    PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
     InventoryGroup=6
+
+    Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
     Skins(2)=texture'Weapons1st_tex.Grenades.SatchelCharge'
+
+    PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
+
+    FuzeLength=15.0
+    PreFireHoldAnim="Weapon_Down"
 }

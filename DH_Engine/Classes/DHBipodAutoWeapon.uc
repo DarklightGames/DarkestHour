@@ -359,33 +359,17 @@ Begin:
 
 defaultproperties
 {
+    bCanBipodDeploy=true
+    ZoomOutTime=0.1
+
+    PutDownAnim="putaway"
     SightUpIronBringUp="SightUp_iron_in"
     SightUpIronPutDown="SightUp_iron_out"
     SightUpIronIdleAnim="SightUp_iron_idle"
     SightUpMagEmptyReloadAnim="sightup_reload_empty"
     SightUpMagPartialReloadAnim="sightup_reload_half"
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
-    IronIdleAnim="Iron_idle"
-    IronBringUp="iron_in"
-    IronPutDown="iron_out"
-    bPlusOneLoading=true
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=35.0
-    ZoomInTime=0.4
-    ZoomOutTime=0.1
-    SelectAnim="Draw"
-    PutDownAnim="putaway"
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
+
     AIRating=0.7
     CurrentRating=0.7
     bSniping=true
-    DisplayFOV=70.0
-    bCanRestDeploy=true
-    bCanBipodDeploy=true
-    BobDamping=1.6
 }
