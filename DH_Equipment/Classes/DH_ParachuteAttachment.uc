@@ -5,19 +5,14 @@
 
 class DH_ParachuteAttachment extends DHWeaponAttachment;
 
-var     name    ChuteDeployAnim;
-var name    ChuteIdleAnim;
-
 simulated function PlayIdle()
 {
-    PlayAnim(ChuteDeployAnim);
+    PlayAnim('Deploy');
 }
 
 defaultproperties
 {
     CullDistance=0.0 // no cull as it's too big
-    ChuteDeployAnim="Deploy"
-    ChuteIdleAnim="Idle"
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
