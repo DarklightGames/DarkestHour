@@ -9,10 +9,27 @@ class DH_M1GarandAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Garand_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bRapidFire=false
+
+    WA_Idle="idle_garand"
+    WA_Fire="idle_garand"
+    WA_Reload="idle_garand"
+    WA_ProneReload="idle_garand"
+    WA_BayonetIdle="idle_garand_bayo"
+    WA_BayonetFire="idle_garand_bayo"
+    WA_BayonetReload="idle_garand_bayo"
+    WA_BayonetProneReload="idle_garand_bayo"
+    WA_BayonetAttach="idle_garand"
+    WA_BayonetDetach="idle_garand_bayo"
+    WA_BayonetAttachProne="idle_garand"
+    WA_BayonetDetachProne="idle_garand_bayo"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -132,19 +149,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_garand"
-    WA_Fire="idle_garand"
-    WA_Reload="idle_garand"
-    WA_ProneReload="idle_garand"
-    WA_BayonetIdle="idle_garand_bayo"
-    WA_BayonetFire="idle_garand_bayo"
-    WA_BayonetReload="idle_garand_bayo"
-    WA_BayonetProneReload="idle_garand_bayo"
-    WA_BayonetAttach="idle_garand"
-    WA_BayonetDetach="idle_garand_bayo"
-    WA_BayonetAttachProne="idle_garand"
-    WA_BayonetDetachProne="idle_garand_bayo"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Garand_3rd'
 }

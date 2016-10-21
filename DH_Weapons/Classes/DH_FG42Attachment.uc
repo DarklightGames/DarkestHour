@@ -38,10 +38,22 @@ simulated function PlayIdle()
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.FG42_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+
+    WA_Idle="idle_FG42"
+    WA_IdleEmpty="idle_FG42"
+    WA_Fire="idle_FG42"
+    WA_Reload="idle_FG42"
+    WA_ReloadEmpty="idle_FG42"
+    WA_ProneReload="idle_FG42"
+    WA_ProneReloadEmpty="idle_FG42"
+    WA_WeaponDeploy="idle_FG42_deployed"
+    WA_WeaponUnDeploy="idle_FG42"
 
     WA_BipodDeploy_Idle="idle_FG42_deployed"
     WA_BipodDeploy_Fire="idle_FG42_deployed"
@@ -208,15 +220,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="idle_FG42"
-    WA_IdleEmpty="idle_FG42"
-    WA_Fire="idle_FG42"
-    WA_Reload="idle_FG42"
-    WA_ReloadEmpty="idle_FG42"
-    WA_ProneReload="idle_FG42"
-    WA_ProneReloadEmpty="idle_FG42"
-    WA_WeaponDeploy="idle_FG42_deployed"
-    WA_WeaponUnDeploy="idle_FG42"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.FG42_3rd'
 }

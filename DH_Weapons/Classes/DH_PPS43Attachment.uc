@@ -7,9 +7,21 @@ class DH_PPS43Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_Weapons.DH_PPS43Bullet_C'
+    Mesh=SkeletalMesh'Weapons3rd_anm.pps43'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.pps43_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+
+    ClientProjectileClass=class'DH_Weapons.DH_PPS43Bullet'
+
+    WA_Idle="idle_pps43"
+    WA_IdleEmpty="idle_pps43"
+    WA_Fire="shoot_pps43"
+    WA_Reload="reloadhalf_pps43"
+    WA_ReloadEmpty="reloadempty_pps43"
+    WA_ProneReload="prone_reloadhalf_pps43"
+    WA_ProneReloadEmpty="prone_reloadempty_pps43"
+
     PA_MovementAnims(0)="stand_jogF_pps43"
     PA_MovementAnims(1)="stand_jogB_pps43"
     PA_MovementAnims(2)="stand_jogL_pps43"
@@ -179,13 +191,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pps43"
     PA_DodgeAnims(2)="jumpL_mid_pps43"
     PA_DodgeAnims(3)="jumpR_mid_pps43"
-    WA_Idle="idle_pps43"
-    WA_IdleEmpty="idle_pps43"
-    WA_Fire="shoot_pps43"
-    WA_Reload="reloadhalf_pps43"
-    WA_ReloadEmpty="reloadempty_pps43"
-    WA_ProneReload="prone_reloadhalf_pps43"
-    WA_ProneReloadEmpty="prone_reloadempty_pps43"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.pps43_icon'
-    Mesh=SkeletalMesh'Weapons3rd_anm.pps43'
 }

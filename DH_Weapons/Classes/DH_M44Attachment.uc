@@ -7,10 +7,26 @@ class DH_M44Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.M44'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.m44_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
+    bRapidFire=false
     bBayonetAttached=true
+
+    WA_Idle="idle_nagant9138"
+    WA_Fire="idle_nagant9138"
+    WA_Reload="stand_reload_nagant9138"
+    WA_ProneReload="prone_reload_nagant9138"
+    WA_BayonetIdle="idle_nagant9138"
+    WA_BayonetIdleEmpty="idle_nagant9138"
+    WA_BayonetFire="idle_nagant9138"
+    WA_BayonetReload="stand_reload_nagant9138"
+    WA_BayonetProneReload="prone_reload_nagant9138"
+    WA_WorkBolt="bolt_nagant9138"
+    WA_BayonetWorkBolt="bolt_nagant9138"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -129,18 +145,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_nagant9138"
-    WA_Fire="idle_nagant9138"
-    WA_Reload="stand_reload_nagant9138"
-    WA_ProneReload="prone_reload_nagant9138"
-    WA_BayonetIdle="idle_nagant9138"
-    WA_BayonetIdleEmpty="idle_nagant9138"
-    WA_BayonetFire="idle_nagant9138"
-    WA_BayonetReload="stand_reload_nagant9138"
-    WA_BayonetProneReload="prone_reload_nagant9138"
-    WA_WorkBolt="bolt_nagant9138"
-    WA_BayonetWorkBolt="bolt_nagant9138"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.m44_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.M44'
 }

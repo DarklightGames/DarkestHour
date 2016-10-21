@@ -7,9 +7,19 @@ class DH_M38Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.nagant9138'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true
+    bRapidFire=false
+
+    WA_Idle="idle_nagant9138"
+    WA_Fire="idle_nagant9138"
+    WA_Reload="stand_reload_nagant9138"
+    WA_ProneReload="prone_reload_nagant9138"
+    WA_WorkBolt="bolt_nagant9138"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -78,10 +88,6 @@ defaultproperties
     PA_ReloadAnim="stand_reload_kar"
     PA_ReloadEmptyAnim="stand_reload_kar"
     PA_ProneReloadEmptyAnim="prone_reload_kar"
-    PA_BayonetAttachAnim="stand_bayattach_kar"
-    PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
-    PA_BayonetDetachAnim="stand_bayremove_kar"
-    PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
     PA_Fire="stand_shoothip_kar"
     PA_IronFire="stand_shootiron_kar"
     PA_CrouchFire="crouch_shoot_kar"
@@ -120,20 +126,8 @@ defaultproperties
     PA_MoveStandIronFire(7)="stand_shootFLiron_kar"
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
-    PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="stand_stab_kar"
-    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
-    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
     PA_FireLastShot="stand_shoothip_kar"
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_nagant9138"
-    WA_Fire="idle_nagant9138"
-    WA_Reload="stand_reload_nagant9138"
-    WA_ProneReload="prone_reload_nagant9138"
-    WA_WorkBolt="bolt_nagant9138"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.nagant9138'
 }

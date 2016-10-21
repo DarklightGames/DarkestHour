@@ -21,10 +21,21 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.Kar98_Scoped'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98scope'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
+    bRapidFire=false
     bLoopReloadAnim=true
+
+    WA_Idle="idle_kar98scoped"
+    WA_Fire="idle_kar98scoped"
+    WA_Reload="insert_kar98scope"
+    WA_PreReload="open_kar98scope"
+    WA_PostReload="close_kar98scope"
+    WA_WorkBolt="bolt_kar98scope"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -155,13 +166,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_scope"
     PA_CrouchFireLastShot="crouch_shoot_scope"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_kar98scoped"
-    WA_Fire="idle_kar98scoped"
-    WA_Reload="insert_kar98scope"
-    WA_PreReload="open_kar98scope"
-    WA_PostReload="close_kar98scope"
-    WA_WorkBolt="bolt_kar98scope"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98scope'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.Kar98_Scoped'
 }

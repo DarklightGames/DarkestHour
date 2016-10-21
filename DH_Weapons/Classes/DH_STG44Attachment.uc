@@ -7,8 +7,19 @@ class DH_STG44Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.stg44'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.stg44'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
+
+    WA_Idle="idle_stg44"
+    WA_IdleEmpty="idle_stg44"
+    WA_Fire="shoot_stg44"
+    WA_Reload="reloadhalf_stg44"
+    WA_ReloadEmpty="reloadempty_stg44"
+    WA_ProneReload="prone_reloadhalf_stg44"
+    WA_ProneReloadEmpty="prone_reloadempty_stg44"
+
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"
     PA_MovementAnims(2)="stand_jogL_stg44"
@@ -159,13 +170,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="idle_stg44"
-    WA_IdleEmpty="idle_stg44"
-    WA_Fire="shoot_stg44"
-    WA_Reload="reloadhalf_stg44"
-    WA_ReloadEmpty="reloadempty_stg44"
-    WA_ProneReload="prone_reloadhalf_stg44"
-    WA_ProneReloadEmpty="prone_reloadempty_stg44"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.stg44'
-    Mesh=SkeletalMesh'Weapons3rd_anm.stg44'
 }

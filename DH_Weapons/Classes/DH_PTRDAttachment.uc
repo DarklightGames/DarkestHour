@@ -7,8 +7,20 @@ class DH_PTRDAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.PTRD'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.prtd_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPTRD'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject14mm'
+    bRapidFire=false
+
+    WA_Idle="idle_ptrd"
+    WA_IdleEmpty="idle_open"
+    WA_Fire="shoot_ptrd"
+    WA_Reload="reload_ptrd"
+    WA_ReloadEmpty="reload_ptrd"
+    WA_ProneReload="prone_reload_ptrd"
+    WA_ProneReloadEmpty="prone_reload_ptrd"
+
     PA_MovementAnims(0)="stand_jogF_ptrd"
     PA_MovementAnims(1)="stand_jogB_ptrd"
     PA_MovementAnims(2)="stand_jogL_ptrd"
@@ -169,14 +181,4 @@ defaultproperties
     PA_HitRAnim="hitR_ptrd"
     PA_HitLLegAnim="hitL_leg_ptrd"
     PA_HitRLegAnim="hitR_leg_ptrd"
-    WA_Idle="idle_ptrd"
-    WA_IdleEmpty="idle_open"
-    WA_Fire="shoot_ptrd"
-    WA_Reload="reload_ptrd"
-    WA_ReloadEmpty="reload_ptrd"
-    WA_ProneReload="prone_reload_ptrd"
-    WA_ProneReloadEmpty="prone_reload_ptrd"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.prtd_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.PTRD'
 }

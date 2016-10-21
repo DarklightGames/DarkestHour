@@ -38,10 +38,22 @@ simulated function PlayIdle()
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.BAR_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+
+    WA_Idle="Idle_BAR"
+    WA_IdleEmpty="Idle_BAR"
+    WA_Fire="shoot_BAR"
+    WA_Reload="reload_half_BAR"
+    WA_ReloadEmpty="reload_empty_BAR"
+    WA_ProneReload="reload_half_BAR"
+    WA_ProneReloadEmpty="reload_empty_BAR"
+    WA_WeaponDeploy="SightUp_iron_in_BAR"
+    WA_WeaponUnDeploy="Sightup_iron_out_BAR"
 
     WA_BipodDeploy_Idle="Sightup_idle_BAR"
     WA_BipodDeploy_Fire="sightup_iron_shoot_BAR"
@@ -208,16 +220,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="Idle_BAR"
-    WA_IdleEmpty="Idle_BAR"
-    WA_Fire="shoot_BAR"
-    WA_Reload="reload_half_BAR"
-    WA_ReloadEmpty="reload_empty_BAR"
-    WA_ProneReload="reload_half_BAR"
-    WA_ProneReloadEmpty="reload_half_BAR"
-    WA_WeaponDeploy="SightUp_iron_in_BAR"
-    WA_WeaponUnDeploy="Sightup_iron_out_BAR"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.BAR_3rd'
 }
-

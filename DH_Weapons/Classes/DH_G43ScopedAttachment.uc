@@ -7,8 +7,20 @@ class DH_G43ScopedAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.g43scope'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.g43scope'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bRapidFire=false
+
+    WA_Idle="Idle_g43"
+    WA_IdleEmpty="Idle_g43"
+    WA_Fire="shoot_g43"
+    WA_Reload="reloadhalf_g43"
+    WA_ReloadEmpty="reloadempty_g43"
+    WA_ProneReload="prone_reloadhalf_g43"
+    WA_ProneReloadEmpty="prone_reloadempty_g43"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -135,14 +147,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_scope"
     PA_CrouchFireLastShot="crouch_shoot_scope"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="Idle_g43"
-    WA_IdleEmpty="Idle_g43"
-    WA_Fire="shoot_g43"
-    WA_Reload="reloadhalf_g43"
-    WA_ReloadEmpty="reloadempty_g43"
-    WA_ProneReload="prone_reloadhalf_g43"
-    WA_ProneReloadEmpty="prone_reloadempty_g43"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.g43scope'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.g43scope'
 }

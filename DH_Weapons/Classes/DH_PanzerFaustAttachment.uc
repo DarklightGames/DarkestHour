@@ -7,8 +7,13 @@ class DH_PanzerFaustAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
+    Skins(0)=texture'Weapons3rd_tex.German.Panzerfaust_world'
+    EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
     mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
     MuzzleBoneName="tip"
+
     PA_MovementAnims(0)="stand_jogF_faust"
     PA_MovementAnims(1)="stand_jogB_faust"
     PA_MovementAnims(2)="stand_jogL_faust"
@@ -118,10 +123,6 @@ defaultproperties
     PA_ReloadEmptyAnim="reload_k98"
     PA_ProneReloadEmptyAnim="prone_reload_faust"
     PA_ProneIdleRestAnim="prone_idle_faust"
-    PA_BayonetAttachAnim="bayattach_faust"
-    PA_ProneBayonetAttachAnim="prone_Bayattach_faust"
-    PA_BayonetDetachAnim="bayremove_faust"
-    PA_ProneBayonetDetachAnim="prone_Bayremove_faust"
     PA_Fire="stand_shootiron_faust"
     PA_IronFire="stand_shootiron_faust"
     PA_CrouchFire="crouch_shoot_faust"
@@ -161,9 +162,6 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="baystrike_faust"
-    PA_CrouchBayonetAltFire="baystrike_faust"
-    PA_ProneBayonetAltFire="baystrike_faust"
     PA_FireLastShot="stand_shoothip_faust"
     PA_IronFireLastShot="stand_shootiron_faust"
     PA_CrouchFireLastShot="crouch_shoot_faust"
@@ -194,8 +192,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_kar"
     PA_DodgeAnims(2)="jumpL_mid_kar"
     PA_DodgeAnims(3)="jumpR_mid_kar"
-    menuImage=texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
-    Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
-    EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
-    Skins(0)=texture'Weapons3rd_tex.German.Panzerfaust_world'
 }

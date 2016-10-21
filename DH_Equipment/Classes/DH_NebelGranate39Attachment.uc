@@ -7,8 +7,8 @@ class DH_NebelGranate39Attachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.gersmokenade'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.gersmokenade'
     WA_Idle="idle_potato"
     WA_Fire="idle_potato"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.gersmokenade'
-    Mesh=SkeletalMesh'Weapons3rd_anm.gersmokenade'
 }

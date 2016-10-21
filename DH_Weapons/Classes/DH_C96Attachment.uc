@@ -7,11 +7,23 @@ class DH_C96Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_C96Bullet' // was 'DH_Weapons.DH_C96Bullet_C'
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.C96_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
-    ShellEjectionBoneName="ejector"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    ShellEjectionBoneName="ejector"
+
+    ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
+
+    WA_Idle="idle_c96"
+    WA_IdleEmpty="idle_c96"
+    WA_Fire="idle_c96"
+    WA_Reload="idle_c96"
+    WA_ReloadEmpty="idle_c96"
+    WA_ProneReload="idle_c96"
+    WA_ProneReloadEmpty="idle_c96"
+
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"
@@ -189,13 +201,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pistol"
     PA_DodgeAnims(2)="jumpL_mid_pistol"
     PA_DodgeAnims(3)="jumpR_mid_pistol"
-    WA_Idle="idle_c96"
-    WA_IdleEmpty="idle_c96"
-    WA_Fire="idle_c96"
-    WA_Reload="idle_c96"
-    WA_ReloadEmpty="idle_c96"
-    WA_ProneReload="idle_c96"
-    WA_ProneReloadEmpty="idle_c96"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.C96_3rd'
 }

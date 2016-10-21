@@ -7,6 +7,13 @@ class DH_SatchelCharge10lb10sAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.satchel'
+    Skins(0)=texture'Weapons3rd_tex.German.satchel_world'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.satchel'
+
+    WA_Idle="idle_satchel"
+    WA_Fire="idle_satchel"
+
     PA_MovementAnims(0)="stand_jogF_satchel"
     PA_MovementAnims(1)="stand_jogB_satchel"
     PA_MovementAnims(2)="stand_jogL_satchel"
@@ -220,9 +227,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_satchel"
     PA_DodgeAnims(2)="jumpL_mid_satchel"
     PA_DodgeAnims(3)="jumpR_mid_satchel"
-    WA_Idle="idle_satchel"
-    WA_Fire="idle_satchel"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.satchel'
-    Mesh=SkeletalMesh'Weapons3rd_anm.satchel'
-    Skins(0)=texture'Weapons3rd_tex.German.satchel_world'
 }

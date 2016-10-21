@@ -21,22 +21,20 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
     Mesh=SkeletalMesh'Weapons3rd_anm.Nagant9130_scoped'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
-    bHeavy=false
-    bRapidFire=false
-    bAltRapidFire=false
     bAnimNotifiedShellEjects=true
-    bDynamicLight=false
-    LightType=LT_Steady
-    LightEffect=LE_NonIncidence
-    LightPeriod=3
-    LightBrightness=150
-    LightHue=30
-    LightSaturation=150
-    LightRadius=4.0
+    bRapidFire=false
+
+    WA_Idle="idle_nagant9130scoped"
+    WA_Fire="idle_nagant9130scoped"
+    WA_Reload="insert_nagantscoped"
+    WA_PreReload="open_nagantscoped"
+    WA_PostReload="close_nagantscoped"
+    WA_WorkBolt="bolt_nagantscope"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -218,10 +216,4 @@ defaultproperties
     PA_LimpIronAnims(5)="stand_limpFRiron_scope"
     PA_LimpIronAnims(6)="stand_limpBLiron_scope"
     PA_LimpIronAnims(7)="stand_limpBRiron_scope"
-    WA_Idle="idle_nagant9130scoped"
-    WA_Fire="idle_nagant9130scoped"
-    WA_Reload="insert_nagantscoped"
-    WA_PreReload="open_nagantscoped"
-    WA_PostReload="close_nagantscoped"
-    WA_WorkBolt="bolt_nagantscope"
 }

@@ -7,10 +7,21 @@ class DH_ThompsonAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Thompson_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Thompson_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+
+    WA_Idle="Idle_thompson"
+    WA_IdleEmpty="Idle_thompson"
+    WA_Fire="Idle_thompson"
+    WA_Reload="Idle_thompson"
+    WA_ReloadEmpty="Idle_thompson"
+    WA_ProneReload="Idle_thompson"
+    WA_ProneReloadEmpty="Idle_thompson"
+
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"
     PA_MovementAnims(2)="stand_jogL_stg44"
@@ -161,13 +172,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="Idle_thompson"
-    WA_IdleEmpty="Idle_thompson"
-    WA_Fire="Idle_thompson"
-    WA_Reload="Idle_thompson"
-    WA_ReloadEmpty="Idle_thompson"
-    WA_ProneReload="Idle_thompson"
-    WA_ProneReloadEmpty="Idle_thompson"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Thompson_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Thompson_3rd'
 }

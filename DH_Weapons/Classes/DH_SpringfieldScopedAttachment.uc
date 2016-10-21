@@ -21,10 +21,21 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Springfield_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    MuzzleBoneName="Muzzle"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    MuzzleBoneName="Muzzle"
     bAnimNotifiedShellEjects=true
+    bRapidFire=false
+
+    WA_Idle="Idle_springfield"
+    WA_Fire="Idle_springfield"
+    WA_Reload="Insert_springfield"
+    WA_PreReload="Open_springfield"
+    WA_PostReload="Close_springfield"
+    WA_WorkBolt="bolt_springfield"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -156,13 +167,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_scope"
     PA_CrouchFireLastShot="crouch_shoot_scope"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="Idle_springfield"
-    WA_Fire="Idle_springfield"
-    WA_Reload="Insert_springfield"
-    WA_PreReload="Open_springfield"
-    WA_PostReload="Close_springfield"
-    WA_WorkBolt="bolt_springfield"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Springfield_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
 }

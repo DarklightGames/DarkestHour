@@ -7,14 +7,26 @@ class DH_DP28Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    bSpawnShellsOutBottom=false
-    ClientProjectileClass=class'DH_Weapons.DH_DP28Bullet'
-    ClientTracerClass=class'DH_Weapons.DH_DP28TracerBullet'
-    bUsesTracers=true
-    TracerFrequency=5
+    Mesh=SkeletalMesh'Weapons3rd_anm.DP28'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.dp28_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdDP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bSpawnShellsOutBottom=false
     bBarrelCanOverheat=true
+
+    ClientProjectileClass=class'DH_Weapons.DH_DP28Bullet'
+    bUsesTracers=true
+    TracerFrequency=5
+    ClientTracerClass=class'DH_Weapons.DH_DP28TracerBullet'
+
+    WA_Idle="idle_DP28"
+    WA_IdleEmpty="idle_DP28"
+    WA_Fire="shoot_dp28"
+    WA_Reload="reloadhalf_dp28"
+    WA_ReloadEmpty="reloadempty_dp28"
+    WA_ProneReload="prone_reloadhalf_dp28"
+    WA_ProneReloadEmpty="prone_reloadempty_dp28"
+
     PA_MovementAnims(0)="stand_jogF_dp27"
     PA_MovementAnims(1)="stand_jogB_dp27"
     PA_MovementAnims(2)="stand_jogL_dp27"
@@ -176,13 +188,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="idle_DP28"
-    WA_IdleEmpty="idle_DP28"
-    WA_Fire="shoot_dp28"
-    WA_Reload="reloadhalf_dp28"
-    WA_ReloadEmpty="reloadempty_dp28"
-    WA_ProneReload="prone_reloadhalf_dp28"
-    WA_ProneReloadEmpty="prone_reloadempty_dp28"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.dp28_icon'
-    Mesh=SkeletalMesh'Weapons3rd_anm.DP28'
 }

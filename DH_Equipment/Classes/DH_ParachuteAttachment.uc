@@ -12,7 +12,12 @@ simulated function PlayIdle()
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Parachute_anm.Parachute3rd'
+    Skins(0)=texture'DH_Sundries_Tex.Parachute.Parachute'
     CullDistance=0.0 // no cull as it's too big
+    MenuImage=texture'DH_Sundries_Tex.Parachute.ParachuteIcon'
+    AttachmentBone="HIP"
+
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
@@ -128,8 +133,4 @@ defaultproperties
     PA_LandAnims(1)="chute_undeploy"
     PA_LandAnims(2)="chute_undeploy"
     PA_LandAnims(3)="chute_undeploy"
-    MenuImage=texture'DH_Sundries_Tex.Parachute.ParachuteIcon'
-    AttachmentBone="HIP"
-    Mesh=SkeletalMesh'DH_Parachute_anm.Parachute3rd'
-    Skins(0)=texture'DH_Sundries_Tex.Parachute.Parachute'
 }

@@ -9,10 +9,29 @@ class DH_EnfieldNo4Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bRapidFire=false
+
+    WA_Idle="idle_enfieldno4"
+    WA_Fire="idle_enfieldno4"
+    WA_Reload="idle_enfieldno4"
+    WA_ProneReload="idle_enfieldno4"
+    WA_BayonetIdle="idle_enfieldno4_bayo"
+    WA_BayonetFire="idle_enfieldno4_bayo"
+    WA_BayonetReload="idle_enfieldno4_bayo"
+    WA_BayonetProneReload="idle_enfieldno4_bayo"
+    WA_BayonetAttach="idle_enfieldno4"
+    WA_BayonetDetach="idle_enfieldno4_bayo"
+    WA_BayonetAttachProne="idle_enfieldno4"
+    WA_BayonetDetachProne="idle_enfieldno4_bayo"
+    WA_WorkBolt="idle_enfieldno4"
+    WA_BayonetWorkBolt="idle_enfieldno4_bayo"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -133,21 +152,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_enfieldno4"
-    WA_Fire="idle_enfieldno4"
-    WA_Reload="idle_enfieldno4"
-    WA_ProneReload="idle_enfieldno4"
-    WA_BayonetIdle="idle_enfieldno4_bayo"
-    WA_BayonetFire="idle_enfieldno4_bayo"
-    WA_BayonetReload="idle_enfieldno4_bayo"
-    WA_BayonetProneReload="idle_enfieldno4_bayo"
-    WA_BayonetAttach="idle_enfieldno4"
-    WA_BayonetDetach="idle_enfieldno4_bayo"
-    WA_BayonetAttachProne="idle_enfieldno4"
-    WA_BayonetDetachProne="idle_enfieldno4_bayo"
-    WA_WorkBolt="idle_enfieldno4"
-    WA_BayonetWorkBolt="idle_enfieldno4_bayo"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_3rd'
 }

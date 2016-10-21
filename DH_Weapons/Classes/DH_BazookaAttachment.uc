@@ -7,10 +7,18 @@ class DH_BazookaAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bazooka_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
-    ExhaustBoneName="ejector"
     mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
+    ExhaustBoneName="ejector"
     MuzzleBoneName="Muzzle"
+
+    WA_Idle="idle_bazooka"
+    WA_Fire="idle_bazooka"
+    WA_Reload="ReloadS_Bazooka"
+    WA_ProneReload="ReloadS_Bazooka"
+
     PA_AssistedReloadAnim="crouch_reloadA_bazooka"
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -83,10 +91,6 @@ defaultproperties
     PA_ReloadEmptyAnim="crouch_reloadS_bazooka"
     PA_ProneReloadEmptyAnim="prone_reload_kar"
     PA_ProneIdleRestAnim="prone_idle_kar"
-    PA_BayonetAttachAnim="bayattach_kar"
-    PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
-    PA_BayonetDetachAnim="bayremove_kar"
-    PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
     PA_Fire="stand_shootiron_kar"
     PA_IronFire="stand_shootiron_kar"
     PA_CrouchFire="crouch_shoot_kar"
@@ -127,17 +131,8 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="baystrike_kar"
-    PA_CrouchBayonetAltFire="baystrike_kar"
-    PA_ProneBayonetAltFire="baystrike_kar"
     PA_FireLastShot="stand_shoothip_kar"
     PA_IronFireLastShot="crouch_shoot_bazooka"
     PA_CrouchFireLastShot="crouch_shoot_bazooka"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_bazooka"
-    WA_Fire="idle_bazooka"
-    WA_Reload="ReloadS_Bazooka"
-    WA_ProneReload="ReloadS_Bazooka"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bazooka_3rd'
 }

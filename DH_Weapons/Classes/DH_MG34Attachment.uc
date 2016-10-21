@@ -7,14 +7,26 @@ class DH_MG34Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_MG34Bullet'
-    ClientTracerClass=class'DH_MG34TracerBullet'
+    Mesh=SkeletalMesh'Weapons3rd_anm.mg34'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg34'
+    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+    bAltFireFlash=true
+    bBarrelCanOverheat=true
+
+    ClientProjectileClass=class'DH_Weapons.DH_MG34Bullet'
     bUsesTracers=true
     TracerFrequency=7
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
-    bAltFireFlash=true
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    bBarrelCanOverheat=true
+    ClientTracerClass=class'DH_MG34TracerBullet'
+
+    WA_Idle="idle_mg34"
+    WA_IdleEmpty="idle_mg34"
+    WA_Fire="shoot_mg34"
+    WA_Reload="reload_mg34"
+    WA_ReloadEmpty="reload_mg34"
+    WA_ProneReload="prone_reload_mg34"
+    WA_ProneReloadEmpty="prone_reload_mg34"
+
     PA_MovementAnims(0)="stand_jogF_mg34"
     PA_MovementAnims(1)="stand_jogB_mg34"
     PA_MovementAnims(2)="stand_jogL_mg34"
@@ -176,13 +188,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="idle_mg34"
-    WA_IdleEmpty="idle_mg34"
-    WA_Fire="shoot_mg34"
-    WA_Reload="reload_mg34"
-    WA_ReloadEmpty="reload_mg34"
-    WA_ProneReload="prone_reload_mg34"
-    WA_ProneReloadEmpty="prone_reload_mg34"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg34'
-    Mesh=SkeletalMesh'Weapons3rd_anm.mg34'
 }

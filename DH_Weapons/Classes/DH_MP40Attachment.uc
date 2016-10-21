@@ -7,8 +7,19 @@ class DH_MP40Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mp40'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+
+    WA_Idle="Idle_mp40"
+    WA_IdleEmpty="Idle_mp40"
+    WA_Fire="shoot_mp40"
+    WA_Reload="reloadhalf_mp40"
+    WA_ReloadEmpty="reloadempty_mp40"
+    WA_ProneReload="prone_reloadhalf_mp40"
+    WA_ProneReloadEmpty="prone_reloadempty_mp40"
+
     PA_MovementAnims(0)="stand_jogF_mp40"
     PA_MovementAnims(1)="stand_jogB_mp40"
     PA_MovementAnims(2)="stand_jogL_mp40"
@@ -178,13 +189,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_mp40"
     PA_DodgeAnims(2)="jumpL_mid_mp40"
     PA_DodgeAnims(3)="jumpR_mid_mp40"
-    WA_Idle="Idle_mp40"
-    WA_IdleEmpty="Idle_mp40"
-    WA_Fire="shoot_mp40"
-    WA_Reload="reloadhalf_mp40"
-    WA_ReloadEmpty="reloadempty_mp40"
-    WA_ProneReload="prone_reloadhalf_mp40"
-    WA_ProneReloadEmpty="prone_reloadempty_mp40"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mp40'
-    Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
 }

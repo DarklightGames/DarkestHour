@@ -7,8 +7,20 @@ class DH_P38Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.p38'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.p38'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    bRapidFire=false
+
+    WA_Idle="idle_p38"
+    WA_IdleEmpty="empty_p38"
+    WA_Fire="shoot_p38"
+    WA_Reload="reloadhalf_p38"
+    WA_ReloadEmpty="reloadempty_p38"
+    WA_ProneReload="prone_reloadhalf_p38"
+    WA_ProneReloadEmpty="prone_reloadempty_p38"
+
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"
@@ -186,14 +198,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pistol"
     PA_DodgeAnims(2)="jumpL_mid_pistol"
     PA_DodgeAnims(3)="jumpR_mid_pistol"
-    WA_Idle="idle_p38"
-    WA_IdleEmpty="empty_p38"
-    WA_Fire="shoot_p38"
-    WA_Reload="reloadhalf_p38"
-    WA_ReloadEmpty="reloadempty_p38"
-    WA_ProneReload="prone_reloadhalf_p38"
-    WA_ProneReloadEmpty="prone_reloadempty_p38"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.p38'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.p38'
 }

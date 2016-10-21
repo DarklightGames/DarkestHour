@@ -7,7 +7,17 @@ class DHWireCuttersAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as binoculars don't have a muzzle flash & are also small
+    Mesh=SkeletalMesh'DH_Wirecutters_3rd.Wirecutters_3rd'
+    Skins(0)=texture'DH_Equipment_tex.wirecutter.Wirecutters_3rdP'
+    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as cutters don't have a muzzle flash & are also small
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
+    bRapidFire=false
+    LightType=LT_None
+    LightEffect=LE_None
+
+    WA_Idle="idle_wirecutters"
+    WA_Fire="cut_wirecutters"
+
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
@@ -227,12 +237,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_nade"
     PA_DodgeAnims(2)="jumpL_mid_nade"
     PA_DodgeAnims(3)="jumpR_mid_nade"
-    WA_Idle="idle_wirecutters" // "idle_binocs"
-    WA_Fire="cut_wirecutters" // "idle_binocs"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
-    bRapidFire=false
-    LightType=LT_None
-    LightEffect=LE_None
-    Mesh=SkeletalMesh'DH_Wirecutters_3rd.Wirecutters_3rd'
-    Skins(0)=texture'DH_Equipment_tex.wirecutter.Wirecutters_3rdP'
 }

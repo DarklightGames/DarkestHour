@@ -38,10 +38,22 @@ simulated function PlayIdle()
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bren_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+
+    WA_Idle="idle_Bren"
+    WA_IdleEmpty="idle_Bren"
+    WA_Fire="idle_Bren"
+    WA_Reload="idle_Bren"
+    WA_ReloadEmpty="idle_Bren"
+    WA_ProneReload="idle_Bren"
+    WA_ProneReloadEmpty="idle_Bren"
+    WA_WeaponDeploy="idle_Bren_deployed"
+    WA_WeaponUnDeploy="idle_Bren"
 
     WA_BipodDeploy_Idle="idle_Bren_deployed"
     WA_BipodDeploy_Fire="idle_Bren_deployed"
@@ -208,15 +220,4 @@ defaultproperties
     PA_HitRAnim="hitR_stg44"
     PA_HitLLegAnim="hitL_leg_stg44"
     PA_HitRLegAnim="hitR_leg_stg44"
-    WA_Idle="idle_Bren"
-    WA_IdleEmpty="idle_Bren"
-    WA_Fire="idle_Bren"
-    WA_Reload="idle_Bren"
-    WA_ReloadEmpty="idle_Bren"
-    WA_ProneReload="idle_Bren"
-    WA_ProneReloadEmpty="idle_Bren"
-    WA_WeaponDeploy="idle_Bren_deployed"
-    WA_WeaponUnDeploy="idle_Bren"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bren_3rd'
 }

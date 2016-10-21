@@ -7,9 +7,21 @@ class DH_EnfieldNo2Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo2_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
-    ShellEjectionBoneName="Bullet1" // Matt: different from all other DH weapons, which use "ejector" (RO weapons use "weapon_eject") - this one seems appropriate
+    ShellEjectionBoneName="Bullet1" // different from all other DH weapons, which use "ejector" (RO weapons use "weapon_eject") - this one seems appropriate
+    bRapidFire=false
+
+    WA_Idle="idle_enfieldno2"
+    WA_IdleEmpty="idle_enfieldno2"
+    WA_Fire="idle_enfieldno2"
+    WA_Reload="idle_enfieldno2"
+    WA_ReloadEmpty="idle_enfieldno2"
+    WA_ProneReload="idle_enfieldno2"
+    WA_ProneReloadEmpty="idle_enfieldno2"
+
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"
@@ -159,9 +171,6 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="stand_stab_kar"
-    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
-    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
     PA_FireLastShot="stand_shoothip_pistol"
     PA_IronFireLastShot="stand_shootiron_pistol"
     PA_CrouchFireLastShot="crouch_shoot_pistol"
@@ -190,14 +199,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pistol"
     PA_DodgeAnims(2)="jumpL_mid_pistol"
     PA_DodgeAnims(3)="jumpR_mid_pistol"
-    WA_Idle="idle_enfieldno2"
-    WA_IdleEmpty="idle_enfieldno2"
-    WA_Fire="idle_enfieldno2"
-    WA_Reload="idle_enfieldno2"
-    WA_ReloadEmpty="idle_enfieldno2"
-    WA_ProneReload="idle_enfieldno2"
-    WA_ProneReloadEmpty="idle_enfieldno2"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo2_3rd'
 }

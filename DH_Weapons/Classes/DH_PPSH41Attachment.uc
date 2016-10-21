@@ -7,9 +7,21 @@ class DH_PPSh41Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_Weapons.DH_PPSh41Bullet_C'
+    Mesh=SkeletalMesh'Weapons3rd_anm.ppsh41'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
+
+    ClientProjectileClass=class'DH_Weapons.DH_PPSH41Bullet'
+
+    WA_Idle="idle_ppsh41"
+    WA_IdleEmpty="idle_ppsh41"
+    WA_Fire="shoot_ppsh41"
+    WA_Reload="reloadhalf_ppsh41"
+    WA_ReloadEmpty="reloadempty_ppsh41"
+    WA_ProneReload="prone_reloadhalf_ppsh41"
+    WA_ProneReloadEmpty="prone_reloadempty_ppsh41"
+
     PA_MovementAnims(0)="stand_jogF_ppsh"
     PA_MovementAnims(1)="stand_jogB_ppsh"
     PA_MovementAnims(2)="stand_jogL_ppsh"
@@ -179,13 +191,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_ppsh"
     PA_DodgeAnims(2)="jumpL_mid_ppsh"
     PA_DodgeAnims(3)="jumpR_mid_ppsh"
-    WA_Idle="idle_ppsh41"
-    WA_IdleEmpty="idle_ppsh41"
-    WA_Fire="shoot_ppsh41"
-    WA_Reload="reloadhalf_ppsh41"
-    WA_ReloadEmpty="reloadempty_ppsh41"
-    WA_ProneReload="prone_reloadhalf_ppsh41"
-    WA_ProneReloadEmpty="prone_reloadempty_ppsh41"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_icon'
-    Mesh=SkeletalMesh'Weapons3rd_anm.ppsh41'
 }

@@ -7,13 +7,25 @@ class DH_MG42Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_MG42Bullet'
-    ClientTracerClass=class'DH_MG42TracerBullet'
-    bUsesTracers=true
-    TracerFrequency=7
+    Mesh=SkeletalMesh'Weapons3rd_anm.mg42'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg42'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bBarrelCanOverheat=true
+
+    ClientProjectileClass=class'DH_Weapons.DH_MG42Bullet'
+    bUsesTracers=true
+    TracerFrequency=7
+    ClientTracerClass=class'DH_Weapons.DH_MG42TracerBullet'
+
+    WA_Idle="idle_mg42"
+    WA_IdleEmpty="idle_mg42"
+    WA_Fire="shoot_mg42"
+    WA_Reload="reload_mg42"
+    WA_ReloadEmpty="reload_mg42"
+    WA_ProneReload="prone_reload_mg42"
+    WA_ProneReloadEmpty="prone_reload_mg42"
+
     PA_MovementAnims(0)="stand_jogF_mg34"
     PA_MovementAnims(1)="stand_jogB_mg34"
     PA_MovementAnims(2)="stand_jogL_mg34"
@@ -174,13 +186,4 @@ defaultproperties
     PA_HitRAnim="hitR_mg42"
     PA_HitLLegAnim="hitL_leg_mg42"
     PA_HitRLegAnim="hitR_leg_mg42"
-    WA_Idle="idle_mg42"
-    WA_IdleEmpty="idle_mg42"
-    WA_Fire="shoot_mg42"
-    WA_Reload="reload_mg42"
-    WA_ReloadEmpty="reload_mg42"
-    WA_ProneReload="prone_reload_mg42"
-    WA_ProneReloadEmpty="prone_reload_mg42"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg42'
-    Mesh=SkeletalMesh'Weapons3rd_anm.mg42'
 }

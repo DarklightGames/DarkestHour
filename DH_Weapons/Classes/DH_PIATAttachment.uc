@@ -7,7 +7,17 @@ class DH_PIATAttachment extends DHRocketWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'
+    EmptyMesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_NoShell_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
+    bHeavy=true
     MuzzleBoneName="Muzzle"
+
+    WA_Idle="idle_PIAT"
+    WA_Fire="idle_PIAT"
+    WA_Reload="idle_PIAT"
+    WA_ProneReload="idle_PIAT"
+
     PA_MovementAnims(0)="stand_jogF_ptrd"
     PA_MovementAnims(1)="stand_jogB_ptrd"
     PA_MovementAnims(2)="stand_jogL_ptrd"
@@ -117,10 +127,6 @@ defaultproperties
     PA_ReloadEmptyAnim="stand_reloadempty_dp27"
     PA_ProneReloadEmptyAnim="prone_reloadempty_dp27"
     PA_ProneIdleRestAnim="prone_idle_mg42"
-    PA_BayonetAttachAnim="bayattach_faust"
-    PA_ProneBayonetAttachAnim="prone_Bayattach_faust"
-    PA_BayonetDetachAnim="bayremove_faust"
-    PA_ProneBayonetDetachAnim="prone_Bayremove_faust"
     PA_Fire="stand_shootiron_mg42"
     PA_IronFire="stand_shootiron_mg42"
     PA_CrouchFire="crouch_shoot_mg34"
@@ -160,19 +166,8 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="baystrike_faust"
-    PA_CrouchBayonetAltFire="baystrike_faust"
-    PA_ProneBayonetAltFire="baystrike_faust"
     PA_FireLastShot="stand_shoothip_faust"
     PA_IronFireLastShot="stand_shootiron_faust"
     PA_CrouchFireLastShot="crouch_shoot_faust"
     PA_ProneFireLastShot="prone_shoot_faust"
-    WA_Idle="idle_PIAT"
-    WA_Fire="idle_PIAT"
-    WA_Reload="idle_PIAT"
-    WA_ProneReload="idle_PIAT"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
-    bHeavy=true
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'
-    EmptyMesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_NoShell_3rd'
 }

@@ -7,10 +7,21 @@ class DH_StenMkIIAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.StenMkII_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Sten_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+
+    WA_Idle="idle_sten"
+    WA_IdleEmpty="idle_sten"
+    WA_Fire="idle_sten"
+    WA_Reload="idle_sten"
+    WA_ReloadEmpty="idle_sten"
+    WA_ProneReload="idle_sten"
+    WA_ProneReloadEmpty="idle_sten"
+
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"
     PA_MovementAnims(2)="stand_jogL_stg44"
@@ -180,13 +191,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pps43"
     PA_DodgeAnims(2)="jumpL_mid_pps43"
     PA_DodgeAnims(3)="jumpR_mid_pps43"
-    WA_Idle="idle_sten"
-    WA_IdleEmpty="idle_sten"
-    WA_Fire="idle_sten"
-    WA_Reload="idle_sten"
-    WA_ReloadEmpty="idle_sten"
-    WA_ProneReload="idle_sten"
-    WA_ProneReloadEmpty="idle_sten"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Sten_icon'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.StenMkII_3rd'
 }

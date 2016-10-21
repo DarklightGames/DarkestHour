@@ -7,21 +7,20 @@ class DH_TT33Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.tt33'
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.tt33_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
-    Mesh=SkeletalMesh'Weapons3rd_anm.tt33'
-    bHeavy=false
     bRapidFire=false
-    bAltRapidFire=false
-    bDynamicLight=false
-    LightType=LT_Steady
-    LightEffect=LE_NonIncidence
-    LightPeriod=3
-    LightBrightness=150
-    LightHue=30
-    LightSaturation=150
-    LightRadius=4.0
+
+    WA_Idle="idle_tt33"
+    WA_IdleEmpty="empty_tt33"
+    WA_Fire="shoot_tt33"
+    WA_Reload="reloadhalf_tt33"
+    WA_ReloadEmpty="reloadempty_tt33"
+    WA_ProneReload="prone_reloadhalf_tt33"
+    WA_ProneReloadEmpty="prone_reloadempty_tt33"
+
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"
@@ -165,9 +164,6 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="stand_stab_kar"
-    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
-    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
     PA_AirStillAnim="jump_mid_pistol"
     PA_AirAnims(0)="jumpF_mid_pistol"
     PA_AirAnims(1)="jumpB_mid_pistol"
@@ -202,11 +198,4 @@ defaultproperties
     PA_LimpIronAnims(5)="stand_limpFRiron_pistol"
     PA_LimpIronAnims(6)="stand_limpBLiron_pistol"
     PA_LimpIronAnims(7)="stand_limpBRiron_pistol"
-    WA_Idle="idle_tt33"
-    WA_IdleEmpty="empty_tt33"
-    WA_Fire="shoot_tt33"
-    WA_Reload="reloadhalf_tt33"
-    WA_ReloadEmpty="reloadempty_tt33"
-    WA_ProneReload="prone_reloadhalf_tt33"
-    WA_ProneReloadEmpty="prone_reloadempty_tt33"
 }

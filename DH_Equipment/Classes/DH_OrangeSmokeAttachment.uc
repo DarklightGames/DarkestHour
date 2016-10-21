@@ -7,8 +7,8 @@ class DH_OrangeSmokeAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.OrangeSmokeGrenade_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke'
     WA_Idle="Idle"
     WA_Fire="Idle"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.OrangeSmokeGrenade_3rd'
 }

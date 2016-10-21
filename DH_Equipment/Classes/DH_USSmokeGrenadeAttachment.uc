@@ -7,8 +7,8 @@ class DH_USSmokeGrenadeAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.SmokeGrenade_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Smoke'
     WA_Idle="Idle"
     WA_Fire="Idle"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Smoke'
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.SmokeGrenade_3rd'
 }

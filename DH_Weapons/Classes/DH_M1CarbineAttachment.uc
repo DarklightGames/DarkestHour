@@ -9,10 +9,22 @@ class DH_M1CarbineAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Carbine_3rd'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
+    bRapidFire=false
+
+    WA_Idle="Idle_M1Carbine"
+    WA_IdleEmpty="Idle_M1Carbine"
+    WA_Fire="Idle_M1Carbine"
+    WA_Reload="Idle_M1Carbine"
+    WA_ReloadEmpty="Idle_M1Carbine"
+    WA_ProneReload="Idle_M1Carbine"
+    WA_ProneReloadEmpty="Idle_M1Carbine"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -126,14 +138,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="Idle_M1Carbine"
-    WA_IdleEmpty="Idle_M1Carbine"
-    WA_Fire="Idle_M1Carbine"
-    WA_Reload="Idle_M1Carbine"
-    WA_ReloadEmpty="Idle_M1Carbine"
-    WA_ProneReload="Idle_M1Carbine"
-    WA_ProneReloadEmpty="Idle_M1Carbine"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Carbine_3rd'
 }

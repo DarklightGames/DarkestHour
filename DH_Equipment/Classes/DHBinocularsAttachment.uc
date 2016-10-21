@@ -27,7 +27,16 @@ simulated event ThirdPersonEffects()
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
     CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as binoculars don't have a muzzle flash & are also small
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
+    bRapidFire=false
+    LightType=LT_None
+    LightEffect=LE_None
+
+    WA_Idle="idle_binocs"
+    WA_Fire="idle_binocs"
+
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
@@ -161,11 +170,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_nade"
     PA_DodgeAnims(2)="jumpL_mid_nade"
     PA_DodgeAnims(3)="jumpR_mid_nade"
-    WA_Idle="idle_binocs"
-    WA_Fire="idle_binocs"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
-    bRapidFire=false
-    LightType=LT_None
-    LightEffect=LE_None
-    Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
 }

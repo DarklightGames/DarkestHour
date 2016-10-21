@@ -11,17 +11,16 @@ defaultproperties
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.svt40scoped_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
-    bHeavy=false
     bRapidFire=false
-    bAltRapidFire=false
-    bDynamicLight=false
-    LightType=LT_Steady
-    LightEffect=LE_NonIncidence
-    LightPeriod=3
-    LightBrightness=150
-    LightHue=30
-    LightSaturation=150
-    LightRadius=4.0
+
+    WA_Idle="idle_svt40"
+    WA_IdleEmpty="idle_svt40"
+    WA_Fire="shoot_svt40"
+    WA_Reload="reloadhalf_svt40"
+    WA_ReloadEmpty="reloadempty_svt40"
+    WA_ProneReload="prone_reloadhalf_svt40"
+    WA_ProneReloadEmpty="prone_reloadempty_svt40"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -199,11 +198,4 @@ defaultproperties
     PA_LimpIronAnims(5)="stand_limpFRiron_scope"
     PA_LimpIronAnims(6)="stand_limpBLiron_scope"
     PA_LimpIronAnims(7)="stand_limpBRiron_scope"
-    WA_Idle="idle_svt40"
-    WA_IdleEmpty="idle_svt40"
-    WA_Fire="shoot_svt40"
-    WA_Reload="reloadhalf_svt40"
-    WA_ReloadEmpty="reloadempty_svt40"
-    WA_ProneReload="prone_reloadhalf_svt40"
-    WA_ProneReloadEmpty="prone_reloadempty_svt40"
 }

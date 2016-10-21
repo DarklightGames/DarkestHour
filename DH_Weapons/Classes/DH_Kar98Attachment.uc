@@ -7,9 +7,28 @@ class DH_Kar98Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.kar98'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true
+    bRapidFire=false
+
+    WA_Idle="idle_kar98"
+    WA_Fire="idle_kar98"
+    WA_Reload="reload_kar98"
+    WA_ProneReload="prone_reload_kar98"
+    WA_BayonetIdle="idle_kar98_bayo"
+    WA_BayonetFire="idle_kar98_bayo"
+    WA_BayonetReload="reload_kar98_bayo"
+    WA_BayonetProneReload="prone_reload_kar98_bayo"
+    WA_BayonetAttach="stand_bayattach_kar98"
+    WA_BayonetDetach="stand_bayremove_kar98"
+    WA_BayonetAttachProne="prone_bayattach_kar98"
+    WA_BayonetDetachProne="prone_bayremove_kar98"
+    WA_WorkBolt="bolt_kar98"
+    WA_BayonetWorkBolt="bolt_kar98_bayo"
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
@@ -130,21 +149,4 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_kar"
     PA_CrouchFireLastShot="crouch_shoot_kar"
     PA_ProneFireLastShot="prone_shoot_kar"
-    WA_Idle="idle_kar98"
-    WA_Fire="idle_kar98"
-    WA_Reload="reload_kar98"
-    WA_ProneReload="prone_reload_kar98"
-    WA_BayonetIdle="idle_kar98_bayo"
-    WA_BayonetFire="idle_kar98_bayo"
-    WA_BayonetReload="reload_kar98_bayo"
-    WA_BayonetProneReload="prone_reload_kar98_bayo"
-    WA_BayonetAttach="stand_bayattach_kar98"
-    WA_BayonetDetach="stand_bayremove_kar98"
-    WA_BayonetAttachProne="prone_bayattach_kar98"
-    WA_BayonetDetachProne="prone_bayremove_kar98"
-    WA_WorkBolt="bolt_kar98"
-    WA_BayonetWorkBolt="bolt_kar98_bayo"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.kar98'
 }

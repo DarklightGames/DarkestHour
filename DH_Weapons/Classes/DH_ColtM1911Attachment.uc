@@ -7,10 +7,23 @@ class DH_ColtM1911Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Colt45_3rd'
+    DrawScale=1.25
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
+    bRapidFire=false
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+
+    WA_Idle="Idle_Colt"
+    WA_IdleEmpty="idle_empty_Colt"
+    WA_Fire="shoot_Colt"
+    WA_Reload="reload_half_Colt"
+    WA_ReloadEmpty="reload_empty_Colt"
+    WA_ProneReload="prone_reload_half_Colt"
+    WA_ProneReloadEmpty="prone_reload_empty_Colt"
+
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"
@@ -160,9 +173,6 @@ defaultproperties
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
-    PA_BayonetAltFire="stand_stab_kar"
-    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
-    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
     PA_FireLastShot="stand_shoothip_pistol"
     PA_IronFireLastShot="stand_shootiron_pistol"
     PA_CrouchFireLastShot="crouch_shoot_pistol"
@@ -191,15 +201,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pistol"
     PA_DodgeAnims(2)="jumpL_mid_pistol"
     PA_DodgeAnims(3)="jumpR_mid_pistol"
-    WA_Idle="Idle_Colt"
-    WA_IdleEmpty="idle_empty_Colt"
-    WA_Fire="shoot_Colt"
-    WA_Reload="reload_half_Colt"
-    WA_ReloadEmpty="reload_empty_Colt"
-    WA_ProneReload="prone_reload_half_Colt"
-    WA_ProneReloadEmpty="prone_reload_empty_Colt"
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
-    bRapidFire=false
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Colt45_3rd'
-    DrawScale=1.25
 }

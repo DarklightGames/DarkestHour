@@ -7,8 +7,20 @@ class DH_P08LugerAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
+    Mesh=SkeletalMesh'Weapons3rd_anm.luger'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.luger'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
+    bRapidFire=false
+
+    WA_Idle="idle_luger"
+    WA_IdleEmpty="empty_luger"
+    WA_Fire="shoot_luger"
+    WA_Reload="reloadhalf_luger"
+    WA_ReloadEmpty="reloadempty_luger"
+    WA_ProneReload="prone_reloadhalf_luger"
+    WA_ProneReloadEmpty="prone_reloadempty_luger"
+
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
     PA_MovementAnims(2)="stand_jogL_pistol"
@@ -186,14 +198,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_pistol"
     PA_DodgeAnims(2)="jumpL_mid_pistol"
     PA_DodgeAnims(3)="jumpR_mid_pistol"
-    WA_Idle="idle_luger"
-    WA_IdleEmpty="empty_luger"
-    WA_Fire="shoot_luger"
-    WA_Reload="reloadhalf_luger"
-    WA_ReloadEmpty="reloadempty_luger"
-    WA_ProneReload="prone_reloadhalf_luger"
-    WA_ProneReloadEmpty="prone_reloadempty_luger"
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.luger'
-    bRapidFire=false
-    Mesh=SkeletalMesh'Weapons3rd_anm.luger'
 }
