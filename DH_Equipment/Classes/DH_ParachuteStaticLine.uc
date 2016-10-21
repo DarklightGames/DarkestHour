@@ -10,12 +10,30 @@ class DH_ParachuteStaticLine extends Weapon;
 
 var     bool    bChuteDeployed;
 
-// No ammo for this weapon
-function bool FillAmmo() { return false; }
-function bool ResupplyAmmo() { return false; }
-simulated function bool IsFiring() { return false; }
+// Functions emptied out or returning false, as parachute isn't a real weapon
+simulated function Fire(float F) {return;}
+simulated event ClientStartFire(int Mode) {return;}
+simulated event StopFire(int Mode) {return;}
+simulated function bool IsFiring() {return false;}
+function bool FillAmmo() {return false;}
+function bool ResupplyAmmo() {return false;}
+simulated exec function ROManualReload() {return;}
+simulated function bool IsBusy() {return false;} // not busy in the idle state because we never fire
+simulated function bool ShouldUseFreeAim() {return false;}
 
-// Matt: modified to stop most stuff happening on a net client, to avoid "accessed none" errors, & to play an appropriate landing sound based on the surface we land on
+simulated state RaisingWeapon
+{
+    simulated function BeginState() {return;}
+    simulated function EndState() {return;}
+}
+
+simulated state LoweringWeapon
+{
+    simulated function BeginState() {return;}
+    simulated function EndState() {return;}
+}
+
+// Modified (from DH 5.1) to stop most stuff happening on net client, to avoid "accessed none" errors, & to play appropriate landing sound based on surface we land on
 simulated function Tick(float DeltaTime)
 {
     if (Instigator == none)
@@ -62,7 +80,7 @@ simulated function Tick(float DeltaTime)
                 Instigator.AccelRate = Instigator.default.AccelRate;
                 Instigator.AirControl = Instigator.default.AirControl;
 
-                // Matt: use GetSound function to get a landing sound appropriate to the surface we landed on
+                // Using GetSound function to get a landing sound appropriate to the surface we landed on
                 if (ROPawn(Instigator) != none)
                 {
                     Instigator.PlaySound(ROPawn(Instigator).GetSound(EST_Land), SLOT_Misc, 512.0, true, 128.0);
@@ -87,12 +105,12 @@ simulated function Tick(float DeltaTime)
             }
 
             Instigator.DeleteInventory(self);
-            Destroy(); // Matt: moved further down to avoid errors
+            Destroy(); // moved further down to avoid errors
         }
     }
 }
 
-// Make 3rd person model of chute appear/disappear
+// New function to make 3rd person model of chute appear/disappear
 function AttachChute(Pawn P)
 {
     Instigator = P;
@@ -102,14 +120,18 @@ function AttachChute(Pawn P)
         if (ThirdPersonActor == none)
         {
             ThirdPersonActor = Spawn(AttachmentClass, Owner);
-            InventoryAttachment(ThirdPersonActor).InitFor(self);
+
+            if (InventoryAttachment(ThirdPersonActor) != none)
+            {
+                InventoryAttachment(ThirdPersonActor).InitFor(self);
+            }
         }
         else
         {
             ThirdPersonActor.NetUpdateTime = Level.TimeSeconds - 1.0;
         }
 
-        P.AttachToBone(ThirdPersonActor,'hip');
+        P.AttachToBone(ThirdPersonActor, 'hip');
     }
     else
     {
@@ -117,6 +139,7 @@ function AttachChute(Pawn P)
     }
 }
 
+// New function to destroy chute attachment
 function RemoveChute(Pawn P)
 {
     if (ThirdPersonActor != none)
@@ -127,9 +150,7 @@ function RemoveChute(Pawn P)
     }
 }
 
-//=============================================================================
-// Functions overridden because parachutes don't shoot
-//=============================================================================
+// Modified to remove firing stuff
 simulated function ClientWeaponSet(bool bPossiblySwitch)
 {
     Instigator = Pawn(Owner);
@@ -139,6 +160,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     if (Instigator == none)
     {
         GotoState('PendingClientWeaponSet');
+
         return;
     }
 
@@ -176,7 +198,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     }
     else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
-        if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
+        if (PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
         {
             return;
         }
@@ -197,71 +219,19 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     }
 }
 
-simulated state RaisingWeapon
+// Modified to remove firing stuff
+simulated function AnimEnd(int Channel)
 {
-    simulated function BeginState(){}
-
-    simulated function EndState(){}
+    if (ClientState == WS_ReadyToFire && (!FireMode[0].bIsFiring && !FireMode[1].bIsFiring))
+    {
+        PlayIdle();
+    }
 }
 
-simulated state LoweringWeapon
-{
-    simulated function BeginState(){}
-
-    simulated function EndState(){}
-}
-
-// No free-aim for parachute
-simulated function bool ShouldUseFreeAim()
-{
-    return false;
-}
-
-// Not busy in the idle state because we never fire
-simulated function bool IsBusy()
-{
-    return false;
-}
-
-// Sprinting interrupts the parachute un/deploy animation, so disallow it
+// Modified to prevent sprinting as it interrupts the parachute un/deploy animation
 simulated function bool WeaponAllowSprint()
 {
     return false;
-}
-
-// Don't fire parachute
-simulated event ClientStartFire(int Mode)
-{
-    return;
-}
-
-// Don't fire parachute
-simulated event StopFire(int Mode)
-{
-    return;
-}
-
-// Can't reload parachute
-simulated exec function ROManualReload()
-{
-    return;
-}
-
-// Parachutes don't shoot
-simulated function Fire(float F)
-{
-    return;
-}
-
-simulated function AnimEnd(int Channel)
-{
-    if (ClientState == WS_ReadyToFire)
-    {
-        if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
-        {
-            PlayIdle();
-        }
-    }
 }
 
 defaultproperties

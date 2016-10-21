@@ -5,66 +5,25 @@
 
 class DHWireCuttersItem extends DHWeapon;
 
-var name                CutAnim;
-var DHObstacleInstance  ObstacleBeingCut;
-var float               CutDistance;
+var     float               CutDistance;
+var     DHObstacleInstance  ObstacleBeingCut;
+var     name                CutAnim;
 
-function bool FillAmmo()
-{
-    return false;
-}
-
-function bool ResupplyAmmo()
-{
-    return false;
-}
-
-simulated function bool IsFiring()
-{
-    return false;
-}
-
-simulated function bool ShouldUseFreeAim()
-{
-    return false;
-}
-
-simulated function bool IsBusy()
-{
-    return false;
-}
-
-simulated exec function ROManualReload()
-{
-    return;
-}
+// Functions emptied out or returning false, as wire cutters aren't a real weapon
+simulated function bool IsFiring(){return false;}
+function bool FillAmmo(){return false;}
+function bool ResupplyAmmo(){return false;}
+simulated exec function ROManualReload() {return;}
+simulated function bool IsBusy() {return false;}
+simulated function bool ShouldUseFreeAim() {return false;}
 
 simulated state Cutting
 {
-    simulated function bool WeaponAllowCrouchChange()
-    {
-        return false;
-    }
-
-    simulated function bool WeaponAllowProneChange()
-    {
-        return false;
-    }
-
-    simulated function bool WeaponCanSwitch()
-    {
-        return false;
-    }
-
     simulated function BeginState()
     {
-        local DHPawn P;
-
-        P = DHPawn(Instigator);
-
-        if (P != none)
+        if (DHPawn(Instigator) != none)
         {
-            P.SetIsCuttingWire(true);
+            DHPawn(Instigator).SetIsCuttingWire(true);
         }
 
         PlayAnim(CutAnim);
@@ -81,6 +40,17 @@ simulated state Cutting
         if (P != none)
         {
             P.SetIsCuttingWire(false);
+        }
+    }
+
+    simulated function Tick(float DeltaTime)
+    {
+        super.Tick(DeltaTime);
+
+        if (ObstacleBeingCut == none || ObstacleBeingCut.Info.IsCleared())
+        {
+            GotoState('');
+            PlayAnim('cutEnd', 1.0, 0.2);
         }
     }
 
@@ -104,12 +74,12 @@ simulated state Cutting
 
     simulated function AnimEnd(int Channel)
     {
-        local name SeqName;
+        local name  SeqName;
         local float AnimRate, AnimFrame;
 
-        GetAnimParams(Channel, SeqName, AnimFrame, AnimRate);
-
         super.AnimEnd(Channel);
+
+        GetAnimParams(Channel, SeqName, AnimFrame, AnimRate);
 
         switch (SeqName)
         {
@@ -133,22 +103,26 @@ simulated state Cutting
         }
     }
 
-    simulated function Tick(float DeltaTime)
+    simulated function bool WeaponCanSwitch()
     {
-        super.Tick(DeltaTime);
+        return false;
+    }
 
-        if (ObstacleBeingCut == none || ObstacleBeingCut.Info.IsCleared())
-        {
-            GotoState('');
-            PlayAnim('cutEnd', 1.0, 0.2);
-        }
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
     }
 }
 
 simulated function Fire(float F)
 {
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
     local DHObstacleInstance O;
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     if (Instigator == none ||
         Instigator.Controller == none ||
@@ -159,16 +133,14 @@ simulated function Fire(float F)
     }
 
     TraceStart = Instigator.Location;
-    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * CutDistance;
+    TraceEnd = TraceStart + (vector(Instigator.Controller.Rotation) * CutDistance);
 
     foreach TraceActors(class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
         if (O != none && !O.Info.IsCleared() && O.Info.CanBeCut())
         {
             ObstacleBeingCut = O;
-
             GotoState('Cutting');
-
             break;
         }
     }
