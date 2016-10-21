@@ -244,7 +244,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
                 EffectEmitter = Spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
             }
 
-            if (CannonDustEmitterClass != none)
+            if (CannonDustEmitterClass != none && Base != none)
             {
                 CannonDustEmitter = Spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
             }
