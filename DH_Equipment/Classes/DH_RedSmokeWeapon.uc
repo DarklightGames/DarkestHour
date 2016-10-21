@@ -5,11 +5,7 @@
 
 class DH_RedSmokeWeapon extends DHExplosiveWeapon;
 
-function bool CanDeadThrow()
-{
-    return false;
-}
-
+// Modified to add a hint about this coloured grenade
 simulated function BringUp(optional Weapon PrevWeapon)
 {
     super.BringUp(PrevWeapon);
@@ -18,6 +14,11 @@ simulated function BringUp(optional Weapon PrevWeapon)
     {
         DHPlayer(Instigator.Controller).QueueHint(3, false);
     }
+}
+
+function bool CanDeadThrow()
+{
+    return false;
 }
 
 defaultproperties

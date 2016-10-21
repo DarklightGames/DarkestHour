@@ -7,7 +7,7 @@ class DH_MG42Weapon extends DHMGWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg42_1st.ukx
 
-// Overridden so we do faster net updated when we're down to the last few rounds
+// Modified so we do faster net updated when we're down to the last few rounds
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     if (AmmoAmount(0) < 11)

@@ -7,7 +7,7 @@ class DH_DP28TracerBullet extends DH_DP28Bullet;
 
 defaultproperties
 {
-    bIsTracerBullet=true 
+    bIsTracerBullet=true
     TracerEffectClass=class'ROEffects.RORussianGreenTracer'
     StaticMesh=StaticMesh'DH_Tracers.Soviet_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.Soviet_Tracer_Ball'

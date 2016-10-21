@@ -7,7 +7,7 @@ class DH_M1GarandWeapon extends DHSemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Garand_1st.ukx
 
-var bool bIsLastRound;
+var     bool    bIsLastRound;
 
 // Modified to support garand last round clip eject for client only
 simulated function Fire(float F)
@@ -17,7 +17,7 @@ simulated function Fire(float F)
     bIsLastRound = AmmoAmount(0) == 1;
 }
 
-// Modified to support garand last round clip eject for server only
+// New function to support garand last round clip eject for server only
 simulated function bool WasLastRound()
 {
     return AmmoAmount(0) == 0;

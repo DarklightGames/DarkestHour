@@ -5,7 +5,7 @@
 
 class DH_SatchelCharge10lb10sFire extends DHThrownExplosiveFire;
 
-// Overridden to require satchel to be held for 1 second
+// Modified to require satchel to be held for 1 second
 event ModeDoFire()
 {
     if (HoldTime >= 1.0)

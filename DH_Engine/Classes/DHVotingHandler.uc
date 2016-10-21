@@ -87,7 +87,7 @@ function PlayerExit(Controller Exiting)
     }
 }
 
-// function to strip prefix
+// Function to strip prefix
 function string PrepMapStr(string MapName)
 {
     MapName = Repl(MapName, "DH-", "");  // remove DH- prefix
@@ -97,7 +97,7 @@ function string PrepMapStr(string MapName)
     return MapName;
 }
 
-// overidden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
+// Overridden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
 function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
     local MapHistoryInfo MapInfo;
@@ -540,7 +540,7 @@ function TallyVotes(bool bForceMapSwitch)
         }
 
         bLevelSwitchPending = true;
-        SetTimer(Level.TimeDilation, true); // timer() will monitor the server-travel and detect a failure
+        SetTimer(Level.TimeDilation, true); // Timer() will monitor the server-travel & detect a failure
         Level.ServerTravel(ServerTravelString, false); // change the map
     }
 }

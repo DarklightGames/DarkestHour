@@ -14,9 +14,9 @@ var class<Emitter>  ExplodeMidAirEffectClass;
 var class<Actor>    SplashEffect;  // water splash effect class
 var sound           WaterHitSound; // sound of this bullet hitting water
 
-// For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & used in other classes):
+// For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & necessary here due to compiler package build order):
 var PlayerReplicationInfo SavedPRI;
-var Pawn SavedInstigator;
+var Pawn                  SavedInstigator;
 
 simulated function Destroyed()
 {
@@ -625,7 +625,10 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
     }
 }
 
-simulated function WeaponLight(); // empty function; can be subclassed
+// New function in projectile class - empty but can be subclassed
+simulated function WeaponLight()
+{
+}
 
 // Implemented so if thrown projectile hits water we play a splash effect (same as a bullet or shell) & slow down a lot
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)

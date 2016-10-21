@@ -16,7 +16,7 @@ simulated function bool IsFiring() {return false;}
 simulated event ClientStartFire(int Mode) {return;}
 simulated event StopFire(int Mode) {return;}
 simulated function bool IsBusy() {return false;}
-function bool FillAmmo()  {return false;}
+function bool FillAmmo() {return false;}
 
 // Modified to add fire button functionality for mortar observer or artillery officer roles to mark targets
 simulated function Fire(float F)
@@ -101,11 +101,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
             DHPlayer(Instigator.Controller).QueueHint(12, true);
         }
     }
-}
-
-function bool CanDeadThrow()
-{
-    return false;
 }
 
 // Modified to avoid re-setting DHPawn.bPreventWeaponFire to false, as binocs can never fire (doesn't actually make a difference, but avoids unnecessary update on replicated variable)
@@ -205,6 +200,11 @@ simulated event RenderOverlays(Canvas Canvas)
         Canvas.DrawActor(self, false, false, DisplayFOV);
         bDrawingFirstPerson = false;
     }
+}
+
+function bool CanDeadThrow()
+{
+    return false;
 }
 
 defaultproperties
