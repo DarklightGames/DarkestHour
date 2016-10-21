@@ -5,6 +5,7 @@
 
 class DH_Kar98ScopedAttachment extends DHWeaponAttachment;
 
+// Modified so we skip the Super if we've just played the reload or pre-reload animation
 simulated function AnimEnd(int Channel)
 {
     local name  Anim;
@@ -12,12 +13,10 @@ simulated function AnimEnd(int Channel)
 
     GetAnimParams(0, Anim, Frame, Rate);
 
-    if (Anim == WA_Reload || Anim == WA_PreReload)
+    if (Anim != WA_Reload && Anim != WA_PreReload)
     {
-        return;
+        super.AnimEnd(Channel);
     }
-
-    super.AnimEnd(Channel);
 }
 
 defaultproperties
