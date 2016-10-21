@@ -5,61 +5,49 @@
 
 class DH_BARAttachment extends DHWeaponAttachment;
 
-var     name    WA_SightUp_Idle;
-var     name    WA_SightUp_Fire;
-var     name    WA_SightUp_Reload;
-var     name    WA_SightUp_ReloadEmpty;
-var     name    WA_SightDown_Idle;
-var     name    WA_SightDown_Fire;
-var     name    WA_SightDown_Reload;
-var     name    WA_SightDown_ReloadEmpty;
+var     name    WA_BipodDeploy_Idle; // TODO: refactor BAR/Bren/FG42 bipod anims & PlayIdle() override into a parent class as is duplicated in all bipod autos
+var     name    WA_BipodDeploy_Fire;
+var     name    WA_BipodDeploy_Reload;
+var     name    WA_BipodDeploy_ReloadEmpty;
 
-// Overwritten to allow for BAR deployed anims - not the best way of doing this but saves having to overwrite functions in ROPawn
+// Modified to allow for bipod deployed animations
+// Changing the fire & reload anims is not the best way of doing this, but saves having to override functions in ROPawn
 simulated function PlayIdle()
 {
     if (Instigator != none && Instigator.bBipodDeployed)
     {
-        LoopAnim(WA_SightUp_Idle);
+        LoopAnim(WA_BipodDeploy_Idle);
 
-        WA_Fire = WA_SightUp_Fire;
-        WA_Reload = WA_SightUp_Reload;
-        WA_ReloadEmpty = WA_SightUp_ReloadEmpty;
-        WA_ProneReload = WA_SightUp_Reload;
-        WA_ProneReloadEmpty = WA_SightUp_ReloadEmpty;
+        WA_Fire = WA_BipodDeploy_Fire;
+        WA_Reload = WA_BipodDeploy_Reload;
+        WA_ReloadEmpty = WA_BipodDeploy_ReloadEmpty;
+        WA_ProneReload = WA_BipodDeploy_Reload;
+        WA_ProneReloadEmpty = WA_BipodDeploy_ReloadEmpty;
     }
     else
     {
-        if (bOutOfAmmo && HasAnim(WA_IdleEmpty))
-        {
-            LoopAnim(WA_IdleEmpty);
-        }
-        else
-        {
-            LoopAnim(WA_Idle);
-        }
+        super.PlayIdle();
 
-        WA_Fire = WA_SightDown_Fire;
-        WA_Reload = WA_SightDown_Reload;
-        WA_ReloadEmpty = WA_SightDown_ReloadEmpty;
-        WA_ProneReload = WA_SightDown_Reload;
-        WA_ProneReloadEmpty = WA_SightDown_ReloadEmpty;
+        WA_Fire = default.WA_Fire;
+        WA_Reload = default.WA_Reload;
+        WA_ReloadEmpty = default.WA_ReloadEmpty;
+        WA_ProneReload = default.WA_ProneReload;
+        WA_ProneReloadEmpty = default.WA_ProneReloadEmpty;
     }
 }
 
 defaultproperties
 {
-    WA_SightUp_Idle="Sightup_idle_BAR"
-    WA_SightUp_Fire="sightup_iron_shoot_BAR"
-    WA_SightUp_Reload="sightup_reload_half_BAR"
-    WA_SightUp_ReloadEmpty="sightup_reload_empty_BAR"
-    WA_SightDown_Idle="Idle_BAR"
-    WA_SightDown_Fire="shoot_BAR"
-    WA_SightDown_Reload="reload_empty_BAR"
-    WA_SightDown_ReloadEmpty="reload_half_BAR"
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="ejector"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
+
+    WA_BipodDeploy_Idle="Sightup_idle_BAR"
+    WA_BipodDeploy_Fire="sightup_iron_shoot_BAR"
+    WA_BipodDeploy_Reload="sightup_reload_half_BAR"
+    WA_BipodDeploy_ReloadEmpty="sightup_reload_empty_BAR"
+
     PA_MovementAnims(0)="stand_jogF_stg44"
     PA_MovementAnims(1)="stand_jogB_stg44"
     PA_MovementAnims(2)="stand_jogL_stg44"

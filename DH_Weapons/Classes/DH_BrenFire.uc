@@ -5,16 +5,13 @@
 
 class DH_BrenFire extends DHAutomaticFire;
 
-var(FireAnims)  name        BipodDeployFireAnim;
-var(FireAnims)  name        BipodDeployFireLoopAnim;
-var(FireAnims)  name        BipodDeployFireEndAnim;
+var     name    BipodDeployFireAnim;
+var     name    BipodDeployFireLoopAnim;
+var     name    BipodDeployFireEndAnim;
 
+// Modified to handle bipod deployed firing animations
 function PlayFiring()
 {
-    local DH_BrenWeapon BipodStatus;
-
-    BipodStatus = DH_BrenWeapon(Owner);
-
     if (Weapon.Mesh != none)
     {
         if (FireCount > 0)
@@ -36,7 +33,7 @@ function PlayFiring()
                 {
                     Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
                 }
-                else
+                else if (Weapon.HasAnim(FireAnim))
                 {
                     Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
                 }
@@ -46,16 +43,16 @@ function PlayFiring()
         {
             if (Weapon.bUsingSights || Instigator.bBipodDeployed)
             {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireLoopAnim))
+                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireAnim))
                 {
-                    Weapon.PlayAnim(BipodDeployFireLoopAnim, FireAnimRate, FireTweenTime);
+                    Weapon.PlayAnim(BipodDeployFireAnim, FireAnimRate, FireTweenTime);
                 }
-                else
+                else if (Weapon.HasAnim(FireIronAnim))
                 {
                     Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
                 }
             }
-            else
+            else if (Weapon.HasAnim(FireAnim))
             {
                 Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
             }
@@ -72,12 +69,9 @@ function PlayFiring()
     FireCount++;
 }
 
+// Modified to handle bipod deployed fire end animation
 function PlayFireEnd()
 {
-    local DH_BrenWeapon BipodStatus;
-
-    BipodStatus = DH_BrenWeapon(Owner);
-
     if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))
     {
         if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))

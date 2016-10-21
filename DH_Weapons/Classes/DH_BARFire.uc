@@ -5,11 +5,11 @@
 
 class DH_BARFire extends DHAutomaticFire;
 
-var     name    SightUpFireIronAnim;
-var     name    SightUpFireIronLoopAnim;
-var     name    SightUpFireIronEndAnim;
+var     name    BipodDeployFireAnim; // TODO: refactor BAR/Bren/FG42 bipod variables & function overrides into a parent class as they are duplicated in each weapon
+var     name    BipodDeployFireLoopAnim;
+var     name    BipodDeployFireEndAnim;
 
-function ModeTick(float DeltaTime)
+function ModeTick(float DeltaTime) // TODO: why is this tick override only added to the BAR? (it's probably pointless)
 {
     super.ModeTick(DeltaTime);
 
@@ -19,6 +19,7 @@ function ModeTick(float DeltaTime)
     }
 }
 
+// Modified to handle bipod deployed firing animations
 function PlayFiring()
 {
     if (Weapon.Mesh != none)
@@ -27,9 +28,9 @@ function PlayFiring()
         {
             if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronLoopAnim))
             {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronLoopAnim))
+                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireLoopAnim))
                 {
-                    Weapon.PlayAnim(SightUpFireIronLoopAnim, FireAnimRate, 0.0);
+                    Weapon.PlayAnim(BipodDeployFireLoopAnim, FireAnimRate, 0.0);
                 }
                 else
                 {
@@ -42,7 +43,7 @@ function PlayFiring()
                 {
                     Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
                 }
-                else
+                else if (Weapon.HasAnim(FireAnim))
                 {
                     Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
                 }
@@ -52,16 +53,16 @@ function PlayFiring()
         {
             if (Weapon.bUsingSights || Instigator.bBipodDeployed)
             {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronLoopAnim))
+                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireAnim))
                 {
-                    Weapon.PlayAnim(SightUpFireIronAnim, FireAnimRate, FireTweenTime);
+                    Weapon.PlayAnim(BipodDeployFireAnim, FireAnimRate, FireTweenTime);
                 }
-                else
+                else if (Weapon.HasAnim(FireIronAnim))
                 {
                     Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
                 }
             }
-            else
+            else if (Weapon.HasAnim(FireAnim))
             {
                 Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
             }
@@ -78,13 +79,14 @@ function PlayFiring()
     FireCount++;
 }
 
+// Modified to handle bipod deployed fire end animation
 function PlayFireEnd()
 {
     if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))
     {
-        if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronEndAnim))
+        if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
         {
-            Weapon.PlayAnim(SightUpFireIronEndAnim, FireEndAnimRate, FireTweenTime);
+            Weapon.PlayAnim(BipodDeployFireEndAnim, FireEndAnimRate, FireTweenTime);
         }
         else
         {
@@ -99,9 +101,9 @@ function PlayFireEnd()
 
 defaultproperties
 {
-    SightUpFireIronAnim="SightUp_iron_shoot_loop"
-    SightUpFireIronLoopAnim="SightUp_iron_shoot_loop"
-    SightUpFireIronEndAnim="SightUp_iron_shoot_end"
+    BipodDeployFireAnim="SightUp_iron_shoot_loop"
+    BipodDeployFireLoopAnim="SightUp_iron_shoot_loop"
+    BipodDeployFireEndAnim="SightUp_iron_shoot_end"
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
     TracerFrequency=5

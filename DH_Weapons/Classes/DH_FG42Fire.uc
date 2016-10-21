@@ -5,25 +5,22 @@
 
 class DH_FG42Fire extends DHAutomaticFire;
 
-var     name    SightUpFireIronAnim;
-var     name    SightUpFireIronLoopAnim;
-var     name    SightUpFireIronEndAnim;
+var     name    BipodDeployFireAnim;
+var     name    BipodDeployFireLoopAnim;
+var     name    BipodDeployFireEndAnim;
 
+// Modified to handle bipod deployed firing animations
 function PlayFiring()
 {
-    local DH_FG42Weapon SightStatus;
-
-    SightStatus = DH_FG42Weapon(Owner);
-
     if (Weapon.Mesh != none)
     {
         if (FireCount > 0)
         {
             if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronLoopAnim))
             {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronLoopAnim))
+                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireLoopAnim))
                 {
-                    Weapon.PlayAnim(SightUpFireIronLoopAnim, FireAnimRate, 0.0);
+                    Weapon.PlayAnim(BipodDeployFireLoopAnim, FireAnimRate, 0.0);
                 }
                 else
                 {
@@ -36,7 +33,7 @@ function PlayFiring()
                 {
                     Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
                 }
-                else
+                else if (Weapon.HasAnim(FireAnim))
                 {
                     Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
                 }
@@ -46,16 +43,16 @@ function PlayFiring()
         {
             if (Weapon.bUsingSights || Instigator.bBipodDeployed)
             {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronLoopAnim))
+                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireAnim))
                 {
-                    Weapon.PlayAnim(SightUpFireIronAnim, FireAnimRate, FireTweenTime);
+                    Weapon.PlayAnim(BipodDeployFireAnim, FireAnimRate, FireTweenTime);
                 }
-                else
+                else if (Weapon.HasAnim(FireIronAnim))
                 {
                     Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
                 }
             }
-            else
+            else if (Weapon.HasAnim(FireAnim))
             {
                 Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
             }
@@ -72,17 +69,14 @@ function PlayFiring()
     FireCount++;
 }
 
+// Modified to handle bipod deployed fire end animation
 function PlayFireEnd()
 {
-    local DH_FG42Weapon SightStatus;
-
-    SightStatus = DH_FG42Weapon(Owner);
-
     if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))
     {
-        if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronEndAnim))
+        if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
         {
-            Weapon.PlayAnim(SightUpFireIronEndAnim, FireEndAnimRate, FireTweenTime);
+            Weapon.PlayAnim(BipodDeployFireEndAnim, FireEndAnimRate, FireTweenTime);
         }
         else
         {
@@ -97,9 +91,9 @@ function PlayFireEnd()
 
 defaultproperties
 {
-    SightUpFireIronAnim="deploy_shoot_end"
-    SightUpFireIronLoopAnim="deploy_shoot_end"
-    SightUpFireIronEndAnim="deploy_shoot_end"
+    BipodDeployFireAnim="deploy_shoot_loop"
+    BipodDeployFireLoopAnim="deploy_shoot_loop"
+    BipodDeployFireEndAnim="deploy_shoot_end"
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
     TracerFrequency=5
