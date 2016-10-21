@@ -8,7 +8,7 @@ class DH_T34MountedMG extends DHVehicleMG;
 defaultproperties
 {
     // MG mesh
-    Mesh=SkeletalMesh'allies_t3485_anm.T3485_MG_ext'
+    Mesh=SkeletalMesh'DH_T34_anm.T34_mg_ext'
     bMatchSkinToVehicle=true
     FireAttachBone="mg_yaw"
     FireEffectOffset=(X=10.0,Y=4.0,Z=0.0)

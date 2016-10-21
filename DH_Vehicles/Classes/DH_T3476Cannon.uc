@@ -8,13 +8,13 @@ class DH_T3476Cannon extends DHVehicleCannon;
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'allies_t3476_anm.t3476_turret_ext'
+    Mesh=SkeletalMesh'DH_T34_anm.T34-76_turret_ext'
     Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
     Skins(1)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
     HighDetailOverlay=material'allies_vehicles_tex.int_vehicles.t3476_int_s'
-//  CollisionStaticMesh=StaticMesh // TODO: make one
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc4.T34-76_turret_col'
 
     // Turret armor
     FrontArmorFactor=4.0

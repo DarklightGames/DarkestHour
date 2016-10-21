@@ -5,7 +5,7 @@
 
 class DH_T3476Tank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\allies_t3476_anm.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_T34_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex.utx
 
 defaultproperties
@@ -18,7 +18,7 @@ defaultproperties
     CollisionHeight=60.0
 
     // Hull mesh
-    Mesh=SkeletalMesh'allies_t3485_anm.t3485_body_ext'
+    Mesh=SkeletalMesh'DH_T34_anm.T34_body_ext'
     Skins(0)=texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
     Skins(1)=texture'allies_vehicles_tex.Treads.T3476_treads'
     Skins(2)=texture'allies_vehicles_tex.Treads.T3476_treads'
@@ -39,8 +39,8 @@ defaultproperties
     // Driver
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'allies_t3485_anm.t3485_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'allies_t3485_anm.t3485_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true,ViewFOV=90.0)
     DriverAttachmentBone="driver_attachment"
     DriveAnim="VT3476_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
