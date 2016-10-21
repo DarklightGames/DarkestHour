@@ -297,6 +297,12 @@ function SetServerOrientation(rotator NewRotation)
     }
 }
 
+// Overridden because we have no melee attack
+simulated function bool IsBusy()
+{
+    return false;
+}
+
 // Modified to add BeltBulletClass static mesh
 static function StaticPrecache(LevelInfo L)
 {

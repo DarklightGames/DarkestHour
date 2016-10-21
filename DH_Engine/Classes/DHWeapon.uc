@@ -464,6 +464,8 @@ function SelfDestroy()
 }
 
 // Modified so an ROEmptyFireClass won't return busy just because it can't fire (it never can)
+// TODO: change this so it only returns true if FireMode[1] actually is a melee attack, rather than assume it always will be (as ROWeapon did)
+// Then remove hack fix in MG weapon class, which stops the MG34 from bugging out as perma-busy when it's out of ammo, just because it has a non-melee FireMode[1]
 simulated function bool IsBusy()
 {
     return !FireMode[1].AllowFire() && FireModeClass[1] != class'ROEmptyFireClass';
