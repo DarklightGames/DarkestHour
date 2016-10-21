@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BazookaPickup extends DHRocketWeaponPickup
-    notplaceable;
+class DH_BazookaPickup extends DHRocketWeaponPickup;
 
 defaultproperties
 {

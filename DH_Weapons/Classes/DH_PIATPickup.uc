@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_PIATPickup extends DHRocketWeaponPickup
-    notplaceable;
+class DH_PIATPickup extends DHRocketWeaponPickup;
 
 defaultproperties
 {

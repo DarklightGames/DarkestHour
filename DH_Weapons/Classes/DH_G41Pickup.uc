@@ -3,14 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_G41Pickup extends DHWeaponPickup
-    notplaceable;
+class DH_G41Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_G41Weapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.g41'
-    PrePivot=(Z=3.0)
-    CollisionRadius=25.0
-    CollisionHeight=3.0
 }

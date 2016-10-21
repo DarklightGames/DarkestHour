@@ -3,14 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_P38Pickup extends DHWeaponPickup
-    notplaceable;
+class DH_P38Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_P38Weapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.p38'
-    PrePivot=(Z=3.0)
-    CollisionRadius=15.0
-    CollisionHeight=3.0
+    CollisionRadius=15.0 // as is a pistol, which is small
 }

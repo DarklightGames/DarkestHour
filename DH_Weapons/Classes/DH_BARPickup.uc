@@ -3,15 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BARPickup extends DHWeaponPickup
-    notplaceable;
+class DH_BARPickup extends DHWeaponPickup;
 
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_BARWeapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.BAR'
-    PrePivot=(Z=3.0)
-    CollisionRadius=25.0
-    CollisionHeight=3.0
 }
 

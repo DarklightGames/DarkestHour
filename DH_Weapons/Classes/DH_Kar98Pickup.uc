@@ -3,14 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_Kar98Pickup extends DHWeaponPickup
-    notplaceable;
+class DH_Kar98Pickup extends DHWeaponPickup;
 
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_Kar98Weapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.k98'
-    PrePivot=(Z=3.0)
-    CollisionRadius=25.0
-    CollisionHeight=3.0
 }
