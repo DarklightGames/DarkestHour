@@ -184,9 +184,6 @@ defaultproperties
     CutDistance=100.0
 
     Mesh=mesh'DH_Wirecutters_1st.wirecutters'
-    HighDetailOverlay=Material'Weapons1st_tex.SniperScopes.Binoc_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
 
     DisplayFOV=70.0
     IronSightDisplayFOV=70.0

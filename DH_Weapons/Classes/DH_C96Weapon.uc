@@ -16,6 +16,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_C96Pickup'
 
     Mesh=SkeletalMesh'DH_C96_1st.c96'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.c96_S'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     PlayerIronsightFOV=70.0
     IronSightDisplayFOV=45.0

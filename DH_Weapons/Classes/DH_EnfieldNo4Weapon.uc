@@ -27,6 +27,11 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4'
+    Skins(3)=shader'Weapons1st_tex.Bullets.kar98k_stripper_s' // TODO: ammo & bayo specularity shaders aren't used in the anim mesh & should be added there
+    Skins(4)=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo4Bayo_s'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo4Main_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=20.0
     ZoomOutTime=0.2

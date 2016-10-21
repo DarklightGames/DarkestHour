@@ -16,6 +16,8 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_M1CarbinePickup'
 
     Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine'
+    Skins(3)=shader'DH_Weapon_tex.Spec_Maps.M1GarandAmmo_s' // TODO: ammo specularity shader isn't used in the anim mesh & should be added there
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.SMG.M1Carbine_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

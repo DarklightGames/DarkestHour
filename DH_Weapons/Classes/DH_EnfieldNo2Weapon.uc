@@ -16,6 +16,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo2Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo2_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=40.0
     PlayerIronsightFOV=60.0

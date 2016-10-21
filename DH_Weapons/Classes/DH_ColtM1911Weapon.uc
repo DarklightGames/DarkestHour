@@ -16,6 +16,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.ColtM1911_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=40.0
 

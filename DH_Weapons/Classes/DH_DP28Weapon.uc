@@ -15,6 +15,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_DP28Pickup'
 
     Mesh=SkeletalMesh'Allies_Dp28_1st.DP28_Mesh'
+    Skins(2)=shader'Weapons1st_tex.MG.dp28_s' // can't specify specularity shader as HighDetailOverlay as includes opacity mask, which doesn't seem to work with HDO system
 
     PlayerIronsightFOV=90.0
     IronSightDisplayFOV=45.0

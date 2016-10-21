@@ -7,7 +7,7 @@ class DH_BARWeapon extends DHBipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_BAR_1st.ukx
 
-var     bool    bSlowFireRate;
+var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
 // Modified as BAR switches between slow/fast auto fire
 simulated function ToggleFireMode()
@@ -41,6 +41,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BARPickup'
 
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BAR_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=25.0
     FreeAimRotationSpeed=2.0

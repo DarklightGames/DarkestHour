@@ -16,6 +16,10 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BazookaPickup'
 
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka'
+//  Skins(3)=shader'DH_Weapon_tex.Spec_Maps.BazookaShell_s'
+//  HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.Bazooka_s' // these specularity shaders exist but weren't used in DH5.1 - perhaps because it doesn't look quite right
+//  bUseHighDetailOverlayIndex=true
+//  HighDetailOverlayIndex=2
 
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true

@@ -38,6 +38,11 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_MG34Pickup'
 
     Mesh=SkeletalMesh'DH_Mg34_1st.MG_34_Mesh' // TODO: check whether the DH version of MG34 anim file actually differs from the RO mesh & is worth keeping
+    Skins(2)=shader'Weapons1st_tex.MG.mg34_s' // can't specify specularity shader as HighDetailOverlay as includes opacity mask, which doesn't seem to work with HDO system
+    Skins(3)=shader'Weapons1st_tex.MG.MGBipod_S' // TODO: bipod specularity shader isn't used in the anim mesh & should be added there
+    HighDetailOverlay=shader'Weapons1st_tex.MG.MGBipod_S'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=3 // can't specify MG34 specularity shader as HDO as includes opacity mask (doesn't seem to work with HDO system), so may as well specify bipod shader
     HandTex=texture'Weapons1st_tex.Arms.hands_gergloves'
 
     PlayerIronsightFOV=90.0

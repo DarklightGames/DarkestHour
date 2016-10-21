@@ -43,6 +43,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_M1GarandPickup'
 
     Mesh=SkeletalMesh'DH_Garand_1st.M1_Garand'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.M1Garand_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=20.0
     FreeAimRotationSpeed=7.5

@@ -16,6 +16,10 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
+    Skins(4)=shader'Weapons1st_tex.Bullets.kar98k_stripper_s' // TODO: ammo specularity shader isn't used in the anim mesh & should be added there
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.No4MainSniper_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=40.0
     PlayerFOVZoom=25.714285 // 3.5x

@@ -16,6 +16,10 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_SpringfieldScopedPickup'
 
     Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_Scoped'
+    Skins(4)=shader'DH_Weapon_tex.Spec_Maps.M1GarandAmmo_s' // TODO: ammo specularity shader isn't used in the anim mesh & should be added there
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.M1919Springfield_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=40.0
     PlayerFOVZoom=36.0 // 2.5x

@@ -24,6 +24,9 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BrenPickup'
 
     Mesh=SkeletalMesh'DH_Bren_1st.Bren'
+    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BrenGun_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=30.0
