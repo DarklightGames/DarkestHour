@@ -103,6 +103,7 @@ simulated function bool StartFire(int Mode)
     return false;
 }
 
+// Modified to prevent MG from playing fire end anims while auto firing
 simulated function AnimEnd(int Channel)
 {
     if (!FireMode[0].IsInState('FireLoop'))

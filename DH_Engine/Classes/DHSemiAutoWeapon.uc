@@ -6,7 +6,7 @@
 class DHSemiAutoWeapon extends DHProjectileWeapon
     abstract;
 
-// Overridden to prevent the exploit of freezing your animations after firing
+// Modified to prevent the exploit of freezing your animations after firing
 simulated function AnimEnd(int Channel)
 {
     local name  Anim;
@@ -16,9 +16,17 @@ simulated function AnimEnd(int Channel)
     {
         GetAnimParams(0, Anim, Frame, Rate);
 
-        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
+//      // Don't play the idle anim after a bayo strike or bash (this, from the ROWeapon Super, is omitted here)
+//      if (FireMode[1].bMeleeMode && ROWeaponFire(FireMode[1]) != none &&
+//          (Anim == ROWeaponFire(FireMode[1]).BashAnim || Anim == ROWeaponFire(FireMode[1]).BayoStabAnim || Anim == ROWeaponFire(FireMode[1]).BashEmptyAnim))
+//      {
+//          // do nothing;
+//      }
+//      else
+
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring) // adds checks that isn't firing
         {
-            PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
+            PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime); // uses FastTweenTime instead of 0.0
         }
         else if (DHProjectileFire(FireMode[0]) != none && Anim == DHProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
         {
@@ -28,14 +36,14 @@ simulated function AnimEnd(int Channel)
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
-        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
+        else if (!FireMode[0].bIsFiring && !FireMode[1].bIsFiring)
         {
             PlayIdle();
         }
     }
 }
 
-// Overridden to prevent the exploit of freezing your animations after firing
+// Modified to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
@@ -43,7 +51,7 @@ simulated event StopFire(int Mode)
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
     {
         PlayIdle();
     }

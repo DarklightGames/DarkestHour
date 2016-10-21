@@ -51,16 +51,18 @@ simulated function PostBeginPlay()
     }
 }
 
-// Helper function for the scope system - the scope system checks here to see when it should draw the portal
-// If you want to limit any times the portal should/shouldn't be drawn, add them here
-simulated function bool ShouldDrawPortal()
+// Modified to clear scope objects
+simulated event Destroyed()
 {
-    local name  ThisAnim;
-    local float AnimFrame, AnimRate;
+    super.Destroyed();
 
-    GetAnimParams(0, ThisAnim, AnimFrame, AnimRate);
+    ClearScopeObjects();
+}
 
-    return bUsingSights && (IsInState('Idle') || IsInState('PostFiring')) && ThisAnim != 'scope_shoot_last';
+// Modified to clear scope objects
+simulated function PreTravelCleanUp()
+{
+    ClearScopeObjects();
 }
 
 // Handles initializing & switching between different scope modes
@@ -177,18 +179,75 @@ simulated event RenderTexture(ScriptedTexture Tex)
     }
 }
 
-// Modified to clear scope objects
-simulated function PreTravelCleanUp()
+// Helper function for the scope system - the scope system checks here to see when it should draw the portal
+// If you want to limit any times the portal should/shouldn't be drawn, add them here
+simulated function bool ShouldDrawPortal()
 {
-    ClearScopeObjects();
+    local name  ThisAnim;
+    local float AnimFrame, AnimRate;
+
+    GetAnimParams(0, ThisAnim, AnimFrame, AnimRate);
+
+    return bUsingSights && (IsInState('Idle') || IsInState('PostFiring')) && ThisAnim != 'scope_shoot_last';
 }
 
-// Modified to clear scope objects
-simulated event Destroyed()
+// Modified to prevent the exploit of freezing your animations after firing
+simulated function AnimEnd(int Channel)
 {
-    super.Destroyed();
+    local name  Anim;
+    local float Frame, Rate;
 
-    ClearScopeObjects();
+    if (ClientState == WS_ReadyToFire)
+    {
+        GetAnimParams(0, Anim, Frame, Rate);
+
+//      // Don't play the idle anim after a bayo strike or bash (this, from the ROWeapon Super, is omitted here)
+//      if (FireMode[1].bMeleeMode && ROWeaponFire(FireMode[1]) != none &&
+//          (Anim == ROWeaponFire(FireMode[1]).BashAnim || Anim == ROWeaponFire(FireMode[1]).BayoStabAnim || Anim == ROWeaponFire(FireMode[1]).BashEmptyAnim))
+//      {
+//          // do nothing;
+//      }
+//      else
+
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring) // adds checks that isn't firing
+        {
+            PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime); // uses FastTweenTime instead of 0.0
+        }
+        else if (DHProjectileFire(FireMode[0]) != none && Anim == DHProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
+        {
+            PlayIdle();
+        }
+        else if (Anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        {
+            PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
+        }
+        else if (!FireMode[0].bIsFiring && !FireMode[1].bIsFiring)
+        {
+            PlayIdle();
+        }
+    }
+}
+
+// Modified to prevent the exploit of freezing your animations after firing
+simulated event StopFire(int Mode)
+{
+    if (FireMode[Mode].bIsFiring)
+    {
+        FireMode[Mode].bInstantStop = true;
+    }
+
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
+    {
+        PlayIdle();
+    }
+
+    FireMode[Mode].bIsFiring = false;
+    FireMode[Mode].StopFiring();
+
+    if (!FireMode[Mode].bFireOnRelease)
+    {
+        ZeroFlashCount(Mode);
+    }
 }
 
 // New function to clear up the scope objects

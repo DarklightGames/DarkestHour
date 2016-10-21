@@ -513,6 +513,18 @@ simulated state PostFiring
     }
 }
 
+// Modified to skip over the Super in DHSniperWeapon that is only relevant to semi-auto & auto weapons
+simulated function AnimEnd(int channel)
+{
+    super(DHProjectileWeapon).AnimEnd(Channel);
+}
+
+// Modified to skip over the Super in DHSniperWeapon that is only relevant to semi-auto & auto weapons
+simulated event StopFire(int Mode)
+{
+    super(DHProjectileWeapon).StopFire(Mode);
+}
+
 // Modified so bots don't go straight to the reloading state on bolt actions
 simulated function OutOfAmmo()
 {

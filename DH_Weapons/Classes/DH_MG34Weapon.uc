@@ -7,15 +7,15 @@ class DH_MG34Weapon extends DHMGWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
 
-// Overridden to prevent the exploit of freezing your animations after firing
-simulated event StopFire(int Mode)
+// Modified to prevent the exploit of freezing your animations after firing
+simulated event StopFire(int Mode) // TODO: check this shouldn't apply to all MGs, as same override is is applied to all other auto & semi-auto weapons
 {
     if (FireMode[Mode].bIsFiring)
     {
         FireMode[Mode].bInstantStop = true;
     }
 
-    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
+    if (InstigatorIsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0)) // adds check that isn't animating
     {
         PlayIdle();
     }

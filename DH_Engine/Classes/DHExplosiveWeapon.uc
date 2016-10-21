@@ -362,9 +362,9 @@ simulated function AnimEnd(int Channel)
         {
             LoopAnim(PreFireHoldAnim, IdleAnimRate, 0.2);
         }
-    }
 
-    super.AnimEnd(Channel);
+        super.AnimEnd(Channel);
+    }
 }
 
 // Modified to include new states PostFiring & AutoLoweringWeapon
