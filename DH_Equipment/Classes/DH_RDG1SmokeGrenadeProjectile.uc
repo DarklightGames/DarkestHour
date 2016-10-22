@@ -7,7 +7,7 @@ class DH_RDG1SmokeGrenadeProjectile extends DHGrenadeProjectile_Smoke;
 
 defaultproperties
 {
-    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.RGD1_throw'
     bIsStickGrenade=true
+    MyDamageType=class'DH_Equipment.DH_RDG1SmokeGrenadeDamType'
 }

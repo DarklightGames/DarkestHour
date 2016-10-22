@@ -7,9 +7,9 @@ class DH_30calBullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Weapons.DH_30calVehDamType'
-    BallisticCoefficient=0.41
     Speed=51299.0
+    BallisticCoefficient=0.41
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_30calDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_30calVehDamType'
 }

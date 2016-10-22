@@ -7,9 +7,9 @@ class DH_SVT40Bullet extends DHBullet;
 
 defaultproperties
 {
-    BallisticCoefficient=0.511
+    Speed=50696.0 // 2756 fps  // TODO: was 2519 fps in RO, why the change?
+    BallisticCoefficient=0.511 // TODO: was 0.37 in RO, why the change?
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_SVT40DamType'
-    Speed=50696.0
     MyVehicleDamage=class'DH_Weapons.DH_SVT40VehDamType'
 }

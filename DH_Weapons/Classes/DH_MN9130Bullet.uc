@@ -7,9 +7,9 @@ class DH_MN9130Bullet extends DHBullet;
 
 defaultproperties
 {
-    BallisticCoefficient=0.511
+    Speed=52204.0 // 2838 fps  // TODO: was 2660 fps in RO, why the change?
+    BallisticCoefficient=0.511 // TODO: was 0.37 in RO, why the change?
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_MN9130DamType'
-    Speed=52204 // 2838 fps
     MyVehicleDamage=class'DH_Weapons.DH_MN9130VehDamType'
 }

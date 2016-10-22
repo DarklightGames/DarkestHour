@@ -7,10 +7,10 @@ class DH_MP41Bullet extends DHBullet;
 
 defaultproperties
 {
-    WhizType=2
-    MyVehicleDamage=class'DH_Weapons.DH_MP41VehDamType'
+    Speed=22934.0 // differs from RO but that had incorrect conversion to UU
     BallisticCoefficient=0.16
-    Speed=19952.0
+    WhizType=2
     Damage=55.0
     MyDamageType=class'DH_Weapons.DH_MP41DamType'
+    MyVehicleDamage=class'DH_Weapons.DH_MP41VehDamType'
 }

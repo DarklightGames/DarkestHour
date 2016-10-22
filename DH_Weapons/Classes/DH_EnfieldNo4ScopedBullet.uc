@@ -7,9 +7,9 @@ class DH_EnfieldNo4ScopedBullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Weapons.DH_EnfieldNo4ScopedVehDamType'
-    BallisticCoefficient=0.37
     Speed=44902.0
+    BallisticCoefficient=0.37
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_EnfieldNo4ScopedDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_EnfieldNo4ScopedVehDamType'
 }

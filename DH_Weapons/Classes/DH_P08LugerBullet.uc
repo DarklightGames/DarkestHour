@@ -7,10 +7,10 @@ class DH_P08LugerBullet extends DHBullet;
 
 defaultproperties
 {
-    WhizType=2
-    MyVehicleDamage=class'DH_Weapons.DH_P08LugerVehDamType'
-    BallisticCoefficient=0.15
     Speed=22632.0
+    BallisticCoefficient=0.15
+    WhizType=2
     Damage=55.0
     MyDamageType=class'DH_Weapons.DH_P08LugerDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_P08LugerVehDamType'
 }

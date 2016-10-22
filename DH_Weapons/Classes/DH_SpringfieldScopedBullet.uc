@@ -7,9 +7,9 @@ class DH_SpringfieldScopedBullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Weapons.DH_SpringfieldScopedVehDamType'
-    BallisticCoefficient=0.41
     Speed=49670.0
+    BallisticCoefficient=0.41
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_SpringfieldScopedDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_SpringfieldScopedVehDamType'
 }

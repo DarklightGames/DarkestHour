@@ -7,9 +7,9 @@ class DH_M44Bullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Weapons.DH_M44VehDamType'
+    Speed=48282.0 // 2625 fps
     BallisticCoefficient=0.511 // ?
-    Speed=48282 // 2625 fps
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_M44DamType'
+    MyVehicleDamage=class'DH_Weapons.DH_M44VehDamType'
 }

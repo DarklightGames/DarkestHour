@@ -7,9 +7,9 @@ class DH_TT33Bullet extends DHBullet;
 
 defaultproperties
 {
-    WhizType=2
+    Speed=22000.0
     BallisticCoefficient=0.14
-    Speed=22000
+    WhizType=2
     Damage=55.0
     MyDamageType=class'DH_Weapons.DH_TT33DamType'
     MyVehicleDamage=class'DH_Weapons.DH_TT33VehDamType'

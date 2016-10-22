@@ -7,10 +7,10 @@ class DH_GreaseGunBullet extends DHBullet;
 
 defaultproperties
 {
-    WhizType=2
-    MyVehicleDamage=class'DH_Weapons.DH_GreaseGunVehDamType'
-    BallisticCoefficient=0.195
     Speed=16899.0
+    BallisticCoefficient=0.195
+    WhizType=2
     Damage=60.0
     MyDamageType=class'DH_Weapons.DH_GreaseGunDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_GreaseGunVehDamType'
 }

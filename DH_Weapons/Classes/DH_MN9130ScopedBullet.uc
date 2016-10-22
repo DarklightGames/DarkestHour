@@ -7,9 +7,9 @@ class DH_MN9130ScopedBullet extends DHBullet;
 
 defaultproperties
 {
+    Speed=52204.0
     BallisticCoefficient=0.511
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_MN9130ScopedDamType'
-    Speed=52204.0
     MyVehicleDamage=class'DH_Weapons.DH_MN9130ScopedVehDamType'
 }

@@ -7,9 +7,9 @@ class DH_M1GarandBullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Weapons.DH_M1GarandVehDamType'
-    BallisticCoefficient=0.41
     Speed=51480.0
+    BallisticCoefficient=0.41
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_M1GarandDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_M1GarandVehDamType'
 }

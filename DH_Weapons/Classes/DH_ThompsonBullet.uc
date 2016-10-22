@@ -7,10 +7,10 @@ class DH_ThompsonBullet extends DHBullet;
 
 defaultproperties
 {
-    WhizType=2
-    MyVehicleDamage=class'DH_Weapons.DH_ThompsonVehDamType'
-    BallisticCoefficient=0.195
     Speed=16899.0
+    BallisticCoefficient=0.195
+    WhizType=2
     Damage=60.0
     MyDamageType=class'DH_Weapons.DH_ThompsonDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_ThompsonVehDamType'
 }

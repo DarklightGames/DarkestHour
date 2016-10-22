@@ -7,9 +7,9 @@ class DH_M1CarbineBullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Weapons.DH_M1CarbineVehDamType'
-    BallisticCoefficient=0.168
     Speed=36211.0
+    BallisticCoefficient=0.168
     Damage=75.0
     MyDamageType=class'DH_Weapons.DH_M1CarbineDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_M1CarbineVehDamType'
 }

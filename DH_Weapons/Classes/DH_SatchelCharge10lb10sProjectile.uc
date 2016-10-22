@@ -88,21 +88,27 @@ simulated function Timer()
 
 defaultproperties
 {
+    bAlwaysRelevant=true
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Satchel_throw'
+    CollisionRadius=4.0
+    CollisionHeight=4.0
+
     FuzeLengthTimer=15.0
     Speed=300.0
     Damage=550.0 // was 600 in 5.1
     DamageRadius=500.0 // was 725.0 in 5.1
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
+
+    ExplosionSoundRadius=4000.0
     ExplosionSound(0)=sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=sound'Inf_Weapons.satchel.satchel_explode02'
     ExplosionSound(2)=sound'Inf_Weapons.satchel.satchel_explode03'
-    ExplosionSoundRadius=4000.0
-    ExplodeDirtEffectClass=class'ROSatchelExplosion'
-    ExplodeSnowEffectClass=class'ROSatchelExplosion'
-    ExplodeMidAirEffectClass=class'ROSatchelExplosion'
-    CollisionRadius=4.0
-    CollisionHeight=4.0
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Satchel_throw'
+    ExplodeDirtEffectClass=class'ROEffects.ROSatchelExplosion'
+    ExplodeSnowEffectClass=class'ROEffects.ROSatchelExplosion'
+    ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
+
+    BlurTime=6.0
+    BlurEffectScalar=1.75
     ShakeRotMag=(X=0.0,Y=0.0,Z=300.0)
     ShakeRotRate=(Z=2500.0)
     ShakeRotTime=3.0
@@ -110,7 +116,4 @@ defaultproperties
     ShakeOffsetRate=(Z=200.0)
     ShakeOffsetTime=5.0
     ShakeScale=2.5
-    BlurTime=6.0
-    BlurEffectScalar=1.75
-    bAlwaysRelevant=true
 }
