@@ -5129,7 +5129,7 @@ simulated function SetUpPlayerModel()
             bInitializedPlayer = true;
         }
         else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
-            log(PRI.PlayerName @ "SetUpPlayerModel: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG
+            log(PRI.PlayerName @ "SetUpPlayerModel: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG (Matt)
     }
 }
 
@@ -5150,7 +5150,7 @@ function SetMovementPhysics()
 }
 
 // Colin: This is a bit of a half-measure, since we need to retain support for
-// "using" the radio trigger normally. Unforunately, the Pawns is consuming the
+// "using" the radio trigger normally. Unfortunately, the Pawns is consuming the
 // use requests when players are looking directly at the player and trying to
 // use the radio. This override simply passes the UsedBy call to the radio
 // trigger, if it exists. All error handling and sanity checks are performed

@@ -260,7 +260,7 @@ function PawnExitedMineVolume(Pawn P, optional bool bStillInsideAnotherMineVolum
     {
         P.MineAreaEnterTime = 0.0;
     }
-    else log("PawnExitedMineVolume from" @ Name @ "but doing NOTHING as also touching another MV"); // TEMP TEST
+    else log("PawnExitedMineVolume from" @ Name @ "but doing NOTHING as also touching another MV"); // TEMPDEBUG (Matt)
 }
 
 // New function to Handle a player that has been found inside mine volume (may include warning, recording enter time or destruction)

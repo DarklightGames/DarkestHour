@@ -73,9 +73,9 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
         ROP.VoiceClass = class<TeamVoicePack>(VoiceClass);
 
         if (P.PlayerReplicationInfo == none && P.DrivenVehicle != none)
-            log(PRI.PlayerName @ "Species.SetUp(): AVERTED VOICE COMMANDS BUG when player was in a vehicle & DHPawn has no PRI"); // TEMPDEBUG
+            log(PRI.PlayerName @ "Species.SetUp(): AVERTED VOICE COMMANDS BUG when player was in a vehicle & DHPawn has no PRI"); // TEMPDEBUG (Matt)
     }
-    else // TEMPDEBUG
+    else // TEMPDEBUG (Matt)
     {
         if (PRI != none) log(PRI.PlayerName @ "Species.Setup(): NO VOICE SETUP due to no PRI.RoleInfo - SHOULD NOT HAPPEN!!!");
         else log(P.name @ "Species.Setup(): NO VOICE SETUP due to no PRI - SHOULD NOT HAPPEN!!!");

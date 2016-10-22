@@ -201,7 +201,7 @@ simulated function bool IsValidCharacterName(string InCharacterName)
     // If role has no defined Models (e.g. using new DH system) return true if a null CharacterName has been passed
     if (default.Models.Length == 0)
     {
-        if (InCharacterName != "") log(name @ "IsValidCharacterName: no Models array so returning FALSE for passed CharacterName" @ InCharacterName @ "!!!"); // TEMPDEBUG
+        if (InCharacterName != "") log(name @ "IsValidCharacterName: no Models array so returning FALSE for passed CharacterName" @ InCharacterName @ "!!!"); // TEMPDEBUG (Matt)
 
         return InCharacterName == "";
     }
@@ -215,7 +215,7 @@ simulated function bool IsValidCharacterName(string InCharacterName)
         }
     }
 
-    log(name @ "IsValidCharacterName: returning FALSE for passed CharacterName" @ InCharacterName @ "which is not in the Models array !!!"); // TEMPDEBUG
+    log(name @ "IsValidCharacterName: returning FALSE for passed CharacterName" @ InCharacterName @ "which is not in the Models array !!!"); // TEMPDEBUG (Matt)
 
     return false;
 }
