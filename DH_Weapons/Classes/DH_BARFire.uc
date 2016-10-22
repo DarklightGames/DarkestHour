@@ -107,7 +107,7 @@ defaultproperties
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-28.0)
     TracerFrequency=5
-    TracerProjectileClass=class'DH_BARTracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_BARTracerBullet' // TODO: has a tracer class but doesn't fire tracer because doesn't have bUsesTracers=true // go one way or the other
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"

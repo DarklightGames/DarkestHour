@@ -98,7 +98,7 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.0)
     bUsesTracers=true
     TracerFrequency=5
-    TracerProjectileClass=class'DH_BrenTracerBullet'
+    TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"

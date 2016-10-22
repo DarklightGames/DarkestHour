@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_RDG1SmokeGrenadePickup extends DHOneShotWeaponPickup
-   notplaceable;
+class DH_RDG1SmokeGrenadePickup extends DHOneShotWeaponPickup;
 
 defaultproperties
 {
