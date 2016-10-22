@@ -5,37 +5,39 @@
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
+// Modified to record SavedInstigator & SavedPRI
 simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)
     {
         Velocity = Speed * vector(Rotation);
 
-        if (Instigator.HeadVolume.bWaterVolume)
+        if (Instigator != none && Instigator.HeadVolume.bWaterVolume)
         {
             Velocity = 0.25 * Velocity;
         }
     }
+
+    Acceleration = 0.5 * PhysicsVolume.Gravity;
 
     if (Instigator != none)
     {
         InstigatorController = Instigator.Controller;
         SavedInstigator = Instigator;
         SavedPRI = Instigator.PlayerReplicationInfo;
-    }
 
-    Acceleration = 0.5 * PhysicsVolume.Gravity;
-
-    if (InstigatorController != none)
-    {
-        ThrowerTeam = InstigatorController.PlayerReplicationInfo.Team.TeamIndex;
+        if (InstigatorController != none && InstigatorController.PlayerReplicationInfo != none && InstigatorController.PlayerReplicationInfo.Team != none)
+        {
+            ThrowerTeam = InstigatorController.PlayerReplicationInfo.Team.TeamIndex;
+        }
     }
 }
 
+// Modified to check whether satchel blew up in a special Volume that needs to be triggered
 function BlowUp(vector HitLocation)
 {
     local ROObjSatchel SatchelObjActor;
-    local Volume       DemoVolume;
+    local Volume       V;
 
     if (Instigator != none)
     {
@@ -50,11 +52,11 @@ function BlowUp(vector HitLocation)
         MakeNoise(1.0);
     }
 
-    foreach TouchingActors(class'Volume', DemoVolume)
+    foreach TouchingActors(class'Volume', V)
     {
-        if (ROObjSatchel(DemoVolume.AssociatedActor) != none)
+        if (ROObjSatchel(V.AssociatedActor) != none)
         {
-            SatchelObjActor = ROObjSatchel(DemoVolume.AssociatedActor);
+            SatchelObjActor = ROObjSatchel(V.AssociatedActor);
 
             if (SatchelObjActor.WithinArea(self))
             {
@@ -62,13 +64,14 @@ function BlowUp(vector HitLocation)
             }
         }
 
-        if (RODemolitionVolume(DemoVolume) != none)
+        if (V.IsA('RODemolitionVolume'))
         {
-            RODemolitionVolume(DemoVolume).Trigger(self, SavedInstigator);
+            RODemolitionVolume(V).Trigger(self, SavedInstigator);
         }
     }
 }
 
+// Implemented here to go to dynamic lighting for a split second, when satchel blows up
 simulated function WeaponLight()
 {
     if (!Level.bDropDetail)
