@@ -8,11 +8,6 @@ class DH_MN9130BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    DeathString="%o was smacked with %k's MN 91/30."
-    MaleSuicide="%o turned the gun on himself."
-    FemaleSuicide="%o turned the gun on herself."
     WeaponClass=class'DH_Weapons.DH_MN9130Weapon'
-    GibModifier=0.0
-    KDamageImpulse=400
 }
 

@@ -8,12 +8,14 @@ class DH_SatchelDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    TankDamageModifier=0.4  // was 0.8 in DH 5.1 & was 1.0 in RO
-    APCDamageModifier=0.75  // was 1.0 in RO
-    VehicleDamageModifier=1.0
-    TreadDamageModifier=0.8 // was 1.0 in RO
     WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
     HUDIcon=texture'InterfaceArt_tex.deathicons.satchel'
+
+    VehicleDamageModifier=1.0
+    APCDamageModifier=0.75  // was 1.0 in RO
+    TankDamageModifier=0.4  // was 0.8 in DH 5.1 & was 1.0 in RO
+    TreadDamageModifier=0.8 // was 1.0 in RO
+
     GibModifier=4.0
     KDamageImpulse=5000.0
     KDeathVel=300.0

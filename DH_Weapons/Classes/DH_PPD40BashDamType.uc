@@ -9,9 +9,4 @@ class DH_PPD40BashDamType extends DHWeaponBashDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_PPD40Weapon'
-    DeathString="%o was smacked with %k's PPD40."
-    FemaleSuicide="%o turned the gun on herself."
-    MaleSuicide="%o turned the gun on himself."
-    GibModifier=0.0
-    KDamageImpulse=400.0
 }

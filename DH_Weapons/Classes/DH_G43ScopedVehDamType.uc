@@ -8,6 +8,6 @@ class DH_G43ScopedVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
     WeaponClass=class'DH_Weapons.DH_G43ScopedWeapon'
+    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
 }

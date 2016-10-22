@@ -8,6 +8,6 @@ class DH_M1GarandVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

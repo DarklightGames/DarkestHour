@@ -8,6 +8,6 @@ class DH_BARVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_BARWeapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

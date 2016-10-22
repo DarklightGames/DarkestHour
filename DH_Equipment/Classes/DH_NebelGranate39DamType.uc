@@ -8,6 +8,6 @@ class DH_NebelGranate39DamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.germgrenade'
     WeaponClass=class'DH_Equipment.DH_NebelGranate39Weapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.germgrenade'
 }

@@ -8,6 +8,6 @@ class DH_STG44VehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_STG44Weapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

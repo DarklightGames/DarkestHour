@@ -8,14 +8,7 @@ class DH_SVT40ScopedDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    DeathString="%o was sniped by %k's SVT-40."
-    MaleSuicide="%o turned the gun on himself."
-    FemaleSuicide="%o turned the gun on herself."
-    WeaponClass=class'SVT40ScopedWeapon'
-    GibModifier=0.0
-    KDeathVel=115.0
-    KDamageImpulse=2500.0
-    KDeathUpKick=5.0
-    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    WeaponClass=class'DH_Weapons.DH_SVT40ScopedWeapon'
     HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
+    KDamageImpulse=2500.0
 }

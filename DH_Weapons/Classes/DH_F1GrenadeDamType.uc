@@ -8,9 +8,6 @@ class DH_F1GrenadeDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.rusgrenade'
     WeaponClass=class'DH_Weapons.DH_F1GrenadeWeapon'
-    DeathString="%o was blown up by %k's F1 grenade."
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.0
+    HUDIcon=texture'InterfaceArt_tex.deathicons.rusgrenade'
 }

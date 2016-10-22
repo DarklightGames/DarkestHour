@@ -8,7 +8,6 @@ class DH_FG42DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_FG42Weapon'
-    KDamageImpulse=2250.0
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

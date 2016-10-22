@@ -8,6 +8,6 @@ class DH_BrenVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_BrenWeapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

@@ -8,8 +8,8 @@ class DH_EnfieldNo2DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_EnfieldNo2Weapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=750.0
     KDeathVel=100.0
     KDeathUpKick=0.0

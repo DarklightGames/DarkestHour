@@ -8,6 +8,6 @@ class DH_StenMkIIVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_StenMkIIWeapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
 }

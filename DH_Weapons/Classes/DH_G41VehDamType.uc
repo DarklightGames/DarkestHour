@@ -8,6 +8,6 @@ class DH_G41VehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_G41Weapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

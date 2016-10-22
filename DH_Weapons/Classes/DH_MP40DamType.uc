@@ -8,8 +8,8 @@ class DH_MP40DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b9mm'
     WeaponClass=class'DH_Weapons.DH_MP40Weapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b9mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0
     KDeathUpKick=0.0

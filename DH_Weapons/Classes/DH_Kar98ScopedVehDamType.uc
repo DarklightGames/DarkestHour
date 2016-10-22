@@ -8,6 +8,6 @@ class DH_Kar98ScopedVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
     WeaponClass=class'DH_Weapons.DH_Kar98ScopedWeapon'
+    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
 }

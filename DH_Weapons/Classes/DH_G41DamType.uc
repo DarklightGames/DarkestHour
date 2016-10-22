@@ -8,7 +8,6 @@ class DH_G41DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_G41Weapon'
-    KDamageImpulse=2250.0
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

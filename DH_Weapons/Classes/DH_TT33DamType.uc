@@ -8,9 +8,9 @@ class DH_TT33DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_TT33Weapon'
-    KDeathVel=100.0
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=750.0
+    KDeathVel=100.0
     KDeathUpKick=0.0
 }

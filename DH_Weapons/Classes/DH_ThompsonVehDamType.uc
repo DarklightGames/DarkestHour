@@ -8,6 +8,6 @@ class DH_ThompsonVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_ThompsonWeapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
 }

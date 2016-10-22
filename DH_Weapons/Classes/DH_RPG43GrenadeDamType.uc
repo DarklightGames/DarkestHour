@@ -8,13 +8,10 @@ class DH_RPG43GrenadeDamType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    TankDamageModifier=0.6
-    TreadDamageModifier=0.8
+    WeaponClass=class'DH_Weapons.DH_RPG43GrenadeWeapon'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
     VehicleDamageModifier=0.75
     APCDamageModifier=0.66
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.rpg43kill'
-    WeaponClass=class'DH_Weapons.DH_RPG43GrenadeWeapon'
-    DeathString="%o was blown up by %k's RPG-43 grenade."
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.0
+    TankDamageModifier=0.6
+    TreadDamageModifier=0.8
 }

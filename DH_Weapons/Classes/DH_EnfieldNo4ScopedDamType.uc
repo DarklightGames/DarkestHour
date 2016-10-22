@@ -8,7 +8,7 @@ class DH_EnfieldNo4ScopedDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     KDamageImpulse=2500.0
 }

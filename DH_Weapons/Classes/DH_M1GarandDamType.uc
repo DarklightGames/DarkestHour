@@ -8,7 +8,6 @@ class DH_M1GarandDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
-    KDamageImpulse=2250.0
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }

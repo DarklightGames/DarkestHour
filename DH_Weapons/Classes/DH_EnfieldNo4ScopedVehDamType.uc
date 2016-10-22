@@ -8,6 +8,6 @@ class DH_EnfieldNo4ScopedVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
     WeaponClass=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
+    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
 }

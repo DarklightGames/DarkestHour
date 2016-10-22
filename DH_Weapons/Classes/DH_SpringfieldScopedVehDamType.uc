@@ -8,6 +8,6 @@ class DH_SpringfieldScopedVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
     WeaponClass=class'DH_Weapons.DH_SpringfieldScopedWeapon'
+    HUDIcon=texture'InterfaceArt2_tex.deathicons.sniperkill'
 }

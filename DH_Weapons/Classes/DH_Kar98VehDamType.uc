@@ -8,6 +8,6 @@ class DH_Kar98VehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_Kar98Weapon'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
 }
