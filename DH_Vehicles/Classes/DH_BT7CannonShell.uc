@@ -9,8 +9,8 @@ defaultproperties
 {
     ShellDiameter=4.5
     BallisticCoefficient=1.12
-    Speed=45806 // 759 m/s
-    MaxSpeed=45806
+    Speed=45806.0 // 759 m/s
+    MaxSpeed=45806.0
     ImpactDamage=350
     ShellImpactDamage=class'DH_Vehicles.DH_BT7CannonShellDamageAPC'
     Tag="BR-240SP"

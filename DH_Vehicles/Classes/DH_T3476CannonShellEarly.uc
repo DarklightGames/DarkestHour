@@ -8,8 +8,8 @@ class DH_T3476CannonShellEarly extends DH_T3476CannonShell; // TODO: this is not
 defaultproperties
 {
     Speed=39832 // 660 m/s
-    MaxSpeed=39832
-    ImpactDamage=550
+    MaxSpeed=39832.0
+    ImpactDamage=550.0
     Tag="BR-350A" // early war APBC round
 
     DHPenetrationTable(0)=8.4

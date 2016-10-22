@@ -5,6 +5,12 @@
 
 class DH_T3476CannonPawn extends DHSovietCannonPawn;
 
+exec function GSD() // TEMP TEST to zero in sights
+{
+    DHVehicleCannon(Gun).bGunsightSettingMode = !DHVehicleCannon(Gun).bGunsightSettingMode;
+    log(name @ "bGunsightSettingMode =" @ DHVehicleCannon(Gun).bGunsightSettingMode);
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_T3476Cannon' // TODO: Pos0 FOV was 34 in RO - need to change?

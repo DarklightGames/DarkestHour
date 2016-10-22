@@ -9,8 +9,8 @@ defaultproperties
 {
     ShellDiameter=4.5
     BallisticCoefficient=1.2
-    Speed=45806 // 759 m/s
-    MaxSpeed=45806
+    Speed=45806.0 // 759 m/s
+    MaxSpeed=45806.0
     Damage=225.0
     DamageRadius=500.0
     MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'

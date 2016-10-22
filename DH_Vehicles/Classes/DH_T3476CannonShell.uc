@@ -9,10 +9,10 @@ defaultproperties
 {
     ShellDiameter=7.62
     BallisticCoefficient=1.55
-    Speed=39529 // 655 m/s
-    MaxSpeed=39529
-    ImpactDamage=580 // 350 in RO, but have matched to Sherman 76mm AP shell
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    Speed=39529.0 // 655 m/s
+    MaxSpeed=39529.0
+    ImpactDamage=560 // 350 in RO, but have made slightly higher than Sherman 75mm shell, as is slightly faster & similar calibre
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
     Tag="BR-350B" // standard mid-late war APBC shell
     bOpticalAiming=true
     bMechanicalAiming=true // TODO: investigate this (it's from RO), as this cannon does not have mech aiming
