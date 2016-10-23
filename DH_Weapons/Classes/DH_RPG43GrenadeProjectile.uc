@@ -157,16 +157,15 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43_Tossed'
+    Speed=900.0
 //  PenetrationAbility=7.6
+    Damage=200.0
+    DamageRadius=250.0
     GrenadeImpactDamage=class'DH_Engine.DHShellImpactDamageType' // TODO - switch this to a suitable HEAT type
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43_Tossed'
+    LifeSpan=15.0 // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     ExplosionSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-    Damage=200.0
-    DamageRadius=250.0
-    FuzeLengthTimer=0.0
-    Speed=900.0
-    LifeSpan=15.0 // used in case the grenade didn't hit hard enough to explode (will stay around for a bit for effect, then disappear)
 }
