@@ -14,7 +14,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_RPG43GrenadeProjectile'
     AmmoClass=class'DH_Weapons.DH_RPG43GrenadeAmmo'
+    MaxHoldTime=60.0 // why hold a grenade for more than a minute?
     bSplashDamage=false
     bRecommendSplashDamage=false
-    MaxHoldTime=60.0 // why hold a grenade for more than a minute?
 }

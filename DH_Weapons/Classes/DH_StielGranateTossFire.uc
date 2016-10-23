@@ -7,7 +7,7 @@ class DH_StielGranateTossFire extends DH_M1GrenadeTossFire;
 
 defaultproperties
 {
-    AmmoClass=class'ROAmmo.StielGranateAmmo'
     ProjectileClass=class'DH_Weapons.DH_StielGranateProjectile'
+    AmmoClass=class'ROAmmo.StielGranateAmmo'
     PreFireAnim="Underhand_Pull_Pin"
 }

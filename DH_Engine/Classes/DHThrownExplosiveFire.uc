@@ -358,29 +358,30 @@ event ModeHoldFire()
 
 defaultproperties
 {
-    MinimumThrowSpeed=600.0
-    MaximumThrowSpeed=1000.0
-    SpeedFromHoldingPerSec=850.0
-    AddedFuseTime=0.38
-    bPullAnimCompensation=true
-    ProjSpawnOffset=(X=25.0,Y=0.0,Z=0.0)
-    AddedPitch=3000
-    bUsePreLaunchTrace=false
-    bSplashDamage=true
-    bRecommendSplashDamage=true
     bTossed=true
     bFireOnRelease=true
     bWaitForRelease=true
+    bShouldBlurOnFire=false
+
+    MinimumThrowSpeed=600.0
+    MaximumThrowSpeed=1000.0
+    SpeedFromHoldingPerSec=850.0
+
+    ProjSpawnOffset=(X=25.0,Y=0.0,Z=0.0)
+    AddedPitch=3000
+    SpreadStyle=SS_Random
+    Spread=75.0
+    bUsePreLaunchTrace=false
+
     PreFireAnim="Pre_Fire"
     FireAnim="Throw"
     TweenTime=0.01
+    FireRate=50.0 // set FireRate ridiculously high since we manually set the next fire time each time you bring up another explosive
     FireForce="RocketLauncherFire"
-    FireRate=50.0
+
+    bSplashDamage=true
+    bRecommendSplashDamage=true
     BotRefireRate=0.5
     WarnTargetPct=0.9
     AimError=200.0
-    Spread=75.0
-    SpreadStyle=SS_Random
-    bShouldBlurOnFire=false
 }
-

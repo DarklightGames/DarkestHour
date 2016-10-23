@@ -7,6 +7,6 @@ class DH_OrangeSmokeFire extends DH_USSmokeGrenadeFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Equipment.DH_OrangeSmokeAmmo'
     ProjectileClass=class'DH_Equipment.DH_OrangeSmokeProjectile'
+    AmmoClass=class'DH_Equipment.DH_OrangeSmokeAmmo'
 }

@@ -7,6 +7,6 @@ class DH_RedSmokeTossFire extends DH_USSmokeGrenadeTossFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
     ProjectileClass=class'DH_Equipment.DH_RedSmokeProjectile'
+    AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
 }

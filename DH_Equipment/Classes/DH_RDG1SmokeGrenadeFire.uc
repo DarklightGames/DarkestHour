@@ -7,6 +7,6 @@ class DH_RDG1SmokeGrenadeFire extends DH_USSmokeGrenadeFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Equipment.DH_RDG1SmokeGrenadeAmmo'
     ProjectileClass=class'DH_Equipment.DH_RDG1SmokeGrenadeProjectile'
+    AmmoClass=class'DH_Equipment.DH_RDG1SmokeGrenadeAmmo'
 }

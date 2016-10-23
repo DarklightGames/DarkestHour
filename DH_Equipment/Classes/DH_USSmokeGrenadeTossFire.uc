@@ -7,8 +7,8 @@ class DH_USSmokeGrenadeTossFire extends DH_M1GrenadeTossFire;
 
 defaultproperties
 {
-    AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
     ProjectileClass=class'DH_Equipment.DH_USSmokeGrenadeProjectile'
+    AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
 
     bIsSmokeGrenade=true
     MaxHoldTime=4.95
