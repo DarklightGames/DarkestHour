@@ -7,15 +7,25 @@ class DH_RPG43GrenadeProjectile extends DHGrenadeProjectile;
 
 #exec OBJ LOAD File=Inf_WeaponsTwo.uax
 
-//var     float               PenetrationAbility;  // TODO: not used (should be)
+//var   float               PenetrationAbility;  // TODO: not used (should be)
 var     class<DamageType>   GrenadeImpactDamage;
 
-// Emptied out as this is grenade does not use a timed fuze
-simulated function Tick(float DeltaTime)
+// Modified to skip explosion effects in the Super if the grenade is simply destroying itself after its LifeSpan expires
+simulated function Destroyed()
 {
+    if (bAlreadyExploded) // only set if grenade detonates on impact
+    {
+        super.Destroyed();
+    }
 }
 
-// Modified to remove 'Fear' stuff, as not an exploding grenade
+// Disabled as this grenade does not use a timed fuze
+simulated function Tick(float DeltaTime)
+{
+    Disable('Tick');
+}
+
+// Modified to remove 'Fear' stuff, as grenade does not explode after landing (if fails to detonate on impact)
 simulated function Landed(vector HitNormal)
 {
     if (Bounces <= 0)
@@ -78,7 +88,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     ImpactSpeed = int(VSize(Velocity));
 
     // Grenade hit a vehicle & will explode if impact speed is high enough
-    if (Wall.IsA('ROVehicle') || Wall.IsA('ROVehicleWeapon'))
+    if (ROVehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
     {
         if (ImpactSpeed >= (820 + Rand(81)))
         {
@@ -91,7 +101,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             }
             else [damage vehicle]
 */
-            // Damage the vehicle if we hit pretty square on (impact angle < 6.85 degrees , expressed in radians)
+            // Damage the vehicle if we hit pretty square on (impact angle < 6.85 degrees, expressed in radians)
             // TODO - crazy, no penetration checks, work something out based on HEAT!!
             if (Role == ROLE_Authority && Acos(HitNormal dot vect(0.0, 0.0, 1.0)) < 0.119555)
             {
@@ -135,6 +145,14 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         PlaySound(ImpactSound, SLOT_Misc, 1.1);
     }
+}
+
+// Modified to flag bAlreadyExploded so Destroyed() function knows grenade hasn't just disappeared after LifeSpan after failing to detonate on impact
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    bAlreadyExploded = true;
+
+    super.Explode(HitLocation, HitNormal);
 }
 
 defaultproperties
