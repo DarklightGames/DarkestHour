@@ -20,7 +20,7 @@ defaultproperties
     Skins(0)=texture'allies_vehicles_tex.ext_vehicles.T3485_ext'
     Skins(1)=texture'allies_vehicles_tex.int_vehicles.T3485_int'
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc4.T34-85_turret_col'
+    CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col'
 
     // Turret armor
     FrontArmorFactor=9.0
