@@ -5238,14 +5238,79 @@ exec function SetFlySpeed(float NewSpeed)
 
 defaultproperties
 {
-    StanceChangeStaminaDrain=1.5
-    Stamina=40.0
+    // Player model
+    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat' // mesh gets set by .upl file but seems to be initial delay until takes effect & pawn spawns with Mesh from defaultproperties
+    FaceSlot=0                                     // so unless Mesh is overridden in subclass, pawn spawns with inherited 'Characters_anm.ger_rifleman_tunic' (many German roles do)
+    BodySlot=1                                     // that can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
+
+    // General class & interaction stuff
+    Species=class'DH_Engine.DHSPECIES_Human'
+    ControllerClass=class'DH_Engine.DHBot'
+    TouchMessageClass=class'DHPawnTouchMessage'
+    bAutoTraceNotify=true
+    bCanAutoTraceSelect=true
+
+    // Movement & impacts
     WalkingPct=0.45
     MinHurtSpeed=475.0
-    Species=class'DH_Engine.DHSPECIES_Human'
+    MaxFallSpeed=700.0
+
+    // Stamina
+    Stamina=40.0
+    StanceChangeStaminaDrain=1.5
+    StaminaRecoveryRate=1.15
+    CrouchStaminaRecoveryRate=1.3
+    ProneStaminaRecoveryRate=1.5
+    SlowStaminaRecoveryRate=0.5
+
+    // Weapon aim
+    IronsightBobAmplitude=4.0
+    IronsightBobFrequency=4.0
+    IronsightBobDecay=6.0
+    DeployedPitchUpLimit=7300 // bipod
+    DeployedPitchDownLimit=-7300
+
+    // Sound
+    FootStepSoundRadius=64
+    FootstepVolume=0.5
+    QuietFootStepVolume=0.66
     DHSoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
+    MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
+
+    // Burning player
+    FireDamage=10
+    FireDamageClass=class'DH_Engine.DHBurningDamageType'
+    FlameEffect=class'DH_Effects.DHBurningPlayerFlame'
+    BurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay_ALT'
+    DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
+    CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
+    BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
+
+    // Third person player animations
+    DodgeAnims(0)="jumpF_mid_nade"
+    DodgeAnims(1)="jumpB_mid_nade"
+    DodgeAnims(2)="jumpL_mid_nade"
+    DodgeAnims(3)="jumpR_mid_nade"
+
+    TakeoffStillAnim="jump_takeoff_nade"
+    TakeoffAnims(0)="jumpF_takeoff_nade"
+    TakeoffAnims(1)="jumpB_takeoff_nade"
+    TakeoffAnims(2)="jumpL_takeoff_nade"
+    TakeoffAnims(3)="jumpR_takeoff_nade"
+
+    AirStillAnim="jump_mid_nade"
+    AirAnims(0)="jumpF_mid_nade"
+    AirAnims(1)="jumpB_mid_nade"
+    AirAnims(2)="jumpL_mid_nade"
+    AirAnims(3)="jumpR_mid_nade"
+
+    LandAnims(0)="jumpF_land_nade"
+    LandAnims(1)="jumpB_land_nade"
+    LandAnims(2)="jumpL_land_nade"
+    LandAnims(3)="jumpR_land_nade"
+
     MantleAnim_40C="mantle_crouch_40"
     MantleAnim_44C="mantle_crouch_44"
     MantleAnim_48C="mantle_crouch_48"
@@ -5272,59 +5337,17 @@ defaultproperties
     MantleAnim_80S="mantle_stand_80"
     MantleAnim_84S="mantle_stand_84"
     MantleAnim_88S="mantle_stand_88"
-    MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
-    FlameEffect=class'DH_Effects.DHBurningPlayerFlame'
-    BurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay_ALT'
-    DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
-    CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
-    BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
-    FireDamage=10
-    FireDamageClass=class'DH_Engine.DHBurningDamageType'
-    DeployedPitchUpLimit=7300
-    DeployedPitchDownLimit=-7300
-    ControllerClass=class'DH_Engine.DHBot'
-    AirAnims(0)="jumpF_mid_nade"
-    AirAnims(1)="jumpB_mid_nade"
-    AirAnims(2)="jumpL_mid_nade"
-    AirAnims(3)="jumpR_mid_nade"
-    TakeoffAnims(0)="jumpF_takeoff_nade"
-    TakeoffAnims(1)="jumpB_takeoff_nade"
-    TakeoffAnims(2)="jumpL_takeoff_nade"
-    TakeoffAnims(3)="jumpR_takeoff_nade"
-    LandAnims(0)="jumpF_land_nade"
-    LandAnims(1)="jumpB_land_nade"
-    LandAnims(2)="jumpL_land_nade"
-    LandAnims(3)="jumpR_land_nade"
-    DodgeAnims(0)="jumpF_mid_nade"
-    DodgeAnims(1)="jumpB_mid_nade"
-    DodgeAnims(2)="jumpL_mid_nade"
-    DodgeAnims(3)="jumpR_mid_nade"
-    AirStillAnim="jump_mid_nade"
-    TakeoffStillAnim="jump_takeoff_nade"
-    MaxFallSpeed=700.0
-    IronsightBobAmplitude=4.0
-    IronsightBobFrequency=4.0
-    IronsightBobDecay=6.0
 
-    // Footstep sounds
-    FootStepSoundRadius=64
-    FootstepVolume=0.5
-    QuietFootStepVolume=0.66
-
-    // Matt: Mesh gets set by .upl file, but seems to be an initial delay until that takes effect & pawn spawns with Mesh from defaultproperties
-    // So unless Mesh is overridden in subclass, pawn spawn with inherited 'Characters_anm.ger_rifleman_tunic' mesh (many German roles do this)
-    // That can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat'
-
-    bAutoTraceNotify=true
-    bCanAutoTraceSelect=true
-    TouchMessageClass=class'DHPawnTouchMessage'
-
-    StaminaRecoveryRate=1.15
-    CrouchStaminaRecoveryRate=1.3
-    ProneStaminaRecoveryRate=1.5
-    SlowStaminaRecoveryRate=0.5
-
-    FaceSlot=0
-    BodySlot=1
+    // Override binoculars WalkAnims from ROPawn that don't exist
+    // Normally these are overridden by weapon-specific anims in the weapon attachment class (PA_WalkAnims), so the problem was masked in RO
+    // But DH now allows player to drop their weapon without bringing up another & this means it falls back to these WalkAnims
+    // When the player walks without a weapon the missing anims caused the player to 'slide' walk,  without animation, with spammed log errors
+    WalkAnims(0)="stand_walkFhip_nade"
+    WalkAnims(1)="stand_walkBhip_nade"
+    WalkAnims(2)="stand_walkLhip_nade"
+    WalkAnims(3)="stand_walkRhip_nade"
+    WalkAnims(4)="stand_walkFLhip_nade"
+    WalkAnims(5)="stand_walkFRhip_nade"
+    WalkAnims(6)="stand_walkBLhip_nade"
+    WalkAnims(7)="stand_walkBRhip_nade"
 }
