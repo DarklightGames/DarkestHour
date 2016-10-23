@@ -14,8 +14,6 @@ defaultproperties
     ImpactDamage=560 // 350 in RO, but have made slightly higher than Sherman 75mm shell, as is slightly faster & similar calibre
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
     Tag="BR-350B" // standard mid-late war APBC shell
-    bOpticalAiming=true
-    bMechanicalAiming=true // TODO: investigate this (it's from RO), as this cannon does not have mech aiming
 
     DHPenetrationTable(0)=8.8
     DHPenetrationTable(1)=8.0
@@ -29,6 +27,7 @@ defaultproperties
     DHPenetrationTable(9)=3.1
     DHPenetrationTable(10)=2.4
 
+    bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.410)
     OpticalRanges(1)=(Range=200,RangeValue=0.417)
     OpticalRanges(2)=(Range=400,RangeValue=0.425)
@@ -56,6 +55,7 @@ defaultproperties
     OpticalRanges(24)=(Range=4800,RangeValue=0.791)
     OpticalRanges(25)=(Range=5000,RangeValue=0.813)
 
+    bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0)
     MechanicalRanges(1)=(Range=200,RangeValue=0)
     MechanicalRanges(2)=(Range=400,RangeValue=0)
@@ -77,10 +77,9 @@ defaultproperties
     MechanicalRanges(18)=(Range=3600,RangeValue=-225)
     MechanicalRanges(19)=(Range=3800,RangeValue=-235)
     MechanicalRanges(20)=(Range=4000,RangeValue=-245)
-    // RO TODO - dial in the rest of these ranges
-    MechanicalRanges(21)=(Range=4200,RangeValue=0)
-    MechanicalRanges(22)=(Range=4400,RangeValue=0)
-    MechanicalRanges(23)=(Range=4600,RangeValue=0)
-    MechanicalRanges(24)=(Range=4800,RangeValue=0)
-    MechanicalRanges(25)=(Range=5000,RangeValue=0)
+    MechanicalRanges(21)=(Range=4200,RangeValue=-255)
+    MechanicalRanges(22)=(Range=4400,RangeValue=-265)
+    MechanicalRanges(23)=(Range=4600,RangeValue=-275)
+    MechanicalRanges(24)=(Range=4800,RangeValue=-285)
+    MechanicalRanges(25)=(Range=5000,RangeValue=-295)
 }

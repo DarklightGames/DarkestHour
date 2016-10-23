@@ -13,7 +13,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=85,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',DriverTransitionAnim="VT3485_com_open",TransitionDownAnim="com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
     DriverPositions(3)=(ViewFOV=20,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VT3485_com_idle_close"
-    //CameraBone="turret" // TEST
     GunsightOverlay=texture'Vehicle_Optic.t3485_sight'
     CannonScopeCenter=texture'Vehicle_Optic.T3476_sight_mover'
     OverlayCenterSize=0.52

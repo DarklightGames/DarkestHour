@@ -18,8 +18,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=780.0 // 1000 in RO
     Tag="OF-350"
-    bOpticalAiming=true
-    bMechanicalAiming=true
 
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1
@@ -33,6 +31,7 @@ defaultproperties
     DHPenetrationTable(9)=0.5
     DHPenetrationTable(10)=0.3
 
+    bOpticalAiming=true // TODO: different from 76mm AP shell?
     OpticalRanges(0)=(Range=0,RangeValue=0.410)
     OpticalRanges(1)=(Range=200,RangeValue=0.418)
     OpticalRanges(2)=(Range=400,RangeValue=0.426)
@@ -53,13 +52,14 @@ defaultproperties
     OpticalRanges(17)=(Range=3400,RangeValue=0.711)
     OpticalRanges(18)=(Range=3600,RangeValue=0.744)
     OpticalRanges(19)=(Range=3800,RangeValue=0.778)
-    OpticalRanges(20)=(Range=4000,RangeValue=0.813)
+    OpticalRanges(20)=(Range=4000,RangeValue=0.813) // TODO: range indicator won't move above 4000m? (in which case remove mech range adjusts?)
     OpticalRanges(21)=(Range=4200,RangeValue=0.813)
     OpticalRanges(22)=(Range=4400,RangeValue=0.813)
     OpticalRanges(23)=(Range=4600,RangeValue=0.813)
     OpticalRanges(24)=(Range=4800,RangeValue=0.813)
     OpticalRanges(25)=(Range=5000,RangeValue=0.813)
 
+    bMechanicalAiming=true // TODO: investigate this (it's from RO), as this cannon does not have mech aiming (same applies to 76mm AP shell at longer ranges)
     MechanicalRanges(0)=(Range=0,RangeValue=0)
     MechanicalRanges(1)=(Range=200,RangeValue=-15)
     MechanicalRanges(2)=(Range=400,RangeValue=-30)
@@ -80,11 +80,10 @@ defaultproperties
     MechanicalRanges(17)=(Range=3400,RangeValue=-578)
     MechanicalRanges(18)=(Range=3600,RangeValue=-642)
     MechanicalRanges(19)=(Range=3800,RangeValue=-704)
-    MechanicalRanges(20)=(Range=4000,RangeValue=-769) // an estimate because it hit the ceiling on the test map
-    // RO TODO - dial in the rest of these ranges
-    MechanicalRanges(21)=(Range=4200,RangeValue=0)
-    MechanicalRanges(22)=(Range=4400,RangeValue=0)
-    MechanicalRanges(23)=(Range=4600,RangeValue=0)
-    MechanicalRanges(24)=(Range=4800,RangeValue=0)
-    MechanicalRanges(25)=(Range=5000,RangeValue=0)
+    MechanicalRanges(20)=(Range=4000,RangeValue=-769) // estimates from here on as these extreme ranges are largely theoretical
+    MechanicalRanges(21)=(Range=4200,RangeValue=834)
+    MechanicalRanges(22)=(Range=4400,RangeValue=899)
+    MechanicalRanges(23)=(Range=4600,RangeValue=964)
+    MechanicalRanges(24)=(Range=4800,RangeValue=1029)
+    MechanicalRanges(25)=(Range=5000,RangeValue=1094)
 }
