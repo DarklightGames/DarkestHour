@@ -1,0 +1,11 @@
+DarkestHourDev/*
+System/RedOrchestraLargeAddressAware.exe
+System/DHMapVotingInfo.ini
+
+!*.git
+!*.gitignore
+!*.make
+!*.steaminclude
+!DarkestHourDev/System/DarkestHourDev.ini
+!DarkestHourDev/System/DarkestHourDevUser.ini
+!tools
