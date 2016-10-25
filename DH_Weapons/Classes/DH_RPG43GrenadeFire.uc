@@ -5,7 +5,7 @@
 
 class DH_RPG43GrenadeFire extends DHThrownExplosiveFire;
 
-// Modified to remove use of fuze times
+// Emptied out to remove use of fuze times
 event ModeTick(float DeltaTime)
 {
 }
