@@ -32,7 +32,12 @@ simulated function PostBeginPlay()
 
     super(DHAntiVehicleProjectile).PostBeginPlay();
 
-    SetTimer(StraightFlightTime, false); // Matt: added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
+    SetTimer(StraightFlightTime, false); // added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
+
+    if (ExplosionSound[3] == class'DHCannonShellHEAT'.default.ExplosionSound[3]) // remove unwanted 4th sound inherited from DHCannonShellHEAT (unless overridden)
+    {
+        ExplosionSound.Length = 3;
+    }
 }
 
 // Modified to drop lighting if low detail or not required
