@@ -157,7 +157,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.RPG43_Tossed'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
     Speed=900.0
 //  PenetrationAbility=7.6
     Damage=200.0

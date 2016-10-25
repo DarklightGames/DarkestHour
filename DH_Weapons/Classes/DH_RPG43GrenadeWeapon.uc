@@ -5,6 +5,8 @@
 
 class DH_RPG43GrenadeWeapon extends DHExplosiveWeapon;
 
+#exec OBJ LOAD FILE=..\Animations\DH_RPG43Grenade_1st.ukx
+
 defaultproperties
 {
     ItemName="RPG43 Anti-Tank Grenade"
@@ -14,6 +16,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
     InventoryGroup=7
 
-    Mesh=SkeletalMesh'DH_RPG43_1st.Sov_rpg43'
-    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.RPG43_Diff'
+    Mesh=SkeletalMesh'DH_RPG43Grenade_1st.RPG43Grenade'
+    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade'
 }

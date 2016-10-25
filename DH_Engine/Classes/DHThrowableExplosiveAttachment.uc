@@ -29,6 +29,13 @@ simulated event ThirdPersonEffects()
 defaultproperties
 {
     CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as a throwable explosive doesn't have a muzzle flash, & is also generally small
+    bRapidFire=false
+    LightType=LT_None
+    LightEffect=LE_None
+
+    WA_Idle="Idle"
+    WA_Fire="Idle"
+
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
@@ -248,7 +255,4 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_nade"
     PA_DodgeAnims(2)="jumpL_mid_nade"
     PA_DodgeAnims(3)="jumpR_mid_nade"
-    bRapidFire=false
-    LightType=LT_None
-    LightEffect=LE_None
 }
