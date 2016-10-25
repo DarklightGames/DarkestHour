@@ -1,6 +1,7 @@
 DarkestHourDev/*
 System/RedOrchestraLargeAddressAware.exe
 System/DHMapVotingInfo.ini
+System/dh_server_launcher.bat
 
 !*.git
 !*.gitignore
@@ -9,3 +10,4 @@ System/DHMapVotingInfo.ini
 !DarkestHourDev/System/DarkestHourDev.ini
 !DarkestHourDev/System/DarkestHourDevUser.ini
 !tools
+!DarkestHourDev/System/DarkestHourDev Server.bat
