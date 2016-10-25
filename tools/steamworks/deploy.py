@@ -9,9 +9,6 @@ import subprocess
 argparser = argparse.ArgumentParser()
 argparser.add_argument('dir', default='.', help='root directory')
 argparser.add_argument('-mod', required=True, help='mod name')
-argparser.add_argument('-username', required=True, help='steam username')
-argparser.add_argument('-password', required=True, help='steam password')
-argparser.add_argument('-steam_guard_code', required=False, help='steam guard code')
 args = argparser.parse_args()
 
 args.dir = os.path.abspath(args.dir)
@@ -35,6 +32,8 @@ for fname in os.listdir(content_path):
 
 # find the .steaminclude file
 steaminclude_path = os.path.join(args.dir, args.mod, '.steaminclude')
+
+print steaminclude_path
 
 if not os.path.exists(steaminclude_path):
     print 'unable to find .steaminclude file'
@@ -87,7 +86,7 @@ for root, dirs, filenames in os.walk(content_path):
             f.write(c)
 
 # actually do the thing!
-args = ['steamcmd.exe', '+login', args.username, args.password, args.steam_guard_code, '+run_app_build', '../scripts/app_build_1280.vdf', '+run_app_build', '../scripts/app_build_1290.vdf', '+quit']
+args = ['steamcmd.exe', '+run_app_build', '../scripts/app_build_1280.vdf', '+run_app_build', '../scripts/app_build_1290.vdf', '+quit']
 p = subprocess.Popen(args, executable=steamcmd_path)
 p.wait()
 
