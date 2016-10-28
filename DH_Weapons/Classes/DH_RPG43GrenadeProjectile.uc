@@ -487,16 +487,16 @@ defaultproperties
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
 
     // Sounds
-    VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    VehicleHitSound=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode01'
     VehicleDeflectSound=sound'Inf_Weapons_Foley.grenadeland'
     ImpactSound=sound'Inf_Weapons_Foley.grenadeland'
     DirtHitSound=sound'Inf_Weapons_Foley.grenadeland'
     RockHitSound=sound'Inf_Weapons_Foley.grenadeland'
     WoodHitSound=sound'Inf_Weapons_Foley.grenadeland'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    ExplosionSound(0)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode01'
+    ExplosionSound(1)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode02'
+    ExplosionSound(2)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode03'
 
     // Properties from usual grenade parent classes (DHGrenadeProjectile, DHThrowableExplosiveProjectile & ROThrowableExplosiveProjectile)
     Physics=PHYS_Falling
