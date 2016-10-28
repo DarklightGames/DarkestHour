@@ -122,7 +122,7 @@ defaultproperties
     PA_TurnIronRightAnim="stand_turnRiron_binoc"
     PA_TurnIronLeftAnim="stand_turnLiron_binoc"
     PA_CrouchTurnIronRightAnim="crouch_turnRiron_binoc"
-    PA_CrouchTurnIronLeftAnim="crouch_turnRiron_binoc"
+    PA_CrouchTurnIronLeftAnim="crouch_turnLiron_binoc"
     PA_ProneTurnRightAnim="prone_turnR_binoc"
     PA_ProneTurnLeftAnim="prone_turnL_binoc"
     PA_StandToProneAnim="StandtoProne_binoc"
