@@ -355,12 +355,30 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
+// Emptied out as is never called in RO/DHBullet
+// In the unused 'XPawn' class it was called in PlayTakeHit() function, but in ROPawn Ramm removed that call, commenting "this doesn't really fit our system")
+simulated function PlayDirectionalHit(Vector HitLoc)
+{
+}
+
 defaultproperties
 {
     CullDistance=8192.0 // 136m - was originally 4000 UU (approx 66m), but when the 3rd person weapon attachment gets culled, player's can't see a muzzle flash, which is important
     bNetNotify=true
     bSpawnShellsOutBottom=false
     ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
+
+    // Override player hit anims from ROWeaponAttachment that don't exist & aren't used anyway
+    // Would only get used in ROPawn's PlayDirectionalHit() function, which is never called in RO (Ramm removed the call, commenting "this doesn't really fit our system")
+    PA_HitFAnim=""
+    PA_HitBAnim=""
+    PA_HitLAnim=""
+    PA_HitRAnim=""
+    PA_HitLLegAnim=""
+    PA_HitRLegAnim=""
+    PA_CrouchHitUpAnim=""
+    PA_CrouchHitDownAnim=""
+    PA_ProneHitAnim=""
 
     // Override player limping movement anims inherited from ROWeaponAttachment that don't exist & don't appear to be used anyway
     // Possible they're used in native code (as with some other movement anims), but even if so that code must be doing HasAnim() checks as we get no log errors
