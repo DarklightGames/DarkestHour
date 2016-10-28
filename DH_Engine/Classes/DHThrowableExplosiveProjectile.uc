@@ -679,7 +679,6 @@ defaultproperties
     TossZ=150.0
     DampenFactor=0.05
     DampenFactorParallel=0.8
-    Physics=PHYS_Falling
     bFixedRotationDir=true
     FailureRate=0.01 // failure rate is default to 1 in 100
     ShrapnelCount=0
@@ -689,8 +688,6 @@ defaultproperties
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    DrawType=DT_StaticMesh
-    bDynamicLight=false
     LightType=LT_Pulse
     LightEffect=LE_NonIncidence
     LightPeriod=3
