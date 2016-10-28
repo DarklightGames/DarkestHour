@@ -187,7 +187,7 @@ function ProcessTouch(Actor Other, optional bool bUnTouch)
             {
                 if (MV != self && MV.bActive)
                 {
-                    log("Pawn" @ P.Tag @ "Untouched MineVolume" @ Name @ "but is still in other MV:" @ MV.Name); // TEMP
+                    log("Pawn" @ P.Tag @ "Untouched MineVolume" @ Name @ "but is still in other MV:" @ MV.Name); // TEMPDEBUG (Matt)
                     bStillInsideAnotherMineVolume = true;
                 }
             }
