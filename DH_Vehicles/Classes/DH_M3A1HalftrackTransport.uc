@@ -27,7 +27,7 @@ defaultproperties
     IdleTimeBeforeReset=300.0
     VehicleSpikeTime=60.0
     MaxPitchSpeed=350.0
-    TreadVelocityScale=400
+    TreadVelocityScale=400.0
     WheelRotationScale=3000
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'

@@ -133,7 +133,7 @@ defaultproperties
     RangeText="meters"
     RangePositionX=0.1
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.Soviet.AB_BINOC_overlay_7x50Sov'
     ScopeCenterPositionX=0.215
     ScopeCenterScaleX=1.35
     ScopeCenterScaleY=1.35
