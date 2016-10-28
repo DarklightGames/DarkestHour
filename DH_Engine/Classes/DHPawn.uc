@@ -5350,4 +5350,15 @@ defaultproperties
     WalkAnims(5)="stand_walkFRhip_nade"
     WalkAnims(6)="stand_walkBLhip_nade"
     WalkAnims(7)="stand_walkBRhip_nade"
+
+    // Override LimpAnims from ROPawn that don't exist & don't appear to be used anyway
+    // Possible they're used in native code (as with some other movement anims), but even if so that code must be doing HasAnim() checks as we get no log errors
+    LimpAnims(0)=""
+    LimpAnims(1)=""
+    LimpAnims(2)=""
+    LimpAnims(3)=""
+    LimpAnims(4)=""
+    LimpAnims(5)=""
+    LimpAnims(6)=""
+    LimpAnims(7)=""
 }

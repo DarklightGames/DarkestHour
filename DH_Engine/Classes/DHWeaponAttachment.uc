@@ -361,4 +361,23 @@ defaultproperties
     bNetNotify=true
     bSpawnShellsOutBottom=false
     ROMGSteamEmitterClass=class'DH_Effects.DHMGSteam'
+
+    // Override player limping movement anims inherited from ROWeaponAttachment that don't exist & don't appear to be used anyway
+    // Possible they're used in native code (as with some other movement anims), but even if so that code must be doing HasAnim() checks as we get no log errors
+    PA_LimpAnims(0)=""
+    PA_LimpAnims(1)=""
+    PA_LimpAnims(2)=""
+    PA_LimpAnims(3)=""
+    PA_LimpAnims(4)=""
+    PA_LimpAnims(5)=""
+    PA_LimpAnims(6)=""
+    PA_LimpAnims(7)=""
+    PA_LimpIronAnims(0)=""
+    PA_LimpIronAnims(1)=""
+    PA_LimpIronAnims(2)=""
+    PA_LimpIronAnims(3)=""
+    PA_LimpIronAnims(4)=""
+    PA_LimpIronAnims(5)=""
+    PA_LimpIronAnims(6)=""
+    PA_LimpIronAnims(7)=""
 }
