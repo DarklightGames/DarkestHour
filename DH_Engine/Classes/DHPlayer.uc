@@ -3571,7 +3571,7 @@ exec function VehCamDist(int NewDistance)
     {
         V = Vehicle(Pawn);
 
-        if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && V != none)
+        if (V != none)
         {
             V.TPCamDistance = NewDistance;
             V.TPCamDistRange.Min = NewDistance;
