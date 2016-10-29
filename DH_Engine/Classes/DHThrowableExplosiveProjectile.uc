@@ -420,6 +420,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
 // Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
+// Also removed call to ClientSideTouch() as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
@@ -458,13 +459,14 @@ simulated singular function Touch(Actor Other)
 
             ProcessTouch(Other, HitLocation);
             LastTouched = none;
-
-            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
-            {
-                ClientSideTouch(Other, HitLocation);
-            }
         }
     }
+}
+
+// Emptied out as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
+// No longer even called as has been removed from Touch()
+simulated function ClientSideTouch(Actor Other, vector HitLocation)
+{
 }
 
 // Matt: modified to call HitWall for all hit actors, so grenades etc bounce off things like turrets or other players
