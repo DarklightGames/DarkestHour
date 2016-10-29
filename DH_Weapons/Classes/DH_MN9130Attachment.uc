@@ -27,7 +27,7 @@ defaultproperties
     WA_BayonetDetach="bayremove_nagant9130"
     WA_BayonetAttachProne="prone_bayattach_nagant9130"
     WA_BayonetDetachProne="prone_bayremove_nagant9130"
-    WA_WorkBolt=Bolt_"nagant9130"
+    WA_WorkBolt="Bolt_nagant9130"
     WA_BayonetWorkBolt="Bolt_nagant9130_bayo"
 
     PA_MovementAnims(0)="stand_jogF_kar"
