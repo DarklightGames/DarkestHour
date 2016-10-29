@@ -32,7 +32,7 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476CannonPawn',WeaponBone="Turret_Placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_T34MountedMGPawn',WeaponBone="MG_Placement")
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-59.0,Y=-50.0,Z=53.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveAnim="VHalftrack_Rider3_idle") // TODO: check kneeler passenger & set DrivePos
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=-25.0,Z=105.5),DriveAnim="crouch_idle_binoc") // kneeling, as can't sit in usual position due to fuel drum
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-135.0,Y=35.0,Z=51.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
     PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-59.0,Y=50.0,Z=54.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
@@ -44,7 +44,7 @@ defaultproperties
     DriverAttachmentBone="driver_attachment"
     DriveAnim="VT3476_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
-    HUDOverlayFOV=85.0
+    HUDOverlayFOV=90.0
 
     // Hull armor
     UFrontArmorFactor=4.5
@@ -61,22 +61,22 @@ defaultproperties
     RearLeftAngle=205.0
 
     // Movement
-    MaxCriticalSpeed=820.0 // 49 kph
+    MaxCriticalSpeed=948.0
     GearRatios(3)=0.65
-    GearRatios(4)=0.7 // TODO: GR4 was 0.75 & TR was 0.13 - why the change?
-    TransRatio=0.11
+    GearRatios(4)=0.75
+    TransRatio=0.13
 
     // Damage
-    Health=525
+    Health=525 // was 800 but adjusted to match similar DH vehicles, i.e. Sherman
     HealthMax=525.0
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-90.0,Y=0.0,Z=0.0)) // engine
-    VehHitpoints(1)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=25.0,PointBone="Body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverDamageMult=1.0
     TreadHitMaxHeight=5.0
     TreadDamageThreshold=0.75
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    DamagedEffectOffset=(X=-105.0,Y=0.0,Z=40.0) // adjusted from original
     HullFireChance=0.55
     FireAttachBone="Body"
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
@@ -84,7 +84,7 @@ defaultproperties
 
     // Exit positions
     ExitPositions(0)=(X=215.0,Y=-14.0,Z=50.0)  // driver
-    ExitPositions(1)=(X=75.0,Y=-5.0,Z=200.0)   // commander // TODO: change to X=25 when obsolete collision box removed from mesh
+    ExitPositions(1)=(X=25.0,Y=-5.0,Z=200.0)   // commander
     ExitPositions(2)=(X=215.0,Y=41.0,Z=50.0)   // hull MG
     ExitPositions(3)=(X=-43.0,Y=-125.0,Z=75.0) // riders
     ExitPositions(4)=(X=-210.0,Y=-35.0,Z=75.0)
@@ -93,8 +93,6 @@ defaultproperties
 
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
-    SoundRadius=2000.0 // TODO: SR normally only 650 & TSR only 700 in DH, so check
-    TransientSoundRadius=5000.0
     MaxPitchSpeed=50
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
     StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
@@ -107,7 +105,7 @@ defaultproperties
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
-    TreadVelocityScale=110
+    TreadVelocityScale=110.0
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-175,Y=30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
@@ -117,16 +115,16 @@ defaultproperties
     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_look'
-    VehicleHudEngineX=0.51
-    VehicleHudTreadsPosX(0)=0.37
-    VehicleHudTreadsPosY=0.51
-    VehicleHudTreadsScale=0.72
-    VehicleHudOccupantsX(0)=0.44
-    VehicleHudOccupantsX(2)=0.56
+    VehicleHudTreadsPosX(0)=0.36 // some positions adjusted from original
+    VehicleHudTreadsScale=0.73
+    VehicleHudOccupantsX(0)=0.465
+    VehicleHudOccupantsX(2)=0.565
     VehicleHudOccupantsX(3)=0.55
     VehicleHudOccupantsX(4)=0.635
     VehicleHudOccupantsX(5)=0.36
     VehicleHudOccupantsX(6)=0.36
+    VehicleHudOccupantsY(0)=0.27
+    VehicleHudOccupantsY(1)=0.47
     VehicleHudOccupantsY(3)=0.65
     VehicleHudOccupantsY(4)=0.75
     VehicleHudOccupantsY(5)=0.75

@@ -10,10 +10,10 @@ defaultproperties
     VehicleNameString="T34/85"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485CannonPawn')
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3485_Destroyed'
-	Skins(0)=texture'allies_vehicles_tex.ext_vehicles.T3485_ext'
-	Skins(1)=texture'allies_vehicles_tex.Treads.T3485_treads'
-	Skins(2)=texture'allies_vehicles_tex.Treads.T3485_treads'
-	Skins(3)=texture'allies_vehicles_tex.int_vehicles.T3485_int'
+    Skins(0)=texture'allies_vehicles_tex.ext_vehicles.T3485_ext'
+    Skins(1)=texture'allies_vehicles_tex.Treads.T3485_treads'
+    Skins(2)=texture'allies_vehicles_tex.Treads.T3485_treads'
+    Skins(3)=texture'allies_vehicles_tex.int_vehicles.T3485_int'
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.T3485_int_s'
     DriveAnim="Vt3485_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.T34DriverOverlay'

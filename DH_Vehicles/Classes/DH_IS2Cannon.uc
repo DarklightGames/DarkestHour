@@ -16,18 +16,18 @@ defaultproperties
     HighDetailOverlayIndex=1
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.IS2.IS2_turret_coll'
 
-    // Turret armor // TODO: set these
-    FrontArmorFactor=9.0
-    LeftArmorFactor=7.5
-    RightArmorFactor=7.5
-    RearArmorFactor=5.2
+    // Turret armor
+    FrontArmorFactor=10.0
+    LeftArmorFactor=9.0
+    RightArmorFactor=9.0
+    RearArmorFactor=9.0
     LeftArmorSlope=20.0
     RightArmorSlope=20.0
-    RearArmorSlope=10.0
-    FrontLeftAngle=320.0
-    FrontRightAngle=40.0
-    RearRightAngle=140.0
-    RearLeftAngle=220.0
+    RearArmorSlope=30.0
+    FrontLeftAngle=340.0
+    FrontRightAngle=20.0
+    RearRightAngle=143.0
+    RearLeftAngle=217.0
 
     // Turret movement
     ManualRotationsPerSecond=0.029
@@ -55,7 +55,7 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="Gun"
     WeaponFireOffset=200.0
-    AltFireOffset=(X=17.0,Y=19.0,Z=0.0)
+    AltFireOffset=(X=8.0,Y=14.0,Z=13.0) // repositioned as was way off in original
 
     // Sounds
     CannonFireSound(0)=sound'Vehicle_Weapons.IS2.122mm_fire01'
@@ -63,7 +63,6 @@ defaultproperties
     CannonFireSound(2)=sound'Vehicle_Weapons.IS2.122mm_fire02'
     AltFireSoundClass=sound'Inf_Weapons.dt_fire_loop'
     AltFireEndSound=sound'Inf_Weapons.dt.dt_fire_end'
-    AltFireSoundScaling=3.0
     ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.IS2_reload_01')
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.IS2_reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.IS2_reload_03')

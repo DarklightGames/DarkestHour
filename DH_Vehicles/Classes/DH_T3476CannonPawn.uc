@@ -5,6 +5,12 @@
 
 class DH_T3476CannonPawn extends DHSovietCannonPawn;
 
+exec function GSD() // TEMP TEST to zero in sights
+{
+    DHVehicleCannon(Gun).bGunsightSettingMode = !DHVehicleCannon(Gun).bGunsightSettingMode;
+    log(name @ "bGunsightSettingMode =" @ DHVehicleCannon(Gun).bGunsightSettingMode);
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_T3476Cannon' // TODO: Pos0 FOV was 34 in RO - need to change?
@@ -17,8 +23,7 @@ defaultproperties
     bLockCameraDuringTransition=true
     GunsightOverlay=texture'Vehicle_Optic.T3476_sight_background'
     CannonScopeCenter=texture'Vehicle_Optic.T3476_sight_mover'
-    OverlayCenterSize=0.52
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: use/make one for T34
+    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: use/make one for T34/Soviet
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'

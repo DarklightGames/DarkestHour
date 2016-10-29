@@ -24,10 +24,10 @@ defaultproperties
     LeftArmorSlope=20.0
     RightArmorSlope=20.0
     RearArmorSlope=10.0
-    FrontLeftAngle=320.0
-    FrontRightAngle=40.0
-    RearRightAngle=140.0
-    RearLeftAngle=220.0
+    FrontLeftAngle=342.0
+    FrontRightAngle=18.0
+    RearRightAngle=162.0
+    RearLeftAngle=198.0
 
     // Turret movement
     ManualRotationsPerSecond=0.029
@@ -40,8 +40,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
     ProjectileDescriptions(0)="APBC"
-	InitialPrimaryAmmo=30
-	InitialSecondaryAmmo=25
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=25
     SecondarySpread=0.002
 
     // Coaxial MG ammo
@@ -55,15 +55,14 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="Gun"
     WeaponFireOffset=200.0
-    AltFireOffset=(X=18.0,Y=19.0,Z=0.0)
+    AltFireOffset=(X=14.0,Y=17.5,Z=0.0) // adjusted from original
 
     // Sounds
-	CannonFireSound(0)=sound'Vehicle_Weapons.T34_85.85mm_fire01'
-	CannonFireSound(1)=sound'Vehicle_Weapons.T34_85.85mm_fire02'
-	CannonFireSound(2)=sound'Vehicle_Weapons.T34_85.85mm_fire03'
+    CannonFireSound(0)=sound'Vehicle_Weapons.T34_85.85mm_fire01'
+    CannonFireSound(1)=sound'Vehicle_Weapons.T34_85.85mm_fire02'
+    CannonFireSound(2)=sound'Vehicle_Weapons.T34_85.85mm_fire03'
     AltFireSoundClass=sound'Inf_Weapons.dt_fire_loop'
     AltFireEndSound=sound'Inf_Weapons.dt.dt_fire_end'
-    AltFireSoundScaling=3.0
     ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.t34_85_reload_01')
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.t34_85_reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.t34_85_reload_03')
@@ -80,26 +79,26 @@ defaultproperties
     AltShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
 
     // Cannon range settings
-	RangeSettings(0)=0
-	RangeSettings(1)=400
-	RangeSettings(2)=500
-	RangeSettings(3)=600
-	RangeSettings(4)=700
-	RangeSettings(5)=800
-	RangeSettings(6)=900
-	RangeSettings(7)=1000
-	RangeSettings(8)=1200
-	RangeSettings(9)=1400
-	RangeSettings(10)=1600
-	RangeSettings(11)=1800
-	RangeSettings(12)=2000
-	RangeSettings(13)=2200
-	RangeSettings(14)=2400
-	RangeSettings(15)=2600
-	RangeSettings(16)=2800
-	RangeSettings(17)=3000
-	RangeSettings(18)=3200
-	RangeSettings(19)=3400
-	RangeSettings(20)=3600
-	RangeSettings(21)=3800
+    RangeSettings(0)=0
+    RangeSettings(1)=400
+    RangeSettings(2)=500
+    RangeSettings(3)=600
+    RangeSettings(4)=700
+    RangeSettings(5)=800
+    RangeSettings(6)=900
+    RangeSettings(7)=1000
+    RangeSettings(8)=1200
+    RangeSettings(9)=1400
+    RangeSettings(10)=1600
+    RangeSettings(11)=1800
+    RangeSettings(12)=2000
+    RangeSettings(13)=2200
+    RangeSettings(14)=2400
+    RangeSettings(15)=2600
+    RangeSettings(16)=2800
+    RangeSettings(17)=3000
+    RangeSettings(18)=3200
+    RangeSettings(19)=3400
+    RangeSettings(20)=3600
+    RangeSettings(21)=3800
 }

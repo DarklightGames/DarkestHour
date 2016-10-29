@@ -35,6 +35,7 @@ defaultproperties
     FireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
 
     // Reload
+    HUDOverlayReloadAnim="reload_tankmg"
     ReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76) // TODO: sound is 1.76 duration vs 1.667 in anim notify (also below)
     ReloadStages(1)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29) // 2.29 / 2.333
     ReloadStages(2)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35) // 2.35 / 2.333
