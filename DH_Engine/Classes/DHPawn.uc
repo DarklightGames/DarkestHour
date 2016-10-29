@@ -1696,22 +1696,24 @@ state Dying
             return;
         }
 
+        // Effects on ragdoll bodies
         if (Physics == PHYS_KarmaRagdoll)
         {
-            // Can't shoot corpses during de-res
             if (bDeRes)
             {
-                return;
+                return; // can't shoot corpses during de-res
             }
 
-            // Throw the body if its a rocket explosion or shock combo
-            if (DamageType.Name == 'ROSMineDamType' || DamageType.Name == 'DH_StielGranateDamType' || DamageType.Name == 'ROMineDamType' || DamageType.Name == 'DH_M1GrenadeDamType')
+            // Move the body if it's a grenade or mine explosion // TODO: add others explosive types & try to remove projectile-specific literals as far as possible
+            if (DamageType.Name == 'DH_StielGranateDamType' || DamageType.Name == 'DH_M1GrenadeDamType' || DamageType.Name == 'DH_F1GrenadeDamType'
+                || DamageType.Name == 'ROMineDamType' || DamageType.Name == 'ROSMineDamType' || DamageType.Name == 'DHATMineDamage')
             {
                 ShotDir = Normal(Momentum);
                 PushLinVel = (RagDeathVel * ShotDir) +  vect(0.0, 0.0, 250.0);
                 PushAngVel = Normal(ShotDir cross vect(0.0, 0.0, 1.0)) * -18000.0;
                 KSetSkelVel(PushLinVel, PushAngVel);
             }
+            // Move the body if it's a bullet
             else if (DamageType.default.bRagdollBullet)
             {
                 if (Momentum == vect(0.0, 0.0, 0.0))
@@ -1730,11 +1732,10 @@ state Dying
                     PushAngVel.X *= 0.5;
                     PushAngVel.Y *= 0.5;
                     PushAngVel.Z *= 4;
-
                     KSetSkelVel(PushLinVel, PushAngVel);
                 }
 
-                PushLinVel = RagShootStrength*Normal(Momentum);
+                PushLinVel = RagShootStrength * Normal(Momentum);
                 KAddImpulse(PushLinVel, HitLocation);
 
                 if (LifeSpan > 0.0 && LifeSpan < (DeResTime + 2.0))
@@ -1742,6 +1743,7 @@ state Dying
                     LifeSpan += 0.2;
                 }
             }
+            // Set the body on fire if it's burning damage
             else if (DamageType.Name == 'DHBurningDamageType')
             {
                 if (!bOnFire)
@@ -1753,6 +1755,7 @@ state Dying
 
                 SetTimer(1.0, false);
             }
+            // Otherwise move the body for other damage types
             else
             {
                 PushLinVel = RagShootStrength * Normal(Momentum);
