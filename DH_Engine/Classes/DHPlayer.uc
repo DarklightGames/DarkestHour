@@ -834,7 +834,8 @@ function ServerSaveMortarTarget(bool bIsSmoke)
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
             if (GRI.GermanMortarTargets[i].Controller == none ||
-                GRI.GermanMortarTargets[i].Controller == self)
+                GRI.GermanMortarTargets[i].Controller == self ||
+                !GRI.GermanMortarTargets[i].bIsActive)
             {
                 GRI.GermanMortarTargets[i].bIsActive = true;
                 GRI.GermanMortarTargets[i].Controller = self;
@@ -852,7 +853,8 @@ function ServerSaveMortarTarget(bool bIsSmoke)
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
             if (GRI.AlliedMortarTargets[i].Controller == none ||
-                GRI.AlliedMortarTargets[i].Controller == self)
+                GRI.AlliedMortarTargets[i].Controller == self ||
+                !GRI.AlliedMortarTargets[i].bIsActive)
             {
                 GRI.AlliedMortarTargets[i].bIsActive = true;
                 GRI.AlliedMortarTargets[i].Controller = self;
