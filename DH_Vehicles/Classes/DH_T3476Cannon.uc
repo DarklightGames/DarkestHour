@@ -51,6 +51,7 @@ defaultproperties
     AltFireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     TracerFrequency=5
+    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Gun"

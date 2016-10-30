@@ -22,5 +22,5 @@ defaultproperties
     HUDOverlayFOV=45.0
     PitchUpLimit=3000
     PitchDownLimit=64000
-//  VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.DP27_ammo_reload' // TODO: make this (may need to adjust HUDProportions in ReloadStages - see BrenCarrier MG)
+    VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'
 }

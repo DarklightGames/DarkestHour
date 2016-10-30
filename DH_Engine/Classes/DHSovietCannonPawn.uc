@@ -127,6 +127,54 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+// Modified to suit the DT MG used in Soviet coaxial MG mounts
+function float GetAltAmmoReloadState()
+{
+    local float ProportionOfReloadRemaining;
+
+    if (DHVehicleCannon(VehWep) != none)
+    {
+        if (VehWep.FireCountdown <= VehWep.AltFireInterval)
+        {
+            if (VehWep.AltAmmoCharge > 0)
+            {
+                return 0.0; // loaded & ready to fire
+            }
+
+            return 1.0; // if FireCountdown is about zero, but MG has no ammo, it must be completely out of ammo, with no reload happening
+        }
+        else
+        {
+            if (VehWep.bUsesMags && VehWep.FireCountdown <= VehWep.FireInterval)
+            {
+                return 0.0; // MG is paired with an autocannon that also uses FireCountdown, so this means cannon is firing, not that MG is reloading (or if it is, it's virtually done anyway)
+            }
+
+            // MG must be reloading, so calculate progress
+            ProportionOfReloadRemaining = VehWep.FireCountdown / GetSoundDuration(DHVehicleCannon(VehWep).AltReloadSound);
+
+            if (ProportionOfReloadRemaining >= 0.75)
+            {
+                return 1.0;
+            }
+            else if (ProportionOfReloadRemaining >= 0.5)
+            {
+                return 0.65;
+            }
+            else if (ProportionOfReloadRemaining >= 0.25)
+            {
+                return 0.5;
+            }
+            else
+            {
+                return 0.35;
+            }
+        }
+    }
+
+    return 1.0;
+}
+
 defaultproperties
 {
     bShowRangeText=true
@@ -137,4 +185,5 @@ defaultproperties
     ScopeCenterPositionX=0.215
     ScopeCenterScaleX=1.35
     ScopeCenterScaleY=1.35
+    AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload' // TODO: make a proper version of this, this texture is just a quick hack job (Oct 2016)
 }
