@@ -11,5 +11,5 @@ defaultproperties
     Skins(1)=texture'allies_vehicles_tex.Treads.IS2_treadsnow'
     Skins(2)=texture'allies_vehicles_tex.Treads.IS2_treadsnow'
     CannonSkins(0)=texture'allies_vehicles_tex.ext_vehicles.IS2snow_ext'
-//  DestroyedMeshSkins(0)=texture'DH_VehiclesSOV_tex.Destroyed.IS2_ext_Snow_dest' // TODO: make destroyed snow combiner
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2snow_ext_dest'
 }
