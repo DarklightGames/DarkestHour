@@ -137,7 +137,7 @@ defaultproperties
 //    VehicleHudOccupantsY(3)=0.75
 //    VehicleHudOccupantsY(4)=0.75
 //    VehicleHudOccupantsY(5)=0.65
-//  SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.ISU152' // TODO: make one
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.ISU152'
 
     // Visible wheels
     WheelRotationScale=1000 // was 2500, but lowered to more closely match tread speed
