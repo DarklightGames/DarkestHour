@@ -42,9 +42,9 @@ defaultproperties
 //    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-59.0,Y=50.0,Z=54.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
-    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'allies_isu152_anm.isu152_body_int',TransitionUpAnim="Overlay_Out",ViewPitchDownLimit=65535,bDrawOverlays=true)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'allies_isu152_anm.isu152_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VSU76_driver_close",ViewPitchUpLimit=1000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000)
-    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'allies_isu152_anm.isu152_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VSU76_driver_open",ViewPitchUpLimit=14500,ViewPitchDownLimit=57000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="Overlay_Out",ViewPitchDownLimit=65535,bDrawOverlays=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VSU76_driver_close",ViewPitchUpLimit=1000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000)
+    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VSU76_driver_open",ViewPitchUpLimit=14500,ViewPitchDownLimit=57000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
     DriverAttachmentBone="driver_attachment"
     DrivePos=(X=10.0,Y=0.0,Z=-41.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
