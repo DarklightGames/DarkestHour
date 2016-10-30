@@ -7,8 +7,7 @@ class DH_Stug3GDestroyer_SnowOne extends DH_Stug3GDestroyer;
 
 defaultproperties
 {
-    bHasAddedSideArmor=false
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
-    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snow_dest'
 }

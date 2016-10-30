@@ -16,4 +16,5 @@ defaultproperties
     Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int_snow'
     Skins(5)=texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
     Skins(6)=texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesUS_tex2.Destroyed.M3A1Halftrack_dest_snow'
 }
