@@ -34,7 +34,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="APBC" // TODO: decide if we want earlier AP or later APBC (or both options, i.e. early/later vehicle versions)
+    ProjectileDescriptions(1)="AP"
     InitialPrimaryAmmo=15
     InitialSecondaryAmmo=7
     Spread=0.0009

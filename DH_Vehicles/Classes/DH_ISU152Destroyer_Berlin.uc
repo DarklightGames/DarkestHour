@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_ISU152Destroyer_Berlin extends DH_ISU152Destroyer;
+class DH_ISU152Destroyer_Berlin extends DH_ISU152Destroyer_Late;
 
 defaultproperties
 {

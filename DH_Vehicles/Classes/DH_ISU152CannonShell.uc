@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_ISU152CannonShell extends DHCannonShellAPBC;
+class DH_ISU152CannonShell extends DHCannonShellAP;
 
 defaultproperties
 {
@@ -12,20 +12,20 @@ defaultproperties
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
     ImpactDamage=3500
-    Tag="BR-540B" // APBC round adopted in late 1944, replacing earlier BR-540 AP round without ballistic cap
+    Tag="BR-540" // AP round without ballistic cap
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
 
-    DHPenetrationTable(0)=13.0  // 100m
-    DHPenetrationTable(1)=13.0  // 250m
-    DHPenetrationTable(2)=13.0  // 500m
-    DHPenetrationTable(3)=12.5
-    DHPenetrationTable(4)=12.0  // 1000m
-    DHPenetrationTable(5)=11.75
-    DHPenetrationTable(6)=11.5  // 1500m
-    DHPenetrationTable(7)=11.0
-    DHPenetrationTable(8)=10.5  // 2000m
-    DHPenetrationTable(9)=9.5
-    DHPenetrationTable(10)=8.5  // 3000m
+    DHPenetrationTable(0)=12.5 // 100m
+    DHPenetrationTable(1)=12.5 // 250m
+    DHPenetrationTable(2)=12.5 // 500m
+    DHPenetrationTable(3)=12.0
+    DHPenetrationTable(4)=11.5 // 1000m
+    DHPenetrationTable(5)=11.0
+    DHPenetrationTable(6)=10.5 // 1500m
+    DHPenetrationTable(7)=9.75
+    DHPenetrationTable(8)=9.0  // 2000m
+    DHPenetrationTable(9)=7.5
+    DHPenetrationTable(10)=6.0 // 3000m
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.411)
