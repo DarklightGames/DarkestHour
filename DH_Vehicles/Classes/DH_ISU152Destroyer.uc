@@ -36,10 +36,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ISU152CannonPawn',WeaponBone="Turret_Placement")
 
     // TODO: set up riders, incl ExitPositions & VehicleHudOccupantsX/Y
-//    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-59.0,Y=-50.0,Z=53.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
-//    PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveAnim="VHalftrack_Rider3_idle")
-//    PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-135.0,Y=35.0,Z=51.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
-//    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-59.0,Y=50.0,Z=54.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-120.0,Y=-50.0,Z=82.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-140.0,Y=0.0,Z=82.0),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-120.0,Y=50.0,Z=82.0),DriveRot=(Yaw=4096),DriveAnim="crouch_idle_binoc")
 
     // Driver
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="Overlay_Out",ViewPitchDownLimit=65535,bDrawOverlays=true)
@@ -89,10 +88,9 @@ defaultproperties
     // Exit positions
     ExitPositions(0)=(X=165.0,Y=-25.0,Z=50.0)  // driver
     ExitPositions(1)=(X=10.0,Y=50.0,Z=200.0)   // commander
-//    ExitPositions(2)=(X=-43.0,Y=-125.0,Z=75.0) // riders
-//    ExitPositions(3)=(X=-210.0,Y=-35.0,Z=75.0)
-//    ExitPositions(4)=(X=-210.0,Y=37.0,Z=75.0)
-//    ExitPositions(5)=(X=-43.0,Y=125.0,Z=75.0)
+    ExitPositions(2)=(X=-140.00,Y=-160.00,Z=50.00) // riders
+    ExitPositions(3)=(X=-360.00,Y=0.00,Z=-50.00)
+    ExitPositions(4)=(X=-140.00,Y=160.00,Z=50.00)
 
     // Sounds
     MaxPitchSpeed=100
@@ -127,16 +125,14 @@ defaultproperties
     VehicleHudTreadsScale=0.7
     VehicleHudOccupantsX(0)=0.46
     VehicleHudOccupantsX(1)=0.592
-    VehicleHudOccupantsX(2)=0.0 // 0.55
-//    VehicleHudOccupantsX(3)=0.635
-//    VehicleHudOccupantsX(4)=0.36
-//    VehicleHudOccupantsX(5)=0.36
+    VehicleHudOccupantsX(2)=0.4
+    VehicleHudOccupantsX(3)=0.5
+    VehicleHudOccupantsX(4)=0.6
     VehicleHudOccupantsY(0)=0.26
     VehicleHudOccupantsY(1)=0.36
-    VehicleHudOccupantsY(2)=0.0 // 0.65
-//    VehicleHudOccupantsY(3)=0.75
-//    VehicleHudOccupantsY(4)=0.75
-//    VehicleHudOccupantsY(5)=0.65
+    VehicleHudOccupantsY(2)=0.6
+    VehicleHudOccupantsY(3)=0.625
+    VehicleHudOccupantsY(4)=0.6
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.ISU152'
 
     // Visible wheels

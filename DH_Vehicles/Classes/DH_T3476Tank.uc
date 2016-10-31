@@ -88,8 +88,8 @@ defaultproperties
     ExitPositions(1)=(X=25.0,Y=-5.0,Z=200.0)   // commander
     ExitPositions(2)=(X=215.0,Y=41.0,Z=50.0)   // hull MG
     ExitPositions(3)=(X=-43.0,Y=-125.0,Z=75.0) // riders
-    ExitPositions(4)=(X=-210.0,Y=-35.0,Z=75.0)
-    ExitPositions(5)=(X=-210.0,Y=37.0,Z=75.0)
+    ExitPositions(4)=(X=-220.0,Y=-35.0,Z=75.0)
+    ExitPositions(5)=(X=-220.0,Y=37.0,Z=75.0)
     ExitPositions(6)=(X=-43.0,Y=125.0,Z=75.0)
 
     // Sounds

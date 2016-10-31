@@ -33,10 +33,10 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn',WeaponBone="Turret_Placement")
 
     // TODO: set up riders, incl ExitPositions & VehicleHudOccupantsX/Y
-//    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-59.0,Y=-50.0,Z=53.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
-//    PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveAnim="VHalftrack_Rider3_idle")
-//    PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-135.0,Y=35.0,Z=51.0),DriveRot=(Yaw=-32768),DriveAnim="VHalftrack_Rider5_idle")
-//    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-59.0,Y=50.0,Z=54.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-110.0,Y=-66.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-70.0,Y=-30.0,Z=95.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-70.0,Y=30.0,Z=95.0),DriveRot=(Yaw=4096),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-110.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
@@ -85,10 +85,10 @@ defaultproperties
     // Exit positions
     ExitPositions(0)=(X=250.0,Y=0.0,Z=50.0)    // driver
     ExitPositions(1)=(X=20.0,Y=-20.0,Z=200.0)  // commander
-//    ExitPositions(2)=(X=-43.0,Y=-125.0,Z=75.0) // riders
-//    ExitPositions(3)=(X=-210.0,Y=-35.0,Z=75.0)
-//    ExitPositions(4)=(X=-210.0,Y=37.0,Z=75.0)
-//    ExitPositions(5)=(X=-43.0,Y=125.0,Z=75.0)
+    ExitPositions(2)=(X=-110.00,Y=-147.00,Z=50.00)  // riders
+    ExitPositions(3)=(X=-284.00,Y=-35.00,Z=50.00)
+    ExitPositions(4)=(X=-284.00,Y=35.00,Z=50.00)
+    ExitPositions(5)=(X=-110.00,Y=147.00,Z=50.00)
 
     // Sounds
     MaxPitchSpeed=450
@@ -120,17 +120,19 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.is2_turret_look'
     VehicleHudTreadsPosX(0)=0.365 // some positions adjusted from original
     VehicleHudTreadsScale=0.8
+
     VehicleHudOccupantsX(0)=0.5
-    VehicleHudOccupantsX(2)=0.0 // 0.55
-//    VehicleHudOccupantsX(3)=0.635
-//    VehicleHudOccupantsX(4)=0.36
-//    VehicleHudOccupantsX(5)=0.36
-	VehicleHudOccupantsY(0)=0.2
+    VehicleHudOccupantsY(0)=0.2
     VehicleHudOccupantsY(1)=0.45
-    VehicleHudOccupantsY(2)=0.0 // 0.65
-//    VehicleHudOccupantsY(3)=0.75
-//    VehicleHudOccupantsY(4)=0.75
-//    VehicleHudOccupantsY(5)=0.65
+    VehicleHudOccupantsX(2)=0.4
+    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsX(3)=0.45
+    VehicleHudOccupantsY(3)=0.65
+    VehicleHudOccupantsX(4)=0.55
+    VehicleHudOccupantsY(4)=0.65
+    VehicleHudOccupantsX(5)=0.6
+    VehicleHudOccupantsY(5)=0.75
+
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.IS2'
 
     // Visible wheels
