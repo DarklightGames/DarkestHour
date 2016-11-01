@@ -41,7 +41,7 @@ defaultproperties
     SecondarySpread=0.0009
 
     // Weapon fire
-    AddedPitch=360 // TODO: check/tune ranges
+    AddedPitch=360
     WeaponFireAttachmentBone="Barrel"
     WeaponFireOffset=120.0
 
@@ -93,4 +93,6 @@ defaultproperties
     RangeSettings(30)=5000
     RangeSettings(31)=5200
     RangeSettings(32)=5400
+    RangeSettings(33)=5600
+    RangeSettings(34)=5800
 }

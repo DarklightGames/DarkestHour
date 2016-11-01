@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-//============================================================================
+//=====================================================================
 // Original ISU-152 for Red Orchestra:
-// Skins, models & animation by Paul Pepera (c) 2007-2008
-// Sounds by Eric Parris (c) 2007-2008
-//============================================================================
+// Skins, models & animation by Paul Pepera, with sounds by Eric Parris
+//=====================================================================
 
 class DH_ISU152Destroyer extends DHArmoredVehicle;
 
@@ -34,8 +33,6 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ISU152CannonPawn',WeaponBone="Turret_Placement")
-
-    // TODO: set up riders, incl ExitPositions & VehicleHudOccupantsX/Y
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-120.0,Y=-50.0,Z=82.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
     PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-140.0,Y=0.0,Z=82.0),DriveAnim="crouch_idle_binoc")
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-120.0,Y=50.0,Z=82.0),DriveRot=(Yaw=4096),DriveAnim="crouch_idle_binoc")
@@ -117,8 +114,8 @@ defaultproperties
     SteeringScaleFactor=0.75
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'           // TODO: remove clockface & resize to 256x256 to match DH
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_rot' // TODO: resize TexRotators to 256x256 to match DH
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_look'
     VehicleHudTreadsPosX(0)=0.38 // some positions adjusted from original
     VehicleHudTreadsPosX(1)=0.64

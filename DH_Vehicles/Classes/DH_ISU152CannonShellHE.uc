@@ -53,7 +53,7 @@ defaultproperties
     OpticalRanges(3)=(Range=300,RangeValue=0.4205)
     OpticalRanges(4)=(Range=400,RangeValue=0.423)
     OpticalRanges(5)=(Range=500,RangeValue=0.427)
-    OpticalRanges(6)=(Range=600,RangeValue=0.43)
+    OpticalRanges(6)=(Range=600,RangeValue=0.430)
     OpticalRanges(7)=(Range=700,RangeValue=0.434)
     OpticalRanges(8)=(Range=800,RangeValue=0.4375)
     OpticalRanges(9)=(Range=900,RangeValue=0.442)
@@ -62,7 +62,7 @@ defaultproperties
     OpticalRanges(12)=(Range=1400,RangeValue=0.4635)
     OpticalRanges(13)=(Range=1600,RangeValue=0.4745)
     OpticalRanges(14)=(Range=1800,RangeValue=0.4875)
-    OpticalRanges(15)=(Range=2000,RangeValue=0.5)
+    OpticalRanges(15)=(Range=2000,RangeValue=0.500)
     OpticalRanges(16)=(Range=2200,RangeValue=0.513)
     OpticalRanges(17)=(Range=2400,RangeValue=0.527)
     OpticalRanges(18)=(Range=2600,RangeValue=0.542)
@@ -80,9 +80,11 @@ defaultproperties
     OpticalRanges(30)=(Range=5000,RangeValue=0.7657)
     OpticalRanges(31)=(Range=5200,RangeValue=0.786)
     OpticalRanges(32)=(Range=5400,RangeValue=0.805)
+    OpticalRanges(33)=(Range=5600,RangeValue=0.824)
+    OpticalRanges(34)=(Range=5800,RangeValue=0.845)
 
-    bMechanicalAiming=true
-    MechanicalRanges(1)=(Range=100,RangeValue=-1.0) // TODO: cannon doesn't have mechanically adjusted aiming - maybe to correct optical settings being off? (AP same)
+    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but believe this is a fudge to adjust for sight markings that are 'out'
+    MechanicalRanges(1)=(Range=100,RangeValue=-1.0)
     MechanicalRanges(2)=(Range=200,RangeValue=-2.0)
     MechanicalRanges(3)=(Range=300,RangeValue=-3.0)
     MechanicalRanges(4)=(Range=400,RangeValue=-4.0)
@@ -114,4 +116,6 @@ defaultproperties
     MechanicalRanges(30)=(Range=5000,RangeValue=-50.0)
     MechanicalRanges(31)=(Range=5200,RangeValue=-52.0)
     MechanicalRanges(32)=(Range=5400,RangeValue=-54.0)
+    MechanicalRanges(33)=(Range=5600,RangeValue=-56.0)
+    MechanicalRanges(34)=(Range=5800,RangeValue=-58.0)
 }

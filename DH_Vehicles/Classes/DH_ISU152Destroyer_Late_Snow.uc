@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_ISU152Destroyer_Snow_Late extends DH_ISU152Destroyer_Snow;
+class DH_ISU152Destroyer_Late_Snow extends DH_ISU152Destroyer_Snow;
 
 defaultproperties
 {
