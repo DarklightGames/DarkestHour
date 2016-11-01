@@ -6,7 +6,7 @@
 class DH_IS2Tank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_IS2_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx // TODO: edit collision mesh to create a 'hole' allowing driver to be shot, as he is enveloped inside the hull collision
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex.utx
 
 defaultproperties
@@ -31,8 +31,6 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn',WeaponBone="Turret_Placement")
-
-    // TODO: set up riders, incl ExitPositions & VehicleHudOccupantsX/Y
     PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-110.0,Y=-66.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-70.0,Y=-30.0,Z=95.0),DriveRot=(Yaw=-4096),DriveAnim="crouch_idle_binoc")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-70.0,Y=30.0,Z=95.0),DriveRot=(Yaw=4096),DriveAnim="crouch_idle_binoc")
@@ -120,7 +118,6 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.is2_turret_look'
     VehicleHudTreadsPosX(0)=0.365 // some positions adjusted from original
     VehicleHudTreadsScale=0.8
-
     VehicleHudOccupantsX(0)=0.5
     VehicleHudOccupantsY(0)=0.2
     VehicleHudOccupantsY(1)=0.45
@@ -132,7 +129,6 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.65
     VehicleHudOccupantsX(5)=0.6
     VehicleHudOccupantsY(5)=0.75
-
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.IS2'
 
     // Visible wheels

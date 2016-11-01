@@ -39,7 +39,7 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_IS2CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShellHE'
-    ProjectileDescriptions(0)="APBC"
+    ProjectileDescriptions(0)="AP"
     InitialPrimaryAmmo=18
     InitialSecondaryAmmo=10
     SecondarySpread=0.002

@@ -18,7 +18,7 @@ defaultproperties
     ImpactDamage=900
     ShellImpactDamage=class'DH_Vehicles.
     PenetrationMag=1250.0
-    Tag="" // TODO
+    Tag="OF-471"
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
 
     DHPenetrationTable(0)=9.5  // 100m
@@ -41,38 +41,38 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
 
     bMechanicalAiming=true
-    MechanicalRanges(0)=(Range=0,RangeValue=0)
-    MechanicalRanges(1)=(Range=400,RangeValue=38)
-    MechanicalRanges(2)=(Range=500,RangeValue=45)
-    MechanicalRanges(3)=(Range=600,RangeValue=57)
-    MechanicalRanges(4)=(Range=700,RangeValue=65)
-    MechanicalRanges(5)=(Range=800,RangeValue=77)
-    MechanicalRanges(6)=(Range=900,RangeValue=88)
-    MechanicalRanges(7)=(Range=1000,RangeValue=100)
-    MechanicalRanges(8)=(Range=1200,RangeValue=122)
-    MechanicalRanges(9)=(Range=1400,RangeValue=153)
-    MechanicalRanges(10)=(Range=1600,RangeValue=185)
-    MechanicalRanges(11)=(Range=1800,RangeValue=208)
-    MechanicalRanges(12)=(Range=2000,RangeValue=237)
-    MechanicalRanges(13)=(Range=2200,RangeValue=265)
-    MechanicalRanges(14)=(Range=2400,RangeValue=298)
-    MechanicalRanges(15)=(Range=2600,RangeValue=332)
-    MechanicalRanges(16)=(Range=2800,RangeValue=372)
-    MechanicalRanges(17)=(Range=3000,RangeValue=402)
-    MechanicalRanges(18)=(Range=3200,RangeValue=447)
-    MechanicalRanges(19)=(Range=3400,RangeValue=489)
-    MechanicalRanges(20)=(Range=3600,RangeValue=535)
-    MechanicalRanges(21)=(Range=3800,RangeValue=586)
-    MechanicalRanges(22)=(Range=4000,RangeValue=644)
-    MechanicalRanges(23)=(Range=4200,RangeValue=705) // estimates from here on as these extreme ranges are largely theoretical
-    MechanicalRanges(24)=(Range=4400,RangeValue=765)
-    MechanicalRanges(25)=(Range=4600,RangeValue=835)
-    MechanicalRanges(26)=(Range=4800,RangeValue=905)
-    MechanicalRanges(27)=(Range=5000,RangeValue=985)
-    MechanicalRanges(28)=(Range=5200,RangeValue=1065)
+    MechanicalRanges(0)=(Range=0,RangeValue=0.0)
+    MechanicalRanges(1)=(Range=400,RangeValue=38.0)
+    MechanicalRanges(2)=(Range=500,RangeValue=45.0)
+    MechanicalRanges(3)=(Range=600,RangeValue=57.0)
+    MechanicalRanges(4)=(Range=700,RangeValue=65.0)
+    MechanicalRanges(5)=(Range=800,RangeValue=77.0)
+    MechanicalRanges(6)=(Range=900,RangeValue=88.0)
+    MechanicalRanges(7)=(Range=1000,RangeValue=100.0)
+    MechanicalRanges(8)=(Range=1200,RangeValue=122.0)
+    MechanicalRanges(9)=(Range=1400,RangeValue=153.0)
+    MechanicalRanges(10)=(Range=1600,RangeValue=185.0)
+    MechanicalRanges(11)=(Range=1800,RangeValue=208.0)
+    MechanicalRanges(12)=(Range=2000,RangeValue=237.0)
+    MechanicalRanges(13)=(Range=2200,RangeValue=265.0)
+    MechanicalRanges(14)=(Range=2400,RangeValue=298.0)
+    MechanicalRanges(15)=(Range=2600,RangeValue=332.0)
+    MechanicalRanges(16)=(Range=2800,RangeValue=372.0)
+    MechanicalRanges(17)=(Range=3000,RangeValue=402.0)
+    MechanicalRanges(18)=(Range=3200,RangeValue=447.0)
+    MechanicalRanges(19)=(Range=3400,RangeValue=489.0)
+    MechanicalRanges(20)=(Range=3600,RangeValue=535.0)
+    MechanicalRanges(21)=(Range=3800,RangeValue=586.0)
+    MechanicalRanges(22)=(Range=4000,RangeValue=644.0)
+    MechanicalRanges(23)=(Range=4200,RangeValue=705.0) // estimates from here on as these extreme ranges are largely theoretical
+    MechanicalRanges(24)=(Range=4400,RangeValue=765.0)
+    MechanicalRanges(25)=(Range=4600,RangeValue=835.0)
+    MechanicalRanges(26)=(Range=4800,RangeValue=905.0)
+    MechanicalRanges(27)=(Range=5000,RangeValue=985.0)
+    MechanicalRanges(28)=(Range=5200,RangeValue=1065.0)
 
     bOpticalAiming=true // just a visual range indicator on the side; doesn't actually alter the aiming point
-    OpticalRanges(0)=(Range=0,RangeValue=0.42)
+    OpticalRanges(0)=(Range=0,RangeValue=0.420)
     OpticalRanges(1)=(Range=400,RangeValue=0.397)
     OpticalRanges(2)=(Range=500,RangeValue=0.391)
     OpticalRanges(3)=(Range=600,RangeValue=0.385)
