@@ -7,7 +7,6 @@ class DH_WHAntiTank extends DH_Heer;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

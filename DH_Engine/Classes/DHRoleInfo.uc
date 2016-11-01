@@ -13,7 +13,6 @@ struct RolePawn
    var float            Weight;
 };
 
-var     bool                    bIsATGunner;            // enable player to request AT resupply.
 var     bool                    bCanUseMortars;         // enable player to use mortars.
 
 var     bool                    bIsMortarObserver;

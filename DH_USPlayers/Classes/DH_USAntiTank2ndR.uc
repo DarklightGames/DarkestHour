@@ -7,7 +7,6 @@ class DH_USAntiTank2ndR extends DH_US_2ndRangersBattalion;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

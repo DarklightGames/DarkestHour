@@ -7,7 +7,6 @@ class DH_WHAntiTank_Greatcoat extends DH_HeerGreatcoat;
 
 defaultproperties
 {
-    bIsATGunner=True
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

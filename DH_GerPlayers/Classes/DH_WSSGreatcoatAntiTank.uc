@@ -7,7 +7,6 @@ class DH_WSSGreatcoatAntiTank extends DH_WaffenSSGreatcoat;
 
 defaultproperties
 {
-    bIsATGunner=True
     MyName="SS Tank Hunter"
     AltName="SS Panzerjäger"
     Article="a "

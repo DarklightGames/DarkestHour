@@ -7,7 +7,6 @@ class DH_12thSSAntiTank extends DH_12thSS;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

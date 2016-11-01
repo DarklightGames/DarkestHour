@@ -7,7 +7,6 @@ class DH_WSSAntiTank_Snow extends DH_WaffenSSSnow;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

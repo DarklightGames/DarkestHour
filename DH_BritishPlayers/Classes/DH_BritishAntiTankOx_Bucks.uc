@@ -7,7 +7,6 @@ class DH_BritishAntiTankOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Tank Hunter"
     Article="a "

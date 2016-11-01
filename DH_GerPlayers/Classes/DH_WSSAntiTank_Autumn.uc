@@ -7,7 +7,6 @@ class DH_WSSAntiTank_Autumn extends DH_WaffenSSAutumn;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

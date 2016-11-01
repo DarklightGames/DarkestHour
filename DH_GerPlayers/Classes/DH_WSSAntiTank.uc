@@ -7,7 +7,6 @@ class DH_WSSAntiTank extends DH_WaffenSS;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

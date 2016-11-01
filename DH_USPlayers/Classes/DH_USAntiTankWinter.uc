@@ -7,7 +7,6 @@ class DH_USAntiTankWinter extends DH_US_Winter_Infantry;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

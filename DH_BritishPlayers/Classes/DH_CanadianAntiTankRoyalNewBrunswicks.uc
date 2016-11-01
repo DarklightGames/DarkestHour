@@ -7,7 +7,6 @@ class DH_CanadianAntiTankRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Tank Hunter"
     Article="an "

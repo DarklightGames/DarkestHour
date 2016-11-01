@@ -7,7 +7,6 @@ class DH_USAntiTank29thBeach extends DH_US_29th_Infantry_Beach;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

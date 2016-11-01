@@ -7,7 +7,6 @@ class DH_FJAntiTank extends DH_FJ;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

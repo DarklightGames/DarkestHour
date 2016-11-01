@@ -7,7 +7,6 @@ class DH_FJ45AntiTank extends DH_FJ_1945;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Panzerjäger"
     Article="a "

@@ -7,7 +7,6 @@ class DH_USAntiTank29th extends DH_US_29th_Infantry;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Anti-Tank Soldier"
     AltName="Anti-Tank Soldier"
     Article="an "

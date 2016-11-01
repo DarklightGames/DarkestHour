@@ -7,7 +7,6 @@ class DH_BritishAntiTankRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
-    bIsATGunner=true
     MyName="Tank Hunter"
     AltName="Tank Hunter"
     Article="a "
