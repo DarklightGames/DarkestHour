@@ -120,16 +120,16 @@ defaultproperties
     VehicleHudTreadsScale=0.73
     VehicleHudOccupantsX(0)=0.465
     VehicleHudOccupantsX(2)=0.565
-    VehicleHudOccupantsX(3)=0.55
-    VehicleHudOccupantsX(4)=0.635
-    VehicleHudOccupantsX(5)=0.36
-    VehicleHudOccupantsX(6)=0.36
+    VehicleHudOccupantsX(3)=0.42
+    VehicleHudOccupantsX(4)=0.45
+    VehicleHudOccupantsX(5)=0.57
+    VehicleHudOccupantsX(6)=0.58
     VehicleHudOccupantsY(0)=0.27
     VehicleHudOccupantsY(1)=0.47
-    VehicleHudOccupantsY(3)=0.65
-    VehicleHudOccupantsY(4)=0.75
-    VehicleHudOccupantsY(5)=0.75
-    VehicleHudOccupantsY(6)=0.65
+    VehicleHudOccupantsY(3)=0.62
+    VehicleHudOccupantsY(4)=0.72
+    VehicleHudOccupantsY(5)=0.73
+    VehicleHudOccupantsY(6)=0.62
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.T34_76'
 
     // Visible wheels
