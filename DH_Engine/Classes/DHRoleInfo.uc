@@ -9,20 +9,18 @@ class DHRoleInfo extends RORoleInfo
 
 struct RolePawn
 {
-   var class<Pawn>      PawnClass;
-   var float            Weight;
+    var class<Pawn>     PawnClass; // possible pawn class for this role
+    var float           Weight;    // weighting to be assigned to this choice if randomly selected from a list
 };
 
-var     bool                    bCanUseMortars;         // enable player to use mortars.
+var     array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
+var     array<float>        HeadgearProbabilities;  // chance of each Headgear type being randomly selected (linked to Headgear array in RORoleInfo)
 
-var     bool                    bIsMortarObserver;
-var     bool                    bIsArtilleryOfficer;
+var     bool                bIsArtilleryOfficer;    // role has functionality of an artillery officer
+var     bool                bCanUseMortars;         // role has functionality of a mortar operator
+var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
 
-var()   int                     AddedReinforcementTime;
-
-var     array<RolePawn>         RolePawns;
-
-var     array<float>            HeadgearProbabilities;
+var()   int                 AddedReinforcementTime; // optional extra time in seconds before re-spawning
 
 function PostBeginPlay()
 {
@@ -221,16 +219,7 @@ simulated function bool IsValidCharacterName(string InCharacterName)
 
 defaultproperties
 {
-    RolePawnClass=""
-    Limit=255 //Infinite (0 is now deactivated)
+    Limit=255 // unlimited (0 is now deactivated)
     AddedReinforcementTime=0
     HeadgearProbabilities(0)=1.0
-    HeadgearProbabilities(1)=0.0
-    HeadgearProbabilities(2)=0.0
-    HeadgearProbabilities(3)=0.0
-    HeadgearProbabilities(4)=0.0
-    HeadgearProbabilities(5)=0.0
-    HeadgearProbabilities(6)=0.0
-    HeadgearProbabilities(7)=0.0
-    HeadgearProbabilities(8)=0.0
 }

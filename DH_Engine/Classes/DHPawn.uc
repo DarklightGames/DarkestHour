@@ -8,24 +8,23 @@ class DHPawn extends ROPawn
 
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
-// Model record variables
-var     array<Material>         FaceSkins;
-var     array<Material>         BodySkins;
-
-var     int                     FaceSlot;
-var     int                     BodySlot;
-
 // General
 var     float   SpawnProtEnds;            // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
 var     float   SpawnKillTimeEnds;        // is set when a player spawns
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
 var     vector  LastWhizLocation;         // last whiz sound location on pawn (basically a non-replicated version of Pawn's mWhizSoundLocation, as we no longer want it to replicate)
-var     bool    bHatShotOff;
 var     bool    bHasBeenPossessed;        // fixes players getting new ammunition when they get out of vehicles
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
+
+// Player model
+var     array<Material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
+var     array<Material> BodySkins;
+var     int             FaceSlot;         // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
+var     int             BodySlot;
+var     bool            bHatShotOff;      // records that player's helmet/headgear has been knocked off by a bullet impact
 
 // Resupply
 var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
