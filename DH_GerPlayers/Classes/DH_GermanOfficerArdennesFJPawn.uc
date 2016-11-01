@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_GermanOfficerAdrennesFJPawn extends DH_GermanFJPawn;
+class DH_GermanOfficerArdennesFJPawn extends DH_GermanFJPawn;
 
 defaultproperties
 {
