@@ -55,6 +55,10 @@ var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
+var     bool                        bPublicPlay;                            // Variable to determine how things should behave (Private vs Public play)
+                                                                            // An organized unit will want to set this to false in a mutator so they can control
+                                                                            // settings for private matches (ex- change to false in realism match mode)
+
 var     UVersion                    Version;
 
 // Overridden to make new clamp of MaxPlayers
@@ -4052,12 +4056,25 @@ event PostLogin(PlayerController NewPlayer)
     }
 
     // Set player's spectator properties, copied from the GameInfo's properties
-    NewPlayer.bLockedBehindView = bSpectateLockedBehindView;
-    NewPlayer.bFirstPersonSpectateOnly = bSpectateFirstPersonOnly;
-    NewPlayer.bAllowRoamWhileSpectating = bSpectateAllowRoaming;
-    NewPlayer.bViewBlackWhenDead = bSpectateBlackoutWhenDead;
-    NewPlayer.bViewBlackOnDeadNotViewingPlayers = bSpectateBlackoutWhenNotViewingPlayers;
-    NewPlayer.bAllowRoamWhileDeadSpectating = bSpectateAllowDeadRoaming;
+    // Theel: Please use the desired settings for public play, overriding may result in further steps to enforce these settings
+    if (bPublicPlay)
+    {
+        NewPlayer.bLockedBehindView = false;
+        NewPlayer.bFirstPersonSpectateOnly = true;
+        NewPlayer.bAllowRoamWhileSpectating = true;
+        NewPlayer.bViewBlackWhenDead = false;
+        NewPlayer.bViewBlackOnDeadNotViewingPlayers = true;
+        NewPlayer.bAllowRoamWhileDeadSpectating = false;
+    }
+    else
+    {
+        NewPlayer.bLockedBehindView = bSpectateLockedBehindView;
+        NewPlayer.bFirstPersonSpectateOnly = bSpectateFirstPersonOnly;
+        NewPlayer.bAllowRoamWhileSpectating = bSpectateAllowRoaming;
+        NewPlayer.bViewBlackWhenDead = bSpectateBlackoutWhenDead;
+        NewPlayer.bViewBlackOnDeadNotViewingPlayers = bSpectateBlackoutWhenNotViewingPlayers;
+        NewPlayer.bAllowRoamWhileDeadSpectating = bSpectateAllowDeadRoaming;
+    }
 
     PC = DHPlayer(NewPlayer);
 
@@ -4326,6 +4343,7 @@ defaultproperties
     bEnableMetrics=false
     bUseWeaponLocking=true
     bUseReinforcementWarning=true
+    bPublicPlay=true
 
     WeaponLockTimes(0)=0
     WeaponLockTimes(1)=5
