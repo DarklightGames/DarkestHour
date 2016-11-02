@@ -4323,7 +4323,7 @@ defaultproperties
     Version=VersionObject
 
     MetricsClass=class'DHMetrics'
-    bEnableMetrics=true
+    bEnableMetrics=false
     bUseWeaponLocking=true
     bUseReinforcementWarning=true
 
