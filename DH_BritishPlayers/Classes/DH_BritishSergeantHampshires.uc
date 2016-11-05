@@ -7,7 +7,8 @@ class DH_BritishSergeantHampshires extends DH_Hampshires;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishSergeantHampshiresPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishSergeantHampshiresPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_BritishVestSergeantHampshiresPawn',Weight=1.0)
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

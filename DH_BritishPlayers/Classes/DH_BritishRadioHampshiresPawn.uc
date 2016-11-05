@@ -7,6 +7,5 @@ class DH_BritishRadioHampshiresPawn extends DH_BritishRadioPawn;
 
 defaultproperties
 {
-    BodySkins(0)=texture'DHBritishCharactersTex.PBI.British_Hampshires'
     Skins(1)=texture'DHBritishCharactersTex.PBI.British_Hampshires'
 }

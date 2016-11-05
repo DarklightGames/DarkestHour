@@ -7,7 +7,6 @@ class DH_BritishSergeant extends DH_British_Infantry;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishSergeantPawn',Weight=1.0)
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

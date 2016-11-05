@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_CanadianOfficerHussarsPawn extends DH_BritishOfficerPawn;
+class DH_Canadian1stHussarsPawn extends DH_BritishOfficerPawn; // not necessarily an officer but tanker pawn uses the officer player mesh
 
 defaultproperties
 {
     Species=class'DH_BritishPlayers.DH_Canadian'
-    BodySkins(0)=texture'DHCanadianCharactersTex.Armoured.RoyalCanadianHussars'
-    Skins(1)=texture'DHCanadianCharactersTex.Armoured.RoyalCanadianHussars'
+    Skins(1)=texture'DHCanadianCharactersTex.Armoured.Canadian1stHussars'
 }

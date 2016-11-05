@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_CanadianSergeantBrunswicksPawn extends DH_BritishSergeantPawn;
+class DH_CanadianSergeantBrunswicksPawn extends DH_CanadianBrunswicksPawn;
 
 defaultproperties
 {
-    Species=class'DH_BritishPlayers.DH_Canadian'
-    BodySkins(0)=texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks_Sarg'
     Skins(0)=texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks_Sarg'
 }

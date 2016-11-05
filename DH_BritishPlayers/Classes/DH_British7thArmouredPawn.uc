@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BritishOfficer7thPawn extends DH_BritishOfficerPawn;
+class DH_British7thArmouredPawn extends DH_BritishOfficerPawn; // not necessarily an officer but tanker pawn uses the officer player mesh
 
 defaultproperties
 {
-    BodySkins(0)=texture'DHBritishCharactersTex.Armoured.BritishTanker'
     Skins(1)=texture'DHBritishCharactersTex.Armoured.BritishTanker'
 }

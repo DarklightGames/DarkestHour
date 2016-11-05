@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BritishSergeantWorcestersPawn extends DH_BritishSergeantPawn;
+class DH_BritishSergeantWorcestersPawn extends DH_BritishWorcestersPawn;
 
 defaultproperties
 {
-    BodySkins(0)=texture'DHBritishCharactersTex.PBI.British_Worcesters_Sarg'
     Skins(0)=texture'DHBritishCharactersTex.PBI.British_Worcesters_Sarg'
 }

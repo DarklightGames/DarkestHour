@@ -7,7 +7,7 @@ class DH_CanadianTankerRoyalCanadianHussars extends DH_RoyalCanadianHussars;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianOfficerHussarsPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianRoyalHussarsPawn',Weight=1.0)
     MyName="Tank Crewman"
     AltName="Tank Crewman"
     Article="a "

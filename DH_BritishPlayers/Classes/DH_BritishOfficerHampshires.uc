@@ -8,6 +8,7 @@ class DH_BritishOfficerHampshires extends DH_Hampshires;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishOfficerHampshiresPawn',Weight=1.0)
+    RolePawns(1)=(PawnClass=none,Weight=0.0) // to override inherited 'vest' that isn't valid for officer
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"
