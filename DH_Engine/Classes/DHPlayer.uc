@@ -589,8 +589,7 @@ function ServerSaveArtilleryPosition()
     local Material     HitMaterial;
     local vector       HitLocation, HitNormal, StartTrace;
     local rotator      AimRot;
-    local int          TraceDist, i;
-    local bool         bFoundARadio;
+    local int          TraceDist;
 
     if (DHPawn(Pawn) != none && Pawn.Weapon != none && Pawn.Weapon.IsA('DHBinocularsItem'))
     {
@@ -601,80 +600,25 @@ function ServerSaveArtilleryPosition()
 
     if (RI != none && RI.bIsArtilleryOfficer && PRI != none && PRI.RoleInfo != none && GRI != none)
     {
-        // If a player tries to mark artillery on a level with no arty for their team, give them a message
-        if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+        TraceDist = GetMaxViewDistance();
+        StartTrace = Pawn.Location + Pawn.EyePosition();
+        AimRot = Rotation;
+
+        HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
+
+        RVT = Spawn(class'DHVolumeTest', self,, HitLocation);
+
+        if ((RVT == none || !RVT.IsInNoArtyVolume()) && HitActor != none && HitNormal != vect(0.0, 0.0, -1.0))
         {
-            for (i = 0; i < arraycount(GRI.AlliedRadios); ++i)
-            {
-                if (GRI.AlliedRadios[i] != none)
-                {
-                    bFoundARadio = true;
-                    break;
-                }
-            }
-
-            if (!bFoundARadio)
-            {
-                for (i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
-                {
-                    if (GRI.CarriedAlliedRadios[i] != none)
-                    {
-                        bFoundARadio = true;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(GRI.AxisRadios); ++i)
-            {
-                if (GRI.AxisRadios[i] != none)
-                {
-                    bFoundARadio = true;
-                    break;
-                }
-            }
-
-            if (!bFoundARadio)
-            {
-                for (i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
-                {
-                    if (GRI.CarriedAxisRadios[i] != none)
-                    {
-                        bFoundARadio = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (bFoundARadio)
-        {
-            TraceDist = GetMaxViewDistance();
-            StartTrace = Pawn.Location + Pawn.EyePosition();
-            AimRot = Rotation;
-
-            HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
-
-            RVT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-            if ((RVT == none || !RVT.IsInNoArtyVolume()) && HitActor != none && HitNormal != vect(0.0, 0.0, -1.0))
-            {
-                ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // position saved
-                SavedArtilleryCoords = HitLocation;
-            }
-            else
-            {
-                ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // invalid target
-            }
-
-            RVT.Destroy();
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // position saved
+            SavedArtilleryCoords = HitLocation;
         }
         else
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 9); // no arty support (actually means there's no radio in the level to call arty)
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // invalid target
         }
+
+        RVT.Destroy();
     }
 }
 
@@ -2837,7 +2781,7 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
 
 function LockWeapons(int Seconds)
 {
-    if (Level != none && Level.Game != none && Level.Game.GameReplicationInfo != none)
+    if (Level != none && Level.Game != none && Level.Game.GameReplicationInfo != none && Seconds > 0)
     {
         bAreWeaponsLocked = true;
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
