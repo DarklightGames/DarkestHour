@@ -8,5 +8,5 @@ class DH_RKKA_Standard extends DH_Soviet_Units
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSummerPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietPawn',Weight=1.0)
 }

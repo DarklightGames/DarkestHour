@@ -7,6 +7,12 @@ class DH_SovietPawn extends DHPawn;
 
 defaultproperties
 {
+    Species=class'DH_SovietPlayers.DH_Soviet'
+
+    Mesh=SkeletalMesh'DHCharacters_anm.DH_rus_rifleman_tunic'
+    Skins(0)=texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
+    Skins(1)=texture'Characters_tex.rus_heads.rus_face01'
+
     FaceSlot=1
     BodySlot=0
 
@@ -25,6 +31,4 @@ defaultproperties
     FaceSkins(12)=texture'Characters_tex.rus_heads.rus_face13'
     FaceSkins(13)=texture'Characters_tex.rus_heads.rus_face14'
     FaceSkins(14)=texture'Characters_tex.rus_heads.rus_face15'
-
-    Species=class'DH_SovietPlayers.DH_Soviet'
 }
