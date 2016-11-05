@@ -10,8 +10,8 @@ var localized string OfficialText;
 var localized string LegacyText;
 var localized string CommunityText;
 
-var protected string OfficialMaps[33]; // Make sure size matches correctly
-var protected string LegacyMaps[6];
+var protected string OfficialMaps[35]; // Make sure size matches correctly
+var protected string LegacyMaps[9];
 
 static function string GetMapSource(string S)
 {
@@ -69,6 +69,7 @@ static function string GetPrettyName(string MapName)
 
 defaultproperties
 {
+    // Make sure the variable array size matches correctly
     OfficialMaps(0)="DH-Bois_Jacques.rom"
     OfficialMaps(1)="DH-Brecourt.rom"
     OfficialMaps(2)="DH-Bridgehead.rom"
@@ -77,7 +78,7 @@ defaultproperties
     OfficialMaps(5)="DH-Cheneux.rom"
     OfficialMaps(6)="DH-Dead_Man's_Corner.rom"
     OfficialMaps(7)="DH-Dog_Green.rom"
-    OfficialMaps(8)="DH-Freyneux_and_Lamormenil.rom"
+    OfficialMaps(8)="DH-Flakturm_Tiergarten.rom"
     OfficialMaps(9)="DH-Foucarville.rom"
     OfficialMaps(10)="DH-Foy.rom"
     OfficialMaps(11)="DH-Hedgerow_Hell.rom"
@@ -86,29 +87,33 @@ defaultproperties
     OfficialMaps(14)="DH-Hurtgenwald.rom"
     OfficialMaps(15)="DH-Juno_Beach.rom"
     OfficialMaps(16)="DH-Kommerscheidt.rom"
-    OfficialMaps(17)="DH-La_Cambe.rom"
-    OfficialMaps(18)="DH-La_Chapelle.rom"
-    OfficialMaps(19)="DH-La_Gleize.rom"
-    OfficialMaps(20)="DH-La_Monderie.rom"
-    OfficialMaps(21)="DH-Lutremange.rom"
-    OfficialMaps(22)="DH-Noville.rom"
-    OfficialMaps(23)="DH-Poteau_Ambush.rom"
-    OfficialMaps(24)="DH-Reichswald.rom"
-    OfficialMaps(25)="DH-Raids.rom"
-    OfficialMaps(26)="DH-Simonskall.rom"
-    OfficialMaps(27)="DH-St-Clement.rom"
-    OfficialMaps(28)="DH-Stavelot.rom"
-    OfficialMaps(29)="DH-Stoumont.rom"
-    OfficialMaps(30)="DH-Targnon.rom"
-    OfficialMaps(31)="DH-Vierville.rom"
-    OfficialMaps(32)="DH-Vieux.rom"
+    OfficialMaps(17)="DH-Konigsplatz.rom"
+    OfficialMaps(18)="DH-Kriegstadt.rom"
+    OfficialMaps(19)="DH-La_Cambe.rom"
+    OfficialMaps(20)="DH-La_Chapelle.rom"
+    OfficialMaps(21)="DH-La_Gleize.rom"
+    OfficialMaps(22)="DH-Lutremange.rom"
+    OfficialMaps(23)="DH-Noville.rom"
+    OfficialMaps(24)="DH-Pariserplatz.rom"
+    OfficialMaps(25)="DH-Poteau_Ambush.rom"
+    OfficialMaps(26)="DH-Reichswald.rom"
+    OfficialMaps(27)="DH-Raids.rom"
+    OfficialMaps(28)="DH-Simonskall.rom"
+    OfficialMaps(29)="DH-St-Clement.rom"
+    OfficialMaps(30)="DH-Stavelot.rom"
+    OfficialMaps(31)="DH-Stoumont.rom"
+    OfficialMaps(32)="DH-Targnon.rom"
+    OfficialMaps(33)="DH-Vierville.rom"
+    OfficialMaps(34)="DH-Watrange.rom"
     LegacyMaps(0)="DH-Vieux_Recon.rom"
     LegacyMaps(1)="DH-Ginkel_Heath.rom"
     LegacyMaps(2)="DH-Wacht_am_Rhein.rom"
     LegacyMaps(3)="DH-Gran.rom"
     LegacyMaps(4)="DH-Cambes_en_Plaine.rom"
     LegacyMaps(5)="DH-Carentan.rom"
-
+    LegacyMaps(6)="DH-Freyneux_and_Lamormenil.rom"
+    LegacyMaps(7)="DH-La_Monderie.rom"
+    LegacyMaps(8)="DH-Vieux.rom"
     OfficialText="Official"
     LegacyText="Legacy"
     CommunityText="Community"
