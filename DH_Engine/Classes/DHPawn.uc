@@ -5266,6 +5266,132 @@ simulated function NotifySelected(Pawn User)
     }
 }
 
+// New debug exec to spawn player pawns with all possible permutations of body & face skins that can be randomly selected
+// Use "DebugPawnSkins kill" to just remove all existing debug pawns that have been spawned
+// Use "DebugPawnSkins <ClassName> true" or "DebugPawnSkins true" to show every possible body & face skin permutation (or by default only 1 pawn per body skin will be spawned)
+exec function DebugPawnSkins(string ClassName, optional bool bShowAllFaceCombinations)
+{
+    local class<DHPawn> C;
+    local DHPawn        P;
+    local vector        SpawnLocation, SpawnSpacing;
+    local rotator       SpawnRotation, TempRot;
+    local byte          BodySkinsIndex, FaceSkinsIndex;
+
+    // Don't run this on client as resulting pawns only exist clientside & work badly, e.g. can't be shot (use 'admin' console command if you need to use in multiplayer)
+    if (Role < ROLE_Authority || (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        return;
+    }
+
+    // If "kill" option was specified then just find & destroy any existing debug pawns that have been spawned, so we don't end up with lots of them
+    if (ClassName ~= "kill")
+    {
+        foreach DynamicActors(class'DHPawn', P, 'DebugPawn')
+        {
+            P.Destroy();
+        }
+
+        return;
+    }
+
+    // Load the debug pawn class from the passed in string value, or use our own DHPawn's class if no ClassName has been specified
+    if (ClassName == "" || ClassName ~= "true")
+    {
+        C = Class;
+
+        if (ClassName ~= "true") // "DebugPawnSkins true" uses our own class & enables the bShowAllFaceCombinations option
+        {
+            bShowAllFaceCombinations = true;
+        }
+    }
+    else
+    {
+        C = class<DHPawn>(DynamicLoadObject(ClassName, class'Class'));
+
+        if (C == none)
+        {
+            ClientMessage("DebugPawnPermutations: don't recognise DHPawn class '" $ ClassName $ "'");
+
+            return;
+        }
+    }
+
+    // Skins arrays can only have a maximum size of 16, so check size & trim if too big & issue a warning
+    if (C.default.BodySkins.Length > 16)
+    {
+        ClientMessage("WARNING: '" $ C $ "' - reduce BodySkins array to no more than index no.15!");
+        Log("WARNING: '" $ C $ "' - reduce BodySkins array to no more than BodySkins(15)!");
+        C.default.BodySkins.Length = 16;
+    }
+
+    if (C.default.FaceSkins.Length > 16)
+    {
+        ClientMessage("WARNING: '" $ C $ "' - reduce FaceSkins array to no more than index no.15!");
+        Log("WARNING: '" $ C $ "' - reduce FaceSkins array to no more than FaceSkins(15)!");
+        C.default.FaceSkins.Length = 16;
+    }
+
+    // Set positioning variables for our spawned debug pawns
+    TempRot.Yaw = Rotation.Yaw;
+    SpawnLocation = Location + (180.0 * vector(TempRot)); // spawn 1st pawn approx 3m in front of us
+    SpawnRotation.Yaw = Rotation.Yaw + 32768;             // so spawned pawns will be facing us (180 degrees from our facing yaw direction)
+    TempRot.Yaw = Rotation.Yaw + 16384;
+    SpawnSpacing = 60.0 * vector(TempRot);                // so we'll spread out multiple spawned pawns in a line to our right, approx 1m apart
+
+    // Loop through all BodySkins & spawn a debug pawn for each one
+    // We use a 'do until' loop so we can handle pawn classes that don't have a BodySkins array, in which case we'll keep the mesh's default skin
+    do
+    {
+        // If this BodySkins slot is empty then give a warning (done here so only happens once for this BodySkins slot)
+        if (C.default.BodySkins.Length > 0 && C.default.BodySkins[BodySkinsIndex] == none)
+        {
+            ClientMessage("WARNING: '" $ C $ "' with empty BodySkins[" $ BodySkinsIndex $ "] - specify a skin or remove it");
+            Log("WARNING: '" $ C $ "' with empty BodySkins[" $ BodySkinsIndex $ "] - specify a skin or remove it");
+        }
+
+        FaceSkinsIndex = 0; // reset for each BodySkins slot
+
+        // This is the FaceSkins loop
+        // But note that unless bShowAllFaceCombinations option has been specified, we won't actually spawn a pawn for every body/face skins permutation
+        // It's not that useful to see every combination of face skin for every body skin & for some pawn classes we'd end up with masses of debug pawns
+        // So by default we exit FaceSkins loop after 1 pawn has been spawned for this body skin - use bShowAllFaceCombinations option to override this
+        do
+        {
+            // Spawn a debug pawn - the assigned tag allows us to find & destroy them later to clear things up
+            // And assigning ourselves as its owner allows us to determine it's a debug pawn in its initialisation & avoid doing random skin set up
+            // Note we can't use the 'DebugPawn' tag to do that because it isn't assigned until after the new pawn's initialisation
+            P = Spawn(C, self, 'DebugPawn', SpawnLocation, SpawnRotation);
+
+            if (P != none)
+            {
+                // Now set the current combination of body & face skins
+                // Changing NetUpdateTime is attempt to delay server's replication of new pawn until it's set skin indexes, then do a quick net update
+                // But generally this debug will be used in single player
+                P.NetUpdateTime = Level.TimeSeconds + 100.0;
+                P.SetBodyAndFaceSkins(BodySkinsIndex, FaceSkinsIndex);
+                P.NetUpdateTime = Level.TimeSeconds - 1.0;
+                P.PlayAnim(IdleRestAnim); // put the pawn in a neutral pose (doesn't get played here on client, but client's pose is fine anyway)
+
+                // On the 1st loop through FaceSkins, if this slot is empty then give a warning
+                if (BodySkinsIndex == 0 && P.FaceSkins.Length > 0 && P.FaceSkins[FaceSkinsIndex] == none)
+                {
+                    ClientMessage("WARNING: '" $ C $ "' with empty FaceSkins[" $ FaceSkinsIndex $ "] - specify a skin or remove it");
+                    Log("WARNING: '" $ C $ "' with empty FaceSkins[" $ FaceSkinsIndex $ "] - specify a skin or remove it");
+                }
+
+                // Adjust the next spawn location about 1m to the right, so pawns form a line in front of us
+                SpawnLocation += SpawnSpacing;
+            }
+
+            FaceSkinsIndex++;
+        }
+        until (!bShowAllFaceCombinations || FaceSkinsIndex >= C.default.FaceSkins.Length) // by default we exit after 1st pass, unless using bShowAllFaceCombinations option
+
+        BodySkinsIndex++;
+    }
+    until (BodySkinsIndex >= C.default.BodySkins.Length)
+}
+
 // Debug exec to set own player on fire
 exec function BurnPlayer()
 {
