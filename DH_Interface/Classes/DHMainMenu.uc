@@ -28,6 +28,7 @@ var     string                  SteamCommunityURL;
 var     string                  PatreonURL;
 
 var     localized string        QuickPlayString;
+var     localized string        JoinTestServerString;
 var     localized string        ConnectingString;
 var     localized string        SteamMustBeRunningText;
 var     localized string        SinglePlayerDisabledText;
@@ -66,6 +67,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_MOTD.ManageComponent(i_MOTDLoading);
 
     l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
+
+    if (class'DarkestHourGame'.default.Version.IsPrerelease())
+    {
+        b_QuickPlay.Caption = default.JoinTestServerString;
+    }
+    else
+    {
+        b_QuickPlay.Caption = default.QuickPlayString;
+    }
 }
 
 function ShowControlsChangedMessage()
@@ -302,7 +312,14 @@ function OnQuickPlayResponse(int Status, TreeMap_string_string Headers, string C
         Log("OnQuickPlayResponse failed:" @ Status @ Content);
     }
 
-    b_QuickPlay.Caption = default.QuickPlayString;
+    if (class'DarkestHourGame'.default.Version.IsPrerelease())
+    {
+        b_QuickPlay.Caption = default.JoinTestServerString;
+    }
+    else
+    {
+        b_QuickPlay.Caption = default.QuickPlayString;
+    }
 
     QuickPlayRequest = none;
 }
@@ -386,7 +403,16 @@ function GetQuickPlayIp()
 {
     QuickPlayRequest = PlayerOwner().Spawn(class'HTTPRequest');
     QuickPlayRequest.Host = "www.darkesthour.darklightgames.com";
-    QuickPlayRequest.Path = "/game/quickjoinip.php";
+
+    if (class'DarkestHourGame'.default.Version.IsPrerelease())
+    {
+        QuickPlayRequest.Path = "/game/betaserverip.php";
+    }
+    else
+    {
+        QuickPlayRequest.Path = "/game/quickjoinip.php";
+    }
+
     QuickPlayRequest.OnResponse = OnQuickPlayResponse;
     QuickPlayRequest.Send();
 
@@ -399,6 +425,7 @@ defaultproperties
 {
     // IP variables
     QuickPlayString="Quick Join"
+    JoinTestServerString="Join Test Server"
     ConnectingString="Joining"
 
     // Menu variables
