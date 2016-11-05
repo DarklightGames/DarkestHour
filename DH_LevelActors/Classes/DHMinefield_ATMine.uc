@@ -144,7 +144,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         Victim.TakeDamage(DamageScale * DamageAmount, none, VictimLocation - 0.5 * (Victim.CollisionHeight + Victim.CollisionRadius) * Direction,
             DamageScale * Momentum * Direction, DamageType);
 
-        if (Victim.IsA('ROVehicle') && ROVehicle(Victim).Health > 0)
+        if (ROVehicle(Victim) != none && ROVehicle(Victim).Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(ROVehicle(Victim), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
         }

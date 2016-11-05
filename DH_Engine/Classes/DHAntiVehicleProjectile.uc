@@ -573,7 +573,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         Victim.TakeDamage(DamageScale * DamageAmount, Instigator, VictimLocation - 0.5 * (Victim.CollisionHeight + Victim.CollisionRadius) * Direction,
             DamageScale * Momentum * Direction, DamageType);
 
-        if (Victim.IsA('ROVehicle') && ROVehicle(Victim).Health > 0)
+        if (ROVehicle(Victim) != none && ROVehicle(Victim).Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(ROVehicle(Victim), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
         }
@@ -596,7 +596,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         LastTouched.TakeDamage(DamageScale * DamageAmount, Instigator,
             LastTouched.Location - 0.5 * (LastTouched.CollisionHeight + LastTouched.CollisionRadius) * Direction, DamageScale * Momentum * Direction, DamageType);
 
-        if (LastTouched.IsA('ROVehicle') && ROVehicle(LastTouched).Health > 0)
+        if (ROVehicle(LastTouched) != none && ROVehicle(LastTouched).Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(ROVehicle(LastTouched), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
         }
