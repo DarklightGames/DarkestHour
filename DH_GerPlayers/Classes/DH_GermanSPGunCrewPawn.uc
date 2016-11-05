@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_GermanSmockToqueHeerPawn extends DH_GermanPawn;
+class DH_GermanSPGunCrewPawn extends DH_GermanTankCrewPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_SmockToque'
-    Skins(1)=texture'DHGermanCharactersTex.Heer.HeerSmockSnow1'
+    Skins(0)=texture'DHGermanCharactersTex.Heer.WH_SP'
 }

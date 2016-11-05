@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_GermanCamoHeerPawn extends DH_GermanHeerPawn;
+class DH_GermanCamoHeerPawn extends DH_GermanPawn;
 
 defaultproperties
 {
+    Skins(1)=texture'DHGermanCharactersTex.Heer.WH_3'
+
     BodySkins(0)=texture'DHGermanCharactersTex.Heer.WH_3'
     BodySkins(1)=texture'DHGermanCharactersTex.Heer.WH_4'
-    Skins(1)=texture'DHGermanCharactersTex.Heer.WH_3'
 }

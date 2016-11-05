@@ -11,7 +11,7 @@ defaultproperties
      AltName="SS Rottenführer"
      Article="a "
      PluralName="SS Fireteam Leaders"
-     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
      PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_G41Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)

@@ -6,7 +6,7 @@
 class DH_FJ_Bandolier extends DH_Fallschirmjager
     abstract;
 
-// Theel: This class needs to be deprecated one day
+// TODO: Theel - this class needs to be deprecated one day
 
 defaultproperties
 {
