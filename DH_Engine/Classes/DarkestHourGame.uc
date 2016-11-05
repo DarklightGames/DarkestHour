@@ -58,7 +58,6 @@ var     config bool                 bEnableMetrics;
 var     bool                        bPublicPlay;                            // Variable to determine how things should behave (Private vs Public play)
                                                                             // An organized unit will want to set this to false in a mutator so they can control
                                                                             // settings for private matches (ex- change to false in realism match mode)
-
 var     UVersion                    Version;
 
 // Overridden to make new clamp of MaxPlayers
@@ -3750,91 +3749,6 @@ function CheckTankCrewSpawnAreas()
 
     // Check mortar spawns areas (No longer used?)
     CheckMortarmanSpawnAreas();
-}
-
-// New function that spawns vehicles near the player (Distance is raised to 5 if <5)
-function SpawnVehicle(DHPlayer DHP, string VehicleString, int Distance, optional int SetAsCrew)
-{
-    local class<Pawn>           VehicleClass;
-    local Pawn                  CreatedVehicle;
-    local vector                TargetLocation;
-    local rotator               Direction;
-
-    if (DHP != none && DHP.Pawn != none && VehicleString != "")
-    {
-        Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-        TargetLocation = DHP.Pawn.Location + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5)));
-
-        VehicleClass = class<Pawn>(DynamicLoadObject(VehicleString, class'class'));
-
-        if (VehicleClass != none)
-        {
-            CreatedVehicle = Spawn(VehicleClass,,, TargetLocation, Direction);
-
-            if (bool(SetAsCrew) == true && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo != none)
-            {
-                DHPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew = true;
-            }
-
-            Level.Game.Broadcast(self, "Admin" @ DHP.GetHumanReadableName() @ "spawned a" @ CreatedVehicle.GetHumanReadableName());
-        }
-    }
-}
-
-// New function that spawns bots on the player
-function SpawnBots(DHPlayer DHP, int Team, int NumBots, int Distance)
-{
-    local Controller C;
-    local ROBot      B;
-    local vector     TargetLocation, RandomOffset;
-    local rotator    Direction;
-    local int        i;
-
-    if (DHP != none && DHP.Pawn != none)
-    {
-        TargetLocation = DHP.Pawn.Location;
-
-        // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
-        if (Distance > 0)
-        {
-            Direction.Yaw = DHP.Pawn.Rotation.Yaw;
-            TargetLocation = TargetLocation + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
-        }
-
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            B = ROBot(C);
-
-            // Look for bots that aren't in game & are on the the specified team (Team 2 signifies to spawn bots of both teams)
-            if (B != none && B.Pawn == none && (Team == 2 || B.GetTeamNum() == Team))
-            {
-                // Spawn bot
-                DeployRestartPlayer(B, false, true);
-
-                if (B != none && B.Pawn != none)
-                {
-                    // Randomise location a little, so bots don't all spawn on top of each other
-                    RandomOffset = VRand() * 120.0;
-                    RandomOffset.Z = 0.0;
-
-                    // Move bot to target location
-                    if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
-                    {
-                        // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
-                        if (NumBots > 0 && ++i >= NumBots)
-                        {
-                            break;
-                        }
-                    }
-                    // But if we couldn't move the bot to the target, kill the pawn
-                    else
-                    {
-                        B.Pawn.Suicide();
-                    }
-                }
-            }
-        }
-    }
 }
 
 function NotifyLogout(Controller Exiting)

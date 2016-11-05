@@ -2998,11 +2998,58 @@ function ServerDebugObstacles(optional int Option)
 // Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
 exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    local DarkestHourGame DHG;
+    local Controller      C;
+    local ROBot           B;
+    local vector          TargetLocation, RandomOffset;
+    local rotator         Direction;
+    local int             i;
+
+    DHG = DarkestHourGame(Level.Game);
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHG != none && Pawn != none)
     {
-        if (DarkestHourGame(Level.Game) != none)
+        TargetLocation = Pawn.Location;
+
+        // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
+        if (Distance > 0)
         {
-            DarkestHourGame(Level.Game).SpawnBots(self, Team, Num, Distance);
+            Direction.Yaw = Pawn.Rotation.Yaw;
+            TargetLocation = TargetLocation + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
+        }
+
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            B = ROBot(C);
+
+            // Look for bots that aren't in game & are on the the specified team (Team 2 signifies to spawn bots of both teams)
+            if (B != none && B.Pawn == none && (Team == 2 || B.GetTeamNum() == Team))
+            {
+                // Spawn bot
+                DHG.DeployRestartPlayer(B, false, true);
+
+                if (B != none && B.Pawn != none)
+                {
+                    // Randomise location a little, so bots don't all spawn on top of each other
+                    RandomOffset = VRand() * 120.0;
+                    RandomOffset.Z = 0.0;
+
+                    // Move bot to target location
+                    if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
+                    {
+                        // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
+                        if (DHG.NumBots > 0 && ++i >= DHG.NumBots)
+                        {
+                            break;
+                        }
+                    }
+                    // But if we couldn't move the bot to the target, kill the pawn
+                    else
+                    {
+                        B.Pawn.Suicide();
+                    }
+                }
+            }
         }
     }
 }
@@ -3302,16 +3349,6 @@ simulated function bool GetVehicleBase(out DHVehicle V)
     }
 
     return V != none;
-}
-
-// New debug exec to spawn any vehicle
-exec function DebugSpawnVehicle(string VehicleClass, int Distance, optional int SetAsCrew)
-{
-    if ((Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin) ||
-        class'DH_LevelInfo'.static.DHDebugMode()) && DarkestHourGame(Level.Game) != none)
-    {
-        DarkestHourGame(Level.Game).SpawnVehicle(self, VehicleClass, Distance, SetAsCrew);
-    }
 }
 
 // New debug exec to show vehicle damage status

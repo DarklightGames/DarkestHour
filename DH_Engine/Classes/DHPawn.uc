@@ -5206,12 +5206,6 @@ simulated function NotifySelected(Pawn User)
     }
 }
 
-// DEBUG exec to check whether bInitializedPlayer has been set to true on a net client - run if player spawns with wrong skin
-exec function DebugInitPlayer()
-{
-    Log("DHPawn.bInitializedPlayer =" @ bInitializedPlayer @ " bNetNotify =" @ bNetNotify);
-}
-
 // Debug exec to set own player on fire
 exec function BurnPlayer()
 {
@@ -5234,6 +5228,40 @@ exec function SetFlySpeed(float NewSpeed)
         else
         {
             AirSpeed = default.AirSpeed;
+        }
+    }
+}
+
+// New debug exec to spawn any vehicle, in front of you
+exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int SetAsCrew)
+{
+    local class<Vehicle> VehicleClass;
+    local Vehicle        V;
+    local DHRoleInfo     RI;
+    local vector         SpawnLocation;
+    local rotator        SpawnDirection;
+
+    if (VehicleString != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin)))
+    {
+        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
+
+        if (VehicleClass != none)
+        {
+            SpawnDirection.Yaw = Rotation.Yaw;
+            SpawnLocation = Location + (vector(SpawnDirection) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5.0))); // distance is raised to 5 if <5
+
+            V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
+            Level.Game.Broadcast(self, "Admin" @ GetHumanReadableName() @ "spawned a" @ V.GetHumanReadableName());
+
+            if (bool(SetAsCrew) == true)
+            {
+                RI = GetRoleInfo();
+
+                if (RI != none)
+                {
+                    RI.bCanBeTankCrew = true;
+                }
+            }
         }
     }
 }
