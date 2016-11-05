@@ -20,11 +20,12 @@ var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net cl
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
 
 // Player model
-var     array<Material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
-var     array<Material> BodySkins;
-var     int             FaceSlot;         // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
-var     int             BodySlot;
-var     bool            bHatShotOff;      // records that player's helmet/headgear has been knocked off by a bullet impact
+var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
+var     array<material> BodySkins;
+var     int     FaceSlot;                 // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
+var     int     BodySlot;                 // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
+var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
+var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
 
 // Resupply
 var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
@@ -103,8 +104,12 @@ var     float               LastNotifyTime;
 
 replication
 {
+    // Variables the server will replicate to clients when this actor is 1st replicated
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        PackedSkinIndexes;
+
     // Variables the server will replicate to all clients except the one that owns this actor
-    reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
+    reliable if (!bNetOwner && bNetDirty && Role == ROLE_Authority)
         bWeaponNeedsReload;
 
     // Variables the server will replicate to all clients
@@ -122,9 +127,6 @@ simulated function PostBeginPlay()
 {
     super(Pawn).PostBeginPlay();
 
-    SetBodySkin(Rand(default.BodySkins.Length));
-    SetFaceSkin(Rand(default.FaceSkins.Length));
-
     if (Level.bStartup && !bNoDefaultInventory)
     {
         AddDefaultInventory();
@@ -138,6 +140,14 @@ simulated function PostBeginPlay()
     AttachToBone(AuxCollisionCylinder, 'spine');
 
     LastResupplyTime = Level.TimeSeconds - 1.0;
+}
+
+// Modified to set up any random selection of body & face skins for the player mesh
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    SetBodyAndFaceSkins();
 }
 
 // Matt 2016: modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
@@ -215,48 +225,6 @@ simulated function PostNetReceive()
     if (bInitializedPlayer && bInitializedWeaponAttachment && bRecievedInitialLoadout)
     {
         bNetNotify = false;
-    }
-}
-
-simulated function SetBodySkin(optional int Index)
-{
-    local int i;
-
-    //return;
-
-    for (i = default.BodySkins.Length - 1; i >= 0; --i)
-    {
-        if (default.BodySkins[i] == None)
-        {
-            default.BodySkins.Remove(i, 1);
-            i -= 1;
-        }
-    }
-
-    if (default.BodySkins.Length > 0)
-    {
-        default.Skins[default.BodySlot] = default.BodySkins[Rand(default.BodySkins.Length)];
-    }
-}
-
-simulated function SetFaceSkin(optional int Index)
-{
-    local int i;
-
-    //return;
-
-    for (i = default.FaceSkins.Length - 1; i >= 0; --i)
-    {
-        if (default.FaceSkins[i] == none)
-        {
-            default.FaceSkins.Remove(i, 1);
-            i -= 1;
-        }
-    }
-
-    if (default.FaceSkins.Length > 0)
-    {
-        default.Skins[default.FaceSlot] = default.FaceSkins[Index % default.FaceSkins.Length];
     }
 }
 
@@ -5060,28 +5028,6 @@ function PlayDyingSound()
     PlaySound(SoundGroupClass.static.GetDeathSound(LastHitIndex), SLOT_Pain, RandRange(20.0, 200.0), true, 80.0,, true);
 }
 
-// Modified to remove all DefaultCharacter stuff as just returns nonsense value that can never work & only cause log errors
-// Will still work with original PlayerRecord info (from nation's .upl file), but causes no errors when using new RolePawns array in DHRoleInfo classes
-// If no PlayerRecord is passed in (i.e. not using .upl file) it only results in setting Species to default Species
-simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
-{
-    if (Rec.Species != none)
-    {
-        Species = Rec.Species;
-    }
-    else
-    {
-        Species = default.Species;
-    }
-
-    RagdollOverride = Rec.Ragdoll; // allows PlayerRecord to specify a different ragdoll skeleton (null in new DH pawn model setup system)
-
-    if (Species != none && Species.static.Setup(self, Rec))
-    {
-        ResetPhysicsBasedAnim();
-    }
-}
-
 // Modified to fix serious net client bugs introduced in ROPawn override because it can undesirably disable our PostNetReceive (PNR) event
 // This function can be called from the PRI's PNR event & that may happen before other crucial set up gets done in our own PNR
 // This functionality basically does the same thing as the part of PNR that handled player set up (now moved to SetUpPlayerModel() function)
@@ -5132,6 +5078,120 @@ simulated function SetUpPlayerModel()
         }
         else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
             log(PRI.PlayerName @ "SetUpPlayerModel: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG (Matt)
+    }
+}
+
+// Modified to remove all DefaultCharacter stuff as just returns nonsense value that can never work & only cause log errors
+// Will still work with original PlayerRecord info (from nation's .upl file), but causes no errors when using new RolePawns array in DHRoleInfo classes
+// If no PlayerRecord is passed in (i.e. not using .upl file) it only results in setting Species to default Species
+simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
+{
+    if (Rec.Species != none)
+    {
+        Species = Rec.Species;
+    }
+    else
+    {
+        Species = default.Species;
+    }
+
+    RagdollOverride = Rec.Ragdoll; // allows PlayerRecord to specify a different ragdoll skeleton (null in new DH pawn model setup system)
+
+    if (Species != none && Species.static.Setup(self, Rec))
+    {
+        ResetPhysicsBasedAnim();
+    }
+}
+
+// New function to handle Modified to set up any random selection of body & face skins for the player mesh
+// In multiplayer the server selects & replicates to all net clients
+simulated function SetBodyAndFaceSkins(optional byte BodySkinsIndex, optional byte FaceSkinsIndex)
+{
+    local bool bIsDebugPawn;
+
+    // Identify if this is a debug pawn, i.e. a fake pawn (not a real player) spawned by another DHPawn using a debug function
+    // Then have to reset owner to none so we can see our own debug pawn (as pawns have bOwnerNoSee=true, so otherwise it would be hidden from us!)
+    // But don't change owner on a server as we need a net client to receive that when it runs this function as it initialises
+    if (DHPawn(Owner) != none)
+    {
+        bIsDebugPawn = true;
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            SetOwner(none);
+        }
+    }
+
+    // Authority role makes random selection of skin for body & face, if any choices are specified in the BodySkins or FaceSkins arrays
+    if (Role == ROLE_Authority)
+    {
+        if (!bIsDebugPawn) // skip random selection & any warnings if this is just a debug pawn
+        {
+            // Select index for body skin
+            if (BodySkins.Length > 0)
+            {
+                // First trim the array if more than 16 members
+                // Server can only pack a maximum of 16 into a byte to replicate to net clients & more than 16 probably just means a typo in the numbering
+                // Don't need to do this on client as the excess members will simply be ignored & have no effect
+                if (BodySkins.Length > 16)
+                {
+                    Log("WARNING: class '" $ Name $ "' with excessive BodySkins array in defaultproperties - please reduce to no higher than BodySkins(15)");
+                    BodySkins.Length = 16;
+                }
+
+                // Now make random selection
+                BodySkinsIndex = Rand(BodySkins.Length);
+
+                if (BodySkins[BodySkinsIndex] == none)
+                {
+                    Log("WARNING: class '" $ Name $ "' with empty BodySkins[" $ BodySkinsIndex $ "] in defaultproperties - please specify a skin or remove the entry");
+                }
+            }
+
+            // Select index for face skin
+            if (FaceSkins.Length > 0)
+            {
+                if (FaceSkins.Length > 16)
+                {
+                    Log("WARNING: class '" $ Name $ "' with excessive FaceSkins array in defaultproperties - please reduce to no higher than FaceSkins(15)");
+                    FaceSkins.Length = 16;
+                }
+
+                FaceSkinsIndex = Rand(FaceSkins.Length);
+
+                if (FaceSkins[FaceSkinsIndex] == none)
+                {
+                    Log("WARNING: class '" $ Name $ "' with empty FaceSkins[" $ FaceSkinsIndex $ "] in defaultproperties - please specify a skin or remove the entry");
+                }
+            }
+        }
+
+        // Server packs the selected skin indexes into a single byte for most efficient replication to net clients
+        if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+        {
+            PackedSkinIndexes = (BodySkinsIndex * 16) + FaceSkinsIndex;
+        }
+    }
+    // Net client unpacks replicated byte received from server to get selected index numbers for body & face skins
+    else
+    {
+        BodySkinsIndex = PackedSkinIndexes / 16;
+        FaceSkinsIndex = PackedSkinIndexes - (BodySkinsIndex * 16);
+    }
+
+    // Finally we set any new body or skin from the selected index position in our BodySkins or FaceSkins arrays
+    // Ignore any empty skins slot unless this is just a debug pawn, in which case we'll set the null texture on the pawn as it highlights the problem
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (BodySkinsIndex < BodySkins.Length && Skins[BodySlot] != BodySkins[BodySkinsIndex] && (BodySkins[BodySkinsIndex] != none || bIsDebugPawn))
+        {
+            Skins[BodySlot] = BodySkins[BodySkinsIndex];
+        }
+
+        if (FaceSkinsIndex < FaceSkins.Length && Skins[FaceSlot] != FaceSkins[FaceSkinsIndex] && (FaceSkins[FaceSkinsIndex] != none || bIsDebugPawn))
+        {
+            Skins[FaceSlot] = FaceSkins[FaceSkinsIndex];
+        }
     }
 }
 
@@ -5270,8 +5330,8 @@ defaultproperties
 {
     // Player model
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat' // mesh gets set by .upl file but seems to be initial delay until takes effect & pawn spawns with Mesh from defaultproperties
-    FaceSlot=0                                     // so unless Mesh is overridden in subclass, pawn spawns with inherited 'Characters_anm.ger_rifleman_tunic' (many German roles do)
-    BodySlot=1                                     // that can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
+    BodySlot=1                                     // so unless Mesh is overridden in subclass, pawn spawns with inherited 'Characters_anm.ger_rifleman_tunic' (many German roles do)
+    FaceSlot=0                                     // that can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
 
     // General class & interaction stuff
     Species=class'DH_Engine.DHSPECIES_Human'

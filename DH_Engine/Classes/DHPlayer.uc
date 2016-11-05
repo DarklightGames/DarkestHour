@@ -66,9 +66,6 @@ var     bool                    bAreWeaponsLocked;          // server-side only,
 var     int                     WeaponUnlockTime;           // the time (relative to ElpasedTime) at which the player's weapons will be unlocked
 var     int                     WeaponLockViolations;       // the number of violations this player has
 
-// Debug
-var     array<DHPawn>           DebugPawns;
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -903,7 +900,7 @@ exec function ThrowMGAmmo()
         return;
     }
 
-    TraceDistance = class'DHUnits'.static.MetersToUnreal(2);
+    TraceDistance = class'DHUnits'.static.MetersToUnreal(2.0);
     TraceStart = MyPawn.Location + MyPawn.EyePosition();
     TraceEnd = TraceStart + (vector(Rotation) * TraceDistance);
 
@@ -2867,64 +2864,6 @@ simulated function bool IsWeaponLocked(optional out int WeaponLockTimeLeft)
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
-
-exec function DebugPawnPermutations(string ClassName)
-{
-    local class<DHPawn> C;
-    local DHPawn P;
-    local int i, j;
-    local float d;
-    local rotator R;
-
-    // Return if not debug mode
-    if (!class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        return;
-    }
-
-    C = class<DHPawn>(DynamicLoadObject(ClassName, class'Class'));
-
-    if (C == none)
-    {
-        Level.Game.Broadcast(self, "Failed to spawn class" @ ClassName);
-    }
-
-    R = Pawn.Rotation;
-    R.Pitch = 0;
-    R.Roll = 0;
-
-    for (i = 0; i < DebugPawns.Length; ++i)
-    {
-        DebugPawns[i].Destroy();
-    }
-
-    // Required because we need to make sure the array is truncated before we iterate over the skin permutations.
-    P = Spawn(C, self);
-    P.SetBodySkin();
-    P.SetFaceSkin();
-    P.Destroy();
-
-    for (i = 0; i < C.default.FaceSkins.Length; ++i)
-    {
-        for (j = 0; j < C.default.BodySkins.Length; ++j)
-        {
-            // do a trace down
-            d += class'DHUnits'.static.MetersToUnreal(1);
-
-            P = Spawn(C, self,, Pawn.Location + (vector(R) * d), R);
-
-            if (P == none)
-            {
-                return;
-            }
-
-            P.SetFaceSkin(i);
-            P.SetBodySkin(j);
-
-            DebugPawns[DebugPawns.Length] = P;
-        }
-    }
-}
 
 exec function DebugLockWeapons(int Seconds)
 {
