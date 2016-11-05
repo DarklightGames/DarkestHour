@@ -3,13 +3,16 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USWinterPawn extends DH_AmericanPawn;
+class DH_USWinterPawn extends DHPawn; // extending DHPawn instead of DH_AmericanPawn so we don't inherit the unwanted FaceSkins array that is longer than our own
 
 defaultproperties
 {
-    BodySlot=0
-    FaceSlot=1
-    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_TrenchcoatS'
-    Skins(0)=texture'DHUSCharactersTex.Winter.TrenchcoatWithScarf'
-    Skins(1)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
+    Species=class'DH_USPlayers.DH_American'
+
+    Mesh=SkeletalMesh'DHCharacters_anm.USWinter_GI'
+    Skins(0)=texture'DHUSCharactersTex.us_heads.WinterFace2'
+    Skins(1)=texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
+
+    FaceSkins(0)=texture'DHUSCharactersTex.us_heads.WinterFace1'
+    FaceSkins(1)=texture'DHUSCharactersTex.us_heads.WinterFace2'
 }

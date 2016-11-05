@@ -7,7 +7,7 @@ class DH_USOfficer1st extends DH_US_1st_Infantry;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USOfficer1stPawn',Weight=2.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USOfficer1stPawn',Weight=1.0)
     RolePawns(1)=(PawnClass=none,Weight=0.0)
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"

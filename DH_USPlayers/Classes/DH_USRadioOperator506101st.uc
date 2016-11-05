@@ -7,7 +7,7 @@ class DH_USRadioOperator506101st extends DH_US_506PIR;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USABRadioPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB101stRadioPawn')
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "

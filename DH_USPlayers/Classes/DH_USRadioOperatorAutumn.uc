@@ -7,8 +7,8 @@ class DH_USRadioOperatorAutumn extends DH_US_Autumn_Infantry;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioAutumnPawn',Weight=1.0)
-    RolePawns(1)=(PawnClass=none,Weight=0.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn')
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USRadioTrenchcoatPawn')
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "

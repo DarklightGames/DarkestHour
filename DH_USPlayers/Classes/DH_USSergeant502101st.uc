@@ -7,7 +7,7 @@ class DH_USSergeant502101st extends DH_US_502PIR;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USABNCOPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB101stNCOPawn')
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "

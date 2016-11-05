@@ -7,7 +7,7 @@ class DH_USSergeant82nd extends DH_US_82nd_Airborne;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB82ndNCOPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB82ndNCOPawn')
     MyName="Sergeant"
     AltName="Sergeant"
     Article="a "

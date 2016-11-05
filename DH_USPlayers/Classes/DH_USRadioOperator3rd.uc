@@ -7,7 +7,7 @@ class DH_USRadioOperator3rd extends DH_US_3rd_Infantry;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadio3rdPawn',Weight=2.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadio3rdPawn',Weight=1.0)
     RolePawns(1)=(PawnClass=none,Weight=0.0)
     MyName="Radio Operator"
     AltName="Radio Operator"

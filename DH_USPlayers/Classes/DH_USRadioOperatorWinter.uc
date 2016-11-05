@@ -7,9 +7,10 @@ class DH_USRadioOperatorWinter extends DH_US_Winter_Infantry;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn',Weight=1.0)
-    RolePawns(1)=(PawnClass=none,Weight=0.0)
-    RolePawns(2)=(PawnClass=none,Weight=0.0)
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioTrenchcoatPawn')
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn')
+    RolePawns(2)=(PawnClass=none,Weight=0.0) // to neutralise unwanted inheritance from parent class
+    RolePawns(3)=(PawnClass=none,Weight=0.0)
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "

@@ -3,14 +3,12 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_USVest1stPawn extends DH_US1stPawn;
+class DH_USVest1stPawn extends DH_USVestPawn;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.US_GI_vest'
+    Skins(1)=texture'DHUSCharactersTex.1stID.US_1stID_AssaultVest'
+
     BodySkins(0)=texture'DHUSCharactersTex.1stID.US_1stID_AssaultVest'
     BodySkins(1)=texture'DHUSCharactersTex.1stID.US_1stID_AssaultVest'
-
-    Skins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
-    Skins(1)=texture'DHUSCharactersTex.1stID.US_1stID_AssaultVest'
 }
