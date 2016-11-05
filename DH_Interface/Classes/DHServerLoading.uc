@@ -15,7 +15,6 @@ var localized string CommunityMapText;
 var localized string UnspecifiedText;
 
 var Material DHTextLogo;
-var Material VACIcon;
 var Material OfficialMapIcon;
 var Material CommunityMapIcon;
 
@@ -27,11 +26,6 @@ simulated event Init()
 
     // Calls the base background and text functions (should be after we get the mapRecord)
     super.Init();
-
-    if (bVACSecured)
-    {
-        DrawOpImage(Operations[8]).Image = VACIcon;
-    }
 }
 
 simulated function SetText()
@@ -147,8 +141,6 @@ simulated function SetImage()
 
 defaultproperties
 {
-    vacIcon=texture'InterfaceArt_tex.ServerIcons.VAC_protected'
-
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
     LegacyMapText="Legacy Map"
@@ -238,15 +230,4 @@ defaultproperties
         FontName="ROInterface.fntROMainMenu"
     End Object
     Operations(7)=OpMapAuthorText
-
-    Begin Object Class=DrawOpImage Name=OpVACImg
-        Top=0.895
-        Lft=0.45
-        Width=0.05
-        Height=0.066
-        DrawColor=(R=255,B=255,G=255,A=255)
-        SubXL=128
-        SubYL=128
-    End Object
-    Operations(8)=OpVACImg
 }
