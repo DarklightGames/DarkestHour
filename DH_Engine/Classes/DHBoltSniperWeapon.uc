@@ -25,7 +25,7 @@ var     name            PostReloadAnim;     // anim for closing the bolt
 var     byte            NumRoundsToLoad;    // set by ClientDoReload to know how many rounds to put in the gun
 var     byte            CurrentBulletCount; // number of spare bullets, used for HUD display rather than total clips
 
-var     Material        AmmoIcon;           // icon to use instead of regular ammo one
+var     material        AmmoIcon;           // icon to use instead of regular ammo one
 
 replication
 {

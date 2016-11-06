@@ -146,7 +146,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.83
     VehicleHudOccupantsX(6)=0.60
     VehicleHudOccupantsY(6)=0.73
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.cromwell'
 
     // Visible wheels
     WheelRotationScale=375

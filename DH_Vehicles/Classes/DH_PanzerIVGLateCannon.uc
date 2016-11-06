@@ -13,7 +13,7 @@ defaultproperties
     Skins(1)=texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
     Skins(2)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 

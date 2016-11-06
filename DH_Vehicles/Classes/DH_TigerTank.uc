@@ -189,7 +189,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_TigerTank.KParams0'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     VehicleHudOccupantsX(3)=0.375
@@ -200,5 +200,5 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.69
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.tiger'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.tiger'
 }

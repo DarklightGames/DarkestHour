@@ -229,10 +229,10 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_BrenCarrierTransport.KParams0'
-    HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
+    HighDetailOverlay=shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
 }

@@ -22,7 +22,7 @@ var     int             ScopeYawHigh;            // tweaks the yaw of the scope 
 // 3d Scope vars
 var     ScriptedTexture ScopeScriptedTexture;    // scripted texture for 3d scopes
 var     Shader          ScopeScriptedShader;     // the shader that combines the scripted texture with the sight overlay
-var     Material        ScriptedTextureFallback; // the texture to render if the users system doesn't support shaders
+var     material        ScriptedTextureFallback; // the texture to render if the users system doesn't support shaders
 
 // New scope vars
 var     Combiner        ScriptedScopeCombiner;
@@ -281,7 +281,7 @@ defaultproperties
     bIsSniper=true
     bPlusOneLoading=true
     OverlayCenterSize=0.7
-    ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
+    ScriptedTextureFallback=shader'Weapons1st_tex.Zoomscope.LensShader'
 
     PlayerIronsightFOV=90.0
     FreeAimRotationSpeed=6.0

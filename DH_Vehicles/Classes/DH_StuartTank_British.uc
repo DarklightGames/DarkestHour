@@ -18,5 +18,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_extB'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_body_ext'
     Skins(4)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart_uk'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart_uk'
 }

@@ -210,7 +210,7 @@ function StartFiring()
 }
 
 // Handles toggling the weapon attachment's ambient sound on and off
-function PlayAmbientSound(Sound aSound)
+function PlayAmbientSound(sound aSound)
 {
     local WeaponAttachment WA;
 

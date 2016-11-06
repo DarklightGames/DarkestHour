@@ -183,8 +183,8 @@ defaultproperties
     Skins(3)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CollisionRadius=175.0
     CollisionHeight=60.0
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_g'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panzer4_g'
 }

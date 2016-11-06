@@ -381,5 +381,5 @@ defaultproperties
         KImpactThreshold=850.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_HigginsBoat.KParams0'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.higgins'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.higgins'
 }

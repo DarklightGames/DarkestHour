@@ -586,7 +586,7 @@ function ServerSaveArtilleryPosition()
     local DHRoleInfo   RI;
     local DHVolumeTest RVT;
     local Actor        HitActor;
-    local Material     HitMaterial;
+    local material     HitMaterial;
     local vector       HitLocation, HitNormal, StartTrace;
     local rotator      AimRot;
     local int          TraceDist;

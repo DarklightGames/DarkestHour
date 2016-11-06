@@ -30,7 +30,7 @@ static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadL
     C.SendVoiceMessage(C.PlayerReplicationInfo, SquadLeader, Type, Index, 'GLOBAL', C.Pawn, MyLocation);
 }
 
-function SetClientDefendMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientDefendMessage(int MessageIndex, PlayerReplicationInfo Recipient, out sound MessageSound)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
@@ -47,7 +47,7 @@ function SetClientDefendMessage(int MessageIndex, PlayerReplicationInfo Recipien
     MessageAnim = DefendAnim;
 }
 
-function SetClientHelpAtMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientHelpAtMessage(int MessageIndex, PlayerReplicationInfo Recipient, out sound MessageSound)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
@@ -64,7 +64,7 @@ function SetClientHelpAtMessage(int MessageIndex, PlayerReplicationInfo Recipien
     MessageAnim = DefendAnim;
 }
 
-function SetClientUnderAttackAtMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientUnderAttackAtMessage(int MessageIndex, PlayerReplicationInfo Recipient, out sound MessageSound)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
@@ -81,7 +81,7 @@ function SetClientUnderAttackAtMessage(int MessageIndex, PlayerReplicationInfo R
     MessageAnim = DefendAnim;
 }
 
-function SetClientGotoMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientGotoMessage(int MessageIndex, PlayerReplicationInfo Recipient, out sound MessageSound)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;
@@ -98,7 +98,7 @@ function SetClientGotoMessage(int MessageIndex, PlayerReplicationInfo Recipient,
     MessageAnim = '';
 }
 
-function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipient, out Sound MessageSound)
+function SetClientAttackMessage(int MessageIndex, PlayerReplicationInfo Recipient, out sound MessageSound)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayer PC;

@@ -252,7 +252,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz251Transport.KParams0'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)

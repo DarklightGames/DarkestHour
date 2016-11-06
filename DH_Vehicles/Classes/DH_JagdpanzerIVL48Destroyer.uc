@@ -208,5 +208,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.KParams0'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l48'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l48'
 }

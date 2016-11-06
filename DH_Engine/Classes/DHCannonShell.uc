@@ -153,7 +153,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     local sound          HitSound;
     local class<Emitter> HitEmitterClass;
     local vector         TraceHitLocation, TraceHitNormal;
-    local Material       HitMaterial;
+    local material       HitMaterial;
     local ESurfaceTypes  SurfType;
     local bool           bShowDecal, bSnowDecal;
 

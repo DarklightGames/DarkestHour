@@ -171,7 +171,7 @@ defaultproperties
     Skins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
     CollisionRadius=175.0
     CollisionHeight=60.0
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=4
     VehicleHudOccupantsX(3)=0.375
@@ -182,5 +182,5 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_l'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panzer3_l'
 }

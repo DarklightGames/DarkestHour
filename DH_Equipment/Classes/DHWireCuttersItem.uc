@@ -155,7 +155,7 @@ defaultproperties
     bCanThrow=false
     CutDistance=100.0
 
-    Mesh=mesh'DH_Wirecutters_1st.wirecutters'
+    Mesh=SkeletalMesh'DH_Wirecutters_1st.wirecutters'
 
     DisplayFOV=70.0
     IronSightDisplayFOV=70.0

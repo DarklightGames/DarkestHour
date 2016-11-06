@@ -187,7 +187,7 @@ simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
 // Sets Hardness based on the surface type hit
 simulated function CheckWall(vector HitNormal, vector X)
 {
-    local Material      HitMaterial;
+    local material      HitMaterial;
     local ESurfaceTypes HitSurfaceType;
     local vector        TempHitLocation, TempHitNormal;
 

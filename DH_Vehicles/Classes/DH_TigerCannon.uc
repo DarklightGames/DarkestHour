@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_turret_Coll'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 

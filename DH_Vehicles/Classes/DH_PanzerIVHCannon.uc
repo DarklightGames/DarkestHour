@@ -12,7 +12,7 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_armor_camo1'
     Skins(2)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
 
     WeaponFireOffset=1.0
     AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)

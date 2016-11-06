@@ -8,7 +8,7 @@ class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
 
 struct DigitSet
 {
-    var Material    DigitTexture;
+    var material    DigitTexture;
     var IntBox      TextureCoords[11];
 };
 

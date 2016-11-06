@@ -180,5 +180,5 @@ defaultproperties
     CollisionHeight=60.0
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
 }

@@ -12,5 +12,5 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.DDay_Sherman_Dest'
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.shermandd_body'
     VehicleNameString="M4A1 Sherman DD"
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_dd'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_dd'
 }

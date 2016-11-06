@@ -113,7 +113,7 @@ defaultproperties
     SteeringScaleFactor=0.75
 
     // HUD
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.is2_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.is2_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.is2_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.is2_turret_look'
     VehicleHudTreadsPosX(0)=0.365 // some positions adjusted from original

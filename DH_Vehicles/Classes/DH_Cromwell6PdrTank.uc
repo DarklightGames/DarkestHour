@@ -15,5 +15,5 @@ defaultproperties
     MaxCriticalSpeed=1165.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-185.0,Y=30.0,Z=95.0),ExhaustRotation=(Pitch=20000)) // doesn't have exhaust deflector cowl
     ExhaustPipes(1)=(ExhaustPosition=(X=-185.0,Y=-30.0,Z=95.0),ExhaustRotation=(Pitch=20000))
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell_6pdr'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.cromwell_6pdr'
 }

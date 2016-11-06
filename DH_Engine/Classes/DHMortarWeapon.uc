@@ -159,7 +159,7 @@ simulated function bool CanDeploy()
     local DHPawn P;
     local Actor HitActor;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-    local Material Material;
+    local material Material;
     local rotator TraceRotation;
     local DHVolumeTest VolumeTest;
 

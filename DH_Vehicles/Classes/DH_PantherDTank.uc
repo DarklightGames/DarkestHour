@@ -219,7 +219,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_PantherDTank.KParams0'
-    HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panther'

@@ -209,5 +209,5 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Tiger2BTank.KParams0'
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.tiger_2b'
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.tiger_2b'
 }

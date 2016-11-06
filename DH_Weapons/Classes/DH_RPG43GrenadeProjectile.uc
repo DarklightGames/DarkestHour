@@ -347,7 +347,7 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
 {
     local vector   HitLoc, HitNorm;
-    local Material HitMat;
+    local material HitMat;
 
     Trace(HitLoc, HitNorm, Location - (HitNormal * 16.0), Location, false,, HitMat);
 

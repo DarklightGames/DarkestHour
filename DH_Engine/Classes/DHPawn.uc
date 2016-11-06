@@ -88,10 +88,10 @@ var     bool                bBurnFXOn;                     // whether Fire FX ar
 var     bool                bCharred;                      // for switching in a charred overlay after the fire goes out
 var     class<Emitter>      FlameEffect;                   // the fire sprite emitter class
 var     Emitter             FlameFX;                       // spawned instance of the above
-var     Material            BurningOverlayMaterial;        // overlay for when player is on fire
-var     Material            DeadBurningOverlayMaterial;    // overlay for when player is on fire and dead
-var     Material            CharredOverlayMaterial;        // overlay for dead, burned players after flame extinguished
-var     Material            BurnedHeadgearOverlayMaterial; // overlay for burned hat
+var     material            BurningOverlayMaterial;        // overlay for when player is on fire
+var     material            DeadBurningOverlayMaterial;    // overlay for when player is on fire and dead
+var     material            CharredOverlayMaterial;        // overlay for dead, burned players after flame extinguished
+var     material            BurnedHeadgearOverlayMaterial; // overlay for burned hat
 var     int                 FireDamage;
 var     class<DamageType>   FireDamageClass;               // the damage type that started the fire
 var     int                 BurnTimeLeft;                  // number of seconds remaining for a corpse to burn
