@@ -87,6 +87,8 @@ def main():
     if os.path.isfile(config_path):
         config.read(config_path)
         packages = config.get('Editor.EditorEngine', 'editpackages')
+    else:
+        packages = default_packages
 
     packages_to_compile = []
     package_crcs = dict()
