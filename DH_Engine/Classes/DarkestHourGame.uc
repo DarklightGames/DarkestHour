@@ -3973,7 +3973,7 @@ event PostLogin(PlayerController NewPlayer)
     // Theel: Please use the desired settings for public play, overriding may result in further steps to enforce these settings
     if (bPublicPlay)
     {
-        NewPlayer.bLockedBehindView = false;
+        NewPlayer.bLockedBehindView = true;
         NewPlayer.bFirstPersonSpectateOnly = true;
         NewPlayer.bAllowRoamWhileSpectating = true;
         NewPlayer.bViewBlackWhenDead = false;
