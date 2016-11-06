@@ -64,18 +64,19 @@ def main():
         # clean build deletes the existing mod config
         os.remove(config_path)
 
+    # read the default config 
+    default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
+    if os.path.isfile(default_config_path):
+        config.read(default_config_path)
+        default_packages = config.get('Editor.EditorEngine', '+editpackages')
+    else:
+        print "error: could not resove mod config file"
+        sys.exit(1)
+
+    # get packages from generated INI?
     if os.path.isfile(config_path):
         config.read(config_path)
         packages = config.get('Editor.EditorEngine', 'editpackages')
-    else:
-        # mod config has not been generated, use default configuration
-        config_path = os.path.join(mod_sys_dir, 'Default.ini')
-        if os.path.isfile(config_path):
-            config.read(config_path)
-            packages = config.get('Editor.EditorEngine', '+editpackages')
-        else:
-            print "error: could not resove mod config file"
-            sys.exit(1)
 
     packages_to_compile = []
     package_crcs = dict()
@@ -124,13 +125,20 @@ def main():
 
     pprint(packages_to_compile)
 
-    # delete packages marked for compiling
+    # delete ALL mod packages from the root system folder
+    for package in default_packages:
+        package_path = os.path.join(sys_dir, package)
+        if os.path.isfile(package_path):
+            try:
+                os.remove(package_path)
+            except OSError:
+                print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
+                sys.exit(1)
+
+    # delete packages marked for compiling from both the root AND mod system folder
     for package in packages_to_compile:
-        package_dirs = [sys_dir, mod_sys_dir]
-
-        for package_dir in package_dirs:
+        for package_dir in [sys_dir, mod_sys_dir]:
             package_path = os.path.join(package_dir, package)
-
             if os.path.isfile(package_path):
                 try:
                     os.remove(package_path)
