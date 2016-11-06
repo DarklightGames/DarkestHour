@@ -563,14 +563,18 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         }
 
         PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-        RI = DHRoleInfo(PRI.RoleInfo);
+
+        if (PRI != none)
+        {
+            RI = DHRoleInfo(PRI.RoleInfo);
+        }
 
         if (!C.bIsPlayer || P == none || !WithinArea(P) || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != Team)
         {
             continue;
         }
 
-        if (!bTankersCanCapture && RI.bCanBeTankCrew)
+        if (!bTankersCanCapture && RI != none && RI.bCanBeTankCrew)
         {
             continue;
         }
