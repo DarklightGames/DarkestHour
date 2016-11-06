@@ -57,13 +57,6 @@ def main():
 
     config = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
 
-    # mod config path
-    config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
-
-    if args.clean and os.path.isfile(config_path):
-        # clean build deletes the existing mod config
-        os.remove(config_path)
-
     # read the default config 
     default_config_path = os.path.join(mod_sys_dir, 'Default.ini')
     if os.path.isfile(default_config_path):
@@ -72,6 +65,23 @@ def main():
     else:
         print "error: could not resove mod config file"
         sys.exit(1)
+
+    # delete ALL mod packages from the root system folder
+    for package in default_packages:
+        package_path = os.path.join(sys_dir, package)
+        if os.path.isfile(package_path):
+            try:
+                os.remove(package_path)
+            except OSError:
+                print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
+                sys.exit(1)
+
+    # mod config path
+    config_path = os.path.join(mod_sys_dir, args.mod + '.ini')
+
+    if args.clean and os.path.isfile(config_path):
+        # clean build deletes the existing mod config
+        os.remove(config_path)
 
     # get packages from generated INI?
     if os.path.isfile(config_path):
@@ -124,16 +134,6 @@ def main():
     print 'compiling the following packages:'
 
     pprint(packages_to_compile)
-
-    # delete ALL mod packages from the root system folder
-    for package in default_packages:
-        package_path = os.path.join(sys_dir, package)
-        if os.path.isfile(package_path):
-            try:
-                os.remove(package_path)
-            except OSError:
-                print 'error: failed to remove \'{}\' (is the client, server or editor running?)'.format(package)
-                sys.exit(1)
 
     # delete packages marked for compiling from both the root AND mod system folder
     for package in packages_to_compile:
