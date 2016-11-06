@@ -68,7 +68,7 @@ def main():
 
     # delete ALL mod packages from the root system folder
     for package in default_packages:
-        package_path = os.path.join(sys_dir, package)
+        package_path = os.path.join(sys_dir, package + '.u')
         if os.path.isfile(package_path):
             try:
                 os.remove(package_path)
