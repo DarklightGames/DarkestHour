@@ -13,9 +13,6 @@ defaultproperties
     Skins(0)=texture'DHBritishCharactersTex.PBI.British_Infantry'
     Skins(1)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
 
-    BodySlot=0
-    FaceSlot=1
-
     FaceSkins(0)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
     FaceSkins(1)=texture'DHBritishCharactersTex.Faces.BritParaFace2'
     FaceSkins(2)=texture'DHBritishCharactersTex.Faces.BritParaFace3'

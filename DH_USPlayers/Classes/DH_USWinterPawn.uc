@@ -13,6 +13,8 @@ defaultproperties
     Skins(0)=texture'DHUSCharactersTex.us_heads.WinterFace2'
     Skins(1)=texture'DHUSCharactersTex.Winter.GI_Variant_Jacket'
 
+    bReversedSkinsSlots=true
+
     FaceSkins(0)=texture'DHUSCharactersTex.us_heads.WinterFace1'
     FaceSkins(1)=texture'DHUSCharactersTex.us_heads.WinterFace2'
 }

@@ -11,6 +11,5 @@ defaultproperties
     Skins(0)=texture'Characters_tex.ger_uniforms.ger_greatcoat'
     Skins(1)=texture'Characters_tex.ger_heads.ger_face01'
 
-    BodySlot=0
-    FaceSlot=1
+    bReversedSkinsSlots=false
 }

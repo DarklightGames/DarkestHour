@@ -13,8 +13,7 @@ defaultproperties
     Skins(0)=texture'Characters_tex.ger_heads.ger_face01'
     Skins(1)=texture'DHGermanCharactersTex.Heer.WH_1'
 
-    BodySlot=1
-    FaceSlot=0
+    bReversedSkinsSlots=true
 
     FaceSkins(0)=texture'Characters_tex.ger_heads.ger_face01'
     FaceSkins(1)=texture'Characters_tex.ger_heads.ger_face02'

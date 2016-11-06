@@ -21,6 +21,5 @@ defaultproperties
 
     HeadScale=0.9
 
-    FaceSlot=0
-    BodySlot=1
+    bReversedSkinsSlots=true
 }

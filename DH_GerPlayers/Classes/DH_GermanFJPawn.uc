@@ -11,8 +11,7 @@ defaultproperties
     Skins(0)=texture'DHGermanCharactersTex.Luftwaffe.FJ_Green'
     Skins(1)=texture'Characters_tex.ger_heads.ger_face01'
 
-    BodySlot=0
-    FaceSlot=1
+    bReversedSkinsSlots=false
 
     BodySkins(0)=texture'DHGermanCharactersTex.Luftwaffe.FJ_Green'
     BodySkins(1)=texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB1'

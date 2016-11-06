@@ -22,9 +22,9 @@ var     bool    bClientPlayedDriveAnim;   // flags that net client already playe
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
 var     array<material> BodySkins;
-var     int     FaceSlot;                 // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
-var     int     BodySlot;                 // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
+var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
+                                          // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
 var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
 
 // Resupply
@@ -5107,6 +5107,7 @@ simulated function Setup(xUtil.PlayerRecord Rec, optional bool bLoadNow)
 // In multiplayer the server selects & replicates to all net clients
 simulated function SetBodyAndFaceSkins(optional byte BodySkinsIndex, optional byte FaceSkinsIndex)
 {
+    local int  BodySlot, FaceSlot;
     local bool bIsDebugPawn;
 
     // Identify if this is a debug pawn, i.e. a fake pawn (not a real player) spawned by another DHPawn using a debug function
@@ -5183,6 +5184,16 @@ simulated function SetBodyAndFaceSkins(optional byte BodySkinsIndex, optional by
     // Ignore any empty skins slot unless this is just a debug pawn, in which case we'll set the null texture on the pawn as it highlights the problem
     if (Level.NetMode != NM_DedicatedServer)
     {
+        // Body & face skin slots are normally 0 & 1 respectively, but some DH meshes have this reversed, so this option handles that
+        if (bReversedSkinsSlots)
+        {
+            BodySlot = 1;
+        }
+        else
+        {
+            FaceSlot = 1;
+        }
+
         if (BodySkinsIndex < BodySkins.Length && Skins[BodySlot] != BodySkins[BodySkinsIndex] && (BodySkins[BodySkinsIndex] != none || bIsDebugPawn))
         {
             Skins[BodySlot] = BodySkins[BodySkinsIndex];
@@ -5454,12 +5465,8 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int
 
 defaultproperties
 {
-    // Player model
-    Mesh=SkeletalMesh'DHCharacters_anm.Ger_Soldat' // mesh gets set by .upl file but seems to be initial delay until takes effect & pawn spawns with Mesh from defaultproperties
-    BodySlot=1                                     // so unless Mesh is overridden in subclass, pawn spawns with inherited 'Characters_anm.ger_rifleman_tunic' (many German roles do)
-    FaceSlot=0                                     // that can cause a rash of log errors, as the RO Characters_anm file doesn't have any DH-specific anims
-
     // General class & interaction stuff
+    Mesh=none // must be set by a specific pawn subclass
     Species=class'DH_Engine.DHSPECIES_Human'
     ControllerClass=class'DH_Engine.DHBot'
     TouchMessageClass=class'DHPawnTouchMessage'

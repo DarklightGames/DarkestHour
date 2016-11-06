@@ -13,6 +13,8 @@ defaultproperties
     Skins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     Skins(1)=texture'DHUSCharactersTex.GI.GI_1'
 
+    bReversedSkinsSlots=true
+
     FaceSkins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face1'
     FaceSkins(1)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
     FaceSkins(2)=texture'DHUSCharactersTex.us_heads.US_AB_Face3'

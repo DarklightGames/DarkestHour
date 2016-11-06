@@ -11,6 +11,5 @@ defaultproperties
     Skins(0)=texture'DHUSCharactersTex.Winter.TrenchcoatWithScarf'
     Skins(1)=texture'DHUSCharactersTex.us_heads.WinterFace2'
 
-    BodySlot=0
-    FaceSlot=1
+    bReversedSkinsSlots=false // US trenchocat meshes are the only US ones with the body & face skin slots in the standard order, i.e. body is 0 & face is 1
 }

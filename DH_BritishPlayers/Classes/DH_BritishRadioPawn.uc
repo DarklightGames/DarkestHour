@@ -11,6 +11,5 @@ defaultproperties
     Skins(0)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
     Skins(1)=texture'DHBritishCharactersTex.PBI.British_Infantry'
 
-    FaceSlot=0
-    BodySlot=1
+    bReversedSkinsSlots=true
 }

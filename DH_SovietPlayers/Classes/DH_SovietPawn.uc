@@ -13,9 +13,6 @@ defaultproperties
     Skins(0)=texture'DHSovietCharactersTex.RussianTunics.DH_rus_rifleman_tunic'
     Skins(1)=texture'Characters_tex.rus_heads.rus_face01'
 
-    FaceSlot=1
-    BodySlot=0
-
     FaceSkins(0)=texture'Characters_tex.rus_heads.rus_face01'
     FaceSkins(1)=texture'Characters_tex.rus_heads.rus_face02'
     FaceSkins(2)=texture'Characters_tex.rus_heads.rus_face03'
