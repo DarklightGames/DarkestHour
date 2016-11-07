@@ -7,7 +7,7 @@ class DH_BritishRadioOperator extends DH_British_Infantry;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioPawn')
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "

@@ -7,7 +7,7 @@ class DH_12thSSRadioman extends DH_12thSS;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioSSPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioSSPawn')
     MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "

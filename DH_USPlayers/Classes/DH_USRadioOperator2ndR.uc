@@ -8,7 +8,7 @@ class DH_USRadioOperator2ndR extends DH_US_2ndRangersBattalion;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadio2ndRPawn',Weight=1.0)
-    RolePawns(1)=(PawnClass=none,Weight=0.0)
+    RolePawns(1)=(PawnClass=none,Weight=0.0) // to override inherited vest pawn that isn't valid for radioman
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "

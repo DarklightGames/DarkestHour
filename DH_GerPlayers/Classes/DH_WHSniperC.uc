@@ -7,8 +7,8 @@ class DH_WHSniperC extends DH_HeerCamo;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCamoHeerPawn',Weight=1.0)
-    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSniperHeerPawn',Weight=8.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSniperHeerPawn')
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanCamoHeerPawn')
     MyName="Sniper"
     AltName="Scharfschütze"
     Article="a "

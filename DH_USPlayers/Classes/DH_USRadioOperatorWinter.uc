@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioTrenchcoatPawn')
     RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn')
-    RolePawns(2)=(PawnClass=none,Weight=0.0) // to neutralise unwanted inheritance from parent class
+    RolePawns(2)=(PawnClass=none,Weight=0.0) // to override inherited headscarf pawns that aren't valid for radioman
     RolePawns(3)=(PawnClass=none,Weight=0.0)
     MyName="Radio Operator"
     AltName="Radio Operator"

@@ -7,7 +7,7 @@ class DH_FJRadioman extends DH_FJ;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioFJPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioFJPawn')
     MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "

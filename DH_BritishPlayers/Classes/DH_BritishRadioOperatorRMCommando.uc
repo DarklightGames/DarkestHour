@@ -7,7 +7,7 @@ class DH_BritishRadioOperatorRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioRMCommandoPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioRMCommandoPawn')
     MyName="Radio Operator"
     AltName="Radio Operator"
     Article="a "

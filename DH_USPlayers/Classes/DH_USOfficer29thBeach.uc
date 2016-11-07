@@ -8,7 +8,7 @@ class DH_USOfficer29thBeach extends DH_US_29th_Infantry_Beach;
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USOfficer29thPawn',Weight=1.0)
-    RolePawns(1)=(PawnClass=none,Weight=0.0)
+    RolePawns(1)=(PawnClass=none,Weight=0.0) // to override inherited vest pawn that isn't valid for officer
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"

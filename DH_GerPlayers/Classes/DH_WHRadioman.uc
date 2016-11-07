@@ -7,7 +7,7 @@ class DH_WHRadioman extends DH_Heer;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioHeerPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioHeerPawn')
     MyName="Radio Operator"
     AltName="Funktruppe"
     Article="a "

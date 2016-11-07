@@ -7,7 +7,7 @@ class DH_BritishOfficerRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishOfficerRMCommandoPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishOfficerRMCommandoPawn')
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillery Officer"

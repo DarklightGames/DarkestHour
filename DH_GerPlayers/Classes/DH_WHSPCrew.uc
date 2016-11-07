@@ -7,7 +7,7 @@ class DH_WHSPCrew extends DH_HeerTankCrew;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSPGunCrewPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSPGunCrewPawn')
     MyName="Assault Gun Crewman"
     AltName="Stugbesatzung"
     Article="a "

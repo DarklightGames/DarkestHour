@@ -7,8 +7,8 @@ class DH_CanadianSergeantRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianSergeantBrunswicksPawn',Weight=2.0)
-    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_CanadianVestSergeantBrunswicksPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianSergeantBrunswicksPawn')
+    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_CanadianVestSergeantBrunswicksPawn')
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

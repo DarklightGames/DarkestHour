@@ -7,7 +7,7 @@ class DH_BritishSergeantOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishAirbornSergeantPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishAirbornSergeantPawn')
     MyName="Corporal"
     AltName="Corporal"
     Article="a "

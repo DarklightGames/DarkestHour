@@ -7,7 +7,7 @@ class DH_FJ45Officer extends DH_FJ_1945;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanOfficerArdennesFJPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanOfficerArdennesFJPawn')
     bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillerieoffizier"

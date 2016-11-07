@@ -7,7 +7,7 @@ class DH_WHArtilleryGunner extends DH_Heer;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn')
     MyName="Artillery Gunner"
     AltName="Artillerie Schütze"
     Article="a "
