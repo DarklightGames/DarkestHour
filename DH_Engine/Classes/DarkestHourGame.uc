@@ -33,6 +33,7 @@ var     float                       ChangeTeamInterval;
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         bTeamOutOfReinforcements[2];
+var     int                         OriginalReinforcementIntervals[2];
 
 const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
@@ -42,6 +43,7 @@ var()   config float                ServerTickForInflation;                 // V
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
+
 
 var     float                       TeamAttritionCounter[2];
 
@@ -163,6 +165,10 @@ function PostBeginPlay()
 
     RoundDuration = LevelInfo.RoundDuration * 60;
     AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
+
+    // Stored the level's original ReinforcementIntervals so we can reset to it when round restarts (in case the level edits it)
+    OriginalReinforcementIntervals[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
+    OriginalReinforcementIntervals[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
 
     // Setup some GRI stuff
     GRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -2071,14 +2077,16 @@ state RoundInPlay
         local DHGameReplicationInfo GRI;
         local ROVehicleFactory ROV;
 
-        // Noticing no cast/ref checks here :P
-
-        // Reset all round properties
+        // Begin reseting all round properties!!!
         RoundStartTime = ElapsedTime;
+
+        // Reset the level's reinforcement interval time (levels can change it, so we store the values in game in beginplay)
+        LevelInfo.Axis.ReinforcementInterval = OriginalReinforcementIntervals[AXIS_TEAM_INDEX];
+        LevelInfo.Allies.ReinforcementInterval = OriginalReinforcementIntervals[ALLIES_TEAM_INDEX];
+
         GRI = DHGameReplicationInfo(GameReplicationInfo);
         GRI.RoundStartTime = RoundStartTime;
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
-
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
 
