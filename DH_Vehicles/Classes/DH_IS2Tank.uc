@@ -6,7 +6,7 @@
 class DH_IS2Tank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_IS2_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx // TODO: edit collision mesh to create a 'hole' allowing driver to be shot, as he is enveloped inside the hull collision
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx
 #exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex.utx
 
 defaultproperties
@@ -41,6 +41,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',DriverTransitionAnim="VIS2_driver_close",TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_in",ViewPitchUpLimit=2730,ViewPitchDownLimit=61900,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
     DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',DriverTransitionAnim="VIS2_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=65000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
     DriverAttachmentBone="driver_attachment"
+    DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.IS2DriverOverlay'
     HUDOverlayFOV=90.0

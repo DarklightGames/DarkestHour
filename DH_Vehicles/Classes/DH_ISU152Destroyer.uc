@@ -11,7 +11,7 @@
 class DH_ISU152Destroyer extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ISU152_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx // TODO: edit collision mesh to create a 'hole' allowing driver to be shot, as he is enveloped inside the hull collision
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesSOV_tex.utx
 
 defaultproperties
