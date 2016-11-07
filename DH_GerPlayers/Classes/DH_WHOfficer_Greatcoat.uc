@@ -7,17 +7,19 @@ class DH_WHOfficer_Greatcoat extends DH_HeerGreatcoat;
 
 defaultproperties
 {
+    bIsArtilleryOfficer=true
     MyName="Artillery Officer"
     AltName="Artillerieoffizier"
     Article="a "
     PluralName="Artillery Officers"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
-    PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-    SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-    SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
+    SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
-    Headgear(0)=Class'DH_GerPlayers.DH_HeerOfficercap'
-    Headgear(1)=Class'DH_GerPlayers.DH_HeerCrushercap'
+    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
+    Headgear(1)=Class'DH_GerPlayers.DH_HeerOfficercap'
+    Headgear(2)=Class'DH_GerPlayers.DH_HeerCrushercap'
     Limit=1
-    bIsArtilleryOfficer=true
 }
