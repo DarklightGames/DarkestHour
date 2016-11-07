@@ -8,14 +8,14 @@ class DHMinefield_ATMine extends ROMine;
 var     Vehicle     HurtVehicle; // records the vehicle that triggered the mine & has already been damaged, so we can avoid HurtRadius() from damaging it again
 
 // Overridden to explode on vehicles only
-// Matt: also to handle new collision mesh actor - if touched by col mesh, we switch touching actor to be col mesh's owner & proceed as if we'd been touched by that actor instead
+// Matt: also to handle new collision mesh actor - if touched by a CM we switch touching actor to be CM's owner & proceed as if we'd been touched by that actor instead
 singular function Touch(Actor Other)
 {
     local int RandomNum;
 
     if (Other.IsA('DHCollisionMeshActor'))
     {
-        Other = Other.Owner;
+        Other = Other.Owner; // switch touching actor
     }
 
     if (Vehicle(Other) == none)

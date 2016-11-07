@@ -418,9 +418,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
-// Also removed call to ClientSideTouch() as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
+// Removed call to ClientSideTouch() as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
+// Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
@@ -431,36 +432,37 @@ simulated singular function Touch(Actor Other)
         CheckForSplash(Location);
     }
 
-    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors))
     {
-        if (Other.IsA('DHCollisionMeshActor'))
-        {
-            if (DHCollisionMeshActor(Other).bWontStopThrownProjectile)
-            {
-                return; // exit, doing nothing, if col mesh actor is set not to stop a thrown projectile, e.g. grenade or satchel
-            }
-
-            Other = Other.Owner;
-        }
-
-        LastTouched = Other;
-
-        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
-        {
-            ProcessTouch(Other, Location);
-            LastTouched = none;
-        }
-        else
-        {
-            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
-            {
-                HitLocation = Location;
-            }
-
-            ProcessTouch(Other, HitLocation);
-            LastTouched = none;
-        }
+        return;
     }
+
+    // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
+    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
+    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
+        || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
+    {
+        HitLocation = Location;
+    }
+
+    // Special handling for hit on a collision mesh actor - switch hit actor to CM's owner & proceed as if we'd hit that actor
+    if (Other.IsA('DHCollisionMeshActor'))
+    {
+        if (DHCollisionMeshActor(Other).bWontStopThrownProjectile)
+        {
+            return; // exit, doing nothing, if col mesh actor is set not to stop a thrown projectile, e.g. grenade or satchel
+        }
+
+        Other = Other.Owner;
+    }
+
+    // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
+    // Record LastTouched to prevent possible recursive calls & then clear it after
+    LastTouched = Other;
+    ProcessTouch(Other, HitLocation);
+    LastTouched = none;
 }
 
 // Emptied out as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around

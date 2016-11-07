@@ -126,8 +126,9 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
+// Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
@@ -138,69 +139,65 @@ simulated singular function Touch(Actor Other)
         CheckForSplash(Location);
     }
 
-    // Added bBlockHitPointTraces check here, so can avoid it at start of ProcessTouch(), meaning owner of col mesh gets handled properly in PT (it will have bBlockHitPointTraces=false)
-    if (Other != none && (Other.bProjTarget || Other.bBlockActors) && Other.bBlockHitPointTraces)
+    // Added bBlockHitPointTraces check here instead of doing it at the start of ProcessTouch()
+    // This is so a collision static mesh gets handled properly in ProcessTouch, as it will have bBlockHitPointTraces=false
+    if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) || !Other.bBlockHitPointTraces)
     {
-        // Collision static mesh actor handling
-        if (Other.IsA('DHCollisionMeshActor'))
-        {
-            // If col mesh is set not to stop a bullet then we exit, doing nothing
-            if (DHCollisionMeshActor(Other).bWontStopBullet)
-            {
-                return;
-            }
-
-            // If col mesh is bullet proof then set a flag, so we can handle vehicle hits accordingly
-            if (DHCollisionMeshActor(Other).bIsBulletProof)
-            {
-                bHitBulletProofColMesh = true;
-            }
-
-            // If col mesh represents a vehicle, which would normally get a HitWall event instead of Touch, we call HitWall on the vehicle & exit
-            if (Other.Owner.IsA('ROVehicle'))
-            {
-                // Trace the col mesh to get an accurate HitLocation, as the projectile has often travelled further by the time this event gets called
-                // A false return means we successfully traced the col mesh, so we change the projectile's location (as we can't pass HitLocation to HitWall)
-                if (!Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
-                {
-                    SetLocation(HitLocation);
-                }
-
-                HitWall(HitNormal, Other.Owner);
-                bHitBulletProofColMesh = false; // guarantees reset
-
-                return;
-            }
-
-            // Switch hit Other to be the col mesh's owner & proceed as if we'd hit that actor
-            Other = Other.Owner;
-        }
-
-        LastTouched = Other;
-
-        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
-        {
-            ProcessTouch(Other, Location);
-            LastTouched = none;
-        }
-        else
-        {
-            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
-            {
-                HitLocation = Location;
-            }
-
-            ProcessTouch(Other, HitLocation);
-            LastTouched = none;
-
-            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
-            {
-                ClientSideTouch(Other, HitLocation);
-            }
-        }
-
-        bHitBulletProofColMesh = false; // guarantees reset
+        return;
     }
+
+    // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
+    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
+    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
+        || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
+    {
+        HitLocation = Location;
+    }
+
+    // Special handling for hit on a collision mesh actor - switch hit actor to CM's owner & proceed as if we'd hit that actor
+    if (Other.IsA('DHCollisionMeshActor'))
+    {
+        if (DHCollisionMeshActor(Other).bWontStopBullet)
+        {
+            return; // exit, doing nothing, if col mesh actor is set not to stop a bullet
+        }
+
+
+        if (DHCollisionMeshActor(Other).bIsBulletProof)
+        {
+            bHitBulletProofColMesh = true; // if col mesh is bullet proof then set a flag so we can handle vehicle hits accordingly
+        }
+
+        Other = Other.Owner; // switch hit actor
+
+        // If col mesh represents a vehicle, which would normally get a HitWall() event instead of Touch, then call HitWall on the vehicle & exit
+        // We first match projectile's location to our HitLocation, as we can't pass HitLocation to HitWall & it always uses current location
+        if (ROVehicle(Other) != none)
+        {
+            SetLocation(HitLocation);
+            HitWall(HitNormal, Other);
+            bHitBulletProofColMesh = false; // guarantees reset
+
+            return;
+        }
+    }
+
+    // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
+    // Record LastTouched to prevent possible recursive calls & then clear it after
+    LastTouched = Other;
+    ProcessTouch(Other, HitLocation);
+    LastTouched = none;
+
+    // On a net client call ClientSideTouch() if we hit a pawn with an authority role on the client (in practice this can only be a ragdoll corpse)
+    // TODO: probably remove this & empty out ClientSideTouch() as ProcessTouch() will get called clientside anyway & is much more class-specific & sophisticated
+    if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none && Velocity != vect(0.0, 0.0, 0.0))
+    {
+        ClientSideTouch(Other, HitLocation);
+    }
+
+    bHitBulletProofColMesh = false; // guarantees reset
 }
 
 // Matt: modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
