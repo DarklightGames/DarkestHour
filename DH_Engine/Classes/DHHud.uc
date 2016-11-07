@@ -4675,7 +4675,7 @@ defaultproperties
 
     // Death messages
     bShowDeathMessages=true
-    ObituaryLifeSpan=8.5
+    ObituaryLifeSpan=9.5
     ObituaryFadeInTime=0.5
     ObituaryDelayTime=5.0
 
