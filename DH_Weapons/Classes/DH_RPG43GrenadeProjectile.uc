@@ -111,14 +111,20 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 }
 
 // From DHThrowableExplosiveProjectile
-// Modified to remove 'Fear' stuff, as grenade does not explode after landing (if fails to detonate on impact)
-// Also making use of inherited NumDeflections variable as replacement for grenade's Bounces (works in reverse, counting up to 5 instead of down from 5)
+// Modified to adjust rotation on ground to compensate for static mesh being modelled facing forwards instead of up (required due to nature of this grenade's flight)
+// Also to remove 'Fear' stuff, as grenade does not explode after landing (if fails to detonate on impact)
+// Makes use of inherited NumDeflections variable as replacement for grenade's Bounces (works in reverse, counting up to 5 instead of down from 5)
 simulated function Landed(vector HitNormal)
 {
+    local rotator NewRotation;
+
     if (NumDeflections > 5)
     {
+        bOrientToVelocity = false; // disable this after grenade lands as it will have no velocity & we want to preserve its rotation on the ground
         SetPhysics(PHYS_None);
-        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw)))));
+        NewRotation = QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw))));
+        NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
+        SetRotation(NewRotation);
     }
     else
     {
@@ -126,18 +132,18 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-// Based on DHCannonShellHEATFrom with elements from DHGrenadeProjectile
+// Based on DHCannonShellHEAT with elements from DHGrenadeProjectile
 // Modified to handle possible explosion on impact, depending on impact speed
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroMesh;
-    local Actor         TraceHitActor;
-    local vector        Direction, TempHitLocation, TempHitNormal;
-    local int           ImpactSpeed, xH, TempMaxWall, i;
-    local bool          bExplodeOnImpact;
+    local Actor  TraceHitActor;
+    local vector Direction, TempHitLocation, TempHitNormal;
+    local int    ImpactSpeed, xH, TempMaxWall, i;
+    local bool   bExplodeOnImpact;
 
-    // Exit without doing anything if we hit something we don't want to count a hit on
-    if (bInHitWall || Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe) // HEAT adds bInHitWall check to prevent recursive calls
+    // Exit without doing anything if we hit something we don't want to count a hit on (allowing Wall == none as grenade's Landed() passes none)
+    if (bInHitWall || (Wall != none && (SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe))) // HEAT adds bInHitWall check to prevent recursive calls
     {
         return;
     }
@@ -145,7 +151,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     SavedHitActor = Pawn(Wall);
 
     // Return here, this was causing the famous "nade bug"
-    if (Wall.IsA('ROCollisionAttachment'))
+    if (ROCollisionAttachment(Wall) != none)
     {
         return;
     }
@@ -181,6 +187,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         }
     }
 
+    bOrientToVelocity = false; // disable this after we hit something as the stabilising 'mini chute' will no longer have any effect
+
     ImpactSpeed = int(VSize(Velocity));
 
     // Grenade hit a vehicle & will explode if impact speed is high enough // TODO: maybe use CheckWall() to get hit surface Hardness & use that to calc req'd ImpactSpeed?
@@ -215,7 +223,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // Check & record whether we hit a world object we can penetrate
-    if ((Wall.bStatic || Wall.bWorldGeometry) && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
+    if (Wall != none && (Wall.bStatic || Wall.bWorldGeometry) && !Wall.IsA('RODestroyableStaticMesh') && !Wall.IsA('Mover'))
     {
         bHitWorldObject = true;
     }
@@ -445,7 +453,7 @@ defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
     Speed=900.0
-//  bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute' // TODO: resolve this, may need to edit static mesh
+    bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
     LifeSpan=15.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     bDidExplosionFX=true   // so by default we'll skip explosion effects, but if grenade actually explodes on impact we'll switch this to false to get effects
     bExplodesOnHittingWater=false
