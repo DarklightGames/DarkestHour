@@ -506,16 +506,17 @@ simulated event PostRender(Canvas Canvas)
 // Modified to add mantling icon - PsYcH0_Ch!cKeN
 simulated function DrawHudPassC(Canvas C)
 {
-    local DHVoiceChatRoom    VCR;
-    local float              Y, XL, YL, Alpha;
-    local string             s;
-    local color              MyColor;
-    local AbsoluteCoordsInfo Coords;
-    local ROWeapon           MyWeapon;
-    local byte               BlockFlags;
-    local vector             CameraLocation;
-    local rotator            CameraRotation;
-    local Actor              ViewActor;
+    local DHVoiceChatRoom       VCR;
+    local float                 Y, XL, YL, Alpha;
+    local string                s;
+    local color                 MyColor;
+    local AbsoluteCoordsInfo    Coords;
+    local ROWeapon              MyWeapon;
+    local byte                  BlockFlags;
+    local vector                CameraLocation;
+    local rotator               CameraRotation;
+    local Actor                 ViewActor;
+    local DHPawn                P;
 
     if (PawnOwner == none)
     {
@@ -526,8 +527,10 @@ simulated function DrawHudPassC(Canvas C)
     Coords.Width = C.ClipX;
     Coords.Height = C.ClipY;
 
+    P = DHPawn(PawnOwner);
+
     // Damage to body parts (but not when in a vehicle)
-    if (bShowPersonalInfo && ROPawn(PawnOwner) != none)
+    if (bShowPersonalInfo && P != none)
     {
         DrawSpriteWidget(C, HealthFigureBackground);
         DrawSpriteWidget(C, HealthFigureStamina);
@@ -536,10 +539,16 @@ simulated function DrawHudPassC(Canvas C)
         DrawLocationHits(C, ROPawn(PawnOwner));
 
         // Extra ammo icon
-        if (!DHPawn(PawnOwner).bUsedCarriedMGAmmo)
+        if (!P.bUsedCarriedMGAmmo)
         {
-            DrawSpriteWidget(C, ExtraAmmoIcon);
+            ExtraAmmoIcon.Tints[TeamIndex] = default.ExtraAmmoIcon.Tints[TeamIndex];
         }
+        else
+        {
+            ExtraAmmoIcon.Tints[TeamIndex] = WeaponReloadingColor;
+        }
+
+        DrawSpriteWidget(C, ExtraAmmoIcon);
     }
 
     // MG deploy icon if the weapon can be deployed
@@ -548,15 +557,15 @@ simulated function DrawHudPassC(Canvas C)
         DrawSpriteWidget(C, MGDeployIcon);
     }
 
-    if (DHPawn(PawnOwner) != none)
+    if (P != none)
     {
         // Mantling icon if an object can be climbed
-        if (DHPawn(PawnOwner).bCanMantle)
+        if (P.bCanMantle)
         {
             DrawSpriteWidget(C, CanMantleIcon);
         }
         // Wire cutting icon if an object can be cut
-        else if (DHPawn(PawnOwner).bCanCutWire)
+        else if (P.bCanCutWire)
         {
             DrawSpriteWidget(C, CanCutWireIcon);
         }
