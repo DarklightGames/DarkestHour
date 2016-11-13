@@ -1499,6 +1499,8 @@ function bool HumanWantsRole(int Team, int Num)
     local ROBot                 BotHasRole;
     local DHGameReplicationInfo GRI;
 
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
     {
@@ -1517,8 +1519,6 @@ function bool HumanWantsRole(int Team, int Num)
             }
         }
     }
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (BotHasRole != none)
     {
