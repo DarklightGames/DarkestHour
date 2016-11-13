@@ -6,6 +6,12 @@
 class DH_RPG43GrenadeProjectile extends DHCannonShellHEAT;
 // Obviously not a cannon shell but it is a HEAT explosive & by extending this we can make use of HEAT functionality & DH armour penetration calculations
 
+// The angle, in degrees, at which the grenade must hit a surface to explode on contact.
+var float               MaxImpactAOIToExplode;
+var float               MinImpactSpeedToExplode;
+
+var class<WeaponPickup> PickupClass;
+
 // Functions entered out as not relevant to grenade
 simulated static function int GetPitchForRange(int Range) { return 0; }
 simulated static function float GetYAdjustForRange(int Range) { return 0; }
@@ -117,6 +123,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 simulated function Landed(vector HitNormal)
 {
     local rotator NewRotation;
+    local WeaponPickup P;
 
     if (NumDeflections > 5)
     {
@@ -125,6 +132,15 @@ simulated function Landed(vector HitNormal)
         NewRotation = QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw))));
         NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
         SetRotation(NewRotation);
+
+        P = Spawn(default.PickupClass,,, Location + vect(0, 0, 2), Rotation);
+
+        if (P != none)
+        {
+            Destroy();
+            P.InitDroppedPickupFor(none);
+            P.AmmoAmount[0] = 1;
+        }
     }
     else
     {
@@ -141,6 +157,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local vector Direction, TempHitLocation, TempHitNormal;
     local int    ImpactSpeed, xH, TempMaxWall, i;
     local bool   bExplodeOnImpact;
+    local float  ImpactAOI;  // Angle of incidence, in degrees
 
     // Exit without doing anything if we hit something we don't want to count a hit on (allowing Wall == none as grenade's Landed() passes none)
     if (bInHitWall || (Wall != none && (SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe))) // HEAT adds bInHitWall check to prevent recursive calls
@@ -189,12 +206,17 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     bOrientToVelocity = false; // disable this after we hit something as the stabilising 'mini chute' will no longer have any effect
 
-    ImpactSpeed = int(VSize(Velocity));
+    ImpactSpeed = VSize(Velocity);
+    ImpactAOI = Abs(class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot Normal(Velocity))) - 180.0);
 
-    // Grenade hit a vehicle & will explode if impact speed is high enough // TODO: maybe use CheckWall() to get hit surface Hardness & use that to calc req'd ImpactSpeed?
-    if (ROVehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+    // Grenade hit a vehicle & will explode if impact speed is high enough and
+    // it has a low angle of incidence (this prevents "glancing" hits from
+    // detonating the grenade
+    // TODO: maybe use CheckWall() to get hit surface Hardness & use that to
+    // calc req'd ImpactSpeed?
+    if (ImpactSpeed >= default.MinImpactSpeedToExplode && ImpactAOI <= default.MaxImpactAOIToExplode)
     {
-        if (ImpactSpeed >= (820 + Rand(81)))
+        if (ROVehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
         {
             // We hit an armored vehicle but failed to penetrate
             if ((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
@@ -204,13 +226,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
                 return;
             }
-
-            bExplodeOnImpact = true;
         }
-    }
-    // We didn't hit a vehicle & ground can be softer, so let's require more impact speed to explode
-    else if (ImpactSpeed >= (950 + Rand(101)))
-    {
+
         bExplodeOnImpact = true;
     }
 
@@ -540,4 +557,9 @@ defaultproperties
     RotationRate=(Roll=0)
     DesiredRotation=(Roll=0)
     ForceType=FT_None
+
+    // RPG-43 specific variables
+    MaxImpactAOIToExplode=35.0
+    MinImpactSpeedToExplode=900.0
+    PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
 }
