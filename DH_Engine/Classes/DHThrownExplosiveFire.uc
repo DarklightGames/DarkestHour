@@ -16,13 +16,18 @@ var     bool    bIsSmokeGrenade;        // is a smoke grenade, which will not ha
 // Modified to allow players to throw explosives while prone transitioning
 simulated function bool AllowFire()
 {
-    if (Level.NetMode == NM_Client && Instigator != none && Instigator.IsLocallyControlled() && DHExplosiveWeapon(Weapon) != none
-        && Weapon.AmmoAmount(ThisModeNum) < DHExplosiveWeapon(Weapon).StartFireAmmoAmount)
+    local DHExplosiveWeapon W;
+
+    W = DHExplosiveWeapon(Weapon);
+
+    if (Level.NetMode == NM_Client &&
+        Instigator != none && Instigator.IsLocallyControlled() &&
+        W != none && W.AmmoAmount(ThisModeNum) < W.StartFireAmmoAmount)
     {
         return true;
     }
 
-    return Weapon.AmmoAmount(ThisModeNum) >= AmmoPerFire;
+    return W != none && W.AmmoAmount(ThisModeNum) >= AmmoPerFire;
 }
 
 // Modified to consume ammo on the clients end
