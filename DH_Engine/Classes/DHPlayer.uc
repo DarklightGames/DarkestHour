@@ -2616,7 +2616,7 @@ function ServerThrowWeapon()
 {
     local vector TossVel;
 
-    if (Pawn.CanThrowWeapon())
+    if (Pawn != none && Pawn.CanThrowWeapon())
     {
         TossVel = vector(GetViewRotation());
         TossVel = TossVel * ((Pawn.Velocity dot TossVel) + 150.0) + vect(0.0, 0.0, 100.0);
