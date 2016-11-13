@@ -133,13 +133,16 @@ simulated function Landed(vector HitNormal)
         NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
         SetRotation(NewRotation);
 
-        P = Spawn(default.PickupClass,,, Location + vect(0, 0, 2), Rotation);
-
-        if (P != none)
+        if (Role == ROLE_Authority)
         {
-            Destroy();
-            P.InitDroppedPickupFor(none);
-            P.AmmoAmount[0] = 1;
+            P = Spawn(default.PickupClass,,, Location + vect(0, 0, 2), Rotation);
+
+            if (P != none)
+            {
+                Destroy();
+                P.InitDroppedPickupFor(none);
+                P.AmmoAmount[0] = 1;
+            }
         }
     }
     else
