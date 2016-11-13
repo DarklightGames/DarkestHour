@@ -7,10 +7,10 @@ class DH_RKKA_StandardSquadLeader extends DH_RKKA_Standard;
 
 defaultproperties
 {
-    MyName="Squad Leader"
+    MyName="Seargent"
     AltName="Komandir otdeleniya"
     Article="a "
-    PluralName="Squad Leaders"
+    PluralName="Seargents"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)

@@ -7,10 +7,10 @@ class DH_WHFireteamLeader_Greatcoat extends DH_HeerGreatcoat;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
+    MyName="Corporal"
     AltName="Gefreiter"
     Article="a "
-    PluralName="Fireteam Leaders"
+    PluralName="Corporals"
     SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

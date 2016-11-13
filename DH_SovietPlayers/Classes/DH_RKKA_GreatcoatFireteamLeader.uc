@@ -7,12 +7,13 @@ class DH_RKKA_GreatcoatFireteamLeader extends DH_RKKA_Greatcoat;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
+    MyName="Corporal"
     AltName="Komandir zvena"
     Article="a "
-    PluralName="Fireteam Leaders"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
+    PluralName="Corporals"
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
+    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon')
+    Grenades(1)=(Item=class'DH_Equipment.DH_RDG1SmokeGrenadeWeapon')
     Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietFurHat'

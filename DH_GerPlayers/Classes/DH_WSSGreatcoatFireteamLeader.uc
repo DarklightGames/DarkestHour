@@ -7,10 +7,10 @@ class DH_WSSGreatcoatFireteamLeader extends DH_WaffenSSGreatcoat;
 
 defaultproperties
 {
-    MyName="SS Fireteam Leader"
+    MyName="Corporal"
     AltName="SS Rottenführer"
     Article="a "
-    PluralName="SS Fireteam Leaders"
+    PluralName="Corporals"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

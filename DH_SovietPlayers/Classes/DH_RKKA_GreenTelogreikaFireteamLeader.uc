@@ -7,10 +7,10 @@ class DH_RKKA_GreenTelogreikaFireteamLeader extends DH_RKKA_GreenTelogreika;
 
 defaultproperties
 {
-    MyName="Fireteam Leader"
+    MyName="Corporal"
     AltName="Komandir zvena"
     Article="a "
-    PluralName="Fireteam Leaders"
+    PluralName="Corporals"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
