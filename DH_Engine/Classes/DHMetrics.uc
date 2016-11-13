@@ -154,6 +154,8 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
     F.RoundTime = RoundTime;
+    F.KillerTeam = Killer.GetTeamNum();
+    F.VictimTeam = Victim.GetTeamNum();
 
     Frags[Frags.Length] = F;
 }
