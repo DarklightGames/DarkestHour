@@ -3016,6 +3016,7 @@ defaultproperties
     PointValue=1.0
     VehicleNameString="ADD VehicleNameString !!"
     TouchMessageClass=class'DHVehicleTouchMessage'
+    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     PlayerCameraBone="Camera_driver"
     MinRunOverSpeed=300 // increased from 0 to roughly 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
     ObjectiveGetOutDist=1500.0

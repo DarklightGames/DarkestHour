@@ -245,7 +245,7 @@ simulated function InitializeVehicleBase()
 
     V = DHVehicle(VehicleBase);
 
-    if (V != none)
+    if (V != none && V.PassengerPawns.Length > 0)
     {
         Index = PositionInArray - V.FirstRiderPositionIndex;
 

@@ -1896,7 +1896,6 @@ defaultproperties
     // Driver & positions
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
-    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     bMustUnbuttonToSwitchToRider=true
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
     DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
