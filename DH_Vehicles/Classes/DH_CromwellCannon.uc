@@ -66,7 +66,6 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-    AltReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
 
     // Cannon range settings
     RangeSettings(1)=200
