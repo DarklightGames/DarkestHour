@@ -1766,6 +1766,24 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
 {
 }
 
+// Modified to call Destroyed_HandleDriver(), the same as would happen in original UT2004 Vehicle code or a RO/DH VehicleWeaponPawn when vehicle is killed
+// RO added this state in between when the vehicle is 'destroyed' in an everyday sense and when the Vehicle actor gets Destroyed()
+// So this state needs to do certain things now that would normally happen in Destroyed(), instead of waiting for that to happen some time later
+// The Driver is dead now so Destroyed_HandleDriver() is one of those things, but it isn't included
+state VehicleDestroyed
+{
+Begin:
+    if (Driver != none)
+    {
+        Destroyed_HandleDriver();
+    }
+
+    DestroyAppearance();
+    VehicleExplosion(vect(0.0, 0.0, 1.0), 1.0);
+    Sleep(TimeTilDissapear);
+    CallDestroy();
+}
+
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
@@ -1885,6 +1903,18 @@ simulated event ClientVehicleExplosion(bool bFinal)
         DestructionEffect.LifeSpan = TimeTilDissapear;
         DestructionEffect.SetBase(self);
     }
+}
+
+// Modified to make sure driver's health is no more than zero on a net client, in case that isn't replicated until later
+// Health now affects collision handling in DHPawn's StopDriving() function
+simulated function Destroyed_HandleDriver()
+{
+    if (Role < ROLE_Authority && Driver != none && Driver.Health > 0 && Driver.DrivenVehicle == self)
+    {
+        Driver.Health = 0;
+    }
+
+    super.Destroyed_HandleDriver();
 }
 
 function bool IsSpawnProtected()

@@ -843,8 +843,11 @@ simulated function bool InExposedVehiclePosition(Vehicle V)
     return Veh != none && Veh.DriverPositions[Veh.DriverPositionIndex].bExposed;
 }
 
-// Modified to avoid restoring collision to players who have exited vehicle because they have been killed (otherwise their collision makes the vehicle jump around)
+// Modified to avoid re-enabling collision to a player killed in vehicle as it can cause some vehicles to jump wildly when player is killed in vehicle with other occupants
+// Seems to be some sort of collision clash when player's collision is re-enabled & he's inside the vehicle's collision - leaving collision disabled is harmless
 // Also so exiting into a shallow water volume doesn't send player into swimming state
+// Note that on a net client it appears that this function is triggered natively when the value of DrivenVehicle gets reset to none
+// A function comment in class 'Pawn' says StartDriving/StopDriving are triggered by transitions of bIsDriving, but it appears that does nothing & bIsDriving isn't used
 simulated function StopDriving(Vehicle V)
 {
     if (Role == ROLE_Authority && IsHumanControlled() && V != none)
@@ -870,12 +873,7 @@ simulated function StopDriving(Vehicle V)
     bHardAttach = false;
     bWaitForAnim = false;
     bCanTeleport = true;
-
-    if (Health > 0) // added Health check so we don't restore collision for dead player
-    {
-        bCollideWorld = true;
-    }
-
+    bCollideWorld = true;
     PlayWaiting();
 
     if (V != none)
@@ -1650,6 +1648,50 @@ function HandleStamina(float DeltaTime)
 
 state Dying
 {
+    // Modified to avoid re-enabling bCollideActors as it can cause some vehicles to jump wildly when player is killed in vehicle with other occupants
+    // Seems to be some sort of collision clash when player's collision is re-enabled & he's inside the vehicle's collision
+    // Infantry pawns have full collision enabled anyway so this actually does nothing for them, while leaving it disabled for players killed in vehicles is harmless
+    function BeginState()
+    {
+        local int i;
+
+//      SetCollision(true, false, false); // removed
+
+        if (bTearOff && Level.NetMode == NM_DedicatedServer)
+        {
+            LifeSpan = 1.0;
+        }
+        else
+        {
+            SetTimer(2.0, false);
+        }
+
+        SetPhysics(PHYS_Falling);
+        bInvulnerableBody = true;
+
+        if (Controller != none)
+        {
+            if (Controller.bIsPlayer)
+            {
+                Controller.PawnDied(self);
+            }
+            else
+            {
+                Controller.Destroy();
+            }
+        }
+
+        for (i = 0; i < Attached.Length; ++i)
+        {
+            if (Attached[i] != none)
+            {
+                Attached[i].PawnBaseDied();
+            }
+        }
+
+        AmbientSound = none;
+    }
+
     simulated function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         local vector SelfToHit, SelfToInstigator, CrossPlaneNormal, HitNormal, ShotDir, PushLinVel, PushAngVel;

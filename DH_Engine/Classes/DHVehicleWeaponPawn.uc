@@ -965,6 +965,18 @@ simulated event DrivingStatusChanged()
     }
 }
 
+// Modified to make sure driver's health is no more than zero on a net client, in case that isn't replicated until later
+// Health now affects collision handling in DHPawn's StopDriving() function
+simulated function Destroyed_HandleDriver()
+{
+    if (Role < ROLE_Authority && Driver != none && Driver.Health > 0 && Driver.DrivenVehicle == self)
+    {
+        Driver.Health = 0;
+    }
+
+    super.Destroyed_HandleDriver();
+}
+
 // New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
