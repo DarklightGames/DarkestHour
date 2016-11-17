@@ -5052,6 +5052,7 @@ simulated function NotifyTeamChanged()
 simulated function SetUpPlayerModel()
 {
     local ROPlayerReplicationInfo PRI;
+    local xUtil.PlayerRecord      Rec;
 
     if (!bInitializedPlayer)
     {
@@ -5070,8 +5071,24 @@ simulated function SetUpPlayerModel()
         // Using new IsValidCharacterName() function instead of GetModel() as was randomly selecting one role from Models array, which is incorrect for a client validity check
         if (PRI != none && DHRoleInfo(PRI.RoleInfo) != none && DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
         {
-            Setup(class'xUtil'.static.FindPlayerRecord(PRI.CharacterName));
+            Rec = class'xUtil'.static.FindPlayerRecord(PRI.CharacterName);
+            Setup(Rec);
             bInitializedPlayer = true;
+
+            // Added call to LoadResources() if we don't have a PlayerRecord (we won't now in DH)
+            // Without a PlayerRecord it no longer gets called from the PlayerController's PostNetReceive() or the PRI's UpdatePrecacheMaterials()
+            // But there is a small amount of LoadResources() that is still relevant, even without a PlayerRecord
+            if (Rec.Species == none)
+            {
+                if (PRI.Team != none)
+                {
+                    Species.static.LoadResources(Rec, Level, PRI, PRI.Team.TeamIndex);
+                }
+                else
+                {
+                    Species.static.LoadResources(Rec, Level, PRI, 255);
+                }
+            }
         }
         else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
             log(PRI.PlayerName @ "SetUpPlayerModel: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG (Matt)
