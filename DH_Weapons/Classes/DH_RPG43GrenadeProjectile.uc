@@ -135,7 +135,7 @@ simulated function Landed(vector HitNormal)
 
         if (Role == ROLE_Authority)
         {
-            P = Spawn(default.PickupClass,,, Location + vect(0, 0, 2), Rotation);
+            P = Spawn(default.PickupClass,,, Location + vect(0.0, 0.0, 2.0), Rotation);
 
             if (P != none)
             {

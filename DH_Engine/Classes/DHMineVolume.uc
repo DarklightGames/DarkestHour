@@ -164,7 +164,7 @@ function ProcessTouch(Actor Other, optional bool bUnTouch)
 
     P = Pawn(Other);
 
-    if (P == none || !bActive || Role != ROLE_Authority)
+    if (P == none || !bActive || Role < ROLE_Authority)
     {
         return;
     }

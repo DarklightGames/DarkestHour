@@ -1695,6 +1695,58 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     }
 }
 
+// Modified to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
+event TakeImpactDamage(float AccelMag)
+{
+    local int Damage;
+
+    Damage = int(AccelMag * ImpactDamageModifier());
+    TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+
+    // Play impact sound (often vehicle 'bottoming out' on ground)
+    // Modified to reduce sound radius so doesn't play across level, & limited sound occurrence to every second
+    if (ImpactDamageSounds.Length > 0 && (Level.TimeSeconds - LastImpactSound) > 1.0)
+    {
+        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], SLOT_None, TransientSoundVolume * 2.5, false, 120.0,, true);
+        LastImpactSound = Level.TimeSeconds;
+    }
+
+    // Make vehicle explode if it's now dead
+    if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)
+    {
+        VehicleExplosion(Normal(ImpactInfo.ImpactNorm), 0.5);
+        LastImpactExplosionTime = Level.TimeSeconds;
+    }
+}
+
+// Modified to kill engine if zero health
+function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
+{
+    // Apply new damage
+    if (EngineHealth > 0)
+    {
+        Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+        EngineHealth -= Damage;
+    }
+
+    // Kill the engine if its health has now fallen to zero
+    if (EngineHealth <= 0)
+    {
+        if (bDebuggingText)
+        {
+            Level.Game.Broadcast(self, "Engine is dead");
+        }
+
+        if (!bEngineOff)
+        {
+            bEngineOff = true;
+            PlaySound(DamagedShutDownSound, SLOT_None, FClamp(Abs(Throttle), 0.3, 0.75));
+        }
+
+        SetEngine();
+    }
+}
+
 // Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
 function DamageTrack(bool bLeftTrack)
 {
@@ -1833,58 +1885,6 @@ simulated event ClientVehicleExplosion(bool bFinal)
 
         DestructionEffect.LifeSpan = TimeTilDissapear;
         DestructionEffect.SetBase(self);
-    }
-}
-
-// Modified to kill engine if zero health
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
-{
-    // Apply new damage
-    if (EngineHealth > 0)
-    {
-        Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
-        EngineHealth -= Damage;
-    }
-
-    // Kill the engine if its health has now fallen to zero
-    if (EngineHealth <= 0)
-    {
-        if (bDebuggingText)
-        {
-            Level.Game.Broadcast(self, "Engine is dead");
-        }
-
-        if (!bEngineOff)
-        {
-            bEngineOff = true;
-            PlaySound(DamagedShutDownSound, SLOT_None, FClamp(Abs(Throttle), 0.3, 0.75));
-        }
-
-        SetEngine();
-    }
-}
-
-// Modified to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
-event TakeImpactDamage(float AccelMag)
-{
-    local int Damage;
-
-    Damage = int(AccelMag * ImpactDamageModifier());
-    TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
-
-    // Play impact sound (often vehicle 'bottoming out' on ground)
-    // Modified to reduce sound radius so doesn't play across level, & limited sound occurrence to every second
-    if (ImpactDamageSounds.Length > 0 && (Level.TimeSeconds - LastImpactSound) > 1.0)
-    {
-        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], SLOT_None, TransientSoundVolume * 2.5, false, 120.0,, true);
-        LastImpactSound = Level.TimeSeconds;
-    }
-
-    // Make vehicle explode if it's now dead
-    if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)
-    {
-        VehicleExplosion(Normal(ImpactInfo.ImpactNorm), 0.5);
-        LastImpactExplosionTime = Level.TimeSeconds;
     }
 }
 
@@ -2157,7 +2157,7 @@ simulated function SpawnVehicleAttachments()
 
                 if (VA.bHasCollision)
                 {
-                    A.SetCollision(true, true); // bCollideActors & bBlockActors both true, so attachment block players walking through & stop projectiles
+                    A.SetCollision(true, true); // bCollideActors & bBlockActors both true, so attachment blocks players walking through & stops projectiles
                     A.bWorldGeometry = true;    // means we get appropriate projectile impact effects, as if we'd hit a normal static mesh actor
                     // TODO - modify ProcessTouch() in projectiles to play hit effects on things other than VehicleWeapons & DHPawns, so we don't need to make this world geometry
                 }

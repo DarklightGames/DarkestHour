@@ -95,7 +95,7 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed'
+    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed' // TODO: make destroyed combiner & add as DestroyedMeshSkins(0)
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)

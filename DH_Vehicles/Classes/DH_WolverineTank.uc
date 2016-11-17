@@ -79,7 +79,7 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
     StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest' // TODO: make destroyed combiner & add as DestroyedVehicleSkins(0)
     DamagedEffectOffset=(X=-126.0,Y=20.0,Z=105.0)
     VehicleTeam=1
     SteeringScaleFactor=0.75

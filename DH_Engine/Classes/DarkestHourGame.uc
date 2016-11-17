@@ -44,7 +44,6 @@ var     float                       ServerTickRateAverage;                  // T
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 
-
 var     float                       TeamAttritionCounter[2];
 
 var     array<int>                  AttritionObjOrder;                      // Order of objectives that were randomly opened
