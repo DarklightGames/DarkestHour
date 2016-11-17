@@ -142,8 +142,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine,
-        ServerDamTrack, ServerKillEngine; // these ones in debug mode only
+        ServerStartEngine;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -2884,12 +2883,19 @@ exec function ToggleViewLimit()
 }
 
 // New debug exec to quickly damage the vehicle
-exec function DamageVehicle()
+exec function DamageVehicle(optional bool bDestroyVehicle)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
     {
-        Health /= 2;
-        EngineHealth /= 2;
+        if (bDestroyVehicle)
+        {
+            super(Vehicle).TakeDamage(99999, none, Location, vect(10000.0,0.0,0.0), class'DHShellImpactDamageType');
+        }
+        else
+        {
+            Health /= 2;
+            EngineHealth /= 2;
+        }
     }
 }
 
@@ -2898,25 +2904,12 @@ exec function KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
     {
-        ServerKillEngine();
+        DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
     }
-}
-
-function ServerKillEngine()
-{
-    DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
 // New debug exec for testing track damage
 exec function DamTrack(string Track)
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
-    {
-        ServerDamTrack(Track);
-    }
-}
-
-function ServerDamTrack(string Track)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
     {

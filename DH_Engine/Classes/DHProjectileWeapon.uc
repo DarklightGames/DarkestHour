@@ -90,8 +90,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerRequestReload, ServerZoomIn, ServerZoomOut, ServerChangeBayoStatus, ServerWorkBolt, ServerSwitchBarrels,
-        ServerLogAmmo; // this one in debug mode only
+        ServerRequestReload, ServerZoomIn, ServerZoomOut, ServerChangeBayoStatus, ServerWorkBolt, ServerSwitchBarrels;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -160,34 +159,22 @@ simulated exec function LogAmmo()
 {
     local int i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
     {
-        if (Role == ROLE_Authority)
-        {
-            Log("Weapon has" @ AmmoAmount(0) @ "rounds loaded and a total of" @ PrimaryAmmoArray.Length @ "mags");
+        Log("Weapon has" @ AmmoAmount(0) @ "rounds loaded and a total of" @ PrimaryAmmoArray.Length @ "mags");
 
-            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+        {
+            if (i == CurrentMagIndex)
             {
-                if (i == CurrentMagIndex)
-                {
-                    Log("Current mag has" @ PrimaryAmmoArray[i] @ "ammo");
-                }
-                else
-                {
-                    Log("Stowed mag has " @ PrimaryAmmoArray[i] @ "ammo");
-                }
+                Log("Current mag has" @ PrimaryAmmoArray[i] @ "ammo");
+            }
+            else
+            {
+                Log("Stowed mag has " @ PrimaryAmmoArray[i] @ "ammo");
             }
         }
-        else
-        {
-            ServerLogAmmo();
-        }
     }
-}
-
-function ServerLogAmmo()
-{
-    LogAmmo();
 }
 
 simulated event RenderOverlays(Canvas Canvas)

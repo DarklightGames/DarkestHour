@@ -106,10 +106,6 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bEngineOnFire;
-
-    // Functions a client can call on the server
-    reliable if (Role < ROLE_Authority)
-        ServerHullFire, ServerEngineFire; // these ones in debug mode only
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1863,15 +1859,7 @@ function float ModifyThreat(float Current, Pawn Threat)
 // New debug exec for testing hull fire damage & effects
 exec function HullFire()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ServerHullFire();
-    }
-}
-
-function ServerHullFire()
-{
-    if (!bOnFire)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && !bOnFire)
     {
         StartHullFire(none);
     }
@@ -1880,15 +1868,7 @@ function ServerHullFire()
 // New debug exec for testing engine fire damage & effects
 exec function EngineFire()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ServerEngineFire();
-    }
-}
-
-function ServerEngineFire()
-{
-    if (!bEngineOnFire)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && !bEngineOnFire)
     {
         StartEngineFire(none);
     }

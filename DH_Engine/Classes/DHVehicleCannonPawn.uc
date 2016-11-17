@@ -891,6 +891,16 @@ exec function SetAltFireSpawnOffset(float NewValue)
     }
 }
 
+// New debug exec to toggle bGunsightSettingMode, allowing calibration of range settings
+exec function SetGunsight()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHVehicleCannon(Gun) != none)
+    {
+        DHVehicleCannon(Gun).bGunsightSettingMode = !DHVehicleCannon(Gun).bGunsightSettingMode;
+        Log(Gun.Tag @ "bGunsightSettingMode =" @ DHVehicleCannon(Gun).bGunsightSettingMode);
+    }
+}
+
 exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or do a reload, when you should be able to)
 {
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
