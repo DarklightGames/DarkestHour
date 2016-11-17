@@ -9,6 +9,7 @@ defaultproperties
 {
     VehicleNameString="T34/85"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485CannonPawn')
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_T3485MountedMGPawn')
     Skins(0)=texture'allies_vehicles_tex.ext_vehicles.T3485_ext'
     Skins(1)=texture'allies_vehicles_tex.Treads.T3485_treads'
     Skins(2)=texture'allies_vehicles_tex.Treads.T3485_treads'
