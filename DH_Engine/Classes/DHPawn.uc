@@ -54,9 +54,8 @@ var     float   IronsightBobDecay;
 var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
 
 // Sounds
-var(Sounds) class<DHPawnSoundGroup> DHSoundGroupClass;
-var() array<sound>                  PlayerHitSounds;
-var() array<sound>                  HelmetHitSounds;
+var()   array<sound>    PlayerHitSounds;
+var()   array<sound>    HelmetHitSounds;
 
 // Mantling
 var     vector  MantleEndPoint;      // player's final location after mantle
@@ -1983,7 +1982,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
-// Overridden for our limited burning screams group
+// Modified to specify radius for hit/damage sounds, including a little randomization
 function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageType)
 {
     local vector  Direction;
@@ -2001,40 +2000,38 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
     {
         if (DamageType.IsA('Drowned'))
         {
-            PlaySound(GetSound(EST_Drown), SLOT_Pain, 1.5 * TransientSoundVolume,, 10.0);
+            PlaySound(GetSound(EST_Drown), SLOT_Pain, 1.5 * TransientSoundVolume,, 10.0); // added radius 10
         }
         else
         {
-            PlaySound(GetSound(EST_HitUnderwater), SLOT_Pain, 1.5 * TransientSoundVolume,, 10.0);
+            PlaySound(GetSound(EST_HitUnderwater), SLOT_Pain, 1.5 * TransientSoundVolume,, 10.0); // added radius 10
         }
 
         return;
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && class<ROWeaponDamageType>(DamageType) != none
+        && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring && ROPlayer(Controller) != none)
     {
-        if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring && ROPlayer(Controller) != none)
-        {
-            // Get the approximate direction that the hit went into the body
-            Direction = self.Location - HitLocation;
+        // Get the approximate direction that the hit went into the body
+        Direction = self.Location - HitLocation;
 
-            // No up-down jarring effects since I don't have the barrel velocity
-            Direction.Z = 0.0;
-            Direction = Normal(Direction);
+        // No up-down jarring effects since I don't have the barrel velocity
+        Direction.Z = 0.0;
+        Direction = Normal(Direction);
 
-            // We need to rotate the jarring direction in screen space so basically the exact opposite of the player's pawn's rotation
-            InvRotation.Yaw = -Rotation.Yaw;
-            InvRotation.Roll = -Rotation.Roll;
-            InvRotation.Pitch = -Rotation.Pitch;
-            Direction = Direction >> InvRotation;
+        // We need to rotate the jarring direction in screen space so basically the exact opposite of the player's pawn's rotation
+        InvRotation.Yaw = -Rotation.Yaw;
+        InvRotation.Roll = -Rotation.Roll;
+        InvRotation.Pitch = -Rotation.Pitch;
+        Direction = Direction >> InvRotation;
 
-            JarScale = FMin(0.1 + (Damage / 50.0), 1.0);
+        JarScale = FMin(0.1 + (Damage / 50.0), 1.0);
 
-            ROPlayer(Controller).PlayerJarred(Direction, JarScale);
-       }
+        ROPlayer(Controller).PlayerJarred(Direction, JarScale);
     }
 
-    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30, 90),, true);
+    PlayOwnedSound(SoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30, 90),, true); // added randomized radius
 }
 
 // A few minor additions
@@ -5553,7 +5550,7 @@ defaultproperties
     FootStepSoundRadius=64
     FootstepVolume=0.5
     QuietFootStepVolume=0.66
-    DHSoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
+    SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
