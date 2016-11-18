@@ -7,16 +7,16 @@ class DH_Vehicle30CalMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
-    Emitters[0].UseCollision = (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600.0));
+    Emitters[0].UseCollision = !Level.bDropDetail && Level.DetailMode != DM_Low && VSizeSquared(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 2560000.0;
 
-    if (bEnabled)
+    if (bEnabled) // 500 rpm
     {
-        Emitters[0].ParticlesPerSecond = 7.0; // 400 RPM
-        Emitters[0].InitialParticlesPerSecond = 7.0;
+        Emitters[0].ParticlesPerSecond = 8.333;
+        Emitters[0].InitialParticlesPerSecond = 8.333;
         Emitters[0].AllParticlesDead = false;
 
-        Emitters[1].ParticlesPerSecond = 14.0;
-        Emitters[1].InitialParticlesPerSecond = 14.0;
+        Emitters[1].ParticlesPerSecond = 8.333;
+        Emitters[1].InitialParticlesPerSecond = 8.333;
         Emitters[1].AllParticlesDead = false;
     }
     else

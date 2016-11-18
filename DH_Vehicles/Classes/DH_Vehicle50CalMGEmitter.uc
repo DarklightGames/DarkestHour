@@ -9,14 +9,14 @@ simulated function SetEmitterStatus(bool bEnabled)
 {
     Emitters[0].UseCollision = !Level.bDropDetail && Level.DetailMode != DM_Low && VSizeSquared(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 2560000.0;
 
-    if (bEnabled)
+    if (bEnabled) // 450 rpm
     {
-        Emitters[0].ParticlesPerSecond = 7.5; // ejected shell casings @ 450 RPM
+        Emitters[0].ParticlesPerSecond = 7.5;
         Emitters[0].InitialParticlesPerSecond = 7.5;
         Emitters[0].AllParticlesDead = false;
 
-        Emitters[1].ParticlesPerSecond = 30.0; // muzzle flash (30 cal = 14, bren = 20 (says 500 rpm), default & all others = 30)
-        Emitters[1].InitialParticlesPerSecond = 30.0;
+        Emitters[1].ParticlesPerSecond = 7.5;
+        Emitters[1].InitialParticlesPerSecond = 7.5;
         Emitters[1].AllParticlesDead = false;
     }
     else

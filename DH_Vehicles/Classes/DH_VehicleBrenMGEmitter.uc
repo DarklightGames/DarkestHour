@@ -7,10 +7,10 @@ class DH_VehicleBrenMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
-    if (bEnabled)
+    if (bEnabled) // 500 rpm
     {
-        Emitters[0].ParticlesPerSecond = 20.0; // 500 RPM
-        Emitters[0].InitialParticlesPerSecond = 20.0;
+        Emitters[0].ParticlesPerSecond = 8.333;
+        Emitters[0].InitialParticlesPerSecond = 8.333;
         Emitters[0].AllParticlesDead = false;
     }
     else

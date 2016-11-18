@@ -16,7 +16,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     bDrawDriverInTP=true
-    DrivePos=(X=-11.0,Y=-4.0,Z=31.0)
+    DrivePos=(X=-6.0,Y=-4.0,Z=33.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VUC_com_idle_close"
     CameraBone="Camera_com"
