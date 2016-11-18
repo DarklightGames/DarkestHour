@@ -9,9 +9,9 @@ class DH_Kz8cmGrW42VehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Mortars.DH_Kz8cmGrW42Weapon'
-    GunClass=class'DH_Mortars.DH_Kz8cmGrW42VehicleWeapon'
-    HUDOverlayClass=class'DH_Mortars.DH_Kz8cmGrW42Overlay'
+    WeaponClass=class'DH_Weapons.DH_Kz8cmGrW42Weapon'
+    GunClass=class'DH_Weapons.DH_Kz8cmGrW42VehicleWeapon'
+    HUDOverlayClass=class'DH_Weapons.DH_Kz8cmGrW42Overlay'
     DriverFiringAnim="deploy_fire_GrW42"
     DriverUnflinchAnim="flinch_return_GrW42"
     OverlayKnobIdleAnim="traverse_idle"

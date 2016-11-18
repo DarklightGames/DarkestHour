@@ -9,9 +9,9 @@ class DH_M2MortarVehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Mortars.DH_M2MortarWeapon'
-    GunClass=class'DH_Mortars.DH_M2MortarVehicleWeapon'
-    HUDOverlayClass=class'DH_Mortars.DH_M2MortarOverlay'
+    WeaponClass=class'DH_Weapons.DH_M2MortarWeapon'
+    GunClass=class'DH_Weapons.DH_M2MortarVehicleWeapon'
+    HUDOverlayClass=class'DH_Weapons.DH_M2MortarOverlay'
     HUDOverlayOffset=(Z=-2.0)
     DriverFiringAnim="deploy_fire_M2Mortar"
     DriverUnflinchAnim="flinch_return_M2Mortar"

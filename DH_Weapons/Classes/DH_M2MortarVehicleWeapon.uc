@@ -9,9 +9,9 @@ class DH_M2MortarVehicleWeapon extends DHMortarVehicleWeapon;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Mortars.DH_M2MortarProjectileHE'
-    PrimaryProjectileClass=class'DH_Mortars.DH_M2MortarProjectileHE'
-    SecondaryProjectileClass=class'DH_Mortars.DH_M2MortarProjectileSmoke'
+    ProjectileClass=class'DH_Weapons.DH_M2MortarProjectileHE'
+    PrimaryProjectileClass=class'DH_Weapons.DH_M2MortarProjectileHE'
+    SecondaryProjectileClass=class'DH_Weapons.DH_M2MortarProjectileSmoke'
     InitialPrimaryAmmo=24
     InitialSecondaryAmmo=4
     PlayerResupplyAmounts(0)=6
