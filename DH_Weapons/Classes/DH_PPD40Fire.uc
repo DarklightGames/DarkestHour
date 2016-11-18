@@ -7,9 +7,9 @@ class DH_PPD40Fire extends DHFastAutoFire;
 
 defaultproperties
 {
-    FireEndSound=SoundGroup'Inf_Weapons.ppd40.ppd40_fire_end'
+    FireEndSound=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_end'
     AmbientFireSoundRadius=750.0
-    AmbientFireSound=SoundGroup'Inf_Weapons.ppd40.ppd40_fire_loop'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_loop'
     AmbientFireVolume=255
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-20.0)

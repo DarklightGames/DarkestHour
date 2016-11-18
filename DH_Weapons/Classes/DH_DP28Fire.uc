@@ -7,9 +7,9 @@ class DH_DP28Fire extends DHMGAutomaticFire;
 
 defaultproperties
 {
-    FireEndSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_end'
+    FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'
     AmbientFireSoundRadius=750.0
-    AmbientFireSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
+    AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
     AmbientFireVolume=255
     PackingThresholdTime=0.12
     ProjSpawnOffset=(X=25.0)
