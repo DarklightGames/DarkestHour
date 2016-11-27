@@ -1987,7 +1987,7 @@ function HitThis(ROArtilleryTrigger RAT)
     G = DarkestHourGame(Level.Game);
     AT = DHArtilleryTrigger(RAT);
 
-    if (G == none && AT == none)
+    if (G == none || AT == none)
     {
         return;
     }
