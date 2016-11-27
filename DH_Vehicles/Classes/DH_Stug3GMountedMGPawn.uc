@@ -12,7 +12,7 @@ function bool CanFire()
         || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex);
 }
 
-// Modified to show a hint that player must be buttoned to fire, but unbuttoned to reload the remote controlled external MG
+// Modified to show a hint that player must be unbuttoned to fire or reload the externally mounted MG
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
@@ -33,7 +33,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     BinocPositionIndex=3
-    bExternallyLoadedMG=true
+    bMustUnbuttonToReload=true
     bDrawDriverInTP=true
     DrivePos=(X=4.0,Y=3.0,Z=20.0)
     DriveRot=(Yaw=16384)

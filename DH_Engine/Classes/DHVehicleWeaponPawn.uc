@@ -261,7 +261,7 @@ simulated function bool PointOfView()
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Emptied out so we have no alt fire by default - implement in subclass if has alt fire
+// Emptied out so we have no alt fire by default - implement functionality in subclass if has alt fire, e.g. cannon with coaxial MG
 function AltFire(optional float F)
 {
 }
@@ -292,7 +292,7 @@ function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
     }
 }
 
-// New function to check whether player is in a view position where he can fire the weapon - implement in subclasses
+// New function to check whether player is in a view position where he can fire the weapon - implement functionality in subclasses as required
 function bool CanFire()
 {
     return true;
@@ -339,6 +339,12 @@ function float GetAmmoReloadState()
     }
 
     return 0.0;
+}
+
+// New helper function to check whether player is in a position where he can reload the weapon - implement functionality in subclasses as required
+simulated function bool CanReload()
+{
+    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -430,7 +436,7 @@ function KDriverEnter(Pawn P)
         // Replicate the weapon's current reload state, unless AttemptReload() changed the state, in which case it will have already done this
         if (VehWep.ReloadState == OldReloadState)
         {
-            VehWep.ClientSetReloadState(VehWep.ReloadState);
+            VehWep.PassReloadStateToClient();
         }
     }
 
@@ -1180,7 +1186,7 @@ simulated function InitializeVehicleBase()
     }
 }
 
-// Matt: new function to do any set up that requires both the 'VehicleBase' & 'Gun' references to the Vehicle & VehicleWeapon actors - implement in subclasses
+// Matt: new function to do any set up that requires both 'VehicleBase' & 'Gun' references to Vehicle & VehicleWeapon actors - implement functionality in subclasses
 simulated function InitializeVehicleAndWeapon()
 {
     bInitializedVehicleAndGun = true;

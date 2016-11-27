@@ -13,7 +13,7 @@ function bool CanFire()
     return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
 }
 
-// Modified to show a hint that player must be unbuttoned to fire or reload the externally mounted MG
+// Modified to show a hint that player must be buttoned to fire, but unbuttoned to reload the remote controlled external MG
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
@@ -47,7 +47,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     BinocPositionIndex=2
-    bExternallyLoadedMG=true
+    bMustUnbuttonToReload=true
     bDrawDriverInTP=true
     DrivePos=(X=-1.5,Y=5.0,Z=-12.0)
     BinocsDrivePos=(X=-8.0,Y=7.0,Z=-12.0)

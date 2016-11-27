@@ -201,7 +201,6 @@ defaultproperties
     Hints(43)=(Title="Resupply Trucks",Text="You are close to a resupply truck. Stand outside the back of the truck to resupply your ammunition.")
     Hints(44)=(Title="Resupply Trucks",Text="You are driving a resupply truck. This vehicle can resupply vehicles, mortars and infantry. Be sure to park it in a safe place.")
     Hints(46)=(Title="Externally mounted MG",Text="This machine gun is externally mounted and can only be fired or reloaded if you unbutton the hatch")
-    Hints(47)=(Title="Remote controlled MG",Text="This external machine gun is remote controlled from inside the vehicle. You can only fire it from inside the vehicle, but you must unbutton the hatch to reload")
-    Hints(48)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch to reload this externally mounted machine gun")
-    Hints(49)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch to continue reloading this externally mounted machine gun")
+    Hints(47)=(Title="Remote controlled MG",Text="This machine gun can only be fired from inside the vehicle, but it is externally mounted and you must unbutton the hatch to reload")
+    Hints(48)=(Title="Externally mounted MG reload",Text="You need to unbutton the hatch (& not be using binoculars) to reload this externally mounted machine gun")
 }

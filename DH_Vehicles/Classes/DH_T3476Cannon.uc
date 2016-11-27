@@ -69,7 +69,10 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.t34_76_reload_04')
-    AltReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
+    AltReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
+    AltReloadStages(1)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
+    AltReloadStages(2)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
+    AltReloadStages(3)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
 
     // View shake
     ShakeRotMag=(X=0.0,Y=0.0,Z=250.0)

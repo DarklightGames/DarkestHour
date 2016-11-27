@@ -82,7 +82,7 @@ state ProjectileFireMode
 }
 
 // Modified so if we're loading a new mixed mag, we reset the 1st shot to be the default AP or HE round
-function AttemptReload()
+simulated function AttemptReload()
 {
     super.AttemptReload();
 

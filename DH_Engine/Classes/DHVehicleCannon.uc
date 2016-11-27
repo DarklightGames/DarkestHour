@@ -33,9 +33,11 @@ var     class<Projectile>   SavedProjectileClass;    // client & listen server r
 // Firing & reloading
 var     array<int>          RangeSettings;           // for cannons with range adjustment
 var     int                 AddedPitch;              // option for global adjustment to cannon's pitch aim
-var     float               AltFireSpawnOffsetX;     // optional extra forward offset when spawning coaxial MG bullets, allowing them to clear potential collision with driver's head
-var     sound               AltReloadSound;          // reload sound for cannon's coaxial MG
 var     bool                bCanisterIsFiring;       // canister is spawning separate projectiles - until done it stops firing effects playing or switch to different round type
+var     float               AltFireSpawnOffsetX;     // optional extra forward offset when spawning coaxial MG bullets, allowing them to clear potential collision with driver's head
+var     EReloadState        AltReloadState;          // the stage of coaxial MG reload or readiness
+var     array<ReloadStage>  AltReloadStages;         // stages for multi-part coaxial MG reload, including sounds, durations & HUD reload icon proportions
+var     bool                bAltReloadPaused;        // a coaxial MG reload has started but was paused, as no longer had a player in a valid reloading position
 
 // Firing effects
 var     sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
@@ -64,10 +66,6 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerManualReload, ServerSetPendingAmmo;
-
-    // Functions the server can call on the client that owns this actor
-    reliable if (Role == ROLE_Authority)
-        ClientAltReload;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -89,43 +87,69 @@ simulated function PostNetReceive()
     }
 }
 
-// Heavily modified (from ROTankCannon) to simplify & optimise, & to use an active pause/resume system instead of a constantly repeating timer until reload can start/resume
+// Modified to handle multi-stage coaxial MG reload in the same way as cannon, with cannon reload taking precedence over any coax reload & putting it on hold
 simulated function Timer()
 {
-    // If already reached final reload stage, always complete reload, regardless of circumstances
-    if (ReloadState == ReloadStages.Length)
+    // Cannon reload
+    if (ReloadState < RL_ReadyToFire)
     {
-        ReloadState = RL_ReadyToFire;
-        bReloadPaused = false;
-    }
-    else if (ReloadState < ReloadStages.Length)
-    {
-        // For earlier reload stages, we only proceed if we have a player in a position where he can reload
-        if (!bReloadPaused && WeaponPawn != none && WeaponPawn.Occupied())
+        super.Timer(); // standard reload process for main weapon
+
+        // If cannon just finished reloading & coaxial MG isn't loaded, try to start/resume a coax reload
+        // Note owning net client runs this independently from server & may resume a paused coax reload (but not start a new reload)
+        if (ReloadState == RL_ReadyToFire)
         {
-            // Play reloading sound for this stage (don't broadcast to owning client as it will play locally anyway)
-            if (ReloadStages[ReloadState].Sound != none)
+            if (AltReloadState != RL_ReadyToFire)
             {
-                PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+                AttemptAltReload();
+            }
+        }
+        // Or if cannon is reloading, pause any active coaxial MG reload as the cannon reload takes precedence
+        else if (AltReloadState < RL_ReadyToFire && !bAltReloadPaused && !bReloadPaused)
+        {
+            bAltReloadPaused = true;
+        }
+    }
+    // Coaxial MG reload - finish reload if already reached final reload stage, regardless of circumstances (final reload sound will have played, so confusing if player can't fire)
+    else if (AltReloadState == AltReloadStages.Length)
+    {
+        AltReloadState = RL_ReadyToFire;
+        bAltReloadPaused = false;
+
+        if (Role == ROLE_Authority)
+        {
+            AltAmmoCharge = InitialAltAmmo;
+        }
+    }
+    // Coaxial MG reload in progress
+    else if (AltReloadState < AltReloadStages.Length && !bAltReloadPaused)
+    {
+        // Check we have a player to do the reload
+        if (WeaponPawn != none && WeaponPawn.Occupied() && WeaponPawn.CanReload())
+        {
+            // Play reloading sound for this stage
+            if (AltReloadStages[AltReloadState].Sound != none)
+            {
+                PlayOwnedSound(AltReloadStages[AltReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
             }
 
             // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
-            if (ReloadStages[ReloadState].Duration > 0.0)
+            if (AltReloadStages[AltReloadState].Duration > 0.0)
             {
-                SetTimer(ReloadStages[ReloadState].Duration, false);
+                SetTimer(AltReloadStages[AltReloadState].Duration, false);
             }
             else
             {
-                SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+                SetTimer(FMax(0.1, GetSoundDuration(AltReloadStages[AltReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
             }
 
             // Move to next reload state
-            ReloadState = EReloadState(ReloadState + 1);
+            AltReloadState = EReloadState(AltReloadState + 1);
         }
-        // Otherwise pause the reload
+        // Otherwise pause the reload as no player to do it
         else
         {
-            bReloadPaused = true;
+            bAltReloadPaused = true;
         }
     }
 }
@@ -465,45 +489,6 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// New function to toggle pending ammo type (very different system from deprecated ROTankCannon)
-// Only happens locally on net client & a changed ammo type is only passed to server on firing or manually reloading, & also plays a click sound (originally in SwitchFireMode)
-simulated function ToggleRoundType()
-{
-    local int i;
-
-    do
-    {
-        ++i;
-        LocalPendingAmmoIndex = ++LocalPendingAmmoIndex % arraycount(MainAmmoChargeExtra); // cycles through ammo types 0/1/2 (loops back to 0 when reaches 3)
-
-        // We have some of this pending ammo type, so lock that in & play a click
-        // Note that if this is the 3rd loop it means we're back at the original ammo, so no switch was possible & no click is played
-        if (i < arraycount(MainAmmoChargeExtra) && HasAmmoToReload(LocalPendingAmmoIndex))
-        {
-            PlayClickSound();
-            break;
-        }
-
-    } until (i >= arraycount(MainAmmoChargeExtra))
-}
-
-// New function for net client to check whether it needs to update pending ammo type to server
-// On a client, ServerPendingAmmoIndex is used to record the last setting updated to the server, so we know whether we need to update again
-simulated function CheckUpdatePendingAmmo(optional bool bForceUpdate)
-{
-    if ((LocalPendingAmmoIndex != GetAmmoIndex() && LocalPendingAmmoIndex != ServerPendingAmmoIndex) || bForceUpdate)
-    {
-        ServerPendingAmmoIndex = LocalPendingAmmoIndex; // record latest setting sent to server
-        ServerSetPendingAmmo(LocalPendingAmmoIndex);
-    }
-}
-
-// New replicated client-to-server function to update server's pending ammo type, only passed when server needs it, i.e. to reload (usually after firing)
-function ServerSetPendingAmmo(byte NewPendingAmmoIndex)
-{
-    ServerPendingAmmoIndex = NewPendingAmmoIndex;
-}
-
 // Modified to incrementally resupply all cannon & coaxial MG ammo (only resupplies spare rounds & mags; doesn't reload the cannon or MG)
 function bool ResupplyAmmo()
 {
@@ -550,8 +535,8 @@ function bool ResupplyAmmo()
         }
     }
 
-    // If cannon is waiting to reload, but doesn't use manual reloading (so must be out of ammo), & we just resupplied & have a player, try to start a reload
-    if (ReloadState == RL_Waiting && !PlayerUsesManualReloading() && bDidResupply && WeaponPawn != none && WeaponPawn.Occupied())
+    // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
+    if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
     {
         AttemptReload();
     }
@@ -561,15 +546,64 @@ function bool ResupplyAmmo()
         ++NumMGMags;
         bDidResupply = true;
 
-        // If coaxial MG is out of ammo, start an MG reload if we have a player
-        // Note we don't need to consider cannon reload, as an empty cannon will already be on a repeating reload timer (or waiting for key press if player uses manual reloading)
-        if (!HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
+        // If coaxial MG is out of ammo & waiting to reload & we have a player, try to start a reload
+        if (AltReloadState == RL_Waiting && !HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
         {
             AttemptAltReload();
         }
     }
 
     return bDidResupply;
+}
+
+// Modified to add coaxial MG
+simulated function bool ReadyToFire(bool bAltFire)
+{
+    if (bAltFire && bMultiStageReload && AltReloadState != RL_ReadyToFire)
+    {
+        return false;
+    }
+
+    return super.ReadyToFire(bAltFire);
+}
+
+// New function to toggle pending ammo type (very different system from deprecated ROTankCannon)
+// Only happens locally on net client & a changed ammo type is only passed to server on firing or manually reloading, & also plays a click sound (originally in SwitchFireMode)
+simulated function ToggleRoundType()
+{
+    local int i;
+
+    do
+    {
+        ++i;
+        LocalPendingAmmoIndex = ++LocalPendingAmmoIndex % arraycount(MainAmmoChargeExtra); // cycles through ammo types 0/1/2 (loops back to 0 when reaches 3)
+
+        // We have some of this pending ammo type, so lock that in & play a click
+        // Note that if this is the 3rd loop it means we're back at the original ammo, so no switch was possible & no click is played
+        if (i < arraycount(MainAmmoChargeExtra) && HasAmmoToReload(LocalPendingAmmoIndex))
+        {
+            PlayClickSound();
+            break;
+        }
+
+    } until (i >= arraycount(MainAmmoChargeExtra))
+}
+
+// New function for net client to check whether it needs to update pending ammo type to server
+// On a client, ServerPendingAmmoIndex is used to record the last setting updated to the server, so we know whether we need to update again
+simulated function CheckUpdatePendingAmmo(optional bool bForceUpdate)
+{
+    if ((LocalPendingAmmoIndex != GetAmmoIndex() && LocalPendingAmmoIndex != ServerPendingAmmoIndex) || bForceUpdate)
+    {
+        ServerPendingAmmoIndex = LocalPendingAmmoIndex; // record latest setting sent to server
+        ServerSetPendingAmmo(LocalPendingAmmoIndex);
+    }
+}
+
+// New replicated client-to-server function to update server's pending ammo type, only passed when server needs it, i.e. to reload (usually after firing)
+function ServerSetPendingAmmo(byte NewPendingAmmoIndex)
+{
+    ServerPendingAmmoIndex = NewPendingAmmoIndex;
 }
 
 // Modified to use extended ammo types
@@ -681,9 +715,226 @@ function byte BestMode()
 //  ********************************** RELOADING **********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New client-to-server replicated function allowing player to trigger a manual cannon reload
+// Far simpler than version that was in ROTankCannon, as AttemptReload() is a generic function that handles what this function used to do
+function ServerManualReload()
+{
+    if (ReloadState == RL_Waiting && PlayerUsesManualReloading())
+    {
+        AttemptReload();
+    }
+}
+
+// Modified so before trying to start a new reload, we try to switch to any different ammo type selected by the player
+// Or if we're out of the currently selected ammo, we try to automatically select a different type
+simulated function AttemptReload()
+{
+    local int i;
+
+    // Cannon needs to try to start a new reload & has a player to do it - authority role only
+    // But first we must check whether we need to switch to a different ammo type
+    if (Role == ROLE_Authority && (ReloadState == RL_ReadyToFire || ReloadState == RL_Waiting) && WeaponPawn != none && WeaponPawn.CanReload())
+    {
+        // Single player or owning listen server update the authoritative ServerPendingAmmoIndex from their local value before starting a reload
+        if (Instigator != none && Instigator.IsLocallyControlled())
+        {
+            ServerPendingAmmoIndex = LocalPendingAmmoIndex;
+        }
+
+        // If we don't have any ammo of the pending type, try to automatically switch to another ammo type (unless player reloads & switches manually)
+        // Note if server changes ammo, client's pending type gets matched in PostNetReceive() on receiving new ProjectileClass, so no need to replicate pending ammo directly
+        if (!HasAmmoToReload(ServerPendingAmmoIndex) && !PlayerUsesManualReloading())
+        {
+            for (i = 0; i < 3; ++i)
+            {
+                if (HasAmmoToReload(i))
+                {
+                    ServerPendingAmmoIndex = i;
+
+                    if (Instigator != none && Instigator.IsLocallyControlled())
+                    {
+                        LocalPendingAmmoIndex = i; // single player or owning listen server also match their local setting
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        // If pending ammo type is different, switch to it now
+        if (ServerPendingAmmoIndex != GetAmmoIndex())
+        {
+            switch (ServerPendingAmmoIndex)
+            {
+                case 0:
+                    ProjectileClass = PrimaryProjectileClass;
+                    break;
+                case 1:
+                    ProjectileClass = SecondaryProjectileClass;
+                    break;
+                case 2:
+                    ProjectileClass = TertiaryProjectileClass;
+                    break;
+            }
+        }
+    }
+
+    super.AttemptReload(); // now we've done that it's the usual attempt reload process
+}
+
+// Implemented to start a coaxial MG reload or resume a previously paused reload, using a multi-stage reload process like a cannon
+simulated function AttemptAltReload()
+{
+    local EReloadState OldReloadState;
+
+    // Try to start a new reload, as coax either just ran out of ammo (still in ready to fire state) or is waiting
+    if (AltReloadState == RL_ReadyToFire || AltReloadState == RL_Waiting)
+    {
+        if (Role == ROLE_Authority)
+        {
+            OldReloadState = AltReloadState; // so we can tell if AltReloadState changes
+
+            // Start a reload if we have a spare mag & the cannon is not reloading (that takes precedence & makes coax wait to reload)
+            if (HasAmmoToReload(ALTFIRE_AMMO_INDEX) && ReloadState >= RL_ReadyToFire && WeaponPawn != none && WeaponPawn.CanReload())
+            {
+                NumMGMags--;
+                AltReloadState = RL_Empty;
+                StartAltReloadTimer();
+            }
+            // Otherwise make sure loading state is waiting (for a player or an ammo resupply or for cannon to finish reloading)
+            else if (AltReloadState != RL_Waiting)
+            {
+                AltReloadState = RL_Waiting;
+                bAltReloadPaused = false; // just make sure this isn't set, as only relevant to a started reload
+            }
+
+            // Server replicates any changed reload state to net client
+            if (AltReloadState != OldReloadState)
+            {
+                PassReloadStateToClient();
+            }
+        }
+    }
+    // Coax has started reloading so try to progress/resume it providing cannon is not reloading
+    // Note we musn't check we have a player here as net client may not yet have received weapon pawn's Controller if reload is starting/resuming on entering vehicle
+    // But generally we can assume we do have a player because either server has triggered this to start new reload (& it will have checked for player if necessary),
+    // or player has just entered vehicle & triggered this (so even if we don't yet have the Controller, he's in the entering/possession process)
+    // In any event the timer makes sure we have a player anyway & the slight delay before timer gets called should mean we have the Controller by then
+    else if (ReloadState >= RL_ReadyToFire && WeaponPawn != none && WeaponPawn.CanReload())
+    {
+        StartAltReloadTimer();
+    }
+    else if (!bAltReloadPaused)
+    {
+        bAltReloadPaused = true;
+    }
+}
+
+// New function to start a coaxial MG reload timer, either when a new reload starts or when a paused reload resumes (separate function to avoid code repetition elsewhere)
+// 0.1 sec delay instead of 0.01 to allow a little longer for net client to receive weapon pawn's Controller actor, so check for player doesn't fail due to network timing issues
+simulated function StartAltReloadTimer()
+{
+    bAltReloadPaused = false;
+    SetTimer(0.1, false);
+}
+
+// Modified to pack both cannon & coaxial MG reload states into a single byte, for efficient replication to owning net client
+function PassReloadStateToClient()
+{
+    if (WeaponPawn != none && !WeaponPawn.IsLocallyControlled()) // dedicated server or non-owning listen server
+    {
+        if (AltFireProjectileClass != none)
+        {
+            ClientSetReloadState((AltReloadState * 10) + ReloadState);
+        }
+        else
+        {
+            ClientSetReloadState(ReloadState);
+        }
+    }
+}
+
+// Modified to unpack combined cannon & coaxial MG reload states from a single replicated byte & to handle a passed coaxial MG reload
+simulated function ClientSetReloadState(byte NewState)
+{
+    if (Role < ROLE_Authority)
+    {
+        // Unpack replicated byte & update cannon & coax reload states
+        // Note we only need to unpack if cannon has a coax, otherwise just the cannon's reload state will have been passed
+        if (AltFireProjectileClass != none)
+        {
+            AltReloadState = EReloadState(NewState / 10);
+            NewState = NewState - (AltReloadState * 10);
+        }
+
+        // Now call the Super to handle any cannon reload, passing the unpacked NewState for the cannon's reload state
+        super.ClientSetReloadState(NewState);
+
+        // If a coax reload has started, try to progress it
+        if (AltFireProjectileClass != none)
+        {
+            if (AltReloadState < RL_ReadyToFire)
+            {
+                AttemptAltReload();
+            }
+            // Coax isn't reloading (it's either ready to fire or waiting to start a reload)
+            // So just just make sure it isn't set to paused, which is only relevant if it's mid-reload
+            else if (bAltReloadPaused)
+            {
+                bAltReloadPaused = false;
+            }
+        }
+    }
+}
+
+// Modified for bigger radius for reloading sound
+simulated function PlayStageReloadSound()
+{
+    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+}
+
+// Modified to handle autocannon's multiple mag types
+function ConsumeMag()
+{
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    {
+        NumPrimaryMags--;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        NumSecondaryMags--;
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        NumTertiaryMags--;
+    }
+}
+
+// Modified to handle autocannon's multiple mag types
+function FinishMagReload()
+{
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    {
+        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+    }
+}
+
 // New function to check whether we can start a reload for a specified ammo type, accommodating either normal cannon shells or mags
 simulated function bool HasAmmoToReload(byte AmmoIndex)
 {
+    if (AmmoIndex == ALTFIRE_AMMO_INDEX) // coaxial MG
+    {
+         return NumMGMags > 0;
+    }
+
     if (bUsesMags) // autocannon
     {
         switch (AmmoIndex)
@@ -698,156 +949,6 @@ simulated function bool HasAmmoToReload(byte AmmoIndex)
     }
 
     return HasAmmo(AmmoIndex); // normal cannon
-}
-
-// New client-to-server replicated function allowing player to trigger a manual cannon reload
-// Far simpler than version that was in ROTankCannon, as AttemptReload() is a generic function that handles what this function used to do
-function ServerManualReload()
-{
-    if (ReloadState == RL_Waiting && PlayerUsesManualReloading())
-    {
-        AttemptReload();
-    }
-}
-
-// Modified to start a reload or resume a previously paused cannon reload
-simulated function AttemptReload()
-{
-    local EReloadState OldReloadState;
-    local bool         bNoAmmoToReload;
-    local int          i;
-
-    // Need to start a new reload (authority role only)
-    if (ReloadState >= RL_ReadyToFire)
-    {
-        if (Role == ROLE_Authority)
-        {
-            OldReloadState = ReloadState;
-
-            // Single player or owning listen server set the authoritative ServerPendingAmmoIndex from their local value before starting a reload
-            if (Instigator != none && Instigator.IsLocallyControlled())
-            {
-                ServerPendingAmmoIndex = LocalPendingAmmoIndex;
-            }
-
-            // If we don't have any ammo of the pending type, try to switch to another ammo type (unless player reloads & switches manually)
-            // Note if server changes ammo, client's pending ammo type gets matched in PostNetReceive() on receiving new ProjectileClass, so no need to replicate pending ammo directly
-            if (!HasAmmoToReload(ServerPendingAmmoIndex) && !PlayerUsesManualReloading())
-            {
-                for (i = 0; i < 3; ++i)
-                {
-                    if (HasAmmoToReload(i))
-                    {
-                        ServerPendingAmmoIndex = i;
-
-                        if (Instigator != none && Instigator.IsLocallyControlled())
-                        {
-                            LocalPendingAmmoIndex = i; // single player or owning listen server also match their local setting
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            // Switch to pending ammo type, if it's different
-            if (ServerPendingAmmoIndex != GetAmmoIndex())
-            {
-                switch (ServerPendingAmmoIndex)
-                {
-                    case 0:
-                        ProjectileClass = PrimaryProjectileClass;
-                        break;
-                    case 1:
-                        ProjectileClass = SecondaryProjectileClass;
-                        break;
-                    case 2:
-                        ProjectileClass = TertiaryProjectileClass;
-                        break;
-                }
-            }
-
-            // If we still don't have any ammo, we must be completely out of all cannon ammo, so wait for a resupply
-            if (PrimaryAmmoCount() < 1)
-            {
-                bNoAmmoToReload = true;
-            }
-            // Otherwise, if starting an autocannon reload, we remove 1 spare mag & also 're-charge' the cannon
-            // Charging it seems premature, but it's easier to do it here & cannon won't be able to fire anyway until reload completes
-            else if (bUsesMags)
-            {
-                switch (ProjectileClass)
-                {
-                    case PrimaryProjectileClass:
-                        NumPrimaryMags--;
-                        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-                        break;
-                    case SecondaryProjectileClass:
-                        NumSecondaryMags--;
-                        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-                        break;
-                    case TertiaryProjectileClass:
-                        NumTertiaryMags--;
-                        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-                        break;
-                }
-            }
-        }
-
-        // If we have no ammo to start a reload, set loading state to waiting (for a resupply)
-        if (bNoAmmoToReload)
-        {
-            ReloadState = RL_Waiting;
-        }
-        // Otherwise start a reload timer
-        else
-        {
-            ReloadState = RL_Empty;
-            bReloadPaused = false;
-            SetTimer(0.01, false);
-        }
-
-        // Replicate any changed reload state to net client
-        if (Role == ROLE_Authority && ReloadState != OldReloadState)
-        {
-            ClientSetReloadState(ReloadState);
-        }
-    }
-    // Resume a paused reload (note owning net client gets this independently from server)
-    else if (bReloadPaused)
-    {
-        bReloadPaused = false;
-        SetTimer(0.01, false);
-    }
-}
-
-// Implemented to start a reload for coaxial MG (based on original HandleReload function from ROTankCannon, but not broadcasting reload sound to owning client to save replication)
-simulated function AttemptAltReload()
-{
-    if (Role == ROLE_Authority && NumMGMags > 0)
-    {
-        FireCountdown = GetSoundDuration(AltReloadSound);
-        NumMGMags--;
-        AltAmmoCharge = InitialAltAmmo;
-        ClientAltReload();
-        PlayOwnedSound(AltReloadSound, SLOT_None, 1.5,, 25.0,, true);
-    }
-}
-
-// New function to set the fire countdown clientside (based on ClientDoReload from ROTankCannon, but playing reload sound locally to save replication)
-simulated function ClientAltReload()
-{
-    if (Role < ROLE_Authority)
-    {
-        FireCountdown = GetSoundDuration(AltReloadSound);
-        PlaySound(AltReloadSound, SLOT_None, 1.5,, 25.0,, true);
-
-        // Necessary because using FireCountdown to stop fire during coax reload stops OwnerEffects() from being called, which would normally handle the cease fire
-        if (WeaponPawn != none)
-        {
-            WeaponPawn.ClientOnlyVehicleCeaseFire(true);
-        }
-    }
 }
 
 // Implemented to handle cannon's manual reloading option
@@ -1454,6 +1555,11 @@ defaultproperties
     ReloadStages(1)=(HUDProportion=0.75)
     ReloadStages(2)=(HUDProportion=0.5)
     ReloadStages(3)=(HUDProportion=0.25)
+    AltReloadState=RL_ReadyToFire
+    AltReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105,HUDProportion=1.0) // MG34 reload sounds are used by most vehicles, even allies
+    AltReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
+    AltReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
+    AltReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
 
     // Sounds
     FireSoundVolume=512.0
@@ -1464,7 +1570,6 @@ defaultproperties
     AltFireSoundVolume=255.0
     AltFireSoundRadius=272.7
     AltFireSoundScaling=2.75
-    AltReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     bRotateSoundFromPawn=true
     RotateSoundThreshold=750.0
 

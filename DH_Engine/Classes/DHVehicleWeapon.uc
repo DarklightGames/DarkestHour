@@ -31,6 +31,8 @@ enum    EReloadState
     RL_ReloadedPart2,
     RL_ReloadedPart3,
     RL_ReloadedPart4,
+    RL_ReloadedPart5, // extra options for up to 6 part reload, although the standard is 4 parts
+    RL_ReloadedPart6,
     RL_ReadyToFire,
     RL_Waiting, // put waiting at end as ReloadStages array then matches ReloadState numbering, & also "ReloadState < RL_ReadyToFire" conveniently signifies weapon is reloading
 };
@@ -45,8 +47,6 @@ const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (c
 var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
 var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
-var     sound               NoMGAmmoSound;         // 'dry fire' sound when trying to fire empty MG
-var     name                HUDOverlayReloadAnim;  // reload animation to play if the MG uses a HUDOverlay
 
 // Turret/MG collision static mesh
 // Matt: new col mesh actor allows us to use a col static mesh with VehicleWeapon - just specify a valid CollisionStaticMesh in default props & col static mesh is automatically used
@@ -125,6 +125,59 @@ simulated function PostNetReceive()
     }
 }
 
+// Implemented here to handle multi-stage reload
+simulated function Timer()
+{
+    if (!bMultiStageReload)
+    {
+        return;
+    }
+
+    // If already reached final reload stage, always complete reload regardless of circumstances
+    // Reason: final reload sound will have played, so confusing if player can't fire, especially if would need to unbutton (e.g some MGs) to finish apparently completed reload
+    if (ReloadState == ReloadStages.Length)
+    {
+        ReloadState = RL_ReadyToFire;
+        bReloadPaused = false;
+
+        if (bUsesMags && Role == ROLE_Authority)
+        {
+            FinishMagReload();
+        }
+    }
+    // Reload in progress
+    else if (ReloadState < ReloadStages.Length && !bReloadPaused)
+    {
+        // Check we have a player in a position to reload
+        if (WeaponPawn != none && WeaponPawn.Occupied() && WeaponPawn.CanReload())
+        {
+            // Play reloading sound for this stage, if there is one (some MGs use a HUD reload animation that plays its own sound through anim notifies)
+            if (ReloadStages[ReloadState].Sound != none)
+            {
+                PlayStageReloadSound();
+            }
+
+            // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
+            if (ReloadStages[ReloadState].Duration > 0.0)
+            {
+                SetTimer(ReloadStages[ReloadState].Duration, false);
+            }
+            else
+            {
+                SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+            }
+
+            // Move to next reload state
+            ReloadState = EReloadState(ReloadState + 1);
+        }
+        // Otherwise pause the reload
+        else
+        {
+            bReloadPaused = true;
+        }
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********************************** FIRING ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -179,7 +232,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     AmmoIndex = GetAmmoIndex(bAltFire);
     ConsumeAmmo(AmmoIndex);
 
-    // Coaxial MG fire
+    // Cannon's coaxial MG fire
     if (bAltFire)
     {
         AltFire(C);
@@ -216,7 +269,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
         else if (PlayerUsesManualReloading() && bMultiStageReload)
         {
             ReloadState = RL_Waiting; // player reloads manually, so just wait for key press
-            ClientSetReloadState(ReloadState);
+            PassReloadStateToClient();
         }
         else
         {
@@ -304,7 +357,7 @@ simulated function OwnerEffects()
             return;
         }
 
-        // Coaxial MG
+        // Cannon's coaxial MG
         if (bIsAltFire)
         {
             SoundVolume = AltFireSoundVolume; // bAmbientAltFireSound is now assumed
@@ -359,7 +412,8 @@ simulated function OwnerEffects()
     }
 }
 
-// Modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
+// Modified to skip over the Super in ROVehicleWeapon to avoid calling UpdateTracer()
+// That function is deprecated (& emptied out below) & we now spawn either a normal bullet OR a tracer bullet (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
@@ -417,12 +471,14 @@ state ServerCeaseFire extends ProjectileFireMode
     function Fire(Controller C)
     {
         super.Fire(C);
+
         GotoState('ProjectileFireMode');
     }
 
     function AltFire(Controller C)
     {
         super.AltFire(C);
+
         GotoState('ProjectileFireMode');
     }
 
@@ -446,7 +502,7 @@ simulated function DryFireEffects(optional bool bAltFire)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** AMMO & RELOADING *******************************  //
+//  ************************************* AMMO ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to include MG mags/belts
@@ -465,7 +521,7 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// New function (in VehicleWeapon class) to use DH's new incremental resupply system - implement in subclasses
+// New function (in VehicleWeapon class) to use DH's new incremental resupply system - implement functionality in subclasses
 function bool ResupplyAmmo()
 {
     return false;
@@ -480,37 +536,6 @@ simulated function bool ReadyToFire(bool bAltFire)
     }
 
     return HasAmmo(GetAmmoIndex(bAltFire));
-}
-
-// New functions to start a reload process - implement functionality in subclasses
-simulated function AttemptReload()
-{
-}
-
-simulated function AttemptAltReload()
-{
-}
-
-// Modified (from ROTankCannon) so only sets timer if new reload state needs it, & to only act on net client (avoids duplication for standalone or listen server)
-simulated function ClientSetReloadState(EReloadState NewState)
-{
-    if (Role < ROLE_Authority)
-    {
-        ReloadState = NewState;
-
-        // If reload is in progress, make sure reload it isn't paused & start a reload timer
-        if (ReloadState < RL_ReadyToFire)
-        {
-            bReloadPaused = false;
-            SetTimer(0.01, false);
-        }
-    }
-}
-
-// New helper function to check if player uses manual reloading, just saving code repetition elsewhere - implement in subclass
-simulated function bool PlayerUsesManualReloading()
-{
-    return false;
 }
 
 // New function to get numeric fire mode from current projectile class
@@ -548,6 +573,150 @@ function float GetSpread(bool bAltFire)
     }
 
     return Spread;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ********************************** RELOADING **********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// New function to try to start a new reload or resume any paused reload
+simulated function AttemptReload()
+{
+    local EReloadState OldReloadState;
+
+    // Try to start a new reload, as either just fired & needs to load (still in ready to fire state) or is waiting to reload - authority role only
+    if (ReloadState == RL_ReadyToFire || ReloadState == RL_Waiting)
+    {
+        if (Role == ROLE_Authority)
+        {
+            OldReloadState = ReloadState; // so we can tell if ReloadState changes
+
+            // Start a reload if we have some ammo & player is in a position to reload
+            if (HasAmmoToReload(GetAmmoIndex()) && WeaponPawn != none && WeaponPawn.CanReload())
+            {
+                if (bUsesMags)
+                {
+                    ConsumeMag(); // remove 1 spare mag
+                }
+
+                ReloadState = RL_Empty;
+                StartReloadTimer();
+            }
+            // Otherwise make sure loading state is waiting (for a player in reloading position or a resupply)
+            else
+            {
+                ReloadState = RL_Waiting;
+                bReloadPaused = false; // just make sure this isn't set, as only relevant to a started reload
+            }
+
+            // Server replicates any changed reload state to net client
+            if (ReloadState != OldReloadState)
+            {
+                PassReloadStateToClient();
+            }
+        }
+    }
+    // Weapon has started reloading so try to progress/resume it if player is in a position to reload
+    // Note we musn't check we have a player here as net client may not yet have received weapon pawn's Controller if reload is starting/resuming on entering vehicle
+    // But generally we can assume we do have a player because either server has triggered this to start new reload (& it will have checked for player if necessary),
+    // or player has just entered vehicle & triggered this (so even if we don't yet have the Controller, he's in the entering/possession process)
+    // In any event the timer makes sure we have a player anyway & the slight delay before timer gets called should mean we have the Controller by then
+    else if (WeaponPawn != none && WeaponPawn.CanReload())
+    {
+        StartReloadTimer();
+    }
+    else if (!bReloadPaused)
+    {
+        bReloadPaused = true;
+    }
+}
+
+// New function to start a reload timer, either when a new reload starts or when a paused reload resumes (separate function to avoid code repetition elsewhere)
+// 0.1 sec delay instead of 0.01 to allow a little longer for net client to receive weapon pawn's Controller actor, so check for player doesn't fail due to network timing issues
+simulated function StartReloadTimer()
+{
+    bReloadPaused = false;
+    SetTimer(0.1, false);
+}
+
+// New function for a server to replicate weapon's reload state to the owning net client
+// Can be subclassed for handling of more complex reload info, e.g. combined reload states of a cannon & coaxial MG (alt fire)
+function PassReloadStateToClient()
+{
+    if (WeaponPawn != none && !WeaponPawn.IsLocallyControlled()) // dedicated server or non-owning listen server
+    {
+        ClientSetReloadState(ReloadState);
+    }
+}
+
+// New function for net client to receive reload state from server & to start or resume a clientside reload timer if the state requires it
+// Uses byte instead of enum for passed NewState parameter, which adds flexibility, e.g. cannon subclass can pack cannon & coaxial MG states together
+simulated function ClientSetReloadState(byte NewState)
+{
+    if (Role < ROLE_Authority)
+    {
+        ReloadState = EReloadState(NewState);
+
+        // If reload has started, try to progress it
+        if (ReloadState < RL_ReadyToFire)
+        {
+            AttemptReload();
+        }
+        // Weapon isn't reloading (it's either ready to fire or waiting to start a reload)
+        // So just just make sure it isn't set to paused, which is only relevant if it's mid-reload
+        else if (bReloadPaused)
+        {
+            bReloadPaused = false;
+        }
+    }
+}
+
+// New function to start or resume an alt fire reload process - implement functionality in subclasses as required, e.g. cannon's coaxial MG
+simulated function AttemptAltReload()
+{
+}
+
+// New helper function to play reloading sound for current reloading stage (separate function allows easy subclassing)
+// Using PlayOwnedSound() to avoid broadcasting over network to owning net client as it will play locally there anyway
+simulated function PlayStageReloadSound()
+{
+    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
+}
+
+// New helper function to remove 1 spare mag, used when we begin a new mag reload (a separate function to allow easy subclassing)
+function ConsumeMag()
+{
+    NumMGMags--;
+}
+
+// New helper function to finish a magazine reload (a separate function to allow easy subclassing)
+function FinishMagReload()
+{
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    {
+        MainAmmoCharge[0] = InitialPrimaryAmmo;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        MainAmmoCharge[1] = InitialSecondaryAmmo;
+    }
+}
+
+// New helper function to check whether we can start a reload for a specified ammo type, accommodating either normal cannon shells or mags
+simulated function bool HasAmmoToReload(byte AmmoIndex)
+{
+    if (bUsesMags || AmmoIndex == ALTFIRE_AMMO_INDEX)
+    {
+         return NumMGMags > 0;
+    }
+
+    return HasAmmo(AmmoIndex);
+}
+
+// New helper function to check if player uses manual reloading - implement functionality in subclasses as required
+simulated function bool PlayerUsesManualReloading()
+{
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -825,7 +994,6 @@ defaultproperties
     bNetNotify=true // necessary to do set up requiring the 'Base' actor reference to the vehicle base
     bMultiStageReload=true
     ReloadState=RL_ReadyToFire
-    NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     PitchUpLimit=15000
     PitchDownLimit=45000
     SoundRadius=272.7

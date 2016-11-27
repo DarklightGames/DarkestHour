@@ -6,68 +6,19 @@
 class DHVehicleMG extends DHVehicleWeapon
     abstract;
 
-var     bool    bMatchSkinToVehicle; // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes
+var     bool    bMatchSkinToVehicle;  // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes
+var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
-///////////////////////////////////////////////////////////////////////////////////////
-//  ***************************** KEY ENGINE EVENTS  ******************************  //
-///////////////////////////////////////////////////////////////////////////////////////
-
-// Multi-stage MG reload similar to a tank cannon, but implemented differently to optimise
+// Modified to stop any HUD reload animation if reload ends up paused
 simulated function Timer()
 {
-    // If already reached final reload stage, always complete reload, regardless of circumstances
-    // Reason: final reload sound will have played, so may be confusing if player cannot fire, especially if would need to unbutton to complete an apparently completed reload
-    if (ReloadState == ReloadStages.Length)
+    super.Timer();
+
+    if (bReloadPaused && HUDOverlayReloadAnim != '' && WeaponPawn != none && WeaponPawn.HUDOverlay != none && ReloadState < RL_ReadyToFire)
     {
-        ReloadState = RL_ReadyToFire;
-        bReloadPaused = false;
-
-        if (Role == ROLE_Authority)
-        {
-            MainAmmoCharge[0] = InitialPrimaryAmmo;
-        }
-    }
-    else if (ReloadState < ReloadStages.Length)
-    {
-        // For earlier reload stages, we only proceed if we have a player in a position where he can reload
-        if (!bReloadPaused && PlayerCanReload() && WeaponPawn.Occupied())
-        {
-            // Play reloading sound for this stage, if there is one (if MG uses a HUD reload animation, it will usually play its own sound through animation notifies)
-            // Only played locally & not broadcast by server to other players, as is not worth the network load just for a reload sound
-            if (ReloadStages[ReloadState].Sound != none && WeaponPawn.IsLocallyControlled())
-            {
-                PlaySound(ReloadStages[ReloadState].Sound, SLOT_Misc, 2.0);
-            }
-
-            // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
-            if (ReloadStages[ReloadState].Duration > 0.0)
-            {
-                SetTimer(ReloadStages[ReloadState].Duration, false);
-            }
-            else
-            {
-                SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
-            }
-
-            // Move to next reload state
-            ReloadState = EReloadState(ReloadState + 1);
-        }
-        // Otherwise pause the reload, including stopping any HUD reload animation
-        else
-        {
-            bReloadPaused = true;
-
-            if (WeaponPawn != none && WeaponPawn.HUDOverlay != none)
-            {
-                WeaponPawn.HUDOverlay.StopAnimating();
-            }
-        }
+        WeaponPawn.HUDOverlay.StopAnimating();
     }
 }
-
-///////////////////////////////////////////////////////////////////////////////////////
-//  ***************************** FIRING & RELOADING ******************************  //
-///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to incrementally resupply MG mags (only resupplies spare mags; doesn't reload the MG)
 function bool ResupplyAmmo()
@@ -77,7 +28,7 @@ function bool ResupplyAmmo()
         ++NumMGMags;
 
         // If MG is out of ammo & waiting to reload & we have a player, try to start a reload
-        if (!HasAmmo(0) && ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied())
+        if (ReloadState == RL_Waiting && !HasAmmo(0) && WeaponPawn != none && WeaponPawn.Occupied())
         {
             AttemptReload();
         }
@@ -88,93 +39,27 @@ function bool ResupplyAmmo()
     return false;
 }
 
-// Modified to start a reload or resume a previously paused MG reload
+// Modified to give player a hint if he needs to unbutton to reload an externally mounted MG
 simulated function AttemptReload()
 {
-    local EReloadState OldState;
+    super.AttemptReload();
 
-    // Need to start a new reload (authority role only)
-    if (ReloadState >= RL_ReadyToFire)
+    if ((ReloadState == RL_Waiting || (bReloadPaused && ReloadState < RL_ReadyToFire)) && DHVehicleMGPawn(WeaponPawn) != none && WeaponPawn.IsLocallyControlled()
+        && DHVehicleMGPawn(WeaponPawn).bMustUnbuttonToReload && !WeaponPawn.CanReload() && DHPlayer(WeaponPawn.Controller) != none)
     {
-        if (Role == ROLE_Authority)
-        {
-            OldState = ReloadState;
-
-            // Start a reload if we have a spare mag & a player in a position where he can reload
-            if (NumMGMags > 0 && PlayerCanReload())
-            {
-                NumMGMags--;
-                ReloadState = RL_Empty;
-                StartReloading();
-            }
-            // Otherwise make sure loading state is waiting (for a player in reloading position or a resupply) & give player a hint
-            else
-            {
-                ReloadState = RL_Waiting;
-
-                if (!PlayerCanReload() && Instigator != none && Instigator.IsLocallyControlled() && DHPlayer(Instigator.Controller) != none)
-                {
-                    DHPlayer(Instigator.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG (for single player or owning listen server)
-                }
-            }
-
-            // If flagged replicate reload state to net client
-            if (ReloadState != OldState)
-            {
-                ClientSetReloadState(ReloadState);
-            }
-        }
-    }
-    // Resume a paused reload (note owning net client gets this independently from server)
-    else if (bReloadPaused && PlayerCanReload())
-    {
-        StartReloading();
+        DHPlayer(WeaponPawn.Controller).QueueHint(48, true);
     }
 }
 
-// Modified to handle pause/resume reload system, including hint if player is in a position where can't reload
-simulated function ClientSetReloadState(EReloadState NewState)
-{
-    if (Role < ROLE_Authority)
-    {
-        ReloadState = NewState;
-
-        // MG is reloading
-        if (ReloadState < RL_ReadyToFire)
-        {
-            // Start/resume reloading, as we have a player in a position to reload
-            // If server starts new reload on unbuttoning, may be possible that net client is still in state ViewTransition when it receives this replicated function call
-            // If so, PlayerCanReload() would return false & reload would pause on client, but a split second later client would leave ViewTransition & reload would be resumed
-            if (PlayerCanReload())
-            {
-                StartReloading();
-            }
-            // Otherwise the reload is paused
-            else
-            {
-                bReloadPaused = true;
-            }
-        }
-        // If MG is waiting to start a reload, but player isn't in a position where he can reload, show a hint that he needs to unbutton
-        // Player will get this if he is firing the MG, runs out of ammo, but isn't in a valid reload position, e.g. buttoned up on remote controlled MG
-        else if (ReloadState == RL_Waiting && !PlayerCanReload() && Instigator != none && DHPlayer(Instigator.Controller) != none)
-        {
-            DHPlayer(Instigator.Controller).QueueHint(48, true); // need to unbutton to reload externally mounted MG
-        }
-    }
-}
-
-// New function to start or resume a reload, including playing any HUD overlay reload animation (this function avoids repeated functionality elsewhere)
-simulated function StartReloading()
+// Modified to play any HUD overlay reload animation, if necessary starting from the point where it was previously paused
+simulated function StartReloadTimer()
 {
     local float ReloadSecondsElapsed, TotalReloadDuration;
     local int   i;
 
-    // Make sure reload isn't set to paused & start a reload timer
-    bReloadPaused = false;
-    SetTimer(0.01, false);
+    super.StartReloadTimer();
 
-    // If MG uses a HUD reload animation, play it
+    // If weapon uses a HUD reload animation, play it
     if (WeaponPawn != none && WeaponPawn.HUDOverlay != none && WeaponPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
     {
         WeaponPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
@@ -200,15 +85,18 @@ simulated function StartReloading()
     }
 }
 
-// New helper function to determine whether player is in a position where he can reload (just to shorten other functions & improve readability)
-simulated function bool PlayerCanReload()
+// Modified to give net client player a hint if he needs to unbutton to start a new reload of an externally mounted MG
+// Have to add this here as won't get this hint from AttemptReload() as client won't call that function if MG is waiting to start a reload
+simulated function ClientSetReloadState(byte NewState)
 {
-    return DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).CanReload();
-}
+    super.ClientSetReloadState(NewState);
 
-///////////////////////////////////////////////////////////////////////////////////////
-//  ******************  SETUP, UPDATE, CLEAN UP, MISCELLANEOUS  *******************  //
-///////////////////////////////////////////////////////////////////////////////////////
+    if (ReloadState == RL_Waiting && DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).bMustUnbuttonToReload
+        && !WeaponPawn.CanReload() && DHPlayer(WeaponPawn.Controller) != none)
+    {
+        DHPlayer(WeaponPawn.Controller).QueueHint(48, true);
+    }
+}
 
 // Modified to add option to automatically match MG skin to vehicle skin, e.g. for gunshield, avoiding need for separate MG pawn & MG classes just for camo variants
 // Also to give Vehicle an 'MGun' reference to this actor

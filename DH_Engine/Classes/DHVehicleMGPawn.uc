@@ -8,7 +8,7 @@ class DHVehicleMGPawn extends DHVehicleWeaponPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var     bool        bExternallyLoadedMG;         // player must be unbuttoned to load MG
+var     bool        bMustUnbuttonToReload;       // player must be unbuttoned to load MG
 var     texture     VehicleMGReloadTexture;      // used to show reload progress on the HUD, like a tank cannon reload
 var     vector      BinocsDrivePos;              // optional additional player position adjustment when on binocs, as player animation can be quite different from typical MG stance
 var     name        GunsightCameraBone;          // optional separate camera bone for the MG gunsights
@@ -162,7 +162,7 @@ simulated function DrawHUD(Canvas C)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ******************************* FIRING & AMMO  ********************************  //
+//  ****************************** FIRING & RELOAD  *******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to prevent fire based on CanFire() & to add dry-fire effects if trying to fire empty MG
@@ -197,22 +197,21 @@ function Fire(optional float F)
     }
 }
 
+// Implemented to handle externally-mounted MGs where player must be unbuttoned to reload (& not using binoculars)
+simulated function bool CanReload()
+{
+    return !bMustUnbuttonToReload
+        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)) // unbuttoned position & not just unbuttoning
+        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex); // above the lowest unbuttoned position, but not on binocs
+}
+
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
 simulated exec function ROManualReload()
 {
-    if (!CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
+    if (bMustUnbuttonToReload && !CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
     {
         DisplayVehicleMessage(12,, true);
     }
-}
-
-// New function to check whether player is in a position where he can reload the MG
-// Always true if MG is not bExternallyLoadedMG, otherwise player must be unbuttoned & not in the process of buttoning up (i.e. transitioning down)
-simulated function bool CanReload()
-{
-    return !bExternallyLoadedMG
-        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)) // unbuttoned position & not just unbuttoning
-        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex); // above the lowest unbuttoned position, but not on binocs
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -243,10 +242,10 @@ simulated state ViewTransition
                 VehWep.AmbientEffectEmitter.bHidden = true;
             }
 
-            // If MG is reloading but player is no longer in a valid reloading position, show a hint that they must unbutton to resume the reload
-            if (VehWep.ReloadState < RL_ReadyToFire && !CanReload() && !VehWep.bReloadPaused && DHPlayer(Controller) != none)
+            // If player was loading externally mounted MG but now moving to invalid reloading position, show hint he must unbutton (or stop using binocs) to continue reload
+            if (bMustUnbuttonToReload && VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && IsLocallyControlled() && !CanReload() && DHPlayer(Controller) != none)
             {
-                DHPlayer(Controller).QueueHint(49, true);
+                DHPlayer(Controller).QueueHint(48, true);
             }
         }
     }
@@ -270,11 +269,13 @@ Begin:
 
 // New state that is very briefly entered whenever player leaves state ViewTransition, just to allow CanReload() functionality to work correctly
 // If MG is not loaded, try to start reloading or resume any previously paused reload (on a net client a resumed reload happens independently to server)
+// If we did this at the end of state ViewTransition, AttemptReload() would fail because CanReload() would return false due to ViewTransition
+// Note owning net client runs this independently from server & may resume a paused reload (but not start a new reload)
 simulated state LeavingViewTransition
 {
     simulated function BeginState()
     {
-        if (VehWep != none && (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused))
+        if (VehWep != none && (VehWep.ReloadState == RL_Waiting || (VehWep.bReloadPaused && VehWep.ReloadState < RL_ReadyToFire)))
         {
             VehWep.AttemptReload();
         }
@@ -458,10 +459,6 @@ function float ModifyThreat(float Current, Pawn Threat)
     return Current + 0.4;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-//  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
-///////////////////////////////////////////////////////////////////////////////////////
-
 // New debug exec to adjust BinocsDrivePos (in binoculars position, the option for a different player offset from attachment bone)
 exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
 {
@@ -486,6 +483,15 @@ exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bSca
 
         Log(Tag @ " new BinocsDrivePos =" @ BinocsDrivePos @ "(was" @ OldBinocsDrivePos $ ")");
     }
+}
+
+exec function LogMG() // DEBUG (Matt: please use & report if you ever find you can't fire or reload MG when you should be able to)
+{
+    Log("LogMG: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
+    Log("Controller =" @ Controller.Tag @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
+    Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " bReloadPaused =" @ VehWep.bReloadPaused @ " CanReload() =" @ CanReload() @ " ProjectileClass =" @ VehWep.ProjectileClass);
+    Log("AmmoIndex =" @ VehWep.GetAmmoIndex() @ " PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount() @ " NumMGMags =" @ VehWep.NumMGMags
+        @ " HasAmmoToReload() =" @ VehWep.HasAmmoToReload(VehWep.GetAmmoIndex()));
 }
 
 defaultproperties

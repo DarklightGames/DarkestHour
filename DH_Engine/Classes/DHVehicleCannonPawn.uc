@@ -405,7 +405,8 @@ function AltFire(optional float F)
             VehWep.ClientStartFire(Controller, true);
         }
     }
-    else if (VehWep.FireCountdown <= VehWep.AltFireInterval) // means that coaxial MG isn't reloading (or at least has virtually completed its reload)
+    // Dry fire effect for empty coax, unless it is reloading
+    else if (DHVehicleCannon(VehWep) != none && (DHVehicleCannon(VehWep).AltReloadState == RL_Waiting || DHVehicleCannon(VehWep).bAltReloadPaused))
     {
         VehWep.DryFireEffects(true);
     }
@@ -447,66 +448,84 @@ simulated exec function ROManualReload()
     }
 }
 
-// New function, used by HUD to show coaxial MG reload progress, like the cannon reload
+// New function, used by HUD to show coaxial MG reload progress, like a cannon reload
 function float GetAltAmmoReloadState()
 {
-    local float ProportionOfReloadRemaining;
+    local DHVehicleCannon Cannon;
 
-    if (DHVehicleCannon(VehWep) != none)
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon != none)
     {
-        if (VehWep.FireCountdown <= VehWep.AltFireInterval)
+        if (Cannon.AltReloadState == RL_ReadyToFire)
         {
-            if (VehWep.AltAmmoCharge > 0)
-            {
-                return 0.0; // loaded & ready to fire
-            }
-
-            return 1.0; // if FireCountdown is about zero, but MG has no ammo, it must be completely out of ammo, with no reload happening
+            return 0.0;
         }
-        else
+        else if (Cannon.AltReloadState == RL_Waiting || Cannon.AltReloadState == RL_Empty)
         {
-            if (VehWep.bUsesMags && VehWep.FireCountdown <= VehWep.FireInterval)
-            {
-                return 0.0; // MG is paired with an autocannon that also uses FireCountdown, so this means cannon is firing, not that MG is reloading (or if it is, it's virtually done anyway)
-            }
-
-            // MG must be reloading, so calculate progress
-            ProportionOfReloadRemaining = VehWep.FireCountdown / GetSoundDuration(DHVehicleCannon(VehWep).AltReloadSound);
-
-            if (ProportionOfReloadRemaining >= 0.75)
-            {
-                return 1.0;
-            }
-            else if (ProportionOfReloadRemaining >= 0.5)
-            {
-                return 0.65;
-            }
-            else if (ProportionOfReloadRemaining >= 0.25)
-            {
-                return 0.45;
-            }
-            else
-            {
-                return 0.25;
-            }
+            return 1.0;
         }
+
+        return Cannon.AltReloadStages[Cannon.AltReloadState - 1].HUDProportion;
     }
 
-    return 1.0;
+    return 0.0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************* ENTRY, CHANGING VIEW & EXIT  ************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to try to start a coaxial MG reload if it's out of ammo, & to show any damaged gunsight
+// Modified to try to start a coaxial MG reload or resume any previously paused reload if MG is not loaded
+// And to replicate combined cannon & coax reload states to net client, & also to show any damaged gunsight
 function KDriverEnter(Pawn P)
 {
-    super.KDriverEnter(P);
+    local DHVehicleCannon Cannon;
+    local byte            OldReloadState, OldAltReloadState;
 
-    if (bHasAltFire && DHVehicleCannon(VehWep) != none && !VehWep.HasAmmo(VehWep.ALTFIRE_AMMO_INDEX))
+    if (bMultiPosition)
     {
-        DHVehicleCannon(VehWep).AttemptAltReload();
+        DriverPositionIndex = InitialPositionIndex;
+        LastPositionIndex = InitialPositionIndex;
+    }
+
+    super(VehicleWeaponPawn).KDriverEnter(P); // skip over the Super in DHVehicleWeaponPawn, as it's re-stated here
+
+    if (VehicleBase != none)
+    {
+        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
+    }
+
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon != none && Cannon.bMultiStageReload)
+    {
+        // Save current reload states so we can tell if they are changed by attempted reloading
+        OldReloadState = Cannon.ReloadState;
+        OldAltReloadState = Cannon.AltReloadState;
+
+        // Try to resume any paused cannon reload, or start a new reload if in waiting state & the player does not use manual reloading
+        if (Cannon.ReloadState < RL_ReadyToFire || (Cannon.ReloadState == RL_Waiting && !Cannon.PlayerUsesManualReloading()))
+        {
+            Cannon.AttemptReload();
+        }
+
+        // If coaxial MG isn't loaded then try to start/resume a reload
+        if (bHasAltFire && Cannon.AltReloadState != RL_ReadyToFire)
+        {
+            Cannon.AttemptAltReload();
+        }
+
+        // Replicate the weapon's current reload state, unless attempted reloading changed the state, in which case it will have already done this
+        if (Cannon.ReloadState == OldReloadState && Cannon.AltReloadState == OldAltReloadState)
+        {
+            Cannon.PassReloadStateToClient();
+        }
+    }
+
+    if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
+    {
+        bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
     }
 
     if (bOpticsDamaged)
@@ -901,13 +920,20 @@ exec function SetGunsight()
     }
 }
 
-exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or do a reload, when you should be able to)
+exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or coax, or do a reload, when you should be able to)
 {
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
-    Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " ProjectileClass =" @ VehWep.ProjectileClass @ " Controller =" @ Controller.Tag);
+    Log("Controller =" @ Controller.Tag @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
+    Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " bReloadPaused =" @ VehWep.bReloadPaused
+        @ " ProjectileClass =" @ VehWep.ProjectileClass @ " HasAmmoToReload() =" @ VehWep.HasAmmoToReload(VehWep.GetAmmoIndex()));
     Log("AmmoIndex =" @ VehWep.GetAmmoIndex() @ " LocalPendingAmmoIndex =" @ DHVehicleCannon(VehWep).LocalPendingAmmoIndex
-        @ " ServerPendingAmmoIndex =" @ DHVehicleCannon(VehWep).ServerPendingAmmoIndex);
-    Log("PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount() @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
+        @ " ServerPendingAmmoIndex =" @ DHVehicleCannon(VehWep).ServerPendingAmmoIndex @ " PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount());
+
+    if (bHasAltFire)
+    {
+        Log("AltReloadState =" @ GetEnum(enum'EReloadState', DHVehicleCannon(VehWep).AltReloadState)
+            @ " bAltReloadPaused =" @ DHVehicleCannon(VehWep).bAltReloadPaused @ " AltAmmoCharge =" @ VehWep.AltAmmoCharge @ " NumMGMags =" @ VehWep.NumMGMags);
+    }
 }
 
 defaultproperties
