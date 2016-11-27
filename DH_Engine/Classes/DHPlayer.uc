@@ -72,7 +72,7 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
-         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
+        NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
         WeaponUnlockTime;
 
     // Variables the server will replicate to all clients
@@ -98,7 +98,7 @@ replication
         ServerSetIsInSpawnMenu;
 }
 
-function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // No longer used
+function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
 
 // Modified to bypass RO design
 event InitInputSystem()

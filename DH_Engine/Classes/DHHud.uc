@@ -15,7 +15,7 @@ const   VOICE_ICON_DIST_MAX = 2624.672119; // maximum distance from a talking pl
 
 var DHGameReplicationInfo   DHGRI;
 
-var     int                 AlliedNationID; // US = 0, Britain = 1, Canada = 2
+var     int                 AlliedNationID; // US = 0, Britain = 1, Canada = 2, Soviet Union = 3
 
 // Map or screen icons/legends
 var     SpriteWidget        MapLevelOverlay;

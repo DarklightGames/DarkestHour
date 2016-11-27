@@ -5288,7 +5288,7 @@ function UsedBy(Pawn User)
 {
     if (CarriedRadioTrigger != none)
     {
-        CarriedRadioTrigger.UsedBy(user);
+        CarriedRadioTrigger.UsedBy(User);
     }
 
     super.UsedBy(User);

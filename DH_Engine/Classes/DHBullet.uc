@@ -164,7 +164,6 @@ simulated singular function Touch(Actor Other)
             return; // exit, doing nothing, if col mesh actor is set not to stop a bullet
         }
 
-
         if (DHCollisionMeshActor(Other).bIsBulletProof)
         {
             bHitBulletProofColMesh = true; // if col mesh is bullet proof then set a flag so we can handle vehicle hits accordingly
