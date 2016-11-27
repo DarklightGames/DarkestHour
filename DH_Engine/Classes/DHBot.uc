@@ -171,12 +171,14 @@ state RangedAttack
             P = VehicleWeaponPawn(Pawn).Driver;
         }
 
+        // Check whether bot should move to empty vehicle weapon position to engage enemy - will do if either has a cannon or if has an MG & enemy is infantry
+        // Removed requirement for bot's vehicle to be an APC to use an MG, as MG will be effective against infantry regardless of the vehicle it's mounted on
         if (V != none)
         {
             for (i = 0; i < V.WeaponPawns.Length; ++i)
             {
                 if (V.WeaponPawns[i] != none && V.WeaponPawns[i].Driver == none
-                    && (V.WeaponPawns[i].IsA('DHVehicleCannonPawn') || (V.WeaponPawns[i].IsA('DHVehicleMGPawn') && DHPawn(Enemy) != none && V.bIsApc)))
+                    && (V.WeaponPawns[i].IsA('DHVehicleCannonPawn') || (V.WeaponPawns[i].IsA('DHVehicleMGPawn') && DHPawn(Enemy) != none/* && V.bIsApc*/)))
                 {
                     V.KDriverLeave(true);
                     V.WeaponPawns[i].KDriverEnter(P);
