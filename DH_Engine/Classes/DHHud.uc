@@ -980,7 +980,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     if (V != none)
     {
         // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
-        if (V.EngineHealth <= (V.default.EngineHealth * V.HeavyEngineDamageThreshold))
+        if (V.EngineHealth <= (V.default.EngineHealth * V.HeavyEngineDamageThreshold) && V.default.EngineHealth > 0)
         {
             if (V.EngineHealth <= 0)
             {
