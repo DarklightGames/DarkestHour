@@ -127,13 +127,14 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// Modified to remove lots of irrelevant tank stuff & to use APCDamageModifier instead of TankDamageModifier
+// Modified to use APCDamageModifier, & to remove code preventing players damaging own team's vehicles that haven't been entered (should only protect vehicle in spawn)
+// Also removes some other irrelevant stuff not relevant to a static AT gun (code that stops 'vehicle' giving itself impact damage & check for engine hit point)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local float VehicleDamageMod;
     local int   i;
 
-    // Fix for suicide death messages
+    // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
         super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, class'ROSuicided');
@@ -142,20 +143,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Set damage modifier from the DamageType
-    if (DamageType != none)
+    if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.05)
-        {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
-        }
-        else if (class<ROVehicleDamageType>(DamageType) != none && class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.05)
-        {
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-        }
+        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+    }
+    else if (class<ROVehicleDamageType>(DamageType) != none)
+    {
+        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
     }
 
     // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= VehicleDamageMod * RandRange(0.75, 1.08);
+    Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
 
     // Exit if no damage
     if (Damage < 1)

@@ -1203,7 +1203,8 @@ simulated function bool CheckIfShatters(DHAntiVehicleProjectile P, float Penetra
 //  *********************************  DAMAGE  ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to add all the DH vehicle damage stuff
+// Modified to DH special damage points, random special damage and/or crew deaths if penetrated, & possibility of setting engine or vehicle on fire
+// Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local DHVehicleCannonPawn CannonPawn;
@@ -1230,8 +1231,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Don't allow your own teammates to destroy vehicles in spawns (& you know some jerks would get off on doing that to their team :))
-    if (!bDriverAlreadyEntered)
+    // Prevent griefer players from damaging own team's vehicles that haven't yet been entered, i.e. are sitting in a spawn area (not applicable in single player)
+    if (!bDriverAlreadyEntered && Level.NetMode != NM_Standalone)
     {
         if (InstigatedBy != none)
         {

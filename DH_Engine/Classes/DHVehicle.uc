@@ -183,25 +183,19 @@ simulated function PostBeginPlay()
         }
     }
 
+    // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
     if (Role == ROLE_Authority)
     {
-        // If InitialPositionIndex is not zero, match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
         if (InitialPositionIndex > 0)
         {
             DriverPositionIndex = InitialPositionIndex;
             PreviousPositionIndex = InitialPositionIndex;
         }
-
-        // For single player mode, we may as well set this here, as it's only intended to stop idiot net players blowing up friendly vehicles in spawn
-        if (Level.NetMode == NM_Standalone)
-        {
-            bDriverAlreadyEntered = true;
-        }
     }
+    // Matt: on net client, force length of WeaponPawns array to normal length so it works with our new passenger pawn system
+    // Passenger pawns won't now exist on client unless occupied, so although passenger slots may be empty in array we still see grey passenger position dots on HUD vehicle icon
     else
     {
-        // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
-        // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
         WeaponPawns.Length = PassengerWeapons.Length;
     }
 
@@ -1430,8 +1424,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to their team :))
-    if (!bDriverAlreadyEntered)
+    // Prevent griefer players from damaging own team's vehicles that haven't yet been entered, i.e. are sitting in a spawn area (not applicable in single player)
+    if (!bDriverAlreadyEntered && Level.NetMode != NM_Standalone)
     {
         if (InstigatedBy != none)
         {
