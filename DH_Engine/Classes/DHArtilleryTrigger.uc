@@ -72,7 +72,7 @@ function UsedBy(Pawn User)
     }
 
     // If player is of a team that can use this trigger, call in an arty strike
-    if (ApprovePlayerTeam(PC.GetTeamNum()))
+    if (ApprovePlayerTeam(PC.GetTeamNum())) // TODO: move this simple check up above the no arty volume test, so quick check is done before spawning & destroying a volume test actor
     {
         bAvailable = false;
         SavedUser = User;

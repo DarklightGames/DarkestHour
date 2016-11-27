@@ -5,11 +5,13 @@
 
 class DHRadioItem extends DHWeapon;
 
+// TODO: ArtilleryTrigger seems to serve no purpose as an instance variable & should be made a local variable in AttachToPawn()
+// The other 2 could probably also be removed & replaced with class/name literals as they are only used here & only once & will never change or be subclassed
 var class<DHArtilleryTrigger>   ArtilleryTriggerClass;
 var DHArtilleryTrigger          ArtilleryTrigger;
 var name                        AttachBoneName;
 
-simulated function PreBeginPlay()
+simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perhaps add an authority role check
 {
     local DHPawn P;
 
@@ -49,7 +51,7 @@ function AttachToPawn(Pawn P)
 
     if (GRI == none || DHP == none || DHP.CarriedRadioTrigger != none)
     {
-        return;
+        return; // TODO: radio should destroy itself here as couldn't attach - although that will reintroduce the 'can't switch weapons' bug (as will the Destroy() in PreBeginPlay!)
     }
 
     ArtilleryTrigger = Spawn(ArtilleryTriggerClass, P);
@@ -108,8 +110,8 @@ simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     return none;
 }
 
-defaultproperties
-{
+defaultproperties // TODO: perhaps make this remote role none so it doesn't replicate as client doesn't need it,
+{                 // then change DHPawn.VerifyGivenItems() so it skips check for inventory item if it has no remote role (i.e. client doesn't expect to receive it)?
     ItemName="Radio"
     InventoryGroup=10
     AttachmentClass=class'DH_Equipment.DHRadioAttachment'
