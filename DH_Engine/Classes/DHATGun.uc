@@ -9,29 +9,6 @@ class DHATGun extends DHVehicle
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
-// The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), or self-destruct if empty:
-simulated function PostNetReceive();
-function Fire(optional float F);
-function ServerStartEngine();
-simulated function SetEngine();
-simulated function StopEmitters();
-simulated function StartEmitters();
-simulated function UpdateMovementSound(float MotionSoundVolume);
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
-simulated function SetupTreads();
-simulated function DestroyTreads();
-function CheckTreadDamage(vector HitLocation, vector Momentum);
-function DamageTrack(bool bLeftTrack);
-simulated function SetDamagedTracks();
-simulated function SetFireEffects();
-function TakeFireDamage();
-function TakeEngineFireDamage();
-function StartHullFire(Pawn InstigatedBy);
-function StartEngineFire(Pawn InstigatedBy);
-simulated function StartDriverHatchFire();
-function Timer();
-simulated function SetNextTimer(optional float Now);
-
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
 {
@@ -180,6 +157,42 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
+// Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
+simulated function PostNetReceive();
+function Fire(optional float F);
+function ServerStartEngine();
+simulated function SetEngine();
+simulated function StopEmitters();
+simulated function StartEmitters();
+simulated function UpdateMovementSound(float MotionSoundVolume);
+function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
+simulated function SetupTreads();
+simulated function DestroyTreads();
+function CheckTreadDamage(vector HitLocation, vector Momentum);
+function DamageTrack(bool bLeftTrack);
+simulated function SetDamagedTracks();
+simulated event DrivingStatusChanged();
+simulated function NextWeapon();
+simulated function PrevWeapon();
+function ServerChangeViewPoint(bool bForward);
+simulated function NextViewPoint();
+simulated function SwitchWeapon(byte F);
+function ServerChangeDriverPosition(byte F);
+function bool KDriverLeave(bool bForceLeave);
+function DriverDied();
+function DriverLeft();
+simulated function bool CanExit() { return false; }
+simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex) { return false; }
+function bool PlaceExitingDriver() { return false; }
+simulated function SetPlayerPosition();
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function DrawHUD(Canvas C);
+simulated function DrawPeriscopeOverlay(Canvas C);
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
+simulated function int LimitYaw(int yaw) { return yaw; }
+function int LimitPawnPitch(int pitch) { return pitch; }
+event CheckReset();
+
 defaultproperties
 {
     // Key properties
@@ -193,6 +206,7 @@ defaultproperties
     // Damage
     HealthMax=101.0
     Health=101
+    EngineHealth=0
     VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
     VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
     DamagedEffectClass=none

@@ -1193,11 +1193,6 @@ simulated function Fire(optional float F)
     }
 }
 
-// Emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
-function AltFire(optional float F)
-{
-}
-
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
@@ -2857,6 +2852,38 @@ simulated function int NumPassengers()
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
 simulated function ShrinkHUD();
+
+// Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):
+simulated event StartDriving(Vehicle V);
+simulated event StopDriving(Vehicle V);
+function bool IsHeadShot(vector Loc, vector Ray, float AdditionalScale) { return false; }
+function AttachFlag(Actor FlagActor);
+function ShouldCrouch(bool Crouch);
+function ShouldProne(bool Prone);
+event EndCrouch(float HeightAdjust);
+event StartCrouch(float HeightAdjust);
+function bool DoJump(bool bUpdating) { return false; }
+function bool CheckWaterJump(out vector WallNormal) { return false; }
+function JumpOutOfWater(vector JumpDir);
+function ClimbLadder(LadderVolume L);
+function EndClimbLadder(LadderVolume OldLadder);
+simulated function AltFire(optional float F);
+function bool StopWeaponFiring() { return false; }
+simulated event StopPlayFiring();
+function ChooseFireAt(Actor A);
+function Actor ShootSpecial(Actor A) { return none; }
+function ShouldTargetMissile(Projectile P);
+function ShootMissile(Projectile P);
+function GiveWeapon(string aClassName);
+simulated function bool CanThrowWeapon() { return false; }
+function TossWeapon(vector TossVel);
+exec function SwitchToLastWeapon();
+simulated function ChangedWeapon();
+function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon);
+function bool AddInventory(Inventory NewItem) { return false; }
+function DeleteInventory(Inventory Item);
+function Inventory FindInventoryType(class DesiredClass) { return none; }
+simulated function Weapon GetDemoRecordingWeapon() { return none; }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //

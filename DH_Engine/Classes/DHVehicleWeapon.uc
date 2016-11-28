@@ -419,6 +419,10 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
+simulated function UpdateTracer()
+{
+}
+
 // Modified to avoid resetting FlashCount immediately, instead briefly entering a new state 'ServerCeaseFire', to use state timing to introduce a slight delay
 // This gives time for the changed value of FlashCount to be replicated to non-owning net clients, triggering 3rd person firing effects in their FlashMuzzleFlash()
 // This is needed as our slightly modified cease fire process (to optimise replication) means CeaseFire() gets called on the server as soon as the only/last shot is fired
@@ -988,6 +992,19 @@ simulated function PlayClickSound()
         PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
     }
 }
+
+// Functions emptied out as not relevant to a VehicleWeapon in RO/DH, which never uses InstantFireMode:
+state InstantFireMode
+{
+    function Fire(Controller C);
+    function AltFire(Controller C);
+    simulated event ClientSpawnHitEffects();
+    simulated function SpawnHitEffects(Actor HitActor, vector HitLocation, vector HitNormal);
+    simulated function AnimEnd(int Channel);
+}
+
+simulated function SimulateTraceFire(out vector Start, out rotator Dir, out vector HitLocation, out vector HitNormal);
+function TraceFire(vector Start, rotator Dir);
 
 defaultproperties
 {

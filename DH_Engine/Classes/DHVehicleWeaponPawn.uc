@@ -1453,6 +1453,38 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
+// Emptied out as blast damage to exposed vehicle occupants is now handled from HurtRadius() in the projectile class
+function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
+{
+}
+
+// Functions emptied out as not relevant to a VehicleWeaponPawn in RO/DH:
+simulated event StartDriving(Vehicle V);
+simulated event StopDriving(Vehicle V);
+function bool IsHeadShot(vector Loc, vector Ray, float AdditionalScale) { return false; }
+function AttachFlag(Actor FlagActor);
+function ShouldCrouch(bool Crouch);
+function ShouldProne(bool Prone);
+event EndCrouch(float HeightAdjust);
+event StartCrouch(float HeightAdjust);
+function bool DoJump(bool bUpdating) { return false; }
+function bool CheckWaterJump(out vector WallNormal) { return false; }
+function JumpOutOfWater(vector JumpDir);
+function ClimbLadder(LadderVolume L);
+function EndClimbLadder(LadderVolume OldLadder);
+function ShouldTargetMissile(Projectile P);
+function ShootMissile(Projectile P);
+function GiveWeapon(string aClassName);
+simulated function bool CanThrowWeapon() { return false; }
+function TossWeapon(vector TossVel);
+exec function SwitchToLastWeapon();
+simulated function ChangedWeapon();
+function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon);
+function bool AddInventory(Inventory NewItem) { return false; }
+function DeleteInventory(Inventory Item);
+function Inventory FindInventoryType(class DesiredClass) { return none; }
+simulated function Weapon GetDemoRecordingWeapon() { return none; }
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

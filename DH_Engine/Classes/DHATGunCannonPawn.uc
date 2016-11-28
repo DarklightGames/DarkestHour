@@ -24,10 +24,13 @@ simulated function SetManualTurret(bool bManual)
 {
 }
 
-// Emptied out as can't switch positions in an AT gun
-simulated function SwitchWeapon(byte F)
-{
-}
+// Functions emptied out as not relevant to an AT gun:
+simulated function SwitchWeapon(byte F);
+simulated function DrawPeriscopeOverlay(Canvas C);
+function AltFire(optional float F);
+function float GetAltAmmoReloadState() { return 0.0; }
+exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth);
+exec function SetAltFireSpawnOffset(float NewValue);
 
 defaultproperties
 {

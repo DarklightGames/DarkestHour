@@ -170,8 +170,31 @@ simulated event NotifySelected(Pawn User)
     }
 }
 
+// Functions emptied out as mortar bases cannot be occupied:
+function KDriverEnter(Pawn P);
+simulated function ClientKDriverEnter(PlayerController PC);
+simulated event DrivingStatusChanged();
+simulated function NextWeapon();
+simulated function PrevWeapon();
+function ServerChangeViewPoint(bool bForward);
+simulated function SwitchWeapon(byte F);
+function ServerChangeDriverPosition(byte F);
+function bool KDriverLeave(bool bForceLeave);
+function DriverDied();
+function DriverLeft();
+function bool PlaceExitingDriver() { return false; }
+simulated function SetPlayerPosition();
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
+simulated function DrawHUD(Canvas C);
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
+simulated function int LimitYaw(int yaw) { return yaw; }
+function int LimitPawnPitch(int pitch) { return pitch; }
+function Fire(optional float F);
+event CheckReset();
+
 defaultproperties
 {
+    bNeverReset=true
     ExplosionSoundRadius=0.0
     ExplosionDamage=0.0
     ExplosionRadius=0.0

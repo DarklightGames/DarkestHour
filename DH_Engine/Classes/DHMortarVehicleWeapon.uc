@@ -240,6 +240,22 @@ function bool ResupplyAmmo()
     return false;
 }
 
+// Functions emptied out as not relevant to a mortar, which uses a custom firing system that ignores most usual firing functions
+// Also it doesn't use a multi-stage reload or have fire (burning) effects
+event bool AttemptFire(Controller C, bool bAltFire) { return false; } // this native event is not triggered by mortar's the custom firing system
+simulated function ClientStartFire(Controller C, bool bAltFire);
+simulated function OwnerEffects();
+simulated function FlashMuzzleFlash(bool bWasAltFire);
+function CeaseFire(Controller C, bool bWasAltFire);
+simulated function bool ReadyToFire(bool bAltFire) { return true; }
+simulated function AttemptReload();
+simulated function StartReloadTimer();
+simulated function Timer();
+function PassReloadStateToClient();
+simulated function ClientSetReloadState(byte NewState);
+simulated function bool HasAmmoToReload(byte AmmoIndex) { return false; }
+simulated function StartHatchFire();
+
 defaultproperties
 {
     // Mesh & animation

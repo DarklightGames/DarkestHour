@@ -38,7 +38,7 @@ var     bool    bUseDriverHeadBoneCam;       // use the driver's head bone for t
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
 simulated function PostBeginPlay()
 {
-    super.PostBeginPlay();
+    super(Vehicle).PostBeginPlay(); // skip over Super in DHVehicleWeaponPawn as it contains nothing relevant to a passenger
 
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
@@ -261,11 +261,6 @@ simulated function InitializeVehicleBase()
     super.InitializeVehicleBase();
 }
 
-// Emptied out to prevent unnecessary replicated function calls to server
-function Fire(optional float F)
-{
-}
-
 // From ROPassengerPawn
 function float ModifyThreat(float Current, Pawn Threat)
 {
@@ -276,6 +271,22 @@ function float ModifyThreat(float Current, Pawn Threat)
 
     return Current + 1.0;
 }
+
+// Functions emptied out as a passenger pawn has no VehicleWeapon:
+function BeginPlay(); // the Super only tries to spawn the GunClass, which is none
+simulated function InitializeVehicleWeapon();
+function Fire(optional float F); // prevents unnecessary replicated VehicleFire() function calls to server
+function VehicleFire(bool bWasAltFire);
+event FiredPendingPrimary();
+event ApplyFireImpulse(bool bAlt);
+function VehicleCeaseFire(bool bWasAltFire);
+function ClientVehicleCeaseFire(bool bWasAltFire);
+function ClientOnlyVehicleCeaseFire(bool bWasAltFire);
+function bool StopWeaponFiring() { return false; }
+function float GetAmmoReloadState() { return 0.0; }
+simulated event SetRotatingStatus(byte NewRotationStatus);
+simulated function ServerSetRotatingStatus(byte NewRotatingStatus);
+function bool ResupplyAmmo() { return false; }
 
 defaultproperties
 {
