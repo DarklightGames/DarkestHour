@@ -62,8 +62,8 @@ defaultproperties
     CannonFireSound(0)=sound'Vehicle_Weapons.T34_85.85mm_fire01'
     CannonFireSound(1)=sound'Vehicle_Weapons.T34_85.85mm_fire02'
     CannonFireSound(2)=sound'Vehicle_Weapons.T34_85.85mm_fire03'
-    AltFireSoundClass=sound'Inf_Weapons.dt_fire_loop'
-    AltFireEndSound=sound'Inf_Weapons.dt.dt_fire_end'
+    AltFireSoundClass=sound'DH_WeaponSounds.dt_fire_loop'
+    AltFireEndSound=sound'DH_WeaponSounds.dt.dt_fire_end'
     ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.t34_85_reload_01')
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.t34_85_reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.t34_85_reload_03')

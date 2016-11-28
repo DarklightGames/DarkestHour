@@ -34,8 +34,8 @@ defaultproperties
     WeaponFireAttachmentBone="Muzzle"
     WeaponFireOffset=-8
     AmbientSoundScaling=1.3 // TODO: compare to DH MGs that use 2.75
-    FireSoundClass=SoundGroup'Inf_Weapons.dt_fire_loop'
-    FireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.dt_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.dt.dt_fire_end'
 
     // Reload
     ReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
