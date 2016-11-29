@@ -6,40 +6,39 @@
 class DHMortarProjectileSmoke extends DHMortarProjectile
     abstract;
 
-var     class<Emitter>  SmokeEmitterClass;
-var     sound           SmokeIgniteSound;
-var     sound           SmokeLoopSound;
-var     float           SmokeSoundDuration;
+var     class<Emitter>  SmokeEmitterClass;  // class to spawn for smoke emitter
+var     sound           SmokeIgniteSound;   // initial sound when smoke begins emitting
+var     sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
+var     float           SmokeSoundDuration; // duration until smoke sound stops playing as smoke clears, used to make projectile persist to keep playing SmokeLoopSound
 
-// Actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
+// Modified to spawn smoke emitter & play smoke sounds
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     super.Explode(HitLocation, HitNormal);
 
-    bTearOff = true; // stops any further replication, but client copies of actor persist to play the smoke sound
-
+    // Shell impact effects
     if (Level.NetMode != NM_DedicatedServer)
     {
         DoHitEffects(HitLocation, HitNormal);
-
-        if (!bDud)
-        {
-            Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0)));
-            PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
-            AmbientSound = SmokeLoopSound;
-            LifeSpan = SmokeSoundDuration; // this actor will persist as long as the smoke sound
-        }
-        else
-        {
-            Destroy();
-        }
     }
+
+    // Spawn smoke emitter & play smoke sounds, if shell isn't a dud (not relevant on server)
+    // Then set LifeSpan for this actor so it persists as long as the smoke sound, so players keep hearing it until the smoke fades away
+    if (Level.NetMode != NM_DedicatedServer && !bDud)
+    {
+        Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0)));
+        PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
+        AmbientSound = SmokeLoopSound;
+
+        SetPhysics(PHYS_None);
+        LifeSpan = SmokeSoundDuration;
+    }
+    // Or destroy actor now if shell is a dud or if on a server
+    // Mortar shells are bAlwaysRelevant so all clients have this actor & smoke sounds are played locally
     else
     {
-        LifeSpan = 1.0; // on a server this actor will be automatically destroyed in 1 second, allowing time for bTearOff to replicate to clients
+        Destroy();
     }
-
-    SetPhysics(PHYS_None);
 }
 
 defaultproperties
