@@ -11,16 +11,24 @@ var     sound           SmokeIgniteSound;   // initial sound when smoke begins e
 var     sound           SmokeLoopSound;     // ambient looping sound as smoke continues to emit
 var     float           SmokeSoundDuration; // duration until smoke sound stops playing as smoke clears, used to make projectile persist to keep playing SmokeLoopSound
 
-// Modified to spawn smoke emitter & play smoke sounds
-simulated function Explode(vector HitLocation, vector HitNormal)
+// Modified to delay destroying this actor until the end of the SmokeSoundDuration, unless shell was a dud
+// Not relevant on server as doesn't need to broadcast smoke sound  (mortar shells are bAlwaysRelevant so all clients have actor & smoke sounds get played locally)
+simulated function HandleDestruction()
 {
-    super.Explode(HitLocation, HitNormal);
-
-    // Shell impact effects
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && !bDud)
     {
-        DoHitEffects(HitLocation, HitNormal);
+        LifeSpan = SmokeSoundDuration; // actor will destroy itself automatically after this time
     }
+    else
+    {
+        Destroy();
+    }
+}
+
+// Implemented to spawn a smoke emitter & play smoke sound
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+{
+    super.SpawnExplosionEffects(HitLocation, HitNormal);
 
     // Spawn smoke emitter & play smoke sounds, if shell isn't a dud (not relevant on server)
     // Then set LifeSpan for this actor so it persists as long as the smoke sound, so players keep hearing it until the smoke fades away

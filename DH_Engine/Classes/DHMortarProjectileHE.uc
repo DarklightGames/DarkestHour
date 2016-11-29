@@ -6,47 +6,118 @@
 class DHMortarProjectileHE extends DHMortarProjectile
     abstract;
 
-// Sounds
-var array<sound> GroundExplosionSounds;
-var array<sound> WaterExplosionSounds;
-var array<sound> AirExplosionSounds;
-var array<sound> SnowExplosionSounds;
+// Explosion effect emitters & sounds
+var     class<Emitter>  GroundExplosionEmitterClass;
+var     class<Emitter>  SnowExplosionEmitterClass;
+var     class<Emitter>  WaterExplosionEmitterClass;
+var     array<sound>    GroundExplosionSounds;
+var     array<sound>    SnowExplosionSounds;
+var     array<sound>    WaterExplosionSounds;
 
-// Emitter classes
-var class<Emitter> AirExplosionEmitterClass;
-var class<Emitter> GroundExplosionEmitterClass;
-var class<Emitter> SnowExplosionEmitterClass;
-var class<Emitter> WaterExplosionEmitterClass;
+// View shake
+var     float           BlurTime;         // how long blur effect should last for this shell
+var     float           BlurEffectScalar; // how much to scale blur & shake effect
+var     vector          ShakeRotMag;      // how far to rot view
+var     vector          ShakeRotRate;     // how fast to rot view
+var     float           ShakeRotTime;     // how much time to rot the instigator's view
+var     vector          ShakeOffsetMag;   // max view offset vertically
+var     vector          ShakeOffsetRate;  // how fast to offset view vertically
+var     float           ShakeOffsetTime;  // how much time to offset view
 
-// Camera shaking
-var vector              ShakeRotMag;      // how far to rot view
-var vector              ShakeRotRate;     // how fast to rot view
-var float               ShakeRotTime;     // how much time to rot the instigator's view
-var vector              ShakeOffsetMag;   // max view offset vertically
-var vector              ShakeOffsetRate;  // how fast to offset view vertically
-var float               ShakeOffsetTime;  // how much time to offset view
-var float               BlurTime;         // How long blur effect should last for this shell
-var float               BlurEffectScalar;
-
-simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterClass, ESurfaceTypes SurfaceType)
+// Modified to stop shell from blowing up if it's in a no arty volume (just make the shell a dud if it is)
+simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    switch (SurfaceType)
+    local DHVolumeTest VT;
+
+    if (!bDud)
     {
-        case EST_Snow:
-        case EST_Ice:
-            ExplosionEmitterClass = SnowExplosionEmitterClass;
-            return;
+        VT = Spawn(class'DHVolumeTest',,, HitLocation);
 
-        case EST_Water:
-            ExplosionEmitterClass = WaterExplosionEmitterClass;
-            return;
+        if (VT != none)
+        {
+            bDud = VT.IsInNoArtyVolume();
+            VT.Destroy();
+        }
+    }
 
-        default:
-            ExplosionEmitterClass = GroundExplosionEmitterClass;
-            return;
+    super.Explode(HitLocation, HitNormal);
+}
+
+// Modified to cause blast damage
+function BlowUp(vector HitLocation)
+{
+    super.BlowUp(HitLocation);
+
+    if (Role == ROLE_Authority)
+    {
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
     }
 }
 
+// Modified to only play impact effects for a dud HE shell, as if it does explode the explosion effects will 'drown out' the smaller impact effects
+simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
+{
+    if (bDud)
+    {
+        super.SpawnImpactEffects(HitLocation, HitNormal);
+    }
+}
+
+// Implemented for HE shell explosion
+// TODO: Need to add throwing ragdoll bodies around, same as other HE shells exploding
+// But also need to add a mechanism to stop server destroying projectile before client has time to trigger this locally & play explosion effects (there are several solutions)
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+{
+    local ESurfaceTypes    HitSurfaceType;
+    local class<Emitter>   ExplosionEmitterClass;
+    local class<Projector> ExplosionDecalClass;
+    local sound            ExplosionSound;
+
+    GetHitSurfaceType(HitSurfaceType, HitNormal);
+    GetExplosionSound(ExplosionSound, HitSurfaceType);
+    PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
+
+    // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
+        GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
+        Spawn(ExplosionEmitterClass, self,, HitLocation);
+        Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
+
+        DoShakeEffect();
+    }
+}
+
+// New function to do screen shake & blur based on player's proximity to explosion
+simulated function DoShakeEffect()
+{
+    local PlayerController PC;
+    local float            Distance, MaxShakeDistance, Scale;
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC != none && PC.ViewTarget != none)
+    {
+        Distance = VSize(Location - PC.ViewTarget.Location);
+        MaxShakeDistance = DamageRadius * 2.0;
+
+        if (Distance < MaxShakeDistance)
+        {
+            // Screen shake
+            Scale = (MaxShakeDistance - Distance) / MaxShakeDistance * BlurEffectScalar;
+            PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+
+            // Screen blur
+            if (PC.IsA('ROPlayer'))
+            {
+                ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
+            }
+        }
+    }
+}
+
+// New function to appropriate explosion sound for shell hitting a given surface type
 simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes SurfaceType)
 {
     switch (SurfaceType)
@@ -66,6 +137,27 @@ simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes Sur
     }
 }
 
+// New function to appropriate explosion effects emitter for shell hitting a given surface type
+simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterClass, ESurfaceTypes SurfaceType)
+{
+    switch (SurfaceType)
+    {
+        case EST_Snow:
+        case EST_Ice:
+            ExplosionEmitterClass = SnowExplosionEmitterClass;
+            return;
+
+        case EST_Water:
+            ExplosionEmitterClass = WaterExplosionEmitterClass;
+            return;
+
+        default:
+            ExplosionEmitterClass = GroundExplosionEmitterClass;
+            return;
+    }
+}
+
+// New function to appropriate explosion decal for shell hitting a given surface type
 simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalClass, ESurfaceTypes SurfaceType)
 {
     switch (SurfaceType)
@@ -81,103 +173,17 @@ simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalCla
     }
 }
 
-// Modified to cause blast damage
-simulated function BlowUp(vector HitLocation)
-{
-    super.BlowUp(HitLocation);
-
-    if (!bDud && Role == ROLE_Authority)
-    {
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-    }
-}
-
-// Modified to stop shell from exploding if it's a dud or if it's in a no arty volume (if so, play impact effects only)
-// And to add explosion effects for a non-dud shell
-simulated function Explode(vector HitLocation, vector HitNormal)
-{
-    local DHVolumeTest     VT;
-    local ESurfaceTypes    HitSurfaceType;
-    local class<Emitter>   ExplosionEmitterClass;
-    local class<Projector> ExplosionDecalClass;
-    local sound            ExplosionSound;
-
-    // Check if in no arty volume & just make the shell a dud if it is
-    if (!bDud)
-    {
-        VT = Spawn(class'DHVolumeTest',,, HitLocation);
-        bDud = VT.IsInNoArtyVolume();
-        VT.Destroy();
-    }
-
-    // If shell is a dud then impact effects only (don't bother with impact effects if not a dud, as the HE explosion will drown them out)
-    if (bDud)
-    {
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            DoHitEffects(HitLocation, HitNormal);
-        }
-    }
-    // Otherwise explode normally
-    else
-    {
-        GetHitSurfaceType(HitSurfaceType, HitNormal);
-        GetExplosionSound(ExplosionSound, HitSurfaceType);
-        PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
-
-        // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
-            GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
-            Spawn(ExplosionEmitterClass, self,, HitLocation);
-            Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
-
-            DoShakeEffect();
-        }
-
-        super.Explode(HitLocation, HitNormal);
-    }
-
-    Destroy();
-}
-
-simulated function DoShakeEffect()
-{
-    local PlayerController PC;
-    local float Dist, Scale;
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        PC = Level.GetLocalPlayerController();
-
-        if (PC != none && PC.ViewTarget != none)
-        {
-            Dist = VSize(Location - PC.ViewTarget.Location);
-
-            if (Dist < DamageRadius * 2.0)
-            {
-                Scale = (DamageRadius * 2.0  - Dist) / (DamageRadius * 2.0);
-                Scale *= BlurEffectScalar;
-
-                PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
-
-                ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
-            }
-        }
-    }
-}
-
 defaultproperties
 {
     MyDamageType=class'DH_Engine.DHMortarDamageType'
-    AirExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
+    MomentumTransfer=75000.0
+
     GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
     SnowExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'
     WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-    MomentumTransfer=75000.0
+
     ShakeRotMag=(Z=100.0)
     ShakeRotRate=(Z=2500.0)
     ShakeRotTime=3.0

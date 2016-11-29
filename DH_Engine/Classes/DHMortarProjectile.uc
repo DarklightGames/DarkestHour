@@ -6,31 +6,34 @@
 class DHMortarProjectile extends ROBallisticProjectile
     abstract;
 
-var bool    bDud;
-var float   DudChance;
+var     vector  HitLocation;
+var     vector  HitNormal;
 
-var sound   DescendingSound;
+// Chance each shell is a dud & does not explode
+var     bool    bDud;
+var     float   DudChance;
 
-var class<Emitter> FireEmitterClass;
+// Effects for firing mortar & for shell descending just before it lands
+var     class<Emitter>  FireEmitterClass;
+var     sound   DescendingSound;
 
-var class<Emitter> HitDirtEmitterClass;
-var class<Emitter> HitSnowEmitterClass;
-var class<Emitter> HitWoodEmitterClass;
-var class<Emitter> HitRockEmitterClass;
-var class<Emitter> HitWaterEmitterClass;
+// Impact effects & sounds
+var     class<Emitter>  HitDirtEmitterClass;
+var     class<Emitter>  HitSnowEmitterClass;
+var     class<Emitter>  HitWoodEmitterClass;
+var     class<Emitter>  HitRockEmitterClass;
+var     class<Emitter>  HitWaterEmitterClass;
 
-var sound HitDirtSound;
-var sound HitRockSound;
-var sound HitWaterSound;
-var sound HitWoodSound;
+var     sound   HitDirtSound;
+var     sound   HitRockSound;
+var     sound   HitWaterSound;
+var     sound   HitWoodSound;
 
-var vector DebugForward;
-var vector DebugRight;
-var vector DebugLocation;
-var bool   bDebug;
-
-var vector HitLocation;
-var vector HitNormal;
+// Debug
+var     vector  DebugForward;
+var     vector  DebugRight;
+var     vector  DebugLocation;
+var     bool    bDebug;
 
 replication
 {
@@ -62,7 +65,7 @@ simulated function PostBeginPlay()
         }
     }
 
-    // Play mortar firing effect (note - can't do an EffectIsRelevant check here, as projectile won't yet have been drawn, so will always fail)
+    // Play mortar firing effect (note - can't do an EffectIsRelevant check here, as shell won't yet have been drawn, so will always fail)
     if (Level.NetMode != NM_DedicatedServer && Location != vect(0.0, 0.0, 0.0) && FireEmitterClass != none)
     {
         Spawn(FireEmitterClass,,, Location, Rotation);
@@ -85,6 +88,12 @@ simulated function PostNetBeginPlay()
     }
 }
 
+// New function allowing subclasses to handle destruction differently, e.g. smoke shells
+simulated function HandleDestruction()
+{
+    Destroy();
+}
+
 // Just a debug option
 simulated function Timer()
 {
@@ -96,40 +105,6 @@ simulated function Timer()
         }
 
         DebugLocation = Location;
-    }
-}
-
-// Adjusts the pitch of the round descent sound - rounds far away will seem to drone, while being close to the descent will make the sounds scream
-simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation)
-{
-    local Pawn   P;
-    local vector CameraLocation;
-    local float  ClampedDistance;
-
-    Pitch = 0.875;
-    P = Level.GetLocalPlayerController().Pawn;
-
-    if (P != none)
-    {
-        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
-        ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
-        Pitch += (((5249.0 - ClampedDistance) / 5249.0) * 0.25);
-    }
-}
-
-simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector HitNormal)
-{
-    local material M;
-
-    Trace(HitLocation, HitNormal, Location - (16.0 * HitNormal), Location, false,, M);
-
-    if (M == none)
-    {
-        HitSurfaceType = EST_Default;
-    }
-    else
-    {
-        HitSurfaceType = ESurfaceTypes(M.SurfaceType);
     }
 }
 
@@ -164,7 +139,7 @@ simulated singular function Touch(Actor Other)
     {
         if (DHCollisionMeshActor(Other).bWontStopShell)
         {
-            return; // exit, doing nothing, if col mesh actor is set not to stop a shell (includes mortar round)
+            return; // exit, doing nothing, if col mesh actor is set not to stop a shell (includes mortar shell)
         }
 
         Other = Other.Owner;
@@ -184,6 +159,8 @@ simulated singular function Touch(Actor Other)
     }
 }
 
+// Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
+// Also to ignore collision with a player right in front of the mortar
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     if (Other == Instigator || Other.Base == Instigator || ROBulletWhipAttachment(Other) != none)
@@ -191,8 +168,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         return;
     }
 
-    // This is to prevent jerks from walking in front of the mortar and blowing us up
-    if (DHPawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0) // within approx 2 metres
+    // This is to prevent jerks from walking in front of the mortar (within approx 2 metres) & blowing us up
+    if (DHPawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0)
     {
         return;
     }
@@ -202,6 +179,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     GotoState('Whistle');
 }
 
+// Modified to go into 'Whistle' state upon hitting something, so players always hear the DescendingSound before shell explodes & actor is destroyed
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     self.HitNormal = HitNormal;
@@ -209,14 +187,52 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     GotoState('Whistle');
 }
 
+// New state that is entered when shell lands - it just plays the DescendingSound & sets a timer to make the shell explode at the end of the sound
+// Purpose is to make sure players hear DescendingSound before this actor is destroyed, so it delays the explosion slightly after impact to achieve that
+simulated state Whistle
+{
+    simulated function BeginState()
+    {
+        local float Pitch;
+
+        SetPhysics(PHYS_None);
+        Velocity = vect(0.0, 0.0, 0.0);
+        SetTimer(FMax(0.1, GetSoundDuration(DescendingSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            GetDescendingSoundPitch(Pitch, Location);
+            PlaySound(DescendingSound, SLOT_None, 8.0, false, 512.0, Pitch, true);
+        }
+    }
+
+    simulated function Timer()
+    {
+        Explode(Location, HitNormal);
+    }
+}
+
+// Modified to handle various effects when mortar hits something, & to set hit location in team's mortar targets so it's marked on the map for mortar crew
+// Also includes a debug option
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (Role == ROLE_Authority)
     {
         SetHitLocation(HitLocation);
+
+        MakeNoise(1.0); // shell landing makes noise, even if a dud & doesn't detonate
     }
 
-    BlowUp(HitLocation);
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SpawnImpactEffects(HitLocation, HitNormal);
+    }
+
+    if (!bDud)
+    {
+        SpawnExplosionEffects(HitLocation, HitNormal);
+        BlowUp(HitLocation);
+    }
 
     if (bDebug)
     {
@@ -227,112 +243,36 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         Log(class'DHUnits'.static.UnrealToMeters(DebugForward dot (HitLocation - OrigLoc)) @ class'DHUnits'.static.UnrealToMeters(DebugRight dot (HitLocation - OrigLoc)));
     }
+
+    HandleDestruction(); // allows subclasses to handle destruction differently rather than always Destroy()
 }
 
+// Emptied out so we don't cause blast damage by default (add in subclass if required) & because we call MakeNoise() when shell lands, even if doesn't blow up
 function BlowUp(vector HitLocation)
 {
-    if (Role == ROLE_Authority)
+}
+
+// New function to spawn impact effects when the shell lands
+simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
+{
+    local ESurfaceTypes  HitSurfaceType;
+    local class<Emitter> HitEmitterClass;
+    local sound          HitSound;
+
+    if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
-        MakeNoise(1.0);
+        GetHitSurfaceType(HitSurfaceType, HitNormal);
+        GetHitSound(HitSound, HitSurfaceType);
+        GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
+
+        PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
+        Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
     }
 }
 
-function SetHitLocation(vector HitLocation)
+// New function to spawn explosion effects - implement is subclasses as required
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 {
-    local DHGameReplicationInfo   GRI;
-    local DHPlayerReplicationInfo PRI;
-    local DHPlayer C;
-    local byte     TeamIndex, ClosestMortarTargetIndex;
-    local float    ClosestMortarTargetDistance, MortarTargetDistance;
-    local int      i;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none || InstigatorController == none || InstigatorController.PlayerReplicationInfo == none)
-    {
-        return;
-    }
-
-    PRI = DHPlayerReplicationInfo(InstigatorController.PlayerReplicationInfo);
-
-    if (PRI == none || PRI.RoleInfo == none || InstigatorController.Pawn == none)
-    {
-        return;
-    }
-
-    C = DHPlayer(InstigatorController);
-
-    TeamIndex = InstigatorController.GetTeamNum();
-
-    // Zero out the z coordinate for 2D distance checking from targets
-    HitLocation.Z = 0.0;
-
-    // Index of 255 means we didn't find a nearby target
-    ClosestMortarTargetIndex = 255;
-    ClosestMortarTargetDistance = 1000000000.0;
-
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        // Find the closest mortar target
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
-        {
-            if (!GRI.GermanMortarTargets[i].bIsActive)
-            {
-                continue;
-            }
-
-            MortarTargetDistance = VSize(GRI.GermanMortarTargets[i].Location - HitLocation);
-
-            if (MortarTargetDistance < ClosestMortarTargetDistance)
-            {
-                ClosestMortarTargetDistance = MortarTargetDistance;
-                ClosestMortarTargetIndex = i;
-            }
-        }
-
-        // If we still have a mortar target index of 255, it means none of the targets were close enough
-        if (ClosestMortarTargetDistance < class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold)
-        {
-            // A 1.0 in the Z-component indicates to display the hit on the map
-            HitLocation.Z = 1.0;
-        }
-
-        if (ClosestMortarTargetIndex != 255)
-        {
-            GRI.GermanMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
-        }
-    }
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        // Find the closest mortar target
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
-        {
-            if (!GRI.AlliedMortarTargets[i].bIsActive)
-            {
-                continue;
-            }
-
-            MortarTargetDistance = VSize(GRI.AlliedMortarTargets[i].Location - HitLocation);
-
-            if (MortarTargetDistance < ClosestMortarTargetDistance)
-            {
-                ClosestMortarTargetDistance = MortarTargetDistance;
-                ClosestMortarTargetIndex = i;
-            }
-        }
-
-        // If we still have a mortar target index of 255, it means none of the targets were close enough
-        if (ClosestMortarTargetDistance < class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold)
-        {
-            // A 1.0 in the Z-component indicates to display the hit on the map
-            HitLocation.Z = 1.0;
-        }
-
-        if (ClosestMortarTargetIndex != 255)
-        {
-            GRI.AlliedMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
-        }
-    }
 }
 
 // Modified to give additional points to the observer & the mortarman for working together for a kill
@@ -586,20 +526,112 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
     }
 }
 
-// New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since firing, e.g. undeployed mortar
-simulated function UpdateInstigator()
+// New function to set hit location in team's mortar targets so it's marked on the map for mortar crew
+function SetHitLocation(vector HitLocation)
 {
-    if (InstigatorController != none && InstigatorController.Pawn != none)
+    local DHGameReplicationInfo   GRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHPlayer C;
+    local byte     TeamIndex, ClosestMortarTargetIndex;
+    local float    ClosestMortarTargetDistance, MortarTargetDistance;
+    local int      i;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none || InstigatorController == none || InstigatorController.PlayerReplicationInfo == none)
     {
-        Instigator = InstigatorController.Pawn;
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(InstigatorController.PlayerReplicationInfo);
+
+    if (PRI == none || PRI.RoleInfo == none || InstigatorController.Pawn == none)
+    {
+        return;
+    }
+
+    C = DHPlayer(InstigatorController);
+
+    TeamIndex = InstigatorController.GetTeamNum();
+
+    // Zero out the z coordinate for 2D distance checking from targets
+    HitLocation.Z = 0.0;
+
+    // Index of 255 means we didn't find a nearby target
+    ClosestMortarTargetIndex = 255;
+    ClosestMortarTargetDistance = 1000000000.0;
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        // Find the closest mortar target
+        for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
+        {
+            if (!GRI.GermanMortarTargets[i].bIsActive)
+            {
+                continue;
+            }
+
+            MortarTargetDistance = VSize(GRI.GermanMortarTargets[i].Location - HitLocation);
+
+            if (MortarTargetDistance < ClosestMortarTargetDistance)
+            {
+                ClosestMortarTargetDistance = MortarTargetDistance;
+                ClosestMortarTargetIndex = i;
+            }
+        }
+
+        // If we still have a mortar target index of 255, it means none of the targets were close enough
+        if (ClosestMortarTargetDistance < class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold)
+        {
+            // A 1.0 in the Z-component indicates to display the hit on the map
+            HitLocation.Z = 1.0;
+        }
+
+        if (ClosestMortarTargetIndex != 255)
+        {
+            GRI.GermanMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
+        }
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        // Find the closest mortar target
+        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
+        {
+            if (!GRI.AlliedMortarTargets[i].bIsActive)
+            {
+                continue;
+            }
+
+            MortarTargetDistance = VSize(GRI.AlliedMortarTargets[i].Location - HitLocation);
+
+            if (MortarTargetDistance < ClosestMortarTargetDistance)
+            {
+                ClosestMortarTargetDistance = MortarTargetDistance;
+                ClosestMortarTargetIndex = i;
+            }
+        }
+
+        // If we still have a mortar target index of 255, it means none of the targets were close enough
+        if (ClosestMortarTargetDistance < class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold)
+        {
+            // A 1.0 in the Z-component indicates to display the hit on the map
+            HitLocation.Z = 1.0;
+        }
+
+        if (ClosestMortarTargetIndex != 255)
+        {
+            GRI.AlliedMortarTargets[ClosestMortarTargetIndex].HitLocation = HitLocation;
+        }
     }
 }
 
+// New function to find the closest mortar observer when mortar shell kills an enemy player
+// Used to give additional points to the observer & the mortarman for working together for a kill!
 function Controller GetClosestMortarTargetController()
 {
     local DHGameReplicationInfo GRI;
-    local float  Distance, ClosestDistance;
-    local int i, ClosestIndex;
+    local float Distance, ClosestDistance;
+    local int   ClosestIndex, i;
 
     ClosestIndex = 255;
     ClosestDistance = class'DHGameReplicationInfo'.default.MortarTargetDistanceThreshold;
@@ -668,23 +700,7 @@ function Controller GetClosestMortarTargetController()
     return none;
 }
 
-simulated function DoHitEffects(vector HitLocation, vector HitNormal)
-{
-    local ESurfaceTypes  HitSurfaceType;
-    local class<Emitter> HitEmitterClass;
-    local sound          HitSound;
-
-    if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
-    {
-        GetHitSurfaceType(HitSurfaceType, HitNormal);
-        GetHitSound(HitSound, HitSurfaceType);
-        PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
-        GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
-        Spawn(HitEmitterClass,,, HitLocation, rotator(HitNormal));
-    }
-}
-
-// Implemented so if hits water we play a splash effect (same as a cannon shell) & the shell explodes
+// Implemented so if hits water we play a splash effect (same as a cannon shell) & the projectile explodes
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
@@ -723,6 +739,24 @@ simulated function CheckForSplash(vector SplashLocation)
     }
 }
 
+// New function to get the surface type the projectile has hit
+simulated function GetHitSurfaceType(out ESurfaceTypes HitSurfaceType, vector HitNormal)
+{
+    local material M;
+
+    Trace(HitLocation, HitNormal, Location - (16.0 * HitNormal), Location, false,, M);
+
+    if (M == none)
+    {
+        HitSurfaceType = EST_Default;
+    }
+    else
+    {
+        HitSurfaceType = ESurfaceTypes(M.SurfaceType);
+    }
+}
+
+// New function to appropriate emitter class for shell hitting a given surface type
 simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfaceTypes SurfaceType)
 {
     switch (SurfaceType)
@@ -750,6 +784,7 @@ simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfa
     }
 }
 
+// New function to appropriate impact sound for shell hitting a given surface type
 simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
 {
     switch (SurfaceType)
@@ -772,26 +807,30 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
     }
 }
 
-simulated state Whistle
+// New function to adjust pitch of shell's descent sound - rounds far away will seem to drone, while being close to the descent will make the sounds scream
+simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation)
 {
-    simulated function BeginState()
+    local Pawn   P;
+    local vector CameraLocation;
+    local float  ClampedDistance;
+
+    Pitch = 0.875;
+    P = Level.GetLocalPlayerController().Pawn;
+
+    if (P != none)
     {
-        local float Pitch;
-
-        SetPhysics(PHYS_None);
-        Velocity = vect(0.0, 0.0, 0.0);
-        SetTimer(FMax(0.1, GetSoundDuration(DescendingSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
-
-        if (Level.NetMode == NM_Standalone || Level.NetMode == NM_Client)
-        {
-            GetDescendingSoundPitch(Pitch, Location);
-            PlaySound(DescendingSound, SLOT_None, 8.0, false, 512.0, Pitch, true);
-        }
+        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
+        ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0.0, 5249.0);
+        Pitch += (((5249.0 - ClampedDistance) / 5249.0) * 0.25);
     }
+}
 
-    simulated function Timer()
+// New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since firing, e.g. undeployed mortar
+simulated function UpdateInstigator()
+{
+    if (InstigatorController != none && InstigatorController.Pawn != none)
     {
-        Explode(Location, HitNormal);
+        Instigator = InstigatorController.Pawn;
     }
 }
 
@@ -845,20 +884,21 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
 defaultproperties
 {
     DudChance=0.01
-    FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
-    DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
-    HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
-    HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
-    HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
-    HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
-    HitWaterEmitterClass=class'DH_Effects.DHShellSplashEffect'
-    HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-    HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-    HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-    HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
+    bAlwaysRelevant=true // always relevant to every net client, so they hear the whistle sound, & for smoke rounds so the smoke effect always gets spawned
     DrawType=DT_None
     LifeSpan=60.0
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
-    bAlwaysRelevant=true // always relevant to every net client, so they hear the whistle sound, & for smoke rounds so the smoke effect always gets spawned
+    FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
+    DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
+
+    HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
+    HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
+    HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
+    HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
+    HitWaterEmitterClass=class'DH_Effects.DHShellSplashEffect'
+    HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
+    HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
+    HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
+    HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
 }
