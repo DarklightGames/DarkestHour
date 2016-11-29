@@ -114,7 +114,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         SpawnRotation.Yaw += SpreadYaw;
     }
 
-    P = Spawn(ProjClass, Instigator,, SpawnLocation, SpawnRotation);
+    P = Spawn(ProjClass, none,, SpawnLocation, SpawnRotation);
 
     // After careful consideration, it was determined that universal pitch adjustments did not work,
     // because at lower elevations the differences in pitch angles becomes nearly undetectable, while at high elevations they were overly dramatic.

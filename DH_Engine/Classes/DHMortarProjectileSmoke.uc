@@ -6,12 +6,12 @@
 class DHMortarProjectileSmoke extends DHMortarProjectile
     abstract;
 
-var  class<Emitter> SmokeEmitterClass;
-var  sound          SmokeIgniteSound;
-var  sound          SmokeLoopSound;
-var  float          SmokeSoundDuration;
+var     class<Emitter>  SmokeEmitterClass;
+var     sound           SmokeIgniteSound;
+var     sound           SmokeLoopSound;
+var     float           SmokeSoundDuration;
 
-// Matt: actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
+// Actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     super.Explode(HitLocation, HitNormal);
@@ -26,10 +26,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         {
             Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0.0, 0.0, 1.0)));
             PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
-            // Matt (March 2015): had to omit playing the smoke loop sound, as it's really weird but while you are on the mortar, the AmbientSound is heard at full volume, even if it distant.
-            // Then if you come off the mortar, the smoke sound is attenuated as it should be. Not a problem with smoke grenades or shells; it's mortar specific and makes no sense to me !
-            // Not an issue with network play or tearing off the actor, as it's the same problem in single player
-//          AmbientSound = SmokeLoopSound;
+            AmbientSound = SmokeLoopSound;
             LifeSpan = SmokeSoundDuration; // this actor will persist as long as the smoke sound
         }
         else
