@@ -3,16 +3,44 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHArtillerySpawner extends ROArtillerySpawner;
+class DHArtillerySpawner extends ROArtillerySpawner; // TODO: suspect this can be made non-replicated
 
-// Modified to spawn DHArtilleryShell instead of RO version
+// Modified to fix log errors causing 1 extra salvo & 1 extra shell per salvo (also re-factored optimise slightly)
+// Also to spawn DHArtilleryShell instead of ROArtilleryShell
 function Timer()
 {
-    local DHVolumeTest RVT;
-    local vector       AimVec;
+    local DHVolumeTest VT;
+    local vector       RandomSpread;
+    local bool         bInvalid;
 
-    // Destroy this actor if the round is over or if the arty officer has switched teams or left the server
-    if (!ROTeamGame(Level.Game).IsInState('RoundInPlay') || InstigatorController == none || InstigatorController.GetTeamNum() != OwningTeam)
+    // Cancel the strike if the round is over or if the arty officer has switched teams or left the server
+    if ((ROTeamGame(Level.Game) != none && !ROTeamGame(Level.Game).IsInState('RoundInPlay')) || InstigatorController == none || InstigatorController.GetTeamNum() != OwningTeam)
+    {
+        bInvalid = true;
+    }
+    // Check whether the target location has become a NoArtyVolume after the strike was called - if it has then cancel the strike
+    else
+    {
+        VT = Spawn(class'DHVolumeTest', self,, OriginalArtyLocation);
+
+        if (VT != none)
+        {
+            if (VT.IsInNoArtyVolume())
+            {
+                bInvalid = true;
+
+                if (PlayerController(InstigatorController) != none)
+                {
+                    PlayerController(InstigatorController).ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid artillery target
+                }
+            }
+
+            VT.Destroy();
+        }
+    }
+
+    // If not a valid strike then destroy this actor & any recorded shell
+    if (bInvalid)
     {
         if (LastSpawnedShell != none && !LastSpawnedShell.bDeleteMe)
         {
@@ -24,63 +52,36 @@ function Timer()
         return;
     }
 
-    RVT = Spawn(class'DHVolumeTest', self,, OriginalArtyLocation);
-
-    // If the place this arty is falling has become a NoArtyVolume after the strike was called, cancel the strike
-    if (RVT != none && RVT.IsInNoArtyVolume())
+    // Make sure this salvo hasn't finished & then spawn an arty shell, with randomised spread based on the map's arty settings for the team
+    if (SpawnCounter < BatterySize)
     {
-        if (ROPlayer(InstigatorController) != none)
-        {
-            ROPlayer(InstigatorController).ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // not a valid artillery target
-        }
+        RandomSpread.X += Rand((2 * SpreadAmount) + 1) - SpreadAmount; // gives +/- zero to SpreadAmount
+        RandomSpread.Y += Rand((2 * SpreadAmount) + 1) - SpreadAmount;
 
-        RVT.Destroy();
-
-        if (LastSpawnedShell != none && !LastSpawnedShell.bDeleteMe)
-        {
-            LastSpawnedShell.Destroy();
-        }
-
-        Destroy();
-
-        return;
-    }
-
-    RVT.Destroy();
-
-    // If this salvo still has remaining shells to land, set a new timer & exit
-    if (SpawnCounter <= BatterySize)
-    {
-        AimVec = vect(0.0, 0.0, 0.0);
-        AimVec.X += Rand(SpreadAmount);
-
-        if (FRand() > 0.5)
-        {
-           AimVec.X *= -1.0;
-        }
-
-        AimVec.Y += Rand(SpreadAmount);
-
-        if (FRand() > 0.5)
-        {
-           AimVec.Y *= -1.0;
-        }
-
-        LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController,, Location + AimVec, rotator(PhysicsVolume.Gravity));
-
+        LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController,, Location + RandomSpread, rotator(PhysicsVolume.Gravity));
         SpawnCounter++;
-        SetTimer(FRand() * 1.5, false); // randomised time between individual shells landing
 
-        return;
+        // If this salvo still has remaining shells to land, set a new, fairly short timer to spawn the next shell & exit
+        if (SpawnCounter < BatterySize)
+        {
+            SetTimer(FRand() * 1.5, false); // randomised 0 to 1.5 seconds between shells
+
+            return;
+        }
+        // Otherwise this salvo has ended so increment the salvo counter
+        else
+        {
+            SalvoCounter++;
+        }
     }
 
-    // If we still have remaining salvo(s) then set a new timer, otherwise destroy this actor
+    // If there's still at least one more salvo to come, set a new, longer timer to start the next salvo
     if (SalvoCounter < SalvoAmount)
     {
-        SalvoCounter++;
-        SpawnCounter = 0;
-        SetTimer(Max(Rand(20), 10), false); // randomised time between each salvo
+        SpawnCounter = 0; // reset shell counter for next salvo
+        SetTimer(10.0 + (10.0 * FRand()), false); // randomised 10 to 20 seconds between salvoes
     }
+    // Otherwise destroy this actor as the arty strike has finished
     else
     {
         Destroy();
