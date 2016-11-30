@@ -5,8 +5,21 @@
 
 class DHArtillerySpawner extends ROArtillerySpawner; // TODO: suspect this can be made non-replicated
 
+var     DHArtilleryShell    LastSpawnedDHShell; // reference to the last DH artillery shell spawned by this arty spawner
+
+// Modified to use LastSpawnedDHShell instead of LastSpawnedShell
+function Destroyed()
+{
+    if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
+    {
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).ArtyStrikeLocation[OwningTeam] = vect(0.0, 0.0, 0.0); // remove arty location from GRI
+    }
+
+    LastSpawnedDHShell = none;
+}
+
 // Modified to fix log errors causing 1 extra salvo & 1 extra shell per salvo (also re-factored optimise slightly)
-// Also to spawn DHArtilleryShell instead of ROArtilleryShell
+// Also to spawn DHArtilleryShell & LastSpawnedDHShell instead of RO versions
 function Timer()
 {
     local DHVolumeTest VT;
@@ -42,9 +55,9 @@ function Timer()
     // If not a valid strike then destroy this actor & any recorded shell
     if (bInvalid)
     {
-        if (LastSpawnedShell != none && !LastSpawnedShell.bDeleteMe)
+        if (LastSpawnedDHShell != none && !LastSpawnedDHShell.bDeleteMe)
         {
-            LastSpawnedShell.Destroy();
+            LastSpawnedDHShell.Destroy();
         }
 
         Destroy();
@@ -58,7 +71,7 @@ function Timer()
         RandomSpread.X += Rand((2 * SpreadAmount) + 1) - SpreadAmount; // gives +/- zero to SpreadAmount
         RandomSpread.Y += Rand((2 * SpreadAmount) + 1) - SpreadAmount;
 
-        LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController,, Location + RandomSpread, rotator(PhysicsVolume.Gravity));
+        LastSpawnedDHShell = Spawn(class'DHArtilleryShell', InstigatorController,, Location + RandomSpread, rotator(PhysicsVolume.Gravity));
         SpawnCounter++;
 
         // If this salvo still has remaining shells to land, set a new, fairly short timer to spawn the next shell & exit

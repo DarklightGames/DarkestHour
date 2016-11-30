@@ -3,7 +3,160 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHArtilleryShell extends ROArtilleryShell;
+class DHArtilleryShell extends Projectile;
+
+// All variables from deprecated ROArtilleryShell:
+
+var     vector              ImpactLocation;             // renamed from FinalHitLocation
+var     float               FlightTimeToTarget;         // replaces DistanceToTarget, as that was only used to calculate flight time, so this is more direct
+var     bool                bAlreadyDroppedProjectile;  // renamed from bDroppedProjectileFirst
+var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
+var     sound               SelectedCloseSound;         // renamed from SavedCloseSound
+var     ROArtillerySound    SoundActor;                 // used to play the CloseSound // TODO: check necessity of this
+var     AvoidMarker         Fear;                       // scare the bots away from this
+
+// Explosion effects
+var     sound               ExplosionSound[4];          // sound of the artillery exploding
+var     sound               DistantSound[4];            // sound of the artillery distant overhead
+var     sound               CloseSound[4];              // sound of the artillery whooshing in close
+var     class<Emitter>      ShellHitDirtEffectClass;    // artillery hitting dirt emitter
+var     class<Emitter>      ShellHitSnowEffectClass;    // artillery hitting snow emitter
+var     class<Emitter>      ShellHitDirtEffectLowClass; // artillery hitting dirt emitter low settings
+var     class<Emitter>      ShellHitSnowEffectLowClass; // artillery hitting snow emitter low settings
+
+// Camera shake & blue
+var     vector              ShakeRotMag;                // how far to rot view
+var     vector              ShakeRotRate;               // how fast to rot view
+var     float               ShakeRotTime;               // how much time to rot the instigator's view
+var     vector              ShakeOffsetMag;             // max view offset vertically
+var     vector              ShakeOffsetRate;            // how fast to offset view verticallyy
+var     float               ShakeOffsetTime;            // how much time to offset view
+var     float               BlurTime;                   // how long blur effect should last for this shell
+var     float               BlurEffectScalar;
+
+// From deprecated ROArtilleryShell class
+simulated function PostBeginPlay()
+{
+    local sound RandomDistantSound;
+
+    super.PostBeginPlay();
+
+    // This fixes trouble when the player who initiated the arty strike leaves the server because their PC is gone, so Owner is now none
+    if (Controller(Owner) != none)
+    {
+        Instigator = Controller(Owner).Pawn;
+
+        if (InstigatorController == none)
+        {
+            InstigatorController = Controller(Owner);
+        }
+    }
+
+    RandomDistantSound = DistantSound[Rand(4)];
+    PlaySound(RandomDistantSound,, 10.0,, 50000.0, 1.0, true);
+    SetTimer(GetSoundDuration(RandomDistantSound) * 0.95, false);
+}
+
+// From deprecated ROArtilleryShell class
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Fear != none)
+    {
+        Fear.Destroy();
+    }
+
+    if (SoundActor != none)
+    {
+        SoundActor.Destroy();
+    }
+}
+
+// From deprecated ROArtilleryShell class
+simulated function Timer()
+{
+    local float CloseSoundDuration, NextTimerDuration;
+
+    // On 1st Timer call, set things up, based on whether the projectile's flight time is going to be longer or shorter than the CloseSound duration
+    if (!bAlreadyPlayedCloseSound && !bAlreadyDroppedProjectile)
+    {
+        SetUpStrike();
+        CloseSoundDuration = GetSoundDuration(SelectedCloseSound);
+
+        // If CloseSound is longer than projectile's flight time, start playing CloseSound now & set a timer to delay dropping the projectile (while part of CloseSound plays)
+        if (CloseSoundDuration > FlightTimeToTarget)
+        {
+            PlayCloseSound();
+            NextTimerDuration = CloseSoundDuration - FlightTimeToTarget;
+        }
+        // Or if flight time is longer than CloseSound, drop the projectile now & set a timer to delay playing CloseSound
+        else
+        {
+            DropProjectile();
+            NextTimerDuration = FlightTimeToTarget - CloseSoundDuration;
+        }
+
+        SetTimer(NextTimerDuration, false);
+    }
+    // Or if we've already played the CloseSound, now drop the projectile
+    else if (bAlreadyPlayedCloseSound)
+    {
+        DropProjectile();
+    }
+    // Or if we've already dropped the projectile, now play the CloseSound
+    else if (bAlreadyDroppedProjectile)
+    {
+        PlayCloseSound();
+    }
+}
+
+// From deprecated ROArtilleryShell class (renamed from SetupStrikeFX)
+simulated function SetUpStrike()
+{
+    local Actor  HitActor;
+    local vector HitNormal;
+
+    HitActor = Trace(ImpactLocation, HitNormal, Location + (50000.0 * Normal(PhysicsVolume.Gravity)), Location, true);
+
+    if (HitActor != none)
+    {
+        FlightTimeToTarget = VSize(Location - ImpactLocation) / Speed;
+        SelectedCloseSound = CloseSound[Rand(4)];
+
+        if (Role == ROLE_Authority)
+        {
+            Fear = Spawn(class'AvoidMarker',,, ImpactLocation);
+            Fear.SetCollisionSize(DamageRadius, 200.0);
+            Fear.StartleBots();
+        }
+    }
+    else
+    {
+        Log("Artillery shell set up error - failed to trace HitActor & get an ImpactLocation, so destroying shell actor!!!");
+        Destroy();
+    }
+}
+
+// New function to make the projectile visible & start it falling
+simulated function DropProjectile()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetDrawType(DT_StaticMesh);
+    }
+
+    Velocity = Normal(PhysicsVolume.Gravity) * Speed;
+    bAlreadyDroppedProjectile = true;
+}
+
+// From deprecated ROArtilleryShell class (renamed from DoTraceFX for clarity)
+simulated function PlayCloseSound()
+{
+    SoundActor = Spawn(class'ROArtillerySound', self,, ImpactLocation, rotator(PhysicsVolume.Gravity));
+    SoundActor.PlaySound(SelectedCloseSound,, 10.0, true, 5248.0, 1.0, true);
+    bAlreadyPlayedCloseSound = true;
+}
 
 // Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also re-factored generally to optimise, but original functionality unchanged
@@ -48,6 +201,122 @@ simulated singular function Touch(Actor Other)
     if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none && Velocity != vect(0.0, 0.0, 0.0))
     {
         ClientSideTouch(Other, HitLocation);
+    }
+}
+
+// From deprecated ROArtilleryShell class
+simulated function ProcessTouch(Actor Other, Vector HitLocation)
+{
+    if (Other != Instigator)
+    {
+        SpawnExplosionEffects(HitLocation, -Normal(Velocity));
+        Explode(HitLocation, Normal(HitLocation - Other.Location));
+    }
+}
+
+// From deprecated ROArtilleryShell class
+simulated function HitWall(vector HitNormal, Actor Wall)
+{
+    Landed(HitNormal);
+}
+
+// From deprecated ROArtilleryShell class
+simulated function Landed(vector HitNormal)
+{
+    SpawnExplosionEffects(Location, HitNormal);
+    Explode(Location, HitNormal);
+}
+
+// Containing ragdoll functionality from deprecated ROArtilleryShell class (moved here from Destroyed), but with explosion radius damage moved to BlowUp()
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    local ROPawn Victims;
+    local vector Direction, Start;
+    local float  DamageScale, Distance;
+
+    // Move karma ragdolls around when this explodes (formerly in Destroyed)
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
+
+        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+        {
+            if (Victims != self && Victims.Physics == PHYS_KarmaRagDoll)
+            {
+                Direction = Victims.Location - Start;
+                Distance = FMax(1.0, VSize(Direction));
+                Direction = Direction / Distance;
+                DamageScale = 1.0 - FMax(0.0, (Distance - Victims.CollisionRadius) / DamageRadius);
+                Victims.DeadExplosionKarma(MyDamageType, DamageScale * MomentumTransfer * Direction, DamageScale);
+            }
+        }
+    }
+
+    BlowUp(HitLocation);
+    Destroy();
+}
+
+// Containing explosion radius damage from deprecated ROArtilleryShell class (moved here from Explode)
+function BlowUp(vector HitLocation)
+{
+    if (Role == ROLE_Authority)
+    {
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+    }
+}
+
+// From deprecated ROArtilleryShell class (renamed from SpawnEffects)
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
+{
+    local vector        TraceHitLocation, TraceHitNormal;
+    local material      HitMaterial;
+    local ESurfaceTypes ST;
+
+    PlaySound(ExplosionSound[Rand(4)],, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
+
+    DoShakeEffect();
+
+    if (EffectIsRelevant(HitLocation, false))
+    {
+        Trace(TraceHitLocation, TraceHitNormal, Location + (16.0 * vector(Rotation)), Location, false,, HitMaterial);
+
+        if (HitMaterial != none)
+        {
+            ST = ESurfaceTypes(HitMaterial.SurfaceType);
+        }
+        else
+        {
+            ST = EST_Default;
+        }
+
+        Spawn(class'RORocketExplosion',,, HitLocation + (16.0 * HitNormal), rotator(HitNormal));
+
+        if (ST == EST_Snow || ST == EST_Ice)
+        {
+            if (Level.bDropDetail || Level.DetailMode == DM_Low)
+            {
+                Spawn(ShellHitSnowEffectLowClass,,, HitLocation, rotator(HitNormal));
+            }
+            else
+            {
+                Spawn(ShellHitSnowEffectClass,,, HitLocation, rotator(HitNormal));
+            }
+
+            Spawn(ExplosionDecalSnow, self,, HitLocation, rotator(-HitNormal));
+        }
+        else
+        {
+            if (Level.bDropDetail || Level.DetailMode == DM_Low)
+            {
+                Spawn(ShellHitDirtEffectLowClass,,, HitLocation, rotator(HitNormal));
+            }
+            else
+            {
+                Spawn(ShellHitDirtEffectClass,,, HitLocation, rotator(HitNormal));
+            }
+
+            Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
+        }
     }
 }
 
@@ -287,6 +556,36 @@ function VehicleOccupantRadiusDamage(Pawn P, float DamageAmount, float DamageRad
     }
 }
 
+// From deprecated ROArtilleryShell class (slightly re-factored to optimise & make clearer)
+simulated function DoShakeEffect()
+{
+    local PlayerController PC;
+    local float            Distance, MaxShakeDistance, Scale, BlastShielding;
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC != none && PC.ViewTarget != none)
+    {
+        Distance = VSize(Location - PC.ViewTarget.Location);
+        MaxShakeDistance = DamageRadius * 3.0;
+
+        if (Distance < MaxShakeDistance)
+        {
+            // Screen shake
+            Scale = (MaxShakeDistance - Distance) / MaxShakeDistance * BlurEffectScalar;
+            PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+
+            // Screen blur (reduce scale if player is not fully exposed to the blast)
+            if (ROPawn(PC.Pawn) != none && PC.IsA('ROPlayer'))
+            {
+                BlastShielding = 1.0 - ROPawn(PC.Pawn).GetExposureTo(Location - (50.0 * Normal(PhysicsVolume.Gravity)));
+                Scale -= (0.35 * BlastShielding);
+                ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
+            }
+        }
+    }
+}
+
 // Colin: Overridden to just return true. The super function is a pointless
 // micro-optimization that may have made sense in 2008 when graphics hardware
 // wasn't as good, but certainly doesn't make sense now. This is an effect
@@ -308,4 +607,55 @@ simulated function UpdateInstigator()
 
 defaultproperties
 {
+    // All from deprecated ROArtilleryShell class:
+    Damage=500
+    DamageRadius=1000.0
+    MyDamageType=class'ROArtilleryDamType'
+    MomentumTransfer=75000.0
+
+    DrawType=DT_None // was DT_StaticMesh in RO, but was then set to DT_None in PostBeginPlay - now we simply start with None & switch to SM when we drop the projectile
+    StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell' // was a panzerfaust warhead in RO, although never visible - now a large shell
+    CullDistance=50000.0
+    AmbientGlow=100
+
+    Speed=8000.0
+    MaxSpeed=8000.0
+    LifeSpan=1500.0 // TODO: seems way too long, a few seconds would be fine, same as other projectiles
+//  bProjTarget=true // was in RO but removed as makes no sense for a shell be a target for other projectiles & no other projectiles have this
+
+    ExplosionSound(0)=sound'Artillery.explosions.explo01'
+    ExplosionSound(1)=sound'Artillery.explosions.explo02'
+    ExplosionSound(2)=sound'Artillery.explosions.explo03'
+    ExplosionSound(3)=sound'Artillery.explosions.explo04'
+    DistantSound(0)=sound'Artillery.fire_distant'
+    DistantSound(1)=sound'Artillery.fire_distant'
+    DistantSound(2)=sound'Artillery.fire_distant'
+    DistantSound(3)=sound'Artillery.fire_distant'
+    CloseSound(0)=sound'Artillery.zoomin.zoom_in01'
+    CloseSound(1)=sound'Artillery.zoomin.zoom_in02'
+    CloseSound(2)=sound'Artillery.zoomin.zoom_in03'
+    CloseSound(3)=sound'Artillery.zoomin.zoom_in03'
+    TransientSoundVolume=1.0
+    SoundVolume=255 // TODO: presume redundant as no ambient sound? (radius too)
+    SoundRadius=100.0
+
+    ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
+    ShellHitDirtEffectLowClass=class'ROArtilleryDirtEmitter_simple'
+    ShellHitSnowEffectLowClass=class'ROArtillerySnowEmitter_simple'
+    ExplosionDecal=class'ArtilleryMarkDirt'
+    ExplosionDecalSnow=class'ArtilleryMarkSnow'
+
+    ShakeRotMag=(X=0.0,Y=0.0,Z=200.0)
+    ShakeRotRate=(X=0.0,Y=0.0,Z=2500.0)
+    ShakeRotTime=3.0
+    ShakeOffsetMag=(X=0.0,Y=0.0,Z=10.0)
+    ShakeOffsetRate=(X=0.0,Y=0.0,Z=200.0)
+    ShakeOffsetTime=5.0
+    BlurTime=6.0
+    BlurEffectScalar=2.1
+
+    ForceType=FT_Constant
+    ForceScale=5.0
+    ForceRadius=60.0
 }
