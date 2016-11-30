@@ -29,7 +29,7 @@ var     vector              ShakeRotMag;                // how far to rot view
 var     vector              ShakeRotRate;               // how fast to rot view
 var     float               ShakeRotTime;               // how much time to rot the instigator's view
 var     vector              ShakeOffsetMag;             // max view offset vertically
-var     vector              ShakeOffsetRate;            // how fast to offset view verticallyy
+var     vector              ShakeOffsetRate;            // how fast to offset view vertically
 var     float               ShakeOffsetTime;            // how much time to offset view
 var     float               BlurTime;                   // how long blur effect should last for this shell
 var     float               BlurEffectScalar;
