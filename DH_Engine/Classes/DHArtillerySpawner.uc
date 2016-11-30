@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHArtillerySpawner extends ROArtillerySpawner; // TODO: suspect this can be made non-replicated
+class DHArtillerySpawner extends ROArtillerySpawner;
 
 var     DHArtilleryShell    LastSpawnedDHShell; // reference to the last DH artillery shell spawned by this arty spawner
 
@@ -103,4 +103,5 @@ function Timer()
 
 defaultproperties
 {
+    RemoteRole=ROLE_None // added as no need for this actor to replicate to net clients
 }
