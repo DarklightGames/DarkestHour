@@ -11,7 +11,7 @@ var     vector              ImpactLocation;             // renamed from FinalHit
 var     float               FlightTimeToTarget;         // replaces DistanceToTarget, as that was only used to calculate flight time, so this is more direct
 var     bool                bAlreadyDroppedProjectile;  // renamed from bDroppedProjectileFirst
 var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
-var     sound               SelectedCloseSound;         // renamed from SavedCloseSound
+var     byte                CloseSoundIndex;            // replaces SavedCloseSound as now only the server selects random CloseSound & replicates it to net clients
 var     ROArtillerySound    SoundActor;                 // used to play the CloseSound // TODO: check necessity of this
 var     AvoidMarker         Fear;                       // scare the bots away from this
 
@@ -34,7 +34,14 @@ var     float               ShakeOffsetTime;            // how much time to offs
 var     float               BlurTime;                   // how long blur effect should last for this shell
 var     float               BlurEffectScalar;
 
-// From deprecated ROArtilleryShell class
+replication
+{
+    // Variables the server will replicate to clients when this actor is 1st replicated
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        CloseSoundIndex;
+}
+
+// Modified from deprecated ROArtilleryShell class so server selects a random CloseSound & replicates the index no. to net clients so their timing is in sync
 simulated function PostBeginPlay()
 {
     local sound RandomDistantSound;
@@ -55,6 +62,11 @@ simulated function PostBeginPlay()
     RandomDistantSound = DistantSound[Rand(4)];
     PlaySound(RandomDistantSound,, 10.0,, 50000.0, 1.0, true);
     SetTimer(GetSoundDuration(RandomDistantSound) * 0.95, false);
+
+    if (Role == ROLE_Authority)
+    {
+        CloseSoundIndex = Rand(arraycount(CloseSound)); // added so server selects random CloseSound & replicates it to clients
+    }
 }
 
 // From deprecated ROArtilleryShell class
@@ -82,7 +94,7 @@ simulated function Timer()
     if (!bAlreadyPlayedCloseSound && !bAlreadyDroppedProjectile)
     {
         SetUpStrike();
-        CloseSoundDuration = GetSoundDuration(SelectedCloseSound);
+        CloseSoundDuration = GetSoundDuration(CloseSound[CloseSoundIndex]);
 
         // If CloseSound is longer than projectile's flight time, start playing CloseSound now & set a timer to delay dropping the projectile (while part of CloseSound plays)
         if (CloseSoundDuration > FlightTimeToTarget)
@@ -111,7 +123,9 @@ simulated function Timer()
     }
 }
 
-// From deprecated ROArtilleryShell class (renamed from SetupStrikeFX)
+// Modified from deprecated ROArtilleryShell class (renamed from SetupStrikeFX) so we no longer select a random CloseSound here
+// That is crucial as now only the server selects a random CloseSound & replicates it to net clients as CloseSoundIndex, so their timing is in sync with the server
+// And the server has to do that earlier so it replicates the index to net clients when this actor is replicated to them, so it now happens in PostBeginPlay()
 simulated function SetUpStrike()
 {
     local Actor  HitActor;
@@ -122,7 +136,6 @@ simulated function SetUpStrike()
     if (HitActor != none)
     {
         FlightTimeToTarget = VSize(Location - ImpactLocation) / Speed;
-        SelectedCloseSound = CloseSound[Rand(4)];
 
         if (Role == ROLE_Authority)
         {
@@ -154,7 +167,7 @@ simulated function DropProjectile()
 simulated function PlayCloseSound()
 {
     SoundActor = Spawn(class'ROArtillerySound', self,, ImpactLocation, rotator(PhysicsVolume.Gravity));
-    SoundActor.PlaySound(SelectedCloseSound,, 10.0, true, 5248.0, 1.0, true);
+    SoundActor.PlaySound(CloseSound[CloseSoundIndex],, 10.0, true, 5248.0, 1.0, true);
     bAlreadyPlayedCloseSound = true;
 }
 
