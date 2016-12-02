@@ -3,32 +3,92 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHThrowableExplosiveProjectile extends ROThrowableExplosiveProjectile
+class DHThrowableExplosiveProjectile extends DHProjectile
     abstract;
 
-var float           ExplosionSoundRadius;
-var class<Emitter>  ExplodeDirtEffectClass;
-var class<Emitter>  ExplodeSnowEffectClass;
-var class<Emitter>  ExplodeMidAirEffectClass;
+var     float           ExplosionSoundRadius;
+var     class<Emitter>  ExplodeDirtEffectClass;
+var     class<Emitter>  ExplodeSnowEffectClass;
+var     class<Emitter>  ExplodeMidAirEffectClass;
 
-var class<Actor>    SplashEffect;  // water splash effect class
-var sound           WaterHitSound; // sound of this bullet hitting water
+var     class<Actor>    SplashEffect;  // water splash effect class
+var     sound           WaterHitSound; // sound of this bullet hitting water
 
 // For DH_SatchelCharge10lb10sProjectile (moved from ROSatchelChargeProjectile & necessary here due to compiler package build order):
-var PlayerReplicationInfo SavedPRI;
-var Pawn                  SavedInstigator;
+var     PlayerReplicationInfo   SavedPRI;
+var     Pawn            SavedInstigator;
 
+//==============================================================================
+// Variables from deprecated ROThrowableExplosiveProjectile:
+
+var     byte            ThrowerTeam;      // the team number of the person that threw this projectile
+var     float           FuzeLengthTimer;
+var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
+var     bool            bDud;
+var     bool            bAlreadyExploded; // this projectile already exploded & is waiting to be destroyed
+var     int             ShrapnelCount;
+var     sound           ExplosionSound[3];
+var     AvoidMarker     Fear;             // scares the bots away from this
+var     byte            Bounces;
+var     float           DampenFactor;
+var     float           DampenFactorParallel;
+
+// View shake
+var     float           BlurTime;         // how long blur effect should last for this projectile
+var     float           BlurEffectScalar;
+var     float           ShakeScale;       // how much larger than the explosion radius should the view shake
+var     vector          ShakeRotMag;      // how far to rot view
+var     vector          ShakeRotRate;     // how fast to rot view
+var     float           ShakeRotTime;     // how much time to rot the instigator's view
+var     vector          ShakeOffsetMag;   // max view offset vertically
+var     vector          ShakeOffsetRate;  // how fast to offset view vertically
+var     float           ShakeOffsetTime;  // how much time to offset view
+
+replication
+{
+    // Variables the server will replicate to clients when this actor is 1st replicated
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        FuzeLengthTimer, Bounces;
+}
+
+// From ROThrowableExplosiveProjectile & ROGrenadeProjectile, combined
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority)
+    {
+        Velocity = Speed * vector(Rotation);
+
+        if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
+        {
+            Velocity = 0.25 * Velocity;
+        }
+    }
+
+    Acceleration = 0.5 * PhysicsVolume.Gravity;
+
+    if (InstigatorController != none && InstigatorController.PlayerReplicationInfo != none && InstigatorController.PlayerReplicationInfo.Team != none)
+    {
+        ThrowerTeam = InstigatorController.PlayerReplicationInfo.Team.TeamIndex;
+    }
+}
+
+// From ROThrowableExplosiveProjectile, ROGrenadeProjectile & ROSatchelChargeProjectile, combined
+// Incorporates ExplosionSoundRadius to make more generic
 simulated function Destroyed()
 {
-    local int           i;
-    local vector        Start;
     local ESurfaceTypes ST;
+    local ROPawn        Victims;
+    local vector        Start, Direction;
+    local float         DamageScale, Distance;
+    local int           i;
 
     WeaponLight();
 
-    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
+    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
 
-    Start = Location + 32.0 * vect(0.0, 0.0, 1.0);
+    Start = Location + vect(0.0, 0.0, 32.0);
 
     if (ShrapnelCount > 0 && Role == ROLE_Authority)
     {
@@ -65,10 +125,32 @@ simulated function Destroyed()
         }
     }
 
+    // Move karma ragdolls around when this explodes
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+        {
+            if (Victims.Physics == PHYS_KarmaRagDoll && Victims != self)
+            {
+                Direction = Victims.Location - Start;
+                Distance = FMax(1.0, VSize(Direction));
+                Direction = Direction / Distance;
+                DamageScale = 1.0 - FMax(0.0, (Distance - Victims.CollisionRadius) / DamageRadius);
+
+                Victims.DeadExplosionKarma(MyDamageType, DamageScale * MomentumTransfer * Direction, DamageScale);
+            }
+        }
+    }
+
+    if (Fear != none)
+    {
+        Fear.Destroy();
+    }
+
     super.Destroyed();
 }
 
-// Modified to optimise
+// Modified from ROThrowableExplosiveProjectile to optimise
 simulated function Tick(float DeltaTime)
 {
     if (!bAlreadyExploded)
@@ -79,6 +161,7 @@ simulated function Tick(float DeltaTime)
         {
             bAlreadyExploded = true;
             Explode(Location, vect(0.0, 0.0, 1.0));
+            Disable('Tick'); // no point continuing to call Tick
         }
     }
 }
@@ -335,7 +418,7 @@ simulated function UpdateInstigator()
     }
 }
 
-// Modified to add SetRotation
+// Modified from ROGrenadeProjectile/ROSatchelChargeProjectile to add SetRotation
 simulated function Landed(vector HitNormal)
 {
     if (Bounces <= 0)
@@ -356,7 +439,8 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-// Matt: added handling if projectile hits a weak destroyable mesh (e.g. glass), so that it breaks the mesh & continues its flight, instead of bouncing off
+// Modified from ROGrenadeProjectile/ROSatchelChargeProjectile to add handling if projectile hits a weak destroyable mesh (e.g. glass)
+// The projectile breaks the mesh & continues its flight, instead of bouncing off
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroMesh;
@@ -471,7 +555,7 @@ simulated function ClientSideTouch(Actor Other, vector HitLocation)
 {
 }
 
-// Matt: modified to call HitWall for all hit actors, so grenades etc bounce off things like turrets or other players
+// Modified from ROThrowableExplosiveProjectile to call HitWall for all hit actors, so grenades etc bounce off things like turrets or other players
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local vector TempHitLocation, HitNormal;
@@ -485,10 +569,65 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
+// From ROGrenadeProjectile
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     BlowUp(HitLocation);
     Destroy();
+}
+
+// From ROGrenadeProjectile & ROSatchelChargeProjectile, combined
+function BlowUp(vector HitLocation)
+{
+    local vector Start;
+    local int    i;
+
+    if (Role == ROLE_Authority)
+    {
+        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+
+        MakeNoise(1.0);
+
+        if (ShrapnelCount > 0)
+        {
+            Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
+
+            for (i = 0; i < ShrapnelCount; ++i)
+            {
+                Spawn(class'ROShrapnelChunk',, '', Start);
+            }
+        }
+    }
+}
+
+// From ROThrowableExplosiveProjectile (slightly re-factored to optimise & make clearer)
+simulated function DoShakeEffect()
+{
+    local PlayerController PC;
+    local float            Distance, MaxShakeDistance, Scale, BlastExposure;
+
+    PC = Level.GetLocalPlayerController();
+
+    if (PC != none && PC.ViewTarget != none)
+    {
+        Distance = VSize(Location - PC.ViewTarget.Location);
+        MaxShakeDistance = DamageRadius * ShakeScale;
+
+        if (Distance < MaxShakeDistance)
+        {
+            // Screen shake
+            Scale = (MaxShakeDistance - Distance) / MaxShakeDistance * BlurEffectScalar;
+            PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+
+            // Screen blur (reduce scale if player is not fully exposed to the blast)
+            if (ROPawn(PC.Pawn) != none && PC.IsA('ROPlayer'))
+            {
+                BlastExposure = ROPawn(PC.Pawn).GetExposureTo(Location - (15.0 * Normal(PhysicsVolume.Gravity)));
+                Scale -= (0.5 * (1.0 - BlastExposure));
+                ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
+            }
+        }
+    }
 }
 
 // Modified to fix UT2004 bug affecting non-owning net players in any vehicle with bPCRelativeFPRotation (nearly all), often causing effects to be skipped
@@ -538,7 +677,7 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     return CheckMaxEffectDistance(PC, SpawnLocation);
 }
 
-// Gets the surface type of the surface the projectile has collided with
+// From ROGrenadeProjectile/ROSatchelChargeProjectile
 simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
 {
     local vector   HitLoc, HitNorm;
@@ -556,7 +695,7 @@ simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
     }
 }
 
-// Gets the DampenFactors and hit sound for the surface the projectile hits
+// From ROGrenadeProjectile/ROSatchelChargeProjectile
 simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 {
     switch (ST)
@@ -629,12 +768,12 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
     }
 }
 
-// New function in projectile class - empty but can be subclassed
+// From ROGrenadeProjectile/ROSatchelChargeProjectile - empty but can be subclassed
 simulated function WeaponLight()
 {
 }
 
-// Implemented so if thrown projectile hits water we play a splash effect (same as a bullet or shell) & slow down a lot
+// Modified from ROGrenadeProjectile so if thrown projectile hits water we play a splash effect
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     if (NewVolume != none && NewVolume.bWaterVolume)
@@ -644,7 +783,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
     }
 }
 
-// Added same as bullet & shell classes to play a water splash effect
+// New function, same as bullet & shell classes, to play a water splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
     local Actor  HitActor;
@@ -699,4 +838,13 @@ defaultproperties
     LightHue=30
     LightSaturation=150
     LightRadius=5.0
+
+    // From deprecated ROThrowableExplosiveProjectile class:
+    bNetTemporary=false
+    bBlockHitPointTraces=false
+    Physics=PHYS_Falling
+    DrawType=DT_StaticMesh
+    ShakeScale=2.25
+    BlurTime=4.0
+    BlurEffectScalar=1.35
 }

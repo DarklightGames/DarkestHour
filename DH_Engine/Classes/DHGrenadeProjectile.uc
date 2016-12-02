@@ -15,13 +15,6 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        Velocity = Speed * vector(Rotation);
-
-        if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
-        {
-            Velocity = 0.25 * Velocity;
-        }
-
         FuzeLengthTimer += FRand();
     }
 
@@ -33,8 +26,6 @@ simulated function PostBeginPlay()
     {
         RandSpin(100000.0); // normal random 3D spin for egg-shaped or canister grenades
     }
-
-    Acceleration = 0.5 * PhysicsVolume.Gravity;
 }
 
 simulated function HitWall(vector HitNormal, Actor Wall)
@@ -48,7 +39,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     super.HitWall(HitNormal, Wall);
 }
 
-// Modified from ROGrenadeProjectile to allow players to dive on grenades to save teammates
+// Modified to allow players to dive on grenades to save teammates
 function BlowUp(vector HitLocation)
 {
     local DHPawn DHP;
@@ -65,11 +56,9 @@ function BlowUp(vector HitLocation)
                 break;
             }
         }
-
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-
-        MakeNoise(1.0);
     }
+
+    super.BlowUp(HitLocation);
 }
 
 defaultproperties

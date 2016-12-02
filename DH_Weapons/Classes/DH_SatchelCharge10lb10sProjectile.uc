@@ -6,35 +6,20 @@
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
 // Modified to record SavedInstigator & SavedPRI
+// RODemolitionChargePlacedMsg from ROSatchelChargeProjectile is omitted
 simulated function PostBeginPlay()
 {
-    if (Role == ROLE_Authority)
-    {
-        Velocity = Speed * vector(Rotation);
-
-        if (Instigator != none && Instigator.HeadVolume.bWaterVolume)
-        {
-            Velocity = 0.25 * Velocity;
-        }
-    }
-
-    Acceleration = 0.5 * PhysicsVolume.Gravity;
+    super.PostBeginPlay();
 
     if (Instigator != none)
     {
-        InstigatorController = Instigator.Controller;
         SavedInstigator = Instigator;
         SavedPRI = Instigator.PlayerReplicationInfo;
-
-        if (InstigatorController != none && InstigatorController.PlayerReplicationInfo != none && InstigatorController.PlayerReplicationInfo.Team != none)
-        {
-            ThrowerTeam = InstigatorController.PlayerReplicationInfo.Team.TeamIndex;
-        }
     }
 }
 
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
-function BlowUp(vector HitLocation)
+simulated function BlowUp(vector HitLocation)
 {
     local ROObjSatchel SatchelObjActor;
     local Volume       V;
@@ -45,13 +30,10 @@ function BlowUp(vector HitLocation)
         SavedPRI = Instigator.PlayerReplicationInfo;
     }
 
-    DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+    super.BlowUp(HitLocation);
 
-    if (Role == ROLE_Authority)
-    {
-        MakeNoise(1.0);
-    }
-
+    // TODO: triggering these special actors appears only appears to do stuff on an authority role, so suspect this can be made authority only
+    // Then we can probably remove bAlwaysRelevant from this actor, as doing this on a net client is the only reason I can guess caused bAlwaysRelevant to be set for satchel?
     foreach TouchingActors(class'Volume', V)
     {
         if (ROObjSatchel(V.AssociatedActor) != none)

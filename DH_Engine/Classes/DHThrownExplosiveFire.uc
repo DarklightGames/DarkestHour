@@ -256,9 +256,9 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
         if (Instigator.Health <= 0)
         {
             // The grenade was active & we'll need to set the remaining fuze length
-            if (ROThrowableExplosiveProjectile(SpawnedProjectile) != none)
+            if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)
             {
-                ROThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime);
+                DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime);
             }
 
             // Have the grenade go in the direction the instigator was going
@@ -280,7 +280,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     SpawnedProjectile.Velocity = SpawnedProjectile.Speed * vector(Dir);
 
     // Set the fuse time
-    if (ROThrowableExplosiveProjectile(SpawnedProjectile) != none)
+    if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)
     {
         SetFuseTime = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime);
 
@@ -289,7 +289,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
             SetFuseTime += AddedFuseTime;
         }
 
-        ROThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = SetFuseTime;
+        DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = SetFuseTime;
     }
 
     return SpawnedProjectile;

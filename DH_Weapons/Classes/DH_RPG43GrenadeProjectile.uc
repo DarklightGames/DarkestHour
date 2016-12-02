@@ -19,40 +19,28 @@ simulated function bool ShouldDrawDebugLines() { return false; }
 function DebugShotDistanceAndSpeed();
 simulated function HandleShellDebug(vector RealHitLocation);
 
-// From DHGrenadeProjectile & its Supers, with FuzeLengthTimer, bDynamicLight & ThrowerTeam blocks removed as not relevant (rest re-factored slightly)
-// Grenade spin functionality removed as this grenade was stablised by a trailing crude 'minute chute'
+// From DHThrowableExplosiveProjectile with ThrowerTeam stuff removed as not relevant
+// Ignoring the DHGrenadeProjectile function as this doesn't use fuzed timer & we don't want grenade spin stuff as this grenade was stablised by a trailing crude 'minute chute'
+// Also includes a necessary line from DHAntiVehicleProjectile & trims the inherited ExplosionSound array as we only have 3 sounds
 simulated function PostBeginPlay()
 {
+    super(Projectile).PostBeginPlay();
+
+    LaunchLocation = Location; // added from DHAntiVehicleProjectile & used in penetration functions
+
+    ExplosionSound.Length = 3; // added remove unwanted 4th sound inherited from DHCannonShellHEAT
+
     if (Role == ROLE_Authority)
     {
         Velocity = Speed * vector(Rotation);
 
-        if (Instigator != none)
+        if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
-            if (Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
-            {
-                Velocity = 0.25 * Velocity;
-            }
-
-            if (Instigator.Controller != none)
-            {
-                if (Instigator.Controller.ShotTarget != none && Instigator.Controller.ShotTarget.Controller != none)
-                {
-                    Instigator.Controller.ShotTarget.Controller.ReceiveProjectileWarning(self);
-                }
-
-                InstigatorController = Instigator.Controller;
-            }
+            Velocity = 0.25 * Velocity;
         }
     }
 
-    LaunchLocation = Location;
-
     Acceleration = 0.5 * PhysicsVolume.Gravity;
-
-    bReadyToSplash = true;
-
-    ExplosionSound.Length = 3; // remove unwanted 4th sound inherited from DHCannonShellHEAT
 }
 
 // From DHThrowableExplosiveProjectile (collision mesh block checks bWontStopThrownProjectile instead of bWontStopShell)
@@ -523,7 +511,7 @@ defaultproperties
     ExplosionSound(1)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode02'
     ExplosionSound(2)=SoundGroup'DH_WeaponSounds.RPG43.RPG43_explode03'
 
-    // Properties from usual grenade parent classes (DHGrenadeProjectile, DHThrowableExplosiveProjectile & ROThrowableExplosiveProjectile)
+    // Properties from usual grenade parent classes (DHGrenadeProjectile & DHThrowableExplosiveProjectile)
     Physics=PHYS_Falling
     bBounce=true
     MaxSpeed=1500.0
