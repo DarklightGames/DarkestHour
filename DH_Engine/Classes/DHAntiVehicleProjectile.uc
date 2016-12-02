@@ -997,9 +997,9 @@ simulated function Destroyed()
 
 simulated function bool ShouldDrawDebugLines()
 {
-    if (bDrawDebugLines && FirstHit && Level.NetMode != NM_DedicatedServer)
+    if (bDrawDebugLines && bFirstHit && Level.NetMode != NM_DedicatedServer)
     {
-        FirstHit = false;
+        bFirstHit = false;
 
         return true;
     }
