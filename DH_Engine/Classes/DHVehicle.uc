@@ -1822,27 +1822,24 @@ simulated event ClientVehicleExplosion(bool bFinal)
     if (bClientInitialized || Role == ROLE_Authority)
     {
         // View shake
-        if (Level.NetMode != NM_DedicatedServer)
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none && PC.ViewTarget != none)
         {
-            PC = Level.GetLocalPlayerController();
+            Dist = VSize(Location - PC.ViewTarget.Location);
 
-            if (PC != none && PC.ViewTarget != none)
+            if (Dist < (ExplosionRadius * 2.5))
             {
-                Dist = VSize(Location - PC.ViewTarget.Location);
-
-                if (Dist < (ExplosionRadius * 2.5))
+                if (Dist < ExplosionRadius)
                 {
-                    if (Dist < ExplosionRadius)
-                    {
-                        Scale = 1.0;
-                    }
-                    else
-                    {
-                        Scale = ((ExplosionRadius * 2.5) - Dist) / ExplosionRadius;
-                    }
-
-                    PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+                    Scale = 1.0;
                 }
+                else
+                {
+                    Scale = ((ExplosionRadius * 2.5) - Dist) / ExplosionRadius;
+                }
+
+                PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
             }
         }
 
@@ -1854,44 +1851,41 @@ simulated event ClientVehicleExplosion(bool bFinal)
     }
 
     // Spawn destroyed vehicle effect
-    if (Level.NetMode != NM_DedicatedServer)
+    // If vehicle disintegrates (falls below DisintegrationHealth), this function gets called twice & two effects get spawned
+    // The 1st call spawns a normal effect, but this is followed by a 2nd disintegration call (with bFinal), which spawns a disintegration effect
+    // This is handled by native code so we can't change what happens - a fix is to destroy the 1st effect if a 2nd is going to be spawned
+    if (DestructionEffect != none)
     {
-        // If vehicle disintegrates (falls below DisintegrationHealth), this function gets called twice & two effects get spawned
-        // The 1st call spawns a normal effect, but this is followed by a 2nd disintegration call (with bFinal), which spawns a disintegration effect
-        // This is handled by native code so we can't change what happens - a fix is to destroy the 1st effect if a 2nd is going to be spawned
-        if (DestructionEffect != none)
-        {
-            DestructionEffect.Destroy();
-        }
+        DestructionEffect.Destroy();
+    }
 
-        // Low detail effect
-        if (Level.bDropDetail || Level.DetailMode == DM_Low)
+    // Low detail effect
+    if (Level.bDropDetail || Level.DetailMode == DM_Low)
+    {
+        if (bFinal)
         {
-            if (bFinal)
-            {
-                DestructionEffect = Spawn(DisintegrationEffectLowClass, self,, Location, Rotation);
-            }
-            else
-            {
-                DestructionEffect = Spawn(DestructionEffectLowClass, self);
-            }
+            DestructionEffect = Spawn(DisintegrationEffectLowClass, self,, Location, Rotation);
         }
-        // Standard detail effect
         else
         {
-            if (bFinal)
-            {
-                DestructionEffect = Spawn(DisintegrationEffectClass, self,, Location, Rotation);
-            }
-            else
-            {
-                DestructionEffect = Spawn(DestructionEffectClass, self);
-            }
+            DestructionEffect = Spawn(DestructionEffectLowClass, self);
         }
-
-        DestructionEffect.LifeSpan = TimeTilDissapear;
-        DestructionEffect.SetBase(self);
     }
+    // Standard detail effect
+    else
+    {
+        if (bFinal)
+        {
+            DestructionEffect = Spawn(DisintegrationEffectClass, self,, Location, Rotation);
+        }
+        else
+        {
+            DestructionEffect = Spawn(DestructionEffectClass, self);
+        }
+    }
+
+    DestructionEffect.LifeSpan = TimeTilDissapear;
+    DestructionEffect.SetBase(self);
 }
 
 // Modified to make sure driver's health is no more than zero on a net client, in case that isn't replicated until later
