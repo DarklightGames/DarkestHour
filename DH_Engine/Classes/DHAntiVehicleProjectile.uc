@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHAntiVehicleProjectile extends ROAntiVehicleProjectile
+class DHAntiVehicleProjectile extends DHBallisticProjectile
     config
     abstract;
 
@@ -59,6 +59,46 @@ var     float           PenetrationMag;          // different for AP and HE shel
 // Debugging
 var     bool            bDebuggingText;          // show screen debugging text
 var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to true for getting the arrow pointers (added from DHBullet so bDebugBallistics can be set in a config file)
+
+// Variables from deprecated ROAntiVehicleProjectile class:
+var     Actor           SavedTouchActor;
+var     Pawn            SavedHitActor;
+var     vector          LaunchLocation;
+var     vector          SavedHitLocation;
+var     vector          SavedHitNormal;
+var     bool            bCollided;
+var     float           DestroyTime;                // how long for the server to wait to destroy the actor after it has collided
+var     bool            bDidExplosionFX;            // already did the explosion effects
+
+// Impact damage
+var class<DamageType>   ShellImpactDamage;
+var     int             ImpactDamage;
+
+// Deflection
+var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
+var     float           DampenFactor;
+var     float           DampenFactorParallel;
+
+// Impact sounds
+var     sound           VehicleHitSound;            // sound of this shell penetrating a vehicle
+var     sound           VehicleDeflectSound;        // sound of this shell deflecting off a vehicle
+var     sound           DirtHitSound;               // sound of this shell hitting dirt
+var     sound           RockHitSound;               // sound of this shell hitting rock
+var     sound           WaterHitSound;              // sound of this shell hitting water
+var     sound           WoodHitSound;               // sound of this shell hitting wood
+
+// Impact effects
+var     class<Emitter>  ShellHitVehicleEffectClass; // effect for this shell hitting a vehicle
+var     class<Emitter>  ShellDeflectEffectClass;    // effect for this shell deflecting off a vehicle
+var     class<Emitter>  ShellHitDirtEffectClass;    // effect for this shell hitting dirt
+var     class<Emitter>  ShellHitSnowEffectClass;    // effect for this shell hitting snow
+var     class<Emitter>  ShellHitWoodEffectClass;    // effect for this shell hitting wood
+var     class<Emitter>  ShellHitRockEffectClass;    // effect for this shell hitting rock
+var     class<Emitter>  ShellHitWaterEffectClass;   // effect for this shell hitting water
+
+// Debug
+var     bool            bDrawDebugLines;
+var     bool            bFirstHit;
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
 simulated function PostBeginPlay()
@@ -741,11 +781,11 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
             }
         }
 
-        DHDeflect(HitLocation, HitNormal, HitActor);
+        Deflect(HitLocation, HitNormal, HitActor);
     }
 
     // If bot fired this round, notify it of ineffective attack on vehicle
-    if (ROBot(InstigatorController) != none)
+    if (bBotNotifyIneffective && Role == ROLE_Authority && ROBot(InstigatorController) != none)
     {
         if (Pawn(HitActor) == none && HitActor != none && Pawn(HitActor.Base) != none)
         {
@@ -758,7 +798,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
 
 // Modified version of function to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns)
 // Also avoided setting replicated variables on a server, as clients are going to get this anyway
-simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
+simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
     local vector VNorm;
 

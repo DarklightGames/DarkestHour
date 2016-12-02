@@ -6,7 +6,7 @@
 class DHBullet_ArmorPiercing extends DHAntiVehicleProjectile
     abstract;
 
-// From ROBullet & DHBullet:
+// From DHBullet:
 const   MinPenetrateVelocity = 163;
 
 var     class<ROHitEffect>  ImpactEffect;
@@ -176,7 +176,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             if (Level.NetMode != NM_DedicatedServer && bHasTracer && VSizeSquared(Velocity) > 500000.0)
             {
                 Trace(HitLocation, HitNormal, HitLocation + (Direction * 50.0), HitLocation - (Direction * 50.0), true);
-                DHDeflect(HitLocation, HitNormal, Other);
+                Deflect(HitLocation, HitNormal, Other);
             }
             else
             {
@@ -369,7 +369,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // Deflect off wall unless bullet speed is very low (approx 12 m/s)
             if (Level.NetMode != NM_DedicatedServer && VSizeSquared(Velocity) > 500000.0)
             {
-                DHDeflect(Location, HitNormal, Wall);
+                Deflect(Location, HitNormal, Wall);
             }
             // Otherwise destroy if tracer has already deflected & this 'bullet' is now just a client visual effect
             else if (HasDeflected())
@@ -459,7 +459,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // Deflect off wall unless penetrated vehicle or bullet speed is very low (approx 12 m/s)
         if (Level.NetMode != NM_DedicatedServer && !bPenetratedVehicle && VSizeSquared(Velocity) > 500000.0)
         {
-            DHDeflect(Location, HitNormal, Wall);
+            Deflect(Location, HitNormal, Wall);
         }
         else
         {
@@ -512,7 +512,7 @@ simulated function PlayVehicleHitEffects(bool bPenetrated, vector HitLocation, v
 }
 
 // Modified so tracer bullet switches to DeflectedMesh & to destroy TracerEffect if bullet speed is very low (from DHBullet)
-simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
+simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
     if (TracerEffect != none && VSizeSquared(Velocity) < 750000.0) // approx 14 m/s
     {
@@ -524,7 +524,7 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
         SetStaticMesh(DeflectedMesh);
     }
 
-    super.DHDeflect(HitLocation, HitNormal, Wall);
+    super.Deflect(HitLocation, HitNormal, Wall);
 }
 
 // New function just to add readability to functions
