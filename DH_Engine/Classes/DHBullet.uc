@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHBullet extends ROBullet
+class DHBullet extends DHBallisticProjectile
     config
     abstract;
 
@@ -34,6 +34,15 @@ var     float           VehicleDeflectSoundVolume;
 
 // Debugging
 var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
+
+// From deprecated ROBullet class:
+const       MinPenetrateVelocity = 163;              // minimum bullet speed in Unreal units to damage anything (equivalent to 2.7 m/sec or 8.86 feet/sec)
+
+var         class<ROHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
+var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
+var         class<Actor>            SplashEffect;    // water splash effect class
+var         class<DamageType>       MyVehicleDamage; // stupid hack we need because TakeDamage doesn't like our ROWeaponDamage for vehicles // TODO: probably unnecessary & removable
+var         Actor                   WallHitActor;    // internal var used for storing the wall that was hit so the same wall doesn't get hit again
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
 simulated function PostBeginPlay()
@@ -714,6 +723,16 @@ simulated function Deflect(vector HitNormal)
     }
 }
 
+// Implemented so if bullet hits a water volume, its speed is reduced & it does a water splash
+simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
+{
+    if (NewVolume != none && NewVolume.bWaterVolume)
+    {
+        Velocity *= 0.5;
+        CheckForSplash(Location);
+    }
+}
+
 // Modified to add water splash sound, & to add an EffectIsRelevant check before spawning visual splash effect
 simulated function CheckForSplash(vector SplashLocation)
 {
@@ -794,4 +813,15 @@ defaultproperties
     Bounces=2
     DampenFactor=0.1
     DampenFactorParallel=0.05
+
+    // From deprecated ROBullet class:
+    bUseCollisionStaticMesh=true
+    DrawType=DT_None
+    LifeSpan=5.0
+    MaxSpeed=100000.0
+    MomentumTransfer=100.0
+    TossZ=0.0
+    SplashEffect=class'ROBulletHitWaterEffect'
+    MyVehicleDamage=class'ROVehicleDamageType'
+
 }

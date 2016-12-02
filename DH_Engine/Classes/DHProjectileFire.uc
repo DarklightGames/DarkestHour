@@ -470,9 +470,9 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     }
     else if (!bTraceHitBulletProofColMesh)
     {
-        if (Other.IsA('ROVehicle') && class<ROBullet>(ProjectileClass) != none)
+        if (Other.IsA('ROVehicle') && class<DHBullet>(ProjectileClass) != none)
         {
-            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<ROBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
+            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<DHBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
         }
         else if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
         {
