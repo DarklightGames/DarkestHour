@@ -4025,8 +4025,7 @@ simulated function DoMantleCrouch()
 // Added a pre-mantle bob
 event UpdateEyeHeight(float DeltaTime)
 {
-    local float  Smooth, MaxEyeHeight, OldEyeHeight;
-    local Actor  HitActor;
+    local float  Smooth, OldEyeHeight, MaxEyeHeight;
     local vector HitLocation, HitNormal;
 
     if (Controller == none)
@@ -4101,15 +4100,13 @@ event UpdateEyeHeight(float DeltaTime)
         return;
     }
 
-    HitActor = Trace(HitLocation, HitNormal, Location + (CollisionHeight + MAXSTEPHEIGHT + 14.0) * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0), true);
-
-    if (HitActor == none)
+    if (Trace(HitLocation, HitNormal, Location + (CollisionHeight + MAXSTEPHEIGHT + 14.0) * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0), true) != none)
     {
-        MaxEyeHeight = CollisionHeight + MAXSTEPHEIGHT;
+        MaxEyeHeight = HitLocation.Z - Location.Z - 14.0;
     }
     else
     {
-        MaxEyeHeight = HitLocation.Z - Location.Z - 14.0;
+        MaxEyeHeight = CollisionHeight + MAXSTEPHEIGHT;
     }
 
     if (Abs(Location.Z - OldZ) > 15.0)

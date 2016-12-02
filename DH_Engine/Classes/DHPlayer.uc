@@ -849,11 +849,10 @@ simulated function float GetMaxViewDistance()
 // Overridden to handle separate MG and AT resupply as well as assisted AT loading
 exec function ThrowMGAmmo()
 {
-    local Actor HitActor;
     local DHPawn MyPawn, OtherPawn;
-    local DHMortarVehicle M;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-    local float TraceDistance;
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal, TraceStart, TraceEnd;
+    local float  TraceDistance;
 
     MyPawn = DHPawn(Pawn);
 
@@ -868,13 +867,7 @@ exec function ThrowMGAmmo()
 
     HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
-    if (HitActor == none)
-    {
-        return;
-    }
-
     OtherPawn = DHPawn(HitActor);
-    M = DHMortarVehicle(HitActor);
 
     if (OtherPawn != none)
     {
@@ -888,9 +881,9 @@ exec function ThrowMGAmmo()
             ServerLoadATAmmo(OtherPawn);
         }
     }
-    else if (M != none)
+    else if (DHMortarVehicle(HitActor) != none)
     {
-        ServerThrowMortarAmmo(M);
+        ServerThrowMortarAmmo(DHMortarVehicle(HitActor));
     }
 }
 
@@ -1583,8 +1576,7 @@ state PlayerSwimming
     // Modified so if player moves into a shallow water volume, they exit swimming state, same as if they move into a non-water volume
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
-        local Actor  HitActor;
-        local vector HitLocation, HitNormal, CheckPoint;
+        local vector CheckPoint, HitLocation, HitNormal;
 
         if (!NewVolume.bWaterVolume || (NewVolume.IsA('DHWaterVolume') && DHWaterVolume(NewVolume).bIsShallowWater)) // moving into shallow water volume also exits swimming state
         {
@@ -1602,13 +1594,12 @@ state PlayerSwimming
                 {
                     GotoState(Pawn.LandMovementState);
                 }
-                else // check if in deep water
+                else // check if in deep water (positive trace means we're not)
                 {
                     CheckPoint = Pawn.Location;
                     CheckPoint.Z -= (Pawn.CollisionHeight + 6.0);
-                    HitActor = Trace(HitLocation, HitNormal, CheckPoint, Pawn.Location, false);
 
-                    if (HitActor != none)
+                    if (Trace(HitLocation, HitNormal, CheckPoint, Pawn.Location, false) != none)
                     {
                         GotoState(Pawn.LandMovementState);
                     }
@@ -1994,7 +1985,6 @@ function BecomeSpectator()
 
     super.BecomeSpectator();
 }
-
 
 // Modified to call ToggleBehindView to avoid code repetition
 exec function BehindView(bool B)
