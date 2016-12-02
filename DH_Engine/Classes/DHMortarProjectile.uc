@@ -223,10 +223,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         MakeNoise(1.0); // shell landing makes noise, even if a dud & doesn't detonate
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        SpawnImpactEffects(HitLocation, HitNormal);
-    }
+    SpawnImpactEffects(HitLocation, HitNormal);
 
     if (!bDud)
     {
@@ -259,7 +256,7 @@ simulated function SpawnImpactEffects(vector HitLocation, vector HitNormal)
     local class<Emitter> HitEmitterClass;
     local sound          HitSound;
 
-    if (!(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
+    if (Level.NetMode != NM_DedicatedServer && !(PhysicsVolume != none && PhysicsVolume.bWaterVolume))
     {
         GetHitSurfaceType(HitSurfaceType, HitNormal);
         GetHitSound(HitSound, HitSurfaceType);

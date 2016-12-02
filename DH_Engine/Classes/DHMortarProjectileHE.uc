@@ -73,15 +73,15 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
     local class<Projector> ExplosionDecalClass;
     local sound            ExplosionSound;
 
-    GetHitSurfaceType(HitSurfaceType, HitNormal);
-    GetExplosionSound(ExplosionSound, HitSurfaceType);
-    PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
-
     // Note no EffectIsRelevant() check as explosion is big & not instantaneous, so player may hear sound & turn towards explosion & must be able to see it)
     if (Level.NetMode != NM_DedicatedServer)
     {
+        GetHitSurfaceType(HitSurfaceType, HitNormal);
+        GetExplosionSound(ExplosionSound, HitSurfaceType);
         GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
         GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
+
+        PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
         Spawn(ExplosionEmitterClass, self,, HitLocation);
         Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
 
