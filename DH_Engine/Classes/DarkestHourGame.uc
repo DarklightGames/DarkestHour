@@ -1155,7 +1155,7 @@ function ScoreATReload(Controller Loader, Controller Gunner)
     }
 }
 
-// Give player a point for resupplying an MG gunner
+// Give radio operator points for teaming up with artillery officer to call in arty
 function ScoreRadioUsed(Controller Radioman)
 {
     local int RadioUsedAward;

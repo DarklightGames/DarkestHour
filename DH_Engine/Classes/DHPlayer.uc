@@ -695,63 +695,47 @@ function ServerArtyStrike()
     }
 }
 
+// New function for mortar observer role to mark a mortar target on the map
 function ServerSaveMortarTarget(bool bIsSmoke)
 {
-    local DHGameReplicationInfo   GRI;
-    local DHPlayerReplicationInfo PRI;
-    local DHPawn       P;
-    local Actor        HitActor;
-    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
+    local DHGameReplicationInfo GRI;
     local DHVolumeTest VT;
+    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local int          TeamIndex, i;
-    local bool         bMortarsAvailable, bMortarTargetMarked;
-
-    TeamIndex = GetTeamNum();
-    P = DHPawn(Pawn);
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    local bool         bValidTarget, bMortarsAvailable, bMortarTargetMarked;
 
     TraceStart = Pawn.Location + Pawn.EyePosition();
-    TraceEnd = TraceStart + (vector(Rotation) * GetMaxViewDistance());
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
 
-    VT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-    // Check that the artillery target is not in a no artillery volume
-    if ((VT != none && VT.IsInNoArtyVolume()) || HitActor == none)
+    // First check that the mortar target is not in a no arty volume
+    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
     {
-        // Invalid mortar target
-        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 0);
-        VT.Destroy();
+        VT = Spawn(class'DHVolumeTest', self,, HitLocation);
+
+        if (VT != none)
+        {
+            bValidTarget = !VT.IsInNoArtyVolume();
+            VT.Destroy();
+        }
+    }
+
+    if (!bValidTarget)
+    {
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 0); // "Invalid mortar target"
 
         return;
     }
 
-    VT.Destroy();
+    TeamIndex = GetTeamNum();
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    // Check that there are mortar operators available and that we haven't set a mortar target in the last 30 seconds
-    if (TeamIndex == AXIS_TEAM_INDEX) // axis
+    // Make sure there is a mortar operator available on our team
+    if (TeamIndex == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
-        {
-            if (GRI.GermanMortarTargets[i].Controller == self &&
-                Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < MORTAR_TARGET_TIME_INTERVAL)
-            {
-                // You cannot mark another mortar target yet
-                ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
-
-                return;
-            }
-        }
-
-        // Go through the roles and find a mortar operator role that has someone on it
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
-            if (GRI.DHAxisRoles[i]!= none &&
-                GRI.DHAxisRoles[i].bCanUseMortars &&
-                GRI.DHAxisRoleCount[i] > 0)
+            if (GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
             {
-                // Mortar operator available!
                 bMortarsAvailable = true;
                 break;
             }
@@ -759,22 +743,9 @@ function ServerSaveMortarTarget(bool bIsSmoke)
     }
     else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
-        {
-            if (GRI.AlliedMortarTargets[i].Controller == self &&
-                Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < MORTAR_TARGET_TIME_INTERVAL)
-            {
-                ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
-
-                return;
-            }
-        }
-
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
-            if (GRI.DHAlliesRoles[i] != none &&
-                GRI.DHAlliesRoles[i].bCanUseMortars &&
-                GRI.DHAlliesRoleCount[i] > 0)
+            if (GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
             {
                 bMortarsAvailable = true;
                 break;
@@ -784,22 +755,28 @@ function ServerSaveMortarTarget(bool bIsSmoke)
 
     if (!bMortarsAvailable)
     {
-        // No mortar operators available
-        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 1);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 1); // "There are no mortar operators available"
 
         return;
     }
 
-    // Zero out the z coordinate for 2D distance checking on round hits
-    HitLocation.Z = 0.0;
+    HitLocation.Z = 0.0; // zero out the z coordinate for 2D distance checking on round hits
 
+    // Axis team - go through team's mortar targets list to make sure we are able to mark a target & there's an available slot
     if (TeamIndex == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); ++i)
         {
-            if (GRI.GermanMortarTargets[i].Controller == none ||
-                GRI.GermanMortarTargets[i].Controller == self ||
-                !GRI.GermanMortarTargets[i].bIsActive)
+            // Make sure this player hasn't set a mortar target in the last 30 seconds
+            if (GRI.GermanMortarTargets[i].Controller == self && (Level.TimeSeconds - GRI.GermanMortarTargets[i].Time) < MORTAR_TARGET_TIME_INTERVAL)
+            {
+                ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4); // "You cannot mark another mortar target marker yet"
+
+                return;
+            }
+
+            // Find an available slot in our team's mortar targets list (an empty slot or our own current marked target)
+            if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self || !GRI.GermanMortarTargets[i].bIsActive)
             {
                 GRI.GermanMortarTargets[i].bIsActive = true;
                 GRI.GermanMortarTargets[i].Controller = self;
@@ -807,18 +784,25 @@ function ServerSaveMortarTarget(bool bIsSmoke)
                 GRI.GermanMortarTargets[i].Location = HitLocation;
                 GRI.GermanMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.GermanMortarTargets[i].bIsSmoke = bIsSmoke;
+
                 bMortarTargetMarked = true;
                 break;
             }
         }
     }
+    // Allies team - go through team's mortar targets list to make sure we are able to mark a target & there's an available slot
     else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); ++i)
         {
-            if (GRI.AlliedMortarTargets[i].Controller == none ||
-                GRI.AlliedMortarTargets[i].Controller == self ||
-                !GRI.AlliedMortarTargets[i].bIsActive)
+            if (GRI.AlliedMortarTargets[i].Controller == self && (Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time) < MORTAR_TARGET_TIME_INTERVAL)
+            {
+                ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
+
+                return;
+            }
+
+            if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self || !GRI.AlliedMortarTargets[i].bIsActive)
             {
                 GRI.AlliedMortarTargets[i].bIsActive = true;
                 GRI.AlliedMortarTargets[i].Controller = self;
@@ -826,28 +810,28 @@ function ServerSaveMortarTarget(bool bIsSmoke)
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
                 GRI.AlliedMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.AlliedMortarTargets[i].bIsSmoke = bIsSmoke;
+
                 bMortarTargetMarked = true;
                 break;
             }
         }
     }
 
+    // Display success or failure screen message to player
     if (bMortarTargetMarked)
     {
-        // [DH]Basnett has marked a mortar target
         if (bIsSmoke)
         {
-            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PlayerReplicationInfo);
+            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PlayerReplicationInfo); // "PlayerName has marked a mortar high-explosive target"
         }
         else
         {
-            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo);
+            Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo); // "PlayerName has marked a mortar smoke target"
         }
     }
     else
     {
-        // There are too many active mortar targets
-        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 6);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 6); // "There are too many active mortar targets"
     }
 }
 
