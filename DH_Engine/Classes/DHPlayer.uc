@@ -579,96 +579,119 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     }
 }
 
+// Modified to require player to be an arty officer instead of RO's bIsLeader role, to remove check that map contains a radio, & to optimise
 function ServerSaveArtilleryPosition()
 {
-    local DHGameReplicationInfo   GRI;
-    local DHPlayerReplicationInfo PRI;
     local DHRoleInfo   RI;
-    local DHVolumeTest RVT;
-    local Actor        HitActor;
-    local material     HitMaterial;
-    local vector       HitLocation, HitNormal, StartTrace;
-    local rotator      AimRot;
-    local int          TraceDist;
+    local DHVolumeTest VT;
+    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
+    local bool         bValidTarget;
 
     if (DHPawn(Pawn) != none && Pawn.Weapon != none && Pawn.Weapon.IsA('DHBinocularsItem'))
     {
         RI = DHPawn(Pawn).GetRoleInfo();
-        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+        if (RI != none && RI.bIsArtilleryOfficer)
+        {
+            TraceStart = Pawn.Location + Pawn.EyePosition();
+            TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+
+            if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none && HitNormal != vect(0.0, 0.0, -1.0))
+            {
+                VT = Spawn(class'DHVolumeTest', self,, HitLocation);
+
+                if (VT != none)
+                {
+                    bValidTarget = !VT.IsInNoArtyVolume();
+                    VT.Destroy();
+                }
+            }
+
+            if (bValidTarget)
+            {
+                ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
+                SavedArtilleryCoords = HitLocation;
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
+            }
+        }
+    }
+}
+
+// Modified to use DHArtilleryTrigger instead of ROArtilleryTrigger, which handles confirm/deny sounds for different allied nations
+// Also to give radio operator points for teaming up with artillery officer to call in arty
+function HitThis(ROArtilleryTrigger RAT)
+{
+    local DarkestHourGame       G;
+    local ROGameReplicationInfo GRI;
+    local DHArtilleryTrigger    AT;
+    local int                   PawnTeam, TimeTilNextStrike;
+
+    G = DarkestHourGame(Level.Game);
+    AT = DHArtilleryTrigger(RAT);
+
+    if (G == none || AT == none)
+    {
+        return;
     }
 
-    if (RI != none && RI.bIsArtilleryOfficer && PRI != none && PRI.RoleInfo != none && GRI != none)
+    GRI = ROGameReplicationInfo(GameReplicationInfo);
+    PawnTeam = Pawn.GetTeamNum();
+
+    // Arty is available
+    if (GRI.bArtilleryAvailable[PawnTeam] > 0)
     {
-        TraceDist = GetMaxViewDistance();
-        StartTrace = Pawn.Location + Pawn.EyePosition();
-        AimRot = Rotation;
+        ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self); // strike confirmed
 
-        HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
+        AT.PlaySound(AT.GetConfirmSound(PawnTeam), SLOT_None, 3.0, false, 100.0, 1.0, true);
 
-        RVT = Spawn(class'DHVolumeTest', self,, HitLocation);
+        GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
+        GRI.TotalStrikes[PawnTeam]++;
 
-        if ((RVT == none || !RVT.IsInNoArtyVolume()) && HitActor != none && HitNormal != vect(0.0, 0.0, -1.0))
+        if (AT.Carrier != none)
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // position saved
-            SavedArtilleryCoords = HitLocation;
+            G.ScoreRadioUsed(AT.Carrier.Controller); // added to give radio operator points
+        }
+
+        ServerArtyStrike();
+
+        G.NotifyPlayersOfMapInfoChange(PawnTeam, self);
+    }
+    // Arty not available
+    else
+    {
+        AT.PlaySound(AT.GetDenySound(PawnTeam), SLOT_None, 3.0, false, 100.0, 1.0, true);
+
+        TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + G.LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
+
+        if (GRI.TotalStrikes[PawnTeam] >= GRI.ArtilleryStrikeLimit[PawnTeam])
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 6); // out of arty
+        }
+        else if (TimeTilNextStrike >= 20)
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 7); // try again later
+        }
+        else if (TimeTilNextStrike >= 0)
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 8); // try again soon
         }
         else
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // invalid target
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 2); // arty denied
         }
-
-        RVT.Destroy();
     }
 }
 
-// Spawn the artillery strike at the appropriate position
+// Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
+// The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
 function ServerArtyStrike()
 {
-    local vector                SpawnLocation;
-    local ROGameReplicationInfo GRI;
-    local DHArtillerySpawner    Spawner;
-
-    GRI = ROGameReplicationInfo(GameReplicationInfo);
-
-    SpawnLocation = SavedArtilleryCoords;
-    SpawnLocation.Z = GRI.NorthEastBounds.Z;
-
-    Spawner = Spawn(class'DHArtillerySpawner', self,, SpawnLocation, rotator(PhysicsVolume.Gravity));
-
-    if (Spawner == none)
+    if (Spawn(class'DHArtillerySpawner', self,, SavedArtilleryCoords, rotator(PhysicsVolume.Gravity)) == none)
     {
-        Log("Error spawning artillery shell spawner");
-    }
-    else
-    {
-        Spawner.OriginalArtyLocation = SavedArtilleryCoords;
-    }
-}
-
-simulated function float GetMaxViewDistance()
-{
-    if (Pawn != none && Pawn.Region.Zone != none && Pawn.Region.Zone.bDistanceFog)
-    {
-        return Pawn.Region.Zone.DistanceFogEnd;
-    }
-
-    switch (Level.ViewDistanceLevel)
-    {
-        case VDL_Default_1000m:
-            return 65536.0;
-
-        case VDL_Medium_2000m:
-            return 131072.0;
-
-        case VDL_High_3000m:
-            return 196608.0;
-
-        case VDL_Extreme_4000m:
-            return 262144.0;
-
-        default:
-            return 65536.0;
+        Log("Error spawning artillery shell spawner!");
     }
 }
 
@@ -826,6 +849,17 @@ function ServerSaveMortarTarget(bool bIsSmoke)
         // There are too many active mortar targets
         ReceiveLocalizedMessage(class'DHMortarTargetMessage', 6);
     }
+}
+
+// Modified to use any distance fog setting for the zone we're in
+simulated function float GetMaxViewDistance()
+{
+    if (Pawn != none && Pawn.Region.Zone != none && Pawn.Region.Zone.bDistanceFog)
+    {
+        return Pawn.Region.Zone.DistanceFogEnd;
+    }
+
+    return super.GetMaxViewDistance();
 }
 
 // Overridden to handle separate MG and AT resupply as well as assisted AT loading
@@ -1977,66 +2011,6 @@ function BecomeSpectator()
     super.BecomeSpectator();
 }
 
-function HitThis(ROArtilleryTrigger RAT)
-{
-    local DarkestHourGame       G;
-    local ROGameReplicationInfo GRI;
-    local DHArtilleryTrigger    AT;
-    local int TimeTilNextStrike, PawnTeam;
-
-    G = DarkestHourGame(Level.Game);
-    AT = DHArtilleryTrigger(RAT);
-
-    if (G == none || AT == none)
-    {
-        return;
-    }
-
-    GRI = ROGameReplicationInfo(GameReplicationInfo);
-    PawnTeam = Pawn.GetTeamNum();
-
-    if (GRI.bArtilleryAvailable[PawnTeam] > 0)
-    {
-        ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self); // strike confirmed
-
-        AT.PlaySound(AT.GetConfirmSound(PawnTeam), SLOT_None, 3.0, false, 100, 1.0, true);
-
-        GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
-        GRI.TotalStrikes[PawnTeam]++;
-
-        if (AT.Carrier != none)
-        {
-            G.ScoreRadioUsed(AT.Carrier.Controller);
-        }
-
-        ServerArtyStrike();
-
-        G.NotifyPlayersOfMapInfoChange(PawnTeam, self);
-    }
-    else
-    {
-        AT.PlaySound(AT.GetDenySound(PawnTeam), SLOT_None, 3.0, false, 100, 1.0, true);
-
-        TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + G.LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
-
-        if (GRI.TotalStrikes[PawnTeam] >= GRI.ArtilleryStrikeLimit[PawnTeam])
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 6); // out of arty
-        }
-        else if (TimeTilNextStrike >= 20)
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 7); // try again later
-        }
-        else if (TimeTilNextStrike >= 0)
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 8); // try again soon
-        }
-        else
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 2); // arty denied
-        }
-    }
-}
 
 // Modified to call ToggleBehindView to avoid code repetition
 exec function BehindView(bool B)

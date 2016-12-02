@@ -6,19 +6,16 @@
 class DHArtilleryShell extends Projectile;
 
 // All variables from deprecated ROArtilleryShell:
-
-var     vector              ImpactLocation;             // renamed from FinalHitLocation
-var     float               FlightTimeToTarget;         // replaces DistanceToTarget, as that was only used to calculate flight time, so this is more direct
+// (less those deprecated or unused)
+var     byte                CloseSoundIndex;            // replaces SavedCloseSound as now only the server selects random CloseSound & replicates it to net clients
 var     bool                bAlreadyDroppedProjectile;  // renamed from bDroppedProjectileFirst
 var     bool                bAlreadyPlayedCloseSound;   // renamed from bAlreadyPlayedFarSound (was incorrect name)
-var     byte                CloseSoundIndex;            // replaces SavedCloseSound as now only the server selects random CloseSound & replicates it to net clients
-var     ROArtillerySound    SoundActor;                 // used to play the CloseSound // TODO: check necessity of this
 var     AvoidMarker         Fear;                       // scare the bots away from this
 
-// Explosion effects
+// Sounds & explosion effects
+var     sound               DistantSound;               // sound of the artillery distant overhead (no longer an array as there's only 1 sound)
+var     sound               CloseSound[3];              // sound of the artillery whooshing in close (array size reduced from 4 as there are only 3 sounds)
 var     sound               ExplosionSound[4];          // sound of the artillery exploding
-var     sound               DistantSound[4];            // sound of the artillery distant overhead
-var     sound               CloseSound[4];              // sound of the artillery whooshing in close
 var     class<Emitter>      ShellHitDirtEffectClass;    // artillery hitting dirt emitter
 var     class<Emitter>      ShellHitSnowEffectClass;    // artillery hitting snow emitter
 var     class<Emitter>      ShellHitDirtEffectLowClass; // artillery hitting dirt emitter low settings
@@ -27,7 +24,7 @@ var     class<Emitter>      ShellHitSnowEffectLowClass; // artillery hitting sno
 // Camera shake & blue
 var     vector              ShakeRotMag;                // how far to rot view
 var     vector              ShakeRotRate;               // how fast to rot view
-var     float               ShakeRotTime;               // how much time to rot the instigator's view
+var     float               ShakeRotTime;               // how much time to rotate the player's view
 var     vector              ShakeOffsetMag;             // max view offset vertically
 var     vector              ShakeOffsetRate;            // how fast to offset view vertically
 var     float               ShakeOffsetTime;            // how much time to offset view
@@ -42,31 +39,18 @@ replication
 }
 
 // Modified from deprecated ROArtilleryShell class so server selects a random CloseSound & replicates the index no. to net clients so their timing is in sync
+// Also omits selection of random distant sound as there's only 1 sound
 simulated function PostBeginPlay()
 {
-    local sound RandomDistantSound;
-
     super.PostBeginPlay();
-
-    // This fixes trouble when the player who initiated the arty strike leaves the server because their PC is gone, so Owner is now none
-    if (Controller(Owner) != none)
-    {
-        Instigator = Controller(Owner).Pawn;
-
-        if (InstigatorController == none)
-        {
-            InstigatorController = Controller(Owner);
-        }
-    }
-
-    RandomDistantSound = DistantSound[Rand(4)];
-    PlaySound(RandomDistantSound,, 10.0,, 50000.0, 1.0, true);
-    SetTimer(GetSoundDuration(RandomDistantSound) * 0.95, false);
 
     if (Role == ROLE_Authority)
     {
-        CloseSoundIndex = Rand(arraycount(CloseSound)); // added so server selects random CloseSound & replicates it to clients
+        CloseSoundIndex = Rand(arraycount(CloseSound));
     }
+
+    PlaySound(DistantSound,, 2.0,, 50000.0); // volume reduced to 2 as that's the biggest multiplier on any transient sound (same with other sounds)
+    SetTimer(GetSoundDuration(DistantSound) * 0.95, false);
 }
 
 // From deprecated ROArtilleryShell class
@@ -78,38 +62,15 @@ simulated function Destroyed()
     {
         Fear.Destroy();
     }
-
-    if (SoundActor != none)
-    {
-        SoundActor.Destroy();
-    }
 }
 
-// From deprecated ROArtilleryShell class
+// Based on deprecated ROArtilleryShell class, but with functionality moved into called functions
 simulated function Timer()
 {
-    local float CloseSoundDuration, NextTimerDuration;
-
-    // On 1st Timer call, set things up, based on whether the projectile's flight time is going to be longer or shorter than the CloseSound duration
+    // On 1st Timer call, set up the timing of the strike so the shell will land just as the close sound finishes playing
     if (!bAlreadyPlayedCloseSound && !bAlreadyDroppedProjectile)
     {
         SetUpStrike();
-        CloseSoundDuration = GetSoundDuration(CloseSound[CloseSoundIndex]);
-
-        // If CloseSound is longer than projectile's flight time, start playing CloseSound now & set a timer to delay dropping the projectile (while part of CloseSound plays)
-        if (CloseSoundDuration > FlightTimeToTarget)
-        {
-            PlayCloseSound();
-            NextTimerDuration = CloseSoundDuration - FlightTimeToTarget;
-        }
-        // Or if flight time is longer than CloseSound, drop the projectile now & set a timer to delay playing CloseSound
-        else
-        {
-            DropProjectile();
-            NextTimerDuration = FlightTimeToTarget - CloseSoundDuration;
-        }
-
-        SetTimer(NextTimerDuration, false);
     }
     // Or if we've already played the CloseSound, now drop the projectile
     else if (bAlreadyPlayedCloseSound)
@@ -126,17 +87,37 @@ simulated function Timer()
 // Modified from deprecated ROArtilleryShell class (renamed from SetupStrikeFX) so we no longer select a random CloseSound here
 // That is crucial as now only the server selects a random CloseSound & replicates it to net clients as CloseSoundIndex, so their timing is in sync with the server
 // And the server has to do that earlier so it replicates the index to net clients when this actor is replicated to them, so it now happens in PostBeginPlay()
+// Also moved some functionality from Timer() here so we don't need to save DistanceToTarget as an instance variable
 simulated function SetUpStrike()
 {
-    local Actor  HitActor;
-    local vector HitNormal;
+    local vector ImpactLocation, HitNormal;
+    local float  FlightTimeToTarget, CloseSoundDuration, NextTimerDuration;
 
-    HitActor = Trace(ImpactLocation, HitNormal, Location + (50000.0 * Normal(PhysicsVolume.Gravity)), Location, true);
-
-    if (HitActor != none)
+    // First do a trace downwards to get the expected impact location
+    if (Trace(ImpactLocation, HitNormal, Location + (50000.0 * Normal(PhysicsVolume.Gravity)), Location, true) != none)
     {
+        // We need to time things so the shell lands just as the close sound finishes playing
+        // So calculate how long the shell will be in flight to reach the impact location & get duration of selected close sound
         FlightTimeToTarget = VSize(Location - ImpactLocation) / Speed;
+        CloseSoundDuration = GetSoundDuration(CloseSound[CloseSoundIndex]);
 
+        // So the timing depends on which is longer: the shell's flight time or the duration of the randomly selected close sound
+        // If CloseSound is longer than flight time, play CloseSound now & set a timer to delay dropping the projectile (while part of CloseSound plays)
+        if (CloseSoundDuration > FlightTimeToTarget)
+        {
+            PlayCloseSound();
+            NextTimerDuration = CloseSoundDuration - FlightTimeToTarget;
+        }
+        // Or if flight time is longer than CloseSound, drop the projectile now & set a timer to delay playing CloseSound
+        else
+        {
+            DropProjectile();
+            NextTimerDuration = FlightTimeToTarget - CloseSoundDuration;
+        }
+
+        SetTimer(NextTimerDuration, false);
+
+        // Scare bots away from the impact location
         if (Role == ROLE_Authority)
         {
             Fear = Spawn(class'AvoidMarker',,, ImpactLocation);
@@ -146,7 +127,7 @@ simulated function SetUpStrike()
     }
     else
     {
-        Log("Artillery shell set up error - failed to trace HitActor & get an ImpactLocation, so destroying shell actor!!!");
+        Log("Artillery shell set up error - downward trace failed to hit anything so we have no impact location - destroying shell actor!!!");
         Destroy();
     }
 }
@@ -163,11 +144,11 @@ simulated function DropProjectile()
     bAlreadyDroppedProjectile = true;
 }
 
-// From deprecated ROArtilleryShell class (renamed from DoTraceFX for clarity)
+// Based on DoTraceFX() function from deprecated ROArtilleryShell, but also deprecating use of spawned SoundActor (& FinalHitLocation) to play close sound
+// Think the problem was close sound was playing with bNoOverride option, which was often stopping the slightly overlapping explosion sound from playing
 simulated function PlayCloseSound()
 {
-    SoundActor = Spawn(class'ROArtillerySound', self,, ImpactLocation, rotator(PhysicsVolume.Gravity));
-    SoundActor.PlaySound(CloseSound[CloseSoundIndex],, 10.0, true, 5248.0, 1.0, true);
+    PlaySound(CloseSound[CloseSoundIndex],, 10.0,, 5248.0);
     bAlreadyPlayedCloseSound = true;
 }
 
@@ -217,55 +198,30 @@ simulated singular function Touch(Actor Other)
     }
 }
 
-// From deprecated ROArtilleryShell class
+// Modified from deprecated ROArtilleryShell class to remove check that hit actor is not our Instigator
+// That is irrelevant as Instigator is the pawn of player who called the arty & if we hit him then we should explode same as anything else
 simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
-    if (Other != Instigator)
-    {
-        SpawnExplosionEffects(HitLocation, -Normal(Velocity));
-        Explode(HitLocation, Normal(HitLocation - Other.Location));
-    }
+    Explode(HitLocation, -Normal(Velocity));
 }
 
-// From deprecated ROArtilleryShell class
+// From deprecated ROArtilleryShell class, but calling Explode() directly instead of calling Landed(), which just calls Explode() anyway
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    Landed(HitNormal);
+    Explode(Location, HitNormal);
 }
 
 // From deprecated ROArtilleryShell class
 simulated function Landed(vector HitNormal)
 {
-    SpawnExplosionEffects(Location, HitNormal);
     Explode(Location, HitNormal);
 }
 
-// Containing ragdoll functionality from deprecated ROArtilleryShell class (moved here from Destroyed), but with explosion radius damage moved to BlowUp()
+// Modified to to call SpawnExplosionEffects() from a single, logical place, but with explosion radius damage moved to BlowUp()
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    local ROPawn Victims;
-    local vector Direction, Start;
-    local float  DamageScale, Distance;
-
-    // Move karma ragdolls around when this explodes (formerly in Destroyed)
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
-
-        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
-        {
-            if (Victims != self && Victims.Physics == PHYS_KarmaRagDoll)
-            {
-                Direction = Victims.Location - Start;
-                Distance = FMax(1.0, VSize(Direction));
-                Direction = Direction / Distance;
-                DamageScale = 1.0 - FMax(0.0, (Distance - Victims.CollisionRadius) / DamageRadius);
-                Victims.DeadExplosionKarma(MyDamageType, DamageScale * MomentumTransfer * Direction, DamageScale);
-            }
-        }
-    }
-
     BlowUp(HitLocation);
+    SpawnExplosionEffects(Location, HitNormal);
     Destroy();
 }
 
@@ -278,14 +234,21 @@ function BlowUp(vector HitLocation)
     }
 }
 
-// From deprecated ROArtilleryShell class (renamed from SpawnEffects)
+// From deprecated ROArtilleryShell class (renamed from SpawnEffects), with functionality to toss ragdolls moved here from Destroyed()
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 {
-    local vector        TraceHitLocation, TraceHitNormal;
-    local material      HitMaterial;
+    local ROPawn        Victims;
     local ESurfaceTypes ST;
+    local material      HitMaterial;
+    local vector        TraceHitLocation, TraceHitNormal, Direction, Start;
+    local float         DamageScale, Distance;
 
-    PlaySound(ExplosionSound[Rand(4)],, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    PlaySound(ExplosionSound[Rand(4)],, 6.0 * TransientSoundVolume,, 5248.0);
 
     DoShakeEffect();
 
@@ -329,6 +292,21 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
             }
 
             Spawn(ExplosionDecal, self,, HitLocation, rotator(-HitNormal));
+        }
+    }
+
+    // Move karma ragdolls around when this explodes
+    Start = Location + vect(0.0, 0.0, 32.0);
+
+    foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+    {
+        if (Victims != self && Victims.Physics == PHYS_KarmaRagDoll)
+        {
+            Direction = Victims.Location - Start;
+            Distance = FMax(1.0, VSize(Direction));
+            Direction = Direction / Distance;
+            DamageScale = 1.0 - FMax(0.0, (Distance - Victims.CollisionRadius) / DamageRadius);
+            Victims.DeadExplosionKarma(MyDamageType, DamageScale * MomentumTransfer * Direction, DamageScale);
         }
     }
 }
@@ -609,6 +587,28 @@ simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedica
     return true;
 }
 
+// New function to set InstigatorController as the arty officer who called the strike, passed to us by our artillery spawner actor
+// Need to set this as don't natively get an Instigator pawn reference as other projectiles do, so PostBeginPlay() fails to get an InstigatorController
+// Note we could get Instigator natively by setting the arty spawner's Instigator, which would automatically set Instigator for every shell it spawned
+// But Instigator reference would be unreliable due to delay between calling arty & shells being spawned, as player may have died or moved into a vehicle pawn
+// Also, this method differs from deprecated ROArtilleryShell, which made the InstigatorController the owner of each shell & used that to get the reference
+// Old method meant shell was always net relevant to player who called arty as he was its owner & its Instigator (either makes shell always relevant)
+// New method avoids that, so if player re-spawns or otherwise moves well away from arty strike, server can decide whether shells are relevant & should be replicated
+// Although we have to avoid setting Instigator here, it does get set in the only place it's needed, which is HurtRadius(), that calls UpdateInstigator()
+// But that only happens when the shell explodes is about to be destroyed, meaning it's too late to suddenly make shell replicate to Instigator
+function SetInstigatorController(Controller ArtyOfficer)
+{
+    if (ArtyOfficer != none)
+    {
+        InstigatorController = ArtyOfficer;
+    }
+    else
+    {
+        Log("Artillery shell error: couldn't set InstigatorController (received ArtyOfficer controller =" @ ArtyOfficer $ ")");
+        Destroy();
+    }
+}
+
 // New function updating Instigator reference to ensure damage is attributed to correct player, as may have switched to different pawn since calling arty, e.g. entered vehicle or died
 simulated function UpdateInstigator()
 {
@@ -636,21 +636,17 @@ defaultproperties
     LifeSpan=1500.0 // TODO: seems way too long, a few seconds would be fine, same as other projectiles
 //  bProjTarget=true // was in RO but removed as makes no sense for a shell be a target for other projectiles & no other projectiles have this
 
+    DistantSound=sound'Artillery.fire_distant'
+    CloseSound(0)=sound'Artillery.zoomin.zoom_in01'
+    CloseSound(1)=sound'Artillery.zoomin.zoom_in02'
+    CloseSound(2)=sound'Artillery.zoomin.zoom_in03'
     ExplosionSound(0)=sound'Artillery.explosions.explo01'
     ExplosionSound(1)=sound'Artillery.explosions.explo02'
     ExplosionSound(2)=sound'Artillery.explosions.explo03'
     ExplosionSound(3)=sound'Artillery.explosions.explo04'
-    DistantSound(0)=sound'Artillery.fire_distant'
-    DistantSound(1)=sound'Artillery.fire_distant'
-    DistantSound(2)=sound'Artillery.fire_distant'
-    DistantSound(3)=sound'Artillery.fire_distant'
-    CloseSound(0)=sound'Artillery.zoomin.zoom_in01'
-    CloseSound(1)=sound'Artillery.zoomin.zoom_in02'
-    CloseSound(2)=sound'Artillery.zoomin.zoom_in03'
-    CloseSound(3)=sound'Artillery.zoomin.zoom_in03'
     TransientSoundVolume=1.0
-    SoundVolume=255 // TODO: presume redundant as no ambient sound? (radius too)
-    SoundRadius=100.0
+//  SoundVolume=255 // omitted as irrelevant as actor has no ambient sound
+//  SoundRadius=100.0
 
     ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
