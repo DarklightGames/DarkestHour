@@ -1003,6 +1003,8 @@ simulated function bool ShouldDrawDebugLines()
 
         return true;
     }
+
+    return false;
 }
 
 function DebugShotDistanceAndSpeed()
@@ -1051,4 +1053,11 @@ defaultproperties
     BlurTime=3.0
     BlurEffectScalar=1.9
     PenetrationMag=100.0
+
+    // From deprecated ROAntiVehicleProjectile class:
+    VehicleDeflectSound=sound'ProjectileSounds.cannon_rounds.AP_deflect'
+    DampenFactor=0.5
+    DampenFactorParallel=0.2
+    DestroyTime=0.2
+    bFirstHit=true
 }
