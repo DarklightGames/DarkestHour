@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHMortarProjectile extends ROBallisticProjectile
+class DHMortarProjectile extends DHBallisticProjectile
     abstract;
 
 var     vector  HitLocation;

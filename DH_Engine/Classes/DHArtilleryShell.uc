@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHArtilleryShell extends Projectile;
+class DHArtilleryShell extends DHProjectile;
 
 // All variables from deprecated ROArtilleryShell:
 // (less those deprecated or unused)
