@@ -447,14 +447,14 @@ simulated function bool IsVehiclePoolIndexValid(RORoleInfo RI, byte VehiclePoolI
     return true;
 }
 
-simulated function byte GetVehiclePoolSpawnsRemaining(byte PoolIndex)
+simulated function byte GetVehiclePoolSpawnsRemaining(byte VehiclePoolIndex)
 {
-    if (VehiclePoolMaxSpawns[PoolIndex] == 255)
+    if (VehiclePoolMaxSpawns[VehiclePoolIndex] == 255)
     {
         return 255;
     }
 
-    return VehiclePoolMaxSpawns[PoolIndex] - VehiclePoolSpawnCounts[PoolIndex];
+    return VehiclePoolMaxSpawns[VehiclePoolIndex] - VehiclePoolSpawnCounts[VehiclePoolIndex];
 }
 
 simulated function class<Vehicle> GetVehiclePoolVehicleClass(byte VehiclePoolIndex)
