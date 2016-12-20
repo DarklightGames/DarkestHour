@@ -787,7 +787,9 @@ event VehicleDestroyed(Vehicle V)
     // Updates the destroyed vehicle in the VehiclePools array
     for (i = 0; i < VehiclePools.Length; ++i)
     {
-        if (V.class == VehiclePools[i].VehicleClass)
+        // Find the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
+        // Vital as same VehicleClass may well be in the vehicles list twice, with one being a spawn vehicle & the other the ordinary version, e.g. a half-track & a spawn vehicle HT
+        if (V.class == VehiclePools[i].VehicleClass && !(DHVehicle(V) != none && DHVehicle(V).bIsSpawnVehicle != VehiclePools[i].bIsSpawnVehicle))
         {
             // Updates due to vehicle being destroyed
             GRI.VehiclePoolActiveCounts[i] -= 1;
