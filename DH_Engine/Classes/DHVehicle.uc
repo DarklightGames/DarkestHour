@@ -2724,7 +2724,7 @@ function bool IsFactorysLastVehicle()
 
         if (GRI != none)
         {
-            VehiclePoolIndex = GRI.GetVehiclePoolIndex(Class);
+            VehiclePoolIndex = GRI.GetVehiclePoolIndex(self);
         }
 
         return GRI != none && VehiclePoolIndex < arraycount(GRI.VehiclePoolMaxSpawns) && GRI.GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) <= 0; // if spawn manager's last vehicle

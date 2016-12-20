@@ -631,20 +631,20 @@ simulated function GetActiveSpawnVehicleIndices(byte Team, out array<int> Indice
     }
 }
 
-simulated function byte GetVehiclePoolIndex(class<Vehicle> VehicleClass)
+// Finds the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
+// Vital as same VehicleClass may well be in the vehicles list twice, with one being a spawn vehicle & the other the ordinary version, e.g. a half-track & a spawn vehicle HT
+simulated function byte GetVehiclePoolIndex(Vehicle V)
 {
     local int i;
 
-    if (VehicleClass == none)
+    if (V != none)
     {
-        return 255;
-    }
-
-    for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
-    {
-        if (VehiclePoolVehicleClasses[i] == VehicleClass)
+        for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
         {
-            return i;
+            if (V.Class == VehiclePoolVehicleClasses[i] && !(DHVehicle(V) != none && DHVehicle(V).bIsSpawnVehicle != bool(VehiclePoolIsSpawnVehicles[i])))
+            {
+                return i;
+            }
         }
     }
 
