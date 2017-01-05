@@ -362,6 +362,33 @@ exec function ConsoleClose()
     super.ConsoleClose();
 }
 
+exec function SquadTalk()
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    if (ViewportOwner == none || ViewportOwner.Actor == none)
+    {
+        return;
+    }
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI != none && PRI.IsInSquad())
+    {
+        TypedStr = "SquadSay ";
+        TypedStrPos = Len(TypedStr);
+        TypingOpen();
+    }
+}
+
 defaultproperties
 {
 }

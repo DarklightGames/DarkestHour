@@ -107,6 +107,19 @@ function InternalOnOpen()
 
     if (SavedVersion != CurrentVersion)
     {
+        // To make a long story short, we can't force the client to delete
+        // their configuration file at will, so we need to forcibly create
+        // control bindings for new commands.
+        if (SavedVersion == "")
+        {
+            // v7.0.0
+            OnHideAnnouncement = ShowControlsChangedMessage;
+
+            PlayerOwner().ConsoleCommand("set input i SquadTalk");
+            PlayerOwner().ConsoleCommand("set input insert Speak Squad");
+            PlayerOwner().ConsoleCommand("set input capslock ShowOrderMenu | OnRelease HideOrderMenu");
+        }
+
         //ShowAnnouncement();
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();

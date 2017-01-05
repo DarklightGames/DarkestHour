@@ -3,11 +3,14 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHPlayer extends ROPlayer;
+class DHPlayer extends ROPlayer
+    dependson(DHSquadReplicationInfo);
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
 const DEATH_PENALTY_FACTOR = 10;
+const SQUAD_SIGNALS_MAX = 3;
+const SQUAD_SIGNAL_DURATION = 15.0;
 
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
@@ -54,9 +57,12 @@ var     bool                    bSpawnedKilled;             // player was spawn 
 var     int                     NextSpawnTime;              // the next time the player will be able to spawn
 var     int                     LastKilledTime;             // the time at which last death occured
 var     int                     NextVehicleSpawnTime;       // the time at which a player can spawn a vehicle next (this gets set when a player spawns a vehicle)
+
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
+
 var     bool                    bSpawnPointInvalidated;
+
 var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
 var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
                                                             // it resets whenever an objective is taken
@@ -66,6 +72,23 @@ var     bool                    bAreWeaponsLocked;          // server-side only,
 var     int                     WeaponUnlockTime;           // the time (relative to ElpasedTime) at which the player's weapons will be unlocked
 var     int                     WeaponLockViolations;       // the number of violations this player has
 
+// Squads
+var     DHSquadReplicationInfo  SquadReplicationInfo;
+var     bool                    bIgnoreSquadInvitations;
+var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
+
+var     DHCommandInteraction SquadOrderInteraction;
+
+struct SquadSignal
+{
+    var vector Location;
+    var float TimeSeconds;
+    var float FirstDrawTime;
+    var float LastDrawTime;
+};
+
+var     SquadSignal             SquadSignals[2];
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -73,32 +96,36 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
-        WeaponUnlockTime;
+        WeaponUnlockTime, SquadReplicationInfo, SquadMemberPositions;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsInStateMantling;
 
-    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerSetPlayerInfo, ServerClearObstacle,
         // these ones in debug mode only
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog,
-        ServerMetricsDump, ServerLockWeapons;
+        ServerMetricsDump, ServerLockWeapons,
+        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
+        SeverSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
+        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
+        ServerSquadRename;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage;
+        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite,
+        ClientSquadSignal;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
         ServerSetIsInSpawnMenu;
 }
 
-function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
+function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // No longer used
 
 // Modified to bypass RO design
 event InitInputSystem()
@@ -4052,6 +4079,362 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
                 V.VehicleAttachments.Remove(i, 1);
             }
         }
+    }
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// START SQUAD FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
+{
+    if (!bIgnoreSquadInvitations)
+    {
+        class'DHSquadInviteInteraction'.default.SenderName = SenderName;
+        class'DHSquadInviteInteraction'.default.SquadName = SquadName;
+        class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
+    }
+}
+
+simulated function ClientJoinSquadResult(DHSquadReplicationInfo.ESquadError Error)
+{
+}
+
+simulated function ClientLeaveSquadResult(DHSquadReplicationInfo.ESquadError Error)
+{
+}
+
+simulated function ClientChangeSquadLeaderResult(DHSquadReplicationInfo.ESquadError Error)
+{
+}
+
+simulated function ClientCreateSquadResult(DHSquadReplicationInfo.ESquadError Error)
+{
+}
+
+exec function Speak(string ChannelTitle)
+{
+    local VoiceChatRoom VCR;
+    local string ChanPwd;
+    local DHVoiceReplicationInfo VRI;
+    local DHPlayerReplicationInfo PRI;
+
+    if (VoiceReplicationInfo == none || !VoiceReplicationInfo.bEnableVoiceChat  || !bVoiceChatEnabled)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    // Colin: Hard-coding this, unfortunately, because we need to have the
+    // player be able to join just by executing "Speak Squad". We can't
+    // depend on the name of the squad because it's not unique and is subject
+    // to change, and we don't want to go passing around UUIDs when we can just
+    // put in a sneaky little hack.
+    if (ChannelTitle ~= "SQUAD")
+    {
+        VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
+
+        if (VRI != none)
+        {
+            VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
+
+            if (VCR == none)
+            {
+                return;
+            }
+        }
+    }
+    else
+    {
+        // Check that we are a member of this room.
+        VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, GetTeamNum());
+    }
+
+    if (VCR == none && ChatRoomMessageClass != none)
+    {
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+
+        return;
+    }
+
+    if (VCR.ChannelIndex >= 0)
+    {
+        ChanPwd = FindChannelPassword(ChannelTitle);
+
+        ServerSpeak(VCR.ChannelIndex, ChanPwd);
+    }
+    else if (ChatRoomMessageClass != none)
+    {
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+    }
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// START SQUAD DEBUG FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+simulated exec function SquadCreate()
+{
+    ServerSquadCreate();
+}
+
+function ServerSquadCreate()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+}
+
+simulated exec function SquadLeave()
+{
+    ServerSquadLeave();
+}
+
+function ServerSquadLeave()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+}
+
+simulated exec function SquadJoin(int SquadIndex)
+{
+    ServerSquadJoin(GetTeamNum(), SquadIndex);
+}
+
+function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvited)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
+}
+
+simulated exec function SquadJoinAuto()
+{
+    SeverSquadJoinAuto();
+}
+
+function SeverSquadJoinAuto()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.JoinSquadAuto(DHPlayerReplicationInfo(PlayerReplicationInfo));
+    }
+}
+
+simulated exec function SquadInvite(string PlayerName)
+{
+    ServerSquadInvite(PlayerName);
+}
+
+function ServerSquadInvite(string PlayerName)
+{
+    local int i;
+    local DHPlayerReplicationInfo PRI, Recipient;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
+    {
+        if (PlayerName ~= GameReplicationInfo.PRIArray[i].PlayerName)
+        {
+            Recipient = DHPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]);
+            break;
+        }
+    }
+
+    if (SquadReplicationInfo != none && PRI != none && PRI.IsInSquad())
+    {
+        SquadReplicationInfo.InviteToSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), GetTeamNum(), PRI.SquadIndex, Recipient);
+    }
+}
+
+function ServerSquadKick(DHPlayerReplicationInfo MemberToKick)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.KickFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, MemberToKick);
+    }
+}
+
+simulated exec function SquadLock(bool bIsLocked)
+{
+    ServerSquadLock(bIsLocked);
+}
+
+function ServerSquadLock(bool bIsLocked)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetSquadLocked(PRI, GetTeamNum(), PRI.SquadIndex, bIsLocked);
+    }
+}
+
+simulated exec function SquadCommandeer()
+{
+    ServerSquadCommandeer();
+}
+
+function ServerSquadCommandeer()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.CommandeerSquad(PRI, GetTeamNum(), PRI.SquadIndex);
+    }
+}
+
+function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
+    }
+}
+
+function ServerSquadOrder(DHSquadReplicationInfo.ESquadOrderType Type, optional vector Location)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetSquadOrder(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
+    }
+}
+
+function ServerSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector Location)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
+    }
+}
+
+function ServerSquadRename(string Name)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetName(GetTeamNum(), PRI.SquadIndex, Name);
+    }
+}
+
+simulated function ClientSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector L)
+{
+    local int i;
+
+    i = int(Type);
+
+    SquadSignals[i].Location = L;
+    SquadSignals[i].TimeSeconds = Level.TimeSeconds;
+}
+
+simulated function bool IsSquadSignalActive(int i)
+{
+    return i >= 0 && i < arraycount(SquadSignals) && SquadSignals[i].Location != vect(0, 0, 0) && Level.TimeSeconds - SquadSignals[i].TimeSeconds < 15.0;
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// END SQUAD DEBUG FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+exec function SquadSay(string Msg)
+{
+    Msg = Left(Msg, 128);
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerSquadSay(Msg);
+    }
+}
+
+function ServerSquadSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    // Colin: We'll preserve this teamkill forgiveness logic because people will
+    // probably be confused if typing "np" only works in Say or TeamSay.
+    if (ROTeamGame(Level.Game) != none &&
+        ROTeamGame(Level.Game).bForgiveFFKillsEnabled &&
+        LastFFKiller != none &&
+        (Msg ~= "np" || Msg ~= "forgive" || Msg ~= "no prob" || Msg ~= "no problem"))
+    {
+        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
+        LastFFKiller.FFKills -= LastFFKillAmount;
+        LastFFKiller = none;
+    }
+
+    LastActiveTime = Level.TimeSeconds;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.BroadcastSquad(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'SquadSay');
+    }
+}
+
+exec function ShowOrderMenu()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadOrderInteraction == none &&
+        Pawn != none &&
+        !IsDead() &&
+        PRI != none &&
+        PRI.IsSquadLeader())
+    {
+        SquadOrderInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
+
+        // TODO: invitation!
+        SquadOrderInteraction.PushMenu("DH_Engine.DHCommandMenu_SquadLeader");
+    }
+}
+
+exec function HideOrderMenu()
+{
+    // TODO: on death, hide order menu
+    if (SquadOrderInteraction != none)
+    {
+        SquadOrderInteraction.Hide();
+
+        SquadOrderInteraction = none;
     }
 }
 

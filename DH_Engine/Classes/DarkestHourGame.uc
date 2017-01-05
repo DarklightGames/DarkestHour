@@ -60,6 +60,7 @@ var     bool                        bPublicPlay;                            // V
                                                                             // An organized unit will want to set this to false in a mutator so they can control
                                                                             // settings for private matches (ex- change to false in realism match mode)
 var     UVersion                    Version;
+var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
@@ -71,6 +72,13 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
     }
+}
+
+function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()
@@ -1275,11 +1283,19 @@ event PlayerController Login(string Portal, string Options, out string Error)
 {
     local string InName;
     local PlayerController NewPlayer;
+    local DHPlayer PC;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
     NewPlayer = super.Login(Portal, Options, Error);
+
+    PC = DHPlayer(NewPlayer);
+
+    if (PC != none)
+    {
+        PC.SquadReplicationInfo = SquadReplicationInfo;
+    }
 
     ChangeName(NewPlayer, InName, false);
 
@@ -3185,6 +3201,8 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SpawnVehicleIndex = 255;
 
             GRI.UnreserveVehicle(PC);
+
+            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
         }
     }
 
@@ -3775,6 +3793,8 @@ function NotifyLogout(Controller Exiting)
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        SquadReplicationInfo.LeaveSquad(PRI);
     }
 
     super.Destroyed();
@@ -4160,6 +4180,20 @@ function AttritionUnlockObjective(optional int ObjNum)
     }
 }
 
+function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DHBroadcastHandler BH;
+
+    Log("BroadcastSquad" @ Sender @ Msg @ Type);
+
+    BH = DHBroadcastHandler(BroadcastHandler);
+
+    if (BH != none)
+    {
+        BH.BroadcastSquad(Sender, Msg, Type);
+    }
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
@@ -4207,7 +4241,7 @@ defaultproperties
     RussianNames(13)="Telly Savalas"
     RussianNames(14)="Audie Murphy"
     RussianNames(15)="George Baker"
-    GermanNames(0)="Günther Liebing"
+    GermanNames(0)="GÃ¼nther Liebing"
     GermanNames(1)="Heinz Werner"
     GermanNames(2)="Rudolf Giesler"
     GermanNames(3)="Seigfried Hauber"
@@ -4216,10 +4250,10 @@ defaultproperties
     GermanNames(6)="Willi Eiken"
     GermanNames(7)="Wolfgang Steyer"
     GermanNames(8)="Rolf Steiner"
-    GermanNames(9)="Anton Müller"
+    GermanNames(9)="Anton MÃ¼ller"
     GermanNames(10)="Klaus Triebig"
-    GermanNames(11)="Hans Grüschke"
-    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(11)="Hans GrÃ¼schke"
+    GermanNames(12)="Wilhelm KrÃ¼ger"
     GermanNames(13)="Herrmann Dietrich"
     GermanNames(14)="Erich Klein"
     GermanNames(15)="Horst Altmann"
