@@ -22,16 +22,6 @@ var     bool                bIsMortarObserver;      // role has functionality of
 
 var()   int                 AddedReinforcementTime; // optional extra time in seconds before re-spawning
 
-function PostBeginPlay()
-{
-    if (DarkestHourGame(Level.Game) != none)
-    {
-        DarkestHourGame(Level.Game).AddRole(self);
-    }
-
-    HandlePrecache();
-}
-
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
 simulated function HandlePrecache()
