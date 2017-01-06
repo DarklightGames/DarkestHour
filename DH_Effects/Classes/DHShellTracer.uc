@@ -9,16 +9,13 @@ class DHShellTracer extends Effects
 var     float   DrawScaleIncreaseRate;
 var     float   MaximumDrawScale;
 
-auto state Start
+simulated function Tick(float DeltaTime)
 {
-    simulated function Tick(float DeltaTime)
-    {
-        SetDrawScale(FMin(MaximumDrawScale, DrawScale + (DrawScaleIncreaseRate * DeltaTime)));
+    SetDrawScale(FMin(MaximumDrawScale, DrawScale + (DrawScaleIncreaseRate * DeltaTime)));
 
-        if (DrawScale >= MaximumDrawScale)
-        {
-            GotoState('');
-        }
+    if (DrawScale >= MaximumDrawScale)
+    {
+        Disable('Tick');
     }
 }
 
