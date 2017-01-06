@@ -14,64 +14,60 @@ enum EReloadState
     RS_PostReload,
 };
 
-var     EReloadState    ReloadState;
-
-var     bool            bInterruptReload;   // stop reload part way through?
-
-var     name            PreReloadAnim;      // anim for opening the bolt
-var     name            SingleReloadAnim;   // anim inserting single bullets
-var     name            PostReloadAnim;     // anim for closing the bolt
-
-var     byte            NumRoundsToLoad;    // set by ClientDoReload to know how many rounds to put in the gun
-var     byte            CurrentBulletCount; // number of spare bullets, used for HUD display rather than total clips
-
-var     material        AmmoIcon;           // icon to use instead of regular ammo one
+var     EReloadState    ReloadState;      // weapon's current reloading state (none means not reloading)
+var     bool            bInterruptReload; // set when one-by-one reload is stopped by player part way through, by pressing fire button
+var     name            PreReloadAnim;    // one-off anim when starting to reload
+var     name            SingleReloadAnim; // looping anim for inserting a single round
+var     name            PostReloadAnim;   // one-off anim when reloading ends
+var     byte            NumRoundsToLoad;  // how many rounds to be loaded to fill the weapon
 
 replication
 {
-    // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        CurrentBulletCount;
-
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetInterruptReload;
 }
 
-// Modified as we want to display actual number of bullets, rather than number of clips
-simulated function int GetHudAmmoCount()
-{
-    return CurrentBulletCount;
-}
-
-// Modified to update count of individual rounds
+// Modified to update number of individual spare rounds
+// As weapon doesn't used mags, the existing replicated CurrentMagCount is used to represent the total no. of individual spare rounds
+// This is calculated by adding up the rounds in each dummy 'mag' (just a data grouping of individual spare rounds)
+// This is primarily used by net clients to display the no. of spare rounds carried, as clients don't have PrimaryAmmoArray data
 function UpdateResupplyStatus(bool bCurrentWeapon)
 {
-    local int TempCount, i;
-
-    super.UpdateResupplyStatus(bCurrentWeapon);
+    local DHPawn P;
+    local int    NumSpareRounds, DummyMagCount, i;
 
     if (bCurrentWeapon)
     {
         for (i = 1; i < PrimaryAmmoArray.Length; ++i)
         {
-            TempCount += PrimaryAmmoArray[i];
+            NumSpareRounds += PrimaryAmmoArray[i];
         }
 
-        CurrentBulletCount = TempCount;
+        CurrentMagCount = byte(NumSpareRounds);
+    }
+
+    P = DHPawn(Instigator);
+
+    if (P != none)
+    {
+        DummyMagCount = Max(0, PrimaryAmmoArray.Length - 1); // what CurrentMagCount would normally be, used below to set bWeaponNeedsResupply
+
+        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && DummyMagCount < (MaxNumPrimaryMags - 1);
+        P.bWeaponNeedsReload = false;
     }
 }
 
-// Modified to allow one-by-one reloading unless weapon is already reloading, has maximum ammo, is firing or busy, or is out of ammo
+// Modified to prevent reloading if weapon is already reloading or has maximum ammo
 simulated function bool AllowReload()
 {
     return ReloadState == RS_None && !AmmoMaxed(0) && !IsFiring() && !IsBusy() && CurrentMagCount > 0;
 }
 
-// Modified to allow reloading of individual bullets
+// Modified to allow reloading of individual rounds
 function ServerRequestReload()
 {
-    local int ReloadAmount;
+    local byte ReloadAmount;
 
     if (AllowReload())
     {
@@ -91,11 +87,12 @@ function ServerRequestReload()
     }
 }
 
-// Modified to allow reloading of individual bullets
+// Modified to update (on the client) the number of rounds to be reloaded
 simulated function ClientDoReload(optional byte NumRounds)
 {
     NumRoundsToLoad = NumRounds;
-    GotoState('Reloading');
+
+    super.ClientDoReload(NumRounds);
 }
 
 // Out of state this does nothing & should never be called anyway - it is only effective in state Reloading
@@ -103,10 +100,10 @@ function ServerSetInterruptReload()
 {
 }
 
-// Modified to handle substantially different reload system
+// Modified to handle substantially different one round at a time reload system
 simulated state Reloading
 {
-    // Overridden to allow interruption of reloads
+    // Modified to allow interruption of reload by pressing fire
     simulated function Fire(float F)
     {
         if (ReloadState != RS_PostReload)
@@ -116,12 +113,13 @@ simulated state Reloading
         }
     }
 
+    // New replicated client-to-server function to set bInterruptReload on server
     function ServerSetInterruptReload()
     {
         bInterruptReload = true;
     }
 
-    // Overridden to support playing proper anims after bolting
+    // Modified to progress through reload stages, playing appropriate anims
     simulated function AnimEnd(int Channel)
     {
         local name  Anim;
@@ -131,6 +129,7 @@ simulated state Reloading
         {
             GetAnimParams(0, Anim, Frame, Rate);
 
+            // Just finished playing pre-reload anim so now load 1st round
             if (Anim == PreReloadAnim)
             {
                 SetTimer(0.0, false);
@@ -140,22 +139,28 @@ simulated state Reloading
                 return;
             }
 
+            // Just finished playing a single round reload anim
             if (Anim == SingleReloadAnim)
             {
+                // Either loaded last round or player stopped the reload (by pressing fire), so now play post-reload anim
                 if (NumRoundsToLoad == 0 || bInterruptReload)
                 {
                     SetTimer(0.0, false);
+                    bInterruptReload = false;
                     ReloadState = RS_PostReload;
                     PlayPostReload();
 
                     if (Role == ROLE_Authority)
                     {
-                        ROPawn(Instigator).StopReload();
+                        if (ROPawn(Instigator) != none)
+                        {
+                            ROPawn(Instigator).StopReload();
+                        }
+
                         PerformReload();
                     }
-
-                    bInterruptReload = false;
                 }
+                // Otherwise start loading the next round
                 else
                 {
                     PlayReload();
@@ -169,17 +174,13 @@ simulated state Reloading
                 return;
             }
         }
-
-        super.AnimEnd(Channel);
     }
 
+    // Modified to progress through reload stages
     simulated function Timer()
     {
-        if (ReloadState == RS_PostReload)
-        {
-            super.Timer();
-        }
-        else if (ReloadState == RS_PreReload)
+        // Just finished pre-reload anim so now load 1st round
+        if (ReloadState == RS_PreReload)
         {
             ReloadState = RS_ReloadLooped;
             PlayReload();
@@ -189,8 +190,10 @@ simulated state Reloading
                 NumRoundsToLoad--;
             }
         }
+        // Just finished loading a single round
         else if (ReloadState == RS_ReloadLooped)
         {
+            // Either loaded last round or player stopped the reload (by pressing fire), so now play post-reload anim
             if (NumRoundsToLoad == 0 || bInterruptReload)
             {
                 if (Role == ROLE_Authority)
@@ -201,12 +204,13 @@ simulated state Reloading
                     }
 
                     PerformReload();
-                    bInterruptReload = false;
                 }
 
+                bInterruptReload = false;
                 ReloadState = RS_PostReload;
                 PlayPostReload();
             }
+            // Otherwise start loading the next round
             else
             {
                 PlayReload();
@@ -217,6 +221,11 @@ simulated state Reloading
                     NumRoundsToLoad--;
                 }
             }
+        }
+        // Just finished post-reload anim so we're finished
+        else if (ReloadState == RS_PostReload)
+        {
+            GotoState('Idle');
         }
     }
 
@@ -248,15 +257,10 @@ simulated state Reloading
 // New function to play the pre-reload animation
 simulated function PlayPreReload()
 {
-    SetTimer(GetAnimDuration(PreReloadAnim, 1.0) + FastTweenTime, false);
-
-    if (InstigatorIsLocallyControlled() && HasAnim(PreReloadAnim))
-    {
-        PlayAnim(PreReloadAnim, 1.0, FastTweenTime);
-    }
+    PlayAnimAndSetTimer(PreReloadAnim, 1.0);
 }
 
-// Modified to use single reload animation & to decrement the number of rounds to load // need to add tween time to this?
+// Modified to use single reload animation (without adding FastTweenTime to timer), & to decrement the number of rounds to load
 simulated function PlayReload()
 {
     SetTimer(GetAnimDuration(SingleReloadAnim, 1.0), false);
@@ -272,7 +276,7 @@ simulated function PlayReload()
     }
 }
 
-// New function to play the post-reload animation // need to add tween time to this?
+// New function to play PostReloadAnim & set a timer for when it ends (without adding FastTweenTime to timer)
 simulated function PlayPostReload()
 {
     SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
@@ -283,10 +287,10 @@ simulated function PlayPostReload()
     }
 }
 
-// New function to calculate the number of bullets to be loaded
+// New function to calculate the number of rounds to be loaded to fill the weapon
 function byte GetRoundsToLoad()
 {
-    local int  CurrentMagLoad, InitialAmount;
+    local int  CurrentLoadedRounds, MaxLoadedRounds;
     local byte AmountNeeded;
 
     if (PrimaryAmmoArray.Length == 0)
@@ -294,21 +298,26 @@ function byte GetRoundsToLoad()
         return 0;
     }
 
-    CurrentMagLoad = AmmoAmount(0);
-    InitialAmount = AmmoClass[0].default.InitialAmount;
+    CurrentLoadedRounds = AmmoAmount(0);
+    MaxLoadedRounds = AmmoClass[0].default.InitialAmount;
 
     if (bTwoMagsCapacity)
     {
-        InitialAmount *= 2;
+        MaxLoadedRounds *= 2;
     }
 
-    AmountNeeded = InitialAmount - CurrentMagLoad;
+    AmountNeeded = MaxLoadedRounds - CurrentLoadedRounds;
 
-    return Min(AmountNeeded, CurrentBulletCount);
+    return Min(AmountNeeded, CurrentMagCount);
 }
 
 // Modified to load one round each time
-// Note than in this weapon type, CurrentMagIndex is not cycled & always remains zero (it's the 'mag' already loaded in the weapon)
+// 'Mags' for this weapon aren't really mags, they are just dummy mags that act as data groupings of individual spare rounds
+// Each dummy mag contains the max no. of rounds that can be loaded into the weapon
+// Mag zero represents the weapon's currently loaded rounds (so CurrentMagIndex is not cycled as usual & always remains zero)
+// When reloading, individual rounds are stripped one at a time from mag 1 & loaded into the weapon
+// When mag 1 is empty it is deleted (removed from PrimaryAmmoArray) so the next mag becomes mag 1 & that is used for any further loading
+// It's done this way to work with existing mag-based functionality, while allowing one at a time loading up to a max no. limited by the dummy mag size
 function PerformReload()
 {
     local int i;
