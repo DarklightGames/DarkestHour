@@ -40,7 +40,7 @@ event ModeDoFire()
     }
 
     // Client
-    if (Instigator.IsLocallyControlled())
+    if (Instigator != none && Instigator.IsLocallyControlled())
     {
         if (!bDelayedRecoil)
         {
@@ -80,7 +80,7 @@ event ModeDoFire()
     Load = AmmoPerFire;
     HoldTime = 0;
 
-    if (Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
+    if (Instigator != none && Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
     {
         bIsFiring = false;
         Weapon.PutDown();

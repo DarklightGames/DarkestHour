@@ -4603,13 +4603,7 @@ simulated function bool CanUseMortars()
 
 simulated function DHRoleInfo GetRoleInfo()
 {
-    local DHRoleInfo              RI;
     local DHPlayerReplicationInfo PRI;
-
-    if (PlayerReplicationInfo == none)
-    {
-        return none;
-    }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
@@ -4618,9 +4612,7 @@ simulated function DHRoleInfo GetRoleInfo()
         return none;
     }
 
-    RI = DHRoleInfo(PRI.RoleInfo);
-
-    return RI;
+    return DHRoleInfo(PRI.RoleInfo);
 }
 
 simulated function bool AllowSprint()

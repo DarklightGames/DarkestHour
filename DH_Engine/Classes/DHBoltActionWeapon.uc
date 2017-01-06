@@ -130,7 +130,7 @@ simulated state PostFiring
 
     simulated function Timer()
     {
-        if (!Instigator.IsHumanControlled())
+        if (!InstigatorIsHumanControlled())
         {
             if (AmmoAmount(0) > 0)
             {

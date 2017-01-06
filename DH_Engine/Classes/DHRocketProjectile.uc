@@ -63,7 +63,7 @@ simulated function PostNetBeginPlay()
                 return;
             }
 
-            if (PC == none || PC.ViewTarget == none || VSize(PC.ViewTarget.Location - Location) > 3000.0)
+            if (PC == none || PC.ViewTarget == none || VSizeSquared(PC.ViewTarget.Location - Location) > 9000000.0) // local player > 50m away
             {
                 bDynamicLight = false;
                 LightType = LT_None;
