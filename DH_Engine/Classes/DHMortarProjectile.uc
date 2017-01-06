@@ -146,7 +146,7 @@ simulated singular function Touch(Actor Other)
     }
 
     // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
-    // Record LastTouched to prevent possible recursive calls & then clear it after
+    // Record LastTouched to make sure that if HurtRadius() gets called to give blast damage, it will always 'find' the hit actor
     LastTouched = Other;
     ProcessTouch(Other, HitLocation);
     LastTouched = none;
@@ -327,7 +327,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         }
 
         // Now we need to check whether there's something in the way that could shield this actor from the blast
-        // Usually we trace to actor's location, but for a tank (or similar, including AT gun), we adjust Z location to give a more consistent, realistic tracing height
+        // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
         VictimLocation = Victim.Location;
         V = DHVehicle(Victim);

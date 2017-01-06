@@ -29,7 +29,7 @@ Changes in other classes: slight modifications to functions NumPassengers in Veh
 // Note that if really needed we can still use specific passenger classes with a vehicle, instead of the PassengerPawns array
 var     array<class<DHPassengerPawn> >  PassengerClasses;
 
-var     bool    bUseDriverHeadBoneCam;       // use the driver's head bone for the camera location
+var     bool    bUseDriverHeadBoneCam; // use the driver's head bone for the camera location
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS  ***********  //
@@ -211,7 +211,7 @@ simulated function AttachDriver(Pawn P)
 
 // Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel
 // Need to use timer to add short delay, to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to client before shutting down all net traffic
-simulated event DrivingStatusChanged()
+simulated event DrivingStatusChanged() // TODO: think this fits better in DriverLeft() as only happens on server, which will now always get DriverLeft
 {
     super.DrivingStatusChanged();
 

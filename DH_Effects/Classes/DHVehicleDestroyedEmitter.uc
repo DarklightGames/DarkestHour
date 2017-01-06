@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHVehicleDestroyedEmitter extends Emitter;
+class DHVehicleDestroyedEmitter extends Emitter; // this class is not used (as at December 2016) & vehicles use the 'ROVehicleDestroyedEmitter' effect
 
 defaultproperties
 {
@@ -13,7 +13,7 @@ defaultproperties
     Style=STY_Masked
     bHardAttach=true
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter0
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter0 // not in ROVehicleDestroyedEmitter (which has extra texture'Effects_Tex.explosions.explosion_1frame' emitter)
         FadeOut=true
         FadeIn=true
         RespawnDeadParticles=false
@@ -82,7 +82,7 @@ defaultproperties
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
-    Begin Object Class=SpriteEmitter Name=SpriteEmitter2
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter2 // added in this class (extra to ROVehicleDestroyedEmitter)
         FadeOut=true
         FadeIn=true
         RespawnDeadParticles=false

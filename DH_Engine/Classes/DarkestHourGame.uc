@@ -929,11 +929,8 @@ function Bot SpawnBot(optional string botName)
 function byte PickTeam(byte num, Controller C)
 {
     local UnrealTeamInfo NewTeam;
-    local int SmallTeam, BigTeam;
-
-    local int TeamSizes[2];
-    local int IdealTeamSizes[2];
-    local float TeamSizeRatings[2];
+    local int            SmallTeam, BigTeam, TeamSizes[2], IdealTeamSizes[2];
+    local float          TeamSizeRatings[2];
 
     if (bPlayersVsBots && (Level.NetMode != NM_Standalone))
     {
@@ -941,6 +938,7 @@ function byte PickTeam(byte num, Controller C)
         {
             return 1;
         }
+
         return 0;
     }
 
@@ -967,10 +965,10 @@ function byte PickTeam(byte num, Controller C)
     {
         NewTeam = Teams[SmallTeam];
     }
-    else if (bPlayersBalanceTeams && (Level.NetMode != NM_Standalone) && (PlayerController(C) != None))
+    else if (bPlayersBalanceTeams && Level.NetMode != NM_Standalone && PlayerController(C) != none)
     {
         // If the teams are on the verge of being off balance, force the player onto the small team
-        if ((Abs(IdealTeamSizes[0] - TeamSizes[0]) >=  MaxTeamDifference) || (Abs(IdealTeamSizes[1] - TeamSizes[1]) >=  MaxTeamDifference))
+        if (Abs(IdealTeamSizes[0] - TeamSizes[0]) >= MaxTeamDifference || Abs(IdealTeamSizes[1] - TeamSizes[1]) >= MaxTeamDifference)
         {
             NewTeam = Teams[SmallTeam];
         }
@@ -979,7 +977,7 @@ function byte PickTeam(byte num, Controller C)
     return NewTeam.TeamIndex;
 }
 
-// Handles calculation of team balance variables (in seperate function so this code isn't duplicated in a couple places)
+// Handles calculation of team balance variables (in separate function so this code isn't duplicated in a couple places)
 function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes[2], out float TeamSizeRatings[2])
 {
     local float TeamRatios[2];
@@ -2460,7 +2458,7 @@ state RoundInPlay
             ArtilleryStrikeInt = LevelInfo.GetStrikeInterval(i);
 
             // Artillery is not available if out of strikes, if still waiting on next call, or a strike is currently in progress
-            if ((GRI.TotalStrikes[i] < GRI.ArtilleryStrikeLimit[i]) && ElapsedTime > GRI.LastArtyStrikeTime[i] + ArtilleryStrikeInt && GRI.ArtyStrikeLocation[i] == vect(0.0, 0.0, 0.0))
+            if ((GRI.TotalStrikes[i] < GRI.ArtilleryStrikeLimit[i]) && ElapsedTime > (GRI.LastArtyStrikeTime[i] + ArtilleryStrikeInt) && GRI.ArtyStrikeLocation[i] == vect(0.0, 0.0, 0.0))
             {
                 GRI.bArtilleryAvailable[i] = 1;
             }

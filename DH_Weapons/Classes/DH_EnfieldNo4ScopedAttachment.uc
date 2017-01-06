@@ -5,7 +5,8 @@
 
 class DH_EnfieldNo4ScopedAttachment extends DHWeaponAttachment;
 
-// Modified so we skip the Super if we've just played the reload or pre-reload animation
+// Modified so we don't play play the idle anim (which is all the Super does) if we just played reload or pre-reload animation
+// This is because the reload anims play in a sequence, ending with the post-reload anim
 simulated function AnimEnd(int Channel) // TODO: re-factor into a parent as this is in all the bolt action sniper rifles
 {
     local name  Anim;

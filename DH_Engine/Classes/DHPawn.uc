@@ -3053,13 +3053,13 @@ simulated function PlayMantle()
     {
         if (Role == ROLE_Authority)
         {
-            ClientMessage("SERVER playing anim:" @ Anim);
-            Log("SERVER playing anim:" @ Anim);
+            ClientMessage("SERVER playing mantling anim:" @ Anim);
+            Log("SERVER playing mantling anim:" @ Anim);
         }
         else
         {
-            ClientMessage("CLIENT playing anim:" @ Anim);
-            Log("CLIENT playing anim:" @ Anim);
+            ClientMessage("CLIENT playing mantling anim:" @ Anim);
+            Log("CLIENT playing mantling anim:" @ Anim);
         }
     }
 }
@@ -3684,13 +3684,13 @@ function PostMantle()
     {
         if (Role == ROLE_Authority)
         {
-            ClientMessage("SERVER Running PostMantle");
-            Log("SERVER Running PostMantle");
+            ClientMessage("SERVER running PostMantle");
+            Log("SERVER running PostMantle");
         }
         else
         {
-            ClientMessage("CLIENT Running PostMantle");
-            Log("CLIENT Running PostMantle");
+            ClientMessage("CLIENT running PostMantle");
+            Log("CLIENT running PostMantle");
         }
     }
 }
@@ -3914,13 +3914,13 @@ simulated state Mantling
         {
             if (Role == ROLE_Authority)
             {
-                ClientMessage("SERVER Running Timer");
-                Log("SERVER Running Timer");
+                ClientMessage("SERVER running mantling timer");
+                Log("SERVER running mantling timer");
             }
             else
             {
-                ClientMessage("CLIENT Running Timer");
-                Log("CLIENT Running Timer");
+                ClientMessage("CLIENT running mantling timer");
+                Log("CLIENT running mantling timer");
             }
         }
 
@@ -5539,7 +5539,7 @@ exec function SetFlySpeed(float NewSpeed)
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int SetAsCrew)
+exec function DebugSpawnVehicle(string VehicleString, int Distance, optional bool bSetAsCrew)
 {
     local class<Vehicle> VehicleClass;
     local Vehicle        V;
@@ -5559,7 +5559,7 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
             Level.Game.Broadcast(self, "Admin" @ GetHumanReadableName() @ "spawned a" @ V.GetHumanReadableName());
 
-            if (bool(SetAsCrew) == true)
+            if (bSetAsCrew)
             {
                 RI = GetRoleInfo();
 

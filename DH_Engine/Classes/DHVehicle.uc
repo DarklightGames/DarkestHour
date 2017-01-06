@@ -480,7 +480,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
     }
 
-    // Get camera location & adjust for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
+    // Get camera location & adjust for any offset positioning
     CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
     CameraLocation = CameraLocation + (FPCamPos >> Rotation);
 

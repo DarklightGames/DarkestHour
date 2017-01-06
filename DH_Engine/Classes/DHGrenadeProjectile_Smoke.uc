@@ -6,10 +6,15 @@
 class DHGrenadeProjectile_Smoke extends DHGrenadeProjectile
     abstract;
 
-var  class<Emitter> SmokeEmitterClass;
-var  sound          SmokeIgniteSound;
-var  sound          SmokeLoopSound;
-var  float          SmokeSoundDuration;
+// TODO: suspect the smoke loop sound could be moved to the smoke effect emitter, probably the ignite sound too
+// It's an actor so should be able to play AmbientSound or transient sound, or use a sound effect in one of its ParticleEmitters
+// Would simplify this projectile as wouldn't need delayed destruction, server tear off or use of timer - could simply destroy itself when it explodes
+// Similar applies to cannon & mortar smoke shells
+
+var     class<Emitter>  SmokeEmitterClass;
+var     sound           SmokeIgniteSound;
+var     sound           SmokeLoopSound;
+var     float           SmokeSoundDuration;
 
 // Function emptied out to remove everything relating to explosion, as not an exploding grenade
 simulated function Destroyed()

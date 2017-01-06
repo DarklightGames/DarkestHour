@@ -53,7 +53,7 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
-// Implemented here to go to dynamic lighting for a split second, when satchel blows up
+// Implemented here to go to dynamic lighting for a split second, when satchel blows up // TODO: doesn't appear to do anything noticeable?
 simulated function WeaponLight()
 {
     if (!Level.bDropDetail)

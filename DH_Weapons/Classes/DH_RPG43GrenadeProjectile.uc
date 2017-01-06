@@ -6,11 +6,9 @@
 class DH_RPG43GrenadeProjectile extends DHCannonShellHEAT;
 // Obviously not a cannon shell but it is a HEAT explosive & by extending this we can make use of HEAT functionality & DH armour penetration calculations
 
-// The angle, in degrees, at which the grenade must hit a surface to explode on contact.
-var float               MaxImpactAOIToExplode;
-var float               MinImpactSpeedToExplode;
-
-var class<WeaponPickup> PickupClass;
+var     float           MinImpactSpeedToExplode; // minimum impact speed at which grenade must hit a surface to explode on contact
+var     float           MaxImpactAOIToExplode;   // maximum angle, in degrees, at which grenade must hit a surface to explode on contact
+var class<WeaponPickup> PickupClass;             // pickup class if grenade is thrown but does not explode & lies on ground
 
 // Functions entered out as not relevant to grenade
 simulated static function int GetPitchForRange(int Range) { return 0; }
@@ -81,7 +79,7 @@ simulated singular function Touch(Actor Other)
     }
 
     // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
-    // Record LastTouched to prevent possible recursive calls & then clear it after
+    // Record LastTouched to make sure that if HurtRadius() gets called to give blast damage, it will always 'find' the hit actor
     LastTouched = Other;
     ProcessTouch(Other, HitLocation);
     LastTouched = none;

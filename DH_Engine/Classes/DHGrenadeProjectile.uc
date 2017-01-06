@@ -28,6 +28,7 @@ simulated function PostBeginPlay()
     }
 }
 
+// TODO: pretty sure this is obsolete & can be deleted, as only ROCollisionAttachment in game is bullet whip attachment, which triggers Touch() not HitWall() & is already ignored by ProcessTouch()
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     // Return here, this was causing the famous "nade bug"

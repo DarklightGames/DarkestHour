@@ -6,7 +6,7 @@
 class DHBoltFire extends DHProjectileFire
     abstract;
 
-// Modified to support our recoil system
+// Modified to call PostFire() on the weapon to handling working the bolt before next shot, & to omit setting NextFireTime
 event ModeDoFire()
 {
     if (!AllowFire())
@@ -65,13 +65,17 @@ event ModeDoFire()
             StartMuzzleSmoke();
         }
     }
-    else // Server
+    // Server
+    else
     {
         ServerPlayFiring();
     }
 
     Weapon.IncrementFlashCount(ThisModeNum);
-    Weapon.PostFire();
+
+    // Setting NextFireTime is OMITTED here
+
+    Weapon.PostFire(); // ADDED here
 
     Load = AmmoPerFire;
     HoldTime = 0;

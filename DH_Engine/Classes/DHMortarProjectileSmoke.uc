@@ -13,7 +13,7 @@ var     float           SmokeSoundDuration; // duration until smoke sound stops 
 
 // Modified to delay destroying projectile until the end of the SmokeSoundDuration (unless shell was a dud)
 // Means actor persists as long as the smoke sound, so players keep hearing it until the smoke fades away
-// Not relevant on server as doesn't need to broadcast smoke sound  (mortar shells are bAlwaysRelevant so all clients have actor & smoke sounds get played locally)
+// Not relevant on server & client actors will already have been torn off & are independent from server as mortar shells are bNetTemporary projectiles
 simulated function HandleDestruction()
 {
     if (Level.NetMode != NM_DedicatedServer && !bDud)

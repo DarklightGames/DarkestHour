@@ -181,7 +181,7 @@ simulated singular function Touch(Actor Other)
         Other = Other.Owner; // switch hit actor
 
         // If col mesh represents a vehicle, which would normally get a HitWall() event instead of Touch, then call HitWall on the vehicle & exit
-        // We first match projectile's location to our HitLocation, as we can't pass HitLocation to HitWall & it always uses current location
+        // First match projectile's location to our more accurate HitLocation, as we can't pass HitLocation to HitWall & it will use current location
         if (ROVehicle(Other) != none)
         {
             SetLocation(HitLocation);
@@ -193,7 +193,7 @@ simulated singular function Touch(Actor Other)
     }
 
     // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
-    // Record LastTouched to prevent possible recursive calls & then clear it after
+    // Record LastTouched to make sure that if HurtRadius() gets called to give blast damage, it will always 'find' the hit actor
     LastTouched = Other;
     ProcessTouch(Other, HitLocation);
     LastTouched = none;

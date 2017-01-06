@@ -9,10 +9,10 @@ class DHRocketProjectile extends DHCannonShellHEAT
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
 
-var PanzerfaustTrail SmokeTrail;         // smoke trail emitter
-var() float          StraightFlightTime; // how long the rocket has propellant and flies straight
+var     float               StraightFlightTime; // how long the rocket has propellant & flies straight
+var     PanzerfaustTrail    SmokeTrail;         // smoke trail emitter
 
-// Modified to spawn a rocket smoke trail
+// Modified to spawn a rocket smoke trail & set a timer to cut off the rocket after a set time
 simulated function PostBeginPlay()
 {
     SetPhysics(PHYS_Flying);
@@ -58,7 +58,7 @@ simulated function PostNetBeginPlay()
         {
             PC = Level.GetLocalPlayerController();
 
-            if (Instigator != none && PC == Instigator.Controller)
+            if (Instigator != none && PC == Instigator.Controller) // our own (local player's) projectile
             {
                 return;
             }

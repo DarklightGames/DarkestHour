@@ -468,8 +468,8 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // If Fire() or AltFire() are called in the meantime, we exit this state early & resume firing (in that situation there's no need to reset FlashCount)
 // The 0.1 second delay is arbitrary, but should give sufficient time, while not being a noticeable delay
 // Note that the delay in the original system was essentially random & caused by its network inefficiency
-// The server called ClientCeaseFire() on owning client, which in return called VehicleCeaseFire() on the server - both know they need to cease fire, so that was unnecessary
-// But it did create delay - however, timing was from 2-way replication between server & owning client, which is random to other clients & no better than an arbitrary time delay, maybe worse
+// The server called ClientCeaseFire() on owning client, which in return called VehicleCeaseFire() on server - both know they need to cease fire so was unnecessary
+// It did create delay but timing was from 2-way replication between server & owning client, which is random to other clients & no better than arbitrary time delay, maybe worse
 state ServerCeaseFire extends ProjectileFireMode
 {
     function Fire(Controller C)
