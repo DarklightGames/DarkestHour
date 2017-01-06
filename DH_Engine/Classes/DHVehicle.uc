@@ -71,6 +71,7 @@ var     bool        bEngineOff;                  // vehicle engine is simply swi
 var     bool        bSavedEngineOff;             // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;          // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
 var     float       IgnitionSwitchInterval;      // how frequently the engine can be manually switched on/off
+var     float       EngineRestartFailChance;     // chance of engine failing to re-start (only temporarily) after it has been switched off (0 to 1 value)
 
 // Driving effects
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
@@ -1196,12 +1197,24 @@ simulated function Fire(optional float F)
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
+    local bool bFirstTimeStarted;
+
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > default.IgnitionSwitchInterval)
     {
+        bFirstTimeStarted = IgnitionSwitchTime == 0.0; // if IgnitionSwitchTime never been set this must be the 1st engine start
         IgnitionSwitchTime = Level.TimeSeconds;
 
-        if (EngineHealth > 0)
+        // Engine won't start if it's dead
+        // Also a random chance of temporary failure each time when trying to re-start an engine that has been switched off (engine doesn't turn over the 1st time)
+        // Random failure not applied the 1st time vehicle is entered & started (typically when deploying into a spawned vehicle), only when trying to re-start
+        // Same non-start sound suits both situations
+        if (EngineHealth <= 0 || (bEngineOff && !bFirstTimeStarted && EngineRestartFailChance > 0.0 && FRand() < EngineRestartFailChance))
+        {
+            PlaySound(DamagedStartUpSound, SLOT_None, 2.0);
+        }
+        // Otherwise toggle the engine on or off, with appropriate sound
+        else
         {
             bEngineOff = !bEngineOff;
 
@@ -1218,10 +1231,6 @@ function ServerStartEngine()
             {
                 PlaySound(StartUpSound, SLOT_None, 1.0);
             }
-        }
-        else
-        {
-            PlaySound(DamagedStartUpSound, SLOT_None, 2.0);
         }
     }
 }
@@ -3007,6 +3016,7 @@ defaultproperties
     ChangeUpPoint=2000.0
     ChangeDownPoint=1000.0
     EngineHealth=30
+    EngineRestartFailChance=0.05
 
     // Damage
     Health=175

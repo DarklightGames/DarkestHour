@@ -2070,4 +2070,5 @@ defaultproperties
     MaxDesireability=1.4
     SteerBoneAxis=AXIS_X
     SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
+    EngineRestartFailChance=0.1
 }
