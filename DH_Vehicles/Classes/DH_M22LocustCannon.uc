@@ -11,8 +11,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_M22Locust_anm.M22Locust_turret'
     Skins(0)=texture'DH_M22Locust_tex.ext_vehicles.M22Locust_turret_ext'
     Skins(1)=texture'DH_M22Locust_tex.int_vehicles.M22Locust_int'
-    //CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.Locust.Locust_turret_col' // TODO: get this made
-    WeaponAttachOffset=(X=5.313) // TEMP until model is corrected
+    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_turret_col' // TODO: get a proper, low poly col mesh made
+    FireAttachBone="turret"
+    FireEffectOffset=(X=-21.0,Y=16.0,Z=35.0)
 
     // Turret armor
     FrontArmorFactor=2.54 // 1 inch
@@ -28,10 +29,9 @@ defaultproperties
     RearLeftAngle=199.0
 
     // Turret movement
-//    YawBone="Turret_placement" // TEMP until model is corrected (should be a centred 'Turret' bone)
     ManualRotationsPerSecond=0.04
-    CustomPitchUpLimit=3641
-    CustomPitchDownLimit=63352
+    CustomPitchUpLimit=5461    // 30 degrees elevation
+    CustomPitchDownLimit=63716 // 10 degrees depression
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
@@ -39,7 +39,7 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=20 // TODO: confirm loadout & whether had canister, but was 50 rounds total
+    InitialPrimaryAmmo=20 // TODO: confirm loadout, but was 50 rounds total
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=10
     SecondarySpread=0.00145
@@ -54,10 +54,9 @@ defaultproperties
     TracerFrequency=5
 
     // Weapon fire
-    WeaponFireOffset=9.5
-    AddedPitch=18 // check/SET
+    WeaponFireOffset=10.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeC' // smaller muzzle flash effect
-    AltFireOffset=(X=-67.0,Y=8.5,Z=0.0)
+    AltFireOffset=(X=-66.5,Y=8.3,Z=0.0)
     ShakeRotRate=(Z=600.0)
     ShakeOffsetMag=(Z=5.0)
     ShakeOffsetTime=6.0

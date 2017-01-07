@@ -8,7 +8,7 @@ class DH_M22LocustTank extends DHArmoredVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_M22Locust_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_M22Locust_tex.utx // TODO: move this into one of the DH_VehiclesUS_tex files
 
-simulated state ViewTransition // TEMP until anims are made
+simulated state ViewTransition // TEMP to fake camera position changes until anims are made
 {
     simulated function HandleTransition()
     {
@@ -17,20 +17,65 @@ simulated state ViewTransition // TEMP until anims are made
         if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
              if (DriverPositionIndex == 0)
-                 FPCamPos = vect(30.0, 0.0, 10.0);
+                 FPCamPos = vect(19.0, -2.0, 16.0);
              else if (DriverPositionIndex == 1)
-                 FPCamPos = vect(0.0, 0.0, 0.0);
+                 FPCamPos = vect(15.0, -0.5, 6.0);
              else if (DriverPositionIndex == 2)
-                 FPCamPos = vect(20.0, 0.0, 100.0);
+                 FPCamPos = vect(23.0, -0.5, 6.0);
         }
+    }
+}
+
+exec function SetTex(int Slot) // TEMP
+{
+    Switch(Slot)
+    {
+        case 0:
+            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = texture'DH_M22Locust_tex.ext_vehicles.M22Locust_body_ext_2048'; // 2048 slightly sharper than 1024 but acceptable
+            else Skins[Slot] = default.Skins[Slot];
+            break;
+        case 1:
+            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = texture'DH_M22Locust_tex.ext_vehicles.M22Locust_wheels_1024'; // 1024 sharper than 512 (2048 no diff from 1024)
+            else if (Skins[Slot] == texture'DH_M22Locust_tex.ext_vehicles.M22Locust_wheels_1024') Skins[Slot] = texture'DH_M22Locust_tex.ext_vehicles.M22Locust_wheels_2048';
+            else Skins[Slot] = default.Skins[Slot];
+            break;
+        case 2:
+            if (Skins[Slot] == default.Skins[Slot]) // 2048 sharper than 1024 but acceptable
+            {
+                Skins[Slot] = texture'DH_M22Locust_tex.int_vehicles.M22Locust_int_2048';
+                Cannon.Skins[1] = texture'DH_M22Locust_tex.int_vehicles.M22Locust_int_2048';
+            }
+            else
+            {
+                Skins[Slot] = default.Skins[Slot];
+                Cannon.Skins[1] = default.Skins[Slot];
+            }
+            break;
+        case 3:
+            if (Skins[Slot] == default.Skins[Slot])
+            {
+                Skins[Slot] = texture'DH_M22Locust_tex.ext_vehicles.M22Locust_turret_ext_2048'; // no difference, except turret ring guard looks slightly different
+                Cannon.Skins[0] = texture'DH_M22Locust_tex.ext_vehicles.M22Locust_turret_ext_2048';
+            }
+            else
+            {
+                Skins[Slot] = default.Skins[Slot];
+                Cannon.Skins[0] = default.Skins[Slot];
+            }
+            break;
+        case 4:
+            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = texture'DH_M22Locust_tex.Treads.M22Locust_treads_1024'; // no difference
+            else Skins[Slot] = default.Skins[Slot];
+            break;
     }
 }
 
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="M22 Locust (rough WIP)"
+    VehicleNameString="M22 Locust (WIP)"
     VehicleTeam=1
+    VehicleMass=5.0
     MaxDesireability=1.9
     PointValue=2.0
     CollisionRadius=175.0
@@ -39,26 +84,26 @@ defaultproperties
     // Hull mesh
     Mesh=SkeletalMesh'DH_M22Locust_anm.M22Locust_body'
     Skins(0)=texture'DH_M22Locust_tex.ext_vehicles.M22Locust_body_ext'
-    Skins(1)=texture'DH_M22Locust_tex.Treads.M22Locust_treads'
-    Skins(2)=texture'DH_M22Locust_tex.ext_vehicles.M22Locust_turret_ext'
-    Skins(3)=texture'DH_M22Locust_tex.int_vehicles.M22Locust_int'
-    Skins(4)=texture'DH_M22Locust_tex.ext_vehicles.M22Locust_wheels'
+    Skins(1)=texture'DH_M22Locust_tex.ext_vehicles.M22Locust_wheels'
+    Skins(2)=texture'DH_M22Locust_tex.int_vehicles.M22Locust_int'
+    Skins(3)=texture'DH_M22Locust_tex.ext_vehicles.M22Locust_turret_ext'
+    Skins(4)=texture'DH_M22Locust_tex.Treads.M22Locust_treads'
     Skins(5)=texture'DH_M22Locust_tex.Treads.M22Locust_treads'
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M22LocustCannonPawn',WeaponBone="Turret_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-40.0,Z=83.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-113.0,Y=0.0,Z=81.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=46.0,Z=83.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-40.0,Z=43.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-116.0,Y=0.0,Z=45.0),DriveRot=(Pitch=2000,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=46.0,Z=43.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
 
     // Driver
     DriverPositions(0)=(TransitionUpAnim="Overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="Driver_hatch_open",TransitionDownAnim="Overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(TransitionDownAnim="Driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    DriverAttachmentBone="driver_player" // should be Driver_attachment
-    DrivePos=(X=15.0,Y=5.0,Z=-10.0) // SET // TODO: reposition attachment bone to remove need for this offset, then delete this line
-    DriveAnim="VPanzer3_driver_idle_open"
+    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DriverAttachmentBone="driver_attachment"
+    DrivePos=(X=16.0,Y=2.0,Z=-3.0) // TODO: reposition attachment bone to remove need for this offset, then delete this line
+    DriveAnim="VPanzer3_driver_idle_open" // TEST - check is most suitable
 
     // Hull armor
     UFrontArmorFactor=1.27   // 1/2 inch
@@ -85,50 +130,50 @@ defaultproperties
     Health=200
     HealthMax=200.0
     EngineHealth=100
-    VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-80.0,Y=0.0,Z=45.0)) // engine
-    VehHitpoints(1)=(PointRadius=9.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=0.0,Z=55.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-72.0,Y=13.5,Z=3.5)) // engine
+    VehHitpoints(1)=(PointRadius=9.0,PointScale=1.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverDamageMult=1.0
     TreadHitMaxHeight=49.0
     DamagedEffectScale=0.8
-    DamagedEffectOffset=(X=-60.0,Y=0.0,Z=70.0)
+    DamagedEffectOffset=(X=-60.0,Y=13.5,Z=30.0)
     HullFireChance=0.45
     FireAttachBone="body"
-    FireEffectOffset=(X=60.0,Y=-30.0,Z=90.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1' // 'DH_allies_vehicles_stc3.Locust.Locust_dest' // TODO: get this made
+    FireEffectOffset=(X=60.0,Y=-30.0,Z=50.0)
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_dest' // TODO: get a proper destroyed mesh made & add destroyed skins
 
     // Entry & exit
-    ExitPositions(0)=(X=60.0,Y=-95.0,Z=75.0)   // driver
-    ExitPositions(1)=(X=-20.0,Y=-12.0,Z=200.0) // commander
-    ExitPositions(2)=(X=-75.0,Y=-110.0,Z=75.0) // riders
-    ExitPositions(3)=(X=-170.0,Y=2.24,Z=75.0)
-    ExitPositions(4)=(X=-75.0,Y=110.0,Z=75.0)
+    ExitPositions(0)=(X=60.0,Y=-95.0,Z=50.0)   // driver
+    ExitPositions(1)=(X=-20.0,Y=-12.0,Z=150.0) // commander
+    ExitPositions(2)=(X=-75.0,Y=-110.0,Z=50.0) // riders
+    ExitPositions(3)=(X=-170.0,Y=2.24,Z=50.0)
+    ExitPositions(4)=(X=-75.0,Y=110.0,Z=50.0)
 
     // Sounds
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
     StartUpSound=sound'Vehicle_Engines.T60.t60_engine_start'
     ShutDownSound=sound'Vehicle_Engines.T60.t60_engine_stop'
-    //LeftTrackSoundBone="Track_L"
-    //RightTrackSoundBone="Track_R"
+    LeftTrackSoundBone="Track_L"
+    RightTrackSoundBone="Track_R"
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    //RumbleSoundBone="placeholder_int"
+    RumbleSoundBone="body"
     RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
     SoundPitch=32
 
     // Visual effects
     TreadVelocityScale=120.0
-    LeftTreadIndex=5 // TODO: re-order material groups
-    RightTreadIndex=1
+    LeftTreadIndex=4
+    RightTreadIndex=5
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=16384)
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-53.0,Y=68.0,Z=69.0),ExhaustRotation=(Yaw=16384))
-//  LeftLeverBoneName="lever_L" // TODO: add steering lever bones
-//  LeftLeverAxis=AXIS_Z
-//  RightLeverBoneName="lever_R"
-//  RightLeverAxis=AXIS_Z
-//  SteeringScaleFactor=0.75
+    ExhaustPipes(0)=(ExhaustPosition=(X=-53.0,Y=68.0,Z=29.0),ExhaustRotation=(Yaw=16384))
+    LeftLeverBoneName="lever_L"
+    LeftLeverAxis=AXIS_Z
+    RightLeverBoneName="lever_R"
+    RightLeverAxis=AXIS_Z
+    SteeringScaleFactor=0.75
 
     // HUD // TODO: get 4 named HUD icons made
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body' // locust_body
@@ -173,7 +218,6 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-24.0,Y=5.9,Z=-12.5) // TODO: reposition physics wheel bones & then remove all BoneOffset
         WheelRadius=26.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M22LocustTank.LF_Steering'
@@ -183,7 +227,6 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-24.0,Y=-2.9,Z=-12.5)
         WheelRadius=26.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M22LocustTank.RF_Steering'
@@ -193,7 +236,6 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=2.0,Y=10.5,Z=-12.5)
         WheelRadius=26.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M22LocustTank.LR_Steering'
@@ -203,48 +245,23 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=2.0,Y=-7.5,Z=-12.5)
         WheelRadius=26.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M22LocustTank.RR_Steering'
 
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
-        BoneName="drive_wheel_LM" // TODO: rename bone to 'drive_wheel_L' (similar with right wheel)
+        BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-16.0,Y=10.5,Z=-12.5)
         WheelRadius=26.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M22LocustTank.Left_Drive_Wheel'
 
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
-        BoneName="drive_wheel_RM"
+        BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-16.0,Y=-7.5,Z=-12.5)
         WheelRadius=26.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M22LocustTank.Right_Drive_Wheel'
-
-    // Karma
-    VehicleMass=5.0
-    Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.0
-        KInertiaTensor(3)=3.0
-        KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-0.1,Y=0.0,Z=1.0) // default is Z=-0.5
-        KLinearDamping=0.05
-        KAngularDamping=0.05
-        KStartEnabled=true
-        bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.9 // default is 1.0
-        bHighDetailOnly=false
-        bClientOnly=false
-        bKDoubleTickRate=true
-        bDestroyOnWorldPenetrate=true
-        bDoSafetime=true
-        KFriction=0.5
-        KImpactThreshold=700.0
-    End Object
-    KParams=KarmaParamsRBFull'DH_Vehicles.DH_M22LocustTank.KParams0'
 }
