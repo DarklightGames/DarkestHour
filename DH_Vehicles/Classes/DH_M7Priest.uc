@@ -71,8 +71,8 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))    // TODO: where tho
     // TODO: make these
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestCannonPawn',WeaponBone="Turret_placement")
-    // PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestCannonPawn',WeaponBone="turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestMGPawn',WeaponBone="mg_placement")
     // TODO: passengers
     // PassengerPawns(0)=(AttachBone="Passenger_1",DrivePos=(X=0.0,Y=-15.0,Z=0.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     // PassengerPawns(1)=(AttachBone="passenger_2",DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
@@ -88,7 +88,7 @@ defaultproperties
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"         // TODO: make this anim
     DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
+    DriverPositions(1)=(TransitionUpAnim="hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'  // TODO: make interface art
     // TODO: set these up correctly

@@ -12,9 +12,6 @@ simulated event Tick(float DeltaTime)
     super.Tick(DeltaTime);
 
     R = GetBoneRotation('turret');
-
-    Log(R);
-
     R.Pitch = 0;
 
     SetBoneRotation('gunsight', R);
@@ -50,10 +47,12 @@ defaultproperties
     CustomPitchDownLimit=64625      // -5 degrees
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellHE'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellSmoke'
+    ProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="HEAT"
     ProjectileDescriptions(2)="Smoke"
     InitialPrimaryAmmo=45
     InitialSecondaryAmmo=40
@@ -75,6 +74,8 @@ defaultproperties
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
 
-    ShootLoweredAnim="fire"
-    ShootRaisedAnim="fire"
+    ShootLoweredAnim="fire_close"
+    ShootRaisedAnim="fire_open"
+
+    BeginningIdleAnim="com_close_idle"
 }
