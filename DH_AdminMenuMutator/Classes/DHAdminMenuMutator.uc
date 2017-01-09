@@ -88,9 +88,10 @@ function SetInitialVariables()
         SaveMinefields();
 
         // Look for the realism match mutator - if it's there we just set a flag
+        // Check GroupName as there are different realism mutator versions & may have different class names, but GroupName should be constant
         for (Mut = Level.Game.BaseMutator; Mut != none; Mut = Mut.NextMutator)
         {
-            if (Mut.IsA('MutRealismMatch'))
+            if (Mut.GroupName ~= "RealismMatch")
             {
                 bRealismMutPresent = true;
                 break;
