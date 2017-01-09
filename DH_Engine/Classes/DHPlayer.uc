@@ -3392,7 +3392,7 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
 }
 
 // New debug exec to adjust a vehicle's DriveRot (vehicle occupant's rotation from attachment bone)
-exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll) // TEST added
+exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
 {
     local Vehicle V;
     local rotator OldDriveRot;

@@ -103,7 +103,7 @@ defaultproperties
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     DriverAttachmentBone="driver_attachment"
     DrivePos=(X=16.0,Y=2.0,Z=-3.0) // TODO: reposition attachment bone to remove need for this offset, then delete this line
-    DriveAnim="VPanzer3_driver_idle_open" // TEST - check is most suitable
+    DriveAnim="VPanzer3_driver_idle_open" // TODO: check is most suitable anim available
 
     // Hull armor
     UFrontArmorFactor=1.27   // 1/2 inch
