@@ -1006,12 +1006,12 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     if (HitAngleDegrees >= FrontLeftAngle || HitAngleDegrees < FrontRightAngle)
     {
         // Debugging
-        if (bDrawPenetration)
+        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
         if (bLogPenetration)
@@ -1048,12 +1048,12 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
         // Debugging
-        if (bDrawPenetration)
+        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
         if (bLogPenetration)
@@ -1093,12 +1093,12 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= RearRightAngle && HitAngleDegrees < RearLeftAngle)
     {
         // Debugging
-        if (bDrawPenetration)
+        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
         if (bLogPenetration)
@@ -1132,12 +1132,12 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
         // Debugging
-        if (bDrawPenetration)
+        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
         if (bLogPenetration)

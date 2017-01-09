@@ -3431,7 +3431,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
     {
-        //Spawn(class'DHDebugTracer', self,, HitLoc, rotator(HitNorm));
+        //Spawn(class'RODebugTracer', self,, HitLoc, rotator(HitNorm));
         //ClientMessage("Object is too high to mantle");
         return false;
     }
