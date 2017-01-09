@@ -1381,7 +1381,7 @@ state Mantling
             P.CancelMantle();
         }
 
-        if (bMantleDebug && Pawn != none && Pawn.IsLocallyControlled())
+        if (bMantleDebug)
         {
             ClientMessage("------------- End Mantle Debug -------------");
             Log("------------- End Mantle Debug -------------");
@@ -2002,14 +2002,11 @@ function ServerToggleBehindView()
 {
     if (Level.NetMode == NM_Standalone || Level.Game.bAllowBehindView || PlayerReplicationInfo.bOnlySpectator)
     {
-        if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-        {
-            ClientSetBehindView(!bBehindView);
-        }
-        else
+        ClientSetBehindView(!bBehindView); // a standalone or owning listen server will get this
+
+        if (Viewport(Player) == none) // on a non-owning server, ClientSetBehindView() is sent to owning net client, so toggle server's local bBehindView setting
         {
             bBehindView = !bBehindView;
-            ClientSetBehindView(bBehindView);
         }
     }
 }

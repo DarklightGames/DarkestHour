@@ -1388,7 +1388,11 @@ function ServerRequestReload()
     if (AllowReload())
     {
         GotoState('Reloading');
-        ClientDoReload();
+
+        if (!InstigatorIsLocallyControlled()) // a server makes an owning net client also go to state 'Reloading' (won't happen in SP or owning listen server)
+        {
+            ClientDoReload();
+        }
     }
     else
     {
@@ -2141,8 +2145,8 @@ simulated function SetBarrelSteamActive(bool bSteaming)
         }
     }
 
-    // Call a replicated server-to-client function to do the same on the owning net client
-    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+    // Server calls a replicated server-to-client function to do the same on the owning net client
+    if ((Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer) && !InstigatorIsLocallyControlled())
     {
         ClientSetBarrelSteam(bBarrelSteamActive);
     }
