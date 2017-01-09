@@ -17,5 +17,5 @@ defaultproperties
     InventoryGroup=9
 
     Mesh=SkeletalMesh'DH_RPG43Grenade_1st.RPG43Grenade'
-    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade'
+    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade' // TODO: there is no specularity mask for this weapon
 }

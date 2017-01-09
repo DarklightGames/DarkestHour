@@ -15,7 +15,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PanzerschreckAttachment'
     PickupClass=class'DH_Weapons.DH_PanzerschreckPickup'
 
-    Mesh=SkeletalMesh'DH_Panzerschreck_1st.Panzerschreck'
+    Mesh=SkeletalMesh'DH_Panzerschreck_1st.Panzerschreck' // TODO: there is no specularity mask for this weapon
 
     FillAmmoMagCount=1
     bDoesNotRetainLoadedMag=true

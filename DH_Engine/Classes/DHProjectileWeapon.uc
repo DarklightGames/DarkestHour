@@ -2031,6 +2031,7 @@ simulated state ChangingBarrels extends WeaponBusy
         // This replaces what would be PlayAnimAndSetTimer(), so on an authority role we set up to call a Timer to swap barrels halfway through the barrel change animation
         // This is so any current steam effect stops when the old barrel has been removed & put away, then we determine whether the new barrel should be steaming
         // This is rather hacky & should really be controlled by a notify event in the barrel change animation, but I can't justify re-making RO's MG34 & MG42 anim files just for that
+        // TODO: looks like RO's MG34 & MG42 anim files were later re-made as DH versions so if they are retained the anim notifies can be added instead of this hacky functionality
         if (HasAnim(BarrelChangeAnim))
         {
             if (InstigatorIsLocallyControlled())

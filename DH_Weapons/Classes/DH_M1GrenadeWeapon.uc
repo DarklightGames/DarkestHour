@@ -17,7 +17,7 @@ defaultproperties
     InventoryGroup=2
 
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
-    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade'
+    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade' // TODO: there is no specularity mask for this weapon
 
     PlayerViewOffset=(X=15.0,Y=15.0)
 

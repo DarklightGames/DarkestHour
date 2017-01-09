@@ -69,7 +69,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PIATAttachment'
     PickupClass=class'DH_Weapons.DH_PIATPickup'
 
-    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
+    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT' // TODO: there is no specularity mask for this weapon
 
     RocketAttachmentClass=class'DH_Weapons.DH_PIATAmmoRound'
     MuzzleBone="Warhead"
