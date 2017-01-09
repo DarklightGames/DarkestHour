@@ -3391,6 +3391,29 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
     }
 }
 
+// New debug exec to adjust a vehicle's DriveRot (vehicle occupant's rotation from attachment bone)
+exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll) // TEST added
+{
+    local Vehicle V;
+    local rotator OldDriveRot;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none && V.Driver != none)
+        {
+            OldDriveRot = V.DriveRot;
+            V.DriveRot.Pitch = NewPitch;
+            V.DriveRot.Yaw = NewYaw;
+            V.DriveRot.Roll = NewRoll;
+            V.DetachDriver(V.Driver);
+            V.AttachDriver(V.Driver);
+            Log(V.VehicleNameString @ " new DriveRot =" @ V.DriveRot @ "(was" @ OldDriveRot $ ")");
+        }
+    }
+}
+
 // New debug exec to set a vehicle position's 1st person camera position offset
 exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
 {
