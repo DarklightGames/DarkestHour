@@ -188,8 +188,9 @@ def main():
     ucc_log_file.write(ucc_log_contents)
     ucc_log_file.close()
 
-    # search for error messages in log to know if build failed
-    did_build_fail = re.search('Failure - \d+ error\(s\)', ucc_log_contents) is not None
+    # search for success message in log
+    # this is a better option than searching for the failure message since GPF errors don't generate this line
+    did_build_fail = re.search('Success - \d+ error\(s\)', ucc_log_contents) is None
 
     if did_build_fail:
         sys.exit(1)
