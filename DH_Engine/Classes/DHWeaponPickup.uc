@@ -17,8 +17,8 @@ var     array<DHWeaponBarrel>   Barrels;                  // array of any carrie
 var     byte                    BarrelIndex;              // index number of current barrel
 var     bool                    bBarrelSteamActive;       // barrel is steaming
 var     bool                    bOldBarrelSteamActive;    // clientside record, so PostNetReceive can tell when bBarrelSteamActive changes
-var     class<DHMGSteam>        BarrelSteamEmitterClass;
-var     DHMGSteam               BarrelSteamEmitter;
+var     class<ROMGSteam>        BarrelSteamEmitterClass;
+var     ROMGSteam               BarrelSteamEmitter;
 var     vector                  BarrelSteamEmitterOffset; // offset for the emitter to position correctly on the pickup static mesh
 
 replication
