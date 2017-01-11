@@ -16,17 +16,16 @@ defaultproperties
     // Movement
     RotationsPerSecond=0.5
     YawBone="yaw"
-    MaxPositiveYaw=12000
-    MaxNegativeYaw=-12000
+    bLimitYaw=false
     PitchBone="pitch"
     CustomPitchUpLimit=5000
     CustomPitchDownLimit=63000
 
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
-    InitialPrimaryAmmo=250
+    InitialPrimaryAmmo=150
     NumMGMags=30
-    FireInterval=0.12
+    FireInterval=0.13
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
     TracerFrequency=5
 
