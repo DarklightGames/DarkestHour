@@ -23,8 +23,8 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
-    InitialPrimaryAmmo=150
-    NumMGMags=30
+    InitialPrimaryAmmo=105
+    NumMGMags=8           // TODO: look this value up in the book
     FireInterval=0.13
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
     TracerFrequency=5
