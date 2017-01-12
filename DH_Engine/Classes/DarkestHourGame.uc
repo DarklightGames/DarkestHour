@@ -1869,6 +1869,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             // Inform the victim's DHPlayer that it was spawn killed
             DHPlayer(Killed).bSpawnedKilled = true;
 
+            // Allow the victim to spawn a vehicle right away
+            DHPlayer(Killed).NextVehicleSpawnTime = DHPlayer(Killed).LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
+
             // Increase infantry reinforcements for victim's team (only if nonzero)
             ModifyReinforcements(Killed.GetTeamNum(), 1, false, true);
 
@@ -1881,9 +1884,6 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
             // Punish instigator for spawn killing (reduce score)
             DHP.PlayerReplicationInfo.Score -= 2;
-
-            // Allow the player to spawn a vehicle right away
-            DHP.NextVehicleSpawnTime = DHP.LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
