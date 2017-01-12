@@ -2502,6 +2502,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
                 }
             }
 
+            // TODO: add "is in arty vehicle" check, maybe move this to a check in PC
+
             // Draw all mortar targets on the map
             if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
             {

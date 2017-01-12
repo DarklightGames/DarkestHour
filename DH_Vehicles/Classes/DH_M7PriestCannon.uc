@@ -54,15 +54,16 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=45
-    InitialSecondaryAmmo=40
-    InitialTertiaryAmmo=5
-    SecondarySpread=0.00175
-    TertiarySpread=0.0036
+    InitialPrimaryAmmo=58
+    InitialSecondaryAmmo=3
+    InitialTertiaryAmmo=8
+    Spread=0.02
+    SecondarySpread=0.015
+    TertiarySpread=0.03
 
     // Weapon fire
     WeaponFireOffset=18.0
-    AddedPitch=68
+    AddedPitch=68 // TODO: why is this here/
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
@@ -79,3 +80,4 @@ defaultproperties
 
     BeginningIdleAnim="com_close_idle"
 }
+

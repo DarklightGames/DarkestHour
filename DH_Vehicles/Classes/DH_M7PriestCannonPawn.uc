@@ -39,6 +39,8 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=90.0,DriverTransitionAnim="stand_idlehip_binoc",TransitionDownAnim="com_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // binoculars
     DriverPositions(4)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
+    PositionInArray=0
+    UnbuttonedPositionIndex=0
     RaisedPositionIndex=3
     PeriscopePositionIndex=1
     BinocPositionIndex=4
@@ -52,3 +54,4 @@ defaultproperties
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     bManualTraverseOnly=true
 }
+

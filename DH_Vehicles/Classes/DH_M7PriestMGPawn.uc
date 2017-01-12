@@ -8,7 +8,7 @@ class DH_M7PriestMGPawn extends DHVehicleMGPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_M7PriestMG'
-    PositionInArray=0
+    PositionInArray=1
     bMustBeTankCrew=false
     GunsightCameraBone="com_camera"
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
@@ -19,10 +19,11 @@ defaultproperties
     bDrawDriverInTP=true
     DriveAnim="stand_idleiron_mg42"
     HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_50Cal'
-    //HUDOverlayOffset=(X=-2.0)
+    HUDOverlayOffset=(X=-2.0)
     HUDOverlayFOV=35.0
     FirstPersonGunRefBone="1stperson_wep"
     FirstPersonGunShakeScale=0.75
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
 }
+

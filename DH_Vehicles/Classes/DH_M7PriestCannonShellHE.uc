@@ -11,6 +11,7 @@ class DH_M7PriestCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    SpeedFudgeScale=1.0
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
     ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
     ExplosionSound(2)=SoundGroup'Artillery.explosions.explo03'
@@ -36,11 +37,12 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
     BallisticCoefficient=2.96
-    Speed=11880.0
-    MaxSpeed=11880.0
+    Speed=9000           // 198m/s 75%
+    MaxSpeed=9000
     Damage=500.0
     DamageRadius=1350.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
     Tag="M1 HE"
     DrawScale=1.3
 }
+

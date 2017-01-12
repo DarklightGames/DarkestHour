@@ -29,8 +29,8 @@ defaultproperties
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="Camera_driver"
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_look'
+    VehicleHudTurret=TexRotator'DH_M7Priest_tex.interface.priest_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M7Priest_tex.interface.priest_turret_look'
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
@@ -69,15 +69,17 @@ defaultproperties
     RightLeverAxis=AXIS_X
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))    // TODO: where tho
+    ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=-40,Z=30.0),ExhaustRotation=(Pitch=0,Yaw=32768))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=40,Z=30.0),ExhaustRotation=(Pitch=0,Yaw=32768))
     // TODO: make these
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestCannonPawn',WeaponBone="turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestMGPawn',WeaponBone="mg_placement")
-    // TODO: passengers
-    // PassengerPawns(0)=(AttachBone="Passenger_1",DrivePos=(X=0.0,Y=-15.0,Z=0.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    // PassengerPawns(1)=(AttachBone="passenger_2",DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
-    // PassengerPawns(2)=(AttachBone="passenger_3",DrivePos=(X=-10.0,Y=0.0,Z=3.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
-    // PassengerPawns(3)=(AttachBone="passenger_4",DrivePos=(X=0.0,Y=15.0,Z=0.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
+    // TODO: passengers (how do we reposition passengers, can't remember!)
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=40.0,Y=-65.0,Z=10.0),DriveRot=(Yaw=24576),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-45.0,Y=60.0,Z=10.0),DriveRot=(Yaw=-8192),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-120.0,Y=-75.0,Z=40.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-170,Y=0,Z=25),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(4)=(AttachBone="body",DrivePos=(X=-120.0,Y=75.0,Z=40.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
     StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
@@ -86,22 +88,28 @@ defaultproperties
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
     VehicleTeam=1
     SteeringScaleFactor=0.75
-    BeginningIdleAnim="driver_hatch_idle_close"         // TODO: make this anim
-    DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
+    BeginningIdleAnim="driver_hatch_idle_close"
+    DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'  // TODO: make interface art
+    VehicleHudImage=texture'DH_M7Priest_tex.interface.priest_body'  // TODO: make interface art
     // TODO: set these up correctly
-    VehicleHudOccupantsX(0)=0.43
-    VehicleHudOccupantsX(2)=0.56
-    VehicleHudOccupantsX(3)=0.375
-    VehicleHudOccupantsY(3)=0.75
-    VehicleHudOccupantsX(4)=0.45
-    VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsX(5)=0.55
-    VehicleHudOccupantsY(5)=0.8
-    VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.75
+    VehicleHudOccupantsX(0)=0.42
+    VehicleHudOccupantsY(0)=0.37
+    VehicleHudOccupantsX(1)=0.43
+    VehicleHudOccupantsY(1)=0.5
+    VehicleHudOccupantsX(2)=0.62
+    VehicleHudOccupantsY(2)=0.40
+    VehicleHudOccupantsX(3)=0.39
+    VehicleHudOccupantsY(3)=0.44
+    VehicleHudOccupantsX(4)=0.60
+    VehicleHudOccupantsY(4)=0.56
+    VehicleHudOccupantsX(5)=0.37
+    VehicleHudOccupantsY(5)=0.74
+    VehicleHudOccupantsX(6)=0.50
+    VehicleHudOccupantsY(6)=0.8
+    VehicleHudOccupantsX(7)=0.63
+    VehicleHudOccupantsY(7)=0.74
     VehicleHudEngineX=0.51
     // TODO: set these up
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
@@ -138,7 +146,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.0
+        WheelRadius=25.00
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M7Priest.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
@@ -158,38 +166,34 @@ defaultproperties
     VehicleMass=13.5
     bFPNoZFromCameraPitch=true
     DrivePos=(X=5.0,Y=0.0,Z=3.0)
-    ExitPositions(0)=(X=125.0,Y=-25.0,Z=200.0)      //driver's hatch
-    ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)        //commander's hatch
-    ExitPositions(2)=(X=125.0,Y=25.0,Z=200.0)       //mg's hatch
-    ExitPositions(3)=(X=-100.0,Y=-150.0,Z=75.0)     //passenger (l)
-    ExitPositions(4)=(X=-250.0,Y=-35.0,Z=75.0)    //passenger (rl)
-    ExitPositions(5)=(X=-250.0,Y=35.0,Z=75.0)     //passenger (rr)
-    ExitPositions(6)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
-    ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
+
+    ExitPositions(0)=(X=50.00,Y=-140.00,Z=-10.00)
+    ExitPositions(1)=(X=-50.00,Y=-140.00,Z=-10.00)
+    ExitPositions(2)=(X=0.00,Y=140.00,Z=-10.00)
+    ExitPositions(3)=(X=15.00,Y=-140.00,Z=-10.00)
+    ExitPositions(4)=(X=-52.00,Y=140.00,Z=-10.00)
+    ExitPositions(5)=(X=-120.00,Y=-140.00,Z=-10.00)
+    ExitPositions(6)=(X=-255.00,Y=0.00,Z=-10.00)
+    ExitPositions(7)=(X=-120.00,Y=140.00,Z=-10.00)
+
     DriverDamageMult=1.0
     VehicleNameString="M7 Priest"
-    MaxDesireability=1.9
     // TODO: flag?
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-
     PitchUpLimit=5000
     PitchDownLimit=60000
-
     HealthMax=525.0
     Health=525
-
     Mesh=SkeletalMesh'DH_M7Priest_anm.ext_body'
     Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
     Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
     Skins(2)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     Skins(3)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     Skins(4)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-
     // TODO: figure this one out
     CollisionRadius=175.0
     CollisionHeight=60.0
-
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -209,9 +213,9 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M7Priest.KParams0'
-
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_m4a1_75'
+    SpawnOverlay(0)=material'DH_M7Priest_tex.interface.priest'
+    UnbuttonedPositionIndex=0
 }
+
