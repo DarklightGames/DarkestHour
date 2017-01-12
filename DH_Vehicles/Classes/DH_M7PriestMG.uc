@@ -24,7 +24,7 @@ defaultproperties
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
     InitialPrimaryAmmo=105
-    NumMGMags=8           // TODO: look this value up in the book
+    NumMGMags=3
     FireInterval=0.13
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
     TracerFrequency=5
@@ -32,17 +32,18 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="tip"
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
-    FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.Quad50Cal_fire_loop'
+    FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
+    AmbientSoundScaling=5.0
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
 
     // Reload
-    HUDOverlayReloadAnim="Reloads"
-    ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.52)
-    ReloadStages(2)=(Sound=none,Duration=1.99)
-    ReloadStages(3)=(Sound=none,Duration=1.75)
+    HUDOverlayReloadAnim="Reload"
+    ReloadStages(0)=(Sound=none,Duration=1.76) // no sounds because HUD overlay reload animation plays them
+    ReloadStages(1)=(Sound=none,Duration=1.76)
+    ReloadStages(2)=(Sound=none,Duration=1.76)
+    ReloadStages(3)=(Sound=none,Duration=1.76)
 }

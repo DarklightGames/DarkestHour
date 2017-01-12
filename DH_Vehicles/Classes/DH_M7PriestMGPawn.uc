@@ -19,10 +19,9 @@ defaultproperties
     bDrawDriverInTP=true
     DriveAnim="stand_idleiron_mg42"
     HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_50Cal'
-    HUDOverlayOffset=(X=-2.0)
-    HUDOverlayFOV=35.0
+    HUDOverlayFOV=40.0
     FirstPersonGunRefBone="1stperson_wep"
-    FirstPersonGunShakeScale=0.75
+    FirstPersonGunShakeScale=1.0
     FirstPersonOffsetZScale=1.0
     bHideMuzzleFlashAboveSights=true
 }
