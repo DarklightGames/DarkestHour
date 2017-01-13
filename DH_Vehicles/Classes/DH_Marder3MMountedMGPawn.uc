@@ -8,7 +8,7 @@ class DH_Marder3MMountedMGPawn extends DHVehicleMGPawn;
 // Can't fire if using binoculars
 function bool CanFire()
 {
-    return DriverPositionIndex != BinocPositionIndex;
+    return DriverPositionIndex != BinocPositionIndex || !IsHumanControlled();
 }
 
 defaultproperties

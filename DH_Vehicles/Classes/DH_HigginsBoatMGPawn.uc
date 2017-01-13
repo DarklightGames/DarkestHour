@@ -8,7 +8,7 @@ class DH_HigginsBoatMGPawn extends DH_M3A1HalftrackMGPawn;
 // Can't fire if using binoculars
 function bool CanFire()
 {
-    return DriverPositionIndex != BinocPositionIndex;
+    return DriverPositionIndex != BinocPositionIndex || !IsHumanControlled();
 }
 
 defaultproperties

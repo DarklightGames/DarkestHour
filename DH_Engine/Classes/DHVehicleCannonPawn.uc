@@ -417,7 +417,7 @@ function bool CanFire()
 {
     return (DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex
         && !(IsInState('ViewTransition') && (LastPositionIndex == PeriscopePositionIndex || LastPositionIndex == BinocPositionIndex)))
-        || ROPlayer(Controller) == none;
+        || !IsHumanControlled();
 }
 
 // Modified (from deprecated ROTankCannonPawn) to keep ammo changes clientside as a network optimisation (only pass to server when it needs the change, not every key press)

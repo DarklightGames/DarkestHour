@@ -168,7 +168,7 @@ simulated state ViewTransition
 // Can't fire if using binoculars
 function bool CanFire()
 {
-    return DriverPositionIndex != BinocPositionIndex;
+    return DriverPositionIndex != BinocPositionIndex || !IsHumanControlled();
 }
 
 defaultproperties

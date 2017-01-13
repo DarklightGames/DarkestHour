@@ -10,7 +10,7 @@ class DH_StuH42MountedMGPawn extends DHVehicleMGPawn;
 // Can't fire unless buttoned up & controlling the remote MG
 function bool CanFire()
 {
-    return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
+    return (DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition')) || !IsHumanControlled();
 }
 
 // Modified to show a hint that player must be buttoned to fire, but unbuttoned to reload the remote controlled external MG

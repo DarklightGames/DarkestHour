@@ -9,7 +9,8 @@ class DH_Stug3GMountedMGPawn extends DHVehicleMGPawn;
 function bool CanFire()
 {
     return (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > DriverPositionIndex))
-        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex);
+        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex)
+        || !IsHumanControlled();
 }
 
 // Modified to show a hint that player must be unbuttoned to fire or reload the externally mounted MG
