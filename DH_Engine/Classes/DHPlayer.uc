@@ -445,6 +445,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     {
         DHPwn = DHPawn(Pawn);
         ROWeap = ROWeapon(Pawn.Weapon);
+        ROVeh = ROVehicle(Pawn);
     }
 
     // Handle any sway if ironsighted
@@ -517,7 +518,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         // Calculate any turning speed adjustments
         if (DHPwn != none && DHPwn.bRestingWeapon)
         {
-            TurnSpeedFactor = DHHalfTurnSpeedFactor; // lower look sensitivity for when resting weapon
+            TurnSpeedFactor = DHHalfTurnSpeedFactor; // start with lower look sensitivity for when resting weapon
         }
         else
         {
@@ -528,9 +529,17 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
         }
-        else if (DHPwn != none && (DHPwn.bIronSights || DHPwn.bBipodDeployed))
+        else if (DHPwn != none)
         {
-            TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights or is bipod deployed
+            if (DHPwn.bIronSights || DHPwn.bBipodDeployed)
+            {
+                TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights or is bipod deployed
+            }
+        }
+        else if (ROVeh != none && ROVeh.DriverPositions[ROVeh.DriverPositionIndex].bDrawOverlays && ROVeh.HUDOverlay == none
+            && DHArmoredVehicle(ROVeh) != none && DHArmoredVehicle(ROVeh).PeriscopeOverlay != none)
+        {
+            TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is driving an armored vehicle & using a periscope
         }
 
         // Calculate base for new view rotation, factoring in any turning speed reduction & applying max value limits
@@ -552,15 +561,10 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
                 DHPwn.LimitYaw(ViewRotation.Yaw);
             }
         }
-        else
+        else if (ROVeh != none)
         {
-            ROVeh = ROVehicle(Pawn);
-
-            if (ROVeh != none)
-            {
-                ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
-                ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
-            }
+            ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
+            ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
         }
 
         // Apply any sway
@@ -573,12 +577,12 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         ViewShake(DeltaTime);
         ViewFlash(DeltaTime);
 
-        // Make pawn face towards new view rotation
-        if (!bRotateToDesired && Pawn != none && (!bFreeCamera || !bBehindView))
+        // Make pawn face towards new view rotation (applied only to a DHPawn as vehicles ignore FaceRotation)
+        if (!bRotateToDesired && DHPwn != none && (!bFreeCamera || !bBehindView))
         {
             NewRotation = ViewRotation;
             NewRotation.Roll = Rotation.Roll;
-            Pawn.FaceRotation(NewRotation, DeltaTime);
+            DHPwn.FaceRotation(NewRotation, DeltaTime);
         }
     }
 }
