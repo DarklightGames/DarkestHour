@@ -56,6 +56,7 @@ var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
 var     localized string    DeathPenaltyText;
+var     localized string    CaptureBarUnlockText;
 
 // Death messages
 var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
@@ -3882,8 +3883,17 @@ simulated function DrawCaptureBar(Canvas Canvas)
     }
 
     // Set up to draw the objective name
-    s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
-    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+    if (DHGRI.DHObjectives[CurrentCapArea].NoCapProgressTimeRemaining > 0)
+    {
+        // If the objective is preventing capture (no precap timer) show the duration instead of the objective name
+        s = CaptureBarUnlockText;
+        s = Repl(s, "{0}", DHGRI.DHObjectives[CurrentCapArea].NoCapProgressTimeRemaining);
+    }
+    else
+    {
+        s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
+        CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+    }
 
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
@@ -4742,13 +4752,14 @@ defaultproperties
     //  ResupplyZoneResupplyingPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
     //  ResupplyZoneResupplyingVehicleIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
 
-    // Capture bar icons
+    // Capture bar variables
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
     CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'
     CaptureBarTeamColors(0)=(R=221,G=0,B=0)
     CaptureBarTeamColors(1)=(R=49,G=57,B=223)
+    CaptureBarUnlockText="Can be captured in: {0} seconds"
 
     // Player figure/health icon
     NationHealthFigures(1)=texture'DH_GUI_Tex.GUI.US_player'

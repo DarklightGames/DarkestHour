@@ -72,7 +72,10 @@ var()   int                         AlliedAwardedReinforcements; // Amount of re
 var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to aware for axis if the obj is captured
 var()   int                         PlayersNeededToCapture;
 var()   name                        NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
+var()   byte                        PreventCaptureTime;          // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
 
+var     byte                        NoCapProgressTimeRemaining;  // time remaining until capture can be captured (replicated to clients)
+var     float                       NoCapTimeRemainingFloat;     // used to calculate time as timer runs 4 times a second
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bAlliesContesting;
@@ -130,6 +133,13 @@ var(DH_ContestEndActions)   array<VehiclePoolAction>    AxisContestEndVehiclePoo
 var(DH_ContestEndActions)   array<name>                 AlliesContestEndEvents;
 var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
 
+replication
+{
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        NoCapProgressTimeRemaining;
+}
+
 function PostBeginPlay()
 {
     local DHGameReplicationInfo DHGRI;
@@ -186,6 +196,8 @@ function Reset()
 {
     super.Reset();
 
+    NoCapProgressTimeRemaining = 0;
+    NoCapTimeRemainingFloat = 0.0;
     SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
@@ -193,6 +205,16 @@ function Reset()
     bAlliesContesting = false;
     bAxisContesting = false;
     bIsLocked = false;
+}
+
+function SetActive( bool bActiveStatus )
+{
+    super.SetActive(bActiveStatus);
+
+    if (bActiveStatus)
+    {
+        NoCapTimeRemainingFloat = float(PreventCaptureTime);
+    }
 }
 
 function DoSpawnPointAction(SpawnPointAction SPA)
@@ -865,6 +887,19 @@ function Timer()
         {
             Rate[i] = 0.0;
         }
+    }
+
+    // If we are not ready to capture because of precap prevention set rate to zero
+    if (NoCapTimeRemainingFloat > 0.0)
+    {
+        NoCapTimeRemainingFloat -= 0.25; // Timer is ran 4 times a second, so we reduce accordingly
+        NoCapProgressTimeRemaining = byte(NoCapTimeRemainingFloat); // Update the replicated byte so clients can see how much longer until the obj unlocks
+        Rate[0] = 0.0;
+        Rate[1] = 0.0;
+    }
+    else
+    {
+        NoCapProgressTimeRemaining = 0; // Make sure this value gets zeroed
     }
 
     // Figure what the replicated # of cappers should be (to take into account the leader bonus)
