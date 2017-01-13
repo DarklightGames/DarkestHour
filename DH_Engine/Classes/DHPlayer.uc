@@ -433,23 +433,22 @@ simulated function PlayerFlinched(float Intensity)
 
 // Updated to allow Yaw limits for mantling
 // Also to disable sway on bolt rifles between shots (while weapon is lowered from face)
-function UpdateRotation(float DeltaTime, float maxPitch)
+function UpdateRotation(float DeltaTime, float MaxPitch)
 {
-    local rotator   NewRotation, ViewRotation;
-    local ROVehicle ROVeh;
     local DHPawn    DHPwn;
     local ROWeapon  ROWeap;
+    local ROVehicle ROVeh;
+    local rotator   NewRotation, ViewRotation;
     local float     TurnSpeedFactor;
-
-    DHPwn = DHPawn(Pawn);
-    ROVeh = ROVehicle(Pawn);
 
     if (Pawn != none)
     {
+        DHPwn = DHPawn(Pawn);
         ROWeap = ROWeapon(Pawn.Weapon);
     }
 
-    if (bSway && Pawn != none && !Pawn.bBipodDeployed && Pawn.Weapon != none && Pawn.Weapon.bCanSway && Pawn.Weapon.bUsingSights && ROWeap != none && !ROWeap.bWaitingToBolt)
+    // Handle any sway if ironsighted
+    if (bSway && Pawn != none && !Pawn.bBipodDeployed && ROWeap != none && ROWeap.bCanSway && ROWeap.bUsingSights && !ROWeap.bWaitingToBolt)
     {
         SwayHandler(DeltaTime);
     }
@@ -462,6 +461,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         SwayTime = 0.0;
     }
 
+    // View shake (& exit) if interpolating
     if (bInterpolating || (Pawn != none && Pawn.bInterpolating))
     {
         ViewShake(DeltaTime);
@@ -469,12 +469,12 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         return;
     }
 
-    // Added FreeCam control for better view control
+    // Using FreeCam for better view control
     if (bFreeCam)
     {
         if (bHudLocksPlayerRotation)
         {
-            // No camera change if we're locking rotation
+            // no camera change if we're locking rotation
         }
         else if (bFreeCamZoom)
         {
@@ -495,9 +495,9 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     {
         ViewRotation = Rotation;
 
+        // Ensure we are not setting the pawn to a rotation beyond its desired
         if (Pawn != none && Pawn.Physics != PHYS_Flying)
         {
-            // Ensure we are not setting the pawn to a rotation beyond its desired
             if (Pawn.DesiredRotation.Roll < 65535 && (ViewRotation.Roll < Pawn.DesiredRotation.Roll || ViewRotation.Roll > 0))
             {
                 ViewRotation.Roll = 0;
@@ -508,72 +508,76 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             }
         }
 
-        DesiredRotation = ViewRotation; // save old rotation
-
+        // Save old rotation & do some resets
+        DesiredRotation = ViewRotation;
         TurnTarget = none;
         bRotateToDesired = false;
         bSetTurnRot = false;
 
-        // Begin handling turning speed
-        TurnSpeedFactor = DHStandardTurnSpeedFactor;
-
-        // Lower look sensitivity for when resting weapon
+        // Calculate any turning speed adjustments
         if (DHPwn != none && DHPwn.bRestingWeapon)
         {
-            TurnSpeedFactor = DHHalfTurnSpeedFactor;
+            TurnSpeedFactor = DHHalfTurnSpeedFactor; // lower look sensitivity for when resting weapon
+        }
+        else
+        {
+            TurnSpeedFactor = DHStandardTurnSpeedFactor;
         }
 
-        // if sniper scope or binoc
-        if (ROWeap != none &&
-            (ROWeap.bPlayerViewIsZoomed || (ROWeap.IsA('DHBinocularsItem') && ROWeap.bPlayerViewIsZoomed)))
+        if (ROWeap != none && ROWeap.bPlayerViewIsZoomed)
         {
-            TurnSpeedFactor *= DHScopeTurnSpeedFactor;
+            TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
         }
         else if (DHPwn != none && (DHPwn.bIronSights || DHPwn.bBipodDeployed))
         {
-            TurnSpeedFactor *= DHISTurnSpeedFactor;
+            TurnSpeedFactor *= DHISTurnSpeedFactor; // reduce if player is using ironsights or is bipod deployed
         }
 
-        // Handle viewrotation
+        // Calculate base for new view rotation, factoring in any turning speed reduction & applying max value limits
         ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -10000.0, 10000.0);
         ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -10000.0, 10000.0);
 
-        if (Pawn != none && Pawn.Weapon != none && DHPwn != none)
-        {
-            ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
-        }
-
+        // Apply any pawn limits on pitch & yaw
         if (DHPwn != none)
         {
+            if (DHPwn.Weapon != none)
+            {
+                ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
+            }
+
             ViewRotation.Pitch = DHPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
-        }
 
-        if (DHPwn != none && (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingMortar || DHPwn.bIsCuttingWire))
+            if (DHPwn.bBipodDeployed || DHPwn.bIsMantling || DHPwn.bIsDeployingMortar || DHPwn.bIsCuttingWire)
+            {
+                DHPwn.LimitYaw(ViewRotation.Yaw);
+            }
+        }
+        else
         {
-            DHPwn.LimitYaw(ViewRotation.Yaw);
+            ROVeh = ROVehicle(Pawn);
+
+            if (ROVeh != none)
+            {
+                ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
+                ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
+            }
         }
 
-        // Limit Pitch and yaw for the ROVehicles
-        if (ROVeh != none)
-        {
-            ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
-            ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
-        }
-
+        // Apply any sway
         ViewRotation.Yaw += SwayYaw;
         ViewRotation.Pitch += SwayPitch;
 
+        // Set new view rotation & do any view shake
         SetRotation(ViewRotation);
 
         ViewShake(DeltaTime);
         ViewFlash(DeltaTime);
 
-        NewRotation = ViewRotation;
-
-        NewRotation.Roll = Rotation.Roll;
-
+        // Make pawn face towards new view rotation
         if (!bRotateToDesired && Pawn != none && (!bFreeCamera || !bBehindView))
         {
+            NewRotation = ViewRotation;
+            NewRotation.Roll = Rotation.Roll;
             Pawn.FaceRotation(NewRotation, DeltaTime);
         }
     }
