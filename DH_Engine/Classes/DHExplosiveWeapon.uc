@@ -399,19 +399,7 @@ simulated state WeaponSprinting
 {
     simulated event ClientStartFire(int Mode)
     {
-        if (Pawn(Owner).Controller.IsInState('GameEnded') || Pawn(Owner).Controller.IsInState('RoundEnded'))
-        {
-            return;
-        }
-
-        if (Role == ROLE_Authority)
-        {
-            StartFire(Mode);
-        }
-        else if (StartFire(Mode))
-        {
-            ServerStartFire(Mode);
-        }
+        global.ClientStartFire(Mode);
     }
 
     simulated function bool ReadyToFire(int Mode)
