@@ -1322,7 +1322,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                             VehicleAmmoTypeText.OffsetX -= StrX;
                             VehicleAmmoTypeText.Tints[TeamIndex] = default.VehicleAmmoTypeText.Tints[TeamIndex]; // default bold text for current ammo type
                         }
-                        else if (Cannon.HasAmmo(i))
+                        else if (Cannon.HasAmmoToReload(i))
                         {
                             VehicleAmmoTypeText.Tints[TeamIndex] = default.VehicleAmmoTypeText.Tints[TeamIndex];
                             VehicleAmmoTypeText.Tints[TeamIndex].A /= 2; // pale text for other available ammo types
