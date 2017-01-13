@@ -30,20 +30,19 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-// Modified to remove the super from DHVehicleMGPawn, which makes the mouse control the MG as well as the turret movement keys
-// But retaining the scope turn speed factor if the player is using binoculars
+// From DHVehicleCannonPawn (just omitting the periscope position check)
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local float TurnSpeedFactor;
 
     if (DriverPositionIndex == BinocPositionIndex && DHPlayer(Controller) != none)
     {
-        TurnSpeedFactor = DHPlayer(Controller).DHISTurnSpeedFactor;
+        TurnSpeedFactor = DHPlayer(Controller).DHScopeTurnSpeedFactor;
         YawChange *= TurnSpeedFactor;
         PitchChange *= TurnSpeedFactor;
     }
 
-    super(DHVehicleWeaponPawn).UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
+    super(DHVehicleWeaponPawn).UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange); // skip over Super in DHVehicleMGPawn
 }
 
 // Modified so camera rotation & offset positioning is always based on the weapon's aim, so player's view always moves with turret

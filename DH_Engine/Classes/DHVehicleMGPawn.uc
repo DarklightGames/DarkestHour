@@ -377,7 +377,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
 }
 
 // Modified to update custom aim, & to stop player from moving the MG if he's not in a position where he can control the MG
-// Also to apply the ironsights turn speed factor if the player is controlling the MG or is using binoculars
+// Also to apply the ironsights turn speed factor if the player is controlling the MG, or his scope factor if using binoculars
 // And to apply RotationsPerSecond limit on MGs swivel speed, which would otherwise be ignored in 1st person for player on MG, because MGs are bInstantRotation weapons
 // While all other players would see a more slowly turning MG, which is very misleading, because gradual rotation via RPS is still used for other players to smooth rotation changes
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
@@ -389,15 +389,15 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     C = DHPlayer(Controller);
     bCanFire = CanFire();
 
-    // Modify view movement speed by the controller's ironsights turn speed factor
-    if ((bCanFire || DriverPositionIndex == BinocPositionIndex) && C != none)
-    {
-        YawChange *= C.DHISTurnSpeedFactor;
-        PitchChange *= C.DHISTurnSpeedFactor;
-    }
-
     if (bCanFire)
     {
+        // Modify view movement speed by the controller's ironsights turn speed factor
+        if (C != none)
+        {
+            YawChange *= C.DHISTurnSpeedFactor;
+            PitchChange *= C.DHISTurnSpeedFactor;
+        }
+
         // Limit rotation speed of MG to it's specified RotationsPerSecond, as MGs are bInstantRotation weapons, which would otherwise ignore RPS in 1st person
         // But don't do this in single player mode, as very high FPS apparently cause MG movement to slow to a crawl, & there aren't any other players to worry about
         if (Level.NetMode != NM_Standalone && Gun != none)
@@ -413,6 +413,12 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     // Stops player moving MG if not in a position where he can control it (but 'null' update still required)
     else
     {
+        if (DriverPositionIndex == BinocPositionIndex && C != none)
+        {
+            YawChange *= C.DHScopeTurnSpeedFactor;
+            PitchChange *= C.DHScopeTurnSpeedFactor;
+        }
+
         UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0);
     }
 
