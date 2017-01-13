@@ -376,59 +376,61 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
     super.HandleBinoculars(bMovingOntoBinocs);
 }
 
-// Modified to update custom aim, & to stop player from moving the MG if he's not in a position where he can control the MG
-// Also to apply the ironsights turn speed factor if the player is controlling the MG, or his scope factor if using binoculars
-// And to apply RotationsPerSecond limit on MGs swivel speed, which would otherwise be ignored in 1st person for player on MG, because MGs are bInstantRotation weapons
-// While all other players would see a more slowly turning MG, which is very misleading, because gradual rotation via RPS is still used for other players to smooth rotation changes
+// Modified to update custom aim, & to stop player from moving the MG if he's not in a position where he is controlling it
+// And to apply RotationsPerSecond limit on MG's movement speed, which would otherwise be ignored in 1st person for player on the gun as MGs are bInstantRotation weapons
+// While other players would see a more slowly turning MG (which is very misleading) as gradual rotation via RPS is still used for other players to smooth rotation changes
+// Also to apply the player's scope turn speed factor if the player is using binoculars
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    local DHPlayer C;
-    local bool     bCanFire;
+    local DHPlayer PC;
     local float    MaxChange;
 
-    C = DHPlayer(Controller);
-    bCanFire = CanFire();
+    PC = DHPlayer(Controller);
 
-    if (bCanFire)
+    // If player is on the gun (in a position where he is controlling it), his look movement rotates the MG & we do a normal custom aim update
+    // We apply his ironsight turn speed reduction, so it feels the same as aiming the infantry version of the same MG
+    if (CanFire())
     {
-        // Modify view movement speed by the controller's ironsights turn speed factor
-        if (C != none)
+        if (PC != none)
         {
-            YawChange *= C.DHISTurnSpeedFactor;
-            PitchChange *= C.DHISTurnSpeedFactor;
+            YawChange *= PC.DHISTurnSpeedFactor;
+            PitchChange *= PC.DHISTurnSpeedFactor;
+
+            // Limit rotation speed of MG to it's specified RotationsPerSecond, so 1st person movement matches 3rd person limits
+            // The MaxChange calculation seems odd, but the Super takes Yaw/PitchChange & multiplies it by DeltaTime & by 32, then applies that to pawn's rotation
+            // The max change we want to apply in rotational units is (RPS * dT * 65536), i.e. the max rotation, in units, the MG can make in DeltaTime
+            // The Super will apply (Change * dT * 32) so we need that to equal (RPS * dT * 65536), meaning we need to pass a max change of (RPS * 65536/32), i.e. RPS * 2048
+            // Native function UpdateSpecialCustomAim() is doing the same rotation adjustment to the MG's aim
+            if (Gun != none)
+            {
+                MaxChange = Gun.RotationsPerSecond * 2048.0;
+                YawChange = FClamp(YawChange, -MaxChange, MaxChange);
+                PitchChange = FClamp(PitchChange, -MaxChange, MaxChange);
+            }
         }
 
-        // Limit rotation speed of MG to it's specified RotationsPerSecond, as MGs are bInstantRotation weapons, which would otherwise ignore RPS in 1st person
-        // But don't do this in single player mode, as very high FPS apparently cause MG movement to slow to a crawl, & there aren't any other players to worry about
-        if (Level.NetMode != NM_Standalone && Gun != none)
-        {
-            MaxChange = Gun.RotationsPerSecond * DeltaTime * 65536;
-            YawChange = FClamp(YawChange, -MaxChange, MaxChange);
-            PitchChange = FClamp(PitchChange, -MaxChange, MaxChange);
-        }
-
-        // Normal custom aim update
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
     }
-    // Stops player moving MG if not in a position where he can control it (but 'null' update still required)
+    // If player is not on the gun we stop the MG from moving (a 'null' custom aim update is necessary)
+    // And if he is using binoculars we apply his scope turn speed reduction
     else
     {
-        if (DriverPositionIndex == BinocPositionIndex && C != none)
+        if (DriverPositionIndex == BinocPositionIndex && PC != none)
         {
-            YawChange *= C.DHScopeTurnSpeedFactor;
-            PitchChange *= C.DHScopeTurnSpeedFactor;
+            YawChange *= PC.DHScopeTurnSpeedFactor;
+            PitchChange *= PC.DHScopeTurnSpeedFactor;
         }
 
         UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0);
     }
 
-    if (C != none)
+    if (PC != none)
     {
-        C.WeaponBufferRotation.Yaw = CustomAim.Yaw;
-        C.WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        PC.WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        PC.WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 
-    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
+    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange); // updates weapon pawn's rotation
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
