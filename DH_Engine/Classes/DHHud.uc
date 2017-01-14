@@ -2951,11 +2951,11 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
                 PlayerLocation = OtherPawn.Location;
                 PlayerYaw = OtherPawn.Rotation.Yaw;
             }
-            else if (PC.SquadMemberPositions[i] != vect(0, 0, 0))
+            else if (PC.SquadMemberLocations[i] != vect(0, 0, 0))
             {
-                PlayerLocation.X = PC.SquadMemberPositions[i].X;
-                PlayerLocation.Y = PC.SquadMemberPositions[i].Y;
-                PlayerYaw = PC.SquadMemberPositions[i].Z;
+                PlayerLocation.X = PC.SquadMemberLocations[i].X;
+                PlayerLocation.Y = PC.SquadMemberLocations[i].Y;
+                PlayerYaw = PC.SquadMemberLocations[i].Z;
             }
             else
             {

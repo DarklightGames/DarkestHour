@@ -75,9 +75,10 @@ var     int                     WeaponLockViolations;       // the number of vio
 // Squads
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
-var     vector                  SquadMemberPositions[12];   // SQUAD_SIZE_MAX
+var     vector                  SquadMemberLocations[12];   // SQUAD_SIZE_MAX
+var     vector                  SquadRallyPoints[2];        // A value of (0,0,0) means the rally point is inactive
 
-var     DHCommandInteraction SquadOrderInteraction;
+var     DHCommandInteraction    SquadOrderInteraction;
 
 struct SquadSignal
 {
@@ -96,7 +97,8 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
-        WeaponUnlockTime, SquadReplicationInfo, SquadMemberPositions;
+        WeaponUnlockTime, SquadReplicationInfo, SquadMemberLocations,
+        SquadRallyPoints;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
