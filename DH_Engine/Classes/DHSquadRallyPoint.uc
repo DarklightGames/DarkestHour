@@ -5,6 +5,7 @@
 
 class DHSquadRallyPoint extends Actor;
 
+
 var DHSquadReplicationInfo SRI;
 var int TeamIndex;
 var int SquadIndex;
@@ -17,6 +18,22 @@ replication
 {
     reliable if (Role == ROLE_Authority)
         TeamIndex, SquadIndex, RallyIndex, SpawnsRemaining;
+}
+
+auto state Activating
+{
+    event BeginState()
+    {
+        Log("Activating");
+    }
+}
+
+state Activated
+{
+    event BeginState()
+    {
+    }
+Begin:
 }
 
 function PostBeginPlay()
@@ -46,17 +63,16 @@ function Timer()
     // TODO: 3-strike rule for spawn kills on the rally point
     if (HasEnemiesNearby())
     {
+//    Destroy();
     }
 
     // TODO: find SRI?
 
-    Destroy();
 }
 
 function bool HasEnemiesNearby()
 {
     local Pawn P;
-    local PlayerController PC;
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(25))
     {
@@ -76,10 +92,13 @@ function bool HasEnemiesNearby()
 
 defaultproperties
 {
+    StaticMesh=StaticMesh'DH_Military_stc.Parachute.Chute_pack'
+    DrawType=DT_StaticMesh
     TeamIndex=-1
     SquadIndex=-1
     RallyIndex=-1
     SpawnsRemaining=15
     SpawnKillCount=0
+    AmbientSound=Sound'Inf_Player.Gibimpact.Gibimpact'
 }
 

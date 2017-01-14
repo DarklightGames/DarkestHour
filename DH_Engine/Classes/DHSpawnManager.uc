@@ -164,23 +164,23 @@ function Reset()
     super.Reset();
 }
 
-function bool DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation)
+function bool DrySpawnVehicle(DHPlayer PC, out vector SpawnLocation, out rotator SpawnRotation)
 {
     local DHSpawnPoint SP;
 
-    if (C == none || GRI == none || C.bSpawnPointInvalidated)
+    if (PC == none || GRI == none || PC.bSpawnPointInvalidated)
     {
         return false;
     }
 
     // Check spawn settings
-    if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
+    if (!GRI.AreSpawnSettingsValid(PC.GetTeamNum(), DHRoleInfo(PC.GetRoleInfo()), PC.SpawnPointIndex, PC.VehiclePoolIndex, PC.SpawnVehicleIndex, PC.RallyPointIndex, PC))
     {
         return false;
     }
 
     // Check spawn point
-    SP = SpawnPoints[C.SpawnPointIndex];
+    SP = SpawnPoints[PC.SpawnPointIndex];
 
     if (SP == none)
     {
@@ -188,12 +188,12 @@ function bool DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator 
     }
 
     // Check vehicle pool
-    if (!GetVehiclePoolError(C, SP))
+    if (!GetVehiclePoolError(PC, SP))
     {
         return false;
     }
 
-    GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation);
+    GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[PC.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation);
 
     return true;
 }
@@ -699,23 +699,23 @@ function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
     return true;
 }
 
-function bool DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation)
+function bool DrySpawnInfantry(DHPlayer PC, out vector SpawnLocation, out rotator SpawnRotation)
 {
     local DHSpawnPoint SP;
 
-    if (C == none || GRI == none || C.bSpawnPointInvalidated)
+    if (PC == none || GRI == none || PC.bSpawnPointInvalidated)
     {
         return false;
     }
 
     // Check spawn settings
-    if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
+    if (!GRI.AreSpawnSettingsValid(PC.GetTeamNum(), DHRoleInfo(PC.GetRoleInfo()), PC.SpawnPointIndex, PC.VehiclePoolIndex, PC.SpawnVehicleIndex, PC.RallyPointIndex, PC))
     {
         return false;
     }
 
     // Check spawn point
-    SP = SpawnPoints[C.SpawnPointIndex];
+    SP = SpawnPoints[PC.SpawnPointIndex];
 
     if (SP == none)
     {

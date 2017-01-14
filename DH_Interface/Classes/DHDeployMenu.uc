@@ -37,10 +37,10 @@ var automated   ROGUIProportionalContainer  c_Roles;
 var automated   DHGUIListBox                    lb_Roles;
 var             DHGUIList                       li_Roles;
 var automated   ROGUIProportionalContainer  LoadoutTabContainer;
-var automated   GUIButton                   	b_EquipmentButton;
-var automated   GUIImage                    	i_EquipmentButton;
-var automated   GUIButton                   	b_VehicleButton;
-var automated   GUIImage                    	i_VehiclesButton;
+var automated   GUIButton                       b_EquipmentButton;
+var automated   GUIImage                        i_EquipmentButton;
+var automated   GUIButton                       b_VehicleButton;
+var automated   GUIImage                        i_VehiclesButton;
 var automated   ROGUIProportionalContainer  MapSquadsTabContainer;
 var automated   GUIButton                   b_MapButton;
 var automated   GUIImage                    i_MapButton;
@@ -51,11 +51,11 @@ var automated   ROGUIProportionalContainer  c_Loadout;
 var automated   ROGUIProportionalContainer      c_Equipment;
 var automated   ROGUIProportionalContainer      c_Vehicle;
 var automated   ROGUIProportionalContainer  c_MapRoot;
-var automated   ROGUIProportionalContainer  	c_Map;
-var automated   GUIImage                    		i_MapBorder;
-var automated   DHGUIMapComponent           		p_Map;
-var automated   ROGUIProportionalContainer  	c_Squads;
-var automated   DHGUISquadsComponent        		p_Squads;
+var automated   ROGUIProportionalContainer      c_Map;
+var automated   GUIImage                            i_MapBorder;
+var automated   DHGUIMapComponent                   p_Map;
+var automated   ROGUIProportionalContainer      c_Squads;
+var automated   DHGUISquadsComponent                p_Squads;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
@@ -100,6 +100,7 @@ var             ELoadoutMode                LoadoutMode;
 
 var             byte                        SpawnPointIndex;
 var             byte                        SpawnVehicleIndex;
+var             byte                        RallyPointIndex;
 
 var             bool                        bButtonsEnabled;
 
@@ -275,7 +276,7 @@ function Timer()
             OnTeamChanged(Team);
 
             // Colin: Automatically select the player's spawn point.
-            p_Map.SelectSpawnPoint(PC.SpawnPointIndex, PC.SpawnVehicleIndex);
+            p_Map.SelectSpawnPoint(PC.SpawnPointIndex, PC.SpawnVehicleIndex, PC.RallyPointIndex);
         }
     }
 
@@ -419,7 +420,7 @@ function UpdateSpawnPoints()
             p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
             p_Map.b_SpawnPoints[i].SetVisibility(true);
 
-            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GetSelectedVehiclePoolIndex(), 255))
+            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GetSelectedVehiclePoolIndex(), 255, 255, PC))
             {
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
@@ -427,7 +428,7 @@ function UpdateSpawnPoints()
             {
                 if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
                 {
-                    p_Map.SelectSpawnPoint(255, 255);
+                    p_Map.SelectSpawnPoint(255, 255, 255);
                 }
 
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
@@ -441,7 +442,7 @@ function UpdateSpawnPoints()
 
             if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
             {
-                p_Map.SelectSpawnPoint(255, 255);
+                p_Map.SelectSpawnPoint(255, 255, 255);
             }
         }
     }
@@ -487,7 +488,7 @@ function UpdateSpawnPoints()
 
                 if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
                 {
-                    p_Map.SelectSpawnPoint(255, 255);
+                    p_Map.SelectSpawnPoint(255, 255, 255);
                 }
             }
         }
@@ -499,9 +500,15 @@ function UpdateSpawnPoints()
             // deselect it.
             if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
             {
-                p_Map.SelectSpawnPoint(255, 255);
+                p_Map.SelectSpawnPoint(255, 255, 255);
             }
         }
+    }
+
+    // Rally points
+    for (i = 0; i < arraycount(p_Map.b_RallyPoints); ++i)
+    {
+
     }
 }
 
@@ -848,7 +855,8 @@ function Apply()
                            cb_SecondaryWeapon.GetIndex(),
                            SpawnPointIndex,
                            GetSelectedVehiclePoolIndex(),
-                           SpawnVehicleIndex);
+                           SpawnVehicleIndex,
+                           RallyPointIndex);
 }
 
 function SetButtonsEnabled(bool bEnable)
@@ -892,7 +900,9 @@ function UpdateButtons()
                                            DHRoleInfo(li_Roles.GetObject()),
                                            SpawnPointIndex,
                                            GetSelectedVehiclePoolIndex(),
-                                           SpawnVehicleIndex)))
+                                           SpawnVehicleIndex,
+                                           RallyPointIndex,
+                                           PC)))
         {
             bContinueEnabled = true;
         }
@@ -1061,13 +1071,13 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             case 97:
                 //Axis
                 OnTeamChanged(AXIS_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(255, 255);
+                p_Map.SelectSpawnPoint(255, 255, 255);
                 break;
 
             //Allies
             case 98:
                 OnTeamChanged(ALLIES_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(255, 255);
+                p_Map.SelectSpawnPoint(255, 255, 255);
                 break;
 
             //Success
@@ -1332,7 +1342,7 @@ function ChangeTeam(byte Team)
     {
         SetButtonsEnabled(false);
 
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255, 255);
     }
 }
 
@@ -1639,8 +1649,9 @@ function static SetVisible(GUIComponent C, bool bVisible)
 
 defaultproperties
 {
-    SpawnPointIndex=255
-    SpawnVehicleIndex=255
+    SpawnPointIndex=-1
+    SpawnVehicleIndex=-1
+    RallyPointIndex=-1
 
     // GUI Components
     OnMessage=InternalOnMessage

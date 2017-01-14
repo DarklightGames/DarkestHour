@@ -1605,7 +1605,7 @@ function DrawPlayerNames(Canvas C)
     ViewLocation = PlayerOwner.CalcViewLocation;
 
     // STAGE 1: check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
-    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (3018.0 * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
+    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (3018.0 * vector(PlayerOwner.CalcViewRotation)), ViewLocation, vect(32, 32, 32))
     {
         if (A.bBlockActors)
         {

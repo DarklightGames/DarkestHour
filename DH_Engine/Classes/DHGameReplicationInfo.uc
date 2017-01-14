@@ -330,7 +330,29 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
     return false;
 }
 
-simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)
+simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
+{
+    local DHSquadRallyPoint RP;
+    local DHPlayerReplicationInfo PRI;
+
+    if (PC == none || PC.SquadReplicationInfo == none)
+    {
+        return false;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    RP = PC.SquadReplicationInfo.RallyPoints[RallyPointIndex];
+
+    if (RP == none || PRI == none || PRI.Team.TeamIndex != RP.TeamIndex || PRI.SquadIndex != RP.SquadIndex)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+simulated function bool AreSpawnSettingsValid(int TeamIndex, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex, byte RallyPointIndex, DHPlayer PC)
 {
     local class<Vehicle> VehicleClass;
 
@@ -338,7 +360,7 @@ simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte Spa
     if (SpawnPointIndex == 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex != 255)
     {
         // Trying to spawn at spawn vehicle
-        if (CanSpawnAtVehicle(Team, SpawnVehicleIndex))
+        if (CanSpawnAtVehicle(TeamIndex, SpawnVehicleIndex))
         {
             return true;
         }
@@ -346,7 +368,7 @@ simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte Spa
     else if (SpawnPointIndex != 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex == 255)
     {
         // Trying to spawn as Infantry at a SP
-        if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, none))
+        if (IsSpawnPointIndexValid(SpawnPointIndex, TeamIndex, RI, none))
         {
             return true;
         }
@@ -358,10 +380,18 @@ simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte Spa
         {
             VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
 
-            if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, VehicleClass))
+            if (IsSpawnPointIndexValid(SpawnPointIndex, TeamIndex, RI, VehicleClass))
             {
                 return true;
             }
+        }
+    }
+    else if (SpawnPointIndex == 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex == 255 && RallyPointIndex != 255)
+    {
+        // Trying to spawn at squad rally point
+        if (IsRallyPointIndexValid(PC, RallyPointIndex, TeamIndex))  // TODO: might need to know the PRI, so the last spawn is saved for the squad leader
+        {
+            return true;
         }
     }
 

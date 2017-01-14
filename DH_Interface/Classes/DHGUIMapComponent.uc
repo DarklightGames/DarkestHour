@@ -9,7 +9,8 @@ const   SPAWN_POINTS_MAX =                  48; // Max spawn points total (make 
 const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
 
 var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX],
-                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX];
+                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX],
+                                            b_RallyPoints[2];
 
 var             DHHud                       MyHud;
 var             DHGameReplicationInfo       GRI;
@@ -62,7 +63,7 @@ function bool InternalOnDraw(Canvas C)
     return false;
 }
 
-function SelectSpawnPoint(byte SpawnPointIndex, byte SpawnVehicleIndex)
+function SelectSpawnPoint(byte SpawnPointIndex, byte SpawnVehicleIndex, byte RallyPointIndex)
 {
     local int i;
 
@@ -254,6 +255,26 @@ defaultproperties
     b_SpawnVehicles(5)=SpawnVehicleButton
     b_SpawnVehicles(6)=SpawnVehicleButton
     b_SpawnVehicles(7)=SpawnVehicleButton
+
+    // Rally Point Buttons
+    Begin Object Class=DHGUICheckBoxButton Name=RallyPointButton
+        StyleName="DHRallyPointButtonStyle"
+        WinWidth=0.04
+        WinHeight=0.04
+        bTabStop=false
+        OnCheckChanged=InternalOnCheckChanged
+        OnDblClick=OnDblClick
+        bVisible=false
+        CheckedOverlay(0)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(1)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(2)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
+        bCanClickUncheck=false
+    End Object
+
+    b_RallyPoints(0)=RallyPointButton
+    b_RallyPoints(1)=RallyPointButton
 
     Begin Object Class=GUIContextMenu Name=RCMenu
         ContextItems(0)="Attack"

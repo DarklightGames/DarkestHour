@@ -33,13 +33,13 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
 
             PC.ServerSquadSignal(SIGNAL_Fire, Location);
             break;
-        case 1: // Attack
-            PC.ConsoleCommand("SPEECH ORDER 0");
-            PC.ServerSquadOrder(ORDER_Attack, Location);
+        case 1: // Create rally point
+            PC.ServerSquadSpawnRallyPoint();
             break;
         case 2: // Defend
-            PC.ConsoleCommand("SPEECH ORDER 1");
-            PC.ServerSquadOrder(ORDER_Defend, Location);
+        // TODO: build menu
+//            PC.ConsoleCommand("SPEECH ORDER 1");
+//            PC.ServerSquadOrder(ORDER_Defend, Location);
             break;
         case 3: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
@@ -57,7 +57,7 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
 defaultproperties
 {
     Options(0)=(Text="Fire",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(Text="Attack",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_attack')
+    Options(1)=(Text="Create Rally Point",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_attack')
     Options(2)=(Text="Defend",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend')
     Options(3)=(Text="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
 }

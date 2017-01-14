@@ -56,7 +56,7 @@ var private byte                    AxisLocked[TEAM_SQUADS_MAX];
 var private ESquadOrderType         AxisOrderTypes[TEAM_SQUADS_MAX];
 var private vector                  AxisOrderLocations[TEAM_SQUADS_MAX];
 
-var private array<DHSquadRallyPoint>    RallyPoints;
+var DHSquadRallyPoint               RallyPoints[16];
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -83,7 +83,8 @@ replication
         AxisMembers, AxisNames, AxisLocked,
         AlliesMembers, AlliesNames, AlliesLocked,
         AxisOrderTypes, AxisOrderLocations,
-        AlliesOrderTypes, AlliesOrderLocations;
+        AlliesOrderTypes, AlliesOrderLocations,
+        RallyPoints;
 }
 
 function PostBeginPlay()
@@ -1149,16 +1150,15 @@ private function InternalSetSquadOrder(int TeamIndex, int SquadIndex, ESquadOrde
     }
 }
 
-function DHSquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex, int RallyIndex)
+function DHSquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex)
 {
     local int i;
 
-    for (i = 0; i < RallyPoints.Length; ++i)
+    for (i = 0; i < arraycount(RallyPoints); ++i)
     {
         if (RallyPoints[i] != none &&
             RallyPoints[i].TeamIndex == TeamIndex &&
-            RallyPoints[i].SquadIndex == SquadIndex &&
-            RallyPoints[i].RallyIndex == RallyIndex)
+            RallyPoints[i].SquadIndex == SquadIndex)
         {
             return RallyPoints[i];
         }
@@ -1175,13 +1175,14 @@ function bool CanCreateRallyPoint(DHPlayer PC)
     local Pawn OtherPawn;
     local DHPawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
-    local int i;
     local bool bIsNearSquadmate;
 
     P = DHPawn(PC.Pawn);
 
     if (P == none)
     {
+        Log("PC is not a DHPawn");
+
         return false;
     }
 
@@ -1190,64 +1191,99 @@ function bool CanCreateRallyPoint(DHPlayer PC)
     // Must be a squad leader
     if (PRI == none || !PRI.IsSquadLeader())
     {
+        Log("Player is not a squad leader");
+
         return false;
     }
 
-    // Must have a teammate nearby
-    foreach P.RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(10))
+    Log("Level.NetMode" @ Level.NetMode);
+
+    if (Level.NetMode != NM_Standalone)
     {
-        if (OtherPawn == none)
+        // Must have a teammate nearby
+        foreach P.RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(10))
         {
-            continue;
+            if (OtherPawn == none)
+            {
+                continue;
+            }
+
+            OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+            {
+                bIsNearSquadmate = true;
+            }
         }
 
-        OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
-
-        if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+        if (!bIsNearSquadmate)
         {
-            bIsNearSquadmate = true;
+            return false;
         }
-    }
-
-    if (!bIsNearSquadmate)
-    {
-        return false;
     }
 
     return true;
 }
 
-function ServerSpawnRallyPoint(DHPlayer PC)
+function DHSquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 {
     local DHSquadRallyPoint RP;
     local Pawn P;
     local DHPlayerReplicationInfo PRI;
+    local vector HitLocation, HitNormal;
+    local int i, RallyPointIndex;
 
     if (!CanCreateRallyPoint(PC))
     {
         // TODO: return an error somewhere
-        return;
+        return none;
     }
 
     P = PC.Pawn;
 
     if (P == none)
     {
-        return;
+        return none;
+    }
+
+    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    if (P.Trace(HitLocation, HitNormal, P.Location - vect(0, 0, 128.0), P.Location, false) == none)
+    {
+        Log("Trace down hit nothing");
+
+        return none;
+    }
+
+    for (i = 0; i < arraycount(RallyPoints); ++i)
+    {
+        if (RallyPoints[i] == none)
+        {
+            RallyPointIndex = i;
+            break;
+        }
+    }
+
+    if (RallyPointIndex < 0)
+    {
+        Warn("Too many active rally points, cannot create another one");
+
+        return none;
     }
 
     // TODO: snap and align to the ground, make sure it's on relatively flat ground etc.
-    RP = Spawn(class'DHSquadRallyPoint', none,, PC.Pawn.Location, PC.Pawn.Rotation);
-    RP.TeamIndex = P.GetTeamNum();
-    Rp.SquadIndex =
-    RP.ActivationTime = Level.Game.GameReplicationInfo.ElapsedTime + 15;    // TODO: this time will probably end up being dynamic
+    RP = Spawn(class'DHSquadRallyPoint', none,, HitLocation, PC.Pawn.Rotation);
 
-    if (RP == none)
+    if (RP != none)
     {
-        return;
+        RP.TeamIndex = P.GetTeamNum();
+        RP.SquadIndex = PRI.SquadIndex;
+        RP.ActivationTime = Level.Game.GameReplicationInfo.ElapsedTime + 15;    // TODO: this time will probably end up being dynamic
     }
 
-    RallyPoints[RallyPoints.Length] = RP;
+    // TODO: send squad leader a message that the RP will be active in 15 seconds
+
+    return RP;
 }
 
 defaultproperties
