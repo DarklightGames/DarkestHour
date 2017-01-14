@@ -32,6 +32,14 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
     }
     // End super code
 
+
+    // Theel: Pausesounds before we begin playing music (another likely failed attempt at preventing MGs from firing continuously after the round ends)
+    if (DHPlayer(P) != none)
+    {
+        DHPlayer(P).ClientConsoleCommand("pausesounds", false);
+    }
+
+
     // Modified function code from RO super, check to make sure we were passed the DH_LevelInfo as OptionalObject
     if (P.PlayerReplicationInfo.Team != none && OptionalObject != none)
     {

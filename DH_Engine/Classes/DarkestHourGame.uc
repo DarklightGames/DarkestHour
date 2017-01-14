@@ -4159,6 +4159,69 @@ function AttritionUnlockObjective(optional int ObjNum)
     }
 }
 
+// Modified (no super) to (attempt) to prevent continuous fire after the match ends (time for machine gun attempts)
+function EndGame(PlayerReplicationInfo Winner, string Reason)
+{
+    local Controller P, NextController;
+    local PlayerController Player;
+    local Actor Cam;
+    local ROMinefieldBase Minefield;
+
+    // Turn off all minefields
+    foreach AllActors(class'ROMinefieldBase', Minefield)
+    {
+        Minefield.Deactivate();
+    }
+
+    foreach AllActors(class'Actor', Cam, LevelInfo.EndCamTag)
+    {
+        break;
+    }
+
+    EndGameFocus = Cam;
+
+    if (EndGameFocus != none)
+    {
+        EndGameFocus.bAlwaysRelevant = true;
+    }
+
+    for (P = Level.ControllerList; P != None; P = NextController)
+    {
+        Player = PlayerController(P);
+
+        if (Player != none)
+        {
+            if (EndGameFocus != none)
+            {
+                Player.ClientSetBehindView(false);
+                Player.ClientSetViewTarget(EndGameFocus);
+                Player.SetViewTarget(EndGameFocus);
+            }
+            else
+            {
+                Player.ClientSetBehindView(true);
+            }
+
+            // Theel: Another attempt to prevent continuous mg fire at game end
+            if (DHPlayer(Player) != none)
+            {
+                DHPlayer(Player).ClientConsoleCommand("pausesounds",false);
+            }
+
+            Player.ClientGameEnded();
+        }
+
+        NextController = P.NextController;
+        P.GameHasEnded();
+    }
+
+    EndTime = Level.TimeSeconds + EndTimeDelay;
+    bGameEnded = true;
+    TriggerEvent('EndGame', self, none);
+    EndLogging(Reason);
+    GotoState('MatchOver');
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
