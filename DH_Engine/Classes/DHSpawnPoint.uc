@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHSpawnPoint extends Actor
+class DHSpawnPoint extends DHSpawnPointComponent
     hidecategories(Lighting,LightColor,Karma,Force,Sound)
     abstract;
 
@@ -20,7 +20,6 @@ var()   ESpawnPointType Type;
 var()   bool            bIsInitiallyActive;          // whether or not the SP is active at the start of the round (or waits to be activated later)
 var()   name            InfantryLocationHintTag;     // the Tag for associated LocationHint actors used to spawn players on foot
 var()   name            VehicleLocationHintTag;      // the Tag for associated LocationHint actors used to spawn players in vehicles
-var()   float           SpawnProtectionTime;         // duration in seconds when a spawned player is protected from all damage
 var()   name            MineVolumeProtectionTag;     // optional Tag for associated mine volume that protects this SP only when the SP is active
 var()   name            NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
 var()   name            LinkedVehicleFactoriesTag;   // optional Tag for vehicle factories that are only active when this SP is active
@@ -34,7 +33,6 @@ var()   float                   LocationHintDeferDistance;
 var()   bool                    bIsInitiallyLocked;
 var     bool                    bIsLocked;
 
-var     int                     TeamIndex;
 var     array<DHLocationHint>   InfantryLocationHints;
 var     array<DHLocationHint>   VehicleLocationHints;
 var     ROMineVolume            MineVolumeProtectionRef;
@@ -100,6 +98,7 @@ simulated function bool CanSpawnInfantry()
     return Type == ESPT_Infantry || Type == ESPT_InfantryVehicles || Type == ESPT_All;
 }
 
+// TODO: this actually means TANKS
 simulated function bool CanSpawnVehicles()
 {
     return Type == ESPT_Vehicles || Type == ESPT_All;
@@ -122,12 +121,159 @@ function Reset()
     bIsLocked = bIsInitiallyLocked;
 }
 
+simulated function bool CanSpawn(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+{
+    local class<Vehicle>    VehicleClass;
+    local DHRoleInfo        RI;
+
+    if (!super.CanSpawn(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    {
+        return false;
+    }
+
+    Log("TeamIndex" @ TeamIndex);
+    Log("RoleIndex" @ RoleIndex);
+
+    RI = GRI.GetRole(TeamIndex, RoleIndex);
+    VehicleClass = GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex);
+
+    if (RI == none)
+    {
+        Log("b");
+        return false;
+    }
+
+    if (RI.default.bCanUseMortars && CanSpawnMortars())
+    {
+        Log("c");
+        return true;
+    }
+
+    if (VehicleClass == none)
+    {
+        return CanSpawnInfantry() || (RI.default.bCanBeTankCrew && CanSpawnVehicles());
+    }
+
+    if (class<ROVehicle>(VehicleClass) != none && TeamIndex == class<ROVehicle>(VehicleClass).default.VehicleTeam)
+    {
+        return CanSpawnVehicles() || (!class<ROVehicle>(VehicleClass).default.bMustBeTankCommander && CanSpawnInfantryVehicles());
+    }
+
+    return true;
+}
+
+simulated function bool CanSpawnVehicle(class<ROVehicle> VehicleClass)
+{
+    // TODO: this is the relevant bit for spawn points, put this in an overridden function
+    if (!CanSpawnVehicles() && !(CanSpawnInfantryVehicles() && !VehicleClass.default.bMustBeTankCommander))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+function bool PerformSpawn(DHPlayer PC)
+{
+}
+
+function GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex, float CollisionRadius)
+{
+    local Controller    C;
+    local Pawn          P;
+    local array<vector> EnemyLocations;
+    local array<DHLocationHint> LocationHints;
+    local array<int>    LocationHintIndices;
+    local int           LocationHintIndex, i, j, k;
+    local bool          bIsBlocked;
+
+    if (VehiclePoolIndex == -1)
+    {
+        LocationHints = InfantryLocationHints;
+    }
+    else
+    {
+        LocationHints = VehicleLocationHints;
+    }
+
+    // Scramble location hint indices so we don't use the same ones repeatedly
+    LocationHintIndices = class'UArray'.static.Range(0, LocationHints.Length - 1);
+    class'UArray'.static.IShuffle(LocationHintIndices);
+
+    // Put location hints with enemies nearby at the end of the array to be evaluated last
+    if (LocationHintIndices.Length > 1)
+    {
+        // Get all enemy locations
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            if (C.Pawn != none && C.GetTeamNum() != TeamIndex)
+            {
+                EnemyLocations[EnemyLocations.Length] = C.Pawn.Location;
+            }
+        }
+
+        for (i = LocationHintIndices.Length - 1; i >= 0; --i)
+        {
+            for (j = 0; j < EnemyLocations.Length; ++j)
+            {
+                // Location hint has enemies nearby, so move to end of the array
+                if (VSize(EnemyLocations[j] - LocationHints[LocationHintIndices[i]].Location) <= LocationHintDeferDistance)
+                {
+                    k = LocationHintIndices[i];
+                    LocationHintIndices.Remove(i, 1);
+                    LocationHintIndices[LocationHintIndices.Length] = k;
+                }
+            }
+        }
+    }
+
+    LocationHintIndex = -1; // initialize with invalid index, so later we can tell if we found a valid one
+
+    // Loop through location hints & try to find one that isn't blocked by a nearby pawn
+    for (i = 0; i < LocationHintIndices.Length; ++i)
+    {
+        if (LocationHints[LocationHintIndices[i]] == none)
+        {
+            continue;
+        }
+
+        bIsBlocked = false;
+
+        foreach RadiusActors(class'Pawn', P, CollisionRadius, LocationHints[LocationHintIndices[i]].Location)
+        {
+            // Found a blocking pawn, so ignore this location hint & exit the foreach iteration
+            bIsBlocked = true;
+            break;
+        }
+
+        // Location hint isn't blocked, so we'll use it & exit the for loop
+        if (!bIsBlocked)
+        {
+            LocationHintIndex = LocationHintIndices[i];
+            break;
+        }
+    }
+
+    // Found a usable location hint
+    if (LocationHintIndex != -1)
+    {
+        SpawnLocation = LocationHints[LocationHintIndex].Location;
+        SpawnRotation = LocationHints[LocationHintIndex].Rotation;
+    }
+    // Otherwise use spawn point itself
+    else
+    {
+        SpawnLocation = Location;
+        SpawnRotation = Rotation;
+    }
+}
+
 defaultproperties
 {
     bDirectional=true
     bHidden=true
     bStatic=true
-    RemoteRole=ROLE_None
+    RemoteRole=ROLE_SimulatedProxy
     DrawScale=1.5
     SpawnProtectionTime=8.0
     bCollideWhenPlacing=true

@@ -41,7 +41,6 @@ var DHVehicleMG     MGun;                        // reference to the vehicle's m
 var array<material> CannonSkins;                 // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of classes
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
-var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;                  // used for scoring
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning empty vehicle
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
@@ -126,6 +125,10 @@ var     class<Actor>              ResupplyAttachmentClass; // option for a funct
 var     name                      ResupplyAttachBone;      // bone name for attaching resupply attachment
 var     Actor                     ResupplyAttachment;      // reference to any resupply actor
 
+// Spawning
+var     bool                    bIsSpawnVehicle;
+var     DHSpawnPoint_Vehicle    SpawnPoint;
+
 // Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugTreadText;
@@ -134,7 +137,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bIsSpawnVehicle, bRightTrackDamaged, bLeftTrackDamaged;
+        bEngineOff, bIsSpawnVehicle, bRightTrackDamaged, bLeftTrackDamaged, SpawnPoint;
 
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
@@ -180,6 +183,16 @@ simulated function PostBeginPlay()
             Index = StartIndex + i;
             PassengerWeapons[Index].WeaponPawnClass = class'DHPassengerPawn'.default.PassengerClasses[Index];
             PassengerWeapons[Index].WeaponBone = PassengerPawns[i].AttachBone;
+        }
+
+        if (bIsSpawnVehicle)
+        {
+            SpawnPoint = Spawn(class'DHSpawnPoint_Vehicle', self, , Location, Rotation);
+
+            if (SpawnPoint != none)
+            {
+                // TODO: explicity ATTACH the spawn point to the vehicle?
+            }
         }
     }
 

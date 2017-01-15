@@ -98,9 +98,7 @@ var             float                       NextChangeTeamTime;
 
 var             ELoadoutMode                LoadoutMode;
 
-var             byte                        SpawnPointIndex;
-var             byte                        SpawnVehicleIndex;
-var             byte                        RallyPointIndex;
+var             int                         SpawnPointIndex;
 
 var             bool                        bButtonsEnabled;
 
@@ -276,7 +274,7 @@ function Timer()
             OnTeamChanged(Team);
 
             // Colin: Automatically select the player's spawn point.
-            p_Map.SelectSpawnPoint(PC.SpawnPointIndex, PC.SpawnVehicleIndex, PC.RallyPointIndex);
+            p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
         }
     }
 
@@ -398,21 +396,35 @@ function int GetSelectedVehiclePoolIndex()
 
 function UpdateSpawnPoints()
 {
-    local int i;
+    local int i, RoleIndex, SquadIndex;
     local float X, Y;
-    local DHRoleInfo RI;
-    local vector L;
-    local eFontScale FS;
+//    local eFontScale FS;
+    local byte Team;
 
-    RI = DHRoleInfo(li_Roles.GetObject());
+    if (GRI != none)
+    {
+        RoleIndex = GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team);
+    }
+    else
+    {
+        RoleIndex = -1;
+    }
+
+    if (PRI != none)
+    {
+        SquadIndex = PRI.SquadIndex;
+    }
+    else
+    {
+        SquadIndex = -1;
+    }
 
     // Spawn points
     for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)
     {
         if (GRI != none &&
             GRI.SpawnPoints[i] != none &&
-            GRI.SpawnPoints[i].TeamIndex == CurrentTeam &&
-            GRI.IsSpawnPointIndexActive(i))
+            GRI.SpawnPoints[i].IsVisibleTo(CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
         {
             GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight);
 
@@ -420,7 +432,7 @@ function UpdateSpawnPoints()
             p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
             p_Map.b_SpawnPoints[i].SetVisibility(true);
 
-            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GetSelectedVehiclePoolIndex(), 255, 255, PC))
+            if (GRI.SpawnPoints[i].CanSpawn(GRI, CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
             {
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
@@ -428,11 +440,23 @@ function UpdateSpawnPoints()
             {
                 if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
                 {
-                    p_Map.SelectSpawnPoint(255, 255, 255);
+                    p_Map.SelectSpawnPoint(-1);
                 }
 
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
             }
+
+            // BLOCK status
+/*            if (GRI.SpawnPoints[i].BlockFlags != class'DHSpawnPointComponent'.default.BLOCKED_None)
+            {
+                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleBlockedButtonStyle";
+            }
+            else
+            {
+                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleButtonStyle";
+            }
+
+            p_Map.b_SpawnVehicles[i].Style = Controller.GetStyle(p_Map.b_SpawnVehicles[i].StyleName, FS);*/
         }
         else
         {
@@ -442,73 +466,9 @@ function UpdateSpawnPoints()
 
             if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
             {
-                p_Map.SelectSpawnPoint(255, 255, 255);
+                p_Map.SelectSpawnPoint(-1);
             }
         }
-    }
-
-    // Spawn Vehicles
-    for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
-    {
-        if (GRI != none &&
-            GRI.SpawnVehicles[i].VehiclePoolIndex >= 0 &&
-            GRI.SpawnVehicles[i].LocationX != 0 && GRI.SpawnVehicles[i].LocationY != 0 &&
-            GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex] != none &&
-            GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex].default.VehicleTeam == CurrentTeam)
-        {
-            L.X = GRI.SpawnVehicles[i].LocationX;
-            L.Y = GRI.SpawnVehicles[i].LocationY;
-
-            GetMapCoords(L, X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight);
-
-            p_Map.b_SpawnVehicles[i].Tag = i;
-            p_Map.b_SpawnVehicles[i].SetPosition(X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight, true);
-            p_Map.b_SpawnVehicles[i].SetVisibility(true);
-
-            if (GRI.SpawnVehicles[i].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
-            {
-                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleBlockedButtonStyle";
-            }
-            else
-            {
-                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleButtonStyle";
-            }
-
-            p_Map.b_SpawnVehicles[i].Style = Controller.GetStyle(p_Map.b_SpawnVehicles[i].StyleName, FS);
-
-            if (li_Vehicles.GetObject() == none && GRI.SpawnVehicles[i].BlockFlags == class'DHSpawnManager'.default.BlockFlags_None)
-            {
-                // If spawn point that was previously selected is now hidden,
-                // deselect it.
-                p_Map.b_SpawnVehicles[i].MenuStateChange(MSAT_Blurry);
-            }
-            else
-            {
-                p_Map.b_SpawnVehicles[i].MenuStateChange(MSAT_Disabled);
-
-                if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
-                {
-                    p_Map.SelectSpawnPoint(255, 255, 255);
-                }
-            }
-        }
-        else
-        {
-            p_Map.b_SpawnVehicles[i].SetVisibility(false);
-
-            // If spawn point that was previously selected is now hidden,
-            // deselect it.
-            if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
-            {
-                p_Map.SelectSpawnPoint(255, 255, 255);
-            }
-        }
-    }
-
-    // Rally points
-    for (i = 0; i < arraycount(p_Map.b_RallyPoints); ++i)
-    {
-
     }
 }
 
@@ -547,7 +507,7 @@ function string GetStatusText()
         return default.SelectRoleText;
     }
 
-    if (SpawnPointIndex == 255 && SpawnVehicleIndex == 255)
+    if (SpawnPointIndex == -1)
     {
         return default.SelectSpawnPointText;
     }
@@ -854,9 +814,7 @@ function Apply()
                            cb_PrimaryWeapon.GetIndex(),
                            cb_SecondaryWeapon.GetIndex(),
                            SpawnPointIndex,
-                           GetSelectedVehiclePoolIndex(),
-                           SpawnVehicleIndex,
-                           RallyPointIndex);
+                           GetSelectedVehiclePoolIndex());
 }
 
 function SetButtonsEnabled(bool bEnable)
@@ -869,6 +827,17 @@ function SetButtonsEnabled(bool bEnable)
 function UpdateButtons()
 {
     local bool bContinueEnabled;
+    local int SquadIndex;
+    local byte Team;
+
+    if (PRI != none)
+    {
+        SquadIndex = PRI.SquadIndex;
+    }
+    else
+    {
+        SquadIndex = -1;
+    }
 
     if (bButtonsEnabled)
     {
@@ -896,13 +865,11 @@ function UpdateButtons()
         // spawning system. If we're using the new spawning system, we have to check
         // that our pending parameters are valid.
         if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
-            (li_Vehicles.Index >= 0 && GRI.AreSpawnSettingsValid(CurrentTeam,
-                                           DHRoleInfo(li_Roles.GetObject()),
-                                           SpawnPointIndex,
-                                           GetSelectedVehiclePoolIndex(),
-                                           SpawnVehicleIndex,
-                                           RallyPointIndex,
-                                           PC)))
+            (li_Vehicles.Index >= 0 && GRI.AreSpawnSettingsValid(SpawnPointIndex,
+                                                                 CurrentTeam,
+                                                                 GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
+                                                                 SquadIndex,
+                                                                 GetSelectedVehiclePoolIndex())))
         {
             bContinueEnabled = true;
         }
@@ -1071,13 +1038,13 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             case 97:
                 //Axis
                 OnTeamChanged(AXIS_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(255, 255, 255);
+                p_Map.SelectSpawnPoint(-1);
                 break;
 
             //Allies
             case 98:
                 OnTeamChanged(ALLIES_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(255, 255, 255);
+                p_Map.SelectSpawnPoint(-1);
                 break;
 
             //Success
@@ -1342,7 +1309,7 @@ function ChangeTeam(byte Team)
     {
         SetButtonsEnabled(false);
 
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255, 255);
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, -1, -1);
     }
 }
 
@@ -1362,10 +1329,9 @@ function OnTeamChanged(byte Team)
     NextChangeTeamTime = PC.Level.TimeSeconds + class'DarkestHourGame'.default.ChangeTeamInterval;
 }
 
-function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick)
+function OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick)
 {
     self.SpawnPointIndex = SpawnPointIndex;
-    self.SpawnVehicleIndex = SpawnVehicleIndex;
 
     UpdateStatus();
     UpdateButtons();
@@ -1447,8 +1413,6 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
     K = EInputKey(Key);
     A = EInputAction(State);
-
-    Log(K @ State @ Delta);
 
     if (K == IK_F1 && A == IST_Release)
     {
@@ -1650,8 +1614,6 @@ function static SetVisible(GUIComponent C, bool bVisible)
 defaultproperties
 {
     SpawnPointIndex=-1
-    SpawnVehicleIndex=-1
-    RallyPointIndex=-1
 
     // GUI Components
     OnMessage=InternalOnMessage

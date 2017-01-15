@@ -5,18 +5,17 @@
 
 class DHGUIMapComponent extends GUIPanel;
 
-const   SPAWN_POINTS_MAX =                  48; // Max spawn points total (make sure this matches GRI)
+const   SPAWN_POINTS_MAX =                  63; // Max spawn points total (make sure this matches GRI)
 const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
+const   SQUAD_RALLY_POINTS_MAX =            16; // Max squad rally points (make sure this matches SRI)
 
-var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX],
-                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX],
-                                            b_RallyPoints[2];
+var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX];
 
 var             DHHud                       MyHud;
 var             DHGameReplicationInfo       GRI;
 var             DHPlayer                    PC;
 
-delegate OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick);
+delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -63,21 +62,16 @@ function bool InternalOnDraw(Canvas C)
     return false;
 }
 
-function SelectSpawnPoint(byte SpawnPointIndex, byte SpawnVehicleIndex, byte RallyPointIndex)
+function SelectSpawnPoint(int SpawnPointIndex)
 {
     local int i;
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        b_SpawnPoints[i].SetChecked(b_SpawnPoints[i].Tag == SpawnPointIndex);
+        b_SpawnPoints[i].SetChecked(b_SpawnPoints[i].Tag != -1 && b_SpawnPoints[i].Tag == SpawnPointIndex);
     }
 
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        b_SpawnVehicles[i].SetChecked(b_SpawnVehicles[i].Tag == SpawnVehicleIndex);
-    }
-
-    OnSpawnPointChanged(SpawnPointIndex, SpawnVehicleIndex);
+    OnSpawnPointChanged(SpawnPointIndex);
 }
 
 function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)
@@ -93,23 +87,11 @@ function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)
     {
         if (Sender == b_SpawnPoints[i])
         {
-            OnSpawnPointChanged(b_SpawnPoints[i].Tag, 255);
+            OnSpawnPointChanged(b_SpawnPoints[i].Tag);
         }
         else
         {
             b_SpawnPoints[i].SetChecked(false);
-        }
-    }
-
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        if (Sender == b_SpawnVehicles[i])
-        {
-            OnSpawnPointChanged(255, b_SpawnVehicles[i].Tag);
-        }
-        else
-        {
-            b_SpawnVehicles[i].SetChecked(false);
         }
     }
 }
@@ -122,17 +104,7 @@ function bool OnDblClick(GUIComponent Sender)
     {
         if (Sender == b_SpawnPoints[i])
         {
-            OnSpawnPointChanged(b_SpawnPoints[i].Tag, 255, true);
-
-            return true;
-        }
-    }
-
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        if (Sender == b_SpawnVehicles[i])
-        {
-            OnSpawnPointChanged(255, b_SpawnVehicles[i].Tag, true);
+            OnSpawnPointChanged(b_SpawnPoints[i].Tag, true);
 
             return true;
         }
@@ -229,6 +201,21 @@ defaultproperties
     b_SpawnPoints(45)=SpawnPointButton
     b_SpawnPoints(46)=SpawnPointButton
     b_SpawnPoints(47)=SpawnPointButton
+    b_SpawnPoints(48)=SpawnPointButton
+    b_SpawnPoints(49)=SpawnPointButton
+    b_SpawnPoints(50)=SpawnPointButton
+    b_SpawnPoints(51)=SpawnPointButton
+    b_SpawnPoints(52)=SpawnPointButton
+    b_SpawnPoints(53)=SpawnPointButton
+    b_SpawnPoints(54)=SpawnPointButton
+    b_SpawnPoints(55)=SpawnPointButton
+    b_SpawnPoints(56)=SpawnPointButton
+    b_SpawnPoints(57)=SpawnPointButton
+    b_SpawnPoints(58)=SpawnPointButton
+    b_SpawnPoints(59)=SpawnPointButton
+    b_SpawnPoints(60)=SpawnPointButton
+    b_SpawnPoints(61)=SpawnPointButton
+    b_SpawnPoints(62)=SpawnPointButton
 
     // Spawn Vehicle Buttons
     Begin Object Class=DHGUICheckBoxButton Name=SpawnVehicleButton
@@ -247,15 +234,6 @@ defaultproperties
         bCanClickUncheck=false
     End Object
 
-    b_SpawnVehicles(0)=SpawnVehicleButton
-    b_SpawnVehicles(1)=SpawnVehicleButton
-    b_SpawnVehicles(2)=SpawnVehicleButton
-    b_SpawnVehicles(3)=SpawnVehicleButton
-    b_SpawnVehicles(4)=SpawnVehicleButton
-    b_SpawnVehicles(5)=SpawnVehicleButton
-    b_SpawnVehicles(6)=SpawnVehicleButton
-    b_SpawnVehicles(7)=SpawnVehicleButton
-
     // Rally Point Buttons
     Begin Object Class=DHGUICheckBoxButton Name=RallyPointButton
         StyleName="DHRallyPointButtonStyle"
@@ -272,9 +250,6 @@ defaultproperties
         CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         bCanClickUncheck=false
     End Object
-
-    b_RallyPoints(0)=RallyPointButton
-    b_RallyPoints(1)=RallyPointButton
 
     Begin Object Class=GUIContextMenu Name=RCMenu
         ContextItems(0)="Attack"

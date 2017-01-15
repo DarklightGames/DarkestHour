@@ -49,10 +49,8 @@ var     bool                    bMantleDebug;
 var     int                     MantleLoopCount;
 
 // Spawning
-var     byte                    SpawnPointIndex;
-var     byte                    SpawnVehicleIndex;
-var     byte                    VehiclePoolIndex;
-var     byte                    RallyPointIndex;
+var     int                     SpawnPointIndex;
+var     int                     VehiclePoolIndex;
 var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
 var     bool                    bSpawnedKilled;             // player was spawn killed (set to false, when the spawn time is reduced)
 var     int                     NextSpawnTime;              // the next time the player will be able to spawn
@@ -95,11 +93,11 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
+        NextSpawnTime, SpawnPointIndex, VehiclePoolIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
         WeaponUnlockTime, SquadReplicationInfo, SquadMemberLocations,
-        SquadRallyPoints, RallyPointIndex;
+        SquadRallyPoints;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1963,7 +1961,7 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if ((bIsInSpawnMenu && VehiclePoolIndex == 255) || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
+    else if ((bIsInSpawnMenu && VehiclePoolIndex == -1) || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
     {
         return false;
     }
@@ -1983,7 +1981,7 @@ function bool HasSelectedSpawn()
 
     if (G != none && G.DHLevelInfo != none && G.DHLevelInfo.SpawnMode == ESM_DarkestHour)
     {
-        return SpawnPointIndex != 255 || SpawnVehicleIndex != 255 || RallyPointIndex != 255;
+        return SpawnPointIndex != -1;
     }
 
     return true;
@@ -2064,7 +2062,7 @@ exec function CommunicationMenu()
 
 // This function returns the time the player will be able to spawn next
 // given some spawn parameters (DHRoleInfo and VehiclePoolIndex).
-simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
+simulated function int GetNextSpawnTime(DHRoleInfo RI, int VehiclePoolIndex)
 {
     local int T;
     local DHGameReplicationInfo GRI;
@@ -2089,7 +2087,7 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
         T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + (DeathPenaltyCount * DEATH_PENALTY_FACTOR);
     }
 
-    if (VehiclePoolIndex != 255)
+    if (VehiclePoolIndex != -1)
     {
         T = Max(T, GRI.VehiclePoolNextAvailableTimes[VehiclePoolIndex]);
         T = Max(T, NextVehicleSpawnTime);
@@ -2242,14 +2240,16 @@ exec function ChangeTeam(int N) { }
 // Colin: This function verifies the spawn parameters (spawn point et al.) that
 // are passed in, and sets them if they check out. If they don't check out, an
 // error is thrown.
-function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewRallyPointIndex)
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, int NewSpawnPointIndex, int NewVehiclePoolIndex)
 {
     local bool bDidFail;
     local DarkestHourGame Game;
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     // Attempt to change teams
     if (newTeam != 255)
@@ -2311,8 +2311,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 DesiredRole = -1;
                 CurrentRole = -1;
                 SpawnPointIndex = -1;
-                SpawnVehicleIndex = -1;
-                RallyPointIndex = -1;
                 GRI.UnreserveVehicle(self);
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
@@ -2429,7 +2427,10 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 RI = DHRoleInfo(Game.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
             }
 
-            if (GRI != none && GRI.AreSpawnSettingsValid(GetTeamNum(), RI, NewSpawnPointIndex, NewVehiclePoolIndex, NewSpawnVehicleIndex, NewRallyPointIndex, self))
+            Log("spawn settings valid?");
+            Log(GRI.AreSpawnSettingsValid(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex));
+
+            if (GRI != none && GRI.AreSpawnSettingsValid(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex))
             {
                 if (NewVehiclePoolIndex != VehiclePoolIndex)
                 {
@@ -2446,8 +2447,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             if (!bDidFail)
             {
                 SpawnPointIndex = NewSpawnPointIndex;
-                SpawnVehicleIndex = NewSpawnVehicleIndex;
-                RallyPointIndex = NewRallyPointIndex;
                 NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
 
                 bSpawnPointInvalidated = false;
@@ -2459,9 +2458,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             {
                 SpawnPointIndex = default.SpawnPointIndex;
                 VehiclePoolIndex = default.VehiclePoolIndex;
-                SpawnVehicleIndex = default.SpawnVehicleIndex;
-                RallyPointIndex = default.RallyPointIndex;
                 NextSpawnTime = default.NextSpawnTime;
+
+                Log("looks good!");
 
                 // this needs commented on what it is doing, in fact most of this function does, very hard to follow
                 ClientChangePlayerInfoResult(19);
@@ -2493,12 +2492,10 @@ function Reset()
     WeaponUnlockTime = default.WeaponUnlockTime;
     NextSpawnTime = default.NextSpawnTime;
     SpawnPointIndex = default.SpawnPointIndex;
-    SpawnVehicleIndex = default.SpawnVehicleIndex;
     VehiclePoolIndex = default.VehiclePoolIndex;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
     DeathPenaltyCount = default.DeathPenaltyCount;
-    RallyPointIndex = default.RallyPointIndex;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -4493,7 +4490,6 @@ defaultproperties
     SteamStatsAndAchievementsClass=none
     SpawnPointIndex=-1
     VehiclePoolIndex=-1
-    SpawnVehicleIndex=-1
     SpectateSpeed=+1200.0
 
     DHPrimaryWeapon=-1

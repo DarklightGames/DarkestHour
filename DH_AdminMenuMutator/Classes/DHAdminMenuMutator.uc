@@ -450,7 +450,7 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
     }
 
     // Now change team and/or role
-    PlayerToSwitch.ServerSetPlayerInfo(TeamIndex, RoleIndex, 0, 0, PlayerToSwitch.SpawnPointIndex, 255, 255);
+    PlayerToSwitch.ServerSetPlayerInfo(TeamIndex, RoleIndex, 0, 0, PlayerToSwitch.SpawnPointIndex, -1);
 
     // If switched teams, now restore restore original team balance setting & find an active spawn point for the new team (just find 1st active spawn for team)
     if (TeamIndex != 255 && ROTG != none)
@@ -459,9 +459,9 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
 
         for (i = 0; i < arraycount(DHGRI.SpawnPoints); ++i)
         {
-            if (DHGRI.IsSpawnPointIndexValid(i, TeamIndex, RoleInfo, none))
+            if (DHGRI.GetSpawnPoint(i) != none && DHGRI.GetSpawnPoint(i).CanSpawn(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
             {
-                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i , 255, 255);
+                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i , -1);
                 break;
             }
         }

@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHSquadRallyPoint extends Actor;
-
+class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointComponent;
 
 var DHSquadReplicationInfo SRI;
-var int TeamIndex;
 var int SquadIndex;
-var int RallyIndex;
+var int RallyPointIndex;
 var int SpawnsRemaining;
 var int SpawnKillCount;
 var int ActivationTime;
@@ -17,23 +15,47 @@ var int ActivationTime;
 replication
 {
     reliable if (Role == ROLE_Authority)
-        TeamIndex, SquadIndex, RallyIndex, SpawnsRemaining;
+        SquadIndex, RallyPointIndex, SpawnsRemaining;
 }
 
-auto state Activating
+auto state Constructing
 {
-    event BeginState()
-    {
-        Log("Activating");
-    }
+Begin:
+    Sleep(15);
+    GotoState('Active');
 }
 
-state Activated
+simulated state Active
 {
     event BeginState()
     {
     }
 Begin:
+}
+
+simulated function bool IsActive()
+{
+    return super.IsActive() && IsInState('Active');
+}
+
+simulated function bool IsBlocked()
+{
+    return IsInState('Constructing');
+}
+
+function bool CanSpawn(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+{
+    if (!super.CanSpawn(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    {
+        return false;
+    }
+
+    if (self.SquadIndex != SquadIndex)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 function PostBeginPlay()
@@ -96,7 +118,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     TeamIndex=-1
     SquadIndex=-1
-    RallyIndex=-1
+    RallyPointIndex=-1
     SpawnsRemaining=15
     SpawnKillCount=0
     AmbientSound=Sound'Inf_Player.Gibimpact.Gibimpact'

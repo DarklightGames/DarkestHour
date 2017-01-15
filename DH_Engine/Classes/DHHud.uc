@@ -52,6 +52,7 @@ var     localized string    SelectSpawnPointText;
 var     localized string    SpawnInfantryText;
 var     localized string    SpawnVehicleText;
 var     localized string    SpawnAtVehicleText;
+var     localized string    SpawnRallyPointText;
 var     localized string    SpawnNoRoleText;
 var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
@@ -546,6 +547,7 @@ simulated function DrawHudPassC(Canvas C)
     local rotator               CameraRotation;
     local Actor                 ViewActor;
     local DHPawn                P;
+    local DHVehicle             V;
 
     if (PawnOwner == none)
     {
@@ -637,20 +639,22 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
-    // Spawn vehicle deploy icon
-    if (DHVehicle(PawnOwner) != none && DHVehicle(PawnOwner).bIsSpawnVehicle)
-    {
-        BlockFlags = DHGRI.GetSpawnVehicleBlockFlags(Vehicle(PawnOwner));
+    V = DHVehicle(PawnOwner);
 
-        if (BlockFlags == class'DHSpawnManager'.default.BlockFlags_None)
+    // Spawn vehicle deploy icon
+    if (V != none && V.SpawnPoint != none)
+    {
+        BlockFlags = V.SpawnPoint.BlockFlags;
+
+        if (BlockFlags == class'DHSpawnPointComponent'.default.BLOCKED_None)
         {
             DrawSpriteWidget(C, DeployOkayIcon);
         }
-        else if ((BlockFlags & class'DHSpawnManager'.default.BlockFlags_InObjective) != 0)
+        else if ((BlockFlags & class'DHSpawnPointComponent'.default.BLOCKED_InObjective) != 0)
         {
             DrawSpriteWidget(C, DeployInObjectiveIcon);
         }
-        else if ((BlockFlags & class'DHSpawnManager'.default.BlockFlags_EnemiesNearby) != 0)
+        else if ((BlockFlags & class'DHSpawnPointComponent'.default.BLOCKED_EnemiesNearby) != 0)
         {
             DrawSpriteWidget(C, DeployEnemiesNearbyIcon);
         }
@@ -4250,9 +4254,8 @@ exec function ShrinkHUD()
 simulated function DrawSpectatingHud(Canvas C)
 {
     local DHPlayerReplicationInfo PRI;
-    local DHSpawnPoint            SP;
+    local DHSpawnPointComponent   SP;
     local DHPlayer                PC;
-    local class<Vehicle>          SVC;
     local float  Scale, X, Y, strX, strY, NameWidth, SmallH, XL;
     local int    Time;
     local string s;
@@ -4317,13 +4320,13 @@ simulated function DrawSpectatingHud(Canvas C)
                 switch (PC.ClientLevelInfo.SpawnMode)
                 {
                     case ESM_DarkestHour:
-                        if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+                        if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
                         {
                             // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
                             s = default.SpawnVehicleText;
                             s = Repl(s, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
                         }
-                        else if (PC.SpawnPointIndex != 255)
+                        else if (PC.SpawnPointIndex != -1)
                         {
                             SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
 
@@ -4337,22 +4340,6 @@ simulated function DrawSpectatingHud(Canvas C)
                             {
                                 // You will deploy as a {0} in {2} | Press ESC to change
                                 s = default.SpawnInfantryText;
-                            }
-                        }
-                        else if (PC.SpawnVehicleIndex != 255)
-                        {
-                            SVC = DHGRI.VehiclePoolVehicleClasses[DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehiclePoolIndex];
-
-                            if (SVC != none)
-                            {
-                                // You will deploy as a {0} at a {1} in {2} | Press ESC to change
-                                s = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
-                            }
-                            else
-                            {
-                                // Press ESC to select a spawn point
-                                s = default.SelectSpawnPointText;
-                                bShouldFlashText= true;
                             }
                         }
                         else
@@ -5215,6 +5202,7 @@ defaultproperties
     SpawnInfantryText="You will deploy as a {0} in {2} | Press [ESC] to change"
     SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press [ESC] to change"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
+    SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
     SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"

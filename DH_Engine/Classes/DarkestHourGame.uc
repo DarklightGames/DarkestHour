@@ -3197,8 +3197,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
 
             // DARKEST HOUR
-            PC.SpawnPointIndex = 255;
-            PC.SpawnVehicleIndex = 255;
+            PC.SpawnPointIndex = -1;
 
             GRI.UnreserveVehicle(PC);
 

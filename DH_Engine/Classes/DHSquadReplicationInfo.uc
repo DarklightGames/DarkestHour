@@ -56,7 +56,7 @@ var private byte                    AxisLocked[TEAM_SQUADS_MAX];
 var private ESquadOrderType         AxisOrderTypes[TEAM_SQUADS_MAX];
 var private vector                  AxisOrderLocations[TEAM_SQUADS_MAX];
 
-var DHSquadRallyPoint               RallyPoints[16];
+var DHSpawnPoint_SquadRallyPoint               RallyPoints[16];
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -1150,7 +1150,7 @@ private function InternalSetSquadOrder(int TeamIndex, int SquadIndex, ESquadOrde
     }
 }
 
-function DHSquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex)
+function DHSpawnPoint_SquadRallyPoint GetRallyPoint(int TeamIndex, int SquadIndex)
 {
     local int i;
 
@@ -1172,6 +1172,8 @@ function bool CanCreateRallyPoint(DHPlayer PC)
     // TODO: cannot be too close to another rally point
     // TODO: can't have placed a rally point recently (say, 90-120 seconds?)
     // TODO: can't have recently exited a vehicle
+    // TODO: can't be inside a minefield
+    // TODO: can't be inside an objective
     local Pawn OtherPawn;
     local DHPawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
@@ -1225,9 +1227,9 @@ function bool CanCreateRallyPoint(DHPlayer PC)
     return true;
 }
 
-function DHSquadRallyPoint SpawnRallyPoint(DHPlayer PC)
+function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 {
-    local DHSquadRallyPoint RP;
+    local DHSpawnPoint_SquadRallyPoint RP;
     local Pawn P;
     local DHPlayerReplicationInfo PRI;
     local vector HitLocation, HitNormal;
@@ -1272,14 +1274,17 @@ function DHSquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     }
 
     // TODO: snap and align to the ground, make sure it's on relatively flat ground etc.
-    RP = Spawn(class'DHSquadRallyPoint', none,, HitLocation, PC.Pawn.Rotation);
+    RP = Spawn(class'DHSpawnPoint_SquadRallyPoint', none,, HitLocation, PC.Pawn.Rotation);
 
     if (RP != none)
     {
         RP.TeamIndex = P.GetTeamNum();
         RP.SquadIndex = PRI.SquadIndex;
+        RP.RallyPointIndex = RallyPointIndex;
         RP.ActivationTime = Level.Game.GameReplicationInfo.ElapsedTime + 15;    // TODO: this time will probably end up being dynamic
     }
+
+    RallyPoints[RallyPointIndex] = RP;
 
     // TODO: send squad leader a message that the RP will be active in 15 seconds
 
