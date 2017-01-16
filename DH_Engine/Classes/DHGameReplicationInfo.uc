@@ -184,6 +184,7 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to update replicated locations of any spawn vehicles, & for net client to check whether local local player has his weapons locked & it's now time to unlock them
 simulated event Timer()
 {
     local int i;
@@ -200,6 +201,10 @@ simulated event Timer()
                 SpawnVehicles[i].LocationY = SpawnVehicles[i].Vehicle.Location.Y;
             }
         }
+    }
+    else if (DHPlayer(Level.GetLocalPlayerController()) != none)
+    {
+        DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
     }
 }
 

@@ -2404,7 +2404,6 @@ state RoundInPlay
         local int i, ArtilleryStrikeInt;
         local Controller P;
         local DHGameReplicationInfo GRI;
-        local DHPlayer PC;
 
         global.Timer();
 
@@ -2469,15 +2468,10 @@ state RoundInPlay
             ChooseWinner();
         }
 
-        // Check whether any players have their weapons locked, but it's now time to unlock them
-        for (P = Level.ControllerList; P != none; P = P.NextController)
+        // Check whether local player has his weapons locked, but it's now time to unlock them (applies to single player or listen server host)
+        if (DHPlayer(Level.GetLocalPlayerController()) != none)
         {
-            PC = DHPlayer(P);
-
-            if (PC != none && PC.bWeaponsAreLocked && ElapsedTime >= PC.WeaponUnlockTime)
-            {
-                PC.UnlockWeapons();
-            }
+            DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
         }
     }
 }

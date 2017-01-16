@@ -61,10 +61,10 @@ var     float                   NextChangeTeamTime;         // the time at which
 var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
                                                             // it resets whenever an objective is taken
 
-// Weapon locking
-var     bool                    bWeaponsAreLocked;          // server-side only, flag used for sending unlocked message after timer expires (done in DarkestHourGame.Timer)
-var     int                     WeaponUnlockTime;           // the time (relative to ElpasedTime) at which the player's weapons will be unlocked
-var     int                     WeaponLockViolations;       // the number of violations this player has
+// Weapon locking (punishment for spawn killing)
+var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
+var     int                     WeaponLockViolations;       // the number of violations this player has, used to increase the locked period for multiple offences
+var     bool                    bWeaponsAreLocked;          // flag only used so we know an unlock message needs to be displayed locally after the locked time expires
 
 replication
 {
@@ -72,8 +72,7 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
-        NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
-        WeaponUnlockTime;
+        NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -91,7 +90,7 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage;
+        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons;
 
     // Variables the owning client will replicate to the server
     reliable if (Role < ROLE_Authority)
@@ -2733,21 +2732,50 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-function LockWeapons(int Seconds)
+// In multi-player it is initially called on server & then on owning net client, via a replicated function call
+simulated function LockWeapons(int Seconds)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
-        bWeaponsAreLocked = true;
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
-        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
+
+        // If this is the local player, flag him as weapon locked & show him a warning screen message
+        // Note bWeaponsAreLocked is only used so we know an unlock message needs to be displayed locally after the locked time expires
+        // Setting a future WeaponUnlockTime is what actually prevents weapons being used
+        if (Viewport(Player) != none)
+        {
+            bWeaponsAreLocked = true;
+            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
+
+            bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
+            bAltFire = 0;
+        }
+        // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
+        else if (Role == ROLE_Authority)
+        {
+            ClientLockWeapons(byte(Seconds));
+        }
     }
 }
 
-// New function to unlock player's weapons so they can fire again
-function UnlockWeapons()
+// New server-to-client replicated function to put owning net player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
+simulated function ClientLockWeapons(byte Seconds)
 {
-    bWeaponsAreLocked = false;
-    ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
+    if (Role < ROLE_Authority)
+    {
+        LockWeapons(int(Seconds));
+    }
+}
+
+// New function to check whether player's weapons are locked (due to spawn killing) but are now due to be unlocked
+// Called from the 1 second timer running continually in the GameInfo & GRI actors (GRI for net clients)
+simulated function CheckUnlockWeapons()
+{
+    if (bWeaponsAreLocked && GameReplicationInfo != none && GameReplicationInfo.ElapsedTime >= WeaponUnlockTime)
+    {
+        bWeaponsAreLocked = false;
+        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
+    }
 }
 
 // New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including option to show screen message
@@ -2758,6 +2786,9 @@ simulated function bool AreWeaponsLocked(optional bool bShowMessageIfLocked)
         if (bShowMessageIfLocked)
         {
             ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+
+            bFire = 0; // 'releases' fire button if being held down, which avoids spamming repeated messages & buzz sounds
+            bAltFire = 0;
         }
 
         return true;
