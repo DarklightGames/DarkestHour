@@ -190,7 +190,7 @@ function PostBeginPlay()
 
         case GT_Advance:
             GRI.CurrentGameType = "Advance";
-            GRI.bUseDeathPenaltyCount = true;
+            //GRI.bUseDeathPenaltyCount = true; //disable for now, as this feature is likely to be removed
             bUseReinforcementWarning = false;
             break;
 
@@ -2273,8 +2273,8 @@ state RoundInPlay
         if (GRI != none)
         {
             // Calculate attrition rates
-            GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
-            GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj)) / 60.0;
+            GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
+            GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj)) / 60.0;
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
