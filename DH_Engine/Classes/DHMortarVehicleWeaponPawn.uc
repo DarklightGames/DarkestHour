@@ -391,10 +391,11 @@ simulated function ClientKDriverLeave(PlayerController PC)
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New replicated client-to-server function to fire the mortar, after the firing animation has played (there's a delay firing a mortar, as the round is dropped down the tube)
+// New replicated client-to-server function to fire mortar, after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
+// Includes server verification that player's weapons aren't locked due to spawn killing (belt & braces as similar clientside check stops it reaching this point anyway)
 function ServerFire()
 {
-    if (Gun != none)
+    if (!ArePlayersWeaponsLocked() && Gun != none)
     {
         Gun.Fire(Controller);
     }
@@ -473,7 +474,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked(true) && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex())) // TODO: this is clientside only so ought to have additional server verification of not weapon locked
+        if (!ArePlayersWeaponsLocked(true) && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('Firing');
         }

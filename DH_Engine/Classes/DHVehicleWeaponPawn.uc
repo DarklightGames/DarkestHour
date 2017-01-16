@@ -275,6 +275,15 @@ function AltFire(optional float F)
 {
 }
 
+// Modified for server verification that player's weapons aren't locked due to spawn killing (belt & braces as similar clientside check stops it reaching this point anyway)
+function VehicleFire(bool bWasAltFire)
+{
+    if (!ArePlayersWeaponsLocked())
+    {
+        super.VehicleFire(bWasAltFire);
+    }
+}
+
 // New function to do what ClientVehicleCeaseFire() does, except skipping the replicated VehicleCeaseFire() function call to a server
 // A network optimisation, avoiding replication when it's unnecessary
 // Used where we need to cease fire on net client, but no point telling server to do same as it will do it's own cease fire, e.g. when running out of ammo or starting a reload
