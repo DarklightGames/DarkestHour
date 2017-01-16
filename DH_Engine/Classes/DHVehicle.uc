@@ -3077,6 +3077,8 @@ defaultproperties
     ObjectiveGetOutDist=1500.0
     RandomAttachmentIndex=255 // an invalid starting value, so will only get changed & replicated if a valid selection is made for a random decorative attachment
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
+    bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
+                               // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true
