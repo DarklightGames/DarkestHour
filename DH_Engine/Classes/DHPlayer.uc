@@ -2755,7 +2755,10 @@ simulated function bool AreWeaponsLocked(optional bool bShowMessageIfLocked)
 {
     if (GameReplicationInfo != none && WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
     {
-        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+        if (bShowMessageIfLocked)
+        {
+            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+        }
 
         return true;
     }
