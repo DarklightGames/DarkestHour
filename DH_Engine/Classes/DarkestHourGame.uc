@@ -1217,7 +1217,7 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
         }
 
         // If the instigator has weapons locked, return no damage
-        if (DHPlayer(InstigatedBy.Controller) != none && DHPlayer(InstigatedBy.Controller).IsWeaponLocked())
+        if (DHPlayer(InstigatedBy.Controller) != none && DHPlayer(InstigatedBy.Controller).AreWeaponsLocked())
         {
             return 0;
         }
@@ -1833,11 +1833,10 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
-    local Controller        P;
-    local DHPlayer          DHP;
-    local DHPawn            KPawn;
-    local float             FFPenalty;
-    local int               Num, i;
+    local DHPlayer   DHKilled, DHKiller;
+    local Controller P;
+    local float      FFPenalty;
+    local int        Num, i;
 
     if (Killed == none)
     {
@@ -1856,34 +1855,28 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             Killed.PlayerReplicationInfo.Deaths += 1.0;
         }
 
-        if (KilledPawn != none)
+        // Special handling if this was a spawn kill
+        // Suiciding won't count as a spawn kill - did this because suiciding after a combat spawn will not act the same way & thus is not intuitive
+        if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).IsSpawnKillProtected() && Killer != Killed)
         {
-            KPawn = DHPawn(KilledPawn);
-            DHP = DHPlayer(Killer);
-        }
+            DHKilled = DHPlayer(Killed);
+            DHKiller = DHPlayer(Killer);
 
-        // If this was a spawn kill, handle the rules for spawn kill and adjust damage type
-        // Suiciding will not count as a Spawn Kill, did this because suiciding after a combat spawn will not act the same way, and thus is not intuitive
-        if (DHP != none && KPawn != none && KPawn.IsSpawnKillProtected() && Killer != Killed && DHPlayer(Killed) != none)
-        {
-            // Inform the victim's DHPlayer that it was spawn killed
-            DHPlayer(Killed).bSpawnedKilled = true;
+            if (DHKiller != none && DHKilled != none) // only relevant to player vs player spawn kills
+            {
+                DamageType = class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
 
-            // Allow the victim to spawn a vehicle right away
-            DHPlayer(Killed).NextVehicleSpawnTime = DHPlayer(Killed).LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
+                // Inform victim's controller that it was spawn killed, allow player to re-spawn in a vehicle quickly,
+                // & increment player reinforcements for victim's team so they don't suffer loss
+                DHKilled.bSpawnedKilled = true;
+                DHKilled.NextVehicleSpawnTime = DHKilled.LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
+                ModifyReinforcements(DHKilled.GetTeamNum(), 1, false, true);
 
-            // Increase infantry reinforcements for victim's team (only if nonzero)
-            ModifyReinforcements(Killed.GetTeamNum(), 1, false, true);
-
-            // Change the damage type because this was a spawn kill and we want to signify that
-            DamageType = class'DHSpawnKillDamageType';
-
-            // Punish instigator for spawn killing (lock weapons)
-            DHP.WeaponLockViolations++;
-            DHP.LockWeapons(WeaponLockTimes[Min(DHP.WeaponLockViolations, arraycount(WeaponLockTimes))]);
-
-            // Punish instigator for spawn killing (reduce score)
-            DHP.PlayerReplicationInfo.Score -= 2;
+                // Punish killer for spawn killing by locking his weapons (also incrementing his WeaponLockViolations) & reducing his score
+                DHKiller.WeaponLockViolations++;
+                DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
+                DHKiller.PlayerReplicationInfo.Score -= 2;
+            }
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
@@ -2476,16 +2469,14 @@ state RoundInPlay
             ChooseWinner();
         }
 
-        // Send "weapon unlock" notification to players
-        for (P = Level.ControllerList; P != none; P = P.nextController)
+        // Check whether any players have their weapons locked, but it's now time to unlock them
+        for (P = Level.ControllerList; P != none; P = P.NextController)
         {
             PC = DHPlayer(P);
 
-            if (PC != none && PC.bAreWeaponsLocked && ElapsedTime > PC.WeaponUnlockTime)
+            if (PC != none && PC.bWeaponsAreLocked && ElapsedTime >= PC.WeaponUnlockTime)
             {
-                PC.bAreWeaponsLocked = false;
-
-                PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2);
+                PC.UnlockWeapons();
             }
         }
     }

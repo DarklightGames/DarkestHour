@@ -62,7 +62,7 @@ var     int                     DeathPenaltyCount;          // number of deaths 
                                                             // it resets whenever an objective is taken
 
 // Weapon locking
-var     bool                    bAreWeaponsLocked;          // server-side only, flag used for sending unlocked message after timer expires (done in DarkestHourGame.Timer)
+var     bool                    bWeaponsAreLocked;          // server-side only, flag used for sending unlocked message after timer expires (done in DarkestHourGame.Timer)
 var     int                     WeaponUnlockTime;           // the time (relative to ElpasedTime) at which the player's weapons will be unlocked
 var     int                     WeaponLockViolations;       // the number of violations this player has
 
@@ -2732,36 +2732,42 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
     }
 }
 
+// New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
 function LockWeapons(int Seconds)
 {
-    if (Level != none && Level.Game != none && Level.Game.GameReplicationInfo != none && Seconds > 0)
+    if (Seconds > 0 && GameReplicationInfo != none)
     {
-        bAreWeaponsLocked = true;
+        bWeaponsAreLocked = true;
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
-
-        // "Your weapons have been locked due to excessive spawn killing."
-        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0);
+        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
     }
 }
 
-simulated function bool IsWeaponLocked(optional out int WeaponLockTimeLeft)
+// New function to unlock player's weapons so they can fire again
+function UnlockWeapons()
 {
-    local DHGameReplicationInfo GRI;
+    bWeaponsAreLocked = false;
+    ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
+}
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none)
+// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including option to show screen message
+simulated function bool AreWeaponsLocked(optional bool bShowMessageIfLocked)
+{
+    if (GameReplicationInfo != none && WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
     {
-        WeaponLockTimeLeft = (WeaponUnlockTime - GRI.ElapsedTime);
+        ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+
+        return true;
     }
 
-    return WeaponLockTimeLeft > 0;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New debug exec to put self into 'weapon lock' for specified number of seconds
 exec function DebugLockWeapons(int Seconds)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -2772,7 +2778,7 @@ exec function DebugLockWeapons(int Seconds)
 
 function ServerLockWeapons(int Seconds)
 {
-    LockWeapons(SecondS);
+    LockWeapons(Seconds);
 }
 
 // Modified to work in debug mode, as well as in single player

@@ -165,32 +165,14 @@ simulated function DrawHUD(Canvas C)
 //  ****************************** FIRING & RELOAD  *******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to prevent fire based on CanFire() & to add dry-fire effects if trying to fire empty MG
+// Modified to add dry-fire effects if trying to fire empty MG (but not if actively reloading)
 function Fire(optional float F)
 {
-    local DHPlayer PC;
-
-    PC = DHPlayer(Controller);
-
-    if (PC != none && PC.IsWeaponLocked())
+    if (CanFire() && !ArePlayersWeaponsLocked(true))
     {
-        PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
-        return;
-    }
+        super(ROVehicleWeaponPawn).Fire(F); // skip over Super in DHVehicleWeaponPawn to avoid duplicating checks on CanFire() & ArePlayersWeaponsLocked()
 
-    if (CanFire() && VehWep != none)
-    {
-        if (VehWep.ReadyToFire(false))
-        {
-            VehicleFire(false);
-            bWeaponIsFiring = true;
-
-            if (IsHumanControlled())
-            {
-                VehWep.ClientStartFire(Controller, false);
-            }
-        }
-        else if (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused) // no dry-fire effect if actively reloading
+        if (VehWep != none && VehWep.ReloadState != RL_ReadyToFire && (VehWep.ReloadState == RL_Waiting || VehWep.bReloadPaused))
         {
             VehWep.DryFireEffects();
         }

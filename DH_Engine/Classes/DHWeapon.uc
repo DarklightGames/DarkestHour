@@ -26,24 +26,16 @@ simulated function BringUp(optional Weapon PrevWeapon)
     ResetPlayerFOV();
 }
 
+// Modified to prevent firing if player's weapons are locked due to spawn killing, with screen message if the local player
+// Gets called on both client & server, so includes server verification that player's weapons aren't locked (belt & braces as clientside check stops it reaching server)
+// TODO: checking weapon lock here isn't ideal as RTF could be called from functionality just wanting a simple 'ready to fire?' check & not actually representing an attempt to fire weapon
+// StartFire() looks a direct equivalent, but better, as it's clearly an actual fire attempt, is even earlier in firing process, & still gets called on server as well as client
 simulated function bool ReadyToFire(int Mode)
 {
-    local DHPlayer PC;
-    local int WeaponLockTimeLeft;
-
-    if (Instigator != none)
+    // Passing the locally controlled check into AreWeaponsLocked() function means only local player receives "Your weapons are locked for X seconds" screen message
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked(InstigatorIsLocallyControlled()))
     {
-        PC = DHPlayer(Instigator.Controller);
-
-        if (PC != none && PC.IsWeaponLocked(WeaponLockTimeLeft))
-        {
-            if (Instigator.IsLocallyControlled())
-            {
-                PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
-            }
-
-            return false;
-        }
+        return false;
     }
 
     return super.ReadyToFire(Mode);

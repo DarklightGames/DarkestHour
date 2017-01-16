@@ -337,60 +337,40 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to check player is in a valid firing position, to add clientside check that we are loaded (avoids wasted replicated function call to server),
-// to removed obsolete RO functionality from ROTankCannonPawn & optimise what remains
-// Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
+// Modified so net client passes any changed pending ammo type to server (optimises network as avoids server update each time player toggles ammo, doing it only when needed)
+// Also so fire button triggers a manual cannon reload if players uses the manual reloading option & the cannon is waiting to start reloading
 function Fire(optional float F)
 {
-    local DHPlayer PC;
-
-    PC = DHPlayer(Controller);
-
-    if (PC != none && PC.IsWeaponLocked())
+    if (!CanFire() || ArePlayersWeaponsLocked(true) || VehWep == none)
     {
-        PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
-
         return;
     }
 
-    if (CanFire() && VehWep != none)
+    if (VehWep.ReadyToFire(false))
     {
-        if (VehWep.ReadyToFire(false))
+        if (Role < ROLE_Authority && !VehWep.PlayerUsesManualReloading() && DHVehicleCannon(VehWep) != none) // no update if manual reloading (update on manual reload instead)
         {
-            if (Role < ROLE_Authority && !VehWep.PlayerUsesManualReloading() && DHVehicleCannon(VehWep) != none) // no update if player uses manual reloading (update on manual reload instead)
-            {
-                DHVehicleCannon(VehWep).CheckUpdatePendingAmmo();
-            }
-
-            super(Vehicle).Fire(F);
-
-            if (IsHumanControlled())
-            {
-                VehWep.ClientStartFire(Controller, false);
-            }
+            DHVehicleCannon(VehWep).CheckUpdatePendingAmmo();
         }
-        else
+
+        super(Vehicle).Fire(F);
+
+        if (IsHumanControlled())
         {
-            ROManualReload(); // only actually tries a manual reload if player uses that option (just that ROML function contains exactly the same checks we'd otherwise duplicate here)
+            VehWep.ClientStartFire(Controller, false);
         }
+    }
+    else
+    {
+        ROManualReload(); // only actually tries a manual reload if player uses that option (ROML function contains exactly the same checks we'd otherwise duplicate here)
     }
 }
 
-// Modified (from deprecated ROTankCannonPawn) to check CanFire(), to skip over obsolete RO functionality, & to add dry-fire sound if trying to fire empty MG
+// Implemented to handle coaxial MG fire, including dry-fire sound if trying to fire it when empty (but not if actively reloading)
+// Checks that player is in a valid firing position & his weapons aren't locked due to spawn killing
 function AltFire(optional float F)
 {
-    local DHPlayer PC;
-
-    PC = DHPlayer(Controller);
-
-    if (PC != none && PC.IsWeaponLocked())
-    {
-        PC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, PC);
-
-        return;
-    }
-
-    if (!bHasAltFire || !CanFire() || VehWep == none)
+    if (!bHasAltFire || !CanFire() || ArePlayersWeaponsLocked(true) || VehWep == none)
     {
         return;
     }

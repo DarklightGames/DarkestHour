@@ -261,6 +261,15 @@ simulated function bool PointOfView()
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Modified to check player is in a valid firing position & his weapons aren't locked due to spawn killing
+function Fire(optional float F)
+{
+    if (CanFire() && !ArePlayersWeaponsLocked(true)) // TODO: this is clientside only so ought to have additional server verification of not weapon locked (same applies to AltFire)
+    {
+        super.Fire(F);
+    }
+}
+
 // Emptied out so we have no alt fire by default - implement functionality in subclass if has alt fire, e.g. cannon with coaxial MG
 function AltFire(optional float F)
 {
@@ -271,7 +280,6 @@ function AltFire(optional float F)
 // Used where we need to cease fire on net client, but no point telling server to do same as it will do it's own cease fire, e.g. when running out of ammo or starting a reload
 function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
 {
-
     if (bWasAltFire)
     {
         bWeaponIsAltFiring = false;
@@ -296,6 +304,13 @@ function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
 function bool CanFire()
 {
     return true;
+}
+
+// New helper function to check if player's weapons are locked due to spawn killing, by calling similar function on a DHPlayer Controller
+// Just improves readability where used in several other functions
+function bool ArePlayersWeaponsLocked(optional bool bShowMessageIfLocked)
+{
+    return DHPlayer(Controller) != none && DHPlayer(Controller).AreWeaponsLocked(bShowMessageIfLocked);
 }
 
 // Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check

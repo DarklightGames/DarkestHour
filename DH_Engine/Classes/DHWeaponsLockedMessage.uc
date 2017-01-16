@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHWeaponsLockedMessage extends ROTouchMessagePlus
+class DHWeaponsLockedMessage extends LocalMessage
     abstract;
 
 #exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
@@ -12,74 +12,55 @@ var localized string LockedMessage;
 var localized string LockedWithTimerMessage;
 var localized string UnlockedMessage;
 
-var float   NextSoundTime;
-var sound   MessageSound;
-
-static function ClientReceive(
-    PlayerController P,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject)
+// Modified to play a buzz sound to go with screen screen message if player's weapon's are locked and he can't fire
+static function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    switch (Switch)
+    if ((Switch == 0 || Switch == 1) && P != none)
     {
-    case 0:
-    case 1:
-        if (P != none && P.Level.TimeSeconds > default.NextSoundTime)
-        {
-            P.ClientPlaySound(default.MessageSound, false,, SLOT_Interface);
+        P.ClientPlaySound(sound'DHMenuSounds.Buzz',,, SLOT_Interface);
 
-            default.NextSoundTime = P.Level.TimeSeconds + P.GetSoundDuration(default.MessageSound);
-        }
-        break;
-    default:
-        break;
+        P.bFire = 0; // 'releases' fire button if being held down, which avoids spammed repeating messages & buzz sounds
+        P.bAltFire = 0;
     }
 
     super.ClientReceive(P, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 }
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject)
+// Modified to show appropriate weapons locked/unlocked message based on passed Switch value
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local DHPlayer PC;
-    local int WeaponLockTimeLeft;
+    local int      WeaponLockTimeLeft;
 
-    PC = DHPlayer(OptionalObject);
-
-    if (PC != none)
-    {
-        PC.IsWeaponLocked(WeaponLockTimeLeft);
-    }
-
-    switch (Switch)
-    {
-    case 0:
-        return default.LockedMessage;
-    case 1:
-        return Repl(default.LockedWithTimerMessage, "{0}", WeaponLockTimeLeft);
-    case 2:
-        return default.UnlockedMessage;
-    }
-}
-
-static function color GetColor(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2
-    )
-{
     switch (Switch)
     {
         case 0:
+            return default.LockedMessage;
+
         case 1:
-            return class'UColor'.default.Red;
-        default:
-            break;
+            PC = DHPlayer(OptionalObject);
+
+            // Get seconds remaining until weapons will be unlocked, to include in screen message to player
+            if (PC != none && PC.GameReplicationInfo != none)
+            {
+                WeaponLockTimeLeft = PC.WeaponUnlockTime - PC.GameReplicationInfo.ElapsedTime;
+            }
+
+            return Repl(default.LockedWithTimerMessage, "{0}", WeaponLockTimeLeft);
+
+        case 2:
+            return default.UnlockedMessage;
+    }
+
+    return "";
+}
+
+// Modified to show message in red if weapon is locked, or white when unlocked
+static function color GetColor(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
+{
+    if (Switch == 0 || Switch == 1)
+    {
+        return class'UColor'.default.Red;
     }
 
     return class'UColor'.default.White;
@@ -89,10 +70,10 @@ defaultproperties
 {
     bFadeMessage=true
     bIsConsoleMessage=false
-    bIsUnique=True
+    bIsUnique=true
     Lifetime=2.5
-    MessageSound=sound'DHMenuSounds.Buzz'
+    PosY=0.8
     LockedMessage="Your weapons have been locked due to excessive spawn killing!"
-    LockedWithTimerMessage="Your weapons are locked for {0} seconds.";
-    UnlockedMessage="Your weapons are now unlocked."
+    LockedWithTimerMessage="Your weapons are locked for {0} seconds"
+    UnlockedMessage="Your weapons are now unlocked"
 }

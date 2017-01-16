@@ -1953,6 +1953,8 @@ function DropFrom(vector StartLocation)
 }
 
 // Modified to play the dry-fire sound if you're out of ammo
+// Note that firing cannot be stopped in this function; it can only be used to do extra things, like effects
+// If the pawn calls Fire() on its Weapon, it appears that ClientStartFire() gets triggered by native code, which is where weapon actually commences firing process
 simulated function Fire(float F)
 {
     if (AmmoAmount(0) < 1 && !IsBusy() && FireMode[0].NoAmmoSound != none)
