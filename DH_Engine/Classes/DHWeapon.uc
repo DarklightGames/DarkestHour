@@ -28,9 +28,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 // Modified to prevent firing if player's weapons are locked due to spawn killing, with screen message if the local player
 // Gets called on both client & server, so includes server verification that player's weapons aren't locked (belt & braces as clientside check stops it reaching server)
-// TODO: checking weapon lock here isn't ideal as RTF could be called from functionality just wanting a simple 'ready to fire?' check & not actually representing an attempt to fire weapon
-// StartFire() looks a direct equivalent, but better, as it's clearly an actual fire attempt, is even earlier in firing process, & still gets called on server as well as client
-simulated function bool ReadyToFire(int Mode)
+simulated function bool StartFire(int Mode)
 {
     // Passing the locally controlled check into AreWeaponsLocked() function means only local player receives "Your weapons are locked for X seconds" screen message
     if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked(InstigatorIsLocallyControlled()))
@@ -38,7 +36,7 @@ simulated function bool ReadyToFire(int Mode)
         return false;
     }
 
-    return super.ReadyToFire(Mode);
+    return super.StartFire(Mode);
 }
 
 // Modified to take player out of ironsights if necessary, & to allow for multiple copies of weapon to drop with spread (so they aren't inside each other)
