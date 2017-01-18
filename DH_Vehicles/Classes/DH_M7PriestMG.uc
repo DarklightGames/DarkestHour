@@ -23,16 +23,17 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
-    InitialPrimaryAmmo=105
+    InitialPrimaryAmmo=105 // TODO: 200 round ammo cans were the norm, I think?
     NumMGMags=3
-    FireInterval=0.13
+    FireInterval=0.133333 // 450 RPM
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
     TracerFrequency=5
+//  TODO: make ammo icon (HudAltAmmoIcon) for 50 cal ammo tin
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"
-    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.Quad50Cal_fire_loop'
+    AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle50CalMGEmitter'
+    FireSoundClass=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.50Cal.50Cal_fire_end'
     AmbientSoundScaling=5.0
     ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
@@ -42,8 +43,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Reload"
-    ReloadStages(0)=(Sound=none,Duration=1.76) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.76)
-    ReloadStages(2)=(Sound=none,Duration=1.76)
-    ReloadStages(3)=(Sound=none,Duration=1.76)
+    ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload anim plays them (durations matched to anim notifies)
+    ReloadStages(1)=(Sound=none,Duration=1.52)
+    ReloadStages(2)=(Sound=none,Duration=2.40)
+    ReloadStages(3)=(Sound=none,Duration=1.70)
 }
