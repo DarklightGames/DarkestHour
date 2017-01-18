@@ -188,7 +188,7 @@ function DoTrace(vector Start, rotator Dir)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  **************************  ALL REMAININ FUNCTIONS ARE RE-STATED FROM ROMELEEFIRE  **************************  //
+//  **************************  ALL REMAINING FUNCTIONS ARE RE-STATED FROM ROMELEEFIRE  *************************  //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Send the weapon to MeleeAttacking state instead of doing a regular fire
@@ -291,7 +291,7 @@ simulated state MeleeAttacking
         }
 
         Load = AmmoPerFire;
-        HoldTime = 0;
+        HoldTime = 0.0;
 
         if (Instigator != none && Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none && Weapon != none)
         {
