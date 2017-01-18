@@ -2914,7 +2914,7 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
                     if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
                     {
                         // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
-                        if (DHG.NumBots > 0 && ++i >= DHG.NumBots)
+                        if (Num > 0 && ++i >= Num)
                         {
                             break;
                         }
