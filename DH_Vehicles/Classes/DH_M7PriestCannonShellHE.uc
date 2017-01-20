@@ -9,6 +9,11 @@
 
 class DH_M7PriestCannonShellHE extends DHCannonShellHE;
 
+simulated function bool EffectIsRelevant(vector SpawnLocation, bool bForceDedicated)
+{
+    return true;
+}
+
 defaultproperties
 {
     SpeedFudgeScale=1.0
