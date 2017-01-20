@@ -56,11 +56,11 @@ defaultproperties
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
     WheelRotationScale=700
-    TreadHitMinAngle=1.3    // TODO:
-    FrontLeftAngle=335.0    // TODO:
-    FrontRightAngle=25.0    // TODO:
-    RearRightAngle=155.0    // TODO:
-    RearLeftAngle=205.0     // TODO:
+    TreadHitMaxHeight=-30
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=155.0
+    RearLeftAngle=205.0
     GearRatios(4)=0.72
     TransRatio=0.1
     LeftLeverBoneName="lever_L"
@@ -71,10 +71,8 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=-40,Z=30.0),ExhaustRotation=(Pitch=0,Yaw=32768))
     ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=40,Z=30.0),ExhaustRotation=(Pitch=0,Yaw=32768))
-    // TODO: make these
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestCannonPawn',WeaponBone="turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M7PriestMGPawn',WeaponBone="mg_placement")
-    // TODO: passengers (how do we reposition passengers, can't remember!)
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=40.0,Y=-65.0,Z=10.0),DriveRot=(Yaw=24576),DriveAnim="VHalftrack_Rider6_idle")
     PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-45.0,Y=60.0,Z=10.0),DriveRot=(Yaw=-8192),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-120.0,Y=-75.0,Z=40.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider2_idle")
@@ -92,8 +90,7 @@ defaultproperties
     DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_M7Priest_tex.interface.priest_body'  // TODO: make interface art
-    // TODO: set these up correctly
+    VehicleHudImage=texture'DH_M7Priest_tex.interface.priest_body'
     VehicleHudOccupantsX(0)=0.42
     VehicleHudOccupantsY(0)=0.37
     VehicleHudOccupantsX(1)=0.43
