@@ -83,20 +83,27 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     GetCellLeftWidth(1, CellLeft, CellWidth);
     DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetMapSource(Parts[0]), FontScale);
 
-    // Type
+    // Allied Side
     if (Parts.Length >= 2)
     {
         GetCellLeftWidth(2, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[1], FontScale);
     }
 
+    // Type
+    if (Parts.Length >= 3)
+    {
+        GetCellLeftWidth(3, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[2], FontScale);
+    }
+
     // Player Range
     if (Parts.Length >= 4)
     {
-        GetCellLeftWidth(3, CellLeft, CellWidth);
+        GetCellLeftWidth(4, CellLeft, CellWidth);
         OldDrawTyle = DrawStyle;
-        Min = int(Parts[2]);
-        Max = int(Parts[3]);
+        Min = int(Parts[3]);
+        Max = int(Parts[4]);
 
         if (Min > 0 || Max <= GRI.MaxPlayers)
         {
@@ -125,35 +132,35 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     }
 
     // Quality Control
-    if (Parts.Length >= 5)
+    if (Parts.Length >= 6)
     {
-        GetCellLeftWidth(4, CellLeft, CellWidth);
+        GetCellLeftWidth(5, CellLeft, CellWidth);
 
-        if (Parts[4] ~= "Failed" && MState != MSAT_Disabled)
+        if (Parts[5] ~= "Failed" && MState != MSAT_Disabled)
         {
             OldDrawTyle = DrawStyle;
             DrawStyle = RedListStyle;
 
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
 
             DrawStyle = OldDrawTyle;
         }
         else
         {
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[4], FontScale);
+            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
         }
     }
     else
     {
-        GetCellLeftWidth(4, CellLeft, CellWidth);
+        GetCellLeftWidth(5, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, "Pending", FontScale);
     }
 
     // Author
-    if (Parts.Length >= 6)
+    if (Parts.Length >= 7)
     {
-        GetCellLeftWidth(5, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
+        GetCellLeftWidth(6, CellLeft, CellWidth);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[6], FontScale);
     }
 }
 
@@ -171,26 +178,32 @@ function string GetSortString(int i)
                 return Caps(class'DHMapList'.static.GetPrettyName(Parts[0]));
             }
         case 1: // Source
-            if (Parts.Length > 0)
+            if (Parts.Length > 1)
             {
-                return class'DHMapList'.static.GetMapSource(Parts[0]);
-            }
-        case 2: // Type
-            if (Parts.Length > 2)
-            {
-                return Caps(Parts[1]);
+                return Caps(class'DHMapList'.static.GetMapSource(Parts[0]));
             }
             break;
-        case 4: // Quality Control
+        case 2: // Allied country
+            if (Parts.Length > 2)
+            {
+                return Caps(Parts[2]);
+            }
+        case 4: // Type
+            if (Parts.Length > 3)
+            {
+                return Caps(Parts[3]);
+            }
+            break;
+        case 5: // Quality Control
             if (Parts.Length > 4)
             {
                 return Caps(Parts[4]);
             }
             break;
-        case 5: // Author
+        case 6: // Author
             if (Parts.Length > 5)
             {
-                return Caps(Parts[5]);
+                return Caps(Parts[6]);
             }
             break;
         default:
@@ -202,27 +215,30 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-    // Map Name | Source | Type | Player Range | Quality Control | Author
+    // Map Name | Source | Country | Type | Player Range | Quality Control | Author
     ColumnHeadings(0)="Map Name"
     ColumnHeadings(1)="Source"
-    ColumnHeadings(2)="Type"
-    ColumnHeadings(3)="Player Range"
-    ColumnHeadings(4)="Quality Control"
-    ColumnHeadings(5)="Author"
+    ColumnHeadings(2)="Country"
+    ColumnHeadings(3)="Type"
+    ColumnHeadings(4)="Player Range"
+    ColumnHeadings(5)="Quality Control"
+    ColumnHeadings(6)="Author"
 
     InitColumnPerc(0)=0.2
-    InitColumnPerc(1)=0.15
-    InitColumnPerc(2)=0.15
-    InitColumnPerc(3)=0.15
+    InitColumnPerc(1)=0.1
+    InitColumnPerc(2)=0.1
+    InitColumnPerc(3)=0.1
     InitColumnPerc(4)=0.2
     InitColumnPerc(5)=0.15
+    InitColumnPerc(6)=0.15
 
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="Current domain of the level, community, legacy, or official."
-    ColumnHeadingHints(2)="What type of game or battle for the map."
-    ColumnHeadingHints(3)="Recommended players for the map."
-    ColumnHeadingHints(4)="Whether or not the level has passed official quality control."
-    ColumnHeadingHints(5)="The map's creator(s)."
+    ColumnHeadingHints(2)="The Allied country for the map."
+    ColumnHeadingHints(3)="What type of game or battle for the map."
+    ColumnHeadingHints(4)="Recommended players for the map."
+    ColumnHeadingHints(5)="Whether or not the level has passed official quality control."
+    ColumnHeadingHints(6)="The map's creator(s)."
 
     RedListStyleName="DHListRed"
 }
