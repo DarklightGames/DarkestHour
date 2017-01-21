@@ -57,13 +57,13 @@ defaultproperties
     InitialPrimaryAmmo=58
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
-    Spread=0.02
+    Spread=0.015
     SecondarySpread=0.015
-    TertiarySpread=0.03
+    TertiarySpread=0.015
 
     // Weapon fire
     WeaponFireOffset=18.0
-    AddedPitch=68 // TODO: why is this here/
+    AddedPitch=68
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
