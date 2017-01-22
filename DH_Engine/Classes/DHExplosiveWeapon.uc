@@ -138,10 +138,11 @@ simulated function InstantPrime()
     }
 }
 
-// Overridden to prevent another nade from being thrown instantly after the previous nade by pressing alternating fire/altfire buttons
+// Modified to prevent another nade from being thrown instantly after the previous nade by pressing alternating fire/altfire buttons
+// Also to set StartFireAmmoAmount so when net client's FireMode fires, it can tell whether weapon has received replicated reduced ammo count - if not it consumes ammo immediately on client
 simulated function bool StartFire(int Mode)
 {
-    local int alt;
+    local int OtherMode;
 
     if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
     {
@@ -155,14 +156,14 @@ simulated function bool StartFire(int Mode)
 
     if (Mode == 0)
     {
-        alt = 1;
+        OtherMode = 1;
     }
     else
     {
-        alt = 0;
+        OtherMode = 0;
     }
 
-    if (Role < ROLE_Authority && InstigatorIsLocallyControlled())
+    if (Role < ROLE_Authority && InstigatorIsLocallyControlled()) // added here
     {
         StartFireAmmoAmount = AmmoAmount(Mode);
     }
@@ -170,13 +171,13 @@ simulated function bool StartFire(int Mode)
     FireMode[Mode].bIsFiring = true;
     FireMode[Mode].NextFireTime = Level.TimeSeconds + FireMode[Mode].PreFireTime;
 
-    if (FireMode[alt].bModeExclusive)
+    if (FireMode[OtherMode].bModeExclusive)
     {
         // Prevents rapidly alternating fire modes
-        FireMode[Mode].NextFireTime = FMax(FireMode[Mode].NextFireTime, FireMode[alt].NextFireTime);
+        FireMode[Mode].NextFireTime = FMax(FireMode[Mode].NextFireTime, FireMode[OtherMode].NextFireTime);
 
-        // Prevent rapidly fire/alt firing nades right after each other
-        FireMode[alt].NextFireTime = Level.TimeSeconds + FireMode[Mode].FireRate;
+        // Prevent firing/alt firing nades right after each other - added here
+        FireMode[OtherMode].NextFireTime = Level.TimeSeconds + FireMode[Mode].FireRate;
     }
 
     if (InstigatorIsLocallyControlled())
