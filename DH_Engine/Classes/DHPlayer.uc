@@ -3011,6 +3011,9 @@ exec function ClearArrows()
 
 // New exec that respawns the player, but leaves their old pawn body behind, frozen in the game
 // Optional bKeepPRI means the old body copy keeps a reference to the player's PRI, so it still shows your name in HUD, with any resupply/reload message
+// TODO: for some reason when you kill a 'LeaveBody' pawn that is not in a vehicle, the pawn actor does not get destroyed on the server
+// Debugged as far as it entering state Dying & in its BeginState() the LifeSpan being set to 1.0 second on a dedicated server
+// But something seems to override that as pawn isn't destroyed & if you log it later it has LifeSpan=0.0 (NB - it's still in state Dying, with no timer running)
 exec function LeaveBody(optional bool bKeepPRI)
 {
     local DHVehicleWeaponPawn WP;
