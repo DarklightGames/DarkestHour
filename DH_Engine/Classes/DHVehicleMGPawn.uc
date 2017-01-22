@@ -168,7 +168,7 @@ simulated function DrawHUD(Canvas C)
 // Modified to add dry-fire effects if trying to fire empty MG (but not if actively reloading)
 function Fire(optional float F)
 {
-    if (CanFire() && !ArePlayersWeaponsLocked(true))
+    if (CanFire() && !ArePlayersWeaponsLocked())
     {
         super(ROVehicleWeaponPawn).Fire(F); // skip over Super in DHVehicleWeaponPawn to avoid duplicating checks on CanFire() & ArePlayersWeaponsLocked()
 

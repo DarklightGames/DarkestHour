@@ -264,7 +264,7 @@ simulated function bool PointOfView()
 // Modified to check player is in a valid firing position & his weapons aren't locked due to spawn killing
 function Fire(optional float F)
 {
-    if (CanFire() && !ArePlayersWeaponsLocked(true)) // TODO: this is clientside only so ought to have additional server verification of not weapon locked (same applies to AltFire)
+    if (CanFire() && !ArePlayersWeaponsLocked())
     {
         super.Fire(F);
     }
@@ -317,9 +317,9 @@ function bool CanFire()
 
 // New helper function to check if player's weapons are locked due to spawn killing, by calling similar function on a DHPlayer Controller
 // Just improves readability where used in several other functions
-function bool ArePlayersWeaponsLocked(optional bool bShowMessageIfLocked)
+function bool ArePlayersWeaponsLocked(optional bool bNoScreenMessage)
 {
-    return DHPlayer(Controller) != none && DHPlayer(Controller).AreWeaponsLocked(bShowMessageIfLocked);
+    return DHPlayer(Controller) != none && DHPlayer(Controller).AreWeaponsLocked(bNoScreenMessage);
 }
 
 // Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check

@@ -1217,7 +1217,7 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
         }
 
         // If the instigator has weapons locked, return no damage
-        if (DHPlayer(InstigatedBy.Controller) != none && DHPlayer(InstigatedBy.Controller).AreWeaponsLocked())
+        if (DHPlayer(InstigatedBy.Controller) != none && DHPlayer(InstigatedBy.Controller).AreWeaponsLocked(true)) // passing true suppresses usual screen message if locked
         {
             return 0;
         }

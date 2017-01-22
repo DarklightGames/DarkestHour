@@ -341,7 +341,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Also so fire button triggers a manual cannon reload if players uses the manual reloading option & the cannon is waiting to start reloading
 function Fire(optional float F)
 {
-    if (!CanFire() || ArePlayersWeaponsLocked(true) || VehWep == none)
+    if (!CanFire() || ArePlayersWeaponsLocked() || VehWep == none)
     {
         return;
     }
@@ -370,7 +370,7 @@ function Fire(optional float F)
 // Checks that player is in a valid firing position & his weapons aren't locked due to spawn killing
 function AltFire(optional float F)
 {
-    if (!bHasAltFire || !CanFire() || ArePlayersWeaponsLocked(true) || VehWep == none)
+    if (!bHasAltFire || !CanFire() || ArePlayersWeaponsLocked() || VehWep == none)
     {
         return;
     }

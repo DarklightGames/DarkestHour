@@ -30,8 +30,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 // Gets called on both client & server, so includes server verification that player's weapons aren't locked (belt & braces as clientside check stops it reaching server)
 simulated function bool StartFire(int Mode)
 {
-    // Passing the locally controlled check into AreWeaponsLocked() function means only local player receives "Your weapons are locked for X seconds" screen message
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked(InstigatorIsLocallyControlled()))
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
     {
         return false;
     }

@@ -2778,17 +2778,14 @@ simulated function CheckUnlockWeapons()
     }
 }
 
-// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including option to show screen message
-simulated function bool AreWeaponsLocked(optional bool bShowMessageIfLocked)
+// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including warning message on screen
+simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 {
     if (GameReplicationInfo != none && WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
     {
-        if (bShowMessageIfLocked)
+        if (!bNoScreenMessage)
         {
             ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
-
-            bFire = 0; // 'releases' fire button if being held down, which avoids spamming repeated messages & buzz sounds
-            bAltFire = 0;
         }
 
         return true;

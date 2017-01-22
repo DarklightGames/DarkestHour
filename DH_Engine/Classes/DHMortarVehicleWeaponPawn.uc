@@ -474,7 +474,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked(true) && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
+        if (!ArePlayersWeaponsLocked() && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('Firing');
         }
@@ -544,7 +544,7 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked(true) && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
+        if (!ArePlayersWeaponsLocked() && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -629,7 +629,7 @@ simulated state FireToIdle extends Busy
 {
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked(true))
+        if (!ArePlayersWeaponsLocked())
         {
             bPendingFire = true; // allows us to queue up a shot in this stage so we don't have an arbitrary 'waiting time' before we accept input after firing
         }
