@@ -3119,12 +3119,10 @@ exec function FixPinHead()
 exec function PossessBody()
 {
     local Pawn   TargetPawn;
-    local vector HitLocation, HitNormal, ViewPos;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROPawn(Pawn) != none)
     {
-        ViewPos = Pawn.Location + Pawn.BaseEyeHeight * vect(0.0, 0.0, 1.0);
-        TargetPawn = Pawn(Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(Rotation), ViewPos, true));
+        TargetPawn = ROPawn(ROPawn(Pawn).AutoTraceActor);
 
         // Only proceed if body's PRI matches the player (so must have been their old body, left using bKeepPRI option), or if body belongs to no one
         if (TargetPawn != none && (TargetPawn.PlayerReplicationInfo == PlayerReplicationInfo || TargetPawn.PlayerReplicationInfo == none))
