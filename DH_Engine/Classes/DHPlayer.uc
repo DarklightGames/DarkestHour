@@ -3102,9 +3102,16 @@ function ServerLeaveBody(optional bool bKeepPRI)
 // New exec, used with LeaveBody(), as a clientside fix for annoying bug where old pawn's head shrinks to 10% size! - can be used when head location accuracy is important
 exec function FixPinHead()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHud) != none && DHHud(myHud).NamedPlayer != none)
+    local ROPawn TargetPawn;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROPawn(Pawn) != none)
     {
-        DHHud(myHud).NamedPlayer.SetHeadScale(DHHud(myHud).NamedPlayer.default.HeadScale);
+        TargetPawn = ROPawn(ROPawn(Pawn).AutoTraceActor);
+
+        if (TargetPawn != none)
+        {
+            TargetPawn.SetHeadScale(TargetPawn.default.HeadScale);
+        }
     }
 }
 
