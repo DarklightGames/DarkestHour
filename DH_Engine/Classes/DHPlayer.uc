@@ -853,44 +853,34 @@ simulated function float GetMaxViewDistance()
     return super.GetMaxViewDistance();
 }
 
-// Overridden to handle separate MG and AT resupply as well as assisted AT loading
+// Modified to handle separate MG & AT resupply as well as assisted AT loading
+// Uses our pawn's AutoTraceActor instead of the HUD's NamedPlayer, which is deprecated (AutoTrace now registers DHPawns so this works fine)
 exec function ThrowMGAmmo()
 {
     local DHPawn MyPawn, OtherPawn;
-    local Actor  HitActor;
-    local vector HitLocation, HitNormal, TraceStart, TraceEnd;
-    local float  TraceDistance;
 
     MyPawn = DHPawn(Pawn);
 
-    if (MyPawn == none)
+    if (MyPawn != none)
     {
-        return;
-    }
+        OtherPawn = DHPawn(MyPawn.AutoTraceActor);
 
-    TraceDistance = class'DHUnits'.static.MetersToUnreal(2.0);
-    TraceStart = MyPawn.Location + MyPawn.EyePosition();
-    TraceEnd = TraceStart + (vector(Rotation) * TraceDistance);
-
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-
-    OtherPawn = DHPawn(HitActor);
-
-    if (OtherPawn != none)
-    {
-        if (!MyPawn.bUsedCarriedMGAmmo && OtherPawn.bWeaponNeedsResupply)
+        if (OtherPawn != none)
         {
-            ServerThrowMGAmmo(OtherPawn);
-        }
+            if (!MyPawn.bUsedCarriedMGAmmo && OtherPawn.bWeaponNeedsResupply)
+            {
+                ServerThrowMGAmmo(OtherPawn);
+            }
 
-        if (OtherPawn.bWeaponNeedsReload)
-        {
-            ServerLoadATAmmo(OtherPawn);
+            if (OtherPawn.bWeaponNeedsReload)
+            {
+                ServerLoadATAmmo(OtherPawn);
+            }
         }
-    }
-    else if (DHMortarVehicle(HitActor) != none)
-    {
-        ServerThrowMortarAmmo(DHMortarVehicle(HitActor));
+        else if (DHMortarVehicle(MyPawn.AutoTraceActor) != none)
+        {
+            ServerThrowMortarAmmo(DHMortarVehicle(ROPawn(Pawn).AutoTraceActor));
+        }
     }
 }
 
