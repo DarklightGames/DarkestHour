@@ -47,6 +47,13 @@ function UsedBy(Pawn User)
         return;
     }
 
+    // Don't let player call arty if his weapons have been locked due to spawn killing
+    // Unlike weapon fire, we have no way of stopping this on the player's client, so we rely on the server to prevent arty use
+    if (PC.AreWeaponsLocked())
+    {
+        return;
+    }
+
     // Exit if no co-ordinates selected (with message)
     if (PC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
     {
