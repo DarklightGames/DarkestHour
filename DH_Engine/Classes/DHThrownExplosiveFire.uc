@@ -31,9 +31,18 @@ simulated function bool AllowFire()
 }
 
 // Modified to consume ammo on the clients end
+// Also to stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
 event ModeDoFire()
 {
     if (!AllowFire())
+    {
+        return;
+    }
+
+    // Stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
+    // Happens because that forces the fire button to be released, which triggers this event
+    // TODO: clean this up & perhaps find a better place to do this, it's just a quick fix with some problems (Matt, Jan 2017)
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
     {
         return;
     }

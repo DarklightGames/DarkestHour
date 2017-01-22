@@ -143,6 +143,11 @@ simulated function bool StartFire(int Mode)
 {
     local int alt;
 
+    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
+    {
+        return false;
+    }
+
     if (!ReadyToFire(Mode))
     {
         return false;
