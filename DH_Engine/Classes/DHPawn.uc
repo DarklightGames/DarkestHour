@@ -243,12 +243,6 @@ simulated function Tick(float DeltaTime)
         {
             EndBurnFX();
         }
-
-        // Forced client bob values. These variables are global config and are used in native code.
-        // There is no way to bypass its use and only way to restrict is by forcing its value in tick
-        // Do not set to DHPawn.default.Bob as it'll just use the ini as default
-        Bob = 0.01;
-        bWeaponBob = true;
     }
 
     // Forces us to equip a mortar if we have one on us.
@@ -4709,7 +4703,7 @@ simulated exec function BobDecay(optional float F)
     }
 }
 
-// Overridden to add some initial weapon bobbing when first iron sighting
+// Modified to add some initial weapon bobbing when first iron sighting, & to enforce the default Bob setting
 function CheckBob(float DeltaTime, vector Y)
 {
     local float OldBobTime, BobModifier, Speed2D, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
@@ -4717,7 +4711,7 @@ function CheckBob(float DeltaTime, vector Y)
 
     OldBobTime = BobTime;
 
-    Bob = FClamp(Bob, -0.01, 0.01);
+    Bob = 0.01; // added to enforce the default Bob value (instead of clamping it between certain values)
 
     // Modify the amount of bob based on the movement state
     if (bIsSprinting)
