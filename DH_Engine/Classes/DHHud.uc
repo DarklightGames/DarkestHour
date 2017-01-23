@@ -3865,12 +3865,17 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
     }
 
-    // Draw everything
+    // Begin drawing capture bar widgets
     DrawSpriteWidget(Canvas, CaptureBarBackground);
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
-    DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
-    DrawSpriteWidget(Canvas, CaptureBarDefenderRatio);
+
+    if (!DHGRI.DHObjectives[CurrentCapArea].bHideCaptureBarRatio)
+    {
+        DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
+        DrawSpriteWidget(Canvas, CaptureBarDefenderRatio);
+    }
+
     DrawSpriteWidget(Canvas, CaptureBarOutline);
 
     // Draw the left icon

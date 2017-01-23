@@ -71,6 +71,7 @@ var()   bool                        bGroupActionsAtDisable;
 var()   bool                        bHideOnMap;
 var()   bool                        bHideOnMapWhenInactive;
 var()   bool                        bHideLabelWhenInactive;
+var()   bool                        bHideCaptureBarRatio;        // Hide the enemy/friendly player ratio on the capture bar for this objective
 var()   bool                        bResetDeathPenalties;        // will reset all players death penalty counts
 var()   bool                        bAlliesFinalObjective;
 var()   bool                        bAxisFinalObjective;

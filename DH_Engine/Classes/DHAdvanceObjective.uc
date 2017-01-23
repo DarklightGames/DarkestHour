@@ -6,7 +6,6 @@
 class DHAdvanceObjective extends DHObjective;
 
 // The purpose of this class is to make setup of Advance much easier and faster.  By doing this it also makes it less error prone
-//
 
 // Modified because in Advance game mode whenever an objective is activated, it becomes neutral
 function SetActive( bool bActiveStatus )
@@ -36,7 +35,6 @@ defaultproperties
     AlliedAwardedReinforcements=20
     AxisAwardedReinforcements=20
     bUsePostCaptureOperations=true
-    //bDisableWhenAxisClearObj=true
-    //bDisableWhenAlliesClearObj=true
     bActivateObjByNumOrder=true
+    bHideCaptureBarRatio=true
 }
