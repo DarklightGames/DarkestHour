@@ -130,38 +130,6 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
             DrawStyle = OldDrawTyle;
         }
     }
-
-    // Quality Control
-    if (Parts.Length >= 6)
-    {
-        GetCellLeftWidth(5, CellLeft, CellWidth);
-
-        if (Parts[5] ~= "Failed" && MState != MSAT_Disabled)
-        {
-            OldDrawTyle = DrawStyle;
-            DrawStyle = RedListStyle;
-
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
-
-            DrawStyle = OldDrawTyle;
-        }
-        else
-        {
-            DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[5], FontScale);
-        }
-    }
-    else
-    {
-        GetCellLeftWidth(5, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, "Pending", FontScale);
-    }
-
-    // Author
-    if (Parts.Length >= 7)
-    {
-        GetCellLeftWidth(6, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[6], FontScale);
-    }
 }
 
 function string GetSortString(int i)
@@ -194,18 +162,6 @@ function string GetSortString(int i)
                 return Caps(Parts[3]);
             }
             break;
-        case 5: // Quality Control
-            if (Parts.Length > 4)
-            {
-                return Caps(Parts[4]);
-            }
-            break;
-        case 6: // Author
-            if (Parts.Length > 5)
-            {
-                return Caps(Parts[6]);
-            }
-            break;
         default:
             break;
     }
@@ -221,24 +177,18 @@ defaultproperties
     ColumnHeadings(2)="Country"
     ColumnHeadings(3)="Type"
     ColumnHeadings(4)="Player Range"
-    ColumnHeadings(5)="Quality Control"
-    ColumnHeadings(6)="Author"
 
-    InitColumnPerc(0)=0.2
-    InitColumnPerc(1)=0.1
-    InitColumnPerc(2)=0.1
-    InitColumnPerc(3)=0.1
-    InitColumnPerc(4)=0.2
-    InitColumnPerc(5)=0.15
-    InitColumnPerc(6)=0.15
+    InitColumnPerc(0)=0.25
+    InitColumnPerc(1)=0.2
+    InitColumnPerc(2)=0.15
+    InitColumnPerc(3)=0.15
+    InitColumnPerc(4)=0.25
 
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="Current domain of the level, community, legacy, or official."
     ColumnHeadingHints(2)="The Allied country for the map."
     ColumnHeadingHints(3)="What type of game or battle for the map."
     ColumnHeadingHints(4)="Recommended players for the map."
-    ColumnHeadingHints(5)="Whether or not the level has passed official quality control."
-    ColumnHeadingHints(6)="The map's creator(s)."
 
     RedListStyleName="DHListRed"
 }
