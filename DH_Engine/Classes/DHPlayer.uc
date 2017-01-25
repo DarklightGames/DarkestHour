@@ -2117,18 +2117,18 @@ simulated function SwayHandler(float DeltaTime)
     // Sway reduction for crouching, prone, and resting the weapon
     if (P.bRestingWeapon)
     {
-        WeaponSwayYawAcc *= 0.1;
-        WeaponSwayPitchAcc *= 0.1;
+        WeaponSwayYawAcc *= 0.15;
+        WeaponSwayPitchAcc *= 0.15;
     }
     else if (P.bIsCrouched)
     {
-        WeaponSwayYawAcc *= 0.5;
-        WeaponSwayPitchAcc *= 0.5;
+        WeaponSwayYawAcc *= 0.55;
+        WeaponSwayPitchAcc *= 0.55;
     }
     else if (P.bIsCrawling)
     {
-        WeaponSwayYawAcc *= 0.25;
-        WeaponSwayPitchAcc *= 0.25;
+        WeaponSwayYawAcc *= 0.3;
+        WeaponSwayPitchAcc *= 0.3;
     }
 
     if (P.IsProneTransitioning())
@@ -4121,7 +4121,7 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
 defaultproperties
 {
     // Sway values
-    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.35),(InVal=12.0,OutVal=0.3),(InVal=45.0,OutVal=0.45),(InVal=10000000000.0,OutVal=0.55)))
+    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))
     BobCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=3.0,OutVal=0.2),(InVal=12.0,OutVal=0.15),(InVal=45.0,OutVal=0.2),(InVal=10000000000.0,OutVal=0.25)))
     DHSwayElasticFactor=8.0;
     DHSwayDampingFactor=0.51;
@@ -4135,7 +4135,7 @@ defaultproperties
     DHScopeTurnSpeedFactor=0.2
 
     // Max flinch offset for close snaps
-    FlinchMaxOffset=350.0
+    FlinchMaxOffset=375.0
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
