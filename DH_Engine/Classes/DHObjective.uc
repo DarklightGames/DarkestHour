@@ -80,6 +80,7 @@ var()   int                         AxisAwardedReinforcements;   // Amount of re
 var()   int                         PlayersNeededToCapture;
 var()   name                        NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
 var()   byte                        PreventCaptureTime;          // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
+var()   bool                        bNeutralizeBeforeCapture;     // if this is true the objective will neutralize first (then can be captured by either team)
 
 var     byte                        NoCapProgressTimeRemaining;  // time remaining until capture can be captured (replicated to clients)
 var     float                       NoCapTimeRemainingFloat;     // used to calculate time as timer runs 4 times a second
@@ -908,6 +909,13 @@ function Timer()
     {
         CurrentCapTeam = NEUTRAL_TEAM_INDEX;
     }
+    else if (ObjState != OBJ_Neutral && CurrentCapProgress == 1.0 && bNeutralizeBeforeCapture)
+    {
+        // If the objective is not netural, has completed progress, and is set to bNeutralizedBeforeCaptured
+        // Then we call different logic which will neutralize the objective without "completing" it
+        ObjectiveNeutralized(CurrentCapTeam);
+        return;
+    }
     else if (CurrentCapProgress == 1.0)
     {
         ObjectiveCompleted(none, CurrentCapTeam);
@@ -1064,6 +1072,20 @@ function Timer()
     }
 
     UpdateCompressedCapProgress();
+}
+
+function ObjectiveNeutralized(int Team)
+{
+    // Reset values as the objective was neutralized
+    CurrentCapProgress = 0.0;
+    CurrentCapTeam = NEUTRAL_TEAM_INDEX;
+    ObjState = OBJ_Neutral;
+
+    // Alert the game of changes
+    ROTeamGame(Level.Game).NotifyObjStateChanged();
+
+    // Notify players
+    BroadcastLocalizedMessage(class'DHObjectiveMessage', Team + 4, none, none, self);
 }
 
 // Overriden to the fix a console warning that would display when EventInstigator was none.
