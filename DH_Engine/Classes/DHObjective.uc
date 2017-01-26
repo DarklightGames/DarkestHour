@@ -55,35 +55,50 @@ struct ObjOperationAction
     var() EObjectiveOperation Operation;
 };
 
-var(ROObjTerritory) bool            bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
-var(ROObjTerritory) bool            bSetInactiveOnClear;        // same as above, but only when clear
+// Territory variables
 var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the capture rate to always be the base value, so we can have consistent capture times
+
+// Basic Obj variables
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
-var()   bool                        bVehiclesCanCapture;
-var()   bool                        bTankersCanCapture;
-var()   bool                        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
-var()   bool                        bActivateObjByNumOrder;     // If true, whenever an objective is deactivated it will calculate which objective it should unlock
+
+// Capture variables
+var(DHObjectiveCapture) bool        bVehiclesCanCapture;
+var(DHObjectiveCapture) bool        bTankersCanCapture;
+var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
+var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
+var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
+var(DHObjectiveCapture) int         PlayersNeededToCapture;
+var(DHObjectiveCapture) byte        PreventCaptureTime;         // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
+
+// Clear variables
+var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
+var(DHObjectiveClear) bool          bDisableWhenAlliesClearObj;
+var(DHObjectiveClear) bool          bDisableWhenAxisClearObj;
+
+// Disable variables
+var(DHObjectiveDisable) bool        bGroupActionsAtDisable;
+var(DHObjectiveDisable) bool          bActivateObjByNumOrder;   // If true, whenever an objective is deactivated it will calculate which objective it should unlock
                                                                 // based on the ObjNum order.  Ex- Allies take obj3, when obj3 disables it will activate obj4
                                                                 // Allies always increase, Axis decrease
-var()   bool                        bDisableWhenAlliesClearObj;
-var()   bool                        bDisableWhenAxisClearObj;
-var()   bool                        bGroupActionsAtDisable;
-var()   bool                        bHideOnMap;
-var()   bool                        bHideOnMapWhenInactive;
-var()   bool                        bHideLabelWhenInactive;
-var()   bool                        bHideCaptureBarRatio;        // Hide the enemy/friendly player ratio on the capture bar for this objective
-var()   bool                        bResetDeathPenalties;        // will reset all players death penalty counts
-var()   bool                        bAlliesFinalObjective;
-var()   bool                        bAxisFinalObjective;
-var()   int                         AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
-var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
-var()   int                         PlayersNeededToCapture;
-var()   name                        NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
-var()   byte                        PreventCaptureTime;          // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
-var()   bool                        bNeutralizeBeforeCapture;     // if this is true the objective will neutralize first (then can be captured by either team)
+// Visual variables
+var(DHObjectiveVisual) bool         bHideOnMap;
+var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
+var(DHObjectiveVisual) bool         bHideLabelWhenInactive;
+var(DHObjectiveVisual) bool         bHideCaptureBarRatio;        // Hide the enemy/friendly player ratio on the capture bar for this objective
 
-var     byte                        NoCapProgressTimeRemaining;  // time remaining until capture can be captured (replicated to clients)
-var     float                       NoCapTimeRemainingFloat;     // used to calculate time as timer runs 4 times a second
+// Award variables
+var(DHObjectiveAwards) bool         bResetDeathPenalties;        // will reset all players death penalty counts
+var(DHObjectiveAwards) int          AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
+var(DHObjectiveAwards) int          AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
+
+// Other variables
+var(DHObjectiveOther) bool          bAlliesFinalObjective;
+var(DHObjectiveOther) bool          bAxisFinalObjective;
+var(DHObjectiveOther) name          NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
+
+// Non configurable variables
+var     byte                        NoCapProgressTimeRemaining;  // time remaining until obj can be captured (replicated to clients)
+var     float                       NoCapTimeRemainingFloat;     // used to calculate time (timer runs 4 times a second, so we need a float)
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bIsLocked;
