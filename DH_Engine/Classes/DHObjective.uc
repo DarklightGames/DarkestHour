@@ -1066,6 +1066,31 @@ function Timer()
     UpdateCompressedCapProgress();
 }
 
+// Overriden to the fix a console warning that would display when EventInstigator was none.
+function Trigger(Actor Other, Pawn EventInstigator)
+{
+    local PlayerReplicationInfo PRI;
+
+    if (!bActive || ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay'))
+    {
+        return;
+    }
+
+    if (EventInstigator != none)
+    {
+        PRI = EventInstigator.PlayerReplicationInfo;
+    }
+
+    if (ObjState == OBJ_Axis)
+    {
+        ObjectiveCompleted(PRI, ALLIES_TEAM_INDEX);
+    }
+    else if (ObjState == OBJ_Allies)
+    {
+        ObjectiveCompleted(PRI, AXIS_TEAM_INDEX);
+    }
+}
+
 defaultproperties
 {
     bDoNotUseLabelShiftingOnSituationMap=true
