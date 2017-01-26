@@ -77,7 +77,7 @@ var(DHObjectiveClear) bool          bDisableWhenAxisClearObj;
 
 // Disable variables
 var(DHObjectiveDisable) bool        bGroupActionsAtDisable;
-var(DHObjectiveDisable) bool          bActivateObjByNumOrder;   // If true, whenever an objective is deactivated it will calculate which objective it should unlock
+var(DHObjectiveDisable) bool        bActivateObjByNumOrder;     // If true, whenever an objective is deactivated it will calculate which objective it should unlock
                                                                 // based on the ObjNum order.  Ex- Allies take obj3, when obj3 disables it will activate obj4
                                                                 // Allies always increase, Axis decrease
 // Visual variables
