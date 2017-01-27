@@ -83,6 +83,18 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
+// Modified to replace RO compass texture with DH one
+simulated event PostBeginPlay()
+{
+    // Don't call the RO super
+    super(HudBase).PostBeginPlay();
+
+    // Setup compass material and offsets
+    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.Material = texture'DH_InterfaceArt_tex.HUD.DHCompassBackground';
+    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.UOffset = 128;
+    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.VOffset = 128;
+}
+
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
 {
@@ -1871,7 +1883,7 @@ simulated function DrawCompass(Canvas C)
 {
     local Actor              A;
     local AbsoluteCoordsInfo GlobalCoors;
-    local float              PawnRotation, PlayerRotation, Compensation, XL, YL;
+    local float              HudScaleTemp, PawnRotation, PlayerRotation, Compensation, XL, YL;
     local int                OverheadOffset;
 
     // Get player actor
@@ -1932,6 +1944,12 @@ simulated function DrawCompass(Canvas C)
         PlayerRotation = CompassCurrentRotation;
     }
 
+    // Save the current HudScale, as we are going to change it temporarily for the compass
+    HudScaleTemp = HudScale;
+
+    // Buff the hud scale for the compass so it doesn't get so small
+    HudScale = FClamp(HudScale * 1.5, 0.5, 1.0);
+
     // Draw compass base (fake, only to get sizes)
     GlobalCoors.width = C.ClipX;
     GlobalCoors.height = C.ClipY;
@@ -1950,6 +1968,9 @@ simulated function DrawCompass(Canvas C)
     {
         DrawCompassIcons(C, CompassNeedle.OffsetX, CompassNeedle.OffsetY, XL / HudScale / 2.0 * CompassIconsPositionRadius, -(A.Rotation.Yaw + 16384), A, GlobalCoors);
     }
+
+    // Bring back the correct HudScale
+    HudScale = HudScaleTemp;
 }
 
 // Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
