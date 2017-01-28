@@ -7,10 +7,10 @@ class DH_RKKA_SnowSquadLeader extends DH_RKKA_Snow;
 
 defaultproperties
 {
-    MyName="Seargent"
+    MyName="Sergeant"
     AltName="Komandir otdeleniya"
     Article="a "
-    PluralName="Seargents"
+    PluralName="Sergeants"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
