@@ -245,12 +245,6 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    // Forces us to equip a mortar if we have one on us.
-    if (Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && DHMortarWeapon(Weapon) == none)
-    {
-        SwitchWeapon(9); // mortars are inventory group 9, deal with it
-    }
-
     // Would prefer to do this in a Timer but too many states hijack timer and reset it on us
     // I don't want to have to override over a dozen functions just to do damage every half second
     if (bOnFire && (Level.TimeSeconds - LastBurnTime > 1.0) && Health > 0)
@@ -262,26 +256,6 @@ simulated function Tick(float DeltaTime)
             BurningDropWeaps();
         }
     }
-}
-
-simulated function bool HasMortarInInventory()
-{
-    local Inventory I;
-
-    if (!CanUseMortars())
-    {
-        return false;
-    }
-
-    for (I = Inventory; I != none; I = I.Inventory)
-    {
-        if (DHMortarWeapon(I) != none)
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 // PossessedBy - figure out what dummy attachments are needed

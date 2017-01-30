@@ -27,6 +27,15 @@ replication
         ServerDeployEnd;
 }
 
+// Implemented to force player to equip the mortar if it isn't already his current weapon
+simulated function Tick(float DeltaTime)
+{
+    if (Instigator != none && Instigator.Weapon != self && Instigator.PendingWeapon != self && Instigator.IsLocallyControlled())
+    {
+        Instigator.SwitchWeapon(InventoryGroup);
+    }
+}
+
 simulated function bool HasAmmo()
 {
     return true;
@@ -317,6 +326,7 @@ function bool FillAmmo()
 defaultproperties
 {
     InventoryGroup=9
+    Priority=99 // super high value so mortar is always ranked as best/preferred weapon to bring up
     bCanThrow=false
     bCanSway=false
 
