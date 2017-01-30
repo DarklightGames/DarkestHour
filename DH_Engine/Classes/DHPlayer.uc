@@ -14,7 +14,6 @@ var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
 
 // DH sway values
-var     InterpCurve             BobCurve;                   // the amount of weapon bob to apply based on an input time in ironsights
 var     float                   DHSwayElasticFactor;
 var     float                   DHSwayDampingFactor;
 
@@ -2072,7 +2071,7 @@ simulated function ResetSwayValues()
 simulated function SwayHandler(float DeltaTime)
 {
     local DHPawn P;
-    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, TimeFactor, BobFactor, StaminaFactor, DeltaSwayYaw, DeltaSwayPitch;
+    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch;
 
     P = DHPawn(Pawn);
 
@@ -2081,57 +2080,53 @@ simulated function SwayHandler(float DeltaTime)
         return;
     }
 
-    StaminaFactor = ((P.default.Stamina - P.Stamina) / P.default.Stamina) * 0.5; //50% stamina factor
     SwayTime += DeltaTime;
 
-    if (SwayClearTime >= 0.025)
+    // Apply random sway movement periodically (using SwayClearTime as timer)
+    if (SwayClearTime >= 0.025) // was 0.05
     {
         SwayClearTime = 0.0;
-        WeaponSwayYawAcc = RandRange(-baseSwayYawAcc, baseSwayYawAcc);
-        WeaponSwayPitchAcc = RandRange(-baseSwayPitchAcc, baseSwayPitchAcc);
+        WeaponSwayYawAcc = RandRange(-BaseSwayYawAcc, BaseSwayYawAcc);
+        WeaponSwayPitchAcc = RandRange(-BaseSwayPitchAcc, BaseSwayPitchAcc);
     }
     else
     {
+        SwayClearTime += DeltaTime;
         WeaponSwayYawAcc = 0.0;
         WeaponSwayPitchAcc = 0.0;
-        SwayClearTime += DeltaTime;
     }
 
-    // Get timefactor based on sway curve
+    // Modify sway based on how long the player has been holding the weapon ironsighted
+    StaminaFactor = ((P.default.Stamina - P.Stamina) / P.default.Stamina) * 0.5;
     TimeFactor = InterpCurveEval(SwayCurve, SwayTime);
 
-    // Get bobfactor based on bob curve
-    BobFactor = InterpCurveEval(BobCurve, SwayTime);
-
-    // Handle timefactor modifier & weapon bob for weapon type
     if (DHWeapon(P.Weapon) != none)
     {
-        TimeFactor *= DHWeapon(P.Weapon).SwayModifyFactor;
-        //P.IronSightBobFactor = BobFactor * DHWeapon(P.Weapon).BobModifyFactor;
+        TimeFactor *= DHWeapon(P.Weapon).SwayModifyFactor; // added option for weapon specific modifier
     }
 
-    // Add modifiers to sway for time in iron sights and stamina
     WeaponSwayYawAcc = (TimeFactor * WeaponSwayYawAcc) + (StaminaFactor * WeaponSwayYawAcc);
     WeaponSwayPitchAcc = (TimeFactor * WeaponSwayPitchAcc) + (StaminaFactor * WeaponSwayPitchAcc);
 
-    // Sway reduction for crouching, prone, and resting the weapon
+    // Reduce sway reduction if crouching, prone or resting the weapon
     if (P.bRestingWeapon)
     {
-        WeaponSwayYawAcc *= 0.15;
+        WeaponSwayYawAcc *= 0.15; // both were 0.1
         WeaponSwayPitchAcc *= 0.15;
     }
     else if (P.bIsCrouched)
     {
-        WeaponSwayYawAcc *= 0.55;
+        WeaponSwayYawAcc *= 0.55; // both were 0.5
         WeaponSwayPitchAcc *= 0.55;
     }
     else if (P.bIsCrawling)
     {
-        WeaponSwayYawAcc *= 0.3;
+        WeaponSwayYawAcc *= 0.3;  // both were 0.15
         WeaponSwayPitchAcc *= 0.3;
     }
 
-    if (P.IsProneTransitioning())
+    // Increase sway if getting up from prone or if leaning
+    if (P.IsProneTransitioning()) // added
     {
         WeaponSwayYawAcc *= 4.5;
         WeaponSwayPitchAcc *= 4.5;
@@ -2143,25 +2138,27 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= 1.45;
     }
 
-    // Add a elastic and damping factor to get sway near the original aim-point and from causing wild oscillations
+    // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
     WeaponSwayYawAcc = WeaponSwayYawAcc - (DHSwayElasticFactor * SwayYaw) - (DHSwayDampingFactor * WeaponSwayYawRate);
     WeaponSwayPitchAcc = WeaponSwayPitchAcc - (DHSwayElasticFactor * SwayPitch) - (DHSwayDampingFactor * WeaponSwayPitchRate);
 
-    // Calculation for motion
-    DeltaSwayYaw = (WeaponSwayYawRate * DeltaTime) + (0.5 * WeaponSwayYawAcc * DeltaTime * DeltaTime);
-    DeltaSwayPitch = (WeaponSwayPitchRate * DeltaTime) + (0.5 * WeaponSwayPitchAcc * DeltaTime * DeltaTime);
-
-    // Add actual sway
-    SwayYaw += DeltaSwayYaw;
-    SwayPitch += DeltaSwayPitch;
-
+    // If weapon is rested, SwayYaw & SwayPitch are zero
     if (P.bRestingWeapon)
     {
         SwayYaw = 0.0;
         SwayPitch = 0.0;
     }
+    // Otherwise update SwayYaw & SwayPitch using basic equation of motion (deltaX = vt + 0.5 * a * t^2)
+    else
+    {
+        DeltaSwayYaw = (WeaponSwayYawRate * DeltaTime) + (0.5 * WeaponSwayYawAcc * DeltaTime * DeltaTime);
+        DeltaSwayPitch = (WeaponSwayPitchRate * DeltaTime) + (0.5 * WeaponSwayPitchAcc * DeltaTime * DeltaTime);
 
-    // Update new sway velocity (R = D*T)
+        SwayYaw += DeltaSwayYaw;
+        SwayPitch += DeltaSwayPitch;
+    }
+
+    // Update new weapon sway sway speed (R = D*T)
     WeaponSwayYawRate += WeaponSwayYawAcc * DeltaTime;
     WeaponSwayPitchRate += WeaponSwayPitchAcc * DeltaTime;
 }
@@ -4122,7 +4119,6 @@ defaultproperties
 {
     // Sway values
     SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))
-    BobCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=3.0,OutVal=0.2),(InVal=12.0,OutVal=0.15),(InVal=45.0,OutVal=0.2),(InVal=10000000000.0,OutVal=0.25)))
     DHSwayElasticFactor=8.0;
     DHSwayDampingFactor=0.51;
     BaseSwayYawAcc=600
