@@ -5716,6 +5716,64 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     }
 }
 
+// TEMPDEBUG (Matt): for problem where net player can't see 3rd person weapon attachment of player exiting vehicle, if vehicle replicated to that client with the player already in it
+exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
+{
+    local ROPawn           P;
+    local WeaponAttachment WA;
+    local int              i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        P = ROPawn(AutoTraceActor);
+
+        if (P != none)
+        {
+            Log("--------- Weapon log for player:" @ P.PlayerReplicationInfo.PlayerName @ "---------");
+
+            if (P.WeaponAttachment != none)
+            {
+                Log("WeaponAttachment =" @ P.WeaponAttachment.Name @ " bHidden =" @ P.WeaponAttachment.bHidden
+                    @ " Base =" @ P.WeaponAttachment.Base @ " AttachmentBone =" @ P.WeaponAttachment.AttachmentBone);
+            }
+            else
+            {
+                Log("WeaponAttachment = none");
+            }
+
+            if (P.Weapon != none && P.Weapon.ThirdPersonActor != none)
+            {
+                Log("ThirdPersonActor =" @ P.Weapon.ThirdPersonActor.Name @ " bHidden =" @ P.Weapon.ThirdPersonActor.bHidden
+                    @ " Base =" @ P.Weapon.ThirdPersonActor.Base @ " AttachmentBone =" @ P.Weapon.ThirdPersonActor.AttachmentBone);
+            }
+            else
+            {
+                Log("ThirdPersonActor = none (Weapon =" @ P.Weapon $ ")");
+            }
+
+            Log("bInitializedWeaponAttachment =" @ P.bInitializedWeaponAttachment @ " bNetNotify =" @ P.bNetNotify);
+
+            for (i = 0; i < P.Attached.Length; ++i)
+            {
+                if (P.Attached[i].IsA('WeaponAttachment'))
+                {
+                    Log("Attached[" $ i $ "] =" @ P.Attached[i].Name @ " bHidden =" @ P.Attached[i].bHidden @ " Base =" @ P.Attached[i].Base @ " AttachmentBone =" @ P.Attached[i].AttachmentBone);
+                }
+            }
+
+            if (bLogAllWeaponAttachments)
+            {
+                foreach DynamicActors(class'WeaponAttachment', WA)
+                {
+                    Log(WA.Name @ " Player =" @ WA.Instigator.PlayerReplicationInfo.PlayerName @ " bHidden =" @ WA.bHidden @ " Base =" @ WA.Base @ " AttachmentBone =" @ WA.AttachmentBone);
+                }
+            }
+
+            Log("-------------------------------------------------------------------------------------------------");
+        }
+    }
+}
+
 defaultproperties
 {
     // General class & interaction stuff
