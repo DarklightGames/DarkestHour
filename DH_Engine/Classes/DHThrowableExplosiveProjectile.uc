@@ -68,9 +68,9 @@ simulated function PostBeginPlay()
 
     Acceleration = 0.5 * PhysicsVolume.Gravity;
 
-    if (InstigatorController != none && InstigatorController.PlayerReplicationInfo != none && InstigatorController.PlayerReplicationInfo.Team != none)
+    if (InstigatorController != none)
     {
-        ThrowerTeam = InstigatorController.PlayerReplicationInfo.Team.TeamIndex;
+        ThrowerTeam = InstigatorController.GetTeamNum();
     }
 }
 
@@ -191,8 +191,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     UpdateInstigator();
 
     // Just return if the player switches teams after throwing the explosive - this prevent people TK exploiting by switching teams
-    if (InstigatorController != none && InstigatorController.PlayerReplicationInfo != none
-        && InstigatorController.PlayerReplicationInfo.Team != none && InstigatorController.PlayerReplicationInfo.Team.TeamIndex != ThrowerTeam)
+    if (InstigatorController == none || InstigatorController.GetTeamNum() != ThrowerTeam || ThrowerTeam == 255)
     {
         return;
     }
