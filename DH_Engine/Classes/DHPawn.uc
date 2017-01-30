@@ -227,33 +227,39 @@ simulated function PostNetReceive()
     }
 }
 
+// Modified so if player is on fire we cause fire damage every second, & force him to drop any weapon he in carrying in his hands
+// We also enable burning effects when he first catches fire, or stop them if he's no longer on fire
 simulated function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
-    // Lets keep the effects client side, the server has enough to deal with
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (bOnFire && !bBurnFXOn)
-        {
-            BurningPlayerDropWeapon(); // if you're on fire, the last thing you'll be doing is continuing to fight!
-            StartBurnFX();
-        }
-        else if (!bOnFire && bBurnFXOn)
-        {
-            EndBurnFX();
-        }
-    }
-
+    // If player is on fire, cause fire damage every second & force him to drop any weapon in his hands
     // Would prefer to do this in a Timer but too many states hijack timer and reset it on us
-    // I don't want to have to override over a dozen functions just to do damage every half second
-    if (bOnFire && (Level.TimeSeconds - LastBurnTime > 1.0) && Health > 0)
+    // I don't want to have to override over a dozen functions just to do damage every second
+    if (bOnFire && Role == ROLE_Authority && (Level.TimeSeconds - LastBurnTime) > 1.0 && Health > 0)
     {
         TakeDamage(FireDamage, FireStarter, Location, vect(0.0, 0.0, 0.0), FireDamageClass);
 
         if (Weapon != none)
         {
             BurningPlayerDropWeapon();
+        }
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // Start burning player effects if player is on fire, & make him drop any weapon in his hands
+        if (bOnFire)
+        {
+            if (!bBurnFXOn)
+            {
+                StartBurnFX();
+            }
+        }
+        // Stop burning player effects if place is no longer on fire
+        else if (bBurnFXOn)
+        {
+            EndBurnFX();
         }
     }
 }
