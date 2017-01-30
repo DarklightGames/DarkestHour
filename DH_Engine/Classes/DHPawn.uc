@@ -1606,14 +1606,23 @@ function HandleStamina(float DeltaTime)
 
 state Dying
 {
-    // Modified to avoid re-enabling bCollideActors as it can cause some vehicles to jump wildly when player is killed in vehicle with other occupants
+    // Modified to destroy player's bullet whip attachment actor so that happens as soon as player dies, without waiting for pawn actor to be destroyed when ragdoll disappears
+    // Also to avoid re-enabling bCollideActors as it can cause some vehicles to jump wildly when player is killed in vehicle with other occupants
     // Seems to be some sort of collision clash when player's collision is re-enabled & he's inside the vehicle's collision
     // Infantry pawns have full collision enabled anyway so this actually does nothing for them, while leaving it disabled for players killed in vehicles is harmless
+    // Even then, something else (native code I believe) re-enables bCollideActors on net client - happens after BeginState() but before state's 'Begin:' label state code
+    // But by then it appears the collision change is late enough that it avoids causing an exited vehicle to jump wildly, so we achieve our primary aim with this fix
     function BeginState()
     {
         local int i;
 
 //      SetCollision(true, false, false); // removed
+
+        // Destroy player's bullet whip attachment
+        if (AuxCollisionCylinder != none)
+        {
+            AuxCollisionCylinder.Destroy();
+        }
 
         if (bTearOff && Level.NetMode == NM_DedicatedServer)
         {
@@ -2036,6 +2045,8 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 
 // A few minor additions
 // DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
+// No longer disable collision on player's bullet whip attachment as we may as well simply destroy that actor
+// But we now do that in state 'Dying' as that happens on both server & client, while this function is server only
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     local vector          HitDirection;
@@ -2076,12 +2087,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     if (bIsMantling)
     {
         ResetRootBone();
-    }
-
-    // Turn off the auxiliary collision when the player dies
-    if (AuxCollisionCylinder != none)
-    {
-        AuxCollisionCylinder.SetCollision(false, false);
     }
 
     DamageBeyondZero = Health;
