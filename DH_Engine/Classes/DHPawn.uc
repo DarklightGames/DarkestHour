@@ -2698,7 +2698,7 @@ state PutWeaponAway
                     AttachedBackItem = none;
                 }
 
-                AttachedBackItem = Spawn(class 'BackAttachment', self);
+                AttachedBackItem = Spawn(class'BackAttachment', self);
                 AttachedBackItem.InitFor(SwapWeapon);
                 AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone);
             }

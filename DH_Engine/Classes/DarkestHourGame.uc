@@ -673,7 +673,7 @@ function NavigationPoint FindPlayerStart(Controller Player, optional byte InTeam
 
         BestRating = -100000000.0;
 
-        foreach AllActors(class 'PlayerStart', PS)
+        foreach AllActors(class'PlayerStart', PS)
         {
             NewRating = RatePlayerStart(PS, InTeam, Player); // now passing the actual team, where this used to pass zero (& so always axis)
             NewRating += 20.0 * FRand(); // add some randomisation

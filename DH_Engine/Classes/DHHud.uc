@@ -1879,6 +1879,7 @@ simulated function DrawShadowedTextClipped(Canvas C, string Text)
 }
 
 // Modified to fix problem where compass failed to follow view rotation of player driving a vehicle
+// Also to increase size of compass & make sure it doesn't get too small if HudScale is very low
 simulated function DrawCompass(Canvas C)
 {
     local Actor              A;
@@ -1945,6 +1946,7 @@ simulated function DrawCompass(Canvas C)
     }
 
     // Save the current HudScale, as we are going to change it temporarily for the compass
+    // Can't just use a local scale variable here as the HudScale is used by the DrawSpriteWidgetClipped() function we call
     HudScaleTemp = HudScale;
 
     // Buff the hud scale for the compass so it doesn't get so small

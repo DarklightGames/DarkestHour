@@ -20,7 +20,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     {
         Start = SavedHitLocation + vect(0.0, 0.0, 32.0); // changed from Location to SavedHitLocation
 
-        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+        foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
         {
             if (Victims.Physics == PHYS_KarmaRagDoll && Victims != self)
             {

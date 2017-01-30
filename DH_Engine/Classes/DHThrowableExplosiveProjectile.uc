@@ -128,7 +128,7 @@ simulated function Destroyed()
     // Move karma ragdolls around when this explodes
     if (Level.NetMode != NM_DedicatedServer)
     {
-        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+        foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
         {
             if (Victims.Physics == PHYS_KarmaRagDoll && Victims != self)
             {
