@@ -56,6 +56,12 @@ function UsedBy(Pawn User)
         return;
     }
 
+    // Check this arty trigger can be used by player's team
+    if (!ApprovePlayerTeam(PC.GetTeamNum()))
+    {
+        return;
+    }
+
     // Don't let player call arty if his weapons have been locked due to spawn killing
     // Unlike weapon fire, we have no way of stopping this on the player's client, so we rely on the server to prevent arty use
     if (PC.AreWeaponsLocked())
@@ -87,16 +93,13 @@ function UsedBy(Pawn User)
         VolumeTest.Destroy();
     }
 
-    // If player is of a team that can use this trigger, call in an arty strike
-    if (ApprovePlayerTeam(PC.GetTeamNum())) // TODO: move this simple check up above the no arty volume test, so quick check is done before spawning & destroying a volume test actor
-    {
-        bAvailable = false;
-        SavedUser = User;
-        PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 1); // request strike
-        RequestSound = GetRequestSound(PC.GetTeamNum());
-        User.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
-        SetTimer(GetSoundDuration(RequestSound), false);
-    }
+    // All checks passed so call an arty strike
+    bAvailable = false;
+    SavedUser = User;
+    PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 1); // request strike
+    RequestSound = GetRequestSound(PC.GetTeamNum());
+    User.PlaySound(RequestSound, SLOT_None, 3.0, false, 100.0, 1.0, true);
+    SetTimer(GetSoundDuration(RequestSound), false);
 }
 
 function sound GetRequestSound(int TeamIndex)
