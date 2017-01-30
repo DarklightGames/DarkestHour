@@ -1225,23 +1225,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         SetLimping(FMin(ActualDamage / 5.0, 10.0));
     }
-    else if (DamageType.Name == 'DHBurningDamageType') // || (DamageType.Name == 'DH_Whatever') // This is for later - Ch!cken
-    {
-        if (ActualDamage <= 0 && bOnFire)
-        {
-            bOnFire = false;
-        }
-        else
-        {
-            bOnFire = true;
-
-            FireDamage = Damage;
-            FireDamageClass = DamageType;
-            FireStarter = InstigatedBy;
-            LastBurnTime = Level.TimeSeconds;
-        }
-    }
-    else if (DamageType.Name == 'DamTypeVehicleExplosion')
+    else if (DamageType.Name == 'DHBurningDamageType' || DamageType.Name == 'DamTypeVehicleExplosion')
     {
         if (ActualDamage <= 0 && bOnFire)
         {
