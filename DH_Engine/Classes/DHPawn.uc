@@ -4702,12 +4702,14 @@ simulated exec function BobDecay(optional float F)
 
         IronsightBobDecay = F;
     }
+
 }
 
 // Modified to add some initial weapon bobbing when first iron sighting, & to enforce the default Bob setting
+// General re-factor to optimise, only doing local variable calcs in code blocks that are actually going to use them
 function CheckBob(float DeltaTime, vector Y)
 {
-    local float OldBobTime, BobModifier, Speed2D, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
+    local float BobModifier, Speed2D, OldBobTime, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
     local int   m, n;
 
     OldBobTime = BobTime;
@@ -4736,10 +4738,36 @@ function CheckBob(float DeltaTime, vector Y)
         BobModifier = 1.0;
     }
 
+    // Player is in the normal 'walking' state
     if (Physics == PHYS_Walking)
     {
         Speed2D = VSize(Velocity);
 
+        OldBobTime = BobTime;
+
+        // Set a bob scaling factor based on the movement state
+        if (bIsSprinting)
+        {
+            BobModifier = 1.75;
+        }
+        else if (bIsCrawling && !bIronSights)
+        {
+            BobModifier = 2.5;
+        }
+        else if (bIsCrouched && !bIronSights)
+        {
+            BobModifier = 2.5;
+        }
+        else if (bIronSights) // added
+        {
+            BobModifier = 0.5;
+        }
+        else
+        {
+            BobModifier = 1.0;
+        }
+
+        // If ironsighted, update ironsight bob properties based on the movement state (added this if/else block)
         if (bIronSights)
         {
             if (bIsCrawling)
@@ -4769,6 +4797,7 @@ function CheckBob(float DeltaTime, vector Y)
             IronsightBob = vect(0.0, 0.0, 0.0);
         }
 
+        // Update bob properties based on movement state & speed
         if (bIsCrawling && !bIronSights)
         {
             BobTime += DeltaTime * ((0.3 + 0.7 * Speed2D / (GroundSpeed * PronePct)) / 2.0);
@@ -4815,32 +4844,33 @@ function CheckBob(float DeltaTime, vector Y)
         if (LandBob > 0.01)
         {
             AppliedBob += FMin(1.0, 16.0 * DeltaTime) * LandBob;
-            LandBob *= (1.0 - 8.0 * Deltatime);
+            LandBob *= (1.0 - 8.0 * DeltaTime);
+        }
+
+        // Play footstep effects (if moving fast enough & not crawling)
+        if (!bIsCrawling && Speed2D >= 10.0 && !(IsHumanControlled() && PlayerController(Controller).bBehindView))
+        {
+            m = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
+            n = int(0.5 * Pi + 9.0 * BobTime / Pi);
+
+            if (m != n)
+            {
+                FootStepping(0);
+            }
         }
     }
+    // Player is in deep water
     else if (Physics == PHYS_Swimming)
     {
         Speed2D = Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y);
         WalkBob = Y * Bob * 0.5 * Speed2D * Sin(4.0 * Level.TimeSeconds);
         WalkBob.Z = Bob * 1.5 * Speed2D * Sin(8.0 * Level.TimeSeconds);
     }
+    // Player is in any other state (not walking or swimming)
     else
     {
         BobTime = 0.0;
         WalkBob = WalkBob * (1.0 - FMin(1.0, 8.0 * DeltaTime));
-    }
-
-    if (Physics != PHYS_Walking || VSize(Velocity) < 10.0 || (PlayerController(Controller) != none && PlayerController(Controller).bBehindView))
-    {
-        return;
-    }
-
-    m = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
-    n = int(0.5 * Pi + 9.0 * BobTime / Pi);
-
-    if (m != n && !bIsCrawling)
-    {
-        FootStepping(0);
     }
 }
 
