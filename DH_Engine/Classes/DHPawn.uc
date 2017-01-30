@@ -2050,22 +2050,24 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 // Also omit possible call to ClientDying() at end of this function as ClientDying() is redundant & emptied out in ROPawn, so it's pointless replication
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
-    local vector          HitDirection;
     local Trigger         T;
     local NavigationPoint N;
+    local vector          HitDirection;
     local float           DamageBeyondZero;
     local bool            bShouldGib;
 
+    // Exit if pawn being destroyed or level is being cleaned up
     if (bDeleteMe || Level.bLevelChange || Level.Game == none)
     {
-        return; // already destroyed, or level is being cleaned up
+        return;
     }
 
-    if (DamageType.default.bCausedByWorld && (Killer == none || Killer == Controller) && LastHitBy != none)
+    // Re-assign killer if death was caused indirectly by them
+    if (DamageType != none && DamageType.default.bCausedByWorld && (Killer == none || Killer == Controller) && LastHitBy != none)
     {
         Killer = LastHitBy;
     }
-    else if (bOnFire) // person who starts the fire always gets the credit
+    else if (bOnFire)
     {
         if (FireStarter != none)
         {
@@ -2090,14 +2092,13 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         ResetRootBone();
     }
 
+    // Make sure health is no more than zero (record original health before adjusting, for use later)
     DamageBeyondZero = Health;
-
     Health = Min(0, Health);
 
-    // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-        DamageType = class'ROSuicided';
+        DamageType = class'ROSuicided'; // fix for suicide death messages
     }
 
     bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
@@ -2109,6 +2110,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         DropWeaponInventory(vect(0.0, 0.0, 0.0)); // the TossVel argument isn't used so just pass in a null vector
     }
 
+    // Destroy some possible DH special carried/owned actors
     DestroyRadioTrigger();
 
     if (OwnedMortar != none)
@@ -2116,9 +2118,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         OwnedMortar.GotoState('PendingDestroy');
     }
 
+    // Notify other actors that player has died
     if (DrivenVehicle != none)
     {
-        Velocity = DrivenVehicle.Velocity;
+        Velocity = DrivenVehicle.Velocity; // give dead driver the vehicle's velocity
         DrivenVehicle.DriverDied();
     }
 
@@ -2134,6 +2137,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     DrivenVehicle = none;
 
+    // Trigger any event that needs to happen on player's death
     if (Killer != none)
     {
         TriggerEvent(Event, self, Killer.Pawn);
@@ -2143,17 +2147,16 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         TriggerEvent(Event, self, none);
     }
 
-    // Make sure to untrigger any triggers requiring player touch
+    // Notify some touching actors that player has died
     if (IsPlayerPawn() || WasPlayerPawn())
     {
         PhysicsVolume.PlayerPawnDiedInVolume(self);
 
         foreach TouchingActors(class'Trigger', T)
         {
-            T.PlayerToucherDied(self);
+            T.PlayerToucherDied(self); // un-trigger any triggers requiring player touch
         }
 
-        // Event for HoldObjectives
         foreach TouchingActors(class'NavigationPoint', N)
         {
             if (N.bReceivePlayerToucherDiedNotify)
@@ -2163,9 +2166,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         }
     }
 
-    // Remove powerup effects, etc.
-    RemovePowerups();
-
+    // Give player's velocity a little up-kick, force a quick net update, & jarr player's vision if DamageType causes that effect
     Velocity.Z *= 1.3;
 
     if (IsHumanControlled())
@@ -2173,9 +2174,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         PlayerController(Controller).ForceDeathUpdate();
     }
 
-    if (DHPlayer(Controller) != none &&
-        class<ROWeaponDamageType>(DamageType) != none &&
-        class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring)
+    if (DHPlayer(Controller) != none && class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring)
     {
         HitDirection = Location - HitLocation;
         HitDirection.Z = 0.0;
@@ -2184,6 +2183,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         DHPlayer(Controller).PlayerJarred(HitDirection, 3.0);
     }
 
+    // Damage/dying effects
     if (DamageType != none && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
     {
         if (Level.NetMode == NM_DedicatedServer)
