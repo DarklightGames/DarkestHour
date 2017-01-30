@@ -236,7 +236,7 @@ simulated function Tick(float DeltaTime)
     {
         if (bOnFire && !bBurnFXOn)
         {
-            BurningDropWeaps(); // if you're on fire, the last thing you'll be doing is continuing to fight!
+            BurningPlayerDropWeapon(); // if you're on fire, the last thing you'll be doing is continuing to fight!
             StartBurnFX();
         }
         else if (!bOnFire && bBurnFXOn)
@@ -253,7 +253,7 @@ simulated function Tick(float DeltaTime)
 
         if (Weapon != none)
         {
-            BurningDropWeaps();
+            BurningPlayerDropWeapon();
         }
     }
 }
@@ -2090,11 +2090,11 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
 
-    // If the pawn has not been gibbed, is not in a vehicle, and has not been spawn killed
-    if (!bShouldGib && DrivenVehicle == none && !IsSpawnKillProtected())
+    // If the pawn has not been gibbed, is not in a vehicle & has not been spawn killed, then drop weapons
+    // If they don't get dropped here, they get destroyed in the GameInfo's DiscardInventory(), called from its Killed() function
+    if (!bShouldGib && (DrivenVehicle == none || DrivenVehicle.bAllowWeaponToss) && !IsSpawnKillProtected())
     {
-        // Then drop weapons
-        BurningDropWeaps();
+        DropWeaponInventory(vect(0.0, 0.0, 0.0)); // the TossVel argument isn't used so just pass in a null vector
     }
 
     DestroyRadioTrigger();
@@ -4400,66 +4400,93 @@ simulated function EndBurnFX()
     bBurnFXOn = false;
 }
 
-// Burning players drop everything they have - they're on fire after all!
-function BurningDropWeaps()
+// Modified so a burning player can't switch weapons (he's forced to drop the one he's carrying in his hands & this stops him bringing up another weapon)
+simulated function bool CanSwitchWeapon()
 {
-    local vector TossVel;
-
-    if (Weapon != none && (DrivenVehicle == none || DrivenVehicle.bAllowWeaponToss))
-    {
-        if (Controller != none)
-        {
-            Controller.LastPawnWeapon = Weapon.Class;
-        }
-
-        Weapon.HolderDied();
-        TossVel = vector(GetViewRotation());
-        TossVel = TossVel * ((Velocity dot TossVel) + 50.0) + vect(0.0, 0.0, 200.0);
-        TossWeapon(TossVel);
-    }
-
-    DropWeaponInventory(TossVel);
+    return !bOnFire && super.CanSwitchWeapon();
 }
 
-// Modified to also destroy inventory items, necessary for burning players
+// Modified so a burning player can't switch weapons
+simulated function bool CanBusySwitchWeapon()
+{
+    return !bOnFire && super.CanBusySwitchWeapon();
+}
+
+// New function to make a burning player drop the weapon he is holding
+// If he can't drop it, applying the check whether weapon should be dropped when player dies), we just destroy it so it disappears
+function BurningPlayerDropWeapon()
+{
+    local DHWeapon DHW;
+    local vector   TossVel;
+
+    if (Controller != none)
+    {
+        Controller.LastPawnWeapon = Weapon.Class;
+    }
+
+    if ((DrivenVehicle == none || DrivenVehicle.bAllowWeaponToss) && !IsSpawnKillProtected())
+    {
+        DHW = DHWeapon(Weapon);
+
+        if ((DHW != none && DHW.CanDeadThrow()) || (DHW == none && Weapon.bCanThrow))
+        {
+            TossVel = vector(GetViewRotation());
+            TossVel = TossVel * ((Velocity dot TossVel) + 50.0) + vect(0.0, 0.0, 200.0);
+            TossWeapon(TossVel);
+
+            return;
+        }
+    }
+
+    Weapon.Destroy();
+}
+
+// Modified to use new CanDeadThrow() before dropping a weapon (makes function specific to dropping player's inventory when dead, buts that's all it's used for)
+// Also to incorporate tossing player's current weapon, which was previously in Died() & always called before this function, so no need for it to be separate
+// Completely re-factored the inventory check loop to be far simpler & more efficient
+// Note the passed in TossVel argument wasn't used, but here it gets used like a local variable by the toss current weapon functionality
 function DropWeaponInventory(vector TossVel)
 {
-    local Inventory Inv;
+    local Inventory Inv, NextInv;
     local Weapon    W;
     local DHWeapon  DHW;
     local vector    X, Y, Z;
-    local int       i;
-    local array<Inventory> InventoryList;
 
     GetAxes(Rotation, X, Y, Z);
 
-    Inv = Inventory;
-
-    while (Inv != none)
+    // Loop through player's inventory chain & drop anything that can be dropped
+    for (Inv = Inventory; Inv != none; Inv = NextInv)
     {
-        InventoryList[InventoryList.Length] = Inv;
+        NextInv = Inv.Inventory; // have to record this here & use it in for loop, as if we drop current Inv it will be destroyed & we'll lose our Inv.Inventory reference
+        W = Weapon(Inv);
 
-        Inv = Inv.Inventory;
-    }
-
-    for (i = 0; i < InventoryList.Length; ++i)
-    {
-        W = Weapon(InventoryList[i]);
-
-        if (W == none)
+        if (W != none)
         {
-            continue;
-        }
+            DHW = DHWeapon(W);
 
-        DHW = DHWeapon(W);
+            if ((DHW != none && DHW.CanDeadThrow()) || (DHW == none && W.bCanThrow))
+            {
+                // Special handling if inventory item is pawn's currently held weapon
+                // This was previously part of separate functionality in Died() but we can apply standardised 'can drop?' checks here
+                if (W == Weapon)
+                {
+                    if (Controller != none)
+                    {
+                        Controller.LastPawnWeapon = Weapon.Class;
+                    }
 
-        if ((DHW != none && DHW.CanDeadThrow()) || (DHW == none && W.bCanThrow))
-        {
-            W.DropFrom(Location + (0.8 * CollisionRadius * X) - (0.5 * CollisionRadius * Y));
-        }
-        else
-        {
-            W.Destroy();
+                    Weapon.HolderDied();
+
+                    TossVel = vector(GetViewRotation());
+                    TossVel = TossVel * ((Velocity dot TossVel) + 50.0) + vect(0.0, 0.0, 200.0);
+                    TossWeapon(TossVel);
+                }
+                // Other inventory items
+                else
+                {
+                    W.DropFrom(Location + (0.8 * CollisionRadius * X) - (0.5 * CollisionRadius * Y));
+                }
+            }
         }
     }
 }
