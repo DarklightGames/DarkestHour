@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHMetrics extends Actor;
+class DHMetrics extends Actor
+    notplaceable;
 
 var private Hashtable_string_Object Players;
 var private array<DHMetricsFrag>    Frags;
@@ -173,3 +174,8 @@ function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, a
     Captures[Captures.Length] = C;
 }
 
+defaultproperties
+{
+    RemoteRole=ROLE_None
+    bHidden=true
+}
