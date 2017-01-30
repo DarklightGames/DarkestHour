@@ -206,6 +206,7 @@ defaultproperties
     CollisionRadius=20.0
     CollisionHeight=10.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.MortarBase_generic' // not visible, just a 1 bone mesh to attach VehicleWeapon to, so don't need separate models for different mortars
+    Physics=PHYS_None // stops karma log error as mortar base has no karma collision (i.e. pink collision boxes for mesh) or KarmaParams
 
     // Exit positions
     ExitPositions(0)=(Y=48.0)
