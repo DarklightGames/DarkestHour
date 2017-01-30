@@ -33,6 +33,12 @@ function UsedBy(Pawn User)
 
     if (DHPawn(User) != none)
     {
+        // Don't let a burning player call arty
+        if (DHPawn(User).bOnFire)
+        {
+            return;
+        }
+
         RI = DHPawn(User).GetRoleInfo();
     }
 

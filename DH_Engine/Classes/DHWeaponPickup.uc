@@ -67,6 +67,15 @@ simulated function PostNetReceive()
     }
 }
 
+// Modified so a burning player can't pick up a weapon
+auto state Pickup
+{
+    function bool ValidTouch(Actor Other)
+    {
+        return !(DHPawn(Other) != none && DHPawn(Other).bOnFire) && super.ValidTouch(Other);
+    }
+}
+
 // Modified to store ammo mags & any barrels from the weapon
 function InitDroppedPickupFor(Inventory Inv)
 {
