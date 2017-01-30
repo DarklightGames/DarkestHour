@@ -2542,7 +2542,125 @@ function CreateInventory(string InventoryClassName)
     }
 }
 
+// Modified to optimise network load by avoiding needlessly destroying & re-spawning replicated BackAttachment actors just because we need to change its mesh
+// Also slightly re-factored to optimise
+function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
+{
+    // If single player mode or a hosting listen server player, & in 1st person view, then just switch the attachment
+    // Don't worry about playing all the third person player stuff (that was borking up the first person weapon switches)
+    if (Level.Netmode != NM_DedicatedServer && IsLocallyControlled() && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+    {
+        Weapon = NewWeapon;
+
+        if (Controller != none)
+        {
+            Controller.ChangedWeapon();
+        }
+
+        PendingWeapon = none;
+
+        // Put away any currently held weapon
+        if (OldWeapon != none)
+        {
+            if (OldWeapon.bCanAttachOnBack)
+            {
+                // Originally the replicated BackAttachment actor was needlessly destroyed & re-spawned just to switch to a different weapon mesh
+                // That caused unnecessary network load by requiring server to destroy existing actor, instruct all clients to do same, then close the net channels
+                // Only to immediately spawn the same BackAttachment actor, initialise it to have the new weapon mesh, then replicate it to all relevant clients
+                // BackAttachment actor is completely generic & is only made to take on the appearance of new weapon by calling InitFor() to swap its mesh
+                // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
+                if (AttachedBackItem == none)
+                {
+                    AttachedBackItem = Spawn(class'BackAttachment', self);
+
+                    if (AttachedBackItem != none)
+                    {
+                        AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone);
+                    }
+                }
+
+                AttachedBackItem.InitFor(SwapWeapon);
+            }
+
+            OldWeapon.SetDefaultDisplayProperties();
+            OldWeapon.DetachFromPawn(self);
+            OldWeapon.GotoState('Hidden');
+            OldWeapon.NetUpdateFrequency = 2.0;
+        }
+
+        // Switch to the new weapon
+        if (Weapon != none)
+        {
+            // Destroy an AttachedBackItem actor if it represents the weapon we are switching to
+            if (AttachedBackItem != none && AttachedBackItem.InventoryClass == Weapon.Class)
+            {
+                AttachedBackItem.Destroy();
+                AttachedBackItem = none;
+            }
+
+            Weapon.NetUpdateFrequency = 100.0;
+            Weapon.AttachToPawn(self);
+            Weapon.BringUp(OldWeapon);
+            PlayWeaponSwitch(NewWeapon);
+        }
+
+        if (Inventory != none)
+        {
+            Inventory.OwnerEvent('ChangedWeapon');
+        }
+    }
+    // If a dedicated server or other mode in 3rd person view
+    else
+    {
+        // If we're holding a weapon, put that away & set our PendingWeapon to be the new weapon so we will switch to that
+        if (OldWeapon != none)
+        {
+            if (IsInState('PutWeaponAway'))
+            {
+                GotoState('');
+            }
+
+            PendingWeapon = NewWeapon;
+            GotoState('PutWeaponAway');
+        }
+        // Or if we're not currently holding a weapon, switch to the new weapon immediately
+        // (Removed pointless OldWeapon stuff from this as we can't have an OldWeapon if we got here)
+        else
+        {
+            Weapon = NewWeapon;
+
+            if (Controller != none)
+            {
+                Controller.ChangedWeapon();
+            }
+
+            PendingWeapon = none;
+
+            if (Weapon != none)
+            {
+                // Destroy an AttachedBackItem actor if it represents the weapon we are switching to
+                if (AttachedBackItem != none && AttachedBackItem.InventoryClass == Weapon.Class)
+                {
+                    AttachedBackItem.Destroy();
+                    AttachedBackItem = none;
+                }
+
+                Weapon.NetUpdateFrequency = 100.0;
+                Weapon.AttachToPawn(self);
+                Weapon.BringUp();
+                PlayWeaponSwitch(NewWeapon);
+            }
+
+            if (Inventory != none)
+            {
+                Inventory.OwnerEvent('ChangedWeapon');
+            }
+        }
+    }
+}
+
 // Modified to use DH weapon classes to determine the correct put away & draw animations (also to prevent "accessed none" errors on parachute landing)
+// Also to optimise network load by avoiding needlessly destroying & re-spawning replicated BackAttachment actors just because we need to change its mesh
 state PutWeaponAway
 {
     simulated function BeginState()
@@ -2652,15 +2770,36 @@ state PutWeaponAway
         {
             if (SwapWeapon.bCanAttachOnBack)
             {
+                // TEST replacing below (Matt, Jan 2017) - appears we needlessly destroyed & re-spawned a replicated BackAttachment actor (same in ServerChangedWeapon)
+                // Needs multi-player test to confirm other players receive updated weapon mesh (should do as Mesh is replicated to all)
+
+                // Originally the replicated BackAttachment actor was needlessly destroyed & re-spawned just to switch to a different weapon mesh
+                // That caused unnecessary network load by requiring server to destroy existing actor, instruct all clients to do same, then close the net channels
+                // Only to immediately spawn the same BackAttachment actor, initialise it to have the new weapon mesh, then replicate it to all relevant clients
+                // BackAttachment actor is completely generic & is only made to take on the appearance of new weapon by calling InitFor() to swap its mesh
+                // So we can keep the existing BackAttachment actor, which is already attached, & simply call InitFor() on it
+                if (AttachedBackItem == none)
+                {
+                    AttachedBackItem = Spawn(class'BackAttachment', self);
+
+                    if (AttachedBackItem != none)
+                    {
+                        AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone);
+                    }
+                }
+
+                AttachedBackItem.InitFor(SwapWeapon);
+/*
                 if (AttachedBackItem != none)
                 {
+
                     AttachedBackItem.Destroy();
                     AttachedBackItem = none;
                 }
 
                 AttachedBackItem = Spawn(class'BackAttachment', self);
                 AttachedBackItem.InitFor(SwapWeapon);
-                AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone);
+                AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone); */
             }
 
             SwapWeapon.SetDefaultDisplayProperties();
@@ -2793,6 +2932,7 @@ state PutWeaponAway
 
         if (Weapon != none)
         {
+            // Destroy an AttachedBackItem actor if it represents the weapon we are switching to
             if (AttachedBackItem != none && AttachedBackItem.InventoryClass == Weapon.Class)
             {
                 AttachedBackItem.Destroy();
