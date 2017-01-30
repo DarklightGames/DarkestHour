@@ -7,7 +7,7 @@ class DH_LWHelmetTwo extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG2');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.LW_HG2');
 }
 
 defaultproperties

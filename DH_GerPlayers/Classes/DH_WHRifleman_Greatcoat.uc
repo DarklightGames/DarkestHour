@@ -11,8 +11,8 @@ defaultproperties
     AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
 }

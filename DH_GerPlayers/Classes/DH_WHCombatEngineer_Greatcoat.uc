@@ -15,8 +15,8 @@ defaultproperties
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    Grenades(1)=(Item=Class'DH_Equipment.DH_NebelGranate39Weapon')
-    Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
+    Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     Limit=1
 }

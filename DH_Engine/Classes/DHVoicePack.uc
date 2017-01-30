@@ -128,7 +128,7 @@ function Timer()
         PlayerController(Owner).myHUD.DisplayPortrait(PortraitPRI);
     }
 
-    if ((Phrase[PhraseNum] != None) && ((Level.TimeSeconds - PlayerOwner.LastPlaySpeech > VOICEREPEATTIME) || (PhraseNum > 0)))
+    if ((Phrase[PhraseNum] != none) && ((Level.TimeSeconds - PlayerOwner.LastPlaySpeech > VOICEREPEATTIME) || (PhraseNum > 0)))
     {
         PlayerOwner.LastPlaySpeech = Level.TimeSeconds;
 
@@ -140,7 +140,7 @@ function Timer()
             }
             else
             {
-                SoundPlayer = Spawn(Class'ROVoiceMessageEffect',,, senderLoc);
+                SoundPlayer = Spawn(class'ROVoiceMessageEffect',,, senderLoc);
 
                 if (SoundPlayer != none)
                 {
@@ -154,7 +154,7 @@ function Timer()
         }
         else
         {
-            if (PlayerOwner.ViewTarget != None)
+            if (PlayerOwner.ViewTarget != none)
             {
                 PlayerOwner.ViewTarget.PlaySound(Phrase[PhraseNum], SLOT_Interface, ShoutVolume,, ShoutRadius, 1.0, true);
             }
@@ -169,7 +169,7 @@ function Timer()
             UnrealPlayer(PlayerOwner).Taunt(MessageAnim);
         }
 
-        if (Phrase[PhraseNum+1] == None)
+        if (Phrase[PhraseNum + 1] == none)
         {
             Destroy();
         }
@@ -179,6 +179,7 @@ function Timer()
             {
                 Log("ROVoicePack Setting the timer for a sound to zero");
             }
+
             SetTimer(FMax(0.1, GetSoundDuration(Phrase[PhraseNum])), false);
             PhraseNum++;
         }

@@ -110,11 +110,11 @@ simulated function SetImage()
 {
     local Material M;
 
-    M = Material'MenuBlack';
+    M = material'MenuBlack';
 
     DrawOpImage(Operations[0]).Image = M;
 
-    M = Material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
+    M = material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
 
     if (M == none)
     {
@@ -193,7 +193,7 @@ defaultproperties
         Width=0.9
         Justification=0
         FontName="ROInterface.fntROMainMenu""
-        bWrapText=False
+        bWrapText=false
     End Object
     Operations(4)=OpLoading
 

@@ -134,8 +134,8 @@ defaultproperties
         WinTop=0.371020
         bVisibleWhenEmpty=true
         StyleName="ServerBrowserGrid"
-        bScaleToParent=True
-        bBoundToParent=True
+        bScaleToParent=true
+        bBoundToParent=true
         FontScale=FNS_Small
         HeaderColumnPerc(0)=0.25 // Map Name
         HeaderColumnPerc(1)=0.2  // Source

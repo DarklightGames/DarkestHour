@@ -77,7 +77,7 @@ private static function bool PRIAlphabeticalComparatorFunction(Object A, Object 
 }
 
 // Emptied out as instead we use the PRIComparator object & it's own functions, as above
-simulated function SortPRIArray() ;
+simulated function SortPRIArray();
 simulated function bool InOrder(PlayerReplicationInfo P1, PlayerReplicationInfo P2) { return true;}
 
 // Emptied out as these ROScoreBoard functions were never used, so just to de-clutter & avoid possible confusion

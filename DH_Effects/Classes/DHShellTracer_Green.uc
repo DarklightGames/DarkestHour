@@ -7,5 +7,5 @@ class DHShellTracer_Green extends DHShellTracer;
 
 defaultproperties
 {
-    Texture=Texture'DH_FX_Tex.Effects.GreenFlare'
+    Texture=texture'DH_FX_Tex.Effects.GreenFlare'
 }

@@ -13,7 +13,7 @@ defaultproperties
     PluralName="Panzer Grenadiers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     GivenItems(0)="DH_Weapons.DH_PanzerFaustWeapon"
-    Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     Limit=2
 }

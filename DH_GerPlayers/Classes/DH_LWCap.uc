@@ -9,7 +9,7 @@ class DH_LWCap extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.LW_HG');
 }
 
 defaultproperties

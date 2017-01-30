@@ -183,11 +183,11 @@ defaultproperties
     HealthMax=525.0
     Health=525
     Mesh=SkeletalMesh'DH_M7Priest_anm.ext_body'
-    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
-    Skins(2)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    Skins(3)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    Skins(4)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
+    Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
+    Skins(2)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(3)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(4)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     // TODO: figure this one out
     CollisionRadius=175.0
     CollisionHeight=60.0

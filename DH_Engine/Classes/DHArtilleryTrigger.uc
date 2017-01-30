@@ -5,15 +5,18 @@
 
 class DHArtilleryTrigger extends ROArtilleryTrigger;
 
-var()   bool        bShouldShowOnSituationMap;
-var()   float       TriggerDelay;
+var()   bool        bShouldShowOnSituationMap;    // whether HUD overhead map should show an icon to mark this arty trigger's position
+var()   float       TriggerDelay;                 // time in seconds between repeat use of this trigger
 
-var     float       TriggerTime;
-var     DHPawn      Carrier;
-var     SoundGroup  AlliedNationRequestSounds[4];
+var     float       TriggerTime;                  // last time this trigger was used
+var     DHPawn      Carrier;                      // a radioman player pawn that is carrying this arty trigger
+
+var     SoundGroup  AlliedNationRequestSounds[4]; // voice sounds for different allies nations (USA = 0, Britain = 1, Canada = 2, Soviet Union = 3)
 var     SoundGroup  AlliedNationConfirmSounds[4];
 var     SoundGroup  AlliedNationDenySounds[4];
 
+// Modified so only arty officer roles can call in arty, & to use request sounds for different allies nations
+// Also to stop a player calling arty if they are on fire or if their weapons have been locked (for spawn killing)
 function UsedBy(Pawn User)
 {
     local DHRoleInfo   RI;
@@ -33,7 +36,7 @@ function UsedBy(Pawn User)
         RI = DHPawn(User).GetRoleInfo();
     }
 
-    // Don't let non-commanders call in arty
+    // Only allow arty officer roles to call in arty
     if (RI == none || !RI.bIsArtilleryOfficer)
     {
         return;
@@ -41,7 +44,7 @@ function UsedBy(Pawn User)
 
     PC = DHPlayer(User.Controller);
 
-    // Bots can't call arty yet
+    // Bots can't call arty
     if (PC == none)
     {
         return;
@@ -54,7 +57,7 @@ function UsedBy(Pawn User)
         return;
     }
 
-    // Exit if no co-ordinates selected (with message)
+    // Exit if no arty co-ordinates selected (with message)
     if (PC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
     {
         PC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4); // no co-ords selected
@@ -150,6 +153,7 @@ function sound GetDenySound(int TeamIndex)
     return none;
 }
 
+// Modified so only arty officer roles can call in arty, & to add a TriggerDelay time before this trigger can be used again
 function Touch(Actor Other)
 {
     local Pawn P;

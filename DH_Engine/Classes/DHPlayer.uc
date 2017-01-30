@@ -378,7 +378,7 @@ simulated function PlayerWhizzed(float DistSquared)
 {
     local float Intensity;
 
-    // The magic number below is 75% of the radius of DHBulletWhipAttachment squared!
+    // The magic number below is 75% of the radius of DHBulletWhipAttachment squared (we don't want a flinch on the more distant shots)
     Intensity = 1.0 - ((FMin(DistSquared, 16875.0)) / 16875.0);
 
     AddBlur(0.85, Intensity);
@@ -4125,8 +4125,8 @@ defaultproperties
     BobCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=3.0,OutVal=0.2),(InVal=12.0,OutVal=0.15),(InVal=45.0,OutVal=0.2),(InVal=10000000000.0,OutVal=0.25)))
     DHSwayElasticFactor=8.0;
     DHSwayDampingFactor=0.51;
-    baseSwayYawAcc=600
-    baseSwayPitchAcc=500
+    BaseSwayYawAcc=600
+    BaseSwayPitchAcc=500
 
     // Max turn speed values
     DHStandardTurnSpeedFactor=32.0

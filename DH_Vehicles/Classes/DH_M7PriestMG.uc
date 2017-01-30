@@ -9,8 +9,8 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.ext_mg'
-    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.50CalMain'
+    Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
+    Skins(1)=texture'DH_Weapon_tex.AlliedSmallArms.50CalMain'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 

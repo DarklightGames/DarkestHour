@@ -7,7 +7,7 @@ class DH_SSHelmetSnow extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(Material'GermanCharactersTex.WSS.WSSParkaSnow1');
+//  L.AddPrecacheMaterial(material'GermanCharactersTex.WSS.WSSParkaSnow1');
 }
 
 defaultproperties

@@ -216,7 +216,7 @@ function Reset()
     bIsLocked = false;
 }
 
-function SetActive( bool bActiveStatus )
+function SetActive(bool bActiveStatus)
 {
     super.SetActive(bActiveStatus);
 
@@ -926,9 +926,10 @@ function Timer()
     }
     else if (ObjState != OBJ_Neutral && CurrentCapProgress == 1.0 && bNeutralizeBeforeCapture)
     {
-        // If the objective is not netural, has completed progress, and is set to bNeutralizedBeforeCaptured
+        // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
         // Then we call different logic which will neutralize the objective without "completing" it
         ObjectiveNeutralized(CurrentCapTeam);
+
         return;
     }
     else if (CurrentCapProgress == 1.0)
@@ -1089,6 +1090,7 @@ function Timer()
     UpdateCompressedCapProgress();
 }
 
+// New function to implement the bNeutralizeBeforeCapture option
 function ObjectiveNeutralized(int Team)
 {
     // Reset values as the objective was neutralized
@@ -1103,7 +1105,7 @@ function ObjectiveNeutralized(int Team)
     BroadcastLocalizedMessage(class'DHObjectiveMessage', Team + 4, none, none, self);
 }
 
-// Overriden to the fix a console warning that would display when EventInstigator was none.
+// Overridden to the fix a console warning that would display when EventInstigator was none
 function Trigger(Actor Other, Pawn EventInstigator)
 {
     local PlayerReplicationInfo PRI;

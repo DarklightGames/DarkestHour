@@ -8,10 +8,10 @@ var float Value;
 
 static final function UFloat Create(optional float Value)
 {
-	local UFloat F;
+    local UFloat F;
 
-	F = new class'UFloat';
-	F.Value = Value;
+    F = new class'UFloat';
+    F.Value = Value;
 
-	return F;
+    return F;
 }

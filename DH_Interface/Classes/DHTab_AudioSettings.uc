@@ -356,7 +356,7 @@ defaultproperties
         OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
         OnChange=DHTab_AudioSettings.InternalOnChange
         INIOption="@Internal"
-        bAutoSizeCaption=True
+        bAutoSizeCaption=true
         TabOrder=29
     End Object
     nu_AudioChannels=AudioChannelsNum

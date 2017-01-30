@@ -1951,8 +1951,8 @@ simulated function DrawCompass(Canvas C)
     HudScale = FClamp(HudScale * 1.33, 0.5, 1.0);
 
     // Draw compass base (fake, only to get sizes)
-    GlobalCoors.width = C.ClipX;
-    GlobalCoors.height = C.ClipY;
+    GlobalCoors.Width = C.ClipX;
+    GlobalCoors.Height = C.ClipY;
     DrawSpriteWidgetClipped(C, CompassBase, GlobalCoors, true, XL, YL, true, true, true);
 
     // Calculate needle screen offset
@@ -3886,7 +3886,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
     }
 
-    // Begin drawing capture bar widgets
+    // Begin drawing capture bar
     DrawSpriteWidget(Canvas, CaptureBarBackground);
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
@@ -4551,7 +4551,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
     {
         for (i = 0; i < arraycount(LocalMessages); ++i)
         {
-            if(LocalMessages[i].Message != none && LocalMessages[i].Message == Message)
+            if (LocalMessages[i].Message != none && LocalMessages[i].Message == Message)
             {
                 break;
             }

@@ -190,11 +190,11 @@ function Broadcast(Actor Sender, coerce string Msg, optional name Type)
         PRI = Controller(Sender).PlayerReplicationInfo;
     }
 
-    for (C = Level.ControllerList; C != None; C = C.NextController)
+    for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         P = PlayerController(C);
 
-        if (P != None)
+        if (P != none)
         {
             BroadcastText(PRI, P, Msg, Type);
         }

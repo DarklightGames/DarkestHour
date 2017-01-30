@@ -7,7 +7,7 @@ class DH_HeerHelmetSnow extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaSnow1');
+//  L.AddPrecacheMaterial(material'GermanCharactersTex.Heer.HeerParkaSnow1');
 }
 
 defaultproperties

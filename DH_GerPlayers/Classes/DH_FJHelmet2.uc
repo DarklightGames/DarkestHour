@@ -7,7 +7,7 @@ class DH_FJHelmet2 extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.FJ_Helmet2');
+//  L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.FJ_Helmet2');
 }
 
 defaultproperties

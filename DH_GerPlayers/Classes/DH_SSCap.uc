@@ -9,7 +9,7 @@ class DH_SSCap extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_2');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.SS_HG_2');
 }
 
 defaultproperties

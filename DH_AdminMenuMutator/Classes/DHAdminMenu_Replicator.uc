@@ -209,7 +209,7 @@ simulated function ClientPrivateMessage(PlayerController Receiver, PlayerReplica
         if (bIsAdminWarning)
         {
             // Displays the warning in the middle of the player's screen
-            Receiver.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage', 1, AdminPRI, , self);
+            Receiver.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage', 1, AdminPRI,, self);
 
             // As a backup, display the message as white chat text at the bottom of the player's screen
             Receiver.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_WarningMessage'.default.WarningChatPrefix @ "'" $ AdminPRI.PlayerName $ "':" @ PrivateMessage);
@@ -217,13 +217,13 @@ simulated function ClientPrivateMessage(PlayerController Receiver, PlayerReplica
             // Play a warning sound to highlight the message
             if (WarningSound != none)
             {
-                Receiver.ClientPlaySound(WarningSound, false, , SLOT_Interface);
+                Receiver.ClientPlaySound(WarningSound, false,, SLOT_Interface);
             }
         }
         else
         {
             // Displays the private message toward the top of the player's screen
-            Receiver.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage', 0, AdminPRI, , self);
+            Receiver.ReceiveLocalizedMessage(class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage', 0, AdminPRI,, self);
 
             // As a backup, display the message as white chat text at the bottom of the player's screen
             Receiver.ClientMessage(class'DH_AdminMenuMutator.DHAdminMenu_PrivateMessage'.default.MessageChatPrefix @ "'" $ AdminPRI.PlayerName $ "':" @ PrivateMessage);

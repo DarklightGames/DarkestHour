@@ -462,7 +462,7 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
         {
             if (DHGRI.IsSpawnPointIndexValid(i, TeamIndex, RoleInfo, none))
             {
-                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i , 255, 255);
+                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i, 255, 255);
                 break;
             }
         }
@@ -1359,10 +1359,10 @@ function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
             }
         }
 
-        if (OverheadOffset  == 90)
+        if (OverheadOffset == 90)
         {
             SwapX = HudLoc.Y * -1.0;
-            SwapY = HudLoc.X ;
+            SwapY = HudLoc.X;
             HudLoc.X = SwapX;
             HudLoc.Y = SwapY;
         }
@@ -1402,7 +1402,7 @@ function SetParaDropVariables()
     for (i = 1; i < 6; ++i)
     {
         TILocation.Z += 1920.0;
-        TestActor = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_TestSM', , , TILocation);
+        TestActor = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_TestSM',,, TILocation);
 
         if (TestActor != none)
         {

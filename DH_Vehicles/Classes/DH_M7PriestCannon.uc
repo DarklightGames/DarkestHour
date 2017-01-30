@@ -21,8 +21,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.ext_turret'
-    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
+    Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
+    Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
     // CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll'  // TODO:
 
     // Turret armor

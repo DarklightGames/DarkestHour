@@ -8,10 +8,10 @@ var int Value;
 
 static final function UInteger Create(optional int Value)
 {
-	local UInteger I;
+    local UInteger I;
 
-	I = new class'UInteger';
-	I.Value = Value;
+    I = new class'UInteger';
+    I.Value = Value;
 
-	return I;
+    return I;
 }

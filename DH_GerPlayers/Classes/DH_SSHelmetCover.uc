@@ -7,7 +7,7 @@ class DH_SSHelmetCover extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(Material'GermanCharactersTex.WSS.WSSParkaCam1');
+//  L.AddPrecacheMaterial(material'GermanCharactersTex.WSS.WSSParkaCam1');
 }
 
 defaultproperties

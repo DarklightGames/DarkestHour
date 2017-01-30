@@ -8,13 +8,13 @@ class DHMGSteam extends ROMGSteam;
 defaultproperties
 {
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-        FadeOut=True
-        FadeIn=True
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
+        FadeOut=true
+        FadeIn=true
+        SpinParticles=true
+        UseSizeScale=true
+        UseRegularSizeScale=false
+        UniformSize=true
+        AutomaticInitialSpawning=false
         Acceleration=(Z=25.0) // different
         FadeOutStartTime=1.0
         FadeInEndTime=0.2
@@ -25,7 +25,7 @@ defaultproperties
         SizeScale(0)=(RelativeTime=1.0,RelativeSize=16.0) // different
         StartSizeRange=(X=(Min=1.5,Max=4.0),Y=(Min=1.5,Max=4.0),Z=(Min=1.5,Max=4.0)) // different
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=texture'Effects_Tex.explosions.DSmoke_2'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=2.0)
         StartVelocityRange=(Z=(Min=8.0,Max=12.0)) // added

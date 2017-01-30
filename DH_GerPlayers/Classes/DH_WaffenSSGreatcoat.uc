@@ -9,6 +9,6 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
     SleeveTexture=texture'Weapons1st_tex.Arms.GermanCoatSleeves'
-    DetachedArmClass=Class'ROEffects.SeveredArmGerGreat'
-    DetachedLegClass=Class'ROEffects.SeveredLegGerGreat'
+    DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
+    DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
 }

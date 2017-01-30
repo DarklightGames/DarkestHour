@@ -24,5 +24,3 @@ defaultproperties
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
 }
-
-

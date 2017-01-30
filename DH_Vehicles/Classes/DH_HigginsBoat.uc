@@ -75,7 +75,7 @@ simulated function DrawBinocsOverlay(Canvas C)
 
     ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
-    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position

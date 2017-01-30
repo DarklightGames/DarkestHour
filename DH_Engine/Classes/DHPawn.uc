@@ -2281,6 +2281,7 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 
     // Stop shooting
     AnimBlendParams(1, 0.0);
+
     LifeSpan = RagdollLifeSpan;
 
     GotoState('Dying');
@@ -5659,7 +5660,7 @@ defaultproperties
     // Override binoculars WalkAnims from ROPawn that don't exist
     // Normally these are overridden by weapon-specific anims in the weapon attachment class (PA_WalkAnims), so the problem was masked in RO
     // But DH now allows player to drop their weapon without bringing up another & this means it falls back to these WalkAnims
-    // When the player walks without a weapon the missing anims caused the player to 'slide' walk,  without animation, with spammed log errors
+    // When the player walks without a weapon the missing anims caused the player to 'slide' walk without animation, with spammed log errors
     WalkAnims(0)="stand_walkFhip_nade"
     WalkAnims(1)="stand_walkBhip_nade"
     WalkAnims(2)="stand_walkLhip_nade"

@@ -7,7 +7,7 @@ class DH_KriegsmarineHelmet extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WK_HG_1');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.WK_HG_1');
 }
 
 defaultproperties

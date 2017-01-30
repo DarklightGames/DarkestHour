@@ -151,7 +151,7 @@ defaultproperties
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneOffset=(X=35.0,Y=-10.0,Z=2.0)
          SteerType=VST_Steered
          BoneName="Steer_Wheel_LF"
@@ -160,7 +160,7 @@ defaultproperties
      End Object
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.LF_Steering'
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
         BoneOffset=(X=35.0,Y=10.0,Z=2.0)
          SteerType=VST_Steered
          BoneName="Steer_Wheel_RF"
@@ -169,7 +169,7 @@ defaultproperties
      End Object
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.RF_Steering'
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneOffset=(X=-12.0,Y=-10.0,Z=2.0)
          SteerType=VST_Inverted
          BoneName="Steer_Wheel_LR"
@@ -178,7 +178,7 @@ defaultproperties
      End Object
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.LR_Steering'
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneOffset=(X=-12.0,Y=10.0,Z=2.0)
          SteerType=VST_Inverted
          BoneName="Steer_Wheel_RR"
@@ -187,7 +187,7 @@ defaultproperties
      End Object
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.RR_Steering'
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneOffset=(X=0.0,Y=10.0,Z=2.0)
          BoneName="Drive_Wheel_L"
          BoneRollAxis=AXIS_Y
@@ -195,7 +195,7 @@ defaultproperties
      End Object
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.Left_Drive_Wheel'
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneOffset=(X=0.0,Y=-10.0,Z=2.0)
          BoneName="Drive_Wheel_R"
          BoneRollAxis=AXIS_Y

@@ -70,7 +70,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 function Reset()
 {
-    GotoState('Initialize'); //cancles the Timing Timer (allowing for resetgame)
+    GotoState('Initialize'); // cancels the Timing Timer (allowing for ResetGame)
 }
 
 auto state Initialize
@@ -91,13 +91,13 @@ state Timing
 
     function Timer()
     {
-        Trigger(self, none); //calls it's own Trigger Function
+        Trigger(self, none); // calls its own Trigger function
     }
 }
 
 state Done
 {
-    //Do Nothing
+    // Do nothing
 }
 
 defaultproperties

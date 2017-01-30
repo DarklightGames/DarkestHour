@@ -9,7 +9,7 @@ class DH_HeerTankerCap extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_2');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.WH_HG_2');
 }
 
 defaultproperties

@@ -12,8 +12,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController,MyOwner);
 
-    if (RedListStyleName != "" && RedListStyle == None)
+    if (RedListStyleName != "" && RedListStyle == none)
+    {
         RedListStyle = MyController.GetStyle(RedListStyleName,FontScale);
+    }
 }
 
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)

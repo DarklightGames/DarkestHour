@@ -12,10 +12,10 @@ defaultproperties
     Article="a "
     PluralName="Tank Hunters"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-    Grenades(0)=(Item=Class'DH_Equipment.DH_NebelGranate39Weapon')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
-    Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
-    Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     Limit=1
 }

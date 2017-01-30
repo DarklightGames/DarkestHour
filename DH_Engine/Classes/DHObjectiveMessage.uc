@@ -12,31 +12,35 @@ var(Messages) localized string AlliesNeutralized;
 // Override to handle more messages
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    if (ROObjective(OptionalObject) == none)
+    local string ObjectiveName;
+
+    if (ROObjective(OptionalObject) != none)
     {
-        return "";
+        ObjectiveName = ROObjective(OptionalObject).ObjName;
+
+        switch (Switch)
+        {
+            case 0:
+                return default.AxisCapture $ ObjectiveName;
+            case 1:
+                return default.AlliesCapture $ ObjectiveName;
+            case 2:
+                return default.AxisTriggeredMessage $ ObjectiveName;
+            case 3:
+                return default.AlliesTriggeredMessage $ ObjectiveName;
+            case 4:
+                return default.AxisNeutralized $ ObjectiveName;
+            case 5:
+                return default.AlliesNeutralized $ ObjectiveName;
+        }
     }
 
-    switch (Switch)
-    {
-        case 0:
-            return default.AxisCapture $ ROObjective(OptionalObject).ObjName;
-        case 1:
-            return default.AlliesCapture $ ROObjective(OptionalObject).ObjName;
-        case 2:
-            return default.AxisTriggeredMessage $ ROObjective(OptionalObject).ObjName;
-        case 3:
-            return default.AlliesTriggeredMessage $ ROObjective(OptionalObject).ObjName;
-        case 4:
-            return default.AxisNeutralized $ ROObjective(OptionalObject).ObjName;
-        case 5:
-            return default.AlliesNeutralized $ ROObjective(OptionalObject).ObjName;
-    }
+    return "";
 }
 
 defaultproperties
 {
-    iconTexture=texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    IconTexture=texture'DH_GUI_Tex.GUI.criticalmessages_icons'
     AxisNeutralized="The Axis forces have neutralized "
     AlliesNeutralized="The Allied forces have neutralized "
 }

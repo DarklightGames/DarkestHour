@@ -9,7 +9,7 @@ class DH_LWCrushercap extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_LW_crashcap');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.RMFGerHeadgear.ger_LW_crashcap');
 }
 
 defaultproperties

@@ -312,7 +312,7 @@ private function SkipWhiteSpace()
 {
     local int A;
 
-    while (True)
+    while (true)
     {
         class'UString'.static.IsWhitespace(InputBuffer.Peek(1));
 

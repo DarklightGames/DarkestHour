@@ -190,7 +190,7 @@ function PostBeginPlay()
 
         case GT_Advance:
             GRI.CurrentGameType = "Advance";
-            //GRI.bUseDeathPenaltyCount = true; //disable for now, as this feature is likely to be removed
+            //GRI.bUseDeathPenaltyCount = true; // disable for now, as this feature is likely to be removed
             bUseReinforcementWarning = false;
             break;
 
@@ -934,7 +934,7 @@ function byte PickTeam(byte num, Controller C)
 
     if (bPlayersVsBots && (Level.NetMode != NM_Standalone))
     {
-        if (PlayerController(C) != None)
+        if (PlayerController(C) != none)
         {
             return 1;
         }
@@ -961,7 +961,7 @@ function byte PickTeam(byte num, Controller C)
         NewTeam = Teams[num];
     }
 
-    if (NewTeam == None)
+    if (NewTeam == none)
     {
         NewTeam = Teams[SmallTeam];
     }
@@ -2266,8 +2266,8 @@ state RoundInPlay
         if (GRI != none)
         {
             // Calculate attrition rates
-            GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX] - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
-            GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX])) / NumObj)) / 60.0;
+            GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
+            GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj)) / 60.0;
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
@@ -4170,7 +4170,7 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
         EndGameFocus.bAlwaysRelevant = true;
     }
 
-    for (P = Level.ControllerList; P != None; P = NextController)
+    for (P = Level.ControllerList; P != none; P = NextController)
     {
         Player = PlayerController(P);
 

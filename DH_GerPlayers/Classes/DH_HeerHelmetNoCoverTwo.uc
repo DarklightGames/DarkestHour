@@ -7,7 +7,7 @@ class DH_HeerHelmetNoCoverTwo extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaCam1');
+//  L.AddPrecacheMaterial(material'GermanCharactersTex.Heer.HeerParkaCam1');
 }
 
 defaultproperties

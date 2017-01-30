@@ -191,7 +191,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.72
     VehicleHudOccupantsY(3)=0.78
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart' // M22_Locust
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart' // M22_Locust
 
     // Visible wheels
     WheelRotationScale=700
