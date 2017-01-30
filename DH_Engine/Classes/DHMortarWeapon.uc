@@ -127,18 +127,11 @@ simulated function ClientDeploy()
 function ServerDeployEnd()
 {
     local DHMortarVehicle V;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-    local rotator SpawnRotation;
-    local DHPawn P;
+    local vector          TraceStart, TraceEnd, HitLocation, HitNormal;
+    local rotator         SpawnRotation;
 
-    P = DHPawn(Instigator);
-
-    TraceStart = P.Location + vect(0.0, 0.0, 1.0) * P.CollisionHeight;
+    TraceStart = Instigator.Location + (vect(0.0, 0.0, 1.0) * Instigator.CollisionHeight);
     TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
-
-    SpawnRotation = P.Rotation;
-    SpawnRotation.Pitch = 0;
-    SpawnRotation.Roll = 0;
 
     if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
     {
@@ -147,9 +140,10 @@ function ServerDeployEnd()
         return;
     }
 
+    SpawnRotation.Yaw = Instigator.Rotation.Yaw;
     V = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
     V.SetTeamNum(VehicleClass.default.VehicleTeam);
-    V.TryToDrive(P);
+    V.TryToDrive(Instigator);
 
     Destroy();
 }
