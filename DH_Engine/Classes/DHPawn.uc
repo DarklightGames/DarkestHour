@@ -2047,6 +2047,7 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 // DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
 // No longer disable collision on player's bullet whip attachment as we may as well simply destroy that actor
 // But we now do that in state 'Dying' as that happens on both server & client, while this function is server only
+// Also omit possible call to ClientDying() at end of this function as ClientDying() is redundant & emptied out in ROPawn, so it's pointless replication
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     local vector          HitDirection;
@@ -2205,16 +2206,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
-
-        if (Level.Game.bGameEnded)
-        {
-            return;
-        }
-
-        if (!bPhysicsAnimUpdate && !IsLocallyControlled())
-        {
-            ClientDying(DamageType, HitLocation);
-        }
     }
 }
 
