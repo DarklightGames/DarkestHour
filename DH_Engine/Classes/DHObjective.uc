@@ -220,15 +220,15 @@ function SetActive(bool bActiveStatus)
 {
     super.SetActive(bActiveStatus);
 
-    // Instigate timed actions if a timer value was set
-    if (bActiveStatus && TimedActionsTime > 0)
-    {
-        bTimedActionsRunning = true;
-        TimedActionsTimeRemaining = TimedActionsTime;
-    }
-
     if (bActiveStatus)
     {
+        // Instigate timed actions if a timer value was set
+        if (TimedActionsTime > 0)
+        {
+            bTimedActionsRunning = true;
+            TimedActionsTimeRemaining = TimedActionsTime;
+        }
+
         NoCapTimeRemainingFloat = float(PreventCaptureTime);
     }
 }
