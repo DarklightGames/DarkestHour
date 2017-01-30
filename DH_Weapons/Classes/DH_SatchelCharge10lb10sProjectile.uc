@@ -21,8 +21,8 @@ simulated function PostBeginPlay()
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
 simulated function BlowUp(vector HitLocation)
 {
-    local ROObjSatchel SatchelObjActor;
-    local Volume       V;
+    local DH_ObjSatchel SatchelObjActor;
+    local Volume        V;
 
     if (Instigator != none)
     {
@@ -36,9 +36,9 @@ simulated function BlowUp(vector HitLocation)
     // Then we can probably remove bAlwaysRelevant from this actor, as doing this on a net client is the only reason I can guess caused bAlwaysRelevant to be set for satchel?
     foreach TouchingActors(class'Volume', V)
     {
-        if (ROObjSatchel(V.AssociatedActor) != none)
+        if (DH_ObjSatchel(V.AssociatedActor) != none)
         {
-            SatchelObjActor = ROObjSatchel(V.AssociatedActor);
+            SatchelObjActor = DH_ObjSatchel(V.AssociatedActor);
 
             if (SatchelObjActor.WithinArea(self))
             {
