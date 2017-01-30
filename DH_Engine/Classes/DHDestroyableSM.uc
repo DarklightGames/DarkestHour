@@ -21,26 +21,22 @@ function Trigger(Actor Other, Pawn EventInstigator)
         MakeNoise(1.0);
     }
 
-    // If destroyed, go to state working (basically repairs it)
     if (bDamaged)
     {
         GotoState('Working');
     }
-    // It's not destroyed - let's destroy it
     else
     {
-        Health = 0;
-        TriggerEvent(DestroyedEvent, self, EventInstigator);
-        BroadcastCriticalMessage(EventInstigator);
-        BreakApart(Location);
+        DestroyDSM(EventInstigator);
     }
 }
 
-function DestroyDSM()
+// New function used by DH_ModifyDSMStatus actor to
+function DestroyDSM(Pawn EventInstigator)
 {
     Health = 0;
-    TriggerEvent(DestroyedEvent, self, none);
-    BroadcastCriticalMessage(none);
+    TriggerEvent(DestroyedEvent, self, EventInstigator);
+    BroadcastCriticalMessage(EventInstigator);
     BreakApart(Location);
 }
 

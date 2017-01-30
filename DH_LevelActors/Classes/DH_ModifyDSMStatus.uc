@@ -45,7 +45,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     {
         case DSM_Destroy: //Destroys the reference DSM if it's not already
             if (!DSMReference.bDamaged)
-                DSMReference.DestroyDSM();
+                DSMReference.DestroyDSM(EventInstigator);
         break;
         case DSM_Repair: //Repairs the reference DSM if needed
             if (DSMReference.bDamaged || bRepairIfNotFullHealth)
@@ -55,7 +55,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
             if (DSMReference.bDamaged)
                 DSMReference.Reset();
             else
-                DSMReference.DestroyDSM();
+                DSMReference.DestroyDSM(EventInstigator);
         break;
         default:
         break;
