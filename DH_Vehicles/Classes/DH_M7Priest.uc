@@ -22,7 +22,7 @@ defaultproperties
     URearArmorFactor=3.8
     UFrontArmorSlope=55.0
     MaxPitchSpeed=150.0
-    TreadVelocityScale=110.0
+    TreadVelocityScale=130.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
@@ -55,7 +55,7 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
-    WheelRotationScale=700
+    WheelRotationScale=600
     TreadHitMaxHeight=-30
     FrontLeftAngle=335.0
     FrontRightAngle=25.0
@@ -195,7 +195,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-0.4) // default is -0.5
+        KCOMOffset=(Z=-1.2) // default is -0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
