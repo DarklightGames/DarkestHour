@@ -77,9 +77,9 @@ simulated state Cutting
         local name  SeqName;
         local float AnimRate, AnimFrame;
 
-        super.AnimEnd(Channel);
-
         GetAnimParams(Channel, SeqName, AnimFrame, AnimRate);
+
+        super.AnimEnd(Channel);
 
         switch (SeqName)
         {
