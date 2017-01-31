@@ -11,8 +11,6 @@ class DHAdvanceObjective extends DHObjective;
 function SetActive(bool bActiveStatus)
 {
     // This should to be called before the super
-    // TEST - suggested alterations for review by @theel:
-    // (1) don't activate if objective disabled (same as super) & (2) only call NotifyObjStateChanged if state actually changes
     if (bActiveStatus && !bDisabled && ObjState != OBJ_Neutral)
     {
         ObjState = OBJ_Neutral;
