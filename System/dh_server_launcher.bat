@@ -1,1 +1,1 @@
-ucc server DH-Brecourt.rom?game=DH_Engine.DarkestHourGame?MaxPlayers=64? -log=ServerLog.log -mod=DarkestHour -ini=DarkestHour.ini
+ucc server DH-Brecourt.rom?game=DH_Engine.DarkestHourGame?MaxPlayers=64? -log=DHServerLog_%RANDOM%.log -mod=DarkestHour -ini=DarkestHour.ini
