@@ -4719,6 +4719,46 @@ simulated function SetSkyOff(bool bHideSky)
     }
 }
 
+// Overwritten to fix an issue where players could see through the fade to black effect
+simulated function DrawFadeEffect(Canvas C)
+{
+    if (FadeTime < 0.0)
+    {
+        return;
+    }
+
+    if (FadeTime - Level.TimeSeconds - 5.0 - WhiteFlashTime > 0.0)
+    {
+        FadeColor.R = 255;
+        FadeColor.G = 255;
+        FadeColor.B = 255;
+        FadeColor.A = 64 * (1 - (FMax(FadeTime - Level.TimeSeconds - 5.0 - WhiteFlashTime, 0.0) / WhiteFlashTime));
+        C.DrawColor = FadeColor;
+    }
+    else if (FadeTime - Level.TimeSeconds - 5.0 > 0.0)
+    {
+        FadeColor.R = 255;
+        FadeColor.G = 255;
+        FadeColor.B = 255;
+        FadeColor.A = 64 * (FMax(FadeTime - Level.TimeSeconds - 5.0, 0.0) / WhiteFlashTime);
+        C.DrawColor = FadeColor;
+    }
+    else
+    {
+        FadeColor.R = 0;
+        FadeColor.G = 0;
+        FadeColor.B = 0;
+        FadeColor.A = 255 * (1.0 - FMax(FadeTime - Level.TimeSeconds, 0.0) * 0.2);
+        C.DrawColor = FadeColor;
+    }
+
+    C.ColorModulate.W = 1.0;
+    C.SetPos(0.0, 0.0);
+    C.DrawTileStretched(material'Engine.WhiteSquareTexture', C.ClipX, C.ClipY);
+    C.DrawColor = WhiteColor;
+    C.ColorModulate.W = HudOpacity / 255.0;
+}
+
 defaultproperties
 {
     // General
