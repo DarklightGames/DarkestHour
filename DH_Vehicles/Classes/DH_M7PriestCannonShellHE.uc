@@ -42,8 +42,8 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
     BallisticCoefficient=2.96
-    Speed=9000           // 198m/s ~75%
-    MaxSpeed=9000
+    Speed=11950           // 198m/s
+    MaxSpeed=11950
     Damage=500.0
     DamageRadius=1350.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'

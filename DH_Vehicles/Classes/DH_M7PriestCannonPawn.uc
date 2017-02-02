@@ -47,7 +47,7 @@ defaultproperties
     DrivePos=(X=0,Z=0)
     DriveAnim="crouch_idle_binoc"
     bLockCameraDuringTransition=false
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman_sight_background'
+    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.m12a7_sight_2'
     OverlayCenterSize=0.542
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'

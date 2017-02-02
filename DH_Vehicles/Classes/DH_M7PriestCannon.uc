@@ -57,9 +57,9 @@ defaultproperties
     InitialPrimaryAmmo=58
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
-    Spread=0.015
-    SecondarySpread=0.015
-    TertiarySpread=0.015
+    Spread=0.005
+    SecondarySpread=0.005
+    TertiarySpread=0.005
 
     // Weapon fire
     WeaponFireOffset=18.0

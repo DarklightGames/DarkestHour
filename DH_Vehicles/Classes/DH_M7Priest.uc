@@ -16,10 +16,10 @@ defaultproperties
     MaxCriticalSpeed=638.0
     TreadDamageThreshold=0.75
     HullFireChance=0.45
-    UFrontArmorFactor=5.1
-    URightArmorFactor=3.8
-    ULeftArmorFactor=3.8
-    URearArmorFactor=3.8
+    UFrontArmorFactor=1.27
+    URightArmorFactor=1.27
+    ULeftArmorFactor=1.27
+    URearArmorFactor=1.27
     UFrontArmorSlope=55.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=130.0
@@ -55,7 +55,7 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
-    WheelRotationScale=600
+    WheelRotationScale=200
     TreadHitMaxHeight=-30
     FrontLeftAngle=335.0
     FrontRightAngle=25.0
@@ -109,10 +109,9 @@ defaultproperties
     VehicleHudOccupantsY(7)=0.74
     VehicleHudEngineX=0.51
     // TODO: set these up
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=60.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=55.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")
+    VehHitpoints(1)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"    // TODO: put this in the exterior mesh
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
