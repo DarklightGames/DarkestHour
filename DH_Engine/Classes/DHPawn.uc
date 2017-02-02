@@ -2579,7 +2579,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
                     }
                 }
 
-                AttachedBackItem.InitFor(SwapWeapon);
+                AttachedBackItem.InitFor(OldWeapon);
             }
 
             OldWeapon.SetDefaultDisplayProperties();
