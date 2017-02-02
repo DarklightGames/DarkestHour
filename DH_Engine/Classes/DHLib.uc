@@ -6,32 +6,11 @@
 class DHLib extends Object
     abstract;
 
+// Returns current map name, stripping any ".rom" suffix to the name
+// The map name returned by the native GetURLMap() function includes the suffix on a server, but not in single player mode or on a net client
 static final function string GetMapName(LevelInfo L)
 {
-    local string MapName;
-    local int i, j;
-
-    MapName = L.GetLocalURL();
-    i = InStr(MapName, "/");
-
-    if (i < 0)
-    {
-        i = 0;
-    }
-
-    j = InStr(MapName, "?");
-
-    if (j < 0)
-    {
-        j = Len(MapName);
-    }
-
-    if (Mid(MapName, j - 3, 3) ~= "rom")
-    {
-        j -= 4;
-    }
-
-    return Mid(MapName, i, j - i);
+    return Repl(L.GetURLMap(), ".rom", "");
 }
 
 static final function string GetDurationString(int Seconds, string Format)
