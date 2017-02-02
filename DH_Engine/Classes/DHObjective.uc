@@ -657,7 +657,6 @@ function Timer()
     local float                   OldCapProgress, LeaderBonus[2], Rate[2];
     local int                     NumTotal[2], Num[2], NumForCheck[2], i;
     local byte                    CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
-    local ObjOperationAction      ObjA;
 
     if (ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay') || (!bActive && !bUsePostCaptureOperations))
     {
