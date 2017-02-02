@@ -1658,7 +1658,7 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
 }
 
 // New debug exec to adjust location of hatch fire position
-exec function SetFEOffset(int NewX, int NewY, int NewZ)
+exec function SetFEOffset(int NewX, int NewY, int NewZ, optional int NewScaleInOneTenths)
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && VehWep != none)
     {
@@ -1667,6 +1667,12 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
             VehWep.FireEffectOffset.X = NewX;
             VehWep.FireEffectOffset.Y = NewY;
             VehWep.FireEffectOffset.Z = NewZ;
+        }
+
+        // Option to re-scale effect (won't accept float as input so have to enter say 9 & convert that to 0.9)
+        if (NewScaleInOneTenths > 0.0)
+        {
+            VehWep.FireEffectScale = float(NewScaleInOneTenths) / 10.0;
         }
 
         VehWep.StartHatchFire();

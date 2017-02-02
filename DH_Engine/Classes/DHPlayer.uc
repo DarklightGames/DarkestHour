@@ -3863,7 +3863,7 @@ exec function SetAngDamp(float NewValue)
 }
 
 // New debug exec to adjust location of engine smoke/fire position
-exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire)
+exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional int NewScaleInOneTenths)
 {
     local DHVehicle V;
 
@@ -3904,6 +3904,12 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             {
                 V.DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // light smoke
             }
+        }
+
+        // Option to re-scale effect (won't accept float as input so have to enter say 9 & convert that to 0.9)
+        if (NewScaleInOneTenths > 0.0)
+        {
+            V.DamagedEffectScale = float(NewScaleInOneTenths) / 10.0;
         }
 
         // Reposition any existing effect
