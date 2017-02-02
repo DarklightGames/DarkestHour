@@ -61,7 +61,7 @@ var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the cap
 // Basic Obj variables
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 
-// Capture variables
+// Capture/Actions variables
 var(DHObjectiveCapture) bool        bVehiclesCanCapture;
 var(DHObjectiveCapture) bool        bTankersCanCapture;
 var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
@@ -69,17 +69,13 @@ var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bR
 var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
 var(DHObjectiveCapture) int         PlayersNeededToCapture;
 var(DHObjectiveCapture) byte        PreventCaptureTime;         // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
+var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 
 // Clear variables
 var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
 var(DHObjectiveClear) bool          bDisableWhenAlliesClearObj;
 var(DHObjectiveClear) bool          bDisableWhenAxisClearObj;
 
-// Disable variables
-var(DHObjectiveDisable) bool        bGroupActionsAtDisable;
-var(DHObjectiveDisable) bool        bActivateObjByNumOrder;     // If true, whenever an objective is deactivated it will calculate which objective it should unlock
-                                                                // based on the ObjNum order.  Ex- Allies take obj3, when obj3 disables it will activate obj4
-                                                                // Allies always increase, Axis decrease
 // Visual variables
 var(DHObjectiveVisual) bool         bHideOnMap;
 var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
@@ -789,30 +785,6 @@ function Timer()
                 if (bGroupActionsAtDisable)
                 {
                     HandleGroupActions(AXIS_TEAM_INDEX);
-                }
-            }
-
-            // Handles automated objective status changes whenever this objective is cleared based on the objective # order
-            // ex- ObjNum 4 is captured by Axis (when it disables), it will activate ObjNum 3 (Axis reduce Allies increase)
-            if (bActivateObjByNumOrder)
-            {
-                // If Axis controlled (Axis reduce)
-                if (ObjState == OBJ_Axis)
-                {
-                    // Pick the objective num (don't attempt it on zero as it is an "end" objective)
-                    if (ObjNum != 0)
-                    {
-                        ObjA.ObjectiveNum = ObjNum - 1;
-                        DoObjectiveAction(ObjA);
-                    }
-                }
-
-                // If Allies controlled (Allies increase)
-                if (ObjState == OBJ_Allies)
-                {
-                    // Pick the objective num
-                    ObjA.ObjectiveNum = ObjNum + 1;
-                    DoObjectiveAction(ObjA);
                 }
             }
 

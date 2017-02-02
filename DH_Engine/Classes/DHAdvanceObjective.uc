@@ -35,6 +35,5 @@ defaultproperties
     AlliedAwardedReinforcements=20
     AxisAwardedReinforcements=20
     bUsePostCaptureOperations=true
-    bActivateObjByNumOrder=true
     bHideCaptureBarRatio=true
 }
