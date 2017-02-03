@@ -13,6 +13,7 @@ defaultproperties
     Skins(1)=texture'DH_Weapon_tex.AlliedSmallArms.50CalMain'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
+    FireEffectClass=none // there's no MG hatch & the 'turret' fire effect fills the open superstructure
 
     // Movement
     RotationsPerSecond=0.5
@@ -24,7 +25,7 @@ defaultproperties
 
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
-    InitialPrimaryAmmo=105 // TODO: 200 round ammo cans were the norm, I think?
+    InitialPrimaryAmmo=105
     NumMGMags=3
     FireInterval=0.133333 // 450 RPM
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'

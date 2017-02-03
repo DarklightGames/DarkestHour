@@ -7,7 +7,7 @@ class DH_M7Priest extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M7Priest_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_M7Priest_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
 
 defaultproperties
 {
@@ -17,10 +17,10 @@ defaultproperties
     TreadDamageThreshold=0.75
     HullFireChance=0.45
     UFrontArmorFactor=1.27
-    URightArmorFactor=1.27
+    URightArmorFactor=1.27 // TODO: query 0.5 inch to sides & rear?
     ULeftArmorFactor=1.27
     URearArmorFactor=1.27
-    UFrontArmorSlope=55.0
+    UFrontArmorSlope=55.0 // TODO: query 30 degrees? (upper front varies a lot, but most is 30)
     MaxPitchSpeed=150.0
     TreadVelocityScale=130.0
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
@@ -55,14 +55,14 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
-    WheelRotationScale=200
+    WheelRotationScale=650
     TreadHitMaxHeight=-30
     FrontLeftAngle=335.0
     FrontRightAngle=25.0
     RearRightAngle=155.0
     RearLeftAngle=205.0
     GearRatios(4)=0.72
-    TransRatio=0.1
+    TransRatio=0.1 // TODO: may want to review ratios as a result of reduced VehicleMass & increased physics wheel size - currently max speed is 31kph on the flat
     LeftLeverBoneName="lever_L"
     LeftLeverAxis=AXIS_X
     RightLeverBoneName="lever_R"
@@ -83,13 +83,17 @@ defaultproperties
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest'    // TODO: get a proper one
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
+    DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
+    FireAttachBone="Body"
+    FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
     VehicleTeam=1
     SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
+    DriverPositions(0)=(TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=-1,bExposed=true,bDrawOverlays=true,ViewFOV=90.0)
+    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
     DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
+    FPCamPos=(X=-10.0,Y=0.0,Z=0.0)
+    OverlayFPCamPos=(X=4.0,Y=0.0,Z=0.0)
     VehicleHudImage=texture'DH_M7Priest_tex.interface.priest_body'
     VehicleHudOccupantsX(0)=0.42
     VehicleHudOccupantsY(0)=0.37
@@ -108,17 +112,18 @@ defaultproperties
     VehicleHudOccupantsX(7)=0.63
     VehicleHudOccupantsY(7)=0.74
     VehicleHudEngineX=0.51
-    // TODO: set these up
+    // TODO: set these up (later note by Matt 3rd Feb: looks like these have been set up & this TODO can be removed, but suggest radius of ammo stores could be increased to 15
     VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")
-    VehHitpoints(1)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"    // TODO: put this in the exterior mesh
+    VehHitpoints(1)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        WheelRadius=23.0
+        BoneOffset=(X=0.0,Y=0.0,Z=9.0)
+        WheelRadius=33.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M7Priest.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -126,7 +131,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.0
+        BoneOffset=(X=0.0,Y=0.0,Z=9.0)
+        WheelRadius=33.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M7Priest.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -134,7 +140,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.0
+        BoneOffset=(X=0.0,Y=0.0,Z=9.0)
+        WheelRadius=33.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M7Priest.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -142,25 +149,27 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.00
+        BoneOffset=(X=0.0,Y=0.0,Z=9.0)
+        WheelRadius=33.00
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M7Priest.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.0
+        BoneOffset=(X=0.0,Y=0.0,Z=9.0)
+        WheelRadius=33.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M7Priest.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.0
+        BoneOffset=(X=0.0,Y=0.0,Z=9.0)
+        WheelRadius=33.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M7Priest.Right_Drive_Wheel'
-    VehicleMass=13.5
-    bFPNoZFromCameraPitch=true
+    VehicleMass=11.5
     DrivePos=(X=5.0,Y=0.0,Z=3.0)
 
     ExitPositions(0)=(X=50.00,Y=-140.00,Z=-10.00)
@@ -174,11 +183,6 @@ defaultproperties
 
     DriverDamageMult=1.0
     VehicleNameString="M7 Priest"
-    // TODO: flag?
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
     HealthMax=525.0
     Health=525
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_body'
@@ -187,15 +191,12 @@ defaultproperties
     Skins(2)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     Skins(3)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     Skins(4)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    // TODO: figure this one out
-    CollisionRadius=175.0
-    CollisionHeight=60.0
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-1.2) // default is -0.5
+        KCOMOffset=(Z=-1.7) // default is -0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
