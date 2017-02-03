@@ -181,7 +181,7 @@ defaultproperties
     PitchDownLimit=60000
     HealthMax=525.0
     Health=525
-    Mesh=SkeletalMesh'DH_M7Priest_anm.ext_body'
+    Mesh=SkeletalMesh'DH_M7Priest_anm.priest_body'
     Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
     Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
     Skins(2)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
@@ -190,6 +190,7 @@ defaultproperties
     // TODO: figure this one out
     CollisionRadius=175.0
     CollisionHeight=60.0
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

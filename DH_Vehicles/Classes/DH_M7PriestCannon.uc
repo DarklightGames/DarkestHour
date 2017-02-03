@@ -20,7 +20,7 @@ simulated event Tick(float DeltaTime)
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_M7Priest_anm.ext_turret'
+    Mesh=SkeletalMesh'DH_M7Priest_anm.priest_turret'
     Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
     Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
     // CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll'  // TODO:
@@ -74,10 +74,4 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
     ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
     ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
-
-    ShootLoweredAnim="fire_close"
-    ShootRaisedAnim="fire_open"
-
-    BeginningIdleAnim="com_close_idle"
 }
-
