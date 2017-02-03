@@ -172,15 +172,14 @@ simulated function Tick(float DeltaTime)
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor                         Victim, TraceActor;
-    local DHVehicle                     V;
-    local ROPawn                        P;
-    local DHDestroyableSM               DSM;
-    local array<ROPawn>                 CheckedROPawns;
-    local bool                          bAlreadyChecked;
-    local vector                        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
-    local float                         DamageScale, Distance, DamageExposure;
-    local int                           i;
+    local Actor         Victim, TraceActor;
+    local DHVehicle     V;
+    local ROPawn        P;
+    local array<ROPawn> CheckedROPawns;
+    local bool          bAlreadyChecked;
+    local vector        VictimLocation, Direction, TraceHitLocation, TraceHitNormal;
+    local float         DamageScale, Distance, DamageExposure;
+    local int           i;
 
     // Make sure nothing else runs HurtRadius() while we are in the middle of the function
     if (bHurtEntry)
@@ -225,6 +224,22 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
             continue;
         }
 
+        // Don't damage a destroyable static mesh if it can't be damaged by the explosive thrower's team
+        if (Victim.IsA('DHDestroyableSM'))
+        {
+            if (ThrowerTeam == AXIS_TEAM_INDEX)
+            {
+                if (!DHDestroyableSM(Victim).bDestroyableByAxis)
+                {
+                    continue;
+                }
+            }
+            else if (ThrowerTeam == ALLIES_TEAM_INDEX && !DHDestroyableSM(Victim).bDestroyableByAllies)
+            {
+                continue;
+            }
+        }
+
         // Now we need to check whether there's something in the way that could shield this actor from the blast
         // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
@@ -253,23 +268,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         if (TraceActor != none && TraceActor != Victim && (TraceActor.bWorldGeometry || TraceActor.IsA('ROVehicle') || (TraceActor.IsA('DHVehicleCannon') && Victim != TraceActor.Base)))
         {
             continue;
-        }
-
-        DSM = DHDestroyableSM(Victim);
-
-        // Check for a victim of type Destroyable Static Mesh
-        if (DSM != none)
-        {
-            // If the DSM can't be damaged by Axis, then skip
-            if (!DSM.bDestroyableByAxis && ThrowerTeam == AXIS_TEAM_INDEX)
-            {
-                continue;
-            }
-            // If the DSM can't be damaged by Allies, then skip
-            if (!DSM.bDestroyableByAllies && ThrowerTeam == ALLIES_TEAM_INDEX)
-            {
-                continue;
-            }
         }
 
         // Check for hit on player pawn
