@@ -70,6 +70,10 @@ var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is tr
 var(DHObjectiveCapture) int         PlayersNeededToCapture;
 var(DHObjectiveCapture) byte        PreventCaptureTime;         // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
 var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
+var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
+var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
+var(DHObjectiveCapture) array<int>  AlliesRequiredObjForCapture;
+
 
 // Clear variables
 var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
@@ -226,6 +230,17 @@ function SetActive(bool bActiveStatus)
         }
 
         NoCapTimeRemainingFloat = float(PreventCaptureTime);
+
+        // Make neutral if desired
+        if (bNeutralOnActivation && !bDisabled && ObjState != OBJ_Neutral)
+        {
+            ObjState = OBJ_Neutral;
+
+            if (DarkestHourGame(Level.Game) != none)
+            {
+                DarkestHourGame(Level.Game).NotifyObjStateChanged();
+            }
+        }
     }
 }
 
@@ -647,6 +662,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
 function Timer()
 {
+    local DHGameReplicationInfo   DHGRI;
     local ROPlayerReplicationInfo PRI;
     local DHRoleInfo              RI;
     local Controller              FirstCapturer, C;
@@ -659,6 +675,13 @@ function Timer()
     local byte                    CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
 
     if (ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay') || (!bActive && !bUsePostCaptureOperations))
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (DHGRI == none)
     {
         return;
     }
@@ -850,9 +873,39 @@ function Timer()
         NoCapProgressTimeRemaining = 0; // Make sure this value gets zeroed
     }
 
-    // Figure what the replicated # of cappers should be (to take into account the leader bonus)
-    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX]; // * int(4.0 * LeaderBonus[AXIS_TEAM_INDEX]);
-    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX]; // * int(4.0 * LeaderBonus[ALLIES_TEAM_INDEX]);
+    // Theel: TODO need to indicate to the player that they cannot capture this obj until they control the required obj
+    // Determine if we can progress on the capture (will set rate to 0.0 to prevent it)
+    // If the objective is bNeutralizeBeforeCapture & if we are capturing (not neutralizing)
+    if (bNeutralizeBeforeCapture && ObjState == OBJ_Neutral)
+    {
+        // Check if Axis are trying to capture
+        if (CurrentCapTeam == AXIS_TEAM_INDEX)
+        {
+            // Then check if Axis have required objectives controlled
+            for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+            {
+                if (DHGRI.DHObjectives[AxisRequiredObjForCapture[i]].ObjState != AXIS_TEAM_INDEX)
+                {
+                    // We don't have required objectives controlled, no progress allowed
+                    Rate[AXIS_TEAM_INDEX] = 0.0;
+                }
+            }
+        }
+
+        if (CurrentCapTeam == ALLIES_TEAM_INDEX)
+        {
+            for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+            {
+                if (DHGRI.DHObjectives[AlliesRequiredObjForCapture[i]].ObjState != ALLIES_TEAM_INDEX)
+                {
+                    Rate[ALLIES_TEAM_INDEX] = 0.0;
+                }
+            }
+        }
+    }
+
+    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX];
+    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX];
 
     // Note: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
     if (ObjState != OBJ_Axis && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])
