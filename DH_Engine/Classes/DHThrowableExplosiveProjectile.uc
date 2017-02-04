@@ -224,22 +224,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
             continue;
         }
 
-        // Don't damage a destroyable static mesh if it can't be damaged by the explosive thrower's team
-        if (Victim.IsA('DHDestroyableSM'))
-        {
-            if (ThrowerTeam == AXIS_TEAM_INDEX)
-            {
-                if (!DHDestroyableSM(Victim).bDestroyableByAxis)
-                {
-                    continue;
-                }
-            }
-            else if (ThrowerTeam == ALLIES_TEAM_INDEX && !DHDestroyableSM(Victim).bDestroyableByAllies)
-            {
-                continue;
-            }
-        }
-
         // Now we need to check whether there's something in the way that could shield this actor from the blast
         // Usually we trace to actor's location, but for a vehicle with a cannon we adjust Z location to give a more consistent, realistic tracing height
         // This is because many vehicles are modelled with their origin on the ground, so even a slight bump in the ground could block all blast damage!
