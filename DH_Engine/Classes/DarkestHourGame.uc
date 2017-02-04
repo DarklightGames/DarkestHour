@@ -1907,7 +1907,8 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     {
                         FFPenalty = FFArtyScale;
                     }
-                    else if (class<ROGrenadeDamType>(DamageType) != none || class<ROSatchelDamType>(DamageType) != none || class<ROTankShellExplosionDamage>(DamageType) != none)
+                    // Added mortar HE (& removed specific satchel damage as now all thrown explosives extend from ROGrenadeDamType via DHThrowableExplosiveDamageType)
+                    else if (class<ROGrenadeDamType>(DamageType) != none || class<ROTankShellExplosionDamage>(DamageType) != none || class<DHMortarDamageType>(DamageType) != none)
                     {
                         FFPenalty = FFExplosivesScale;
                     }
