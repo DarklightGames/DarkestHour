@@ -8,6 +8,7 @@ class DHWeaponBashDamageType extends ROWeaponBashDamageType
 
 defaultproperties
 {
+    VehicleDamageModifier=0.0
     DeathString="%o was bludgeoned to death by %k's %w."
     MaleSuicide="%o bludgeoned himself to death with his own %w."
     FemaleSuicide="%o bludgeoned herself to death with her own %w."
