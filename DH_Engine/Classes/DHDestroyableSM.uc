@@ -16,6 +16,15 @@ var     bool    bActive;          // option for DSM to only be treated as 'activ
 var()   bool        bDestroyableByAxis, bDestroyableByAllies; // option for leveller to specify that a team cannot damage the mesh
 var     Controller  DelayedDamageInstigatorController;        // projectiles set this when they explode so we have reference to player responsible for damage, even if his pawn dies
 
+replication
+{
+    // Variables the server will replicate to all clients
+    // bAcive is only replicated so it can be used by the HUD to avoid displaying an inactive DSM as a destroyable target on the map
+    // So we only replicate it if this mesh has been set up with the bShowOnSituationMap option enabled
+    reliable if (bNetDirty && bShowOnSituationMap && Role == ROLE_Authority)
+        bActive;
+}
+
 // Modified to activate or deactivate the DSM based on the leveller's setting of bInitiallyActive
 // Called whenever a new round starts, including the ResetGame option (so we don't need to do this in PostBeginPlay)
 function Reset()

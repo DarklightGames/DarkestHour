@@ -2392,6 +2392,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         {
             for (i = 0; i < Player.Destroyables.Length; ++i)
             {
+                if (Player.Destroyables[i] == none || (Player.Destroyables[i].IsA('DHDestroyableSM') && !DHDestroyableSM(Player.Destroyables[i]).bActive))
+                {
+                    continue;
+                }
+
                 if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {
                     DrawIconOnMap(C, SubCoords, MapIconDestroyedItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
@@ -3153,6 +3158,11 @@ simulated function DrawObjectives(Canvas C)
         {
             for (i = 0; i < Player.Destroyables.Length; ++i)
             {
+                if (Player.Destroyables[i] == none || (Player.Destroyables[i].IsA('DHDestroyableSM') && !DHDestroyableSM(Player.Destroyables[i]).bActive))
+                {
+                    continue;
+                }
+
                 if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {
                     bShowDestroyedItems = true;
