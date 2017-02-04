@@ -10,16 +10,28 @@ class DHDestroyableSM extends RODestroyableStaticMesh
 // It is abstract because we have DH_DestroyableSM (notice the _) which is in DH_LevelActors and already used by maps
 // We can't just move DH_DestroyableSM to DH_Engine, as it would break levels that use it, hence why we have DHDestroyableSM
 
+var()   bool    bInitiallyActive; // leveller can set DSM to be inactive at start of round, so it can be activated later by an event
+var     bool    bActive;          // option for DSM to only be treated as 'active' at certain map stages or conditions, so it can't be destroyed at other times
+
 var()   bool        bDestroyableByAxis, bDestroyableByAllies; // option for leveller to specify that a team cannot damage the mesh
 var     Controller  DelayedDamageInstigatorController;        // projectiles set this when they explode so we have reference to player responsible for damage, even if his pawn dies
 
+// Modified to activate or deactivate the DSM based on the leveller's setting of bInitiallyActive
+// Called whenever a new round starts, including the ResetGame option (so we don't need to do this in PostBeginPlay)
 function Reset()
 {
+    SetActiveStatus(bInitiallyActive);
+
     super.Reset();
 
     DelayedDamageInstigatorController = none;
 }
 
+// New function to set whether or not this DSM is active & can be destroyed
+function SetActiveStatus(bool bNewActiveStatus)
+{
+    bActive = bNewActiveStatus;
+}
 
 // Modified to allow allow toggling between destroyed & normal states
 function Trigger(Actor Other, Pawn EventInstigator)
@@ -54,6 +66,11 @@ auto state Working
 {
     function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
+        if (!bActive)
+        {
+            return;
+        }
+
         if (!bDestroyableByAxis && GetDamagingTeamIndex(InstigatedBy) != ALLIES_TEAM_INDEX)
         {
             return;
@@ -95,6 +112,8 @@ function SetDelayedDamageInstigatorController(Controller C)
 
 defaultproperties
 {
+    bInitiallyActive=true
+    bActive=true
     bDestroyableByAxis=true
     bDestroyableByAllies=true
 }
