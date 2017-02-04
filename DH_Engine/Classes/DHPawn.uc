@@ -5845,6 +5845,8 @@ defaultproperties
     LandAnims(2)="jumpL_land_nade"
     LandAnims(3)="jumpR_land_nade"
 
+    IdleSwimAnim="stand_idlehip_nade" // not specified in ROPawn, resulting in log spam when in water (goes with ROPawn's 'stand_jogX_nade' directional SwimAnims)
+
     MantleAnim_40C="mantle_crouch_40"
     MantleAnim_44C="mantle_crouch_44"
     MantleAnim_48C="mantle_crouch_48"
