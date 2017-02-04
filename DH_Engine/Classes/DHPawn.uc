@@ -5002,13 +5002,13 @@ function CheckBob(float DeltaTime, vector Y)
 }
 
 // Modified to cause some stamina loss for prone diving
+// Also to play the selected animation (the Super always played the pawn's DiveToProneEndAnim, even if the weapon-specific anim had been selected)
 simulated state DivingToProne
 {
-    // Copied function from ROPawn as I think calling the super is risky
     simulated function EndState()
     {
         local float NewHeight;
-        local name Anim;
+        local name  Anim;
 
         NewHeight = default.CollisionHeight - ProneHeight;
 
@@ -5021,7 +5021,11 @@ simulated state DivingToProne
             Anim = DiveToProneEndAnim;
         }
 
-        PlayAnim(DiveToProneEndAnim, 0.0, 0.0, 0);
+        if (HasAnim(Anim))
+        {
+            PlayAnim(Anim, 0.0, 0.0, 0); // the Super wasn't playing the selected anim & always played the pawn's DiveToProneEndAnim
+        }
+
         PrePivot = default.PrePivot + (NewHeight * vect(0.0, 0.0, 1.0));
 
         // Take stamina away with each dive prone
