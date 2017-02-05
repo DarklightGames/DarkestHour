@@ -36,7 +36,7 @@ Explanation of several nasty bugs in ROMineVolume, especially when mine volume i
     Solution: when a vehicle enters the MV or we find a vehicle in the MV, loop through all occupants & give a warning to any players.
 */
 
-var()   bool                    bInitiallyActive;    // leveller can set MV to be inactive at start of round, so it can be activated later by an event (using a modify actor)
+var()   bool                    bInitiallyActive;    // leveller can set MV to be inactive at start of round, so it can be activated later by an event
 var()   bool                    bIsAlsoNoArtyVolume; // leveller can set this volume to also function like a no arty volume, stopping artillery/mortars rounds from being effective
 var     float                   ActivationTime;      // time this MV was activated - used in workaround fix to bug if player teleports into MV, & also useful in subclasses
 var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to use for warning messages, so can be replaced by custom messages in a subclass

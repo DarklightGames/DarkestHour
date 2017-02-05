@@ -69,8 +69,9 @@ singular static function bool DHDebugMode()
 
 defaultproperties
 {
-    AlliesToAxisRatio=0.5
     bDHDebugMode=true // TEMP - revert to false before any release
+
+    AlliesToAxisRatio=0.5
     Texture=texture'DHEngine_Tex.LevelInfo'
     AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
