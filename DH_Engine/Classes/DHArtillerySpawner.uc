@@ -27,7 +27,7 @@ function PostBeginPlay()
         OwningTeam = Controller(Owner).GetTeamNum();
 
         // Save artillery strike position to GRI so team players see it on their map
-        if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) == none)
+        if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
         {
             ROGameReplicationInfo(Level.Game.GameReplicationInfo).ArtyStrikeLocation[OwningTeam] = Location;
         }
