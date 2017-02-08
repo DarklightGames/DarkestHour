@@ -8,9 +8,6 @@ class DH_MN9130BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-    DeathString="%o was stabbed by %k's mounted bayonet."
-    MaleSuicide="%o turned the bayonet on himself."
-    FemaleSuicide="%o turned the bayonet on herself."
     WeaponClass=class'DH_Weapons.DH_MN9130Weapon'
     GibModifier=0.0
     KDamageImpulse=400
