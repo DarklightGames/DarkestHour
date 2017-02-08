@@ -2,8 +2,7 @@
 Message="Benötige Artillerieunterstützung vom Hauptquartier"
 
 [DH_BritishRadioAttachment]
-MenuDescription="SRC-300 Funkgerät wird von Funkern als Rucksack getragen;
- zur Benutzung von Offizieren für Artillerieunterstützung."
+MenuDescription="SRC-300 Funkgerät wird von Funkern als Rucksack getragen; zur Benutzung von Offizieren für Artillerieunterstützung."
 
 [DH_BritishRadioItem]
 ItemName="Funkgerät"
@@ -43,8 +42,7 @@ MenuDescription="Für Offiziere; wird im Spiel zur Markierung von Artillerieziele
 MenuDescription="Für Unteroffiziere und Panzermannschaften; wird im Spiel zur Beobachtung von Feindbewegungen benutzt."
 
 [DH_USRadioAttachment]
-MenuDescription=" SRC-300 Funkgerät wird von Funkern als Rucksack getragen;
- zur Benutzung von Offizieren für Artillerieunterstützung."
+MenuDescription=" SRC-300 Funkgerät wird von Funkern als Rucksack getragen; zur Benutzung von Offizieren für Artillerieunterstützung."
 
 [DH_USRadioItem]
 ItemName="Funkgerät"

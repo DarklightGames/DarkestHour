@@ -160,7 +160,7 @@ MPFooter.SecondaryCaption="Dediziert"
 
 [DHGamePageSP]
 PageCaption="Übung"
-SPFooter.PrimaryCaption="Übungsspiel Starten
+SPFooter.PrimaryCaption="Übungsspiel Starten"
 
 [DHGetDataMenu]
 CancelButton.Caption="ABBRECHEN"
@@ -287,7 +287,7 @@ SettingHeader.Caption="Einstellungen"
 
 [DHSettingsPage_new]
 PanelCaption=("Spiel","Anzeige","Audio","Kontrollen","Eingabe","HUD","keine")
-SettingHeader.Caption="Einstellungen
+SettingHeader.Caption="Einstellungen"
 
 [DHSettings_Footer]
 BackB.Caption="Zurück"

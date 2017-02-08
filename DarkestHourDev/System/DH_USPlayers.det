@@ -40,7 +40,7 @@ InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Ba
 [DH_USAntiTank502101st]
 MyName="Panzerabwehrsoldat"
 AltName="Panzerabwehrsoldat"
-Article=Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer.
+Article="Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 PluralName="Panzerabwehrsoldaten"
 InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 
@@ -48,28 +48,28 @@ InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Ba
 [DH_USAntiTank506101st]
 MyName="Panzerabwehrsoldat"
 AltName="Panzerabwehrsoldat"
-Article=Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer.
+Article="Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer.""
 PluralName="Panzerabwehrsoldaten"
 InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 
 [DH_USAntiTank82nd]
 MyName="Panzerabwehrsoldat"
 AltName="Panzerabwehrsoldat"
-Article=Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer.
+Article="Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 PluralName="Panzerabwehrsoldaten"
 InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 
 [DH_USAntiTankAutumn]
 MyName="Panzerabwehrsoldat"
 AltName="Panzerabwehrsoldat"
-Article=Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer.
+Article="Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 PluralName="Panzerabwehrsoldaten"
 InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 
 [DH_USAntiTankWinter]
 MyName="Panzerabwehrsoldat"
 AltName="Panzerabwehrsoldat"
-Article=Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer.
+Article="Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 PluralName="Panzerabwehrsoldaten"
 InfoText="Panzerabwehrsoldat - Schwierigkeitsgrad: Fortgeschritten||Mit einer Bazooka bewaffnet wird der Panzerabwehrsoldat zur einer ernstzunehmenden Bedrohung für feindliche Panzer."
 
