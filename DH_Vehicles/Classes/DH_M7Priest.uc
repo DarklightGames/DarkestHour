@@ -66,10 +66,9 @@ defaultproperties
     // Damage
     Health=525
     HealthMax=525.0
-    // TODO: set these up (later note by Matt 3rd Feb: looks like these have been set up & this TODO can be removed, but suggest radius of ammo stores could be increased to 15
     VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")
-    VehHitpoints(1)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="hp_ammo_l",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="hp_ammo_r",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverDamageMult=1.0
     TreadHitMaxHeight=-30
     TreadDamageThreshold=0.75
@@ -78,7 +77,7 @@ defaultproperties
     HullFireChance=0.45
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest' // TODO: get a proper one made
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.priest.priest_destro'
 
     // Entry & exit
     ExitPositions(0)=(X=50.0,Y=-140.0,Z=-10.0)
