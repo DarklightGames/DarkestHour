@@ -1733,43 +1733,22 @@ simulated function ResetSwayAfterBolt()
     SwayTime = 0.0;
 }
 
-// Called server-side by SendVoiceMessage()
+// Modified to allow mortar operator to make a resupply request
 function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional vector RequestLocation)
 {
-    local DHGameReplicationInfo     GRI;
-    local DHRoleInfo                RI;
-    local DarkestHourGame           G;
-    local DHPlayerReplicationInfo   DHPRI;
+    local DHRoleInfo RI;
 
-    DHPRI = DHPlayerReplicationInfo(PRI);
+    RI = DHRoleInfo(GetRoleInfo());
 
-    if (DHPRI == none)
+    // Only allow if requesting player is a leader role or if he's a machine gunner or mortar operator requesting resupply
+    if (RI != none && (RI.bIsLeader || (RequestType == 3 && (RI.bIsGunner || RI.bCanUseMortars)))
+        && ROGameReplicationInfo(GameReplicationInfo) != none && PRI != none && PRI.Team != none)
     {
-        return;
-    }
+        ROGameReplicationInfo(GameReplicationInfo).AddHelpRequest(PRI, ObjID, RequestType, RequestLocation); // add to team's HelpRequests array
 
-    RI = DHRoleInfo(DHPRI.RoleInfo);
-
-    // Check if caller is a leader
-    if (RI == none || RequestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars))
-    {
-        // If not, check if we're a MG requesting ammo
-        // Basnett, added mortar operators requesting resupply.
-        return;
-    }
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none && PRI != none && PRI.bIsSpectator && PRI.Team != none)
-    {
-        GRI.AddHelpRequest(PRI, ObjID, RequestType, RequestLocation);
-
-        G = DarkestHourGame(Level.Game);
-
-        if (G != none)
+        if (DarkestHourGame(Level.Game) != none)
         {
-            // Notify team members to check their map
-            G.NotifyPlayersOfMapInfoChange(PRI.Team.TeamIndex, self);
+            DarkestHourGame(Level.Game).NotifyPlayersOfMapInfoChange(PRI.Team.TeamIndex, self); // notify team members to check their map
         }
     }
 }
