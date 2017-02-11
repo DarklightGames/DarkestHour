@@ -868,8 +868,8 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
-    // Debug option - draw actors on the HUD to help debugging network relevancy
-    if (bShowRelevancyDebugOverlay && (Level.NetMode == NM_Standalone || (DHGRI != none && DHGRI.bAllowNetDebug)))
+    // Debug option - draw actors on the HUD to help debugging network relevancy (toggle using console command: ShowNetDebugOverlay)
+    if (bShowRelevancyDebugOverlay && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (DHGRI != none && DHGRI.bAllowNetDebug)))
     {
         DrawNetworkActors(C);
     }
@@ -1975,6 +1975,100 @@ simulated function DrawCompass(Canvas C)
     HudScale = HudScaleTemp;
 }
 
+// Modified so will work in DHDebugMode, & also to show all network actors & not just pawns (colour coded based on actor type)
+function DrawNetworkActors(Canvas C)
+{
+    local Actor  A;
+    local vector Direction, ScreenPos;
+    local string ActorName;
+    local float  StrX, StrY;
+    local int    Pos;
+
+    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode()
+        && !(ROGameReplicationInfo(PlayerOwner.GameReplicationInfo) != none && ROGameReplicationInfo(PlayerOwner.GameReplicationInfo).bAllowNetDebug))
+    {
+        return;
+    }
+
+    if (PlayerOwner == none)
+    {
+        return;
+    }
+
+    foreach DynamicActors(class'Actor', A)
+    {
+        // Check whether it's a network actor, i.e. has been, or would be, replicated by a server
+        if (A.bNoDelete)
+        {
+            continue;
+        }
+
+        if (Level.NetMode == NM_Client)
+        {
+            if (A.Role == ROLE_Authority && !A.bTearOff) // we'll allow torn off network actors a pass through & we'll draw them in a different colour
+            {
+                continue;
+            }
+        }
+        // In single player mode, checking for no remote role is a passable approximation of what would be network actors
+        // Although it isn't perfect & displays actors with remote roles that in multi-player would only be spawned locally on a client, e.g. ROSoundAttachment
+        else if (A.RemoteRole == ROLE_None)
+        {
+            continue;
+        }
+
+        // Only draw if in front of player, i.e. will display on his screen
+        // Changed to use PC's CalcViewLocation & CalcViewRotation, which are simple & also work when using behind view
+        Direction = Normal(A.Location - PlayerOwner.CalcViewLocation);
+
+        if (Direction dot vector(PlayerOwner.CalcViewRotation) > 0.0)
+        {
+            // Get the actor's name to draw, stripping its package name if required
+            ActorName = "" $ A;
+            Pos = InStr(ActorName, ".");
+
+            if (Pos != -1)
+            {
+                ActorName = Mid(ActorName, Pos + 1);
+            }
+
+            // Set draw colour based on type of actor
+            if (A.bTearOff)
+            {
+                C.DrawColor = TurqColor;
+            }
+            else if (A.bAlwaysRelevant && !A.IsA('Pickup')) // pickup actors are bAlwaysRelevant by default, but server sets it to false as soon as they are dropped
+            {
+                C.DrawColor = RedColor;
+            }
+            else if (A.bNetTemporary)
+            {
+                C.DrawColor = GoldColor;
+            }
+            else if (A.IsA('Pawn'))
+            {
+                C.DrawColor = PurpleColor;
+            }
+            else if (A.IsA('Inventory') || A.IsA('InventoryAttachment') || A.IsA('VehicleWeapon'))
+            {
+                C.DrawColor = WhiteColor;
+            }
+            else
+            {
+                C.DrawColor = GrayColor;
+            }
+
+            // Draw actor's name on screen (changed to use smallest font available)
+            C.Font = C.TinyFont;
+            C.TextSize(ActorName, StrX, StrY);
+            ScreenPos = C.WorldToScreen(A.Location);
+            C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
+
+            C.DrawTextClipped(ActorName);
+        }
+    }
+}
+
 // Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
 // (Badly named, but is an inherited function - best thought of as DrawVehicleOccupantHitPoint)
 simulated function DrawDriverPointSphere()
@@ -2162,12 +2256,11 @@ simulated function DrawVehiclePhysiscsWheels()
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
     local int                       i, Pos, OwnerTeam, Distance;
-    local Controller                P;
     local float                     MyMapScale, ArrowRotation;
     local vector                    Temp, MapCenter;
     local Vehicle                   V;
-    local Actor                     NetActor;
-    local Pawn                      NetPawn;
+    local Actor                     A;
+    local Pawn                      P;
     local DHPawn                    DHP;
     local SpriteWidget              Widget;
     local string                    S, DistanceString, ObjLabel;
@@ -2239,138 +2332,6 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         {
             // Player resupply icon
             DrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
-        }
-    }
-
-    if (Level.NetMode == NM_Standalone && bShowDebugInfoOnMap)
-    {
-        // PSYONIX: DEBUG - Show all vehicles on map who have no driver
-        foreach DynamicActors(class'Vehicle', V)
-        {
-            Widget = MapIconRally[V.GetTeamNum()];
-            Widget.TextureScale = 0.04;
-
-            if (V.Health <= 0)
-            {
-                Widget.RenderStyle = STY_Translucent;
-            }
-            else
-            {
-                Widget.RenderStyle = STY_Normal;
-            }
-
-            // Empty vehicle
-            if (Bot(V.Controller) == none && ROWheeledVehicle(V) != none && V.NumPassengers() == 0)
-            {
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, "");
-            }
-            // Vehicle
-            else if (VehicleWeaponPawn(V) == none && V.Controller != none)
-            {
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, Left(Bot(V.Controller).Squad.GetOrders(), 1) @ V.NumPassengers());
-            }
-        }
-
-        // PSYONIX: DEBUG - Show all players on map and indicate orders
-        for (P = Level.ControllerList; P != none; P = P.NextController)
-        {
-            if (Bot(P) != none && ROVehicle(P.Pawn) == none)
-            {
-                Widget = MapIconTeam[P.GetTeamNum()];
-                Widget.TextureScale = 0.025;
-
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, P.Pawn.Location, MapCenter, Left(Bot(P).Squad.GetOrders(), 1));
-            }
-        }
-    }
-
-    if ((Level.NetMode == NM_Standalone || DHGRI.bAllowNetDebug) && bShowRelevancyDebugOnMap)
-    {
-        if (NetDebugMode == ND_All)
-        {
-            foreach DynamicActors(class'Actor', NetActor)
-            {
-                if (!NetActor.bStatic && !NetActor.bNoDelete)
-                {
-                    Widget = MapIconNeutral;
-                    Widget.TextureScale = 0.04;
-                    Widget.RenderStyle = STY_Normal;
-                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetActor.Location, MapCenter, "");
-                }
-            }
-        }
-        else if (NetDebugMode == ND_VehiclesOnly)
-        {
-            // PSYONIX: DEBUG - Show all vehicles on map who have no driver
-            foreach DynamicActors(class'Vehicle', V)
-            {
-                Widget = MapIconRally[V.GetTeamNum()];
-                Widget.TextureScale = 0.04;
-                Widget.RenderStyle = STY_Normal;
-
-                if (ROWheeledVehicle(V) != none)
-                {
-                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, "");
-                }
-            }
-        }
-        else if (NetDebugMode == ND_PlayersOnly)
-        {
-            foreach DynamicActors(class'DHPawn', DHP)
-            {
-                Widget = MapIconTeam[DHP.GetTeamNum()];
-                Widget.TextureScale = 0.04;
-                Widget.RenderStyle = STY_Normal;
-
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, DHP.Location, MapCenter, "");
-            }
-        }
-        else if (NetDebugMode == ND_PawnsOnly)
-        {
-            foreach DynamicActors(class'Pawn', NetPawn)
-            {
-                if (Vehicle(NetPawn) != none)
-                {
-                    Widget = MapIconRally[V.GetTeamNum()];
-                }
-                else if (ROPawn(NetPawn) != none)
-                {
-                    Widget = MapIconTeam[NetPawn.GetTeamNum()];
-                }
-                else
-                {
-                    Widget = MapIconNeutral;
-                }
-
-                Widget.TextureScale = 0.04;
-                Widget.RenderStyle = STY_Normal;
-
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetPawn.Location, MapCenter, "");
-            }
-        }
-        if (NetDebugMode == ND_AllWithText)
-        {
-            foreach DynamicActors(class'Actor', NetActor)
-            {
-                if (!NetActor.bStatic && !NetActor.bNoDelete)
-                {
-                    Widget = MapIconNeutral;
-                    Widget.TextureScale = 0.04;
-                    Widget.RenderStyle = STY_Normal;
-
-                    S = "" $ NetActor;
-
-                    // Remove the package name, if it exists
-                    Pos = InStr(s, ".");
-
-                    if (Pos != -1)
-                    {
-                        s = Mid(s, Pos + 1);
-                    }
-
-                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetActor.Location, MapCenter, s);
-                }
-            }
         }
     }
 
@@ -2764,11 +2725,114 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
 
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
 
-    // Overhead map debugging
-    if (Level.NetMode == NM_Standalone && ROTeamGame(Level.Game).LevelInfo.bDebugOverhead)
+/////////////////////////  DEBUGGING ///////////////////////////////////////////////////
+
+    // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
+    if (bShowDebugInfoOnMap && Level.NetMode == NM_Standalone)
     {
         DrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter);
         DrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter);
+    }
+
+    // Show specified network actors, based on NetDebugMode - toggle using console command: ShowNetDebugMap [optional int DebugMode]
+    if (bShowRelevancyDebugOnMap && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || DHGRI.bAllowNetDebug))
+    {
+        // Show all pawns only (DebugMode 0)
+        if (NetDebugMode == ND_PawnsOnly)
+        {
+            foreach DynamicActors(class'Pawn', P)
+            {
+                if (Vehicle(P) != none)
+                {
+                    Widget = MapIconRally[P.GetTeamNum()];
+                }
+                else if (ROPawn(P) != none)
+                {
+                    Widget = MapIconTeam[P.GetTeamNum()];
+                }
+                else
+                {
+                    Widget = MapIconNeutral;
+                }
+
+                Widget.TextureScale = 0.04;
+                Widget.RenderStyle = STY_Normal;
+
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, P.Location, MapCenter, "");
+            }
+        }
+        // Show vehicles only (DebugMode 1)
+        else if (NetDebugMode == ND_VehiclesOnly)
+        {
+            foreach DynamicActors(class'Vehicle', V)
+            {
+                if (ROWheeledVehicle(V) != none)
+                {
+                    Widget = MapIconRally[V.GetTeamNum()];
+                    Widget.TextureScale = 0.04;
+                    Widget.RenderStyle = STY_Normal;
+
+                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, "");
+                }
+            }
+        }
+        // Show player pawns only (DebugMode 2)
+        else if (NetDebugMode == ND_PlayersOnly)
+        {
+            foreach DynamicActors(class'DHPawn', DHP)
+            {
+                Widget = MapIconTeam[DHP.GetTeamNum()];
+                Widget.TextureScale = 0.04;
+                Widget.RenderStyle = STY_Normal;
+
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, DHP.Location, MapCenter, "");
+            }
+        }
+        // Show all net actors (DebugMode 3)
+        // Substantially improved so only draws actually network actors (i.e. replicated) instead of all dynamic actors, even those spawned locally
+        else if (NetDebugMode == ND_All || NetDebugMode == ND_AllWithText)
+        {
+            Widget = MapIconNeutral;
+            Widget.TextureScale = 0.04;
+            Widget.RenderStyle = STY_Normal;
+
+            C.Font = C.TinyFont; // changed to use smallest font available
+
+            foreach DynamicActors(class'Actor', A)
+            {
+                if (!A.bNoDelete)
+                {
+                    // Check whether it's a network actor, i.e. has been, or would be, replicated by a server
+                    if (Level.NetMode == NM_Client)
+                    {
+                        if (A.Role == ROLE_Authority && !A.bTearOff) // we'll allow torn off network actors a pass through & we'll draw them in a different colour
+                        {
+                            continue;
+                        }
+                    }
+                    // In single player mode, checking for no remote role is a passable approximation of what would be network actors
+                    // Although it isn't perfect & displays actors with remote roles that in multi-player would only be spawned locally on a client, e.g. ROSoundAttachment
+                    else if (A.RemoteRole == ROLE_None)
+                    {
+                        continue;
+                    }
+
+                    // Option to show actor names, with any package name stripped (DebugMode 4)
+                    if (NetDebugMode == ND_AllWithText)
+                    {
+                        s = "" $ A;
+                        Pos = InStr(s, ".");
+
+                        if (Pos != -1)
+                        {
+                            s = Mid(s, Pos + 1);
+                        }
+                    }
+
+                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, A.Location, MapCenter, s);
+                }
+            }
+        }
     }
 }
 
