@@ -8,6 +8,7 @@ class DHAdminMenu_TestSM extends StaticMeshActor;
 
 defaultproperties
 {
+    RemoteRole=ROLE_None
     bExactProjectileCollision=false
     StaticMesh=StaticMesh'MilitarySM.sandbag.sandbag02'
     bUseDynamicLights=false

@@ -1388,39 +1388,46 @@ function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
 function SetParaDropVariables()
 {
     local ROGameReplicationInfo GRI;
-    local TerrainInfo           TInfo;
-    local vector                TILocation, MapDiagonal;
+    local TerrainInfo           TI;
+    local vector                TestLocation, MapDiagonal;
     local Actor                 TestActor;
     local int                   i;
 
-    foreach AllActors(class'TerrainInfo', TInfo)
+    // Get the maximum safe height to paradrop a player, without him getting stuck in the skybox or whatever
+    // For a starting location we get the location of the TerrainInfo actor
+    foreach AllActors(class'TerrainInfo', TI)
     {
-        TILocation.Z = TInfo.Location.Z;
+        TestLocation = TI.Location;
         break;
     }
 
+    // We'll spawn a temporary static mesh test actor & use it to check up to 5 locations of increasing height
     for (i = 1; i < 6; ++i)
     {
-        TILocation.Z += 1920.0;
-        TestActor = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_TestSM',,, TILocation);
+        TestLocation.Z += 1920.0; // each pass we'll try moving the test location higher (approx 32m)
 
-        if (TestActor != none)
+        // On the 1st pass we'll spawn the test actor (1920 UU above the TerrainInfo)
+        if (TestActor == none)
         {
-            TestActor.SetStaticMesh(none);
+            TestActor = Spawn(class'DH_AdminMenuMutator.DHAdminMenu_TestSM',,, TestLocation); // spawns on 1st pass & then gets moved
         }
-
-        if ((i == 5 && TestActor != none) || TestActor == none)
+        // Only subsequent passes we try to move the test actor to the new higher location
+        // If we fail (i.e. SetLocation returns false) then we're too high, so revert to the previous height & stop checking
+        else if (!TestActor.SetLocation(TestLocation))
         {
-            if (TestActor != none)
-            {
-                TestActor.Destroy();
-            }
-
-            TILocation.Z -= 1920.0;
-            ParaDropHeight = TILocation.Z;
+            TestLocation.Z -= 1920.0;
+            break;
         }
     }
 
+    ParaDropHeight = TestLocation.Z;
+
+    if (TestActor != none)
+    {
+        TestActor.Destroy();
+    }
+
+    // Now calculate the map centre & scale
     GRI = ROGameReplicationInfo(Level.Game.GameReplicationInfo);
     MapDiagonal = GRI.SouthWestBounds - GRI.NorthEastBounds;
     MapCenter = (MapDiagonal / 2.0) + GRI.NorthEastBounds;
