@@ -290,7 +290,8 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
 // SPT_Vehicle (so that vehicle crews can spawn together)
 simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, DHRoleInfo RI, class<Vehicle> VehicleClass)
 {
-    local DHSpawnPoint SP;
+    local DHSpawnPoint     SP;
+    local class<ROVehicle> V;
 
     // Valid index?
     if (SpawnPointIndex >= SPAWN_POINTS_MAX)
@@ -317,22 +318,24 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
         return false;
     }
 
+    // If the player is mortar crew & the SP is a mortar spawn (or allows any type of spawn) then it's a valid SP for him
     if (RI.default.bCanUseMortars && SP.CanSpawnMortars())
     {
         return true;
     }
 
-    if (VehicleClass == none)
+    // If player is trying to spawn into a vehicle then SP is valid if it can either spawn any vehicle type, or can spawn infantry vehicles & one has been selected
+    // Also check the vehicle is the correct team, but that's just a fail-safe
+    if (VehicleClass != none)
     {
-        return SP.CanSpawnInfantry() || (RI.default.bCanBeTankCrew && SP.CanSpawnVehicles());
+        V = class<ROVehicle>(VehicleClass);
+
+        return V != none && (SP.CanSpawnVehicles() || (SP.CanSpawnInfantryVehicles() && !V.default.bMustBeTankCommander)) && SP.TeamIndex == V.default.VehicleTeam;
     }
 
-    if (class<ROVehicle>(VehicleClass) != none && SP.TeamIndex == class<ROVehicle>(VehicleClass).default.VehicleTeam)
-    {
-        return SP.CanSpawnVehicles() || (!class<ROVehicle>(VehicleClass).default.bMustBeTankCommander && SP.CanSpawnInfantryVehicles());
-    }
-
-    return false;
+    // Otherwise the player is trying to spawn on foot, so the SP is valid if it allows that
+    // Plus special exception to allow tank crewmen to spawn on foot at a vehicle SP, so that tank crews can spawn together
+    return SP.CanSpawnInfantry() || (RI.default.bCanBeTankCrew && SP.CanSpawnVehicles());
 }
 
 simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)

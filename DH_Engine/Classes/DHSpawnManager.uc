@@ -667,7 +667,7 @@ function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
 
     if (!SP.CanSpawnVehicles() && !(SP.CanSpawnInfantryVehicles() && !VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander))
     {
-        return false;
+        return false; // check whether SP can either spawn any vehicle type, or can spawn infantry vehicles & one has been selected
     }
 
     if (!GRI.IgnoresMaxTeamVehiclesFlags(C.VehiclePoolIndex) &&
