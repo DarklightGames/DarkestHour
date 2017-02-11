@@ -845,7 +845,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
@@ -930,7 +930,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
