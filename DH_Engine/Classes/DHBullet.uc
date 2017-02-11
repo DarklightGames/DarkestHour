@@ -508,7 +508,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                 {
                     DHVehicleCannonPawn(AV.Cannon.WeaponPawn).DamageCannonOverlay();
 
-                    if (AV.bLogPenetration)
+                    if (AV.bLogDebugPenetration)
                     {
                         Log("We hit NHP_GunOptics hitpoint");
                     }

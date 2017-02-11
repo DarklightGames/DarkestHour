@@ -52,10 +52,9 @@ var     float               ManualRotationsPerSecond;  // turret/cannon rotation
 var     float               PoweredRotationsPerSecond; // faster rotation speed with powered assistance (engine must be running)
 
 // Debugging & calibration
-var     bool                bDrawPenetration;
-var     bool                bPenetrationText;
-var     bool                bLogPenetration;
-var     config bool         bGunsightSettingMode;
+var     bool                bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
+var     bool                bLogDebugPenetration; // similar debug log entries
+var     bool                bGunsightSettingMode; // allows quick adjustment of added pitch at different range settings, using lean left/right keys
 
 replication
 {
@@ -997,7 +996,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         Y = Y >> CurrentAim;
     }
 
-    if (bPenetrationText && Role == ROLE_Authority)
+    if (bDebugPenetration && Role == ROLE_Authority)
     {
         Level.Game.Broadcast(self, "Turret hit angle =" @ HitAngleDegrees @ "degrees");
     }
@@ -1006,7 +1005,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     if (HitAngleDegrees >= FrontLeftAngle || HitAngleDegrees < FrontRightAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
@@ -1014,7 +1013,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Front turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
@@ -1026,7 +1025,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to opposite side
         if (InAngleDegrees > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from front to REAR turret hit: base armor =" @ RearArmorFactor * 10.0 $ "mm, slope =" @ RearArmorSlope);
             }
@@ -1035,7 +1034,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > RearArmorFactor && CheckPenetration(P, RearArmorFactor, GetCompoundAngle(InAngle, RearArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Front turret hit: base armor =" @ FrontArmorFactor * 10.0 $ "mm, slope =" @ FrontArmorSlope);
         }
@@ -1048,7 +1047,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
@@ -1056,7 +1055,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Right side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
@@ -1073,7 +1072,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT turret hit: base armor =" @ LeftArmorFactor * 10.0 $ "mm, slope =" @ LeftArmorSlope);
             }
@@ -1081,7 +1080,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > LeftArmorFactor && CheckPenetration(P, LeftArmorFactor, GetCompoundAngle(InAngle, LeftArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Right turret hit: base armor =" @ RightArmorFactor * 10.0 $ "mm, slope =" @ RightArmorSlope);
         }
@@ -1093,7 +1092,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= RearRightAngle && HitAngleDegrees < RearLeftAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
@@ -1101,7 +1100,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Rear turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
@@ -1112,7 +1111,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from rear to FRONT turret hit: base armor =" @ FrontArmorFactor * 10.0 $ "mm, slope =" @ FrontArmorSlope);
             }
@@ -1120,7 +1119,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > FrontArmorFactor && CheckPenetration(P, FrontArmorFactor, GetCompoundAngle(InAngle, FrontArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Rear turret hit: base armor =" @ RearArmorFactor * 10.0 $ "mm, slope =" @ RearArmorSlope);
         }
@@ -1132,7 +1131,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
@@ -1140,7 +1139,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Left side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
@@ -1157,7 +1156,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Fix hit detection bug
         if (InAngleDegrees > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from left to RIGHT turret hit: base armor =" @ RightArmorFactor * 10.0 $ "mm, slope =" @ RightArmorSlope);
             }
@@ -1165,7 +1164,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > RightArmorFactor && CheckPenetration(P, RightArmorFactor, GetCompoundAngle(InAngle, RightArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Left turret hit: base armor =" @ LeftArmorFactor * 10.0 $ "mm, slope =" @ LeftArmorSlope);
         }
@@ -1206,7 +1205,7 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     PenetrationRatio = PenetrationNumber / EffectiveArmor;
 
     // Penetration debugging
-    if (bPenetrationText && Role == ROLE_Authority)
+    if (bDebugPenetration && Role == ROLE_Authority)
     {
         Level.Game.Broadcast(self, "Effective armor:" @ EffectiveArmor * 10.0 $ "mm" @ " Shot penetration:" @ PenetrationNumber * 10.0 $ "mm");
         Level.Game.Broadcast(self, "Compound angle:" @ CompoundAngleDegrees @ " Slope multiplier:" @ SlopeMultiplier);

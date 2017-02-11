@@ -97,9 +97,8 @@ var     int         EngineFireStarterTeam;
 var     sound       SmokingEngineSound;
 
 // Debugging
-var     bool        bDrawPenetration; // debug lines on screen
-var     bool        bPenetrationText; // text on screen
-var     bool        bLogPenetration;  // log entries
+var     bool        bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
+var     bool        bLogDebugPenetration; // similar debug log entries
 
 replication
 {
@@ -789,7 +788,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         HitAngleDegrees = 360.0 - HitAngleDegrees;
     }
 
-    if (bPenetrationText && Role == ROLE_Authority)
+    if (bDebugPenetration && Role == ROLE_Authority)
     {
         Level.Game.Broadcast(self, "Hull hit angle =" @ HitAngleDegrees @ "degrees");
     }
@@ -798,7 +797,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     if (HitAngleDegrees >= FrontLeftAngle || HitAngleDegrees < FrontRightAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
@@ -806,7 +805,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Front hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
         }
@@ -817,7 +816,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // InAngle over 90 degrees is impossible, so must be a hit detection bug (opposite side collision detection error) & we need to switch to opposite side
         if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from front to REAR hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm, slope =" @ URearArmorSlope);
             }
@@ -828,7 +827,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return bPenetrated;
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Front hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm, slope =" @ UFrontArmorSlope);
         }
@@ -842,7 +841,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
@@ -850,7 +849,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Right side hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
         }
@@ -866,7 +865,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Fix hit detection bug
         if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from right to LEFT hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm, slope =" @ ULeftArmorSlope);
             }
@@ -874,7 +873,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Right hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm, slope =" @ URightArmorSlope);
         }
@@ -886,7 +885,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= RearRightAngle && HitAngleDegrees < RearLeftAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
@@ -894,7 +893,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Rear hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
         }
@@ -904,7 +903,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Fix hit detection bug
         if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from rear to FRONT hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm, slope =" @ UFrontArmorSlope);
             }
@@ -912,7 +911,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Rear hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm, slope =" @ URearArmorSlope);
         }
@@ -927,7 +926,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
         // Debugging
-        if (bDrawPenetration && Level.NetMode != NM_DedicatedServer)
+        if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
@@ -935,7 +934,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
 
-        if (bLogPenetration)
+        if (bLogDebugPenetration)
         {
             Log("Left side hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
         }
@@ -951,7 +950,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Fix hit detection bug
         if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
         {
-            if (bPenetrationText && Role == ROLE_Authority)
+            if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from left to RIGHT hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm, slope =" @ URightArmorSlope);
             }
@@ -959,7 +958,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
         }
 
-        if (bPenetrationText && Role == ROLE_Authority)
+        if (bDebugPenetration && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Left hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm, slope =" @ ULeftArmorSlope);
         }
@@ -998,7 +997,7 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     PenetrationRatio = PenetrationNumber / EffectiveArmor;
 
     // Penetration debugging
-    if (bPenetrationText && Role == ROLE_Authority)
+    if (bDebugPenetration && Role == ROLE_Authority)
     {
         Level.Game.Broadcast(self, "Effective armor:" @ EffectiveArmor * 10.0 $ "mm" @ " Shot penetration:" @ PenetrationNumber * 10.0 $ "mm");
         Level.Game.Broadcast(self, "Compound angle:" @ CompoundAngleDegrees @ " Slope multiplier:" @ SlopeMultiplier);
@@ -1317,9 +1316,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             if (IsPointShot(HitLocation, Momentum, 1.0, i))
             {
-                if (bLogPenetration)
+                if (bLogDebugPenetration)
                 {
-                    Log("We hit" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType) @ "hitpoint");
+                    Log("We hit VehHitpoints[" $ i $ "]:" @ GetEnum(enum'EHitPointType', VehHitpoints[i].HitPointType));
                 }
 
                 // Engine hit
@@ -1383,9 +1382,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             if (IsNewPointShot(HitLocation, Momentum, 1.0, i))
             {
-                if (bLogPenetration)
+                if (bLogDebugPenetration)
                 {
-                    Log("We hit" @ GetEnum(enum'ENewHitPointType', NewVehHitpoints[i].NewHitPointType) @ "hitpoint");
+                    Log("We hit NewVehHitpoints[" $ i $ "]:" @ GetEnum(enum'EHitPointType', NewVehHitpoints[i].NewHitPointType));
                 }
 
                 // Hit periscope optics
