@@ -10,11 +10,18 @@ class DHDestroyableSM extends RODestroyableStaticMesh
 // It is abstract because we have DH_DestroyableSM (notice the _) which is in DH_LevelActors and already used by maps
 // We can't just move DH_DestroyableSM to DH_Engine, as it would break levels that use it, hence why we have DHDestroyableSM
 
-var()   bool    bInitiallyActive; // leveller can set DSM to be inactive at start of round, so it can be activated later by an event
-var     bool    bActive;          // option for DSM to only be treated as 'active' at certain map stages or conditions, so it can't be destroyed at other times
+enum ETeamCanDamage
+{
+    TD_Both,
+    TD_Axis,
+    TD_Allies,
+};
 
-var()   bool        bDestroyableByAxis, bDestroyableByAllies; // option for leveller to specify that a team cannot damage the mesh
-var     Controller  DelayedDamageInstigatorController;        // projectiles set this when they explode so we have reference to player responsible for damage, even if his pawn dies
+var()   ETeamCanDamage  TeamCanDamage;                     // option for leveller to specify that only one team can damage the mesh
+var     Controller      DelayedDamageInstigatorController; // projectiles set this when they explode so we have reference to player responsible for damage, even if his pawn dies
+
+var()   bool            bInitiallyActive; // leveller can set DSM to be inactive at start of round, so it can be activated later by an event
+var     bool            bActive;          // option for DSM to only be treated as 'active' at certain map stages or conditions, so it can't be destroyed at other times
 
 replication
 {
@@ -80,12 +87,12 @@ auto state Working
             return;
         }
 
-        if (!bDestroyableByAxis && GetDamagingTeamIndex(InstigatedBy) != ALLIES_TEAM_INDEX)
+        if (TeamCanDamage == TD_Axis && GetDamagingTeamIndex(InstigatedBy) != AXIS_TEAM_INDEX)
         {
             return;
         }
 
-        if (!bDestroyableByAllies && GetDamagingTeamIndex(InstigatedBy) != AXIS_TEAM_INDEX)
+        if (TeamCanDamage == TD_Allies && GetDamagingTeamIndex(InstigatedBy) != ALLIES_TEAM_INDEX)
         {
             return;
         }
@@ -123,6 +130,4 @@ defaultproperties
 {
     bInitiallyActive=true
     bActive=true
-    bDestroyableByAxis=true
-    bDestroyableByAllies=true
 }
