@@ -855,6 +855,43 @@ function AddHelpRequest(PlayerReplicationInfo PRI, int ObjectiveID, int RequestT
     }
 }
 
+// Modified to fix incorrect RequestType used to identify resupply request (was 2, which is a defend objective request - should be 3)
+function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
+{
+    local int i;
+
+    if (PRI == none || PRI.Team == none)
+    {
+        return;
+    }
+
+    // Search request array to see if there's an MG resupply request for this player & clear it if there is
+    if (PRI.Team.TeamIndex == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(AxisHelpRequests); ++i)
+        {
+            if (AxisHelpRequests[i].OfficerPRI == PRI && AxisHelpRequests[i].RequestType == 2)
+            {
+                AxisHelpRequests[i].OfficerPRI = none;
+                AxisHelpRequests[i].RequestType = 255;
+                break;
+            }
+        }
+    }
+    else if (PRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < arraycount(AlliedHelpRequests); ++i)
+        {
+            if (AlliedHelpRequests[i].OfficerPRI == PRI && AlliedHelpRequests[i].RequestType == 2)
+            {
+                AlliedHelpRequests[i].OfficerPRI = none;
+                AlliedHelpRequests[i].RequestType = 255;
+                break;
+            }
+        }
+    }
+}
+
 simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
 {
     local int i;
