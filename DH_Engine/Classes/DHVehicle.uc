@@ -2744,10 +2744,12 @@ function bool IsFactorysLastVehicle()
     return VF != none && (!VF.bAllowVehicleRespawn || VF.TotalSpawnedVehicles >= VF.VehicleRespawnLimit); // if vehicle factory's last vehicle
 }
 
-// Modified to prevent "enter vehicle" screen messages if vehicle is destroyed & to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
+// Modified to prevent "enter vehicle" screen messages if vehicle is destroyed or if it's an enemy vehicle
+// Also to pass new NotifyParameters to message, allowing it to display both the use/enter key & vehicle name
 simulated event NotifySelected(Pawn User)
 {
-    if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
+    if (Level.NetMode != NM_DedicatedServer && User != none && User.IsHumanControlled() && (User.GetTeamNum() == VehicleTeam || !bTeamLocked)
+        && ((Level.TimeSeconds - LastNotifyTime) >= TouchMessageClass.default.LifeTime) && Health > 0)
     {
         NotifyParameters.Put("Controller", User.Controller);
         User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
