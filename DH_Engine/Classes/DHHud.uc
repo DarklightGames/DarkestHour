@@ -2460,9 +2460,9 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             }
         }
 
-        // Draw help requests
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
+            // Draw help requests
             for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
             {
                 if (DHGRI.AxisHelpRequests[i].RequestType == 255)
@@ -2497,10 +2497,8 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
                 }
             }
 
-            // TODO: add "is in arty vehicle" check, maybe move this to a check in PC
-
             // Draw all mortar targets on the map
-            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
+            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars || DHPlayer(PlayerOwner).IsInArtilleryVehicle()))
             {
                 for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
                 {
@@ -2547,6 +2545,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
+            // Draw help requests
             for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
             {
                 if (DHGRI.AlliedHelpRequests[i].RequestType == 255)
@@ -2582,7 +2581,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             }
 
             // Draw all mortar targets on the map
-            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
+            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars || DHPlayer(PlayerOwner).IsInArtilleryVehicle()))
             {
                 for (i = 0; i < arraycount(DHGRI.AlliedMortarTargets); ++i)
                 {

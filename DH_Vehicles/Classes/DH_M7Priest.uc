@@ -17,6 +17,9 @@ defaultproperties
     CollisionRadius=175.0
     CollisionHeight=60.0
 
+    // Artillery
+    bIsArtilleryVehicle=true
+
     // Hull mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_body'
     Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'

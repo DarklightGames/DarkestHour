@@ -691,6 +691,28 @@ function HitThis(ROArtilleryTrigger RAT)
     }
 }
 
+// New function to determine if the player is operating a vehicle that is marked as artillery.
+simulated function bool IsInArtilleryVehicle()
+{
+    local DHVehicle V;
+    local VehicleWeaponPawn VWP;
+
+    V = DHVehicle(Pawn);
+    VWP = VehicleWeaponPawn(Pawn);
+
+    if (VWP != none)
+    {
+        V = DHVehicle(VWP.VehicleBase);
+    }
+
+    if (V != none)
+    {
+        return V.bIsArtilleryVehicle;
+    }
+
+    return false;
+}
+
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
 // The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
 function ServerArtyStrike()
@@ -708,7 +730,7 @@ function ServerSaveMortarTarget(bool bIsSmoke)
     local DHVolumeTest VT;
     local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local int          TeamIndex, i;
-    local bool         bValidTarget, bMortarsAvailable, bMortarTargetMarked;
+    local bool         bValidTarget, bMortarTargetMarked;
 
     TraceStart = Pawn.Location + Pawn.EyePosition();
     TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
@@ -734,37 +756,6 @@ function ServerSaveMortarTarget(bool bIsSmoke)
 
     TeamIndex = GetTeamNum();
     GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    // Make sure there is a mortar operator available on our team
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
-        {
-            if (GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
-            {
-                bMortarsAvailable = true;
-                break;
-            }
-        }
-    }
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
-        {
-            if (GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
-            {
-                bMortarsAvailable = true;
-                break;
-            }
-        }
-    }
-
-    if (!bMortarsAvailable)
-    {
-        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 1); // "There are no mortar operators available"
-
-        return;
-    }
 
     HitLocation.Z = 0.0; // zero out the z coordinate for 2D distance checking on round hits
 

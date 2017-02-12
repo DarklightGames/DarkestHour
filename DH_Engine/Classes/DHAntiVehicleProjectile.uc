@@ -470,6 +470,8 @@ simulated function BlowUp(vector HitLocation)
     {
         Corona.Destroy();
     }
+
+    super.BlowUp(HitLocation);
 }
 
 // Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor

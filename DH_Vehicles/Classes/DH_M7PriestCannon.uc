@@ -11,7 +11,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_turret'
     Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
     Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
-//  CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll' // TODO: make col mesh for gun shield? (barely moves so better adding as part of hull mesh)
     FireAttachBone="Turret_placement"
     FireEffectScale=2.5 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-55.0,Y=-15.0,Z=100.0)
@@ -34,11 +33,11 @@ defaultproperties
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellHE'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
-    ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="HEAT" // TODO: suggest make HEAT round tertiary for consistency with Sherman 105mm & other howitzer/support weapons (HEAT would very much be last resort) - Matt
-    ProjectileDescriptions(2)="Smoke"
+    SecondaryProjectileClass=class'DH_Vehicles.DH_M7PriestCannonShellSmoke'
+    TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+    ProjectileDescriptions(0)="HE-1"
+    ProjectileDescriptions(1)="Smoke"
+    ProjectileDescriptions(2)="HEAT"
     InitialPrimaryAmmo=58
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8
@@ -49,6 +48,9 @@ defaultproperties
     // Weapon fire
     WeaponFireOffset=18.0
     AddedPitch=68
+
+    // Artillery
+    bIsArtillery=true
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'

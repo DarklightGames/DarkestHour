@@ -127,6 +127,9 @@ var     class<Actor>              ResupplyAttachmentClass; // option for a funct
 var     name                      ResupplyAttachBone;      // bone name for attaching resupply attachment
 var     Actor                     ResupplyAttachment;      // reference to any resupply actor
 
+// Artillery
+var     bool        bIsArtilleryVehicle;
+
 // Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugTreadText;

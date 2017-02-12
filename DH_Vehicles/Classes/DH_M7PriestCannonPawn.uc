@@ -15,7 +15,6 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     if (Level.NetMode != NM_DedicatedServer && ((YawChange != 0.0 && !bTurretRingDamaged) || (PitchChange != 0.0 && !bGunPivotDamaged)) && Gun != none)
     {
         R = Gun.GetBoneRotation('gun');
-        Log(R); // TEMPDEBUG - remove before release
         R.Yaw = 0;
         Gun.SetBoneRotation('gunsight', R);
     }
@@ -29,7 +28,7 @@ defaultproperties
     // gunsight
     DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=24.0,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     // periscope // TODO: query this as it's a commander's 360 degree periscope?
-    DriverPositions(1)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=90.0,ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=90.0,ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true,bExposed=true)
     // kneeling
     DriverPositions(2)=(ViewFOV=90.0,DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // standing
@@ -44,6 +43,7 @@ defaultproperties
     bManualTraverseOnly=true
     bHasAltFire=false
     GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.m12a7_sight_2'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.m12a7_sight'
     OverlayCenterSize=0.542
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'

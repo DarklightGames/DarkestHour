@@ -10,9 +10,9 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_M7PriestMG'
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-    bMultiPosition=true
+    bMultiPosition=false
     DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',DriverTransitionAnim="stand_idleiron_mg42",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
+//    DriverPositions(1)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     BinocPositionIndex=1
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'

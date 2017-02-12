@@ -87,6 +87,8 @@ function ServerSetFiringSettings(byte PackedSettings)
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
+    local DHBallisticProjectile BP;
+    local DHMortarProjectile MP;
     local vector     SpawnLocation, X, Y, Z;
     local rotator    SpawnRotation, R;
     local float      SpreadYaw;
@@ -116,6 +118,16 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     P = Spawn(ProjClass, none,, SpawnLocation, SpawnRotation);
 
+    if (bIsArtillery)
+    {
+        BP = DHBallisticProjectile(P);
+
+        if (BP != none)
+        {
+            BP.bIsArtilleryProjectile = true;
+        }
+    }
+
     // After careful consideration, it was determined that universal pitch adjustments did not work,
     // because at lower elevations the differences in pitch angles becomes nearly undetectable, while at high elevations they were overly dramatic.
     // In the end, I opted to go with a slight velocity adjustment, as this scales fairly nicely at all ranges. -Basnett
@@ -129,10 +141,15 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
     }
 
-    if (bDebug && DHMortarProjectile(P) != none)
+    if (bDebug)
     {
-        DHMortarProjectile(P).DebugForward = vector(R);
-        DHMortarProjectile(P).DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
+        MP = DHMortarProjectile(P);
+
+        if (MP != none)
+        {
+            MP.DebugForward = vector(R);
+            MP.DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
+        }
     }
 
     PlaySound(GetFireSound(),, 4.0);

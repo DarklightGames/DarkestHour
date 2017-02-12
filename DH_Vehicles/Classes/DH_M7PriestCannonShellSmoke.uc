@@ -7,7 +7,7 @@
 // to deliver rounds with a higher angle-of-incidence.
 //==============================================================================
 
-class DH_M7PriestCannonShellHE extends DH_ShermanM4A3105CannonShellHE;
+class DH_M7PriestCannonShellSmoke extends DH_ShermanM4A3105CannonShellSmoke;
 
 defaultproperties
 {

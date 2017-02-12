@@ -60,6 +60,9 @@ var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
+// Artillery
+var     bool                        bIsArtillery;   // TODO: put this in vehicle itself?
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor

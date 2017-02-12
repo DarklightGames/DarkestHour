@@ -196,6 +196,7 @@ state ProjectileFireMode
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
+    local DHBallisticProjectile BP;
     local rotator    FireRot;
 
     // Calculate projectile's direction & then spawn the projectile
@@ -212,6 +213,16 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     }
 
     P = Spawn(ProjClass, none,, WeaponFireLocation, FireRot);
+
+    if (bIsArtillery)
+    {
+        BP = DHBallisticProjectile(P);
+
+        if (BP != none)
+        {
+            BP.bIsArtilleryProjectile = true;
+        }
+    }
 
     // Play firing effects (unless it's canister shot still spawning separate projectiles, in which case we only play firing effects once, at the end)
     if (!bCanisterIsFiring && P != none)

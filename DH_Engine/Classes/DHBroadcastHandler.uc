@@ -13,13 +13,13 @@ event AllowBroadcastLocalized(
     optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject)
 {
-    local Controller       C;
-    local PlayerController P;
-    local DHRoleInfo       RI;
+    local Controller    C;
+    local DHPlayer      P;
+    local DHRoleInfo    RI;
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        P = PlayerController(C);
+        P = DHPlayer(C);
 
         // Only broadcast rally point messages to your same team, and only to other players
         if (class<RORallyMsg>(Message) != none && Switch == 1)
@@ -51,7 +51,7 @@ event AllowBroadcastLocalized(
             }
         }
         // If this message is a static mesh destroyed msg, figure who it should go to
-        else if (class<RODestroyableSMDestroyedMsg>(Message) != none && ROPlayer(P) != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
+        else if (class<RODestroyableSMDestroyedMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
             switch (Switch)
             {
@@ -99,7 +99,7 @@ event AllowBroadcastLocalized(
             RI = DHRoleInfo(DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo);
 
             // Only show these messages to people involved with the mortars
-            if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
+            if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars || P.IsInArtilleryVehicle()))
             {
                 switch (Switch)
                 {
