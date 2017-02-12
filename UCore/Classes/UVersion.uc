@@ -16,8 +16,8 @@ static final function UVersion FromString(string S)
 {
     local int i;
     local UVersion V;
-    local array<string> Parts, VersionParts;
-    local string L, R, VersionString;
+    local array<string> VersionParts;
+    local string VersionString;
 
     V = new class'UVersion';
 
