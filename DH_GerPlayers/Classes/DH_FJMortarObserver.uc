@@ -8,10 +8,10 @@ class DH_FJMortarObserver extends DH_FJ;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Werferbeobachter"
+    MyName="Artillery Observer"
+    AltName="Artilleriebeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G41Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

@@ -8,10 +8,10 @@ class DH_BritishMortarObserver extends DH_British_Infantry;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Mortar Observer"
+    MyName="Artillery Observer"
+    AltName="Artillery Observer"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"

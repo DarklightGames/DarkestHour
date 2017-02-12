@@ -250,7 +250,7 @@ function PostBeginPlay()
         GRI.AxisHelpRequests[k].RequestType = 255;
     }
 
-    ResetMortarTargets();
+    ResetArtilleryTargets();
 
     if (LevelInfo.OverheadOffset == OFFSET_90)
     {
@@ -1774,7 +1774,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
             if (GRI != none)
             {
-                GRI.ClearMortarTarget(DHPlayer(aPlayer));
+                GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
             }
         }
         else
@@ -2183,7 +2183,7 @@ state RoundInPlay
         // Notify players that the map has been updated
         NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
 
-        ResetMortarTargets();
+        ResetArtilleryTargets();
 
         GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
         GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
@@ -2650,7 +2650,7 @@ function CheckMineVolumes()
     }
 }
 
-function ResetMortarTargets()
+function ResetArtilleryTargets()
 {
     local DHGameReplicationInfo GRI;
 
@@ -2658,7 +2658,7 @@ function ResetMortarTargets()
 
     if (GRI != none)
     {
-        GRI.ClearAllMortarTargets();
+        GRI.ClearAllArtilleryTargets();
     }
 }
 
@@ -3195,7 +3195,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     if (GRI != none)
     {
-        GRI.ClearMortarTarget(DHPlayer(Other));
+        GRI.ClearArtilleryTarget(DHPlayer(Other));
     }
 
     if (PC != none)
@@ -3756,7 +3756,7 @@ function NotifyLogout(Controller Exiting)
 
     if (GRI != none && PC != none)
     {
-        GRI.ClearMortarTarget(PC);
+        GRI.ClearArtilleryTarget(PC);
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);

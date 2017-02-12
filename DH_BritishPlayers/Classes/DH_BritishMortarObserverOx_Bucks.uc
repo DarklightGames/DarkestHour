@@ -8,10 +8,10 @@ class DH_BritishMortarObserverOx_Bucks extends DH_Ox_Bucks;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Mortar Observer"
+    MyName="Artillery Observer"
+    AltName="Artillery Observer"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')

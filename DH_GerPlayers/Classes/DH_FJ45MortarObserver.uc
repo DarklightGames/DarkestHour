@@ -8,10 +8,10 @@ class DH_FJ45MortarObserver extends DH_FJ_1945;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Werferbeobachter"
+    MyName="Artillery Observer"
+    AltName="Artilleriebeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')

@@ -8,10 +8,10 @@ class DH_USMortarObserver506101st extends DH_US_506PIR;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Mortar Observer"
+    MyName="Artillery Observer"
+    AltName="Artillery Observer"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')

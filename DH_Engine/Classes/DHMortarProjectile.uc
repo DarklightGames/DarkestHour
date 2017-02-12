@@ -212,8 +212,9 @@ simulated state Whistle
     }
 }
 
-// Modified to handle various effects when mortar hits something, & to set hit location in team's mortar targets so it's marked on the map for mortar crew
-// Also includes a debug option
+// Modified to handle various effects when mortar hits something, & to set hit
+// location in team's artillery targets so it's marked on the map for artillery
+// crew. Also includes a debug option.
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (Role == ROLE_Authority)
@@ -387,7 +388,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
                 continue;
             }
 
-            bAlreadyDead = P.Health <= 0; // added so we don't score points for a mortar observer unless it's a live kill
+            bAlreadyDead = P.Health <= 0; // added so we don't score points for a artillery observer unless it's a live kill
         }
 
         // Calculate damage based on distance from explosion
@@ -424,7 +425,7 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         // Added to give additional points to the observer & the mortarman for working together for a kill!
         if (!bAlreadyDead && Victim.IsA('Pawn') && Pawn(Victim).Health <= 0 && InstigatorController.GetTeamNum() != Pawn(Victim).GetTeamNum())
         {
-            C = GetClosestMortarTargetController();
+            C = GetClosestArtilleryTargetController();
 
             if (C != none)
             {

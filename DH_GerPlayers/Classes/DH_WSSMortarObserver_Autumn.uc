@@ -8,10 +8,10 @@ class DH_WSSMortarObserver_Autumn extends DH_WaffenSSAutumn;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Werferbeobachter"
+    MyName="Artillery Observer"
+    AltName="Artilleriebeobachter"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')

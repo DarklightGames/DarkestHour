@@ -8,10 +8,10 @@ class DH_USMortarObserver29thBeach extends DH_US_29th_Infantry_Beach;
 defaultproperties
 {
     bIsMortarObserver=true
-    MyName="Mortar Observer"
-    AltName="Mortar Observer"
+    MyName="Artillery Observer"
+    AltName="Artillery Observer"
     Article="a "
-    PluralName="Mortar Observers"
+    PluralName="Artillery Observers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')

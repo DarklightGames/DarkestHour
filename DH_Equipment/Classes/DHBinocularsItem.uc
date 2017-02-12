@@ -18,7 +18,7 @@ simulated event StopFire(int Mode) {return;}
 simulated function bool IsBusy() {return false;}
 function bool FillAmmo() {return false;}
 
-// Modified to add fire button functionality for mortar observer or artillery officer roles to mark targets
+// Modified to add fire button functionality for artillery observer or artillery officer roles to mark targets
 simulated function Fire(float F)
 {
     local DHRoleInfo RI;
@@ -36,7 +36,7 @@ simulated function Fire(float F)
             {
                 if (RI.bIsMortarObserver)
                 {
-                    PC.ServerSaveMortarTarget(false);
+                    PC.ServerSaveArtilleryTarget(false);
                 }
                 else if (RI.bIsArtilleryOfficer)
                 {
@@ -47,7 +47,7 @@ simulated function Fire(float F)
     }
 }
 
-// Modified to add alt fire button functionality for mortar observer to mark smoke targets
+// Modified to add alt fire button functionality for artillery observer to mark smoke targets
 simulated function AltFire(float F)
 {
     local DHRoleInfo RI;
@@ -58,12 +58,12 @@ simulated function AltFire(float F)
 
         if (RI != none && RI.bIsMortarObserver && DHPlayer(Instigator.Controller) != none)
         {
-            DHPlayer(Instigator.Controller).ServerSaveMortarTarget(true);
+            DHPlayer(Instigator.Controller).ServerSaveArtilleryTarget(true);
         }
     }
 }
 
-// Modified to add binoculars hint for mortar observer or artillery officer
+// Modified to add binoculars hint for artillery observer or artillery officer
 simulated function BringUp(optional Weapon PrevWeapon)
 {
     local DHPawn P;
