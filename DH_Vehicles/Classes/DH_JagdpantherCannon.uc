@@ -35,7 +35,6 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
-    ProjectileDescriptions(2)="Smoke"
     InitialPrimaryAmmo=42
     InitialSecondaryAmmo=15
     SecondarySpread=0.00135
