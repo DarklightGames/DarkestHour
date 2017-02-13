@@ -624,6 +624,21 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.CannonScopeCenter);
     }
 
+    if (default.RangeRingRotator != none)
+    {
+        L.AddPrecacheMaterial(default.RangeRingRotator);
+    }
+
+    if (default.DestroyedGunsightOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.DestroyedGunsightOverlay);
+    }
+
+    if (default.PeriscopeOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.PeriscopeOverlay);
+    }
+
     if (default.AmmoShellTexture != none)
     {
         L.AddPrecacheMaterial(default.AmmoShellTexture);
@@ -646,6 +661,9 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(CannonScopeCenter);
+    Level.AddPrecacheMaterial(RangeRingRotator);
+    Level.AddPrecacheMaterial(DestroyedGunsightOverlay);
+    Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(AmmoShellTexture);
     Level.AddPrecacheMaterial(AmmoShellReloadTexture);
     Level.AddPrecacheMaterial(AltAmmoReloadTexture);

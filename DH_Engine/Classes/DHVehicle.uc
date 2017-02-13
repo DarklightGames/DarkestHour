@@ -31,8 +31,8 @@ struct VehicleAttachment
 
 struct RandomAttachOption
 {
-    var StaticMesh  StaticMesh; // a possible random decorative attachment mesh
-    var byte        PercentChance;    // the % chance of this attachment being the one spawned
+    var StaticMesh  StaticMesh;    // a possible random decorative attachment mesh
+    var byte        PercentChance; // the % chance of this attachment being the one spawned
 };
 
 // General
@@ -1994,6 +1994,11 @@ static function StaticPrecache(LevelInfo L)
 
     for (i = 0; i < default.VehicleAttachments.Length; ++i)
     {
+        if (default.VehicleAttachments[i].Skin != none)
+        {
+            L.AddPrecacheMaterial(default.VehicleAttachments[i].Skin);
+        }
+
         if (default.VehicleAttachments[i].StaticMesh != none)
         {
             L.AddPrecacheStaticMesh(default.VehicleAttachments[i].StaticMesh);
@@ -2064,6 +2069,21 @@ simulated function UpdatePrecacheMaterials()
     {
         Level.AddPrecacheStaticMesh(DamagedTrackStaticMeshRight);
     }
+
+    for (i = 0; i < VehicleAttachments.Length; ++i)
+    {
+        if (VehicleAttachments[i].Skin != none)
+        {
+            Level.AddPrecacheMaterial(VehicleAttachments[i].Skin);
+        }
+    }
+}
+
+simulated function UpdatePrecacheStaticMeshes()
+{
+    local int i;
+
+    super.UpdatePrecacheStaticMeshes();
 
     for (i = 0; i < VehicleAttachments.Length; ++i)
     {

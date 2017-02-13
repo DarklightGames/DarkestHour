@@ -848,6 +848,53 @@ simulated function PlayFirstPersonAnimation(name Anim, optional bool bLoop, opti
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+//  *******************************  MISCELLANEOUS  *******************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified to add extra material properties
+static function StaticPrecache(LevelInfo L)
+{
+    super.StaticPrecache(L);
+
+    if (default.HUDArcTexture != none)
+    {
+        L.AddPrecacheMaterial(default.HUDArcTexture);
+    }
+
+    if (default.HUDArrowTexture != none)
+    {
+        L.AddPrecacheMaterial(default.HUDArrowTexture);
+    }
+
+    if (default.HUDHighExplosiveTexture != none)
+    {
+        L.AddPrecacheMaterial(default.HUDHighExplosiveTexture);
+    }
+
+    if (default.HUDSmokeTexture != none)
+    {
+        L.AddPrecacheMaterial(default.HUDSmokeTexture);
+    }
+
+    if (default.Digits.DigitTexture != none)
+    {
+        L.AddPrecacheMaterial(default.Digits.DigitTexture);
+    }
+}
+
+// Modified to add extra material properties
+simulated function UpdatePrecacheMaterials()
+{
+    super.UpdatePrecacheMaterials();
+
+    Level.AddPrecacheMaterial(HUDArcTexture);
+    Level.AddPrecacheMaterial(HUDArrowTexture);
+    Level.AddPrecacheMaterial(HUDHighExplosiveTexture);
+    Level.AddPrecacheMaterial(HUDSmokeTexture);
+    Level.AddPrecacheMaterial(Digits.DigitTexture);
+}
+
 defaultproperties
 {
     // Mortar operator, aiming & undeploying

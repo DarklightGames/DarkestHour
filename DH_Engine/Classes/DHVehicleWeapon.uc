@@ -775,6 +775,11 @@ static function StaticPrecache(LevelInfo L)
     {
         L.AddPrecacheMaterial(default.HighDetailOverlay);
     }
+
+    if (default.CollisionStaticMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.CollisionStaticMesh);
+    }
 }
 
 // Modified to add extra material properties (note the Super in Actor already pre-caches the Skins array)
@@ -793,7 +798,7 @@ simulated function UpdatePrecacheMaterials()
     }
 }
 
-// Modified to add projectile classes
+// Modified to add projectile classes & collision mesh
 simulated function UpdatePrecacheStaticMeshes()
 {
     super.UpdatePrecacheStaticMeshes();
@@ -806,6 +811,11 @@ simulated function UpdatePrecacheStaticMeshes()
     if (SecondaryProjectileClass != none)
     {
         Level.AddPrecacheStaticMesh(SecondaryProjectileClass.default.StaticMesh);
+    }
+
+    if (CollisionStaticMesh != none)
+    {
+        Level.AddPrecacheStaticMesh(CollisionStaticMesh);
     }
 }
 
