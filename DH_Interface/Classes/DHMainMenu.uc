@@ -389,8 +389,8 @@ function GetMOTD()
     }
 
     MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    MOTDRequest.Host = "www.darkesthour.darklightgames.com";
-    MOTDRequest.Path = "/game/motd.php";
+    MOTDRequest.Host = "darklightgames.000webhostapp.com";
+    MOTDRequest.Path = "/darkest_hour/motd.php";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
 
@@ -402,15 +402,15 @@ function GetMOTD()
 function GetQuickPlayIp()
 {
     QuickPlayRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    QuickPlayRequest.Host = "www.darkesthour.darklightgames.com";
+    QuickPlayRequest.Host = "darklightgames.000webhostapp.com";
 
     if (class'DarkestHourGame'.default.Version.IsPrerelease())
     {
-        QuickPlayRequest.Path = "/game/betaserverip.php";
+        QuickPlayRequest.Path = "/darkest_hour/betaserverip.php";
     }
     else
     {
-        QuickPlayRequest.Path = "/game/quickjoinip.php";
+        QuickPlayRequest.Path = "/darkest_hour/quickplayip.php";
     }
 
     QuickPlayRequest.OnResponse = OnQuickPlayResponse;
