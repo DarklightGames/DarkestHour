@@ -974,8 +974,9 @@ simulated function bool PlayerUsesManualReloading()
 // New generic function to handle penetration calcs for any shell type
 simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float  WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
-    local vector LocDir, HitDir, X, Y, Z;
+    local float   WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
+    local vector  LocDir, HitDir, X, Y, Z;
+    local rotator TurretRelativeRotation;
 
     if (!bHasTurret)
     {
@@ -1003,9 +1004,13 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     if (HitAngleDegrees < 0.0)
     {
         HitAngleDegrees += 360.0;
-        X = X >> CurrentAim;
-        Y = Y >> CurrentAim;
     }
+
+    // Adjust the X & Y axes we got from the vehicle's rotation, to factor in the turret's traverse (ignore Z axis as we don't use it)
+    // Then we can use the adjusted axes to calculate projectile's angle of incidence to the direction that the hit side of the turret is facing
+    TurretRelativeRotation.Yaw = CurrentAim.Yaw;
+    X = X >> TurretRelativeRotation;
+    Y = Y >> TurretRelativeRotation;
 
     if (bDebugPenetration && Role == ROLE_Authority)
     {
@@ -1032,9 +1037,6 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
         InAngle = Acos(Normal(-HitRotation) dot Normal(X));
         InAngleDegrees = class'UUnits'.static.RadiansToDegrees(InAngle);
-
-        // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to opposite side
-
 
         // Check for 'hit bug', where a projectile may pass through the 1st face of vehicle's collision & be detected as a hit on the opposite side (on the way out)
         // Calculate incoming angle of the shot, relative to perpendicular from the side we think we hit
