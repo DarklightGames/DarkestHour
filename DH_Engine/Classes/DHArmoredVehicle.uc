@@ -813,8 +813,13 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         // Calculate the direction the shot came from (in radians, not degrees))
         InAngle = Acos(Normal(-HitRotation) dot Normal(X));
 
-        // InAngle over 90 degrees is impossible, so must be a hit detection bug (opposite side collision detection error) & we need to switch to opposite side
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
+        // Check for 'hit bug', where a projectile may pass through the 1st face of vehicle's collision & be detected as a hit on the opposite side (on the way out)
+        // Calculate incoming angle of the shot, relative to perpendicular from the side we think we hit
+        // If the angle is too high it's impossible, so we do a crude fix by switching the hit to the opposite
+        // Angle of over 90 degrees is theoretically impossible, but in reality vehicles aren't regular shaped boxes & it is possible for legitimate hits a bit over 90 degrees
+        // So have softened the threshold to 120 degrees, which should still catch genuine hit bugs
+        // Also modified to skip this check for deflected shots, which can ricochet onto another part of the vehicle at weird angles
+        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
@@ -863,7 +868,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         InAngle = Acos(Normal(-HitRotation) dot Normal(Y));
 
         // Fix hit detection bug
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
+        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
@@ -901,7 +906,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
 
         // Fix hit detection bug
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
+        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
@@ -948,7 +953,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         InAngle = Acos(Normal(-HitRotation) dot Normal(-Y));
 
         // Fix hit detection bug
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 90.0)
+        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
