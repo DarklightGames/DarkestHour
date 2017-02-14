@@ -64,8 +64,6 @@ var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to tru
 var     Actor           SavedTouchActor;
 var     Pawn            SavedHitActor;
 var     vector          LaunchLocation;
-var     vector          SavedHitLocation;
-var     vector          SavedHitNormal;
 var     bool            bCollided;
 var     float           DestroyTime;                // how long for the server to wait to destroy the actor after it has collided
 var     bool            bDidExplosionFX;            // already did the explosion effects
@@ -442,10 +440,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (!bCollided)
     {
-        // Save the hit info for when the shell is destroyed
-        SavedHitLocation = HitLocation;
-        SavedHitNormal = HitNormal;
-
         BlowUp(HitLocation);
         HandleDestruction();
     }

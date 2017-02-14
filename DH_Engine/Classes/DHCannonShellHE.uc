@@ -18,7 +18,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Move karma ragdolls around when this explodes
     if (Level.NetMode != NM_DedicatedServer)
     {
-        Start = SavedHitLocation + vect(0.0, 0.0, 32.0); // changed from Location to SavedHitLocation
+        Start = HitLocation + vect(0.0, 0.0, 32.0);
 
         foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
         {

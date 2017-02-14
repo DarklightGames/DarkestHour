@@ -57,11 +57,31 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 }
 
+// Modified so we don't spawn explosion effects at SavedHitLocation/SavedHitNormal, which were pointless variables & that system didn't - and could never - work
+// Explosion effects are only triggered from here if a net client hasn't 'caught up' with the server version of the projectile & handled its own collision & explosion
+// So server, after waiting arbitrary split second delay, destroys projectile, making client trigger explosion effects here as it hasn't flagged bDidExplosionFX locally
+// In which case the client cannot possibly have run Explode(), which was the only place SavedHitLocation & SavedHitNormal were set
+// Resulting in a catch 22 situation & the client always having null SavedHitLocation & SavedHitNormal if this functionality gets triggered
+// Meaning the shell would explode at a zero vector location, i.e. the world origin, instead of where it actually is!
 simulated function Destroyed()
 {
+    local vector HitLocation, HitNormal;
+
+    // If shell is being destroyed without having exploded, usually it means a replicated client version of shell actor is being destroyed
+    // by server just before client actor has had time to impact & explode locally - so we spawn explosion effects so the player sees them
     if (!bDidExplosionFX)
     {
-        SpawnExplosionEffects(SavedHitLocation, SavedHitNormal);
+        // Do a trace up to 10m forward, along shell's flight path, to get a hit location & normal for what we should be just about to hit
+        // If trace fails to hit anything we fall back to using shell's current location & a 'straight up' hit normal
+        if (Trace(HitLocation, HitNormal, Location + (600.0 * vector(Rotation)), Location, true) != none)
+        {
+            SpawnExplosionEffects(HitLocation, HitNormal);
+        }
+        else
+        {
+            SpawnExplosionEffects(Location, vect(0.0, 0.0, 1.0));
+        }
+
         bDidExplosionFX = true;
     }
 
