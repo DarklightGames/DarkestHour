@@ -777,16 +777,15 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     GetAxes(Rotation, X, Y, Z);
 
     // Calculate the angle direction of hit relative to vehicle's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc)
-    // Start by getting the offset of the HitLocation from vehicle's centre, relative to vehicle's facing direction
-    // 'Flatten' that to a 2D vector by removing Z its element, so we ignore any height difference, which must not affect the 'top down 2D' HitAngleDegrees calc
-    // Then calculate its angle from vehicle's facing direction (vector(1,0,0) in relative terms)
+    // Start by getting the offset of HitLocation from vehicle's centre, relative to vehicle's facing direction
+    // Then convert to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
+    // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
     HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
-    HitLocationRelativeOffset.Z = 0.0;
-    HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(vect(1.0, 0.0, 0.0) dot Normal(HitLocationRelativeOffset)));
+    HitAngleDegrees = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
 
-    if (HitLocationRelativeOffset.Y < 0.0)
+    if (HitAngleDegrees < 0.0)
     {
-        HitAngleDegrees = 360.0 - HitAngleDegrees; // hit left arc of vehicle & is an anti-clockwise angle, so adjust to 0-360 degree format
+        HitAngleDegrees += 360.0; // convert negative angles to 180 to 360 degree format
     }
 
     if (bDebugPenetration && Role == ROLE_Authority)
