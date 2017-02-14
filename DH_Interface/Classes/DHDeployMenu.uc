@@ -50,8 +50,8 @@ var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
 var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
-var automated   GUIImage                        i_SpawnVehicle;
-var automated   GUIImage                        i_ArtilleryVehicle;
+var automated   GUIGFXButton                    i_SpawnVehicle;
+var automated   GUIGFXButton                    i_ArtilleryVehicle;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
@@ -1927,27 +1927,29 @@ defaultproperties
     End Object
     i_Vehicle=VehicleImageObject
 
-    Begin Object Class=GUIImage Name=SpawnVehicleImageObject
-        WinWidth=1.0
+    Begin Object Class=GUIGFXButton Name=SpawnVehicleImageObject
+        WinWidth=0.25
         WinHeight=0.125
-        WinLeft=0.0
+        WinLeft=0.75
         WinTop=0.0
-        ImageStyle=ISTY_Normal
-        ImageAlign=IMGA_BottomRight
-        Image=material'DH_GUI_Tex.DeployMenu.DeployEnabled'
+        Position=ICP_Center
+        Graphic=material'DH_GUI_Tex.DeployMenu.DeployEnabled'
+        Hint="Spawn Vehicle"
         bVisible=false
+        StyleName="TextLabel"
     End Object
     i_SpawnVehicle=SpawnVehicleImageObject
 
-    Begin Object Class=GUIImage Name=ArtilleryVehicleImageObject
-        WinWidth=1.0
+    Begin Object Class=GUIGFXButton Name=ArtilleryVehicleImageObject
+        WinWidth=0.25
         WinHeight=0.125
-        WinLeft=0.0
+        WinLeft=0.75
         WinTop=0.0
-        ImageStyle=ISTY_Normal
-        ImageAlign=IMGA_BottomRight
-        Image=material'DH_GUI_Tex.DeployMenu.artillery'
+        Position=ICP_Center
+        Graphic=material'DH_GUI_Tex.DeployMenu.artillery'
         bVisible=false
+        Hint="Artillery Vehicle"
+        StyleName="TextLabel"
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
 
