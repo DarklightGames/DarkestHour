@@ -974,8 +974,8 @@ simulated function bool PlayerUsesManualReloading()
 // New generic function to handle penetration calcs for any shell type
 simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float   WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
-    local vector  LocDir, HitDir, X, Y, Z;
+    local float   WeaponRotationDegrees, HitAngleDegrees, InAngle, InAngleDegrees;
+    local vector  HitLocationRelativeOffset, X, Y, Z;
     local rotator TurretRelativeRotation;
 
     if (!bHasTurret)
@@ -984,31 +984,34 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         return PenetrationNumber > GunMantletArmorFactor && CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
     }
 
-    // Figure out which side we hit
-    LocDir = vector(Rotation);
-    LocDir.Z = 0.0;
-    HitDir = HitLocation - Location;
-    HitDir.Z = 0.0;
-    HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
-    GetAxes(Rotation, X, Y, Z);
-    Side = Y dot HitDir;
+    // Calculate the angle direction of hit relative to turret's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc) // TEMP - fix
+    // We do this in two stages: first getting the hit direction angle relative to the vehicle, secondly factoring in the turret's traverse
+    // 1st stage: start by getting the offset of HitLocation from vehicle's centre, relative to vehicle's facing direction (note turret actor's rotation is same as vehicle)
+    // 'Flatten' that to a 2D vector by removing Z its element, so we ignore any height difference, which must not affect the 'top down 2D' HitAngleDegrees calc
+    // Then calculate its angle from vehicle's facing direction (vector(1,0,0) in relative terms)
+    HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
+    HitLocationRelativeOffset.Z = 0.0;
+    HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(vect(1.0, 0.0, 0.0) dot Normal(HitLocationRelativeOffset)));
 
-    if (Side < 0.0)
+    if (HitLocationRelativeOffset.Y < 0.0)
     {
-        HitAngleDegrees = 360.0 - HitAngleDegrees;
+        HitAngleDegrees = 360.0 - HitAngleDegrees; // hit left arc of vehicle & is an anti-clockwise angle, so adjust to 0-360 degree format
     }
 
+    // 2nd stage : now factor in the turret's relative yaw (ignoring any gun pitch as that isn't relevant to turret's rotation)
+    // It is deducted from our earlier angle direction (relative to vehicle) as any positive turret yaw will serve to 'close the gap' towards that angle
     WeaponRotationDegrees = (CurrentAim.Yaw / 65536.0 * 360.0);
     HitAngleDegrees -= WeaponRotationDegrees;
 
     if (HitAngleDegrees < 0.0)
     {
-        HitAngleDegrees += 360.0;
+        HitAngleDegrees += 360.0; // convert negative angles to 180 to 360 degree format
     }
 
-    // Adjust the X & Y axes we got from the vehicle's rotation, to factor in the turret's traverse (ignore Z axis as we don't use it)
-    // Then we can use the adjusted axes to calculate projectile's angle of incidence to the direction that the hit side of the turret is facing
+    // Get the axes relative to turret's combined facing direction
+    // Initially get axes relative to vehicle, then adjust to factor in turret's relative yaw (ignore Z axis as we don't use it)
     TurretRelativeRotation.Yaw = CurrentAim.Yaw;
+    GetAxes(Rotation, X, Y, Z);
     X = X >> TurretRelativeRotation;
     Y = Y >> TurretRelativeRotation;
 
@@ -1031,7 +1034,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Front turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+            Log("Front turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
 
         // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
@@ -1078,7 +1081,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Right side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+            Log("Right side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
 
         // Don't penetrate with HEAT if there is added side armor
@@ -1123,7 +1126,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Rear turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+            Log("Rear turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
@@ -1162,7 +1165,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Left side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
+            Log("Left side turret hit: HitAngleDegrees =" @ HitAngleDegrees @ " Weapon WeaponRotationDegrees =" @ WeaponRotationDegrees);
         }
 
         // Don't penetrate with HEAT if there is added side armor

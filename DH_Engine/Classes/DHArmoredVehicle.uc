@@ -768,24 +768,25 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
 // Heavily modified from deprecated ROTreadCraft class for DH's armour penetration system, handling penetration calcs for any shell type
 simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float  HitAngleDegrees, Side, InAngle;
-    local vector LocDir, HitDir, X, Y, Z;
+    local float  HitAngleDegrees, InAngle;
+    local vector HitLocationRelativeOffset, X, Y, Z;
     local bool   bPenetrated;
 
     bRearHullPenetration = false; // reset before we start
 
-    // Figure out which side we hit
-    LocDir = vector(Rotation);
-    LocDir.Z = 0.0;
-    HitDir = HitLocation - Location;
-    HitDir.Z = 0.0;
-    HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
     GetAxes(Rotation, X, Y, Z);
-    Side = Y dot HitDir;
 
-    if (Side < 0.0)
+    // Calculate the angle direction of hit relative to vehicle's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc)
+    // Start by getting the offset of the HitLocation from vehicle's centre, relative to vehicle's facing direction
+    // 'Flatten' that to a 2D vector by removing Z its element, so we ignore any height difference, which must not affect the 'top down 2D' HitAngleDegrees calc
+    // Then calculate its angle from vehicle's facing direction (vector(1,0,0) in relative terms)
+    HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
+    HitLocationRelativeOffset.Z = 0.0;
+    HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(vect(1.0, 0.0, 0.0) dot Normal(HitLocationRelativeOffset)));
+
+    if (HitLocationRelativeOffset.Y < 0.0)
     {
-        HitAngleDegrees = 360.0 - HitAngleDegrees;
+        HitAngleDegrees = 360.0 - HitAngleDegrees; // hit left arc of vehicle & is an anti-clockwise angle, so adjust to 0-360 degree format
     }
 
     if (bDebugPenetration && Role == ROLE_Authority)
@@ -807,7 +808,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Front hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+            Log("Front hull hit: HitAngleDegrees =" @ HitAngleDegrees);
         }
 
         // Calculate the direction the shot came from (in radians, not degrees))
@@ -856,7 +857,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Right side hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+            Log("Right side hull hit: HitAngleDegrees =" @ HitAngleDegrees);
         }
 
         // Don't penetrate with HEAT if there is added side armor
@@ -900,7 +901,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Rear hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+            Log("Rear hull hit: HitAngleDegrees =" @ HitAngleDegrees);
         }
 
         InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
@@ -941,7 +942,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (bLogDebugPenetration)
         {
-            Log("Left side hull hit: HitAngleDegrees =" @ HitAngleDegrees @ " Side =" @ Side);
+            Log("Left side hull hit: HitAngleDegrees =" @ HitAngleDegrees);
         }
 
         // Don't penetrate with HEAT if there is added side armor
