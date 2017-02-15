@@ -768,9 +768,10 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
 // Heavily modified from deprecated ROTreadCraft class for DH's armour penetration system, handling penetration calcs for any shell type
 simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
-    local float  HitAngleDegrees, InAngle;
-    local vector HitLocationRelativeOffset, X, Y, Z;
-    local bool   bPenetrated;
+    local float   HitAngleDegrees, AngleOfIncidenceDegrees;
+    local vector  HitLocationRelativeOffset, ArmorNormal, X, Y, Z;
+    local rotator ArmourSlopeRotator;
+    local bool    bPenetrated;
 
     bRearHullPenetration = false; // reset before we start
 
@@ -796,11 +797,17 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Frontal hit
     if (HitAngleDegrees >= FrontLeftAngle || HitAngleDegrees < FrontRightAngle)
     {
+        // Calculate the projectile's angle of incidence to the actual armor slope
+        // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
+        ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(UFrontArmorSlope);
+        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(X));
+        AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
         // Debugging
         if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(ArmorNormal), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
@@ -810,23 +817,25 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Log("Front hull hit: HitAngleDegrees =" @ HitAngleDegrees);
         }
 
-        // Calculate the direction the shot came from (in radians, not degrees))
-        InAngle = Acos(Normal(-HitRotation) dot Normal(X));
-
         // Check for 'hit bug', where a projectile may pass through the 1st face of vehicle's collision & be detected as a hit on the opposite side (on the way out)
         // Calculate incoming angle of the shot, relative to perpendicular from the side we think we hit
         // If the angle is too high it's impossible, so we do a crude fix by switching the hit to the opposite
         // Angle of over 90 degrees is theoretically impossible, but in reality vehicles aren't regular shaped boxes & it is possible for legitimate hits a bit over 90 degrees
         // So have softened the threshold to 120 degrees, which should still catch genuine hit bugs
         // Also modified to skip this check for deflected shots, which can ricochet onto another part of the vehicle at weird angles
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
+        if (AngleOfIncidenceDegrees > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from front to REAR hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm, slope =" @ URearArmorSlope);
             }
 
-            bPenetrated = PenetrationNumber > URearArmorFactor && CheckPenetration(P, URearArmorFactor, GetCompoundAngle(InAngle, URearArmorSlope), PenetrationNumber);
+            // Calculate the projectile's angle of incidence to the actual armor slope
+            ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(URearArmorSlope);
+            ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(-X));
+            AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
+            bPenetrated = PenetrationNumber > URearArmorFactor && CheckPenetration(P, URearArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
             bRearHullPenetration = bPenetrated; // record that we penetrated the rear of vehicle, which is useful in TakeDamage()
 
             return bPenetrated;
@@ -839,17 +848,22 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         // Check whether or not we penetrated & return true or false accordingly
         // Checking that PenetrationNumber > ArmorFactor 1st is a quick pre-check that it's worth doing more complex calculations in CheckPenetration()
-        return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
+        return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
     }
 
     // Right side hit
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
+        // Calculate the projectile's angle of incidence to the actual armor slope
+        ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(URightArmorSlope);
+        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(Y));
+        AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
         // Debugging
         if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(ArmorNormal), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
@@ -865,17 +879,20 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return false;
         }
 
-        InAngle = Acos(Normal(-HitRotation) dot Normal(Y));
-
         // Fix hit detection bug
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
+        if (AngleOfIncidenceDegrees > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from right to LEFT hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm, slope =" @ ULeftArmorSlope);
             }
 
-            return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
+            // Calculate the projectile's angle of incidence to the actual armor slope
+            ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ULeftArmorSlope);
+            ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(-Y));
+            AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
+            return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
         }
 
         if (bDebugPenetration && Role == ROLE_Authority)
@@ -883,17 +900,22 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Level.Game.Broadcast(self, "Right hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm, slope =" @ URightArmorSlope);
         }
 
-        return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
+        return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
     }
 
     // Rear hit
     else if (HitAngleDegrees >= RearRightAngle && HitAngleDegrees < RearLeftAngle)
     {
+        // Calculate the projectile's angle of incidence to the actual armor slope
+        ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(URearArmorSlope);
+        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(-X));
+        AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
         // Debugging
         if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(ArmorNormal), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
@@ -903,17 +925,20 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Log("Rear hull hit: HitAngleDegrees =" @ HitAngleDegrees);
         }
 
-        InAngle = Acos(Normal(-HitRotation) dot Normal(-X));
-
         // Fix hit detection bug
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
+        if (AngleOfIncidenceDegrees > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from rear to FRONT hull hit: base armor =" @ UFrontArmorFactor * 10.0 $ "mm, slope =" @ UFrontArmorSlope);
             }
 
-            return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
+            // Calculate the projectile's angle of incidence to the actual armor slope
+            ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(UFrontArmorSlope);
+            ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(X));
+            AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
+            return PenetrationNumber > UFrontArmorFactor && CheckPenetration(P, UFrontArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
         }
 
         if (bDebugPenetration && Role == ROLE_Authority)
@@ -921,7 +946,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Level.Game.Broadcast(self, "Rear hull hit: base armor =" @ URearArmorFactor * 10.0 $ "mm, slope =" @ URearArmorSlope);
         }
 
-        bPenetrated = PenetrationNumber > URearArmorFactor && CheckPenetration(P, URearArmorFactor, GetCompoundAngle(InAngle, URearArmorSlope), PenetrationNumber);
+        bPenetrated = PenetrationNumber > URearArmorFactor && CheckPenetration(P, URearArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
         bRearHullPenetration = bPenetrated; // record that we penetrated the rear of vehicle, which is useful in TakeDamage()
 
         return bPenetrated;
@@ -930,11 +955,16 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Left side hit
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
+        // Calculate the projectile's angle of incidence to the actual armor slope
+        ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ULeftArmorSlope);
+        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(-Y));
+        AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
         // Debugging
         if (bDebugPenetration && Level.NetMode != NM_DedicatedServer)
         {
             ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(ArmorNormal), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
             Spawn(class'RODebugTracer', self,, HitLocation, rotator(HitRotation));
         }
@@ -950,17 +980,20 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return false;
         }
 
-        InAngle = Acos(Normal(-HitRotation) dot Normal(-Y));
-
         // Fix hit detection bug
-        if (class'UUnits'.static.RadiansToDegrees(InAngle) > 120.0 && P.NumDeflections == 0)
+        if (AngleOfIncidenceDegrees > 120.0 && P.NumDeflections == 0)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit bug - switching from left to RIGHT hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm, slope =" @ URightArmorSlope);
             }
 
-            return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, GetCompoundAngle(InAngle, URightArmorSlope), PenetrationNumber);
+            // Calculate the projectile's angle of incidence to the actual armor slope
+            ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(URightArmorSlope);
+            ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(Y));
+            AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-HitRotation dot ArmorNormal));
+
+            return PenetrationNumber > URightArmorFactor && CheckPenetration(P, URightArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
         }
 
         if (bDebugPenetration && Role == ROLE_Authority)
@@ -968,7 +1001,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             Level.Game.Broadcast(self, "Left hull hit: base armor =" @ ULeftArmorFactor * 10.0 $ "mm, slope =" @ ULeftArmorSlope);
         }
 
-        return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, GetCompoundAngle(InAngle, ULeftArmorSlope), PenetrationNumber);
+        return PenetrationNumber > ULeftArmorFactor && CheckPenetration(P, ULeftArmorFactor, AngleOfIncidenceDegrees, PenetrationNumber);
     }
 
     // Should never happen !
@@ -983,17 +1016,9 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
 // New generic function to handle penetration calcs for any shell type
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT from DH 5.1 (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
+simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float CompoundAngleDegrees, float PenetrationNumber)
 {
-    local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
-
-    // Convert angle back to degrees
-    CompoundAngleDegrees = class'UUnits'.static.RadiansToDegrees(CompoundAngle);
-
-    if (CompoundAngleDegrees > 90.0)
-    {
-        CompoundAngleDegrees = 180.0 - CompoundAngleDegrees;
-    }
+    local float OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
 
     // Calculate the SlopeMultiplier & EffectiveArmor, to give us the PenetrationRatio
     OverMatchFactor = ArmorFactor / P.ShellDiameter;
@@ -1020,12 +1045,6 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorF
     bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated; // would be much better to flag bIsHeatRound in DamageType, but would need new DHWeaponDamageType class
 
     return bProjectilePenetrated;
-}
-
-// Returns the compound hit angle (now we pass AOI to this function in radians, to save unnecessary processing to & from degrees)
-simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
-{
-    return Acos(Cos(class'UUnits'.static.DegreesToRadians(Abs(ArmorSlopeDegrees))) * Cos(AOI));
 }
 
 // New generic function to work with generic ShouldPenetrate & CheckPenetration functions

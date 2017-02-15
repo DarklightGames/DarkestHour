@@ -36,7 +36,7 @@ defaultproperties
     UFrontArmorSlope=55.0
     URightArmorSlope=40.0
     ULeftArmorSlope=40.0
-    URearArmorSlope=30.0
+    URearArmorSlope=-30.0
     PointValue=4.0
     MaxPitchSpeed=100.0
     TreadVelocityScale=225.0
