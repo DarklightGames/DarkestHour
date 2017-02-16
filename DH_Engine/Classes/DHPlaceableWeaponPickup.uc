@@ -162,12 +162,16 @@ state Sleeping
 Begin:
     Sleep(1.0); // allow a little time for bHidden to replicate to clients, before switching off all further replication (by setting RemoteRole to none)
     RemoteRole = ROLE_None;
-    Sleep(GetReSpawnTime() - RespawnEffectTime - 1.0);
-    Goto('Respawn');
+
+    if (GetReSpawnTime() > 0.0)
+    {
+        Sleep(GetReSpawnTime() - RespawnEffectTime - 1.0);
+        GoTo('Respawn');
+    }
 }
 
 // Modified to always go inactive instead of being destroyed
-// Pickup may respawn if suitable RespawnTime was set, but even if a very high time effectively prevents respawning, Sleeping state still allows pickup to be rectivated if match is reset
+// Even if pickup is set not to respawn, the Sleeping state still allows pickup to be rectivated if match is reset
 function SetRespawn()
 {
     StartSleeping();
