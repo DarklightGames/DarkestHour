@@ -20,6 +20,9 @@ simulated function SpawnVehicleAttachments()
 
 defaultproperties
 {
+    bDebugPenetration=true // TEMPDEBUG x 2
+    bLogDebugPenetration=true
+
     RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
@@ -30,12 +33,21 @@ defaultproperties
     TreadDamageThreshold=0.85
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=8.5
-    URightArmorFactor=4.0
-    ULeftArmorFactor=4.0
-    URearArmorFactor=4.0
     UFrontArmorSlope=55.0
+    LFrontArmorFactor=6.5
+    LFrontArmorSlope=-35.0
+    LFrontArmorHeight=-8.0
+    URightArmorFactor=4.0
     URightArmorSlope=40.0
+    LRightArmorFactor=4.0
+    LRightArmorSlope=0.0
+    LRightArmorHeight=23.0
+    ULeftArmorFactor=4.0
     ULeftArmorSlope=40.0
+    LLeftArmorFactor=4.0
+    LLeftArmorSlope=0.0
+    LLeftArmorHeight=23.0
+    URearArmorFactor=4.0
     URearArmorSlope=-30.0
     PointValue=4.0
     MaxPitchSpeed=100.0

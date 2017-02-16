@@ -42,8 +42,11 @@ var     texture     PeriscopeOverlay;           // driver's periscope overlay te
 var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
 
 // Armor penetration
-var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
-var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
+var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (cm)
+var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope (degrees)
+var     float       LFrontArmorFactor, LRightArmorFactor, LLeftArmorFactor, LRearArmorFactor; // lower hull armor thickness
+var     float       LFrontArmorSlope, LRightArmorSlope, LLeftArmorSlope, LRearArmorSlope;     // lower hull armor slope
+var     float       LFrontArmorHeight, LRightArmorHeight, LRearArmorHeight, LLeftArmorHeight; // height (in Unreal units) of top of lower hull armor above hull mesh origin
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
@@ -858,8 +861,18 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Now set the relevant armour properties to use, based on which side we hit
     if (HitSide ~= "Front")
     {
-        ArmorThickness = UFrontArmorFactor;
-        ArmorSlope = UFrontArmorSlope;
+        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
+        if (LFrontArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LFrontArmorHeight)
+        {
+            ArmorThickness = LFrontArmorFactor;
+            ArmorSlope = LFrontArmorSlope;
+            HitSide = "Lower front";
+        }
+        else
+        {
+            ArmorThickness = UFrontArmorFactor;
+            ArmorSlope = UFrontArmorSlope;
+        }
     }
     else if (HitSide ~= "Right")
     {
@@ -879,14 +892,35 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return false;
         }
 
-        ArmorThickness = URightArmorFactor;
-        ArmorSlope = URightArmorSlope;
+        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
+        if (LRightArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LRightArmorHeight)
+        {
+            ArmorThickness = LRightArmorFactor;
+            ArmorSlope = LRightArmorSlope;
+            HitSide = "Lower right";
+        }
+        else
+        {
+            ArmorThickness = URightArmorFactor;
+            ArmorSlope = URightArmorSlope;
+        }
     }
     else if (HitSide ~= "Rear")
     {
         bRearHit = true;
-        ArmorThickness = URearArmorFactor;
-        ArmorSlope = URearArmorSlope;
+
+        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
+        if (LRearArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LRearArmorHeight)
+        {
+            ArmorThickness = LRearArmorFactor;
+            ArmorSlope = LRearArmorSlope;
+            HitSide = "Lower rear";
+        }
+        else
+        {
+            ArmorThickness = URearArmorFactor;
+            ArmorSlope = URearArmorSlope;
+        }
     }
     else if (HitSide ~= "Left")
     {
@@ -906,8 +940,18 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
             return false;
         }
 
-        ArmorThickness = ULeftArmorFactor;
-        ArmorSlope = ULeftArmorSlope;
+        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
+        if (LLeftArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LLeftArmorHeight)
+        {
+            ArmorThickness = LLeftArmorFactor;
+            ArmorSlope = LLeftArmorSlope;
+            HitSide = "Lower left";
+        }
+        else
+        {
+            ArmorThickness = ULeftArmorFactor;
+            ArmorSlope = ULeftArmorSlope;
+        }
     }
 
     // Calculate the projectile's angle of incidence to the actual armor slope

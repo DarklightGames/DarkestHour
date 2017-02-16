@@ -3893,6 +3893,49 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
     }
 }
 
+// New debug exec to show & adjust the height of vehicle's lower armour, i.e. the highest point (above the origin) where a hit counts as a lower hull hit
+// Spawns an angle plane attachment representing the setting (run again with no option specified to remove this)
+exec function SetLowerArmorHeight(optional string Option, optional float NewValue)
+{
+    local DHVehicle        V;
+    local DHArmoredVehicle AV;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    {
+        AV = DHArmoredVehicle(V);
+
+        if (AV != none)
+        {
+            DestroyPlaneAttachments(AV); // remove any existing angle plane attachments
+
+            if (Option ~= "F" || Option ~= "Front")
+            {
+                Log(AV.VehicleNameString @ "LFrontArmorHeight =" @ NewValue @ "(was" @ AV.LFrontArmorHeight $ ")");
+                AV.LFrontArmorHeight = NewValue;
+                SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.LFrontArmorHeight * vect(0.0, 0.0, 1.0));
+            }
+            else if (Option ~= "R" || Option ~= "Right")
+            {
+                Log(AV.VehicleNameString @ "LRightArmorHeight =" @ NewValue @ "(was" @ AV.LRightArmorHeight $ ")");
+                AV.LRightArmorHeight = NewValue;
+                SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.LRightArmorHeight * vect(0.0, 0.0, 1.0));
+            }
+            else if (Option ~= "B" || Option ~= "Back" || Option ~= "Rear")
+            {
+                Log(AV.VehicleNameString @ "LRearArmorHeight =" @ NewValue @ "(was" @ AV.LRearArmorHeight $ ")");
+                AV.LRearArmorHeight = NewValue;
+                SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.LRearArmorHeight * vect(0.0, 0.0, 1.0));
+            }
+            else if (Option ~= "L" || Option ~= "Left")
+            {
+                Log(AV.VehicleNameString @ "LLeftArmorHeight =" @ NewValue @ "(was" @ AV.LLeftArmorHeight $ ")");
+                AV.LLeftArmorHeight = NewValue;
+                SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LLeftArmorHeight * vect(0.0, 0.0, 1.0));
+            }
+        }
+    }
+}
+
 // New debug exec to show & adjust a vehicle's TreadHitMaxHeight, which is the highest point (above the origin) where a side hit may damage treads
 // Spawns an angle plane attachment representing the setting (repeat same setting, i.e. no change, to remove this)
 exec function SetTreadHeight(float NewValue)
@@ -3907,8 +3950,8 @@ exec function SetTreadHeight(float NewValue)
         if (NewValue != V.TreadHitMaxHeight)
         {
             V.TreadHitMaxHeight = NewValue;
-            SpawnPlaneAttachment(V, rot(0, 0, 16384), V.TreadHitMaxHeight * vect(0.0, 0.0, 1.0));
-            SpawnPlaneAttachment(V, rot(32768, 0, 16384), V.TreadHitMaxHeight * vect(0.0, 0.0, 1.0));
+            SpawnPlaneAttachment(V, rot(0, 16384, 16384), V.TreadHitMaxHeight * vect(0.0, 0.0, 1.0));
+            SpawnPlaneAttachment(V, rot(0, -16384, 16384), V.TreadHitMaxHeight * vect(0.0, 0.0, 1.0));
         }
     }
 }
