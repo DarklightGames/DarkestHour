@@ -1155,15 +1155,15 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, HitSide @ "turret hit: penetrated =" @ bPenetrated $ ", hit direction =" @ int(HitDirectionDegrees)
-                @ "deg, InAngle =" @ int(AngleOfIncidenceDegrees) @ "deg, Base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
+            Level.Game.Broadcast(self, HitSide @ "turret hit: penetrated =" @ Locs(bPenetrated) $ ", hit loc direction =" @ int(HitDirectionDegrees)
+                @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
         }
     }
 
     if (bLogDebugPenetration && P.NumDeflections == 0)
     {
-        Log(HitSide @ "turret hit: penetrated =" @ bPenetrated $ ", hit direction =" @ int(HitDirectionDegrees)
-            @ "deg, InAngle =" @ int(AngleOfIncidenceDegrees) @ "deg, Base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
+        Log(HitSide @ "turret hit: penetrated =" @ Locs(bPenetrated) $ ", hit loc direction =" @ int(HitDirectionDegrees)
+            @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
     }
 
     // Finally return whether or not we penetrated the vehicle turret
@@ -1185,16 +1185,16 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorT
     EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
     PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
 
-    // Penetration debugging
+    // Debugging options
     if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
     {
-        Level.Game.Broadcast(self, "Effective armor =" @ int(EffectiveArmorThickness * 10.0) $ "mm, shot penetration =" @ int(PenetrationNumber * 10.0)
+        Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
             $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
     }
 
     if (bLogDebugPenetration && P.NumDeflections == 0)
     {
-        Log("Effective armor =" @ int(EffectiveArmorThickness * 10.0) $ "mm, shot penetration =" @ int(PenetrationNumber * 10.0)
+        Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
             $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
     }
 
