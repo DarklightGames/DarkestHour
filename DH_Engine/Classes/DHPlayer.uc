@@ -3932,6 +3932,13 @@ exec function SetLowerArmorHeight(optional string Option, optional float NewValu
                 AV.LLeftArmorHeight = NewValue;
                 SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LLeftArmorHeight * vect(0.0, 0.0, 1.0));
             }
+            else if (Option ~= "A" || Option ~= "All") // option to just display heights for all sides (no change)
+            {
+                SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.LFrontArmorHeight * vect(0.0, 0.0, 1.0));
+                SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.LRightArmorHeight * vect(0.0, 0.0, 1.0));
+                SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.LRearArmorHeight * vect(0.0, 0.0, 1.0));
+                SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LLeftArmorHeight * vect(0.0, 0.0, 1.0));
+            }
         }
     }
 }
