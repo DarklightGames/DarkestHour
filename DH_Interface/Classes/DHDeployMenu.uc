@@ -982,19 +982,28 @@ function AutoSelectRole()
     }
 }
 
-// Colin: Automatically selects the players' currently selected vehicle to
+// Automatically selects the players' currently selected vehicle to
 // spawn. If no vehicle is selected to spawn, the "None" option will be
-// selected.
+// selected, by default.
 function AutoSelectVehicle()
 {
-    local class<Vehicle> VehicleClass;
+    local int i;
+    local UInteger Integer;
 
-    if (PC.VehiclePoolIndex >= 0 && PC.VehiclePoolIndex < arraycount(GRI.VehiclePoolVehicleClasses))
+    if (PC.VehiclePoolIndex < 0)
     {
-        VehicleClass = GRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex];
+        return;
     }
 
-    li_Vehicles.SelectByObject(VehicleClass);
+    for (i = 0; i < li_Vehicles.Elements.Length; ++i)
+    {
+        Integer = UInteger(li_Vehicles.Elements[i].ExtraData);
+
+        if (Integer != none && Integer.Value == PC.VehiclePoolIndex)
+        {
+            li_Vehicles.SetIndex(i);
+        }
+    }
 }
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
