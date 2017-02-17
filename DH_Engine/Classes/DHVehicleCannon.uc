@@ -982,10 +982,9 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     local bool    bPenetrated;
 
     // If vehicle has no turret we must have hit collision representing a gun mantlet or similar, so return penetration based on our mantlet armor properties
-    // Checking first that PenetrationNumber exceeds ArmorThickness is a quick pre-check whether it's worth doing more complex calculations in CheckPenetration()
     if (!bHasTurret)
     {
-        return PenetrationNumber > GunMantletArmorFactor && CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
+        return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
     }
 
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
@@ -1132,8 +1131,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
 
     // Check whether or not we penetrated (record for now to allow for use in debug options)
-    // Checking first that PenetrationNumber exceeds ArmorThickness is a quick pre-check whether it's worth doing more complex calculations in CheckPenetration()
-    bPenetrated = PenetrationNumber > ArmorThickness && CheckPenetration(P, ArmorThickness, AngleOfIncidenceDegrees, PenetrationNumber);
+    bPenetrated = CheckPenetration(P, ArmorThickness, AngleOfIncidenceDegrees, PenetrationNumber);
 
     // Debugging options
     if (bDebugPenetration && P.NumDeflections == 0)
@@ -1179,23 +1177,29 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorT
     local float OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
     local bool  bProjectilePenetrated;
 
-    // Calculate armor's slope multiplier & then effective armor thickness, to give us a penetration ratio (penetrating depth vs effective thickness)
-    OverMatchFactor = ArmorThickness / P.ShellDiameter;
-    SlopeMultiplier = class'DHArmoredVehicle'.static.GetArmorSlopeMultiplier(P, AngleOfIncidenceDegrees, OverMatchFactor);
-    EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
-    PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
-
-    // Debugging options
-    if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
+    // Calculate armor's slope multiplier & then effective armor thickness, to give us penetration ratio (penetrating depth vs effective thickness)
+    // But we can skip these calcs if PenetrationNumber doesn't exceed ArmorThickness, because that means we can't ever penetrate
+    // Although we won't simply return here because want to make sure bProjectilePenetrated etc actively get set to false in this function
+    // (We'll always do these calcs if a debug option is enabled, as they get used in the debug)
+    if (PenetrationNumber > ArmorThickness || ((bDebugPenetration || bLogDebugPenetration) && P.NumDeflections == 0))
     {
-        Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-            $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
-    }
+        OverMatchFactor = ArmorThickness / P.ShellDiameter;
+        SlopeMultiplier = class'DHArmoredVehicle'.static.GetArmorSlopeMultiplier(P, AngleOfIncidenceDegrees, OverMatchFactor);
+        EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
+        PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
 
-    if (bLogDebugPenetration && P.NumDeflections == 0)
-    {
-        Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-            $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
+        // Debugging options
+        if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
+        {
+            Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
+                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
+        }
+
+        if (bLogDebugPenetration && P.NumDeflections == 0)
+        {
+            Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
+                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
+        }
     }
 
     // Check if round penetrated the vehicle & record whether it shattered on the armor

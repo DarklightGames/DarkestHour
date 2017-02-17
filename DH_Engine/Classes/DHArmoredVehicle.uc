@@ -961,8 +961,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
 
     // Check whether or not we penetrated (record for now to allow for use in debug options)
-    // Checking first that PenetrationNumber exceeds ArmorThickness is a quick pre-check whether it's worth doing more complex calculations in CheckPenetration()
-    bPenetrated = PenetrationNumber > ArmorThickness && CheckPenetration(P, ArmorThickness, AngleOfIncidenceDegrees, PenetrationNumber);
+    bPenetrated = CheckPenetration(P, ArmorThickness, AngleOfIncidenceDegrees, PenetrationNumber);
     bRearHullPenetration = bRearHit && bPenetrated; // used in TakeDamage()
 
     // Debugging options
@@ -1006,23 +1005,29 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorT
 {
     local float OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
 
-    // Calculate armor's slope multiplier & then effective armor thickness, to give us a penetration ratio (penetrating depth vs effective thickness)
-    OverMatchFactor = ArmorThickness / P.ShellDiameter;
-    SlopeMultiplier = GetArmorSlopeMultiplier(P, AngleOfIncidenceDegrees, OverMatchFactor);
-    EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
-    PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
-
-    // Debugging options
-    if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
+    // Calculate armor's slope multiplier & then effective armor thickness, to give us penetration ratio (penetrating depth vs effective thickness)
+    // But we can skip these calcs if PenetrationNumber doesn't exceed ArmorThickness, because that means we can't ever penetrate
+    // Although we won't simply return here because want to make sure bProjectilePenetrated etc actively get set to false in this function
+    // (We'll always do these calcs if a debug option is enabled, as they get used in the debug)
+    if (PenetrationNumber > ArmorThickness || ((bDebugPenetration || bLogDebugPenetration) && P.NumDeflections == 0))
     {
-        Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-            $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
-    }
+        OverMatchFactor = ArmorThickness / P.ShellDiameter;
+        SlopeMultiplier = GetArmorSlopeMultiplier(P, AngleOfIncidenceDegrees, OverMatchFactor);
+        EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
+        PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
 
-    if (bLogDebugPenetration && P.NumDeflections == 0)
-    {
-        Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-            $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
+        // Debugging options
+        if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
+        {
+            Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
+                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
+        }
+
+        if (bLogDebugPenetration && P.NumDeflections == 0)
+        {
+            Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
+                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
+        }
     }
 
     // Check if round penetrated the vehicle & record whether it shattered on the armor
@@ -1031,7 +1036,6 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorT
 
     // Set variables used in TakeDamage()
     bTurretPenetration = false;
-    bRearHullPenetration = bRearHullPenetration && bProjectilePenetrated;
     bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
 
     return bProjectilePenetrated;
