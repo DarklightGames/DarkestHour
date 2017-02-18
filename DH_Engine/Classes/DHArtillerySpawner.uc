@@ -17,20 +17,18 @@ var     int     SalvoAmount;  // no. of salvoes in this strike
 var     int     SpreadAmount; // randomised spread of each shell (in UU)
 
 // From deprecated ROArtillerySpawner, optimised a little
+// And setting a LifeSpan for this actor, as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
 function PostBeginPlay()
 {
     local ROLevelInfo LI;
-    local float       StrikeDelay;
+    local float       StrikeDelay, MaxSalvoDuration;
 
-    if (Controller(Owner) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).LevelInfo != none)
+    if (Controller(Owner) != none && ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).LevelInfo != none && ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
     {
+        // Record the team that called this arty strike
+        // Also save strike position to GRI so team players see it on their map (note this also prevents team calling another strike until this one is over)
         OwningTeam = Controller(Owner).GetTeamNum();
-
-        // Save artillery strike position to GRI so team players see it on their map
-        if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
-        {
-            ROGameReplicationInfo(Level.Game.GameReplicationInfo).ArtyStrikeLocation[OwningTeam] = Location;
-        }
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).ArtyStrikeLocation[OwningTeam] = Location;
 
         // Get arty strike properties from our team's settings in the map's DHLevelInfo
         LI = ROTeamGame(Level.Game).LevelInfo;
@@ -41,6 +39,13 @@ function PostBeginPlay()
 
         // Set timer until arty strike begins
         SetTimer(FMin(StrikeDelay, 1.0), false); // added a minimum to avoid any possibility of setting a null timer
+
+        // Set LifeSpan until this actor destroys itself
+        // Added as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
+        // If that happened this actor wouldn't destroy itself & arty strike would remain 'live', stopping the team from calling any more arty
+        // This actor's LifeSpan is set to the maximum possible length of the strike, assuming the max random time between shells & salvoes
+        MaxSalvoDuration = float(BatterySize - 1) * 1.5;
+        LifeSpan = StrikeDelay + (float(SalvoAmount - 1) * 20.0) + (float(SalvoAmount) * MaxSalvoDuration) + 1.0;
     }
     else
     {
