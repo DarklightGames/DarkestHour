@@ -40,7 +40,7 @@ function PostBeginPlay()
         StrikeDelay = float(LI.GetStrikeDelay(OwningTeam)) * (0.85 + (FRand() * 0.3));  // +/- 15% randomisation on delay
 
         // Set timer until arty strike begins
-        SetTimer(StrikeDelay, false);
+        SetTimer(FMin(StrikeDelay, 1.0), false); // added a minimum to avoid any possibility of setting a null timer
     }
     else
     {
@@ -55,6 +55,10 @@ function Destroyed()
     if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
     {
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).ArtyStrikeLocation[OwningTeam] = vect(0.0, 0.0, 0.0);
+    }
+    else
+    {
+        Log("DHArtillerySpawner ERROR: actor destroyed but no GRI so can't clear the ArtyStrikeLocation to end the strike!");
     }
 
     LastSpawnedShell = none;
@@ -127,7 +131,7 @@ function Timer()
         // If this salvo still has remaining shells to land, set a new, fairly short timer to spawn the next shell & exit
         if (ShellCounter < BatterySize)
         {
-            SetTimer(FRand() * 1.5, false); // randomised 0 to 1.5 seconds between shells
+            SetTimer(0.05 + (FRand() * 1.45), false); // randomised 0.05 to 1.5 seconds between shells (0.05 minimum to avoid any possibility of setting a null timer)
 
             return;
         }
@@ -142,7 +146,7 @@ function Timer()
     if (SalvoCounter < SalvoAmount)
     {
         ShellCounter = 0; // reset shell counter for next salvo
-        SetTimer(10.0 + (10.0 * FRand()), false); // randomised 10 to 20 seconds between salvoes
+        SetTimer(10.0 + (FRand() * 10.0), false); // randomised 10 to 20 seconds between salvoes
     }
     // Otherwise destroy this actor as the arty strike has finished
     else
