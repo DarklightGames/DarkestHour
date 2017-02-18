@@ -1045,7 +1045,7 @@ simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorT
 // A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
 simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float AngleOfIncidenceDegrees, optional float OverMatchFactor)
 {
-    local float CompoundExp, RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
+    local float CompoundExp, BaseAngleDegrees, DegreesSpread, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, MultiplierDifference;
 
     if (P.RoundType == RT_HVAP)
     {
@@ -1094,18 +1094,21 @@ simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile 
     {
         if (AngleOfIncidenceDegrees < 10.0)
         {
-            return AngleOfIncidenceDegrees / 10.0 * ArmorSlopeTable(P, 10.0, OverMatchFactor);
+            BaseAngleDegrees = 10.0; // we'll start with base multiplier for 10 degrees & then reduce based on how far much lower than 10 we are
+            DegreesSpread = 10.0;
         }
         else
         {
-            RoundedDownAngleDegrees = float(int(AngleOfIncidenceDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
-            ExtraAngleDegrees = AngleOfIncidenceDegrees - RoundedDownAngleDegrees;
-            BaseSlopeMultiplier = ArmorSlopeTable(P, RoundedDownAngleDegrees, OverMatchFactor);
-            NextSlopeMultiplier = ArmorSlopeTable(P, RoundedDownAngleDegrees + 5.0, OverMatchFactor);
-            SlopeMultiplierGap = NextSlopeMultiplier - BaseSlopeMultiplier;
-
-            return BaseSlopeMultiplier + (ExtraAngleDegrees / 5.0 * SlopeMultiplierGap);
+            BaseAngleDegrees = float(int(AngleOfIncidenceDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
+            DegreesSpread = 5.0;
         }
+
+        ExtraAngleDegrees = AngleOfIncidenceDegrees - BaseAngleDegrees;
+        BaseSlopeMultiplier = ArmorSlopeTable(P, BaseAngleDegrees, OverMatchFactor);
+        NextSlopeMultiplier = ArmorSlopeTable(P, BaseAngleDegrees + 5.0, OverMatchFactor);
+        MultiplierDifference = NextSlopeMultiplier - BaseSlopeMultiplier;
+
+        return BaseSlopeMultiplier + (ExtraAngleDegrees / DegreesSpread * MultiplierDifference);
     }
 
     return 1.0; // fail-safe neutral return value
