@@ -633,7 +633,7 @@ defaultproperties
 
     Speed=8000.0
     MaxSpeed=8000.0
-    LifeSpan=1500.0 // TODO: seems way too long, a few seconds would be fine, same as other projectiles
+    LifeSpan=12.0    // was 1500 seconds but way too long & no reason for that
 //  bProjTarget=true // was in RO but removed as makes no sense for a shell be a target for other projectiles & no other projectiles have this
 
     DistantSound=sound'Artillery.fire_distant'
