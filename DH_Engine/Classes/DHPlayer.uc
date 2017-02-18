@@ -3490,6 +3490,70 @@ exec function DriverCollisionDebug()
     }
 }
 
+// New debug exec to enable/disable penetration debugging functionality for all armored vehicles
+exec function DebugPenetration(bool bEnable)
+{
+    local class<DHArmoredVehicle> AVClass;
+    local class<DHVehicleCannon>  VCClass;
+    local DHArmoredVehicle        AV;
+    local DHVehicleCannon         VC;
+    local DHGameReplicationInfo   GRI;
+    local int                     i;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (!bEnable)
+        {
+            ClearStayingDebugLines();
+        }
+
+        // Change debug settings for current vehicles
+        foreach DynamicActors(class'DHArmoredVehicle', AV)
+        {
+            AV.bDebugPenetration = bEnable;
+            AV.bLogDebugPenetration = bEnable;
+            AV.Class.default.bDebugPenetration = bEnable; // also change defaults so future spawned vehicles inherit the setting
+            AV.Class.default.bLogDebugPenetration = bEnable;
+        }
+
+        foreach DynamicActors(class'DHVehicleCannon', VC)
+        {
+            VC.bDebugPenetration = bEnable;
+            VC.bLogDebugPenetration = bEnable;
+            VC.Class.default.bDebugPenetration = bEnable;
+            VC.Class.default.bLogDebugPenetration = bEnable;
+        }
+
+        // Change default settings for all vehicles listed in the SpawnManager actor's vehicle pool list
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            for (i = 0; i < GRI.VEHICLE_POOLS_MAX; ++i)
+            {
+                AVClass = class<DHArmoredVehicle>(GRI.GetVehiclePoolVehicleClass(i));
+
+                if (AVClass != none)
+                {
+                    AVClass.default.bDebugPenetration = bEnable;
+                    AVClass.default.bLogDebugPenetration = bEnable;
+
+                    if (AVClass.default.PassengerWeapons.Length > 0 && class<DHVehicleCannonPawn>(AVClass.default.PassengerWeapons[0].WeaponPawnClass) != none)
+                    {
+                        VCClass = class<DHVehicleCannon>(AVClass.default.PassengerWeapons[0].WeaponPawnClass.default.GunClass);
+
+                        if (VCClass != none)
+                        {
+                            VCClass.default.bDebugPenetration = bEnable;
+                            VCClass.default.bLogDebugPenetration = bEnable;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 // New debug exec to adjust rotation speed of treads
 exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {

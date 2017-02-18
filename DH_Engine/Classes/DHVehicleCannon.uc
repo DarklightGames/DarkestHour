@@ -1162,6 +1162,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     {
         Log(HitSide @ "turret hit: penetrated =" @ Locs(bPenetrated) $ ", hit loc direction =" @ int(HitDirectionDegrees)
             @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
+        Log("------------------------------------------------------------------------------------------------------");
     }
 
     // Finally return whether or not we penetrated the vehicle turret

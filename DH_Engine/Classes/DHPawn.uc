@@ -5720,6 +5720,45 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     }
 }
 
+// New debug exec that makes player's current weapon fire 20mm AP rounds, which is very useful for testing hits on vehicle armour, e.g. angle and side calcs
+// Calling it again will toggle back to the normal ammo
+// By default it also enables/disables penetration debug settings, but adding "true" after the console command will ignore those settings
+exec function DebugFire20mm(optional bool bIgnorePenetrationDebug)
+{
+    local class<Projectile> AP20mmClass;
+    local DHProjectileFire  FireMode;
+    local bool              bDebugFireEnabled;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Weapon != none)
+    {
+        FireMode = DHProjectileFire(Weapon.GetFireMode(0));
+
+        if (FireMode != none)
+        {
+            AP20mmClass = class<Projectile>(DynamicLoadObject("DH_Vehicles.DH_Sdkfz2341CannonShell", class'Class'));
+
+            // Switch current weapon to fire 20mm AP rounds (or toggle back to using normal ammo)
+            if (FireMode.ProjectileClass != AP20mmClass)
+            {
+                bDebugFireEnabled = true;
+                FireMode.ProjectileClass = AP20mmClass;
+                FireMode.bUsePreLaunchTrace = false; // have to disable PLT otherwise it stops projectiles even being spawned for close range shots
+            }
+            else
+            {
+                FireMode.ProjectileClass = FireMode.default.ProjectileClass;
+                FireMode.bUsePreLaunchTrace = FireMode.default.bUsePreLaunchTrace;
+            }
+
+            // Enable penetration debugging (or toggle back to off) - with option to ignore this
+            if (!bIgnorePenetrationDebug && DHPlayer(Controller) != none)
+            {
+                DHPlayer(Controller).DebugPenetration(bDebugFireEnabled);
+            }
+        }
+    }
+}
+
 // TEMPDEBUG (Matt): for problem where net player can't see 3rd person weapon attachment of player exiting vehicle, if vehicle replicated to that client with the player already in it
 exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
 {
