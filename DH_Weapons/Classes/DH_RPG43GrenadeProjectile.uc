@@ -102,8 +102,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
-// From DHThrowableExplosiveProjectile
-// Modified to adjust rotation on ground to compensate for static mesh being modelled facing forwards instead of up (required due to nature of this grenade's flight)
+// From DHThrowableExplosiveProjectile, modified so when projectile lands without having detonated it becomes a pickup
+// Also to adjust rotation on ground to compensate for static mesh being modelled facing forwards instead of up (required due to nature of this grenade's flight)
 // Also to remove 'Fear' stuff, as grenade does not explode after landing (if fails to detonate on impact)
 // Makes use of inherited NumDeflections variable as replacement for grenade's Bounces (works in reverse, counting up to 5 instead of down from 5)
 simulated function Landed(vector HitNormal)
@@ -223,7 +223,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Deflect without exploding if grenade failed to detonate
     if (!bExplodeOnImpact)
     {
-        DHDeflect(Location, HitNormal, Wall);
+        Deflect(Location, HitNormal, Wall);
 
         return;
     }
@@ -324,9 +324,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     HandleDestruction();
 }
 
-// Modified version of function to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns)
-// Also avoided setting replicated variables on a server, as clients are going to get this anyway
-simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
+// Modified to use grenade bounce functionality from DHThrowableExplosiveProjectile
+// In that class it's at the end of HitWall(), but here conveniently moved into Deflect() function of our DHAntiVehicleProjectile parent class
+simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
     local ESurfaceTypes ST;
     local vector        VNorm;
