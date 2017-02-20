@@ -2770,9 +2770,6 @@ state PutWeaponAway
         {
             if (SwapWeapon.bCanAttachOnBack)
             {
-                // TEST replacing below (Matt, Jan 2017) - appears we needlessly destroyed & re-spawned a replicated BackAttachment actor (same in ServerChangedWeapon)
-                // Needs multi-player test to confirm other players receive updated weapon mesh (should do as Mesh is replicated to all)
-
                 // Originally the replicated BackAttachment actor was needlessly destroyed & re-spawned just to switch to a different weapon mesh
                 // That caused unnecessary network load by requiring server to destroy existing actor, instruct all clients to do same, then close the net channels
                 // Only to immediately spawn the same BackAttachment actor, initialise it to have the new weapon mesh, then replicate it to all relevant clients
@@ -2789,17 +2786,6 @@ state PutWeaponAway
                 }
 
                 AttachedBackItem.InitFor(SwapWeapon);
-/*
-                if (AttachedBackItem != none)
-                {
-
-                    AttachedBackItem.Destroy();
-                    AttachedBackItem = none;
-                }
-
-                AttachedBackItem = Spawn(class'BackAttachment', self);
-                AttachedBackItem.InitFor(SwapWeapon);
-                AttachToBone(AttachedBackItem, AttachedBackItem.AttachmentBone); */
             }
 
             SwapWeapon.SetDefaultDisplayProperties();
