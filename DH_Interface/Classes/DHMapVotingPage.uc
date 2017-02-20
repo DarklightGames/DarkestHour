@@ -81,8 +81,8 @@ function SendVote(GUIComponent Sender)
             // Do a check if the current player count is in bounds of recommended range or if level has failed QA
             if (Parts.Length >= 5) //Require all info
             {
-                Min = int(Parts[2]);
-                Max = int(Parts[3]);
+                Min = int(Parts[3]);
+                Max = int(Parts[4]);
 
                 if (GRI.PRIArray.Length < Min || (GRI.PRIArray.Length > Max && GRI.PRIArray.Length < GRI.MaxPlayers))
                 {
