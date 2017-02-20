@@ -15,10 +15,6 @@ defaultproperties
     FireEffectScale=2.5 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-55.0,Y=-15.0,Z=100.0)
 
-    // Cannon armour (gun shield) // TODO: set these (or remove altogether if we don't go with a separate collision for gun shield)
-    GunMantletArmorFactor=2.54
-    GunMantletSlope=30.0
-
     // Turret movement
     bHasTurret=false
     ManualRotationsPerSecond=0.02

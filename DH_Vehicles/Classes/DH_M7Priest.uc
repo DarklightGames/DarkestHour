@@ -7,7 +7,7 @@ class DH_M7Priest extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M7Priest_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_M7Priest_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc2.usx
 
 defaultproperties
 {
@@ -27,7 +27,7 @@ defaultproperties
     Skins(2)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     Skins(3)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     Skins(4)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc3.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
@@ -80,7 +80,7 @@ defaultproperties
     HullFireChance=0.45
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.priest.priest_destro'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_destro'
 
     // Entry & exit
     ExitPositions(0)=(X=50.0,Y=-140.0,Z=-10.0)
