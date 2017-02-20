@@ -6,9 +6,10 @@
 class DH_RPG43GrenadeProjectile extends DHCannonShellHEAT;
 // Obviously not a cannon shell but it is a HEAT explosive & by extending this we can make use of HEAT functionality & DH armour penetration calculations
 
-var     float           MinImpactSpeedToExplode; // minimum impact speed at which grenade must hit a surface to explode on contact
-var     float           MaxImpactAOIToExplode;   // maximum angle, in degrees, at which grenade must hit a surface to explode on contact
-var class<WeaponPickup> PickupClass;             // pickup class if grenade is thrown but does not explode & lies on ground
+var     float           MinImpactSpeedToExplode;   // minimum impact speed at which grenade must hit a surface to explode on contact
+var     float           MaxImpactAOIToExplode;     // maximum angle, in degrees, at which grenade must hit a surface to explode on contact
+var     float           MaxVerticalAOIForTopArmor; // max impact angle from vertical (in degrees, relative to vehicle) that registers as a hit on relatively thin top armor
+var class<WeaponPickup> PickupClass;               // pickup class if grenade is thrown but does not explode & lies on ground
 
 // Functions entered out as not relevant to grenade
 simulated static function int GetPitchForRange(int Range) { return 0; }
@@ -143,7 +144,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local RODestroyableStaticMesh DestroMesh;
     local Actor  TraceHitActor;
-    local vector Direction, TempHitLocation, TempHitNormal;
+    local vector Direction, TempHitLocation, TempHitNormal, VehicleRelativeVertical, X, Y;
     local int    ImpactSpeed, xH, TempMaxWall, i;
     local bool   bExplodeOnImpact;
     local float  ImpactAOI;  // Angle of incidence, in degrees
@@ -195,29 +196,40 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     bOrientToVelocity = false; // disable this after we hit something as the stabilising 'mini chute' will no longer have any effect
 
-    ImpactSpeed = VSize(Velocity);
-    ImpactAOI = Abs(class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot Normal(Velocity))) - 180.0);
-
-    // Grenade hit a vehicle & will explode if impact speed is high enough and
-    // it has a low angle of incidence (this prevents "glancing" hits from
-    // detonating the grenade
-    // TODO: maybe use CheckWall() to get hit surface Hardness & use that to
-    // calc req'd ImpactSpeed?
-    if (ImpactSpeed >= default.MinImpactSpeedToExplode && ImpactAOI <= default.MaxImpactAOIToExplode)
+    // Check whether grenade explodes on impact or bounces off, depending on what it hit, how fast & at what angle
+    // Made it so it grenade never explodes if it hits a player & always bounces off (discourages throwing at other players)
+    if (ROPawn(Wall) == none)
     {
-        if (ROVehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+        ImpactSpeed = VSize(Velocity);
+        ImpactAOI = Abs(class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot Normal(Velocity))) - 180.0);
+
+        // Grenade will explode if impact speed is high enough & it angle of incidence is low enough (that prevents glancing hits from detonating it)
+        // TODO: maybe use CheckWall() to get hit surface Hardness & use that to calculate required ImpactSpeed?
+        if (ImpactSpeed >= default.MinImpactSpeedToExplode && ImpactAOI <= default.MaxImpactAOIToExplode)
         {
-            // We hit an armored vehicle but failed to penetrate
-            if ((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
-                || (Wall.IsA('DHVehicleCannon') && !DHVehicleCannon(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location))))
+            // We hit an armored vehicle
+            // 1st check whether it's a downwards hit, which probably means grenade dropped onto relatively thin top surface armour (a common tactic)
+            // If so we'll assume HEAT grenade's substantial penetration will defeat top armour of any vehicle's hull or turret, so skip penetration check
+            // Top hits or armor are not modelled in this game, but it's a reasonable assumption as even heavy tanks only had 30-40mm top armor
+            // Otherwise do normal armour penetration check & exit if it fails to penetrate (with suitable effects)
+            if (DHArmoredVehicle(Wall) != none || DHVehicleCannon(Wall) != none)
             {
-                FailToPenetrateArmor(Location, HitNormal, Wall);
+                // Re-calc AOI, this time relative to a line 'straight up' from the vehicle (relative to its rotation)
+                Wall.GetAxes(Wall.Rotation, X, Y, VehicleRelativeVertical);
+                ImpactAOI = class'UUnits'.static.RadiansToDegrees(Acos(-Normal(Velocity) dot VehicleRelativeVertical));
 
-                return;
+                if (ImpactAOI > default.MaxVerticalAOIForTopArmor &&
+                    ((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+                    || (Wall.IsA('DHVehicleCannon') && !DHVehicleCannon(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))))
+                {
+                    FailToPenetrateArmor(Location, HitNormal, Wall);
+
+                    return;
+                }
             }
-        }
 
-        bExplodeOnImpact = true;
+            bExplodeOnImpact = true;
+        }
     }
 
     // Deflect without exploding if grenade failed to detonate
@@ -550,5 +562,6 @@ defaultproperties
     // RPG-43 specific variables
     MaxImpactAOIToExplode=35.0
     MinImpactSpeedToExplode=900.0
+    MaxVerticalAOIForTopArmor=25.0
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
 }
