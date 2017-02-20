@@ -10,7 +10,7 @@ var localized string OfficialText;
 var localized string LegacyText;
 var localized string CommunityText;
 
-var protected string OfficialMaps[35]; // Make sure size matches correctly
+var protected string OfficialMaps[37]; // Make sure size matches correctly
 var protected string LegacyMaps[9];
 
 static function string GetMapSource(string S)
@@ -96,15 +96,17 @@ defaultproperties
     OfficialMaps(23)="DH-Noville.rom"
     OfficialMaps(24)="DH-Pariserplatz.rom"
     OfficialMaps(25)="DH-Poteau_Ambush.rom"
-    OfficialMaps(26)="DH-Reichswald.rom"
-    OfficialMaps(27)="DH-Raids.rom"
-    OfficialMaps(28)="DH-Simonskall.rom"
-    OfficialMaps(29)="DH-St-Clement.rom"
-    OfficialMaps(30)="DH-Stavelot.rom"
-    OfficialMaps(31)="DH-Stoumont.rom"
-    OfficialMaps(32)="DH-Targnon.rom"
-    OfficialMaps(33)="DH-Vierville.rom"
-    OfficialMaps(34)="DH-Watrange.rom"
+    OfficialMaps(26)="DH-Raids.rom"
+    OfficialMaps(27)="DH-Rakowice.rom"
+    OfficialMaps(28)="DH-Reichswald.rom"
+    OfficialMaps(29)="DH-Simonskall.rom"
+    OfficialMaps(30)="DH-St-Clement.rom"
+    OfficialMaps(31)="DH-Stavelot.rom"
+    OfficialMaps(32)="DH-Stoumont.rom"
+    OfficialMaps(33)="DH-Targnon.rom"
+    OfficialMaps(34)="DH-Vierville.rom"
+    OfficialMaps(35)="DH-Vossenack_November7th"
+    OfficialMaps(36)="DH-Watrange.rom"
     LegacyMaps(0)="DH-Vieux_Recon.rom"
     LegacyMaps(1)="DH-Ginkel_Heath.rom"
     LegacyMaps(2)="DH-Wacht_am_Rhein.rom"
