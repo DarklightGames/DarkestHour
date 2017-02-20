@@ -94,7 +94,7 @@ function Timer()
                 }
             }
 
-            if (RI != none && DHP.bUsedCarriedMGAmmo)
+            if (RI != none && DHP != none && DHP.bUsedCarriedMGAmmo)
             {
                 DHP.bUsedCarriedMGAmmo = false;
 

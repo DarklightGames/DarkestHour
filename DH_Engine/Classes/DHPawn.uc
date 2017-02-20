@@ -4739,7 +4739,7 @@ simulated function DHRoleInfo GetRoleInfo()
 
 simulated function bool AllowSprint()
 {
-    if (bIsWalking && !Weapon.bUsingSights)
+    if (bIsWalking && (Weapon != none && !Weapon.bUsingSights))
     {
         return false;
     }

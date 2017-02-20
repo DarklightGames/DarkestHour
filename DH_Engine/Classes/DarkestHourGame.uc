@@ -2879,7 +2879,9 @@ exec function CaptureObj(int Team)
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
-        if (DHObjectives[i].bActive && DHObjectives[i].ObjState != Team)
+        if (DHObjectives[i] != none &&
+            DHObjectives[i].bActive &&
+            DHObjectives[i].ObjState != Team)
         {
             DHObjectives[i].ObjectiveCompleted(none, Team);
 

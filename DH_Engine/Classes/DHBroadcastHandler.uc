@@ -87,10 +87,12 @@ event AllowBroadcastLocalized(
                     Warn("Unknown broadcast type found for message class RODemolitionChargePlacedMsg: " $ Switch);
             }
         }
-
         else if (class<DHArtilleryTargetMessage>(Message) != none)
         {
-            if (P.Pawn == none || P.Pawn.PlayerReplicationInfo == none || DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
+            if (P == none ||
+                P.Pawn == none ||
+                P.Pawn.PlayerReplicationInfo == none ||
+                DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none)
             {
                 continue;
