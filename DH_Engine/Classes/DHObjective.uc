@@ -804,6 +804,11 @@ function Timer()
                     DoVehiclePoolAction(AxisClearedCaptureVehiclePoolActions[i]);
                 }
 
+                for (i = 0; i < AxisClearedCaptureEvents.Length; ++i)
+                {
+                    TriggerEvent(AxisClearedCaptureEvents[i], none, none);
+                }
+
                 if (bGroupActionsAtDisable)
                 {
                     HandleGroupActions(AXIS_TEAM_INDEX);
@@ -818,7 +823,7 @@ function Timer()
                 DisableCapBarsForThisObj();
                 return;
             }
-            else if (bDisableWhenAlliesClearObj)
+            else if (bDisableWhenAxisClearObj || bDisableWhenAlliesClearObj)
             {
                 CurrentCapProgress = 0.0;
                 SetActive(false);
