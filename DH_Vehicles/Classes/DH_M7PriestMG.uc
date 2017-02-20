@@ -21,7 +21,7 @@ defaultproperties
     bLimitYaw=false
     PitchBone="pitch"
     CustomPitchUpLimit=5000
-    CustomPitchDownLimit=63000
+    CustomPitchDownLimit=63400
 
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_50CalVehicleBullet'
