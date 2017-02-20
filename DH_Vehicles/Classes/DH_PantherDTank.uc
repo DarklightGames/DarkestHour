@@ -20,9 +20,6 @@ simulated function SpawnVehicleAttachments()
 
 defaultproperties
 {
-    bDebugPenetration=true // TEMPDEBUG x 2
-    bLogDebugPenetration=true
-
     RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left

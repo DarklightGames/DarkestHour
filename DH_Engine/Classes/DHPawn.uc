@@ -5277,8 +5277,6 @@ simulated function SetUpPlayerModel()
                 }
             }
         }
-        else if (DrivenVehicle != none && PRI != none && DHRoleInfo(PRI.RoleInfo) != none && !DHRoleInfo(PRI.RoleInfo).IsValidCharacterName(PRI.CharacterName))
-            log(PRI.PlayerName @ "SetUpPlayerModel: AVERTED UNIFORM BUG due to PRI.CharacterName" @ PRI.CharacterName @ "being invalid for role" @ PRI.RoleInfo); // TEMPDEBUG (Matt)
     }
 }
 
@@ -5759,7 +5757,7 @@ exec function DebugFire20mm(optional bool bIgnorePenetrationDebug)
     }
 }
 
-// TEMPDEBUG (Matt): for problem where net player can't see 3rd person weapon attachment of player exiting vehicle, if vehicle replicated to that client with the player already in it
+// TEMPDEBUG (Matt, v7.2): for problem where net player can't see 3rd person weapon attachment of player exiting vehicle, if vehicle replicated to that client with the player already in it
 exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
 {
     local ROPawn           P;

@@ -187,7 +187,6 @@ function ProcessTouch(Actor Other, optional bool bUnTouch)
             {
                 if (MV != self && MV.bActive)
                 {
-                    log("Pawn" @ P.Tag @ "Untouched MineVolume" @ Name @ "but is still in other MV:" @ MV.Name); // TEMPDEBUG (Matt)
                     bStillInsideAnotherMineVolume = true;
                 }
             }
@@ -260,7 +259,6 @@ function PawnExitedMineVolume(Pawn P, optional bool bStillInsideAnotherMineVolum
     {
         P.MineAreaEnterTime = 0.0;
     }
-    else log("PawnExitedMineVolume from" @ Name @ "but doing NOTHING as also touching another MV"); // TEMPDEBUG (Matt)
 }
 
 // New function to Handle a player that has been found inside mine volume (may include warning, recording enter time or destruction)

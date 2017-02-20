@@ -73,14 +73,6 @@ static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 
         PRI.VoiceType = VoiceClass;
         ROP.VoiceClass = class<TeamVoicePack>(VoiceClass);
-
-        if (P.PlayerReplicationInfo == none && P.DrivenVehicle != none)
-            log(PRI.PlayerName @ "Species.SetUp(): AVERTED VOICE COMMANDS BUG when player was in a vehicle & DHPawn has no PRI"); // TEMPDEBUG (Matt)
-    }
-    else // TEMPDEBUG (Matt) - the IsPendingConnection check just stops misleading error log here when disconnecting from a server, suggesting something is wrong when it isn't
-    {
-        if (PRI != none) log(PRI.PlayerName @ "Species.Setup(): NO VOICE SETUP due to no PRI.RoleInfo - SHOULD NOT HAPPEN!!!");
-        else if (!P.Level.IsPendingConnection()) log(P.name @ "Species.Setup(): NO VOICE SETUP due to no PRI - SHOULD NOT HAPPEN!!!");
     }
 
     return true;
