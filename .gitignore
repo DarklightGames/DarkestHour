@@ -47,6 +47,8 @@ ROInventory/
 RORoles/
 ROVehicles/
 ScreenShots/
+Tools/
+Turul/
 Unrealed/
 UnrealGame/
 UTV2004c/
@@ -57,6 +59,8 @@ XGame/
 XInterface/
 XVoting/
 XWebAdmin/
+/*.bat
+/DarkestHourDev/*.bat
 /System/*.det
 /System/*.int
 /System/*.blob
@@ -74,6 +78,7 @@ XWebAdmin/
 /System/*.sav
 /System/ucc
 /System/*.upl
+/System/*.ini
 /System/Microsoft
 /System/ArmoredBeasts2.ini
 /System/Build.ini
@@ -92,32 +97,6 @@ XWebAdmin/
 /System/UPlaylists.ini
 /System/User.ini
 /DarkestHour51/
-CCpl/
-DH__AllSourceCode/
-DarkestHourDev/Animations/DH_50CalVehicles_anm_V2.ukx
-DarkestHourDev/Animations/DH_Hetzer_anm_V2.ukx
-DarkestHourDev/Animations/DH_ShermanJumbo_anm_V3.ukx
-*.bat
-DarkestHourDev/DECOMPILED_TEMP/
-DarkestHourDev/Maps/DH-Belgium_DevTest.rom
-DarkestHourDev/Maps/DH-DemoMap_Summer_GG7.rom
-DarkestHourDev/Maps/DH-DemoMap_Winter_GG7.rom
-DarkestHourDev/Maps/DH-Target_Range_Sov.rom
-DarkestHourDev/Maps/New folder/
-ROpl/
-DarkestHourDev/StaticMeshes/DH_Hetzer_stc_V2.usx
-DarkestHourDev/StaticMeshes/DH_ShermanJumbo_stc_V3.usx
-DarkestHourDev/Textures/DH_GG_VehiclesGEWinter_tex.utx
-DarkestHourDev/Textures/DH_GG_VehiclesGE_tex.utx
-DarkestHourDev/Textures/DH_GG_VehiclesUKWinter_tex.utx
-DarkestHourDev/Textures/DH_Hetzer_tex_V1.utx
-*.ini
-SystemOLD/
-tools/
-turul/
-DarkestHourDev/Maps/LevelGameActorsMaps/
-DarkestHourDev/Maps/Maps deleted since 5-1/
-DarkestHourDev/Maps/DH-AlteZiegelei_GG7_WIP3_Test7.rom
-DarkestHourDev/Maps/DH-Watrange_ShotGunTest.rom
-DarkestHourDev/Textures/DH_Winchester1897_tex.utx
-DarkestHourDev/Textures/DH_USSightCentre_tex.utx
+/DH-AllSourceCode/
+/DarkestHourDev/Notes/
+/DarkestHourDev/Maps/Archive/
