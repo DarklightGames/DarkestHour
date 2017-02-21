@@ -62,6 +62,7 @@ var     int                     DeathPenaltyCount;          // number of deaths 
 
 // Weapon locking (punishment for spawn killing)
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
+var     int                     PendingWeaponLockSeconds ;  // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
 var     int                     WeaponLockViolations;       // the number of violations this player has, used to increase the locked period for multiple offences
 var     bool                    bWeaponsAreLocked;          // flag only used so we know an unlock message needs to be displayed locally after the locked time expires
 
@@ -118,6 +119,26 @@ simulated event PostBeginPlay()
             break;
         }
     }
+}
+
+// Modified to add hacky fix for problem where player re-joins a server with an active weapon lock saved in his DHPlayerSession
+// When that happens the weapon lock is passed to the client, but it doesn't yet have a GRI reference so it all goes wrong
+// In that situation we record a PendingWeaponLockSeconds  on client, then here we use it to set the weapon lock on client as soon as it receives the GRI
+simulated function PostNetReceive()
+{
+    if (PendingWeaponLockSeconds  > 0 && GameReplicationInfo != none)
+    {
+        LockWeapons(PendingWeaponLockSeconds );
+        PendingWeaponLockSeconds  = 0;
+    }
+
+    super.PostNetReceive();
+}
+
+// Modified so we don't disable PostNetReceive() until we've received the GRI, which allows PendingWeaponLockSeconds  functionality to work
+simulated function bool NeedNetNotify()
+{
+    return super.NeedNetNotify() || GameReplicationInfo == none;
 }
 
 // Matt: modified to avoid "accessed none" error
@@ -2712,6 +2733,12 @@ simulated function LockWeapons(int Seconds)
         {
             ClientLockWeapons(byte(Seconds));
         }
+    }
+    // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
+    // If we don't yet have GRI, we record a PendingWeaponLockSeconds  on client, then PostNetReceive() uses it to set weapon lock as soon as it receives GRI
+    else if (GameReplicationInfo == none)
+    {
+        PendingWeaponLockSeconds  = Seconds;
     }
 }
 
