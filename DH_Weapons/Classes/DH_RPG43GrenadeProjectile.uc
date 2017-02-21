@@ -42,6 +42,21 @@ simulated function PostBeginPlay()
     Acceleration = 0.5 * PhysicsVolume.Gravity;
 }
 
+
+// Modified to skip over Super in DHAntiVehicleProjectile, so we simply destroy the actor
+// This is a net temporary, torn off projectile, so it doesn't need the delayed destruction stuff used by a fully replicated cannon shell
+simulated function HandleDestruction()
+{
+    Destroy();
+}
+
+// Modified to skip over Super in DHCannonShell, to avoid playing explosion effects when projectile is destroyed
+// This is a net temporary, torn off projectile, so net client always handles its own destruction & so will always play explosion effects elsewhere if it needs to
+simulated function Destroyed()
+{
+    super(DHProjectile).Destroyed();
+}
+
 // From DHThrowableExplosiveProjectile (collision mesh block checks bWontStopThrownProjectile instead of bWontStopShell)
 simulated singular function Touch(Actor Other)
 {
@@ -114,23 +129,24 @@ simulated function Landed(vector HitNormal)
 
     if (NumDeflections > 5)
     {
-        bOrientToVelocity = false; // disable this after grenade lands as it will have no velocity & we want to preserve its rotation on the ground
-        SetPhysics(PHYS_None);
-        NewRotation = QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw))));
-        NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
-        SetRotation(NewRotation);
-
         if (Role == ROLE_Authority)
         {
+            bOrientToVelocity = false; // disable this after grenade lands as it will have no velocity & we want to preserve its rotation on the ground
+            SetPhysics(PHYS_None);
+            NewRotation = QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw))));
+            NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
+            SetRotation(NewRotation);
+
             P = Spawn(default.PickupClass,,, Location + vect(0.0, 0.0, 2.0), Rotation);
 
             if (P != none)
             {
-                Destroy();
                 P.InitDroppedPickupFor(none);
                 P.AmmoAmount[0] = 1;
             }
         }
+
+        Destroy();
     }
     else
     {
@@ -280,8 +296,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         }
     }
 
-    // Explode (unset bDidExplosionFX so Destroyed() knows grenade hasn't just disappeared after LifeSpan after failing to detonate on impact)
-    bDidExplosionFX = false;
     Explode(Location + ExploWallOut * HitNormal, HitNormal);
 
     bInHitWall = true; // set flag to prevent recursive calls
@@ -473,7 +487,6 @@ defaultproperties
     Speed=900.0
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
     LifeSpan=15.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
-    bDidExplosionFX=true   // so by default we'll skip explosion effects, but if grenade actually explodes on impact we'll switch this to false to get effects
     bExplodesOnHittingWater=false
     bHasTracer=false
 
@@ -549,6 +562,7 @@ defaultproperties
     // Override unwanted properties inherited from cannon shell parent classes
     bTrueBallistics=false
     bUpdateSimulatedPosition=false
+    bNetTemporary=true // doesn't use replicated FuzeLengthTimer to make it explode, like other grenades (& short range weapon without ongoing movement replication like cannon shell)
     TransientSoundRadius=300.0
     TransientSoundVolume=0.3
     ExplosionSoundVolume=3.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
