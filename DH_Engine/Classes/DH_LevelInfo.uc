@@ -69,7 +69,7 @@ singular static function bool DHDebugMode()
 
 defaultproperties
 {
-    bDHDebugMode=true // TEMP - revert to false before any release
+    bDHDebugMode=false // TEMP - revert to false before any release
 
     AlliesToAxisRatio=0.5
     Texture=texture'DHEngine_Tex.LevelInfo'
