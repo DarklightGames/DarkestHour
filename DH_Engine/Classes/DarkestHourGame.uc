@@ -24,7 +24,7 @@ var     DHObstacleManager           ObstacleManager;
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
-var     int                         WeaponLockTimes[6];
+var     int                         WeaponLockTimes[10];
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
@@ -4318,9 +4318,13 @@ defaultproperties
     bPublicPlay=true
 
     WeaponLockTimes(0)=0
-    WeaponLockTimes(1)=5
-    WeaponLockTimes(2)=15
-    WeaponLockTimes(3)=30
-    WeaponLockTimes(4)=45
-    WeaponLockTimes(5)=60
+    WeaponLockTimes(1)=0
+    WeaponLockTimes(2)=5
+    WeaponLockTimes(3)=10
+    WeaponLockTimes(4)=15
+    WeaponLockTimes(5)=20
+    WeaponLockTimes(6)=25
+    WeaponLockTimes(7)=30
+    WeaponLockTimes(8)=45
+    WeaponLockTimes(9)=60
 }
