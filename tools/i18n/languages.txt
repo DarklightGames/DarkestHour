@@ -1,8 +1,0 @@
-int
-det
-est
-frt
-itt
-kot
-tct
-rut

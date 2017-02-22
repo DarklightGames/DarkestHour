@@ -15,6 +15,8 @@ from openpyxl.utils import get_column_letter
 from collections import defaultdict
 import json
 
+# TODO: handle an array with object-like items
+# TODO: this array parsing code is a god damned mess. either clean this up or use PLY or some other tokenizer.
 def parse_array(s, i):
     if s[i] != '(':
         raise RuntimeError('invalid array syntax')
@@ -23,11 +25,18 @@ def parse_array(s, i):
     while True:
         r = parse_array_item(s, i)
         if r is None:
+            print 'Array parse failure for in string "{}"'.format(s)
             break
         i, item = r
         items.append(item)
         if s[i] == ',':
             i += 1
+            while s[i] == ',':
+                i += 1
+                items.append('')
+            if s[i] == ')':
+                # end of list
+                break
             continue
         for j, c in enumerate(s[i:]):
             # skip whitespace
@@ -54,7 +63,8 @@ def parse_array_item(s, i):
         return i + j + 1, st
     elif s[i] == '(':
         # TODO: parse struct
-        return len(s) - 1, s[i + 1:]
+        # return len(s) - 1, s[i + 1:]
+        return None
     else:
         return None
 
@@ -81,27 +91,25 @@ def read_localization_file(sections, language, path):
                 match = re.match(r'^\((.+)\)$', value)
                 # TODO: split these
                 if match is None:
-                    #print section_name, key, value
                     pass
                 else:
                     value = parse_array(value, 0)
-            values = section[key]
-            values[language] = value
+            if value is not None:
+                values = section[key]
+                values[language] = value
     return sections
 
 
 def main():
 
-    modname = 'DarkestHourDev'
-
     # parse options
     argparser = argparse.ArgumentParser()
     argparser.add_argument('dir', default='.', help='root directory')
     argparser.add_argument('-mod', required=True, help='mod name')
-    args = argparser.parse_args(['-mod', modname, 'C:\Users\colin_000\Documents\GitHub\DarkestHour'])
+    args = argparser.parse_args()
 
     # TODO: prompt to do a clean recompile
-    print os.path.join(args.dir, 'tools', 'make', 'make.py')
+    #print os.path.join(args.dir, 'tools', 'make', 'make.py')
 
     '''
     # do a clean recompile of the project and run dumpint
@@ -136,7 +144,7 @@ def main():
         print 'error could not resolve mod system directory'
         sys.exit(1)
 
-    workbook_name = '{0}.xlsx'.format(modname)
+    workbook_name = '{0}.xlsx'.format(args.mod)
 
     # TODO: write to mod folder
     workbook = Workbook(workbook_name)
@@ -150,8 +158,8 @@ def main():
     no_data_format = workbook.add_format({'bg_color': '#ffcccb'})
     data_format = workbook.add_format({'bg_color': '#ccffcb'})
 
-    # read languages file
-    with open('languages.txt') as f:
+    # read i18n configuration file
+    with open(os.path.join(mod_dir, '.i18n')) as f:
         languages = f.read().splitlines()
 
     default_language = languages[0]
@@ -304,7 +312,6 @@ def main():
                             if len(values) == 1:
                                 kvs.append((key, '"' + values[0].encode('cp1252') + '"'))
                             else:
-                                print key
                                 kvs.append((key, '(' + ','.join(map(lambda x: '"' + x.encode('cp1252') + '"', values)) + ')'))
                     if len(kvs) == 0:
                         continue
@@ -312,8 +319,9 @@ def main():
                     for kv in kvs:
                         f.write('{0}={1}\n'.format(kv[0], kv[1]))
                     f.write('\n')
-        # s = json.dumps(sections)
-        # print s
+
+    print 'Success!'
+    print 'Wrote workbook \"{}\"'.format(workbook_name)
 
 
 if __name__ == "__main__":

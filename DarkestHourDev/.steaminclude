@@ -7,6 +7,7 @@ System/dh_server_launcher.bat
 !*.gitignore
 !*.make
 !*.steaminclude
+!*.i18n
 !DarkestHourDev/System/DarkestHourDev.ini
 !DarkestHourDev/System/DarkestHourDevUser.ini
 !tools
