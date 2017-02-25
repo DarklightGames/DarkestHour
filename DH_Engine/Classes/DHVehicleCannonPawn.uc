@@ -50,8 +50,7 @@ var     bool        bOpticsDamaged;
 var     texture     DestroyedGunsightOverlay;
 
 // Debug
-var     bool        bDebugSights;        // shows centering cross in gunsight for testing purposes
-var     bool        bDebuggingText;      // on screen messages if damage prevents turret or gun from moving properly
+var     bool        bDebugSights; // shows centering cross in gunsight for testing purposes
 
 replication
 {
@@ -739,26 +738,6 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
         if (bGunPivotDamaged)
         {
             PitchChange = 0.0;
-        }
-
-        // Debug
-        if (bDebuggingText && Role == ROLE_Authority)
-        {
-            if (bTurretRingDamaged)
-            {
-                if (bGunPivotDamaged)
-                {
-                    Level.Game.Broadcast(self, "Turret traverse & gun pivot disabled");
-                }
-                else
-                {
-                    Level.Game.Broadcast(self, "Turret traverse disabled");
-                }
-            }
-            else if (bGunPivotDamaged)
-            {
-                Level.Game.Broadcast(self, "Gun pivot disabled");
-            }
         }
 
         UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
