@@ -59,7 +59,7 @@ defaultproperties
     RightWheelBones(10)="Wheel_R_11"
     WheelRotationScale=1000
     bHasAddedSideArmor=true
-    TreadHitMinAngle=1.8
+    TreadHitMaxHeight=20.0
     FrontLeftAngle=330.0
     FrontRightAngle=30.0
     RearRightAngle=150.0

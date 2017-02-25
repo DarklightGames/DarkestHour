@@ -99,8 +99,7 @@ var     rotator             LeftWheelRot, RightWheelRot;     // keep track of th
 var     int                 WheelRotationScale;              // allows adjustment of wheel rotation speed for each vehicle
 
 // Damaged treads
-var     float               TreadHitMaxHeight;     // height (in Unreal units) of the top of treads above hull mesh origin, used to detect tread hits (see notes in TakeDamage)
-var     float               TreadHitMinAngle;      // old, buggy system before TreadHitMaxHeight, where hit angle (radians) determined tread hits - to be deprecated in time
+var     float               TreadHitMaxHeight;     // height (in UU) of top of treads above hull mesh centre, used to detect tread hits (replaces RO's TreadHitMinAngle)
 var     float               TreadDamageThreshold;  // minimum TreadDamageModifier in DamageType to possibly break treads
 var     bool                bLeftTrackDamaged;     // the left track has been damaged
 var     bool                bRightTrackDamaged;    // the left track has been damaged
@@ -132,7 +131,6 @@ var     bool        bIsArtilleryVehicle;
 
 // Debugging
 var     bool        bDebuggingText;
-var     bool        bDebugTreadText;
 
 replication
 {
@@ -1546,151 +1544,87 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 }
 
-// New function to remove a very long functionality from the already very long TakeDamage() function
-// Matt UK July 2015: added a modified alternative method for track hit detection that works properly
-// Problem with original RO method above is the InAngle calculation is distorted by the position of the hit along the vehicle mesh's X axis
+// New function to remove lengthy functionality from the already very long TakeDamage() function
+// Uses new method for track hit detection that works properly - TreadHitMaxHeight is the height (in Unreal units) of the top of tracks above hull mesh origin
+// Problem with original RO method (TreadHitMinAngle) was the InAngle calculation was distorted by the position of the hit along the vehicle mesh's X axis
 // New method is simpler & works, producing consistent results along the length of the hull
-// To implement, it needs each tracked vehicle to have TreadHitMaxHeight set, being the height (in Unreal units) of the top of the tracks above the hull mesh origin
-// I don't have time to do this for the 6.0 release, so will add later
-// Both methods are functional - just add a TreadHitMaxHeight that isn't zero to use the new method
 function CheckTreadDamage(vector HitLocation, vector Momentum)
 {
-    local vector HitDir, LocDir, X, Y, Z;
-    local float  HitHeight, InAngle, HitAngleDegrees, Side, InAngleDegrees;
-    local bool   bUsingTreadHitMaxHeight, bHitLowEnoughToHitTrack;
+    local vector HitLocationRelativeOffset, X, RightSidePerp, Z;
+    local float  HitDirectionDegrees, InAngleDegrees;
+    local string HitSide, OppositeSide;
 
-    // Work out the height of the HitLocation, in relation to the hull mesh origin
-    if (TreadHitMaxHeight != 0.0)
+    // Get the offset of the HitLocation from vehicle's centre, relative to vehicle's facing direction
+    // If the hit's relative height (Z component) is above vehicle's TreadHitMaxHeight then it can't be a tread hit & we exit
+    HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
+
+    if (HitLocationRelativeOffset.Z > TreadHitMaxHeight)
     {
-        // New, better method - straightforward height in units (difference in Z axis, having factored in hull's rotation)
-        bUsingTreadHitMaxHeight = true;
-        HitDir = HitLocation - Location;
-        HitHeight = (HitDir << Rotation).Z;
-
-        if (HitHeight <= TreadHitMaxHeight)
-        {
-            bHitLowEnoughToHitTrack = true;
-        }
+        return;
     }
+
+    // Calculate the angle direction of hit relative to vehicle's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc)
+    // Convert hit offset to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
+    // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
+    HitDirectionDegrees = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+
+    if (HitDirectionDegrees < 0.0)
+    {
+        HitDirectionDegrees += 360.0; // convert negative angles to 180 to 360 degree format
+    }
+
+    // Right side hit
+    if (HitDirectionDegrees >= FrontRightAngle && HitDirectionDegrees < RearRightAngle)
+    {
+        HitSide = "Right"; // use strings instead of the obvious bools as they're useful in debugging text
+        OppositeSide = "Left";
+    }
+    // Left side hit
+    else if (HitDirectionDegrees >= RearLeftAngle && HitDirectionDegrees < FrontLeftAngle)
+    {
+        HitSide = "Left";
+        OppositeSide = "Right";
+    }
+    // Didn't hit left or right side, so not a hit on treads
     else
     {
-        // Old, flawed method - height expressed as an angle in radians
-        HitDir = HitLocation - Location;
-        GetAxes(Rotation, X, Y, Z);
-        InAngle = Acos(Normal(HitDir) dot Normal(Z));
-
-        if (InAngle > TreadHitMinAngle)
-        {
-            bHitLowEnoughToHitTrack = true;
-        }
+        return;
     }
 
-    // We hit low enough to possibly hit one of the tracks
-    if (bHitLowEnoughToHitTrack)
+    // Check for 'hit bug', where a projectile may pass through the 1st face of vehicle's collision & be detected as a hit on the opposite side (on the way out)
+    // Calculate incoming angle of the shot, relative to a perpendicular line from the side we think we hit
+    // If the angle is too high it's impossible, so we do a crude fix by switching the hit to the opposite
+    GetAxes(Rotation, X, RightSidePerp, Z);
+    InAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot RightSidePerp));
+
+    if (HitSide == "Left")
     {
-        // Now figure out which side of the vehicle we hit
-        if (bUsingTreadHitMaxHeight)
+        InAngleDegrees = Abs(InAngleDegrees - 180.0); // correct angle for left hit, as we used the right side perpendicular
+    }
+
+    if (InAngleDegrees > 120.0)
+    {
+        if (bDebuggingText || class'DH_LevelInfo'.static.DHDebugMode())
         {
-            GetAxes(Rotation, X, Y, Z);
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
+            }
+
+            Log("Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
         }
 
-        LocDir = vector(Rotation);
-        LocDir.Z = 0.0;
-        HitDir.Z = 0.0;
-        HitAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(LocDir) dot Normal(HitDir)));
-        Side = Y dot HitDir;
+        HitSide = OppositeSide;
+    }
 
-        if (Side < 0.0)
+    // Damage the track we hit, if it isn't already damaged
+    if ((HitSide == "Right" && !bRightTrackDamaged) || (HitSide == "Left" && !bLeftTrackDamaged))
+    {
+        DamageTrack(HitSide == "Left"); // passing true means left track damage
+
+        if (bDebuggingText && Role == ROLE_Authority)
         {
-            HitAngleDegrees = 360.0 - HitAngleDegrees;
-        }
-
-        // Right track hit
-        if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
-        {
-            // Calculate the direction the shot came from, so we can check for possible 'hit detection bug' (opposite side collision detection error)
-            InAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(Y)));
-
-            // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to left side (same as in DHShouldPenetrate)
-            if (InAngleDegrees > 90.0)
-            {
-                if (!bLeftTrackDamaged)
-                {
-                    DamageTrack(true);
-
-                    if (bDebugTreadText && Role == ROLE_Authority)
-                    {
-                        if (bUsingTreadHitMaxHeight)
-                        {
-                            Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged (HitHeight =" @ HitHeight $ ")");
-                        }
-                        else
-                        {
-                            Level.Game.Broadcast(self, "Hit bug: switching from right to LEFT track damaged");
-                        }
-                    }
-                }
-            }
-            // Otherwise it's a valid hit on the right track
-            else if (!bRightTrackDamaged)
-            {
-                DamageTrack(false);
-
-                if (bDebugTreadText && Role == ROLE_Authority)
-                {
-                    if (bUsingTreadHitMaxHeight)
-                    {
-                        Level.Game.Broadcast(self, "Right track damaged (HitHeight =" @ HitHeight $ ")");
-                    }
-                    else
-                    {
-                        Level.Game.Broadcast(self, "Right track damaged");
-                    }
-                }
-            }
-        }
-        // Left track hit
-        else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
-        {
-            InAngleDegrees = class'UUnits'.static.RadiansToDegrees(Acos(Normal(-Momentum) dot Normal(-Y)));
-
-            // InAngle over 90 degrees is impossible, so it's a hit detection bug & we need to switch to right side
-            if (InAngleDegrees > 90.0)
-            {
-                if (!bRightTrackDamaged)
-                {
-                    DamageTrack(false);
-
-                    if (bDebugTreadText && Role == ROLE_Authority)
-                    {
-                        if (bUsingTreadHitMaxHeight)
-                        {
-                            Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged (HitHeight =" @ HitHeight $ ")");
-                        }
-                        else
-                        {
-                            Level.Game.Broadcast(self, "Hit bug: switching from left to RIGHT track damaged");
-                        }
-                    }
-                }
-            }
-            // Otherwise it's a valid hit on the left track
-            else if (!bLeftTrackDamaged)
-            {
-                DamageTrack(true);
-
-                if (bDebugTreadText && Role == ROLE_Authority)
-                {
-                    if (bUsingTreadHitMaxHeight)
-                    {
-                        Level.Game.Broadcast(self, "Left track damaged (HitHeight =" @ HitHeight $ ")");
-                    }
-                    else
-                    {
-                        Level.Game.Broadcast(self, "Left track damaged");
-                    }
-                }
-            }
+            Level.Game.Broadcast(self, HitSide @ "track damaged (hit height =" @ HitLocationRelativeOffset.Z $ ")");
         }
     }
 }

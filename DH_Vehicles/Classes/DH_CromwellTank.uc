@@ -79,7 +79,7 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=40.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverDamageMult=1.0
-    TreadHitMinAngle=1.16
+    TreadHitMaxHeight=58.0
     TreadDamageThreshold=0.75
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=85.0)

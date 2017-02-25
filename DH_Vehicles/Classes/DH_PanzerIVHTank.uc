@@ -62,7 +62,7 @@ defaultproperties
     RightWheelBones(12)="Wheel_R_13"
     RightWheelBones(13)="Wheel_R_14"
     WheelRotationScale=550
-    TreadHitMinAngle=1.8
+    TreadHitMaxHeight=14.0
     FrontLeftAngle=332.0
     RearLeftAngle=208.0
     GearRatios(4)=0.65

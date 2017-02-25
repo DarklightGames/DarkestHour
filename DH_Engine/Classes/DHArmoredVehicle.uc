@@ -1931,7 +1931,6 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     TreadVelocityScale=450.0
     WheelRotationScale=500
-    TreadHitMinAngle=2.0
 
     // Damage
     Health=300
