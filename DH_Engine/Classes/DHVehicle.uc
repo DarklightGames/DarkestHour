@@ -41,7 +41,6 @@ var DHVehicleMG     MGun;                        // reference to the vehicle's m
 var array<material> CannonSkins;                 // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of classes
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
-var     bool        bIsSpawnVehicle;             // set by DHSpawnManager & used here for engine on/off hints
 var     float       PointValue;                  // used for scoring
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning empty vehicle
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
@@ -126,17 +125,22 @@ var     class<Actor>              ResupplyAttachmentClass; // option for a funct
 var     name                      ResupplyAttachBone;      // bone name for attaching resupply attachment
 var     Actor                     ResupplyAttachment;      // reference to any resupply actor
 
+// Spawning
+var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
+var     DHSpawnPointBase        SpawnPoint;                 // The spawn point that was used to spawn this vehicle.
+
 // Artillery
 var     bool        bIsArtilleryVehicle;
 
 // Debugging
 var     bool        bDebuggingText;
+var     bool        bDebugTreadText;
 
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bIsSpawnVehicle, bRightTrackDamaged, bLeftTrackDamaged;
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment;
 
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
@@ -257,6 +261,14 @@ simulated function Destroyed()
     super.Destroyed();
 
     DestroyAttachments();
+
+    if (Role == ROLE_Authority)
+    {
+        if (SpawnPointAttachment != none)
+        {
+            SpawnPointAttachment.Destroy();
+        }
+    }
 }
 
 // Modified to score the vehicle kill
@@ -840,7 +852,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     {
         P.QueueHint(40, true);
 
-        if (bIsSpawnVehicle)
+        if (IsSpawnVehicle())
         {
             P.QueueHint(14, true);
             P.QueueHint(16, true);
@@ -2547,7 +2559,7 @@ function MaybeDestroyVehicle()
     local bool bDeactivatedFactoryWantsToDestroy;
 
     // Do nothing if vehicle is a spawn vehicle, or isn't empty, or is factory's last vehicle (no point destroying vehicle if factory won't spawn replacement)
-    if (bIsSpawnVehicle || !IsVehicleEmpty() || IsFactorysLastVehicle())
+    if (IsSpawnVehicle() || !IsVehicleEmpty() || IsFactorysLastVehicle())
     {
         return;
     }
@@ -2603,7 +2615,7 @@ event CheckReset()
     // Do nothing if vehicle is a spawn vehicle, or isn't empty, or is its factory's last vehicle (no point destroying vehicle if factory won't spawn replacement)
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
     // Occupied vehicle shouldn't have CheckReset timer running & if player exits, leaving vehicle empty, then a new CheckReset timer gets started
-    if (bIsSpawnVehicle || !IsVehicleEmpty() || IsFactorysLastVehicle())
+    if (IsSpawnVehicle() || !IsVehicleEmpty() || IsFactorysLastVehicle())
     {
         return;
     }
@@ -2964,6 +2976,11 @@ exec function SetRumbleVol(float NewValue)
 {
     Log(VehicleNameString @ "RumbleSoundVolumeModifier =" @ NewValue @ "(was" @ RumbleSoundVolumeModifier $ ")");
     RumbleSoundVolumeModifier = NewValue;
+}
+
+simulated function bool IsSpawnVehicle()
+{
+    return SpawnPointAttachment != none;
 }
 
 defaultproperties

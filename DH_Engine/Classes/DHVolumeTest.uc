@@ -64,9 +64,7 @@ function bool IsInNoArtyVolume()
 // (Similar to IsCurrentSpawnArea() for spawn areas)
 function bool IsActiveSpawnPoint(DHSpawnPoint SP)
 {
-    return SP != none && DHGameReplicationInfo(Level.Game.GameReplicationInfo) != none
-        && DHGameReplicationInfo(Level.Game.GameReplicationInfo).IsSpawnPointActive(SP);
-
+    return SP != none && SP.IsActive();
 }
 
 defaultproperties

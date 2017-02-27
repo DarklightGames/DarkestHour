@@ -13,8 +13,11 @@ simulated function bool AllowFire()
 
     TracedObstacle = DHObstacleInstance(Trace(HitLocation, HitNormal, 100.0 * vector(Weapon.Rotation), Weapon.Location, true));
 
-    if (TracedObstacle != none && TracedObstacle.Info.CanBeCut() &&
-        Instigator != none && !Instigator.IsProneTransitioning() && Instigator.Velocity == vect(0.0, 0.0, 0.0))
+    if (TracedObstacle != none &&
+        TracedObstacle.Info.CanBeCut() &&
+        Instigator != none &&
+        !Instigator.IsProneTransitioning() &&
+        Instigator.Velocity == vect(0.0, 0.0, 0.0))
     {
         return true;
     }

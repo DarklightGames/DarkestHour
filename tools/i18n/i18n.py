@@ -228,9 +228,9 @@ def main():
 
     if args.digest:
         # now READ IT IN
-        print 'loading workboook ' + workbook_name + '...'
+        print 'Loading workboook ' + workbook_name + '...'
         workbook = load_workbook(workbook_name)
-        print 'workbook loaded!'
+        print 'Workbook loaded!'
         for sheet_name in workbook.get_sheet_names():
             sheet = workbook.get_sheet_by_name(sheet_name)
             # gather up languages in the file
@@ -264,45 +264,69 @@ def main():
                     # we got a key/value row on our hands here
                     if sheet[cell].value is not None:
                         key = sheet[cell].value
-                    col = 3
-                    for language in languages[1:]:
-                        # TODO: go searching for the translations across the rows, do a look-up for the
+                    col = 2
+                    for language in languages:
+                        # go searching for the translations across the rows, do a look-up for the cell
                         cell = '{0}{1}'.format(get_column_letter(col), row)
-                        # print (language, sheet_name, cell)
-                        value = sheet[cell].value
-                        if value is None:
-                            col += 1
-                            continue
                         if key not in section:
                             # add key to section
                             section[key] = dict()
+                        if language not in section[key]:
                             section[key][language] = list()
-                        # print (key, language, value)
+
+                        value = sheet[cell].value
                         section[key][language].append(value)
                         col += 1
                 row += 1
-            # TODO: now write out to an .ini file
+            # now write out translations to their respective files
             for language in languages[1:]:
-                with open(os.path.join(mod_sys_dir, sheet_name + '.' + language), 'wb') as f:
-                    # don't write anything if there's nothing to write!
+                file_path = os.path.join(mod_sys_dir, sheet_name + '.' + language)
+                with open(file_path, 'wb') as f:
+                    # iterate over each section
                     for section_name in sections.keys():
-                        kvs = []
+                        # we keep a list of key-value pairs to write out, we can query
+                        # the length of the list later on and decide whether to write
+                        # the section out at all
+                        key_values = []
                         for key in sections[section_name].keys():
-                            # TODO: make sure present language has anything for this key
+                            # make sure present language has anything for this key
                             if language in sections[section_name][key]:
+                                # fetch the translated values
                                 values = sections[section_name][key][language]
-                                # TODO: check length of values, parse depending on size etc.
-                                if len(values) == 1:
-                                    kvs.append((key, '"' + values[0].encode('cp1252') + '"'))
+                                # fetch the original values
+                                original_values = sections[section_name][key]['int']    # TODO: remove magic string
+                                # check length of values, parse depending on size
+                                if len(values) == 1 and values[0] is not None:
+                                    key_values.append((key, '"' + match_whitespace(original_values[0], values[0]).encode('cp1252') + '"'))
                                 else:
-                                    kvs.append((key, '(' + ','.join(map(lambda x: '"' + x.encode('cp1252') + '"', values)) + ')'))
-                        if len(kvs) == 0:
+                                    # trasform the values to string representations; `None`s become empty strings
+                                    strings = map(lambda x: '"' + x.encode('cp1252') + '"' if x is not None else '', values)
+                                    # trim rightside of empty strings, as it is redundant to write out joining commas for empty values
+                                    j = -1
+                                    for i in xrange(len(strings) - 1, -1, -1):
+                                        if strings[i] != '':
+                                            j = i
+                                            break
+                                    strings = strings[0:j + 1]
+                                    if len(strings) > 0:
+                                        key_values.append((key, '(' + ','.join(strings) + ')'))
+                        if len(key_values) == 0:
                             continue
                         f.write('[{0}]\n'.format(section_name))
-                        for kv in kvs:
-                            f.write('{0}={1}\n'.format(kv[0], kv[1]))
+                        for key, value in key_values:
+                            f.write('{0}={1}\n'.format(key, value))
                         f.write('\n')
+                if os.stat(file_path).st_size == 0:
+                    os.remove(file_path)
 
+
+
+
+def match_whitespace(original, translated):
+    trailing = len(original) - len(original.lstrip(' '))
+    if len(original.strip(' ')) > 0:
+        leading = len(original) - len(original.rstrip(' '))
+    return (' ' * trailing) + translated.strip(' ') + (' ' * leading)
 
 if __name__ == "__main__":
     main()

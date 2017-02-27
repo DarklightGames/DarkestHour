@@ -60,6 +60,7 @@ var     bool                        bPublicPlay;                            // V
                                                                             // An organized unit will want to set this to false in a mutator so they can control
                                                                             // settings for private matches (ex- change to false in realism match mode)
 var     UVersion                    Version;
+var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
@@ -71,6 +72,13 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
     }
+}
+
+function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()
@@ -1273,11 +1281,19 @@ event PlayerController Login(string Portal, string Options, out string Error)
 {
     local string InName;
     local PlayerController NewPlayer;
+    local DHPlayer PC;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
     NewPlayer = super.Login(Portal, Options, Error);
+
+    PC = DHPlayer(NewPlayer);
+
+    if (PC != none)
+    {
+        PC.SquadReplicationInfo = SquadReplicationInfo;
+    }
 
     ChangeName(NewPlayer, InName, false);
 
@@ -3168,10 +3184,11 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
 
             // DARKEST HOUR
-            PC.SpawnPointIndex = 255;
-            PC.SpawnVehicleIndex = 255;
+            PC.SpawnPointIndex = -1;
 
             GRI.UnreserveVehicle(PC);
+
+            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
         }
     }
 
@@ -3762,6 +3779,8 @@ function NotifyLogout(Controller Exiting)
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        SquadReplicationInfo.LeaveSquad(PRI);
     }
 
     super.Destroyed();
@@ -4147,67 +4166,93 @@ function AttritionUnlockObjective(optional int ObjNum)
     }
 }
 
-// Modified (no super) to (attempt) to prevent continuous fire after the match ends (time for machine gun attempts)
-function EndGame(PlayerReplicationInfo Winner, string Reason)
+function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
 {
-    local Controller P, NextController;
-    local PlayerController Player;
-    local Actor Cam;
-    local ROMinefieldBase Minefield;
+    local DHBroadcastHandler BH;
 
-    // Turn off all minefields
-    foreach AllActors(class'ROMinefieldBase', Minefield)
+    Log("BroadcastSquad" @ Sender @ Msg @ Type);
+
+    BH = DHBroadcastHandler(BroadcastHandler);
+
+    if (BH != none)
     {
-        Minefield.Deactivate();
+        BH.BroadcastSquad(Sender, Msg, Type);
+    }
+}
+
+function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
+{
+    if (C == none)
+    {
+        return none;
     }
 
-    foreach AllActors(class'Actor', Cam, LevelInfo.EndCamTag)
+    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
     {
-        break;
+        BaseMutator.PlayerChangedClass(C);
     }
 
-    EndGameFocus = Cam;
-
-    if (EndGameFocus != none)
+    // Spawn player pawn
+    if (C.PawnClass != none)
     {
-        EndGameFocus.bAlwaysRelevant = true;
+        C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
     }
 
-    for (P = Level.ControllerList; P != none; P = NextController)
+    // If spawn failed, try again using default player class
+    if (C.Pawn == none)
     {
-        Player = PlayerController(P);
+        C.Pawn = Spawn(GetDefaultPlayerClass(C),,, SpawnLocation, SpawnRotation);
+    }
 
-        if (Player != none)
+    // Hard spawning the player at the spawn location failed, most likely because spawn function was blocked
+    // Try again with black room spawn & teleport them to spawn location
+    if (C.Pawn == none)
+    {
+        DeployRestartPlayer(C, false, true);
+
+        if (C.Pawn != none)
         {
-            if (EndGameFocus != none)
+            if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
-                Player.ClientSetBehindView(false);
-                Player.ClientSetViewTarget(EndGameFocus);
-                Player.SetViewTarget(EndGameFocus);
+                return C.Pawn; // exit as we used old spawn system & don't need to do anything else in this function
             }
             else
             {
-                Player.ClientSetBehindView(true);
+                C.Pawn.Suicide(); // teleport failed & pawn is still in the black room, so kill it
             }
-
-            // Theel: Another attempt to prevent continuous mg fire at game end
-            if (DHPlayer(Player) != none)
-            {
-                DHPlayer(Player).ClientConsoleCommand("pausesounds",false);
-            }
-
-            Player.ClientGameEnded();
         }
-
-        NextController = P.NextController;
-        P.GameHasEnded();
     }
 
-    EndTime = Level.TimeSeconds + EndTimeDelay;
-    bGameEnded = true;
-    TriggerEvent('EndGame', self, none);
-    EndLogging(Reason);
-    GotoState('MatchOver');
+    // Still haven't managed to spawn a player pawn, so go to state 'Dead' & exit
+    if (C.Pawn == none)
+    {
+        C.GotoState('Dead');
+        C.ClientGotoState('Dead', 'Begin');
+
+        return none;
+    }
+
+    // We have a new player pawn, so handle the necessary set up & possession
+    C.TimeMargin = -0.1;
+
+    C.Pawn.LastStartTime = Level.TimeSeconds;
+    C.PreviousPawnClass = C.Pawn.Class;
+    C.Possess(C.Pawn);
+    C.PawnClass = C.Pawn.Class;
+    C.Pawn.PlayTeleportEffect(true, true);
+    C.ClientSetRotation(C.Pawn.Rotation);
+
+    // Set proper spawn kill protection times
+    if (DHPawn(C.Pawn) != none && SP != none)
+    {
+        DHPawn(C.Pawn).SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        DHPawn(C.Pawn).SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
+        DHPawn(C.Pawn).SpawnPoint = SP;
+    }
+
+    AddDefaultInventory(C.Pawn);
+
+    return C.Pawn;
 }
 
 defaultproperties
@@ -4304,9 +4349,10 @@ defaultproperties
     ReinforcementMessagePercentages(3)=0.0
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=7
-        Minor=2
-        Patch=1
+        Major=8
+        Minor=0
+        Patch=0
+        Prerelease="dev"
     End Object
     Version=VersionObject
 

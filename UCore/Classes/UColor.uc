@@ -165,6 +165,18 @@ static final function color Interp(float X, color A, color B)
     return C;
 }
 
+// Given a string eg. #ffba23, will return the color (R=255,G=181,B=35)
+static final function color FromHex(string S)
+{
+    local color C;
+
+    C.A = 255;
+
+    class'UInteger'.static.ToBytes(class'UInteger'.static.FromHex(S), C.B, C.G, C.R);
+
+    return C;
+}
+
 defaultproperties
 {
     AliceBlue=(R=240,G=248,B=255,A=255)

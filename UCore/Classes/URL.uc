@@ -66,7 +66,7 @@ static final function string RawUrlDecode(string S, optional bool bIgnorePlus)
     while (i >= 0)
     {
         Char = Mid(S, i + 1, 2);
-        Char = Chr(class'UString'.static.Hex2Int(Char));
+        Char = Chr(class'UInteger'.static.FromHex(Char));
 
         if (Char == "%")
         {

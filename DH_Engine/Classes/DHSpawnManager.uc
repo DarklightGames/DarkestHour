@@ -8,7 +8,6 @@ class DHSpawnManager extends SVehicleFactory;
 const   SPAWN_POINTS_MAX = 48;
 const   VEHICLE_POOLS_MAX = 32;
 const   SPAWN_VEHICLES_MAX = 8;
-const   SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 const   SPAWN_PROTECTION_TIME = 2; // The full protection time given to players/vehicles (they cannot be damaged/killed within this time)
 
 struct VehiclePoolSlot
@@ -41,22 +40,9 @@ struct VehiclePool
 var()   array<VehiclePool>  VehiclePools;
 var()   byte                MaxTeamVehicles[2];
 
-var     private     byte                    TeamVehicleCounts[2];
 var     private     array<ROVehicle>        Vehicles;
 var     private     array<DHSpawnPoint>     SpawnPoints;
 var     private     DHGameReplicationInfo   GRI;
-
-var     const byte  SVT_None;
-var     const byte  SVT_EngineOff;
-var     const byte  SVT_Always;
-
-var     const byte  SpawnPointType_Infantry;
-var     const byte  SpawnPointType_Vehicles;
-
-var     const byte  BlockFlags_None;
-var     const byte  BlockFlags_EnemiesNearby;
-var     const byte  BlockFlags_InObjective;
-var     const byte  BlockFlags_Full;
 
 function PostBeginPlay()
 {
@@ -124,9 +110,6 @@ function PostBeginPlay()
     {
         GRI.MaxTeamVehicles[i] = MaxTeamVehicles[i];
     }
-
-    // Set repeating 1 second timer that checks whether spawn vehicles are blocked from players deploying to them
-    SetTimer(1.0, true);
 }
 
 function Reset()
@@ -137,11 +120,6 @@ function Reset()
     {
         SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
         SpawnPoints[i].bIsLocked = SpawnPoints[i].bIsInitiallyLocked;
-    }
-
-    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
-    {
-        GRI.SpawnVehicles[i].VehiclePoolIndex = -1;
     }
 
     for (i = 0; i < VehiclePools.Length; ++i)
@@ -164,596 +142,183 @@ function Reset()
     super.Reset();
 }
 
-function bool DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation)
+function bool SpawnPlayer(DHPlayer PC)
 {
-    local DHSpawnPoint SP;
+    local DHSpawnPointBase SP;
+    local bool bResult;
+    local DHPawn P;
 
-    if (C == none || GRI == none || C.bSpawnPointInvalidated)
+    if (PC != none)
     {
-        return false;
-    }
+        SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
 
-    // Check spawn settings
-    if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
-    {
-        return false;
-    }
-
-    // Check spawn point
-    SP = SpawnPoints[C.SpawnPointIndex];
-
-    if (SP == none)
-    {
-        return false;
-    }
-
-    // Check vehicle pool
-    if (!GetVehiclePoolError(C, SP))
-    {
-        return false;
-    }
-
-    GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius, SpawnLocation, SpawnRotation);
-
-    return true;
-}
-
-function GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
-{
-    local Controller    C;
-    local Pawn          P;
-    local array<vector> EnemyLocations;
-    local array<int>    LocationHintIndices;
-    local int           LocationHintIndex, i, j, k;
-    local bool          bIsBlocked;
-
-    // Scramble location hint indices so we don't use the same ones repeatedly
-    LocationHintIndices = class'UArray'.static.Range(0, LocationHints.Length - 1);
-    class'UArray'.static.IShuffle(LocationHintIndices);
-
-    // Put location hints with enemies nearby at the end of the array to be evaluated last
-    if (LocationHintIndices.Length > 1)
-    {
-        // Get all enemy locations
-        for (C = Level.ControllerList; C != none; C = C.NextController)
+        if (SP != none)
         {
-            if (C.Pawn != none && C.GetTeamNum() != SP.TeamIndex)
-            {
-                EnemyLocations[EnemyLocations.Length] = C.Pawn.Location;
-            }
-        }
+            bResult = SP.PerformSpawn(PC);
 
-        for (i = LocationHintIndices.Length - 1; i >= 0; --i)
-        {
-            for (j = 0; j < EnemyLocations.Length; ++j)
+            if (bResult)
             {
-                // Location hint has enemies nearby, so move to end of the array
-                if (VSize(EnemyLocations[j] - LocationHints[LocationHintIndices[i]].Location) <= SP.LocationHintDeferDistance)
+                P = DHPawn(PC.Pawn);
+
+                if (P != none)
                 {
-                    k = LocationHintIndices[i];
-                    LocationHintIndices.Remove(i, 1);
-                    LocationHintIndices[LocationHintIndices.Length] = k;
+                    P.SpawnPoint = SP;
                 }
             }
+
+            return bResult;
         }
     }
 
-    LocationHintIndex = -1; // initialize with invalid index, so later we can tell if we found a valid one
-
-    // Loop through location hints & try to find one that isn't blocked by a nearby pawn
-    for (i = 0; i < LocationHintIndices.Length; ++i)
-    {
-        if (LocationHints[LocationHintIndices[i]] == none)
-        {
-            continue;
-        }
-
-        bIsBlocked = false;
-
-        foreach RadiusActors(class'Pawn', P, CollisionRadius, LocationHints[LocationHintIndices[i]].Location)
-        {
-            // Found a blocking pawn, so ignore this location hint & exit the foreach iteration
-            bIsBlocked = true;
-            break;
-        }
-
-        // Location hint isn't blocked, so we'll use it & exit the for loop
-        if (!bIsBlocked)
-        {
-            LocationHintIndex = LocationHintIndices[i];
-            break;
-        }
-    }
-
-    // Found a usable location hint
-    if (LocationHintIndex != -1)
-    {
-        SpawnLocation = LocationHints[LocationHintIndex].Location;
-        SpawnRotation = LocationHints[LocationHintIndex].Rotation;
-    }
-    // Otherwise use spawn point itself
-    else
-    {
-        SpawnLocation = SP.Location;
-        SpawnRotation = SP.Rotation;
-    }
+    return false;
 }
 
-function bool SpawnPlayer(DHPlayer C)
-{
-    if (C != none)
-    {
-        if (C.VehiclePoolIndex != 255) // deploy into vehicle
-        {
-            return SpawnVehicle(C);
-        }
-        else if (C.SpawnVehicleIndex != 255) // deploy to spawn vehicle
-        {
-            return SpawnPlayerAtSpawnVehicle(C);
-        }
-        else if (SpawnPoints[C.SpawnPointIndex] != none) // deploy to spawn point
-        {
-            return SpawnInfantry(C);
-        }
-    }
-}
-
-function bool SpawnVehicle(DHPlayer C)
+function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator SpawnRotation)
 {
     local ROVehicle V;
-    local vector    SpawnLocation;
-    local rotator   SpawnRotation;
     local int       i;
+    local DHPlayerReplicationInfo PRI;
+    local DHSpawnPointBase SP;
+    local DHVehicle DHV;
 
-    if (C == none || C.Pawn != none)
+    if (PC == none || PC.Pawn != none)
     {
-        return false;
+        return none;
     }
+
+    SP = GRI.SpawnPoints[PC.SpawnPointIndex];
+
+    if (SP == none || !SP.CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex))
+    {
+        return none;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     // Make sure player isn't excluded from a tank crew role
-    if (VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander &&
-        (ROPlayerReplicationInfo(C.PlayerReplicationInfo) == none
-            || ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo == none
-            || !ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    if (VehiclePools[PC.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander &&
+        (PRI == none || PRI.RoleInfo == none || !PRI.RoleInfo.bCanBeTankCrew))
     {
-        return false;
+        return none;
     }
 
-    // Some checks that we have valid settings to spawn a vehicle
-    if (!DrySpawnVehicle(C, SpawnLocation, SpawnRotation))
+    if (!GRI.CanSpawnVehicle(PC.VehiclePoolIndex))
     {
-        return false;
+        return none;
     }
 
     // This calls old RestartPlayer (spawns player in black room) & avoids reinforcement subtraction (because we will subtract later)
     if (DarkestHourGame(Level.Game) != none)
     {
-        DarkestHourGame(Level.Game).DeployRestartPlayer(C, false, true);
+        DarkestHourGame(Level.Game).DeployRestartPlayer(PC, false, true);
     }
 
-    if (C.Pawn == none)
+    if (PC.Pawn == none)
     {
-        return false;
+        return none;
     }
 
     // Now spawn the vehicle (& make sure it was successful)
-    V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass, self,, SpawnLocation, SpawnRotation);
+    V = Spawn(VehiclePools[PC.VehiclePoolIndex].VehicleClass, self,, SpawnLocation, SpawnRotation);
 
     if (V == none)
     {
-        return false;
+        return none;
     }
 
     // If we successfully enter the vehicle
-    if (V.TryToDrive(C.Pawn))
+    if (V.TryToDrive(PC.Pawn))
     {
         // Set vehicle properties & add to our Vehicles array
         V.SetTeamNum(V.default.VehicleTeam);
         V.ParentFactory = self;
         Vehicles[Vehicles.Length] = V;
 
+        DHV = DHVehicle(V);
+
         // Start engine
-        if (V.IsA('DHVehicle') && DHVehicle(V).bEngineOff)
+        if (DHV != none && DHV.bEngineOff)
         {
-            DHVehicle(V).bIsSpawnVehicle = VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle;
-            DHVehicle(V).ServerStartEngine();
+            DHV.ServerStartEngine();
         }
 
-        // If it's a spawn vehicle that doesn't require the engine to be off, add to GRI's SpawnVehicles array
-        if (VehiclePools[C.VehiclePoolIndex].bIsSpawnVehicle)
+        // If this vehicle is a spawn vehicle, create the spawn point attachment
+        if (VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle)
         {
-            GRI.AddSpawnVehicle(C.VehiclePoolIndex, V);
+            if (DHV != none)
+            {
+                DHV.SpawnPointAttachment = DHSpawnPoint_Vehicle(DHV.SpawnAttachment(class'DHSpawnPoint_Vehicle'));
+
+                if (DHV.SpawnPointAttachment != none)
+                {
+                    DHV.SpawnPointAttachment.Vehicle = DHV;
+                    DHV.SpawnPointAttachment.TeamIndex = V.default.VehicleTeam;
+                    DHV.SpawnPointAttachment.SetIsActive(true);
+                }
+            }
         }
 
         // Increment vehicle counts
-        ++TeamVehicleCounts[V.default.VehicleTeam];
+        ++GRI.TeamVehicleCounts[V.default.VehicleTeam];
 
-        if (!VehiclePools[C.VehiclePoolIndex].bIgnoreMaxTeamVehicles)
+        if (!VehiclePools[PC.VehiclePoolIndex].bIgnoreMaxTeamVehicles)
         {
             --GRI.MaxTeamVehicles[V.default.VehicleTeam];
         }
 
-        ++GRI.VehiclePoolActiveCounts[C.VehiclePoolIndex];
-        ++GRI.VehiclePoolSpawnCounts[C.VehiclePoolIndex];
+        ++GRI.VehiclePoolActiveCounts[PC.VehiclePoolIndex];
+        ++GRI.VehiclePoolSpawnCounts[PC.VehiclePoolIndex];
 
         // Assign newly spawned vehicle to a VehiclePools slot so we can track its respawn time, & set controller's NextVehicleSpawnTime
-        for (i = 0; i < VehiclePools[C.VehiclePoolIndex].Slots.Length; ++i)
+        for (i = 0; i < VehiclePools[PC.VehiclePoolIndex].Slots.Length; ++i)
         {
-            if (VehiclePools[C.VehiclePoolIndex].Slots[i].Vehicle == none)
+            if (VehiclePools[PC.VehiclePoolIndex].Slots[i].Vehicle == none)
             {
-                VehiclePools[C.VehiclePoolIndex].Slots[i].Vehicle = V;
+                VehiclePools[PC.VehiclePoolIndex].Slots[i].Vehicle = V;
                 break;
             }
         }
 
-        C.NextVehicleSpawnTime = GRI.ElapsedTime + 60;
+        // TODO: remove magic number
+        PC.NextVehicleSpawnTime = GRI.ElapsedTime + 60;
 
         // Trigger any OnVehicleSpawnedEvent
-        if (VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent != '')
+        if (VehiclePools[PC.VehiclePoolIndex].OnVehicleSpawnedEvent != '')
         {
-            TriggerEvent(VehiclePools[C.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
+            TriggerEvent(VehiclePools[PC.VehiclePoolIndex].OnVehicleSpawnedEvent, self, none);
         }
 
         // Set spawn protection variables for the vehicle
         if (DHVehicle(V) != none)
         {
-            DHVehicle(V).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
-            DHVehicle(V).SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+            DHVehicle(V).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SP.SpawnProtectionTime);
+            DHVehicle(V).SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+            DHVehicle(V).SpawnPoint = SP;
         }
 
         // Set spawn protection variables for the player that spawned the vehicle
         if (DHPawn(V.Driver) != none)
         {
-            DHPawn(V.Driver).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
-            DHPawn(V.Driver).SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
+            DHPawn(V.Driver).SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SP.SpawnProtectionTime);
+            DHPawn(V.Driver).SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+            DHPawn(V.Driver).SpawnPoint = SP;
         }
 
         // Decrement reservation count
-        GRI.UnreserveVehicle(C);
+        GRI.UnreserveVehicle(PC);
 
-        C.bSpawnPointInvalidated = true;
+        PC.bSpawnPointInvalidated = true;
     }
     // We were unable to enter the vehicle, so destroy it & kill the player, so they aren't stuck in the black room
     else
     {
         V.Destroy();
-        C.Pawn.Suicide();
-
-        return false;
-    }
-
-    return true;
-}
-
-function bool SpawnPlayerAtSpawnVehicle(DHPlayer C)
-{
-    local Pawn       P;
-    local Vehicle    V, EntryVehicle;
-    local vector     Offset;
-    local array<int> ExitPositionIndices;
-    local int        i;
-
-    if (C == none || GRI == none || DarkestHourGame(Level.Game) == none)
-    {
-        return false;
-    }
-
-    // Spawn vehicle & make sure it was successful
-    V = GRI.SpawnVehicles[C.SpawnVehicleIndex].Vehicle;
-
-    if (V == none)
-    {
-        return false;
-    }
-
-    // Spawn player pawn in black room & make sure it was successful
-    if (C.Pawn == none)
-    {
-        DarkestHourGame(Level.Game).DeployRestartPlayer(C, false, true);
-    }
-
-    if (C.Pawn == none)
-    {
-        return false;
-    }
-
-    Offset = C.PawnClass.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    // Check if we can deploy into or near the vehicle
-    if (GRI.CanSpawnAtVehicle(C.GetTeamNum(), C.SpawnVehicleIndex))
-    {
-        // Randomise exit locations
-        ExitPositionIndices = class'UArray'.static.Range(0, V.ExitPositions.Length - 1);
-        class'UArray'.static.IShuffle(ExitPositionIndices);
-
-        // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
-        if (V.IsA('DHVehicle') && DHVehicle(V).bEngineOff)
-        {
-            // Attempt to deploy at an exit position
-            for (i = 0; i < ExitPositionIndices.Length; ++i)
-            {
-                if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
-                {
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            // Attempt to deploy into the vehicle
-            EntryVehicle = FindEntryVehicle(C.GetRoleInfo().bCanBeTankCrew, ROVehicle(V));
-
-            if (EntryVehicle != none && EntryVehicle.TryToDrive(C.Pawn))
-            {
-                return true;
-            }
-        }
-    }
-
-    // Invalidate spawn point, reset spawn vehicle index, and zero out next
-    // spawn time. Since next spawn time is set when player is reset above,
-    // without this, the player would be forced to wait to spawn timer again.
-    C.bSpawnPointInvalidated = true;
-    C.SpawnVehicleIndex = 255;
-    C.NextSpawnTime = 0;
-
-    // Attempting to deploy into or near the vehicle failed, so kill the player pawn we spawned earlier
-    P = C.Pawn;
-    C.UnPossess();
-    P.Suicide();
-
-    // This makes sure the player doesn't watch and hear himself die. A
-    // dirty hack, but the alternative is much worse.
-    C.ServerNextViewPoint();
-
-    return false;
-}
-
-function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G == none || C == none)
-    {
-        return none;
-    }
-
-    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
-    {
-        G.BaseMutator.PlayerChangedClass(C);
-    }
-
-    // Spawn player pawn
-    if (C.PawnClass != none)
-    {
-        C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
-    }
-
-    // If spawn failed, try again using default player class
-    if (C.Pawn == none)
-    {
-        C.Pawn = Spawn(G.GetDefaultPlayerClass(C),,, SpawnLocation, SpawnRotation);
-    }
-
-    // Hard spawning the player at the spawn location failed, most likely because spawn function was blocked
-    // Try again with black room spawn & teleport them to spawn location
-    if (C.Pawn == none)
-    {
-        G.DeployRestartPlayer(C, false, true);
-
-        if (C.Pawn != none)
-        {
-            if (TeleportPlayer(C, SpawnLocation, SpawnRotation))
-            {
-                return C.Pawn; // exit as we used old spawn system & don't need to do anything else in this function
-            }
-            else
-            {
-                C.Pawn.Suicide(); // teleport failed & pawn is still in the black room, so kill it
-            }
-        }
-    }
-
-    // Still haven't managed to spawn a player pawn, so go to state 'Dead' & exit
-    if (C.Pawn == none)
-    {
-        C.GotoState('Dead');
-
-        if (PlayerController(C) != none)
-        {
-            PlayerController(C).ClientGotoState('Dead', 'Begin');
-        }
+        PC.Pawn.Suicide();
 
         return none;
     }
 
-    // We have a new player pawn, so handle the necessary set up & possession
-    if (PlayerController(C) != none)
-    {
-        PlayerController(C).TimeMargin = -0.1;
-    }
-
-    C.Pawn.LastStartTime = Level.TimeSeconds;
-    C.PreviousPawnClass = C.Pawn.Class;
-    C.Possess(C.Pawn);
-    C.PawnClass = C.Pawn.Class;
-    C.Pawn.PlayTeleportEffect(true, true);
-    C.ClientSetRotation(C.Pawn.Rotation);
-
-    G.AddDefaultInventory(C.Pawn);
-
-    return C.Pawn;
-}
-
-function bool TeleportPlayer(Controller C, vector SpawnLocation, rotator SpawnRotation)
-{
-    if (C != none && C.Pawn != none && C.Pawn.SetLocation(SpawnLocation))
-    {
-        C.Pawn.SetRotation(SpawnRotation);
-        C.Pawn.SetViewRotation(SpawnRotation);
-        C.Pawn.ClientSetRotation(SpawnRotation);
-
-        return true;
-    }
-
-    return false;
-}
-
-// Similar to FindEntryVehicle() function in a Vehicle class, it checks for a suitable vehicle position to enter, before we call TryToDrive() on the vehicle
-// We need to do this, otherwise if we TryToDrive() a vehicle that already has a driver, we fail to enter that vehicle, so here we try to find an empty, valid weapon pawn to enter
-// Deliberately ignores driver position, to discourage players from deploying into a spawn vehicle, which may be carefully positioned by the team, & immediately driving off in it
-// Prioritises passenger positions over real weapon positions (MGs or cannons), so players deploying into spawn vehicle are less likely to be exposed & have a moment to orient themselves
-function Vehicle FindEntryVehicle(bool bCanBeTankCrew, ROVehicle V)
-{
-    local VehicleWeaponPawn        WP;
-    local array<VehicleWeaponPawn> RealWeaponPawns;
-    local int  i;
-
-    if (V == none)
-    {
-        return none;
-    }
-
-    // Loop through the weapon pawns to check if we can enter one (but skip real weapon positions, like MGs & cannons, on this 1st pass, so we prioritise passenger slots)
-    for (i = 0; i < V.WeaponPawns.Length; ++i)
-    {
-        WP = V.WeaponPawns[i];
-
-        if (WP != none)
-        {
-            // If weapon pawn is not a passenger slot (i.e. it's an MG or cannon), skip it on this 1st pass, but record it to check later if we don't find a valid passenger slot
-            if (!WP.IsA('DHPassengerPawn'))
-            {
-                RealWeaponPawns[RealWeaponPawns.Length] = WP;
-                continue;
-            }
-
-            // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
-            if (WP.Driver == none && (bCanBeTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
-            {
-                return WP;
-            }
-        }
-    }
-
-    // We didn't find a valid passenger slot, so now try any real weapon positions that we skipped on the 1st pass
-    for (i = 0; i < RealWeaponPawns.Length; ++i)
-    {
-        WP = RealWeaponPawns[i];
-
-        // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
-        if (WP.Driver == none && (bCanBeTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
-        {
-            return WP;
-        }
-    }
-
-    return none; // there are no empty, usable vehicle positions
-}
-
-function bool GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
-{
-    if (SP == none || C == none || GRI == none)
-    {
-        return false;
-    }
-
-    if (C.VehiclePoolIndex >= VEHICLE_POOLS_MAX || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
-    {
-        return false;
-    }
-
-    if (!SP.CanSpawnVehicles() && !(SP.CanSpawnInfantryVehicles() && !VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander))
-    {
-        return false; // check whether SP can either spawn any vehicle type, or can spawn infantry vehicles & one has been selected
-    }
-
-    if (!GRI.IgnoresMaxTeamVehiclesFlags(C.VehiclePoolIndex) &&
-        TeamVehicleCounts[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleTeam])
-    {
-        return false;
-    }
-
-    if (!GRI.IsVehiclePoolActive(C.VehiclePoolIndex))
-    {
-        return false;
-    }
-
-    if (Level.TimeSeconds < GRI.VehiclePoolNextAvailableTimes[C.VehiclePoolIndex])
-    {
-        return false;
-    }
-
-    if (GRI.VehiclePoolSpawnCounts[C.VehiclePoolIndex] >= GRI.VehiclePoolMaxSpawns[C.VehiclePoolIndex])
-    {
-        return false;
-    }
-
-    if (GRI.VehiclePoolActiveCounts[C.VehiclePoolIndex] >= GRI.VehiclePoolMaxActives[C.VehiclePoolIndex])
-    {
-        return false;
-    }
-
-    return true;
-}
-
-function bool DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation)
-{
-    local DHSpawnPoint SP;
-
-    if (C == none || GRI == none || C.bSpawnPointInvalidated)
-    {
-        return false;
-    }
-
-    // Check spawn settings
-    if (!GRI.AreSpawnSettingsValid(C.GetTeamNum(), DHRoleInfo(C.GetRoleInfo()), C.SpawnPointIndex, C.VehiclePoolIndex, C.SpawnVehicleIndex))
-    {
-        return false;
-    }
-
-    // Check spawn point
-    SP = SpawnPoints[C.SpawnPointIndex];
-
-    if (SP == none)
-    {
-        return false;
-    }
-
-    GetSpawnLocation(SP, SP.InfantryLocationHints, class'DHPawn'.default.CollisionRadius, SpawnLocation, SpawnRotation);
-
-    return true;
-}
-
-function bool SpawnInfantry(DHPlayer C)
-{
-    local DHPawn  P;
-    local vector  SpawnLocation;
-    local rotator SpawnRotation;
-
-    if (C == none || C.Pawn != none)
-    {
-        return false;
-    }
-
-    if (!DrySpawnInfantry(C, SpawnLocation, SpawnRotation))
-    {
-        return false;
-    }
-
-    P = DHPawn(SpawnPawn(C, SpawnLocation, SpawnRotation));
-
-    if (P == none)
-    {
-        return false;
-    }
-
-    P.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime);
-    P.SpawnKillTimeEnds = Level.TimeSeconds + SpawnPoints[C.SpawnPointIndex].SpawnProtectionTime;
-
-    return true;
+    return V;
 }
 
 event VehicleDestroyed(Vehicle V)
@@ -761,14 +326,32 @@ event VehicleDestroyed(Vehicle V)
     local ROVehicle ROV;
     local int       NextAvailableTime, i, j;
     local bool      bWasSpawnKilled;
+    local DHVehicle DHV;
+
     const SPAWN_KILL_RESPAWN_TIME = 2;
 
     super.VehicleDestroyed(V);
 
-    // Find out if the vehicle was spawned killed
-    if (V.IsA('DHVehicle') && DHVehicle(V).IsSpawnKillProtected())
+    DHV = DHVehicle(V);
+
+    if (DHV != none)
     {
-        bWasSpawnKilled = true;
+        // Find out if the vehicle was spawned killed
+        if (DHV.IsSpawnKillProtected())
+        {
+            if (DHV.SpawnPoint != none)
+            {
+                DHV.SpawnPoint.OnSpawnKill(V, none);
+            }
+
+            bWasSpawnKilled = true;
+        }
+
+        // Destroy spawn point attachment
+        if (DHV.SpawnPointAttachment != none)
+        {
+            DHV.SpawnPointAttachment.Destroy();
+        }
     }
 
     // Removes the destroyed vehicle from the managed Vehicles array
@@ -776,7 +359,7 @@ event VehicleDestroyed(Vehicle V)
     {
         if (V == Vehicles[i])
         {
-            --TeamVehicleCounts[Vehicles[i].VehicleTeam];
+            --GRI.TeamVehicleCounts[Vehicles[i].VehicleTeam];
 
             Vehicles.Remove(i, 1);
 
@@ -789,7 +372,7 @@ event VehicleDestroyed(Vehicle V)
     {
         // Find the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
         // Vital as same VehicleClass may well be in the vehicles list twice, with one being a spawn vehicle & the other the ordinary version, e.g. a half-track & a spawn vehicle HT
-        if (V.class == VehiclePools[i].VehicleClass && !(DHVehicle(V) != none && DHVehicle(V).bIsSpawnVehicle != VehiclePools[i].bIsSpawnVehicle))
+        if (V.class == VehiclePools[i].VehicleClass && !(DHVehicle(V) != none && DHVehicle(V).IsSpawnVehicle() != VehiclePools[i].bIsSpawnVehicle))
         {
             // Updates due to vehicle being destroyed
             GRI.VehiclePoolActiveCounts[i] -= 1;
@@ -872,9 +455,6 @@ event VehicleDestroyed(Vehicle V)
             break;
         }
     }
-
-    // Check whether we need to remove a spawn vehicle from the spawn vehicles array
-    GRI.RemoveSpawnVehicle(V);
 }
 
 //==============================================================================
@@ -894,51 +474,48 @@ private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> S
     }
 }
 
-private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
+private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
 {
     local DHSpawnPoint     SP;
     local DHVehicleFactory Factory;
     local int              i;
 
-    SP = SpawnPoints[SpawnPointIndex];
+    SP = DHSpawnPoint(GRI.GetSpawnPoint(SpawnPointIndex));
 
     if (SP == none || SP.bIsLocked)
     {
         return;
     }
 
-    if (GRI != none)
-    {
-        GRI.SetSpawnPointIsActive(SpawnPointIndex, bIsActive);
+    SP.SetIsActive(bIsActive);
 
-        // Activate/deactivate any linked mine volume protecting the spawn point
-        if (SP.MineVolumeProtectionRef != none)
+    // Activate/deactivate any linked mine volume protecting the spawn point
+    if (SP.MineVolumeProtectionRef != none)
+    {
+        if (bIsActive)
+        {
+            SP.MineVolumeProtectionRef.Activate();
+        }
+        else
+        {
+            SP.MineVolumeProtectionRef.Deactivate();
+        }
+    }
+
+    // Activate/deactivate any linked vehicle factories
+    for (i = 0; i < SP.LinkedVehicleFactories.Length; ++i)
+    {
+        Factory = SP.LinkedVehicleFactories[i];
+
+        if (Factory != none)
         {
             if (bIsActive)
             {
-                SP.MineVolumeProtectionRef.Activate();
+                Factory.ActivatedBySpawn(Factory.TeamNum);
             }
             else
             {
-                SP.MineVolumeProtectionRef.Deactivate();
-            }
-        }
-
-        // Activate/deactivate any linked vehicle factories
-        for (i = 0; i < SP.LinkedVehicleFactories.Length; ++i)
-        {
-            Factory = SP.LinkedVehicleFactories[i];
-
-            if (Factory != none)
-            {
-                if (bIsActive)
-                {
-                    Factory.ActivatedBySpawn(Factory.TeamNum);
-                }
-                else
-                {
-                    Factory.Deactivate();
-                }
+                Factory.Deactivate();
             }
         }
     }
@@ -974,12 +551,23 @@ function ToggleSpawnPointIsActiveByTag(name SpawnPointTag)
 {
     local array<byte> SpawnPointIndices;
     local int         i;
+    local DHSpawnPoint SP;
+
+    if (GRI == none)
+    {
+        return;
+    }
 
     GetSpawnPointIndicesByTag(SpawnPointTag, SpawnPointIndices);
 
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
-        SetSpawnPointIsActive(SpawnPointIndices[i], !(GRI != none && GRI.IsSpawnPointIndexActive(i)));
+        SP = DHSpawnPoint(GRI.GetSpawnPoint(i));
+
+        if (SP != none)
+        {
+            SP.SetIsActive(SP.IsActive());
+        }
     }
 }
 
@@ -1142,38 +730,6 @@ function ToggleVehiclePoolIsActiveByTag(name VehiclePoolTag)
     }
 }
 
-function int GetVehiclePoolCount()
-{
-    return VehiclePools.Length;
-}
-
-function int GetSpawnPointCount()
-{
-    return SpawnPoints.Length;
-}
-
-//==============================================================================
-// Spawn Vehicle Functions
-//==============================================================================
-
-function int GetSpawnVehicleCount()
-{
-    local int SpawnVehicleCount, i;
-
-    if (GRI != none)
-    {
-        for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
-        {
-            if (GRI.SpawnVehicles[i].Vehicle != none)
-            {
-                ++SpawnVehicleCount;
-            }
-        }
-    }
-
-    return SpawnVehicleCount;
-}
-
 function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local PlayerController PC;
@@ -1193,84 +749,11 @@ function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageCla
     }
 }
 
-// A repeating timer to checks whether spawn vehicles are blocked from players deploying to them
-function Timer()
-{
-    local Vehicle     V;
-    local Pawn        P;
-    local DHObjective O;
-    local byte        BlockFlags;
-    local int         i, j;
-
-    if (GRI == none)
-    {
-        return;
-    }
-
-    // Loop through all recorded spawn vehicles
-    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
-    {
-        BlockFlags = 0;
-
-        V = GRI.SpawnVehicles[i].Vehicle;
-
-        if (V == none)
-        {
-            continue;
-        }
-
-        // Check whether there is an enemy pawn within blocking distance of this spawn vehicle
-        foreach V.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
-        {
-            if (P != none && P.Controller != none)
-            {
-                if (V.GetTeamNum() != P.GetTeamNum())
-                {
-                    BlockFlags = BlockFlags | BlockFlags_EnemiesNearby;
-
-                    break;
-                }
-            }
-        }
-
-        // Check whether this spawn vehicle is inside an active objective
-        for (j = 0; j < arraycount(GRI.DHObjectives); ++j)
-        {
-            O = GRI.DHObjectives[j];
-
-            if (O != none && O.bActive && O.WithinArea(V))
-            {
-                BlockFlags = BlockFlags | BlockFlags_InObjective;
-
-                break;
-            }
-        }
-
-        // Check if a suitable entry vehicle is available for non-crew
-        if (FindEntryVehicle(false, ROVehicle(V)) == none)
-        {
-            BlockFlags = BlockFlags | BlockFlags_Full;
-        }
-
-        // Update this spawn vehicle's bIsBlocked setting in the GRI
-        GRI.SpawnVehicles[i].BlockFlags = BlockFlags;
-    }
-}
-
 defaultproperties
 {
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
-    SpawnPointType_Infantry=0
-    SpawnPointType_Vehicles=1
-    SVT_None=0
-    SVT_EngineOff=1
-    SVT_Always=2
     bDirectional=false
     DrawScale=3.0
-    BlockFlags_None=0
-    BlockFlags_EnemiesNearby=1
-    BlockFlags_InObjective=2
-    BlockFlags_Full=4
 }
 

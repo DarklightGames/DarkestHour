@@ -267,7 +267,7 @@ function string ReadEscape()
         case "t":   // Tab
             return Chr(0x09);
         case "u":   // Unicode character (eg. \u0820)
-            return Chr(class'UString'.static.Hex2Int(InputBuffer.Read(4)));
+            return Chr(class'UInteger'.static.FromHex(InputBuffer.Read(4)));
     }
 }
 

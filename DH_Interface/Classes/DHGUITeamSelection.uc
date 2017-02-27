@@ -161,15 +161,15 @@ function SelectTeam(int Team)
 
     if (Team == -1) // Spectate
     {
-        PC.ServerSetPlayerInfo(254, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(254, 255, 0, 0, -1, -1);
     }
     else if (Team == -2) // Auto-select
     {
-        PC.ServerSetPlayerInfo(250, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(250, 255, 0, 0, -1, -1);
     }
     else // Allies or Axis
     {
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, -1, -1);
     }
 }
 

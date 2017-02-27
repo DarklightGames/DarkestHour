@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHHud extends ROHud;
+class DHHud extends ROHud
+    dependson(DHSquadReplicationInfo);
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
@@ -51,6 +52,7 @@ var     localized string    SelectSpawnPointText;
 var     localized string    SpawnInfantryText;
 var     localized string    SpawnVehicleText;
 var     localized string    SpawnAtVehicleText;
+var     localized string    SpawnRallyPointText;
 var     localized string    SpawnNoRoleText;
 var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
@@ -75,6 +77,9 @@ var     material            NeedAmmoIconMaterial;
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
 var     globalconfig bool   bShowDeathMessages;     // whether or not to show the death messages
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
+var     globalconfig bool   bShowSquadMembers;      // whether or not to show the squad members list
+var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
+var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 
 // Debug
 var     bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
@@ -82,17 +87,8 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
-// Modified to replace RO compass texture with DH one
-simulated event PostBeginPlay()
-{
-    // Don't call the RO super
-    super(HudBase).PostBeginPlay();
-
-    // Setup compass material and offsets
-    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.Material = texture'DH_InterfaceArt_tex.HUD.DHCompassBackground';
-    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.UOffset = 128;
-    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.VOffset = 128;
-}
+var     SpriteWidget        SquadOrderAttackIcon;
+var     SpriteWidget        SquadOrderDefendIcon;
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
@@ -277,6 +273,28 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
             DHMessageClassType = class'DHTeamSayDeadMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
+        case 'SquadSay':
+            if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
+            {
+                DHMessageClassType = class'DHSquadLeaderSayMessage';
+            }
+            else
+            {
+                DHMessageClassType = class'DHSquadSayMessage';
+            }
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
+        case 'SquadSayDead':
+            if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
+            {
+                DHMessageClassType = class'DHSquadLeaderSayDeadMessage';
+            }
+            else
+            {
+                DHMessageClassType = class'DHSquadSayDeadMessage';
+            }
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
         case 'VehicleSay':
             DHMessageClassType = class'DHVehicleSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
@@ -343,11 +361,11 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     if (Killer != none && Killer != Victim)
     {
         O.KillerName = Killer.PlayerName;
-        O.KillerColor = class'DHColor'.default.TeamColors[Killer.Team.TeamIndex];
+        O.KillerColor = GetPlayerColor(Killer);
     }
 
     O.VictimName = Victim.PlayerName;
-    O.VictimColor = class'DHColor'.default.TeamColors[Victim.Team.TeamIndex];
+    O.VictimColor = GetPlayerColor(Victim);
     O.DamageType = DamageType;
 
     // If a suicide, team kill, or spawn kill then have the kill message display ASAP
@@ -524,11 +542,11 @@ simulated function DrawHudPassC(Canvas C)
     local color                 MyColor;
     local AbsoluteCoordsInfo    Coords;
     local ROWeapon              MyWeapon;
-    local byte                  BlockFlags;
     local vector                CameraLocation;
     local rotator               CameraRotation;
     local Actor                 ViewActor;
     local DHPawn                P;
+    local DHVehicle             V;
 
     if (PawnOwner == none)
     {
@@ -620,20 +638,20 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
-    // Spawn vehicle deploy icon
-    if (DHVehicle(PawnOwner) != none && DHVehicle(PawnOwner).bIsSpawnVehicle)
-    {
-        BlockFlags = DHGRI.GetSpawnVehicleBlockFlags(Vehicle(PawnOwner));
+    V = DHVehicle(PawnOwner);
 
-        if (BlockFlags == class'DHSpawnManager'.default.BlockFlags_None)
+    // Spawn vehicle deploy icon
+    if (V != none && V.SpawnPointAttachment != none)
+    {
+        if (V.SpawnPointAttachment.BlockReason == SPBR_None)
         {
             DrawSpriteWidget(C, DeployOkayIcon);
         }
-        else if ((BlockFlags & class'DHSpawnManager'.default.BlockFlags_InObjective) != 0)
+        else if (V.SpawnPointAttachment.BlockReason == SPBR_InObjective)
         {
             DrawSpriteWidget(C, DeployInObjectiveIcon);
         }
-        else if ((BlockFlags & class'DHSpawnManager'.default.BlockFlags_EnemiesNearby) != 0)
+        else if (V.SpawnPointAttachment.BlockReason == SPBR_EnemiesNearby)
         {
             DrawSpriteWidget(C, DeployEnemiesNearbyIcon);
         }
@@ -769,6 +787,9 @@ simulated function DrawHudPassC(Canvas C)
     // Player names
     DrawPlayerNames(C);
 
+    // Signals
+    DrawSignals(C);
+
     // Portrait
     if (bShowPortrait || (bShowPortraitVC && Level.TimeSeconds - LastPlayerIDTalkingTime < 2.0))
     {
@@ -835,6 +856,11 @@ simulated function DrawHudPassC(Canvas C)
                 {
                     PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
+                }
+
+                if (VCR.IsSquadChannel() && class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+                {
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.SquadColor;
                 }
             }
 
@@ -1420,7 +1446,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     if (Vehicle.PlayerReplicationInfo != none)
     {
         Lines[0] = "1." @ Vehicle.PlayerReplicationInfo.PlayerName;
-        Colors[0] = GetPlayerColor(DHPlayerReplicationInfo(Vehicle.PlayerReplicationInfo));
+        Colors[0] = GetPlayerColor(Vehicle.PlayerReplicationInfo);
     }
 
     // Get passenger names & colors
@@ -1432,7 +1458,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         {
             //Lines[Lines.Length] = "" $ (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
             Lines[Lines.Length] = (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
-            Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WP.PlayerReplicationInfo));
+            Colors[Colors.Length] = GetPlayerColor(WP.PlayerReplicationInfo);
         }
     }
 
@@ -1453,16 +1479,29 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 }
 
-function color GetPlayerColor(DHPlayerReplicationInfo PRI)
+function color GetPlayerColor(PlayerReplicationInfo PRI)
 {
-    local DHPlayerReplicationInfo MyPRI;
+    local DHPlayerReplicationInfo MyPRI, OtherPRI;
+
+    OtherPRI = DHPlayerReplicationInfo(PRI);
 
     if (PlayerOwner != none)
     {
         MyPRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
     }
 
-    if (PRI != none && PRI.Team != none)
+    if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI))
+    {
+        if (OtherPRI.IsSquadLeader())
+        {
+            return class'DHColor'.default.SquadLeaderColor;
+        }
+        else
+        {
+            return class'DHColor'.default.SquadColor;
+        }
+    }
+    else if (PRI != none && PRI.Team != none)
     {
         return class'DHColor'.default.TeamColors[PRI.Team.TeamIndex];
     }
@@ -1470,12 +1509,87 @@ function color GetPlayerColor(DHPlayerReplicationInfo PRI)
     return class'UColor'.default.White;
 }
 
+function DrawSignals(Canvas C)
+{
+    local int i;
+    local DHPlayer PC;
+    local vector    Direction;
+    local vector    TraceStart, TraceEnd;
+    local vector    ScreenLocation;
+    local material  SignalMaterial;
+    local float     Angle;
+    local bool      bHasLOS;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PawnOwner == none || PC == none)
+    {
+        return;
+    }
+
+    TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
+
+    for (i = 0; i < arraycount(PC.SquadSignals); ++i)
+    {
+        if (!PC.IsSquadSignalActive(i))
+        {
+            continue;
+        }
+
+        TraceEnd = PC.SquadSignals[i].Location;
+
+        Direction = Normal(TraceEnd - TraceStart);
+        Angle = Direction dot vector(PlayerOwner.CalcViewRotation);
+
+        if (Angle < 0.0)
+        {
+            continue;
+        }
+
+        switch (i)
+        {
+            case 0: // SIGNAL_Fire
+                C.DrawColor = class'DHColor'.default.SquadSignalFireColor;
+                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world';
+                break;
+            case 1: // SIGNAL_Move
+                C.DrawColor = class'DHColor'.default.SquadSignalMoveColor;
+                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world';
+                break;
+            default:
+                break;
+        }
+
+        bHasLOS = FastTrace(TraceEnd, TraceStart);
+
+        if (bHasLOS)
+        {
+            C.DrawColor.A = 255;
+        }
+        else
+        {
+            C.DrawColor.A = 64;
+        }
+
+        if (Angle >= 0.99)
+        {
+            C.DrawColor.A = 32;
+        }
+
+        ScreenLocation = C.WorldToScreen(TraceEnd);
+
+        // TODO: convert to spritewidget
+        C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - 8);
+        C.DrawTile(SignalMaterial, 24, 24, 0, 0, 31, 31);
+    }
+}
+
 // Modified to show the names of friendly players within 25m if they are talking, or if we can resupply them or assist them with loading a rocket
 // This is as well as any player we are looking directly at (within a longer distance of 50m)
 // We also show a relevant icon above a drawn name if the player is talking or if we can resupply or assist reload them
 function DrawPlayerNames(Canvas C)
 {
-    local DHPlayerReplicationInfo OtherPRI;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
     local ROVehicle               VehicleBase;
     local VehicleWeaponPawn       WepPawn;
     local DHMortarVehicle         Mortar;
@@ -1495,6 +1609,8 @@ function DrawPlayerNames(Canvas C)
     {
         return;
     }
+
+    PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
     ViewLocation = PlayerOwner.CalcViewLocation;
 
@@ -1590,13 +1706,15 @@ function DrawPlayerNames(Canvas C)
 
         bCurrentlyValid = false; // reset for each pawn to be checked
 
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
         // The LookedAtPawn is always valid, as we're looking directly at them & know they are within range
         if (P == LookedAtPawn)
         {
             bCurrentlyValid = true;
         }
-        // Player is talking, so will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
-        else if (P.PlayerReplicationInfo == PortraitPRI)
+        // Player is talking or is in our squad, so will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
+        else if (P.PlayerReplicationInfo == PortraitPRI || class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
         {
             bMayBeValid = true;
         }
@@ -1665,7 +1783,7 @@ function DrawPlayerNames(Canvas C)
     if (NamedPawns.Length > 0)
     {
         C.Font = GetPlayerNameFont(C);
-        TeamColor = GetPlayerColor(DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo));
+        TeamColor = GetPlayerColor(OtherPRI);
     }
 
     for (i = NamedPawns.Length - 1; i >= 0; --i)
@@ -1779,7 +1897,7 @@ function DrawPlayerNames(Canvas C)
 
         // Set to draw the name & name icon in our team's color
         // And if player's name is fading in or out, lower the drawing alpha value accordingly
-        C.DrawColor = TeamColor;
+        C.DrawColor = GetPlayerColor(OtherPRI);
 
         if (NameFadeTime < 1.0 && NameFadeTime >= 0.0)
         {
@@ -2721,6 +2839,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
+    DrawSquadOrderOnMap(C, SubCoords, MyMapScale, MapCenter);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
 
 /////////////////////////  DEBUGGING ///////////////////////////////////////////////////
@@ -2834,19 +2953,113 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     }
 }
 
+simulated function DrawSquadOrderOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHSquadReplicationInfo.ESquadOrderType OrderType;
+    local vector OrderLocation;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    SRI = PC.SquadReplicationInfo;
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (SRI == none || !PRI.IsInSquad())
+    {
+        return;
+    }
+
+    SRI.GetSquadOrder(PC.GetTeamNum(), PRI.SquadIndex, OrderType, OrderLocation);
+
+    switch (OrderType)
+    {
+        case ORDER_Attack:
+            DrawIconOnMap(C, SubCoords, SquadOrderAttackIcon, MyMapScale, OrderLocation, MapCenter);
+            break;
+        case ORDER_Defend:
+            DrawIconOnMap(C, SubCoords, SquadOrderDefendIcon, MyMapScale, OrderLocation, MapCenter);
+            break;
+        default:
+            break;
+    }
+}
+
 simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
 {
     local Actor A;
     local DHPlayer PC;
-    local DHPlayerReplicationInfo PRI;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local DHSquadReplicationInfo SRI;
+    local vector PlayerLocation;
     local int PlayerYaw;
-    local color SelfColor;
+    local Pawn P, OtherPawn;
+    local color SquadMemberColor, SelfColor;
+    local int i;
 
     PC = DHPlayer(PlayerOwner);
 
     if (PC != none)
     {
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+        SRI = PC.SquadReplicationInfo;
+    }
+
+    // Draw squad members on map
+    if (PRI != none && PRI.IsInSquad() && SRI != none)
+    {
+        for (i = 0; i < SRI.GetTeamSquadSize(PC.GetTeamNum()); ++i)
+        {
+            OtherPRI = SRI.GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
+
+            if (OtherPRI == none || OtherPRI == PRI)
+            {
+                continue;
+            }
+
+            // PERFORMANCE: this is totally inefficient, but will be run on
+            // the client so we can get away with it...for now.
+            // TODO: only run this once and map Pawns to PRIs.
+            foreach DynamicActors(class'Pawn', P)
+            {
+                if (P.PlayerReplicationInfo == OtherPRI)
+                {
+                    OtherPawn = P;
+                    break;
+                }
+            }
+
+            // If our client has a replicated instance of the squad member's pawn
+            // available, use that pawn's location and rotation.
+            // Otherwise, we will use the cached values that are sent to the
+            // client from the server.
+            if (OtherPawn != none)
+            {
+                PlayerLocation = OtherPawn.Location;
+                PlayerYaw = OtherPawn.Rotation.Yaw;
+            }
+            else if (PC.SquadMemberLocations[i] != vect(0, 0, 0))
+            {
+                PlayerLocation.X = PC.SquadMemberLocations[i].X;
+                PlayerLocation.Y = PC.SquadMemberLocations[i].Y;
+                PlayerYaw = PC.SquadMemberLocations[i].Z;
+            }
+            else
+            {
+                continue;
+            }
+
+            SquadMemberColor = class'DHColor'.default.SquadColor;
+            SquadMemberColor.A = 160;
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i, SquadMemberColor, 0.03);
+        }
     }
 
     // Draw the local player on the map
@@ -2883,12 +3096,12 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
         {
             SelfColor = class'UColor'.default.OrangeRed;
             SelfColor.A = 160;
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, SelfColor, 0.05);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05);
         }
     }
 }
 
-simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, color Color, float TextureScale)
+simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale)
 {
     MapPlayerIcon.TextureScale = TextureScale;
 
@@ -2899,6 +3112,15 @@ simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
 
     // Draw the player icon
     DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter);
+
+    if (Number >= 0)
+    {
+        MapPlayerNumberIcon.TextureScale = TextureScale;
+        MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[Number];
+
+        //TODO: draw the number indicator
+        DrawIconOnMap(C, SubCoords, MapPlayerNumberIcon, MyMapScale, Location, MapCenter);
+    }
 }
 
 simulated function float GetMapIconYaw(float WorldYaw)
@@ -4126,9 +4348,8 @@ exec function ShrinkHUD()
 simulated function DrawSpectatingHud(Canvas C)
 {
     local DHPlayerReplicationInfo PRI;
-    local DHSpawnPoint            SP;
+    local DHSpawnPointBase   SP;
     local DHPlayer                PC;
-    local class<Vehicle>          SVC;
     local float  Scale, X, Y, strX, strY, NameWidth, SmallH, XL;
     local int    Time;
     local string s;
@@ -4193,13 +4414,13 @@ simulated function DrawSpectatingHud(Canvas C)
                 switch (PC.ClientLevelInfo.SpawnMode)
                 {
                     case ESM_DarkestHour:
-                        if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
+                        if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
                         {
                             // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
                             s = default.SpawnVehicleText;
                             s = Repl(s, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
                         }
-                        else if (PC.SpawnPointIndex != 255)
+                        else if (PC.SpawnPointIndex != -1)
                         {
                             SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
 
@@ -4213,22 +4434,6 @@ simulated function DrawSpectatingHud(Canvas C)
                             {
                                 // You will deploy as a {0} in {2} | Press ESC to change
                                 s = default.SpawnInfantryText;
-                            }
-                        }
-                        else if (PC.SpawnVehicleIndex != 255)
-                        {
-                            SVC = DHGRI.VehiclePoolVehicleClasses[DHGRI.SpawnVehicles[PC.SpawnVehicleIndex].VehiclePoolIndex];
-
-                            if (SVC != none)
-                            {
-                                // You will deploy as a {0} at a {1} in {2} | Press ESC to change
-                                s = Repl(default.SpawnAtVehicleText, "{1}", SVC.default.VehicleNameString);
-                            }
-                            else
-                            {
-                                // Press ESC to select a spawn point
-                                s = default.SelectSpawnPointText;
-                                bShouldFlashText= true;
                             }
                         }
                         else
@@ -4689,6 +4894,103 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
     LocalMessages[i].StringMessage = CriticalString;
 }
 
+// Colin: Overridden to have the color be green if you are talking in a squad channel.
+function DisplayVoiceGain(Canvas C)
+{
+    local float VoiceGain;
+    local float PosY, PosX, XL, YL;
+    local string ActiveName;
+    local float IconSize, Scale, YOffset;
+    local color SavedColor;
+    local DHVoiceChatRoom VCR;
+
+    Scale = C.SizeY / 1200.0 * HudScale;
+
+    SavedColor = C.DrawColor;
+
+    C.DrawColor = WhiteColor;
+    C.Style = ERenderStyle.STY_Alpha;
+
+    VoiceGain = (1 - 3 * Min(Level.TimeSeconds - LastVoiceGainTime, 0.3333)) * LastVoiceGain;
+    YOffset = 12 * scale;
+    IconSize = VoiceMeterSize * Scale;
+    PosY = VoiceMeterY * C.ClipY - IconSize - YOffset;
+    PosX = VoiceMeterX * C.ClipX;
+
+    C.SetPos(PosX, PosY);
+    C.DrawTile(VoiceMeterBackground, IconSize, IconSize, 0, 0, VoiceMeterBackground.USize, VoiceMeterBackground.VSize);
+
+    NeedleRotator.Rotation.Yaw = -1 * ((20000 * VoiceGain) + 55000);
+
+    C.SetPos(PosX, PosY);
+    C.DrawTileScaled(NeedleRotator, scale * VoiceMeterSize / 128.0, scale * VoiceMeterSize / 128.0);
+
+    if (PlayerOwner != none)
+    {
+        VCR = DHVoiceChatRoom(PlayerOwner.ActiveRoom);
+
+        if (VCR != none)
+        {
+            ActiveName = VCR.GetTitle();
+        }
+    }
+
+    // Display name of currently active channel
+    if (PlayerOwner != none && PlayerOwner.ActiveRoom != none)
+    {
+        ActiveName = PlayerOwner.ActiveRoom.GetTitle();
+    }
+
+    // Remove for release
+    if (ActiveName == "")
+    {
+        ActiveName = "No Channel Selected!";
+    }
+
+    if (ActiveName != "")
+    {
+        C.SetPos(0, 0);
+
+        ActiveName = "(" @ ActiveName @ ")";
+
+        C.Font = GetFontSizeIndex(C, -2);
+
+        C.StrLen(ActiveName, XL, YL);
+
+        if (XL > 0.125 * C.ClipY)
+        {
+            C.Font = GetFontSizeIndex(C,-4);
+            C.StrLen(ActiveName,XL,YL);
+        }
+
+        C.SetPos(PosX + ((IconSize / 2) - (XL / 2)), PosY - YL);
+        C.DrawColor = C.MakeColor(160, 160, 160);
+
+        if (VCR != none && VCR.IsSquadChannel())
+        {
+            C.DrawColor = class'DHColor'.default.SquadColor;
+        }
+        else if (PlayerOwner != none && PlayerOwner.PlayerReplicationInfo != none)
+        {
+            if (PlayerOwner.PlayerReplicationInfo.Team != none)
+            {
+                if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == 0)
+                {
+                    C.DrawColor = class'DHColor'.default.TeamColors[0];
+                }
+                else
+                {
+                    C.DrawColor = class'DHColor'.default.TeamColors[1];
+                }
+            }
+        }
+
+        C.DrawText(ActiveName);
+    }
+
+    C.DrawColor = SavedColor;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -4824,6 +5126,7 @@ defaultproperties
     PlayerNameFontSize=1
     OverrideConsoleFontName="DHFonts.DHFont14"
     SpacingText="        "
+    bShowSquadMembers=true
 
     // Death messages
     bShowDeathMessages=true
@@ -4854,6 +5157,7 @@ defaultproperties
     SpawnInfantryText="You will deploy as a {0} in {2} | Press [ESC] to change"
     SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press [ESC] to change"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
+    SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
     SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
@@ -4927,6 +5231,10 @@ defaultproperties
     MapIconMortarSmokeTarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+
+    // Map icons for squad orders
+    SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
+    SquadOrderDefendIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_defend',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

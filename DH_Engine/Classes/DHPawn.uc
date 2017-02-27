@@ -101,6 +101,9 @@ var     Pawn                FireStarter;                   // who set a player o
 var     class<LocalMessage> TouchMessageClass;
 var     float               LastNotifyTime;
 
+// Spawning
+var     DHSpawnPointBase    SpawnPoint;                     // the spawn point that was used to spawn this vehicle
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -373,6 +376,11 @@ function PossessedBy(Controller C)
     {
         bMantleDebug = DHPlayer(Controller).bMantleDebug;
     }
+}
+
+function UnPossessed()
+{
+    super.UnPossessed();
 }
 
 // Modified to remove trying to loop non-existent 'Vehicle_Driving' animation if vehicle doesn't have a DriveAnim (e.g. where driver is hidden)

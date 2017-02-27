@@ -5,25 +5,46 @@
 
 class DHGUIMapComponent extends GUIPanel;
 
-const   SPAWN_POINTS_MAX =                  48; // Max spawn points total (make sure this matches GRI)
+const   SPAWN_POINTS_MAX =                  63; // Max spawn points total (make sure this matches GRI)
 const   SPAWN_VEHICLES_MAX =                8;  // Max spawn vehicles total (make sure this matches GRI)
+const   SQUAD_RALLY_POINTS_MAX =            16; // Max squad rally points (make sure this matches SRI)
 
-var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX],
-                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX];
+var automated   DHGUICheckBoxButton         b_SpawnPoints[SPAWN_POINTS_MAX];
 
 var             DHHud                       MyHud;
 var             DHGameReplicationInfo       GRI;
 var             DHPlayer                    PC;
+var             DHPlayerReplicationInfo     PRI;
 
-delegate OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick);
+var             GUIContextMenu              SquadRallyPointContextMenu;
+
+delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
+    local int i;
+
     super.InitComponent(MyController, MyOwner);
 
     PC = DHPlayer(PlayerOwner());
 
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        b_SpawnPoints[i].Tag = i;
+        b_SpawnPoints[i].ContextMenu.Tag = i;
+        b_SpawnPoints[i].ContextMenu.OnOpen = MyContextOpen;
+        b_SpawnPoints[i].ContextMenu.OnClose = MyContextClose;
+        b_SpawnPoints[i].ContextMenu.OnSelect = MyContextSelect;
+    }
+
     if (PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none)
     {
         return;
     }
@@ -57,26 +78,27 @@ function bool InternalOnDraw(Canvas C)
     SubCoords.Width = ActualWidth();
     SubCoords.Height = ActualHeight();
 
-    DHHud(PlayerOwner().myHUD).DrawMap(C, SubCoords, PC);
+    MyHud.DrawMap(C, SubCoords, PC);
 
     return false;
 }
 
-function SelectSpawnPoint(byte SpawnPointIndex, byte SpawnVehicleIndex)
+function SelectSpawnPoint(int SpawnPointIndex)
 {
     local int i;
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        b_SpawnPoints[i].SetChecked(b_SpawnPoints[i].Tag == SpawnPointIndex);
+        if (i == SpawnPointIndex)
+        {
+            Log("b_SpawnPoints[" $ i $ "]" @ b_SpawnPoints[i]);
+            Log("Tag" @ b_SpawnPoints[i].Tag);
+        }
+
+        b_SpawnPoints[i].SetChecked(b_SpawnPoints[i].Tag != -1 && b_SpawnPoints[i].Tag == SpawnPointIndex);
     }
 
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        b_SpawnVehicles[i].SetChecked(b_SpawnVehicles[i].Tag == SpawnVehicleIndex);
-    }
-
-    OnSpawnPointChanged(SpawnPointIndex, SpawnVehicleIndex);
+    OnSpawnPointChanged(SpawnPointIndex);
 }
 
 function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)
@@ -92,23 +114,11 @@ function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)
     {
         if (Sender == b_SpawnPoints[i])
         {
-            OnSpawnPointChanged(b_SpawnPoints[i].Tag, 255);
+            OnSpawnPointChanged(b_SpawnPoints[i].Tag);
         }
         else
         {
             b_SpawnPoints[i].SetChecked(false);
-        }
-    }
-
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        if (Sender == b_SpawnVehicles[i])
-        {
-            OnSpawnPointChanged(255, b_SpawnVehicles[i].Tag);
-        }
-        else
-        {
-            b_SpawnVehicles[i].SetChecked(false);
         }
     }
 }
@@ -121,17 +131,7 @@ function bool OnDblClick(GUIComponent Sender)
     {
         if (Sender == b_SpawnPoints[i])
         {
-            OnSpawnPointChanged(b_SpawnPoints[i].Tag, 255, true);
-
-            return true;
-        }
-    }
-
-    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
-    {
-        if (Sender == b_SpawnVehicles[i])
-        {
-            OnSpawnPointChanged(255, b_SpawnVehicles[i].Tag, true);
+            OnSpawnPointChanged(b_SpawnPoints[i].Tag, true);
 
             return true;
         }
@@ -140,26 +140,62 @@ function bool OnDblClick(GUIComponent Sender)
     return false;
 }
 
-function bool MyContextOpen(GUIContextMenu Menu)
+function bool MyContextOpen(GUIContextMenu Sender)
 {
-    //return HandleContextMenuOpen(List, Menu, Menu.MenuOwner);
-    return false;
+    local DHSpawnPoint_SquadRallyPoint SRP;
+
+    if (PRI == none || !PRI.IsSquadLeader())
+    {
+        return false;
+    }
+
+    if (GRI != none)
+    {
+        SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
+    }
+
+    if (SRP == none || SRP.TeamIndex != PC.GetTeamNum() || SRP.SquadIndex != PRI.SquadIndex || !SRP.IsActive())
+    {
+        return false;
+    }
+
+    return true;
 }
 
 function bool MyContextClose(GUIContextMenu Sender)
 {
-    //return HandleContextMenuClose(Sender);
-    return false;
+    return true;
 }
 
 function MyContextSelect(GUIContextMenu Sender, int Index)
 {
-    //NotifyContextSelect(Sender, Index);
+    local DHSpawnPoint_SquadRallyPoint SRP;
+
+    if (PRI == none || !PRI.IsSquadLeader())
+    {
+        return;
+    }
+
+    if (GRI != none)
+    {
+        SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
+    }
+
+    PC.ServerSquadDestroyRallyPoint(SRP);
+
+    return;
 }
 
 defaultproperties
 {
     OnDraw=InternalOnDraw
+
+    Begin Object Class=GUIContextMenu Name=SRPContextMenu
+        ContextItems(0)="Destroy"
+        OnOpen=DHGUIMapComponent.MyContextOpen
+        OnClose=DHGUIMapComponent.MyContextClose
+        OnSelect=DHGUIMapComponent.MyContextSelect
+    End Object
 
     // Spawn points
     Begin Object Class=DHGUICheckBoxButton Name=SpawnPointButton
@@ -177,6 +213,7 @@ defaultproperties
         CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
         OnCheckChanged=InternalOnCheckChanged
         bCanClickUncheck=false
+        ContextMenu=SRPContextMenu
     End Object
 
     //TODO: This is begging to be put into a loop somewhere
@@ -228,42 +265,20 @@ defaultproperties
     b_SpawnPoints(45)=SpawnPointButton
     b_SpawnPoints(46)=SpawnPointButton
     b_SpawnPoints(47)=SpawnPointButton
-
-    // Spawn Vehicle Buttons
-    Begin Object Class=DHGUICheckBoxButton Name=SpawnVehicleButton
-        StyleName="DHSpawnVehicleButtonStyle"
-        WinWidth=0.04
-        WinHeight=0.04
-        bTabStop=false
-        OnCheckChanged=InternalOnCheckChanged
-        OnDblClick=OnDblClick
-        bVisible=false
-        CheckedOverlay(0)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(1)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(2)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(3)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        CheckedOverlay(4)=material'DH_GUI_Tex.DeployMenu.spawn_point_osc'
-        bCanClickUncheck=false
-    End Object
-
-    b_SpawnVehicles(0)=SpawnVehicleButton
-    b_SpawnVehicles(1)=SpawnVehicleButton
-    b_SpawnVehicles(2)=SpawnVehicleButton
-    b_SpawnVehicles(3)=SpawnVehicleButton
-    b_SpawnVehicles(4)=SpawnVehicleButton
-    b_SpawnVehicles(5)=SpawnVehicleButton
-    b_SpawnVehicles(6)=SpawnVehicleButton
-    b_SpawnVehicles(7)=SpawnVehicleButton
-
-    Begin Object Class=GUIContextMenu Name=RCMenu
-        ContextItems(0)="Attack"
-        ContextItems(1)="Defend"
-        ContextItems(2)="-"
-        ContextItems(3)="Clear"
-        OnOpen=MyContextOpen
-        OnClose=MyContextClose
-        OnSelect=MyContextSelect
-    End Object
-    ContextMenu=GUIContextMenu'DH_Interface.DHGUIMapComponent.RCMenu'
+    b_SpawnPoints(48)=SpawnPointButton
+    b_SpawnPoints(49)=SpawnPointButton
+    b_SpawnPoints(50)=SpawnPointButton
+    b_SpawnPoints(51)=SpawnPointButton
+    b_SpawnPoints(52)=SpawnPointButton
+    b_SpawnPoints(53)=SpawnPointButton
+    b_SpawnPoints(54)=SpawnPointButton
+    b_SpawnPoints(55)=SpawnPointButton
+    b_SpawnPoints(56)=SpawnPointButton
+    b_SpawnPoints(57)=SpawnPointButton
+    b_SpawnPoints(58)=SpawnPointButton
+    b_SpawnPoints(59)=SpawnPointButton
+    b_SpawnPoints(60)=SpawnPointButton
+    b_SpawnPoints(61)=SpawnPointButton
+    b_SpawnPoints(62)=SpawnPointButton
 }
 

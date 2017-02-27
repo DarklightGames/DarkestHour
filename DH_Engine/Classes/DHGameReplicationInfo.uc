@@ -18,11 +18,9 @@ struct ArtilleryTarget
 
 struct SpawnVehicle
 {
+    var int             SpawnPointIndex;
     var int             VehiclePoolIndex;
     var Vehicle         Vehicle;
-    var int             LocationX;
-    var int             LocationY;
-    var byte            BlockFlags;
 };
 
 const RADIOS_MAX = 10;
@@ -79,15 +77,11 @@ var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
 var byte                MaxTeamVehicles[2];
+var byte                TeamVehicleCounts[2];
 
-const SPAWN_POINTS_MAX = 48;
+const SPAWN_POINTS_MAX = 63;
 
-var DHSpawnPoint        SpawnPoints[SPAWN_POINTS_MAX];
-var private byte        SpawnPointIsActives[SPAWN_POINTS_MAX];
-
-const SPAWN_VEHICLES_MAX = 8;
-
-var SpawnVehicle        SpawnVehicles[SPAWN_VEHICLES_MAX];
+var DHSpawnPointBase   SpawnPoints[SPAWN_POINTS_MAX];
 
 const OBJECTIVES_MAX = 32;
 
@@ -127,14 +121,14 @@ replication
         VehiclePoolIsSpawnVehicles,
         VehiclePoolReservationCount,
         VehiclePoolIgnoreMaxTeamVehiclesFlags,
-        SpawnPointIsActives,
-        SpawnVehicles,
         MaxTeamVehicles,
         DHObjectives,
         AttritionRate,
         bUseDeathPenaltyCount,
         CurrentGameType,
-        CurrentAlliedToAxisRatio;
+        CurrentAlliedToAxisRatio,
+        TeamVehicleCounts,
+        SpawnPoints;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -184,196 +178,123 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to update replicated locations of any spawn vehicles, & for net client to check whether local local player has his weapons locked & it's now time to unlock them
-simulated event Timer()
-{
-    local int i;
-
-    super.Timer();
-
-    if (Role == ROLE_Authority)
-    {
-        for (i = 0; i < arraycount(SpawnVehicles); ++i)
-        {
-            if (SpawnVehicles[i].Vehicle != none)
-            {
-                SpawnVehicles[i].LocationX = SpawnVehicles[i].Vehicle.Location.X;
-                SpawnVehicles[i].LocationY = SpawnVehicles[i].Vehicle.Location.Y;
-            }
-        }
-    }
-    else if (DHPlayer(Level.GetLocalPlayerController()) != none)
-    {
-        DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
-    }
-}
-
 //------------------------------------------------------------------------------
 // Spawn Point Functions
 //------------------------------------------------------------------------------
 
-simulated function bool IsSpawnPointIndexActive(byte SpawnPointIndex)
-{
-    return SpawnPointIsActives[SpawnPointIndex] != 0;
-}
-
-simulated function bool IsSpawnPointActive(DHSpawnPoint SP)
-{
-    return IsSpawnPointIndexActive(GetSpawnPointIndex(SP));
-}
-
-function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
-{
-    local Controller C;
-    local DHPlayer PC;
-
-    SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
-
-    if (!bIsActive)
-    {
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            PC = DHPlayer(C);
-
-            if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
-            {
-                PC.SpawnPointIndex = 255;
-                PC.bSpawnPointInvalidated = true;
-            }
-        }
-    }
-}
-
-simulated function byte GetSpawnPointIndex(DHSpawnPoint SP)
+simulated function int AddSpawnPoint(DHSpawnPointBase SP)
 {
     local int i;
 
+    if (SP == none)
+    {
+        return -1;
+    }
+
     for (i = 0; i < arraycount(SpawnPoints); ++i)
     {
-        if (SpawnPoints[i] == SP)
+        if (SP == SpawnPoints[i])
         {
+            return -1;
+        }
+    }
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] == none)
+        {
+            SpawnPoints[i] = SP;
             return i;
         }
     }
 
-    Warn("Spawn point index could not be resolved");
-
-    return 255;
+    return -1;
 }
 
-simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
+simulated function DHSpawnPointBase GetSpawnPoint(int SpawnPointIndex)
 {
-    local int i;
-
-    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    if (SpawnPointIndex < 0 || SpawnPointIndex >= arraycount(SpawnPoints))
     {
-        if (SpawnPoints[i] != none &&
-            SpawnPoints[i].TeamIndex == TeamIndex &&
-            SpawnPointIsActives[i] != 0)
-        {
-            SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
-        }
+        return none;
     }
+
+    return SpawnPoints[SpawnPointIndex];
 }
 
-// Colin: The rules for spawn point availability are a little bit
-// complicated, so here's a run-down:
-//
-// Players not spawning vehicles can spawn at any spawn point marked as
-// SPT_Infantry.
-//
-// Mortar operators can use any spawn point marked as SPT_Mortar.
-//
-// Vehicles can be spawned at any spawn point marked as SPT_Vehicles.
-//
-// Tank crewmen not spawning tanks can use any spawn point marked as
-// SPT_Vehicle (so that vehicle crews can spawn together)
-simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, DHRoleInfo RI, class<Vehicle> VehicleClass)
+simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
 {
-    local DHSpawnPoint     SP;
-    local class<ROVehicle> V;
+    local DHSpawnPoint_SquadRallyPoint RP;
+    local DHPlayerReplicationInfo PRI;
 
-    // Valid index?
-    if (SpawnPointIndex >= SPAWN_POINTS_MAX)
-    {
-        return false; //Not valid index
-    }
-
-    // Is spawn point active
-    if (!IsSpawnPointIndexActive(SpawnPointIndex))
-    {
-        return false; //Not active
-    }
-
-    // Is spawn point for the correct team
-    SP = SpawnPoints[SpawnPointIndex];
-
-    if (SP.TeamIndex != TeamIndex)
+    if (PC == none || PC.SquadReplicationInfo == none)
     {
         return false;
     }
 
-    if (RI == none)
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    RP = PC.SquadReplicationInfo.RallyPoints[RallyPointIndex];
+
+    if (RP == none || PRI == none || PRI.Team.TeamIndex != RP.TeamIndex || PRI.SquadIndex != RP.SquadIndex)
     {
         return false;
     }
 
-    // If the player is mortar crew & the SP is a mortar spawn (or allows any type of spawn) then it's a valid SP for him
-    if (RI.default.bCanUseMortars && SP.CanSpawnMortars())
-    {
-        return true;
-    }
-
-    // If player is trying to spawn into a vehicle then SP is valid if it can either spawn any vehicle type, or can spawn infantry vehicles & one has been selected
-    // Also check the vehicle is the correct team, but that's just a fail-safe
-    if (VehicleClass != none)
-    {
-        V = class<ROVehicle>(VehicleClass);
-
-        return V != none && (SP.CanSpawnVehicles() || (SP.CanSpawnInfantryVehicles() && !V.default.bMustBeTankCommander)) && SP.TeamIndex == V.default.VehicleTeam;
-    }
-
-    // Otherwise the player is trying to spawn on foot, so the SP is valid if it allows that
-    // Plus special exception to allow tank crewmen to spawn on foot at a vehicle SP, so that tank crews can spawn together
-    return SP.CanSpawnInfantry() || (RI.default.bCanBeTankCrew && SP.CanSpawnVehicles());
+    return true;
 }
 
-simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)
+simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
-    local class<Vehicle> VehicleClass;
+    local DHSpawnPointBase SP;
 
-    // Determine what we are trying to spawn as
-    if (SpawnPointIndex == 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex != 255)
-    {
-        // Trying to spawn at spawn vehicle
-        if (CanSpawnAtVehicle(Team, SpawnVehicleIndex))
-        {
-            return true;
-        }
-    }
-    else if (SpawnPointIndex != 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex == 255)
-    {
-        // Trying to spawn as Infantry at a SP
-        if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, none))
-        {
-            return true;
-        }
-    }
-    else if (SpawnPointIndex != 255 && VehiclePoolIndex != 255 && SpawnVehicleIndex == 255)
-    {
-        // Trying to spawn a vehicle
-        if (IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
-        {
-            VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
+    SP = GetSpawnPoint(SpawnPointIndex);
 
-            if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, VehicleClass))
-            {
-                return true;
-            }
-        }
+    if (SP == none)
+    {
+        return false;
     }
 
-    return false;
+    return SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex);
+}
+
+simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
+{
+    local class<ROVehicle> VC;
+
+    if (VehiclePoolIndex < 0 || VehiclePoolIndex >= VEHICLE_POOLS_MAX)
+    {
+        return false;
+    }
+
+    VC = VehiclePoolVehicleClasses[VehiclePoolIndex];
+
+    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) &&
+        TeamVehicleCounts[VC.default.VehicleTeam] >= MaxTeamVehicles[VC.default.VehicleTeam])
+    {
+        return false;
+    }
+
+    if (!IsVehiclePoolActive(VehiclePoolIndex))
+    {
+        return false;
+    }
+
+    if (ElapsedTime < VehiclePoolNextAvailableTimes[VehiclePoolIndex])
+    {
+        return false;
+    }
+
+    if (VehiclePoolSpawnCounts[VehiclePoolIndex] >= VehiclePoolMaxSpawns[VehiclePoolIndex])
+    {
+        return false;
+    }
+
+    if (VehiclePoolActiveCounts[VehiclePoolIndex] >= VehiclePoolMaxActives[VehiclePoolIndex])
+    {
+        return false;
+    }
+
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -399,7 +320,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
 
             if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
             {
-                PC.VehiclePoolIndex = 255;
+                PC.VehiclePoolIndex = -1;
                 PC.bSpawnPointInvalidated = true;
             }
         }
@@ -465,9 +386,9 @@ simulated function byte GetVehiclePoolSpawnsRemaining(byte VehiclePoolIndex)
     return VehiclePoolMaxSpawns[VehiclePoolIndex] - VehiclePoolSpawnCounts[VehiclePoolIndex];
 }
 
-simulated function class<Vehicle> GetVehiclePoolVehicleClass(byte VehiclePoolIndex)
+simulated function class<Vehicle> GetVehiclePoolVehicleClass(int VehiclePoolIndex)
 {
-    if (VehiclePoolIndex == 255 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    if (VehiclePoolIndex == -1 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
     {
         return none;
     }
@@ -510,16 +431,16 @@ simulated function bool IsVehiclePoolReservable(DHPlayer PC, DHRoleInfo RI, int 
     return true;
 }
 
-function bool ReserveVehicle(DHPlayer PC, byte VehiclePoolIndex)
+function bool ReserveVehicle(DHPlayer PC, int VehiclePoolIndex)
 {
-    if (VehiclePoolIndex != 255 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
+    if (VehiclePoolIndex != -1 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
     {
         return false;
     }
 
     PC.VehiclePoolIndex = VehiclePoolIndex;
 
-    if (VehiclePoolIndex != 255)
+    if (VehiclePoolIndex != -1)
     {
         ++VehiclePoolReservationCount[VehiclePoolIndex];
     }
@@ -529,114 +450,12 @@ function bool ReserveVehicle(DHPlayer PC, byte VehiclePoolIndex)
 
 function UnreserveVehicle(DHPlayer PC)
 {
-    if (PC.VehiclePoolIndex != 255)
+    if (PC.VehiclePoolIndex != -1)
     {
         --VehiclePoolReservationCount[PC.VehiclePoolIndex];
     }
 
-    PC.VehiclePoolIndex = 255;
-}
-
-//------------------------------------------------------------------------------
-// Spawn Vehicle Functions
-//------------------------------------------------------------------------------
-
-function int AddSpawnVehicle(int VehiclePoolIndex, Vehicle V)
-{
-    local int i;
-
-    // Ensure this vehicle doesn't yet exist in the array
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == V)
-        {
-            // Vehicle already exists in the array
-            return i;
-        }
-    }
-
-    // Find an empty place to put the vehicle in the array
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == none)
-        {
-            SpawnVehicles[i].VehiclePoolIndex = VehiclePoolIndex;
-            SpawnVehicles[i].LocationX = V.Location.X;
-            SpawnVehicles[i].LocationY = V.Location.Y;
-            SpawnVehicles[i].Vehicle = V;
-            SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
-
-            // Vehicle was successfully added
-            return i;
-        }
-    }
-
-    Warn("Spawn vehicle (" $ V.Class $ ") could not be initialized.");
-
-    // No empty spaces, cannot add to SpawnVehicles
-    return -1;
-}
-
-function bool RemoveSpawnVehicle(Vehicle V)
-{
-    local int i;
-    local Controller C;
-    local DHPlayer PC;
-
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == V)
-        {
-            SpawnVehicles[i].LocationX = 0;
-            SpawnVehicles[i].LocationY = 0;
-            SpawnVehicles[i].VehiclePoolIndex = -1;
-            SpawnVehicles[i].Vehicle = none;
-            SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
-
-            for (C = Level.ControllerList; C != none; C = C.NextController)
-            {
-                PC = DHPlayer(C);
-
-                if (PC != none && PC.SpawnVehicleIndex == i)
-                {
-                    PC.SpawnVehicleIndex = 255;
-                    PC.bSpawnPointInvalidated = true;
-                }
-            }
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
-simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
-{
-    if (Index >= arraycount(SpawnVehicles) ||
-        SpawnVehicles[Index].VehiclePoolIndex < 0 ||
-        VehiclePoolVehicleClasses[SpawnVehicles[Index].VehiclePoolIndex].default.VehicleTeam != Team ||
-        SpawnVehicles[Index].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-simulated function GetActiveSpawnVehicleIndices(byte Team, out array<int> Indices)
-{
-    local int i;
-
-    Indices.Length = 0;
-
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (CanSpawnAtVehicle(Team, i))
-        {
-            Indices[Indices.Length] = i;
-        }
-    }
+    PC.VehiclePoolIndex = -1;
 }
 
 // Finds the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
@@ -649,7 +468,7 @@ simulated function byte GetVehiclePoolIndex(Vehicle V)
     {
         for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
         {
-            if (V.Class == VehiclePoolVehicleClasses[i] && !(DHVehicle(V) != none && DHVehicle(V).bIsSpawnVehicle != bool(VehiclePoolIsSpawnVehicles[i])))
+            if (V.Class == VehiclePoolVehicleClasses[i] && !(DHVehicle(V) != none && DHVehicle(V).IsSpawnVehicle() != bool(VehiclePoolIsSpawnVehicles[i])))
             {
                 return i;
             }
@@ -672,6 +491,24 @@ simulated function bool IgnoresMaxTeamVehiclesFlags(int VehiclePoolIndex)
 //------------------------------------------------------------------------------
 // Roles
 //------------------------------------------------------------------------------
+
+simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
+{
+    if (RoleIndex < 0 || RoleIndex >= arraycount(DHAxisRoles))
+    {
+        return none;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DHAxisRoles[RoleIndex];
+        case ALLIES_TEAM_INDEX:
+            return DHAlliesRoles[RoleIndex];
+    }
+
+    return none;
+}
 
 simulated function int GetRoleIndexAndTeam(RORoleInfo RI, out byte Team)
 {
@@ -893,21 +730,6 @@ function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
             }
         }
     }
-}
-
-simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
-{
-    local int i;
-
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == V)
-        {
-            return SpawnVehicles[i].BlockFlags;
-        }
-    }
-
-    return class'DHSpawnManager'.default.BlockFlags_None;
 }
 
 simulated function string GetTeamScaleString(int Team)
