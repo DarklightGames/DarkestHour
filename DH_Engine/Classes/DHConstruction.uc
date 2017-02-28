@@ -17,6 +17,20 @@ var     int CurrentStageIndex;
 var     int Health;
 var     int HealthMax;
 
+enum EAnchorType
+{
+    ANCHOR_Above,
+    ANCHOR_Below
+};
+
+struct Anchor
+{
+    var EAnchorType Type;
+    var vector Location;
+};
+
+var array<Anchor> Anchors;
+
 struct ConstructionStage
 {
     var int Health;
