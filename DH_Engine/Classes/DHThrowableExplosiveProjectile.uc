@@ -603,7 +603,7 @@ function BlowUp(vector HitLocation)
 simulated function DoShakeEffect()
 {
     local PlayerController PC;
-    local float            Distance, MaxShakeDistance, Scale, BlastExposure;
+    local float            Distance, MaxShakeDistance, Scale, BlastShielding;
 
     PC = Level.GetLocalPlayerController();
 
@@ -621,8 +621,8 @@ simulated function DoShakeEffect()
             // Screen blur (reduce scale if player is not fully exposed to the blast)
             if (ROPawn(PC.Pawn) != none && PC.IsA('ROPlayer'))
             {
-                BlastExposure = ROPawn(PC.Pawn).GetExposureTo(Location - (15.0 * Normal(PhysicsVolume.Gravity)));
-                Scale -= (0.5 * (1.0 - BlastExposure));
+                BlastShielding = 1.0 - ROPawn(PC.Pawn).GetExposureTo(Location - (15.0 * Normal(PhysicsVolume.Gravity)));
+                Scale -= (0.5 * BlastShielding * Scale);
                 ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
             }
         }
