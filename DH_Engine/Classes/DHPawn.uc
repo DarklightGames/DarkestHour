@@ -104,6 +104,9 @@ var     float               LastNotifyTime;
 // Spawning
 var     DHSpawnPointBase    SpawnPoint;                     // the spawn point that was used to spawn this vehicle
 
+// Construction
+var     DHConstructionProxy ConstructionProxy;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -265,6 +268,17 @@ simulated function Tick(float DeltaTime)
             EndBurnFX();
         }
     }
+}
+
+simulated function exec StartConstructing()
+{
+    if (ConstructionProxy != none)
+    {
+        ConstructionProxy.Destroy();
+    }
+
+    ConstructionProxy = Spawn(class'DHConstructionProxy', self);
+    ConstructionProxy.SetConstructionClass(class'DHConstruction_Test');
 }
 
 // PossessedBy - figure out what dummy attachments are needed
@@ -4458,7 +4472,11 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if (ConstructionProxy != none)
+    {
+        ConstructionProxy.LocalRotationRate.Yaw = 16384;
+    }
+    else if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanRight = false;
     }
@@ -4468,15 +4486,43 @@ simulated function LeanRight()
     }
 }
 
+simulated function LeanRightReleased()
+{
+    if (ConstructionProxy != none)
+    {
+        ConstructionProxy.LocalRotationRate.Yaw = 0;
+    }
+    else
+    {
+        super.LeanRightReleased();
+    }
+}
+
 simulated function LeanLeft()
 {
-    if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if (ConstructionProxy != none)
+    {
+        ConstructionProxy.LocalRotationRate.Yaw = -16384;
+    }
+    else if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanLeft = false;
     }
     else if (!bLeanRight)
     {
         bLeanLeft = true;
+    }
+}
+
+simulated function LeanLeftReleased()
+{
+    if (ConstructionProxy != none)
+    {
+        ConstructionProxy.LocalRotationRate.Yaw = 0;
+    }
+    else
+    {
+        super.LeanLeftReleased();
     }
 }
 

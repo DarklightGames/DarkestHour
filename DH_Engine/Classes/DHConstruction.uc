@@ -6,7 +6,7 @@
 class DHConstruction extends Actor
     abstract;
 
-var     float   ProxyDistanceInMeters;
+var     float   ProxyDistanceInMeters;      // The distance at which the proxy object will be away from the player when
 var     bool    bShouldAlignToGround;
 var     float   GroundSlopeMaxInDegrees;
 
@@ -16,6 +16,9 @@ var     int CurrentStageIndex;
 
 var     int Health;
 var     int HealthMax;
+
+var     class<Actor>    ActorClass;
+var     bool            bDestroyOnConstruction;
 
 enum EAnchorType
 {
@@ -67,6 +70,17 @@ state Constructed
     {
 
     }
+Begin:
+    OnConstructed();
+
+    if (bDestroyOnConstruction)
+    {
+        Destroy();
+    }
+}
+
+simulated function OnConstructed()
+{
 }
 
 defaultproperties
@@ -75,5 +89,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Military_stc.Defences.hedgehog'
     ConstructionStages(0)=(Health=0,StaticMesh=none,Sound=none,Emitter=none)
     HealthMax=100
+    ProxyDistanceInMeters=5.0
+    GroundSlopeMaxInDegrees=25.0
 }
 
