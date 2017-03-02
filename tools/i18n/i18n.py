@@ -312,10 +312,10 @@ def main():
                                         key_values.append((key, '(' + ','.join(strings) + ')'))
                         if len(key_values) == 0:
                             continue
-                        f.write('[{0}]\n'.format(section_name))
+                        f.write('[{0}]\r\n'.format(section_name))
                         for key, value in key_values:
-                            f.write('{0}={1}\n'.format(key, value))
-                        f.write('\n')
+                            f.write('{0}={1}\r\n'.format(key, value))
+                        f.write('\r\n')
                 if os.stat(file_path).st_size == 0:
                     os.remove(file_path)
 
