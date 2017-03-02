@@ -277,6 +277,11 @@ simulated function exec StartConstructing()
         ConstructionProxy.Destroy();
     }
 
+    if (Weapon != none)
+    {
+        Weapon.PutDown();
+    }
+
     ConstructionProxy = Spawn(class'DHConstructionProxy', self);
     ConstructionProxy.SetConstructionClass(class'DHConstruction_Test');
 }
@@ -4474,7 +4479,7 @@ simulated function LeanRight()
 {
     if (ConstructionProxy != none)
     {
-        ConstructionProxy.LocalRotationRate.Yaw = 16384;
+        ConstructionProxy.LocalRotationRate.Yaw = ConstructionProxy.ConstructionClass.default.LocalRotationRate;
     }
     else if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
@@ -4502,7 +4507,7 @@ simulated function LeanLeft()
 {
     if (ConstructionProxy != none)
     {
-        ConstructionProxy.LocalRotationRate.Yaw = -16384;
+        ConstructionProxy.LocalRotationRate.Yaw = -ConstructionProxy.ConstructionClass.default.LocalRotationRate;
     }
     else if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
@@ -5852,6 +5857,28 @@ exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
 
             Log("-------------------------------------------------------------------------------------------------");
         }
+    }
+}
+
+simulated function Fire( optional float F )
+{
+    local DHConstruction C;
+
+    if (ConstructionProxy != none)
+    {
+        // TODO: run some sort of thing that attempts to actually *create* the actor, for now
+        C = Spawn(ConstructionProxy.ConstructionClass,,, ConstructionProxy.Location, ConstructionProxy.Rotation);
+
+        if (C != none)
+        {
+            C.SetStaticMesh(ConstructionProxy.StaticMesh);
+        }
+
+        ConstructionProxy.Destroy();
+    }
+    else
+    {
+        super.Fire(F);
     }
 }
 

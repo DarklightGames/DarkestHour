@@ -5,13 +5,17 @@
 
 class DHConstructionProxy extends Actor;
 
-enum EProvisionalPositionResult
+enum EConstructionProxyError
 {
-    PPR_OK,         // Position was obtained and is valid
-    PPR_Fatal,      // Position was not obtained, some fatal error occurred
-    PPR_NoGround,   // Position was not obtained, unable to find solid ground to sit on
-    PPR_TooSteep,   // Position was not obtained, the ground is too steep
+    CPE_None,
+    CPE_Fatal,      // Some fatal error occurred, usually a case of unexpected values
+    CPE_NoGround,   // No solid ground was able to be found
+    CPE_TooSteep,   // The ground slope exceeded the allowable maximum
+    CPE_InWater,    // The construction is in water and the construction type disallows this
+    CPE_Restricted, // Construction overlaps a restriction volume
 };
+
+var EConstructionProxyError ProxyError;
 
 var DHPawn                  PawnOwner;
 var class<DHConstruction>   ConstructionClass;
@@ -36,27 +40,24 @@ function PostBeginPlay()
 
 function SetConstructionClass(class<DHConstruction> ConstructionClass)
 {
-    local int i;
-
     self.ConstructionClass = ConstructionClass;
+
+    if (ConstructionClass == none)
+    {
+        Error("Cannot set the construction class to none");
+    }
 
     SetStaticMesh(ConstructionClass.default.StaticMesh);
 
-    // TODO: set all skins to simple color skin.
-    Skins.Length = 0;
-
-//    for (i = 0; i < StaticMesh.Skins.Length; ++i)
-//    {
-//        Skins[i] = default.GreenMaterial;
-//    }
-
-    // TODO: detect validity
+    // Initialize the local rotation based on the parameters in the new construction class
+    LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
 }
 
 function Tick(float DeltaTime)
 {
     local vector L;
     local rotator R;
+    local Actor A;
 
     super.Tick(DeltaTime);
 
@@ -67,41 +68,54 @@ function Tick(float DeltaTime)
 
     LocalRotation += (LocalRotationRate * DeltaTime);
 
-    switch (GetProvisionalPosition(L, R))
+    // TODO: combine getprovisionallocation and getpositionerror into one
+    // function able to be run on the client and the server independently
+    // An error may be thrown when determining the location, so store it here.
+    ProxyError = GetProvisionalPosition(L, R);
+
+    // Set the location
+    SetLocation(L);
+    SetRotation(R);
+
+    if (ProxyError == CPE_None)
     {
-        case PPR_OK:
+        // Location was determined to be okay, now do another pass.
+        ProxyError = GetPositionError();
+    }
+
+    switch (ProxyError)
+    {
+        case CPE_None:
+            Style = STY_Normal;
             // TODO: make GOOD color
             break;
         default:
-            // TODO: make BAD color
+            (new class'UStaticMesh').MakeActorTranslucent(self);
             break;
     }
-
-    SetLocation(L);
-    SetRotation(R);
 }
 
 // This function gets the provisional location and rotation of the construction.
 // Returns true if the function was able to determine these provisional values.
-function EProvisionalPositionResult GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
+function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
     local PlayerController PC;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward;
     local Actor HitActor;
     local rotator R;
-    local EProvisionalPositionResult Result;
     local float GroundSlopeDegrees;
+    local EConstructionProxyError Error;
 
     if (PawnOwner == none)
     {
-        return PPR_Fatal;
+        return CPE_Fatal;
     }
 
     PC = PlayerController(PawnOwner.Controller);
 
-    if (PC == none || ConstructionClass == none || Level.NetMode == NM_DedicatedServer)
+    if (PC == none || ConstructionClass == none)
     {
-        return PPR_Fatal;
+        return CPE_Fatal;
     }
 
     // Trace out into the world and try and hit something static.
@@ -120,19 +134,20 @@ function EProvisionalPositionResult GetProvisionalPosition(out vector OutLocatio
 
     if (HitActor != none && HitActor.bStatic && !HitActor.bDeleteMe)
     {
+        // Hit something static in the world.
         GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
 
-        if (GroundSlopeDegrees >= class'UUnits'.static.DegreesToRadians(ConstructionClass.default.GroundSlopeMaxInDegrees))
+        // TODO:
+
+        if (GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
             // Too steep!
-            Result = PPR_TooSteep;
+            Error = CPE_TooSteep;
 
             // Just point the normal straight up so  it doesn't look wacky
             HitNormal = vect(0, 0, 1);
         }
 
-        // Hit something static in the world. Based the location and rotation
-        // off of the hit position.
         if (!ConstructionClass.default.bShouldAlignToGround)
         {
             // Not aligning to ground, just use world up vector as the hit normal
@@ -145,9 +160,10 @@ function EProvisionalPositionResult GetProvisionalPosition(out vector OutLocatio
     }
     else
     {
-        Result = PPR_NoGround;
+        // Didn't hit anything!
+        Error = CPE_NoGround;
         // TODO: verify correctness
-        HitLocation = TraceStart;
+        HitLocation = TraceEnd;
         R = PC.CalcViewRotation;
         R.Pitch = 0;
         R.Roll = 0;
@@ -157,14 +173,31 @@ function EProvisionalPositionResult GetProvisionalPosition(out vector OutLocatio
     OutLocation = HitLocation;
     OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
 
-    return Result;
+    return Error;
 }
 
-function bool IsValidPosition(vector TestLocation, vector TestRotation)
+// We separate this function from GetProvisionalPosition because we need to have
+// the server do it's own check before attempting to spawn the construction.
+function EConstructionProxyError GetPositionError()
 {
     local int i;
-    // TODO: test the anchor points
+    local DHRestrictionVolume RV;
 
+    // TODO: refactor this out to another function
+    if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
+    {
+        return CPE_InWater;
+    }
+
+    foreach TouchingActors(class'DHRestrictionVolume', RV)
+    {
+        if (RV != none && RV.bNoConstructions)
+        {
+            return CPE_Restricted;
+        }
+    }
+
+    // TODO: test the anchor points
     for (i = 0; i < ConstructionClass.default.Anchors.Length; ++i)
     {
         switch (ConstructionClass.default.Anchors[i].Type)
@@ -174,22 +207,23 @@ function bool IsValidPosition(vector TestLocation, vector TestRotation)
             case ANCHOR_Below:
                 break;
             default:
-                return false;
+                break;
         }
     }
 
     // TODO: how do we deal with things that are RIGHT next to a wall??
     // TODO: should we
 
-    return false;
+    return CPE_None;
 }
 
 defaultproperties
 {
     RemoteRole=ROLE_None
     DrawType=DT_StaticMesh
-    bCollideActors=false
-    bCollideWhenPlacing=false
+    bCollideActors=true
     bCollideWorld=false
+    bBlockActors=true
+    bBlockPlayers=false
 }
 
