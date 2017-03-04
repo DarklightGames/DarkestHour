@@ -29,6 +29,9 @@ var     int     HealthMax;
 
 var     class<Actor>    ActorClass;
 
+var     localized string    MenuName;
+var     localized Material  MenuMaterial;
+
 enum EAnchorType
 {
     ANCHOR_Above,

@@ -19,7 +19,11 @@ var int                 SelectedIndex;
 // Colin: This is necessary because trying to DrawTile on idential TexRotators
 // and other procedural materials in the same frame ends up only drawing one
 // of them.
-var TexRotator          MaterialQuarters[4];
+
+const MAX_OPTIONS = 8;
+
+var Texture             OptionTextures[MAX_OPTIONS];
+var array<TexRotator>   OptionTexRotators;
 
 event Initialized()
 {
@@ -33,6 +37,32 @@ event Initialized()
 function Hide()
 {
     GotoState('FadeOut');
+}
+
+function CreateOptionTexRotators(int OptionCount)
+{
+    local int i;
+    local TexRotator TR;
+
+    OptionTexRotators.Length = 0;
+
+    if (OptionCount <= 0 || OptionCount > MAX_OPTIONS)
+    {
+        Warn("Assertion error, option count must be between 1 and" @ MAX_OPTIONS @ "(found" @ OptionCount $ ")");
+        return;
+    }
+
+    for (i = 0; i < OptionCount; ++i)
+    {
+        TR = new class'Engine.TexRotator';
+        TR.Material = OptionTextures[OptionCount - 1];
+        TR.TexRotationType = TR_FixedRotation;
+        TR.UOffset = TR.Material.MaterialUSize() / 2;
+        TR.VOffset = TR.Material.MaterialVSize() / 2;
+        TR.Rotation.Yaw = -(i * (65536 / OptionCount));
+
+        OptionTexRotators[OptionTexRotators.Length] = TR;
+    }
 }
 
 function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject)
@@ -53,6 +83,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
 
     Menu.Interaction = self;
     Menu.MenuObject = OptionalObject;
+    Menu.Setup();
 
     OldMenu = DHCommandMenu(Menus.Peek());
 
@@ -62,6 +93,8 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
     }
 
     Menus.Push(Menu);
+
+    CreateOptionTexRotators(Menu.Options.Length);
 
     Menu.OnPush();
     Menu.OnActive();
@@ -148,6 +181,7 @@ function Tick(float DeltaTime)
     local float ArcLength, Theta;
     local DHCommandMenu Menu;
     local DHPlayer PC;
+    local int OldSelectedIndex;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
@@ -161,6 +195,8 @@ function Tick(float DeltaTime)
 
     // Clamp cursor
     Cursor = class'UCore'.static.VClampSize(Cursor, 0.0, OUTER_RADIUS);
+
+    OldSelectedIndex = SelectedIndex;
 
     if (Menu.Options.Length > 0 && Cursor != vect(0, 0, 0))
     {
@@ -185,11 +221,29 @@ function Tick(float DeltaTime)
         else
         {
             SelectedIndex = (Menu.Options.Length * (Theta / Tau));
+
+            if (Menu.IsOptionDisabled(SelectedIndex))
+            {
+                SelectedIndex = -1;
+            }
         }
     }
     else
     {
         SelectedIndex = -1;
+    }
+
+    if (OldSelectedIndex != SelectedIndex)
+    {
+        if (OldSelectedIndex != -1)
+        {
+            Menu.OnHoverOut(OldSelectedIndex);
+        }
+
+        if (SelectedIndex != -1)
+        {
+            Menu.OnHoverIn(SelectedIndex);
+        }
     }
 }
 
@@ -216,7 +270,7 @@ function PostRender(Canvas C)
     C.DrawColor = class'UColor'.default.White;
     C.DrawTile(material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
-    C.Font = class'DHHud'.static.GetSmallMenuFont(C);
+    C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
     Menu = DHCommandMenu(Menus.Peek());
 
@@ -234,6 +288,11 @@ function PostRender(Canvas C)
                 C.DrawColor = class'UColor'.default.Yellow;
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
             }
+            else if (Menu.IsOptionDisabled(i))
+            {
+                C.DrawColor = class'UColor'.default.DarkGray;
+                C.DrawColor.A = byte(255 * MenuAlpha * 0.25);
+            }
             else
             {
                 C.DrawColor = class'UColor'.default.White;
@@ -241,18 +300,22 @@ function PostRender(Canvas C)
             }
 
             C.SetPos(CenterX - 256, CenterY - 256);
-            C.DrawTileClipped(MaterialQuarters[i], 512, 512, 0, 0, 512, 512);
+            C.DrawTileClipped(OptionTexRotators[i], 512, 512, 0, 0, 512, 512);
 
-            U = Menu.Options[i].Material.MaterialUSize();
-            V = Menu.Options[i].Material.MaterialVSize();
+            // Draw option icon
+            if (Menu.Options[i].Material != none)
+            {
+                U = Menu.Options[i].Material.MaterialUSize();
+                V = Menu.Options[i].Material.MaterialVSize();
 
-            X = CenterX  + (Cos(Theta) * 144) - (U / 2);
-            Y = CenterY + (Sin(Theta) * 144) - (V / 2);
+                X = CenterX  + (Cos(Theta) * 144) - (U / 2);
+                Y = CenterY + (Sin(Theta) * 144) - (V / 2);
 
-            C.DrawColor = class'UColor'.default.White;
-            C.DrawColor.A = byte(255 * MenuAlpha);
-            C.SetPos(X, Y);
-            C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);
+                C.DrawColor = class'UColor'.default.White;
+                C.DrawColor.A = byte(255 * MenuAlpha);
+                C.SetPos(X, Y);
+                C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);
+            }
 
             Theta += ArcLength;
         }
@@ -264,6 +327,7 @@ function PostRender(Canvas C)
         Menu.GetOptionText(SelectedIndex, ActionText, SubjectText);
 
         // Draw action text
+        C.DrawColor = class'UColor'.default.White;
         C.TextSize(ActionText, XL, YL);
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
         C.DrawText(ActionText);
@@ -349,6 +413,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     }
 
                     OnSelect(SelectedIndex, HitLocation);
+
                     return true;
                 case IK_RightMouse:
                     if (Menus.Size() > 1)
@@ -373,7 +438,7 @@ function bool OnSelect(int Index, optional vector Location)
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    if (Menu == none || Index < 0 || Index >= Menu.Options.Length)
+    if (Menu == none || Index < 0 || Index >= Menu.Options.Length || Menu.IsOptionDisabled(Index))
     {
         return false;
     }
@@ -387,8 +452,8 @@ defaultproperties
     bVisible=true
     bRequiresTick=true
 
-    MaterialQuarters(0)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_1'
-    MaterialQuarters(1)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_2'
-    MaterialQuarters(2)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_3'
-    MaterialQuarters(3)=TexRotator'DH_InterfaceArt_tex.Communication.menu_option_quarter_4'
+    OptionTextures(0)=Texture'DH_InterfaceArt_tex.Communication.menu_option_whole'
+    OptionTextures(1)=Texture'DH_InterfaceArt_tex.Communication.menu_option_half'
+    OptionTextures(2)=Texture'DH_InterfaceArt_tex.Communication.menu_option_third'
+    OptionTextures(3)=Texture'DH_InterfaceArt_tex.Communication.menu_option_quarter'
 }

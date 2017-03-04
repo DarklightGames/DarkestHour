@@ -5882,6 +5882,26 @@ simulated function Fire( optional float F )
     }
 }
 
+function SetConstructionProxy(class<DHConstruction> ConstructionClass)
+{
+    if (ConstructionClass == none)
+    {
+        if (ConstructionProxy != none)
+        {
+            ConstructionProxy.Destroy();
+        }
+    }
+    else
+    {
+        if (ConstructionProxy == none)
+        {
+            ConstructionProxy = Spawn(class'DHConstructionProxy', self);
+        }
+
+        ConstructionProxy.SetConstructionClass(ConstructionClass);
+    }
+}
+
 defaultproperties
 {
     // General class & interaction stuff

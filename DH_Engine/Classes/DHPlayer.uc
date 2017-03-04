@@ -2773,7 +2773,7 @@ simulated function LockWeapons(int Seconds)
         // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
         else if (Role == ROLE_Authority)
         {
-            ClientLockWeapons(byte(Seconds));
+            ClientLockWeapons(Seconds);
         }
     }
     // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
@@ -2785,11 +2785,11 @@ simulated function LockWeapons(int Seconds)
 }
 
 // New server-to-client replicated function to put owning net player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-simulated function ClientLockWeapons(byte Seconds)
+simulated function ClientLockWeapons(int Seconds)
 {
     if (Role < ROLE_Authority)
     {
-        LockWeapons(int(Seconds));
+        LockWeapons(Seconds);
     }
 }
 
