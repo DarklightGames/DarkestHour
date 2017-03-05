@@ -124,6 +124,9 @@ replication
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientPawnWhizzed;
+
+    reliable if (Role < ROLE_Authority)
+        ServerCreateConstruction;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -4505,7 +4508,7 @@ simulated function LeanRightReleased()
 
 simulated function LeanLeft()
 {
-    if (ConstructionProxy != none)
+    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
         ConstructionProxy.LocalRotationRate.Yaw = -ConstructionProxy.ConstructionClass.default.LocalRotationRate;
     }
@@ -5862,19 +5865,9 @@ exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
 
 simulated function Fire( optional float F )
 {
-    local DHConstruction C;
-
-    Log(F);
-
-    if (ConstructionProxy != none)
+    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none && ConstructionProxy.ProxyError == CPE_None)
     {
-        // TODO: run some sort of thing that attempts to actually *create* the actor, for now
-        C = Spawn(ConstructionProxy.ConstructionClass,,, ConstructionProxy.Location, ConstructionProxy.Rotation);
-
-        if (C != none)
-        {
-            C.SetStaticMesh(ConstructionProxy.StaticMesh);
-        }
+        ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
 
         ConstructionProxy.Destroy();
     }
@@ -5901,6 +5894,18 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
         }
 
         ConstructionProxy.SetConstructionClass(ConstructionClass);
+    }
+}
+
+function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vector L, rotator R)
+{
+    local DHConstruction C; // TODO: run some sort of thing that attempts to actually *create* the actor, for now
+
+    C = Spawn(ConstructionClass,,, L, R);
+
+    if (C != none)
+    {
+        C.SetStaticMesh(ConstructionProxy.StaticMesh);
     }
 }
 

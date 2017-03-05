@@ -402,7 +402,6 @@ function UpdateSpawnPoints()
 {
     local int i, RoleIndex, SquadIndex;
     local float X, Y;
-    local eFontScale FS;
     local byte Team;
 
     if (GRI != none)
