@@ -26,6 +26,8 @@ var Material                RedMaterial;
 var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
 
+var array<Material>         Materials;
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -51,13 +53,89 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
 
     // Initialize the local rotation based on the parameters in the new construction class
     LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
+
+    // TODO: create "OK" textures
+    CreateMaterials();
+
+}
+
+function CreateMaterials()
+{
+    local int i;
+    local array<Material> StaticMeshSkins;
+    local Combiner C;
+    local FadeColor FC;
+    local FinalBlend FB;
+
+    StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(StaticMesh);
+
+    Materials.Length = 0;
+
+    for (i = 0; i < StaticMeshSkins.Length; ++i)
+    {
+        FC = new class'FadeColor';
+        FC.Color1 = class'UColor'.default.White;
+        FC.Color1.A = 128;
+        FC.Color2 = class'UColor'.default.White;
+        FC.Color2.A = 255;
+        FC.FadePeriod = 0.25;
+        FC.ColorFadeType = FC_Sinusoidal;
+
+        C = new class'Combiner';
+        C.CombineOperation = CO_Multiply;
+        C.AlphaOperation = AO_Use_Alpha_From_Material2;
+        C.Material1 = StaticMeshSkins[i];
+        C.Material2 = FC;
+        C.Modulate4X = true;
+
+        FB = new class'FinalBlend';
+        FB.FrameBufferBlending = FB_AlphaBlend;
+        FB.ZWrite = true;
+        FB.ZTest = true;
+        FB.AlphaTest = true;
+        FB.TwoSided = false;
+        FB.Material = C;
+
+        Skins[i] = FB;
+    }
+}
+
+function SetStaticMeshColor(color Color)
+{
+    local FinalBlend FB;
+    local Combiner C;
+    local FadeColor FC;
+    local int i;
+
+    for (i = 0; i < Skins.Length; ++i)
+    {
+        FB = FinalBlend(Skins[i]);
+
+        if (FB != none)
+        {
+            C = Combiner(FB.Material);
+
+            if (C != none)
+            {
+                FC = FadeColor(C.Material2);
+
+                if (FC != none)
+                {
+                    FC.Color1 = Color;
+                    FC.Color1.A = 128;
+
+                    FC.Color2 = Color;
+                    FC.Color2.A = 255;
+                }
+            }
+        }
+    }
 }
 
 function Tick(float DeltaTime)
 {
     local vector L;
     local rotator R;
-    local Actor A;
 
     super.Tick(DeltaTime);
 
@@ -86,11 +164,10 @@ function Tick(float DeltaTime)
     switch (ProxyError)
     {
         case CPE_None:
-            Style = STY_Normal;
-            // TODO: make GOOD color
+            SetStaticMeshColor(class'UColor'.default.Green);
             break;
         default:
-            (new class'UStaticMesh').MakeActorTranslucent(self);
+            SetStaticMeshColor(class'UColor'.default.Red);
             break;
     }
 }

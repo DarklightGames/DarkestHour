@@ -124,9 +124,6 @@ defaultproperties
     ProxyDistanceInMeters=5.0
     GroundSlopeMaxInDegrees=25.0
 
-    StartRotationMin=(Yaw=-16384)
-    StartRotationMax=(Yaw=16384)
-
     bStatic=false
     bNoDelete=false
     bCanBeDamaged=true

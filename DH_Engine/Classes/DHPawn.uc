@@ -5864,6 +5864,8 @@ simulated function Fire( optional float F )
 {
     local DHConstruction C;
 
+    Log(F);
+
     if (ConstructionProxy != none)
     {
         // TODO: run some sort of thing that attempts to actually *create* the actor, for now

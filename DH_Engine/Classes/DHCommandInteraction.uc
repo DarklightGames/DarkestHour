@@ -92,10 +92,9 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
         OldMenu.OnPassive();
     }
 
-    Menus.Push(Menu);
-
     CreateOptionTexRotators(Menu.Options.Length);
 
+    Menus.Push(Menu);
     Menu.OnPush();
     Menu.OnActive();
 
@@ -117,6 +116,8 @@ function DHCommandMenu PopMenu()
 
     if (NewMenu != none)
     {
+        CreateOptionTexRotators(NewMenu.Options.Length);
+
         NewMenu.OnActive();
     }
 

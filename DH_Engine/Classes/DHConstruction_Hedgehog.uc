@@ -10,4 +10,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     bShouldAlignToGround=true
     MenuName="Hedgehog"
+
+    StartRotationMin=(Yaw=-16384)
+    StartRotationMax=(Yaw=16384)
 }

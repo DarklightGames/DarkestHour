@@ -87,9 +87,6 @@ struct SquadSignal
 
 var     SquadSignal             SquadSignals[2];
 
-// Construction
-var     DHConstructionProxy     ConstructionProxy;
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -2199,7 +2196,15 @@ simulated function SwayHandler(float DeltaTime)
 // Modified to not allow IronSighting when transitioning to/from prone
 simulated exec function ROIronSights()
 {
-    if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
+    local DHPawn P;
+
+    P = DHPawn(Pawn);
+
+    if (P != none && P.ConstructionProxy != none)
+    {
+        P.ConstructionProxy.Destroy();
+    }
+    else if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
     {
         Pawn.Weapon.ROIronSights();
     }
