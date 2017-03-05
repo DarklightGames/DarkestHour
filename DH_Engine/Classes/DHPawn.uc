@@ -5905,7 +5905,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
     if (C != none)
     {
-        C.SetStaticMesh(ConstructionProxy.StaticMesh);
+        C.SetStaticMesh(ConstructionClass.default.StaticMesh);
     }
 }
 
