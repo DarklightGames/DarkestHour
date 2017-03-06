@@ -9,6 +9,8 @@ var DHResupplyAttachment ResupplyAttachment;
 
 function PostBeginPlay()
 {
+    super.PostBeginPlay();
+
     if (Role == ROLE_Authority)
     {
         ResupplyAttachment = Spawn(class'DHResupplyAttachment', self);
