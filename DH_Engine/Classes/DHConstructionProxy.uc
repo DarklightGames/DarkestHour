@@ -83,7 +83,7 @@ function CreateMaterials()
 
         C = new class'Combiner';
         C.CombineOperation = CO_Multiply;
-        C.AlphaOperation = AO_Use_Alpha_From_Material2;
+        C.AlphaOperation = AO_Multiply;
         C.Material1 = StaticMeshSkins[i];
         C.Material2 = FC;
         C.Modulate4X = true;
@@ -93,7 +93,7 @@ function CreateMaterials()
         FB.ZWrite = true;
         FB.ZTest = true;
         FB.AlphaTest = true;
-        FB.TwoSided = false;
+        FB.TwoSided = true;
         FB.Material = C;
 
         Skins[i] = FB;
