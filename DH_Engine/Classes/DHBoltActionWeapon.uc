@@ -28,23 +28,21 @@ simulated function Fire(float F)
     }
 }
 
-// Work the bolt
+// New function to work the bolt
 simulated function WorkBolt()
 {
-    if (!bWaitingToBolt || AmmoAmount(0) < 1 || FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))
+    if (bWaitingToBolt && AmmoAmount(0) > 0 && !FireMode[1].bIsFiring && !FireMode[1].IsInState('MeleeAttacking'))
     {
-        return;
-    }
+        GotoState('WorkingBolt');
 
-    GotoState('WorkingBolt');
-
-    if (Role < ROLE_Authority)
-    {
-        ServerWorkBolt();
+        if (Role < ROLE_Authority)
+        {
+            ServerWorkBolt();
+        }
     }
 }
 
-// Server side function called to work the bolt on the server
+// Client-to-server function to work the bolt
 function ServerWorkBolt()
 {
     WorkBolt();
@@ -68,7 +66,6 @@ simulated state WorkingBolt extends WeaponBusy
         return false;
     }
 
-    // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int Channel)
     {
         local name  Anim;
@@ -93,6 +90,11 @@ simulated state WorkingBolt extends WeaponBusy
     {
         if (bUsingSights)
         {
+            if (bPlayerFOVZooms && InstigatorIsLocallyControlled())
+            {
+                PlayerViewZoom(false);
+            }
+
             PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
         }
         else
@@ -100,15 +102,19 @@ simulated state WorkingBolt extends WeaponBusy
             PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
         }
 
-        // Play the animation on the pawn
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
-            ROPawn(Instigator).HandleBoltAction();
+            ROPawn(Instigator).HandleBoltAction(); // play the animation on the pawn
         }
     }
 
     simulated function EndState()
     {
+        if (bUsingSights && bPlayerFOVZooms && InstigatorIsLocallyControlled())
+        {
+            PlayerViewZoom(true);
+        }
+
         bWaitingToBolt = false;
         FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // ready to fire fire now
     }
