@@ -477,6 +477,15 @@ simulated function PlayerFlinched(float Intensity)
     }
 }
 
+// Modified to prevent a mistakenly passed negative blur time, which causes the blur to 'freeze' indefinitely, until some other blur effect resets it
+simulated function AddBlur(float NewBlurTime, float NewBlurScale)
+{
+    if (NewBlurTime > 0.0)
+    {
+        super.AddBlur(NewBlurTime, NewBlurScale);
+    }
+}
+
 // Updated to allow Yaw limits for mantling
 // Also to disable sway on bolt rifles between shots (while weapon is lowered from face)
 function UpdateRotation(float DeltaTime, float MaxPitch)
