@@ -34,7 +34,7 @@ function PostBeginPlay()
 
 function Reset()
 {
-    GoToState('DelayBeforeFind');
+    GotoState('DelayBeforeFind');
 }
 
 auto state DelayBeforeFind
@@ -49,13 +49,13 @@ auto state DelayBeforeFind
         switch (HowToFind)
         {
             case FT_ClassProximity:
-                GoToState('Findclass');
+                GotoState('Findclass');
             break;
             case FT_TagProximity:
-                GoToState('FindTag');
+                GotoState('FindTag');
             break;
             case FT_Factory:
-                GoToState('FindFactory');
+                GotoState('FindFactory');
             break;
         }
     }

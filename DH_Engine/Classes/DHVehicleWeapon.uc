@@ -17,7 +17,7 @@ var     bool           bInitializedVehicleBase;          // done set up after re
 var     bool           bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & VehicleWeaponPawn actors
 
 // Reloading
-struct  ReloadStage
+struct ReloadStage
 {
 var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
 var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage

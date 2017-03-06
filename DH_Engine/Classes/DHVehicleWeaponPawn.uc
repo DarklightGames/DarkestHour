@@ -518,7 +518,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
         if (Gun != none)
         {
-            Gotostate('EnteringVehicle');
+            GotoState('EnteringVehicle');
         }
         else
         {

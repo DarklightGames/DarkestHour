@@ -540,7 +540,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     // A single position autocannon goes to state 'EnteringVehicle' - very obscure but avoids potential problem if another player has changed pending ammo - see notes in 'EnteringVehicle'
     if (!bMultiPosition && Role < ROLE_Authority && VehWep != none && VehWep.bUsesMags)
     {
-        Gotostate('EnteringVehicle');
+        GotoState('EnteringVehicle');
     }
 }
 

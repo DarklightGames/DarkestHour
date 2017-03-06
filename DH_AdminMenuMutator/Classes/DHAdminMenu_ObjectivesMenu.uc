@@ -26,7 +26,7 @@ exec function ObjectivesMenu(string Action, optional string PlayerName)
         }
 
         SelectionPrefix = Action @ PlayerName; // sets variables to be used in the generic HandleInput function, which avoids having to redefine it here
-        GoToState('MenuVisible');
+        GotoState('MenuVisible');
     }
 }
 

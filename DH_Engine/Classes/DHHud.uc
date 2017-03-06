@@ -1430,7 +1430,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
         if (WP != none && WP.PlayerReplicationInfo != none)
         {
-            //Lines[Lines.Length] = "" $ (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
             Lines[Lines.Length] = (i + 2) $ "." @ WP.PlayerReplicationInfo.PlayerName;
             Colors[Colors.Length] = GetPlayerColor(DHPlayerReplicationInfo(WP.PlayerReplicationInfo));
         }

@@ -33,7 +33,7 @@ exec function RolesMenu(string Team, string Action, string PlayerName)
 
         PreviousMenu = "PlayerActionsMenu" @ PlayerName; // means we will return to the actions menu for the selected player if we press the 'previous menu' key
         SelectionPrefix = Action @ PlayerName;           // sets variable to be used in the generic HandleInput function, which avoids having to redefine it here
-        GoToState('MenuVisible');
+        GotoState('MenuVisible');
     }
 }
 

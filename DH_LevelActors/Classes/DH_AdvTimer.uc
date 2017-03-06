@@ -99,7 +99,7 @@ state Timing
             }
             else
             {
-                GoToState('Done'); //Leave timer as we don't want to repeat & timer is up
+                GotoState('Done'); //Leave timer as we don't want to repeat & timer is up
             }
         }
         else
