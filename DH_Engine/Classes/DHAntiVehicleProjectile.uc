@@ -159,7 +159,7 @@ simulated function float GetPenetration(vector Distance)
 {
     local float MeterDistance, PenetrationNumber;
 
-    MeterDistance = VSize(Distance) / 60.352;
+    MeterDistance = class'DHUnits'.static.UnrealToMeters(VSize(Distance));
 
     if      (MeterDistance < 100.0)   PenetrationNumber = (DHPenetrationTable[0] +  (100.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
     else if (MeterDistance < 250.0)   PenetrationNumber = (DHPenetrationTable[1] +  (250.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
@@ -1007,11 +1007,12 @@ function DebugShotDistanceAndSpeed()
 {
     if (bIsAlliedShell)
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / 18.395 @ "fps");
+        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / ScaleFactor @ "fps");
     }
     else
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 60.352) $ "m, impact speed:" @ VSize(Velocity) / 60.352 @ "m/s");
+        Level.Game.Broadcast(self, "Shot distance:" @ class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location))
+            $ "m, impact speed:" @ class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
     }
 }
 
@@ -1024,7 +1025,8 @@ simulated function HandleShellDebug(vector RealHitLocation)
     if (NumDeflections < 1) // don't debug if it's just a deflected shell
     {
         ShellDropUnits = TraceHitLoc.Z - RealHitLocation.Z;
-        Log("Shell drop =" @ ShellDropUnits / 60.352 * 100.0 @ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches" @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
+        Log("Shell drop =" @ class'DHUnits'.static.UnrealToMeters(ShellDropUnits) * 100.0 $ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches"
+            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
     }
 }
 
