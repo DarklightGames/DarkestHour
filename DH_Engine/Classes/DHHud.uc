@@ -1589,7 +1589,7 @@ function DrawSignals(Canvas C)
 function DrawPlayerNames(Canvas C)
 {
     local DHPlayerReplicationInfo PRI, OtherPRI;
-    local ROVehicle               VehicleBase;
+    local ROVehicle               OwnVehicle, VehicleBase;
     local VehicleWeaponPawn       WepPawn;
     local DHMortarVehicle         Mortar;
     local Actor                   A;
@@ -1609,76 +1609,112 @@ function DrawPlayerNames(Canvas C)
         return;
     }
 
+    // Set some local variables we'll use
     PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
     ViewLocation = PlayerOwner.CalcViewLocation;
 
+    if (PawnOwner.IsA('ROVehicle'))
+    {
+        OwnVehicle = ROVehicle(PawnOwner);
+    }
+    else if (PawnOwner.IsA('VehicleWeaponPawn'))
+    {
+        OwnVehicle = VehicleWeaponPawn(PawnOwner).VehicleBase;
+    }
+
     // STAGE 1: check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
     foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (3018.0 * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
     {
-        if (A.bBlockActors)
+        // Ignore non-blocking actors
+        if (!A.bBlockActors)
         {
-            // If traced a collision mesh actor, we switch traced actor to col mesh's owner & proceed as if we'd hit that actor
-            if (A.IsA('DHCollisionMeshActor') && A.Owner != none)
+            continue;
+        }
+
+        // If we traced a collision mesh actor, switch traced actor to col mesh's owner & proceed as if we'd traced that actor
+        if (A.IsA('DHCollisionMeshActor') && A.Owner != none)
+        {
+            A = A.Owner;
+        }
+
+        // If looking at a vehicle weapon (usually a turret, or could be an MG with collision), switch traced actor to its weapon pawn
+        if (A.IsA('VehicleWeapon'))
+        {
+            WepPawn = VehicleWeaponPawn(A.Instigator);
+            A = WepPawn;
+        }
+
+        // Stop checking if we're looking at anything other than a pawn
+        if (A == none || !A.IsA('Pawn'))
+        {
+            break;
+        }
+
+        // Continue tracing if we're looking at our own pawn (happens in a vehicle or if moving forward)
+        if (A == PawnOwner)
+        {
+            continue;
+        }
+
+        // If we're looking at a player pawn, register it as our LookedAtPawn
+        if (A.IsA('ROPawn'))
+        {
+            LookedAtPawn = Pawn(A);
+        }
+        // Otherwise we must be looking at a vehicle so start by getting its VehicleBase
+        else if (WepPawn != none)
+        {
+            VehicleBase = WepPawn.VehicleBase;
+        }
+        else
+        {
+            VehicleBase = ROVehicle(A);
+        }
+
+        // We're looking at a vehicle, so we need to check what pawn (if any) to use as our LookedAtPawn
+        if (VehicleBase != none)
+        {
+            // If we're looking at a vehicle we are travelling in, then we ignore it & stop trying to find a LookedAtPawn
+            // We don't want to display the name of another vehicle occupant as it looks wrong, & is anyway unnecessary as occupant names are listed on our HUD
+            if (VehicleBase == OwnVehicle)
             {
-                A = A.Owner;
+                break;
             }
 
-            // We may be looking at a vehicle weapon (usually turret, could be some MGs with collision) & its owner will be a weapon pawn
-            // If it's occupied, we'll use the weapon pawn as our LookedAtPawn, otherwise we'll check the vehicle for other occupants
-            WepPawn = VehicleWeaponPawn(A.Owner);
-
-            if (WepPawn != none)
+            // If we're looking at an occupied weapon pawn, register it as our LookedAtPawn
+            if (A == WepPawn && WepPawn.bDriving)
             {
-                if (WepPawn.bDriving)
-                {
-                    A = WepPawn;
-                }
-
-                VehicleBase = WepPawn.VehicleBase;
+                LookedAtPawn = WepPawn;
             }
+            // Or if vehicle has a driver, register the vehicle as our LookedAtPawn
+            else if (VehicleBase.bDriving)
+            {
+                LookedAtPawn = VehicleBase;
+            }
+            // Otherwise try to find any other occupied weapon pawn & register that as our LookedAtPawn (the 1st we find)
             else
             {
-                VehicleBase = ROVehicle(A);
-            }
+                for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+                {
+                    WepPawn = VehicleBase.WeaponPawns[i];
 
-            // We're looking towards a vehicle, so if it has a driver we use the Vehicle as LookedAtPawn, otherwise we use any other occupied position (1st we find)
-            // But we skip this if we've already found an occupied weapon pawn
-            if (VehicleBase != none && A != WepPawn)
-            {
-                if (VehicleBase.bDriving)
-                {
-                    A = VehicleBase;
-                }
-                else
-                {
-                    for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+                    if (WepPawn != none && WepPawn.bDriving)
                     {
-                        WepPawn = VehicleBase.WeaponPawns[i];
-
-                        if (WepPawn != none && WepPawn.bDriving)
-                        {
-                            A = WepPawn;
-                            break;
-                        }
+                        LookedAtPawn = WepPawn;
+                        break;
                     }
                 }
             }
-
-            // Make sure we aren't looking at our own pawn (happens in a vehicle or if moving forward)
-            // Otherwise if we're looking at a pawn, record it & put it in the start of our Pawns array, then exit the foreach iteration
-            if (A != PawnOwner && A != none)
-            {
-                LookedAtPawn = Pawn(A);
-
-                if (LookedAtPawn != none)
-                {
-                    Pawns[0] = LookedAtPawn;
-                }
-
-                break;
-            }
         }
+
+        // If we have a LookedAtPawn, add it to the 1st slot in our Pawns array
+        if (LookedAtPawn != none)
+        {
+            Pawns[0] = LookedAtPawn;
+        }
+
+        break; // exit the trace if we reached here, whether or not we found a LookedAtPawn
     }
 
     // STAGE 2: find all other pawns within 25 meters & build our Pawns array (excluding our own pawn & any LookedAtPawn we've already added)
