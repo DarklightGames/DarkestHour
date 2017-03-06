@@ -9,14 +9,11 @@ var     name                        BarrelBones[4];           // bone names for 
 var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
 var     WeaponAmbientEmitter        BarrelEffectEmitter[4];   // separate emitter for each barrel, for muzzle flash & ejected shell cases
 
-// Modified to skip over the Super in DHVehicleWeapon, which calculates whether to fire a tracer
-// Because we have multiple barrels, we let SpawnProjectile handle tracers
-state ProjectileFireMode
+// Modified to avoid the Super in DHVehicleWeapon, which calculates whether to fire a tracer
+// Because we have multiple barrels, we let SpawnProjectile handle tracers instead
+function Fire(Controller C)
 {
-    function Fire(Controller C)
-    {
-        super(ROVehicleWeapon).Fire(C);
-    }
+    SpawnProjectile(ProjectileClass, false);
 }
 
 // Modified to handle multiple barrel fire

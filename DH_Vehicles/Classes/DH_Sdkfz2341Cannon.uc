@@ -57,27 +57,24 @@ simulated function DestroyEffects()
 }
 
 // Modified to alternate between AP & HE rounds if firing a mixed mag (the tertiary ammo type)
-state ProjectileFireMode
+function Fire(Controller C)
 {
-    function Fire(Controller C)
+    if (ProjectileClass == PrimaryProjectileClass)
     {
-        if (ProjectileClass == PrimaryProjectileClass)
+        if (bMixedMagFireAP)
         {
-            if (bMixedMagFireAP)
-            {
-                SpawnProjectile(SecondaryProjectileClass, false);
-            }
-            else
-            {
-                SpawnProjectile(TertiaryProjectileClass, false);
-            }
-
-            bMixedMagFireAP = !bMixedMagFireAP;
+            SpawnProjectile(SecondaryProjectileClass, false);
         }
         else
         {
-            SpawnProjectile(ProjectileClass, false);
+            SpawnProjectile(TertiaryProjectileClass, false);
         }
+
+        bMixedMagFireAP = !bMixedMagFireAP;
+    }
+    else
+    {
+        SpawnProjectile(ProjectileClass, false);
     }
 }
 

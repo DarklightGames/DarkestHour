@@ -18,12 +18,9 @@ replication
 }
 
 // Modified to skip over Super in DH_Sdkfz2341Cannon, as handling of mixed mag is instead handled in SpawnProjectile, which now fires two projectiles
-state ProjectileFireMode
+function Fire(Controller C)
 {
-    function Fire(Controller C)
-    {
-        super(DHVehicleCannon).Fire(C);
-    }
+    super(DHVehicleCannon).Fire(C);
 }
 
 // Modified to fire two projectiles from a pair of alternating barrels & to handle alternating AP/HE rounds if a mixed mag is loaded

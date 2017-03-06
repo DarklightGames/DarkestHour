@@ -176,29 +176,26 @@ simulated function Depress()
     }
 }
 
-state ProjectileFireMode
+function Fire(Controller C)
 {
-    function Fire(Controller C)
+    if (bDebugCalibrate)
     {
-        if (bDebugCalibrate)
+        for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
         {
-            for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
-            {
-                SpawnProjectile(ProjectileClass, false);
-            }
+            SpawnProjectile(ProjectileClass, false);
         }
-        else
+    }
+    else
+    {
+        if (HasAmmo(GetAmmoIndex()))
         {
-            if (HasAmmo(GetAmmoIndex()))
-            {
-                SpawnProjectile(ProjectileClass, false);
-                --MainAmmoCharge[GetAmmoIndex()];
+            SpawnProjectile(ProjectileClass, false);
+            --MainAmmoCharge[GetAmmoIndex()];
 
-                // We fired one off, so we are now eligible for resupply
-                if (DHMortarVehicle(Base) != none)
-                {
-                    DHMortarVehicle(Base).bCanBeResupplied = true;
-                }
+            // We fired one off, so we are now eligible for resupply
+            if (DHMortarVehicle(Base) != none)
+            {
+                DHMortarVehicle(Base).bCanBeResupplied = true;
             }
         }
     }

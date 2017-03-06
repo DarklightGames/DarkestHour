@@ -99,6 +99,14 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to stop us entering state 'ProjectileFireMode', which is deprecated as unnecessary in DH & should never be entered
+// Fire functions now work out of state, so projectile fire is effectively the default, non-state condition for all DHVehicleWeapon
+simulated function PostNetBeginPlay()
+{
+    InitEffects();
+    MaxRange();
+}
+
 // No longer use Tick, as hatch fire effects & manual/powered turret are now triggered on net client from Vehicle's PostNetReceive()
 // Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
@@ -283,32 +291,31 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return true;
 }
 
+// Fire functions moved out of state 'ProjectileFireMode', which is deprecated as unnecessary in DH
+// Projectile fire is now effectively the default, non-state condition for all DHVehicleWeapon
 // Modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
-// Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result = 0) then it's time to fire a tracer
-state ProjectileFireMode
+// Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly then it's time to fire a tracer
+function Fire(Controller C)
 {
-    function Fire(Controller C)
+    if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
     {
-        if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
-        {
-            SpawnProjectile(TracerProjectileClass, false);
-        }
-        else if (ProjectileClass != none)
-        {
-            SpawnProjectile(ProjectileClass, false);
-        }
+        SpawnProjectile(TracerProjectileClass, false);
     }
-
-    function AltFire(Controller C)
+    else if (ProjectileClass != none)
     {
-        if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
-        {
-            SpawnProjectile(TracerProjectileClass, true);
-        }
-        else if (AltFireProjectileClass != none)
-        {
-            SpawnProjectile(AltFireProjectileClass, true);
-        }
+        SpawnProjectile(ProjectileClass, false);
+    }
+}
+
+function AltFire(Controller C)
+{
+    if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
+    {
+        SpawnProjectile(TracerProjectileClass, true);
+    }
+    else if (AltFireProjectileClass != none)
+    {
+        SpawnProjectile(AltFireProjectileClass, true);
     }
 }
 
@@ -416,7 +423,7 @@ simulated function OwnerEffects()
 }
 
 // Modified to skip over the Super in ROVehicleWeapon to avoid calling UpdateTracer()
-// That function is deprecated (& emptied out below) & we now spawn either a normal bullet OR a tracer bullet (see ProjectileFireMode)
+// That function is deprecated (& emptied out below) & we now spawn either a normal bullet OR a tracer bullet when we fire
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
@@ -473,26 +480,26 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // Note that the delay in the original system was essentially random & caused by its network inefficiency
 // The server called ClientCeaseFire() on owning client, which in return called VehicleCeaseFire() on server - both know they need to cease fire so was unnecessary
 // It did create delay but timing was from 2-way replication between server & owning client, which is random to other clients & no better than arbitrary time delay, maybe worse
-state ServerCeaseFire extends ProjectileFireMode
+state ServerCeaseFire
 {
     function Fire(Controller C)
     {
-        super.Fire(C);
+        global.Fire(C);
 
-        GotoState('ProjectileFireMode');
+        GotoState('');
     }
 
     function AltFire(Controller C)
     {
-        super.AltFire(C);
+        global.AltFire(C);
 
-        GotoState('ProjectileFireMode');
+        GotoState('');
     }
 
 Begin:
     Sleep(0.1);
     FlashCount = 0;
-    GotoState('ProjectileFireMode');
+    GotoState('');
 }
 
 // New function to play the main weapon firing sound (allows easy subclassing)
@@ -1004,6 +1011,18 @@ simulated function PlayClickSound()
     {
         PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
     }
+}
+
+// State 'emptied out' as is deprecated as unnecessary in DH and should never be entered
+// Fire functions now work out of state, so projectile fire is effectively the default, non-state condition for all DHVehicleWeapon
+state ProjectileFireMode
+{
+    function Fire(Controller C);
+    function AltFire(Controller C);
+
+Begin:
+    Log("WARNING:" @ Name @ "entered state 'ProjectileFireMode', which should never happen now!");
+    GotoState('');
 }
 
 // Functions emptied out as not relevant to a VehicleWeapon in RO/DH, which never uses InstantFireMode:

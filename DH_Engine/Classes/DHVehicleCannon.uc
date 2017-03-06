@@ -157,37 +157,34 @@ simulated function Timer()
 //  *********************************** FIRING ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-state ProjectileFireMode
+// Modified to handle canister shot
+function Fire(Controller C)
 {
-    // Modified to handle canister shot
-    function Fire(Controller C)
+    local vector  WeaponFireVector;
+    local int     ProjectilesToFire, i;
+
+    // Special handling for canister shot
+    if (class<DHCannonShellCanister>(ProjectileClass) != none)
     {
-        local vector  WeaponFireVector;
-        local int     ProjectilesToFire, i;
+        bCanisterIsFiring = true;
+        ProjectilesToFire = class<DHCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
+        WeaponFireVector = vector(WeaponFireRotation);
 
-        // Special handling for canister shot
-        if (class<DHCannonShellCanister>(ProjectileClass) != none)
+        for (i = 1; i <= ProjectilesToFire; ++i)
         {
-            bCanisterIsFiring = true;
-            ProjectilesToFire = class<DHCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
-            WeaponFireVector = vector(WeaponFireRotation);
+            WeaponFireRotation = rotator(WeaponFireVector + (VRand() * (FRand() * TertiarySpread)));
 
-            for (i = 1; i <= ProjectilesToFire; ++i)
+            if (i >= ProjectilesToFire)
             {
-                WeaponFireRotation = rotator(WeaponFireVector + (VRand() * (FRand() * TertiarySpread)));
-
-                if (i >= ProjectilesToFire)
-                {
-                    bCanisterIsFiring = false;
-                }
-
-                SpawnProjectile(ProjectileClass, false);
+                bCanisterIsFiring = false;
             }
+
+            SpawnProjectile(ProjectileClass, false);
         }
-        else
-        {
-            super.Fire(C);
-        }
+    }
+    else
+    {
+        super.Fire(C);
     }
 }
 
@@ -245,7 +242,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
-// Modified (from ROTankCannon) to remove call to UpdateTracer (now we spawn either normal bullet OR tracer - see ProjectileFireMode), & also to expand & improve cannon firing anims
+// Modified (from ROTankCannon) to remove call to UpdateTracer (now we spawn either normal bullet OR tracer when we fire), & also to expand & improve cannon firing anims
 // Now check against RaisedPositionIndex instead of bExposed (allows lowered commander in open turret to be exposed), to play relevant firing animation
 // Also adds new option for 'intermediate' position with its own firing animation, e.g. some AT guns have open sight position, between optics (lowered) & raised head position
 // And we avoid playing shoot animations altogether on a server, as they serve no purpose there
