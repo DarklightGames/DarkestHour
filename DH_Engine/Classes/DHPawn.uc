@@ -5905,6 +5905,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
     if (C != none)
     {
+        C.SetTeamIndex(GetTeamNum());
         C.SetStaticMesh(ConstructionClass.default.StaticMesh);
     }
 }

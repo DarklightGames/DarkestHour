@@ -7,7 +7,6 @@ class DH_OpelBlitzSupport extends DH_OpelBlitz;
 
 defaultproperties
 {
-    ResupplyAttachmentClass=class'DH_OpelBlitzResupplyAttachment'
     ResupplyAttachBone="supply"
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark',AttachBone="Deco") // decorative only representation of resupply crates
     PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider4_idle")

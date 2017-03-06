@@ -7,7 +7,7 @@ class DHConstruction extends Actor
     abstract;
 
 // Ownership
-var()   int TeamIndex;
+var() private int TeamIndex;
 
 // Placement
 var     float   ProxyDistanceInMeters;      // The distance at which the proxy object will be away from the player when
@@ -18,6 +18,7 @@ var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
+var     sound   PlacementSound;
 
 // Construction
 var     int     CurrentStageIndex;
@@ -31,6 +32,8 @@ var     class<Actor>    ActorClass;
 
 var     localized string    MenuName;
 var     localized Material  MenuMaterial;
+
+// Staging
 
 enum EAnchorType
 {
@@ -46,6 +49,7 @@ struct Anchor
 
 var array<Anchor> Anchors;
 
+// Staging
 struct ConstructionStage
 {
     var int Health;
@@ -57,7 +61,30 @@ struct ConstructionStage
 var int StageIndex;
 var array<ConstructionStage> ConstructionStages;
 
+function OnTeamIndexChanged();
 function OnHealthChanged();
+
+final function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+final function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+
+    OnTeamIndexChanged();
+}
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority)
+    {
+        PlaySound(PlacementSound, SLOT_Misc, 4.0,, 60.0,, true);
+    }
+}
 
 auto state Constructing
 {
@@ -111,6 +138,8 @@ event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Mo
 
     super.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 
+    // TODO: probably want to go into some sort of destroyed state
+
     OnHealthChanged();
 }
 
@@ -155,5 +184,7 @@ defaultproperties
     bCanPlaceIndoors=false
 
     LocalRotationRate=32768
+
+    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
 }
 

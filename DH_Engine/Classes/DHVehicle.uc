@@ -116,14 +116,14 @@ var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
 
 // Vehicle attachments
-var     array<VehicleAttachment>  VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
-var     array<VehicleAttachment>  CollisionAttachments;    // collision mesh attachments for a moving part of vehicle that should have collision, e.g. a ramp or driver's armoured visor
-var     VehicleAttachment         RandomAttachment;        // option for a visual attachment with a random selection of static mesh type, e.g. schurzen with different stages of damage
-var     array<RandomAttachOption> RandomAttachOptions;     // possible static meshes to use with the random decorative attachment
-var     byte                      RandomAttachmentIndex;   // the attachment index number selected randomly to be spawned for this vehicle
-var     class<Actor>              ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
-var     name                      ResupplyAttachBone;      // bone name for attaching resupply attachment
-var     Actor                     ResupplyAttachment;      // reference to any resupply actor
+var     array<VehicleAttachment>    VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
+var     array<VehicleAttachment>    CollisionAttachments;    // collision mesh attachments for a moving part of vehicle that should have collision, e.g. a ramp or driver's armoured visor
+var     VehicleAttachment           RandomAttachment;        // option for a visual attachment with a random selection of static mesh type, e.g. schurzen with different stages of damage
+var     array<RandomAttachOption>   RandomAttachOptions;     // possible static meshes to use with the random decorative attachment
+var     byte                        RandomAttachmentIndex;   // the attachment index number selected randomly to be spawned for this vehicle
+var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
+var     name                        ResupplyAttachBone;      // bone name for attaching resupply attachment
+var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
 
 // Spawning
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
@@ -2089,7 +2089,12 @@ simulated function SpawnVehicleAttachments()
     {
         if (ResupplyAttachmentClass != none && ResupplyAttachBone != '' && ResupplyAttachment == none)
         {
-            ResupplyAttachment = SpawnAttachment(ResupplyAttachmentClass, ResupplyAttachBone);
+            ResupplyAttachment = DHResupplyAttachment(SpawnAttachment(ResupplyAttachmentClass, ResupplyAttachBone));
+
+            if (ResupplyAttachment != none)
+            {
+                ResupplyAttachment.SetTeamIndex(VehicleTeam);
+            }
         }
 
         // If vehicle has possible random decorative attachments, select which one (if any at all, depending on specified chances)
@@ -3055,6 +3060,8 @@ defaultproperties
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
     bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
                                // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
+
+    ResupplyAttachmentClass=class'DHResupplyAttachment'
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true

@@ -3,19 +3,8 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHMobileResupplyAttachment extends RODummyAttachment
-    abstract;
-
-//Hack in AmmoResupplyVolume code
-enum EOwningTeam
-{
-    OWNER_Axis,
-    OWNER_Allies,
-    OWNER_Neutral,
-};
-
-var()   EOwningTeam     Team;           //Team this volume resupplies
-var()   float           UpdateTime;     //How often this thing needs to do it's business
+class DHResupplyAttachment extends RODummyAttachment
+    notplaceable;
 
 enum EResupplyType
 {
@@ -25,9 +14,10 @@ enum EResupplyType
     RT_Mortars
 };
 
-var()   EResupplyType       ResupplyType; //Who this volume will resupply
-
-var     array<Pawn>         ResupplyActors;
+var     private int     TeamIndex;      // Team this volume resupplies
+var     EResupplyType   ResupplyType;   //Who this volume will resupply
+var     array<Pawn>     ResupplyActors;
+var     float           UpdateTime;     // How often this thing needs to do it's business
 
 simulated function PostBeginPlay()
 {
@@ -39,25 +29,30 @@ simulated function PostBeginPlay()
 function ProcessActorLeave()
 {
     local int i;
-    local Pawn P;
+    local Pawn P, R;
     local bool bFound;
-    local Pawn R;
 
     if (ResupplyActors.Length == 0)
+    {
         return;
+    }
 
     for (i = 0; i < ResupplyActors.Length; ++i)
     {
-        if (ResupplyActors[i] == none)
-            continue;
-
         R = ResupplyActors[i];
+
+        if (R == none)
+        {
+            continue;
+        }
 
         foreach VisibleCollidingActors(class'Pawn', P, 300.0)
         {
             // This stops us from the vehicle resupplying itself.
             if (Base != none && Base == P)
+            {
                 continue;
+            }
 
             bFound = false;
 
@@ -71,9 +66,13 @@ function ProcessActorLeave()
         if (!bFound)
         {
             if (DHPawn(R) != none)
+            {
                 DHPawn(R).bTouchingResupply = false;
+            }
             else if (Vehicle(R) != none)
+            {
                 Vehicle(R).LeftResupply();
+            }
         }
     }
 }
@@ -84,7 +83,6 @@ function Timer()
     local inventory recvr_inv;
     local ROWeapon recvr_weapon;
     local bool bResupplied;
-//  local bool bEnemyGrenadeFound, bEnemySmokeFound; // not used
     local DHPawn P;
     local Vehicle V;
     local DHRoleInfo RI;
@@ -97,9 +95,11 @@ function Timer()
     {
         // This stops us from the vehicle resupplying itself.
         if (Base != none && Base == P)
+        {
             continue;
+        }
 
-        if (Team==OWNER_Neutral || recvr.GetTeamNum()==Team)
+        if (TeamIndex == NEUTRAL_TEAM_INDEX || recvr.GetTeamNum() == TeamIndex)
         {
             bResupplied = false;
             P = DHPawn(recvr);
@@ -111,14 +111,18 @@ function Timer()
                 ResupplyActors[ResupplyActors.Length] = P;
 
                 if (!P.bTouchingResupply)
+                {
                     P.bTouchingResupply = true;
+                }
             }
             else if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
             {
                 ResupplyActors[ResupplyActors.Length] = V;
 
                 if (!V.bTouchingResupply)
+                {
                     V.bTouchingResupply = true;
+                }
             }
 
             if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
@@ -207,14 +211,20 @@ event Destroyed()
     for (i = 0; i < ResupplyActors.Length; ++i)
     {
         if (ResupplyActors[i] == none)
+        {
             continue;
+        }
 
         P = ResupplyActors[i];
 
         if (DHPawn(P) != none)
+        {
             DHPawn(P).bTouchingResupply = false;
+        }
         else if (Vehicle(P) != none)
+        {
             Vehicle(P).LeftResupply();
+        }
     }
 }
 
@@ -228,14 +238,16 @@ event Touch(Actor Other)
 
     // This stops us from the vehicle resupplying itself.
     if (Base != none && Base == Other)
+    {
         return;
+    }
 
     if (ROP != none)
     {
-        if (Team == OWNER_Neutral ||
-           (ROP.PlayerReplicationInfo != none && ROP.PlayerReplicationInfo.Team != none
-           && ((ROP.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && Team == OWNER_Axis) ||
-               (ROP.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && Team == OWNER_Allies))))
+        if (TeamIndex == NEUTRAL_TEAM_INDEX ||
+           (ROP.PlayerReplicationInfo != none &&
+            ROP.PlayerReplicationInfo.Team != none &&
+            ROP.PlayerReplicationInfo.Team.TeamIndex == TeamIndex))
         {
             ROP.bTouchingResupply = true;
         }
@@ -243,9 +255,7 @@ event Touch(Actor Other)
 
     if (V != none)
     {
-        if (Team == OWNER_Neutral ||
-           ((V.GetTeamNum() == AXIS_TEAM_INDEX && Team == OWNER_Axis) ||
-            (V.GetTeamNum() == ALLIES_TEAM_INDEX && Team == OWNER_Allies)))
+        if (TeamIndex == NEUTRAL_TEAM_INDEX || V.GetTeamNum() == TeamIndex)
         {
             V.EnteredResupply();
         }
@@ -262,7 +272,9 @@ event UnTouch(Actor Other)
 
     // This stops us from the vehicle resupplying itself.
     if (Base != none && Base == Other)
+    {
         return;
+    }
 
     if (ROP != none)
     {
@@ -275,12 +287,27 @@ event UnTouch(Actor Other)
     }
 }
 
+function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+final function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+
+    OnTeamIndexChanged();
+}
+
+function OnTeamIndexChanged();
+
 defaultproperties
 {
-    Team=OWNER_Neutral
+    TeamIndex=NEUTRAL_TEAM_INDEX
     UpdateTime=2.5
     ResupplyType=RT_All
     bDramaticLighting=true
     CollisionRadius=300
     CollisionHeight=100
 }
+
