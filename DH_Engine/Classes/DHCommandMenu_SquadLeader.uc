@@ -56,6 +56,6 @@ defaultproperties
 {
     Options(0)=(ActionText="Fire",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
     Options(1)=(ActionText="Create Rally Point",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_attack')
-    Options(2)=(ActionText="Construction",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend')
+    Options(2)=(ActionText="Construction",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend',Type=TYPE_Submenu)
     Options(3)=(ActionText="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
 }

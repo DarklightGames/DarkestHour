@@ -28,13 +28,11 @@ var     bool    bDestroyOnConstruction;
 var     int     Health;
 var     int     HealthMax;
 
-var     class<Actor>    ActorClass;
-
+// Menu
 var     localized string    MenuName;
 var     localized Material  MenuMaterial;
 
-// Staging
-
+// Anchors
 enum EAnchorType
 {
     ANCHOR_Above,
@@ -61,6 +59,8 @@ struct ConstructionStage
 var int StageIndex;
 var array<ConstructionStage> ConstructionStages;
 
+function OnConstructed();
+function OnConstructionStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 function OnHealthChanged();
 
@@ -111,8 +111,6 @@ Begin:
 GotoState('Constructed');
 }
 
-simulated function OnConstructionStageIndexChanged(int OldIndex);
-
 state Constructed
 {
     function OnHealthChanged()
@@ -126,10 +124,6 @@ Begin:
     {
         Destroy();
     }
-}
-
-simulated function OnConstructed()
-{
 }
 
 event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)

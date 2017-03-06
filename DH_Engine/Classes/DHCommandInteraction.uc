@@ -25,6 +25,10 @@ const MAX_OPTIONS = 8;
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
 
+var color               SelectedColor;
+var color               DisabledColor;
+var color               SubmenuColor;
+
 event Initialized()
 {
     super.Initialized();
@@ -243,6 +247,8 @@ function Tick(float DeltaTime)
 
         if (SelectedIndex != -1)
         {
+            PC.Pawn.PlayOwnedSound(sound'ROMenuSounds.msfxDown', SLOT_Interface, 1.0);
+
             Menu.OnHoverIn(SelectedIndex);
         }
     }
@@ -286,17 +292,26 @@ function PostRender(Canvas C)
         {
             if (SelectedIndex == i)
             {
-                C.DrawColor = class'UColor'.default.Yellow;
+                C.DrawColor = default.SelectedColor;
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
             }
             else if (Menu.IsOptionDisabled(i))
             {
-                C.DrawColor = class'UColor'.default.DarkGray;
+                C.DrawColor = default.DisabledColor;
                 C.DrawColor.A = byte(255 * MenuAlpha * 0.25);
             }
             else
             {
-                C.DrawColor = class'UColor'.default.White;
+                switch (Menu.Options[i].Type)
+                {
+                    case TYPE_Normal:
+                        C.DrawColor = class'UColor'.default.White;
+                        break;
+                    case TYPE_Submenu:
+                        C.DrawColor = default.SubmenuColor;
+                        break;
+                }
+
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
 
@@ -453,8 +468,16 @@ defaultproperties
     bVisible=true
     bRequiresTick=true
 
-    OptionTextures(0)=Texture'DH_InterfaceArt_tex.Communication.menu_option_whole'
-    OptionTextures(1)=Texture'DH_InterfaceArt_tex.Communication.menu_option_half'
-    OptionTextures(2)=Texture'DH_InterfaceArt_tex.Communication.menu_option_third'
-    OptionTextures(3)=Texture'DH_InterfaceArt_tex.Communication.menu_option_quarter'
+    OptionTextures(0)=Texture'DH_InterfaceArt_tex.Communication.menu_option_1'
+    OptionTextures(1)=Texture'DH_InterfaceArt_tex.Communication.menu_option_2'
+    OptionTextures(2)=Texture'DH_InterfaceArt_tex.Communication.menu_option_3'
+    OptionTextures(3)=Texture'DH_InterfaceArt_tex.Communication.menu_option_4'
+    OptionTextures(4)=Texture'DH_InterfaceArt_tex.Communication.menu_option_5'
+    OptionTextures(5)=Texture'DH_InterfaceArt_tex.Communication.menu_option_6'
+    OptionTextures(6)=Texture'DH_InterfaceArt_tex.Communication.menu_option_7'
+    OptionTextures(7)=Texture'DH_InterfaceArt_tex.Communication.menu_option_8'
+
+    SelectedColor=(R=255,G=255,B=64,A=255)
+    DisabledColor=(R=32,G=32,B=32,A=255)
+    SubmenuColor=(R=255,G=64,B=255,A=255)
 }
