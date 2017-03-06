@@ -377,7 +377,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
                     if (A != InstigatorPlayer && A.Base != InstigatorPlayer && A.Owner != InstigatorPlayer && A.Owner != Instigator
-                        && !A.bDeleteMe && !(Other.IsA('Projectile') && !Other.bProjTarget) && A != HitPlayer)
+                        && !A.bDeleteMe && !(A.IsA('Projectile') && !A.bProjTarget) && A != HitPlayer)
                     {
                         HitPlayer = none;
                         break;
