@@ -33,6 +33,7 @@ var localized string SquadRallyPointTooSoon;
 var localized string SquadRallyPointAbandoned;
 var localized string SquadRallyPointBadLocation;
 var localized string SquadRallyPointDestroyed;
+var localized string SquadRallyPointAbandonmentWarning;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -98,6 +99,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.SquadRallyPointBadLocation;
         case 57:
             return default.SquadRallyPointDestroyed;
+        case 58:
+            return default.SquadRallyPointAbandonmentWarning;
         default:
             break;
     }
@@ -125,7 +128,7 @@ defaultproperties
     SquadRallyPointTooCloseMessage="You cannot create a rally point so close to an existing one, you must be {0} meters further away."
     SquadRallyPointExhaustedMessage="A squad rally point has been exhausted."
     SquadRallyPointNeedSquadmateNearby="You must have at least one other squadmate nearby to create a squad rally point."
-    SquadRallyPointCreatedMessage="You have create a squad rally point. Secure the area with your squad to establish this rally point."
+    SquadRallyPointCreatedMessage="You have created a squad rally point. Secure the area with your squad to establish this rally point."
     SquadRallyPointOverrunMessage="A squad rally point has been overrun by enemies."
     SquadRallyPointGroundTooSteep="The ground is too steep to establish a rally point here."
     SquadRallyPointInMinefield="You cannot create a squad rally point in a minefield."
@@ -135,5 +138,6 @@ defaultproperties
     SquadRallyPointAbandoned="A squad rally point failed to be established because it was abandoned."
     SquadRallyPointBadLocation="A squad rally point cannot be created at this location."
     SquadRallyPointDestroyed="The squad leader has forcibly destroyed a rally point."
+    SquadRallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
 }
 

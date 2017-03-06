@@ -26,6 +26,8 @@ var float ConstructionCounterThreshold;         // The value that ConstructionCo
 var float ConstructionStartTimeSeconds;         // The value of Level.TimeSeconds when this rally point began construction.
 var float OverrunMinimumTimeSeconds;            // The number of seconds a rally point must be "alive" for in order to be overrun by enemies. (To stop squad rally points being used as "enemy radar".
 
+var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while constructing
+
 replication
 {
     reliable if (Role == ROLE_Authority)
@@ -64,6 +66,18 @@ auto state Constructing
 
         ConstructionCounter -= EnemyCount;
         ConstructionCounter += SquadmateCount;
+
+        if (bCanSendAbandonmentWarningMessage && SquadmateCount == 0)
+        {
+            // "A newly created squad rally point is being abandoned!"
+            SRI.BroadcastLocalizedMessage(SRI.SquadMessageClass, 58);
+
+            bCanSendAbandonmentWarningMessage = false;
+        }
+        else if (SquadmateCount > 0)
+        {
+            bCanSendAbandonmentWarningMessage = true;
+        }
 
         if (SquadmateCount == 0 && EnemyCount == 0)
         {
@@ -333,5 +347,6 @@ defaultproperties
     ConstructionCounterThreshold=60
     OverrunMinimumTimeSeconds=15
     bHidden=false
+    bCanSendAbandonmentWarningMessage=true
 }
 
