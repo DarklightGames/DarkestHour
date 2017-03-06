@@ -23,7 +23,7 @@ exec function PlayerActionsMenu(string PlayerName)
     {
         MenuTitle = default.MenuTitle @ PlayerName; // adds player name to menu title
         SelectionSuffix = PlayerName;
-        GoToState('MenuVisible');
+        GotoState('MenuVisible');
     }
 }
 

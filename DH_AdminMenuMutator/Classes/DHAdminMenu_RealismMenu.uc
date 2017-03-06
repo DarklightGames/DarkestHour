@@ -9,7 +9,7 @@ class DHAdminMenu_RealismMenu extends DHAdminMenu_MenuBase;
 
 exec function RealismMenu()
 {
-    GoToState('MenuVisible');
+    GotoState('MenuVisible');
 }
 
 exec function EnableRealismMatch()
