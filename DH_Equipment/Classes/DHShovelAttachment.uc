@@ -5,4 +5,3 @@
 
 class DHShovelAttachment extends DHWeaponAttachment;
 
-

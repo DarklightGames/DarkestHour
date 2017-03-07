@@ -3,17 +3,13 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHConstruction_Hedgehog extends DHConstruction;
+class DHConstruction_Sandbags extends DHConstruction;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
+    StaticMesh=StaticMesh'DH_Military_stc.sandbag.Sandbag_StackedSCurve'
     bShouldAlignToGround=true
-    MenuName="Hedgehog"
-
-    StartRotationMin=(Yaw=-16384)
-    StartRotationMax=(Yaw=16384)
-
-    CollisionHeight=60
-    CollisionRadius=60
+    MenuName="Sandbags"
+    CollisionHeight=100
+    CollisionRadius=100
 }

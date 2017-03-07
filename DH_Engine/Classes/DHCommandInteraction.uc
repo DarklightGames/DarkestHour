@@ -47,6 +47,9 @@ function CreateOptionTexRotators(int OptionCount)
 {
     local int i;
     local TexRotator TR;
+    local TexOscillator TO;
+    local float Angle;
+    local float Amplitude;
 
     OptionTexRotators.Length = 0;
 
@@ -56,14 +59,27 @@ function CreateOptionTexRotators(int OptionCount)
         return;
     }
 
+    Amplitude = 0.01;
+    Angle = (0.5 / OptionCount) * Tau;
+
     for (i = 0; i < OptionCount; ++i)
     {
+        TO = new class'Engine.TexOscillator';
+        TO.Material = OptionTextures[OptionCount - 1];
+        TO.UOscillationAmplitude = Sin(Angle) * Amplitude;
+        TO.UOscillationRate = 0.0;
+        TO.UOscillationPhase = 0.5;
+        TO.VOscillationAmplitude = Cos(Angle) * -Amplitude;
+        TO.VOscillationRate = 0.0;
+        TO.VOscillationPhase = 0.5;
+
         TR = new class'Engine.TexRotator';
-        TR.Material = OptionTextures[OptionCount - 1];
+        TR.Material = TO;
         TR.TexRotationType = TR_FixedRotation;
         TR.UOffset = TR.Material.MaterialUSize() / 2;
         TR.VOffset = TR.Material.MaterialVSize() / 2;
-        TR.Rotation.Yaw = -(i * (65536 / OptionCount));
+
+        TR.Rotation.Yaw = -(i * (65536 / OptionCount)) + ((0.5 / OptionCount) * 65536);
 
         OptionTexRotators[OptionTexRotators.Length] = TR;
     }
@@ -292,6 +308,8 @@ function PostRender(Canvas C)
         {
             if (SelectedIndex == i)
             {
+                // TODO: also do some sort of "push out" with some sort of offset thing?
+
                 C.DrawColor = default.SelectedColor;
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
             }
@@ -313,6 +331,12 @@ function PostRender(Canvas C)
                 }
 
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+            }
+
+            if (SelectedIndex == i)
+            {
+                // indent the position just slightly
+                //(0.5 / MenuOptions.Length)
             }
 
             C.SetPos(CenterX - 256, CenterY - 256);

@@ -48,6 +48,7 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
         Error("Cannot set the construction class to none");
     }
 
+    SetCollisionSize(ConstructionClass.default.CollisionHeight, ConstructionClass.default.CollisionRadius);
     SetStaticMesh(ConstructionClass.default.StaticMesh);
 
     // Initialize the local rotation based on the parameters in the new construction class
@@ -262,6 +263,8 @@ function EConstructionProxyError GetPositionError()
     local vector HitLocation, HitNormal, TraceStart, TraceEnd;
     local Actor TouchingActor;
     local float AngleRadians;
+    local array<vector> HitLocations;
+    local array<vector> HitNormals;
 
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
@@ -276,33 +279,22 @@ function EConstructionProxyError GetPositionError()
         }
     }
 
-//    foreach TouchingActors(class'Actor', TouchingActor)
-//    {
-//        if (TouchingActor != none && TouchingActor.bBlockActors)
-//        {
-//        }
-//    }
-
-    // TODO: test the anchor points
-    for (i = 0; i < ConstructionClass.default.Anchors.Length; ++i)
+    foreach TouchingActors(class'Actor', TouchingActor)
     {
-        switch (ConstructionClass.default.Anchors[i].Type)
+        if (TouchingActor != none && TouchingActor.bBlockActors)
         {
-            case ANCHOR_Above:
-                break;
-            case ANCHOR_Below:
-                break;
-            default:
-                break;
+            return CPE_NoRoom;
         }
     }
 
-    GetAxes(Rotation, X, Y, Z);
+    // TODO: test the anchor points
 
     // TODO: enable or disable this check
+    GetAxes(Rotation, X, Y, Z);
+
     for (i = 0; i < TRACE_RESOLUTION; ++i)
     {
-        AngleRadians = (float(i) / TRACE_RESOLUTION) / Pi;
+        AngleRadians = (float(i) / TRACE_RESOLUTION) * Pi;
 
         TraceStart = vect(0, 0, 0);
         TraceStart.Z = CollisionHeight;
@@ -319,6 +311,24 @@ function EConstructionProxyError GetPositionError()
         {
             return CPE_NoRoom;
         }
+
+        if (Trace(HitLocation, HitNormal, TraceStart - (Z * CollisionHeight * 2), TraceStart, false) == none)
+        {
+            return CPE_NoGround;
+        }
+        else
+        {
+            // TODO:
+//            Acos(HitNormal dot Z)
+
+            HitLocations[HitLocations.Length] = HitLocation;
+
+            // TODO: test normal differences
+//            HitNormals[HitNormals.Length] =
+        }
+
+//        if (Trace(HitLocation,
+        // TODO: test surface, store heights etc.
     }
 
     return CPE_None;

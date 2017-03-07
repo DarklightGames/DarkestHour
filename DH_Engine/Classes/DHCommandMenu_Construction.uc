@@ -78,5 +78,6 @@ defaultproperties
     ConstructionClasses(0)=class'DHConstruction_Hedgehog'
     ConstructionClasses(1)=class'DHConstruction_ConcertinaWire'
     ConstructionClasses(2)=class'DHConstruction_Resupply'
+    ConstructionClasses(3)=class'DHConstruction_Sandbags'
 }
 

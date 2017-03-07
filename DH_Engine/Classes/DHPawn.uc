@@ -2446,6 +2446,12 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
+            // TODO: make this better
+            if (PRI != none && PRI.SquadIndex != -1)
+            {
+                CreateInventory("DH_Equipment.DHShovelItem");
+            }
+
             RI = P.GetRoleInfo();
 
             if (RI != none)
