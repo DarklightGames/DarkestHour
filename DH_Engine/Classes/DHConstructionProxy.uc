@@ -13,6 +13,7 @@ enum EConstructionProxyError
     CPE_TooSteep,   // The ground slope exceeded the allowable maximum
     CPE_InWater,    // The construction is in water and the construction type disallows this
     CPE_Restricted, // Construction overlaps a restriction volume
+    CPE_NoRoom      // No room to place this construction
 };
 
 var EConstructionProxyError ProxyError;
@@ -25,8 +26,6 @@ var Material                RedMaterial;
 
 var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
-
-var array<Material>         Materials;
 
 function PostBeginPlay()
 {
@@ -68,8 +67,6 @@ function CreateMaterials()
     local FinalBlend FB;
 
     StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(StaticMesh);
-
-    Materials.Length = 0;
 
     for (i = 0; i < StaticMeshSkins.Length; ++i)
     {
@@ -173,7 +170,6 @@ function Tick(float DeltaTime)
 }
 
 // This function gets the provisional location and rotation of the construction.
-// Returns true if the function was able to determine these provisional values.
 function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
     local PlayerController PC;
@@ -253,14 +249,20 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
     return Error;
 }
 
+const TRACE_RESOLUTION = 8;
+
 // We separate this function from GetProvisionalPosition because we need to have
 // the server do it's own check before attempting to spawn the construction.
 function EConstructionProxyError GetPositionError()
 {
     local int i;
     local DHRestrictionVolume RV;
+    local vector X, Y, Z;
+    local vector L;
+    local vector HitLocation, HitNormal, TraceStart, TraceEnd;
+    local Actor TouchingActor;
+    local float AngleRadians;
 
-    // TODO: refactor this out to another function
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
         return CPE_InWater;
@@ -273,6 +275,13 @@ function EConstructionProxyError GetPositionError()
             return CPE_Restricted;
         }
     }
+
+//    foreach TouchingActors(class'Actor', TouchingActor)
+//    {
+//        if (TouchingActor != none && TouchingActor.bBlockActors)
+//        {
+//        }
+//    }
 
     // TODO: test the anchor points
     for (i = 0; i < ConstructionClass.default.Anchors.Length; ++i)
@@ -288,8 +297,29 @@ function EConstructionProxyError GetPositionError()
         }
     }
 
-    // TODO: how do we deal with things that are RIGHT next to a wall??
-    // TODO: should we
+    GetAxes(Rotation, X, Y, Z);
+
+    // TODO: enable or disable this check
+    for (i = 0; i < TRACE_RESOLUTION; ++i)
+    {
+        AngleRadians = (float(i) / TRACE_RESOLUTION) / Pi;
+
+        TraceStart = vect(0, 0, 0);
+        TraceStart.Z = CollisionHeight;
+        TraceEnd = TraceStart;
+        TraceEnd.X = Sin(AngleRadians) * CollisionRadius;
+        TraceEnd.Y = Cos(AngleRadians) * CollisionRadius;
+        TraceStart.X = -TraceEnd.X;
+        TraceStart.Y = -TraceEnd.Y;
+
+        TraceStart = Location + QuatRotateVector(QuatFromRotator(rotator(X)), TraceStart);
+        TraceEnd = Location + QuatRotateVector(QuatFromRotator(rotator(X)), TraceEnd);
+
+        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
+        {
+            return CPE_NoRoom;
+        }
+    }
 
     return CPE_None;
 }
@@ -301,6 +331,5 @@ defaultproperties
     bCollideActors=true
     bCollideWorld=false
     bBlockActors=true
-    bBlockPlayers=false
 }
 

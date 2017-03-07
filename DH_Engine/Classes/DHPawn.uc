@@ -2416,6 +2416,7 @@ function AddDefaultInventory()
     local DHPlayer   P;
     local DHBot      B;
     local RORoleInfo RI;
+    local DHPlayerReplicationInfo PRI;
     local string     S;
     local int        i;
 
@@ -2425,6 +2426,7 @@ function AddDefaultInventory()
     }
 
     P = DHPlayer(Controller);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (IsLocallyControlled())
     {
@@ -2545,6 +2547,12 @@ function AddDefaultInventory()
             if (S != "None" && S != "")
             {
                 CreateInventory(S);
+            }
+
+            // TODO: make this better
+            if (PRI != none && PRI.SquadIndex != -1)
+            {
+                CreateInventory("DH_Equipment.DHShovelItem");
             }
         }
     }
