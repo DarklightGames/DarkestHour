@@ -40,7 +40,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 

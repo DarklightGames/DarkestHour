@@ -476,13 +476,13 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 // Modified to run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
 simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
 {
-    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location));
 }
 
 // Modified to run penetration calculations on an armored vehicle, but damage any other vehicle automatically
 simulated function bool PenetrateVehicle(ROVehicle V)
 {
-    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
+    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location));
 }
 
 // From DHBullet

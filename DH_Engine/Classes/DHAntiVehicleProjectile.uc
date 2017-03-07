@@ -154,32 +154,32 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Borrowed from AB: Just using a standard linear interpolation equation here
-simulated function float GetPenetration(vector Distance)
+// Borrowed from AB: just using a standard linear interpolation equation here
+simulated function float GetMaxPenetration(vector LaunchLocation, vector HitLocation)
 {
-    local float MeterDistance, PenetrationNumber;
+    local float DistanceMeters, MaxPenetration;
 
-    MeterDistance = class'DHUnits'.static.UnrealToMeters(VSize(Distance));
+    DistanceMeters = class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location));
 
-    if      (MeterDistance < 100.0)   PenetrationNumber = (DHPenetrationTable[0] +  (100.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
-    else if (MeterDistance < 250.0)   PenetrationNumber = (DHPenetrationTable[1] +  (250.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
-    else if (MeterDistance < 500.0)   PenetrationNumber = (DHPenetrationTable[2] +  (500.0  - MeterDistance) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
-    else if (MeterDistance < 750.0)   PenetrationNumber = (DHPenetrationTable[3] +  (750.0  - MeterDistance) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
-    else if (MeterDistance < 1000.0)  PenetrationNumber = (DHPenetrationTable[4] +  (1000.0 - MeterDistance) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
-    else if (MeterDistance < 1250.0)  PenetrationNumber = (DHPenetrationTable[5] +  (1250.0 - MeterDistance) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
-    else if (MeterDistance < 1500.0)  PenetrationNumber = (DHPenetrationTable[6] +  (1500.0 - MeterDistance) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
-    else if (MeterDistance < 1750.0)  PenetrationNumber = (DHPenetrationTable[7] +  (1750.0 - MeterDistance) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
-    else if (MeterDistance < 2000.0)  PenetrationNumber = (DHPenetrationTable[8] +  (2000.0 - MeterDistance) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
-    else if (MeterDistance < 2500.0)  PenetrationNumber = (DHPenetrationTable[9] +  (2500.0 - MeterDistance) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
-    else if (MeterDistance < 3000.0)  PenetrationNumber = (DHPenetrationTable[10] + (3000.0 - MeterDistance) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
-    else                              PenetrationNumber =  DHPenetrationTable[10];
+    if      (DistanceMeters < 100.0)   MaxPenetration = (DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
+    else if (DistanceMeters < 250.0)   MaxPenetration = (DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
+    else if (DistanceMeters < 500.0)   MaxPenetration = (DHPenetrationTable[2]  + (500.0  - DistanceMeters) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
+    else if (DistanceMeters < 750.0)   MaxPenetration = (DHPenetrationTable[3]  + (750.0  - DistanceMeters) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
+    else if (DistanceMeters < 1000.0)  MaxPenetration = (DHPenetrationTable[4]  + (1000.0 - DistanceMeters) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
+    else if (DistanceMeters < 1250.0)  MaxPenetration = (DHPenetrationTable[5]  + (1250.0 - DistanceMeters) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
+    else if (DistanceMeters < 1500.0)  MaxPenetration = (DHPenetrationTable[6]  + (1500.0 - DistanceMeters) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
+    else if (DistanceMeters < 1750.0)  MaxPenetration = (DHPenetrationTable[7]  + (1750.0 - DistanceMeters) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
+    else if (DistanceMeters < 2000.0)  MaxPenetration = (DHPenetrationTable[8]  + (2000.0 - DistanceMeters) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
+    else if (DistanceMeters < 2500.0)  MaxPenetration = (DHPenetrationTable[9]  + (2500.0 - DistanceMeters) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
+    else if (DistanceMeters < 3000.0)  MaxPenetration = (DHPenetrationTable[10] + (3000.0 - DistanceMeters) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
+    else                               MaxPenetration =  DHPenetrationTable[10];
 
     if (NumDeflections > 0)
     {
-        PenetrationNumber = PenetrationNumber * 0.04;  // just for now, until pen is based on velocity
+        MaxPenetration = MaxPenetration * 0.04;
     }
 
-    return PenetrationNumber;
+    return MaxPenetration;
 }
 
 // Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
@@ -284,7 +284,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
         if (HitVehicleWeapon.IsA('DHVehicleCannon')
-            && !DHVehicleCannon(HitVehicleWeapon).ShouldPenetrate(self, HitLocation, Direction, GetPenetration(LaunchLocation - HitLocation)))
+            && !DHVehicleCannon(HitVehicleWeapon).ShouldPenetrate(self, HitLocation, Direction, GetMaxPenetration(LaunchLocation, HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -390,7 +390,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
