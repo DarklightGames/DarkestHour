@@ -895,65 +895,156 @@ function ServerChangeDriverPosition(byte F)
     }
 }
 
-// Modified to prevent exit if player is buttoned up, & to give player the same momentum as the vehicle when exiting
-// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
+// Modified to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
+// Also to prevent exit if player is buttoned up & to give player the same momentum as the vehicle when exiting
 function bool KDriverLeave(bool bForceLeave)
 {
-    local Pawn   ExitingDriver;
-    local vector ExitVelocity;
+    local Controller SavedController;
+    local vector     ExitVelocity;
 
-    if (!bForceLeave)
+    // Prevent exit from vehicle if player is buttoned up (or if game type or mutator prevents exit)
+    // Only if bForceLeave is false, meaning player is trying to exit vehicle & not just switch to another vehicle position
+    if (!bForceLeave && (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver))))
     {
-        if (!CanExit()) // not bForceLeave means player is trying to exit vehicle & not just switch position, so no risk of locking someone in one slot
+        if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
         {
+            ServerChangeDriverPosition(1); // if bot tries & fails to exit, it tries switching to vehicle driver's position (added in VWPawn, it's not in Vehicle)
+        }
+
+        return false;
+    }
+
+    // Find an exit location for place to exiting player
+    if (Driver != none && (!bRemoteControlled || bHideRemoteDriver))
+    {
+        Driver.bHardAttach = false;
+        Driver.bCollideWorld = true;
+        Driver.SetCollision(true, true);
+
+        // If we couldn't find a place to put exiting player, leave him inside (restoring his attachment & collision properties)
+        if (!PlaceExitingDriver() && !bForceLeave)
+        {
+            Driver.bHardAttach = true;
+            Driver.bCollideWorld = false;
+            Driver.SetCollision(false, false);
+
+            if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
+            {
+                ServerChangeDriverPosition(1);
+            }
+
             return false;
         }
-
-        if (VehicleBase != none)
-        {
-            ExitingDriver = Driver;
-            ExitVelocity = VehicleBase.Velocity;
-            ExitVelocity.Z += 60.0; // add a little height kick
-        }
     }
 
-    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
+    // Stop controlling this VehicleWeaponPawn
+    if (Controller != none)
     {
-        if (!bForceLeave && ExitingDriver != none)
+        if (Controller.RouteGoal == self)
         {
-            ExitingDriver.Velocity = ExitVelocity;
+            Controller.RouteGoal = none;
         }
 
-        return true;
+        if (Controller.MoveTarget == self)
+        {
+            Controller.MoveTarget = none;
+        }
+
+        Controller.bVehicleTransition = true; // to keep Bots from doing Restart() in Possess()
+
+        SavedController = Controller; // save because Unpossess() will clear our reference
+        Controller.UnPossess();
+
+        // Take control of the exiting player pawn (our 'Driver')
+        if (Driver != none && Driver.Health > 0)
+        {
+//          Driver.SetOwner(SavedController); // removed as gets set anyway in the possession process
+            SavedController.Possess(Driver);
+
+            if (SavedController.IsA('PlayerController'))
+            {
+                PlayerController(SavedController).ClientSetViewTarget(Driver); // set PlayerController to view the person that got out
+            }
+        }
+
+        SavedController.bVehicleTransition = false; // reset
+
+        if (Controller == SavedController) // if our Controller didn't change, clear it
+        {
+            Controller = none;
+        }
+
+        if (SavedController.IsA('Bot'))
+        {
+            Bot(SavedController).ClearTemporaryOrders(); // added in VWPawn, it's not in Vehicle
+        }
+    }
+    else if (Driver != none && Driver.Controller == self) // if we somehow didn't have a Controller, clear the owner of the exiting player
+    {
+        Driver.SetOwner(none);
     }
 
-    return false;
+    // Update exiting player pawn as he has now left the vehicle
+    if (Driver != none)
+    {
+        Driver.bSetPCRotOnPossess = Driver.default.bSetPCRotOnPossess; // undo temporary change made when entering vehicle
+
+        Driver.StopDriving(self);
+
+        // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick
+        if (!bForceLeave && Driver.Health > 0 && VehicleBase != none)
+        {
+            ExitVelocity = VehicleBase.Velocity;
+            ExitVelocity.Z += 60.0;
+            Driver.Velocity = ExitVelocity;
+        }
+    }
+
+    DriverLeft();
+
+    return true;
 }
 
-// Matt: modified to fix major bug where player death would mean next player who enters would find weapon rotating wildly to remain facing towards a fixed point
-// Also to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
+// Also made it so function progresses to call DriverLeft() even if has no Controller, which specifically works with the LeaveBody() debug exec
 function DriverDied()
 {
-    super(Vehicle).DriverDied(); // need to skip over Super in ROVehicleWeaponPawn (& Super in VehicleWeaponPawn adds nothing)
+    local Controller SavedController;
 
-    // Added to match KDriverLeave() to fix major bug (resetting Gun.bActive is the key)
-    if (Gun != none)
+    if (Driver != none)
     {
-        Gun.bActive = false;
-        Gun.FlashCount = 0;
-        Gun.NetUpdateFrequency = Gun.default.NetUpdateFrequency;
-        Gun.NetPriority = Gun.default.NetPriority;
+        Level.Game.DiscardInventory(Driver);
+        Driver.StopDriving(self);
+        Driver.Controller = Controller;
+        Driver.DrivenVehicle = self; // for in game stats, so it knows player was killed inside a vehicle
+
+        if (Controller != none)
+        {
+            if (IsHumanControlled()) // set PlayerController to view the dead driver
+            {
+                Controller.SetLocation(Location);
+                PlayerController(Controller).SetViewTarget(Driver);
+                PlayerController(Controller).ClientSetViewTarget(Driver);
+            }
+
+            SavedController = Controller; // save because Unpossess() will clear our reference
+            Controller.Unpossess();
+
+            if (Controller == SavedController) // if our Controller didn't change, clear it
+            {
+                Controller = none;
+            }
+
+            SavedController.Pawn = Driver;
+        }
     }
 
-    if (VehicleBase != none && VehicleBase.Health > 0)
-    {
-        SetRotatingStatus(0); // kill the rotation sound if the driver dies but the vehicle doesn't
-    }
-
-    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
+    DriverLeft();
 }
 
 // Modified to add common features from KDriverLeave() & DriverDied(), which both call this function, & to reset to InitialPositionIndex instead of zero
+// Moving the 'Gun' section here fixes a major bug caused because before it was only being run in KDriverLeave() and not in DriverDied()
+// If player died in vehicle weapon, next player who entered would find weapon rotating wildly to remain facing towards a fixed point (resetting Gun.bActive is key)
 function DriverLeft()
 {
     if (bMultiPosition)
@@ -962,12 +1053,25 @@ function DriverLeft()
         LastPositionIndex = InitialPositionIndex;
     }
 
+    if (Gun != none)
+    {
+        Gun.bActive = false;
+        Gun.FlashCount = 0;
+        Gun.NetUpdateFrequency = Gun.default.NetUpdateFrequency;
+        Gun.NetPriority = Gun.default.NetPriority;
+    }
+
+    SetRotatingStatus(0); // stop playing any turret rotation sound
+
     if (VehicleBase != none)
     {
         VehicleBase.MaybeDestroyVehicle(); // checks if vehicle is now empty & may set a timer to destroy later
     }
 
-    DrivingStatusChanged(); // the Super from Vehicle
+    Level.Game.DriverLeftVehicle(self, Driver);
+    Driver = none;
+    bDriving = false;
+    DrivingStatusChanged();
 }
 
 // Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()

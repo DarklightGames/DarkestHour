@@ -1107,52 +1107,157 @@ simulated function SwitchWeapon(byte F)
     ServerChangeDriverPosition(F);
 }
 
-// Modified to prevent exit if player is buttoned up, & to give player the same momentum as the vehicle when exiting
-// Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
+// Modified to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
+// Also to prevent exit if player is buttoned up & to give player the same momentum as the vehicle when exiting
 function bool KDriverLeave(bool bForceLeave)
 {
-    local Pawn   ExitingDriver;
-    local vector ExitVelocity;
+    local Controller SavedController;
+    local vector     ExitVelocity;
 
-    if (!bForceLeave)
+    // Prevent exit from vehicle if player is buttoned up (or if game type or mutator prevents exit)
+    // Only if bForceLeave is false, meaning player is trying to exit vehicle & not just switch to another vehicle position
+    if (!bForceLeave && (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver))))
     {
-        if (!CanExit()) // not bForceLeave means player is trying to exit vehicle & not just switch to another vehicle position, so no risk of locking someone in one slot
+        return false;
+    }
+
+    // Find an exit location for place to exiting player
+    if (Driver != none && (!bRemoteControlled || bHideRemoteDriver))
+    {
+        Driver.bHardAttach = false;
+        Driver.bCollideWorld = true;
+        Driver.SetCollision(true, true);
+
+        // If we couldn't find a place to put exiting player, leave him inside (restoring his attachment & collision properties)
+        if (!PlaceExitingDriver() && !bForceLeave)
         {
+            Driver.bHardAttach = true;
+            Driver.bCollideWorld = false;
+            Driver.SetCollision(false, false);
+
             return false;
         }
-
-        ExitingDriver = Driver;
-        ExitVelocity = Velocity;
-        ExitVelocity.Z += 60.0; // add a little height kick
     }
 
-    if (super(ROVehicle).KDriverLeave(bForceLeave))
+    // Stop controlling this vehicle
+    if (Controller != none)
     {
-        if (!bForceLeave && ExitingDriver != none)
+        if (Controller.RouteGoal == self)
         {
-            ExitingDriver.Velocity = ExitVelocity;
+            Controller.RouteGoal = none;
         }
 
-        return true;
+        if (Controller.MoveTarget == self)
+        {
+            Controller.MoveTarget = none;
+        }
+
+        Controller.bVehicleTransition = true; // to keep Bots from doing Restart() in Possess()
+
+        SavedController = Controller; // save because Unpossess() will clear our reference
+        Controller.UnPossess();
+
+        // Take control of the exiting player pawn
+        if (Driver != none && Driver.Health > 0)
+        {
+//          Driver.SetOwner(SavedController); // removed as gets set anyway in the possession process
+            SavedController.Possess(Driver);
+
+            if (SavedController.IsA('PlayerController'))
+            {
+                PlayerController(SavedController).ClientSetViewTarget(Driver); // set PlayerController to view the person that got out
+            }
+        }
+
+        SavedController.bVehicleTransition = false; // reset
+
+        if (Controller == SavedController) // if our Controller didn't change, clear it
+        {
+            Controller = none;
+        }
+    }
+    else if (Driver != none && Driver.Controller == self) // if we somehow didn't have a Controller, clear the owner of the exiting player
+    {
+        Driver.SetOwner(none);
     }
 
-    return false;
+    // Update exiting player pawn as he has now left the vehicle
+    if (Driver != none)
+    {
+        Driver.bSetPCRotOnPossess = Driver.default.bSetPCRotOnPossess; // undo temporary change made when entering vehicle
+        Instigator = Driver; // so if vehicle continues on & hits something, the old driver is responsible for any damage caused
+
+        Driver.StopDriving(self);
+
+        // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick
+        if (!bForceLeave && Driver.Health > 0)
+        {
+            ExitVelocity = Velocity;
+            ExitVelocity.Z += 60.0;
+            Driver.Velocity = ExitVelocity;
+        }
+    }
+
+    DriverLeft();
+
+    return true;
 }
 
-// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions
 function DriverDied()
 {
-    super(ROVehicle).DriverDied();
+    local Controller SavedController;
+
+    if (Driver != none)
+    {
+        Level.Game.DiscardInventory(Driver);
+        Driver.StopDriving(self);
+        Driver.Controller = Controller;
+        Driver.DrivenVehicle = self; // for in game stats, so it knows player was killed inside a vehicle
+
+        if (Controller != none)
+        {
+            if (IsHumanControlled()) // set PlayerController to view the dead driver
+            {
+                Controller.SetLocation(Location);
+                PlayerController(Controller).SetViewTarget(Driver);
+                PlayerController(Controller).ClientSetViewTarget(Driver);
+            }
+
+            SavedController = Controller; // save because Unpossess() will clear our reference
+            Controller.Unpossess();
+
+            if (Controller == SavedController) // if our Controller didn't change, clear it
+            {
+                Controller = none;
+            }
+
+            SavedController.Pawn = Driver;
+        }
+    }
+
+    DriverLeft();
 }
 
-// Modified to avoid playing engine shut down sound when leaving vehicle & also to use IdleTimeBeforeReset
-// Also to add common features from KDriverLeave() & DriverLeft(), which both call this function
+// Modified to add common features from KDriverLeave() & DriverDied(), which both call this function
+// Unlike RO, we avoid playing engine shut down sound when leaving vehicle
 function DriverLeft()
 {
-    DriverPositionIndex = InitialPositionIndex;
-    PreviousPositionIndex = InitialPositionIndex;
-    MaybeDestroyVehicle();
-    DrivingStatusChanged(); // the Super from Vehicle, as we need to skip over Super in ROVehicle
+    if (Health > 0)
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        PreviousPositionIndex = InitialPositionIndex;
+
+        MaybeDestroyVehicle(); // checks if vehicle is now empty & may set a timer to destroy later
+    }
+
+    Throttle = 0.0;
+    Steering = 0.0;
+    Rise = 0.0;
+
+    Level.Game.DriverLeftVehicle(self, Driver);
+    Driver = none;
+    bDriving = false;
+    DrivingStatusChanged();
 }
 
 // New function to check if player can exit - implement in subclass as required
