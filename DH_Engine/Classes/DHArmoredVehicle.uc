@@ -1018,38 +1018,38 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
 // New function to calculate the appropriate armor slope multiplier for various projectile types & angles
 // A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
-simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float AngleOfIncidenceDegrees, optional float OverMatchFactor)
+simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float AngleOfIncidence, optional float OverMatchFactor)
 {
-    local float CompoundExp, BaseAngleDegrees, DegreesSpread, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, MultiplierDifference;
+    local float CompoundExp, BaseLookupAngle, DegreesSpread, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, MultiplierDifference;
 
     if (P.RoundType == RT_HVAP)
     {
         if (P.ShellDiameter > 8.5) // HVAP rounds bigger than 85mm shell diameter (instead of using separate RoundType RT_HVAPLarge)
         {
-            if (AngleOfIncidenceDegrees <= 30.0)
+            if (AngleOfIncidence <= 30.0)
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 1.75;
+               CompoundExp = AngleOfIncidence ** 1.75;
 
                return 2.71828 ** (CompoundExp * 0.000662);
             }
             else
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 2.2;
+               CompoundExp = AngleOfIncidence ** 2.2;
 
                return 0.9043 * (2.71828 ** (CompoundExp * 0.0001987));
             }
         }
         else // smaller HVAP rounds
         {
-            if (AngleOfIncidenceDegrees <= 25.0)
+            if (AngleOfIncidence <= 25.0)
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 2.2;
+               CompoundExp = AngleOfIncidence ** 2.2;
 
                return 2.71828 ** (CompoundExp * 0.0001727);
             }
             else
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 1.5;
+               CompoundExp = AngleOfIncidence ** 1.5;
 
                return 0.7277 * (2.71828 ** (CompoundExp * 0.003787));
             }
@@ -1057,30 +1057,30 @@ simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile 
     }
     else if (P.RoundType == RT_APDS)
     {
-        CompoundExp = AngleOfIncidenceDegrees ** 2.6;
+        CompoundExp = AngleOfIncidence ** 2.6;
 
         return 2.71828 ** (CompoundExp * 0.00003011);
     }
     else if (P.RoundType == RT_HEAT)
     {
-        return 1.0 / Cos(class'UUnits'.static.DegreesToRadians(Abs(AngleOfIncidenceDegrees)));
+        return 1.0 / Cos(class'UUnits'.static.DegreesToRadians(Abs(AngleOfIncidence)));
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
     {
-        if (AngleOfIncidenceDegrees < 10.0)
+        if (AngleOfIncidence < 10.0)
         {
-            BaseAngleDegrees = 10.0; // we'll start with base multiplier for 10 degrees & then reduce based on how far much lower than 10 we are
+            BaseLookupAngle = 10.0; // we'll start with base multiplier for 10 degrees & then reduce based on how far much lower than 10 we are
             DegreesSpread = 10.0;
         }
         else
         {
-            BaseAngleDegrees = float(int(AngleOfIncidenceDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
+            BaseLookupAngle = float(int(AngleOfIncidence / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
             DegreesSpread = 5.0;
         }
 
-        ExtraAngleDegrees = AngleOfIncidenceDegrees - BaseAngleDegrees;
-        BaseSlopeMultiplier = ArmorSlopeTable(P, BaseAngleDegrees, OverMatchFactor);
-        NextSlopeMultiplier = ArmorSlopeTable(P, BaseAngleDegrees + 5.0, OverMatchFactor);
+        ExtraAngleDegrees = AngleOfIncidence - BaseLookupAngle;
+        BaseSlopeMultiplier = ArmorSlopeTable(P, BaseLookupAngle, OverMatchFactor);
+        NextSlopeMultiplier = ArmorSlopeTable(P, BaseLookupAngle + 5.0, OverMatchFactor);
         MultiplierDifference = NextSlopeMultiplier - BaseSlopeMultiplier;
 
         return BaseSlopeMultiplier + (ExtraAngleDegrees / DegreesSpread * MultiplierDifference);
@@ -1091,64 +1091,64 @@ simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile 
 
 // New lookup function to calculate the appropriate armor slope multiplier for various projectile types & angles
 // All from "WWII Ballistics: Armor & Gunnery" by Bird & Livingston
-simulated static function float ArmorSlopeTable(DHAntiVehicleProjectile P, float AngleOfIncidenceDegrees, float OverMatchFactor)
 // A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
+simulated static function float ArmorSlopeTable(DHAntiVehicleProjectile P, float AngleOfIncidence, float OverMatchFactor)
 {
     if (P.RoundType == RT_AP) // from Darkest Orchestra
     {
-        if      (AngleOfIncidenceDegrees <= 10.0)  return 0.98  * (OverMatchFactor ** 0.06370); // at 10 degrees
-        else if (AngleOfIncidenceDegrees <= 15.0)  return 1.00  * (OverMatchFactor ** 0.09690);
-        else if (AngleOfIncidenceDegrees <= 20.0)  return 1.04  * (OverMatchFactor ** 0.13561);
-        else if (AngleOfIncidenceDegrees <= 25.0)  return 1.11  * (OverMatchFactor ** 0.16164);
-        else if (AngleOfIncidenceDegrees <= 30.0)  return 1.22  * (OverMatchFactor ** 0.19702);
-        else if (AngleOfIncidenceDegrees <= 35.0)  return 1.38  * (OverMatchFactor ** 0.22546);
-        else if (AngleOfIncidenceDegrees <= 40.0)  return 1.63  * (OverMatchFactor ** 0.26313);
-        else if (AngleOfIncidenceDegrees <= 45.0)  return 2.00  * (OverMatchFactor ** 0.34717);
-        else if (AngleOfIncidenceDegrees <= 50.0)  return 2.64  * (OverMatchFactor ** 0.57353);
-        else if (AngleOfIncidenceDegrees <= 55.0)  return 3.23  * (OverMatchFactor ** 0.69075);
-        else if (AngleOfIncidenceDegrees <= 60.0)  return 4.07  * (OverMatchFactor ** 0.81826);
-        else if (AngleOfIncidenceDegrees <= 65.0)  return 6.27  * (OverMatchFactor ** 0.91920);
-        else if (AngleOfIncidenceDegrees <= 70.0)  return 8.65  * (OverMatchFactor ** 1.00539);
-        else if (AngleOfIncidenceDegrees <= 75.0)  return 13.75 * (OverMatchFactor ** 1.07400);
-        else if (AngleOfIncidenceDegrees <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
+        if      (AngleOfIncidence <= 10.0)  return 0.98  * (OverMatchFactor ** 0.06370); // at 10 degrees
+        else if (AngleOfIncidence <= 15.0)  return 1.00  * (OverMatchFactor ** 0.09690);
+        else if (AngleOfIncidence <= 20.0)  return 1.04  * (OverMatchFactor ** 0.13561);
+        else if (AngleOfIncidence <= 25.0)  return 1.11  * (OverMatchFactor ** 0.16164);
+        else if (AngleOfIncidence <= 30.0)  return 1.22  * (OverMatchFactor ** 0.19702);
+        else if (AngleOfIncidence <= 35.0)  return 1.38  * (OverMatchFactor ** 0.22546);
+        else if (AngleOfIncidence <= 40.0)  return 1.63  * (OverMatchFactor ** 0.26313);
+        else if (AngleOfIncidence <= 45.0)  return 2.00  * (OverMatchFactor ** 0.34717);
+        else if (AngleOfIncidence <= 50.0)  return 2.64  * (OverMatchFactor ** 0.57353);
+        else if (AngleOfIncidence <= 55.0)  return 3.23  * (OverMatchFactor ** 0.69075);
+        else if (AngleOfIncidence <= 60.0)  return 4.07  * (OverMatchFactor ** 0.81826);
+        else if (AngleOfIncidence <= 65.0)  return 6.27  * (OverMatchFactor ** 0.91920);
+        else if (AngleOfIncidence <= 70.0)  return 8.65  * (OverMatchFactor ** 1.00539);
+        else if (AngleOfIncidence <= 75.0)  return 13.75 * (OverMatchFactor ** 1.07400);
+        else if (AngleOfIncidence <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
         else                                       return 34.49 * (OverMatchFactor ** 1.28631); // at 85 degrees
     }
     else if (P.RoundType == RT_APBC) // from Darkest Orchestra
     {
-        if      (AngleOfIncidenceDegrees <= 10.0)  return 1.04  * (OverMatchFactor ** 0.01555); // at 10 degrees
-        else if (AngleOfIncidenceDegrees <= 15.0)  return 1.06  * (OverMatchFactor ** 0.02315);
-        else if (AngleOfIncidenceDegrees <= 20.0)  return 1.08  * (OverMatchFactor ** 0.03448);
-        else if (AngleOfIncidenceDegrees <= 25.0)  return 1.11  * (OverMatchFactor ** 0.05134);
-        else if (AngleOfIncidenceDegrees <= 30.0)  return 1.16  * (OverMatchFactor ** 0.07710);
-        else if (AngleOfIncidenceDegrees <= 35.0)  return 1.22  * (OverMatchFactor ** 0.11384);
-        else if (AngleOfIncidenceDegrees <= 40.0)  return 1.31  * (OverMatchFactor ** 0.16952);
-        else if (AngleOfIncidenceDegrees <= 45.0)  return 1.44  * (OverMatchFactor ** 0.24604);
-        else if (AngleOfIncidenceDegrees <= 50.0)  return 1.68  * (OverMatchFactor ** 0.37910);
-        else if (AngleOfIncidenceDegrees <= 55.0)  return 2.11  * (OverMatchFactor ** 0.56444);
-        else if (AngleOfIncidenceDegrees <= 60.0)  return 3.50  * (OverMatchFactor ** 1.07411);
-        else if (AngleOfIncidenceDegrees <= 65.0)  return 5.34  * (OverMatchFactor ** 1.46188);
-        else if (AngleOfIncidenceDegrees <= 70.0)  return 9.48  * (OverMatchFactor ** 1.81520);
-        else if (AngleOfIncidenceDegrees <= 75.0)  return 20.22 * (OverMatchFactor ** 2.19155);
-        else if (AngleOfIncidenceDegrees <= 80.0)  return 56.20 * (OverMatchFactor ** 2.56210);
+        if      (AngleOfIncidence <= 10.0)  return 1.04  * (OverMatchFactor ** 0.01555); // at 10 degrees
+        else if (AngleOfIncidence <= 15.0)  return 1.06  * (OverMatchFactor ** 0.02315);
+        else if (AngleOfIncidence <= 20.0)  return 1.08  * (OverMatchFactor ** 0.03448);
+        else if (AngleOfIncidence <= 25.0)  return 1.11  * (OverMatchFactor ** 0.05134);
+        else if (AngleOfIncidence <= 30.0)  return 1.16  * (OverMatchFactor ** 0.07710);
+        else if (AngleOfIncidence <= 35.0)  return 1.22  * (OverMatchFactor ** 0.11384);
+        else if (AngleOfIncidence <= 40.0)  return 1.31  * (OverMatchFactor ** 0.16952);
+        else if (AngleOfIncidence <= 45.0)  return 1.44  * (OverMatchFactor ** 0.24604);
+        else if (AngleOfIncidence <= 50.0)  return 1.68  * (OverMatchFactor ** 0.37910);
+        else if (AngleOfIncidence <= 55.0)  return 2.11  * (OverMatchFactor ** 0.56444);
+        else if (AngleOfIncidence <= 60.0)  return 3.50  * (OverMatchFactor ** 1.07411);
+        else if (AngleOfIncidence <= 65.0)  return 5.34  * (OverMatchFactor ** 1.46188);
+        else if (AngleOfIncidence <= 70.0)  return 9.48  * (OverMatchFactor ** 1.81520);
+        else if (AngleOfIncidence <= 75.0)  return 20.22 * (OverMatchFactor ** 2.19155);
+        else if (AngleOfIncidence <= 80.0)  return 56.20 * (OverMatchFactor ** 2.56210);
         else                                       return 221.3 * (OverMatchFactor ** 2.93265); // at 85 degrees
     }
     else // should mean RoundType is RT_APC (also covers APCBC) or RT_HE, but treating this as a catch-all default
     {
-        if      (AngleOfIncidenceDegrees <= 10.0)  return 1.01  * (OverMatchFactor ** 0.0225); // at 10 degrees
-        else if (AngleOfIncidenceDegrees <= 15.0)  return 1.03  * (OverMatchFactor ** 0.0327);
-        else if (AngleOfIncidenceDegrees <= 20.0)  return 1.10  * (OverMatchFactor ** 0.0454);
-        else if (AngleOfIncidenceDegrees <= 25.0)  return 1.17  * (OverMatchFactor ** 0.0549);
-        else if (AngleOfIncidenceDegrees <= 30.0)  return 1.27  * (OverMatchFactor ** 0.0655);
-        else if (AngleOfIncidenceDegrees <= 35.0)  return 1.39  * (OverMatchFactor ** 0.0993);
-        else if (AngleOfIncidenceDegrees <= 40.0)  return 1.54  * (OverMatchFactor ** 0.1388);
-        else if (AngleOfIncidenceDegrees <= 45.0)  return 1.72  * (OverMatchFactor ** 0.1655);
-        else if (AngleOfIncidenceDegrees <= 50.0)  return 1.94  * (OverMatchFactor ** 0.2035);
-        else if (AngleOfIncidenceDegrees <= 55.0)  return 2.12  * (OverMatchFactor ** 0.2427);
-        else if (AngleOfIncidenceDegrees <= 60.0)  return 2.56  * (OverMatchFactor ** 0.2450);
-        else if (AngleOfIncidenceDegrees <= 65.0)  return 3.20  * (OverMatchFactor ** 0.3354);
-        else if (AngleOfIncidenceDegrees <= 70.0)  return 3.98  * (OverMatchFactor ** 0.3478);
-        else if (AngleOfIncidenceDegrees <= 75.0)  return 5.17  * (OverMatchFactor ** 0.3831);
-        else if (AngleOfIncidenceDegrees <= 80.0)  return 8.09  * (OverMatchFactor ** 0.4131);
+        if      (AngleOfIncidence <= 10.0)  return 1.01  * (OverMatchFactor ** 0.0225); // at 10 degrees
+        else if (AngleOfIncidence <= 15.0)  return 1.03  * (OverMatchFactor ** 0.0327);
+        else if (AngleOfIncidence <= 20.0)  return 1.10  * (OverMatchFactor ** 0.0454);
+        else if (AngleOfIncidence <= 25.0)  return 1.17  * (OverMatchFactor ** 0.0549);
+        else if (AngleOfIncidence <= 30.0)  return 1.27  * (OverMatchFactor ** 0.0655);
+        else if (AngleOfIncidence <= 35.0)  return 1.39  * (OverMatchFactor ** 0.0993);
+        else if (AngleOfIncidence <= 40.0)  return 1.54  * (OverMatchFactor ** 0.1388);
+        else if (AngleOfIncidence <= 45.0)  return 1.72  * (OverMatchFactor ** 0.1655);
+        else if (AngleOfIncidence <= 50.0)  return 1.94  * (OverMatchFactor ** 0.2035);
+        else if (AngleOfIncidence <= 55.0)  return 2.12  * (OverMatchFactor ** 0.2427);
+        else if (AngleOfIncidence <= 60.0)  return 2.56  * (OverMatchFactor ** 0.2450);
+        else if (AngleOfIncidence <= 65.0)  return 3.20  * (OverMatchFactor ** 0.3354);
+        else if (AngleOfIncidence <= 70.0)  return 3.98  * (OverMatchFactor ** 0.3478);
+        else if (AngleOfIncidence <= 75.0)  return 5.17  * (OverMatchFactor ** 0.3831);
+        else if (AngleOfIncidence <= 80.0)  return 8.09  * (OverMatchFactor ** 0.4131);
         else                                       return 11.32 * (OverMatchFactor ** 0.4550); // at 85 degrees
     }
 
