@@ -7,7 +7,7 @@ class DHWireCuttersAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Wirecutters_3rd.Wirecutters_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Wirecutters_3rd'
     Skins(0)=texture'DH_Equipment_tex.wirecutter.Wirecutters_3rdP'
     CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as cutters don't have a muzzle flash & are also small
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
