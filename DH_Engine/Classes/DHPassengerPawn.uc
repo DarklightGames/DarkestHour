@@ -209,13 +209,13 @@ simulated function AttachDriver(Pawn P)
     }
 }
 
-// Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel
-// Need to use timer to add short delay, to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to client before shutting down all net traffic
-simulated event DrivingStatusChanged() // TODO: think this fits better in DriverLeft() as only happens on server, which will now always get DriverLeft
+// Modified to set bTearOff to true, after a short timer, on a server when player exits, which causes server to close the net channel & destroy client actor
+// Need to use a short delay to allow properties updated on exit (e.g. Owner, Driver & PRI all to none) to replicate to client before shutting down net traffic
+function DriverLeft()
 {
-    super.DrivingStatusChanged();
+    super.DriverLeft();
 
-    if (!bDriving && (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer))
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         SetTimer(0.5, false);
     }
