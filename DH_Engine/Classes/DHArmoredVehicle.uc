@@ -50,12 +50,6 @@ var     texture     PeriscopeOverlay;           // driver's periscope overlay te
 var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
 
 // Armor penetration
-var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (cm)
-var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope (degrees)
-var     float       LFrontArmorFactor, LRightArmorFactor, LLeftArmorFactor, LRearArmorFactor; // lower hull armor thickness
-var     float       LFrontArmorSlope, LRightArmorSlope, LLeftArmorSlope, LRearArmorSlope;     // lower hull armor slope
-var     float       LFrontArmorHeight, LRightArmorHeight, LRearArmorHeight, LLeftArmorHeight; // height (in Unreal units) of top of lower hull armor above hull mesh origin
-
 var     array<ArmorSection> FrontArmor;        // array of armor properties (divided into horizontal bands) for each side of vehicle
 var     array<ArmorSection> RightArmor;
 var     array<ArmorSection> LeftArmor;
@@ -878,43 +872,11 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Get the relevant armour array to use, based on which side we hit
     if (HitSide ~= "front")
     {
-        // If vehicle has the new banded armor array set up, use that // TODO: remove legacy lower/upper armor stuff below, when all vehicles set up for new system
-        if (FrontArmor.Length > 0)
-        {
-            HitSideArmorArray = FrontArmor;
-        }
-        // For legacy armor system, if vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
-        else if (LFrontArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LFrontArmorHeight)
-        {
-            ArmorThickness = LFrontArmorFactor;
-            ArmorSlope = LFrontArmorSlope;
-            HitSide = "lower front";
-        }
-        // Otherwise use upper hull armor
-        else
-        {
-            ArmorThickness = UFrontArmorFactor;
-            ArmorSlope = UFrontArmorSlope;
-        }
+        HitSideArmorArray = FrontArmor;
     }
     else if (HitSide ~= "rear")
     {
-        if (RearArmor.Length > 0)
-        {
-            HitSideArmorArray = RearArmor;
-        }
-        else if (LRearArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LRearArmorHeight)
-        {
-            ArmorThickness = LRearArmorFactor;
-            ArmorSlope = LRearArmorSlope;
-            HitSide = "lower rear";
-        }
-        else
-        {
-            ArmorThickness = URearArmorFactor;
-            ArmorSlope = URearArmorSlope;
-        }
-
+        HitSideArmorArray = RearArmor;
         bRearHit = true; // so we can set bRearHullPenetration if we do penetrate (it's used in TakeDamage)
     }
     else if (HitSide ~= "right" || HitSide ~= "left")
@@ -939,39 +901,11 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if (HitSide ~= "right")
         {
-            if (RightArmor.Length > 0)
-            {
-                HitSideArmorArray = RightArmor;
-            }
-            else if (LRightArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LRightArmorHeight)
-            {
-                ArmorThickness = LRightArmorFactor;
-                ArmorSlope = LRightArmorSlope;
-                HitSide = "lower right";
-            }
-            else
-            {
-                ArmorThickness = URightArmorFactor;
-                ArmorSlope = URightArmorSlope;
-            }
+            HitSideArmorArray = RightArmor;
         }
         else
         {
-            if (LeftArmor.Length > 0)
-            {
-                HitSideArmorArray = LeftArmor;
-            }
-            else if (LLeftArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LLeftArmorHeight)
-            {
-                ArmorThickness = LLeftArmorFactor;
-                ArmorSlope = LLeftArmorSlope;
-                HitSide = "lower left";
-            }
-            else
-            {
-                ArmorThickness = ULeftArmorFactor;
-                ArmorSlope = ULeftArmorSlope;
-            }
+            HitSideArmorArray = LeftArmor;
         }
     }
 
