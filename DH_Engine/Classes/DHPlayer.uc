@@ -4040,6 +4040,87 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
     }
 }
 
+// New debug exec to show & adjust the height bands of an armoured vehicle's hull armour sections, i.e. highest relative point (above mesh origin) for that armour section
+// Spawns an angle plane attachment representing the height setting (run again with no side specified to remove this)
+exec function SetArmorHeight(optional string Side, optional byte Index, optional float NewValue)
+{
+    local DHVehicle        V;
+    local DHArmoredVehicle AV;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.IsA('DHArmoredVehicle'))
+    {
+        AV = DHArmoredVehicle(V);
+        DestroyPlaneAttachments(AV); // remove any existing angle plane attachments
+
+        if (Side ~= "F" || Side ~= "Front")
+        {
+            if (Index >= AV.FrontArmor.Length)
+            {
+                AV.FrontArmor.Length = Index + 1;
+            }
+
+            Log(AV.VehicleNameString @ "FrontArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.FrontArmor[Index].MaxRelativeHeight $ ")");
+            AV.FrontArmor[Index].MaxRelativeHeight = NewValue;
+            SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.FrontArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+        }
+        else if (Side ~= "R" || Side ~= "Right")
+        {
+            if (Index >= AV.RightArmor.Length)
+            {
+                AV.RightArmor.Length = Index + 1;
+            }
+
+            Log(AV.VehicleNameString @ "RightArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.RightArmor[Index].MaxRelativeHeight $ ")");
+            AV.RightArmor[Index].MaxRelativeHeight = NewValue;
+            SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.RightArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+        }
+        else if (Side ~= "B" || Side ~= "Back" || Side ~= "Rear")
+        {
+            if (Index >= AV.RearArmor.Length)
+            {
+                AV.RearArmor.Length = Index + 1;
+            }
+
+            Log(AV.VehicleNameString @ "RearArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.RearArmor[Index].MaxRelativeHeight $ ")");
+            AV.RearArmor[Index].MaxRelativeHeight = NewValue;
+            SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.RearArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+        }
+        else if (Side ~= "L" || Side ~= "Left")
+        {
+            if (Index >= AV.LeftArmor.Length)
+            {
+                AV.LeftArmor.Length = Index + 1;
+            }
+
+            Log(AV.VehicleNameString @ "LeftArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.LeftArmor[Index].MaxRelativeHeight $ ")");
+            AV.LeftArmor[Index].MaxRelativeHeight = NewValue;
+            SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LeftArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+        }
+        else if (Side ~= "A" || Side ~= "All") // option to just display heights for this armor index position for all sides
+        {
+            if (Index < AV.FrontArmor.Length - 1) // minus 1 because we don't want to show the highest band as it doesn't have a max height
+            {
+                SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.FrontArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+            }
+
+            if (Index < AV.RightArmor.Length - 1)
+            {
+                SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.RightArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+            }
+
+            if (Index < AV.RearArmor.Length - 1)
+            {
+                SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.RearArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+            }
+
+            if (Index < AV.LeftArmor.Length - 1)
+            {
+                SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LeftArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+            }
+        }
+    }
+}
+
 // New debug exec to show & adjust the height of vehicle's lower armour, i.e. the highest point (above the origin) where a hit counts as a lower hull hit
 // Spawns an angle plane attachment representing the setting (run again with no option specified to remove this)
 exec function SetLowerArmorHeight(optional string Option, optional float NewValue)
