@@ -970,20 +970,17 @@ simulated function bool PlayerUsesManualReloading()
 
 // New generic function to handle turret penetration calcs for any shell type
 // Based on same function in DHArmoredVehicle, but some adjustments for turret, especially the need to factor in turret's independent traverse
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float PenetrationNumber)
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
 {
+    local DHArmoredVehicle AV;
     local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
     local rotator TurretRelativeRotation, TurretNonRelativeRotation, ArmourSlopeRotator;
-    local float   HitDirectionDegrees, AngleOfIncidenceDegrees, ArmorThickness, ArmorSlope;
-    local string  HitSide, OppositeSide;
-    local bool    bPenetrated;
+    local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope;
+    local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
+    local string  HitSide, OppositeSide, DebugString1, DebugString2;
+    local bool    bProjectilePenetrated;
 
-    // If vehicle has no turret we must have hit collision representing a gun mantlet or similar, so return penetration based on our mantlet armor properties
-    if (!bHasTurret)
-    {
-        return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
-    }
-
+    AV = DHArmoredVehicle(Base);
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
 
     // Calculate the angle direction of hit relative to turret's facing direction, so we can work out out which side was hit (a 'top down 2D' angle calc)
@@ -991,52 +988,64 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Then use that to get the offset of HitLocation from turret's centre, relative to turret's facing direction
     // Then convert to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to turret
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
-    TurretRelativeRotation.Yaw = CurrentAim.Yaw;;
-    TurretNonRelativeRotation = rotator(vector(TurretRelativeRotation) >> Rotation);
-    GetAxes(TurretNonRelativeRotation, X, Y, Z);
-    HitLocationRelativeOffset = (HitLocation - Location) << TurretNonRelativeRotation;
-    HitDirectionDegrees = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
-
-    if (HitDirectionDegrees < 0.0)
+    if (bHasTurret)
     {
-        HitDirectionDegrees += 360.0; // convert negative angles to 180 to 360 degree format
+        TurretRelativeRotation.Yaw = CurrentAim.Yaw;;
+        TurretNonRelativeRotation = rotator(vector(TurretRelativeRotation) >> Rotation);
+        GetAxes(TurretNonRelativeRotation, X, Y, Z);
+        HitLocationRelativeOffset = (HitLocation - Location) << TurretNonRelativeRotation;
+        HitLocationAngle = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+
+        if (HitLocationAngle < 0.0)
+        {
+            HitLocationAngle += 360.0; // convert negative angles to 180 to 360 degree format
+        }
     }
 
     // Assign settings based on which side we hit
-    if (HitDirectionDegrees >= FrontLeftAngle || HitDirectionDegrees < FrontRightAngle) // frontal hit
+    if (!bHasTurret)
     {
-        HitSide = "Front";
-        OppositeSide = "Rear";
+        HitSide = "mantlet"; // if vehicle has no turret we must have hit collision representing a gun mantlet or similar, so return penetration based on mantlet armor properties
+    }
+    else if (HitLocationAngle >= FrontLeftAngle || HitLocationAngle < FrontRightAngle) // frontal hit
+    {
+        HitSide = "front";
+        OppositeSide = "rear";
         HitSideAxis = X;
     }
-    else if (HitDirectionDegrees >= FrontRightAngle && HitDirectionDegrees < RearRightAngle) // right side hit
+    else if (HitLocationAngle >= FrontRightAngle && HitLocationAngle < RearRightAngle) // right side hit
     {
-        HitSide = "Right";
-        OppositeSide = "Left";
+        HitSide = "right";
+        OppositeSide = "left";
         HitSideAxis = Y;
     }
-    else if (HitDirectionDegrees >= RearRightAngle && HitDirectionDegrees < RearLeftAngle) // rear hit
+    else if (HitLocationAngle >= RearRightAngle && HitLocationAngle < RearLeftAngle) // rear hit
     {
-        HitSide = "Rear";
-        OppositeSide = "Front";
+        HitSide = "rear";
+        OppositeSide = "front";
         HitSideAxis = -X;
     }
-    else if (HitDirectionDegrees >= RearLeftAngle && HitDirectionDegrees < FrontLeftAngle) // left side hit
+    else if (HitLocationAngle >= RearLeftAngle && HitLocationAngle < FrontLeftAngle) // left side hit
     {
-        HitSide = "Left";
-        OppositeSide = "Right";
+        HitSide = "left";
+        OppositeSide = "right";
         HitSideAxis = -Y;
     }
     else // didn't hit any side !! (angles must be screwed up, so fix those)
     {
-       Log("ERROR: turret angles not set up correctly for" @ Tag @ "(took hit from" @ HitDirectionDegrees @ "degrees & couldn't resolve which side that was");
+        Log("ERROR: turret angles not set up correctly for" @ Tag @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
 
-       if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
-       {
-           Level.Game.Broadcast(self, "ERROR: turret angles not set up correctly for" @ Tag @ "(took hit from" @ HitDirectionDegrees @ "degrees & couldn't resolve which side that was");
-       }
+        if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "ERROR: turret angles not set up correctly for" @ Tag @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
+        }
 
-       return false;
+        if (AV != none)
+        {
+            AV.ResetTakeDamageVariables();
+        }
+
+        return false;
     }
 
     // Check for 'hit bug', where a projectile may pass through the 1st face of vehicle's collision & be detected as a hit on the opposite side (on the way out)
@@ -1045,21 +1054,21 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Angle of over 90 degrees is theoretically impossible, but in reality vehicles aren't regular shaped boxes & it is possible for legitimate hits a bit over 90 degrees
     // So have softened the threshold to 120 degrees, which should still catch genuine hit bugs
     // Also modified to skip this check for deflected shots, which can ricochet onto another part of the vehicle at weird angles
-    if (P.NumDeflections == 0)
+    if (P.NumDeflections == 0 && bHasTurret)
     {
-        AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot HitSideAxis));
+        AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot HitSideAxis));
 
-        if (AngleOfIncidenceDegrees > 120.0)
+        if (AngleOfIncidence > 120.0)
         {
             if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
-                    @ "as angle of incidence to original side was" @ int(AngleOfIncidenceDegrees) @ "degrees");
+                    @ "as angle of incidence to original side was" @ int(AngleOfIncidence) @ "degrees");
             }
 
             if (bLogDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode())
             {
-                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide @ "as angle of incidence to original side was" @ int(AngleOfIncidenceDegrees) @ "degrees");
+                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide @ "as angle of incidence to original side was" @ int(AngleOfIncidence) @ "degrees");
             }
 
             HitSide = OppositeSide;
@@ -1068,153 +1077,137 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
 
     // Now set the relevant armour properties to use, based on which side we hit
-    if (HitSide ~= "Front")
+    if (HitSide == "mantlet")
+    {
+        ArmorThickness = GunMantletArmorFactor;
+    }
+    else if (HitSide ~= "front")
     {
         ArmorThickness = FrontArmorFactor;
         ArmorSlope = FrontArmorSlope;
     }
-    else if (HitSide ~= "Right")
-    {
-        // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
-        {
-            if (bDebugPenetration && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, HitSide @ "turret hit: no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            if (bLogDebugPenetration)
-            {
-                Log(HitSide @ "turret hit: no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            return false;
-        }
-
-        ArmorThickness = RightArmorFactor;
-        ArmorSlope = RightArmorSlope;
-    }
-    else if (HitSide ~= "Rear")
+    else if (HitSide ~= "rear")
     {
         ArmorThickness = RearArmorFactor;
         ArmorSlope = RearArmorSlope;
     }
-    else if (HitSide ~= "Left")
+    else if (HitSide ~= "right" || HitSide ~= "left")
     {
         // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
         if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
         {
             if (bDebugPenetration && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, HitSide @ "turret hit: no penetration as extra side armor stops HEAT projectiles");
+                Level.Game.Broadcast(self, "Hit turret" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
             }
 
             if (bLogDebugPenetration)
             {
-                Log(HitSide @ "turret hit: no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit turret" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+            }
+
+            if (AV != none)
+            {
+                AV.ResetTakeDamageVariables();
             }
 
             return false;
         }
 
-        ArmorThickness = LeftArmorFactor;
-        ArmorSlope = LeftArmorSlope;
-    }
-
-    // Calculate the projectile's angle of incidence to the actual armor slope
-    // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
-    ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
-    ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
-    AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
-
-    // Check whether or not we penetrated (record for now to allow for use in debug options)
-    bPenetrated = CheckPenetration(P, ArmorThickness, AngleOfIncidenceDegrees, PenetrationNumber);
-
-    // Debugging options
-    if (bDebugPenetration && P.NumDeflections == 0)
-    {
-        if (Level.NetMode != NM_DedicatedServer)
+        if (HitSide ~= "right")
         {
-            ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + (600.0 * ArmorNormal), 0, 0, 255); // blue line for ArmorNormal
-
-            if (bPenetrated)
-            {
-                DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 0, 255, 0); // green line for penetration
-            }
-            else
-            {
-                DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 255, 0, 0); // red line if failed to penetrate
-            }
+            ArmorThickness = RightArmorFactor;
+            ArmorSlope = RightArmorSlope;
         }
-
-        if (Role == ROLE_Authority)
+        else
         {
-            Level.Game.Broadcast(self, HitSide @ "turret hit: penetrated =" @ Locs(bPenetrated) $ ", hit loc direction =" @ int(HitDirectionDegrees)
-                @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
+            ArmorThickness = LeftArmorFactor;
+            ArmorSlope = LeftArmorSlope;
         }
     }
 
-    if (bLogDebugPenetration && P.NumDeflections == 0)
+    // Calculate the effective armor thickness, factoring in projectile's angle of incidence, & compare to projectile's penetration capability
+    // We can skip these calcs if MaxArmorPenetration doesn't exceed ArmorThickness, because that means we can't ever penetrate
+    // But if a debug option is enabled, we'll do the calcs as they get used in the debug
+    if (MaxArmorPenetration > ArmorThickness || ((bDebugPenetration || bLogDebugPenetration) && P.NumDeflections == 0))
     {
-        Log(HitSide @ "turret hit: penetrated =" @ Locs(bPenetrated) $ ", hit loc direction =" @ int(HitDirectionDegrees)
-            @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
-        Log("------------------------------------------------------------------------------------------------------");
-    }
+        // Calculate the projectile's angle of incidence to the actual armor slope
+        // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
+        if (bHasTurret)
+        {
+            ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
+            ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
+            AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
+        }
+        else
+        {
+            AngleOfIncidence = GunMantletSlope;
+        }
 
-    // Finally return whether or not we penetrated the vehicle turret
-    return bPenetrated;
-}
-
-// New generic function to handle penetration calcs for any shell type
-// Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT from DH 5.1 (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-// Based on same function in DHArmoredVehicle, but with some adjustments for turret
-simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorThickness, float AngleOfIncidenceDegrees, float PenetrationNumber)
-{
-    local DHArmoredVehicle AV;
-    local float OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
-    local bool  bProjectilePenetrated;
-
-    // Calculate armor's slope multiplier & then effective armor thickness, to give us penetration ratio (penetrating depth vs effective thickness)
-    // But we can skip these calcs if PenetrationNumber doesn't exceed ArmorThickness, because that means we can't ever penetrate
-    // Although we won't simply return here because want to make sure bProjectilePenetrated etc actively get set to false in this function
-    // (We'll always do these calcs if a debug option is enabled, as they get used in the debug)
-    if (PenetrationNumber > ArmorThickness || ((bDebugPenetration || bLogDebugPenetration) && P.NumDeflections == 0))
-    {
+        // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
-        SlopeMultiplier = class'DHArmoredVehicle'.static.GetArmorSlopeMultiplier(P, AngleOfIncidenceDegrees, OverMatchFactor);
+        SlopeMultiplier = class'DHArmoredVehicle'.static.GetArmorSlopeMultiplier(P, AngleOfIncidence, OverMatchFactor);
         EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
-        PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
 
-        // Debugging options
-        if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
-        {
-            Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
-        }
-
-        if (bLogDebugPenetration && P.NumDeflections == 0)
-        {
-            Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
-        }
+        // Get the penetration ratio (penetration capability vs effective thickness)
+        PenetrationRatio = MaxArmorPenetration / EffectiveArmorThickness;
     }
 
-    // Check if round penetrated the vehicle & record whether it shattered on the armor
+    // Check & record whether or not we penetrated the vehicle (including check if shattered on the armor)
     P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && class'DHArmoredVehicle'.static.CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
     bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
     // Set variables on the vehicle itself that are used in its TakeDamage()
-    AV = DHArmoredVehicle(Base);
-
     if (AV != none)
     {
         AV.bProjectilePenetrated = bProjectilePenetrated;
         AV.bTurretPenetration = bProjectilePenetrated;
-        AV.bRearHullPenetration = false;
         AV.bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
+        AV.bRearHullPenetration = false;
     }
 
+    // Debugging options
+    if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
+    {
+        DebugString1 = Caps("Hit turret" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated) $ ", hit location angle ="
+            @ int(HitLocationAngle) @ "deg, armor =" @ int(ArmorThickness * 10.0) $ "mm @" @ int(ArmorSlope) @ "deg";
+
+        DebugString2 = "Shot penetration =" @ int(MaxArmorPenetration * 10.0) $ "mm, effective armor =" @ int(EffectiveArmorThickness * 10.0)
+            $ "mm, shot AOI =" @ int(AngleOfIncidence) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
+
+        if (bLogDebugPenetration)
+        {
+            Log(DebugString1);
+            Log(DebugString2);
+            Log("------------------------------------------------------------------------------------------------------");
+        }
+
+        if (bDebugPenetration)
+        {
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, DebugString1);
+                Level.Game.Broadcast(self, DebugString2);
+            }
+
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                ClearStayingDebugLines();
+                DrawStayingDebugLine(HitLocation, HitLocation + (600.0 * ArmorNormal), 0, 0, 255); // blue line for ArmorNormal
+
+                if (bProjectilePenetrated)
+                {
+                    DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 0, 255, 0); // green line for penetration
+                }
+                else
+                {
+                    DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 255, 0, 0); // red line if failed to penetrate
+                }
+            }
+        }
+    }
+
+    // Finally return whether or not we penetrated the vehicle turret
     return bProjectilePenetrated;
 }
 

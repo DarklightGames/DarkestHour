@@ -6,9 +6,8 @@
 class DHATGunCannon extends DHVehicleCannon
     abstract;
 
-// Functions emptied out as AT gun will always be penetrated by a shell & needs no penetration functionality:
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber) { return true; }
-simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float AngleOfIncidenceDegrees, float PenetrationNumber) { return true; }
+// Emptied out as AT gun will always be penetrated by a shell & needs no penetration functionality
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration) { return true; }
 
 defaultproperties
 {
