@@ -14,12 +14,28 @@ defaultproperties
     MaxCriticalSpeed=1057.0
     FireAttachBone="Player_Driver"
     HullFireChance=0.45
+
+    FrontArmor(0)=(Thickness=2.9,Slope=48.0)
+    RightArmor(0)=(Thickness=2.9)
+    LeftArmor(0)=(Thickness=2.9)
+    RearArmor(0)=(Thickness=2.5,Slope=17.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=2.9
     URightArmorFactor=2.9
     ULeftArmorFactor=2.9
     URearArmorFactor=2.5
     UFrontArmorSlope=48.0
     URearArmorSlope=17.0
+*/
     PointValue=2.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=215.0

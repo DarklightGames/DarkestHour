@@ -47,6 +47,20 @@ defaultproperties
     HUDOverlayFOV=90.0
 
     // Hull armor
+    FrontArmor(0)=(Thickness=4.5,Slope=60.0)
+    RightArmor(0)=(Thickness=4.5,Slope=40.0)
+    LeftArmor(0)=(Thickness=4.5,Slope=40.0)
+    RearArmor(0)=(Thickness=4.5,Slope=45.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=4.5
     URightArmorFactor=4.5
     ULeftArmorFactor=4.5
@@ -55,6 +69,7 @@ defaultproperties
     URightArmorSlope=40.0
     ULeftArmorSlope=40.0
     URearArmorSlope=45.0
+*/
     FrontLeftAngle=330.0
     FrontRightAngle=30.0
     RearRightAngle=155.0

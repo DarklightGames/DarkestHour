@@ -13,6 +13,21 @@ defaultproperties
 {
     LeftTreadIndex=3
     MaxCriticalSpeed=729.0
+
+    FrontArmor(0)=(Thickness=1.0,Slope=30.0)
+    RightArmor(0)=(Thickness=1.5,Slope=15.0)
+    LeftArmor(0)=(Thickness=1.5,Slope=15.0)
+    RearArmor(0)=(Thickness=1.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=1.0
     URightArmorFactor=1.5
     ULeftArmorFactor=1.5
@@ -20,6 +35,7 @@ defaultproperties
     UFrontArmorSlope=30.0
     URightArmorSlope=15.0
     ULeftArmorSlope=15.0
+*/
     MaxPitchSpeed=450.0
     TreadVelocityScale=300.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'

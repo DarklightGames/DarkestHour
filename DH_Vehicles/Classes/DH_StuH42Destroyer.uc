@@ -16,12 +16,28 @@ defaultproperties
     GunOpticsHitPointIndex=0
     LeftTreadIndex=3
     MaxCriticalSpeed=729.0
+
+    FrontArmor(0)=(Thickness=8.1,Slope=20.0)
+    RightArmor(0)=(Thickness=3.1)
+    LeftArmor(0)=(Thickness=3.1)
+    RearArmor(0)=(Thickness=5.0,Slope=10.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=8.1
     URightArmorFactor=3.1
     ULeftArmorFactor=3.1
     URearArmorFactor=5.0
     UFrontArmorSlope=20.0
     URearArmorSlope=10.0
+*/
     MaxPitchSpeed=150.0
     TreadVelocityScale=146.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'

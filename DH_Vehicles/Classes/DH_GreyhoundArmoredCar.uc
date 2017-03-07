@@ -24,10 +24,26 @@ defaultproperties
     bHasTreads=false
     bIsApc=true
     MaxCriticalSpeed=1077.0 // 64 kph
+
+    FrontArmor(0)=(Thickness=1.6)
+    RightArmor(0)=(Thickness=0.9)
+    LeftArmor(0)=(Thickness=0.9)
+    RearArmor(0)=(Thickness=0.9)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=1.6
     URightArmorFactor=0.9
     ULeftArmorFactor=0.9
     URearArmorFactor=0.9
+*/
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_look'
     FrontLeftAngle=332.0

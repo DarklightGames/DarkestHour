@@ -13,12 +13,28 @@ defaultproperties
 {
     MaxCriticalSpeed=693.0
     TreadDamageThreshold=1.0
+
+    FrontArmor(0)=(Thickness=10.8,Slope=24.0)
+    RightArmor(0)=(Thickness=8.7)
+    LeftArmor(0)=(Thickness=8.7)
+    RearArmor(0)=(Thickness=8.7,Slope=-8.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=10.8
     URightArmorFactor=8.7
     ULeftArmorFactor=8.7
     URearArmorFactor=8.7
     UFrontArmorSlope=24.0
     URearArmorSlope=-8.0
+*/
     PointValue=5.0
     MaxPitchSpeed=150.0
     TreadVelocityScale=104.0

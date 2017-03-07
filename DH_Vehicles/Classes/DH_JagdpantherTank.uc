@@ -37,6 +37,21 @@ defaultproperties
     MaxCriticalSpeed=1002.0
     TreadDamageThreshold=0.85
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+
+    FrontArmor(0)=(Thickness=8.2,Slope=55.0)
+    RightArmor(0)=(Thickness=5.0,Slope=30.0)
+    LeftArmor(0)=(Thickness=5.0,Slope=30.0)
+    RearArmor(0)=(Thickness=4.0,Slope=-25.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=8.2
     URightArmorFactor=5.0
     ULeftArmorFactor=5.0
@@ -45,6 +60,7 @@ defaultproperties
     URightArmorSlope=30.0
     ULeftArmorSlope=30.0
     URearArmorSlope=-25.0
+*/
     PointValue=4.0
     MaxPitchSpeed=80.0
     TreadVelocityScale=172.0

@@ -16,12 +16,28 @@ defaultproperties
     RightTreadIndex=3
     MaxCriticalSpeed=729.0
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+
+    FrontArmor(0)=(Thickness=7.2,Slope=9.0)
+    RightArmor(0)=(Thickness=3.0)
+    LeftArmor(0)=(Thickness=3.0)
+    RearArmor(0)=(Thickness=5.0,Slope=9.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=7.2
     URightArmorFactor=3.0
     ULeftArmorFactor=3.0
     URearArmorFactor=5.0
     UFrontArmorSlope=9.0
     URearArmorSlope=9.0
+*/
     MaxPitchSpeed=150.0
     TreadVelocityScale=98.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'

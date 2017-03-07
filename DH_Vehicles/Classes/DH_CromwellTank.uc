@@ -57,13 +57,27 @@ defaultproperties
     OverlayFPCamPos=(X=9.0,Y=0.0,Z=0.0)
 
     // Hull armor
+    FrontArmor(0)=(Thickness=6.3)
+    RightArmor(0)=(Thickness=3.2)
+    LeftArmor(0)=(Thickness=3.2)
+    RearArmor(0)=(Thickness=3.2)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=6.3
     URightArmorFactor=3.2
     ULeftArmorFactor=3.2
     URearArmorFactor=3.2
     FrontRightAngle=27.0
     RearRightAngle=153.0
-
+*/
     // Movement
     MaxCriticalSpeed=948.0
     GearRatios(3)=0.6

@@ -19,6 +19,21 @@ defaultproperties
     GunOpticsHitPointIndex=0
     MaxCriticalSpeed=638.0
     TreadDamageThreshold=1.0
+
+    FrontArmor(0)=(Thickness=15.0,Slope=50.0)
+    RightArmor(0)=(Thickness=8.0,Slope=25.0)
+    LeftArmor(0)=(Thickness=8.0,Slope=25.0)
+    RearArmor(0)=(Thickness=8.0,Slope=-30.0)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=15.0
     URightArmorFactor=8.0
     ULeftArmorFactor=8.0
@@ -27,6 +42,7 @@ defaultproperties
     URightArmorSlope=25.0
     ULeftArmorSlope=25.0
     URearArmorSlope=-30.0
+*/
     PointValue=5.0
     MaxPitchSpeed=50.0
     TreadVelocityScale=350.0

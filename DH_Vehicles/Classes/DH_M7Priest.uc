@@ -50,11 +50,24 @@ defaultproperties
     OverlayFPCamPos=(X=4.0,Y=0.0,Z=0.0)
 
     // Hull armor
+    FrontArmor(0)=(Thickness=5.54,Slope=-35.0,MaxRelativeHeight=-47.6,LocationName="nose (lower)")
+    FrontArmor(1)=(Thickness=5.54,MaxRelativeHeight=-32.2,LocationName="nose (flattest)") // represents 'flat' (i.e. front facing) part of rounded nose plate (the differential cover)
+    FrontArmor(2)=(Thickness=5.54,Slope=42.0,MaxRelativeHeight=-6.4,LocationName="nose (upper)")
+    FrontArmor(3)=(Thickness=1.27,Slope=53.0,MaxRelativeHeight=3.0,LocationName="upper")
+    FrontArmor(4)=(Thickness=1.27,Slope=30.0,LocationName="superstructure")
+    RightArmor(0)=(Thickness=4.11,MaxRelativeHeight=-16.0,LocationName="lower") // TODO: query AFV database notes this 1.5" lower side armour is "soft"?
+    RightArmor(1)=(Thickness=1.27,LocationName="superstructure")
+    LeftArmor(0)=(Thickness=4.11,MaxRelativeHeight=-16.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=1.27,LocationName="superstructure")
+    RearArmor(0)=(Thickness=4.11,Slope=-23.0,MaxRelativeHeight=-9.0,LocationName="lower")
+    RearArmor(1)=(Thickness=1.27,LocationName="upper")
+/*
     UFrontArmorFactor=1.27
     URightArmorFactor=1.27 // TODO: query 0.5 inch to sides & rear?
     ULeftArmorFactor=1.27
     URearArmorFactor=1.27
     UFrontArmorSlope=55.0 // TODO: query 30 degrees? (upper front varies a lot, but most is 30)
+*/
     FrontLeftAngle=335.0
     FrontRightAngle=25.0
     RearRightAngle=155.0

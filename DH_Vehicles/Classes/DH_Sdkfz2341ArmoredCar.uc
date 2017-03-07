@@ -25,11 +25,27 @@ defaultproperties
     bIsApc=true
     UnbuttonedPositionIndex=3
     MaxCriticalSpeed=1039.0 // 62 kph
+
+    FrontArmor(0)=(Thickness=3.0,Slope=40.0)
+    RightArmor(0)=(Thickness=0.8)
+    LeftArmor(0)=(Thickness=0.8)
+    RearArmor(0)=(Thickness=0.8)
+/*
+    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
+    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+
     UFrontArmorFactor=3.0
     URightArmorFactor=0.8
     ULeftArmorFactor=0.8
     URearArmorFactor=0.8
     UFrontArmorSlope=40.0
+*/
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_look'
     FrontLeftAngle=338.0
