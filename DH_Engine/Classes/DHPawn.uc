@@ -426,9 +426,6 @@ simulated event AnimEnd(int Channel)
 {
     local name  WeapAnim, PlayerAnim, Anim;
     local float Frame, Rate;
-    local bool  bIsMoving;
-
-    bIsMoving = VSizeSquared(Velocity) > 625.0; // equivalent to speed of 25 (VSSquared is more efficient)
 
     if (DrivenVehicle != none)
     {
@@ -450,7 +447,7 @@ simulated event AnimEnd(int Channel)
             AnimBlendToAlpha(1, 0.0, 0.12);
             WeaponState = GS_None;
 
-            if (!bIsMoving)
+            if (VSizeSquared(Velocity) < 25.0) // if player isn't moving significantly
             {
                 IdleTime = Level.TimeSeconds;
             }
@@ -1532,6 +1529,113 @@ simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
 
         WeaponAttachment.AnimEnd(0);
     }
+}
+
+// Modified to avoid errors if trying to play animations that don't exist
+simulated function PlayBoltAction()
+{
+    local name Anim;
+
+    if (WeaponAttachment != none)
+    {
+        if (bIsCrawling)
+        {
+            Anim = WeaponAttachment.PA_ProneBoltActionAnim;
+        }
+        else if (bIsCrouched)
+        {
+            if (bIronSights || VSizeSquared(Velocity) > 25.0) // if ironsighted or player is moving
+            {
+                Anim = WeaponAttachment.PA_CrouchIronBoltActionAnim;
+            }
+            else
+            {
+                Anim = WeaponAttachment.PA_CrouchBoltActionAnim;
+            }
+        }
+        else
+        {
+            if (bIronSights)
+            {
+                Anim = WeaponAttachment.PA_StandIronBoltActionAnim;
+            }
+            else
+            {
+                Anim = WeaponAttachment.PA_StandBoltActionAnim;
+            }
+        }
+
+        // Play any 3rd person player animation
+        if (HasAnim(Anim))
+        {
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
+
+            PlayAnim(Anim,, 0.1, 1);
+
+            AnimBlendTime = GetAnimDuration(Anim, 1.0) + 0.1;
+        }
+
+        if (WeaponAttachment.bBayonetAttached)
+        {
+            Anim = WeaponAttachment.WA_BayonetWorkBolt;
+        }
+        else
+        {
+            Anim = WeaponAttachment.WA_WorkBolt;
+        }
+
+        // Play any 3rd person weapon animation
+        if (WeaponAttachment.HasAnim(Anim))
+        {
+            WeaponAttachment.PlayAnim(Anim,, 0.1);
+        }
+    }
+}
+
+// Modified to avoid errors if trying to play animations that don't exist
+simulated function PlayStopReloading()
+{
+    local name Anim;
+
+    if ((WeaponState == GS_ReloadLooped || WeaponState == GS_PreReload) && WeaponAttachment != none)
+    {
+        AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
+
+        if (bIsCrawling)
+        {
+            Anim = WeaponAttachment.PA_PronePostReloadAnim;
+        }
+        else
+        {
+            Anim = WeaponAttachment.PA_PostReloadAnim;
+        }
+
+        // Play any 3rd person player animation
+        if (HasAnim(Anim))
+        {
+            PlayAnim(Anim,, 0.1, 1);
+        }
+
+        if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetPostReload != '')
+        {
+            Anim = WeaponAttachment.WA_BayonetPostReload;
+        }
+        else if (WeaponAttachment.WA_PostReload != '')
+        {
+            Anim = WeaponAttachment.WA_PostReload;
+        }
+
+        // Play any 3rd person weapon animation
+        if (WeaponAttachment.HasAnim(Anim))
+        {
+            WeaponAttachment.PlayAnim(Anim,, 0.1);
+        }
+
+        WeaponState = GS_ReloadSingle;
+    }
+
+    IdleTime = Level.TimeSeconds;
 }
 
 // Handles the stamina calculations and sprinting functionality
@@ -3082,21 +3186,28 @@ function HandleAssistedReload()
 // Play an assisted reload on the client
 simulated function PlayAssistedReload()
 {
-    local name PlayerAnim;
-    local name WeaponAnim;
+    local name Anim;
 
     if (DHWeaponAttachment(WeaponAttachment) != none)
     {
-        PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
-        WeaponAnim = WeaponAttachment.WA_ReloadEmpty;
+        Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
 
-        AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
-        AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
+        if (HasAnim(Anim))
+        {
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
 
-        PlayAnim(PlayerAnim,, 0.1, 1);
-        WeaponAttachment.PlayAnim(WeaponAnim,, 0.1);
+            PlayAnim(Anim,, 0.1, 1);
 
-        AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
+            AnimBlendTime = GetAnimDuration(Anim, 1.0) + 0.1;
+        }
+
+        Anim = WeaponAttachment.WA_ReloadEmpty;
+
+        if (WeaponAttachment.HasAnim(Anim))
+        {
+            WeaponAttachment.PlayAnim(Anim,, 0.1);
+        }
 
         WeaponState = GS_ReloadSingle;
     }
