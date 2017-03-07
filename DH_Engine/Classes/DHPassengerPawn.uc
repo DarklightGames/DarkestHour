@@ -8,19 +8,23 @@ class DHPassengerPawn extends DHVehicleWeaponPawn
 
 /**
 Matt UK, November 2014 - added new system to avoid rider pawns needing to exist on net clients unless rider position is occupied
-Each rider pawn that exists on a client is a net channel that has to be maintained & updated by the server.
-The new system can substantially cut down the number of net channels & associated replication, especially in maps with lots of vehicles.
-We toggle the bTearOff flag for each rider pawn when it is unoccupied/occupied, which causes the usual clientside simulated actors to spawn or be destroyed.
-When bTearOff is set, the actor stops being net relevant & the server closes the channel, stops replicating the actor & destroys the clientside version.
-The trick is to stop the actor from actually being torn off on the client, otherwise that causes us big problems & breaks the system.
-There is a built-in delay of 5 seconds before the server decides the actor isn't net relevant, closes the channel & destroys the clientside actor.
-If a player switches back to the old rider position within these 5 secs, we need them to re-occupy the existing rider pawn & abort closing the channel.
-I've found a way to achieve this is to delay the next NetUpdateTime to be >5 seconds in the future, which delays bTearOff from replicating to clients.
-That way the server closes the channel & destroys the clientside actor before bTearOff is sent to the client, so it never actually gets torn off.
-And if a player re-enters the rider position during these 5 secs, we just change bTearOff back to false & it becomes net relevant again.
-A further complication is when a player exits a rider pawn, we need to introduce a very short delay before setting bTearOff on server, so a 0.5 sec timer is used.
-This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to clients before shutting down all net traffic.
-Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
+Each rider pawn that exists on a client is a net channel that has to be maintained & updated by the server
+The new system can substantially cut down the number of net channels & associated replication, especially in maps with lots of vehicles
+What we need is a way of making the server stop replicating an empty rider pawn & cause any client versions of that actor to be destroyed
+But that's actually hard to do; there isn't a simple instruction that makes a server do it
+We can't just set RemoteRole to none, as that doesn't destroy any existing client actors, it just stops any further replicated info reaching them
+As a workaround, on a server we toggle the bTearOff networking flag based on whether a rider pawn is unoccupied or occupied
+Setting bTearOff on the server stops the actor being considered net relevant & stops further replication for it
+Then, after a built-in engine delay of 5 seconds, the server closes the channel & destroys all existing replicated client versions of the actor
+But the trick is to stop the actor from actually being torn off on clients, otherwise it leaves independent client actor copies, which must be avoided
+Also, if a player switches into this rider position within these 5 seconds, we need to abort closing the net channel & destroying the client actors
+I found a way to achieve all this is to delay next NetUpdateTime to be >5 seconds in the future, which delays bTearOff from replicating to clients
+That way the server closes the channel & destroys the client actor before bTearOff is sent to the client, so it never actually gets torn off
+And if a player re-enters the rider position during these 5 seconds, we simply change bTearOff back to false & it becomes net relevant again
+A further complication is when player exits rider pawn we must introduce a short delay before setting bTearOff on server, so a 0.5 sec timer is used
+That's necessary to allow properties updated on exit (e.g. Owner, Driver & PRI to none) to replicate to clients before shutting down all net traffic
+Changes in other classes: when a DHVehicle spawns on net client, match WeaponPawns.Length to PassengerPawns.Length to account for 'missing' rider pawns
+And always check a WeaponPawns array member exists before trying to do anything with it, as rider pawns may not exist on client (good practice anyway)
 */
 
 // An array of subclasses, one specifically assigned for each index position in the vehicle's WeaponPawns array, so this actor knows its own PositionInArray
@@ -46,9 +50,9 @@ simulated function PostBeginPlay()
     }
 }
 
-// Sets bTearOff to true on a server when player exits, purely so server decides the actor is no longer net relevant, kills off the clientside actor & closes the net channel
-// But we don't want the clientside actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
-// So we delay the next update to the client for longer than the server's 5 second delay before it kills a clientside actor after it becomes net irrelevant
+// Sets bTearOff to true on server after player exits, so server decides actor is no longer net relevant, closes the net channel & destroys client actor
+// But we don't want the client actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
+// So we delay next update to client for longer than server's 5 second built-in delay before it destroys client actor after it stops being net relevant
 function Timer()
 {
     if (!bDriving && !bTearOff && (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer))
@@ -140,11 +144,13 @@ function KDriverEnter(Pawn P)
     local Controller C;
     local rotator    NewRotation;
 
-    // On a server, disable bTearOff so this actor replicates to relevant net clients
+    // On a server, disable bTearOff so this occupied rider pawn actor replicates to relevant net clients
+    // We clear any timer, so we don't risk setting bTearOff to true again just after we enter
+    // Note we don't need to force a quick net update of bTearOff, as normal possession functionality does it
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
-        SetTimer(0.0, false); // clear any timer, so we don't risk setting bTearOff to true again just after we enter
-        bTearOff = false;     // don't need to do quick net update as normal entering sequence already does it
+        SetTimer(0.0, false);
+        bTearOff = false;
     }
 
     bDriving = true;
