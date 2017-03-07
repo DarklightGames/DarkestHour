@@ -895,28 +895,33 @@ function ServerChangeDriverPosition(byte F)
     }
 }
 
-// Modified to prevent exit if not unbuttoned & to give player the same momentum as the vehicle when exiting
+// Modified to prevent exit if player is buttoned up, & to give player the same momentum as the vehicle when exiting
 // Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
 function bool KDriverLeave(bool bForceLeave)
 {
+    local Pawn   ExitingDriver;
     local vector ExitVelocity;
 
     if (!bForceLeave)
     {
-        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+        if (!CanExit()) // not bForceLeave means player is trying to exit vehicle & not just switch position, so no risk of locking someone in one slot
         {
             return false;
         }
 
-        ExitVelocity = Velocity;
-        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
+        if (VehicleBase != none)
+        {
+            ExitingDriver = Driver;
+            ExitVelocity = VehicleBase.Velocity;
+            ExitVelocity.Z += 60.0; // add a little height kick
+        }
     }
 
     if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
     {
-        if (!bForceLeave)
+        if (!bForceLeave && ExitingDriver != none)
         {
-            Instigator.Velocity = ExitVelocity;
+            ExitingDriver.Velocity = ExitVelocity;
         }
 
         return true;

@@ -1111,24 +1111,26 @@ simulated function SwitchWeapon(byte F)
 // Also to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions
 function bool KDriverLeave(bool bForceLeave)
 {
+    local Pawn   ExitingDriver;
     local vector ExitVelocity;
 
     if (!bForceLeave)
     {
-        if (!CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+        if (!CanExit()) // not bForceLeave means player is trying to exit vehicle & not just switch to another vehicle position, so no risk of locking someone in one slot
         {
             return false;
         }
 
+        ExitingDriver = Driver;
         ExitVelocity = Velocity;
-        ExitVelocity.Z += 60.0; // add a little height kick to allow for hacked in damage system
+        ExitVelocity.Z += 60.0; // add a little height kick
     }
 
     if (super(ROVehicle).KDriverLeave(bForceLeave))
     {
-        if (!bForceLeave)
+        if (!bForceLeave && ExitingDriver != none)
         {
-            Instigator.Velocity = ExitVelocity;
+            ExitingDriver.Velocity = ExitVelocity;
         }
 
         return true;
