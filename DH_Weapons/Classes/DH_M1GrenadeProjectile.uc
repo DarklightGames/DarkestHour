@@ -15,5 +15,4 @@ defaultproperties
     Damage=140.0
     DamageRadius=785.0
     Speed=1000.0
-    FuzeLengthTimer=4.0
 }
