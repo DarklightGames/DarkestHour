@@ -368,7 +368,7 @@ function Vehicle FindEntryVehicle(Pawn P)
 
     if (P != none && Bot(P.Controller) != none && WeaponPawns.Length > 0 && IsVehicleEmpty())
     {
-        for (i = WeaponPawns.Length -1; i >= 0; --i)
+        for (i = WeaponPawns.Length - 1; i >= 0; --i)
         {
             if (WeaponPawns[i] != none && WeaponPawns[i].Driver == none)
             {
