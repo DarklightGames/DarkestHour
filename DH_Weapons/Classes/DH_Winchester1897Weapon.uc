@@ -31,7 +31,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_Winchester1897Pickup'
 
     Mesh=SkeletalMesh'DH_Winchester1897_1st.Winchester1897'
-    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.Winchester1897' // TODO: there is no specularity mask for this weapon
 
     PlayerIronsightFOV=60.0 // revert unwanted inherited value from DHSniperWeapon
     IronSightDisplayFOV=30.0
