@@ -445,7 +445,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         if (Victims != self && Victims != Pawn(Owner) && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
         {

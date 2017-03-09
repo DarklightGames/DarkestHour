@@ -590,7 +590,7 @@ simulated function PrevWeapon()
 {
     if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
     {
-        PendingPositionIndex = DriverPositionIndex -1;
+        PendingPositionIndex = DriverPositionIndex - 1;
         ServerChangeViewPoint(false);
     }
 }

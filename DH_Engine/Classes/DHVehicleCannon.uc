@@ -990,7 +990,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
     if (bHasTurret)
     {
-        TurretRelativeRotation.Yaw = CurrentAim.Yaw;;
+        TurretRelativeRotation.Yaw = CurrentAim.Yaw;
         TurretNonRelativeRotation = rotator(vector(TurretRelativeRotation) >> Rotation);
         GetAxes(TurretNonRelativeRotation, X, Y, Z);
         HitLocationRelativeOffset = (HitLocation - Location) << TurretNonRelativeRotation;

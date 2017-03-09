@@ -102,8 +102,8 @@ function NotifyLevelChange()
 
 defaultproperties
 {
-    InvitationText="{0} has invited you to join {1} squad.";
-    PromptText="[F1] Accept [F2] Decline [F3] Ignore All";
+    InvitationText="{0} has invited you to join {1} squad."
+    PromptText="[F1] Accept [F2] Decline [F3] Ignore All"
     bActive=true
     bVisible=true
 }

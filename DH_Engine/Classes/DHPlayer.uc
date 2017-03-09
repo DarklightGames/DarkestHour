@@ -4308,7 +4308,7 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
         // Using DynamicLoadObject so we don't have DH_DebugTools static mesh file loaded all the time; just dynamically load on demand
         PlaneStaticMesh = StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh'));
 
-        for (i = V.VehicleAttachments.Length -1; i >= 0; --i)
+        for (i = V.VehicleAttachments.Length - 1; i >= 0; --i)
         {
             if (V.VehicleAttachments[i].Actor != none && V.VehicleAttachments[i].Actor.StaticMesh == PlaneStaticMesh)
             {
@@ -4778,8 +4778,8 @@ defaultproperties
 {
     // Sway values
     SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))
-    DHSwayElasticFactor=8.0;
-    DHSwayDampingFactor=0.51;
+    DHSwayElasticFactor=8.0
+    DHSwayDampingFactor=0.51
     BaseSwayYawAcc=600
     BaseSwayPitchAcc=500
 

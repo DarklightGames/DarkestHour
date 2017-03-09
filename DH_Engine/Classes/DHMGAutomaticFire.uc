@@ -222,9 +222,9 @@ function DoFireEffect()
             X = vector(Aim);
             for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-                R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
-                R.Pitch = AppliedSpread * (FRand()-0.5);
-                R.Roll = AppliedSpread * (FRand()-0.5);
+                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+                R.Pitch = AppliedSpread * (FRand() - 0.5);
+                R.Roll = AppliedSpread * (FRand() - 0.5);
 
                 HandleProjectileSpawning(StartProj, rotator(X >> R));
             }
@@ -233,7 +233,7 @@ function DoFireEffect()
         case SS_Line:
             for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-                theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
+                theta = AppliedSpread * PI / 32768 * (projectileID - float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;

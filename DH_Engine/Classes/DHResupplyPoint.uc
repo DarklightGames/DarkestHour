@@ -9,12 +9,11 @@ var()   bool    bIsInfinite;
 
 function PostBeginPlay()
 {
-
 }
 
 defaultproperties
 {
-    RemoteRole=ROLE_SimulatedProxy,
+    RemoteRole=ROLE_SimulatedProxy
     bIsInfinite=true
 }
 

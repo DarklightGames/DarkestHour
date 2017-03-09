@@ -332,9 +332,9 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 
     if (i == ConsoleMessageCount)
     {
-        for (i = 0; i < ConsoleMessageCount-1; ++i)
+        for (i = 0; i < ConsoleMessageCount - 1; ++i)
         {
-            TextMessages[i] = TextMessages[i+1];
+            TextMessages[i] = TextMessages[i + 1];
         }
     }
 
@@ -5198,7 +5198,7 @@ defaultproperties
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
 
     // Screen indicator icons
-    PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world';
+    PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'
     SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
     NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'

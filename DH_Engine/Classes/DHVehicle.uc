@@ -917,7 +917,7 @@ simulated function PrevWeapon()
 {
     if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
     {
-        PendingPositionIndex = DriverPositionIndex -1;
+        PendingPositionIndex = DriverPositionIndex - 1;
         ServerChangeViewPoint(false);
     }
 }
@@ -3111,7 +3111,7 @@ defaultproperties
     HealthMax=175.0
     ImpactDamageMult=0.5
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
-    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=HP_Normal) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     FrontLeftAngle=333.0
     FrontRightAngle=28.0
     RearRightAngle=152.0

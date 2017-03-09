@@ -39,5 +39,5 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
-    TouchMessage="Press [%USE%] to enter {0}";
+    TouchMessage="Press [%USE%] to enter {0}"
 }
