@@ -16,7 +16,7 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'allies_carrier_anm.Carrier_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=9000,ViewNegativeYawLimit=-9000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     bDrawDriverInTP=true
-    DriveRot=(Pitch=0,Roll=0,Yaw=16384);
+    DriveRot=(Pitch=0,Roll=0,Yaw=16384)
     DriveAnim="VUC_com_idle_close"
     CameraBone="Camera_com"
     HUDOverlayClass=class'ROVehicles.ROVehDTOverlay'

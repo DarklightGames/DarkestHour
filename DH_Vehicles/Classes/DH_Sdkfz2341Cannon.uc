@@ -140,7 +140,7 @@ defaultproperties
     Spread=0.003
 
     // Coaxial MG ammo
-    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet''
+    AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
     InitialAltAmmo=150
     NumMGMags=12
     TracerProjectileClass=class'DH_Weapons.DH_MG42TracerBullet'
