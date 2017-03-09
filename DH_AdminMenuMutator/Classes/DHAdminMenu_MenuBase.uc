@@ -328,7 +328,7 @@ function bool IsNumberKey(EInputKey Key, out int KeyNumber)
 {
     if (Key >= 48 && Key <= 57)
     {
-        KeyNumber = Key -48;
+        KeyNumber = Key - 48;
 
         return true;
     }

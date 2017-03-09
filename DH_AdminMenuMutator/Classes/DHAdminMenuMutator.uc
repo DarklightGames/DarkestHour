@@ -1016,9 +1016,9 @@ function string PutMessageTogether(array<string> Words, byte StartIndex)
     {
         Message $= Words[StartIndex];
 
-        if (Words.Length > (StartIndex +1))
+        if (Words.Length > (StartIndex + 1))
         {
-            for (i = StartIndex +1; i < Words.Length; ++i)
+            for (i = StartIndex + 1; i < Words.Length; ++i)
             {
                 Message @= Words[i];
             }

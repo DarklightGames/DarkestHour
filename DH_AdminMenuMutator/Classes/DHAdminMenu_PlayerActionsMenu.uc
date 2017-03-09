@@ -14,7 +14,7 @@ exec function PlayerActionsMenu(string PlayerName)
 
         if (Replicator == none || !Replicator.bParaDropPlayerAllowed) // if paradrops are not enabled on the server then remove those menu options
         {
-            MenuText.Length = MenuText.Length -3;
+            MenuText.Length = MenuText.Length - 3;
             MenuCommand.Length = MenuCommand.Length - 3;
         }
     }
