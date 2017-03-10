@@ -8,12 +8,13 @@ class DHConstructionProxy extends Actor;
 enum EConstructionProxyError
 {
     CPE_None,
-    CPE_Fatal,      // Some fatal error occurred, usually a case of unexpected values
-    CPE_NoGround,   // No solid ground was able to be found
-    CPE_TooSteep,   // The ground slope exceeded the allowable maximum
-    CPE_InWater,    // The construction is in water and the construction type disallows this
-    CPE_Restricted, // Construction overlaps a restriction volume
-    CPE_NoRoom      // No room to place this construction
+    CPE_Fatal,          // Some fatal error occurred, usually a case of unexpected values
+    CPE_NoGround,       // No solid ground was able to be found
+    CPE_TooSteep,       // The ground slope exceeded the allowable maximum
+    CPE_InWater,        // The construction is in water and the construction type disallows this
+    CPE_Restricted,     // Construction overlaps a restriction volume
+    CPE_NoRoom,         // No room to place this construction
+    CPE_NotOnTerrain    // Construction is not on terrain
 };
 
 var EConstructionProxyError ProxyError;
@@ -174,11 +175,12 @@ function Tick(float DeltaTime)
 function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
     local PlayerController PC;
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward;
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation;
     local Actor HitActor;
     local rotator R;
-    local float GroundSlopeDegrees;
+    local float GroundSlopeDegrees, AngleRadians;
     local EConstructionProxyError Error;
+    local int i;
 
     if (PawnOwner == none)
     {
@@ -208,63 +210,116 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
 
     if (HitActor != none && HitActor.bStatic && !HitActor.bDeleteMe)
     {
-        // Hit something static in the world.
-        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
+        BaseLocation = HitLocation;
 
-        // TODO:
-
-        if (GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
+        if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !HitActor.IsA('TerrainInfo'))
         {
-            // Too steep!
-            Error = CPE_TooSteep;
-
-            // Just point the normal straight up so  it doesn't look wacky
-            HitNormal = vect(0, 0, 1);
+            Error = CPE_NotOnTerrain;
         }
 
         if (!ConstructionClass.default.bShouldAlignToGround)
         {
-            // Not aligning to ground, just use world up vector as the hit normal
+            // Not aligning to ground, just use world up vector as the hit normal.
             HitNormal = vect(0, 0, 1);
         }
 
         Forward = Normal(vector(PC.CalcViewRotation));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
+
+        // Hit something static in the world.
+        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
+
+        if (Error == CPE_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
+        {
+            // Too steep!
+            Error = CPE_TooSteep;
+        }
+
+        if (Error == CPE_None)
+        {
+            // TODO: test the anchor points
+            // TODO: enable or disable this check
+            GetAxes(rotator(Forward), X, Y, Z);
+
+            const TRACE_RESOLUTION = 8;
+
+            for (i = 0; i < TRACE_RESOLUTION; ++i)
+            {
+                AngleRadians = (float(i) / TRACE_RESOLUTION) * Pi;
+
+                TraceStart = vect(0, 0, 0);
+                TraceStart.Z = CollisionHeight;
+                TraceEnd = TraceStart;
+                TraceEnd.X = Sin(AngleRadians) * CollisionRadius;
+                TraceEnd.Y = Cos(AngleRadians) * CollisionRadius;
+                TraceStart.X = -TraceEnd.X;
+                TraceStart.Y = -TraceEnd.Y;
+
+                TraceStart = BaseLocation + QuatRotateVector(QuatFromRotator(rotator(X)), TraceStart);
+                TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(rotator(X)), TraceEnd);
+
+                // Trace across the diameter of the collision cylinder
+                if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
+                {
+                    Error = CPE_NoRoom;
+                    break;
+                }
+
+                // Trace down from the top of the cylinder to the bottom
+                TraceEnd = TraceStart - (Z * (CollisionHeight + class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.FloatToleranceInMeters)));
+
+                if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false) == none)
+                {
+                    Error = CPE_NoGround;
+                    break;
+                }
+                else
+                {
+                    HitNormalSum += HitNormal;
+                }
+            }
+        }
+
+        if (Error == CPE_None)
+        {
+            HitNormalSum.X /= TRACE_RESOLUTION;
+            HitNormalSum.Y /= TRACE_RESOLUTION;
+            HitNormalSum.Z /= TRACE_RESOLUTION;
+        }
+        else
+        {
+            HitNormalSum = vect(0, 0, 1);
+        }
+
+        Forward = Normal(vector(PC.CalcViewRotation));
+        Left = Forward cross HitNormalSum;
+        Forward = HitNormalSum cross Left;
     }
     else
     {
         // Didn't hit anything!
         Error = CPE_NoGround;
         // TODO: verify correctness
-        HitLocation = TraceEnd;
+        BaseLocation = TraceEnd;
         R = PC.CalcViewRotation;
         R.Pitch = 0;
         R.Roll = 0;
         Forward = vector(R);
     }
 
-    OutLocation = HitLocation;
+    OutLocation = BaseLocation;
     OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
 
     return Error;
 }
 
-const TRACE_RESOLUTION = 8;
-
 // We separate this function from GetProvisionalPosition because we need to have
 // the server do it's own check before attempting to spawn the construction.
 function EConstructionProxyError GetPositionError()
 {
-    local int i;
     local DHRestrictionVolume RV;
-    local vector X, Y, Z;
-    local vector L;
-    local vector HitLocation, HitNormal, TraceStart, TraceEnd;
     local Actor TouchingActor;
-    local float AngleRadians;
-    local array<vector> HitLocations;
-    local array<vector> HitNormals;
 
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
@@ -285,50 +340,6 @@ function EConstructionProxyError GetPositionError()
         {
             return CPE_NoRoom;
         }
-    }
-
-    // TODO: test the anchor points
-
-    // TODO: enable or disable this check
-    GetAxes(Rotation, X, Y, Z);
-
-    for (i = 0; i < TRACE_RESOLUTION; ++i)
-    {
-        AngleRadians = (float(i) / TRACE_RESOLUTION) * Pi;
-
-        TraceStart = vect(0, 0, 0);
-        TraceStart.Z = CollisionHeight;
-        TraceEnd = TraceStart;
-        TraceEnd.X = Sin(AngleRadians) * CollisionRadius;
-        TraceEnd.Y = Cos(AngleRadians) * CollisionRadius;
-        TraceStart.X = -TraceEnd.X;
-        TraceStart.Y = -TraceEnd.Y;
-
-        TraceStart = Location + QuatRotateVector(QuatFromRotator(rotator(X)), TraceStart);
-        TraceEnd = Location + QuatRotateVector(QuatFromRotator(rotator(X)), TraceEnd);
-
-        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
-        {
-            return CPE_NoRoom;
-        }
-
-        if (Trace(HitLocation, HitNormal, TraceStart - (Z * CollisionHeight * 2), TraceStart, false) == none)
-        {
-            return CPE_NoGround;
-        }
-        else
-        {
-            // TODO:
-//            Acos(HitNormal dot Z)
-
-            HitLocations[HitLocations.Length] = HitLocation;
-
-            // TODO: test normal differences
-//            HitNormals[HitNormals.Length] =
-        }
-
-//        if (Trace(HitLocation,
-        // TODO: test surface, store heights etc.
     }
 
     return CPE_None;

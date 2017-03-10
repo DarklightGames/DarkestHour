@@ -14,11 +14,13 @@ var     float   ProxyDistanceInMeters;      // The distance at which the proxy o
 var     bool    bShouldAlignToGround;
 var     bool    bCanPlaceInWater;
 var     bool    bCanPlaceIndoors;
+var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     sound   PlacementSound;
+var     float   FloatToleranceInMeters;
 
 // Construction
 var     int     CurrentStageIndex;
@@ -128,11 +130,9 @@ Begin:
 
 event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    Log("took damage");
-
     super.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 
-    // TODO: probably want to go into some sort of destroyed state
+    // TODO: probably want to go into some sort of destroyed state once health is depleted
 
     OnHealthChanged();
 }
@@ -176,6 +176,7 @@ defaultproperties
     // Placement
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
+    FloatToleranceInMeters=0.5
 
     LocalRotationRate=32768
 

@@ -316,7 +316,7 @@ function PostRender(Canvas C)
             else if (Menu.IsOptionDisabled(i))
             {
                 C.DrawColor = default.DisabledColor;
-                C.DrawColor.A = byte(255 * MenuAlpha * 0.25);
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
             else
             {

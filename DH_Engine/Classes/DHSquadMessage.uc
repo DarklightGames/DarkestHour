@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHSquadMessage extends ROGameMessage;
+class DHSquadMessage extends ROGameMessage
+    abstract;
 
 var localized string SquadJoinedMessage;
 var localized string SquadLeftMessage;

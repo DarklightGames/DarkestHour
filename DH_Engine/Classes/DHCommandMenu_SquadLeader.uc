@@ -52,6 +52,21 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
     return true;
 }
 
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local PlayerController PC;
+
+    PC = Interaction.ViewportOwner.Actor;
+
+    switch (OptionIndex)
+    {
+    case 2:
+        return PC == none || PC.Pawn == none || !PC.Pawn.IsA('DHPawn');
+    default:
+        return false;
+    }
+}
+
 defaultproperties
 {
     Options(0)=(ActionText="Fire",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')

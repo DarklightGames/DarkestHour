@@ -47,8 +47,6 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
         P.SetConstructionProxy(ConstructionClass);
     }
 
-    Log("say what");
-
     Interaction.Hide();
 
     return true;

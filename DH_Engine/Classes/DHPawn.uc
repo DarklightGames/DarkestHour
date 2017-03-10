@@ -5990,11 +5990,18 @@ exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
 
 simulated function Fire( optional float F )
 {
-    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none && ConstructionProxy.ProxyError == CPE_None)
+    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
-        ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
+        if (ConstructionProxy.ProxyError == CPE_None)
+        {
+            ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
 
-        ConstructionProxy.Destroy();
+            ConstructionProxy.Destroy();
+        }
+        else
+        {
+            ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(ConstructionProxy.ProxyError),,, ConstructionProxy);
+        }
     }
     else
     {
