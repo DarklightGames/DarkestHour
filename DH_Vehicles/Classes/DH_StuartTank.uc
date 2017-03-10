@@ -10,11 +10,34 @@ class DH_StuartTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    LeftTreadIndex=3
-    MaxCriticalSpeed=1057.0
-    FireAttachBone="Player_Driver"
-    HullFireChance=0.45
+    // Vehicle properties
+    VehicleNameString="M5 Stuart"
+    VehicleTeam=1
+    VehicleMass=7.0
+    PointValue=2.0
 
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
+    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
+    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=50.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DrivePos=(X=1.0,Y=7.0,Z=-10.0)
+    DriveAnim="VPanzer3_driver_idle_open"
+
+    // Hull armor
     FrontArmor(0)=(Thickness=2.9,Slope=48.0)
     RightArmor(0)=(Thickness=2.9)
     LeftArmor(0)=(Thickness=2.9)
@@ -36,21 +59,79 @@ defaultproperties
     UFrontArmorSlope=48.0
     URearArmorSlope=17.0
 */
-    PointValue=2.0
-    MaxPitchSpeed=150.0
-    TreadVelocityScale=215.0
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+
+    // Movement
+    MaxCriticalSpeed=1057.0 // 63 kph
+    GearRatios(3)=0.65
+    GearRatios(4)=0.75
+    TransRatio=0.13
+
+    // Damage
+    Health=375
+    HealthMax=375.0
+    EngineHealth=200
+    VehHitpoints(0)=(PointOffset=(X=-73.0,Z=10.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=59.0
+    TreadDamageThreshold=0.5
+    DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
+    HullFireChance=0.45
+    FireAttachBone="Player_Driver"
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1'
+
+    // Exit
+    ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
+    ExitPositions(1)=(X=0.0,Y=0.0,Z=225.0)     // commander hatch
+    ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // hull MG mg hatch
+    ExitPositions(3)=(X=-75.0,Y=-125.0,Z=75.0) // left
+    ExitPositions(4)=(X=-200.0,Y=2.24,Z=75.0)  // rear
+    ExitPositions(5)=(X=-75.0,Y=125.0,Z=75.0)  // right
+    ExitPositions(6)=(X=200.0,Y=0,Z=75.0)      // front
+
+    // Sounds
+    SoundPitch=32 // half normal pitch = 1 octave lower
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.T60.t60_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.T60.t60_engine_stop'
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
     RumbleSoundBone="placeholder_int"
+    RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+
+    // Visual effects
+    LeftTreadIndex=3
+    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+    TreadVelocityScale=215.0
+    ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=45.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    LeftLeverBoneName="lever_L"
+    RightLeverBoneName="lever_R"
+
+    // HUD
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_look'
+    VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.72
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsY(0)=0.35
+    VehicleHudOccupantsY(2)=0.35
+    VehicleHudOccupantsX(3)=0.35
+    VehicleHudOccupantsY(3)=0.72
+    VehicleHudOccupantsX(4)=0.5
+    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsX(5)=0.65
+    VehicleHudOccupantsY(5)=0.72
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -69,53 +150,8 @@ defaultproperties
     RightWheelBones(6)="Wheel_R_7"
     RightWheelBones(7)="Wheel_R_8"
     RightWheelBones(8)="Wheel_R_9"
-    WheelRotationScale=700
-    TreadHitMaxHeight=59.0
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-    GearRatios(3)=0.65
-    GearRatios(4)=0.75
-    TransRatio=0.13
-    LeftLeverBoneName="lever_L"
-    LeftLeverAxis=AXIS_Z
-    RightLeverBoneName="lever_R"
-    RightLeverAxis=AXIS_Z
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=45.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-55.0,Z=50.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-108.0,Y=0.0,Z=57.0),DriveRot=(Pitch=3640,Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=57.0,Z=50.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.T60.t60_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1'
-    DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
-    VehicleTeam=1
-    SteeringScaleFactor=0.75
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
-    VehicleHudOccupantsX(0)=0.43
-    VehicleHudOccupantsX(3)=0.35
-    VehicleHudOccupantsX(4)=0.5
-    VehicleHudOccupantsX(5)=0.65
-    VehicleHudOccupantsY(0)=0.35
-    VehicleHudOccupantsY(2)=0.35
-    VehicleHudOccupantsY(3)=0.72
-    VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsY(5)=0.72
-    VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointOffset=(X=-73.0,Z=10.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=10.0,PointScale=1.0,PointBone="body",PointOffset=(Y=45.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    EngineHealth=200
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -168,33 +204,25 @@ defaultproperties
         WheelRadius=33.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_StuartTank.Right_Drive_Wheel'
-    VehicleMass=7.0
-    bFPNoZFromCameraPitch=true
-    DrivePos=(X=1.0,Y=7.0,Z=-10.0)
-    DriveAnim="VPanzer3_driver_idle_open"
-    ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
-    ExitPositions(1)=(X=0.0,Y=0.0,Z=225.0)     // commander hatch
-    ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // mg hatch
-    ExitPositions(3)=(X=-75.0,Y=-125.0,Z=75.0) // left
-    ExitPositions(4)=(X=-200.0,Y=2.24,Z=75.0)  // rear
-    ExitPositions(5)=(X=-75.0,Y=125.0,Z=75.0)  // right
-    ExitPositions(6)=(X=200.0,Y=0,Z=75.0)      // front
-    DriverDamageMult=1.0
-    VehicleNameString="M5 Stuart"
-    MaxDesireability=1.9
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=375.0
-    Health=375
-    Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
-    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
-    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
-    SoundPitch=32
-    CollisionRadius=175.0
-    CollisionHeight=60.0
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+
+    // Karma
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(Z=0.0) // default is -0.5
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        KMaxAngularSpeed=0.9 // default is 1.0
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.5
+        KImpactThreshold=700.0
+    End Object
+    KParams=KarmaParamsRBFull'DH_Vehicles.DH_JacksonTank.KParams0'
 }

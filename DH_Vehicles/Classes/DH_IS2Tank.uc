@@ -14,9 +14,6 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="IS2"
     VehicleTeam=1
-    MaxDesireability=1.9
-    CollisionRadius=175.0
-    CollisionHeight=60.0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_IS2_anm.IS2-body_ext'
@@ -27,7 +24,6 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
-    BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_IS2CannonPawn',WeaponBone="Turret_Placement")
@@ -40,7 +36,6 @@ defaultproperties
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',DriverTransitionAnim="VIS2_driver_close",TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_in",ViewPitchUpLimit=2730,ViewPitchDownLimit=61900,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
     DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',DriverTransitionAnim="VIS2_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=65000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-    DriverAttachmentBone="driver_attachment"
     DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.IS2DriverOverlay'
@@ -86,9 +81,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverDamageMult=1.0
     TreadHitMaxHeight=8.0
-    TreadDamageThreshold=0.75
     DamagedEffectOffset=(X=-135.0,Y=0.0,Z=35.0) // repositioned to engine deck grille
     HullFireChance=0.55
     FireAttachBone="Body"
@@ -97,36 +90,31 @@ defaultproperties
     DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.IS2_ext_dest'
 
     // Exit positions
-    ExitPositions(0)=(X=250.0,Y=0.0,Z=50.0)    // driver
-    ExitPositions(1)=(X=20.0,Y=-20.0,Z=200.0)  // commander
-    ExitPositions(2)=(X=-110.00,Y=-147.00,Z=50.00)  // riders
+    ExitPositions(0)=(X=250.0,Y=0.0,Z=50.0)        // driver
+    ExitPositions(1)=(X=20.0,Y=-20.0,Z=200.0)      // commander
+    ExitPositions(2)=(X=-110.00,Y=-147.00,Z=50.00) // riders
     ExitPositions(3)=(X=-284.00,Y=-35.00,Z=50.00)
     ExitPositions(4)=(X=-284.00,Y=35.00,Z=50.00)
     ExitPositions(5)=(X=-110.00,Y=147.00,Z=50.00)
 
     // Sounds
-    MaxPitchSpeed=450
+    MaxPitchSpeed=450.0
     IdleSound=sound'Vehicle_Engines.IS2.IS2_engine_loop'
     StartUpSound=sound'Vehicle_Engines.IS2.IS2_engine_start'
     ShutDownSound=sound'Vehicle_Engines.IS2.IS2_engine_stop'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
-    LeftTreadSound=sound'Vehicle_Engines.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.track_squeak_R03'
-    RumbleSoundBone="Body"
-    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble02'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=125.0
+    WheelRotationScale=1000 // was 600, but raised to more closely match tread speed
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=60.0,Z=40.0),ExhaustRotation=(Pitch=34000,Yaw=0,Roll=-10000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-150.0,Y=-60.0,Z=40.0),ExhaustRotation=(Pitch=34000,Yaw=0,Roll=10000))
     LeftLeverBoneName="Lever_L"
-    LeftLeverAxis=AXIS_Z
     RightLeverBoneName="Lever_R"
-    RightLeverAxis=AXIS_Z
-    SteeringScaleFactor=0.75
 
     // HUD
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.is2_body'
@@ -148,7 +136,6 @@ defaultproperties
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.IS2'
 
     // Visible wheels
-    WheelRotationScale=1000 // was 600, but raised to more closely match tread speed
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

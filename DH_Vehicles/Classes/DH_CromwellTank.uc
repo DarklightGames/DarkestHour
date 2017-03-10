@@ -23,9 +23,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Cromwell Mk.IV"
     VehicleTeam=1
-    MaxDesireability=1.9
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+    VehicleMass=13.0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'
@@ -35,7 +33,6 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
     Skins(4)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
     Skins(5)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
-    BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellCannonPawn',WeaponBone="Turret_placement")
@@ -52,7 +49,6 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="Overlay_Out",TransitionDownAnim="Vision_hatch_open",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true,ViewFOV=90.0)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,ViewFOV=90.0)
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true,ViewFOV=90.0)
-    DriverAttachmentBone="Driver_attachment"
     DriveAnim="VUC_driver_idle_close"
     OverlayFPCamPos=(X=9.0,Y=0.0,Z=0.0)
 
@@ -79,29 +75,24 @@ defaultproperties
     RearRightAngle=153.0
 */
     // Movement
-    MaxCriticalSpeed=948.0
+    MaxCriticalSpeed=948.0 // 57 kph
     GearRatios(3)=0.6
     GearRatios(4)=0.8
     TransRatio=0.14
-    MaxPitchSpeed=150.0
 
     // Damage
-    Health=525
-    HealthMax=525.0
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-95.0,Z=2.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=40.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverDamageMult=1.0
     TreadHitMaxHeight=58.0
-    TreadDamageThreshold=0.75
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=85.0)
     FireAttachBone="Body"
     FireEffectOffset=(X=110.0,Y=35.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
 
-    // Entry & exit
+    // Exit
     ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)   // driver
     ExitPositions(1)=(X=25.0,Y=-35.0,Z=250.0)   // commander
     ExitPositions(2)=(X=125.0,Y=35.0,Z=175.0)   // hull MG
@@ -114,27 +105,21 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
     StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
     ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSoundBone="Body"
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
-    TreadVelocityScale=78.0
     LeftTreadIndex=4
     RightTreadIndex=5
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    TreadVelocityScale=78.0
+    WheelRotationScale=375
     ExhaustPipes(0)=(ExhaustPosition=(X=-195.0,Y=30.0,Z=95.0),ExhaustRotation=(Pitch=36000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-195.0,Y=-30.0,Z=95.0),ExhaustRotation=(Pitch=36000))
     LeftLeverBoneName="Lever_L"
-    LeftLeverAxis=AXIS_Z
     RightLeverBoneName="Lever_R"
-    RightLeverAxis=AXIS_Z
     SteeringScaleFactor=1.0
 
     // HUD
@@ -163,7 +148,6 @@ defaultproperties
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.cromwell'
 
     // Visible wheels
-    WheelRotationScale=375
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -234,7 +218,6 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.Right_Drive_Wheel'
 
     // Karma
-    VehicleMass=13.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

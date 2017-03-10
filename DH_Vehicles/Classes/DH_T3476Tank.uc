@@ -13,9 +13,6 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="T34/76"
     VehicleTeam=1
-    MaxDesireability=1.9
-    CollisionRadius=175.0
-    CollisionHeight=60.0
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34_body_ext'
@@ -26,7 +23,6 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     HighDetailOverlay=material'allies_vehicles_tex.int_vehicles.t3476_int_s'
-    BeginningIdleAnim="driver_hatch_idle_close"
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476CannonPawn',WeaponBone="Turret_Placement")
@@ -41,7 +37,6 @@ defaultproperties
     UnbuttonedPositionIndex=1
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="Vt3485_driver_close",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true,ViewFOV=90.0)
-    DriverAttachmentBone="driver_attachment"
     DriveAnim="VT3476_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
     HUDOverlayFOV=90.0
@@ -76,7 +71,7 @@ defaultproperties
     RearLeftAngle=205.0
 
     // Movement
-    MaxCriticalSpeed=948.0
+    MaxCriticalSpeed=948.0 // 57 kph
     GearRatios(3)=0.65
     GearRatios(4)=0.75
     TransRatio=0.13
@@ -87,9 +82,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-90.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverDamageMult=1.0
     TreadHitMaxHeight=5.0
-    TreadDamageThreshold=0.75
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-105.0,Y=0.0,Z=40.0) // adjusted from original
     HullFireChance=0.55
@@ -109,19 +102,17 @@ defaultproperties
 
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
-    MaxPitchSpeed=50
+    MaxPitchSpeed=50.0
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
     StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
     ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSoundBone="Body"
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=110.0
+    WheelRotationScale=450
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-175,Y=30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
@@ -134,21 +125,20 @@ defaultproperties
     VehicleHudTreadsPosX(0)=0.36 // some positions adjusted from original
     VehicleHudTreadsScale=0.73
     VehicleHudOccupantsX(0)=0.465
-    VehicleHudOccupantsX(2)=0.565
-    VehicleHudOccupantsX(3)=0.42
-    VehicleHudOccupantsX(4)=0.45
-    VehicleHudOccupantsX(5)=0.57
-    VehicleHudOccupantsX(6)=0.58
     VehicleHudOccupantsY(0)=0.27
+    VehicleHudOccupantsX(2)=0.565
     VehicleHudOccupantsY(1)=0.47
+    VehicleHudOccupantsX(3)=0.42
     VehicleHudOccupantsY(3)=0.62
+    VehicleHudOccupantsX(4)=0.45
     VehicleHudOccupantsY(4)=0.72
+    VehicleHudOccupantsX(5)=0.57
     VehicleHudOccupantsY(5)=0.73
+    VehicleHudOccupantsX(6)=0.58
     VehicleHudOccupantsY(6)=0.62
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.T34_76'
 
     // Visible wheels
-    WheelRotationScale=450
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"

@@ -11,9 +11,31 @@ class DH_Marder3MDestroyer extends DHArmoredVehicle;
 
 defaultproperties
 {
-    LeftTreadIndex=3
-    MaxCriticalSpeed=729.0
+    // Vehicle properties
+    VehicleNameString="Marder III Ausf.M"
+    VehicleMass=11.0
 
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
+    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
+    Skins(2)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
+    Skins(4)=texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DrivePos=(X=-5.0,Y=0.0,Z=2.0)
+    DriveAnim="VPanzer3_driver_idle_open"
+
+    // Hull armor
     FrontArmor(0)=(Thickness=1.0,Slope=30.0)
     RightArmor(0)=(Thickness=1.5,Slope=15.0)
     LeftArmor(0)=(Thickness=1.5,Slope=15.0)
@@ -36,20 +58,73 @@ defaultproperties
     URightArmorSlope=15.0
     ULeftArmorSlope=15.0
 */
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
+
+    // Movement
+    MaxCriticalSpeed=729.0 // 43 kph
+    GearRatios(4)=0.72
+    TransRatio=0.1
+
+    // Damage
+    Health=400
+    HealthMax=400.0
+    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=-5.0
+    TreadDamageThreshold=0.5
+    DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
+    FireEffectOffset=(X=10.0,Y=0.0,Z=-20.0)
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
+
+    // Exit
+    ExitPositions(0)=(X=78.0,Y=96.0,Z=5.0)      // driver's hatch
+    ExitPositions(1)=(X=-133.0,Y=-27.0,Z=120.0) // commander's position
+    ExitPositions(2)=(X=-135.0,Y=24.0,Z=120.0)  // MG position
+    ExitPositions(3)=(X=25.0,Y=106.0,Z=5.0)     // rider
+
+    // Sounds
     MaxPitchSpeed=450.0
-    TreadVelocityScale=300.0
+    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
     RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
-    RumbleSoundBone="body"
+
+    // Visual effects
+    LeftTreadIndex=3
+    TreadVelocityScale=300.0
+    WheelRotationScale=1700
+    ExhaustPipes(0)=(ExhaustPosition=(X=-142.0,Y=-28.0,Z=18.0),ExhaustRotation=(Pitch=40050))
+    LeftLeverBoneName="lever_L"
+    RightLeverBoneName="lever_R"
+
+    // HUD
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_look'
+    VehicleHudEngineX=0.51
+    VehicleHudEngineY=0.47
     VehicleHudTreadsPosX(0)=0.36
     VehicleHudTreadsPosX(1)=0.64
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.72
+    VehicleHudOccupantsX(0)=0.55
+    VehicleHudOccupantsY(0)=0.33
+    VehicleHudOccupantsX(1)=0.45
+    VehicleHudOccupantsY(1)=0.71
+    VehicleHudOccupantsX(2)=0.55
+    VehicleHudOccupantsY(2)=0.71
+    VehicleHudOccupantsX(3)=0.575
+    VehicleHudOccupantsY(3)=0.5
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.marder3'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -64,52 +139,8 @@ defaultproperties
     RightWheelBones(4)="Wheel_R_5"
     RightWheelBones(5)="Wheel_R_6"
     RightWheelBones(6)="Wheel_R_7"
-    WheelRotationScale=1700
-    TreadHitMaxHeight=-5.0
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
-    RearRightAngle=150.0
-    RearLeftAngle=210.0
-    GearRatios(4)=0.72
-    TransRatio=0.1
-    SteerBoneName="Steering"
-    LeftLeverBoneName="lever_L"
-    LeftLeverAxis=AXIS_Z
-    RightLeverBoneName="lever_R"
-    RightLeverAxis=AXIS_Z
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-142.0,Y=-28.0,Z=18.0),ExhaustRotation=(Pitch=40050))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=7.5,Y=30.0,Z=41.0),DriveAnim="VUC_rider1_idle")
-    IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
-    DamagedEffectOffset=(X=30.0,Y=0.0,Z=20.0)
-    FireEffectOffset=(X=10.0,Y=0.0,Z=-20.0)
-    SteeringScaleFactor=0.75
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
-    VehicleHudOccupantsX(0)=0.55
-    VehicleHudOccupantsX(1)=0.45
-    VehicleHudOccupantsX(2)=0.55
-    VehicleHudOccupantsX(3)=0.575
-    VehicleHudOccupantsY(0)=0.33
-    VehicleHudOccupantsY(1)=0.71
-    VehicleHudOccupantsY(2)=0.71
-    VehicleHudOccupantsY(3)=0.5
-    VehicleHudEngineX=0.51
-    VehicleHudEngineY=0.47
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(Z=-5.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-50.0,Y=-20.0,Z=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-90.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -160,31 +191,8 @@ defaultproperties
         WheelRadius=30.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Marder3MDestroyer.Right_Drive_Wheel'
-    VehicleMass=11.0
-    bFPNoZFromCameraPitch=true
-    DrivePos=(X=-5.0,Y=0.0,Z=2.0)
-    DriveAnim="VPanzer3_driver_idle_open"
-    ExitPositions(0)=(X=78.0,Y=96.0,Z=5.0)
-    ExitPositions(1)=(X=-133.0,Y=-27.0,Z=120.0)
-    ExitPositions(2)=(X=-135.0,Y=24.0,Z=120.0)
-    ExitPositions(3)=(X=25.0,Y=106.0,Z=5.0)
-    DriverDamageMult=1.0
-    VehicleNameString="Marder III Ausf.M"
-    MaxDesireability=1.9
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=400.0
-    Health=400
-    Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
-    Skins(2)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(4)=texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -206,5 +214,4 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Marder3MDestroyer.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.marder3'
 }

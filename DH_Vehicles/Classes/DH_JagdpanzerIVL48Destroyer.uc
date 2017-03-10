@@ -12,16 +12,34 @@ class DH_JagdpanzerIVL48Destroyer extends DHArmoredVehicle;
 
 defaultproperties
 {
-    NewVehHitpoints(0)=(PointRadius=5.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.0,Y=10.5,Z=65.0),NewHitPointType=NHP_GunOptics)
-    NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_Traverse)
-    NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_GunPitch)
-    GunOpticsHitPointIndex=0
-    LeftTreadIndex=4
-    RightTreadIndex=3
-    MaxCriticalSpeed=730.0
-    TreadDamageThreshold=0.75
+    // Vehicle properties
+    VehicleNameString="Jagdpanzer IV/48"
+    VehicleMass=12.0
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo1'
+    Skins(2)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
+    Skins(3)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
+    Skins(4)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
+    Skins(5)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    BeginningIdleAnim="Overlay_Idle"
+    FireEffectOffset=(X=55.0,Y=0.0,Z=-25.0)
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-100.0,Y=0.0,Z=110.0),DriveAnim="prone_idle_nade")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=40.0,Z=110.0),DriveRot=(Yaw=2048),DriveAnim="prone_idle_satchel")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
+    bDrawDriverInTP=false
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
+    // Hull armor
     FrontArmor(0)=(Thickness=8.0,Slope=50.0)
     RightArmor(0)=(Thickness=4.0,Slope=30.0)
     LeftArmor(0)=(Thickness=4.0,Slope=30.0)
@@ -45,20 +63,72 @@ defaultproperties
     ULeftArmorSlope=30.0
     URearArmorSlope=9.0
 */
-    MaxPitchSpeed=150.0
-    TreadVelocityScale=100.0
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+
+    // Movement
+    MaxCriticalSpeed=730.0 // 44 kph
+
+    // Damage
+    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Z=10.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=5.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.0,Y=10.5,Z=65.0),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=10.0,Z=35.0),NewHitPointType=NHP_GunPitch)
+    GunOpticsHitPointIndex=0
+    TreadHitMaxHeight=13.0
+    DamagedEffectScale=0.9
+    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.Jagdpanzer4.Jagdpanzer4_dest48'
+
+    // Exit
+    ExitPositions(0)=(X=-26.0,Y=-25.0,Z=135.0)
+    ExitPositions(1)=(X=-26.0,Y=-25.0,Z=135.0)
+    ExitPositions(2)=(X=-26.0,Y=-25.0,Z=135.0)
+    ExitPositions(3)=(X=-251.0,Y=-7.0,Z=5.0)
+    ExitPositions(4)=(X=-252.0,Y=39.0,Z=5.0)
+
+    // Sounds
+    IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+
+    // Visual effects
+    LeftTreadIndex=4
+    RightTreadIndex=3
+    TreadVelocityScale=100.0
+    WheelRotationScale=768
+    ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=16.0,Z=30.0),ExhaustRotation=(Pitch=22000,Yaw=9000))
+    LeftLeverBoneName="lever_L"
+    RightLeverBoneName="lever_R"
+
+    // HUD
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.JPIV_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL48_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL48_turret_look'
     VehicleHudTreadsPosX(0)=0.36
-    VehicleHudTreadsPosX(1)=0.64
+    VehicleHudTreadsPosX(1)=0.645
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.66
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsY(0)=0.42
+    VehicleHudOccupantsX(1)=0.46
+    VehicleHudOccupantsY(1)=0.56
+    VehicleHudOccupantsX(2)=0.6
+    VehicleHudOccupantsY(2)=0.42
+    VehicleHudOccupantsX(3)=0.5
+    VehicleHudOccupantsY(3)=0.7
+    VehicleHudOccupantsX(4)=0.6
+    VehicleHudOccupantsY(4)=0.7
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l48'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -85,48 +155,8 @@ defaultproperties
     RightWheelBones(10)="Wheel_R_11"
     RightWheelBones(11)="Wheel_R_12"
     RightWheelBones(12)="Wheel_R_13"
-    WheelRotationScale=768
-    TreadHitMaxHeight=13.0
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-    LeftLeverBoneName="lever_L"
-    LeftLeverAxis=AXIS_Z
-    RightLeverBoneName="lever_R"
-    RightLeverAxis=AXIS_Z
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=16.0,Z=30.0),ExhaustRotation=(Pitch=22000,Yaw=9000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-100.0,Y=0.0,Z=110.0),DriveAnim="prone_idle_nade")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-100.0,Y=40.0,Z=110.0),DriveRot=(Yaw=2048),DriveAnim="prone_idle_satchel")
-    IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.Jagdpanzer4.Jagdpanzer4_dest48'
-    DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    FireEffectOffset=(X=55.0,Y=0.0,Z=-25.0)
-    SteeringScaleFactor=0.75
-    BeginningIdleAnim="Overlay_Idle"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-5500,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.JPIV_body'
-    VehicleHudOccupantsX(0)=0.43
-    VehicleHudOccupantsX(1)=0.46
-    VehicleHudOccupantsX(2)=0.6
-    VehicleHudOccupantsX(3)=0.5
-    VehicleHudOccupantsX(4)=0.6
-    VehicleHudOccupantsY(0)=0.42
-    VehicleHudOccupantsY(1)=0.56
-    VehicleHudOccupantsY(2)=0.42
-    VehicleHudOccupantsY(3)=0.7
-    VehicleHudOccupantsY(4)=0.7
-    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Z=10.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -179,32 +209,8 @@ defaultproperties
         WheelRadius=29.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.Right_Drive_Wheel'
-    VehicleMass=12.0
-    bDrawDriverInTP=false
-    bFPNoZFromCameraPitch=true
-    ExitPositions(0)=(X=-26.0,Y=-25.0,Z=135.0)
-    ExitPositions(1)=(X=-26.0,Y=-25.0,Z=135.0)
-    ExitPositions(2)=(X=-26.0,Y=-25.0,Z=135.0)
-    ExitPositions(3)=(X=-251.0,Y=-7.0,Z=5.0)
-    ExitPositions(4)=(X=-252.0,Y=39.0,Z=5.0)
-    DriverDamageMult=1.0
-    VehicleNameString="Jagdpanzer IV/48"
-    MaxDesireability=1.9
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=525.0
-    Health=525
-    Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
-    Skins(1)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo1'
-    Skins(2)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
-    Skins(3)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(4)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(5)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -224,5 +230,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.KParams0'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l48'
 }

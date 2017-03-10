@@ -20,16 +20,38 @@ simulated function SpawnVehicleAttachments()
 
 defaultproperties
 {
-    RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
-    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
-    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
-    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
-    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
+    // Vehicle properties
+    VehicleNameString="Panzer V 'Panther' Ausf.D"
+    VehicleMass=14.0
+    PointValue=4.0
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
+    Skins(1)=texture'axis_vehicles_tex.Treads.PantherG_treads'
+    Skins(2)=texture'axis_vehicles_tex.Treads.PantherG_treads'
+    Skins(3)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=3
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-96.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-180.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-96.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    InitialPositionIndex=0
     UnbuttonedPositionIndex=1
-    MaxCriticalSpeed=932.0
-    TreadDamageThreshold=0.85
+    DriveAnim="VPanther_driver_idle_close"
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
+    // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-35.0,MaxRelativeHeight=-8.0,LocationName="lower")
     FrontArmor(1)=(Thickness=8.5,Slope=55.0,LocationName="upper")
     RightArmor(0)=(Thickness=4.0,MaxRelativeHeight=23.0,LocationName="lower")
@@ -56,21 +78,84 @@ defaultproperties
     URearArmorFactor=4.0
     URearArmorSlope=-30.0
 */
-    PointValue=4.0
+    FrontLeftAngle=334.0
+    FrontRightAngle=26.0
+    RearRightAngle=154.0
+    RearLeftAngle=206.0
+
+    // Movement
+    bTurnInPlace=true // don't think this affects panther's ability to turn, i.e. to neutral turn; think it's just a bot property
+    GearRatios(4)=0.8
+    TransRatio=0.11
+    ChangeUpPoint=1990.0
+    ChangeDownPoint=1000.0
+
+    // Damage
+    Health=600
+    HealthMax=600.0
+    VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-90.0,Z=6.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointHeight=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=0.0
+    TreadDamageThreshold=0.85
+    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed' // TODO: make destroyed combiner & add as DestroyedMeshSkins(0)
+
+    // Exit
+    ExitPositions(0)=(X=123.0,Y=-28.0,Z=105.0) // driver
+    ExitPositions(1)=(X=-91.0,Y=20.0,Z=110.0)  // commander
+    ExitPositions(2)=(X=128.0,Y=39.0,Z=105.0)  // hull MG
+    ExitPositions(3)=(X=-95.0,Y=-160.0,Z=5.0)  // riders
+    ExitPositions(4)=(X=-176.0,Y=-162.0,Z=5.0)
+    ExitPositions(5)=(X=-176.0,Y=162.0,Z=5.0)
+    ExitPositions(6)=(X=-95.0,Y=160.0,Z=5.0)
+
+    // Sounds
+    SoundPitch=32
     MaxPitchSpeed=100.0
-    TreadVelocityScale=225.0
+    IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R05'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
+
+    // Visual effects
+    TreadVelocityScale=225.0
+    WheelRotationScale=1250
+    ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
+    RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made
+    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
+    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
+    RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
+    RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
+
+    // HUD
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
     VehicleHudTreadsPosX(0)=0.38
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.49
     VehicleHudTreadsScale=0.61
+    VehicleHudOccupantsX(0)=0.45
+    VehicleHudOccupantsY(0)=0.38
+    VehicleHudOccupantsX(2)=0.55
+    VehicleHudOccupantsY(2)=0.38
+    VehicleHudOccupantsX(3)=0.4
+    VehicleHudOccupantsY(3)=0.69
+    VehicleHudOccupantsX(4)=0.4
+    VehicleHudOccupantsY(4)=0.79
+    VehicleHudOccupantsX(5)=0.605
+    VehicleHudOccupantsY(5)=0.79
+    VehicleHudOccupantsX(6)=0.605
+    VehicleHudOccupantsY(6)=0.69
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panther'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -91,53 +176,8 @@ defaultproperties
     RightWheelBones(7)="Wheel_R_8"
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
-    WheelRotationScale=1250
-    TreadHitMaxHeight=0.0
-    FrontLeftAngle=334.0
-    FrontRightAngle=26.0
-    RearRightAngle=154.0
-    RearLeftAngle=206.0
-    GearRatios(4)=0.8
-    TransRatio=0.11
-    ChangeUpPoint=1990.0
-    ChangeDownPoint=1000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-96.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-180.0,Y=-76.5,Z=55.5),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-150.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-96.0,Y=76.5,Z=55.5),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
-    IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed' // TODO: make destroyed combiner & add as DestroyedMeshSkins(0)
-    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    InitialPositionIndex=0
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
-    VehicleHudOccupantsX(0)=0.45
-    VehicleHudOccupantsY(0)=0.38
-    VehicleHudOccupantsX(2)=0.55
-    VehicleHudOccupantsY(2)=0.38
-    VehicleHudOccupantsX(3)=0.4
-    VehicleHudOccupantsY(3)=0.69
-    VehicleHudOccupantsX(4)=0.4
-    VehicleHudOccupantsY(4)=0.79
-    VehicleHudOccupantsX(5)=0.605
-    VehicleHudOccupantsY(5)=0.79
-    VehicleHudOccupantsX(6)=0.605
-    VehicleHudOccupantsY(6)=0.69
-    VehHitpoints(0)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-90.0,Z=6.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointHeight=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -191,34 +231,8 @@ defaultproperties
         WheelRadius=33.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Right_Drive_Wheel'
-    VehicleMass=14.0
-    bTurnInPlace=true
-    bFPNoZFromCameraPitch=true
-    DriveAnim="VPanther_driver_idle_close"
-    ExitPositions(0)=(X=123.0,Y=-28.0,Z=105.0)
-    ExitPositions(1)=(X=-91.0,Y=20.0,Z=110.0)
-    ExitPositions(2)=(X=128.0,Y=39.0,Z=105.0)
-    ExitPositions(3)=(X=-95.0,Y=-160.0,Z=5.0)
-    ExitPositions(4)=(X=-176.0,Y=-162.0,Z=5.0)
-    ExitPositions(5)=(X=-176.0,Y=162.0,Z=5.0)
-    ExitPositions(6)=(X=-95.0,Y=160.0,Z=5.0)
-    DriverDamageMult=1.0
-    VehicleNameString="Panzer V 'Panther' Ausf.D"
-    MaxDesireability=2.1
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=600.0
-    Health=600
-    Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(2)=texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(3)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
-    SoundPitch=32
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -238,8 +252,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_PantherDTank.KParams0'
-    HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=3
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panther'
 }

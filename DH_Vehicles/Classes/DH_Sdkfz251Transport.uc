@@ -91,8 +91,6 @@ defaultproperties
     EngineRPMSoundRange=5000.0
     SteerBoneName="Steering"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=105.0,Y=-70.0,Z=-15.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251MGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VHalftrack_Rider1_idle")
@@ -111,7 +109,6 @@ defaultproperties
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.0,bExposed=true,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
@@ -214,7 +211,6 @@ defaultproperties
     ExitPositions(10)=(X=-111.0,Y=36.0,Z=112.0) // Top Extra
 
     CenterSpringForce="SpringONSSRV"
-    DriverDamageMult=1.0
     ImpactDamageMult=0.001
     VehicleNameString="Sd.Kfz.251 Halftrack"
     MaxDesireability=1.2

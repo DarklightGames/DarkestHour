@@ -53,8 +53,6 @@ defaultproperties
     EngineRPMSoundRange=6000.0
     SteerBoneName="Steer_Wheel"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.0,Y=45.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-140.0,Y=-45.0),ExhaustRotation=(Pitch=34000,Roll=5000))
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=30.0,Y=29.0,Z=-2.0),DriveAnim="VHalftrack_Rider1_idle")
@@ -69,7 +67,6 @@ defaultproperties
     DestructionAngularMomentum=(Min=5.0,Max=15.0)
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=-100.0,Z=15.0)
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_int',ViewPitchUpLimit=8000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
@@ -137,7 +134,6 @@ defaultproperties
     ExitPositions(2)=(X=-25.0,Y=-110.0,Z=25.0)
     ExitPositions(3)=(X=-40.0,Y=110.0,Z=25.0)
     CenterSpringForce="SpringONSSRV"
-    DriverDamageMult=1.0
     VehicleNameString="Volkswagen Type 82"
     MaxDesireability=1.9
     GroundSpeed=325.0

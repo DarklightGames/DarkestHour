@@ -49,8 +49,6 @@ defaultproperties
     EngineRPMSoundRange=5000.0
     SteerBoneName="WheelDrive"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-30.0,Y=180.0,Z=-50.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
     PassengerPawns(0)=(AttachBone="passenger1",DrivePos=(X=2.0,Y=0.0,Z=-6.0),DriveAnim="VHalftrack_Rider1_idle")
     IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
@@ -66,7 +64,6 @@ defaultproperties
     DamagedEffectOffset=(X=115.0,Z=70.0)
     ImpactDamageThreshold=5000.0
     ImpactDamageMult=0.001
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="Overlay_Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.0)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.0)
@@ -125,7 +122,6 @@ defaultproperties
     ExitPositions(0)=(X=70.0,Y=-130.0,Z=60.0)
     ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)
     CenterSpringForce="SpringONSSRV"
-    DriverDamageMult=1.0
     VehicleNameString="Opel Blitz"
     MaxDesireability=0.12
     FlagBone="Mg_placement"

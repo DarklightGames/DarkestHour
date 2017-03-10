@@ -12,10 +12,36 @@ class DH_Tiger2BTank extends DHArmoredVehicle;
 
 defaultproperties
 {
-    MaxCriticalSpeed=693.0
-    TreadDamageThreshold=1.0
+    // Vehicle properties
+    VehicleNameString="Panzer VI 'King Tiger' Ausf.B"
+    VehicleMass=16.0
+    PointValue=5.0
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
+    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
+    Skins(4)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-140.0,Y=-85.0,Z=25.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-190.0,Y=-55.0,Z=25.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-190.0,Y=55.0,Z=25.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-140.0,Y=85.0,Z=25.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=15000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DrivePos=(X=3.0,Y=3.0,Z=-21.0)
+    DriveAnim="VPanzer3_driver_idle_open"
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
+    // Hull armor
     FrontArmor(0)=(Thickness=15.0,Slope=50.0)
     RightArmor(0)=(Thickness=8.0,Slope=25.0)
     LeftArmor(0)=(Thickness=8.0,Slope=25.0)
@@ -39,20 +65,82 @@ defaultproperties
     ULeftArmorSlope=25.0
     URearArmorSlope=-30.0
 */
-    PointValue=5.0
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+
+    // Movement
+    MaxCriticalSpeed=693.0 // 41 kph
+    GearRatios(3)=0.45
+    GearRatios(4)=0.7
+    TransRatio=0.07
+    SteerSpeed=50.0
+
+    // Damage
+    Health=700
+    HealthMax=700.0
+    VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=-38.3
+    TreadDamageThreshold=1.0
+    DamagedEffectScale=1.25
+    DamagedEffectOffset=(X=-135.0,Y=20.0,Z=20.0)
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_dest'
+
+    // Exit
+    ExitPositions(0)=(X=165.0,Y=-30.0,Z=80.0)    // driver's hatch
+    ExitPositions(1)=(X=-35.0,Y=-30.0,Z=145.0)   // commander's hatch
+    ExitPositions(2)=(X=165.0,Y=40.0,Z=80.0)     // hull MG hatch
+    ExitPositions(3)=(X=-135.0,Y=-175.0,Z=-40.0) // riders
+    ExitPositions(4)=(X=-280.0,Y=-55.0,Z=-40.0)
+    ExitPositions(5)=(X=-280.0,Y=55.0,Z=-40.0)
+    ExitPositions(6)=(X=-135.0,Y=175.0,Z=-40.0)
+
+    // Sounds
+    SoundPitch=32
     MaxPitchSpeed=50.0
-    TreadVelocityScale=200.0
+    IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L04'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R04'
+    LeftTrackSoundBone="Tread_L"
+    RightTrackSoundBone="Tread_R"
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
-    LeftTrackSoundBone="Wheel_L_1"
-    RightTrackSoundBone="Wheel_R_1"
     RumbleSoundBone="driver_attachment"
+
+    // Visual effects
+    TreadVelocityScale=200.0
+    WheelRotationScale=900
+    ExhaustPipes(0)=(ExhaustPosition=(X=-232.0,Y=23.0,Z=27.0),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-232.0,Y=-27.0,Z=27.0),ExhaustRotation=(Pitch=22000))
+    SteerBoneName="Steering"
+    SteeringScaleFactor=2.0
+
+    // HUD
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger2B_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger2B_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger2B_turret_look'
     VehicleHudTreadsPosX(1)=0.67
     VehicleHudTreadsPosY=0.54
     VehicleHudTreadsScale=0.72
+    VehicleHudOccupantsX(0)=0.44
+    VehicleHudOccupantsX(2)=0.57
+    VehicleHudOccupantsY(0)=0.35
+    VehicleHudOccupantsY(2)=0.35
+    VehicleHudOccupantsX(3)=0.375
+    VehicleHudOccupantsY(3)=0.75
+    VehicleHudOccupantsX(4)=0.45
+    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsX(5)=0.55
+    VehicleHudOccupantsY(5)=0.8
+    VehicleHudOccupantsX(6)=0.625
+    VehicleHudOccupantsY(6)=0.75
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.tiger_2b'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -75,55 +163,8 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
-    WheelRotationScale=900
-    TreadHitMaxHeight=-38.3
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-    GearRatios(3)=0.45
-    GearRatios(4)=0.7
-    TransRatio=0.07
-    SteerSpeed=50.0
-    SteerBoneName="Steering"
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-232.0,Y=23.0,Z=27.0),ExhaustRotation=(Pitch=22000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-232.0,Y=-27.0,Z=27.0),ExhaustRotation=(Pitch=22000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BMountedMGPawn',WeaponBone="Mg_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-140.0,Y=-85.0,Z=25.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-190.0,Y=-55.0,Z=25.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-190.0,Y=55.0,Z=25.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-140.0,Y=85.0,Z=25.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
-    IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_dest'
-    DamagedEffectScale=1.25
-    DamagedEffectOffset=(X=-135.0,Y=20.0,Z=20.0)
-    SteeringScaleFactor=2.0
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=15000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger2B_body'
-    VehicleHudOccupantsX(0)=0.44
-    VehicleHudOccupantsX(2)=0.57
-    VehicleHudOccupantsY(0)=0.35
-    VehicleHudOccupantsY(2)=0.35
-    VehicleHudOccupantsX(3)=0.375
-    VehicleHudOccupantsY(3)=0.75
-    VehicleHudOccupantsX(4)=0.45
-    VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsX(5)=0.55
-    VehicleHudOccupantsY(5)=0.8
-    VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.75
-    VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -177,35 +218,8 @@ defaultproperties
         WheelRadius=38.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Tiger2BTank.Right_Drive_Wheel'
-    VehicleMass=16.0
-    bFPNoZFromCameraPitch=true
-    DrivePos=(X=3.0,Y=3.0,Z=-21.0)
-    DriveAnim="VPanzer3_driver_idle_open"
-    ExitPositions(0)=(X=165.0,Y=-30.0,Z=80.0)
-    ExitPositions(1)=(X=-35.0,Y=-30.0,Z=145.0)
-    ExitPositions(2)=(X=165.0,Y=40.0,Z=80.0)
-    ExitPositions(3)=(X=-135.0,Y=-175.0,Z=-40.0)
-    ExitPositions(4)=(X=-280.0,Y=-55.0,Z=-40.0)
-    ExitPositions(5)=(X=-280.0,Y=55.0,Z=-40.0)
-    ExitPositions(6)=(X=-135.0,Y=175.0,Z=-40.0)
-    DriverDamageMult=1.0
-    VehicleNameString="Panzer VI 'King Tiger' Ausf.B"
-    MaxDesireability=1.9
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=650.0
-    Health=650
-    Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
-    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
-    Skins(4)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
-    SoundPitch=32
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -225,5 +239,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Tiger2BTank.KParams0'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.tiger_2b'
 }

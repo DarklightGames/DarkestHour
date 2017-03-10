@@ -94,8 +94,6 @@ defaultproperties
     EngineRPMSoundRange=5000.0
     SteerBoneName="Steering_wheel"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=70.0,Y=-65.0,Z=-5.0),ExhaustRotation=(Pitch=-7000,Yaw=-16364))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105PassengerPawn',WeaponBone="Body")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105CannonPawn',WeaponBone="Turret_placement")
@@ -109,7 +107,6 @@ defaultproperties
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=90.0,Y=0.0,Z=15.0)
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="Driver_idle_out"
     DriverPositions(0)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
     DriverPositions(1)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
@@ -180,7 +177,6 @@ defaultproperties
     ExitPositions(4)=(X=-100.00,Y=125.0,Z=20.00)  // alternative exit on right side
 
     CenterSpringForce="SpringONSSRV"
-    DriverDamageMult=1.0
     VehicleNameString="Sd.Kfz. 10/5"
     MaxDesireability=1.2
     GroundSpeed=325.0

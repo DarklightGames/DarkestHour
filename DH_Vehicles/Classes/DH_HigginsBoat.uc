@@ -350,7 +350,6 @@ defaultproperties
     ExitPositions(5)=(X=185.0,Y=38.0,Z=100.0)
     ExitPositions(6)=(X=115.0,Y=38.0,Z=100.0)
     ExitPositions(7)=(X=45.0,Y=38.0,Z=100.0)
-    DriverDamageMult=1.0
     VehicleNameString="Higgins Boat"
     MaxDesireability=1.9
     GroundSpeed=80.0

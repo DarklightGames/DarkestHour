@@ -410,7 +410,10 @@ simulated function Tick(float DeltaTime)
 
                     for (i = 0; i < LeftWheelBones.Length; ++i)
                     {
-                        SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+                        if (LeftWheelBones[i] != '')
+                        {
+                            SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+                        }
                     }
                 }
 
@@ -421,7 +424,10 @@ simulated function Tick(float DeltaTime)
 
                     for (i = 0; i < RightWheelBones.Length; ++i)
                     {
-                        SetBoneRotation(RightWheelBones[i], RightWheelRot);
+                        if (RightWheelBones[i] != '')
+                        {
+                            SetBoneRotation(RightWheelBones[i], RightWheelRot);
+                        }
                     }
                 }
             }
@@ -3097,26 +3103,36 @@ simulated function bool IsSpawnVehicle()
 
 defaultproperties
 {
-    // Engine
-    bEngineOff=true
-    bSavedEngineOff=true
-    IgnitionSwitchInterval=4.0
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
-    EngineHealth=30
-    EngineRestartFailChance=0.05
+    // Miscellaneous
+    VehicleMass=3.0
+    PointValue=1.0
+    VehicleNameString="ADD VehicleNameString !!"
+    TouchMessageClass=class'DHVehicleTouchMessage'
+    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    PlayerCameraBone="Camera_driver"
+    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
+    MinRunOverSpeed=300 // increased from 0 to roughly 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
+    ObjectiveGetOutDist=1500.0
+    bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
+                               // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
 
-    // Damage
-    Health=175
-    HealthMax=175.0
-    ImpactDamageMult=0.5
-    VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
-    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=HP_Normal) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    // Hull corner angles (used to determine which side of vehicle wa shit for armour penetration calcs)
     FrontLeftAngle=333.0
     FrontRightAngle=28.0
     RearRightAngle=152.0
     RearLeftAngle=207.0
+
+    // Damage
+    Health=175
+    HealthMax=175.0
+    EngineHealth=30
+    VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
+    VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
+    TreadDamageThreshold=0.3
     ImpactDamageThreshold=20.0
+    ImpactDamageMult=0.5
+    DriverDamageMult=1.0
+    DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 
     // Smoking/burning engine effect
     HeavyEngineDamageThreshold=0.25
@@ -3124,13 +3140,6 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.5
     DamagedEffectHealthHeavySmokeFactor=0.25
     DamagedEffectHealthFireFactor=0.15
-
-    // Sounds
-    RumbleSoundVolumeModifier=2.5
-    DamagedStartUpSound=sound'DH_AlliedVehicleSounds.Damaged.engine_start_damaged'
-    DamagedShutDownSound=sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
-    VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
 
     // Vehicle destruction
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
@@ -3141,34 +3150,39 @@ defaultproperties
     ExplosionRadius=700.0
     ExplosionSoundRadius=750.0
 
-    // Treads
-    TreadDamageThreshold=0.3
-    DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    VehicleHudTreadsPosX(0)=0.35
-    VehicleHudTreadsPosX(1)=0.65
-    VehicleHudTreadsPosY=0.5
-    VehicleHudTreadsScale=0.65
-
     // Vehicle reset/respawn
     VehicleSpikeTime=30.0    // if disabled
     IdleTimeBeforeReset=90.0 // if empty & no friendlies nearby
     FriendlyResetDistance=4000.0 // 66m
 
-    // Miscellaneous
-    VehicleMass=3.0
-    PointValue=1.0
-    VehicleNameString="ADD VehicleNameString !!"
-    TouchMessageClass=class'DHVehicleTouchMessage'
-    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
-    PlayerCameraBone="Camera_driver"
-    MinRunOverSpeed=300 // increased from 0 to roughly 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
-    ObjectiveGetOutDist=1500.0
-    RandomAttachmentIndex=255 // an invalid starting value, so will only get changed & replicated if a valid selection is made for a random decorative attachment
-    SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
-    bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
-                               // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
+    // Engine
+    bEngineOff=true
+    bSavedEngineOff=true
+    IgnitionSwitchInterval=4.0
+    EngineRestartFailChance=0.05
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
 
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    // Sounds
+    MaxPitchSpeed=150.0
+    RumbleSoundVolumeModifier=2.5
+    DamagedStartUpSound=sound'DH_AlliedVehicleSounds.Damaged.engine_start_damaged'
+    DamagedShutDownSound=sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
+    VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
+    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+
+    // Visual effects
+    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
+    SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
+    SteeringScaleFactor=4.0
+    RandomAttachmentIndex=255 // an invalid starting value, so will only get changed & replicated if a valid selection is made for a random decorative attachment
+
+    // HUD
+    VehicleHudTreadsPosX(0)=0.35
+    VehicleHudTreadsPosX(1)=0.65
+    VehicleHudTreadsPosY=0.5
+    VehicleHudTreadsScale=0.65
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true
@@ -3177,5 +3191,5 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-//  EntryRadius=375.0 // deprecated variable
+//  EntryRadius=375.0 // deprecated
 }

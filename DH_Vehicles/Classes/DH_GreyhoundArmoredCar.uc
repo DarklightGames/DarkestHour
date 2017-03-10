@@ -11,20 +11,36 @@ class DH_GreyhoundArmoredCar extends DHArmoredVehicle;
 
 defaultproperties
 {
-    // Properties from the old DHArmoredCar class
-    bSpecialTankTurning=false
-    PointValue=2.0
-    HeavyEngineDamageThreshold=0.25
-    DriverKillChance=900.0
-    GunnerKillChance=900.0
-    CommanderKillChance=600.0
-    GunDamageChance=1000.0
-    TraverseDamageChance=1250.0
-
-    bHasTreads=false
+    // Vehicle properties
+    VehicleNameString="M8 Armored Car"
+    VehicleTeam=1
     bIsApc=true
-    MaxCriticalSpeed=1077.0 // 64 kph
+    bHasTreads=false
+    bSpecialTankTurning=false
+    VehicleMass=5.0
+    PointValue=2.0
 
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'
+    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(2)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-70.0,Z=105.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-125.0,Y=75.0,Z=105.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=9500,ViewPitchDownLimit=60065,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DrivePos=(X=10.0,Y=-5.0,Z=2.0)
+    DriveAnim="VBA64_driver_idle_close"
+
+    // Hull armor
     FrontArmor(0)=(Thickness=1.6)
     RightArmor(0)=(Thickness=0.9)
     LeftArmor(0)=(Thickness=0.9)
@@ -44,10 +60,13 @@ defaultproperties
     ULeftArmorFactor=0.9
     URearArmorFactor=0.9
 */
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_look'
     FrontLeftAngle=332.0
     RearLeftAngle=208.0
+
+    // Movement
+    MaxCriticalSpeed=1077.0 // 64 kph
+    GearRatios(3)=0.6
+    GearRatios(4)=0.75
     WheelPenScale=1.2
     WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
@@ -56,36 +75,50 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=5.0
     ChassisTorqueScale=0.095
     MaxSteerAngleCurve=(Points=((OutVal=20.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
-    GearRatios(3)=0.6
-    GearRatios(4)=0.75
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
     SteerSpeed=75.0
     TurnDamping=100.0
-    SteerBoneName="Drive_wheel"
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=34.0,Z=45.0),ExhaustRotation=(Pitch=34000,Yaw=-5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-70.0,Z=105.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-125.0,Y=75.0,Z=105.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.M8_Destroyed'
+
+    // Damage
+    Health=300
+    HealthMax=300.0
+    EngineHealth=100
+    HeavyEngineDamageThreshold=0.25
     DisintegrationHealth=-100000.0
+    VehHitpoints(0)=(PointBone="Engine",PointOffset=(Z=-10.0)) // engine
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=100.0)
     FireEffectOffset=(X=5.0,Y=5.0,Z=0.0)
-    VehicleTeam=1
+    DriverKillChance=900.0
+    CommanderKillChance=600.0
+    GunDamageChance=1000.0
+    TraverseDamageChance=1250.0
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.M8_Destroyed'
+
+    // Exit
+    ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)  // driver
+    ExitPositions(1)=(X=30.0,Y=-5.0,Z=210.0)    // commander
+    ExitPositions(2)=(X=-124.0,Y=-161.0,Z=64.0) // passenger (l)
+    ExitPositions(3)=(X=-245.0,Y=-42.0,Z=63.0)  // passenger (bl)
+    ExitPositions(4)=(X=-249.0,Y=31.0,Z=63.0)   // passenger (br)
+    ExitPositions(5)=(X=-126.0,Y=169.0,Z=64.0)  // passenger (r)
+
+    // Sounds
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+
+    // Visual effects
+    ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=34.0,Z=45.0),ExhaustRotation=(Pitch=34000,Yaw=-5000))
+    SteerBoneName="Drive_wheel"
     SteeringScaleFactor=2.0
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=9500,ViewPitchDownLimit=60065,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+
+    // HUD
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_look'
+    VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsX(1)=0.5
@@ -98,10 +131,9 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
-    VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointBone="Engine",PointOffset=(Z=-10.0)) // engine
-    EngineHealth=100
-    DriverAttachmentBone="driver_attachment"
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         BoneName="wheel_FR"
@@ -156,28 +188,10 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
-    VehicleMass=5.0
-    DrivePos=(X=10.0,Y=-5.0,Z=2.0)
-    DriveAnim="VBA64_driver_idle_close"
-    ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)  //driver
-    ExitPositions(1)=(X=30.0,Y=-5.0,Z=210.0)    //commander
-    ExitPositions(2)=(X=-124.0,Y=-161.0,Z=64.0) //passenger (l)
-    ExitPositions(3)=(X=-245.0,Y=-42.0,Z=63.0)  //passenger (rl)
-    ExitPositions(4)=(X=-249.0,Y=31.0,Z=63.0)   //passenger (rr)
-    ExitPositions(5)=(X=-126.0,Y=169.0,Z=64.0)  //passenger (r)
-    DriverDamageMult=1.0
-    VehicleNameString="M8 Armored Car"
-    MaxDesireability=0.1
-    PitchUpLimit=500
-    PitchDownLimit=58000
-    Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.3
+        KInertiaTensor(0)=1.3 // default is 1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
         KCOMOffset=(X=0.3,Z=-0.525) // default is X=0.0, Z=-0.5
@@ -194,5 +208,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_GreyhoundArmoredCar.KParams0'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
 }

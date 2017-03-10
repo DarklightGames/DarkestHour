@@ -90,8 +90,6 @@ defaultproperties
     EngineRPMSoundRange=5000.0
     SteerBoneName="Steering"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Y=60.0,Z=-10.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider1_idle")
@@ -110,7 +108,6 @@ defaultproperties
     DamagedEffectScale=0.75
     DamagedEffectOffset=(Y=10.0,Z=80.0)
     VehicleTeam=1
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true,ViewFOV=90.0)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
@@ -203,7 +200,6 @@ defaultproperties
     ExitPositions(10)=(X=-107.0,Y=-33.0,Z=116.0)// Top Extra
     CenterSpringForce="SpringONSSRV"
     ImpactDamageMult=0.001
-    DriverDamageMult=1.0
     VehicleNameString="M3A1 Halftrack"
     MaxDesireability=1.5
     GroundSpeed=325.0

@@ -1877,29 +1877,34 @@ exec function SetFEOffset(int NewX, int NewY, int NewZ)
 
 defaultproperties
 {
+    // Vehicle properties
+    VehicleMass=12.5
+    CollisionRadius=175.0
+    CollisionHeight=60.0
+    PointValue=3.0
+    MaxDesireability=1.9
+    EngineRestartFailChance=0.1
+
     // Driver & positions
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
     bMustUnbuttonToSwitchToRider=true
+    DriverAttachmentBone="Driver_attachment"
+    BeginningIdleAnim="driver_hatch_idle_close"
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
-
-    // Treads & track wheels
-    bHasTreads=true
-    LeftTreadIndex=1
-    RightTreadIndex=2
-    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    TreadVelocityScale=450.0
-    WheelRotationScale=500
 
     // Damage
-    Health=300
-    HealthMax=300.0
+    Health=525
+    HealthMax=525.0
     EngineHealth=300
     VehHitpoints(0)=(PointBone="Body") // default engine hit point bone
     GunOpticsHitPointIndex=-1 // set in subclass if vehicle has exposed gunsight optics
-    TreadDamageThreshold=0.5
+    TreadDamageThreshold=0.75
+    ImpactDamageThreshold=5000.0
+    ImpactDamageMult=0.001
+    DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
+
+    // Component damage probabilities
     DriverKillChance=1150.0
     GunnerKillChance=1150.0
     CommanderKillChance=950.0
@@ -1908,6 +1913,8 @@ defaultproperties
     TraverseDamageChance=2000.0
     TurretDetonationThreshold=1750.0
     AmmoIgnitionProbability=0.75
+
+    // Vehicle fires
     HullFireChance=0.25
     HullFireHEATChance=0.5
     EngineFireChance=0.5
@@ -1916,10 +1923,9 @@ defaultproperties
     PlayerFireDamagePer2Secs=15.0
     FireDetonationChance=0.07
     bFirstPenetratingHit=true
-    ImpactDamageMult=0.001
-    ImpactDamageThreshold=5000.0
+    VehicleBurningDamType=class'DHVehicleBurningDamageType'
 
-    // Vehicle fires
+    // Burning/smoking vehicle effects
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0) // position of engine smoke or fire
     HeavyEngineDamageThreshold=0.5
     DamagedEffectHealthSmokeFactor=0.85
@@ -1929,7 +1935,6 @@ defaultproperties
     FireEffectClass=class'ROEngine.VehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    VehicleBurningDamType=class'DHVehicleBurningDamageType'
 
     // Vehicle destruction
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
@@ -1943,17 +1948,36 @@ defaultproperties
     ExplosionRadius=900.0
     ExplosionSoundRadius=1000.0
 
+    // Vehicle reset/respawn
+    VehicleSpikeTime=60.0     // if disabled
+    TimeTilDissapear=90.0     // after destroyed
+    IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
+
+    // Treads & track wheels
+    bHasTreads=true
+    LeftTreadIndex=1
+    RightTreadIndex=2
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    TreadVelocityScale=450.0
+    WheelRotationScale=700
+
     // Sounds
     SoundRadius=650.0
     TransientSoundRadius=700.0
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     TrackDamagedSound=sound'Vehicle_Engines.track_broken'
+    LeftTrackSoundBone="Track_L"
+    RightTrackSoundBone="Track_R"
+    RumbleSoundBone="body"
     RumbleSoundVolumeModifier=1.0
 
-    // Vehicle reset/respawn
-    VehicleSpikeTime=60.0     // if disabled
-    TimeTilDissapear=90.0     // after destroyed
-    IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
+    // Visible effects
+    SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
+    SteeringScaleFactor=0.75
+    SteerBoneAxis=AXIS_X
+    LeftLeverAxis=AXIS_Z
+    RightLeverAxis=AXIS_Z
 
     // Camera
     PlayerCameraBone="Camera_driver"
@@ -1961,20 +1985,57 @@ defaultproperties
     TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
 
-    // Entry & exit
+    // Vew shake
+    bEnableProximityViewShake=false // TODO - this is default false anyway, but interesting to test enabling this, as could be a good feature for heavy vehicles
+    ViewShakeRadius=50.0   // was 600 in RO
+    ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0) // was X=0.5,Z=2 in RO
+    ViewShakeOffsetFreq=0.0 // was 7 in RO
+
+    // Force feedback
+    StartUpForce="TankStartUp"
+    ShutDownForce="TankShutDown"
+    CenterSpringForce="SpringONSSRV"
+
+    // Exit positions
     ExitPositions(0)=(X=0.0,Y=-165.0,Z=40.0)
     ExitPositions(1)=(X=0.0,Y=165.0,Z=40.0)
     ExitPositions(2)=(X=0.0,Y=-165.0,Z=-40.0)
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
-    // Physics and movement
-    bSpecialTankTurning=true
-    CollisionRadius=100.0
-    CollisionHeight=400.0
-    VehicleMass=12.5
+    // Driving & movement
     MaxCriticalSpeed=700.0 // approx 42 kph
     GroundSpeed=325.0
+    TorqueCurve=(Points=((InVal=0,OutVal=12.0),(InVal=200,OutVal=3.0),(InVal=1500,OutVal=4.0),(InVal=2200,OutVal=0.0)))
+    GearRatios(0)=-0.2
+    GearRatios(1)=0.2
+    GearRatios(2)=0.35
+    GearRatios(3)=0.55
+    GearRatios(4)=0.6
+    TransRatio=0.12
+    ChangeUpPoint=2050.0   // was 2000 in RO
+    ChangeDownPoint=1100.0 // was 1000 in RO
+    LSDFactor=1.0
+    FTScale=0.03
+    ChassisTorqueScale=0.9 // was 0.25 in RO
+    MinBrakeFriction=4.0
+    EngineBrakeFactor=0.0001
+    EngineBrakeRPMScale=0.1
+    EngineInertia=0.1
+    IdleRPM=500.0
+    EngineRPMSoundRange=5000
+    RevMeterScale=4000.0
+
+    // Steering & braking
+    bSpecialTankTurning=true
+    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    SteerSpeed=160.0
+    TurnDamping=50
     bHasHandbrake=true
+    HandbrakeThresh=200.0
+    StopThreshold=100.0
+    MaxBrakeTorque=20.0
+
+    // Physics wheels properties
     WheelSoftness=0.025
     WheelPenScale=2.0
     WheelPenOffset=0.01
@@ -1989,38 +2050,13 @@ defaultproperties
     WheelHandbrakeFriction=0.1
     WheelSuspensionTravel=15.0
     WheelSuspensionMaxRenderTravel=15.0
-    FTScale=0.03
-    ChassisTorqueScale=0.9 // was 0.25 in RO
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
-    TorqueCurve=(Points=((InVal=0,OutVal=12.0),(InVal=200,OutVal=3.0),(InVal=1500,OutVal=4.0),(InVal=2200,OutVal=0.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.6
-    TransRatio=0.12
-    ChangeUpPoint=2050.0   // was 2000 in RO
-    ChangeDownPoint=1100.0 // was 1000 in RO
-    LSDFactor=1.0
-    EngineBrakeFactor=0.0001
-    EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
-    SteerSpeed=160.0
-    TurnDamping=50
-    StopThreshold=100.0
-    HandbrakeThresh=200.0
-    EngineInertia=0.1
-    IdleRPM=500.0
-    EngineRPMSoundRange=5000
-    RevMeterScale=4000.0
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-0.0,Y=0.0,Z=-0.5)
+        KCOMOffset=(X=0.0,Y=0.0,Z=-0.5)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -2035,22 +2071,4 @@ defaultproperties
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
-
-    // Proximity view shake
-    bEnableProximityViewShake=false // TODO - this is default false anyway, but interesting to test enabling this, as could be a good feature for heavy vehicles
-    ViewShakeRadius=50.0   // was 600 in RO
-    ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0) // was X=0.5,Z=2 in RO
-    ViewShakeOffsetFreq=0.0 // was 7 in RO
-
-    // Force feedback
-    StartUpForce="TankStartUp"
-    ShutDownForce="TankShutDown"
-    CenterSpringForce="SpringONSSRV"
-
-    // Miscellaneous
-    PointValue=3.0
-    MaxDesireability=1.4
-    SteerBoneAxis=AXIS_X
-    SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
-    EngineRestartFailChance=0.1
 }

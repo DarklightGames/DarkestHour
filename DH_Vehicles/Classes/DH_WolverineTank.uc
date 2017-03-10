@@ -11,10 +11,35 @@ class DH_WolverineTank extends DHArmoredVehicle; // later version with HVAP inst
 
 defaultproperties
 {
-    LeftTreadIndex=3
-    MaxCriticalSpeed=766.0
-    TreadDamageThreshold=0.75
+    // Vehicle properties
+    VehicleNameString="M10 Wolverine"
+    VehicleTeam=1
+    VehicleMass=13.0
 
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
+    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
+    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-65.0,Z=12.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-125.0,Y=65.0,Z=12.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
+    DrivePos=(X=-3.0,Y=0.0,Z=4.0)
+    DriveAnim="VPanzer3_driver_idle_open"
+
+    // Hull armor
     FrontArmor(0)=(Thickness=3.8,Slope=55.0)
     RightArmor(0)=(Thickness=1.9,Slope=38.0)
     LeftArmor(0)=(Thickness=1.9,Slope=38.0)
@@ -37,20 +62,78 @@ defaultproperties
     URightArmorSlope=38.0
     ULeftArmorSlope=38.0
 */
-    MaxPitchSpeed=150.0
-    TreadVelocityScale=228.0
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+
+    // Movement
+    MaxCriticalSpeed=766.0 // 46 kph
+    GearRatios(4)=0.75
+    TransRatio=0.1
+
+    // Damage
+    Health=500
+    HealthMax=500.0
+    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-90.0,Z=-35.0)) // engine
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=62.0
+    DamagedEffectOffset=(X=-100.0,Y=0.0,Z=95.0)
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest' // TODO: make destroyed combiner & add as DestroyedVehicleSkins(0)
+
+    // Exit
+    ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  // driver
+    ExitPositions(1)=(X=40.0,Y=-15.0,Z=250.0)   // commander
+    ExitPositions(2)=(X=-125.0,Y=-150.0,Z=75.0) // passenger (l)
+    ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  // passenger (bl)
+    ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   // passenger (br)
+    ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  // passenger (r)
+
+    // Sounds
+    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
+    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
     RumbleSoundBone="placeholder_int"
+    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+
+    // Visual effects
+    LeftTreadIndex=3
+    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+    TreadVelocityScale=228.0
+    WheelRotationScale=1100
+    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
+    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=40.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    LeftLeverBoneName="lever_L"
+    RightLeverBoneName="lever_R"
+
+    // HUD
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_look'
+    VehicleHudEngineX=0.51
     VehicleHudTreadsPosX(0)=0.36
     VehicleHudTreadsPosX(1)=0.64
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.72
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsY(0)=0.32
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.5
+    VehicleHudOccupantsX(2)=0.4
+    VehicleHudOccupantsY(2)=0.74
+    VehicleHudOccupantsX(3)=0.45
+    VehicleHudOccupantsY(3)=0.8
+    VehicleHudOccupantsX(4)=0.55
+    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsX(5)=0.6
+    VehicleHudOccupantsY(5)=0.74
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m10_wolverine'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -73,55 +156,8 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
-    WheelRotationScale=900
-    TreadHitMaxHeight=62.0
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-    GearRatios(4)=0.75
-    TransRatio=0.1
-    SteerBoneName="Steering"
-    LeftLeverBoneName="lever_L"
-    LeftLeverAxis=AXIS_Z
-    RightLeverBoneName="lever_R"
-    RightLeverAxis=AXIS_Z
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=40.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-125.0,Y=-65.0,Z=12.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-165.0,Y=-35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-165.0,Y=35.0,Z=12.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-125.0,Y=65.0,Z=12.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest' // TODO: make destroyed combiner & add as DestroyedVehicleSkins(0)
-    DamagedEffectOffset=(X=-126.0,Y=20.0,Z=105.0)
-    VehicleTeam=1
-    SteeringScaleFactor=0.75
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
-    VehicleHudOccupantsX(0)=0.43
-    VehicleHudOccupantsY(0)=0.32
-    VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.5
-    VehicleHudOccupantsX(2)=0.4
-    VehicleHudOccupantsY(2)=0.74
-    VehicleHudOccupantsX(3)=0.45
-    VehicleHudOccupantsY(3)=0.8
-    VehicleHudOccupantsX(4)=0.55
-    VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsX(5)=0.6
-    VehicleHudOccupantsY(5)=0.74
-    VehicleHudEngineX=0.51
-    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-90.0,Z=-35.0)) // engine
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0,Y=-55.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -174,34 +210,8 @@ defaultproperties
         WheelRadius=33.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.Right_Drive_Wheel'
-    VehicleMass=13.0
-    bFPNoZFromCameraPitch=true
-    DrivePos=(X=-3.0,Y=0.0,Z=4.0)
-    DriveAnim="VPanzer3_driver_idle_open"
-    ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  //driver
-    ExitPositions(1)=(X=40.0,Y=-15.0,Z=250.0)   //commander
-    ExitPositions(2)=(X=-125.0,Y=-150.0,Z=75.0) //passenger (l)
-    ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  //passenger (rl)
-    ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   //passenger (rr)
-    ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  //passenger (r)
-    DriverDamageMult=1.0
-    VehicleNameString="M10 Wolverine"
-    MaxDesireability=1.9
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=500.0
-    Health=500
-    Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
-    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -221,7 +231,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WolverineTank.KParams0'
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m10_wolverine'
 }

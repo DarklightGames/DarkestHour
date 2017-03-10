@@ -53,8 +53,6 @@ defaultproperties
     EngineRPMSoundRange=6000.0
     SteerBoneName="Steer_Wheel"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-120.0,Y=30.0,Z=-5.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
     PassengerPawns(0)=(AttachBone="passenger2",DrivePos=(X=5.0,Y=0.0,Z=11.0),DriveAnim="VHalftrack_Rider1_idle")
     PassengerPawns(1)=(AttachBone="Passenger3",DrivePos=(X=0.0,Y=0.0,Z=7.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider6_idle")
@@ -69,7 +67,6 @@ defaultproperties
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=75.0,Y=5.0,Z=45.0)
     VehicleTeam=1
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
@@ -143,7 +140,6 @@ defaultproperties
     ExitPositions(2)=(X=-64.0,Y=-109.0,Z=30.0)
     ExitPositions(3)=(X=-71.0,Y=109.0,Z=30.0)
     CenterSpringForce="SpringONSSRV"
-    DriverDamageMult=1.0
     VehicleNameString="Willys Jeep MB"
     GroundSpeed=325.0
     PitchUpLimit=500

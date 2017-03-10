@@ -85,8 +85,6 @@ defaultproperties
     EngineRPMSoundRange=5000.0
     SteerBoneName="Steering"
     RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-105.0,Y=33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-105.0,Y=-33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierMGPawn',WeaponBone="mg_base")
@@ -105,7 +103,6 @@ defaultproperties
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
     VehicleTeam=1
-    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
@@ -193,7 +190,6 @@ defaultproperties
     ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
     ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
     ImpactDamageMult=0.001
-    DriverDamageMult=1.0
     VehicleNameString="Bren Carrier Mk.I"
     MaxDesireability=0.1
     HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
