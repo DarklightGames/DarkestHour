@@ -9,6 +9,7 @@
 *.int
 *.u
 *.DS_Store
+.idea
 Red Orchestra.app
 /Animations/
 /Cache/
