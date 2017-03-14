@@ -856,12 +856,14 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         {
             if (bLogDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode())
             {
-                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide @ "as angle of incidence to original side was" @ int(AngleOfIncidence) @ "degrees");
+                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
+                    @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
             }
 
             if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide @ "as angle of incidence to original side was" @ int(AngleOfIncidence) @ "degrees");
+                Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
+                    @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
             }
 
             HitSide = OppositeSide;
@@ -960,10 +962,10 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
     {
         DebugString1 = Caps("Hit hull" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated) $ ", hit location angle ="
-            @ int(HitLocationAngle) @ "deg, armor =" @ int(ArmorThickness * 10.0) $ "mm @" @ int(ArmorSlope) @ "deg";
+            @ int(Round(HitLocationAngle)) @ "deg, armor =" @ int(Round(ArmorThickness * 10.0)) $ "mm @" @ int(Round(ArmorSlope)) @ "deg";
 
-        DebugString2 = "Shot penetration =" @ int(MaxArmorPenetration * 10.0) $ "mm, effective armor =" @ int(EffectiveArmorThickness * 10.0)
-            $ "mm, shot AOI =" @ int(AngleOfIncidence) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
+        DebugString2 = "Shot penetration =" @ int(Round(MaxArmorPenetration * 10.0)) $ "mm, effective armor =" @ int(Round(EffectiveArmorThickness * 10.0))
+            $ "mm, shot AOI =" @ int(Round(AngleOfIncidence)) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
 
         if (bLogDebugPenetration)
         {
